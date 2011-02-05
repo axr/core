@@ -1,8 +1,12 @@
 This is the official README of the AXR project.
 
-Right now, there is no code yet, but please go to our wiki (http://github.com/veosotano/AXR/wiki) and read everything about this project.
+I'm starting with the development now. If you want to help me out in building the initial prototype email me on veosotano [at] gmail [dot] com
 
-Also, please join our mailing list (http://groups.google.com/group/axr-main) and ask questions, discuss features, contribute, etc.
+The official website for the project is http://axr.vg , where you can find the Mission Statement and read the working draft of the specification. The plan is to integrate a forum in the site, where we could discuss syntax, development, performance and organizational issues.
+
+I could really need a hand with this. If you have experience with PHP open source forum software (such as Vanilla) please contact me, it would really help me to build this community faster.
+
+Meanwhile, please join our mailing list (http://groups.google.com/group/axr-main) and ask questions, discuss features, contribute, etc.
 
 Cheers,
 Miro Keller
