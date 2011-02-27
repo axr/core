@@ -1,4 +1,6 @@
-This is my sandbox where I'm playing around with the object structure in HSS. The objects have a @ in front of their type, and the other things are their properties. Those properties that accept multiple values are marked with [].
+This is my sandbox where I'm playing around with the object structure in HSS.
+The objects have a @ in front of their type, and the other things are their properties.
+Those properties that accept multiple values are marked with [].
 
 
 @object
