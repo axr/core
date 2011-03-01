@@ -1,0 +1,933 @@
+Tmac
+v7
+r0
+t319931933.325313
+cCheck dependencies
+cProcessInfoPlistFile /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Info.plist mac-Info.plist
+cCopyStringsFile /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/English.lproj/InfoPlist.strings English.lproj/InfoPlist.strings
+cCompileXIB /Users/miro/AXR/prototype/mac/English.lproj/MainMenu.xib
+cCpResource build/Debug/mac.app/Contents/Resources/test.xml test.xml
+cCpResource build/Debug/mac.app/Contents/Resources/test2.xml test2.xml
+cProcessPCH /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-cbnxmpmftbxxisgwwjkqiiweijdc/mac_Prefix.pch.gch mac_Prefix.pch normal x86_64 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/mac.build/Debug/mac.build/Objects-normal/x86_64/main.o /Users/miro/AXR/prototype/mac/main.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/mac.build/Debug/mac.build/Objects-normal/x86_64/macAppDelegate.o /Users/miro/AXR/prototype/mac/macAppDelegate.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
+cLd /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/MacOS/mac normal x86_64
+
+N/Developer/SDKs/MacOSX10.6.sdk
+c000000004D59A3A900000000000000EE
+t1297720233
+s238
+
+N/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Cocoa.framework/Headers/Cocoa.h
+c0000000040C4AA6800000000000001E5
+t1086630504
+s485
+
+N/Developer/SDKs/MacOSX10.6.sdk/usr/include/assert.h
+c000000004AC326060000000000000DCB
+t1254303238
+s3531
+
+N/Developer/SDKs/MacOSX10.6.sdk/usr/include/expat.h
+c000000004A119ADD0000000000009D93
+t1242667741
+s40339
+
+N/Developer/SDKs/MacOSX10.6.sdk/usr/include/memory.h
+c000000004AC326060000000000000765
+t1254303238
+s1893
+
+N/Developer/SDKs/MacOSX10.6.sdk/usr/include/stdio.h
+c000000004BBD2CE90000000000004174
+t1270689001
+s16756
+
+N/Developer/SDKs/MacOSX10.6.sdk/usr/include/stdlib.h
+c000000004AC326060000000000002DF5
+t1254303238
+s11765
+
+N/Developer/SDKs/MacOSX10.6.sdk/usr/include/string.h
+c000000004BBD2CE90000000000001731
+t1270689001
+s5937
+
+N/Developer/SDKs/MacOSX10.6.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stddef.h
+c000000004AC326650000000000003197
+t1254303333
+s12695
+
+N/System/Library/Frameworks/Cocoa.framework/Cocoa
+c000000004A1F2D63000000000000A5E0
+t1243557219
+s42464
+
+N/Users/miro/AXR/prototype/core/build/Debug/libcore.a
+c000000004D618D340000000000003008
+t1298238772
+s12296
+
+N/Users/miro/AXR/prototype/mac/English.lproj/InfoPlist.strings
+c000000004D57F7CC000000000000002D
+t1297610700
+s45
+
+N/Users/miro/AXR/prototype/mac/English.lproj/MainMenu.xib
+c000000004D57F7CC000000000002BB3F
+t1297610700
+s179007
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app
+t1298236349
+s102
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Info.plist
+t1297720599
+s874
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/MacOS/mac
+t2
+s0
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/PkgInfo
+t1297720599
+s8
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/English.lproj/InfoPlist.strings
+t1297639515
+s92
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/English.lproj/MainMenu.nib
+t1297639515
+s34321
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/Makefile.MPW
+t1297625297
+s4599
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/expat.dsp
+t1297625297
+s5465
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/expat_static.dsp
+t1297625297
+s4254
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/expatw.dsp
+t1297625297
+s5535
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/expatw_static.dsp
+t1297625297
+s4325
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/libexpat.def
+t1297625297
+s2028
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/libexpatw.def
+t1297625297
+s2028
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/test.xml
+t1297720599
+s1114
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/test2.xml
+t1297720599
+s128
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/xmlparse.lo
+t1297625297
+s319
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/xmlrole.lo
+t1297625297
+s316
+
+N/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/xmltok.lo
+t1297625297
+s313
+
+N/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/mac.LinkFileList
+c000000004D58685B00000000000000C0
+t1297639515
+s192
+
+N/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/macAppDelegate.o
+t1298239081
+s22624
+
+N/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/main.o
+t1298239010
+s4968
+
+N/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/untitled.o
+t2
+s0
+
+N/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmlparse.o
+t2
+s0
+
+N/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmlrole.o
+t1297625297
+s36952
+
+N/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok.o
+t1297625298
+s163572
+
+N/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok_impl.o
+t1297625297
+s1512
+
+N/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok_ns.o
+t1297625297
+s1508
+
+N/Users/miro/AXR/prototype/mac/expat/.libs/xmlparse.o
+c000000004D581F8E000000000002F0BC
+t1297620878
+s192700
+
+N/Users/miro/AXR/prototype/mac/expat/.libs/xmlrole.o
+c000000004D581F92000000000000E38C
+t1297620882
+s58252
+
+N/Users/miro/AXR/prototype/mac/expat/.libs/xmltok.o
+c000000004D581F9100000000000347E8
+t1297620881
+s215016
+
+N/Users/miro/AXR/prototype/mac/expat/Makefile.MPW
+c000000003D29C6AF00000000000011F7
+t1026148015
+s4599
+
+N/Users/miro/AXR/prototype/mac/expat/amigaconfig.h
+c000000004662D6C0000000000000031D
+t1180882624
+s797
+
+N/Users/miro/AXR/prototype/mac/expat/ascii.h
+c00000000463FDF9F00000000000007C1
+t1178591135
+s1985
+
+N/Users/miro/AXR/prototype/mac/expat/asciitab.h
+c000000003D20BF4600000000000006E0
+t1025556294
+s1760
+
+N/Users/miro/AXR/prototype/mac/expat/expat.dsp
+c00000000463945480000000000001559
+t1178158408
+s5465
+
+N/Users/miro/AXR/prototype/mac/expat/expat.h
+c00000000456A52CE0000000000009D93
+t1164595918
+s40339
+i<stdlib.h>
+i"expat_external.h"
+
+N/Users/miro/AXR/prototype/mac/expat/expat_external.h
+c0000000044802C600000000000000D24
+t1149250656
+s3364
+
+N/Users/miro/AXR/prototype/mac/expat/expat_static.dsp
+c0000000046394548000000000000109E
+t1178158408
+s4254
+
+N/Users/miro/AXR/prototype/mac/expat/expatw.dsp
+c0000000046394548000000000000159F
+t1178158408
+s5535
+
+N/Users/miro/AXR/prototype/mac/expat/expatw_static.dsp
+c000000004639454800000000000010E5
+t1178158408
+s4325
+
+N/Users/miro/AXR/prototype/mac/expat/iasciitab.h
+c000000003D20BF460000000000000726
+t1025556294
+s1830
+
+N/Users/miro/AXR/prototype/mac/expat/internal.h
+c000000004569D06900000000000007EC
+t1164562537
+s2028
+
+N/Users/miro/AXR/prototype/mac/expat/latin1tab.h
+c000000003D20BF460000000000000715
+t1025556294
+s1813
+
+N/Users/miro/AXR/prototype/mac/expat/libexpat.def
+c000000004644A5D800000000000007EC
+t1178904024
+s2028
+
+N/Users/miro/AXR/prototype/mac/expat/libexpatw.def
+c000000004644A5D800000000000007EC
+t1178904024
+s2028
+
+N/Users/miro/AXR/prototype/mac/expat/macconfig.h
+c000000003FA54973000000000000052D
+t1067796851
+s1325
+
+N/Users/miro/AXR/prototype/mac/expat/nametab.h
+c0000000039C6422E0000000000001B8A
+t969294382
+s7050
+
+N/Users/miro/AXR/prototype/mac/expat/utf8tab.h
+c000000003D20BF4600000000000006E3
+t1025556294
+s1763
+
+N/Users/miro/AXR/prototype/mac/expat/winconfig.h
+c0000000043A2FC3F00000000000002C5
+t1134754879
+s709
+i<windows.h>
+i<memory.h>
+i<string.h>
+
+N/Users/miro/AXR/prototype/mac/expat/xmlparse.c
+c00000000463FDF9F000000000002F58E
+t1178591135
+s193934
+i<stddef.h>
+i<string.h>
+i<assert.h>
+i"winconfig.h"
+i"macconfig.h"
+i"amigaconfig.h"
+i"watcomconfig.h"
+i<expat_config.h>
+i"ascii.h"
+i"expat.h"
+i"internal.h"
+i"xmltok.h"
+i"xmlrole.h"
+
+N/Users/miro/AXR/prototype/mac/expat/xmlparse.lo
+c000000004D581F8F000000000000013F
+t1297620879
+s319
+
+N/Users/miro/AXR/prototype/mac/expat/xmlparse.o
+c000000004D581F8F000000000002F0BC
+t1297620879
+s192700
+
+N/Users/miro/AXR/prototype/mac/expat/xmlrole.c
+c0000000044D4CEAF0000000000007EDC
+t1154797231
+s32476
+i<stddef.h>
+i"winconfig.h"
+i"macconfig.h"
+i"amigaconfig.h"
+i"watcomconfig.h"
+i<expat_config.h>
+i"expat_external.h"
+i"internal.h"
+i"xmlrole.h"
+i"ascii.h"
+
+N/Users/miro/AXR/prototype/mac/expat/xmlrole.h
+c000000003DD176700000000000000BCF
+t1037137520
+s3023
+i"xmltok.h"
+
+N/Users/miro/AXR/prototype/mac/expat/xmlrole.lo
+c000000004D581F93000000000000013C
+t1297620883
+s316
+
+N/Users/miro/AXR/prototype/mac/expat/xmlrole.o
+c000000004D581F93000000000000E38C
+t1297620883
+s58252
+
+N/Users/miro/AXR/prototype/mac/expat/xmltok.c
+c000000004569D036000000000000A1C0
+t1164562486
+s41408
+i<stddef.h>
+i"winconfig.h"
+i"macconfig.h"
+i"amigaconfig.h"
+i"watcomconfig.h"
+i<expat_config.h>
+i"expat_external.h"
+i"internal.h"
+i"xmltok.h"
+i"nametab.h"
+i"xmltok_impl.h"
+i"ascii.h"
+i"xmltok_impl.c"
+i"asciitab.h"
+i"utf8tab.h"
+i"asciitab.h"
+i"utf8tab.h"
+i"iasciitab.h"
+i"utf8tab.h"
+i"iasciitab.h"
+i"utf8tab.h"
+i"asciitab.h"
+i"latin1tab.h"
+i"asciitab.h"
+i"latin1tab.h"
+i"asciitab.h"
+i"asciitab.h"
+i"xmltok_impl.c"
+i"asciitab.h"
+i"latin1tab.h"
+i"asciitab.h"
+i"latin1tab.h"
+i"iasciitab.h"
+i"latin1tab.h"
+i"iasciitab.h"
+i"latin1tab.h"
+i"xmltok_impl.c"
+i"asciitab.h"
+i"latin1tab.h"
+i"asciitab.h"
+i"latin1tab.h"
+i"iasciitab.h"
+i"latin1tab.h"
+i"iasciitab.h"
+i"latin1tab.h"
+i"xmltok_ns.c"
+i"xmltok_ns.c"
+
+N/Users/miro/AXR/prototype/mac/expat/xmltok.h
+c0000000043AC0D870000000000002BB0
+t1135349127
+s11184
+
+N/Users/miro/AXR/prototype/mac/expat/xmltok.lo
+c000000004D581F920000000000000139
+t1297620882
+s313
+
+N/Users/miro/AXR/prototype/mac/expat/xmltok.o
+c000000004D581F9200000000000347E8
+t1297620882
+s215016
+
+N/Users/miro/AXR/prototype/mac/expat/xmltok_impl.c
+c000000004569D036000000000000AE0C
+t1164562486
+s44556
+
+N/Users/miro/AXR/prototype/mac/expat/xmltok_impl.h
+c0000000039CA7B920000000000000295
+t969571218
+s661
+i<stddef.h>
+
+N/Users/miro/AXR/prototype/mac/expat/xmltok_ns.c
+c000000004569D0360000000000000C48
+t1164562486
+s3144
+
+N/Users/miro/AXR/prototype/mac/macAppDelegate.h
+c000000004D618E4C000000000000012E
+t1298239052
+s302
+i<Cocoa/Cocoa.h>
+
+N/Users/miro/AXR/prototype/mac/macAppDelegate.m
+c000000004D618E5500000000000001FE
+t1298239061
+s510
+i"macAppDelegate.h"
+i<string.h>
+i<stdio.h>
+
+N/Users/miro/AXR/prototype/mac/macAppDelegate.mm
+c000000004D5865F10000000000000580
+t1297638897
+s1408
+i"macAppDelegate.h"
+i<expat.h>
+
+N/Users/miro/AXR/prototype/mac/mac_Prefix.pch
+c000000004D57F7CC0000000000000089
+t1297610700
+s137
+i<Cocoa/Cocoa.h>
+
+N/Users/miro/AXR/prototype/mac/main.m
+c000000004D57F7CC00000000000000F9
+t1297610700
+s249
+i<Cocoa/Cocoa.h>
+
+N/Users/miro/AXR/prototype/mac/test.xml
+c000000004D593B85000000000000045A
+t1297693573
+s1114
+
+N/Users/miro/AXR/prototype/mac/test2.xml
+c000000004D59428D0000000000000080
+t1297695373
+s128
+
+N/Users/miro/AXR/prototype/mac/untitled.cpp
+c000000004D581966000000000000009B
+t1297619302
+s155
+i"untitled.h"
+
+N/Users/miro/AXR/prototype/mac/untitled.h
+c000000004D5819660000000000000082
+t1297619302
+s130
+
+N/usr/local/include/expat.h
+c000000004D5820140000000000009D93
+t1297621012
+s40339
+
+N/usr/local/lib/libexpat.dylib
+c000000004D582014000000000002C4C0
+t1297621012
+s181440
+
+N/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-ahcstcupdasnypgajiseajasdade/mac_Prefix.pch.gch
+t1297625191
+s58615440
+
+N/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-asqbkckrxhqaltdmagejduejtdyq/mac_Prefix.pch.gch
+t1297720601
+s54306576
+
+N/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-bdowcvlgbwudicftmtjgzxjbnnbs/mac_Prefix.pch.gch
+t2
+s0
+
+N/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-bpsunnmkzivkuybiecdieteqtzlk/mac_Prefix.pch.gch
+t2
+s0
+
+N/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-bviognsefeqrbqhhtklhedrzldqi/mac_Prefix.pch.gch
+t1297638768
+s58615440
+
+N/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-cbnxmpmftbxxisgwwjkqiiweijdc/mac_Prefix.pch.gch
+t1298239010
+s54306576
+
+N/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-dazfaqwceihetidmvrgdklqwglpb/mac_Prefix.pch.gch
+t1297625297
+s2195824
+
+N/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-fgtsxjkcnxickkeooaaduwjeatam/mac_Prefix.pch.gch
+t1297625135
+s54265616
+
+N/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-gnkvznudcopahbaqblbxafksiuul/mac_Prefix.pch.gch
+t2
+s0
+
+Nmac-Info.plist
+c000000004D57F7CC00000000000003EA
+t1297610700
+s1002
+
+CCheck dependencies
+r0
+lSLF07#2@18"Check dependencies319931933#319931933#0(0"0(0#1#0"8622746080#0"0#
+
+CCompileC build/mac.build/Debug/mac.build/Objects-normal/x86_64/macAppDelegate.o /Users/miro/AXR/prototype/mac/macAppDelegate.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
+s319931881.532422
+e319931881.802883
+r1
+xCompileC
+xbuild/mac.build/Debug/mac.build/Objects-normal/x86_64/macAppDelegate.o
+x/Users/miro/AXR/prototype/mac/macAppDelegate.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+o/Users/miro/AXR/prototype/mac/macAppDelegate.m: In function '-[macAppDelegate applicationDidFinishLaunching:]':
+o/Users/miro/AXR/prototype/mac/macAppDelegate.m:22: warning: unused variable 'filepath'
+lSLF07#2@54"Compile /Users/miro/AXR/prototype/mac/macAppDelegate.m319931881#319931881#0(199"/Users/miro/AXR/prototype/mac/macAppDelegate.m: In function '-[macAppDelegate applicationDidFinishLaunching:]':/Users/miro/AXR/prototype/mac/macAppDelegate.m:22: warning: unused variable 'filepath'1(22@26"Unused variable 'filepath'319931881#112#87#0(6@46"/Users/miro/AXR/prototype/mac/macAppDelegate.m319931861#22#0#22#0#19"unused variable '*'0(0#0#46"/Users/miro/AXR/prototype/mac/macAppDelegate.m8622830624#1310"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -DAXR_PLATFORM_OSX -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -include /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-cbnxmpmftbxxisgwwjkqiiweijdc/mac_Prefix.pch -c /Users/miro/AXR/prototype/mac/macAppDelegate.m -o /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/macAppDelegate.o0#
+
+CCompileC build/mac.build/Debug/mac.build/Objects-normal/x86_64/macAppDelegate.o /Users/miro/AXR/prototype/mac/macAppDelegate.mm normal x86_64 objective-c++ com.apple.compilers.gcc.4_2
+s319331698.366901
+e319331698.556256
+r1
+xCompileC
+xbuild/mac.build/Debug/mac.build/Objects-normal/x86_64/macAppDelegate.o
+x/Users/miro/AXR/prototype/mac/macAppDelegate.mm
+xnormal
+xx86_64
+xobjective-c++
+xcom.apple.compilers.gcc.4_2
+o/Users/miro/AXR/prototype/mac/macAppDelegate.mm: In function 'void parse(const char*, int)':
+o/Users/miro/AXR/prototype/mac/macAppDelegate.mm:51: warning: unused variable 'p'
+lSLF07#2@55"Compile /Users/miro/AXR/prototype/mac/macAppDelegate.mm319331698#319331698#0(174"/Users/miro/AXR/prototype/mac/macAppDelegate.mm: In function 'void parse(const char*, int)':/Users/miro/AXR/prototype/mac/macAppDelegate.mm:51: warning: unused variable 'p'1(22@19"Unused variable 'p'319331698#93#81#0(6@47"/Users/miro/AXR/prototype/mac/macAppDelegate.mm319331697#51#0#51#0#19"unused variable '*'0(0#0#47"/Users/miro/AXR/prototype/mac/macAppDelegate.mm8619545952#1311"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c++ -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -fvisibility-inlines-hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -include /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-bviognsefeqrbqhhtklhedrzldqi/mac_Prefix.pch -c /Users/miro/AXR/prototype/mac/macAppDelegate.mm -o /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/macAppDelegate.o0#
+
+CCompileC build/mac.build/Debug/mac.build/Objects-normal/x86_64/main.o /Users/miro/AXR/prototype/mac/main.m normal x86_64 objective-c com.apple.compilers.gcc.4_2
+s319931810.654632
+e319931810.823064
+r1
+xCompileC
+xbuild/mac.build/Debug/mac.build/Objects-normal/x86_64/main.o
+x/Users/miro/AXR/prototype/mac/main.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@44"Compile /Users/miro/AXR/prototype/mac/main.m319931810#319931810#0(0"0(0#0#36"/Users/miro/AXR/prototype/mac/main.m8623869024#1290"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -DAXR_PLATFORM_OSX -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -include /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-cbnxmpmftbxxisgwwjkqiiweijdc/mac_Prefix.pch -c /Users/miro/AXR/prototype/mac/main.m -o /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/main.o0#
+
+CCompileC build/mac.build/Debug/mac.build/Objects-normal/x86_64/untitled.o /Users/miro/AXR/prototype/mac/untitled.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
+r0
+
+CCompileC build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmlparse.o /Users/miro/AXR/prototype/mac/expat/xmlparse.c normal x86_64 c com.apple.compilers.gcc.4_2
+s319318097.880706
+e319318098.173745
+r0
+xCompileC
+xbuild/mac.build/Debug/mac.build/Objects-normal/x86_64/xmlparse.o
+x/Users/miro/AXR/prototype/mac/expat/xmlparse.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.gcc.4_2
+o/Users/miro/AXR/prototype/mac/expat/xmlparse.c:81:2: error: #error memmove does not exist on this platform, nor is a substitute available
+lSLF07#2@54"Compile /Users/miro/AXR/prototype/mac/expat/xmlparse.c319318097#319318098#0(138"/Users/miro/AXR/prototype/mac/expat/xmlparse.c:81:2: error: #error memmove does not exist on this platform, nor is a substitute available1(4@77"#error memmove does not exist on this platform, nor is a substitute available319318097#0#138#0(6@46"/Users/miro/AXR/prototype/mac/expat/xmlparse.c200283935#81#0#81#0#8"#error *0(0#0#46"/Users/miro/AXR/prototype/mac/expat/xmlparse.c8617674272#1297"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -Iexpat -Iexpat/.libs -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -include /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-dazfaqwceihetidmvrgdklqwglpb/mac_Prefix.pch -c /Users/miro/AXR/prototype/mac/expat/xmlparse.c -o /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmlparse.o1#
+
+CCompileC build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmlrole.o /Users/miro/AXR/prototype/mac/expat/xmlrole.c normal x86_64 c com.apple.compilers.gcc.4_2
+s319318097.881376
+e319318097.969829
+r1
+xCompileC
+xbuild/mac.build/Debug/mac.build/Objects-normal/x86_64/xmlrole.o
+x/Users/miro/AXR/prototype/mac/expat/xmlrole.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@53"Compile /Users/miro/AXR/prototype/mac/expat/xmlrole.c319318097#319318097#0(0"0(0#0#45"/Users/miro/AXR/prototype/mac/expat/xmlrole.c8616724800#1295"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -Iexpat -Iexpat/.libs -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -include /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-dazfaqwceihetidmvrgdklqwglpb/mac_Prefix.pch -c /Users/miro/AXR/prototype/mac/expat/xmlrole.c -o /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmlrole.o0#
+
+CCompileC build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok.o /Users/miro/AXR/prototype/mac/expat/xmltok.c normal x86_64 c com.apple.compilers.gcc.4_2
+s319318097.881968
+e319318098.264061
+r1
+xCompileC
+xbuild/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok.o
+x/Users/miro/AXR/prototype/mac/expat/xmltok.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@52"Compile /Users/miro/AXR/prototype/mac/expat/xmltok.c319318097#319318098#0(0"0(0#0#44"/Users/miro/AXR/prototype/mac/expat/xmltok.c8616886624#1293"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -Iexpat -Iexpat/.libs -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -include /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-dazfaqwceihetidmvrgdklqwglpb/mac_Prefix.pch -c /Users/miro/AXR/prototype/mac/expat/xmltok.c -o /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok.o0#
+
+CCompileC build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok_impl.o /Users/miro/AXR/prototype/mac/expat/xmltok_impl.c normal x86_64 c com.apple.compilers.gcc.4_2
+s319318097.882613
+e319318097.909818
+r1
+xCompileC
+xbuild/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok_impl.o
+x/Users/miro/AXR/prototype/mac/expat/xmltok_impl.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@57"Compile /Users/miro/AXR/prototype/mac/expat/xmltok_impl.c319318097#319318097#0(0"0(0#0#49"/Users/miro/AXR/prototype/mac/expat/xmltok_impl.c8616320608#1303"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -Iexpat -Iexpat/.libs -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -include /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-dazfaqwceihetidmvrgdklqwglpb/mac_Prefix.pch -c /Users/miro/AXR/prototype/mac/expat/xmltok_impl.c -o /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok_impl.o0#
+
+CCompileC build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok_ns.o /Users/miro/AXR/prototype/mac/expat/xmltok_ns.c normal x86_64 c com.apple.compilers.gcc.4_2
+s319318097.883376
+e319318097.908870
+r1
+xCompileC
+xbuild/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok_ns.o
+x/Users/miro/AXR/prototype/mac/expat/xmltok_ns.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@55"Compile /Users/miro/AXR/prototype/mac/expat/xmltok_ns.c319318097#319318097#0(0"0(0#0#47"/Users/miro/AXR/prototype/mac/expat/xmltok_ns.c8617123456#1299"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -Iexpat -Iexpat/.libs -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -include /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-dazfaqwceihetidmvrgdklqwglpb/mac_Prefix.pch -c /Users/miro/AXR/prototype/mac/expat/xmltok_ns.c -o /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/xmltok_ns.o0#
+
+CCompileXIB /Users/miro/AXR/prototype/mac/English.lproj/MainMenu.xib
+s319332315.273923
+e319332315.520232
+r1
+xCompileXIB
+x/Users/miro/AXR/prototype/mac/English.lproj/MainMenu.xib
+lSLF07#2@37"CompileXIB English.lproj/MainMenu.xib319332315#319332315#0(0"0(0#0#56"/Users/miro/AXR/prototype/mac/English.lproj/MainMenu.xib8600756032#333"    cd /Users/miro/AXR/prototype/mac    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/English.lproj/MainMenu.nib /Users/miro/AXR/prototype/mac/English.lproj/MainMenu.xib --sdk /Developer/SDKs/MacOSX10.6.sdk0#
+
+CCopyStringsFile /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/English.lproj/InfoPlist.strings English.lproj/InfoPlist.strings
+s319332315.273274
+e319332315.291214
+r1
+xCopyStringsFile
+x/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/English.lproj/InfoPlist.strings
+xEnglish.lproj/InfoPlist.strings
+lSLF07#2@36"Copy English.lproj/InfoPlist.strings319332315#319332315#0(0"0(0#0#61"/Users/miro/AXR/prototype/mac/English.lproj/InfoPlist.strings8601411680#343"    cd /Users/miro/AXR/prototype/mac    setenv ICONV /usr/bin/iconv    /Developer/Library/Xcode/Plug-ins/CoreBuildTasks.xcplugin/Contents/Resources/copystrings --validate --inputencoding utf-8 --outputencoding UTF-16 English.lproj/InfoPlist.strings --outdir /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources/English.lproj0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/Makefile.MPW expat/Makefile.MPW
+s319318097.758374
+e319318097.776240
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/Makefile.MPW
+xexpat/Makefile.MPW
+lSLF07#2@23"Copy expat/Makefile.MPW319318097#319318097#0(0"0(0#0#48"/Users/miro/AXR/prototype/mac/expat/Makefile.MPW8612084800#303"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks /Users/miro/AXR/prototype/mac/expat/Makefile.MPW /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/expat.dsp expat/expat.dsp
+s319318097.755883
+e319318097.776115
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/expat.dsp
+xexpat/expat.dsp
+lSLF07#2@20"Copy expat/expat.dsp319318097#319318097#0(0"0(0#0#45"/Users/miro/AXR/prototype/mac/expat/expat.dsp8616957216#300"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks /Users/miro/AXR/prototype/mac/expat/expat.dsp /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/expat_static.dsp expat/expat_static.dsp
+s319318097.756344
+e319318097.790731
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/expat_static.dsp
+xexpat/expat_static.dsp
+lSLF07#2@27"Copy expat/expat_static.dsp319318097#319318097#0(0"0(0#0#52"/Users/miro/AXR/prototype/mac/expat/expat_static.dsp8606208384#307"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks /Users/miro/AXR/prototype/mac/expat/expat_static.dsp /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/expatw.dsp expat/expatw.dsp
+s319318097.756763
+e319318097.790880
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/expatw.dsp
+xexpat/expatw.dsp
+lSLF07#2@21"Copy expat/expatw.dsp319318097#319318097#0(0"0(0#0#46"/Users/miro/AXR/prototype/mac/expat/expatw.dsp8601807296#301"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks /Users/miro/AXR/prototype/mac/expat/expatw.dsp /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/expatw_static.dsp expat/expatw_static.dsp
+s319318097.757164
+e319318097.790975
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/expatw_static.dsp
+xexpat/expatw_static.dsp
+lSLF07#2@28"Copy expat/expatw_static.dsp319318097#319318097#0(0"0(0#0#53"/Users/miro/AXR/prototype/mac/expat/expatw_static.dsp8618039968#308"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks /Users/miro/AXR/prototype/mac/expat/expatw_static.dsp /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/libexpat.def expat/libexpat.def
+s319318097.757567
+e319318097.775459
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/libexpat.def
+xexpat/libexpat.def
+lSLF07#2@23"Copy expat/libexpat.def319318097#319318097#0(0"0(0#0#48"/Users/miro/AXR/prototype/mac/expat/libexpat.def8617341248#303"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks /Users/miro/AXR/prototype/mac/expat/libexpat.def /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/libexpatw.def expat/libexpatw.def
+s319318097.757965
+e319318097.775224
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/libexpatw.def
+xexpat/libexpatw.def
+lSLF07#2@24"Copy expat/libexpatw.def319318097#319318097#0(0"0(0#0#49"/Users/miro/AXR/prototype/mac/expat/libexpatw.def8616428896#304"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks /Users/miro/AXR/prototype/mac/expat/libexpatw.def /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/test.xml test.xml
+s319413399.080519
+e319413399.119740
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/test.xml
+xtest.xml
+lSLF07#2@13"Copy test.xml319413399#319413399#0(0"0(0#0#38"/Users/miro/AXR/prototype/mac/test.xml8606604640#307"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -resolve-src-symlinks /Users/miro/AXR/prototype/mac/test.xml /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/test2.xml test2.xml
+s319413399.081985
+e319413399.119929
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/test2.xml
+xtest2.xml
+lSLF07#2@14"Copy test2.xml319413399#319413399#0(0"0(0#0#39"/Users/miro/AXR/prototype/mac/test2.xml8606509024#308"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -resolve-src-symlinks /Users/miro/AXR/prototype/mac/test2.xml /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/xmlparse.lo expat/xmlparse.lo
+s319318097.758782
+e319318097.775768
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/xmlparse.lo
+xexpat/xmlparse.lo
+lSLF07#2@22"Copy expat/xmlparse.lo319318097#319318097#0(0"0(0#0#47"/Users/miro/AXR/prototype/mac/expat/xmlparse.lo8617580896#302"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks /Users/miro/AXR/prototype/mac/expat/xmlparse.lo /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/xmlrole.lo expat/xmlrole.lo
+s319318097.759188
+e319318097.775607
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/xmlrole.lo
+xexpat/xmlrole.lo
+lSLF07#2@21"Copy expat/xmlrole.lo319318097#319318097#0(0"0(0#0#46"/Users/miro/AXR/prototype/mac/expat/xmlrole.lo8617125504#301"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks /Users/miro/AXR/prototype/mac/expat/xmlrole.lo /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CCpResource build/Debug/mac.app/Contents/Resources/xmltok.lo expat/xmltok.lo
+s319318097.759610
+e319318097.775934
+r1
+xCpResource
+xbuild/Debug/mac.app/Contents/Resources/xmltok.lo
+xexpat/xmltok.lo
+lSLF07#2@20"Copy expat/xmltok.lo319318097#319318097#0(0"0(0#0#45"/Users/miro/AXR/prototype/mac/expat/xmltok.lo8615045536#300"    cd /Users/miro/AXR/prototype/mac    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks /Users/miro/AXR/prototype/mac/expat/xmltok.lo /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Resources0#
+
+CLd /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/MacOS/mac normal x86_64
+s319931933.299724
+e319931933.325256
+r0
+xLd
+x/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/MacOS/mac
+xnormal
+xx86_64
+oUndefined symbols:
+o  "_XML_ParserCreate", referenced from:
+o      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)
+o  "_XML_GetCurrentLineNumber", referenced from:
+o      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)
+o  "___gxx_personality_v0", referenced from:
+o      AXRXmlParser::AXRXmlParser()in libcore.a(AXRXmlParser.o)
+o      AXRXmlParser::AXRXmlParser()in libcore.a(AXRXmlParser.o)
+o      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)
+o      _elementEndCallback in libcore.a(AXRXmlParser.o)
+o      _elementContentTextCallback in libcore.a(AXRXmlParser.o)
+o      _elementStartCallback in libcore.a(AXRXmlParser.o)
+o      CIE in libcore.a(AXRXmlParser.o)
+o  "_XML_SetCharacterDataHandler", referenced from:
+o      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)
+o  "_XML_GetErrorCode", referenced from:
+o      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)
+o  "_XML_ParserFree", referenced from:
+o      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)
+o  "_XML_ErrorString", referenced from:
+o      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)
+o  "_XML_Parse", referenced from:
+o      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)
+o  "_XML_SetElementHandler", referenced from:
+o      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)
+old: symbol(s) not found
+ocollect2: ld returned 1 exit status
+lSLF07#2@73"Link /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/MacOS/mac319931933#319931933#0(1400"Undefined symbols:  "_XML_ParserCreate", referenced from:      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)  "_XML_GetCurrentLineNumber", referenced from:      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)  "___gxx_personality_v0", referenced from:      AXRXmlParser::AXRXmlParser()in libcore.a(AXRXmlParser.o)      AXRXmlParser::AXRXmlParser()in libcore.a(AXRXmlParser.o)      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)      _elementEndCallback in libcore.a(AXRXmlParser.o)      _elementContentTextCallback in libcore.a(AXRXmlParser.o)      _elementStartCallback in libcore.a(AXRXmlParser.o)      CIE in libcore.a(AXRXmlParser.o)  "_XML_SetCharacterDataHandler", referenced from:      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)  "_XML_GetErrorCode", referenced from:      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)  "_XML_ParserFree", referenced from:      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)  "_XML_ErrorString", referenced from:      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)  "_XML_Parse", referenced from:      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)  "_XML_SetElementHandler", referenced from:      AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)ld: symbol(s) not foundcollect2: ld returned 1 exit status26(4@37""_XML_ParserCreate", referenced from:319931933#19#40#0(6@0"319931933#0#0#0#0#0"0(13@60"AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)319931933#59#67#0(6@0"319931933#0#0#0#0#0"0(4@45""_XML_GetCurrentLineNumber", referenced from:319931933#126#48#0(6@0"319931933#0#0#0#0#0"0(13@60"AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)319931933#174#67#0(6@0"319931933#0#0#0#0#0"0(4@41""___gxx_personality_v0", referenced from:319931933#241#44#0(6@0"319931933#0#0#0#0#0"0(13@56"AXRXmlParser::AXRXmlParser()in libcore.a(AXRXmlParser.o)319931933#285#63#0(6@0"319931933#0#0#0#0#0"0(13@56"AXRXmlParser::AXRXmlParser()in libcore.a(AXRXmlParser.o)319931933#348#63#0(6@0"319931933#0#0#0#0#0"0(13@60"AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)319931933#411#67#0(6@0"319931933#0#0#0#0#0"0(13@48"_elementEndCallback in libcore.a(AXRXmlParser.o)319931933#478#55#0(6@0"319931933#0#0#0#0#0"0(13@56"_elementContentTextCallback in libcore.a(AXRXmlParser.o)319931933#533#63#0(6@0"319931933#0#0#0#0#0"0(13@50"_elementStartCallback in libcore.a(AXRXmlParser.o)319931933#596#57#0(6@0"319931933#0#0#0#0#0"0(13@32"CIE in libcore.a(AXRXmlParser.o)319931933#653#39#0(6@0"319931933#0#0#0#0#0"0(4@48""_XML_SetCharacterDataHandler", referenced from:319931933#692#51#0(6@0"319931933#0#0#0#0#0"0(13@60"AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)319931933#743#67#0(6@0"319931933#0#0#0#0#0"0(4@37""_XML_GetErrorCode", referenced from:319931933#810#40#0(6@0"319931933#0#0#0#0#0"0(13@60"AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)319931933#850#67#0(6@0"319931933#0#0#0#0#0"0(4@35""_XML_ParserFree", referenced from:319931933#917#38#0(6@0"319931933#0#0#0#0#0"0(13@60"AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)319931933#955#67#0(6@0"319931933#0#0#0#0#0"0(4@36""_XML_ErrorString", referenced from:319931933#1022#39#0(6@0"319931933#0#0#0#0#0"0(13@60"AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)319931933#1061#67#0(6@0"319931933#0#0#0#0#0"0(4@30""_XML_Parse", referenced from:319931933#1128#33#0(6@0"319931933#0#0#0#0#0"0(13@60"AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)319931933#1161#67#0(6@0"319931933#0#0#0#0#0"0(4@42""_XML_SetElementHandler", referenced from:319931933#1228#45#0(6@0"319931933#0#0#0#0#0"0(13@60"AXRXmlParser::parse(char const*)in libcore.a(AXRXmlParser.o)319931933#1273#67#0(6@0"319931933#0#0#0#0#0"0(13@19"Symbol(s) not found319931933#1340#24#0(6@0"319931933#0#0#0#0#0"0(13@35"Collect2: ld returned 1 exit status319931933#1364#36#0(6@0"319931933#0#0#0#0#0"0(0#0#0"8618304096#530"    cd /Users/miro/AXR/prototype/mac    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/gcc-4.2 -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/miro/AXR/prototype/mac/build/Debug -F/Users/miro/AXR/prototype/mac/build/Debug -filelist /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/Objects-normal/x86_64/mac.LinkFileList -mmacosx-version-min=10.6 /Users/miro/AXR/prototype/core/build/Debug/libcore.a -framework Cocoa -o /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/MacOS/mac1#
+
+CProcessInfoPlistFile /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Info.plist mac-Info.plist
+s319413398.756812
+e319413399.080338
+r1
+xProcessInfoPlistFile
+x/Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Info.plist
+xmac-Info.plist
+lSLF07#2@22"Process mac-Info.plist319413399#319413399#0(0"0(0#0#44"/Users/miro/AXR/prototype/mac/mac-Info.plist31244160508756040#271"    cd /Users/miro/AXR/prototype/mac    builtin-infoPlistUtility mac-Info.plist -genpkginfo /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/PkgInfo -expandbuildsettings -platform macosx -o /Users/miro/AXR/prototype/mac/build/Debug/mac.app/Contents/Info.plist0#
+
+CProcessPCH /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-asqbkckrxhqaltdmagejduejtdyq/mac_Prefix.pch.gch mac_Prefix.pch normal x86_64 objective-c com.apple.compilers.gcc.4_2
+s319413399.120099
+e319413401.383926
+r1
+xProcessPCH
+x/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-asqbkckrxhqaltdmagejduejtdyq/mac_Prefix.pch.gch
+xmac_Prefix.pch
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@25"Precompile mac_Prefix.pch319413399#319413401#0(0"0(0#0#44"/Users/miro/AXR/prototype/mac/mac_Prefix.pch8606462496#1190"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c-header -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -c /Users/miro/AXR/prototype/mac/mac_Prefix.pch -o /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-asqbkckrxhqaltdmagejduejtdyq/mac_Prefix.pch.gch0#
+
+CProcessPCH /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-bpsunnmkzivkuybiecdieteqtzlk/mac_Prefix.pch.gch mac_Prefix.pch normal x86_64 objective-c com.apple.compilers.gcc.4_2
+r0
+
+CProcessPCH /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-cbnxmpmftbxxisgwwjkqiiweijdc/mac_Prefix.pch.gch mac_Prefix.pch normal x86_64 objective-c com.apple.compilers.gcc.4_2
+s319931807.453885
+e319931810.654485
+r1
+xProcessPCH
+x/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-cbnxmpmftbxxisgwwjkqiiweijdc/mac_Prefix.pch.gch
+xmac_Prefix.pch
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@25"Precompile mac_Prefix.pch319931807#319931810#0(0"0(0#0#44"/Users/miro/AXR/prototype/mac/mac_Prefix.pch7454417774365012992#1209"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c-header -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -DAXR_PLATFORM_OSX -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -c /Users/miro/AXR/prototype/mac/mac_Prefix.pch -o /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-cbnxmpmftbxxisgwwjkqiiweijdc/mac_Prefix.pch.gch0#
+
+CProcessPCH /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-dazfaqwceihetidmvrgdklqwglpb/mac_Prefix.pch.gch mac_Prefix.pch normal x86_64 c com.apple.compilers.gcc.4_2
+s319318097.791172
+e319318097.880492
+r1
+xProcessPCH
+x/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-dazfaqwceihetidmvrgdklqwglpb/mac_Prefix.pch.gch
+xmac_Prefix.pch
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@25"Precompile mac_Prefix.pch319318097#319318097#0(0"0(0#0#44"/Users/miro/AXR/prototype/mac/mac_Prefix.pch8617623776#1202"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c-header -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -Iexpat -Iexpat/.libs -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -c /Users/miro/AXR/prototype/mac/mac_Prefix.pch -o /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-dazfaqwceihetidmvrgdklqwglpb/mac_Prefix.pch.gch0#
+
+CProcessPCH /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-fgtsxjkcnxickkeooaaduwjeatam/mac_Prefix.pch.gch mac_Prefix.pch normal x86_64 objective-c com.apple.compilers.gcc.4_2
+s319317932.377695
+e319317935.433871
+r1
+xProcessPCH
+x/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-fgtsxjkcnxickkeooaaduwjeatam/mac_Prefix.pch.gch
+xmac_Prefix.pch
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@25"Precompile mac_Prefix.pch319317932#319317935#0(0"0(0#0#44"/Users/miro/AXR/prototype/mac/mac_Prefix.pch7308052895054196736#1212"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c-header -arch x86_64 -fmessage-length=0 -pipe -std=gnu99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -Iexpat -Iexpat/.libs -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -c /Users/miro/AXR/prototype/mac/mac_Prefix.pch -o /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-fgtsxjkcnxickkeooaaduwjeatam/mac_Prefix.pch.gch0#
+
+CProcessPCH /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-gnkvznudcopahbaqblbxafksiuul/mac_Prefix.pch.gch mac_Prefix.pch normal x86_64 objective-c com.apple.compilers.gcc.4_2
+r0
+
+CProcessPCH++ /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-ahcstcupdasnypgajiseajasdade/mac_Prefix.pch.gch mac_Prefix.pch normal x86_64 objective-c++ com.apple.compilers.gcc.4_2
+s319317989.190834
+e319317991.342900
+r1
+xProcessPCH++
+x/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-ahcstcupdasnypgajiseajasdade/mac_Prefix.pch.gch
+xmac_Prefix.pch
+xnormal
+xx86_64
+xobjective-c++
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@25"Precompile mac_Prefix.pch319317989#319317991#0(0"0(0#0#44"/Users/miro/AXR/prototype/mac/mac_Prefix.pch8617025120#1231"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c++-header -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -fvisibility-inlines-hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -Iexpat -Iexpat/.libs -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -c /Users/miro/AXR/prototype/mac/mac_Prefix.pch -o /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-ahcstcupdasnypgajiseajasdade/mac_Prefix.pch.gch0#
+
+CProcessPCH++ /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-bdowcvlgbwudicftmtjgzxjbnnbs/mac_Prefix.pch.gch mac_Prefix.pch normal x86_64 c++ com.apple.compilers.gcc.4_2
+r0
+
+CProcessPCH++ /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-bviognsefeqrbqhhtklhedrzldqi/mac_Prefix.pch.gch mac_Prefix.pch normal x86_64 objective-c++ com.apple.compilers.gcc.4_2
+s319331565.448799
+e319331568.260206
+r1
+xProcessPCH++
+x/var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-bviognsefeqrbqhhtklhedrzldqi/mac_Prefix.pch.gch
+xmac_Prefix.pch
+xnormal
+xx86_64
+xobjective-c++
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@25"Precompile mac_Prefix.pch319331565#319331568#0(0"0(0#0#44"/Users/miro/AXR/prototype/mac/mac_Prefix.pch8625738528#1209"    cd /Users/miro/AXR/prototype/mac    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x objective-c++-header -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mfix-and-continue -fvisibility-inlines-hidden -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-generated-files.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-own-target-headers.hmap -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/mac-project-headers.hmap -F/Users/miro/AXR/prototype/mac/build/Debug -I/Users/miro/AXR/prototype/mac/build/Debug/include -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/mac/build/mac.build/Debug/mac.build/DerivedSources -c /Users/miro/AXR/prototype/mac/mac_Prefix.pch -o /var/folders/RL/RL6YGuIdFV0RSOHMAa3n6++++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/mac_Prefix-bviognsefeqrbqhhtklhedrzldqi/mac_Prefix.pch.gch0#
+
+CTouch /Users/miro/AXR/prototype/mac/build/Debug/mac.app
+s319929149.096526
+e319929149.098558
+r1
+xTouch
+x/Users/miro/AXR/prototype/mac/build/Debug/mac.app
+lSLF07#2@55"Touch /Users/miro/AXR/prototype/mac/build/Debug/mac.app319929149#319929149#0(0"0(0#0#0"8610946912#109"    cd /Users/miro/AXR/prototype/mac    /usr/bin/touch -c /Users/miro/AXR/prototype/mac/build/Debug/mac.app0#
+

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test>
+	
+	<test2>
+		<test3>
+			<!-- this is a comment ü -->
+		</test3>
+	</test2>
+</test>

@@ -1,0 +1,14 @@
+000000000000001a0000000000000026 9512efff5236e82122a638afbc8d25e4 ffffffffffffffffffffffffffffffff 1412 /Users/miro/AXR/prototype/core/build/core.build/Debug/core.build/Objects-normal/x86_64/OSX.o
+00000000000007360000000000005206 ee2bd1d3145cda6de416f23ce8f28ea2 ffffffffffffffffffffffffffffffff 8664 /Users/miro/AXR/prototype/core/build/core.build/Debug/core.build/Objects-normal/x86_64/AXRXmlParser.o
+000000004a11912c0000000000009e7e 7c675a92ad65e1fc508d376025155dd3 ffffffffffffffffffffffffffffffff 1768 /Users/miro/AXR/prototype/core/build/core.build/Debug/core.build/Objects-normal/x86_64/AXR.o
+075e64bea11fc60d963dfdf37168fee5 5b2664822017b1f37be88ff76c262de7 ffffffffffffffffffffffffffffffff 12296 /Users/miro/AXR/prototype/core/build/Debug/libcore.a
+a82a03d97ee42bf0ee7ce1233e34aead 9f31e1e7a4de3f40faadddfc8a31d468 ffffffffffffffffffffffffffffffff 31364 /Users/miro/AXR/prototype/core/build/Release/libcore.a
+54e7f1e6640d626928357d6b836a3f7d dde409f5b4c9e2c1dde8f53d3c949008 ffffffffffffffffffffffffffffffff 10304 /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/libcore.a
+ccd0367c039c94785abfe2a90609ab4b 878d5fb1f84214998d73dba28c97681f ffffffffffffffffffffffffffffffff 9720 /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/libcore.a
+3bd1764c9888deb297b203e51efa1312 51a5e44bcd76f50b5bdf539b15aed19e ffffffffffffffffffffffffffffffff 11272 /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/libcore.a
+00000000000000b4000000000000529a 0d6048c0d3f51f36e140711bcf71e0a0 ffffffffffffffffffffffffffffffff 8580 /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/AXRXmlParser.o
+00000000000000b4000000000000529a 0c63ae2b3364008fbe1b40236b47ab95 ffffffffffffffffffffffffffffffff 8064 /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/AXRXmlParser.o
+00000000000000b4000000000000529a 1d90a05494a8b6e1922670b15dbe8eba ffffffffffffffffffffffffffffffff 9488 /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/AXRXmlParser.o
+0000000000003eac00000000000000ec 5987b926b7f9c0fac9750c704c194985 ffffffffffffffffffffffffffffffff 1272 /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/AXR.o
+0000000000003eac00000000000000ec c0b3985730f92952e4a4a28a6d4c9686 ffffffffffffffffffffffffffffffff 1204 /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/AXR.o
+0000000000003eac00000000000000ec 2641d6180c21d5f60594735443460bf0 ffffffffffffffffffffffffffffffff 1408 /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/AXR.o
