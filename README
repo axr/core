@@ -1,12 +1,19 @@
 This is the official README of the AXR project.
 
-I'm starting with the development now. If you want to help me out in building the initial prototype email me on veosotano [at] gmail [dot] com . It will probably be written in Python, so if you know you'r way around, you're more than welcome.
+I have started with the development of the prototype, it is being written in C++.
 
-The official website for the project is http://axr.vg , where you can find the Mission Statement and read the working draft of the specification.
+Please read the README inside the "prototype" folder to know more about the current state of the prototype.
+If you want to help coding, please contact me on veosotano [at] gmail [dot] com or on
+http://twitter.com/veosotano
 
-I could really need a hand with this. If you have experience with PHP open source forum software (such as Vanilla) please contact me, it would really help me to build this community faster.
+The official website for the project is http://axr.vg , where you can find the Mission Statement and read
+the working draft of the specification.
 
-Meanwhile, please join our mailing list (http://groups.google.com/group/axr-main) and ask questions, discuss features, contribute, etc.
+I could really need a hand with this. For example, if you have experience with PHP open source forum software (such as
+Vanilla) please contact me, it would really help me to build this community faster.
+
+Meanwhile, please join our mailing list (http://groups.google.com/group/axr-main) and ask questions, discuss
+features, contribute, etc.
 
 Cheers,
 Miro Keller
