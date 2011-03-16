@@ -1,3 +1,18 @@
-This is just some experimentation I did in C++ with xcode, the Expat XML parser.
+This is the official README of the AXR Prototype!
 
-I guess for the prototype I'll go for a higher level language, such as Python, or maybe even JavaScript with node.js ... we'll see :)
+It is being implemented as a Mac app for testing purposes, since that's the system I'm working on.
+If you want to build it on Windows or Linux and have any experience in working on those systems,
+please let me know!
+
+On opening the app it will ask you for an HSS file, and then print out all the statements it finds.
+After that, you have two buttons, each one loads a new file, and either prints statements or tokens.
+The output will appear in Console.app.
+
+For XML parsing I'll use the Expat parser, so I think that to build successfully you'll need to
+install it first, since the headers include it from the standard location <expat.h>
+
+The core library is being built in platform-independent c++. It has no external dependencies.
+Right now, I'm working on the tokenizer, parser, and the general skeleton of objects. The last ones
+are still in the early stages.
+
+The test HSS files I'm using are inside the "mac" folder.

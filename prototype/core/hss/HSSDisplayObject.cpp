@@ -1,0 +1,18 @@
+//
+//  HSSDisplayObject.cpp
+//  mac
+//
+//  Created by Miro Keller on 15/03/11.
+//  Copyright 2011 Miro Keller. All rights reserved.
+//
+
+#include "HSSDisplayObject.h"
+
+string HSSDisplayObject::toString()
+{
+    if (this->isNamed()) {
+        return string("HSSDisplayObject: ").append(this->name);
+    } else {
+        return "Annonymous HSSDisplayObject";
+    }
+}

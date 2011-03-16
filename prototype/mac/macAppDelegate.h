@@ -14,4 +14,11 @@
 
 @property (assign) IBOutlet NSWindow *window;
 
+void listHSSStatements(NSString * filepath);
+void listHSSTokens(NSString * filepath);
+
+- (IBAction)listStatements:(id)sender;
+- (IBAction)listTokens:(id)sender;
+
+
 @end
