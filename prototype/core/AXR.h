@@ -18,7 +18,7 @@
 #include "os/GNU.h"
 #endif
 
-#include "xml/AXRXmlParser.h"
+//#include "xml/AXRXmlParser.h"
 #include "hss/hss.h"
 
 //Debug levels:
@@ -28,7 +28,7 @@
 // - 3 
 // - 4 All messages
 
-#define AXR_DEBUG_LEVEL 0
+#define AXR_DEBUG_LEVEL 2
 
 
 #if AXR_DEBUG_LEVEL > 0

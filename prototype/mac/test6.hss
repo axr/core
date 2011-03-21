@@ -1,0 +1,4 @@
+myElement
+{
+	border: @lineBorder{ 1 }
+}

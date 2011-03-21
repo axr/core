@@ -10,7 +10,7 @@
 #ifndef HSSTOKEN_H
 #define HSSTOKEN_H
 
-#import <string>
+#include <string>
 using namespace std;
 
 enum HSSTokenType

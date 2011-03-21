@@ -1,402 +1,0 @@
-Tcore
-v7
-r0
-t319931392.470180
-cCheck dependencies
-c<C0014:'CompileC AXRXmlParser.o':P8:W0>
-
-N/Developer/SDKs/MacOSX10.6.sdk
-c000000004D59A3A900000000000000EE
-t1297720233
-s238
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/expat.h
-c000000004A119ADD0000000000009D93
-t1242667741
-s40339
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/stdio.h
-c000000004BBD2CE90000000000004174
-t1270689001
-s16756
-
-N/Developer/SDKs/MacOSX10.6.sdk/usr/include/string.h
-c000000004BBD2CE90000000000001731
-t1270689001
-s5937
-
-N/Users/miro/AXR/prototype/core/AXR.cpp
-c000000004D6187760000000000000092
-t1298237302
-s146
-i"AXR.h"
-
-N/Users/miro/AXR/prototype/core/AXR.h
-c000000004D618AC80000000000000140
-t1298238152
-s320
-i"os/OSX.h"
-i"os/Windows.h"
-i"os/GNU.h"
-
-N/Users/miro/AXR/prototype/core/build/Release/libcore.a
-t1298238478
-s35484
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/AXR.o
-t1298238450
-s1204
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/AXRXmlParser.o
-t1298238478
-s8064
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/OSX.o
-t1298238450
-s1208
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/Osx.o
-t2
-s0
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/core.LinkFileList
-c000000004D618BF20000000000000120
-t1298238450
-s288
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/libcore.a
-t1298238478
-s11000
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/osx.o
-t2
-s0
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/AXR.o
-t1298238450
-s1272
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/AXRXmlParser.o
-t1298238478
-s8580
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/OSX.o
-t1298238450
-s1276
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/Osx.o
-t2
-s0
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/core.LinkFileList
-c000000004D618BF2000000000000011D
-t1298238450
-s285
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/libcore.a
-t1298238478
-s11656
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/osx.o
-t2
-s0
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/AXR.o
-t1298238450
-s1408
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/AXRXmlParser.o
-t1298238477
-s9488
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/AXRXmlParser.s
-t1298238592
-s35780
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/OSX.o
-t1298238450
-s1412
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/Osx.o
-t2
-s0
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/core.LinkFileList
-c000000004D618BF20000000000000126
-t1298238450
-s294
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/libcore.a
-t1298238478
-s12760
-
-N/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/osx.o
-t2
-s0
-
-N/Users/miro/AXR/prototype/core/os/OSX.cpp
-c000000004D618A730000000000000092
-t1298238067
-s146
-i"OSX.h"
-
-N/Users/miro/AXR/prototype/core/os/OSX.h
-c000000004D618A6900000000000000B4
-t1298238057
-s180
-
-N/Users/miro/AXR/prototype/core/os/Osx.cpp
-c000000004D618A080000000000000092
-t1298237960
-s146
-i"Osx.h"
-
-N/Users/miro/AXR/prototype/core/os/Osx.h
-c000000004D618A1600000000000000B4
-t1298237974
-s180
-
-N/Users/miro/AXR/prototype/core/os/osx.cpp
-c000000004D6189590000000000000092
-t1298237785
-s146
-i"osx.h"
-
-N/Users/miro/AXR/prototype/core/os/osx.h
-c000000004D6189A000000000000000B4
-t1298237856
-s180
-
-N/Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp
-c000000004D618C0D00000000000006DA
-t1298238477
-s1754
-i"AXRXmlParser.h"
-i<expat.h>
-i<string.h>
-i<stdio.h>
-
-N/Users/miro/AXR/prototype/core/xml/AXRXmlParser.h
-c000000004D618BDC0000000000000295
-t1298238428
-s661
-i<expat.h>
-
-N/Users/miro/AXR/prototype/core/xml/expat.h
-c000000004D618B2E000000000000010B
-t1298238254
-s267
-i<expat.h>
-
-N/usr/local/lib/libexpat.dylib
-c000000004D582014000000000002C4C0
-t1297621012
-s181440
-
-C<C0014:'CompileC AXRXmlParser.o':P8:W0>
-s319931392.418821
-e319931392.470147
-r1
-xCompileC
-xbuild/core.build/Release/core.build/Objects-normal/x86_64/AXRXmlParser.o
-x/Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp
-xnormal
-xx86_64
-xc++
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@59"Compile /Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp319931392#319931392#0(0"0(0#0#51"/Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp6364246260416002048#1140"    cd /Users/miro/AXR/prototype/core    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-generated-files.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-own-target-headers.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-project-headers.hmap -F/Users/miro/AXR/prototype/core/build/Release -I/Users/miro/AXR/prototype/core/build/Release/include -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources -S /Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/AXRXmlParser.s0#
-
-CCheck dependencies
-r0
-lSLF07#2@18"Check dependencies319931392#319931392#0(0"0(0#1#0"8610362592#0"0#
-
-CCompileC build/core.build/Release/core.build/Objects-normal/i386/AXR.o /Users/miro/AXR/prototype/core/AXR.cpp normal i386 c++ com.apple.compilers.gcc.4_2
-s319931250.047094
-e319931250.073365
-r1
-xCompileC
-xbuild/core.build/Release/core.build/Objects-normal/i386/AXR.o
-x/Users/miro/AXR/prototype/core/AXR.cpp
-xnormal
-xi386
-xc++
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@46"Compile /Users/miro/AXR/prototype/core/AXR.cpp319931250#319931250#0(0"0(0#0#38"/Users/miro/AXR/prototype/core/AXR.cpp8620003296#1112"    cd /Users/miro/AXR/prototype/core    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch i386 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-generated-files.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-own-target-headers.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-project-headers.hmap -F/Users/miro/AXR/prototype/core/build/Release -I/Users/miro/AXR/prototype/core/build/Release/include -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources/i386 -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources -c /Users/miro/AXR/prototype/core/AXR.cpp -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/AXR.o0#
-
-CCompileC build/core.build/Release/core.build/Objects-normal/i386/AXRXmlParser.o /Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp normal i386 c++ com.apple.compilers.gcc.4_2
-s319931278.893671
-e319931278.945677
-r1
-xCompileC
-xbuild/core.build/Release/core.build/Objects-normal/i386/AXRXmlParser.o
-x/Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp
-xnormal
-xi386
-xc++
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@59"Compile /Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp319931278#319931278#0(0"0(0#0#51"/Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp8614362848#1134"    cd /Users/miro/AXR/prototype/core    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch i386 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-generated-files.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-own-target-headers.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-project-headers.hmap -F/Users/miro/AXR/prototype/core/build/Release -I/Users/miro/AXR/prototype/core/build/Release/include -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources/i386 -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources -c /Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/AXRXmlParser.o0#
-
-CCompileC build/core.build/Release/core.build/Objects-normal/i386/OSX.o /Users/miro/AXR/prototype/core/os/OSX.cpp normal i386 c++ com.apple.compilers.gcc.4_2
-s319931250.048501
-e319931250.078858
-r1
-xCompileC
-xbuild/core.build/Release/core.build/Objects-normal/i386/OSX.o
-x/Users/miro/AXR/prototype/core/os/OSX.cpp
-xnormal
-xi386
-xc++
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@49"Compile /Users/miro/AXR/prototype/core/os/OSX.cpp319931250#319931250#0(0"0(0#0#41"/Users/miro/AXR/prototype/core/os/OSX.cpp8619655136#1115"    cd /Users/miro/AXR/prototype/core    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch i386 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-generated-files.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-own-target-headers.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-project-headers.hmap -F/Users/miro/AXR/prototype/core/build/Release -I/Users/miro/AXR/prototype/core/build/Release/include -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources/i386 -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources -c /Users/miro/AXR/prototype/core/os/OSX.cpp -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/OSX.o0#
-
-CCompileC build/core.build/Release/core.build/Objects-normal/i386/Osx.o /Users/miro/AXR/prototype/core/os/Osx.cpp normal i386 c++ com.apple.compilers.gcc.4_2
-r0
-
-CCompileC build/core.build/Release/core.build/Objects-normal/i386/osx.o /Users/miro/AXR/prototype/core/os/osx.cpp normal i386 c++ com.apple.compilers.gcc.4_2
-r0
-
-CCompileC build/core.build/Release/core.build/Objects-normal/ppc/AXR.o /Users/miro/AXR/prototype/core/AXR.cpp normal ppc c++ com.apple.compilers.gcc.4_2
-s319931250.049225
-e319931250.075953
-r1
-xCompileC
-xbuild/core.build/Release/core.build/Objects-normal/ppc/AXR.o
-x/Users/miro/AXR/prototype/core/AXR.cpp
-xnormal
-xppc
-xc++
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@46"Compile /Users/miro/AXR/prototype/core/AXR.cpp319931250#319931250#0(0"0(0#0#38"/Users/miro/AXR/prototype/core/AXR.cpp8619104576#1119"    cd /Users/miro/AXR/prototype/core    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch ppc -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-generated-files.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-own-target-headers.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-project-headers.hmap -F/Users/miro/AXR/prototype/core/build/Release -I/Users/miro/AXR/prototype/core/build/Release/include -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources/ppc -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources -c /Users/miro/AXR/prototype/core/AXR.cpp -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/AXR.o0#
-
-CCompileC build/core.build/Release/core.build/Objects-normal/ppc/AXRXmlParser.o /Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp normal ppc c++ com.apple.compilers.gcc.4_2
-s319931278.894376
-e319931278.947648
-r1
-xCompileC
-xbuild/core.build/Release/core.build/Objects-normal/ppc/AXRXmlParser.o
-x/Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp
-xnormal
-xppc
-xc++
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@59"Compile /Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp319931278#319931278#0(0"0(0#0#51"/Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp8606465792#1141"    cd /Users/miro/AXR/prototype/core    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch ppc -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-generated-files.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-own-target-headers.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-project-headers.hmap -F/Users/miro/AXR/prototype/core/build/Release -I/Users/miro/AXR/prototype/core/build/Release/include -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources/ppc -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources -c /Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/AXRXmlParser.o0#
-
-CCompileC build/core.build/Release/core.build/Objects-normal/ppc/OSX.o /Users/miro/AXR/prototype/core/os/OSX.cpp normal ppc c++ com.apple.compilers.gcc.4_2
-s319931250.073486
-e319931250.091314
-r1
-xCompileC
-xbuild/core.build/Release/core.build/Objects-normal/ppc/OSX.o
-x/Users/miro/AXR/prototype/core/os/OSX.cpp
-xnormal
-xppc
-xc++
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@49"Compile /Users/miro/AXR/prototype/core/os/OSX.cpp319931250#319931250#0(0"0(0#0#41"/Users/miro/AXR/prototype/core/os/OSX.cpp8618243200#1122"    cd /Users/miro/AXR/prototype/core    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch ppc -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mtune=G5 -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-generated-files.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-own-target-headers.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-project-headers.hmap -F/Users/miro/AXR/prototype/core/build/Release -I/Users/miro/AXR/prototype/core/build/Release/include -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources/ppc -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources -c /Users/miro/AXR/prototype/core/os/OSX.cpp -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/OSX.o0#
-
-CCompileC build/core.build/Release/core.build/Objects-normal/ppc/Osx.o /Users/miro/AXR/prototype/core/os/Osx.cpp normal ppc c++ com.apple.compilers.gcc.4_2
-r0
-
-CCompileC build/core.build/Release/core.build/Objects-normal/ppc/osx.o /Users/miro/AXR/prototype/core/os/osx.cpp normal ppc c++ com.apple.compilers.gcc.4_2
-r0
-
-CCompileC build/core.build/Release/core.build/Objects-normal/x86_64/AXR.o /Users/miro/AXR/prototype/core/AXR.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-s319931250.045049
-e319931250.074723
-r1
-xCompileC
-xbuild/core.build/Release/core.build/Objects-normal/x86_64/AXR.o
-x/Users/miro/AXR/prototype/core/AXR.cpp
-xnormal
-xx86_64
-xc++
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@46"Compile /Users/miro/AXR/prototype/core/AXR.cpp319931250#319931250#0(0"0(0#0#38"/Users/miro/AXR/prototype/core/AXR.cpp8620315680#1118"    cd /Users/miro/AXR/prototype/core    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-generated-files.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-own-target-headers.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-project-headers.hmap -F/Users/miro/AXR/prototype/core/build/Release -I/Users/miro/AXR/prototype/core/build/Release/include -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources -c /Users/miro/AXR/prototype/core/AXR.cpp -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/AXR.o0#
-
-CCompileC build/core.build/Release/core.build/Objects-normal/x86_64/AXRXmlParser.o /Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-s319931278.892348
-e319931278.893064
-r1
-xCompileC
-xbuild/core.build/Release/core.build/Objects-normal/x86_64/AXRXmlParser.o
-x/Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp
-xnormal
-xx86_64
-xc++
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@59"Compile /Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp319931278#319931278#0(0"0(0#0#51"/Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp8615488704#1140"    cd /Users/miro/AXR/prototype/core    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-generated-files.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-own-target-headers.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-project-headers.hmap -F/Users/miro/AXR/prototype/core/build/Release -I/Users/miro/AXR/prototype/core/build/Release/include -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources -c /Users/miro/AXR/prototype/core/xml/AXRXmlParser.cpp -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/AXRXmlParser.o0#
-
-CCompileC build/core.build/Release/core.build/Objects-normal/x86_64/OSX.o /Users/miro/AXR/prototype/core/os/OSX.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-s319931250.046497
-e319931250.074950
-r1
-xCompileC
-xbuild/core.build/Release/core.build/Objects-normal/x86_64/OSX.o
-x/Users/miro/AXR/prototype/core/os/OSX.cpp
-xnormal
-xx86_64
-xc++
-xcom.apple.compilers.gcc.4_2
-lSLF07#2@49"Compile /Users/miro/AXR/prototype/core/os/OSX.cpp319931250#319931250#0(0"0(0#0#41"/Users/miro/AXR/prototype/core/os/OSX.cpp8620199808#1121"    cd /Users/miro/AXR/prototype/core    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++ -arch x86_64 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -Os -Wreturn-type -Wunused-variable -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6 -gdwarf-2 -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-generated-files.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-own-target-headers.hmap -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-all-target-headers.hmap -iquote /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/core-project-headers.hmap -F/Users/miro/AXR/prototype/core/build/Release -I/Users/miro/AXR/prototype/core/build/Release/include -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources/x86_64 -I/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/DerivedSources -c /Users/miro/AXR/prototype/core/os/OSX.cpp -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/OSX.o0#
-
-CCompileC build/core.build/Release/core.build/Objects-normal/x86_64/Osx.o /Users/miro/AXR/prototype/core/os/Osx.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-r0
-
-CCompileC build/core.build/Release/core.build/Objects-normal/x86_64/osx.o /Users/miro/AXR/prototype/core/os/osx.cpp normal x86_64 c++ com.apple.compilers.gcc.4_2
-r0
-
-CCreateUniversalBinary /Users/miro/AXR/prototype/core/build/Release/libcore.a normal "x86_64 i386 ppc"
-s319931278.951425
-e319931278.980745
-r1
-xCreateUniversalBinary
-x/Users/miro/AXR/prototype/core/build/Release/libcore.a
-xnormal
-xx86_64 i386 ppc
-o/Developer/usr/bin/libtool: for architecture: x86_64 file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/libcore.a(AXR.o) has no symbols
-o/Developer/usr/bin/libtool: for architecture: x86_64 file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/libcore.a(OSX.o) has no symbols
-o/Developer/usr/bin/libtool: for architecture: i386 file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/libcore.a(AXR.o) has no symbols
-o/Developer/usr/bin/libtool: for architecture: i386 file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/libcore.a(OSX.o) has no symbols
-o/Developer/usr/bin/libtool: for architecture: ppc file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/libcore.a(AXR.o) has no symbols
-o/Developer/usr/bin/libtool: for architecture: ppc file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/libcore.a(OSX.o) has no symbols
-lSLF07#2@70"CreateUniversalBinary build/Release/libcore.a normal "x86_64 i386 ppc"319931278#319931278#0(1060"/Developer/usr/bin/libtool: for architecture: x86_64 file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/libcore.a(AXR.o) has no symbols/Developer/usr/bin/libtool: for architecture: x86_64 file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/libcore.a(OSX.o) has no symbols/Developer/usr/bin/libtool: for architecture: i386 file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/libcore.a(AXR.o) has no symbols/Developer/usr/bin/libtool: for architecture: i386 file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/libcore.a(OSX.o) has no symbols/Developer/usr/bin/libtool: for architecture: ppc file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/libcore.a(AXR.o) has no symbols/Developer/usr/bin/libtool: for architecture: ppc file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/libcore.a(OSX.o) has no symbols0(0#0#46"/Users/miro/AXR/prototype/core/x86_64 i386 ppc8605303648#427"    cd /Users/miro/AXR/prototype/core    /Developer/usr/bin/libtool -static /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/libcore.a /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/libcore.a /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/libcore.a -o /Users/miro/AXR/prototype/core/build/Release/libcore.a0#
-
-CLibtool /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/libcore.a normal i386
-s319931278.945748
-e319931278.948872
-r1
-xLibtool
-x/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/libcore.a
-xnormal
-xi386
-o/Developer/usr/bin/libtool: file: /usr/local/lib/libexpat.dylib is a dynamic library, not added to the static library
-o/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/AXR.o has no symbols
-o/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/OSX.o has no symbols
-lSLF07#2@85"Libtool build/core.build/Release/core.build/Objects-normal/i386/libcore.a normal i386319931278#319931278#0(402"/Developer/usr/bin/libtool: file: /usr/local/lib/libexpat.dylib is a dynamic library, not added to the static library/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/AXR.o has no symbols/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/OSX.o has no symbols0(0#0#0"8611261728#469"    cd /Users/miro/AXR/prototype/core    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/libtool -static -arch_only i386 -syslibroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/miro/AXR/prototype/core/build/Release -filelist /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/core.LinkFileList /usr/local/lib/libexpat.dylib -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/i386/libcore.a0#
-
-CLibtool /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/libcore.a normal ppc
-s319931278.947711
-e319931278.951369
-r1
-xLibtool
-x/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/libcore.a
-xnormal
-xppc
-o/Developer/usr/bin/libtool: file: /usr/local/lib/libexpat.dylib is a dynamic library, not added to the static library
-o/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/AXR.o has no symbols
-o/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/OSX.o has no symbols
-lSLF07#2@83"Libtool build/core.build/Release/core.build/Objects-normal/ppc/libcore.a normal ppc319931278#319931278#0(400"/Developer/usr/bin/libtool: file: /usr/local/lib/libexpat.dylib is a dynamic library, not added to the static library/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/AXR.o has no symbols/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/OSX.o has no symbols0(0#0#0"8616633632#466"    cd /Users/miro/AXR/prototype/core    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/libtool -static -arch_only ppc -syslibroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/miro/AXR/prototype/core/build/Release -filelist /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/core.LinkFileList /usr/local/lib/libexpat.dylib -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/ppc/libcore.a0#
-
-CLibtool /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/libcore.a normal x86_64
-s319931278.893151
-e319931278.896588
-r1
-xLibtool
-x/Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/libcore.a
-xnormal
-xx86_64
-o/Developer/usr/bin/libtool: file: /usr/local/lib/libexpat.dylib is a dynamic library, not added to the static library
-o/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/AXR.o has no symbols
-o/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/OSX.o has no symbols
-lSLF07#2@89"Libtool build/core.build/Release/core.build/Objects-normal/x86_64/libcore.a normal x86_64319931278#319931278#0(406"/Developer/usr/bin/libtool: file: /usr/local/lib/libexpat.dylib is a dynamic library, not added to the static library/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/AXR.o has no symbols/Developer/usr/bin/libtool: file: /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/OSX.o has no symbols0(0#0#0"8614863008#475"    cd /Users/miro/AXR/prototype/core    setenv MACOSX_DEPLOYMENT_TARGET 10.6    /Developer/usr/bin/libtool -static -arch_only x86_64 -syslibroot /Developer/SDKs/MacOSX10.6.sdk -L/Users/miro/AXR/prototype/core/build/Release -filelist /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/core.LinkFileList /usr/local/lib/libexpat.dylib -o /Users/miro/AXR/prototype/core/build/core.build/Release/core.build/Objects-normal/x86_64/libcore.a0#
-

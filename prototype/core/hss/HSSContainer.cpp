@@ -16,3 +16,16 @@ string HSSContainer::toString()
         return "Annonymous HSSContainer";
     }
 }
+
+string HSSContainer::defaultObjectType(string property)
+{
+    if (property == "shape"){
+        return "roundedRect";
+    } else if (property == "innerMargin"){
+        return "margin";
+    } else if (property == "background"){
+        return "image";
+    } else {
+        return HSSDisplayObject::defaultObjectType(property);
+    }
+}

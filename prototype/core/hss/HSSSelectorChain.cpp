@@ -8,6 +8,9 @@
 
 #include "HSSSelectorChain.h"
 #include "AXR.h"
+#include <iostream>
+
+using namespace std;
 
 HSSSelectorChain::HSSSelectorChain()
 {
@@ -36,6 +39,7 @@ string HSSSelectorChain::toString()
 
     
     return tempstr;
+    return "";
 }
 
 void HSSSelectorChain::add(HSSParserNode * newNode)

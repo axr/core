@@ -12,5 +12,7 @@
 #include "HSSObject.h"
 #include "HSSDisplayObject.h"
 #include "HSSContainer.h"
+#include "HSSLineBorder.h"
+#include "HSSValue.h"
 
 #endif

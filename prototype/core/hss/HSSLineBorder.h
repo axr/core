@@ -1,24 +1,25 @@
 //
-//  HSSDisplayObject.h
+//  HSSLineBorder.h
 //  mac
 //
-//  Created by Miro Keller on 15/03/11.
+//  Created by Miro Keller on 20/03/11.
 //  Copyright 2011 Miro Keller. All rights reserved.
 //
 
-#ifndef HSSDISPLAYOBJECT_H
-#define HSSDISPLAYOBJECT_H
+#ifndef HSSLINEBORDER_H
+#define HSSLINEBORDER_H
 
 #include <string>
-#include "HSSObject.h"
+#include "HSSBorder.h"
 
 using namespace std;
 
-class HSSDisplayObject : public HSSObject
+class HSSLineBorder : public HSSBorder
 {
 public:
     virtual string toString();
     virtual string defaultObjectType(string property);
 };
+
 
 #endif

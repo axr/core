@@ -19,9 +19,9 @@ HSSValueToken::HSSValueToken(HSSTokenType type, string value)
 HSSValueToken::HSSValueToken(HSSTokenType type, char value)
 :HSSToken(type)
 {
-    string tempstr (1, value);
+    //string tempstr (1, value);
 	this->type = type;
-	this->value = value;
+	this->value = string(1, value);
 }
 
 bool HSSValueToken::equals(HSSTokenType otherType, string otherValue)

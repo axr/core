@@ -26,7 +26,6 @@ public:
     HSSExpectedTokenException(HSSTokenType type);
     HSSExpectedTokenException(HSSTokenType type, string value);
     virtual string toString();
-private:
     HSSTokenType type;
     string value;
 };
@@ -37,7 +36,6 @@ public:
     HSSUnexpectedTokenException(HSSTokenType type);
     HSSUnexpectedTokenException(HSSTokenType type, string value);
     virtual string toString();
-private:
     HSSTokenType type;
     string value;
 };
@@ -47,7 +45,6 @@ class HSSUnexpectedObjectTypeException
 public:
     HSSUnexpectedObjectTypeException(string type);
     virtual string toString();
-private:
     string type;
 };
 

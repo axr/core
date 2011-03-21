@@ -5,4 +5,4 @@ test { }
 block * / /* ** / /* comment */
 
 test2{} //hello!!!
-test3 { margin: @{ 15 } } /* comment inside of a comment */
+test3 { margin: @{ 15 } } /* //comment inside of a comment */

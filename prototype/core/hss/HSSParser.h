@@ -12,6 +12,7 @@
 #include "HSSTokenizer.h"
 #include <string>
 #include "HSSParserExceptions.h"
+#include "HSSObjectExceptions.h"
 #include "HSSParserNodes.h"
 #include "HSSObjects.h"
 #include <stack>
@@ -59,7 +60,6 @@ protected:
     HSSSelector * readSelector();
     
     HSSObjectDefinition * readObjectDefinition();
-    string deriveObjectType();
     
     HSSPropertyDefinition * readPropertyDefinition();
     

@@ -7,6 +7,28 @@
 //
 
 #include "HSSObject.h"
+#include "HSSObjects.h"
+#include "HSSObjectExceptions.h"
+
+
+HSSObject * HSSObject::newObjectWithType(string type){
+    HSSObject * ret;
+    
+    if (type == "container"){
+        ret = new HSSContainer();
+    } else if (type == "displayObject"){
+        ret = new HSSDisplayObject();
+    } else if (type == "lineBorder") {
+        ret = new HSSLineBorder();
+    } else if (type == "object") {
+        ret = new HSSObject();
+    } else {
+        throw HSSUnknownObjectTypeException(type);
+    }
+    
+    return ret;
+}
+
 
 HSSObject::HSSObject()
 {
@@ -51,3 +73,7 @@ void HSSObject::dropName()
     this->_isNamed = false;
 }
 
+
+string HSSObject::defaultObjectType(string property){
+    return "value";
+}

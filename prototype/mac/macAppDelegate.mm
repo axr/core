@@ -86,7 +86,7 @@ void listHSSStatements(NSString *filepath)
     }
     std::cout << "reached end of source" << std::endl;
     delete statement;
-#if AXR_DEBUG_LEVEL > 2
+#if AXR_DEBUG_LEVEL > 1
     exit(0);
 #endif
 }
@@ -125,7 +125,7 @@ void listHSSTokens(NSString *filepath)
     }
     std::cout << "reached end of source" << std::endl;
     delete token;
-#if AXR_DEBUG_LEVEL > 2
+#if AXR_DEBUG_LEVEL > 1
     exit(0);
 #endif
 }

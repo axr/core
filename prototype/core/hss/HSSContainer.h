@@ -18,6 +18,7 @@ class HSSContainer : public HSSDisplayObject
 {
 public:
     virtual string toString();
+    virtual string defaultObjectType(string property);
 };
 
 #endif

@@ -15,6 +15,9 @@ using namespace std;
 class HSSObject
 {
 public:
+    
+    static HSSObject * newObjectWithType(string type);
+    
     string name;
     
     HSSObject();
@@ -25,6 +28,8 @@ public:
     bool isNamed();
     void setName(string newName);
     void dropName();
+    
+    virtual string defaultObjectType(string property);
     
 private:
     bool _isNamed;

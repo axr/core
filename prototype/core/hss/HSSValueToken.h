@@ -11,7 +11,7 @@
 
 #include "HSSToken.h"
 
-#define VALUE_TOKEN(thetoken) ((HSSValueToken *)thetoken)
+#define VALUE_TOKEN(thetoken) (static_cast<HSSValueToken *>(thetoken))
 
 class HSSValueToken: public HSSToken
 {

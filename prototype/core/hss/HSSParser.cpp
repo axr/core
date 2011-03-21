@@ -9,6 +9,7 @@
 #include "HSSParser.h"
 #include "HSSValueToken.h"
 #include <iostream>
+#include <cstdlib>
 
 #include "AXR.h"
 
@@ -86,13 +87,14 @@ HSSStatement * HSSParser::readRule()
     //read the inner part of the block
     while (!this->currentToken->isA(HSSBlockClose))
     {
-        std_log1(this->currentToken->toString());
+        //std_log1(this->currentToken->toString());
         //if we find an identifier, we must peek forward to see if it is a property name
         if(this->currentToken->isA(HSSIdentifier)){
             if (this->isPropertyDefinition()){
-                this->readPropertyDefinition();
+                ret->propertiesAdd(this->readPropertyDefinition());
             } else {
                 //recursive omg!
+                std_log1("omg recursiving!");
                 this->readRule();
             }
         } else {
@@ -206,7 +208,7 @@ bool HSSParser::isCombinator(HSSToken * token)
                 return false;
         }
     } else if ( token->isA(HSSWhitespace) ){
-        return true;
+        return this->isChildrenCombinator();
     }
     return false;
 }
@@ -312,13 +314,22 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
     this->skipExpected(HSSObjectSign);
     //end of file would be fatal
     this->checkForUnexpectedEndOfSource();
+    
+    //store the current context for later use
+    HSSParserContext outerContext = this->currentContext.top();
     //set the appropriate context
     this->currentContext.push(HSSParserContextObjectDefinition);
     
     //first we need to know what type of object it is
     if (this->currentToken->isA(HSSWhitespace)) {
         //damn, we'll have to derive that from the context
-        objtype = this->deriveObjectType();
+        if (outerContext == HSSParserContextRoot){
+            objtype = "container";
+        } else {
+            //FIXME
+            std_log1("deriving object types from context is only supported in root context yet");
+            objtype = "object";
+        }
     } else if(this->currentToken->isA(HSSIdentifier)){
         //alright, we've got a type, look it up
         objtype = static_cast<HSSValueToken*>(this->currentToken)->value;
@@ -329,15 +340,13 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
         return NULL;
     }
     
-    if (objtype == "container"){
-        obj = new HSSContainer();
-    } else if (objtype == "object") {
-        obj = new HSSObject();
-    } else if (objtype == "displayObject"){
-        obj = new HSSDisplayObject();
-    } else {
-        throw HSSUnexpectedObjectTypeException(objtype);
+    //try to create an object of that type
+    try {
+        obj = HSSObject::newObjectWithType(objtype);
+    } catch (HSSUnknownObjectTypeException e) {
+        throw HSSUnexpectedObjectTypeException(e.type);
     }
+    
     
     //get the name of the object
     if (this->currentToken->isA(HSSWhitespace)) {
@@ -345,6 +354,9 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
     }
     if (this->currentToken->isA(HSSIdentifier)) {
         obj->setName(static_cast<HSSValueToken*>(this->currentToken)->value);
+    } else if (this->currentToken->isA(HSSBlockOpen)){
+        //it is the opening curly brace, therefore an annonymous object:
+        //do nothing
     } else {
         throw HSSUnexpectedTokenException(this->currentToken->type);
         delete obj;
@@ -352,7 +364,7 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
     }
     
     ret = new HSSObjectDefinition(obj);
-    this->readNextToken();
+    this->skipExpected(HSSBlockOpen);
     
     //now we're inside the block
     this->currentContext.push(HSSParserContextBlock);
@@ -362,6 +374,7 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
     
     //FIXME: read the inner part of the block here
     while (!this->currentToken->isA(HSSBlockClose)){
+        std_log1("skipping over token "+HSSToken::tokenStringRepresentation(this->currentToken->type));
         this->readNextToken();
     }
     
@@ -377,12 +390,6 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
     }
     
     return ret;
-}
-
-string HSSParser::deriveObjectType()
-{
-    std_log1("this is not implemented yet");
-    return "object";
 }
 
 HSSPropertyDefinition * HSSParser::readPropertyDefinition()
@@ -401,12 +408,22 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
         //we don't give a f$%# about whitespace
         this->skip(HSSWhitespace);
         //now comes either an object definition, a literal value or an expression
+        //object
         if (this->currentToken->isA(HSSObjectSign)){
-            this->readNextToken(); //FIXME
+            ret->setValue(this->readObjectDefinition());
+            //this->readNextToken();
+            
         } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
-            this->readNextToken(); //FIXME
+            ret->setValue(new HSSObjectDefinition(new HSSValue(VALUE_TOKEN(this->currentToken)->value)));
+            this->readNextToken();
+            
+        //number literal
         } else if (this->currentToken->isA(HSSNumber)){
-            this->readNextToken(); //FIXME
+            //FIXME: parse the number and see if it is an int or a float
+            long double num = strtold(VALUE_TOKEN(this->currentToken)->value.c_str(), NULL);            
+            ret->setValue(new HSSObjectDefinition(new HSSValue(num)));
+            this->readNextToken();
+            
         } else if (this->currentToken->isA(HSSPercentageNumber)) {
             this->readNextToken(); //FIXME
         } else {
@@ -418,11 +435,11 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
         this->skip(HSSWhitespace);
         //expect a semicolon or the closing brace
         if(this->currentToken->isA(HSSEndOfStatement)){
-            this->skip(HSSEndOfStatement);
+            this->readNextToken();
             this->skip(HSSWhitespace);
             
         } else if (this->currentToken->isA(HSSBlockClose)){
-            
+            //alright, this is the end of the property definition
         } else {
             throw HSSUnexpectedTokenException(this->currentToken->type);
             delete ret;
