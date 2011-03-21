@@ -69,6 +69,9 @@ void listHSSStatements(NSString *filepath)
         catch(HSSUnexpectedObjectTypeException e){
             std::cout << e.toString() << std::endl;
         }
+        catch(HSSExpectedTokenException e){
+            std::cout << e.toString() << std::endl;
+        }
         
         
         if(statement == NULL){

@@ -23,8 +23,43 @@ HSSObjectDefinition::~HSSObjectDefinition()
 }
 
 string HSSObjectDefinition::toString()
-{
-    string tempstr = "HSSObjectDefinition with object of type ";
+{    
+    string tempstr = string("HSSObjectDefinition with object of type:");
     tempstr.append(this->prototype->toString());
+    
+    const int pccount = this->propertiesSize();
+    if(pccount > 0){
+        tempstr.append(" and the following properties: \n");
+        unsigned j;
+        for (j=0; j<pccount; j++) {
+            tempstr.append("   ").append(this->properties[j]->toString()).append("\n");
+        }
+    }
+    
     return tempstr;
+}
+
+void HSSObjectDefinition::propertiesAdd(HSSStatement * newStatement)
+{
+    if(newStatement != NULL)
+    {
+        std_log3("Added node of type " << newStatement->toString());
+        this->properties.push_back(newStatement);
+    }
+}
+
+void HSSObjectDefinition::propertiesRemoveLast()
+{
+    delete this->properties.back();
+    this->properties.pop_back();
+}
+
+HSSStatement * HSSObjectDefinition::propertiesLast()
+{
+    return this->properties.back();
+}
+
+const int HSSObjectDefinition::propertiesSize()
+{
+    return this->properties.size();
 }

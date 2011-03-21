@@ -22,6 +22,8 @@ HSSObject * HSSObject::newObjectWithType(string type){
         ret = new HSSLineBorder();
     } else if (type == "object") {
         ret = new HSSObject();
+    } else if (type == "value") {
+        ret = new HSSValue();
     } else {
         throw HSSUnknownObjectTypeException(type);
     }

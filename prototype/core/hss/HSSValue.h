@@ -25,6 +25,7 @@ enum HSSValueType {
 class HSSValue : public HSSObject
 {
 public:
+    HSSValue();
     HSSValue(long int value);
     HSSValue(long double value);
     HSSValue(string value);

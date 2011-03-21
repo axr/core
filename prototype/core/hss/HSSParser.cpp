@@ -48,7 +48,7 @@ HSSStatement * HSSParser::readNextStatement()
         
         //if the statement starts with an identifier, universal selector or combinator it is a rule
         if(this->currentToken->isA(HSSIdentifier)
-           || (this->currentToken->isA(HSSSymbol) && static_cast<HSSValueToken*>(this->currentToken)->equals(HSSSymbol, "*"))
+           || (this->currentToken->isA(HSSSymbol) && VALUE_TOKEN(this->currentToken)->equals(HSSSymbol, "*"))
            || this->isCombinator()){ //FIXME: search for combinators as well
             return this->readRule();
         }
@@ -138,7 +138,7 @@ HSSSelectorChain * HSSParser::readSelectorChain()
             
             //a symbol, probably a combinator
         } else if (this->currentToken->isA(HSSSymbol)) {
-            const char currentTokenValue = *(static_cast<HSSValueToken*>(this->currentToken)->value).c_str();
+            const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->value).c_str();
             switch (currentTokenValue) {
                 case '=':
                 case '-':
@@ -155,8 +155,8 @@ HSSSelectorChain * HSSParser::readSelectorChain()
                     break;
                 case '.':
                     //we need to check if it is really a combinator or just a syntax error
-                    if(   static_cast<HSSValueToken*>(this->currentToken)->value == ".."
-                       || static_cast<HSSValueToken*>(this->currentToken)->value == "..."  ){
+                    if(   VALUE_TOKEN(this->currentToken)->value == ".."
+                       || VALUE_TOKEN(this->currentToken)->value == "..."  ){
                         ret->add(this->readSymbolCombinator());
                         break;
                     }
@@ -265,7 +265,7 @@ HSSCombinator * HSSParser::readSymbolCombinator()
 {
     //FIXME: check the context
     HSSCombinator * ret;
-    const char currentTokenChar = *(static_cast<HSSValueToken*>(this->currentToken)->value).c_str();
+    const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->value).c_str();
     switch (currentTokenChar) {
         case '=':
             ret = new HSSCombinator(HSSSiblingsCombinator);
@@ -297,7 +297,7 @@ HSSCombinator * HSSParser::readSymbolCombinator()
 //this assumes that the currentToken is an identifier
 HSSSelector * HSSParser::readSelector()
 {
-    HSSSelector * ret = new HSSSelector(static_cast<HSSValueToken*>(this->currentToken)->value);
+    HSSSelector * ret = new HSSSelector(VALUE_TOKEN(this->currentToken)->value);
     this->readNextToken();
     return ret;
 }
@@ -332,7 +332,7 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
         }
     } else if(this->currentToken->isA(HSSIdentifier)){
         //alright, we've got a type, look it up
-        objtype = static_cast<HSSValueToken*>(this->currentToken)->value;
+        objtype = VALUE_TOKEN(this->currentToken)->value;
         this->readNextToken();
         this->checkForUnexpectedEndOfSource();
     } else {
@@ -353,7 +353,8 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
         this->skip(HSSWhitespace);
     }
     if (this->currentToken->isA(HSSIdentifier)) {
-        obj->setName(static_cast<HSSValueToken*>(this->currentToken)->value);
+        obj->setName(VALUE_TOKEN(this->currentToken)->value);
+        this->readNextToken();
     } else if (this->currentToken->isA(HSSBlockOpen)){
         //it is the opening curly brace, therefore an annonymous object:
         //do nothing
@@ -364,7 +365,9 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
     }
     
     ret = new HSSObjectDefinition(obj);
+    this->skip(HSSWhitespace);
     this->skipExpected(HSSBlockOpen);
+    this->skip(HSSWhitespace);
     
     //now we're inside the block
     this->currentContext.push(HSSParserContextBlock);
@@ -372,14 +375,13 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
     //if the file ends here, fuuuuuuu[...]
     this->checkForUnexpectedEndOfSource();
     
-    //FIXME: read the inner part of the block here
+    //read the inner part of the block
     while (!this->currentToken->isA(HSSBlockClose)){
-        std_log1("skipping over token "+HSSToken::tokenStringRepresentation(this->currentToken->type));
-        this->readNextToken();
+        ret->propertiesAdd(this->readPropertyDefinition());
     }
     
-    //we're out of the block, read next token
-    this->readNextToken();
+    //we're out of the block, we expect a closing brace
+    this->skipExpected(HSSBlockClose);
     //leave the block context
     this->currentContext.pop();
     //leave the object definition context
@@ -401,7 +403,7 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
     
     if (this->currentToken->isA(HSSIdentifier)){
         //FIXME: do something with the property here
-        ret = new HSSPropertyDefinition(static_cast<HSSValueToken*>(this->currentToken)->value);
+        ret = new HSSPropertyDefinition(VALUE_TOKEN(this->currentToken)->value);
         this->readNextToken();
         //now must come a colon
         this->skipExpected(HSSColon);
@@ -426,6 +428,11 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
             
         } else if (this->currentToken->isA(HSSPercentageNumber)) {
             this->readNextToken(); //FIXME
+            
+        } else if (this->currentToken->isA(HSSIdentifier)){
+            //FIXME: this is either a keyword or an object name
+            std_log1("reading identifier");
+            this->readNextToken();
         } else {
             throw HSSUnexpectedTokenException(this->currentToken->type);
             delete ret;
@@ -440,6 +447,7 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
             
         } else if (this->currentToken->isA(HSSBlockClose)){
             //alright, this is the end of the property definition
+            std_log1("end of property definition");
         } else {
             throw HSSUnexpectedTokenException(this->currentToken->type);
             delete ret;

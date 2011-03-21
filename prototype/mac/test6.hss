@@ -1,4 +1,7 @@
+@value myValue { value: 250 }
+
 myElement
 {
-	border: @lineBorder{ 1 }
+	border: @lineBorder{ size: 1 };
+	margin: myValue
 }

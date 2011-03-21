@@ -9,6 +9,12 @@
 #include "HSSValue.h"
 #include <sstream>
 
+HSSValue::HSSValue()
+{
+    this->type = HSSValueNumberInt;
+    this->intValue = 0;
+}
+
 HSSValue::HSSValue(long int value)
 {
     this->type = HSSValueNumberInt;

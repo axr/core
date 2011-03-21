@@ -121,12 +121,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322415542.875676"
+         timestampString = "322424775.871867"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "399"
-         endingLineNumber = "399"
-         landmarkName = "HSSParser::readPropertyDefinition()"
+         startingLineNumber = "377"
+         endingLineNumber = "377"
+         landmarkName = "HSSParser::readObjectDefinition()"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -149,11 +149,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322353342.066832"
+         timestampString = "322425589.678127"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "443"
-         endingLineNumber = "443"
+         startingLineNumber = "441"
+         endingLineNumber = "441"
          landmarkName = "HSSParser::readPropertyDefinition()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -169,6 +169,20 @@
          startingLineNumber = "68"
          endingLineNumber = "68"
          landmarkName = "HSSParser::readRule()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
+         timestampString = "322420138.540397"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "368"
+         endingLineNumber = "368"
+         landmarkName = "HSSParser::readObjectDefinition()"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
