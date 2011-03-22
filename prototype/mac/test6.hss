@@ -1,7 +1,7 @@
-@value myValue { value: 250 }
+@margin margin1 { size: 50 }
 
 myElement
 {
 	border: @lineBorder{ size: 1 };
-	margin: myValue
+	margin: margin1
 }

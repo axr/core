@@ -19,6 +19,10 @@ HSSRule::HSSRule(HSSSelectorChain * selectorChain)
 HSSRule::~HSSRule()
 {
     delete this->selectorChain;
+    unsigned i;
+    for(i=0; i<this->properties.size(); i++){
+        this->propertiesRemoveLast();
+    }
 }
 
 string HSSRule::toString()

@@ -9,11 +9,8 @@
 #ifndef HSSVALUE_H
 #define HSSVALUE_H
 
-#include <string>
 #include "HSSObject.h"
 #include "HSSObjectExceptions.h"
-
-using namespace std;
 
 enum HSSValueType {
     HSSValueNumberInt,
@@ -39,6 +36,10 @@ public:
     void setValue(long double value);
     void setValue(string value);
     void setKWValue(string keyword);
+    
+    string getStringValue();
+    long int getIntValue();
+    long double getFloatValue();
     
 protected:
     HSSValueType type;

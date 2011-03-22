@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* macAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* macAppDelegate.mm */; };
+		4E05EA9C1338E1AE003B42DA /* HSSMargin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E05EA9A1338E1AE003B42DA /* HSSMargin.cpp */; };
+		4E05EA9F1338E2B9003B42DA /* HSSMultipleValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E05EA9D1338E2B8003B42DA /* HSSMultipleValue.cpp */; };
 		4E07D902130973C100156F11 /* test2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4E07D901130973C100156F11 /* test2.xml */; };
 		4E1EE0CF132D502C00DDF8D6 /* HSSParserNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1EE0CD132D502C00DDF8D6 /* HSSParserNode.cpp */; };
 		4E1EE0D2132D50F500DDF8D6 /* HSSParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1EE0D0132D50F400DDF8D6 /* HSSParser.cpp */; };
@@ -68,6 +70,10 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		4E05EA9A1338E1AE003B42DA /* HSSMargin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSMargin.cpp; path = ../core/hss/HSSMargin.cpp; sourceTree = "<group>"; };
+		4E05EA9B1338E1AE003B42DA /* HSSMargin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSMargin.h; path = ../core/hss/HSSMargin.h; sourceTree = "<group>"; };
+		4E05EA9D1338E2B8003B42DA /* HSSMultipleValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSMultipleValue.cpp; path = ../core/hss/HSSMultipleValue.cpp; sourceTree = "<group>"; };
+		4E05EA9E1338E2B8003B42DA /* HSSMultipleValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSMultipleValue.h; path = ../core/hss/HSSMultipleValue.h; sourceTree = "<group>"; };
 		4E07D901130973C100156F11 /* test2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test2.xml; sourceTree = "<group>"; };
 		4E1EE0CD132D502C00DDF8D6 /* HSSParserNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSParserNode.cpp; path = ../core/hss/HSSParserNode.cpp; sourceTree = "<group>"; };
 		4E1EE0CE132D502C00DDF8D6 /* HSSParserNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSParserNode.h; path = ../core/hss/HSSParserNode.h; sourceTree = "<group>"; };
@@ -291,10 +297,14 @@
 			isa = PBXGroup;
 			children = (
 				4EBCBD61133026A10086FD01 /* HSSObjects.h */,
+				4E05EA9A1338E1AE003B42DA /* HSSMargin.cpp */,
+				4E05EA9B1338E1AE003B42DA /* HSSMargin.h */,
 				4EBCBD4A133017510086FD01 /* HSSObject.cpp */,
 				4EBCBD4B133017510086FD01 /* HSSObject.h */,
 				4E1FAB8413369B0200C17884 /* HSSValue.cpp */,
 				4E1FAB8513369B0300C17884 /* HSSValue.h */,
+				4E05EA9D1338E2B8003B42DA /* HSSMultipleValue.cpp */,
+				4E05EA9E1338E2B8003B42DA /* HSSMultipleValue.h */,
 				4E1FAB7B1336851100C17884 /* HSSBorder.cpp */,
 				4E1FAB7C1336851100C17884 /* HSSBorder.h */,
 				4E1FAB7E133685D900C17884 /* HSSLineBorder.cpp */,
@@ -447,6 +457,8 @@
 				4E1FAB80133685DA00C17884 /* HSSLineBorder.cpp in Sources */,
 				4E1FAB83133689DC00C17884 /* HSSObjectExceptions.cpp in Sources */,
 				4E1FAB8613369B0500C17884 /* HSSValue.cpp in Sources */,
+				4E05EA9C1338E1AE003B42DA /* HSSMargin.cpp in Sources */,
+				4E05EA9F1338E2B9003B42DA /* HSSMultipleValue.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

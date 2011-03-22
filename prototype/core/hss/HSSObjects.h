@@ -14,5 +14,6 @@
 #include "HSSContainer.h"
 #include "HSSLineBorder.h"
 #include "HSSValue.h"
+#include "HSSMargin.h"
 
 #endif

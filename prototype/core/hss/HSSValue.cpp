@@ -112,7 +112,38 @@ void HSSValue::setKWValue(string keyword)
     this->stringValue = keyword;
 }
 
+string HSSValue::getStringValue()
+{
+    if (this->type == HSSValueString) {
+        return this->stringValue;
+    } else if (this->type == HSSValueNumberInt || this->type == HSSValueNumberFloat){
+        std::ostringstream tempstream;
+        tempstream << (this->type == HSSValueNumberInt ? this->intValue : this->floatValue);
+        return tempstream.str();
+    } else {
+        throw HSSUnknownValueTypeException();
+    }
+}
 
+long int HSSValue::getIntValue()
+{
+    if(this->type == HSSValueNumberInt){
+        return this->intValue;
+    } else {
+        //FIXME: parse string to int
+        throw HSSUnknownValueTypeException();
+    }
+}
+
+long double HSSValue::getFloatValue()
+{
+    if(this->type == HSSValueNumberFloat){
+        return this->floatValue;
+    } else {
+        //FIXME: parse string to float
+        throw HSSUnknownValueTypeException();
+    }
+}
 
 
 

@@ -24,6 +24,8 @@ HSSObject * HSSObject::newObjectWithType(string type){
         ret = new HSSObject();
     } else if (type == "value") {
         ret = new HSSValue();
+    } else if (type == "margin"){
+        ret = new HSSMargin();
     } else {
         throw HSSUnknownObjectTypeException(type);
     }
