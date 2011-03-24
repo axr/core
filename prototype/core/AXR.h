@@ -28,7 +28,7 @@
 // - 3 
 // - 4 All messages
 
-#define AXR_DEBUG_LEVEL 2
+#define AXR_DEBUG_LEVEL 1
 
 
 #if AXR_DEBUG_LEVEL > 0

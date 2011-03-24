@@ -11,14 +11,12 @@
 		256AC3DA0F4B6AC300CF3369 /* macAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* macAppDelegate.mm */; };
 		4E05EA9C1338E1AE003B42DA /* HSSMargin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E05EA9A1338E1AE003B42DA /* HSSMargin.cpp */; };
 		4E05EA9F1338E2B9003B42DA /* HSSMultipleValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E05EA9D1338E2B8003B42DA /* HSSMultipleValue.cpp */; };
-		4E07D902130973C100156F11 /* test2.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4E07D901130973C100156F11 /* test2.xml */; };
 		4E1EE0CF132D502C00DDF8D6 /* HSSParserNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1EE0CD132D502C00DDF8D6 /* HSSParserNode.cpp */; };
 		4E1EE0D2132D50F500DDF8D6 /* HSSParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1EE0D0132D50F400DDF8D6 /* HSSParser.cpp */; };
 		4E1FAB7D1336851100C17884 /* HSSBorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1FAB7B1336851100C17884 /* HSSBorder.cpp */; };
 		4E1FAB80133685DA00C17884 /* HSSLineBorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1FAB7E133685D900C17884 /* HSSLineBorder.cpp */; };
 		4E1FAB83133689DC00C17884 /* HSSObjectExceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1FAB81133689DB00C17884 /* HSSObjectExceptions.cpp */; };
 		4E1FAB8613369B0500C17884 /* HSSValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1FAB8413369B0200C17884 /* HSSValue.cpp */; };
-		4E37DC101308923500C47973 /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = 4E37DC0F1308923500C47973 /* test.xml */; };
 		4E4429671311D051000E37D3 /* libcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E4429621311CF88000E37D3 /* libcore.a */; };
 		4E45207F1311D3F2006645EF /* AXR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E4520751311D3F2006645EF /* AXR.cpp */; };
 		4E71BFF7132D1A0300FC71D7 /* HSSValueToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E71BFF5132D1A0300FC71D7 /* HSSValueToken.cpp */; };
@@ -420,8 +418,6 @@
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
-				4E37DC101308923500C47973 /* test.xml in Resources */,
-				4E07D902130973C100156F11 /* test2.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,6 +530,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
@@ -548,6 +545,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
 			};

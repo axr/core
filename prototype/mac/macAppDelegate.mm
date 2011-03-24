@@ -7,8 +7,7 @@
 //
 
 #import "macAppDelegate.h"
-#import <string.h>
-#import <stdio.h>
+#import <string>
 #import "AXR.h"
 #import <iostream>
 
@@ -88,6 +87,7 @@ void listHSSStatements(NSString *filepath)
         }
     }
     std::cout << "reached end of source" << std::endl;
+    std::cout << "\n\n\n\n";
     delete statement;
 #if AXR_DEBUG_LEVEL > 1
     exit(0);
@@ -127,6 +127,7 @@ void listHSSTokens(NSString *filepath)
         }
     }
     std::cout << "reached end of source" << std::endl;
+    std::cout << "\n\n\n\n";
     delete token;
 #if AXR_DEBUG_LEVEL > 1
     exit(0);
