@@ -30,6 +30,7 @@ public:
     void dropName();
     
     virtual string defaultObjectType(string property);
+    virtual bool isKeyword(string value, string property);
     
 private:
     bool _isNamed;

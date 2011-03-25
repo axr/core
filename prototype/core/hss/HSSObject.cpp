@@ -81,3 +81,13 @@ void HSSObject::dropName()
 string HSSObject::defaultObjectType(string property){
     return "value";
 }
+
+bool HSSObject::isKeyword(string value, string property)
+{
+    if(value == "default" || value == "inherit" || value == "undefined" || value == "none"){
+        return true;
+    } else {
+        return false;
+    }
+}
+

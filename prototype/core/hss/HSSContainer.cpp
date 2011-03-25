@@ -29,3 +29,16 @@ string HSSContainer::defaultObjectType(string property)
         return HSSDisplayObject::defaultObjectType(property);
     }
 }
+
+bool HSSContainer::isKeyword(string value, string property)
+{
+    if (value == "center"){
+        if (   property == "contentAlignX"
+            || property == "contentAlignY" ) {
+            return true;
+        }
+    }
+    
+    //if we reached this far, let the superclass handle it
+    return HSSDisplayObject::isKeyword(value, property);
+}

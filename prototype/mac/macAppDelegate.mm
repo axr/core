@@ -76,7 +76,7 @@ void listHSSStatements(NSString *filepath)
         if(statement == NULL){
             done = TRUE;
         } else {
-            std::cout << statement->toString() << std::endl;
+            std::cout << std::endl << "-----------------------------" << std::endl <<  statement->toString() << "-----------------------------" << std::endl << std::endl;
         }
         
         if(security_count == 99999)
@@ -116,7 +116,7 @@ void listHSSTokens(NSString *filepath)
         if(token == NULL){
             done = TRUE;
         } else {
-            std::cout << token->toString() << std::endl;
+            std::cout << std::endl << "-----------------------------" << std::endl << token->toString() << "-----------------------------" << std::endl << std::endl;
         }
         
         if(security_count == 99999)

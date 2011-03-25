@@ -233,15 +233,23 @@ HSSToken * HSSTokenizer::readString()
     if(this->currentChar == '"'){
         this->readNextChar();
         while (this->currentChar != '"') {
-            this->storeCurrentCharAndReadNext();
-        }
-        ret = new HSSValueToken(HSSSingleQuoteString, this->extractCurrentTokenText());
-    } else if(this->currentChar == '\'') {
-        this->readNextChar();
-        while (this->currentChar != '\'') {
+            if(this->atEndOfSource()){
+                throw HSSUnexpectedEndOfSourceException();
+                return NULL;
+            }
             this->storeCurrentCharAndReadNext();
         }
         ret = new HSSValueToken(HSSDoubleQuoteString, this->extractCurrentTokenText());
+    } else if(this->currentChar == '\'') {
+        this->readNextChar();
+        while (this->currentChar != '\'') {
+            if(this->atEndOfSource()){
+                throw HSSUnexpectedEndOfSourceException();
+                return NULL;
+            }
+            this->storeCurrentCharAndReadNext();
+        }
+        ret = new HSSValueToken(HSSSingleQuoteString, this->extractCurrentTokenText());
     }
     
     this->readNextChar();

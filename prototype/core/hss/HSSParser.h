@@ -15,6 +15,7 @@
 #include "HSSObjectExceptions.h"
 #include "HSSParserNodes.h"
 #include "HSSObjects.h"
+#include <vector>
 #include <stack>
 
 using namespace std;
@@ -42,7 +43,8 @@ public:
 protected:
     HSSTokenizer * tokenizer;
     HSSToken * currentToken;
-    stack <HSSParserContext> currentContext;
+    vector<HSSParserContext> currentContext;
+    stack<HSSObject *> currentObjectContext;
     
     HSSStatement * readRule();
     HSSSelectorChain * readSelectorChain(); //FIXME
@@ -54,16 +56,19 @@ protected:
     //will return a pointer or NULL
     //you get to be the owner of the pointer
     HSSCombinator * readChildrenCombinatorOrSkip();
-    
+    //will return a pointer or NULL
+    //you get to be the owner of the pointer
     HSSCombinator * readSymbolCombinator();
-    
+    //will return a pointer or NULL
+    //you get to be the owner of the pointer
     HSSSelector * readSelector();
-    
+    //will return a pointer or NULL
+    //you get to be the owner of the pointer
     HSSObjectDefinition * readObjectDefinition();
-    
+    //will return a pointer or NULL
+    //you get to be the owner of the pointer
     HSSPropertyDefinition * readPropertyDefinition();
     
-    //reads and returns a pointer to the next token in the buffer or NULL if none found
 	void readNextToken();
     
     bool atEndOfSource();
@@ -71,6 +76,8 @@ protected:
     void skipExpected(HSSTokenType type);
     void skipExpected(HSSTokenType type, string value);
     void skip(HSSTokenType type);
+    
+    void currentObjectContextRemoveLast();
     
 };
 

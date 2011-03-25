@@ -37,3 +37,23 @@ string HSSDisplayObject::defaultObjectType(string property)
         return HSSObject::defaultObjectType(property);
     }
 }
+
+bool HSSDisplayObject::isKeyword(string value, string property)
+{
+    if (value == "center"){
+        if (   property == "anchorX"
+            || property == "anchorY"
+            || property == "alignX"
+            || property == "alignY"
+            ) {
+            return true;
+        }
+    } else if (value == "yes" || value == "no"){
+        if (property == "flow") {
+            return true;
+        }
+    }
+    
+    //if we reached this far, let the superclass handle it
+    return HSSObject::isKeyword(value, property);
+}

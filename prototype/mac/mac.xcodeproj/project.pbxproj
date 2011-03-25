@@ -17,9 +17,15 @@
 		4E1FAB80133685DA00C17884 /* HSSLineBorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1FAB7E133685D900C17884 /* HSSLineBorder.cpp */; };
 		4E1FAB83133689DC00C17884 /* HSSObjectExceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1FAB81133689DB00C17884 /* HSSObjectExceptions.cpp */; };
 		4E1FAB8613369B0500C17884 /* HSSValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1FAB8413369B0200C17884 /* HSSValue.cpp */; };
+		4E2ECFBA133D2A7F00195203 /* HSSExpression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E2ECFB8133D2A7F00195203 /* HSSExpression.cpp */; };
+		4E2ECFC3133D352400195203 /* HSSStringConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E2ECFC1133D352300195203 /* HSSStringConstant.cpp */; };
+		4E2ECFC6133D494C00195203 /* HSSKeywordConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E2ECFC4133D494A00195203 /* HSSKeywordConstant.cpp */; };
+		4E2ECFCC133D4AF900195203 /* HSSObjectNameConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E2ECFCA133D4AF700195203 /* HSSObjectNameConstant.cpp */; };
+		4E2ECFD1133D509B00195203 /* HSSPercentageConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E2ECFCF133D509300195203 /* HSSPercentageConstant.cpp */; };
 		4E4429671311D051000E37D3 /* libcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E4429621311CF88000E37D3 /* libcore.a */; };
 		4E45207F1311D3F2006645EF /* AXR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E4520751311D3F2006645EF /* AXR.cpp */; };
 		4E71BFF7132D1A0300FC71D7 /* HSSValueToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E71BFF5132D1A0300FC71D7 /* HSSValueToken.cpp */; };
+		4E87C880133D29B400C2042C /* HSSNumberConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E87C87E133D29B400C2042C /* HSSNumberConstant.cpp */; };
 		4EB58FCB13311AAD001484A3 /* HSSPropertyDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EB58FC913311AAC001484A3 /* HSSPropertyDefinition.cpp */; };
 		4EB58FCE13312C10001484A3 /* HSSSelectorChain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EB58FCC13312C0E001484A3 /* HSSSelectorChain.cpp */; };
 		4EBCBD461330160B0086FD01 /* HSSObjectDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EBCBD441330160B0086FD01 /* HSSObjectDefinition.cpp */; };
@@ -85,6 +91,17 @@
 		4E1FAB82133689DB00C17884 /* HSSObjectExceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSObjectExceptions.h; path = ../core/hss/HSSObjectExceptions.h; sourceTree = "<group>"; };
 		4E1FAB8413369B0200C17884 /* HSSValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSValue.cpp; path = ../core/hss/HSSValue.cpp; sourceTree = "<group>"; };
 		4E1FAB8513369B0300C17884 /* HSSValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSValue.h; path = ../core/hss/HSSValue.h; sourceTree = "<group>"; };
+		4E2ECFB8133D2A7F00195203 /* HSSExpression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSExpression.cpp; path = ../core/hss/HSSExpression.cpp; sourceTree = "<group>"; };
+		4E2ECFB9133D2A7F00195203 /* HSSExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSExpression.h; path = ../core/hss/HSSExpression.h; sourceTree = "<group>"; };
+		4E2ECFC1133D352300195203 /* HSSStringConstant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSStringConstant.cpp; path = ../core/hss/HSSStringConstant.cpp; sourceTree = "<group>"; };
+		4E2ECFC2133D352300195203 /* HSSStringConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSStringConstant.h; path = ../core/hss/HSSStringConstant.h; sourceTree = "<group>"; };
+		4E2ECFC4133D494A00195203 /* HSSKeywordConstant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSKeywordConstant.cpp; path = ../core/hss/HSSKeywordConstant.cpp; sourceTree = "<group>"; };
+		4E2ECFC5133D494B00195203 /* HSSKeywordConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSKeywordConstant.h; path = ../core/hss/HSSKeywordConstant.h; sourceTree = "<group>"; };
+		4E2ECFCA133D4AF700195203 /* HSSObjectNameConstant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSObjectNameConstant.cpp; path = ../core/hss/HSSObjectNameConstant.cpp; sourceTree = "<group>"; };
+		4E2ECFCD133D4CD400195203 /* HSSObjectNameConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSObjectNameConstant.h; path = ../core/hss/HSSObjectNameConstant.h; sourceTree = "<group>"; };
+		4E2ECFCE133D4D2900195203 /* HSSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSConstants.h; path = ../core/hss/HSSConstants.h; sourceTree = "<group>"; };
+		4E2ECFCF133D509300195203 /* HSSPercentageConstant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSPercentageConstant.cpp; path = ../core/hss/HSSPercentageConstant.cpp; sourceTree = "<group>"; };
+		4E2ECFD0133D509500195203 /* HSSPercentageConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSPercentageConstant.h; path = ../core/hss/HSSPercentageConstant.h; sourceTree = "<group>"; };
 		4E37DC0F1308923500C47973 /* test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test.xml; sourceTree = "<group>"; };
 		4E4429581311CF71000E37D3 /* core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = core.xcodeproj; sourceTree = AXR_CORE_SRC; };
 		4E4520751311D3F2006645EF /* AXR.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AXR.cpp; path = ../core/AXR.cpp; sourceTree = SOURCE_ROOT; };
@@ -92,6 +109,8 @@
 		4E4521011311DBDF006645EF /* libexpat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libexpat.a; path = /usr/local/lib/libexpat.a; sourceTree = "<absolute>"; };
 		4E71BFF5132D1A0300FC71D7 /* HSSValueToken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSValueToken.cpp; path = ../core/hss/HSSValueToken.cpp; sourceTree = "<group>"; };
 		4E71BFF6132D1A0300FC71D7 /* HSSValueToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSValueToken.h; path = ../core/hss/HSSValueToken.h; sourceTree = "<group>"; };
+		4E87C87E133D29B400C2042C /* HSSNumberConstant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSNumberConstant.cpp; path = ../core/hss/HSSNumberConstant.cpp; sourceTree = "<group>"; };
+		4E87C87F133D29B400C2042C /* HSSNumberConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSNumberConstant.h; path = ../core/hss/HSSNumberConstant.h; sourceTree = "<group>"; };
 		4EAF82581331690C00AFF970 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4EAF8288133169E700AFF970 /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB58FC913311AAC001484A3 /* HSSPropertyDefinition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSPropertyDefinition.cpp; path = ../core/hss/HSSPropertyDefinition.cpp; sourceTree = "<group>"; };
@@ -253,6 +272,19 @@
 			children = (
 				4E1EE0D0132D50F400DDF8D6 /* HSSParser.cpp */,
 				4E1EE0D1132D50F400DDF8D6 /* HSSParser.h */,
+				4E2ECFCE133D4D2900195203 /* HSSConstants.h */,
+				4E87C87E133D29B400C2042C /* HSSNumberConstant.cpp */,
+				4E87C87F133D29B400C2042C /* HSSNumberConstant.h */,
+				4E2ECFCF133D509300195203 /* HSSPercentageConstant.cpp */,
+				4E2ECFD0133D509500195203 /* HSSPercentageConstant.h */,
+				4E2ECFC1133D352300195203 /* HSSStringConstant.cpp */,
+				4E2ECFC2133D352300195203 /* HSSStringConstant.h */,
+				4E2ECFC4133D494A00195203 /* HSSKeywordConstant.cpp */,
+				4E2ECFC5133D494B00195203 /* HSSKeywordConstant.h */,
+				4E2ECFCA133D4AF700195203 /* HSSObjectNameConstant.cpp */,
+				4E2ECFCD133D4CD400195203 /* HSSObjectNameConstant.h */,
+				4E2ECFB8133D2A7F00195203 /* HSSExpression.cpp */,
+				4E2ECFB9133D2A7F00195203 /* HSSExpression.h */,
 				4EE5E23A132D6A5300950DE9 /* HSSParserNodes.h */,
 				4E1EE0CD132D502C00DDF8D6 /* HSSParserNode.cpp */,
 				4E1EE0CE132D502C00DDF8D6 /* HSSParserNode.h */,
@@ -455,6 +487,12 @@
 				4E1FAB8613369B0500C17884 /* HSSValue.cpp in Sources */,
 				4E05EA9C1338E1AE003B42DA /* HSSMargin.cpp in Sources */,
 				4E05EA9F1338E2B9003B42DA /* HSSMultipleValue.cpp in Sources */,
+				4E87C880133D29B400C2042C /* HSSNumberConstant.cpp in Sources */,
+				4E2ECFBA133D2A7F00195203 /* HSSExpression.cpp in Sources */,
+				4E2ECFC3133D352400195203 /* HSSStringConstant.cpp in Sources */,
+				4E2ECFC6133D494C00195203 /* HSSKeywordConstant.cpp in Sources */,
+				4E2ECFCC133D4AF900195203 /* HSSObjectNameConstant.cpp in Sources */,
+				4E2ECFD1133D509B00195203 /* HSSPercentageConstant.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

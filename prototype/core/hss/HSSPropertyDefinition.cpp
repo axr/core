@@ -20,7 +20,7 @@ HSSPropertyDefinition::HSSPropertyDefinition(string name)
     this->value = NULL;
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(string name, HSSStatement * value)
+HSSPropertyDefinition::HSSPropertyDefinition(string name, HSSParserNode * value)
 {
     this->name = name;
     this->value = value;
@@ -50,13 +50,13 @@ string HSSPropertyDefinition::getName()
     return this->name;
 }
 
-void HSSPropertyDefinition::setValue(HSSStatement * value)
+void HSSPropertyDefinition::setValue(HSSParserNode * value)
 {
     delete this->value;
     this->value = value;
 }
 
-HSSStatement * HSSPropertyDefinition::getValue()
+HSSParserNode * HSSPropertyDefinition::getValue()
 {
     return this->value;
 }

@@ -25,3 +25,15 @@ string HSSBorder::defaultObjectType(string property)
         return HSSObject::defaultObjectType(property);
     }
 }
+
+bool HSSBorder::isKeyword(string value, string property)
+{
+    if (value == "inside" || value == "centered" || value == "outside"){
+        if (property == "position") {
+            return true;
+        }
+    }
+    
+    //if we reached this far, let the superclass handle it
+    return HSSObject::isKeyword(value, property);
+}

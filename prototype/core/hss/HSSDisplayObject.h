@@ -19,6 +19,7 @@ class HSSDisplayObject : public HSSObject
 public:
     virtual string toString();
     virtual string defaultObjectType(string property);
+    virtual bool isKeyword(string value, string property);
 };
 
 #endif

@@ -8,6 +8,7 @@
 
 #include "HSSParser.h"
 #include "HSSValueToken.h"
+#include "HSSConstants.h"
 #include <iostream>
 #include <cstdlib>
 
@@ -17,7 +18,9 @@ HSSParser::HSSParser(char * buffer, unsigned buflen)
 {
     this->tokenizer = new HSSTokenizer(buffer, buflen);
     this->currentToken = NULL;
-    this->currentContext.push(HSSParserContextRoot);
+    this->currentContext.push_back(HSSParserContextRoot);
+    //FIXME: will there bee a root object? Now defaults to container
+    this->currentObjectContext.push(new HSSContainer());
     
     this->readNextToken();
 }
@@ -25,11 +28,15 @@ HSSParser::HSSParser(char * buffer, unsigned buflen)
 HSSParser::~HSSParser()
 {
     delete this->tokenizer;
+    unsigned i;
+    for (i=0; i<this->currentObjectContext.size(); i++){
+        this->currentObjectContextRemoveLast();
+    }
 }
 
 HSSStatement * HSSParser::readNextStatement()
 {
-    if(this->currentContext.top() == HSSParserContextRoot)
+    if(this->currentContext.back() == HSSParserContextRoot)
     {
         //the file was empty
         if(this->atEndOfSource())
@@ -72,9 +79,9 @@ HSSStatement * HSSParser::readRule()
     HSSRule * ret = new HSSRule(selectorChain);
     
     //we're not in a selector anymore
-    this->currentContext.pop();
+    this->currentContext.pop_back();
     //now we're inside the block
-    this->currentContext.push(HSSParserContextBlock);
+    this->currentContext.push_back(HSSParserContextBlock);
     
     //if the file ends here, fuuuuuuu[...]
     this->checkForUnexpectedEndOfSource();
@@ -108,7 +115,7 @@ HSSStatement * HSSParser::readRule()
     //we're out of the block, read next token
     this->readNextToken();
     //leave the block context
-    this->currentContext.pop();
+    this->currentContext.pop_back();
     if(!this->atEndOfSource()){
         //ignore all the whitespace after the block
         this->skip(HSSWhitespace);
@@ -125,7 +132,7 @@ HSSSelectorChain * HSSParser::readSelectorChain()
     
     //first we need to look at the selector chain
     //set the appropriate context
-    this->currentContext.push(HSSParserContextSelectorChain);
+    this->currentContext.push_back(HSSParserContextSelectorChain);
     //parse the selector chain until we find the block
     while (this->currentToken != NULL && !this->currentToken->isA(HSSBlockOpen)) {
         std_log3(this->currentToken->toString());
@@ -188,7 +195,7 @@ bool HSSParser::isCombinator()
 bool HSSParser::isCombinator(HSSToken * token)
 {
     //are we in a context that accepts combinators?
-    HSSParserContext context = this->currentContext.top();
+    HSSParserContext context = this->currentContext.back();
     if (context == HSSParserContextExpression) {
         return false;
     }
@@ -316,9 +323,9 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
     this->checkForUnexpectedEndOfSource();
     
     //store the current context for later use
-    HSSParserContext outerContext = this->currentContext.top();
+    HSSParserContext outerContext = this->currentContext.back();
     //set the appropriate context
-    this->currentContext.push(HSSParserContextObjectDefinition);
+    this->currentContext.push_back(HSSParserContextObjectDefinition);
     
     //first we need to know what type of object it is
     if (this->currentToken->isA(HSSWhitespace)) {
@@ -370,7 +377,7 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
     this->skip(HSSWhitespace);
     
     //now we're inside the block
-    this->currentContext.push(HSSParserContextBlock);
+    this->currentContext.push_back(HSSParserContextBlock);
     
     //if the file ends here, fuuuuuuu[...]
     this->checkForUnexpectedEndOfSource();
@@ -383,9 +390,9 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
     //we're out of the block, we expect a closing brace
     this->skipExpected(HSSBlockClose);
     //leave the block context
-    this->currentContext.pop();
+    this->currentContext.pop_back();
     //leave the object definition context
-    this->currentContext.pop();
+    this->currentContext.pop_back();
     if(!this->atEndOfSource()){
         //ignore all the whitespace after the block
         this->skip(HSSWhitespace);
@@ -396,6 +403,8 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
 
 HSSPropertyDefinition * HSSParser::readPropertyDefinition()
 {
+    string propertyName;
+    
     //end of source is no good
     this->checkForUnexpectedEndOfSource();
     
@@ -403,7 +412,8 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
     
     if (this->currentToken->isA(HSSIdentifier)){
         //FIXME: do something with the property here
-        ret = new HSSPropertyDefinition(VALUE_TOKEN(this->currentToken)->value);
+        propertyName = VALUE_TOKEN(this->currentToken)->value;
+        ret = new HSSPropertyDefinition(propertyName);
         this->readNextToken();
         //now must come a colon
         this->skipExpected(HSSColon);
@@ -416,22 +426,30 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
             //this->readNextToken();
             
         } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
-            ret->setValue(new HSSObjectDefinition(new HSSValue(VALUE_TOKEN(this->currentToken)->value)));
+            ret->setValue(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->value));
+            this->checkForUnexpectedEndOfSource();
             this->readNextToken();
             
         //number literal
         } else if (this->currentToken->isA(HSSNumber)){
             //FIXME: parse the number and see if it is an int or a float
-            long double num = strtold(VALUE_TOKEN(this->currentToken)->value.c_str(), NULL);            
-            ret->setValue(new HSSObjectDefinition(new HSSValue(num)));
+            ret->setValue(new HSSNumberConstant(strtold(VALUE_TOKEN(this->currentToken)->value.c_str(), NULL)));
             this->readNextToken();
             
         } else if (this->currentToken->isA(HSSPercentageNumber)) {
-            this->readNextToken(); //FIXME
+            ret->setValue(new HSSPercentageConstant(strtold(VALUE_TOKEN(this->currentToken)->value.c_str(), NULL)));
+            this->readNextToken();
             
         } else if (this->currentToken->isA(HSSIdentifier)){
-            //FIXME: this is either a keyword or an object name
-            std_log1("reading identifier");
+            //this is either a keyword or an object name
+            //check if it is a keyword
+            string valuestr = VALUE_TOKEN(this->currentToken)->value;
+            if(this->currentObjectContext.top()->isKeyword(valuestr, propertyName)){
+                ret->setValue(new HSSKeywordConstant(valuestr)); 
+            } else {
+                //FIXME
+                ret->setValue(new HSSObjectNameConstant(valuestr));
+            }
             this->readNextToken();
         } else {
             throw HSSUnexpectedTokenException(this->currentToken->type);
@@ -447,7 +465,7 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
             
         } else if (this->currentToken->isA(HSSBlockClose)){
             //alright, this is the end of the property definition
-            std_log1("end of property definition");
+            std_log3("end of property definition");
         } else {
             throw HSSUnexpectedTokenException(this->currentToken->type);
             delete ret;
@@ -509,3 +527,10 @@ void HSSParser::skip(HSSTokenType type)
         this->readNextToken();
     }
 }
+
+void HSSParser::currentObjectContextRemoveLast()
+{
+    delete this->currentObjectContext.top();
+    this->currentObjectContext.pop();
+}
+

@@ -29,3 +29,15 @@ string HSSLineBorder::defaultObjectType(string property)
         return HSSObject::defaultObjectType(property);
     }
 }
+
+bool HSSLineBorder::isKeyword(string value, string property)
+{
+    if (value == "rounded" || value == "projected"){
+        if (property == "caps") {
+            return true;
+        }
+    }
+    
+    //if we reached this far, let the superclass handle it
+    return HSSBorder::isKeyword(value, property);
+}
