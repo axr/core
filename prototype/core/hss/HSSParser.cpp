@@ -43,8 +43,10 @@ HSSStatement * HSSParser::readNextStatement()
             return NULL;
         
         if(this->currentToken->isA(HSSInstructionSign)){
-            //create a instruction statement
-            return NULL;
+            this->tokenizer->preferHex = true;
+            HSSStatement * ret = this->readInstruction();
+            this->tokenizer->preferHex = false;
+            return ret;
         }
         
         //if the statement starts with an object sign, it is an object definition
@@ -451,6 +453,11 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
                 ret->setValue(new HSSObjectNameConstant(valuestr));
             }
             this->readNextToken();
+        } else if (this->currentToken->isA(HSSInstructionSign)){
+            this->tokenizer->preferHex = true;
+            ret->setValue(this->readInstruction());
+            this->tokenizer->preferHex = false;
+            
         } else {
             throw HSSUnexpectedTokenException(this->currentToken->type);
             delete ret;
@@ -479,6 +486,66 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
         return NULL;
     }
 }
+
+
+HSSInstruction * HSSParser::readInstruction()
+{
+    HSSInstruction * ret;
+    std::string currentval;
+    
+    this->skipExpected(HSSInstructionSign);
+    this->checkForUnexpectedEndOfSource();
+    //we are looking at
+    //if it starts with a number, we are looking at a color instruction
+    if (this->currentToken->isA(HSSHexNumber)){
+        currentval = VALUE_TOKEN(this->currentToken)->value;
+        switch (currentval.length()) {
+            //1 digit grayscale
+            case 1:
+            //2 digit grayscale
+            case 2:
+            //rgb
+            case 3:
+            //rgba
+            case 4:
+            //rrggbb
+            case 6:
+            //rrggbbaa
+            case 8:
+                ret = new HSSInstruction(HSSColorInstruction, currentval);
+                this->readNextToken();
+                break;
+                
+            default:
+                throw HSSWrongHexLengthException(currentval.length());
+                return NULL;
+        }
+                
+    } else if (this->currentToken->isA(HSSIdentifier)){
+        currentval = VALUE_TOKEN(this->currentToken)->value;
+        if (currentval == "new"){
+            ret = new HSSInstruction(HSSNewInstruction);
+        } else if (currentval == "ensure") {
+            ret = new HSSInstruction(HSSEnsureInstruction);
+        } else if (currentval == "import") {
+            ret = new HSSInstruction(HSSImportInstruction);
+        } else {
+            throw HSSUnexpectedTokenException(this->currentToken->type);
+            return NULL;
+        }
+        this->readNextToken();
+        
+    } else {
+        throw HSSUnexpectedTokenException(this->currentToken->type);
+        return NULL;
+    }
+    
+    this->checkForUnexpectedEndOfSource();
+    this->skip(HSSWhitespace);
+    return ret;
+}
+
+
 
 void HSSParser::readNextToken()
 {

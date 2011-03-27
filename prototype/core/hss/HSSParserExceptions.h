@@ -12,40 +12,57 @@
 #include <exception>
 #include <string>
 #include "HSSToken.h"
+
 using namespace std;
 
-class HSSUnexpectedEndOfSourceException
+class HSSParserException
+{
+public:
+    HSSTokenType type;
+    string filename;
+    string value;
+    int line;
+    int column;
+    virtual string toString() =0;
+};
+
+
+class HSSUnexpectedEndOfSourceException : public HSSParserException
 {
 public:
     virtual string toString();
 };
 
-class HSSExpectedTokenException
+class HSSExpectedTokenException : public HSSParserException
 {
 public:
     HSSExpectedTokenException(HSSTokenType type);
     HSSExpectedTokenException(HSSTokenType type, string value);
     virtual string toString();
-    HSSTokenType type;
-    string value;
 };
 
-class HSSUnexpectedTokenException
+class HSSUnexpectedTokenException : public HSSParserException
 {
 public:
     HSSUnexpectedTokenException(HSSTokenType type);
     HSSUnexpectedTokenException(HSSTokenType type, string value);
     virtual string toString();
-    HSSTokenType type;
-    string value;
 };
 
-class HSSUnexpectedObjectTypeException
+class HSSUnexpectedObjectTypeException : public HSSParserException
 {
 public:
-    HSSUnexpectedObjectTypeException(string type);
+    HSSUnexpectedObjectTypeException(string objectType);
     virtual string toString();
-    string type;
+    string objectType;
+};
+
+class HSSWrongHexLengthException : public HSSParserException
+{
+public:
+    HSSWrongHexLengthException(int length);
+    virtual string toString();
+    int length;
 };
 
 #endif

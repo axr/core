@@ -35,6 +35,9 @@ HSSTokenizer::HSSTokenizer(char * buffer, unsigned buflen)
 	
 	//start by reading the first character
 	this->readNextChar();
+    
+    //by default, numbers are read as real numbers and A-F will be an identifier
+    this->preferHex = false;
 }
 
 HSSTokenizer::~HSSTokenizer()
@@ -54,7 +57,11 @@ HSSToken * HSSTokenizer::readNextToken()
     
 	//identifiers can start with a letter or an underscore
 	if (isalpha(cc) || cc == '_') {
-		return this->readIdentifier();
+        if(this->preferHex){
+            return this->readHexOrIdentifier();
+        } else {
+            return this->readIdentifier();
+        }
 	}
 	
 	if (isspace(cc)) {
@@ -63,7 +70,11 @@ HSSToken * HSSTokenizer::readNextToken()
 	
 	//if it starts with a number it is either a number or a percentage
 	if (isdigit(cc)) {
-		return this->readNumberOrPercentage();
+        if(this->preferHex){
+            return this->readHex();
+        } else {
+            return this->readNumberOrPercentage();
+        }
 	}
 	
 	HSSToken * ret;
@@ -201,6 +212,7 @@ HSSToken * HSSTokenizer::readWhitespace()
 	this->skipWhitespace();
 	return new HSSToken(HSSWhitespace);
 }
+
 //reads and returns an identifier token
 HSSToken * HSSTokenizer::readIdentifier()
 {
@@ -209,6 +221,82 @@ HSSToken * HSSTokenizer::readIdentifier()
 	}
 	return new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText());
 }
+
+//reads and returns a hexadecimal number
+HSSToken * HSSTokenizer::readHex()
+{
+    security_brake_init();
+	while (1) {
+        switch (this->currentChar) {
+            case 'a':
+            case 'A':
+            case 'b':
+            case 'B':
+            case 'c':
+            case 'C':
+            case 'd':
+            case 'D':
+            case 'e':
+            case 'E':
+            case 'f':
+            case 'F':
+                this->storeCurrentCharAndReadNext();
+                continue;
+                
+            default:
+                if (isdigit(this->currentChar)){
+                    this->storeCurrentCharAndReadNext();
+                    continue;
+                    
+                } else {
+                    break;
+                }
+        }
+        security_brake();
+	}
+    
+    return new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText());
+}
+
+//reads and returns a hexadecimal number or an identifier
+HSSToken * HSSTokenizer::readHexOrIdentifier()
+{
+    security_brake_init();
+	while (1) {
+        switch (this->currentChar) {
+            case 'a':
+            case 'A':
+            case 'b':
+            case 'B':
+            case 'c':
+            case 'C':
+            case 'd':
+            case 'D':
+            case 'e':
+            case 'E':
+            case 'f':
+            case 'F':
+                this->storeCurrentCharAndReadNext();
+                continue;
+                
+            default:
+                if (isdigit(this->currentChar)){
+                    this->storeCurrentCharAndReadNext();
+                    continue;
+                    
+                } else if (this->currentTokenText.length() > 0){
+                    return new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText());
+                } else {
+                    break;
+                }
+        }
+        security_brake();
+	}
+    
+    //if we reached this far, it is an identifier - finish reading it
+    return this->readIdentifier();
+}
+
 //reads and returns either a number or a percentage token
 //the currentChar is assumed to be a number
 HSSToken * HSSTokenizer::readNumberOrPercentage()
@@ -225,6 +313,7 @@ HSSToken * HSSTokenizer::readNumberOrPercentage()
    }
 	return ret;
 }
+
 //reads and returns either a single quoted or double quoted string token
 //the currentChar is assumed to be either " or '
 HSSToken * HSSTokenizer::readString()

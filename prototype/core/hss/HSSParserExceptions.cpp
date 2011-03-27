@@ -7,13 +7,12 @@
 //
 
 #include "HSSParserExceptions.h"
+#include <sstream>
 
 string HSSUnexpectedEndOfSourceException::toString()
 {
     return "HSSParser Error: unexpected end of source";
 }
-
-
 
 
 HSSExpectedTokenException::HSSExpectedTokenException(HSSTokenType type)
@@ -56,16 +55,31 @@ string HSSUnexpectedTokenException::toString()
     {
         return "HSSParser Error: Unexpected token of type "+HSSToken::tokenStringRepresentation(this->type);
     } else {
-        return "HSSParser Error: Unexpected token of type "+HSSToken::tokenStringRepresentation(this->type)+" and value "+value;
+        return "HSSParser Error: Unexpected token of type "+HSSToken::tokenStringRepresentation(this->type)+" and value "+this->value;
     }
 }
 
 HSSUnexpectedObjectTypeException::HSSUnexpectedObjectTypeException(string type)
 {
-    this->type = type;
+    this->objectType = type;
 }
 
 string HSSUnexpectedObjectTypeException::toString()
 {
-    return "HSSParser Error: Unexpected object type "+this->type;
+    return "HSSParser Error: Unexpected object type "+this->objectType;
 }
+
+HSSWrongHexLengthException::HSSWrongHexLengthException(int length)
+{
+    this->length = length;
+}
+
+string HSSWrongHexLengthException::toString()
+{
+    std::ostringstream tempstream;
+    tempstream << this->length;
+    return "HSSParser Error: The hex number has a wrong length: "+tempstream.str()+". It must be either 1, 2, 3, 4, 6 or 8 digits long.";
+}
+
+
+

@@ -19,6 +19,7 @@ enum HSSTokenType
 	HSSIdentifier,
 	HSSNumber,
 	HSSPercentageNumber,
+    HSSHexNumber,
 	HSSDoubleQuoteString,
 	HSSSingleQuoteString,
 	HSSSymbol,

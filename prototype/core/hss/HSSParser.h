@@ -68,6 +68,9 @@ protected:
     //will return a pointer or NULL
     //you get to be the owner of the pointer
     HSSPropertyDefinition * readPropertyDefinition();
+    //will return a pointer or NULL
+    //you get to be the owner of the pointer
+    HSSInstruction * readInstruction();
     
 	void readNextToken();
     

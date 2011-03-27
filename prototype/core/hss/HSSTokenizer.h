@@ -40,6 +40,10 @@ public:
     //the caller acquires ownership of the pointer
     HSSToken * peekNextToken();
     void resetPeek();
+    
+    //if you are expecting a hexadecimal number, set this to true
+    //don't forget to reset it afterwards
+    bool preferHex;
 	
 protected:
 	//the current character that has been read
@@ -77,6 +81,12 @@ protected:
 	//reads and returns an identifier token
     //the caller acquires ownership of the pointer
 	HSSToken * readIdentifier();
+	//reads and returns a hexadecimal number
+    //the caller acquires ownership of the pointer
+    HSSToken * readHex();
+	//reads and returns a hexadecimal number or an identifier token
+    //the caller acquires ownership of the pointer
+    HSSToken * readHexOrIdentifier();
 	//reads and returns either a number or a percentage token
     //the caller acquires ownership of the pointer
 	HSSToken * readNumberOrPercentage();

@@ -35,6 +35,7 @@ string HSSToken::tokenStringRepresentation(HSSTokenType type){
 	types[HSSIdentifier] = "HSSIdentifier";
 	types[HSSNumber] = "HSSNumber";
 	types[HSSPercentageNumber] = "HSSPercentageNumber";
+    types[HSSHexNumber] = "HSSHexNumber";
 	types[HSSDoubleQuoteString] = "HSSDoubleQuoteString";
 	types[HSSSingleQuoteString] = "HSSSingleQuoteString";
 	types[HSSSymbol] = "HSSSymbol";
