@@ -18,49 +18,54 @@ using namespace std;
 class HSSParserException
 {
 public:
-    HSSTokenType type;
+    HSSParserException(string filename, int line, int column);
+    
     string filename;
-    string value;
     int line;
     int column;
-    virtual string toString() =0;
+    virtual string toString();
 };
 
 
 class HSSUnexpectedEndOfSourceException : public HSSParserException
 {
 public:
+    HSSUnexpectedEndOfSourceException(string filename, int line, int column);
     virtual string toString();
 };
 
 class HSSExpectedTokenException : public HSSParserException
 {
 public:
-    HSSExpectedTokenException(HSSTokenType type);
-    HSSExpectedTokenException(HSSTokenType type, string value);
+    HSSExpectedTokenException(HSSTokenType type, string filename, int line, int column);
+    HSSExpectedTokenException(HSSTokenType type, string value, string filename, int line, int column);
     virtual string toString();
+    HSSTokenType type;
+    string value;
 };
 
 class HSSUnexpectedTokenException : public HSSParserException
 {
 public:
-    HSSUnexpectedTokenException(HSSTokenType type);
-    HSSUnexpectedTokenException(HSSTokenType type, string value);
+    HSSUnexpectedTokenException(HSSTokenType type, string filename, int line, int column);
+    HSSUnexpectedTokenException(HSSTokenType type, string value, string filename, int line, int column);
     virtual string toString();
+    HSSTokenType type;
+    string value;
 };
 
 class HSSUnexpectedObjectTypeException : public HSSParserException
 {
 public:
-    HSSUnexpectedObjectTypeException(string objectType);
+    HSSUnexpectedObjectTypeException(string type, string filename, int line, int column);
     virtual string toString();
-    string objectType;
+    string type;
 };
 
 class HSSWrongHexLengthException : public HSSParserException
 {
 public:
-    HSSWrongHexLengthException(int length);
+    HSSWrongHexLengthException(int length, string filename, int line, int column);
     virtual string toString();
     int length;
 };

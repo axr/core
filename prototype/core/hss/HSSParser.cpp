@@ -14,10 +14,12 @@
 
 #include "AXR.h"
 
-HSSParser::HSSParser(char * buffer, unsigned buflen)
+HSSParser::HSSParser(char * buffer, unsigned buflen, string filename)
 {
     this->tokenizer = new HSSTokenizer(buffer, buflen);
     this->currentToken = NULL;
+    this->filename = filename;
+    
     this->currentContext.push_back(HSSParserContextRoot);
     //FIXME: will there bee a root object? Now defaults to container
     this->currentObjectContext.push(new HSSContainer());
@@ -107,7 +109,7 @@ HSSStatement * HSSParser::readRule()
                 this->readRule();
             }
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->type);
+            throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         }
         
         security_brake()
@@ -171,13 +173,13 @@ HSSSelectorChain * HSSParser::readSelectorChain()
                     }
                     //huh? we didn't expect any other symbol
                 default:
-                    throw HSSUnexpectedTokenException(HSSSymbol, string(1,currentTokenValue));
+                    throw HSSUnexpectedTokenException(HSSSymbol, string(1,currentTokenValue), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
                     delete ret;
                     return NULL;
             }
             //we didn't expect any other type of token
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->type);
+            throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
             delete ret;
             return NULL;
         }
@@ -294,7 +296,7 @@ HSSCombinator * HSSParser::readSymbolCombinator()
             
             break;
         default:
-            throw HSSUnexpectedTokenException(HSSSymbol, string(1, currentTokenChar));
+            throw HSSUnexpectedTokenException(HSSSymbol, string(1, currentTokenChar), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
             return NULL;
     }
     
@@ -345,7 +347,7 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
         this->readNextToken();
         this->checkForUnexpectedEndOfSource();
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->type);
+        throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         return NULL;
     }
     
@@ -353,7 +355,7 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
     try {
         obj = HSSObject::newObjectWithType(objtype);
     } catch (HSSUnknownObjectTypeException e) {
-        throw HSSUnexpectedObjectTypeException(e.type);
+        throw HSSUnexpectedObjectTypeException(e.type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
     }
     
     
@@ -368,7 +370,7 @@ HSSObjectDefinition * HSSParser::readObjectDefinition()
         //it is the opening curly brace, therefore an annonymous object:
         //do nothing
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->type);
+        throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         delete obj;
         return NULL;
     }
@@ -459,7 +461,7 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
             this->tokenizer->preferHex = false;
             
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->type);
+            throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
             delete ret;
             return NULL;
         }
@@ -474,14 +476,14 @@ HSSPropertyDefinition * HSSParser::readPropertyDefinition()
             //alright, this is the end of the property definition
             std_log3("end of property definition");
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->type);
+            throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
             delete ret;
             return NULL;
         }
         
         return ret;
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->type);
+        throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         this->readNextToken();
         return NULL;
     }
@@ -517,7 +519,7 @@ HSSInstruction * HSSParser::readInstruction()
                 break;
                 
             default:
-                throw HSSWrongHexLengthException(currentval.length());
+                throw HSSWrongHexLengthException(currentval.length(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
                 return NULL;
         }
                 
@@ -530,13 +532,13 @@ HSSInstruction * HSSParser::readInstruction()
         } else if (currentval == "import") {
             ret = new HSSInstruction(HSSImportInstruction);
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->type);
+            throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
             return NULL;
         }
         this->readNextToken();
         
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->type);
+        throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         return NULL;
     }
     
@@ -565,7 +567,7 @@ bool HSSParser::atEndOfSource()
 void HSSParser::checkForUnexpectedEndOfSource()
 {
     if (this->atEndOfSource()) {
-        throw HSSUnexpectedEndOfSourceException();
+        throw HSSUnexpectedEndOfSourceException(this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
     }
 }
 
@@ -573,7 +575,7 @@ void HSSParser::skipExpected(HSSTokenType type)
 {
     this->checkForUnexpectedEndOfSource();
     if (!this->currentToken->isA(type)) {
-        throw HSSExpectedTokenException(type);
+        throw HSSExpectedTokenException(type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
     }
     this->readNextToken();
 }
@@ -583,7 +585,7 @@ void HSSParser::skipExpected(HSSTokenType type, string value)
     this->checkForUnexpectedEndOfSource();
     HSSValueToken * currentToken = static_cast<HSSValueToken *>(this->currentToken);
     if (!currentToken->equals(type, value)) {
-        throw HSSExpectedTokenException(type, value);
+        throw HSSExpectedTokenException(type, value, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
     }
     this->readNextToken();
 }

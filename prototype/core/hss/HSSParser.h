@@ -33,12 +33,14 @@ class HSSParser
 {
 public:
     //initialize with a pointer to the buffer where the HSS code is stored, and the lenght of the buffer
-	HSSParser(char * buffer, unsigned buflen);
+	HSSParser(char * buffer, unsigned buflen, string filename);
 	//destructor
 	~HSSParser();
     
     //reads and returns a pointer to the next statement in the buffer or NULL if none found
     HSSStatement * readNextStatement();
+    
+    string filename;
     
 protected:
     HSSTokenizer * tokenizer;

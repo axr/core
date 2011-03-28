@@ -32,6 +32,8 @@ HSSTokenizer::HSSTokenizer(char * buffer, unsigned buflen)
 	this->bufpos = 0;
     //the peeking position is the same as the bufpos
     this->peekpos = 0;
+    //we start at line 0 and column 0
+    this->currentLine = this->currentColumn = 1;
 	
 	//start by reading the first character
 	this->readNextChar();
@@ -164,6 +166,7 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
 	}
     std_log4("read charachter |" << this->currentChar << "|");
 	this->bufpos++;
+    this->currentColumn++;
     std_log4("now at position " << this->bufpos);
     
 	
@@ -173,6 +176,10 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
 HSS_TOKENIZING_STATUS HSSTokenizer::skipWhitespace()
 {
 	while (isspace(this->currentChar)){
+        if(this->currentChar == '\n' || this->currentChar == '\r'){
+            this->currentLine++;
+            this->currentColumn = 0;
+        }
 		this->readNextChar();
 	}
 	
@@ -323,7 +330,7 @@ HSSToken * HSSTokenizer::readString()
         this->readNextChar();
         while (this->currentChar != '"') {
             if(this->atEndOfSource()){
-                throw HSSUnexpectedEndOfSourceException();
+                throw HSSUnexpectedEndOfSourceException("unknown", this->currentLine, this->currentColumn);
                 return NULL;
             }
             this->storeCurrentCharAndReadNext();
@@ -333,7 +340,7 @@ HSSToken * HSSTokenizer::readString()
         this->readNextChar();
         while (this->currentChar != '\'') {
             if(this->atEndOfSource()){
-                throw HSSUnexpectedEndOfSourceException();
+                throw HSSUnexpectedEndOfSourceException("unknown", this->currentLine, this->currentColumn);
                 return NULL;
             }
             this->storeCurrentCharAndReadNext();

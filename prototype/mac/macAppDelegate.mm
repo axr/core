@@ -45,7 +45,7 @@ void listHSSStatements(NSString *filepath)
     FILE * hssfile = fopen([filepath UTF8String], "r");
     int len = (int)fread(buffer, 1, buflen, hssfile);
     fclose(hssfile);
-    HSSParser parser(buffer, len);
+    HSSParser parser(buffer, len, [[filepath lastPathComponent] UTF8String]);
     HSSStatement * statement = NULL;
     bool done = FALSE;
     int security_count = 0;

@@ -44,6 +44,10 @@ public:
     //if you are expecting a hexadecimal number, set this to true
     //don't forget to reset it afterwards
     bool preferHex;
+    
+    //the current line and column position we're on
+    long int currentLine;
+    long int currentColumn;
 	
 protected:
 	//the current character that has been read
