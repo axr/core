@@ -14,6 +14,7 @@
 #include "HSSValueToken.h"
 #include <iostream>
 #include "AXR.h"
+#include <sstream>
 
 HSSTokenizer::HSSTokenizer(char * buffer, unsigned buflen)
 {
@@ -158,16 +159,16 @@ void HSSTokenizer::resetPeek()
 
 HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
 {
-    std_log4("was at position " << this->bufpos);
 	if(this->buflen == this->bufpos){
 		this->currentChar = '\0';
 	} else {
 		this->currentChar = buffer[this->bufpos];
 	}
-    std_log4("read charachter |" << this->currentChar << "|");
+    std::ostringstream tempstream;
+    tempstream << this->bufpos;
+    std_log4("read charachter "+tempstream.str()+"|" << this->currentChar << "|");
 	this->bufpos++;
     this->currentColumn++;
-    std_log4("now at position " << this->bufpos);
     
 	
 	return HSSTokenizerOK;
@@ -290,9 +291,6 @@ HSSToken * HSSTokenizer::readHexOrIdentifier()
                 if (isdigit(this->currentChar)){
                     this->storeCurrentCharAndReadNext();
                     continue;
-                    
-                } else if (this->currentTokenText.length() > 0){
-                    return new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText());
                 } else {
                     break;
                 }
@@ -330,6 +328,7 @@ HSSToken * HSSTokenizer::readString()
         this->readNextChar();
         while (this->currentChar != '"') {
             if(this->atEndOfSource()){
+                //FIXME
                 throw HSSUnexpectedEndOfSourceException("unknown", this->currentLine, this->currentColumn);
                 return NULL;
             }
@@ -340,6 +339,7 @@ HSSToken * HSSTokenizer::readString()
         this->readNextChar();
         while (this->currentChar != '\'') {
             if(this->atEndOfSource()){
+                //FIXME
                 throw HSSUnexpectedEndOfSourceException("unknown", this->currentLine, this->currentColumn);
                 return NULL;
             }
