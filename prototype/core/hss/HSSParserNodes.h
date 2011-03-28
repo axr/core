@@ -17,5 +17,6 @@
 #include "HSSUniversalSelector.h"
 #include "HSSPropertyDefinition.h"
 #include "HSSInstruction.h"
+#include "HSSComment.h"
 
 #endif

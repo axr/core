@@ -64,6 +64,13 @@ HSSStatement * HSSParser::readNextStatement()
             return this->readRule();
         }
         
+        if(this->currentToken->isA(HSSBlockComment) || this->currentToken->isA(HSSLineComment)){
+            HSSComment * ret = new HSSComment(VALUE_TOKEN(this->currentToken)->value);
+            this->readNextToken();
+            this->skip(HSSWhitespace);
+            return ret;
+        }
+        
         return NULL;
     } else {
         std_log1("reading in anything other than root context is not implemented yet");

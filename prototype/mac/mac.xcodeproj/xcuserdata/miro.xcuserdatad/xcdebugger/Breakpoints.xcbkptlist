@@ -37,11 +37,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322952429.913637"
+         timestampString = "323016239.564539"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "275"
-         endingLineNumber = "275"
+         startingLineNumber = "282"
+         endingLineNumber = "282"
          landmarkName = "HSSParser::readSymbolCombinator()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -65,11 +65,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322952429.913637"
+         timestampString = "323016239.564539"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "202"
-         endingLineNumber = "202"
+         startingLineNumber = "209"
+         endingLineNumber = "209"
          landmarkName = "HSSParser::isCombinator(HSSToken * token)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -79,11 +79,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322952429.913637"
+         timestampString = "323016239.564539"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "96"
-         endingLineNumber = "96"
+         startingLineNumber = "103"
+         endingLineNumber = "103"
          landmarkName = "HSSParser::readRule()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -107,11 +107,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322952429.913637"
+         timestampString = "323016239.564539"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "320"
-         endingLineNumber = "320"
+         startingLineNumber = "327"
+         endingLineNumber = "327"
          landmarkName = "HSSParser::readObjectDefinition()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -121,11 +121,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322952429.913637"
+         timestampString = "323016239.564539"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "388"
-         endingLineNumber = "388"
+         startingLineNumber = "395"
+         endingLineNumber = "395"
          landmarkName = "HSSParser::readObjectDefinition()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -135,11 +135,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322952429.913637"
+         timestampString = "323016239.564539"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "354"
-         endingLineNumber = "354"
+         startingLineNumber = "361"
+         endingLineNumber = "361"
          landmarkName = "HSSParser::readObjectDefinition()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -149,11 +149,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322952429.913637"
+         timestampString = "323016239.564539"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "459"
-         endingLineNumber = "459"
+         startingLineNumber = "466"
+         endingLineNumber = "466"
          landmarkName = "HSSParser::readPropertyDefinition()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -163,11 +163,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322952429.913637"
+         timestampString = "323016239.564539"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "79"
-         endingLineNumber = "79"
+         startingLineNumber = "86"
+         endingLineNumber = "86"
          landmarkName = "HSSParser::readRule()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -177,11 +177,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322952429.913637"
+         timestampString = "323016239.564539"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "379"
-         endingLineNumber = "379"
+         startingLineNumber = "386"
+         endingLineNumber = "386"
          landmarkName = "HSSParser::readObjectDefinition()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -191,11 +191,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322952429.913637"
+         timestampString = "323016239.564539"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "424"
-         endingLineNumber = "424"
+         startingLineNumber = "431"
+         endingLineNumber = "431"
          landmarkName = "HSSParser::readPropertyDefinition()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -205,11 +205,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/HSSParser.cpp"
-         timestampString = "322952429.913637"
+         timestampString = "323016239.564539"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "501"
-         endingLineNumber = "501"
+         startingLineNumber = "508"
+         endingLineNumber = "508"
          landmarkName = "HSSParser::readInstruction()"
          landmarkType = "5">
       </FileBreakpoint>

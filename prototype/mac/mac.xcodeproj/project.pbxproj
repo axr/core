@@ -33,6 +33,7 @@
 		4EBCBD4C133017510086FD01 /* HSSObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EBCBD4A133017510086FD01 /* HSSObject.cpp */; };
 		4EBCBD4F133025710086FD01 /* HSSDisplayObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EBCBD4D133025710086FD01 /* HSSDisplayObject.cpp */; };
 		4EBCBD52133025ED0086FD01 /* HSSContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EBCBD50133025ED0086FD01 /* HSSContainer.cpp */; };
+		4EBCF89D1340D35600DC2CC7 /* HSSComment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EBCF89B1340D35600DC2CC7 /* HSSComment.cpp */; };
 		4EC79548132AA85200A2D989 /* HSSToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EC79543132AA85200A2D989 /* HSSToken.cpp */; };
 		4EC79549132AA85200A2D989 /* HSSTokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EC79545132AA85200A2D989 /* HSSTokenizer.cpp */; };
 		4EC79551132AA87600A2D989 /* OSX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EC7954C132AA87600A2D989 /* OSX.cpp */; };
@@ -129,6 +130,8 @@
 		4EBCBD50133025ED0086FD01 /* HSSContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSContainer.cpp; path = ../core/hss/HSSContainer.cpp; sourceTree = "<group>"; };
 		4EBCBD51133025ED0086FD01 /* HSSContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSContainer.h; path = ../core/hss/HSSContainer.h; sourceTree = "<group>"; };
 		4EBCBD61133026A10086FD01 /* HSSObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSObjects.h; path = ../core/hss/HSSObjects.h; sourceTree = "<group>"; };
+		4EBCF89B1340D35600DC2CC7 /* HSSComment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSComment.cpp; path = ../core/hss/HSSComment.cpp; sourceTree = "<group>"; };
+		4EBCF89C1340D35600DC2CC7 /* HSSComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSComment.h; path = ../core/hss/HSSComment.h; sourceTree = "<group>"; };
 		4EC79543132AA85200A2D989 /* HSSToken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSToken.cpp; path = ../core/hss/HSSToken.cpp; sourceTree = "<group>"; };
 		4EC79544132AA85200A2D989 /* HSSToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSToken.h; path = ../core/hss/HSSToken.h; sourceTree = "<group>"; };
 		4EC79545132AA85200A2D989 /* HSSTokenizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSTokenizer.cpp; path = ../core/hss/HSSTokenizer.cpp; sourceTree = "<group>"; };
@@ -288,9 +291,9 @@
 				4E2ECFCD133D4CD400195203 /* HSSObjectNameConstant.h */,
 				4E2ECFB8133D2A7F00195203 /* HSSExpression.cpp */,
 				4E2ECFB9133D2A7F00195203 /* HSSExpression.h */,
-				4EE5E23A132D6A5300950DE9 /* HSSParserNodes.h */,
 				4E1F0208133E863100314DD3 /* HSSInstruction.cpp */,
 				4E1F0209133E863100314DD3 /* HSSInstruction.h */,
+				4EE5E23A132D6A5300950DE9 /* HSSParserNodes.h */,
 				4E1EE0CD132D502C00DDF8D6 /* HSSParserNode.cpp */,
 				4E1EE0CE132D502C00DDF8D6 /* HSSParserNode.h */,
 				4EE5E237132D68A700950DE9 /* HSSSelector.cpp */,
@@ -301,6 +304,8 @@
 				4EFE85C1132FC1510080A241 /* HSSCombinator.h */,
 				4EB58FCC13312C0E001484A3 /* HSSSelectorChain.cpp */,
 				4EB58FCD13312C0F001484A3 /* HSSSelectorChain.h */,
+				4EBCF89B1340D35600DC2CC7 /* HSSComment.cpp */,
+				4EBCF89C1340D35600DC2CC7 /* HSSComment.h */,
 				4EE5E234132D649600950DE9 /* HSSStatement.cpp */,
 				4EE5E235132D649600950DE9 /* HSSStatement.h */,
 				4EE5E23B132D757700950DE9 /* HSSRule.cpp */,
@@ -499,6 +504,7 @@
 				4E2ECFCC133D4AF900195203 /* HSSObjectNameConstant.cpp in Sources */,
 				4E2ECFD1133D509B00195203 /* HSSPercentageConstant.cpp in Sources */,
 				4E1F020A133E863200314DD3 /* HSSInstruction.cpp in Sources */,
+				4EBCF89D1340D35600DC2CC7 /* HSSComment.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
