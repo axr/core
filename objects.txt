@@ -34,6 +34,8 @@ Those properties that accept multiple values are marked with [].
 			tabIndex
 			focused
 			mask
+			contentText
+			attributes[]
 			
 				@container
 					shape
@@ -44,7 +46,6 @@ Those properties that accept multiple values are marked with [].
 					secondaryDirection
 					contentAlignX
 					contentAlignY
-					contentText
 					background
 				
 				@textBlock
