@@ -25,6 +25,11 @@
 		4E2ECFD1133D509B00195203 /* HSSPercentageConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E2ECFCF133D509300195203 /* HSSPercentageConstant.cpp */; };
 		4E4429671311D051000E37D3 /* libcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E4429621311CF88000E37D3 /* libcore.a */; };
 		4E45207F1311D3F2006645EF /* AXR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E4520751311D3F2006645EF /* AXR.cpp */; };
+		4E5D17641347A6350066342D /* XMLParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E5D17621347A6350066342D /* XMLParser.cpp */; };
+		4E5D17671347B0AC0066342D /* XMLParserExceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E5D17651347B0AC0066342D /* XMLParserExceptions.cpp */; };
+		4E6E74501347704300D3522E /* AXRController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E6E744E1347704300D3522E /* AXRController.cpp */; };
+		4E6E746413478A0800D3522E /* ExpatXMLParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E6E746313478A0800D3522E /* ExpatXMLParser.cpp */; };
+		4E6E746613478C8A00D3522E /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E4521011311DBDF006645EF /* libexpat.a */; };
 		4E71BFF7132D1A0300FC71D7 /* HSSValueToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E71BFF5132D1A0300FC71D7 /* HSSValueToken.cpp */; };
 		4E87C880133D29B400C2042C /* HSSNumberConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E87C87E133D29B400C2042C /* HSSNumberConstant.cpp */; };
 		4EB58FCB13311AAD001484A3 /* HSSPropertyDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EB58FC913311AAC001484A3 /* HSSPropertyDefinition.cpp */; };
@@ -111,6 +116,16 @@
 		4E4520751311D3F2006645EF /* AXR.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AXR.cpp; path = ../core/AXR.cpp; sourceTree = SOURCE_ROOT; };
 		4E4520761311D3F2006645EF /* AXR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AXR.h; path = ../core/AXR.h; sourceTree = SOURCE_ROOT; };
 		4E4521011311DBDF006645EF /* libexpat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libexpat.a; path = /usr/local/lib/libexpat.a; sourceTree = "<absolute>"; };
+		4E5D17621347A6350066342D /* XMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XMLParser.cpp; sourceTree = "<group>"; };
+		4E5D17631347A6350066342D /* XMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLParser.h; sourceTree = "<group>"; };
+		4E5D17651347B0AC0066342D /* XMLParserExceptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XMLParserExceptions.cpp; sourceTree = "<group>"; };
+		4E5D17661347B0AC0066342D /* XMLParserExceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLParserExceptions.h; sourceTree = "<group>"; };
+		4E6E744E1347704300D3522E /* AXRController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AXRController.cpp; path = ../core/AXRController.cpp; sourceTree = "<group>"; };
+		4E6E744F1347704300D3522E /* AXRController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AXRController.h; path = ../core/AXRController.h; sourceTree = "<group>"; };
+		4E6E746313478A0800D3522E /* ExpatXMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpatXMLParser.cpp; sourceTree = "<group>"; };
+		4E6E746513478A6200D3522E /* ExpatXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpatXMLParser.h; sourceTree = "<group>"; };
+		4E6E74691347A07A00D3522E /* ExpatXMLFileParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpatXMLFileParser.h; sourceTree = "<group>"; };
+		4E6E746A1347A07A00D3522E /* ExpatXMLFileParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpatXMLFileParser.cpp; sourceTree = "<group>"; };
 		4E71BFF5132D1A0300FC71D7 /* HSSValueToken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSValueToken.cpp; path = ../core/hss/HSSValueToken.cpp; sourceTree = "<group>"; };
 		4E71BFF6132D1A0300FC71D7 /* HSSValueToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSValueToken.h; path = ../core/hss/HSSValueToken.h; sourceTree = "<group>"; };
 		4E87C87E133D29B400C2042C /* HSSNumberConstant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSNumberConstant.cpp; path = ../core/hss/HSSNumberConstant.cpp; sourceTree = "<group>"; };
@@ -138,8 +153,8 @@
 		4EC79546132AA85200A2D989 /* HSSTokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSTokenizer.h; path = ../core/hss/HSSTokenizer.h; sourceTree = "<group>"; };
 		4EC7954C132AA87600A2D989 /* OSX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OSX.cpp; sourceTree = "<group>"; };
 		4EC7954D132AA87600A2D989 /* OSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSX.h; sourceTree = "<group>"; };
-		4EC7954F132AA87600A2D989 /* AXRXmlParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRXmlParser.cpp; sourceTree = "<group>"; };
-		4EC79550132AA87600A2D989 /* AXRXmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRXmlParser.h; sourceTree = "<group>"; };
+		4EC7954F132AA87600A2D989 /* AXRXmlParser_old.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRXmlParser_old.cpp; sourceTree = "<group>"; };
+		4EC79550132AA87600A2D989 /* AXRXmlParser_old.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRXmlParser_old.h; sourceTree = "<group>"; };
 		4EC7960C132AAD2C00A2D989 /* hss.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hss.h; path = ../core/hss/hss.h; sourceTree = SOURCE_ROOT; };
 		4EE5E231132D58C900950DE9 /* HSSParserExceptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSSParserExceptions.cpp; path = ../core/hss/HSSParserExceptions.cpp; sourceTree = "<group>"; };
 		4EE5E232132D58C900950DE9 /* HSSParserExceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSSParserExceptions.h; path = ../core/hss/HSSParserExceptions.h; sourceTree = "<group>"; };
@@ -164,6 +179,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E4429671311D051000E37D3 /* libcore.a in Frameworks */,
+				4E6E746613478C8A00D3522E /* libexpat.a in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -263,6 +279,7 @@
 		4E4520711311D3D8006645EF /* core */ = {
 			isa = PBXGroup;
 			children = (
+				4E6E74511347722800D3522E /* axr */,
 				4EC7954B132AA87600A2D989 /* os */,
 				4EC7954E132AA87600A2D989 /* xml */,
 				4EC79541132AA83E00A2D989 /* hss */,
@@ -271,6 +288,15 @@
 				4E4429581311CF71000E37D3 /* core.xcodeproj */,
 			);
 			name = core;
+			sourceTree = "<group>";
+		};
+		4E6E74511347722800D3522E /* axr */ = {
+			isa = PBXGroup;
+			children = (
+				4E6E744E1347704300D3522E /* AXRController.cpp */,
+				4E6E744F1347704300D3522E /* AXRController.h */,
+			);
+			name = axr;
 			sourceTree = "<group>";
 		};
 		4EBCBD47133016EA0086FD01 /* parsing */ = {
@@ -383,8 +409,16 @@
 		4EC7954E132AA87600A2D989 /* xml */ = {
 			isa = PBXGroup;
 			children = (
-				4EC7954F132AA87600A2D989 /* AXRXmlParser.cpp */,
-				4EC79550132AA87600A2D989 /* AXRXmlParser.h */,
+				4E6E74691347A07A00D3522E /* ExpatXMLFileParser.h */,
+				4E6E746A1347A07A00D3522E /* ExpatXMLFileParser.cpp */,
+				4E6E746513478A6200D3522E /* ExpatXMLParser.h */,
+				4E6E746313478A0800D3522E /* ExpatXMLParser.cpp */,
+				4E5D17651347B0AC0066342D /* XMLParserExceptions.cpp */,
+				4E5D17661347B0AC0066342D /* XMLParserExceptions.h */,
+				4EC7954F132AA87600A2D989 /* AXRXmlParser_old.cpp */,
+				4EC79550132AA87600A2D989 /* AXRXmlParser_old.h */,
+				4E5D17621347A6350066342D /* XMLParser.cpp */,
+				4E5D17631347A6350066342D /* XMLParser.h */,
 			);
 			name = xml;
 			path = ../core/xml;
@@ -505,6 +539,10 @@
 				4E2ECFD1133D509B00195203 /* HSSPercentageConstant.cpp in Sources */,
 				4E1F020A133E863200314DD3 /* HSSInstruction.cpp in Sources */,
 				4EBCF89D1340D35600DC2CC7 /* HSSComment.cpp in Sources */,
+				4E6E74501347704300D3522E /* AXRController.cpp in Sources */,
+				4E6E746413478A0800D3522E /* ExpatXMLParser.cpp in Sources */,
+				4E5D17641347A6350066342D /* XMLParser.cpp in Sources */,
+				4E5D17671347B0AC0066342D /* XMLParserExceptions.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -596,6 +634,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
 			};

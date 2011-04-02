@@ -16,9 +16,13 @@
 
 void listHSSStatements(NSString * filepath);
 void listHSSTokens(NSString * filepath);
+void listXMLElements(NSString * filepath);
 
 - (IBAction)listStatements:(id)sender;
 - (IBAction)listTokens:(id)sender;
 
+- (void)listXMLElements;
+
+- (IBAction)listXMLElements:(id)sender;
 
 @end

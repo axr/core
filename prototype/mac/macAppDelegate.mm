@@ -20,19 +20,21 @@ char Buff[BUFFSIZE];
 @synthesize window;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	//load the sample HSS file
-	NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
-	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	int result;
-	[openPanel setCanChooseFiles:TRUE];
-	[openPanel setAllowsMultipleSelection:FALSE];
-	result = [openPanel runModalForTypes:hssFileType];
-	if(result == NSOKButton){
-		if([[openPanel filenames] count] > 0){
-			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
-            listHSSStatements(filepath);
-		}
-	}
+//	//load the sample HSS file
+//	NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
+//	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+//	int result;
+//	[openPanel setCanChooseFiles:TRUE];
+//	[openPanel setAllowsMultipleSelection:FALSE];
+//	result = [openPanel runModalForTypes:hssFileType];
+//	if(result == NSOKButton){
+//		if([[openPanel filenames] count] > 0){
+//			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
+//            listHSSStatements(filepath);
+//		}
+//	}
+    
+    [self listXMLElements];
 }
 
 
@@ -138,6 +140,42 @@ void listHSSTokens(NSString *filepath)
 #endif
 }
 
+void listXMLElements(NSString *filepath)
+{
+    std_log1(string("reading all XML elements from ").append([filepath UTF8String]));
+    
+    AXR::AXRController * controller = new AXR::AXRController();
+    AXR::XMLParser parser = AXR::XMLParser(controller, [filepath UTF8String], [[filepath lastPathComponent] UTF8String]);
+    try {
+        parser.Parse();
+    }
+    catch(AXR::XMLUnexpectedEndOfSourceException e){
+        std::cout << e.toString() << std::endl;
+    }
+    
+    std::cout << std::endl << "-----------------------------" << std::endl
+    <<  controller->toString() << std::endl << "-----------------------------" << std::endl;
+}
+
+- (void)listXMLElements
+{
+    //load the sample XML file
+	NSArray *xmlFileType = [NSArray arrayWithObject:@"xml"];
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+	int result;
+	[openPanel setCanChooseFiles:TRUE];
+	[openPanel setAllowsMultipleSelection:FALSE];
+	result = [openPanel runModalForTypes:xmlFileType];
+	if(result == NSOKButton){
+		if([[openPanel filenames] count] > 0){
+			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
+            listXMLElements(filepath);
+		}
+	}
+    std::cout << "reached end of source" << std::endl;
+    std::cout << "\n\n\n\n";
+}
+
 - (IBAction)listStatements:(id)sender {
     //load the sample HSS file
 	NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
@@ -168,5 +206,9 @@ void listHSSTokens(NSString *filepath)
             listHSSTokens(filepath);
 		}
 	}
+}
+
+- (IBAction)listXMLElements:(id)sender {
+    [self listXMLElements];
 }
 @end

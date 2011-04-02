@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <test>
-	
-	<test2>
-		<test3>
-			<!-- this is a comment ü -->
-		</test3>
+	<test2 arg1="test">
+		bla
+		<test3 bread="yes" butter="maybe"/>
 	</test2>
 </test>

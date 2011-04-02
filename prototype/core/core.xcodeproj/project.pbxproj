@@ -11,8 +11,6 @@
 		4E4428751311C0D9000E37D3 /* OSX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E4428731311C0D9000E37D3 /* OSX.cpp */; };
 		4ED1A89E1309A4F5001EAEA9 /* AXR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4ED1A8981309A4F5001EAEA9 /* AXR.cpp */; };
 		4ED1A89F1309A4F5001EAEA9 /* AXR.h in Headers */ = {isa = PBXBuildFile; fileRef = 4ED1A8991309A4F5001EAEA9 /* AXR.h */; };
-		4ED1A8A01309A4F5001EAEA9 /* AXRXmlParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4ED1A89B1309A4F5001EAEA9 /* AXRXmlParser.cpp */; };
-		4ED1A8A11309A4F5001EAEA9 /* AXRXmlParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 4ED1A89C1309A4F5001EAEA9 /* AXRXmlParser.h */; };
 		4ED1A95F1309AEC0001EAEA9 /* libexpat.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ED1A95E1309AEC0001EAEA9 /* libexpat.dylib */; };
 /* End PBXBuildFile section */
 
@@ -21,8 +19,6 @@
 		4E4428731311C0D9000E37D3 /* OSX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OSX.cpp; path = os/OSX.cpp; sourceTree = "<group>"; };
 		4ED1A8981309A4F5001EAEA9 /* AXR.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXR.cpp; sourceTree = "<group>"; };
 		4ED1A8991309A4F5001EAEA9 /* AXR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXR.h; sourceTree = "<group>"; };
-		4ED1A89B1309A4F5001EAEA9 /* AXRXmlParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRXmlParser.cpp; sourceTree = "<group>"; };
-		4ED1A89C1309A4F5001EAEA9 /* AXRXmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRXmlParser.h; sourceTree = "<group>"; };
 		4ED1A95E1309AEC0001EAEA9 /* libexpat.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libexpat.dylib; path = /usr/local/lib/libexpat.dylib; sourceTree = "<absolute>"; };
 		D2AAC046055464E500DB518D /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -56,7 +52,6 @@
 				4E4428761311C0DD000E37D3 /* os */,
 				4ED1A8981309A4F5001EAEA9 /* AXR.cpp */,
 				4ED1A8991309A4F5001EAEA9 /* AXR.h */,
-				4ED1A89A1309A4F5001EAEA9 /* xml */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -78,15 +73,6 @@
 			name = os;
 			sourceTree = "<group>";
 		};
-		4ED1A89A1309A4F5001EAEA9 /* xml */ = {
-			isa = PBXGroup;
-			children = (
-				4ED1A89B1309A4F5001EAEA9 /* AXRXmlParser.cpp */,
-				4ED1A89C1309A4F5001EAEA9 /* AXRXmlParser.h */,
-			);
-			path = xml;
-			sourceTree = "<group>";
-		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -102,7 +88,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4ED1A89F1309A4F5001EAEA9 /* AXR.h in Headers */,
-				4ED1A8A11309A4F5001EAEA9 /* AXRXmlParser.h in Headers */,
 				4E4428741311C0D9000E37D3 /* OSX.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -157,7 +142,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4ED1A89E1309A4F5001EAEA9 /* AXR.cpp in Sources */,
-				4ED1A8A01309A4F5001EAEA9 /* AXRXmlParser.cpp in Sources */,
 				4E4428751311C0D9000E37D3 /* OSX.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

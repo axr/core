@@ -8,6 +8,23 @@
 
 #include "HSSDisplayObject.h"
 
+HSSDisplayObject::HSSDisplayObject()
+: HSSObject()
+{
+    this->parent = NULL;
+}
+
+HSSDisplayObject::HSSDisplayObject(string name)
+: HSSObject(name)
+{
+    this->parent = NULL;
+}
+
+HSSDisplayObject::~HSSDisplayObject()
+{
+    this->parent = NULL;
+}
+
 string HSSDisplayObject::toString()
 {
     if (this->isNamed()) {
@@ -57,3 +74,31 @@ bool HSSDisplayObject::isKeyword(string value, string property)
     //if we reached this far, let the superclass handle it
     return HSSObject::isKeyword(value, property);
 }
+
+HSSContainer * HSSDisplayObject::getParent()
+{
+    return this->parent;
+}
+
+void HSSDisplayObject::setParent(HSSContainer *parent)
+{
+    //is this necessary?
+    this->parent = NULL;
+    this->parent = parent;
+}
+
+
+void HSSDisplayObject::attributesAdd(string name, string value)
+{
+    this->attributes[name] = value;
+}
+
+void HSSDisplayObject::attributesRemove(string name)
+{
+    this->attributes.erase(name);
+}
+
+
+
+
+
