@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="application/x-hss" src="style.hss"?>
+<test>
+	<test2 arg1="test">
+		bla
+		<test3 bread="yes" butter="maybe"/>
+	</test2>
+</test>

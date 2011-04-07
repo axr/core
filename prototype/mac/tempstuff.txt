@@ -1,0 +1,276 @@
+container
+textBlock
+word
+glyph
+image
+imageFamily
+video
+box
+shape
+rect
+roundedRect
+circle
+polygon
+star
+path
+pathSegment
+line
+arc
+arcTangents
+curve
+quadCurve
+pathOperation
+union
+perforation
+intersection
+margin
+projectedMargin
+straightMargin
+border
+lineBorder
+shapeBorder
+calligraphicBorder
+tiledBorder
+color
+rgb
+hsb
+cmyk
+pattern
+gradient
+linearGradient
+radialGradient
+contourGradient
+colorStop
+font
+interpolation
+transition
+animation
+keyframe
+effect
+generatorEffect
+shadow
+glow
+modifierEffect
+blur
+motionBlur
+blurBelow
+opacity
+blending
+colorHSB
+colorBC
+transform
+scale
+skew
+translate
+rotate
+value
+keyValue
+request
+event
+mouseEvent
+press
+release
+click
+drag
+over
+out
+rollOver
+rollOut
+dragOver
+dragOut
+keyboardEvent
+gestures
+modifierEvent
+error
+jsFunction
+javascript
+filter
+load
+
+
+
+map<string,HSSObjectType> objectTypes;
+   objectTypes["container"] = HSSOTContainer;
+       "textBlock",
+       "word",
+       "glyph",
+       "image",
+       "imageFamily",
+       "video",
+       "box",
+       "shape",
+       "rect",
+       "roundedRect",
+       "circle",
+       "polygon",
+       "star",
+       "path",
+       "pathSegment",
+       "line",
+       "arc",
+       "arcTangents",
+       "curve",
+       "quadCurve",
+       "pathOperation",
+       "union",
+       "perforation",
+       "intersection",
+       "margin",
+       "projectedMargin",
+       "straightMargin",
+       "border",
+       "lineBorder",
+       "shapeBorder",
+       "calligraphicBorder",
+       "tiledBorder",
+       "color",
+       "rgb",
+       "hsb",
+       "cmyk",
+       "pattern",
+       "gradient",
+       "linearGradient",
+       "radialGradient",
+       "contourGradient",
+       "colorStop",
+       "font",
+       "interpolation",
+       "transition",
+       "animation",
+       "keyframe",
+       "effect",
+       "generatorEffect",
+       "shadow",
+       "glow",
+       "modifierEffect",
+       "blur",
+       "motionBlur",
+       "blurBelow",
+       "opacity",
+       "blending",
+       "colorHSB",
+       "colorBC",
+       "transform",
+       "scale",
+       "skew",
+       "translate",
+       "rotate",
+       "value",
+       "keyValue",
+       "request",
+       "event",
+       "mouseEvent",
+       "press",
+       "release",
+       "click",
+       "drag",
+       "over",
+       "out",
+       "rollOver",
+       "rollOut",
+       "dragOver",
+       "dragOut",
+       "keyboardEvent",
+       "gestures",
+       "modifierEvent",
+       "error",
+       "jsFunction",
+       "javascript",
+       "filter",
+       "load"
+   };
+
+
+
+
+enum HSSObjectType
+{
+    HSSOTContainer,
+    HSSOTTextBlock,
+    HSSOTWord,
+    HSSOTGlyph,
+    HSSOTImage,
+    HSSOTImageFamily,
+    HSSOTVideo,
+    HSSOTBox,
+    HSSOTShape,
+    HSSOTRect,
+    HSSOTRoundedRect,
+    HSSOTCircle,
+    HSSOTPolygon,
+    HSSOTStar,
+    HSSOTPath,
+    HSSOTPathSegment,
+    HSSOTLine,
+    HSSOTArc,
+    HSSOTArcTangents,
+    HSSOTCurve,
+    HSSOTQuadCurve,
+    HSSOTPathOperation,
+    HSSOTUnion,
+    HSSOTPerforation,
+    HSSOTIntersection,
+    HSSOTMargin,
+    HSSOTProjectedMargin,
+    HSSOTStraightMargin,
+    HSSOTBorder,
+    HSSOTLineBorder,
+    HSSOTShapeBorder,
+    HSSOTCalligraphicBorder,
+    HSSOTTiledBorder,
+    HSSOTColor,
+    HSSOTRGB,
+    HSSOTHSB,
+    HSSOTCMYK,
+    HSSOTPattern,
+    HSSOTGradient,
+    HSSOTLinearGradient,
+    HSSOTRadialGradient,
+    HSSOTContourGradient,
+    HSSOTColorStop,
+    HSSOTFont,
+    HSSOTInterpolation,
+    HSSOTTransition,
+    HSSOTAnimation,
+    HSSOTKeyframe,
+    HSSOTEffect,
+    HSSOTGeneratorEffect,
+    HSSOTShadow,
+    HSSOTGlow,
+    HSSOTModifierEffect,
+    HSSOTBlur,
+    HSSOTMotionBlur,
+    HSSOTBlurBelow,
+    HSSOTOpacity,
+    HSSOTBlending,
+    HSSOTColorHSB,
+    HSSOTColorBC,
+    HSSOTTransform,
+    HSSOTScale,
+    HSSOTSkew,
+    HSSOTTranslate,
+    HSSOTRotate,
+    HSSOTValue,
+    HSSOTKeyValue,
+    HSSOTRequest,
+    HSSOTEvent,
+    HSSOTMouseEvent,
+    HSSOTPress,
+    HSSOTRelease,
+    HSSOTClick,
+    HSSOTDrag,
+    HSSOTOver,
+    HSSOTOut,
+    HSSOTRollOver,
+    HSSOTRollOut,
+    HSSOTDragOver,
+    HSSOTDragOut,
+    HSSOTKeyboardEvent,
+    HSSOTGestures,
+    HSSOTModifierEvent,
+    HSSOTError,
+    HSSOTJSFunction,
+    HSSOTJavascript,
+    HSSOTFilter,
+    HSSOTLoad
+};

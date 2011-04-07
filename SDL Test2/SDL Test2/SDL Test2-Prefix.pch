@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'SDL Test2' target in the 'SDL Test2' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

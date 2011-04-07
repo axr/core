@@ -1,0 +1,16 @@
+/* FIXME: this crashes the parser */
+
+@container
+{
+	contentText: "annonymous container object";
+}
+
+/*@container myContainer
+{
+	width: 150;
+}
+
+@lineBorder myBorder
+{
+	color: @rgb { 127, 127, 128, 20% }
+}*/

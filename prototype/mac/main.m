@@ -7,8 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "../core/os/osx/AXRView.h"
 
 int main(int argc, char *argv[])
 {
+    //hack to make it work with IB from a dependent target
+    [AXRView _keepAtLinkTime];
     return NSApplicationMain(argc,  (const char **) argv);
 }

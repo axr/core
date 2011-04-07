@@ -1,10 +1,41 @@
-//
-//  AXRXMLParser.cpp
-//  mac
-//
-//  Created by Miro Keller on 02/04/11.
-//  Copyright 2011 Miro Keller. All rights reserved.
-//
+/**********************************************************
+ *
+ *      d8888 Y88b   d88P 8888888b.  
+ *      d88888  Y88b d88P  888   Y88b 
+ *      d88P888   Y88o88P   888    888 
+ *      d88P 888    Y888P    888   d88P 
+ *      88P  888    d888b    8888888P"  
+ *      d88P   888   d88888b   888 T88b   
+ *      d8888888888  d88P Y88b  888  T88b  
+ *      d88P     888 d88P   Y88b 888   T88b 
+ *      
+ *      ARBITRARY·······XML········RENDERING
+ *      ====================================
+ *
+ *      AUTHORS: Miro Keller
+ *      
+ *      COPYRIGHT: ©2011 - All Rights Reserved
+ *
+ *      LICENSE: see License.txt file
+ *
+ *      WEB: http://axr.vg
+ *
+ *      THIS CODE AND INFORMATION ARE PROVIDED "AS IS"
+ *      WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED
+ *      OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
+ *      FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ **********************************************************
+ *
+ *      FILE INFORMATION:
+ *      =================
+ *      Last changed: 2011/04/04
+ *      HSS version: 1.0
+ *      Core version: 0.3
+ *      Revision: 1
+ *
+ **********************************************************/
 
 #include "XMLParser.h"
 #include <iostream>
@@ -74,3 +105,71 @@ void XMLParser::EndElement(const XML_Char *name)
 {
     this->controller->setCurrent(this->controller->getCurrent()->getParent());
 }
+
+
+//FIXME: this should be fleshed out into specialized tokenizing and parsing classes
+//to better handle unexpected characters and such
+void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *data)
+{
+    string instructionName = string(target);
+    //maximum size of temp is the same as data (+1 for the \0)
+    XML_Char * temp = new XML_Char[strlen(data)+1];
+    string attribute;
+    string content;
+    bool readingAttr = true;
+    unsigned datai = 0;
+    unsigned tempi = 0;
+    security_brake_init();
+    if(instructionName == "xml-stylesheet"){
+        while (data[datai] != '\0') {
+            if (isspace(data[datai])){
+                //ignore the whitespace
+                //FIXME: set behavior according to XML spec
+            } else if(data[datai] == '=') {
+                if(readingAttr){
+                    //finished reading the attribute
+                    readingAttr = false;
+                    temp[tempi] = '\0';
+                    attribute = string(temp);
+                    tempi=0;
+                    //we now expect a double quote
+                    datai++;
+                    if(data[datai] != '"'){
+                        throw XMLMalformedProcessingInstructionException(this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4);
+                    }
+                    
+                    std_log1(attribute);
+                } else {
+                    //this must be part of the value
+                    temp[tempi] = data[datai];
+                    tempi ++;
+                }
+                
+            } else if(data[datai] == '"'){
+                if(readingAttr){
+                    throw XMLMalformedProcessingInstructionException(this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4);
+                } else {
+                    readingAttr = true;
+                    temp[tempi] = '\0';
+                    content = string(temp);
+                    std_log1(content);
+                    tempi=0;
+                }
+            } else {
+                temp[tempi] = data[datai];
+                tempi ++;
+            }
+            datai++;
+            security_brake();
+        }
+        
+    } else {
+        //balk
+        throw XMLUnknownProcessingInstructionException(this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser));
+    }
+    delete [] temp;
+}
+
+
+
+

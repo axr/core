@@ -1,0 +1,3 @@
+#import "axr.hss";
+
+note:first message .. subject > * { height: (100% - 30) / 2 }

@@ -1,0 +1,8 @@
+@value alignment1 { value: 150 }
+
+element1
+{
+	alignX: alignment1;
+	alignY: center;
+	width: 50%;
+}

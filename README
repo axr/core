@@ -1,19 +1,25 @@
 This is the official README of the AXR project.
 
-I have started with the development of the prototype, it is being written in C++.
+AXR stands for Arbitrary XML Rendering. It's aim is to provide a better alternative to HTML+CSS,
+using XML for the content and HSS for the design and simple behavior of the interface, whose syntax is
+like CSS, but offers many more advanced features, such as object orientation, rule nesting, expressions,
+references to other objects, modularization (code reuse), etc. JavaScript will be used as well
+for advanced behavior.
+
+The idea is to create a standard cross-platform library that browser makers can use to add support
+for the technology. But it needs to prove itself first, and therefore we will build a wrapper that
+uses the library to create a downloadable browser plug-in, the technology can be available in browsers
+that haven't added support yet. Plus, it will work with older browsers as well.
+
+
+I have started with the development of the prototype, it is being written in C++. It uses the Expat
+XML parser and Cairo for graphics.
 
 Please read the README inside the "prototype" folder to know more about the current state of the prototype.
-If you want to help coding, please contact me on veosotano [at] gmail [dot] com or on
-http://twitter.com/veosotano
+If you want to help coding, join our mailing list (http://groups.google.com/group/axr-main) and ask questions, discuss features, contribute, etc.
 
 The official website for the project is http://axr.vg , where you can find the Mission Statement and read
 the working draft of the specification.
-
-I could really need a hand with this. For example, if you have experience with PHP open source forum software (such as
-Vanilla) please contact me, it would really help me to build this community faster.
-
-Meanwhile, please join our mailing list (http://groups.google.com/group/axr-main) and ask questions, discuss
-features, contribute, etc.
 
 Cheers,
 Miro Keller
