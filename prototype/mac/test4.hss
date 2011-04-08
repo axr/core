@@ -1,6 +1,0 @@
-root * * child + child2 subchild { width: 250 }
-
-root child child2
-{
-	width: 120%;
-}

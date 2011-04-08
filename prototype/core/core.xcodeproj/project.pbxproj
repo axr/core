@@ -94,8 +94,8 @@
 /* Begin PBXFileReference section */
 		4E836692134E23AF007A31BF /* AXRController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AXRController.cpp; path = ../core/AXRController.cpp; sourceTree = "<group>"; };
 		4E836693134E23AF007A31BF /* AXRController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = AXRController.h; path = ../core/AXRController.h; sourceTree = "<group>"; };
-		4E836695134E23AF007A31BF /* OSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = OSX.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		4E836696134E23AF007A31BF /* OSX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = OSX.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		4E836695134E23AF007A31BF /* OSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = OSX.h; sourceTree = "<group>"; };
+		4E836696134E23AF007A31BF /* OSX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = OSX.cpp; sourceTree = "<group>"; };
 		4E83669B134E23AF007A31BF /* ExpatXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpatXMLParser.h; sourceTree = "<group>"; };
 		4E83669C134E23AF007A31BF /* ExpatXMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpatXMLParser.cpp; sourceTree = "<group>"; };
 		4E83669D134E23AF007A31BF /* XMLParserExceptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = XMLParserExceptions.cpp; sourceTree = "<group>"; };

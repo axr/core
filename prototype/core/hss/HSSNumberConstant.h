@@ -1,17 +1,30 @@
-/**********************************************************
+/********************************************************************
+ *             a  A                                                        
+ *            AM\/MA                                                         
+ *           (MMMMMD                                                         
+ *            :: VD
+ *           ::  .                                                         
+ *          ::                                                              
+ *          M   NZ      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
+ +       .MMZ. MMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
+ *      AMMMMMDJMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
+ *      MM  MMMMMC         ___MMMM     VMMMMMMM6       MMMM                   
+ *      MM  MMMMMMM,     AMMMMMMMM      VMMMMM6        MMMM                  
+ *     :MM AMMMMMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
+ *    :: MMMMMMMMMM    MMMMMMMMMMM      AMMMMMMD       MMMM                   
+ *   .     MMMMM~     MMMM    MMMM     AMMMMMMMMD      MMMM                   
+ *         MMMMM      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
+ *        MMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
+ *       MMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
+ *      MMMM MMMM                                                           
+ *     AMMM  .MMM                                         
+ *     MMM   .MMD       ARBITRARY·······XML········RENDERING                           
+ *     MMM    MMA       ====================================                              
+ *     DMN    MM                               
+ *      MN    ZM                       
+ *            MM,
  *
- *      d8888 Y88b   d88P 8888888b.  
- *      d88888  Y88b d88P  888   Y88b 
- *      d88P888   Y88o88P   888    888 
- *      d88P 888    Y888P    888   d88P 
- *      88P  888    d888b    8888888P"  
- *      d88P   888   d88888b   888 T88b   
- *      d8888888888  d88P Y88b  888  T88b  
- *      d88P     888 d88P   Y88b 888   T88b 
- *      
- *      ARBITRARY·······XML········RENDERING
- *      ====================================
- *
+ * 
  *      AUTHORS: Miro Keller
  *      
  *      COPYRIGHT: ©2011 - All Rights Reserved
@@ -26,7 +39,7 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- **********************************************************
+ ********************************************************************
  *
  *      FILE INFORMATION:
  *      =================
@@ -35,7 +48,7 @@
  *      Core version: 0.3
  *      Revision: 1
  *
- **********************************************************/
+ ********************************************************************/
 
 #ifndef HSSNUMBERCONSTANT_H
 #define HSSNUMBERCONSTANT_H

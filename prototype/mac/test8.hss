@@ -1,4 +1,0 @@
-#import @value { value: "hello" } // this should be a @request
-@container { background: #666 }
-#new element { }
-#ensure element2 { }

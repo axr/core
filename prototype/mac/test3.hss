@@ -1,8 +1,0 @@
-test { }
-
-//this is a line comment
-/* this is a
-block * / /* ** / /* comment */
-
-test2{} //hello!!!
-test3 { margin: @{ 15 } } /* //comment inside of a comment */
