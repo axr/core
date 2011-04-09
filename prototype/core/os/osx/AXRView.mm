@@ -43,17 +43,78 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/08
  *      HSS version: 1.0
  *      Core version: 0.3
  *      Revision: 2
  *
  ********************************************************************/
 
-#ifndef HSS_H
-#define HSS_H
+#import "AXRView.h"
+//#include <cairo/cairo.h>
+#include <cairo/cairo-quartz.h>
 
-#include "parsing/HSSParser.h"
-#include "tokenizing/HSSTokenizer.h"
+@implementation AXRView
 
-#endif
+//hack to make it work with IB from a dependent target
++(void)_keepAtLinkTime
+{
+    //do nothing
+}
+
+- (id)initWithFrame:(NSRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // nothing here
+    }
+    
+    return self;
+}
+
+- (void)awakeFromNib
+{
+    
+}
+
+- (void)dealloc
+{
+    [super dealloc];
+}
+
+- (BOOL)isOpaque
+{
+    return YES;
+}
+
+- (void)drawRect:(NSRect)dirtyRect
+{
+    NSRect bounds = [self bounds];
+    float width = bounds.size.width;
+    float height = bounds.size.height;
+    
+    CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+    //invert the coordinate system
+    CGContextTranslateCTM (ctxt, 0.0, (int)height);
+    CGContextScaleCTM (ctxt, 1.0, -1.0);
+    
+    [[NSColor whiteColor] set];
+    NSRectFill(bounds);
+    
+    cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, width, height);
+    cairo_t * cairo = cairo_create(targetSurface);
+    cairo_surface_destroy(targetSurface);
+    
+    cairo_set_line_width(cairo, 10);
+    cairo_set_source_rgb(cairo, 1,0.8,0.8);
+    cairo_rectangle(cairo, 20, 20, width/2, height/2.);
+    cairo_fill_preserve(cairo);
+    cairo_set_source_rgb(cairo, 0,0,0);
+    cairo_stroke(cairo);
+    NSLog(@"drawing w:%f h:%f", dirtyRect.size.width, dirtyRect.size.height);
+    
+    cairo_destroy(cairo);
+    
+}
+
+@end

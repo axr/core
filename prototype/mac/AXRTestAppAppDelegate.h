@@ -3,7 +3,7 @@
 //  mac
 //
 //  Created by Miro Keller on 13/02/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Copyright 2011 Miro Keller. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -16,6 +16,7 @@
 @property (assign) IBOutlet NSWindow *testsWindow;
 @property (assign) IBOutlet NSWindow *axrWindow;
 @property (assign) IBOutlet AXRView *axrView;
+//@property (assign) AXRController *axrController;
 
 void listHSSStatements(NSString * filepath);
 void listHSSTokens(NSString * filepath);

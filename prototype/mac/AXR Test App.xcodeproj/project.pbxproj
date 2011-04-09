@@ -9,25 +9,26 @@
 /* Begin PBXBuildFile section */
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* AXRTestAppAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* AXRTestAppAppDelegate.mm */; };
-		4E4429671311D051000E37D3 /* libcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E4429621311CF88000E37D3 /* libcore.a */; };
+		4E351B7913507C2F00FEB909 /* libcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E351B7813507C2F00FEB909 /* libcore.a */; };
+		4E351B7B13507C2F00FEB909 /* libcairo.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E351B7A13507C2F00FEB909 /* libcairo.dylib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4E4429611311CF88000E37D3 /* PBXContainerItemProxy */ = {
+		4E351B74135077C000FEB909 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4E4429581311CF71000E37D3 /* core.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D;
-			remoteInfo = core;
-		};
-		4E4429631311CFCB000E37D3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4E4429581311CF71000E37D3 /* core.xcodeproj */;
+			containerPortal = 4E95BFCE135076F100117354 /* core.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC045055464E500DB518D;
+			remoteInfo = core;
+		};
+		4E95BFD5135076F200117354 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4E95BFCE135076F100117354 /* core.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = core;
 		};
 /* End PBXContainerItemProxy section */
@@ -43,9 +44,10 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		4E4429581311CF71000E37D3 /* core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = core.xcodeproj; sourceTree = AXR_CORE_SRC; };
+		4E351B7813507C2F00FEB909 /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E351B7A13507C2F00FEB909 /* libcairo.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcairo.dylib; path = usr/local/lib/libcairo.dylib; sourceTree = SDKROOT; };
+		4E95BFCE135076F100117354 /* core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = core.xcodeproj; path = ../core/core.xcodeproj; sourceTree = "<group>"; };
 		4EAF82581331690C00AFF970 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		4EAF8288133169E700AFF970 /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D1107310486CEB800E47090 /* mac-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "mac-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* AXR Test App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AXR Test App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -55,7 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4E4429671311D051000E37D3 /* libcore.a in Frameworks */,
+				4E351B7B13507C2F00FEB909 /* libcairo.dylib in Frameworks */,
+				4E351B7913507C2F00FEB909 /* libcore.a in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -101,8 +104,9 @@
 		29B97314FDCFA39411CA2CEA /* mac */ = {
 			isa = PBXGroup;
 			children = (
-				4EAF8288133169E700AFF970 /* libcore.a */,
-				4E4429581311CF71000E37D3 /* core.xcodeproj */,
+				4E351B7A13507C2F00FEB909 /* libcairo.dylib */,
+				4E351B7813507C2F00FEB909 /* libcore.a */,
+				4E95BFCE135076F100117354 /* core.xcodeproj */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -141,10 +145,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4E44295E1311CF88000E37D3 /* Products */ = {
+		4E95BFCF135076F100117354 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4E4429621311CF88000E37D3 /* libcore.a */,
+				4E95BFD6135076F200117354 /* libcore.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -163,7 +167,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				4E4429641311CFCB000E37D3 /* PBXTargetDependency */,
+				4E351B75135077C000FEB909 /* PBXTargetDependency */,
 			);
 			name = "AXR Test App";
 			productInstallPath = "$(HOME)/Applications";
@@ -191,8 +195,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 4E44295E1311CF88000E37D3 /* Products */;
-					ProjectRef = 4E4429581311CF71000E37D3 /* core.xcodeproj */;
+					ProductGroup = 4E95BFCF135076F100117354 /* Products */;
+					ProjectRef = 4E95BFCE135076F100117354 /* core.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -203,11 +207,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		4E4429621311CF88000E37D3 /* libcore.a */ = {
+		4E95BFD6135076F200117354 /* libcore.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libcore.a;
-			remoteRef = 4E4429611311CF88000E37D3 /* PBXContainerItemProxy */;
+			remoteRef = 4E95BFD5135076F200117354 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -237,10 +241,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4E4429641311CFCB000E37D3 /* PBXTargetDependency */ = {
+		4E351B75135077C000FEB909 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = core;
-			targetProxy = 4E4429631311CFCB000E37D3 /* PBXContainerItemProxy */;
+			targetProxy = 4E351B74135077C000FEB909 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -267,7 +271,7 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -284,7 +288,7 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

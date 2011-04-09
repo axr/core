@@ -1,19 +1,19 @@
 /********************************************************************
  *             a  A                                                        
  *            AM\/MA                                                         
- *           (MMMMMD                                                         
+ *           (MA:MMD                                                         
  *            :: VD
- *           ::  .                                                         
+ *           ::  º                                                         
  *          ::                                                              
- *          M   NZ      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       .MMZ. MMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      AMMMMMDJMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      MM  MMMMMC         ___MMMM     VMMMMMMM6       MMMM                   
- *      MM  MMMMMMM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *     :MM AMMMMMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *    :: MMMMMMMMMM    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *   .     MMMMM~     MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         MMMMM      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
+ *         ::   NZ      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
+ +       6MMZ. MMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
+ *      6MDAMMDJMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
+ *      $$  MMMMMC         ___MMMM     VMMMMMMM6       MMMM                   
+ *     CMM  MMMMMMM,     AMMMMMMMM      VMMMMM6        MMMM                  
+ *    ::MMM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
+ *   ::  MMMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
  *        MMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
  *       MMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
  *      MMMM MMMM                                                           
@@ -50,20 +50,5 @@
  *
  ********************************************************************/
 
-#ifndef HSSSELECTOR_H
-#define HSSSELECTOR_H
+#include "OSX.h"
 
-#include "HSSParserNode.h"
-#include <string>
-using namespace std;
-
-
-class HSSSelector : public HSSParserNode {
-    string elementName;
-    
-public:
-    HSSSelector(string elementName);
-    virtual string toString();
-};
-
-#endif

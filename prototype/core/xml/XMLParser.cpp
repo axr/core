@@ -1,19 +1,19 @@
 /********************************************************************
  *             a  A                                                        
  *            AM\/MA                                                         
- *           (MMMMMD                                                         
+ *           (MA:MMD                                                         
  *            :: VD
- *           ::  .                                                         
+ *           ::  º                                                         
  *          ::                                                              
- *          M   NZ      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       .MMZ. MMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      AMMMMMDJMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      MM  MMMMMC         ___MMMM     VMMMMMMM6       MMMM                   
- *      MM  MMMMMMM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *     :MM AMMMMMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *    :: MMMMMMMMMM    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *   .     MMMMM~     MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         MMMMM      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
+ *         ::   NZ      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
+ +       6MMZ. MMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
+ *      6MDAMMDJMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
+ *      $$  MMMMMC         ___MMMM     VMMMMMMM6       MMMM                   
+ *     CMM  MMMMMMM,     AMMMMMMMM      VMMMMM6        MMMM                  
+ *    ::MMM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
+ *   ::  MMMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
  *        MMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
  *       MMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
  *      MMMM MMMM                                                           
@@ -43,16 +43,16 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/04
+ *      Last changed: 2011/04/09
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
 #include "XMLParser.h"
 #include <iostream>
-#include "AXR.h"
+#include "../AXR.h"
 
 using namespace AXR;
 XMLParser::XMLParser(AXRController * controller, std::string filepath, std::string filename) : expatmm::ExpatXMLParser() {
@@ -124,11 +124,11 @@ void XMLParser::EndElement(const XML_Char *name)
 //to better handle unexpected characters and such
 void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *data)
 {
-    string instructionName = string(target);
+    std::string instructionName = std::string(target);
     //maximum size of temp is the same as data (+1 for the \0)
     XML_Char * temp = new XML_Char[strlen(data)+1];
-    string attribute;
-    string content;
+    std::string attribute;
+    std::string content;
     bool readingAttr = true;
     unsigned datai = 0;
     unsigned tempi = 0;
@@ -143,7 +143,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
                     //finished reading the attribute
                     readingAttr = false;
                     temp[tempi] = '\0';
-                    attribute = string(temp);
+                    attribute = std::string(temp);
                     tempi=0;
                     //we now expect a double quote
                     datai++;
@@ -164,7 +164,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
                 } else {
                     readingAttr = true;
                     temp[tempi] = '\0';
-                    content = string(temp);
+                    content = std::string(temp);
                     std_log1(content);
                     tempi=0;
                 }

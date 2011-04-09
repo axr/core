@@ -3,14 +3,13 @@
 //  mac
 //
 //  Created by Miro Keller on 13/02/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Copyright 2011 Miro Kelelr. All rights reserved.
 //
 
 #import "AXRTestAppAppDelegate.h"
 #import <string>
-#import "../core/AXR.h"
 #import <iostream>
-
+#import "../core/AXR.h"
 
 #define BUFFSIZE 8192
 char Buff[BUFFSIZE];
@@ -25,18 +24,17 @@ char Buff[BUFFSIZE];
     
 }
 
-
 void listHSSStatements(NSString *filepath)
 {
-    std_log1(string("******************************************************************\n* reading all statements from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
+    std_log1(std::string("******************************************************************\n* reading all statements from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
     
     unsigned buflen = 8000;
     char buffer[buflen];
     FILE * hssfile = fopen([filepath UTF8String], "r");
     int len = (int)fread(buffer, 1, buflen, hssfile);
     fclose(hssfile);
-    HSSParser parser(buffer, len, [[filepath lastPathComponent] UTF8String]);
-    HSSStatement * statement = NULL;
+    AXR::HSSParser parser(buffer, len, [[filepath lastPathComponent] UTF8String]);
+    AXR::HSSStatement * statement = NULL;
     bool done = FALSE;
     int security_count = 0;
     while (!done) {
@@ -48,20 +46,20 @@ void listHSSStatements(NSString *filepath)
         try {
             statement = parser.readNextStatement();
         }
-        catch(HSSUnexpectedTokenException e){
+        catch(AXR::HSSUnexpectedTokenException e){
             std::cout << e.toString() << std::endl;
             continue;
         }
-        catch(HSSUnexpectedEndOfSourceException e){
+        catch(AXR::HSSUnexpectedEndOfSourceException e){
             std::cout << e.toString() << std::endl;
         }
-        catch(HSSUnexpectedObjectTypeException e){
+        catch(AXR::HSSUnexpectedObjectTypeException e){
             std::cout << e.toString() << std::endl;
         }
-        catch(HSSExpectedTokenException e){
+        catch(AXR::HSSExpectedTokenException e){
             std::cout << e.toString() << std::endl;
         }
-        catch(HSSWrongHexLengthException e){
+        catch(AXR::HSSWrongHexLengthException e){
             std::cout << e.toString() << std::endl;
         }
         
@@ -90,15 +88,15 @@ void listHSSStatements(NSString *filepath)
 
 void listHSSTokens(NSString *filepath)
 {
-    std_log1(string("******************************************************************\n* reading all tokens from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
+    std_log1(std::string("******************************************************************\n* reading all tokens from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
     
     unsigned buflen = 8000;
     char buffer[buflen];
     FILE * hssfile = fopen([filepath UTF8String], "r");
     int len = (int)fread(buffer, 1, buflen, hssfile);
     fclose(hssfile);
-    HSSTokenizer tokenizer(buffer, len);
-    HSSToken * token = NULL;
+    AXR::HSSTokenizer tokenizer(buffer, len);
+    AXR::HSSToken * token = NULL;
     bool done = FALSE;
     int security_count = 0;
     while (!done) {
@@ -130,7 +128,7 @@ void listHSSTokens(NSString *filepath)
 
 void listXMLElements(NSString *filepath)
 {
-    std_log1(string("******************************************************************\n* reading all XML elements from\n* ").append([filepath UTF8String]).append("\n******************************************************************"));
+    std_log1(std::string("******************************************************************\n* reading all XML elements from\n* ").append([filepath UTF8String]).append("\n******************************************************************"));
     
     AXR::AXRController * controller = new AXR::AXRController();
     AXR::XMLParser parser = AXR::XMLParser(controller, [filepath UTF8String], [[filepath lastPathComponent] UTF8String]);

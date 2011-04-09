@@ -2185,6 +2185,9 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">568</int>
 						<reference key="object" ref="733421949"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
 						<reference key="parent" ref="27867822"/>
 					</object>
 				</object>
@@ -2612,7 +2615,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">570</int>
+			<int key="maxID">574</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2676,7 +2679,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>AXRView</string>
+							<string>NSView</string>
 							<string>NSWindow</string>
 							<string>NSWindow</string>
 						</object>
@@ -2693,7 +2696,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBToOneOutletInfo">
 								<string key="name">axrView</string>
-								<string key="candidateClassName">AXRView</string>
+								<string key="candidateClassName">NSView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">axrWindow</string>
