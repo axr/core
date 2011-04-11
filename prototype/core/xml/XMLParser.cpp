@@ -5,22 +5,22 @@
  *            :: VD
  *           ::  º                                                         
  *          ::                                                              
- *         ::   NZ      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6MMZ. MMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6MDAMMDJMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      $$  MMMMMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     CMM  MMMMMMM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    ::MMM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::  MMMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
  *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
  *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        MMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       MMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      MMMM MMMM                                                           
- *     AMMM  .MMM                                         
- *     MMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     MMM    MMA       ====================================                              
- *     DMN    MM                               
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
+ *      TMMM MMMM                                                           
+ *     TMMM  .MMM                                         
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
+ *     TMM    MMA       ====================================                              
+ *     TMN    MM                               
  *      MN    ZM                       
  *            MM,
  *
@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -55,7 +55,37 @@
 #include "../AXR.h"
 
 using namespace AXR;
-XMLParser::XMLParser(AXRController * controller, std::string filepath, std::string filename) : expatmm::ExpatXMLParser() {
+
+XMLParser::XMLParser(XMLParser::controllerPointer controller)
+: expatmm::ExpatXMLParser()
+{
+    this->filepath = "";
+    this->filename = "";
+    this->controller = controller;
+}
+
+//XMLParser::XMLParser(AXRController * controller, std::string filepath, std::string filename) : expatmm::ExpatXMLParser() {
+//    this->filepath = filepath;
+//    this->filename = filename;
+//	this->filehandle = fopen(filepath.c_str(), "r");
+//	if(this->filehandle != NULL){
+//        expatmm::ExpatXMLParser::setReadiness(true);
+//    } else {
+//        this->setReadiness(false);
+//    }
+//    
+//    this->controller = controller;
+//}
+
+XMLParser::~XMLParser() {
+    if(this->filehandle){
+        fclose(this->filehandle);
+    }
+    this->filepath = "";
+}
+
+void XMLParser::loadFile(std::string filepath, std::string filename)
+{
     this->filepath = filepath;
     this->filename = filename;
 	this->filehandle = fopen(filepath.c_str(), "r");
@@ -65,13 +95,7 @@ XMLParser::XMLParser(AXRController * controller, std::string filepath, std::stri
         this->setReadiness(false);
     }
     
-    this->controller = controller;
-}
-
-XMLParser::~XMLParser() {
-    fclose(this->filehandle);
-    this->filepath = "";
-    this->controller = NULL;
+    this->Parse();
 }
 
 ssize_t XMLParser::read_block(void) {
@@ -106,17 +130,25 @@ ssize_t XMLParser::read_block(void) {
 void XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)
 {
     unsigned i;
-    HSSContainer * newContainer = new HSSContainer(std::string(name));
+    HSSContainer::p newContainer = HSSContainer::p(new HSSContainer(std::string(name)));
+    std_log1(std::string(name));
     for (i = 0; attrs[i]; i += 2) {
         newContainer->attributesAdd(attrs[i], attrs[i + 1]);
     }
-    this->controller->add(newContainer);
-    this->controller->setCurrent(newContainer);
+    
+    boost::shared_ptr<AXRController>theController = this->controller.lock();
+    
+    theController->add(newContainer);
+    //theController->add(newContainer);
+    theController->setCurrent(newContainer);
 }
 
 void XMLParser::EndElement(const XML_Char *name)
 {
-    this->controller->setCurrent(this->controller->getCurrent()->getParent());
+    boost::shared_ptr<AXRController>theController = this->getController();
+    std_log1(theController->getRoot()->name);
+    HSSContainer::p parentContainer = theController->getCurrent()->getParent();
+    theController->setCurrent(parentContainer);
 }
 
 
@@ -129,7 +161,11 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
     XML_Char * temp = new XML_Char[strlen(data)+1];
     std::string attribute;
     std::string content;
+    std::string sheetType;
+    std::string sheetName;
+    
     bool readingAttr = true;
+    
     unsigned datai = 0;
     unsigned tempi = 0;
     security_brake_init();
@@ -151,7 +187,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
                         throw XMLMalformedProcessingInstructionException(this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4);
                     }
                     
-                    std_log1(attribute);
+                    //std_log1(attribute);
                 } else {
                     //this must be part of the value
                     temp[tempi] = data[datai];
@@ -165,7 +201,12 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
                     readingAttr = true;
                     temp[tempi] = '\0';
                     content = std::string(temp);
-                    std_log1(content);
+                    //std_log1(attribute);
+                    if(attribute == "type"){
+                        sheetType = content;
+                    } else if(attribute == "src"){
+                        sheetName = content;
+                    }
                     tempi=0;
                 }
             } else {
@@ -176,6 +217,13 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
             security_brake();
         }
         
+        if(sheetType != "application/x-hss" && sheetType != "text/hss"){
+            throw XMLUnknownSheetTypeException(this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser));
+        }
+        
+        //add to load later
+        this->getController()->loadSheetsAdd(sheetName);
+        
     } else {
         //balk
         throw XMLUnknownProcessingInstructionException(this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser));
@@ -184,5 +232,10 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
 }
 
 
+
+boost::shared_ptr<AXRController> XMLParser::getController()
+{
+    return this->controller.lock();
+}
 
 

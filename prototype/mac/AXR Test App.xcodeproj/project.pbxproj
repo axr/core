@@ -280,6 +280,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = "mac-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-DAXR_PLATFORM_OSX";
 				PRODUCT_NAME = "AXR Test App";
 				USER_HEADER_SEARCH_PATHS = /usr/local/include/;
 			};
@@ -294,6 +295,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = "mac-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_CFLAGS = "-DAXR_PLATFORM_OSX";
 				PRODUCT_NAME = "AXR Test App";
 				USER_HEADER_SEARCH_PATHS = /usr/local/include/;
 			};

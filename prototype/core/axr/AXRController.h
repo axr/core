@@ -5,22 +5,22 @@
  *            :: VD
  *           ::  º                                                         
  *          ::                                                              
- *         ::   NZ      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6MMZ. MMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6MDAMMDJMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      $$  MMMMMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     CMM  MMMMMMM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    ::MMM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::  MMMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
  *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
  *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        MMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       MMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      MMMM MMMM                                                           
- *     AMMM  .MMM                                         
- *     MMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     MMM    MMA       ====================================                              
- *     DMN    MM                               
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
+ *      TMMM MMMM                                                           
+ *     TMMM  .MMM                                         
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
+ *     TMM    MMA       ====================================                              
+ *     TMN    MM                               
  *      MN    ZM                       
  *            MM,
  *
@@ -43,49 +43,64 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 4
  *
  ********************************************************************/
 
 #ifndef AXRCONTROLLER_H
 #define AXRCONTROLLER_H
 
-#include "../hss/objects/HSSContainer.h"
 #include <vector>
-#include <cairo/cairo.h>
+#include "../AXR.h"
+#include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
     class AXRController {
     public:
-        AXRController();
-        virtual ~AXRController();
+        typedef boost::shared_ptr<AXRController> p;
+        //you should use this to instantiate a new controller
+        static AXRController::p create();
         
+        virtual ~AXRController();
         virtual std::string toString();
         
-        HSSContainer * getRoot();
-        //this acquires ownership of the pointer
-        void setRoot(HSSContainer * newRoot);
+        //use this to clean up and start from fresh
+        void reset();
         
-        //this acquires ownership of the pointer
-        void add(HSSContainer * newContainer);
-        HSSContainer * getCurrent();
-        void setCurrent(HSSContainer * newCurrent);
+        void loadFile();
+        void loadXMLFile(std::string filepath, std::string filename);
+        void loadHSSFile(std::string filepath, std::string filename);
         
-        //this acquires ownership of the pointer
-        void objectTreeAdd(HSSObject * newObject);
+        HSSContainer::p getRoot();
+        void setRoot(HSSContainer::p newRoot);
+        
+        void add(HSSContainer::p newContainer);
+        HSSContainer::p getCurrent();
+        void setCurrent(HSSContainer::p newCurrent);
+        
+        void objectTreeAdd(HSSObject::p newObject);
         void objectTreeRemove(unsigned index);
-        HSSObject * objectTreeGet(unsigned index);
+        HSSObject::p objectTreeGet(unsigned index);
+        
+        void loadSheetsAdd(std::string sheet);
+        void loadSheetsRemove(unsigned index);
+        std::string loadSheetsGet(unsigned index);
         
     protected:
-        HSSContainer * root;
-        //this is a weak pointer
-        HSSContainer * current;
+        HSSContainer::p root;
+        HSSContainer::p current;
         
-        std::vector<HSSObject *>objectTree;
-        cairo_t * cairo;
+        std::vector<HSSObject::p>objectTree;
+        std::vector<std::string>loadSheets;
+        XMLParser::p parserXML;
+        HSSParser::p parserHSS;
+        OSHelper::p osHelper;
+    private:
+        AXRController();
     };
 }
 

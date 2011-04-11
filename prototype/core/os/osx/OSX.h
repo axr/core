@@ -5,22 +5,22 @@
  *            :: VD
  *           ::  º                                                         
  *          ::                                                              
- *         ::   NZ      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6MMZ. MMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6MDAMMDJMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      $$  MMMMMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     CMM  MMMMMMM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    ::MMM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::  MMMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
  *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
  *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        MMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       MMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      MMMM MMMM                                                           
- *     AMMM  .MMM                                         
- *     MMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     MMM    MMA       ====================================                              
- *     DMN    MM                               
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
+ *      TMMM MMMM                                                           
+ *     TMMM  .MMM                                         
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
+ *     TMM    MMA       ====================================                              
+ *     TMN    MM                               
  *      MN    ZM                       
  *            MM,
  *
@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/10
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -54,8 +54,20 @@
 #ifndef OS_OSX_H
 #define OS_OSX_H
 
+#include <string>
+#include <boost/shared_ptr.hpp>
 
-//#import "AXRView.h"
+namespace AXR {
+    class OSHelper
+    {
+    public:
+        typedef boost::shared_ptr<OSHelper> p;
+        
+        OSHelper();
+        virtual ~OSHelper();
+        bool openFileDialog(std::string &filePath, std::string &fileName);
+    };
+}
 
 
 #endif

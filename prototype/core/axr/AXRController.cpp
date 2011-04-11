@@ -5,22 +5,22 @@
  *            :: VD
  *           ::  º                                                         
  *          ::                                                              
- *         ::   NZ      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6MMZ. MMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6MDAMMDJMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      $$  MMMMMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     CMM  MMMMMMM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    ::MMM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::  MMMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
  *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
  *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        MMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       MMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      MMMM MMMM                                                           
- *     AMMM  .MMM                                         
- *     MMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     MMM    MMA       ====================================                              
- *     DMN    MM                               
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
+ *      TMMM MMMM                                                           
+ *     TMMM  .MMM                                         
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
+ *     TMM    MMA       ====================================                              
+ *     TMN    MM                               
  *      MN    ZM                       
  *            MM,
  *
@@ -43,37 +43,82 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 4
  *
  ********************************************************************/
 
 #include "AXRController.h"
+#include "AXRExceptions.h"
+#include "../AXR.h"
+#include <sstream>
 
 using namespace AXR;
 
+//use this factory method to instantiate the controller
+AXRController::p AXRController::create()
+{
+    AXRController::p inst(new AXRController);
+    inst->parserXML = XMLParser::p(new XMLParser(XMLParser::controllerPointer(AXRController::p(inst))));
+    return inst;
+}
+
 AXRController::AXRController()
 {
-    this->root = NULL;
-    this->current = NULL;
-    this->cairo = NULL;
+    this->parserHSS = HSSParser::p(new HSSParser());
+    this->osHelper = OSHelper::p(new OSHelper());
 }
 
 AXRController::~AXRController()
 {
+    this->objectTree.clear();
+    this->loadSheets.clear();
+}
+
+void AXRController::loadFile()
+{
+    std::string xmlfilepath = std::string();
+    std::string xmlfilename = std::string();
+    
+    std::string hssfilepath = std::string();
+    std::string hssfolder = std::string();
+    std::string hssfilename = std::string();
+    
     unsigned i;
-    if(this->root != NULL)
-    {
-        delete this->root;
-    }
-    for (i=0; i<this->objectTree.size(); i++) {
-        this->objectTree.pop_back();
-    }
-    if(this->cairo != NULL)
-    {
-        cairo_destroy(this->cairo);
+    
+    bool success = this->osHelper->openFileDialog(xmlfilepath, xmlfilename);
+    if(success){
+        this->loadXMLFile(xmlfilepath, xmlfilename);
+        //load the obtained stylesheets
+        if(this->loadSheets.size() == 0){
+            throw AXRNoStylesheetsException(xmlfilepath);
+            std_log1("this comes after the exception, it get's executed");
+        } else {
+            for (i=0; i<this->loadSheets.size(); i++) {
+                
+                hssfilename = this->loadSheets[i];
+                
+                if(hssfilename.substr(0,1) == "/"){
+                    //FIXME: add support for absolute paths
+                } else {
+                    //FIXME: why is doing exactly the opposite of what I expect? that's why I put the ! in there
+//                    size_t hasFolder = hssfilename.rfind("/", hssfilename.size());
+//                    if(hasFolder != -1){
+//                        //construct the new path
+//                        hssfolder = hssfilename.substr(0, hssfilename.rfind("/", hssfilename.length()));
+//                        std_log1("has folder: ");std_log1(hssfolder);
+//                    } else {
+                        hssfolder = xmlfilepath.substr(0, xmlfilepath.rfind("/", xmlfilepath.length())+1);
+                        hssfilepath = hssfolder.append(hssfilename);
+//                        std_log1("no folder: ");std_log1(hssfilepath);
+//                    }
+                    
+                    this->loadHSSFile(hssfilepath, hssfilename.substr(hssfilename.rfind("/", hssfilename.length())+1));
+                }
+            }
+        }
     }
 }
 
@@ -81,7 +126,7 @@ std::string AXRController::toString()
 {
     std::string tempstr;
     if(this->root != NULL){
-      tempstr = this->root->toString();  
+        tempstr = this->root->toString();  
     }
     unsigned i;
     if(this->objectTree.size() > 0)
@@ -94,36 +139,64 @@ std::string AXRController::toString()
     return tempstr;
 }
 
-HSSContainer * AXRController::getRoot()
+
+void AXRController::reset()
+{
+    this->objectTree.clear();
+    this->loadSheets.clear();
+    this->root.reset();
+    this->current.reset();
+    //the operator -> is very important here
+    this->parserHSS->reset();
+}
+
+
+void AXRController::loadXMLFile(std::string filepath, std::string filename)
+{
+    this->parserXML->loadFile(filepath, filename);
+    std_log1(this->toString());
+}
+
+void AXRController::loadHSSFile(std::string filepath, std::string filename)
+{
+    std_log1(std::string("******************************************************************\n* opening document:\n* ").append(filepath).append("\n******************************************************************"));
+    this->parserHSS->loadFile(filepath);
+}
+
+HSSContainer::p AXRController::getRoot()
 {
     return this->root;
 }
 
-void AXRController::setRoot(HSSContainer * newRoot){
-    delete this->root;
+void AXRController::setRoot(HSSContainer::p newRoot){
     this->root = newRoot;
 }
 
-void AXRController::add(HSSContainer * newContainer)
+void AXRController::add(HSSContainer::p newContainer)
 {
-    if(this->root == NULL){
+    if(!this->root){
         this->root = newContainer;
     } else {
-        this->current->add(newContainer);
+        std_log1(this->root->name);
+        if(this->current){
+            this->current->add(newContainer);
+        } else {
+            throw "tried to add a container to nonexistent current";
+        }
     }
 }
 
-HSSContainer * AXRController::getCurrent()
+HSSContainer::p AXRController::getCurrent()
 {
     return this->current;
 }
 
-void AXRController::setCurrent(HSSContainer *newCurrent)
+void AXRController::setCurrent(HSSContainer::p newCurrent)
 {
     this->current = newCurrent;
 }
 
-void AXRController::objectTreeAdd(HSSObject * newObject)
+void AXRController::objectTreeAdd(HSSObject::p newObject)
 {
     this->objectTree.push_back(newObject);
 }
@@ -133,12 +206,26 @@ void AXRController::objectTreeRemove(unsigned index)
     this->objectTree.erase(this->objectTree.begin()+index);
 }
 
-HSSObject * AXRController::objectTreeGet(unsigned index)
+HSSObject::p AXRController::objectTreeGet(unsigned index)
 {
     return this->objectTree[index];
 }
 
 
+void AXRController::loadSheetsAdd(std::string sheet)
+{
+    this->loadSheets.push_back(sheet);
+}
+
+void AXRController::loadSheetsRemove(unsigned index)
+{
+    this->loadSheets.erase(this->loadSheets.begin()+index);
+}
+
+std::string AXRController::loadSheetsGet(unsigned index)
+{
+    return this->loadSheets[index];
+}
 
 
 

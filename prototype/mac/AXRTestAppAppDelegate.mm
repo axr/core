@@ -21,7 +21,8 @@ char Buff[BUFFSIZE];
 @synthesize axrView;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    
+    [self setAxrController:AXR::AXRController::create()];
+    [self openDocument:self];
 }
 
 void listHSSStatements(NSString *filepath)
@@ -29,19 +30,18 @@ void listHSSStatements(NSString *filepath)
     std_log1(std::string("******************************************************************\n* reading all statements from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
     
     unsigned buflen = 8000;
-    char buffer[buflen];
+    AXR::HSSTokenizer::buf_p buffer = AXR::HSSTokenizer::buf_p(new char[buflen]);
     FILE * hssfile = fopen([filepath UTF8String], "r");
-    int len = (int)fread(buffer, 1, buflen, hssfile);
+    int len = (int)fread(buffer.get(), 1, buflen, hssfile);
     fclose(hssfile);
     AXR::HSSParser parser(buffer, len, [[filepath lastPathComponent] UTF8String]);
-    AXR::HSSStatement * statement = NULL;
+    AXR::HSSStatement::p statement;
     bool done = FALSE;
     int security_count = 0;
     while (!done) {
         std::cout << "read statement\n";
-        if(statement != NULL){
-            delete statement;
-            statement = NULL;
+        if(statement){
+            statement.reset();
         }
         try {
             statement = parser.readNextStatement();
@@ -80,7 +80,6 @@ void listHSSStatements(NSString *filepath)
     }
     std::cout << "reached end of source" << std::endl;
     std::cout << "\n\n\n\n";
-    delete statement;
 #if AXR_DEBUG_LEVEL > 1
     exit(0);
 #endif
@@ -95,17 +94,16 @@ void listHSSTokens(NSString *filepath)
     FILE * hssfile = fopen([filepath UTF8String], "r");
     int len = (int)fread(buffer, 1, buflen, hssfile);
     fclose(hssfile);
-    AXR::HSSTokenizer tokenizer(buffer, len);
-    AXR::HSSToken * token = NULL;
+    AXR::HSSTokenizer tokenizer(AXR::HSSTokenizer::buf_p(buffer), len);
+    AXR::HSSToken::p token;
     bool done = FALSE;
     int security_count = 0;
     while (!done) {
-        if(token != NULL){
-            delete token;
-            token = NULL;
+        if(token){
+            token.reset();
         }
         token = tokenizer.readNextToken();
-        if(token == NULL){
+        if(!token){
             done = TRUE;
         } else {
             std::cout << token->toString() << std::endl;
@@ -120,7 +118,6 @@ void listHSSTokens(NSString *filepath)
     }
     std::cout << "reached end of source" << std::endl;
     std::cout << "\n\n\n\n";
-    delete token;
 #if AXR_DEBUG_LEVEL > 1
     exit(0);
 #endif
@@ -128,30 +125,30 @@ void listHSSTokens(NSString *filepath)
 
 void listXMLElements(NSString *filepath)
 {
-    std_log1(std::string("******************************************************************\n* reading all XML elements from\n* ").append([filepath UTF8String]).append("\n******************************************************************"));
-    
-    AXR::AXRController * controller = new AXR::AXRController();
-    AXR::XMLParser parser = AXR::XMLParser(controller, [filepath UTF8String], [[filepath lastPathComponent] UTF8String]);
-    try {
-        parser.Parse();
-    }
-    catch(AXR::XMLUnexpectedEndOfSourceException e){
-        std::cout << e.toString() << std::endl;
-    }
-    catch(AXR::XMLUnknownProcessingInstructionException e){
-        std::cout << e.toString() << std::endl;
-    }
-    catch(AXR::XMLMalformedProcessingInstructionException e){
-        std::cout << e.toString() << std::endl;
-    }
-    
-    std::cout << std::endl << "-----------------------------" << std::endl
-    <<  controller->toString() << std::endl << "-----------------------------" << std::endl;
+//    std_log1(std::string("******************************************************************\n* reading all XML elements from\n* ").append([filepath UTF8String]).append("\n******************************************************************"));
+//    
+//    AXR::AXRController * controller = new AXR::AXRController();
+//    AXR::XMLParser parser = AXR::XMLParser(controller, [filepath UTF8String], [[filepath lastPathComponent] UTF8String]);
+//    try {
+//        parser.Parse();
+//    }
+//    catch(AXR::XMLUnexpectedEndOfSourceException e){
+//        std::cout << e.toString() << std::endl;
+//    }
+//    catch(AXR::XMLUnknownProcessingInstructionException e){
+//        std::cout << e.toString() << std::endl;
+//    }
+//    catch(AXR::XMLMalformedProcessingInstructionException e){
+//        std::cout << e.toString() << std::endl;
+//    }
+//    
+//    std::cout << std::endl << "-----------------------------" << std::endl
+//    <<  controller->toString() << std::endl << "-----------------------------" << std::endl;
 }
 
 - (void)listXMLElements
 {
-    //load the sample XML file
+    //load the XML file
 	NSArray *xmlFileType = [NSArray arrayWithObject:@"xml"];
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	int result;
@@ -169,7 +166,7 @@ void listXMLElements(NSString *filepath)
 }
 
 - (IBAction)listStatements:(id)sender {
-    //load the sample HSS file
+    //load the HSS file
 	NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	int result;
@@ -185,7 +182,7 @@ void listXMLElements(NSString *filepath)
 }
 
 - (IBAction)listTokens:(id)sender {
-    //load the sample HSS file
+    //load the HSS file
 	NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	int result;
@@ -205,10 +202,22 @@ void listXMLElements(NSString *filepath)
 }
 
 - (IBAction)openDocument:(id)sender {
-    //[self listXMLElements];
-    [[self axrWindow] makeKeyAndOrderFront:self];
+    
+    //FIXME: something's wrong with the reset, probably currentToken or something
+    //[self axrController]->reset();
+    [self axrController]->loadFile();
+    //[[self axrWindow] makeKeyAndOrderFront:self];
 }
 
+- (void)setAxrController:(AXR::AXRController::p)newController
+{
+    axrController = newController;
+}
+
+- (AXR::AXRController::p)axrController
+{
+    return axrController;
+}
 
 
 @end
