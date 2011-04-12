@@ -21,7 +21,6 @@ char Buff[BUFFSIZE];
 @synthesize axrView;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    [self setAxrController:AXR::AXRController::create()];
     [self openDocument:self];
 }
 
@@ -202,21 +201,10 @@ void listXMLElements(NSString *filepath)
 }
 
 - (IBAction)openDocument:(id)sender {
+    [[self axrWindow] makeKeyAndOrderFront:self];
+    //sending loadfile
+    [[self axrView] loadFile];
     
-    //FIXME: something's wrong with the reset, probably currentToken or something
-    //[self axrController]->reset();
-    [self axrController]->loadFile();
-    //[[self axrWindow] makeKeyAndOrderFront:self];
-}
-
-- (void)setAxrController:(AXR::AXRController::p)newController
-{
-    axrController = newController;
-}
-
-- (AXR::AXRController::p)axrController
-{
-    return axrController;
 }
 
 

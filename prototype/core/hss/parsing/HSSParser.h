@@ -72,14 +72,19 @@ namespace AXR {
         HSSParserContextSelectorChain
     };
     
+    //this was defined elsewhere
+    class AXRController;
+    
     class HSSParser
     {
         
     public:
         typedef boost::shared_ptr<HSSParser> p;
+        typedef boost::weak_ptr<AXRController> controllerPointer;
+        
         std::string filename;
         
-        HSSParser();
+        HSSParser(boost::shared_ptr<AXRController> controller);
         //initialize with a pointer to the buffer where the HSS code is stored, and the lenght of the buffer
         HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, std::string filename);
         //destructor
@@ -89,13 +94,15 @@ namespace AXR {
         void reset();
         
         //reads the specified file
-        void loadFile(std::string filepath);
+        bool loadFile(std::string filepath);
         
         //reads and returns a shared pointer to the next statement in the buffer
         HSSStatement::p readNextStatement();
         
     protected:
         HSSTokenizer::p tokenizer;
+        controllerPointer controller;
+        
         HSSToken::p currentToken;
         std::vector<HSSParserContext> currentContext;
         std::stack<HSSObject::p> currentObjectContext;
@@ -125,6 +132,8 @@ namespace AXR {
         void skip(HSSTokenType type);
         
         void currentObjectContextRemoveLast();
+        
+        boost::shared_ptr<AXRController> getController();
     };
 }
 

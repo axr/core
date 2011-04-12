@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/11
+ *      Last changed: 2011/04/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -56,12 +56,12 @@
 
 using namespace AXR;
 
-XMLParser::XMLParser(XMLParser::controllerPointer controller)
+XMLParser::XMLParser(boost::shared_ptr<AXRController> controller)
 : expatmm::ExpatXMLParser()
 {
     this->filepath = "";
     this->filename = "";
-    this->controller = controller;
+    this->controller = controllerPointer(controller);
 }
 
 //XMLParser::XMLParser(AXRController * controller, std::string filepath, std::string filename) : expatmm::ExpatXMLParser() {
@@ -78,13 +78,13 @@ XMLParser::XMLParser(XMLParser::controllerPointer controller)
 //}
 
 XMLParser::~XMLParser() {
-    if(this->filehandle){
+    if(this->filehandle != NULL){
         fclose(this->filehandle);
     }
     this->filepath = "";
 }
 
-void XMLParser::loadFile(std::string filepath, std::string filename)
+bool XMLParser::loadFile(std::string filepath, std::string filename)
 {
     this->filepath = filepath;
     this->filename = filename;
@@ -93,9 +93,10 @@ void XMLParser::loadFile(std::string filepath, std::string filename)
         expatmm::ExpatXMLParser::setReadiness(true);
     } else {
         this->setReadiness(false);
+        return false;
     }
     
-    this->Parse();
+    return this->Parse();
 }
 
 ssize_t XMLParser::read_block(void) {

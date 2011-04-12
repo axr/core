@@ -247,11 +247,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSParser.cpp"
-         timestampString = "324231402.575388"
+         timestampString = "324313278.011175"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "117"
-         endingLineNumber = "117"
+         startingLineNumber = "118"
+         endingLineNumber = "118"
          landmarkName = "HSSParser::loadFile(std::string filepath)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -261,25 +261,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/xml/XMLParser.cpp"
-         timestampString = "324160089.426897"
+         timestampString = "324313278.011175"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "81"
-         endingLineNumber = "81"
-         landmarkName = "XMLParser::~XMLParser()"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "0"
-         filePath = "/Users/miro/AXR/prototype/core/xml/XMLParser.cpp"
-         timestampString = "324217890.14781"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "132"
-         endingLineNumber = "132"
+         startingLineNumber = "133"
+         endingLineNumber = "133"
          landmarkName = "XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -289,11 +275,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/xml/XMLParser.cpp"
-         timestampString = "324221101.972925"
+         timestampString = "324313278.011175"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "149"
-         endingLineNumber = "149"
+         startingLineNumber = "150"
+         endingLineNumber = "150"
          landmarkName = "XMLParser::EndElement(const XML_Char *name)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -303,11 +289,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/axr/AXRController.cpp"
-         timestampString = "324231322.590312"
+         timestampString = "324315544.761637"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "177"
-         endingLineNumber = "177"
+         startingLineNumber = "202"
+         endingLineNumber = "202"
          landmarkName = "AXRController::add(HSSContainer::p newContainer)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -359,12 +345,26 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSParser.cpp"
-         timestampString = "324231402.575388"
+         timestampString = "324314940.225379"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "456"
-         endingLineNumber = "456"
+         startingLineNumber = "462"
+         endingLineNumber = "462"
          landmarkName = "HSSParser::readSelector()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSParser.cpp"
+         timestampString = "324251979.59574"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "95"
+         endingLineNumber = "95"
+         landmarkName = "HSSParser::reset()"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

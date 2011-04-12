@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/08
+ *      Last changed: 2011/04/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -74,7 +74,7 @@
 
 - (void)awakeFromNib
 {
-    
+    [self setAxrController:AXR::AXRController::p(AXR::AXRController::create())];
 }
 
 - (void)dealloc
@@ -89,32 +89,63 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
+    
     NSRect bounds = [self bounds];
     float width = bounds.size.width;
     float height = bounds.size.height;
     
-    CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
-    //invert the coordinate system
-    CGContextTranslateCTM (ctxt, 0.0, (int)height);
-    CGContextScaleCTM (ctxt, 1.0, -1.0);
-    
-    [[NSColor whiteColor] set];
-    NSRectFill(bounds);
-    
-    cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, width, height);
-    cairo_t * cairo = cairo_create(targetSurface);
-    cairo_surface_destroy(targetSurface);
-    
-    cairo_set_line_width(cairo, 10);
-    cairo_set_source_rgb(cairo, 1,0.8,0.8);
-    cairo_rectangle(cairo, 20, 20, width/2, height/2.);
-    cairo_fill_preserve(cairo);
-    cairo_set_source_rgb(cairo, 0,0,0);
-    cairo_stroke(cairo);
-    NSLog(@"drawing w:%f h:%f", dirtyRect.size.width, dirtyRect.size.height);
-    
-    cairo_destroy(cairo);
-    
+    if([self axrController] && [self axrController]->hasLoadedFile()){
+        AXR::AXRController::p controller = [self axrController];
+        //std_log1(controller->toString());
+        
+        //fill with white
+        [[NSColor whiteColor] set];
+        NSRectFill(bounds);
+        
+        CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+        //invert the coordinate system
+        CGContextTranslateCTM (ctxt, 0.0, (int)height);
+        CGContextScaleCTM (ctxt, 1.0, -1.0);
+        
+        cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, width, height);
+        cairo_t * cairo = cairo_create(targetSurface);
+        cairo_surface_destroy(targetSurface);
+        
+        cairo_set_line_width(cairo, 2);
+        unsigned i;
+        for(i=0; i<controller->getRoot()->children.size(); i++){
+            cairo_rectangle(cairo, (i*150)+((i+1)*10), 20, 150, 150);
+            cairo_set_source_rgb(cairo, 1,0.8,0.8);
+            cairo_fill_preserve(cairo);
+            cairo_set_source_rgb(cairo, 0,0,0);
+            cairo_stroke(cairo);
+        }
+        
+        cairo_destroy(cairo);
+        
+    } else {
+        //fill with light gray
+        [[NSColor colorWithCalibratedWhite:0.8 alpha:1.] set];
+        NSRectFill(bounds);
+    }
+}
+
+- (void)setAxrController:(AXR::AXRController::p)theController
+{
+    axrController = theController;
+}
+
+- (AXR::AXRController::p)axrController
+{
+    return axrController;
+}
+
+- (bool)loadFile
+{
+    std_log1("loading file");
+    bool loaded = [self axrController]->loadFile();
+    [self setNeedsDisplay:YES];
+    return loaded;
 }
 
 @end

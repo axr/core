@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/11
+ *      Last changed: 2011/04/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -61,7 +61,7 @@
 
 using namespace AXR;
 
-HSSParser::HSSParser()
+HSSParser::HSSParser(boost::shared_ptr<AXRController> controller)
 {
     this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
     
@@ -112,24 +112,29 @@ void HSSParser::reset()
     
 }
 
-void HSSParser::loadFile(std::string filepath)
+bool HSSParser::loadFile(std::string filepath)
 {
     security_brake_init();
+    //get the filename from the path
     this->filename = filepath.substr(filepath.rfind("/", filepath.size())+1);
-    std_log1(this->filename);
     
+    //open the file for reading
     FILE * hssfile = fopen(filepath.c_str(), "r");
+    //read the file into the buffer of the tokenizer
     HSSTokenizer::buf_p hssbuffer = this->tokenizer->getBuffer();
     int len = (int)fread(hssbuffer.get(), 1, AXR_HSS_BUFFER_SIZE, hssfile);
     if (ferror(hssfile)) {
-        throw "couldn't read file";
+        fclose(hssfile);
+        return false;
     }
+    //initialize
     this->tokenizer->setBufferLength(len);
     this->tokenizer->readNextChar();
-    this->readNextToken();
     
-    //FIXME
+    //FIXME: what if the file is longer than the buffer?
     fclose(hssfile);
+    
+    this->readNextToken();
     
     HSSStatement::p statement;
     
@@ -163,8 +168,8 @@ void HSSParser::loadFile(std::string filepath)
         if(!statement){
             done = true;
         } else {
-            std::cout << std::endl << "-----------------------------" << std::endl
-            <<  statement->toString() << std::endl << "-----------------------------" << std::endl;
+//            std::cout << std::endl << "-----------------------------" << std::endl
+//            <<  statement->toString() << std::endl << "-----------------------------" << std::endl;
         }
         
         security_brake();
@@ -172,8 +177,7 @@ void HSSParser::loadFile(std::string filepath)
     std::cout << "reached end of source" << std::endl;
     std::cout << "\n\n\n\n";
     
-    this->reset();
-    
+    return true;
 }
 
 HSSStatement::p HSSParser::readNextStatement()
@@ -255,7 +259,6 @@ HSSRule::p HSSParser::readRule()
                 ret->propertiesAdd(this->readPropertyDefinition());
             } else {
                 //recursive omg!
-                std_log1("omg recursiving!");
                 ret->childrenAdd(this->readRule());
             }
         } else {
@@ -295,7 +298,10 @@ HSSSelectorChain::p HSSParser::readSelectorChain()
         if (this->currentToken->isA(HSSIdentifier)){
             ret->add(this->readSelector());
             //adds only if needed
-            ret->add(this->readChildrenCombinatorOrSkip());
+            HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+            if(childrenCombinator){
+                ret->add(childrenCombinator);
+            }
             
             //a symbol, probably a combinator
         } else if (this->currentToken->isA(HSSSymbol)) {
@@ -351,7 +357,7 @@ bool HSSParser::isCombinator(HSSToken::p token)
     }
     //all combinators are symbols
     if(token->isA(HSSSymbol) ){
-        const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->value).c_str();
+        const char currentTokenChar = *(VALUE_TOKEN(token).get()->value).c_str();
         switch (currentTokenChar) {
             case '=':
             case '-':
@@ -741,5 +747,10 @@ void HSSParser::skip(HSSTokenType type)
 void HSSParser::currentObjectContextRemoveLast()
 {
     this->currentObjectContext.pop();
+}
+
+boost::shared_ptr<AXRController> HSSParser::getController()
+{
+    return this->controller.lock();
 }
 

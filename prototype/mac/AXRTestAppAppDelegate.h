@@ -12,7 +12,6 @@
 
 @interface AXRTestAppAppDelegate : NSObject <NSApplicationDelegate> {
     NSWindow *window;
-    AXR::AXRController::p axrController;
 }
 
 @property (assign) IBOutlet NSWindow *testsWindow;
@@ -32,8 +31,5 @@ void listXMLElements(NSString * filepath);
 - (IBAction)listXMLElements:(id)sender;
 
 - (IBAction)openDocument:(id)sender;
-
-- (void)setAxrController:(AXR::AXRController::p)newController;
-- (AXR::AXRController::p)axrController;
 
 @end

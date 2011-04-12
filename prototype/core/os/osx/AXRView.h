@@ -43,21 +43,27 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/04
+ *      Last changed: 2011/04/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
 #import <Cocoa/Cocoa.h>
+#import "../../AXR.h"
 
 @interface AXRView : NSView {
 @private
-    
+    AXR::AXRController::p axrController;
 }
 
 //hack to make it work with IB from a dependent target
 +(void)_keepAtLinkTime;
+
+- (void)setAxrController:(AXR::AXRController::p)theController;
+- (AXR::AXRController::p)axrController;
+
+- (bool)loadFile;
 
 @end

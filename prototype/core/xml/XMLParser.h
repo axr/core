@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -71,13 +71,13 @@ namespace AXR {
         typedef boost::shared_ptr<XMLParser> p;
         typedef boost::weak_ptr<AXRController> controllerPointer;
         
-        XMLParser(XMLParser::controllerPointer controller);
+        XMLParser(boost::shared_ptr<AXRController> controller);
         //the caller is responsible for maintaining the existence of the controller
         //until after the parser is deallocated
         //XMLParser(AXRController * controller, std::string filepath, std::string filename);
         virtual ~XMLParser();
         
-        void loadFile(std::string filepath, std::string filename);
+        bool loadFile(std::string filepath, std::string filename);
         
     protected:
         virtual ssize_t read_block(void);

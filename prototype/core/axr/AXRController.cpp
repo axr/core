@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/11
+ *      Last changed: 2011/04/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -61,14 +61,15 @@ using namespace AXR;
 AXRController::p AXRController::create()
 {
     AXRController::p inst(new AXRController);
-    inst->parserXML = XMLParser::p(new XMLParser(XMLParser::controllerPointer(AXRController::p(inst))));
+    inst->parserXML = XMLParser::p(new XMLParser(inst->shared_from_this()));
+    inst->parserHSS = HSSParser::p(new HSSParser(inst->shared_from_this()));
     return inst;
 }
 
 AXRController::AXRController()
 {
-    this->parserHSS = HSSParser::p(new HSSParser());
     this->osHelper = OSHelper::p(new OSHelper());
+    this->_hasLoadedFile = false;
 }
 
 AXRController::~AXRController()
@@ -77,8 +78,11 @@ AXRController::~AXRController()
     this->loadSheets.clear();
 }
 
-void AXRController::loadFile()
+bool AXRController::loadFile()
 {
+    //we assume success unless noted otherwise
+    bool loadingSuccess = true;
+    
     std::string xmlfilepath = std::string();
     std::string xmlfilename = std::string();
     
@@ -90,36 +94,56 @@ void AXRController::loadFile()
     
     bool success = this->osHelper->openFileDialog(xmlfilepath, xmlfilename);
     if(success){
-        this->loadXMLFile(xmlfilepath, xmlfilename);
-        //load the obtained stylesheets
-        if(this->loadSheets.size() == 0){
-            throw AXRNoStylesheetsException(xmlfilepath);
-            std_log1("this comes after the exception, it get's executed");
+        if(this->_hasLoadedFile){
+            //prepare itself for loading a new file
+            this->reset();
+        }
+        
+        if(!this->loadXMLFile(xmlfilepath, xmlfilename)){
+            //FIXME: handle the error
+            std_log1("could not load the xml file");
+            loadingSuccess = false;
         } else {
-            for (i=0; i<this->loadSheets.size(); i++) {
-                
-                hssfilename = this->loadSheets[i];
-                
-                if(hssfilename.substr(0,1) == "/"){
-                    //FIXME: add support for absolute paths
-                } else {
-                    //FIXME: why is doing exactly the opposite of what I expect? that's why I put the ! in there
-//                    size_t hasFolder = hssfilename.rfind("/", hssfilename.size());
-//                    if(hasFolder != -1){
-//                        //construct the new path
-//                        hssfolder = hssfilename.substr(0, hssfilename.rfind("/", hssfilename.length()));
-//                        std_log1("has folder: ");std_log1(hssfolder);
-//                    } else {
+            //needs reset on next load
+            this->_hasLoadedFile = true;
+            
+            //load the obtained stylesheets
+            if(this->loadSheets.size() == 0){
+                throw AXRNoStylesheetsException(xmlfilepath);
+                //FIXME: test this to better understand exceptions
+                std_log1("this comes after the exception, it get's executed");
+            } else {
+                for (i=0; i<this->loadSheets.size(); i++) {
+                    
+                    hssfilename = this->loadSheets[i];
+                    
+                    if(hssfilename.substr(0,1) == "/"){
+                        //FIXME: add support for absolute paths
+                    } else {
+                        //FIXME: why is doing exactly the opposite of what I expect? that's why I put the ! in there
+                        //                    size_t hasFolder = hssfilename.rfind("/", hssfilename.size());
+                        //                    if(hasFolder != -1){
+                        //                        //construct the new path
+                        //                        hssfolder = hssfilename.substr(0, hssfilename.rfind("/", hssfilename.length()));
+                        //                        std_log1("has folder: ");std_log1(hssfolder);
+                        //                    } else {
                         hssfolder = xmlfilepath.substr(0, xmlfilepath.rfind("/", xmlfilepath.length())+1);
                         hssfilepath = hssfolder.append(hssfilename);
-//                        std_log1("no folder: ");std_log1(hssfilepath);
-//                    }
-                    
-                    this->loadHSSFile(hssfilepath, hssfilename.substr(hssfilename.rfind("/", hssfilename.length())+1));
+                        //                        std_log1("no folder: ");std_log1(hssfilepath);
+                        //                    }
+                        
+                        if(!this->loadHSSFile(hssfilepath, hssfilename.substr(hssfilename.rfind("/", hssfilename.length())+1))){
+                            //FIXME: handle the error
+                            loadingSuccess = false;
+                            std_log1("error loading hss file");
+                        }
+                    }
                 }
             }
         }
     }
+    
+    return loadingSuccess;
 }
 
 std::string AXRController::toString()
@@ -148,19 +172,20 @@ void AXRController::reset()
     this->current.reset();
     //the operator -> is very important here
     this->parserHSS->reset();
+    this->parserXML = XMLParser::p(new XMLParser(this->shared_from_this()));
+    //this->parserXML = XMLParser::p(new XMLParser(XMLParser::controllerPointer(AXRController::p(this))));
 }
 
 
-void AXRController::loadXMLFile(std::string filepath, std::string filename)
+bool AXRController::loadXMLFile(std::string filepath, std::string filename)
 {
-    this->parserXML->loadFile(filepath, filename);
-    std_log1(this->toString());
+    return this->parserXML->loadFile(filepath, filename);
 }
 
-void AXRController::loadHSSFile(std::string filepath, std::string filename)
+bool AXRController::loadHSSFile(std::string filepath, std::string filename)
 {
     std_log1(std::string("******************************************************************\n* opening document:\n* ").append(filepath).append("\n******************************************************************"));
-    this->parserHSS->loadFile(filepath);
+    return this->parserHSS->loadFile(filepath);
 }
 
 HSSContainer::p AXRController::getRoot()
@@ -227,7 +252,10 @@ std::string AXRController::loadSheetsGet(unsigned index)
     return this->loadSheets[index];
 }
 
-
+bool AXRController::hasLoadedFile()
+{
+    return _hasLoadedFile;
+}
 
 
 

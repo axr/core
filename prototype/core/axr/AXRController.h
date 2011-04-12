@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/11
+ *      Last changed: 2011/04/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -56,10 +56,12 @@
 #include <vector>
 #include "../AXR.h"
 #include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 namespace AXR {
     
-    class AXRController {
+    class AXRController : public boost::enable_shared_from_this<AXRController>
+    {
     public:
         typedef boost::shared_ptr<AXRController> p;
         //you should use this to instantiate a new controller
@@ -71,9 +73,12 @@ namespace AXR {
         //use this to clean up and start from fresh
         void reset();
         
-        void loadFile();
-        void loadXMLFile(std::string filepath, std::string filename);
-        void loadHSSFile(std::string filepath, std::string filename);
+        //tells wether a file has been loaded or not
+        bool hasLoadedFile();
+        
+        bool loadFile();
+        bool loadXMLFile(std::string filepath, std::string filename);
+        bool loadHSSFile(std::string filepath, std::string filename);
         
         HSSContainer::p getRoot();
         void setRoot(HSSContainer::p newRoot);
@@ -99,6 +104,9 @@ namespace AXR {
         XMLParser::p parserXML;
         HSSParser::p parserHSS;
         OSHelper::p osHelper;
+        
+        bool _hasLoadedFile;
+        
     private:
         AXRController();
     };

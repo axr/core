@@ -149,9 +149,11 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
 	} else {
 		this->currentChar = buffer[this->bufpos];
 	}
+#if AXR_DEBUG_LEVEL > 3
     std::ostringstream tempstream;
     tempstream << this->bufpos;
     std_log4("read charachter "+tempstream.str()+"|" << this->currentChar << "|");
+#endif
 	this->bufpos++;
     this->currentColumn++;
     

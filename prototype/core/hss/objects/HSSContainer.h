@@ -78,8 +78,11 @@ namespace AXR {
         std::string getContentText();
         void setContentText(std::string newText);
         
-    protected:
+        //FIXME: make protected and provide accessors
         std::vector<HSSDisplayObject::p>children;
+    
+    protected:
+        
         std::string contentText;
     };
 }

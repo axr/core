@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="application/x-hss" src="style.hss"?>
 <test>
-	<test2 arg1="test"></test2>
-	<test3></test3>
+	<test2 arg1="test">This is a test element</test2>
+	<test3>This is another</test3>
 </test>
