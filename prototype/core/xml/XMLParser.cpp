@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/12
+ *      Last changed: 2011/04/14
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -62,6 +62,7 @@ XMLParser::XMLParser(boost::shared_ptr<AXRController> controller)
     this->filepath = "";
     this->filename = "";
     this->controller = controllerPointer(controller);
+    this->filehandle = NULL;
 }
 
 //XMLParser::XMLParser(AXRController * controller, std::string filepath, std::string filename) : expatmm::ExpatXMLParser() {
@@ -132,7 +133,6 @@ void XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)
 {
     unsigned i;
     HSSContainer::p newContainer = HSSContainer::p(new HSSContainer(std::string(name)));
-    std_log1(std::string(name));
     for (i = 0; attrs[i]; i += 2) {
         newContainer->attributesAdd(attrs[i], attrs[i + 1]);
     }
@@ -147,7 +147,6 @@ void XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)
 void XMLParser::EndElement(const XML_Char *name)
 {
     boost::shared_ptr<AXRController>theController = this->getController();
-    std_log1(theController->getRoot()->name);
     HSSContainer::p parentContainer = theController->getCurrent()->getParent();
     theController->setCurrent(parentContainer);
 }
@@ -237,6 +236,14 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
 boost::shared_ptr<AXRController> XMLParser::getController()
 {
     return this->controller.lock();
+}
+
+std::string XMLParser::getFilePath(){
+    return this->filepath;
+}
+
+std::string XMLParser::getFileName(){
+    return this->filename;
 }
 
 

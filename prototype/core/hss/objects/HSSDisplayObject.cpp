@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/11
+ *      Last changed: 2011/04/13
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -58,18 +58,18 @@ using namespace AXR;
 HSSDisplayObject::HSSDisplayObject()
 : HSSObject()
 {
-    std_log1(std::string("creating annonymous display object"));
+    std_log3(std::string("creating annonymous display object"));
 }
 
 HSSDisplayObject::HSSDisplayObject(std::string name)
 : HSSObject(name)
 {
-     std_log1(std::string("creating display object with name ").append(name));   
+     std_log3(std::string("creating display object with name ").append(name));   
 }
 
 HSSDisplayObject::~HSSDisplayObject()
 {
-    std_log1(std::string("destroying display object with name ").append(this->name));
+    std_log3(std::string("destroying display object with name ").append(this->name));
 }
 
 std::string HSSDisplayObject::toString()

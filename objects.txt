@@ -5,7 +5,6 @@ Those properties that accept multiple values are marked with [].
 
 @object
 	isA[]
-	defaultObjectType
 	shorthandOrder[]
 	
 		@displayObject
@@ -68,6 +67,9 @@ Those properties that accept multiple values are marked with [].
 				@video
 					source[]
 					autoplay
+				
+				@blob
+					shape
 		
 		@box
 			x

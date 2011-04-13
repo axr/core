@@ -86,7 +86,7 @@ namespace AXR {
         
         HSSParser(boost::shared_ptr<AXRController> controller);
         //initialize with a pointer to the buffer where the HSS code is stored, and the lenght of the buffer
-        HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, std::string filename);
+        //HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, std::string filename);
         //destructor
         ~HSSParser();
         

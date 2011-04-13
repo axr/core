@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/12
+ *      Last changed: 2011/04/14
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -78,6 +78,9 @@ namespace AXR {
         virtual ~XMLParser();
         
         bool loadFile(std::string filepath, std::string filename);
+        
+        std::string getFilePath();
+        std::string getFileName();
         
     protected:
         virtual ssize_t read_block(void);

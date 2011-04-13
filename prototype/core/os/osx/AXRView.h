@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/12
+ *      Last changed: 2011/04/13
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -65,5 +65,6 @@
 - (AXR::AXRController::p)axrController;
 
 - (bool)loadFile;
+- (bool)reload;
 
 @end

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/12
+ *      Last changed: 2011/04/13
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -74,7 +74,7 @@
 
 - (void)awakeFromNib
 {
-    [self setAxrController:AXR::AXRController::p(AXR::AXRController::create())];
+    
 }
 
 - (void)dealloc
@@ -96,7 +96,7 @@
     
     if([self axrController] && [self axrController]->hasLoadedFile()){
         AXR::AXRController::p controller = [self axrController];
-        //std_log1(controller->toString());
+        std_log1(controller->toString());
         
         //fill with white
         [[NSColor whiteColor] set];
@@ -142,10 +142,25 @@
 
 - (bool)loadFile
 {
+    if([self axrController] == nil){
+        [self setAxrController:AXR::AXRController::p(AXR::AXRController::create())];
+    }
     std_log1("loading file");
     bool loaded = [self axrController]->loadFile();
     [self setNeedsDisplay:YES];
     return loaded;
+}
+
+- (bool)reload
+{
+    if([self axrController] != nil && [self axrController]->hasLoadedFile()){
+        std_log1("reloading file");
+        bool loaded = [self axrController]->reload();
+        [self setNeedsDisplay:YES];
+        return loaded;
+    }
+    
+    return false;
 }
 
 @end

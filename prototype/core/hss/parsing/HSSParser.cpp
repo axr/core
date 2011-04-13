@@ -63,27 +63,30 @@ using namespace AXR;
 
 HSSParser::HSSParser(boost::shared_ptr<AXRController> controller)
 {
+    this->controller = controllerPointer(controller);
     this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
     
     this->currentContext.push_back(HSSParserContextRoot);
     //FIXME: will there be a root object? Now defaults to container
     this->currentObjectContext.push(HSSContainer::p(new HSSContainer()));
+    std_log1("creating hss parser");
 }
 
-HSSParser::HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, std::string filename)
-{
-    this->tokenizer = HSSTokenizer::p(new HSSTokenizer(buffer, buflen));
-    this->filename = filename;
-    
-    this->currentContext.push_back(HSSParserContextRoot);
-    //FIXME: will there be a root object? Now defaults to container
-    this->currentObjectContext.push(HSSContainer::p(new HSSContainer()));
-    
-    this->readNextToken();
-}
+//HSSParser::HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, std::string filename)
+//{
+//    this->tokenizer = HSSTokenizer::p(new HSSTokenizer(buffer, buflen));
+//    this->filename = filename;
+//    
+//    this->currentContext.push_back(HSSParserContextRoot);
+//    //FIXME: will there be a root object? Now defaults to container
+//    this->currentObjectContext.push(HSSContainer::p(new HSSContainer()));
+//    
+//    this->readNextToken();
+//}
 
 HSSParser::~HSSParser()
 {
+    std_log1("destructing hss parser");
     unsigned i;
     for (i=0; i<this->currentObjectContext.size(); i++){
         this->currentObjectContextRemoveLast();
@@ -170,6 +173,7 @@ bool HSSParser::loadFile(std::string filepath)
         } else {
 //            std::cout << std::endl << "-----------------------------" << std::endl
 //            <<  statement->toString() << std::endl << "-----------------------------" << std::endl;
+            this->getController()->statementsAdd(statement);
         }
         
         security_brake();

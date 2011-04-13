@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/12
+ *      Last changed: 2011/04/14
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -80,63 +80,67 @@ AXRController::~AXRController()
 
 bool AXRController::loadFile()
 {
-    //we assume success unless noted otherwise
-    bool loadingSuccess = true;
-    
     std::string xmlfilepath = std::string();
     std::string xmlfilename = std::string();
-    
+    bool success = this->osHelper->openFileDialog(xmlfilepath, xmlfilename);
+    if(success){
+        return this->loadFile(xmlfilepath, xmlfilename);
+    } else {
+        return false;
+    }
+}
+
+bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
+{
+    //we assume success unless noted otherwise
+    bool loadingSuccess = true;
     std::string hssfilepath = std::string();
     std::string hssfolder = std::string();
     std::string hssfilename = std::string();
-    
     unsigned i;
     
-    bool success = this->osHelper->openFileDialog(xmlfilepath, xmlfilename);
-    if(success){
-        if(this->_hasLoadedFile){
-            //prepare itself for loading a new file
-            this->reset();
-        }
+    if(this->_hasLoadedFile){
+        //prepare itself for loading a new file
+        this->reset();
+    }
+    
+    if(!this->loadXMLFile(xmlfilepath, xmlfilename)){
+        //FIXME: handle the error
+        std_log1("could not load the xml file");
+        loadingSuccess = false;
+    } else {
+        //needs reset on next load
+        this->_hasLoadedFile = true;
         
-        if(!this->loadXMLFile(xmlfilepath, xmlfilename)){
-            //FIXME: handle the error
-            std_log1("could not load the xml file");
-            loadingSuccess = false;
+        //load the obtained stylesheets
+        if(this->loadSheets.size() == 0){
+            throw AXRNoStylesheetsException(xmlfilepath);
+            //FIXME: test this to better understand exceptions
+            std_log1("this comes after the exception, it get's executed");
         } else {
-            //needs reset on next load
-            this->_hasLoadedFile = true;
-            
-            //load the obtained stylesheets
-            if(this->loadSheets.size() == 0){
-                throw AXRNoStylesheetsException(xmlfilepath);
-                //FIXME: test this to better understand exceptions
-                std_log1("this comes after the exception, it get's executed");
-            } else {
-                for (i=0; i<this->loadSheets.size(); i++) {
+            for (i=0; i<this->loadSheets.size(); i++) {
+                
+                hssfilename = this->loadSheets[i];
+                
+                if(hssfilename.substr(0,1) == "/"){
+                    //FIXME: add support for absolute paths
+                } else {
+                    //FIXME: why is doing exactly the opposite of what I expect? that's why I put the ! in there
+                    //                    size_t hasFolder = hssfilename.rfind("/", hssfilename.size());
+                    //                    if(hasFolder != -1){
+                    //                        //construct the new path
+                    //                        hssfolder = hssfilename.substr(0, hssfilename.rfind("/", hssfilename.length()));
+                    //                        std_log1("has folder: ");std_log1(hssfolder);
+                    //                    } else {
+                    hssfolder = xmlfilepath.substr(0, xmlfilepath.rfind("/", xmlfilepath.length())+1);
+                    hssfilepath = hssfolder.append(hssfilename);
+                    //                        std_log1("no folder: ");std_log1(hssfilepath);
+                    //                    }
                     
-                    hssfilename = this->loadSheets[i];
-                    
-                    if(hssfilename.substr(0,1) == "/"){
-                        //FIXME: add support for absolute paths
-                    } else {
-                        //FIXME: why is doing exactly the opposite of what I expect? that's why I put the ! in there
-                        //                    size_t hasFolder = hssfilename.rfind("/", hssfilename.size());
-                        //                    if(hasFolder != -1){
-                        //                        //construct the new path
-                        //                        hssfolder = hssfilename.substr(0, hssfilename.rfind("/", hssfilename.length()));
-                        //                        std_log1("has folder: ");std_log1(hssfolder);
-                        //                    } else {
-                        hssfolder = xmlfilepath.substr(0, xmlfilepath.rfind("/", xmlfilepath.length())+1);
-                        hssfilepath = hssfolder.append(hssfilename);
-                        //                        std_log1("no folder: ");std_log1(hssfilepath);
-                        //                    }
-                        
-                        if(!this->loadHSSFile(hssfilepath, hssfilename.substr(hssfilename.rfind("/", hssfilename.length())+1))){
-                            //FIXME: handle the error
-                            loadingSuccess = false;
-                            std_log1("error loading hss file");
-                        }
+                    if(!this->loadHSSFile(hssfilepath, hssfilename.substr(hssfilename.rfind("/", hssfilename.length())+1))){
+                        //FIXME: handle the error
+                        loadingSuccess = false;
+                        std_log1("error loading hss file");
                     }
                 }
             }
@@ -144,6 +148,17 @@ bool AXRController::loadFile()
     }
     
     return loadingSuccess;
+}
+
+bool AXRController::reload()
+{
+    if(this->_hasLoadedFile){
+        std::string filepath = this->parserXML->getFilePath();
+        std::string filename = this->parserXML->getFileName();
+        return this->loadFile(filepath, filename);
+    }
+    
+    return false;
 }
 
 std::string AXRController::toString()
@@ -157,6 +172,14 @@ std::string AXRController::toString()
     {
         for (i=0; i<this->objectTree.size(); i++) {
             tempstr.append("\n").append(this->objectTree[i]->toString());
+        }
+    }
+    
+    if(this->statements.size() > 0)
+    {
+        tempstr.append("\n\n\nSTATEMENTS:");
+        for (i=0; i<this->statements.size(); i++) {
+            tempstr.append("\n").append(this->statements[i]->toString());
         }
     }
     
@@ -202,7 +225,6 @@ void AXRController::add(HSSContainer::p newContainer)
     if(!this->root){
         this->root = newContainer;
     } else {
-        std_log1(this->root->name);
         if(this->current){
             this->current->add(newContainer);
         } else {
@@ -257,6 +279,25 @@ bool AXRController::hasLoadedFile()
     return _hasLoadedFile;
 }
 
+const std::vector<HSSStatement::p>& AXRController::getStatements() const
+{
+    return this->statements;
+}
+
+void AXRController::statementsAdd(HSSStatement::p statement)
+{
+    this->statements.push_back(statement);
+}
+
+void AXRController::statementsRemove(unsigned index)
+{
+    this->statements.erase(this->statements.begin()+index);
+}
+
+HSSStatement::p AXRController::statementsGet(unsigned index)
+{
+    return this->statements[index];
+}
 
 
 

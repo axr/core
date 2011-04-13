@@ -43,7 +43,7 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/12
+ *      Last changed: 2011/04/14
  *      HSS version: 1.0
  *      Core version: 0.3
  *      Revision: 5
@@ -77,6 +77,8 @@ namespace AXR {
         bool hasLoadedFile();
         
         bool loadFile();
+        bool loadFile(std::string xmlfilepath, std::string xmlfilename);
+        bool reload();
         bool loadXMLFile(std::string filepath, std::string filename);
         bool loadHSSFile(std::string filepath, std::string filename);
         
@@ -95,12 +97,18 @@ namespace AXR {
         void loadSheetsRemove(unsigned index);
         std::string loadSheetsGet(unsigned index);
         
+        const std::vector<HSSStatement::p>& getStatements() const;
+        void statementsAdd(HSSStatement::p);
+        void statementsRemove(unsigned index);
+        HSSStatement::p statementsGet(unsigned index);
+        
     protected:
         HSSContainer::p root;
         HSSContainer::p current;
         
         std::vector<HSSObject::p>objectTree;
         std::vector<std::string>loadSheets;
+        std::vector<HSSStatement::p>statements;
         XMLParser::p parserXML;
         HSSParser::p parserHSS;
         OSHelper::p osHelper;

@@ -21,64 +21,31 @@ char Buff[BUFFSIZE];
 @synthesize axrView;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    [self openDocument:self];
+    //[self openDocument:self];
 }
 
 void listHSSStatements(NSString *filepath)
 {
     std_log1(std::string("******************************************************************\n* reading all statements from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
     
-    unsigned buflen = 8000;
-    AXR::HSSTokenizer::buf_p buffer = AXR::HSSTokenizer::buf_p(new char[buflen]);
-    FILE * hssfile = fopen([filepath UTF8String], "r");
-    int len = (int)fread(buffer.get(), 1, buflen, hssfile);
-    fclose(hssfile);
-    AXR::HSSParser parser(buffer, len, [[filepath lastPathComponent] UTF8String]);
-    AXR::HSSStatement::p statement;
-    bool done = FALSE;
-    int security_count = 0;
-    while (!done) {
-        std::cout << "read statement\n";
-        if(statement){
-            statement.reset();
+    //FIXME: this is uh-gly
+    AXR::AXRController::p controller(AXR::AXRController::create());
+    AXR::HSSParser::p hssparser(new AXR::HSSParser(controller));
+    bool loaded = hssparser->loadFile(std::string([filepath UTF8String]));
+    if(loaded){
+        unsigned i;
+        const std::vector<AXR::HSSStatement::p> statements = controller->getStatements();
+        for(i=0; i<statements.size(); i++){
+            std_log1(statements[i]->toString());
         }
-        try {
-            statement = parser.readNextStatement();
-        }
-        catch(AXR::HSSUnexpectedTokenException e){
-            std::cout << e.toString() << std::endl;
-            continue;
-        }
-        catch(AXR::HSSUnexpectedEndOfSourceException e){
-            std::cout << e.toString() << std::endl;
-        }
-        catch(AXR::HSSUnexpectedObjectTypeException e){
-            std::cout << e.toString() << std::endl;
-        }
-        catch(AXR::HSSExpectedTokenException e){
-            std::cout << e.toString() << std::endl;
-        }
-        catch(AXR::HSSWrongHexLengthException e){
-            std::cout << e.toString() << std::endl;
-        }
-        
-        
-        if(statement == NULL){
-            done = TRUE;
-        } else {
-            std::cout << std::endl << "-----------------------------" << std::endl
-            <<  statement->toString() << std::endl << "-----------------------------" << std::endl;
-        }
-        
-        if(security_count == 99999)
-        {
-            break;
-        } else {
-            security_count++;
-        }
+    } else {
+        std_log1("error loading file");
     }
+    
     std::cout << "reached end of source" << std::endl;
     std::cout << "\n\n\n\n";
+
+    //std_log1("sorry, this is not working yet");
 #if AXR_DEBUG_LEVEL > 1
     exit(0);
 #endif
@@ -88,12 +55,14 @@ void listHSSTokens(NSString *filepath)
 {
     std_log1(std::string("******************************************************************\n* reading all tokens from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
     
-    unsigned buflen = 8000;
-    char buffer[buflen];
     FILE * hssfile = fopen([filepath UTF8String], "r");
-    int len = (int)fread(buffer, 1, buflen, hssfile);
+    AXR::HSSTokenizer::p tokenizer = AXR::HSSTokenizer::p(new AXR::HSSTokenizer());
+    int len = (int)fread(tokenizer->getBuffer().get(), 1, AXR_HSS_BUFFER_SIZE, hssfile);
+    tokenizer->setBufferLength(len);
+    tokenizer->readNextChar();
     fclose(hssfile);
-    AXR::HSSTokenizer tokenizer(AXR::HSSTokenizer::buf_p(buffer), len);
+    
+    
     AXR::HSSToken::p token;
     bool done = FALSE;
     int security_count = 0;
@@ -101,7 +70,7 @@ void listHSSTokens(NSString *filepath)
         if(token){
             token.reset();
         }
-        token = tokenizer.readNextToken();
+        token = tokenizer->readNextToken();
         if(!token){
             done = TRUE;
         } else {
@@ -205,6 +174,13 @@ void listXMLElements(NSString *filepath)
     //sending loadfile
     [[self axrView] loadFile];
     
+}
+
+- (IBAction)reload:(id)sender {
+    bool loaded = [[self axrView] reload];
+    if(!loaded){
+        NSLog(@"Could not reload file because of an unknown error.");
+    }
 }
 
 
