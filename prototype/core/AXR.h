@@ -43,111 +43,22 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/15
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
 #ifndef AXR_H
 #define AXR_H
 
-#ifdef AXR_PLATFORM_OSX
-#include "os/osx/OSX.h"
-#elif defined AXR_PLATFORM_WIN
-#include "os/windows.h"
-#elif defined AXR_PLATFORM_GNU
-#include "os/gnu.h"
-#endif
+#include "axr/AXRDebugging.h"
 
 #include "xml/xml.h"
 #include "hss/hss.h"
 #include "axr/AXRController.h"
-
-//Debug levels:
-// - 0 No debug
-// - 1 
-// - 2 
-// - 3 
-// - 4 All messages
-
-//you can set this as a preprocessor macros in your IDE to override
-#ifndef AXR_DEBUG_LEVEL
-//default level
-#define AXR_DEBUG_LEVEL 1
-#endif
-
-#ifndef AXR_HSS_BUFFER_SIZE
-#define AXR_HSS_BUFFER_SIZE 10240 //1kB
-#endif
-
-//logging
-#if AXR_DEBUG_LEVEL > 0
-#define std_log1(what) std::cout << what << std::endl
-
-#if AXR_DEBUG_LEVEL > 1
-#define std_log2(what) std::cout << what << std::endl
-
-#if AXR_DEBUG_LEVEL > 2
-#define std_log3(what) std::cout << what << std::endl
-
-#if AXR_DEBUG_LEVEL > 3
-#define std_log4(what) std::cout << what << std::endl
-#else
-#define std_log4(what)
-#endif //AXR_DEBUG_LEVEL > 3
-
-#else
-#define std_log3(what)
-#define std_log4(what)
-#endif //AXR_DEBUG_LEVEL > 2
-
-#else //AXR_DEBUG_LEVEL < 0
-
-#define std_log2(what)
-#define std_log3(what)
-#define std_log4(what)
-#endif //AXR_DEBUG_LEVEL > 1
-
-#else
-#define std_log1(what)
-#define std_log2(what)
-#define std_log3(what)
-#define std_log4(what)
-#endif //AXR_DEBUG_LEVEL > 0
-
-
-//security brakes for while loops
-#if AXR_DEBUG_LEVEL > 0
-
-#define AXR_DEBUG_BRAKE 9999
-#define security_brake_init() int __axr_security_count = 0;
-#define security_brake_reset() __axr_security_count = 0;
-#define security_brake() if(__axr_security_count > AXR_DEBUG_BRAKE ){ break; } else { __axr_security_count++; }
-
-#else // AXR_DEBUG_LEVEL == 0
-
-#define security_brake_init()
-#define security_brake_reset()
-#define security_brake()
-
-#endif //AXR_DEBUG_LEVEL == 0
-
-//indentation for output
-#if AXR_DEBUG_LEVEL > 0
-
-unsigned extern axr_output_debug_indent_count;
-#define inc_output_indent() axr_output_debug_indent_count++;
-#define dec_output_indent() axr_output_debug_indent_count--;
-#define output_indent(what) std::string(axr_output_debug_indent_count*4, ' ').append(what)
-
-#else //AXR_DEBUG_LEVEL == 0
-
-#define inc_output_indent()
-#define dec_output_indent()
-#define output_indent(what)
-
-#endif //AXR_DEBUG_LEVEL == 0
+#include "os/platform.h"
 
 #endif //AXR_H
+

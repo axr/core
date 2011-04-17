@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -57,32 +57,37 @@ using namespace AXR;
 
 HSSValue::HSSValue()
 {
-    this->type = HSSValueNumberInt;
+    this->valueType = HSSValueNumberInt;
+    this->type = HSSObjectTypeValue;
     this->intValue = 0;
 }
 
 HSSValue::HSSValue(long int value)
 {
-    this->type = HSSValueNumberInt;
+    this->valueType = HSSValueNumberInt;
+    this->type = HSSObjectTypeValue;
     this->intValue = value;
 }
 
 HSSValue::HSSValue(long double value)
 {
-    this->type = HSSValueNumberFloat;
+    this->valueType = HSSValueNumberFloat;
+    this->type = HSSObjectTypeValue;
     this->floatValue = value;
 }
 
 HSSValue::HSSValue(std::string value)
 {
-    this->type = HSSValueString;
+    this->valueType = HSSValueString;
+    this->type = HSSObjectTypeValue;
     this->stringValue = value;
 }
 
 //this is used to set a keyword
 HSSValue::HSSValue(void * passNULL, std::string keyword)
 {
-    this->type = HSSValueKeyword;
+    this->valueType = HSSValueKeyword;
+    this->type = HSSObjectTypeValue;
     this->stringValue = keyword;
 }
 
@@ -97,7 +102,7 @@ std::string HSSValue::toString()
         ret = "Annonymous HSSValue with value: ";
     }
     
-    switch (this->type) {
+    switch (this->valueType) {
         case HSSValueNumberInt:
             //create a temp stream to convert the int to a string
             tempstream << this->intValue;
@@ -129,42 +134,42 @@ std::string HSSValue::defaultObjectType(std::string property)
     }
 }
 
-HSSValueType HSSValue::getType()
+HSSValueType HSSValue::getValueType()
 {
-    return this->type;
+    return this->valueType;
 }
 
 void HSSValue::setValue(long int value)
 {
-    this->type = HSSValueNumberInt;
+    this->valueType = HSSValueNumberInt;
     this->intValue = value;
 }
 
 void HSSValue::setValue(long double value)
 {
-    this->type = HSSValueNumberFloat;
+    this->valueType = HSSValueNumberFloat;
     this->floatValue = value;
 }
 
 void HSSValue::setValue(std::string value)
 {
-    this->type = HSSValueString;
+    this->valueType = HSSValueString;
     this->stringValue = value;
 }
 
 void HSSValue::setKWValue(std::string keyword)
 {
-    this->type = HSSValueKeyword;
+    this->valueType = HSSValueKeyword;
     this->stringValue = keyword;
 }
 
 std::string HSSValue::getStringValue()
 {
-    if (this->type == HSSValueString) {
+    if (this->valueType == HSSValueString) {
         return this->stringValue;
-    } else if (this->type == HSSValueNumberInt || this->type == HSSValueNumberFloat){
+    } else if (this->valueType == HSSValueNumberInt || this->valueType == HSSValueNumberFloat){
         std::ostringstream tempstream;
-        tempstream << (this->type == HSSValueNumberInt ? this->intValue : this->floatValue);
+        tempstream << (this->valueType == HSSValueNumberInt ? this->intValue : this->floatValue);
         return tempstream.str();
     } else {
         throw HSSUnknownValueTypeException();
@@ -173,7 +178,7 @@ std::string HSSValue::getStringValue()
 
 long int HSSValue::getIntValue()
 {
-    if(this->type == HSSValueNumberInt){
+    if(this->valueType == HSSValueNumberInt){
         return this->intValue;
     } else {
         //FIXME: parse string to int
@@ -183,7 +188,7 @@ long int HSSValue::getIntValue()
 
 long double HSSValue::getFloatValue()
 {
-    if(this->type == HSSValueNumberFloat){
+    if(this->valueType == HSSValueNumberFloat){
         return this->floatValue;
     } else {
         //FIXME: parse string to float

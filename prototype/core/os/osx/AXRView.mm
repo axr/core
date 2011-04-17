@@ -43,16 +43,20 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/13
+ *      Last changed: 2011/04/15
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
 #import "AXRView.h"
 //#include <cairo/cairo.h>
+#include "../../hss/objects/HSSContainer.h"
+#include "../../axr/AXRController.h"
 #include <cairo/cairo-quartz.h>
+#include <iostream>
+#include "../../axr/AXRDebugging.h"
 
 @implementation AXRView
 
@@ -79,6 +83,7 @@
 
 - (void)dealloc
 {
+    delete (AXR::AXRController *)[self axrController];
     [super dealloc];
 }
 
@@ -94,9 +99,13 @@
     float width = bounds.size.width;
     float height = bounds.size.height;
     
-    if([self axrController] && [self axrController]->hasLoadedFile()){
-        AXR::AXRController::p controller = [self axrController];
-        std_log1(controller->toString());
+    AXR::AXRController * controller;
+    if([self axrController] != NULL){
+        controller = (AXR::AXRController *)[self axrController];
+    }
+    
+    if(controller != NULL && controller->hasLoadedFile()){
+        //std_log1(controller->toString());
         
         //fill with white
         [[NSColor whiteColor] set];
@@ -112,9 +121,18 @@
         cairo_surface_destroy(targetSurface);
         
         cairo_set_line_width(cairo, 2);
-        unsigned i;
-        for(i=0; i<controller->getRoot()->children.size(); i++){
-            cairo_rectangle(cairo, (i*150)+((i+1)*10), 20, 150, 150);
+        float i;
+        unsigned j;
+        AXR::HSSContainer::p root = controller->getRoot();
+        unsigned size = root->children.size();
+        for(i=0; i<size; i++){
+            AXR::HSSDisplayObject::p displayObject = root->children[i];
+            for(j=0;j<displayObject->rulesSize();j++){
+                AXR::HSSRule::p rule = displayObject->rulesGet(j);
+                std_log1(rule->toString());
+            }
+            //std::fprintf(stderr, "rectangle width: %f, height: %f, x: %f, y: %f\n", (i*150.)+((i+1.)*10.), 20., 150., 150.);
+            cairo_rectangle(cairo, (i*150.)+((i+1.)*10.), 20., 150., 150.);
             cairo_set_source_rgb(cairo, 1,0.8,0.8);
             cairo_fill_preserve(cairo);
             cairo_set_source_rgb(cairo, 0,0,0);
@@ -130,34 +148,40 @@
     }
 }
 
-- (void)setAxrController:(AXR::AXRController::p)theController
+- (void)setAxrController:(void *)theController
 {
     axrController = theController;
 }
 
-- (AXR::AXRController::p)axrController
+- (void *)axrController
 {
     return axrController;
 }
 
 - (bool)loadFile
 {
-    if([self axrController] == nil){
-        [self setAxrController:AXR::AXRController::p(AXR::AXRController::create())];
+    if([self axrController] == NULL){
+        [self setAxrController: new AXR::AXRController::AXRController()];
     }
     std_log1("loading file");
-    bool loaded = [self axrController]->loadFile();
+    
+    AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
+    bool loaded = controller->loadFile();
     [self setNeedsDisplay:YES];
     return loaded;
 }
 
 - (bool)reload
 {
-    if([self axrController] != nil && [self axrController]->hasLoadedFile()){
-        std_log1("reloading file");
-        bool loaded = [self axrController]->reload();
-        [self setNeedsDisplay:YES];
-        return loaded;
+    
+    if([self axrController] != NULL){
+        AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
+        if(controller->hasLoadedFile()){
+            std_log1("reloading file");
+            bool loaded = controller->reload();
+            [self setNeedsDisplay:YES];
+            return loaded;
+        }
     }
     
     return false;

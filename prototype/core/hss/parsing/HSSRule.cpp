@@ -43,22 +43,23 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/11
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
 #include "HSSRule.h"
 #include <iostream>
-#include "../../AXR.h"
+#include "../../axr/AXRDebugging.h"
 
 using namespace AXR;
 
 HSSRule::HSSRule(HSSSelectorChain::p selectorChain)
 {
     this->selectorChain = selectorChain;
+    this->type = HSSStatementTypeRule;
 }
 
 HSSRule::~HSSRule()
@@ -144,7 +145,9 @@ void HSSRule::childrenRemoveLast()
     this->children.pop_back();
 }
 
-
-
+const int HSSRule::childrenSize()
+{
+    return this->children.size();
+}
 
 

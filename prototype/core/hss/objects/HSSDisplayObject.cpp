@@ -43,15 +43,15 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/13
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 8
  *
  ********************************************************************/
 
 #include "HSSDisplayObject.h"
-#include "../../AXR.h"
+#include "../../axr/AXRDebugging.h"
 
 using namespace AXR;
 
@@ -59,12 +59,35 @@ HSSDisplayObject::HSSDisplayObject()
 : HSSObject()
 {
     std_log3(std::string("creating annonymous display object"));
+    this->type = HSSObjectTypeDisplayObject;
+    x = y = width = height = anchorX = anchorY = alignX = alignY = drawIndex = 0;
+    tabIndex = zoomFactor = 1;
+    flow = visible = true;
+    does_float = false;
+    
+    width = 100.;
+    height = 100.;
+    
+    elementName = std::string();
+    contentText = "hello";
+    
 }
 
 HSSDisplayObject::HSSDisplayObject(std::string name)
 : HSSObject(name)
 {
-     std_log3(std::string("creating display object with name ").append(name));   
+    std_log3(std::string("creating display object with name ").append(name));   
+    this->type = HSSObjectTypeDisplayObject;
+    x = y = width = height = anchorX = anchorY = alignX = alignY = drawIndex = 0;
+    tabIndex = zoomFactor = 1;
+    flow = visible = true;
+    does_float = false;
+    
+    width = 100.;
+    height = 100.;
+    
+    elementName = std::string();
+    contentText = std::string();
 }
 
 HSSDisplayObject::~HSSDisplayObject()
@@ -142,6 +165,44 @@ void HSSDisplayObject::attributesAdd(std::string name, std::string value)
 void HSSDisplayObject::attributesRemove(std::string name)
 {
     this->attributes.erase(name);
+}
+
+
+std::string HSSDisplayObject::getElementName()
+{
+    return this->elementName;
+}
+
+void HSSDisplayObject::setElementName(std::string newName)
+{
+    this->elementName = newName;
+}
+
+//rules
+
+void HSSDisplayObject::rulesAdd(HSSRule::p newRule)
+{
+    this->rules.push_back(newRule);
+}
+
+HSSRule::p HSSDisplayObject::rulesGet(unsigned index)
+{
+    return this->rules[index];
+}
+
+void HSSDisplayObject::rulesRemove(unsigned index)
+{
+    this->rules.erase(this->rules.begin()+index);
+}
+
+void HSSDisplayObject::rulesRemoveLast()
+{
+    this->rules.pop_back();
+}
+
+const int HSSDisplayObject::rulesSize()
+{
+    return this->rules.size();
 }
 
 

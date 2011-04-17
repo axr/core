@@ -43,94 +43,96 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/04/15
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSDISPLAYOBJECT_H
-#define HSSDISPLAYOBJECT_H
+#ifndef AXRDEBUGGING_H
+#define AXRDEBUGGING_H
 
-#include <string>
-#include <map>
-#include <vector>
-#include "HSSObject.h"
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include "../parsing/HSSRule.h"
+//Debug levels:
+// - 0 No debug
+// - 1 
+// - 2 
+// - 3 
+// - 4 All messages
 
-namespace AXR {
-    
-    class HSSContainer;
-
-    class HSSDisplayObject : public HSSObject
-    {
-    public:
-        typedef boost::shared_ptr<HSSDisplayObject> p;
-        typedef boost::weak_ptr<HSSContainer> parentPointer;
-        
-        HSSDisplayObject();
-        HSSDisplayObject(std::string name);
-        virtual ~HSSDisplayObject();
-        virtual std::string toString();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
-        boost::shared_ptr<HSSContainer> getParent();
-        void setParent(boost::shared_ptr<HSSContainer> parent);
-        void attributesAdd(std::string name, std::string value);
-        void attributesRemove(std::string name);
-        
-        void rulesAdd(HSSRule::p newRule);
-        HSSRule::p rulesGet(unsigned index);
-        void rulesRemove(unsigned index);
-        void rulesRemoveLast();
-        const int rulesSize();
-        
-        std::string getElementName();
-        void setElementName(std::string name);
-        
-        
-    protected:
-        parentPointer parent;
-        std::map<std::string, std::string>attributes;
-        std::string elementName;
-        std::string contentText;
-        std::vector<HSSRule::p> rules;
-        
-        //here go the final computed values
-        double x;
-        double y;
-        double height;
-        double width;
-        //FIXME: bounds
-        double anchorX;
-        double anchorY;
-        bool flow;
-        bool does_float;
-        double alignX;
-        double alignY;
-        //FIXME: margin
-        //FIXME: border
-        double zoomFactor;
-        //FIXME: transform
-        //FIXME: effects
-        //FIXME: animation
-        //FIXME: behavior
-        bool visible;
-        signed int drawIndex;
-        unsigned int tabIndex;
-        //FIXME: focused
-        //FIXME: mask
-        
-        //here go the definition objects
-        HSSObject::p d_width;
-        HSSObject::p d_height;
-
-    };
-
-}
-
-
+//you can set this as a preprocessor macros in your IDE to override
+#ifndef AXR_DEBUG_LEVEL
+//default level
+#define AXR_DEBUG_LEVEL 1
 #endif
+
+//logging
+#if AXR_DEBUG_LEVEL > 0
+#define std_log1(what) std::cout << what << std::endl
+
+#if AXR_DEBUG_LEVEL > 1
+#define std_log2(what) std::cout << what << std::endl
+
+#if AXR_DEBUG_LEVEL > 2
+#define std_log3(what) std::cout << what << std::endl
+
+#if AXR_DEBUG_LEVEL > 3
+#define std_log4(what) std::cout << what << std::endl
+#else
+#define std_log4(what)
+#endif //AXR_DEBUG_LEVEL > 3
+
+#else
+#define std_log3(what)
+#define std_log4(what)
+#endif //AXR_DEBUG_LEVEL > 2
+
+#else //AXR_DEBUG_LEVEL < 0
+
+#define std_log2(what)
+#define std_log3(what)
+#define std_log4(what)
+#endif //AXR_DEBUG_LEVEL > 1
+
+#else
+#define std_log1(what)
+#define std_log2(what)
+#define std_log3(what)
+#define std_log4(what)
+#endif //AXR_DEBUG_LEVEL > 0
+
+
+//security brakes for while loops
+#if AXR_DEBUG_LEVEL > 0
+
+#define AXR_DEBUG_BRAKE 9999
+#define security_brake_init() int __axr_security_count = 0;
+#define security_brake_reset() __axr_security_count = 0;
+#define security_brake() if(__axr_security_count > AXR_DEBUG_BRAKE ){ break; } else { __axr_security_count++; }
+
+#else // AXR_DEBUG_LEVEL == 0
+
+#define security_brake_init()
+#define security_brake_reset()
+#define security_brake()
+
+#endif //AXR_DEBUG_LEVEL == 0
+
+//indentation for output
+#if AXR_DEBUG_LEVEL > 0
+
+unsigned extern axr_output_debug_indent_count;
+#define inc_output_indent() axr_output_debug_indent_count++;
+#define dec_output_indent() axr_output_debug_indent_count--;
+#define output_indent(what) std::string(axr_output_debug_indent_count*4, ' ').append(what)
+
+#else //AXR_DEBUG_LEVEL == 0
+
+#define inc_output_indent()
+#define dec_output_indent()
+#define output_indent(what)
+
+#endif //AXR_DEBUG_LEVEL == 0
+
+
+#endif //AXRDEBUGGING_H

@@ -43,11 +43,42 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/04
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
 #include "HSSStatement.h"
+
+using namespace AXR;
+
+HSSStatement::HSSStatement()
+{
+    this->type = HSSStatementTypeGeneric;
+}
+
+bool HSSStatement::isA(HSSStatementType otherType)
+{
+	return otherType == this->type;
+}
+
+HSSStatementType HSSStatement::getType()
+{
+    return this->type;
+}
+
+std::string HSSStatement::statementStringRepresentation(HSSStatementType type){
+    std::string types[20];
+	types[HSSStatementTypeGeneric] = "HSSGenericStatement";
+	types[HSSStatementTypeRule] = "HSSRule";
+	types[HSSStatementTypePropertyDefinition] = "HSSPropertyDefinition";
+	types[HSSStatementTypeObjectDefinition] = "HSSObjectDefinition";
+	types[HSSStatementTypeComment] = "HSSComment";
+	types[HSSStatementTypeInstruction] = "HSSInstruction";
+
+    return types[type];
+}
+
+

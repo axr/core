@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/11
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -72,7 +72,6 @@ namespace AXR {
         HSSParserContextSelectorChain
     };
     
-    //this was defined elsewhere
     class AXRController;
     
     class HSSParser
@@ -80,11 +79,10 @@ namespace AXR {
         
     public:
         typedef boost::shared_ptr<HSSParser> p;
-        typedef boost::weak_ptr<AXRController> controllerPointer;
         
         std::string filename;
         
-        HSSParser(boost::shared_ptr<AXRController> controller);
+        HSSParser(AXRController * theController);
         //initialize with a pointer to the buffer where the HSS code is stored, and the lenght of the buffer
         //HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, std::string filename);
         //destructor
@@ -101,7 +99,8 @@ namespace AXR {
         
     protected:
         HSSTokenizer::p tokenizer;
-        controllerPointer controller;
+        //weak pointer
+        AXRController * controller;
         
         HSSToken::p currentToken;
         std::vector<HSSParserContext> currentContext;
@@ -132,8 +131,6 @@ namespace AXR {
         void skip(HSSTokenType type);
         
         void currentObjectContextRemoveLast();
-        
-        boost::shared_ptr<AXRController> getController();
     };
 }
 

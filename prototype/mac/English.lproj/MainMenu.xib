@@ -950,7 +950,7 @@
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{906, 458}, {752.594, 515.102}}</string>
-				<int key="NSWTFlags">1685585920</int>
+				<int key="NSWTFlags">611844096</int>
 				<string key="NSWindowTitle">AXR Test</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
@@ -960,7 +960,6 @@
 					<string key="NSFrame">{{7, 11}, {753, 515}}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
-					<reference key="NSNextKeyView"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
 				<string key="NSMaxSize">{1e+13, 1e+13}</string>

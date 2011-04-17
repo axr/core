@@ -43,27 +43,28 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/12
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 7
  *
  ********************************************************************/
 
-#include "HSSParser.h"
+#include "../hss.h"
 #include "HSSValueToken.h"
 #include "HSSConstants.h"
 #include <iostream>
 #include <cstdlib>
 #include <stdio.h>
-
-#include "../../AXR.h"
+#include "../../axr/AXRDebugging.h"
+#include "../../axr/AXRController.h"
+#include <boost/pointer_cast.hpp>
 
 using namespace AXR;
 
-HSSParser::HSSParser(boost::shared_ptr<AXRController> controller)
+HSSParser::HSSParser(AXRController * theController)
 {
-    this->controller = controllerPointer(controller);
+    this->controller = theController;
     this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
     
     this->currentContext.push_back(HSSParserContextRoot);
@@ -173,7 +174,19 @@ bool HSSParser::loadFile(std::string filepath)
         } else {
 //            std::cout << std::endl << "-----------------------------" << std::endl
 //            <<  statement->toString() << std::endl << "-----------------------------" << std::endl;
-            this->getController()->statementsAdd(statement);
+            switch (statement->getType()) {
+                case HSSStatementTypeRule:
+                {
+                    HSSRule::p theRule = boost::static_pointer_cast<HSSRule>(statement);
+                    this->controller->rulesAdd(theRule);
+                    break; 
+                }
+                
+                default:
+                    std_log1("unknown statement");
+                    break;
+            }
+            this->controller->statementsAdd(statement);
         }
         
         security_brake();
@@ -266,7 +279,7 @@ HSSRule::p HSSParser::readRule()
                 ret->childrenAdd(this->readRule());
             }
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+            throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         }
         
         security_brake()
@@ -337,7 +350,7 @@ HSSSelectorChain::p HSSParser::readSelectorChain()
             }
             //we didn't expect any other type of token
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+            throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         }
         
         security_brake();
@@ -503,7 +516,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition()
         this->readNextToken();
         this->checkForUnexpectedEndOfSource();
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+        throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         return ret;
     }
     
@@ -526,7 +539,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition()
         //it is the opening curly brace, therefore an annonymous object:
         //do nothing
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+        throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
     }
     
     ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
@@ -615,7 +628,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
             this->tokenizer->preferHex = false;
             
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+            throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         }
         
         this->skip(HSSWhitespace);
@@ -628,12 +641,12 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
             //alright, this is the end of the property definition
             std_log3("end of property definition");
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+            throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         }
         
         return ret;
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+        throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         this->readNextToken();
     }
     return ret;
@@ -682,13 +695,13 @@ HSSInstruction::p HSSParser::readInstruction()
         } else if (currentval == "import") {
             ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction));
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+            throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
             return ret;
         }
         this->readNextToken();
         
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+        throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         return ret;
     }
     
@@ -751,10 +764,5 @@ void HSSParser::skip(HSSTokenType type)
 void HSSParser::currentObjectContextRemoveLast()
 {
     this->currentObjectContext.pop();
-}
-
-boost::shared_ptr<AXRController> HSSParser::getController()
-{
-    return this->controller.lock();
 }
 

@@ -56,12 +56,30 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    enum HSSParserNodeType
+    {
+        HSSParserNodeTypeGeneric = 0,
+        HSSParserNodeTypeSelector,
+        HSSParserNodeTypeCombinator,
+        HSSParserNodeTypeFilter,
+        HSSParserNodeTypeStatement
+    };
+
+    
     class HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSParserNode> p;
         HSSParserNode();
         virtual std::string toString();
+        
+        bool isA(HSSParserNodeType otherType);
+        HSSParserNodeType getType();
+        
+        static std::string parserNodeStringRepresentation(HSSParserNodeType type);
+        
+    protected:
+        HSSParserNodeType nodeType;
     };
 }
 

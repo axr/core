@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -65,7 +65,7 @@ namespace AXR {
         typedef boost::shared_ptr<HSSMargin> p;
         
         HSSMargin();
-        ~HSSMargin();
+        virtual ~HSSMargin();
         
         HSSMultipleValue segments;
         

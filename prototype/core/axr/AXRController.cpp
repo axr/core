@@ -43,32 +43,29 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/14
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 8
  *
  ********************************************************************/
 
 #include "AXRController.h"
 #include "AXRExceptions.h"
-#include "../AXR.h"
 #include <sstream>
+#include "../axr/AXRDebugging.h"
+#include "../hss/objects/HSSDisplayObject.h"
+#include <boost/pointer_cast.hpp>
+#include "../hss/parsing/HSSSelectorChain.h"
 
 using namespace AXR;
 
-//use this factory method to instantiate the controller
-AXRController::p AXRController::create()
-{
-    AXRController::p inst(new AXRController);
-    inst->parserXML = XMLParser::p(new XMLParser(inst->shared_from_this()));
-    inst->parserHSS = HSSParser::p(new HSSParser(inst->shared_from_this()));
-    return inst;
-}
 
 AXRController::AXRController()
 {
     this->osHelper = OSHelper::p(new OSHelper());
+    this->parserXML = XMLParser::p(new XMLParser(this));
+    this->parserHSS = HSSParser::p(new HSSParser(this));
     this->_hasLoadedFile = false;
 }
 
@@ -97,13 +94,14 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
     std::string hssfilepath = std::string();
     std::string hssfolder = std::string();
     std::string hssfilename = std::string();
-    unsigned i;
+    unsigned i, j;
     
     if(this->_hasLoadedFile){
         //prepare itself for loading a new file
         this->reset();
     }
     
+    //the xml parser will call the enterElement, addAttribute and exitElement functions to construct the initial tree
     if(!this->loadXMLFile(xmlfilepath, xmlfilename)){
         //FIXME: handle the error
         std_log1("could not load the xml file");
@@ -141,6 +139,13 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
                         //FIXME: handle the error
                         loadingSuccess = false;
                         std_log1("error loading hss file");
+                    } else {
+                        //assign the rules to the objects
+                        for (j=0; j<this->rules.size(); j++) {
+                            HSSRule::p rule = this->rules[j];
+                            HSSDisplayObject::p rootObj = boost::static_pointer_cast<HSSDisplayObject>(this->root);
+                            this->recursiveMatchRulesToDisplayObject(rule, rootObj);
+                        }
                     }
                 }
             }
@@ -148,6 +153,40 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
     }
     
     return loadingSuccess;
+}
+
+void AXRController::recursiveMatchRulesToDisplayObject(HSSRule::p & rule, HSSDisplayObject::p & displayObject)
+{
+    unsigned i, j;
+    
+    //look at the selector chain
+    HSSSelectorChain * selectorChain(rule->selectorChain.get());
+    //first try to resolve the simple case
+    if(selectorChain->size() == 1){
+        //just a simple selector, is it assignable?
+        HSSParserNode::p firstNode = (selectorChain->last());
+        if(firstNode->isA(HSSParserNodeTypeSelector)){
+            HSSSelector::p simpleSelector = boost::static_pointer_cast<HSSSelector>(firstNode);
+            //does it match
+            if(simpleSelector->getElementName() == displayObject->getElementName()){
+                std_log1("match "+displayObject->getElementName());
+                displayObject->rulesAdd(rule);
+                
+                //if it is a container it may have children
+                if(displayObject->isA(HSSObjectTypeContainer)){
+                    HSSContainer::p container = boost::static_pointer_cast<HSSContainer>(displayObject);
+                    for (i=0; i<container->children.size(); i++) { //FIXME: container will have an accessor for chlidrenSize in the future
+                        for (j=0; j<rule->childrenSize(); j++) {
+                            HSSRule::p childRule = rule->childrenGet(j);
+                            this->recursiveMatchRulesToDisplayObject(childRule, container->children[i]);
+                        }
+                    }
+                }
+            }
+        } else {
+            std_log1("selector chains starting with anything other than a simple selector have not been implemented yet");
+        }
+    }
 }
 
 bool AXRController::reload()
@@ -189,13 +228,18 @@ std::string AXRController::toString()
 
 void AXRController::reset()
 {
+    unsigned i;
+    
     this->objectTree.clear();
     this->loadSheets.clear();
     this->root.reset();
-    this->current.reset();
+    for(i=0; i<this->currentContext.size(); i++)
+    {
+        this->currentContext.pop();
+    }
     //the operator -> is very important here
     this->parserHSS->reset();
-    this->parserXML = XMLParser::p(new XMLParser(this->shared_from_this()));
+    this->parserXML = XMLParser::p(new XMLParser(this));
     //this->parserXML = XMLParser::p(new XMLParser(XMLParser::controllerPointer(AXRController::p(this))));
 }
 
@@ -211,39 +255,56 @@ bool AXRController::loadHSSFile(std::string filepath, std::string filename)
     return this->parserHSS->loadFile(filepath);
 }
 
-HSSContainer::p AXRController::getRoot()
+HSSContainer::p & AXRController::getRoot()
 {
     return this->root;
 }
 
-void AXRController::setRoot(HSSContainer::p newRoot){
+void AXRController::setRoot(HSSContainer::p & newRoot){
     this->root = newRoot;
 }
 
-void AXRController::add(HSSContainer::p newContainer)
+
+void AXRController::enterElement(std::string elementName)
+{
+    std_log1("enter element " + elementName);
+    HSSContainer::p newContainer(new HSSContainer());
+    newContainer->setElementName(elementName);
+    this->add(newContainer);
+    this->currentContext.push(newContainer);
+}
+
+void AXRController::addAttribute(std::string name, std::string value)
+{
+    std_log1(std::string("adding attribute " + name + " and value " + value));
+    this->currentContext.top()->attributesAdd(name, value);
+}
+
+void AXRController::exitElement()
+{
+    std_log1("exit element");
+    this->currentContext.pop();
+}
+
+
+void AXRController::add(HSSContainer::p & newContainer)
 {
     if(!this->root){
         this->root = newContainer;
     } else {
-        if(this->current){
-            this->current->add(newContainer);
+        if(this->currentContext.size() != 0){
+            HSSContainer::p theCurrent = this->currentContext.top();
+            theCurrent->add(newContainer);
+            
         } else {
             throw "tried to add a container to nonexistent current";
         }
     }
 }
 
-HSSContainer::p AXRController::getCurrent()
-{
-    return this->current;
-}
+//object tree
 
-void AXRController::setCurrent(HSSContainer::p newCurrent)
-{
-    this->current = newCurrent;
-}
-
-void AXRController::objectTreeAdd(HSSObject::p newObject)
+void AXRController::objectTreeAdd(HSSObject::p & newObject)
 {
     this->objectTree.push_back(newObject);
 }
@@ -253,11 +314,12 @@ void AXRController::objectTreeRemove(unsigned index)
     this->objectTree.erase(this->objectTree.begin()+index);
 }
 
-HSSObject::p AXRController::objectTreeGet(unsigned index)
+HSSObject::p & AXRController::objectTreeGet(unsigned index)
 {
     return this->objectTree[index];
 }
 
+//loadSheets
 
 void AXRController::loadSheetsAdd(std::string sheet)
 {
@@ -274,17 +336,21 @@ std::string AXRController::loadSheetsGet(unsigned index)
     return this->loadSheets[index];
 }
 
+//has loaded file
+
 bool AXRController::hasLoadedFile()
 {
     return _hasLoadedFile;
 }
+
+//statements
 
 const std::vector<HSSStatement::p>& AXRController::getStatements() const
 {
     return this->statements;
 }
 
-void AXRController::statementsAdd(HSSStatement::p statement)
+void AXRController::statementsAdd(HSSStatement::p & statement)
 {
     this->statements.push_back(statement);
 }
@@ -294,10 +360,35 @@ void AXRController::statementsRemove(unsigned index)
     this->statements.erase(this->statements.begin()+index);
 }
 
-HSSStatement::p AXRController::statementsGet(unsigned index)
+HSSStatement::p & AXRController::statementsGet(unsigned index)
 {
     return this->statements[index];
 }
+
+//rules
+
+const std::vector<HSSRule::p>& AXRController::getRules() const
+{
+    return this->rules;
+}
+
+void AXRController::rulesAdd(HSSRule::p & statement)
+{
+    this->rules.push_back(statement);
+}
+
+void AXRController::rulesRemove(unsigned index)
+{
+    this->rules.erase(this->rules.begin()+index);
+}
+
+HSSRule::p & AXRController::rulesGet(unsigned index)
+{
+    return this->rules[index];
+}
+
+
+
 
 
 

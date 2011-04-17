@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/15
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -56,11 +56,21 @@
 
 using namespace AXR;
 
+XMLParserException::XMLParserException(std::string filename)
+{
+    this->filename = filename;
+    
+    this->line = 0;
+    this->column = 0;
+    this->_tracks_file_position = false;
+}
+
 XMLParserException::XMLParserException(std::string filename, int line, int column)
 {
     this->filename = filename;
     this->line = line;
     this->column = column;
+    this->_tracks_file_position = true;
 }
 
 std::string XMLParserException::toString()
@@ -129,6 +139,27 @@ std::string XMLUnknownSheetTypeException::toString()
 }
 
 
+XMLUnknownCallbackTypeException::XMLUnknownCallbackTypeException()
+{
+    
+}
+
+std::string XMLUnknownCallbackTypeException::toString()
+{
+    return "XMLParser Error: unknown callback type.";
+}
+
+
+XMLControllerNotSetException::XMLControllerNotSetException(std::string filename)
+: XMLParserException(filename)
+{
+    
+}
+
+std::string XMLControllerNotSetException::toString()
+{
+    return "XMLParser Error: the controller was not set.\n"+XMLParserException::toString();
+}
 
 
 

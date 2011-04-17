@@ -43,15 +43,11 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/04
+ *      Last changed: 2011/04/15
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
 #include "AXR.h"
-
-#if AXR_DEBUG_LEVEL > 0
-unsigned axr_output_debug_indent_count = 0;
-#endif

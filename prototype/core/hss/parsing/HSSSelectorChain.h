@@ -67,6 +67,9 @@ namespace AXR {
         HSSSelectorChain();
         ~HSSSelectorChain();
         std::string toString();
+        
+        HSSParserNode::p & operator[] (const int i);
+        
         //adds a pointer to newNode to the selector chain
         //this function acquires ownership of the parser node
         void add(HSSParserNode::p newNode);
@@ -76,6 +79,7 @@ namespace AXR {
         HSSParserNode::p last();
         //returns how many nodes there are in the selector chain
         const int size();
+        
         
     protected:
         std::vector<HSSParserNode::p> nodeList;

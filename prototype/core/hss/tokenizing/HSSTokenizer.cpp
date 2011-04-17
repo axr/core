@@ -52,11 +52,11 @@
 
 //FIXME: do something meaningful with the error codes
 
-#include "HSSTokenizer.h"
+#include "../hss.h"
 #include "../parsing/HSSParserExceptions.h"
 #include <iostream>
-#include "../../AXR.h"
 #include <sstream>
+#include "../../axr/AXRDebugging.h"
 
 using namespace AXR;
 

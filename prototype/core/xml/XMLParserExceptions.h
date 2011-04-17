@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/15
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -61,12 +61,15 @@ namespace AXR {
     class XMLParserException
     {
     public:
+        XMLParserException(std::string filename);
         XMLParserException(std::string filename, int line, int column);
         
         std::string filename;
         int line;
         int column;
         virtual std::string toString();
+    protected:
+        bool _tracks_file_position;
     };
     
     class XMLUnexpectedEndOfSourceException : public XMLParserException
@@ -100,6 +103,20 @@ namespace AXR {
     {
     public:
         XMLUnknownSheetTypeException(std::string filename, int line, int column);
+        virtual std::string toString();
+    };
+    
+    class XMLUnknownCallbackTypeException
+    {
+    public:
+        XMLUnknownCallbackTypeException();
+        virtual std::string toString();
+    };
+    
+    class XMLControllerNotSetException : public XMLParserException
+    {
+    public:
+        XMLControllerNotSetException(std::string filename);
         virtual std::string toString();
     };
 }

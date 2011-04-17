@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -78,7 +78,7 @@ namespace AXR {
         
         virtual std::string toString();
         virtual std::string defaultObjectType(std::string property);
-        HSSValueType getType();
+        HSSValueType getValueType();
         
         void setValue(long int value);
         void setValue(long double value);
@@ -90,7 +90,7 @@ namespace AXR {
         long double getFloatValue();
         
     protected:
-        HSSValueType type;
+        HSSValueType valueType;
         std::string stringValue;
         long int intValue;
         long double floatValue;

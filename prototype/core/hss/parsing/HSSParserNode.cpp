@@ -56,10 +56,37 @@ using namespace AXR;
 
 HSSParserNode::HSSParserNode()
 {
-    //do nothing
+    this->nodeType = HSSParserNodeTypeGeneric;
 }
 
 std::string HSSParserNode::toString()
 {
     return "Generic parser node";
 }
+
+bool HSSParserNode::isA(HSSParserNodeType otherType)
+{
+	return otherType == this->nodeType;
+}
+
+HSSParserNodeType HSSParserNode::getType()
+{
+    return this->nodeType;
+}
+
+std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type){
+    std::string types[20];
+	types[HSSParserNodeTypeGeneric] = "HSSParserNode";
+	types[HSSParserNodeTypeSelector] = "HSSRule";
+	types[HSSParserNodeTypeCombinator] = "HSSPropertyDefinition";
+	types[HSSParserNodeTypeFilter] = "HSSObjectDefinition";
+	types[HSSParserNodeTypeStatement] = "HSSStatement";
+    
+    return types[type];
+}
+
+
+
+
+
+

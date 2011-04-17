@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/14
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -54,19 +54,24 @@
 #define AXRCONTROLLER_H
 
 #include <vector>
-#include "../AXR.h"
+#include <string>
+#include <stack>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include "../hss/objects/HSSObject.h"
+#include "../hss/objects/HSSContainer.h"
+#include "../hss/parsing/HSSParser.h"
+#include "../xml/XMLParser.h"
+#include "../os/platform.h"
 
 namespace AXR {
     
-    class AXRController : public boost::enable_shared_from_this<AXRController>
+    class AXRController
     {
     public:
         typedef boost::shared_ptr<AXRController> p;
-        //you should use this to instantiate a new controller
-        static AXRController::p create();
         
+        AXRController();
         virtual ~AXRController();
         virtual std::string toString();
         
@@ -82,41 +87,49 @@ namespace AXR {
         bool loadXMLFile(std::string filepath, std::string filename);
         bool loadHSSFile(std::string filepath, std::string filename);
         
-        HSSContainer::p getRoot();
-        void setRoot(HSSContainer::p newRoot);
+        HSSContainer::p & getRoot();
+        void setRoot(HSSContainer::p & newRoot);
         
-        void add(HSSContainer::p newContainer);
-        HSSContainer::p getCurrent();
-        void setCurrent(HSSContainer::p newCurrent);
+        void enterElement(std::string elementName);
+        void addAttribute(std::string name, std::string value);
+        void exitElement();
         
-        void objectTreeAdd(HSSObject::p newObject);
+        void add(HSSContainer::p & newContainer);
+        
+        void objectTreeAdd(HSSObject::p & newObject);
         void objectTreeRemove(unsigned index);
-        HSSObject::p objectTreeGet(unsigned index);
+        HSSObject::p & objectTreeGet(unsigned index);
         
         void loadSheetsAdd(std::string sheet);
         void loadSheetsRemove(unsigned index);
         std::string loadSheetsGet(unsigned index);
         
         const std::vector<HSSStatement::p>& getStatements() const;
-        void statementsAdd(HSSStatement::p);
+        void statementsAdd(HSSStatement::p & statement);
         void statementsRemove(unsigned index);
-        HSSStatement::p statementsGet(unsigned index);
+        HSSStatement::p & statementsGet(unsigned index);
+        
+        const std::vector<HSSRule::p>& getRules() const;
+        void rulesAdd(HSSRule::p & statement);
+        void rulesRemove(unsigned index);
+        HSSRule::p & rulesGet(unsigned index);
         
     protected:
+        std::stack<HSSContainer::p>currentContext;
         HSSContainer::p root;
-        HSSContainer::p current;
         
         std::vector<HSSObject::p>objectTree;
         std::vector<std::string>loadSheets;
         std::vector<HSSStatement::p>statements;
+        std::vector<HSSRule::p>rules;
         XMLParser::p parserXML;
         HSSParser::p parserHSS;
         OSHelper::p osHelper;
         
         bool _hasLoadedFile;
         
-    private:
-        AXRController();
+        void recursiveMatchRulesToDisplayObject(HSSRule::p & rule, HSSDisplayObject::p & displayObject);
+        
     };
 }
 

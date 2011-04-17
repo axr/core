@@ -56,14 +56,16 @@ using namespace AXR;
 
 HSSInstruction::HSSInstruction(HSSInstructionType type)
 {
-    this->type = type;
+    this->instructionType = type;
+    this->type = HSSStatementTypeInstruction;
 }
 
 
 HSSInstruction::HSSInstruction(HSSInstructionType type, std::string value)
 {
-    this->type = type;
+    this->instructionType = type;
     this->value = value;
+    this->type = HSSStatementTypeInstruction;
 }
 
 HSSInstruction::~HSSInstruction()
@@ -73,8 +75,8 @@ HSSInstruction::~HSSInstruction()
 
 std::string HSSInstruction::toString()
 {
-    std::string tempstr = "HSSInstruction of type: "+this->instructionStringRepresentation(this->type);
-    if (this->type == HSSColorInstruction)
+    std::string tempstr = "HSSInstruction of type: "+this->instructionStringRepresentation(this->instructionType);
+    if (this->instructionType == HSSColorInstruction)
     {
         tempstr.append(" and value: "+this->value);
     }

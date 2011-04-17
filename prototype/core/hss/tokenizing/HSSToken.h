@@ -87,10 +87,13 @@ namespace AXR {
         
         static std::string tokenStringRepresentation(HSSTokenType type);
         
-        HSSTokenType type;
         HSSToken(HSSTokenType type);
         bool isA(HSSTokenType otherType);
+        HSSTokenType getType();
         virtual std::string toString();
+        
+    protected:
+        HSSTokenType type;
     };
 }
 

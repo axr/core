@@ -43,22 +43,22 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
 #include "HSSMultipleValue.h"
-#include "../../AXR.h"
 #include <iostream>
+#include "../../axr/AXRDebugging.h"
 
 using namespace AXR;
 
 HSSMultipleValue::HSSMultipleValue()
 {
-    
+    this->type = HSSObjectTypeMultipleValue;
 }
 
 HSSMultipleValue::~HSSMultipleValue()

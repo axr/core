@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -57,8 +57,18 @@ using namespace AXR;
 HSSSelector::HSSSelector(std::string elementName)
 {
     this->elementName = elementName;
+    this->nodeType = HSSParserNodeTypeSelector;
+}
+
+std::string HSSSelector::getElementName()
+{
+    return this->elementName;
 }
 
 std::string HSSSelector::toString(){
     return "Simple selector targeting an element with name "+this->elementName;
 }
+
+
+
+

@@ -43,26 +43,28 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/13
+ *      Last changed: 2011/04/15
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-#import "../../AXR.h"
 
 @interface AXRView : NSView {
 @private
-    AXR::AXRController::p axrController;
+    //this is actually always AXR::AXRController::p, but we hide it
+    //so that we don't need to include the c++ header, which would
+    //create the requirement to rename main.m to main.mm
+    void * axrController;
 }
 
 //hack to make it work with IB from a dependent target
 +(void)_keepAtLinkTime;
 
-- (void)setAxrController:(AXR::AXRController::p)theController;
-- (AXR::AXRController::p)axrController;
+- (void)setAxrController:(void *)theController;
+- (void *)axrController;
 
 - (bool)loadFile;
 - (bool)reload;

@@ -51,7 +51,7 @@
  ********************************************************************/
 
 #include "OSX.h"
-#include "../../AXR.h"
+#include "../../axr/AXRDebugging.h"
 #import <Cocoa/Cocoa.h>
 
 

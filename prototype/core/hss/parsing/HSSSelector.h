@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -59,13 +59,15 @@
 
 namespace AXR {
     class HSSSelector : public HSSParserNode {
-        std::string elementName;
-        
     public:
         typedef boost::shared_ptr<HSSSelector> p;
         
         HSSSelector(std::string elementName);
+        std::string getElementName();
         virtual std::string toString();
+        
+    protected:
+        std::string elementName;
     };
 }
 

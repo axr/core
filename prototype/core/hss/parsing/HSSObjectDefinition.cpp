@@ -43,16 +43,16 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
 #include "HSSObjectDefinition.h"
 #include <iostream>
-#include "../../AXR.h"
+#include "../../axr/AXRDebugging.h"
 
 using namespace AXR;
 
@@ -60,6 +60,7 @@ using namespace AXR;
 HSSObjectDefinition::HSSObjectDefinition(HSSObject::p prototype)
 {
     this->prototype = prototype;
+    this->type = HSSStatementTypeObjectDefinition;
 }
 
 HSSObjectDefinition::~HSSObjectDefinition()

@@ -60,7 +60,7 @@
 #include <boost/enable_shared_from_this.hpp>
 
 namespace AXR {
-    class HSSContainer : public HSSDisplayObject, public boost::enable_shared_from_this<HSSContainer>
+    class HSSContainer : public boost::enable_shared_from_this<HSSContainer>, public HSSDisplayObject
     {
     public:
         typedef boost::shared_ptr<HSSContainer> p;
@@ -82,7 +82,6 @@ namespace AXR {
         std::vector<HSSDisplayObject::p>children;
     
     protected:
-        
         std::string contentText;
     };
 }

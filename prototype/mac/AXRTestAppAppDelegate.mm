@@ -9,7 +9,7 @@
 #import "AXRTestAppAppDelegate.h"
 #import <string>
 #import <iostream>
-#import "../core/AXR.h"
+#import "../core/axr/AXRDebugging.h"
 
 #define BUFFSIZE 8192
 char Buff[BUFFSIZE];
@@ -21,7 +21,7 @@ char Buff[BUFFSIZE];
 @synthesize axrView;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    //[self openDocument:self];
+    [self openDocument:self];
 }
 
 void listHSSStatements(NSString *filepath)
@@ -29,12 +29,12 @@ void listHSSStatements(NSString *filepath)
     std_log1(std::string("******************************************************************\n* reading all statements from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
     
     //FIXME: this is uh-gly
-    AXR::AXRController::p controller(AXR::AXRController::create());
-    AXR::HSSParser::p hssparser(new AXR::HSSParser(controller));
-    bool loaded = hssparser->loadFile(std::string([filepath UTF8String]));
+    AXR::AXRController controller = AXR::AXRController() ;
+    AXR::HSSParser hssparser = AXR::HSSParser(&controller);
+    bool loaded = hssparser.loadFile(std::string([filepath UTF8String]));
     if(loaded){
         unsigned i;
-        const std::vector<AXR::HSSStatement::p> statements = controller->getStatements();
+        const std::vector<AXR::HSSStatement::p> statements = controller.getStatements();
         for(i=0; i<statements.size(); i++){
             std_log1(statements[i]->toString());
         }
@@ -56,10 +56,10 @@ void listHSSTokens(NSString *filepath)
     std_log1(std::string("******************************************************************\n* reading all tokens from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
     
     FILE * hssfile = fopen([filepath UTF8String], "r");
-    AXR::HSSTokenizer::p tokenizer = AXR::HSSTokenizer::p(new AXR::HSSTokenizer());
-    int len = (int)fread(tokenizer->getBuffer().get(), 1, AXR_HSS_BUFFER_SIZE, hssfile);
-    tokenizer->setBufferLength(len);
-    tokenizer->readNextChar();
+    AXR::HSSTokenizer tokenizer = AXR::HSSTokenizer();
+    int len = (int)fread(tokenizer.getBuffer().get(), 1, AXR_HSS_BUFFER_SIZE, hssfile);
+    tokenizer.setBufferLength(len);
+    tokenizer.readNextChar();
     fclose(hssfile);
     
     
@@ -70,7 +70,7 @@ void listHSSTokens(NSString *filepath)
         if(token){
             token.reset();
         }
-        token = tokenizer->readNextToken();
+        token = tokenizer.readNextToken();
         if(!token){
             done = TRUE;
         } else {

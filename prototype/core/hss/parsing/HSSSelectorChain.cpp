@@ -51,8 +51,8 @@
  ********************************************************************/
 
 #include "HSSSelectorChain.h"
-#include "../../AXR.h"
 #include <iostream>
+#include "../../axr/AXRDebugging.h"
 
 using namespace AXR;
 
@@ -81,6 +81,12 @@ std::string HSSSelectorChain::toString()
     
     return tempstr;
     return "";
+}
+
+
+HSSParserNode::p & HSSSelectorChain::operator[] (const int i)
+{
+    return this->nodeList[i];
 }
 
 void HSSSelectorChain::add(HSSParserNode::p newNode)

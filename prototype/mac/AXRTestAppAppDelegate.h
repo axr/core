@@ -12,6 +12,9 @@
 
 @interface AXRTestAppAppDelegate : NSObject <NSApplicationDelegate> {
     NSWindow *window;
+    NSWindow * testsWindow;
+    NSWindow * axrWindow;
+    AXRView * axrView;
 }
 
 @property (assign) IBOutlet NSWindow *testsWindow;

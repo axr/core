@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -57,6 +57,7 @@ using namespace AXR;
 HSSCombinator::HSSCombinator(HSSCombinatorType type)
 {
     this->type = type;
+    this->nodeType = HSSParserNodeTypeCombinator;
 }
 
 bool HSSCombinator::isA(HSSCombinatorType type)

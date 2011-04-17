@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -57,6 +57,21 @@
 #import <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    enum HSSObjectType
+    {
+        HSSObjectTypeGeneric,
+        HSSObjectTypeDisplayObject,
+        HSSObjectTypeContainer,
+        HSSObjectTypeBorderGeneric,
+        HSSObjectTypeLineBorder,
+        HSSObjectTypeMarginGeneric,
+        HSSObjectTypeStraightMargin,
+        HSSObjectTypeProjectedMargin,
+        HSSObjectTypeValue,
+        HSSObjectTypeMultipleValue
+    };
+    
     class HSSObject
     {
     public:
@@ -75,8 +90,14 @@ namespace AXR {
         void setName(std::string newName);
         void dropName();
         
+        bool isA(HSSObjectType otherType);
+        HSSObjectType getType();
+        
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
+        
+    protected:
+        HSSObjectType type;
         
     private:
         bool _isNamed;

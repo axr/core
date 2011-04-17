@@ -43,16 +43,27 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
 #include "HSSLineBorder.h"
 
 using namespace AXR;
+
+HSSLineBorder::HSSLineBorder()
+:HSSBorder()
+{
+    this->type = HSSObjectTypeLineBorder;
+}
+
+HSSLineBorder::~HSSLineBorder()
+{
+    
+}
 
 std::string HSSLineBorder::toString()
 {

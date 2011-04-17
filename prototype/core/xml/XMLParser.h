@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/14
+ *      Last changed: 2011/04/15
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -61,17 +61,23 @@
 #include "XMLParserExceptions.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
+#include <boost/function.hpp>
+#include <vector>
+#include "../hss/objects/HSSContainer.h"
 
 namespace AXR {
+    
+    
     class AXRController;
     
     class XMLParser : public expatmm::ExpatXMLParser {
     public:
         
         typedef boost::shared_ptr<XMLParser> p;
-        typedef boost::weak_ptr<AXRController> controllerPointer;
+        typedef boost::function<void (std::string)> addSheetCallback;
+        typedef boost::function<void (HSSContainer::p)> addContainerCallback;
         
-        XMLParser(boost::shared_ptr<AXRController> controller);
+        XMLParser(AXRController * theController);
         //the caller is responsible for maintaining the existence of the controller
         //until after the parser is deallocated
         //XMLParser(AXRController * controller, std::string filepath, std::string filename);
@@ -82,15 +88,14 @@ namespace AXR {
         std::string getFilePath();
         std::string getFileName();
         
+        //weak ptr
+        AXRController * controller;
+        
     protected:
         virtual ssize_t read_block(void);
         virtual void StartElement(const XML_Char *name, const XML_Char **attrs);
         virtual void EndElement(const XML_Char *name);
         virtual void ProcessingInstruction(const XML_Char *target, const XML_Char *data);
-        
-        controllerPointer controller;
-        
-        boost::shared_ptr<AXRController> getController();
         
     private:
         FILE *filehandle;
@@ -100,7 +105,6 @@ namespace AXR {
         XML_Char currentPIChar;
         void readPIChar(XML_Char nextChar);
         void readNextPIAttr();
-        
     };
 }
 

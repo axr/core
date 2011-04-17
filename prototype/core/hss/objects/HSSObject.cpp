@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -82,17 +82,30 @@ HSSObject::HSSObject()
 {
     this->_isNamed = false;
     this->name = "";
+    this->type = HSSObjectTypeGeneric;
 }
 
 HSSObject::HSSObject(std::string name)
 {
     this->name = name;
     this->_isNamed = true;
+    this->type = HSSObjectTypeGeneric;
 }
+
 
 HSSObject::~HSSObject()
 {
     
+}
+
+bool HSSObject::isA(HSSObjectType otherType)
+{
+	return otherType == this->type;
+}
+
+HSSObjectType HSSObject::getType()
+{
+    return this->type;
 }
 
 std::string HSSObject::toString()

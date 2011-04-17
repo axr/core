@@ -43,15 +43,15 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/11
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
 #include "HSSContainer.h"
-#include "../../AXR.h"
+#include "../../axr/AXRDebugging.h"
 #include <map>
 
 using namespace AXR;
@@ -59,12 +59,15 @@ using namespace AXR;
 HSSContainer::HSSContainer()
 : HSSDisplayObject()
 {
+    this->contentText = std::string();
+    this->type = HSSObjectTypeContainer;
 }
 
 HSSContainer::HSSContainer(std::string name)
 : HSSDisplayObject(name)
 {
-    
+    this->contentText = std::string();
+    this->type = HSSObjectTypeContainer;
 }
 
 HSSContainer::~HSSContainer()
@@ -140,7 +143,7 @@ bool HSSContainer::isKeyword(std::string value, std::string property)
 void HSSContainer::add(HSSDisplayObject::p child)
 {
     this->children.push_back(child);
-    child->setParent(shared_from_this());
+    //child->setParent(shared_from_this());
 }
 
 void HSSContainer::remove(unsigned index)

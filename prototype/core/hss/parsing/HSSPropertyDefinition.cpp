@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -57,6 +57,7 @@ using namespace AXR;
 HSSPropertyDefinition::HSSPropertyDefinition()
 {
     this->name = "";
+    this->type = HSSStatementTypePropertyDefinition;
 }
 
 HSSPropertyDefinition::HSSPropertyDefinition(std::string name)

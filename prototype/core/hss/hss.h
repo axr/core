@@ -43,15 +43,19 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/15
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
 #ifndef HSS_H
 #define HSS_H
+
+#ifndef AXR_HSS_BUFFER_SIZE
+#define AXR_HSS_BUFFER_SIZE 10240 //1kB
+#endif
 
 #include "parsing/HSSParser.h"
 #include "tokenizing/HSSTokenizer.h"

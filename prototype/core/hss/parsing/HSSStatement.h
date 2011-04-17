@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/13
+ *      Last changed: 2011/04/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -58,11 +58,31 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    enum HSSStatementType
+    {
+        HSSStatementTypeGeneric = 0,
+        HSSStatementTypeRule,
+        HSSStatementTypePropertyDefinition,
+        HSSStatementTypeObjectDefinition,
+        HSSStatementTypeComment,
+        HSSStatementTypeInstruction
+    };
+    
     class HSSStatement : public HSSParserNode
     {
     public:
+        HSSStatement();
         typedef boost::shared_ptr<HSSStatement> p;
         virtual std::string toString() =0;
+        
+        bool isA(HSSStatementType otherType);
+        HSSStatementType getType();
+        
+        std::string statementStringRepresentation(HSSStatementType type);
+        
+    protected:
+        HSSStatementType type;
     };
 }
 
