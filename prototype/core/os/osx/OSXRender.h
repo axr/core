@@ -46,47 +46,33 @@
  *      Last changed: 2011/04/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSCONTAINER_H
-#define HSSCONTAINER_H
+#ifndef OSXRENDER_H
+#define OSXRENDER_H
 
-#include <string>
-#include <vector>
-#include "HSSDisplayObject.h"
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
+#include "../../axr/AXRRender.h"
 
 namespace AXR {
-    class HSSContainer : public boost::enable_shared_from_this<HSSContainer>, public HSSDisplayObject
-    {
-    public:
-        typedef boost::shared_ptr<HSSContainer> p;
-        
-        HSSContainer();
-        HSSContainer(std::string name);
-        virtual ~HSSContainer();
-        virtual std::string toString();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
-        
-        void add(HSSDisplayObject::p child);
-        void remove(unsigned index);
-        
-        std::string getContentText();
-        void setContentText(std::string newText);
-        
-        virtual void recursiveReadDefinitionObjects();
-        virtual void recursiveRegenerateSurfaces();
-        
-        //FIXME: make protected and provide accessors
-        std::vector<HSSDisplayObject::p>children;
     
-    protected:
-        std::string contentText;
+    class AXRController;
+    
+    class OSXRender : public AXRRender {
+    public:
+        OSXRender(AXRController * controller);
+        virtual ~OSXRender();
+        
+        void drawInRectWithBounds(AXRRect rect, AXRRect bounds);
     };
 }
 
-#endif
+#endif //OSXRENDER_H
+
+
+
+
+
+
+

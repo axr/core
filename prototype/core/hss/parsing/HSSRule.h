@@ -43,7 +43,7 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/04/17
  *      HSS version: 1.0
  *      Core version: 0.3
  *      Revision: 4
@@ -54,6 +54,7 @@
 #define HSSRULE_H
 
 #import "HSSStatement.h"
+#import "HSSPropertyDefinition.h"
 #import "HSSSelectorChain.h"
 #import <string>
 #import <vector>
@@ -73,14 +74,11 @@ namespace AXR {
         
         std::string toString();
         
-        //adds a pointer to newStatement to the properties list
-        //this function acquires ownership of the statement
-        void propertiesAdd(HSSStatement::p newStatement);
-        //removes last statement from the list and then deletes it
+        void propertiesAdd(HSSPropertyDefinition::p & newProperty);
+        HSSPropertyDefinition::p &propertiesGet(unsigned index);
+        void propertiesRemove(unsigned index);
         void propertiesRemoveLast();
-        //returns a pointer to the last statement in the list
-        HSSStatement::p propertiesLast();
-        //returns how many statements there are in the properties list
+        HSSPropertyDefinition::p &propertiesLast();
         const int propertiesSize();
         
         void childrenAdd(HSSRule::p newRule);
@@ -90,7 +88,7 @@ namespace AXR {
         const int childrenSize();
         
     protected:
-        std::vector<HSSStatement::p> properties;
+        std::vector<HSSPropertyDefinition::p> properties;
         std::vector<HSSRule::p>children;
     };
 }

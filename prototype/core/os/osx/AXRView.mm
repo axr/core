@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/15
+ *      Last changed: 2011/04/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -54,7 +54,7 @@
 //#include <cairo/cairo.h>
 #include "../../hss/objects/HSSContainer.h"
 #include "../../axr/AXRController.h"
-#include <cairo/cairo-quartz.h>
+#include "OSXRender.h"
 #include <iostream>
 #include "../../axr/AXRDebugging.h"
 
@@ -78,12 +78,16 @@
 
 - (void)awakeFromNib
 {
-    
+    AXR::AXRController * theController = new AXR::AXRController::AXRController();
+    [self setAxrController:theController];
+    AXR::OSXRender * theRender =  new AXR::OSXRender::OSXRender(theController);
+    [self setAxrRender:theRender];
 }
 
 - (void)dealloc
 {
     delete (AXR::AXRController *)[self axrController];
+    delete (AXR::OSXRender *)[self axrRender];
     [super dealloc];
 }
 
@@ -96,51 +100,24 @@
 {
     
     NSRect bounds = [self bounds];
-    float width = bounds.size.width;
-    float height = bounds.size.height;
     
-    AXR::AXRController * controller;
-    if([self axrController] != NULL){
-        controller = (AXR::AXRController *)[self axrController];
-    }
+    AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
+    AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
     
-    if(controller != NULL && controller->hasLoadedFile()){
+    if(controller != NULL && controller->hasLoadedFile() && render != NULL){
+        AXR::AXRRect axrRect;
+        axrRect.size.width = dirtyRect.size.width;
+        axrRect.size.height = dirtyRect.size.height;
+        axrRect.origin.x = dirtyRect.origin.x;
+        axrRect.origin.y = dirtyRect.origin.y;
+        AXR::AXRRect axrBounds;
+        axrBounds.size.width = bounds.size.width;
+        axrBounds.size.height = bounds.size.height;
+        axrBounds.origin.x = bounds.origin.x;
+        axrBounds.origin.y = bounds.origin.y;
+        render->drawInRectWithBounds(axrRect, axrBounds);
         //std_log1(controller->toString());
-        
-        //fill with white
-        [[NSColor whiteColor] set];
-        NSRectFill(bounds);
-        
-        CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
-        //invert the coordinate system
-        CGContextTranslateCTM (ctxt, 0.0, (int)height);
-        CGContextScaleCTM (ctxt, 1.0, -1.0);
-        
-        cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, width, height);
-        cairo_t * cairo = cairo_create(targetSurface);
-        cairo_surface_destroy(targetSurface);
-        
-        cairo_set_line_width(cairo, 2);
-        float i;
-        unsigned j;
-        AXR::HSSContainer::p root = controller->getRoot();
-        unsigned size = root->children.size();
-        for(i=0; i<size; i++){
-            AXR::HSSDisplayObject::p displayObject = root->children[i];
-            for(j=0;j<displayObject->rulesSize();j++){
-                AXR::HSSRule::p rule = displayObject->rulesGet(j);
-                std_log1(rule->toString());
-            }
-            //std::fprintf(stderr, "rectangle width: %f, height: %f, x: %f, y: %f\n", (i*150.)+((i+1.)*10.), 20., 150., 150.);
-            cairo_rectangle(cairo, (i*150.)+((i+1.)*10.), 20., 150., 150.);
-            cairo_set_source_rgb(cairo, 1,0.8,0.8);
-            cairo_fill_preserve(cairo);
-            cairo_set_source_rgb(cairo, 0,0,0);
-            cairo_stroke(cairo);
-        }
-        
-        cairo_destroy(cairo);
-        
+                
     } else {
         //fill with light gray
         [[NSColor colorWithCalibratedWhite:0.8 alpha:1.] set];
@@ -158,11 +135,18 @@
     return axrController;
 }
 
+- (void)setAxrRender:(void *)theRender
+{
+    axrRender = theRender;
+}
+
+- (void *)axrRender
+{
+    return axrRender;
+}
+
 - (bool)loadFile
 {
-    if([self axrController] == NULL){
-        [self setAxrController: new AXR::AXRController::AXRController()];
-    }
     std_log1("loading file");
     
     AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
@@ -173,15 +157,12 @@
 
 - (bool)reload
 {
-    
-    if([self axrController] != NULL){
-        AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
-        if(controller->hasLoadedFile()){
-            std_log1("reloading file");
-            bool loaded = controller->reload();
-            [self setNeedsDisplay:YES];
-            return loaded;
-        }
+    AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
+    if(controller->hasLoadedFile()){
+        std_log1("reloading file");
+        bool loaded = controller->reload();
+        [self setNeedsDisplay:YES];
+        return loaded;
     }
     
     return false;

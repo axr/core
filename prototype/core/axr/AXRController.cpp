@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/04/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 8
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -141,11 +141,13 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
                         std_log1("error loading hss file");
                     } else {
                         //assign the rules to the objects
+                        HSSDisplayObject::p rootObj = boost::static_pointer_cast<HSSDisplayObject>(this->root);
                         for (j=0; j<this->rules.size(); j++) {
-                            HSSRule::p rule = this->rules[j];
-                            HSSDisplayObject::p rootObj = boost::static_pointer_cast<HSSDisplayObject>(this->root);
+                            HSSRule::p& rule = this->rules[j];
                             this->recursiveMatchRulesToDisplayObject(rule, rootObj);
                         }
+                        //read the rules into values
+                        rootObj->recursiveReadDefinitionObjects();
                     }
                 }
             }
@@ -171,6 +173,9 @@ void AXRController::recursiveMatchRulesToDisplayObject(HSSRule::p & rule, HSSDis
             if(simpleSelector->getElementName() == displayObject->getElementName()){
                 std_log1("match "+displayObject->getElementName());
                 displayObject->rulesAdd(rule);
+                displayObject->setNeedsRereadRules(true);
+                displayObject->setNeedsSurface(true);
+                displayObject->setDirty(true);
                 
                 //if it is a container it may have children
                 if(displayObject->isA(HSSObjectTypeContainer)){
@@ -264,10 +269,9 @@ void AXRController::setRoot(HSSContainer::p & newRoot){
     this->root = newRoot;
 }
 
-
 void AXRController::enterElement(std::string elementName)
 {
-    std_log1("enter element " + elementName);
+    //std_log1("enter element " + elementName);
     HSSContainer::p newContainer(new HSSContainer());
     newContainer->setElementName(elementName);
     this->add(newContainer);
@@ -276,13 +280,13 @@ void AXRController::enterElement(std::string elementName)
 
 void AXRController::addAttribute(std::string name, std::string value)
 {
-    std_log1(std::string("adding attribute " + name + " and value " + value));
+    //std_log1(std::string("adding attribute " + name + " and value " + value));
     this->currentContext.top()->attributesAdd(name, value);
 }
 
 void AXRController::exitElement()
 {
-    std_log1("exit element");
+    //std_log1("exit element");
     this->currentContext.pop();
 }
 

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -62,11 +62,6 @@ HSSObjectNameConstant::HSSObjectNameConstant(std::string value)
 HSSObjectNameConstant::~HSSObjectNameConstant()
 {
     
-}
-
-HSSParserNode::p HSSObjectNameConstant::evaluate()
-{
-    return HSSObjectNameConstant::p(this);
 }
 
 void HSSObjectNameConstant::setValue(std::string newValue)

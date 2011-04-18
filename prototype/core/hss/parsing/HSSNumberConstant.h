@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -66,14 +66,14 @@ namespace AXR {
         virtual ~HSSNumberConstant();
         
         void setValue(long double newValue);
-        long double getValue();
+        double getValue();
         
-        HSSParserNode::p evaluate();
+        double evaluate();
         
         std::string toString();
         
     protected:
-        long double value;
+        double value;
     };
 }
 

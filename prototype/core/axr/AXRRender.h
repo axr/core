@@ -46,47 +46,56 @@
  *      Last changed: 2011/04/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 2
  *
  ********************************************************************/
 
-#ifndef HSSCONTAINER_H
-#define HSSCONTAINER_H
+#ifndef AXRRENDER_H
+#define AXRRENDER_H
 
-#include <string>
-#include <vector>
-#include "HSSDisplayObject.h"
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
+#include "../hss/parsing/HSSNumberConstant.h"
+#include <cairo/cairo.h>
 
 namespace AXR {
-    class HSSContainer : public boost::enable_shared_from_this<HSSContainer>, public HSSDisplayObject
-    {
-    public:
-        typedef boost::shared_ptr<HSSContainer> p;
-        
-        HSSContainer();
-        HSSContainer(std::string name);
-        virtual ~HSSContainer();
-        virtual std::string toString();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
-        
-        void add(HSSDisplayObject::p child);
-        void remove(unsigned index);
-        
-        std::string getContentText();
-        void setContentText(std::string newText);
-        
-        virtual void recursiveReadDefinitionObjects();
-        virtual void recursiveRegenerateSurfaces();
-        
-        //FIXME: make protected and provide accessors
-        std::vector<HSSDisplayObject::p>children;
     
+    class AXRController;
+    
+    typedef struct {
+        double width;
+        double height;
+    } AXRSize;
+    
+    typedef struct {
+        double x;
+        double y;
+    } AXRPoint;
+    
+    typedef struct {
+        AXRSize size;
+        AXRPoint origin;
+    } AXRRect;
+    
+    class AXRRender {
+    public:
+        AXRRender(AXRController * controller);
+        virtual ~AXRRender();
+        
+        //root surface should be created in platform specific subclass
+        //before calling this as base class' method
+        virtual void drawInRectWithBounds(AXRRect rect, AXRRect bounds);
+        
     protected:
-        std::string contentText;
+        //weak pointer
+        AXRController * controller;
+        double windowWidth;
+        double windowHeight;
+        cairo_surface_t * rootSurface;
     };
 }
 
-#endif
+
+#endif //AXRRENDER_H
+
+
+
+

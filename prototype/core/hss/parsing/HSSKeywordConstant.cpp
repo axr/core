@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -62,11 +62,6 @@ HSSKeywordConstant::HSSKeywordConstant(std::string value)
 HSSKeywordConstant::~HSSKeywordConstant()
 {
     
-}
-
-HSSParserNode::p HSSKeywordConstant::evaluate()
-{
-    return HSSKeywordConstant::p(this);
 }
 
 void HSSKeywordConstant::setValue(std::string newValue)

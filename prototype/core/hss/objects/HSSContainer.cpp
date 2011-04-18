@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/04/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -143,12 +143,11 @@ bool HSSContainer::isKeyword(std::string value, std::string property)
 void HSSContainer::add(HSSDisplayObject::p child)
 {
     this->children.push_back(child);
-    //child->setParent(shared_from_this());
+    child->setParent(shared_from_this());
 }
 
 void HSSContainer::remove(unsigned index)
 {
-    //delete this->children[index];
     this->children.erase(this->children.begin()+index);
 }
 
@@ -163,8 +162,29 @@ void HSSContainer::setContentText(std::string newText)
     this->contentText = newText;
 }
 
+void HSSContainer::recursiveReadDefinitionObjects()
+{
+    if (this->_needsRereadRules) {
+        this->readDefinitionObjects();
+    }
+    
+    unsigned i;
+    for (i=0; i<this->children.size(); i++) {
+        this->children[i]->readDefinitionObjects();
+    }
+}
 
-
+void HSSContainer::recursiveRegenerateSurfaces()
+{
+    if (this->_isDirty) {
+        this->regenerateSurface();
+    }
+    
+    unsigned i;
+    for (i=0; i<this->children.size(); i++) {
+        this->children[i]->regenerateSurface();
+    }
+}
 
 
 

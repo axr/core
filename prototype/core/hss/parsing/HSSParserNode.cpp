@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -81,6 +81,7 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
 	types[HSSParserNodeTypeCombinator] = "HSSPropertyDefinition";
 	types[HSSParserNodeTypeFilter] = "HSSObjectDefinition";
 	types[HSSParserNodeTypeStatement] = "HSSStatement";
+	types[HSSParserNodeTypeExpression] = "HSSExpression";
     
     return types[type];
 }

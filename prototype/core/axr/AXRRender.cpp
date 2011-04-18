@@ -46,47 +46,50 @@
  *      Last changed: 2011/04/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 2
  *
  ********************************************************************/
 
-#ifndef HSSCONTAINER_H
-#define HSSCONTAINER_H
+#include "AXRRender.h"
+#include <iostream>
+#include "../axr/AXRDebugging.h"
+#include "../hss/objects/HSSDisplayObject.h"
+#include "../axr/AXRController.h"
 
-#include <string>
-#include <vector>
-#include "HSSDisplayObject.h"
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
+using namespace AXR;
 
-namespace AXR {
-    class HSSContainer : public boost::enable_shared_from_this<HSSContainer>, public HSSDisplayObject
-    {
-    public:
-        typedef boost::shared_ptr<HSSContainer> p;
-        
-        HSSContainer();
-        HSSContainer(std::string name);
-        virtual ~HSSContainer();
-        virtual std::string toString();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
-        
-        void add(HSSDisplayObject::p child);
-        void remove(unsigned index);
-        
-        std::string getContentText();
-        void setContentText(std::string newText);
-        
-        virtual void recursiveReadDefinitionObjects();
-        virtual void recursiveRegenerateSurfaces();
-        
-        //FIXME: make protected and provide accessors
-        std::vector<HSSDisplayObject::p>children;
-    
-    protected:
-        std::string contentText;
-    };
+AXRRender::AXRRender(AXRController * theController)
+{
+    this->controller = theController;
+    this->windowWidth = 0;
+    this->windowHeight = 0;
 }
 
-#endif
+AXRRender::~AXRRender()
+{
+    
+}
+
+void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
+{
+    std_log1("drawing in rect");
+    
+    //prepare values
+    HSSContainer::p root = this->controller->getRoot();
+    //find out what objects lie in that rect
+    
+    //if the window size has changed, make new size
+    if(bounds.size.width != this->windowWidth || bounds.size.height != this->windowHeight){
+        this->windowWidth = bounds.size.width;
+        this->windowHeight = bounds.size.height;
+        root->setDWidth(HSSNumberConstant::p(new HSSNumberConstant(this->windowWidth)));
+        root->setDHeight(HSSNumberConstant::p(new HSSNumberConstant(this->windowHeight)));
+    }
+    //draw the elements
+    
+    
+}
+
+
+
+

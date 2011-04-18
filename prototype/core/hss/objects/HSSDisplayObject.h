@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/04/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -60,6 +60,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "../parsing/HSSRule.h"
+#include <cairo/cairo.h>
 
 namespace AXR {
     
@@ -70,6 +71,8 @@ namespace AXR {
     public:
         typedef boost::shared_ptr<HSSDisplayObject> p;
         typedef boost::weak_ptr<HSSContainer> parentPointer;
+        
+        friend class OSXRender;
         
         HSSDisplayObject();
         HSSDisplayObject(std::string name);
@@ -87,10 +90,27 @@ namespace AXR {
         void rulesRemove(unsigned index);
         void rulesRemoveLast();
         const int rulesSize();
+        void readDefinitionObjects();
+        virtual void recursiveReadDefinitionObjects();
+        void setNeedsRereadRules(bool value);
+        bool needsRereadRules();
+        
+        virtual void regenerateSurface();
+        virtual void recursiveRegenerateSurfaces();
+        
+        void setNeedsSurface(bool value);
+        bool needsSurface();
+        
+        void setDirty(bool value);
+        bool isDirty();
         
         std::string getElementName();
         void setElementName(std::string name);
         
+        HSSParserNode::p getDWidth();
+        void setDWidth(HSSParserNode::p newDWidth);
+        HSSParserNode::p getDHeight();
+        void setDHeight(HSSParserNode::p newDHeight);
         
     protected:
         parentPointer parent;
@@ -98,6 +118,16 @@ namespace AXR {
         std::string elementName;
         std::string contentText;
         std::vector<HSSRule::p> rules;
+        
+        //if the rules have changed
+        bool _needsRereadRules;
+        
+        //if it needs to resize the surface
+        bool _needsSurface;
+        cairo_surface_t * surface;
+        
+        //if it needs to redraw
+        bool _isDirty;
         
         //here go the final computed values
         double x;
@@ -125,9 +155,8 @@ namespace AXR {
         //FIXME: mask
         
         //here go the definition objects
-        HSSObject::p d_width;
-        HSSObject::p d_height;
-
+        HSSParserNode::p dWidth;
+        HSSParserNode::p dHeight;
     };
 
 }

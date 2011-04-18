@@ -93,11 +93,15 @@
 		4E95BFA51350749300117354 /* libpixman-1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E95BFA01350749300117354 /* libpixman-1.a */; };
 		4E95BFA61350749300117354 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E95BFA11350749300117354 /* libpng15.a */; };
 		4E95BFA71350749300117354 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E95BFA21350749300117354 /* libz.a */; };
+		4E963429135B603E00AF77AE /* AXRRender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E963427135B603E00AF77AE /* AXRRender.cpp */; };
+		4E96342A135B603E00AF77AE /* AXRRender.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E963428135B603E00AF77AE /* AXRRender.h */; };
 		4E9AB08913589DA600837091 /* AXRDebugging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E9AB08713589DA600837091 /* AXRDebugging.cpp */; };
 		4E9AB08A13589DA600837091 /* AXRDebugging.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E9AB08813589DA600837091 /* AXRDebugging.h */; };
 		4E9AB08C1358A08700837091 /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E9AB08B1358A08700837091 /* platform.h */; };
 		4EBEABF61351CE0B000D6CE7 /* AXRExceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EBEABF41351CE0B000D6CE7 /* AXRExceptions.cpp */; };
 		4EBEABF71351CE0B000D6CE7 /* AXRExceptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EBEABF51351CE0B000D6CE7 /* AXRExceptions.h */; };
+		4EFEBB10135C7E1400352CC0 /* OSXRender.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4EFEBB0E135C7E1400352CC0 /* OSXRender.mm */; };
+		4EFEBB11135C7E1400352CC0 /* OSXRender.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EFEBB0F135C7E1400352CC0 /* OSXRender.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -185,6 +189,8 @@
 		4E95BFA01350749300117354 /* libpixman-1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpixman-1.a"; path = "../../../../../usr/local/lib/libpixman-1.a"; sourceTree = "<group>"; };
 		4E95BFA11350749300117354 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../../../../../usr/local/lib/libpng15.a; sourceTree = "<group>"; };
 		4E95BFA21350749300117354 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../../../../usr/local/lib/libz.a; sourceTree = "<group>"; };
+		4E963427135B603E00AF77AE /* AXRRender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRRender.cpp; sourceTree = "<group>"; };
+		4E963428135B603E00AF77AE /* AXRRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRRender.h; sourceTree = "<group>"; };
 		4E9AB08713589DA600837091 /* AXRDebugging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRDebugging.cpp; sourceTree = "<group>"; };
 		4E9AB08813589DA600837091 /* AXRDebugging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRDebugging.h; sourceTree = "<group>"; };
 		4E9AB08B1358A08700837091 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
@@ -192,6 +198,8 @@
 		4EBEABF51351CE0B000D6CE7 /* AXRExceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AXRExceptions.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4ED1A8981309A4F5001EAEA9 /* AXR.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; name = AXR.cpp; path = ../core/AXR.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		4ED1A8991309A4F5001EAEA9 /* AXR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = AXR.h; path = ../core/AXR.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4EFEBB0E135C7E1400352CC0 /* OSXRender.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXRender.mm; sourceTree = "<group>"; };
+		4EFEBB0F135C7E1400352CC0 /* OSXRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXRender.h; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -265,6 +273,8 @@
 				4EBEABF51351CE0B000D6CE7 /* AXRExceptions.h */,
 				4E9AB08713589DA600837091 /* AXRDebugging.cpp */,
 				4E9AB08813589DA600837091 /* AXRDebugging.h */,
+				4E963427135B603E00AF77AE /* AXRRender.cpp */,
+				4E963428135B603E00AF77AE /* AXRRender.h */,
 			);
 			path = axr;
 			sourceTree = SOURCE_ROOT;
@@ -382,6 +392,8 @@
 				4E80C87713505DEA00D88409 /* AXRView.mm */,
 				4E80C87813505DEA00D88409 /* OSX.mm */,
 				4E80C87913505DEA00D88409 /* OSX.h */,
+				4EFEBB0E135C7E1400352CC0 /* OSXRender.mm */,
+				4EFEBB0F135C7E1400352CC0 /* OSXRender.h */,
 			);
 			path = osx;
 			sourceTree = "<group>";
@@ -460,6 +472,8 @@
 				4EBEABF71351CE0B000D6CE7 /* AXRExceptions.h in Headers */,
 				4E9AB08A13589DA600837091 /* AXRDebugging.h in Headers */,
 				4E9AB08C1358A08700837091 /* platform.h in Headers */,
+				4E96342A135B603E00AF77AE /* AXRRender.h in Headers */,
+				4EFEBB11135C7E1400352CC0 /* OSXRender.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,6 +566,8 @@
 				4E95BF77135073A400117354 /* HSSValue.cpp in Sources */,
 				4EBEABF61351CE0B000D6CE7 /* AXRExceptions.cpp in Sources */,
 				4E9AB08913589DA600837091 /* AXRDebugging.cpp in Sources */,
+				4E963429135B603E00AF77AE /* AXRRender.cpp in Sources */,
+				4EFEBB10135C7E1400352CC0 /* OSXRender.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

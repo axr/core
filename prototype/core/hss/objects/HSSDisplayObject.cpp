@@ -43,15 +43,19 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/04/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 8
+ *      Revision: 10
  *
  ********************************************************************/
 
 #include "HSSDisplayObject.h"
 #include "../../axr/AXRDebugging.h"
+#include <math.h>
+#include "HSSParserNode.h"
+#include "HSSExpression.h"
+#include <boost/pointer_cast.hpp>
 
 using namespace AXR;
 
@@ -60,13 +64,19 @@ HSSDisplayObject::HSSDisplayObject()
 {
     std_log3(std::string("creating annonymous display object"));
     this->type = HSSObjectTypeDisplayObject;
+    
+    this->_isDirty= true;
+    this->_needsRereadRules = false;
+    this->_needsSurface = true;
+    this->surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
+    
     x = y = width = height = anchorX = anchorY = alignX = alignY = drawIndex = 0;
     tabIndex = zoomFactor = 1;
     flow = visible = true;
     does_float = false;
     
-    width = 100.;
-    height = 100.;
+    width = 0.;
+    height = 0.;
     
     elementName = std::string();
     contentText = "hello";
@@ -78,6 +88,11 @@ HSSDisplayObject::HSSDisplayObject(std::string name)
 {
     std_log3(std::string("creating display object with name ").append(name));   
     this->type = HSSObjectTypeDisplayObject;
+    
+    this->_isDirty = true;
+    this->_needsRereadRules = false;
+    this->_needsSurface = true;
+    
     x = y = width = height = anchorX = anchorY = alignX = alignY = drawIndex = 0;
     tabIndex = zoomFactor = 1;
     flow = visible = true;
@@ -93,6 +108,7 @@ HSSDisplayObject::HSSDisplayObject(std::string name)
 HSSDisplayObject::~HSSDisplayObject()
 {
     std_log3(std::string("destroying display object with name ").append(this->name));
+    cairo_surface_destroy(this->surface);
 }
 
 std::string HSSDisplayObject::toString()
@@ -205,7 +221,121 @@ const int HSSDisplayObject::rulesSize()
     return this->rules.size();
 }
 
+void HSSDisplayObject::readDefinitionObjects()
+{
+    if(this->_needsRereadRules){
+        unsigned i, j;
+        
+        std::string propertyName;
+        for (i=0; i<this->rules.size(); i++) {
+            HSSRule::p& rule = this->rules[i];
+            
+            for (j=0; j<rule->propertiesSize(); j++) {
+                HSSPropertyDefinition::p& propertyDefinition = rule->propertiesGet(j);
+                propertyName = propertyDefinition->getName();
+                
+                if(propertyName == "width"){
+                    //store a copy of the value
+                    this->dWidth = propertyDefinition->getValue();
+                    if(this->dWidth->isA(HSSParserNodeTypeExpression)){
+                        HSSExpression::p widthExpression = boost::static_pointer_cast<HSSExpression>(this->dWidth);
+                        this->width = widthExpression->evaluate();
+                    }
+                    
+                } else if(propertyName == "height"){
+                    //store a copy of the value
+                    this->dHeight = propertyDefinition->getValue();
+                    if(this->dHeight->isA(HSSParserNodeTypeExpression)){
+                        HSSExpression::p heightExpression = boost::static_pointer_cast<HSSExpression>(this->dHeight);
+                        this->height = heightExpression->evaluate();
+                    }
+                }
+            }
+        }
+        
+        this->_needsRereadRules = false;
+    }
+}
 
+void HSSDisplayObject::setNeedsRereadRules(bool value)
+{
+    this->_needsRereadRules = value;
+}
+
+bool HSSDisplayObject::needsRereadRules()
+{
+    return this->_needsRereadRules;
+}
+
+void HSSDisplayObject::recursiveReadDefinitionObjects()
+{
+    this->readDefinitionObjects();
+}
+
+void HSSDisplayObject::regenerateSurface()
+{
+    if(this->_needsSurface){
+        cairo_surface_destroy(this->surface);
+        this->surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, ceil(this->width), ceil(this->height));
+        this->setDirty(true);
+        this->_needsSurface = false;
+        fprintf(stderr, "created a new surface width: %f, height: %f\n", this->width, this->height);
+    }
+}
+
+void HSSDisplayObject::recursiveRegenerateSurfaces()
+{
+    this->regenerateSurface();
+}
+
+
+void HSSDisplayObject::setNeedsSurface(bool value)
+{
+    this->_needsSurface = value;
+}
+
+bool HSSDisplayObject::needsSurface()
+{
+    return this->_needsSurface;
+}
+
+
+void HSSDisplayObject::setDirty(bool value)
+{
+    this->_isDirty = value;
+}
+
+bool HSSDisplayObject::isDirty()
+{
+    return this->_isDirty;
+}
+
+//width
+HSSParserNode::p HSSDisplayObject::getDWidth()  {   return this->dWidth; }
+void HSSDisplayObject::setDWidth(HSSParserNode::p newDWidth)
+{
+    this->dWidth = newDWidth;
+    if(newDWidth->isA(HSSParserNodeTypeExpression)){
+        HSSExpression::p widthExpresssion = boost::static_pointer_cast<HSSExpression>(newDWidth);
+        this->width = widthExpresssion->evaluate();
+    }
+    
+    this->setNeedsSurface(true);
+    this->setDirty(true);
+}
+//height
+HSSParserNode::p HSSDisplayObject::getDHeight() { return this->dHeight; }
+void HSSDisplayObject::setDHeight(HSSParserNode::p newDHeight)
+{
+    this->dHeight = newDHeight;;
+    if(newDHeight->isA(HSSParserNodeTypeExpression)){
+        HSSExpression::p heightExpresssion = boost::static_pointer_cast<HSSExpression>(newDHeight);
+        this->height = heightExpresssion->evaluate();
+    }
+    
+    this->setNeedsSurface(true);
+    this->setDirty(true);
+}
 
 
 

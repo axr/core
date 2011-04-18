@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -65,9 +65,9 @@ HSSNumberConstant::~HSSNumberConstant()
     
 }
 
-HSSParserNode::p HSSNumberConstant::evaluate()
+double HSSNumberConstant::evaluate()
 {
-    return HSSNumberConstant::p(new HSSNumberConstant(this->value));
+    return this->value;
 }
 
 void HSSNumberConstant::setValue(long double newValue)
@@ -75,7 +75,7 @@ void HSSNumberConstant::setValue(long double newValue)
     this->value = newValue;
 }
 
-long double HSSNumberConstant::getValue()
+double HSSNumberConstant::getValue()
 {
     return this->value;
 }

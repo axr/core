@@ -43,7 +43,7 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/04/17
  *      HSS version: 1.0
  *      Core version: 0.3
  *      Revision: 5
@@ -100,13 +100,18 @@ std::string HSSRule::toString()
     return tempstr;
 }
 
-void HSSRule::propertiesAdd(HSSStatement::p newStatement)
+void HSSRule::propertiesAdd(HSSPropertyDefinition::p & newProperty)
 {
-    if(newStatement != NULL)
+    if(newProperty)
     {
-        std_log3("Added node of type " << newStatement->toString());
-        this->properties.push_back(newStatement);
+        std_log3("Added property: " << newProperty->toString());
+        this->properties.push_back(newProperty);
     }
+}
+
+void HSSRule::propertiesRemove(unsigned int index)
+{
+    this->properties.erase(this->properties.begin()+index);
 }
 
 void HSSRule::propertiesRemoveLast()
@@ -114,7 +119,12 @@ void HSSRule::propertiesRemoveLast()
     this->properties.pop_back();
 }
 
-HSSStatement::p HSSRule::propertiesLast()
+HSSPropertyDefinition::p & HSSRule::propertiesGet(unsigned index)
+{
+    return this->properties[index];
+}
+
+HSSPropertyDefinition::p & HSSRule::propertiesLast()
 {
     return this->properties.back();
 }

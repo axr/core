@@ -2,12 +2,12 @@ parent
 {
 	child1
 	{
-		width: 150;
-		height: 100;
+		width: 350;
+		height: 350;
 	}
 	child2
 	{
-		width: 200;
-		height: 140;
+		width: 300;
+		height: 150;
 	}
 }

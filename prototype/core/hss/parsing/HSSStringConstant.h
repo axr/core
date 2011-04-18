@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -57,7 +57,7 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    class HSSStringConstant : public HSSExpression
+    class HSSStringConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSStringConstant> p;
@@ -67,8 +67,6 @@ namespace AXR {
         
         void setValue(std::string newValue);
         std::string getValue();
-        
-        HSSParserNode::p evaluate();
         
         std::string toString();
         

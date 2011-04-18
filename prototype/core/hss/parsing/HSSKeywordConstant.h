@@ -43,21 +43,21 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
 #ifndef HSSKEYWORDCONSTANT_H
 #define HSSKEYWORDCONSTANT_H
 
-#include "HSSExpression.h"
+#include "HSSParserNode.h"
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    class HSSKeywordConstant : public HSSExpression
+    class HSSKeywordConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSKeywordConstant> p;
@@ -67,8 +67,6 @@ namespace AXR {
         
         void setValue(std::string newValue);
         std::string getValue();
-        
-        HSSParserNode::p evaluate();
         
         std::string toString();
         

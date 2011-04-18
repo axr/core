@@ -273,7 +273,8 @@ HSSRule::p HSSParser::readRule()
         //if we find an identifier, we must peek forward to see if it is a property name
         if(this->currentToken->isA(HSSIdentifier)){
             if (this->isPropertyDefinition()){
-                ret->propertiesAdd(this->readPropertyDefinition());
+                HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition();
+                ret->propertiesAdd(propertyDefinition);
             } else {
                 //recursive omg!
                 ret->childrenAdd(this->readRule());
