@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/18
+ *      Last changed: 2011/04/25
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -58,6 +58,7 @@
 #include "HSSDisplayObject.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <cairo/cairo.h>
 
 namespace AXR {
     class HSSContainer : public boost::enable_shared_from_this<HSSContainer>, public HSSDisplayObject
@@ -80,9 +81,11 @@ namespace AXR {
         
         virtual void recursiveReadDefinitionObjects();
         virtual void recursiveRegenerateSurfaces();
+        virtual void recursiveDraw(cairo_t * cairo);
         
         //FIXME: make protected and provide accessors
         std::vector<HSSDisplayObject::p>children;
+        const std::vector<HSSDisplayObject::p>& getChildren() const;
     
     protected:
         std::string contentText;

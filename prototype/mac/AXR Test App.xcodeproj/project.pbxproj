@@ -10,7 +10,7 @@
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* AXRTestAppAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* AXRTestAppAppDelegate.mm */; };
 		4E351B7913507C2F00FEB909 /* libcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E351B7813507C2F00FEB909 /* libcore.a */; };
-		4E351B7B13507C2F00FEB909 /* libcairo.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E351B7A13507C2F00FEB909 /* libcairo.dylib */; };
+		4E44AF77135CD3200036D1E5 /* libcairo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E44AF76135CD3200036D1E5 /* libcairo.a */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -45,7 +45,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		4E351B7813507C2F00FEB909 /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E351B7A13507C2F00FEB909 /* libcairo.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcairo.dylib; path = usr/local/lib/libcairo.dylib; sourceTree = SDKROOT; };
+		4E44AF76135CD3200036D1E5 /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../usr/local/lib/libcairo.a; sourceTree = "<group>"; };
 		4E95BFCE135076F100117354 /* core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = core.xcodeproj; path = ../core/core.xcodeproj; sourceTree = "<group>"; };
 		4EAF82581331690C00AFF970 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* mac-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "mac-Info.plist"; sourceTree = "<group>"; };
@@ -57,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4E351B7B13507C2F00FEB909 /* libcairo.dylib in Frameworks */,
+				4E44AF77135CD3200036D1E5 /* libcairo.a in Frameworks */,
 				4E351B7913507C2F00FEB909 /* libcore.a in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 			);
@@ -104,7 +104,7 @@
 		29B97314FDCFA39411CA2CEA /* mac */ = {
 			isa = PBXGroup;
 			children = (
-				4E351B7A13507C2F00FEB909 /* libcairo.dylib */,
+				4E44AF76135CD3200036D1E5 /* libcairo.a */,
 				4E351B7813507C2F00FEB909 /* libcore.a */,
 				4E95BFCE135076F100117354 /* core.xcodeproj */,
 				080E96DDFE201D6D7F000001 /* Classes */,

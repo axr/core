@@ -43,22 +43,24 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/04/25
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 4
  *
  ********************************************************************/
 
 #include "HSSPercentageConstant.h"
 #include <sstream>
+#include "../objects/HSSContainer.h"
+#include "../objects/HSSContainer.h"
 
 using namespace AXR;
 
 HSSPercentageConstant::HSSPercentageConstant(long double value)
-: HSSNumberConstant(value)
 {
-    
+    this->nodeType = HSSParserNodeTypePercentageConstant;
+    this->value = value / 100.;
 }
 
 HSSPercentageConstant::~HSSPercentageConstant()
@@ -76,3 +78,14 @@ std::string HSSPercentageConstant::toString()
     ret.append("%");
     return ret;
 }
+
+void HSSPercentageConstant::setValue(long double newValue)
+{
+    this->value = value / 100.;
+}
+
+long double HSSPercentageConstant::getValue(long double baseValue)
+{
+    return this->value * baseValue;
+}
+

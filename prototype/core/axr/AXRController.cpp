@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/17
+ *      Last changed: 2011/04/25
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 9
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -73,6 +73,8 @@ AXRController::~AXRController()
 {
     this->objectTree.clear();
     this->loadSheets.clear();
+    this->rules.clear();
+    this->statements.clear();
 }
 
 bool AXRController::loadFile()
@@ -237,6 +239,8 @@ void AXRController::reset()
     
     this->objectTree.clear();
     this->loadSheets.clear();
+    this->statements.clear();
+    this->rules.clear();
     this->root.reset();
     for(i=0; i<this->currentContext.size(); i++)
     {
@@ -245,7 +249,6 @@ void AXRController::reset()
     //the operator -> is very important here
     this->parserHSS->reset();
     this->parserXML = XMLParser::p(new XMLParser(this));
-    //this->parserXML = XMLParser::p(new XMLParser(XMLParser::controllerPointer(AXRController::p(this))));
 }
 
 
@@ -272,7 +275,7 @@ void AXRController::setRoot(HSSContainer::p & newRoot){
 void AXRController::enterElement(std::string elementName)
 {
     //std_log1("enter element " + elementName);
-    HSSContainer::p newContainer(new HSSContainer());
+    HSSContainer::p newContainer(new HSSContainer(elementName+"_source_obj"));
     newContainer->setElementName(elementName);
     this->add(newContainer);
     this->currentContext.push(newContainer);

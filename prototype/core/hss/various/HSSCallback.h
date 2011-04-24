@@ -46,44 +46,42 @@
  *      Last changed: 2011/04/25
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 7
+ *      Revision: 2
  *
  ********************************************************************/
 
-#include "HSSNumberConstant.h"
-#include <sstream>
+#ifndef HSSCALLBACK_H
+#define HSSCALLBACK_H
 
-using namespace AXR;
+#include <string>
+#include "HSSObservableProperties.h"
 
-HSSNumberConstant::HSSNumberConstant(long double value)
-{
-    this->value = value;
-    this->nodeType = HSSParserNodeTypeNumberConstant;
-}
-
-HSSNumberConstant::~HSSNumberConstant()
-{
+namespace AXR {
+//    class HSSCallback {
+//    public:
+//        virtual void operator()(std::string string) = 0;
+//    };
     
+    class HSSObject;
+    
+    class HSSValueChangedCallback { // : public HSSCallback {
+        void (HSSObject::*fptr)(HSSObservableProperty property, void* data);
+        HSSObject* ptr;
+        
+    public:
+        friend class HSSObject;
+        
+        HSSValueChangedCallback(HSSObject* _ptr, void(HSSObject::*_fptr)(HSSObservableProperty property, void* data)){
+            ptr = _ptr;
+            fptr = _fptr;
+        }
+        
+        void operator()(HSSObservableProperty property, void* data);
+    };
 }
 
-void HSSNumberConstant::setValue(long double newValue)
-{
-    this->value = newValue;
-}
+#endif //HSSCALLBACK_H
 
-double HSSNumberConstant::getValue()
-{
-    return this->value;
-}
 
-std::string HSSNumberConstant::toString()
-{
-    std::string ret = "HSSNumberConstant with value ";
-    std::ostringstream tempstream;
-    //create a temp stream to convert the float to a string
-    tempstream << this->value;
-    ret.append(tempstream.str());
-    return ret;
-}
 
 

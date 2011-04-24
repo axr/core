@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/18
+ *      Last changed: 2011/04/21
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -58,11 +58,30 @@ HSSExpression::HSSExpression()
 : HSSParserNode()
 {
     this->nodeType = HSSParserNodeTypeExpression;
-    
+    this->expressionType = HSSExpressionTypeGeneric;
 }
 
 HSSExpression::~HSSExpression()
 {
     
 }
+
+
+bool HSSExpression::isA(HSSExpressionType otherType)
+{
+	return otherType == this->expressionType;
+}
+
+HSSExpressionType HSSExpression::getExpressionType()
+{
+    return this->expressionType;
+}
+
+std::string HSSExpression::expressionTypeStringRepresentation(HSSExpressionType type){
+    std::string types[20];
+	types[HSSExpressionTypeGeneric] = "HSSExpression";
+    
+    return types[type];
+}
+
 

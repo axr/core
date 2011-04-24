@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/17
+ *      Last changed: 2011/04/24
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 7
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -72,8 +72,6 @@ namespace AXR {
         typedef boost::shared_ptr<HSSDisplayObject> p;
         typedef boost::weak_ptr<HSSContainer> parentPointer;
         
-        friend class OSXRender;
-        
         HSSDisplayObject();
         HSSDisplayObject(std::string name);
         virtual ~HSSDisplayObject();
@@ -95,7 +93,7 @@ namespace AXR {
         void setNeedsRereadRules(bool value);
         bool needsRereadRules();
         
-        virtual void regenerateSurface();
+        virtual void regenerateSurfaces();
         virtual void recursiveRegenerateSurfaces();
         
         void setNeedsSurface(bool value);
@@ -103,14 +101,37 @@ namespace AXR {
         
         void setDirty(bool value);
         bool isDirty();
+        virtual void draw(cairo_t * cairo);
+        virtual void recursiveDraw(cairo_t * cairo);
         
         std::string getElementName();
         void setElementName(std::string name);
         
+        void propertyChanged(HSSObservableProperty property, void* data);
+        
+        //width
         HSSParserNode::p getDWidth();
-        void setDWidth(HSSParserNode::p newDWidth);
+        void setDWidth(HSSParserNode::p value);
+        //height
         HSSParserNode::p getDHeight();
-        void setDHeight(HSSParserNode::p newDHeight);
+        void setDHeight(HSSParserNode::p value);
+        //anchorX
+        HSSParserNode::p getDAnchorX();
+        void setDAnchorX(HSSParserNode::p value);
+        //anchorY
+        HSSParserNode::p getDAnchorY();
+        void setDAnchorY(HSSParserNode::p value);
+        //flow
+        HSSParserNode::p getDFlow();
+        void setDFlow(HSSParserNode::p value);
+        //alignX
+        HSSParserNode::p getDAlignX();
+        void setDAlignX(HSSParserNode::p value);
+        //alignY
+        HSSParserNode::p getDAlignY();
+        void setDAlignY(HSSParserNode::p value);
+        
+        virtual void setDefaults();
         
     protected:
         parentPointer parent;
@@ -124,7 +145,9 @@ namespace AXR {
         
         //if it needs to resize the surface
         bool _needsSurface;
-        cairo_surface_t * surface;
+        cairo_surface_t * backgroundSurface;
+        cairo_surface_t * foregroundSurface;
+        cairo_surface_t * bordersSurface;
         
         //if it needs to redraw
         bool _isDirty;
@@ -133,7 +156,9 @@ namespace AXR {
         double x;
         double y;
         double height;
+        HSSObject * observedHeight;
         double width;
+        HSSObject * observedWidth;
         //FIXME: bounds
         double anchorX;
         double anchorY;
@@ -157,6 +182,11 @@ namespace AXR {
         //here go the definition objects
         HSSParserNode::p dWidth;
         HSSParserNode::p dHeight;
+        HSSParserNode::p dAnchorX;
+        HSSParserNode::p dAnchorY;
+        HSSParserNode::p dFlow;
+        HSSParserNode::p dAlignX;
+        HSSParserNode::p dAlignY;
     };
 
 }

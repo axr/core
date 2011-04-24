@@ -3,4 +3,5 @@
 <parent>
 	<child1 arg1="test">This is a test element</child1>
 	<child2>This is another</child2>
+	<child3><subchild>This is a child inside its parent</subchild></child3>
 </parent>

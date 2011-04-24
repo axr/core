@@ -161,6 +161,8 @@
     if(controller->hasLoadedFile()){
         std_log1("reloading file");
         bool loaded = controller->reload();
+        AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
+        render->reset();
         [self setNeedsDisplay:YES];
         return loaded;
     }

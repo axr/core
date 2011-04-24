@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/18
+ *      Last changed: 2011/04/25
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 7
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -176,17 +176,31 @@ void HSSContainer::recursiveReadDefinitionObjects()
 
 void HSSContainer::recursiveRegenerateSurfaces()
 {
-    if (this->_isDirty) {
-        this->regenerateSurface();
-    }
+    this->regenerateSurfaces();
     
-    unsigned i;
-    for (i=0; i<this->children.size(); i++) {
-        this->children[i]->regenerateSurface();
+    unsigned i, size;
+    for (i=0, size = this->children.size(); i<size; i++) {
+        this->children[i]->regenerateSurfaces();
+    }
+}
+
+void HSSContainer::recursiveDraw(cairo_t * cairo)
+{
+    this->draw(cairo);
+    unsigned i, size;
+    for (i=0, size = this->children.size(); i<size; i++) {
+        this->children[i]->recursiveDraw(cairo);
     }
 }
 
 
+
+
+
+const std::vector<HSSDisplayObject::p>& HSSContainer::getChildren() const
+{
+    return this->children;
+}
 
 
 

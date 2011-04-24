@@ -43,21 +43,21 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/18
+ *      Last changed: 2011/04/25
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 5
  *
  ********************************************************************/
 
 #ifndef HSSNUMBERCONSTANT_H
 #define HSSNUMBERCONSTANT_H
 
-#include "HSSExpression.h"
+#include "HSSParserNode.h"
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    class HSSNumberConstant : public HSSExpression
+    class HSSNumberConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSNumberConstant> p;
@@ -67,8 +67,6 @@ namespace AXR {
         
         void setValue(long double newValue);
         double getValue();
-        
-        double evaluate();
         
         std::string toString();
         

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/18
+ *      Last changed: 2011/04/21
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -84,11 +84,14 @@ namespace AXR {
         //before calling this as base class' method
         virtual void drawInRectWithBounds(AXRRect rect, AXRRect bounds);
         
+        void reset();
+        
     protected:
         //weak pointer
         AXRController * controller;
         double windowWidth;
         double windowHeight;
+        cairo_t * cairo;
         cairo_surface_t * rootSurface;
     };
 }

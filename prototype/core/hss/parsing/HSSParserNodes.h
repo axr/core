@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/04
+ *      Last changed: 2011/04/21
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -62,5 +62,7 @@
 #include "HSSPropertyDefinition.h"
 #include "HSSInstruction.h"
 #include "HSSComment.h"
+#include "HSSConstants.h"
+
 
 #endif

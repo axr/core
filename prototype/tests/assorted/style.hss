@@ -2,12 +2,25 @@ parent
 {
 	child1
 	{
-		width: 350;
-		height: 350;
+		width: 80%;
+		height: 80%;
 	}
+	
 	child2
 	{
-		width: 300;
-		height: 150;
+		width: 70%;
+		height: 500;
+	}
+	
+	child3
+	{
+		width: 25%;
+		height: 20%;
+		
+		subchild
+		{
+			width: 80%;
+			height: 250%;
+		}
 	}
 }

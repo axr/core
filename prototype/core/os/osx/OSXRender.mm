@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/18
+ *      Last changed: 2011/04/21
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -74,6 +74,8 @@ OSXRender::~OSXRender()
 
 void OSXRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
 {
+    //FIXME: is there a more elegant way to transport rectangle data?
+    //eg. inline function, x,y,width,height arguments, etc
     [[NSColor whiteColor] set];
     NSRect boundsRect;
     boundsRect.size.width = bounds.size.width;
@@ -83,40 +85,21 @@ void OSXRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
     NSRectFill(boundsRect);
     
     
-    //FIXME: this is just a test
-    
     CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
     //invert the coordinate system
     CGContextTranslateCTM (ctxt, 0.0, (int)bounds.size.height);
     CGContextScaleCTM (ctxt, 1.0, -1.0);
     
     cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, rect.size.width, rect.size.height);
-    cairo_t * cairo = cairo_create(targetSurface);
+    cairo_t * tempcairo = cairo_create(targetSurface);
     cairo_surface_destroy(targetSurface);
     
-    cairo_set_line_width(cairo, 2);
-    float i;
-    AXR::HSSContainer::p root = this->controller->getRoot();
-    unsigned size = root->children.size();
-    double widthcount = 0;
-    double heightcount = 0;
-    for(i=0; i<size; i++){
-        AXR::HSSDisplayObject::p displayObject = root->children[i];
-        //std::fprintf(stderr, "rectangle width: %f, height: %f, x: %f, y: %f\n", (i*150.)+((i+1.)*10.), 20., 150., 150.);
-        cairo_rectangle(cairo, widthcount+20., 20., displayObject->width, displayObject->height);
-        cairo_set_source_rgb(cairo, 0.8,0.8,0.8);
-        cairo_fill_preserve(cairo);
-        cairo_set_source_rgb(cairo, 0,0,0);
-        cairo_stroke(cairo);
-        widthcount += displayObject->width;
-        heightcount += displayObject->height;
-    }
-    
-    cairo_destroy(cairo);
+    this->cairo = tempcairo;
+    AXRRender::drawInRectWithBounds(rect, bounds);
+    cairo_destroy(this->cairo);
+    this->cairo = NULL;
 
 }
-
-
 
 
 

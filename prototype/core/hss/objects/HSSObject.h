@@ -43,18 +43,21 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/04/25
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
 #ifndef HSSOBJECT_H
 #define HSSOBJECT_H
 
-#import <string>
-#import <boost/shared_ptr.hpp>
+#include <string>
+#include <boost/shared_ptr.hpp>
+#include "../various/HSSCallback.h"
+#include <map>
+#include "../various/HSSObservableProperties.h"
 
 namespace AXR {
     
@@ -76,6 +79,7 @@ namespace AXR {
     {
     public:
         typedef boost::shared_ptr<HSSObject> p;
+        typedef std::map<HSSObject *, HSSValueChangedCallback* > observed;
         
         static HSSObject::p newObjectWithType(std::string type);
         
@@ -96,11 +100,17 @@ namespace AXR {
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
         
+        void observe(HSSObservableProperty property, HSSObject * object, HSSValueChangedCallback *callback);
+        void removeObserver(HSSObservableProperty property, HSSObject * object);
+        virtual void propertyChanged(HSSObservableProperty property, void * data);
+        void notifyObservers(HSSObservableProperty property, void * data);
+        
     protected:
         HSSObjectType type;
         
     private:
         bool _isNamed;
+        std::map<HSSObservableProperty, HSSObject::observed>_propertyObservers;
     };
 
 }

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4E351B771350784B00FEB909 /* AXRView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C87713505DEA00D88409 /* AXRView.mm */; };
+		4E5457AB136443E900D67571 /* HSSObservableProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5457AA136443E900D67571 /* HSSObservableProperties.h */; };
+		4E5457B01364523D00D67571 /* HSSCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E5457AE1364523D00D67571 /* HSSCallback.cpp */; };
+		4E5457B11364523D00D67571 /* HSSCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5457AF1364523D00D67571 /* HSSCallback.h */; };
 		4E95BF43135072A300117354 /* AXR.h in Headers */ = {isa = PBXBuildFile; fileRef = 4ED1A8991309A4F5001EAEA9 /* AXR.h */; };
 		4E95BF44135072A500117354 /* hss.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80C7ED13505DD200D88409 /* hss.h */; };
 		4E95BF45135072B200117354 /* HSSBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80C7F013505DD200D88409 /* HSSBorder.h */; };
@@ -105,6 +108,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E5457AA136443E900D67571 /* HSSObservableProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservableProperties.h; sourceTree = "<group>"; };
+		4E5457AE1364523D00D67571 /* HSSCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSCallback.cpp; sourceTree = "<group>"; };
+		4E5457AF1364523D00D67571 /* HSSCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSCallback.h; sourceTree = "<group>"; };
 		4E80C7D213505C7E00D88409 /* ExpatXMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpatXMLParser.cpp; sourceTree = "<group>"; };
 		4E80C7D313505C7E00D88409 /* ExpatXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpatXMLParser.h; sourceTree = "<group>"; };
 		4E80C7D413505C7E00D88409 /* XMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = XMLParser.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -286,6 +292,7 @@
 				4E80C7EE13505DD200D88409 /* objects */,
 				4E80C80213505DD200D88409 /* parsing */,
 				4E80C82B13505DD300D88409 /* tokenizing */,
+				4ECC1D681360C62500344DE8 /* various */,
 			);
 			path = hss;
 			sourceTree = SOURCE_ROOT;
@@ -412,6 +419,16 @@
 			path = ../mac;
 			sourceTree = "<group>";
 		};
+		4ECC1D681360C62500344DE8 /* various */ = {
+			isa = PBXGroup;
+			children = (
+				4E5457AE1364523D00D67571 /* HSSCallback.cpp */,
+				4E5457AF1364523D00D67571 /* HSSCallback.h */,
+				4E5457AA136443E900D67571 /* HSSObservableProperties.h */,
+			);
+			path = various;
+			sourceTree = "<group>";
+		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -474,6 +491,8 @@
 				4E9AB08C1358A08700837091 /* platform.h in Headers */,
 				4E96342A135B603E00AF77AE /* AXRRender.h in Headers */,
 				4EFEBB11135C7E1400352CC0 /* OSXRender.h in Headers */,
+				4E5457AB136443E900D67571 /* HSSObservableProperties.h in Headers */,
+				4E5457B11364523D00D67571 /* HSSCallback.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,6 +587,7 @@
 				4E9AB08913589DA600837091 /* AXRDebugging.cpp in Sources */,
 				4E963429135B603E00AF77AE /* AXRRender.cpp in Sources */,
 				4EFEBB10135C7E1400352CC0 /* OSXRender.mm in Sources */,
+				4E5457B01364523D00D67571 /* HSSCallback.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

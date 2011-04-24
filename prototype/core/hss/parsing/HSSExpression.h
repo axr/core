@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/18
+ *      Last changed: 2011/04/24
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -55,8 +55,17 @@
 
 #include "HSSParserNode.h"
 #include <boost/shared_ptr.hpp>
+#include <vector>
 
 namespace AXR {
+    
+    enum HSSExpressionType
+    {
+        HSSExpressionTypeGeneric = 0,
+    };
+    
+    class HSSDisplayObject;
+    
     class HSSExpression : public HSSParserNode
     {
     public:
@@ -64,7 +73,16 @@ namespace AXR {
         
         HSSExpression();
         virtual ~HSSExpression();
-        virtual double evaluate() =0;
+        virtual double evaluate(double percentageBase, const std::vector< boost::shared_ptr<HSSDisplayObject> >&scope) =0;
+        virtual double evaluate(double percentageBase) =0;
+        
+        bool isA(HSSExpressionType otherType);
+        HSSExpressionType getExpressionType();
+        
+        static std::string expressionTypeStringRepresentation(HSSExpressionType type);
+
+    protected:
+        HSSExpressionType expressionType;
     };
 }
 

@@ -46,44 +46,27 @@
  *      Last changed: 2011/04/25
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 7
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "HSSNumberConstant.h"
-#include <sstream>
+#ifndef HSSOBSERVABLEPROPERTIES_H
+#define HSSOBSERVABLEPROPERTIES_H
 
-using namespace AXR;
-
-HSSNumberConstant::HSSNumberConstant(long double value)
-{
-    this->value = value;
-    this->nodeType = HSSParserNodeTypeNumberConstant;
+namespace AXR {
+    enum HSSObservableProperty
+    {
+        HSSObservablePropertyWidth,
+        HSSObservablePropertyHeight,
+        HSSObservablePropertyAnchorX,
+        HSSObservablePropertyAnchorY,
+        HSSObservablePropertyFlow,
+        HSSObservablePropertyAlignX,
+        HSSObservablePropertyAlignY
+    };
 }
 
-HSSNumberConstant::~HSSNumberConstant()
-{
-    
-}
+#endif //HSSOBSERVABLEPROPERTIES_H
 
-void HSSNumberConstant::setValue(long double newValue)
-{
-    this->value = newValue;
-}
-
-double HSSNumberConstant::getValue()
-{
-    return this->value;
-}
-
-std::string HSSNumberConstant::toString()
-{
-    std::string ret = "HSSNumberConstant with value ";
-    std::ostringstream tempstream;
-    //create a temp stream to convert the float to a string
-    tempstream << this->value;
-    ret.append(tempstream.str());
-    return ret;
-}
 
 

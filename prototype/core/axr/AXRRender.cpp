@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/18
+ *      Last changed: 2011/04/21
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -63,6 +63,7 @@ AXRRender::AXRRender(AXRController * theController)
     this->controller = theController;
     this->windowWidth = 0;
     this->windowHeight = 0;
+    this->cairo = NULL;
 }
 
 AXRRender::~AXRRender()
@@ -73,6 +74,10 @@ AXRRender::~AXRRender()
 void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
 {
     std_log1("drawing in rect");
+    
+    if(this->cairo == NULL){
+        throw "AXRRender Error: cairo was not defined";
+    }
     
     //prepare values
     HSSContainer::p root = this->controller->getRoot();
@@ -86,8 +91,14 @@ void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
         root->setDHeight(HSSNumberConstant::p(new HSSNumberConstant(this->windowHeight)));
     }
     //draw the elements
-    
-    
+    root->recursiveDraw(this->cairo);
+}
+
+//this will maintain the reference to controller
+void AXRRender::reset()
+{
+    this->windowWidth = 0;
+    this->windowHeight = 0;
 }
 
 

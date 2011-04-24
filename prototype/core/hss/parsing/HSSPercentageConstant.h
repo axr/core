@@ -43,22 +43,23 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/04/25
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
 #ifndef HSSPERCENTAGECONSTANT_H
 #define HSSPERCENTAGECONSTANT_H
 
-#include "HSSNumberConstant.h"
+#include "HSSParserNode.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    class HSSPercentageConstant : public HSSNumberConstant
+    
+    class HSSPercentageConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSPercentageConstant> p;
@@ -66,6 +67,11 @@ namespace AXR {
         HSSPercentageConstant(long double value);
         virtual ~HSSPercentageConstant();
         virtual std::string toString();
+        
+        void setValue(long double newValue);
+        long double getValue(long double baseValue);
+    protected:
+        long double value;
     };
 }
 
