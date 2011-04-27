@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/24
+ *      Last changed: 2011/04/26
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 13
+ *      Revision: 14
  *
  ********************************************************************/
 
@@ -287,7 +287,7 @@ void HSSDisplayObject::regenerateSurfaces()
         this->bordersSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, ceil(this->width), ceil(this->height));
         this->setDirty(true);
         this->_needsSurface = false;
-        fprintf(stderr, "created a new surface width: %f, height: %f\n", this->width, this->height);
+        fprintf(stderr, "created a new surface width: %Lf, height: %Lf\n", this->width, this->height);
 //    }
 }
 
@@ -363,7 +363,14 @@ void HSSDisplayObject::propertyChanged(HSSObservableProperty property, void* dat
                 case HSSParserNodeTypePercentageConstant:
                 {
                     HSSPercentageConstant::p widthValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dWidth);
-                    this->width = widthValue->getValue(*(double*)data);
+                    this->width = widthValue->getValue(*(long double*)data);
+                    break;
+                }
+                    
+                case HSSParserNodeTypeExpression:
+                {
+                    HSSExpression::p widthExpression = boost::static_pointer_cast<HSSExpression>(this->dWidth);
+                    this->width = widthExpression->evaluate();
                     break;
                 }
                     
@@ -386,7 +393,14 @@ void HSSDisplayObject::propertyChanged(HSSObservableProperty property, void* dat
                 case HSSParserNodeTypePercentageConstant:
                 {
                     HSSPercentageConstant::p heightValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dHeight);
-                    this->height = heightValue->getValue(*(double*)data);
+                    this->height = heightValue->getValue(*(long double*)data);
+                    break;
+                }
+                    
+                case HSSParserNodeTypeExpression:
+                {
+                    HSSExpression::p heightExpression = boost::static_pointer_cast<HSSExpression>(this->dHeight);
+                    this->height = heightExpression->evaluate();
                     break;
                 }
                     
@@ -411,7 +425,7 @@ void HSSDisplayObject::propertyChanged(HSSObservableProperty property, void* dat
 HSSParserNode::p HSSDisplayObject::getDWidth()  {   return this->dWidth; }
 void HSSDisplayObject::setDWidth(HSSParserNode::p value)
 {
-    std_log1("setting width of "+this->name+":");
+    //std_log1("setting width of "+this->name+":");
     this->dWidth = value;
     HSSParserNodeType nodeType = value->getType();
     
@@ -435,7 +449,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
             HSSContainer::p parentContainer = this->getParent();
             if(parentContainer){
                 this->width = widthValue->getValue(parentContainer->width);
-                parentContainer->observe(HSSObservablePropertyWidth, this, new HSSValueChangedCallback(this, &HSSObject::propertyChanged));
+                parentContainer->observe(HSSObservablePropertyWidth, this, new HSSValueChangedCallback(this, &HSSObservable::propertyChanged));
                 this->observedWidth = parentContainer.get();
                 
             } else {
@@ -449,9 +463,20 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
             HSSExpression::p widthExpression = boost::static_pointer_cast<HSSExpression>(value);
             HSSContainer::p parentContainer = this->getParent();
             if(parentContainer){
-                this->width = widthExpression->evaluate(parentContainer->width, parentContainer->getChildren());
+                widthExpression->setPercentageBase(parentContainer->width);
+                widthExpression->setPercentageObserved(HSSObservablePropertyWidth, parentContainer.get());
+                widthExpression->setScope(&(parentContainer->getChildren()));
+                this->width = widthExpression->evaluate();
+                widthExpression->observe(HSSObservablePropertyWidth, this, new HSSValueChangedCallback(this, &HSSObservable::propertyChanged));
             } else {
-                this->width = widthExpression->evaluate(this->width);
+                widthExpression->setPercentageBase(this->width);
+                widthExpression->setPercentageObserved(HSSObservablePropertyWidth, this);
+                if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisContainer = static_cast<HSSContainer *>(this);
+                    widthExpression->setScope(&(thisContainer->getChildren()));
+                }
+                this->width = widthExpression->evaluate();
+                widthExpression->observe(HSSObservablePropertyWidth, this, new HSSValueChangedCallback(this, &HSSObservable::propertyChanged));
             }
             break; 
         }
@@ -465,7 +490,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
             break;
     }
     
-    fprintf(stderr, "%f\n", this->width);
+    //fprintf(stderr, "%f\n", this->width);
     this->notifyObservers(HSSObservablePropertyWidth, &this->width);
     this->setNeedsSurface(true);
     this->setDirty(true);
@@ -475,7 +500,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
 HSSParserNode::p HSSDisplayObject::getDHeight() { return this->dHeight; }
 void HSSDisplayObject::setDHeight(HSSParserNode::p value)
 {
-    std_log1("setting height of "+this->name+":");
+    //std_log1("setting height of "+this->name+":");
     this->dHeight = value;
     HSSParserNodeType nodeType = value->getType();
     
@@ -498,7 +523,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
             HSSContainer::p parentContainer = this->getParent();
             if(parentContainer){
                 this->height = heightValue->getValue(parentContainer->height);
-                parentContainer->observe(HSSObservablePropertyHeight, this, new HSSValueChangedCallback(this, &HSSObject::propertyChanged));
+                parentContainer->observe(HSSObservablePropertyHeight, this, new HSSValueChangedCallback(this, &HSSObservable::propertyChanged));
                 this->observedHeight = parentContainer.get();
             }
             break;
@@ -509,9 +534,20 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
             HSSExpression::p heightExpression = boost::static_pointer_cast<HSSExpression>(value);
             HSSContainer::p parentContainer = this->getParent();
             if(parentContainer){
-                this->height = heightExpression->evaluate(parentContainer->height);
+                heightExpression->setPercentageBase(parentContainer->height);
+                heightExpression->setPercentageObserved(HSSObservablePropertyHeight, parentContainer.get());
+                heightExpression->setScope(&(parentContainer->getChildren()));
+                this->height = heightExpression->evaluate();
+                heightExpression->observe(HSSObservablePropertyHeight, this, new HSSValueChangedCallback(this, &HSSObservable::propertyChanged));
             } else {
-                this->height = heightExpression->evaluate(this->height);
+                heightExpression->setPercentageBase(this->height);
+                heightExpression->setPercentageObserved(HSSObservablePropertyHeight, this);
+                if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisContainer = static_cast<HSSContainer *>(this);
+                    heightExpression->setScope(&(thisContainer->getChildren()));
+                }
+                this->height = heightExpression->evaluate();
+                heightExpression->observe(HSSObservablePropertyHeight, this, new HSSValueChangedCallback(this, &HSSObservable::propertyChanged));
             }
             break; 
         }
@@ -525,7 +561,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
             break;
     }
     
-    fprintf(stderr, "%f\n", this->height);
+    //fprintf(stderr, "%f\n", this->height);
     this->notifyObservers(HSSObservablePropertyHeight, &this->height);
     this->setNeedsSurface(true);
     this->setDirty(true);

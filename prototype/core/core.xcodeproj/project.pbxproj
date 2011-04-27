@@ -7,10 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E12B9161365B8D700BBAD6C /* HSSSubtraction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E12B9141365B8D700BBAD6C /* HSSSubtraction.cpp */; };
+		4E12B9171365B8D700BBAD6C /* HSSSubtraction.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E12B9151365B8D700BBAD6C /* HSSSubtraction.h */; };
+		4E12B91A1365B95200BBAD6C /* HSSMultiplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E12B9181365B95200BBAD6C /* HSSMultiplication.cpp */; };
+		4E12B91B1365B95200BBAD6C /* HSSMultiplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E12B9191365B95200BBAD6C /* HSSMultiplication.h */; };
+		4E12B91E1365BB0200BBAD6C /* HSSDivision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E12B91C1365BB0200BBAD6C /* HSSDivision.cpp */; };
+		4E12B91F1365BB0200BBAD6C /* HSSDivision.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E12B91D1365BB0200BBAD6C /* HSSDivision.h */; };
+		4E12B9221365BEA600BBAD6C /* HSSObservable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E12B9201365BEA600BBAD6C /* HSSObservable.cpp */; };
+		4E12B9231365BEA600BBAD6C /* HSSObservable.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E12B9211365BEA600BBAD6C /* HSSObservable.h */; };
 		4E351B771350784B00FEB909 /* AXRView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C87713505DEA00D88409 /* AXRView.mm */; };
 		4E5457AB136443E900D67571 /* HSSObservableProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5457AA136443E900D67571 /* HSSObservableProperties.h */; };
 		4E5457B01364523D00D67571 /* HSSCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E5457AE1364523D00D67571 /* HSSCallback.cpp */; };
 		4E5457B11364523D00D67571 /* HSSCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5457AF1364523D00D67571 /* HSSCallback.h */; };
+		4E5457B41364B37B00D67571 /* HSSSum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E5457B21364B37A00D67571 /* HSSSum.cpp */; };
+		4E5457B51364B37B00D67571 /* HSSSum.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5457B31364B37B00D67571 /* HSSSum.h */; };
+		4E5457B71364B56500D67571 /* HSSExpressions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5457B61364B56400D67571 /* HSSExpressions.h */; };
 		4E95BF43135072A300117354 /* AXR.h in Headers */ = {isa = PBXBuildFile; fileRef = 4ED1A8991309A4F5001EAEA9 /* AXR.h */; };
 		4E95BF44135072A500117354 /* hss.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80C7ED13505DD200D88409 /* hss.h */; };
 		4E95BF45135072B200117354 /* HSSBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80C7F013505DD200D88409 /* HSSBorder.h */; };
@@ -108,9 +119,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E12B9141365B8D700BBAD6C /* HSSSubtraction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSubtraction.cpp; sourceTree = "<group>"; };
+		4E12B9151365B8D700BBAD6C /* HSSSubtraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSubtraction.h; sourceTree = "<group>"; };
+		4E12B9181365B95200BBAD6C /* HSSMultiplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMultiplication.cpp; sourceTree = "<group>"; };
+		4E12B9191365B95200BBAD6C /* HSSMultiplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSMultiplication.h; sourceTree = "<group>"; };
+		4E12B91C1365BB0200BBAD6C /* HSSDivision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSDivision.cpp; sourceTree = "<group>"; };
+		4E12B91D1365BB0200BBAD6C /* HSSDivision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSDivision.h; sourceTree = "<group>"; };
+		4E12B9201365BEA600BBAD6C /* HSSObservable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSObservable.cpp; sourceTree = "<group>"; };
+		4E12B9211365BEA600BBAD6C /* HSSObservable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservable.h; sourceTree = "<group>"; };
 		4E5457AA136443E900D67571 /* HSSObservableProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservableProperties.h; sourceTree = "<group>"; };
 		4E5457AE1364523D00D67571 /* HSSCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSCallback.cpp; sourceTree = "<group>"; };
 		4E5457AF1364523D00D67571 /* HSSCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSCallback.h; sourceTree = "<group>"; };
+		4E5457B21364B37A00D67571 /* HSSSum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSum.cpp; sourceTree = "<group>"; };
+		4E5457B31364B37B00D67571 /* HSSSum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSum.h; sourceTree = "<group>"; };
+		4E5457B61364B56400D67571 /* HSSExpressions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSExpressions.h; sourceTree = "<group>"; };
 		4E80C7D213505C7E00D88409 /* ExpatXMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExpatXMLParser.cpp; sourceTree = "<group>"; };
 		4E80C7D313505C7E00D88409 /* ExpatXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpatXMLParser.h; sourceTree = "<group>"; };
 		4E80C7D413505C7E00D88409 /* XMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = XMLParser.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -331,8 +353,17 @@
 				4E80C80513505DD300D88409 /* HSSComment.cpp */,
 				4E80C80613505DD300D88409 /* HSSComment.h */,
 				4E80C80713505DD300D88409 /* HSSConstants.h */,
+				4E5457B61364B56400D67571 /* HSSExpressions.h */,
 				4E80C80813505DD300D88409 /* HSSExpression.cpp */,
 				4E80C80913505DD300D88409 /* HSSExpression.h */,
+				4E5457B21364B37A00D67571 /* HSSSum.cpp */,
+				4E5457B31364B37B00D67571 /* HSSSum.h */,
+				4E12B9141365B8D700BBAD6C /* HSSSubtraction.cpp */,
+				4E12B9151365B8D700BBAD6C /* HSSSubtraction.h */,
+				4E12B9181365B95200BBAD6C /* HSSMultiplication.cpp */,
+				4E12B9191365B95200BBAD6C /* HSSMultiplication.h */,
+				4E12B91C1365BB0200BBAD6C /* HSSDivision.cpp */,
+				4E12B91D1365BB0200BBAD6C /* HSSDivision.h */,
 				4E80C80A13505DD300D88409 /* HSSInstruction.cpp */,
 				4E80C80B13505DD300D88409 /* HSSInstruction.h */,
 				4E80C80C13505DD300D88409 /* HSSKeywordConstant.cpp */,
@@ -425,6 +456,8 @@
 				4E5457AE1364523D00D67571 /* HSSCallback.cpp */,
 				4E5457AF1364523D00D67571 /* HSSCallback.h */,
 				4E5457AA136443E900D67571 /* HSSObservableProperties.h */,
+				4E12B9201365BEA600BBAD6C /* HSSObservable.cpp */,
+				4E12B9211365BEA600BBAD6C /* HSSObservable.h */,
 			);
 			path = various;
 			sourceTree = "<group>";
@@ -493,6 +526,12 @@
 				4EFEBB11135C7E1400352CC0 /* OSXRender.h in Headers */,
 				4E5457AB136443E900D67571 /* HSSObservableProperties.h in Headers */,
 				4E5457B11364523D00D67571 /* HSSCallback.h in Headers */,
+				4E5457B51364B37B00D67571 /* HSSSum.h in Headers */,
+				4E5457B71364B56500D67571 /* HSSExpressions.h in Headers */,
+				4E12B9171365B8D700BBAD6C /* HSSSubtraction.h in Headers */,
+				4E12B91B1365B95200BBAD6C /* HSSMultiplication.h in Headers */,
+				4E12B91F1365BB0200BBAD6C /* HSSDivision.h in Headers */,
+				4E12B9231365BEA600BBAD6C /* HSSObservable.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,6 +627,11 @@
 				4E963429135B603E00AF77AE /* AXRRender.cpp in Sources */,
 				4EFEBB10135C7E1400352CC0 /* OSXRender.mm in Sources */,
 				4E5457B01364523D00D67571 /* HSSCallback.cpp in Sources */,
+				4E5457B41364B37B00D67571 /* HSSSum.cpp in Sources */,
+				4E12B9161365B8D700BBAD6C /* HSSSubtraction.cpp in Sources */,
+				4E12B91A1365B95200BBAD6C /* HSSMultiplication.cpp in Sources */,
+				4E12B91E1365BB0200BBAD6C /* HSSDivision.cpp in Sources */,
+				4E12B9221365BEA600BBAD6C /* HSSObservable.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

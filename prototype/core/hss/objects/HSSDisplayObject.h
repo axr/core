@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/24
+ *      Last changed: 2011/04/26
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 10
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -153,22 +153,22 @@ namespace AXR {
         bool _isDirty;
         
         //here go the final computed values
-        double x;
-        double y;
-        double height;
+        long double x;
+        long double y;
+        long double height;
         HSSObject * observedHeight;
-        double width;
+        long double width;
         HSSObject * observedWidth;
         //FIXME: bounds
-        double anchorX;
-        double anchorY;
+        long double anchorX;
+        long double anchorY;
         bool flow;
         bool does_float;
-        double alignX;
-        double alignY;
+        long double alignX;
+        long double alignY;
         //FIXME: margin
         //FIXME: border
-        double zoomFactor;
+        long double zoomFactor;
         //FIXME: transform
         //FIXME: effects
         //FIXME: animation

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/24
+ *      Last changed: 2011/04/27
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -56,33 +56,64 @@
 #include "HSSParserNode.h"
 #include <boost/shared_ptr.hpp>
 #include <vector>
+#include "../various/HSSObservable.h"
+#include "../objects/HSSDisplayObject.h"
 
 namespace AXR {
     
     enum HSSExpressionType
     {
         HSSExpressionTypeGeneric = 0,
+        HSSExpressionTypeSum,
+        HSSExpressionTypeSubtraction,
+        HSSExpressionTypeMultiplication,
+        HSSExpressionTypeDivision,
     };
     
-    class HSSDisplayObject;
-    
-    class HSSExpression : public HSSParserNode
+    class HSSExpression : public HSSParserNode, public HSSObservable
     {
     public:
         typedef boost::shared_ptr<HSSExpression> p;
         
-        HSSExpression();
+        HSSExpression(HSSParserNode::p _left, HSSParserNode::p _right);
         virtual ~HSSExpression();
-        virtual double evaluate(double percentageBase, const std::vector< boost::shared_ptr<HSSDisplayObject> >&scope) =0;
-        virtual double evaluate(double percentageBase) =0;
+        long double evaluate();
+        virtual long double calculate(long double leftval, long double rightval) =0;
         
         bool isA(HSSExpressionType otherType);
         HSSExpressionType getExpressionType();
         
         static std::string expressionTypeStringRepresentation(HSSExpressionType type);
+        
+        void setLeft(HSSParserNode::p newLeft);
+        HSSParserNode::p getLeft();
+        void setRight(HSSParserNode::p newRight);
+        HSSParserNode::p getRight();
+        
+        virtual void propertyChanged(HSSObservableProperty property, void* data);
+        
+        virtual void setPercentageBase(long double value);
+        virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
+        virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
+        
+        void setDirty(bool value);
+        bool isDirty();
+        
+        void setValue(long double newValue);
+        long double getValue();
 
     protected:
         HSSExpressionType expressionType;
+        HSSParserNode::p left;
+        HSSParserNode::p right;
+        
+        long double percentageBase;
+        HSSObservableProperty percentageObservedProperty;
+        HSSObservable * percentageObserved;
+        const std::vector<boost::shared_ptr<HSSDisplayObject> > * scope;
+        
+        bool _isDirty;
+        long double _value;
     };
 }
 

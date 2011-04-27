@@ -43,18 +43,16 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2011/04/26
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
 #include "HSSObject.h"
 #include "HSSObjects.h"
 #include "HSSObjectExceptions.h"
-#include <map>
-#include "../various/HSSObservableProperties.h"
 #include "../../axr/AXRDebugging.h"
 
 using namespace AXR;
@@ -98,7 +96,7 @@ HSSObject::HSSObject(std::string name)
 
 HSSObject::~HSSObject()
 {
-    //FIXME: empty observers here
+    
 }
 
 bool HSSObject::isA(HSSObjectType otherType)
@@ -150,49 +148,5 @@ bool HSSObject::isKeyword(std::string value, std::string property)
         return false;
     }
 }
-
-
-void HSSObject::observe(HSSObservableProperty property, HSSObject * object, HSSValueChangedCallback *callback)
-{
-    std_log1("added observer: "+object->name);
-    if(this->_propertyObservers.count(property) != 0){
-        HSSObject::observed &theObserved = this->_propertyObservers[property];
-        theObserved[object] = callback;
-    } else {
-        HSSObject::observed theObserved;
-        theObserved[object] = callback;
-        this->_propertyObservers[property] = theObserved;
-    }
-}
-
-void HSSObject::removeObserver(HSSObservableProperty property, HSSObject * object)
-{
-    std_log1("removing observer");
-    if(this->_propertyObservers.count(property) != 0){
-        HSSObject::observed &theObserved = this->_propertyObservers[property];
-        theObserved.erase(object);
-    } else {
-        throw "removing non existent observer";
-    }
-}
-
-void HSSObject::propertyChanged(HSSObservableProperty property, void *data)
-{
-    std_log1("property changed");
-}
-
-void HSSObject::notifyObservers(HSSObservableProperty property, void *data)
-{
-    HSSObject::observed::iterator it;
-    if(this->_propertyObservers.count(property) != 0){
-        HSSObject::observed &theObserved = this->_propertyObservers[property];
-        for (it=theObserved.begin(); it != theObserved.end() ; it++) {
-            std_log1("notifying observer: "+(*(*it).second).ptr->name);
-            HSSValueChangedCallback callback = *(*it).second;
-            callback(property, data);
-        }
-    }
-}
-
 
 

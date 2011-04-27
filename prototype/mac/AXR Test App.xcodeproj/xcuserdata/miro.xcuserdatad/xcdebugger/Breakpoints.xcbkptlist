@@ -247,11 +247,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSParser.cpp"
-         timestampString = "324659426.372687"
+         timestampString = "325368721.974439"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "122"
-         endingLineNumber = "122"
+         startingLineNumber = "123"
+         endingLineNumber = "123"
          landmarkName = "HSSParser::loadFile(std::string filepath)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -275,11 +275,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSParser.cpp"
-         timestampString = "324760548.877054"
+         timestampString = "325368721.974439"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "480"
-         endingLineNumber = "480"
+         startingLineNumber = "481"
+         endingLineNumber = "481"
          landmarkName = "HSSParser::readSelector()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -289,11 +289,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSParser.cpp"
-         timestampString = "324659426.372687"
+         timestampString = "325368721.974439"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "99"
-         endingLineNumber = "99"
+         startingLineNumber = "100"
+         endingLineNumber = "100"
          landmarkName = "HSSParser::reset()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -316,8 +316,78 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "0"
+         filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSDisplayObject.cpp"
+         timestampString = "325603797.701053"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "403"
+         endingLineNumber = "403"
+         landmarkName = "HSSDisplayObject::propertyChanged(HSSObservableProperty property, void* data)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSDisplayObject.cpp"
+         timestampString = "325603774.963634"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "525"
+         endingLineNumber = "525"
+         landmarkName = "HSSDisplayObject::setDHeight(HSSParserNode::p value)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSDisplayObject.cpp"
+         timestampString = "325603844.867389"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "516"
+         endingLineNumber = "516"
+         landmarkName = "HSSDisplayObject::setDHeight(HSSParserNode::p value)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSExpression.cpp"
+         timestampString = "325602213.479421"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "161"
+         endingLineNumber = "161"
+         landmarkName = "HSSExpression::propertyChanged(HSSObservableProperty property, void* data)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSDisplayObject.cpp"
+         timestampString = "325518640.264725"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "357"
+         endingLineNumber = "357"
+         landmarkName = "HSSDisplayObject::propertyChanged(HSSObservableProperty property, void* data)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/axr/AXRRender.cpp"
-         timestampString = "325103422.322029"
+         timestampString = "325602685.494262"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "94"
@@ -331,12 +401,12 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSDisplayObject.cpp"
-         timestampString = "325360827.389921"
+         timestampString = "325606645.059635"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "514"
-         endingLineNumber = "514"
-         landmarkName = "HSSDisplayObject::setDHeight(HSSParserNode::p value)"
+         startingLineNumber = "429"
+         endingLineNumber = "429"
+         landmarkName = "HSSDisplayObject::setDWidth(HSSParserNode::p value)"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -345,11 +415,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSDisplayObject.cpp"
-         timestampString = "325360827.389921"
+         timestampString = "325602731.020829"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "512"
-         endingLineNumber = "512"
+         startingLineNumber = "503"
+         endingLineNumber = "503"
          landmarkName = "HSSDisplayObject::setDHeight(HSSParserNode::p value)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -358,12 +428,26 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "0"
-         filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSDisplayObject.cpp"
-         timestampString = "325360465.978509"
+         filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSExpression.cpp"
+         timestampString = "325603702.001742"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "389"
-         endingLineNumber = "389"
+         startingLineNumber = "99"
+         endingLineNumber = "99"
+         landmarkName = "HSSExpression::evaluate()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSDisplayObject.cpp"
+         timestampString = "325603813.950616"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "396"
+         endingLineNumber = "396"
          landmarkName = "HSSDisplayObject::propertyChanged(HSSObservableProperty property, void* data)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -372,27 +456,13 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "0"
-         filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSDisplayObject.cpp"
-         timestampString = "325360827.389921"
+         filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSParser.cpp"
+         timestampString = "325604115.767687"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "500"
-         endingLineNumber = "500"
-         landmarkName = "HSSDisplayObject::setDHeight(HSSParserNode::p value)"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "0"
-         filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSDisplayObject.cpp"
-         timestampString = "325360827.389921"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "491"
-         endingLineNumber = "491"
-         landmarkName = "HSSDisplayObject::setDHeight(HSSParserNode::p value)"
+         startingLineNumber = "248"
+         endingLineNumber = "248"
+         landmarkName = "HSSParser::readRule()"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/04/25
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -121,6 +121,11 @@ namespace AXR {
         HSSObjectDefinition::p readObjectDefinition();
         HSSPropertyDefinition::p readPropertyDefinition();
         HSSInstruction::p readInstruction();
+        HSSParserNode::p readExpression();
+        
+        HSSParserNode::p readAdditiveExpression();
+        HSSParserNode::p readMultiplicativeExpression();
+        HSSParserNode::p readBaseExpression();
         
         void readNextToken();
         

@@ -43,68 +43,32 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2011/04/27
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 3
  *
  ********************************************************************/
 
-#ifndef HSSOBJECT_H
-#define HSSOBJECT_H
+#include "HSSSum.h"
 
-#include <string>
-#include <boost/shared_ptr.hpp>
-#include "../various/HSSObservable.h"
-#include <map>
+using namespace AXR;
 
-namespace AXR {
-    
-    enum HSSObjectType
-    {
-        HSSObjectTypeGeneric,
-        HSSObjectTypeDisplayObject,
-        HSSObjectTypeContainer,
-        HSSObjectTypeBorderGeneric,
-        HSSObjectTypeLineBorder,
-        HSSObjectTypeMarginGeneric,
-        HSSObjectTypeStraightMargin,
-        HSSObjectTypeProjectedMargin,
-        HSSObjectTypeValue,
-        HSSObjectTypeMultipleValue
-    };
-    
-    class HSSObject : public HSSObservable
-    {
-    public:
-        typedef boost::shared_ptr<HSSObject> p;
-        
-        static HSSObject::p newObjectWithType(std::string type);
-        
-        std::string name;
-        
-        HSSObject();
-        HSSObject(std::string name);
-        ~HSSObject();
-        
-        virtual std::string toString();
-        bool isNamed();
-        void setName(std::string newName);
-        void dropName();
-        
-        bool isA(HSSObjectType otherType);
-        HSSObjectType getType();
-        
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
-        
-    protected:
-        HSSObjectType type;
-        
-    private:
-        bool _isNamed;
-    };
-
+HSSSum::HSSSum(HSSParserNode::p _left, HSSParserNode::p _right)
+:HSSExpression(_left, _right)
+{
+    this->expressionType = HSSExpressionTypeSum;
 }
 
-#endif
+HSSSum::~HSSSum()
+{
+    
+}
+
+long double HSSSum::calculate(long double leftval, long double rightval)
+{
+    return leftval + rightval;
+}
+
+
+

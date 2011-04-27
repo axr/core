@@ -62,16 +62,16 @@ namespace AXR {
 //        virtual void operator()(std::string string) = 0;
 //    };
     
-    class HSSObject;
+    class HSSObservable;
     
     class HSSValueChangedCallback { // : public HSSCallback {
-        void (HSSObject::*fptr)(HSSObservableProperty property, void* data);
-        HSSObject* ptr;
+        void (HSSObservable::*fptr)(HSSObservableProperty property, void* data);
+        HSSObservable* ptr;
         
     public:
         friend class HSSObject;
         
-        HSSValueChangedCallback(HSSObject* _ptr, void(HSSObject::*_fptr)(HSSObservableProperty property, void* data)){
+        HSSValueChangedCallback(HSSObservable* _ptr, void(HSSObservable::*_fptr)(HSSObservableProperty property, void* data)){
             ptr = _ptr;
             fptr = _fptr;
         }

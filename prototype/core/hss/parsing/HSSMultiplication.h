@@ -43,68 +43,34 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2011/04/27
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 3
  *
  ********************************************************************/
 
-#ifndef HSSOBJECT_H
-#define HSSOBJECT_H
+#ifndef HSSMULTIPLICATION_H
+#define HSSMULTIPLICATION_H
 
-#include <string>
+#include "HSSExpression.h"
 #include <boost/shared_ptr.hpp>
-#include "../various/HSSObservable.h"
-#include <map>
 
 namespace AXR {
-    
-    enum HSSObjectType
-    {
-        HSSObjectTypeGeneric,
-        HSSObjectTypeDisplayObject,
-        HSSObjectTypeContainer,
-        HSSObjectTypeBorderGeneric,
-        HSSObjectTypeLineBorder,
-        HSSObjectTypeMarginGeneric,
-        HSSObjectTypeStraightMargin,
-        HSSObjectTypeProjectedMargin,
-        HSSObjectTypeValue,
-        HSSObjectTypeMultipleValue
-    };
-    
-    class HSSObject : public HSSObservable
-    {
+    class HSSMultiplication : public HSSExpression {
+        
     public:
-        typedef boost::shared_ptr<HSSObject> p;
+        typedef boost::shared_ptr<HSSMultiplication> p;
         
-        static HSSObject::p newObjectWithType(std::string type);
+        HSSMultiplication(HSSParserNode::p left, HSSParserNode::p right);
+        virtual ~HSSMultiplication();
         
-        std::string name;
-        
-        HSSObject();
-        HSSObject(std::string name);
-        ~HSSObject();
-        
-        virtual std::string toString();
-        bool isNamed();
-        void setName(std::string newName);
-        void dropName();
-        
-        bool isA(HSSObjectType otherType);
-        HSSObjectType getType();
-        
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
-        
-    protected:
-        HSSObjectType type;
-        
-    private:
-        bool _isNamed;
+        long double calculate(long double leftval, long double rightval);
     };
-
 }
 
-#endif
+#endif //HSSMULTIPLICATION_H
+
+
+
+

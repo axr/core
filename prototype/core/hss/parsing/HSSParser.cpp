@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/04/27
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 7
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -59,6 +59,7 @@
 #include "../../axr/AXRDebugging.h"
 #include "../../axr/AXRController.h"
 #include <boost/pointer_cast.hpp>
+#include "HSSExpressions.h"
 
 using namespace AXR;
 
@@ -583,7 +584,6 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
     HSSPropertyDefinition::p ret;
     
     if (this->currentToken->isA(HSSIdentifier)){
-        //FIXME: do something with the property here
         propertyName = VALUE_TOKEN(this->currentToken)->value;
         ret = HSSPropertyDefinition::p(new HSSPropertyDefinition(propertyName));
         this->readNextToken();
@@ -603,14 +603,11 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
             this->readNextToken();
             
         //number literal
-        } else if (this->currentToken->isA(HSSNumber)){
-            //FIXME: parse the number and see if it is an int or a float
-            ret->setValue(HSSNumberConstant::p(new HSSNumberConstant(strtold(VALUE_TOKEN(this->currentToken)->value.c_str(), NULL))));
-            this->readNextToken();
+        } else if (this->currentToken->isA(HSSNumber) || this->currentToken->isA(HSSPercentageNumber) || this->currentToken->isA(HSSParenthesisOpen)){
             
-        } else if (this->currentToken->isA(HSSPercentageNumber)) {
-            ret->setValue(HSSPercentageConstant::p(new HSSPercentageConstant(strtold(VALUE_TOKEN(this->currentToken)->value.c_str(), NULL))));
-            this->readNextToken();
+            //FIXME: parse the number and see if it is an int or a float
+            HSSParserNode::p exp = this->readExpression();
+            ret->setValue(exp);
             
         } else if (this->currentToken->isA(HSSIdentifier)){
             //this is either a keyword or an object name
@@ -711,7 +708,123 @@ HSSInstruction::p HSSParser::readInstruction()
     return ret;
 }
 
+HSSParserNode::p HSSParser::readExpression()
+{
+    return this->readAdditiveExpression();
+}
 
+HSSParserNode::p HSSParser::readAdditiveExpression()
+{
+    security_brake_init();
+    
+    this->checkForUnexpectedEndOfSource();
+    HSSParserNode::p left = this->readMultiplicativeExpression();
+    while (!this->atEndOfSource() && this->currentToken->isA(HSSSymbol)) {
+        const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->value).c_str();
+        switch (currentTokenChar) {
+            case '+':
+            {
+                this->readNextToken();
+                this->skip(HSSWhitespace);
+                left = HSSSum::p(new HSSSum(left, this->readMultiplicativeExpression()));
+                break;
+            }
+                
+            case '-':
+            {
+                this->readNextToken();
+                this->skip(HSSWhitespace);
+                left = HSSSubtraction::p(new HSSSubtraction(left, this->readMultiplicativeExpression()));
+                break;
+            }
+                
+            default:
+                return left;
+                break;
+        }
+        
+        security_brake();
+    }
+    
+    return left;
+}
+
+HSSParserNode::p HSSParser::readMultiplicativeExpression()
+{
+    security_brake_init();
+    
+    this->checkForUnexpectedEndOfSource();
+    HSSParserNode::p left = this->readBaseExpression();
+    while (!this->atEndOfSource() && this->currentToken->isA(HSSSymbol)) {
+        
+        const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->value).c_str();
+        switch (currentTokenChar) {
+            case '*':
+            {
+                this->readNextToken();
+                this->skip(HSSWhitespace);
+                left = HSSMultiplication::p(new HSSMultiplication(left, this->readBaseExpression()));
+                break;
+            }
+                
+            case '/':
+            {
+                this->readNextToken();
+                this->skip(HSSWhitespace);
+                left = HSSDivision::p(new HSSDivision(left, this->readBaseExpression()));
+                break;
+            }
+                
+            default:
+                return left;
+                break;
+        }
+        
+        security_brake();
+    }
+    
+    return left;
+}
+
+HSSParserNode::p HSSParser::readBaseExpression()
+{
+    this->checkForUnexpectedEndOfSource();
+    HSSParserNode::p left;
+    
+    switch (this->currentToken->getType()) {
+        case HSSNumber:
+        {
+            left = HSSNumberConstant::p(new HSSNumberConstant(strtold(VALUE_TOKEN(this->currentToken)->value.c_str(), NULL)));
+            this->readNextToken();
+            this->skip(HSSWhitespace);
+            break;
+        }
+        
+        case HSSPercentageNumber:
+        {
+            left = HSSPercentageConstant::p(new HSSPercentageConstant(strtold(VALUE_TOKEN(this->currentToken)->value.c_str(), NULL)));
+            this->readNextToken();
+            this->skip(HSSWhitespace);
+            break;
+        }
+            
+        case HSSParenthesisOpen:
+        {
+            this->readNextToken();
+            this->skip(HSSWhitespace);
+            left = this->readExpression();
+            this->skipExpected(HSSParenthesisClose);
+            this->skip(HSSWhitespace);
+            break;
+        }
+        
+        default:
+            throw "Unknown token type while parsing base expression";
+            break;
+    }
+    
+    return left;
+}
 
 void HSSParser::readNextToken()
 {
