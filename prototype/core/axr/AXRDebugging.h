@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/15
+ *      Last changed: 2011/04/27
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -130,7 +130,7 @@ unsigned extern axr_output_debug_indent_count;
 
 #define inc_output_indent()
 #define dec_output_indent()
-#define output_indent(what)
+#define output_indent(what) std::string(what)
 
 #endif //AXR_DEBUG_LEVEL == 0
 

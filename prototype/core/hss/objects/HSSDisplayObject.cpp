@@ -60,6 +60,8 @@
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
 #include "HSSContainer.h"
+#include <sstream>
+#include <string>
 
 using namespace AXR;
 
@@ -287,7 +289,11 @@ void HSSDisplayObject::regenerateSurfaces()
         this->bordersSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, ceil(this->width), ceil(this->height));
         this->setDirty(true);
         this->_needsSurface = false;
-        fprintf(stderr, "created a new surface width: %Lf, height: %Lf\n", this->width, this->height);
+#if AXR_DEBUG_LEVEL > 0
+    std::ostringstream wstr << this->width;
+    std::ostringstream hstr << this->height;
+        std_log1("created a new surface width:"+wstr.str()+" height:"+hstr.str());
+#endif
 //    }
 }
 

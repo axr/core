@@ -42,8 +42,8 @@ void listHSSStatements(NSString *filepath)
         std_log1("error loading file");
     }
     
-    std::cout << "reached end of source" << std::endl;
-    std::cout << "\n\n\n\n";
+    std_log1("reached end of source");
+    std_log1("\n\n\n\n");
 
     //std_log1("sorry, this is not working yet");
 #if AXR_DEBUG_LEVEL > 1
@@ -84,8 +84,8 @@ void listHSSTokens(NSString *filepath)
             security_count++;
         }
     }
-    std::cout << "reached end of source" << std::endl;
-    std::cout << "\n\n\n\n";
+    std_log1("reached end of source");
+    std_log1("\n\n\n\n");
 #if AXR_DEBUG_LEVEL > 1
     exit(0);
 #endif
@@ -129,8 +129,8 @@ void listXMLElements(NSString *filepath)
             listXMLElements(filepath);
 		}
 	}
-    std::cout << "reached end of source" << std::endl;
-    std::cout << "\n\n\n\n";
+    std_log1("reached end of source");
+    std_log1("\n\n\n\n");
 }
 
 - (IBAction)listStatements:(id)sender {

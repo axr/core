@@ -145,7 +145,7 @@ bool HSSParser::loadFile(std::string filepath)
     
     bool done = false;
     while (!done) {
-        std::cout << "read statement\n";
+        std_log1("read statement");
         if(statement){
             statement.reset();
         }
@@ -192,8 +192,8 @@ bool HSSParser::loadFile(std::string filepath)
         
         security_brake();
     }
-    std::cout << "reached end of source" << std::endl;
-    std::cout << "\n\n\n\n";
+    std_log1("reached end of source");
+    std_log1("\n\n\n\n");
     
     return true;
 }

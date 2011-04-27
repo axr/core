@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E11A277136868040013A3A9 /* libcairo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E11A276136868040013A3A9 /* libcairo.a */; };
+		4E11A328136872720013A3A9 /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E11A327136872720013A3A9 /* libfreetype.a */; };
 		4E12B9161365B8D700BBAD6C /* HSSSubtraction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E12B9141365B8D700BBAD6C /* HSSSubtraction.cpp */; };
 		4E12B9171365B8D700BBAD6C /* HSSSubtraction.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E12B9151365B8D700BBAD6C /* HSSSubtraction.h */; };
 		4E12B91A1365B95200BBAD6C /* HSSMultiplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E12B9181365B95200BBAD6C /* HSSMultiplication.cpp */; };
@@ -102,7 +104,6 @@
 		4E95BF90135073C600117354 /* XMLParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C7D413505C7E00D88409 /* XMLParser.cpp */; };
 		4E95BF91135073C600117354 /* XMLParserExceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C7D613505C7E00D88409 /* XMLParserExceptions.cpp */; };
 		4E95BF93135073C600117354 /* OSX.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C87813505DEA00D88409 /* OSX.mm */; };
-		4E95BFA31350749300117354 /* libcairo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E95BF9E1350749300117354 /* libcairo.a */; };
 		4E95BFA41350749300117354 /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E95BF9F1350749300117354 /* libexpat.a */; };
 		4E95BFA51350749300117354 /* libpixman-1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E95BFA01350749300117354 /* libpixman-1.a */; };
 		4E95BFA61350749300117354 /* libpng15.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E95BFA11350749300117354 /* libpng15.a */; };
@@ -119,6 +120,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E11A276136868040013A3A9 /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../usr/local/lib/libcairo.a; sourceTree = "<group>"; };
+		4E11A327136872720013A3A9 /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = ../../../../../usr/local/lib/libfreetype.a; sourceTree = "<group>"; };
 		4E12B9141365B8D700BBAD6C /* HSSSubtraction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSubtraction.cpp; sourceTree = "<group>"; };
 		4E12B9151365B8D700BBAD6C /* HSSSubtraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSubtraction.h; sourceTree = "<group>"; };
 		4E12B9181365B95200BBAD6C /* HSSMultiplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMultiplication.cpp; sourceTree = "<group>"; };
@@ -212,7 +215,6 @@
 		4E80C87813505DEA00D88409 /* OSX.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = OSX.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4E80C87913505DEA00D88409 /* OSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = OSX.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4E80C88C1350700E00D88409 /* xml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = xml.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		4E95BF9E1350749300117354 /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../usr/local/lib/libcairo.a; sourceTree = "<group>"; };
 		4E95BF9F1350749300117354 /* libexpat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libexpat.a; path = ../../../../../usr/local/lib/libexpat.a; sourceTree = "<group>"; };
 		4E95BFA01350749300117354 /* libpixman-1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpixman-1.a"; path = "../../../../../usr/local/lib/libpixman-1.a"; sourceTree = "<group>"; };
 		4E95BFA11350749300117354 /* libpng15.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng15.a; path = ../../../../../usr/local/lib/libpng15.a; sourceTree = "<group>"; };
@@ -236,7 +238,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4E95BFA31350749300117354 /* libcairo.a in Frameworks */,
+				4E11A328136872720013A3A9 /* libfreetype.a in Frameworks */,
+				4E11A277136868040013A3A9 /* libcairo.a in Frameworks */,
 				4E95BFA41350749300117354 /* libexpat.a in Frameworks */,
 				4E95BFA51350749300117354 /* libpixman-1.a in Frameworks */,
 				4E95BFA61350749300117354 /* libpng15.a in Frameworks */,
@@ -250,7 +253,8 @@
 		08FB7794FE84155DC02AAC07 /* core */ = {
 			isa = PBXGroup;
 			children = (
-				4E95BF9E1350749300117354 /* libcairo.a */,
+				4E11A327136872720013A3A9 /* libfreetype.a */,
+				4E11A276136868040013A3A9 /* libcairo.a */,
 				4E95BF9F1350749300117354 /* libexpat.a */,
 				4E95BFA01350749300117354 /* libpixman-1.a */,
 				4E95BFA11350749300117354 /* libpng15.a */,
@@ -651,6 +655,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)/usr/local/lib/cairo\"",
+					/usr/X11/lib,
 				);
 				OTHER_CFLAGS = "-DAXR_PLATFORM_OSX";
 				PRODUCT_NAME = core;
@@ -669,6 +674,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SDKROOT)/usr/local/lib/cairo\"",
+					/usr/X11/lib,
 				);
 				OTHER_CFLAGS = "-DAXR_PLATFORM_OSX";
 				PRODUCT_NAME = core;

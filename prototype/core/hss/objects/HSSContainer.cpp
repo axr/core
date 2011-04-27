@@ -43,16 +43,17 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2011/04/27
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 10
+ *      Revision: 11
  *
  ********************************************************************/
 
 #include "HSSContainer.h"
 #include "../../axr/AXRDebugging.h"
 #include <map>
+#include <string>
 
 using namespace AXR;
 
