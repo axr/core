@@ -318,7 +318,7 @@
 				4E80C7EE13505DD200D88409 /* objects */,
 				4E80C80213505DD200D88409 /* parsing */,
 				4E80C82B13505DD300D88409 /* tokenizing */,
-				4ECC1D681360C62500344DE8 /* various */,
+				4ECC1D681360C62500344DE8 /* observing */,
 			);
 			path = hss;
 			sourceTree = SOURCE_ROOT;
@@ -454,7 +454,7 @@
 			path = ../mac;
 			sourceTree = "<group>";
 		};
-		4ECC1D681360C62500344DE8 /* various */ = {
+		4ECC1D681360C62500344DE8 /* observing */ = {
 			isa = PBXGroup;
 			children = (
 				4E5457AE1364523D00D67571 /* HSSCallback.cpp */,
@@ -463,6 +463,7 @@
 				4E12B9201365BEA600BBAD6C /* HSSObservable.cpp */,
 				4E12B9211365BEA600BBAD6C /* HSSObservable.h */,
 			);
+			name = observing;
 			path = various;
 			sourceTree = "<group>";
 		};

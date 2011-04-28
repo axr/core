@@ -62,12 +62,12 @@ namespace AXR {
     class HSSObservable
     {
     public:
-        typedef std::map<HSSObservable *, HSSValueChangedCallback* > observed;
+        typedef std::map<HSSObservable *, HSSCallback* > observed;
         
         HSSObservable();
         virtual ~HSSObservable();
         
-        void observe(HSSObservableProperty property, HSSObservable * object, HSSValueChangedCallback *callback);
+        void observe(HSSObservableProperty property, HSSObservable * object, HSSCallback *callback);
         void removeObserver(HSSObservableProperty property, HSSObservable * object);
         virtual void propertyChanged(HSSObservableProperty property, void * data);
         void notifyObservers(HSSObservableProperty property, void * data);

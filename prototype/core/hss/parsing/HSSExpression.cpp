@@ -161,7 +161,7 @@ void HSSExpression::propertyChanged(HSSObservableProperty property, void* data)
         long double newPercentageBase = *(long double *)data;
         this->setPercentageBase(newPercentageBase);
         std_log1("property of expression changed");
-        this->notifyObservers(property, NULL);
+        this->notifyObservers(HSSObservablePropertyValue, NULL);
     } else {
         std_log1("############### unknown observed property");
     }
@@ -206,7 +206,7 @@ void HSSExpression::setPercentageObserved(HSSObservableProperty property, HSSObs
 {
     this->percentageObservedProperty = property;
     this->percentageObserved = observed;
-    observed->observe(property, this, new HSSValueChangedCallback(this, &HSSObservable::propertyChanged));
+    observed->observe(property, this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::propertyChanged));
     
     //propagate values
     if (this->left && this->left->isA(HSSParserNodeTypeExpression)) {

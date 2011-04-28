@@ -66,7 +66,7 @@ HSSObservable::~HSSObservable()
     this->_propertyObservers.clear();
 }
 
-void HSSObservable::observe(HSSObservableProperty property, HSSObservable * object, HSSValueChangedCallback *callback)
+void HSSObservable::observe(HSSObservableProperty property, HSSObservable * object, HSSCallback *callback)
 {
     //std_log1("added observer: "+object->name);
     if(this->_propertyObservers.count(property) != 0){
@@ -102,8 +102,8 @@ void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
         HSSObservable::observed &theObserved = this->_propertyObservers[property];
         for (it=theObserved.begin(); it != theObserved.end() ; it++) {
             //std_log1("notifying observer: "+(*(*it).second).ptr->name);
-            HSSValueChangedCallback callback = *(*it).second;
-            callback(property, data);
+            HSSCallback * callback = (*it).second;
+            callback->call(property, data);
         }
     }
 }

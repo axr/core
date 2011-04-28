@@ -57,26 +57,28 @@
 #include "HSSObservableProperties.h"
 
 namespace AXR {
-//    class HSSCallback {
-//    public:
-//        virtual void operator()(std::string string) = 0;
-//    };
+    class HSSCallback {
+    public:
+        virtual void call(HSSObservableProperty property, void* data) =0;
+    };
     
     class HSSObservable;
     
-    class HSSValueChangedCallback { // : public HSSCallback {
-        void (HSSObservable::*fptr)(HSSObservableProperty property, void* data);
-        HSSObservable* ptr;
+    template <class T> class HSSValueChangedCallback : public HSSCallback {
+        void (T::*fptr)(HSSObservableProperty property, void* data);
+        T* ptr;
         
     public:
         friend class HSSObject;
         
-        HSSValueChangedCallback(HSSObservable* _ptr, void(HSSObservable::*_fptr)(HSSObservableProperty property, void* data)){
+        HSSValueChangedCallback(T* _ptr, void(T::*_fptr)(HSSObservableProperty property, void* data)){
             ptr = _ptr;
             fptr = _fptr;
         }
         
-        void operator()(HSSObservableProperty property, void* data);
+        void call(HSSObservableProperty property, void* data){
+            (*ptr.*fptr)(property, data);
+        }
     };
 }
 

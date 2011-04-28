@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/26
+ *      Last changed: 2011/04/28
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 11
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -107,20 +107,22 @@ namespace AXR {
         std::string getElementName();
         void setElementName(std::string name);
         
-        void propertyChanged(HSSObservableProperty property, void* data);
-        
         //width
         HSSParserNode::p getDWidth();
         void setDWidth(HSSParserNode::p value);
+        void widthChanged(HSSObservableProperty source, void*data);
         //height
         HSSParserNode::p getDHeight();
         void setDHeight(HSSParserNode::p value);
+        void heightChanged(HSSObservableProperty source, void*data);
         //anchorX
         HSSParserNode::p getDAnchorX();
         void setDAnchorX(HSSParserNode::p value);
+        void anchorXChanged(HSSObservableProperty source, void*data);
         //anchorY
         HSSParserNode::p getDAnchorY();
         void setDAnchorY(HSSParserNode::p value);
+        void anchorYChanged(HSSObservableProperty source, void*data);
         //flow
         HSSParserNode::p getDFlow();
         void setDFlow(HSSParserNode::p value);
@@ -156,12 +158,14 @@ namespace AXR {
         long double x;
         long double y;
         long double height;
-        HSSObject * observedHeight;
+        HSSObservable * observedHeight;
         long double width;
-        HSSObject * observedWidth;
+        HSSObservable * observedWidth;
         //FIXME: bounds
         long double anchorX;
+        HSSObservable * observedAnchorX;
         long double anchorY;
+        HSSObservable * observedAnchorY;
         bool flow;
         bool does_float;
         long double alignX;
@@ -187,8 +191,17 @@ namespace AXR {
         HSSParserNode::p dFlow;
         HSSParserNode::p dAlignX;
         HSSParserNode::p dAlignY;
+    private:
+        long double _setLDProperty(
+                                   void(HSSDisplayObject::*callback)(HSSObservableProperty property, void* data),
+                                   HSSParserNode::p         value,
+                                   long double              percentageBase,
+                                   HSSObservableProperty    observedProperty,
+                                   HSSObservable *          observedObject,
+                                   const std::vector<HSSDisplayObject::p> * scope
+                                   );
+        
     };
-
 }
 
 

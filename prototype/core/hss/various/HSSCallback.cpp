@@ -50,15 +50,16 @@
  *
  ********************************************************************/
 
-#include "HSSCallback.h"
-#include "../objects/HSSObject.h"
-
-using namespace AXR;
-
-void HSSValueChangedCallback::operator()(HSSObservableProperty property, void* data)
-{
-    (*ptr.*fptr)(property, data);
-}
+//#include "HSSCallback.h"
+//#include "../objects/HSSObject.h"
+//
+//using namespace AXR;
+//
+//template <class T>
+//void HSSValueChangedCallback<T>::call(HSSObservableProperty property, void* data)
+//{
+//    
+//}
 
 
 
