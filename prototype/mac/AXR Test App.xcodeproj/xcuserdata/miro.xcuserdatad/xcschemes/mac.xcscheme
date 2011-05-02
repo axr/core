@@ -46,13 +46,6 @@
             ReferencedContainer = "container:AXR Test App.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "AXR_DEBUGGING_LEVEL"
-            value = "0"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

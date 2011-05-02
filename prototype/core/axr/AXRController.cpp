@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 10
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -137,7 +137,7 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
                     //                        std_log1("no folder: ");std_log1(hssfilepath);
                     //                    }
                     
-                    if(!this->loadHSSFile(hssfilepath, hssfilename.substr(hssfilename.rfind("/", hssfilename.length())+1))){
+                    if(! this->loadHSSFile(hssfilepath, hssfilename.substr(hssfilename.rfind("/", hssfilename.length())+1))){
                         //FIXME: handle the error
                         loadingSuccess = false;
                         std_log1("error loading hss file");
@@ -146,7 +146,9 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
                         HSSDisplayObject::p rootObj = boost::static_pointer_cast<HSSDisplayObject>(this->root);
                         for (j=0; j<this->rules.size(); j++) {
                             HSSRule::p& rule = this->rules[j];
-                            this->recursiveMatchRulesToDisplayObject(rule, rootObj);
+                            const HSSDisplayObject::p rootScopeArr[1] = {root};
+                            const std::vector<HSSDisplayObject::p>rootScope(rootScopeArr, rootScopeArr+1);
+                            this->recursiveMatchRulesToDisplayObjects(rule, rootScope);
                         }
                         //read the rules into values
                         rootObj->recursiveReadDefinitionObjects();
@@ -159,42 +161,235 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
     return loadingSuccess;
 }
 
-void AXRController::recursiveMatchRulesToDisplayObject(HSSRule::p & rule, HSSDisplayObject::p & displayObject)
+void AXRController::recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope)
 {
-    unsigned i, j;
+    this->currentChain = rule->selectorChain;
+    this->currentChainSize = this->currentChain->size();
+    this->currentChainCount = 0;
+    this->currentSelectorNode = this->currentChain->get(0);
     
-    //look at the selector chain
-    HSSSelectorChain * selectorChain(rule->selectorChain.get());
-    //first try to resolve the simple case
-    if(selectorChain->size() == 1){
-        //just a simple selector, is it assignable?
-        HSSParserNode::p firstNode = (selectorChain->last());
-        if(firstNode->isA(HSSParserNodeTypeSelector)){
-            HSSSelector::p simpleSelector = boost::static_pointer_cast<HSSSelector>(firstNode);
-            //does it match
-            if(simpleSelector->getElementName() == displayObject->getElementName()){
-                std_log1("match "+displayObject->getElementName());
-                displayObject->rulesAdd(rule);
-                displayObject->setNeedsRereadRules(true);
-                displayObject->setNeedsSurface(true);
-                displayObject->setDirty(true);
-                
-                //if it is a container it may have children
-                if(displayObject->isA(HSSObjectTypeContainer)){
-                    HSSContainer::p container = boost::static_pointer_cast<HSSContainer>(displayObject);
-                    for (i=0; i<container->children.size(); i++) { //FIXME: container will have an accessor for chlidrenSize in the future
-                        for (j=0; j<rule->childrenSize(); j++) {
-                            HSSRule::p childRule = rule->childrenGet(j);
-                            this->recursiveMatchRulesToDisplayObject(childRule, container->children[i]);
-                        }
-                    }
-                }
+    const std::vector<HSSDisplayObject::p> selection = this->selectHierarchical(scope);
+    unsigned i, size, j, size2;
+    for (i=0, size=selection.size(); i<size; i++) {
+        const HSSDisplayObject::p & displayObject = selection[i];
+        std_log1("match "+displayObject->getElementName());
+        displayObject->rulesAdd(rule);
+        displayObject->setNeedsRereadRules(true);
+        displayObject->setNeedsSurface(true);
+        displayObject->setDirty(true);
+        
+        //if it is a container it may have children
+        if(displayObject->isA(HSSObjectTypeContainer)){
+            HSSContainer::p container = boost::static_pointer_cast<HSSContainer>(displayObject);
+            for (j=0, size2=rule->childrenSize(); j<size2; j++) {
+                HSSRule::p childRule = rule->childrenGet(j);
+                this->recursiveMatchRulesToDisplayObjects(childRule, container->children);
             }
-        } else {
-            std_log1("selector chains starting with anything other than a simple selector have not been implemented yet");
         }
     }
+    
+    
+//    //look at the selector chain
+//    HSSSelectorChain * selectorChain(rule->selectorChain.get());
+//    std::vector<HSSDisplayObject::p>tempSelection;
+//    unsigned i, j, size;
+//    
+//    unsigned selectorCount = 0;
+//    unsigned selectorSize = selectorChain->size();
+//    while (selectorCount < selectorSize) {
+//        const HSSParserNode::p & selector = selectorChain->get(selectorCount++);
+//        if(selectorChain->size() == 1){
+//            if(selector->isA(HSSParserNodeTypeSelector)){
+//                HSSSelector::p simpleSelector = boost::static_pointer_cast<HSSSelector>(selector);
+//                //select items
+//                for (i=0, size=scope.size(); i<size; i++) {
+//                    const HSSDisplayObject::p & displayObject = scope[i];
+//                
+//                    //does it match
+//                    if(simpleSelector->getElementName() == displayObject->getElementName()){
+//                        std_log1("match "+displayObject->getElementName());
+//                        displayObject->rulesAdd(rule);
+//                        displayObject->setNeedsRereadRules(true);
+//                        displayObject->setNeedsSurface(true);
+//                        displayObject->setDirty(true);
+//                        
+//                        //if it is a container it may have children
+//                        if(displayObject->isA(HSSObjectTypeContainer)){
+//                            HSSContainer::p container = boost::static_pointer_cast<HSSContainer>(displayObject);
+//                            for (i=0; i<container->children.size(); i++) { //FIXME: container will have an accessor for chlidrenSize in the future
+//                                for (j=0; j<rule->childrenSize(); j++) {
+//                                    HSSRule::p childRule = rule->childrenGet(j);
+//                                    this->recursiveMatchRulesToDisplayObjects(childRule, container->children);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        } else {
+//            const HSSParserNode::p & selector2 = selectorChain->get(selectorCount++);
+//            HSSParserNodeType selectorType = selector2->getType();
+//            switch (selectorType) {
+//                case HSSParserNodeTypeCombinator:
+//                {
+//                    HSSCombinator::p combinator = boost::static_pointer_cast<HSSCombinator>(selector2);
+//                    const HSSCombinatorType & combinatorType = combinator->getCombinatorType();
+//                    switch (combinatorType) {
+//                        case HSSCombinatorTypeNextSiblings:
+//                            <#statements#>
+//                            break;
+//                            
+//                        default:
+//                            break;
+//                    }
+//                    break;
+//                }
+//                    
+//                default:
+//                    break;
+//            }
+//        }
+//    }
+//    
+//    
+//    
+//    //select items
+//    for (i=0, size=scope.size(); i<size; i++) {
+//        const HSSDisplayObject::p & displayObject = scope[i];
+//        
+//        
+//        
+//        //in case we're dealing with a displayObject which cannot have children
+//        //we shortcut here
+//        if(selectorChain->size() > 1 && !displayObject->isA(HSSObjectTypeContainer)){
+//            //we're done
+//            continue;
+//        }
+//        
+//        for (j=0, size=selectorChain->size(); j<size; j++) {
+//            const HSSParserNode::p & currentNode = selectorChain->get(j);
+//            if(currentNode->isA(HSSParserNodeTypeSelector)){
+//                HSSSelector::p simpleSelector = boost::static_pointer_cast<HSSSelector>(currentNode);
+//                
+//                //match the selector
+//                if (simpleSelector->getElementName() == displayObject->getElementName()) {
+//                    tempSelection.push_back(displayObject);
+//                }
+//            }
+//        }
+//    }
 }
+
+bool AXRController::readNextSelectorNode()
+{
+    if(this->currentChainCount < this->currentChainSize-1){
+        this->currentChainCount++;
+        this->currentSelectorNode = this->currentChain->get(this->currentChainCount);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const std::vector<HSSDisplayObject::p> AXRController::selectHierarchical(const std::vector<HSSDisplayObject::p> & scope)
+{
+    std::vector<HSSDisplayObject::p> ret = this->selectOnLevel(scope);
+//    unsigned i, size;
+//    for (i=0, size=left.size(); i<size; i++) {
+//        
+//    }
+    return ret;
+}
+
+const std::vector<HSSDisplayObject::p> AXRController::selectOnLevel(const std::vector<HSSDisplayObject::p> & scope)
+{
+    std::vector<HSSDisplayObject::p> left = this->selectSimple(scope);
+    //only continue if it actually found anything
+    if(left.size() > 0){
+        if(this->readNextSelectorNode()){
+            std::vector<HSSDisplayObject::p> ret;
+            if(this->currentSelectorNode->isA(HSSParserNodeTypeCombinator))
+            {
+                HSSCombinator::p combinator = boost::static_pointer_cast<HSSCombinator>(this->currentSelectorNode);
+                HSSCombinatorType combinatorType = combinator->getCombinatorType();
+                switch (combinatorType) {
+                    case HSSCombinatorTypeSiblings:
+                    {
+                        //if found, just select the right part
+                        this->readNextSelectorNode();
+                        ret = this->selectSimple(scope);
+                        break;
+                    }
+                        
+                    case HSSCombinatorTypeNextSiblings:
+                    {
+                        //find the selected ones on the left, and select all the following ones that match
+                        std::vector<HSSDisplayObject::p> vect(scope);
+                        std::vector<HSSDisplayObject::p>::iterator it;
+                        it = std::find(vect.begin(), vect.end(), left.front());
+                        std::vector<HSSDisplayObject::p> right(it+1, vect.end());
+                        this->readNextSelectorNode();
+                        ret = this->selectSimple(right);
+                        break;
+                    }
+                        
+                    case HSSCombinatorTypePreviousSiblings:
+                    {
+                        //find the selected ones on the left, and select all the previous ones that match
+                        std::vector<HSSDisplayObject::p> vect(scope);
+                        std::vector<HSSDisplayObject::p>::iterator it;
+                        it = std::find(vect.begin(), vect.end(), left.back());
+                        std::vector<HSSDisplayObject::p> right(vect.begin(), it);
+                        this->readNextSelectorNode();
+                        ret = this->selectSimple(right);
+                        break;
+                    }
+                        
+                    default:
+                        break;
+                }
+            }
+            
+            return ret;
+        }
+        
+    }
+    return left;
+}
+
+const std::vector<HSSDisplayObject::p> AXRController::selectSimple(const std::vector<HSSDisplayObject::p> & scope)
+{
+    std::vector<HSSDisplayObject::p> ret;
+    unsigned i, size;
+    HSSParserNodeType selectorType = this->currentSelectorNode->getType();
+    switch (selectorType) {
+        case HSSParserNodeTypeSelector:
+        {
+            //select only elements with matching element name
+            HSSSelector::p selector = boost::static_pointer_cast<HSSSelector>(this->currentSelectorNode);
+            for (i=0, size=scope.size(); i<size; i++) {
+                if(scope[i]->getElementName() == selector->getElementName()){
+                    ret.push_back(scope[i]);
+                }
+            }
+            break;
+        }
+        
+        case HSSParserNodeTypeUniversalSelector:
+        {
+            //the entire scope will be selected
+            ret = scope;
+            break;
+        }
+        
+        default:
+            throw "unexpected selector node type";
+            break;
+    }
+    
+    return ret;
+}
+
 
 bool AXRController::reload()
 {
@@ -285,6 +480,11 @@ void AXRController::addAttribute(std::string name, std::string value)
 {
     //std_log1(std::string("adding attribute " + name + " and value " + value));
     this->currentContext.top()->attributesAdd(name, value);
+}
+
+void AXRController::setContentText(std::string text)
+{
+    this->currentContext.top()->setContentText(text);
 }
 
 void AXRController::exitElement()

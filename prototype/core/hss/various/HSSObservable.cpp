@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -55,6 +55,19 @@
 #include "../../axr/AXRDebugging.h"
 
 using namespace AXR;
+
+std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property){
+    std::string types[20];
+	types[HSSObservablePropertyValue] = "HSSObservablePropertyValue";
+	types[HSSObservablePropertyWidth] = "HSSObservablePropertyWidth";
+	types[HSSObservablePropertyHeight] = "HSSObservablePropertyHeight";
+	types[HSSObservablePropertyAnchorX] = "HSSObservablePropertyAnchorX";
+	types[HSSObservablePropertyAnchorY] = "HSSObservablePropertyAnchorY";
+	types[HSSObservablePropertyFlow] = "HSSObservablePropertyFlow";
+	types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
+	types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
+    return types[property];
+}
 
 HSSObservable::HSSObservable()
 {
@@ -72,21 +85,23 @@ void HSSObservable::observe(HSSObservableProperty property, HSSObservable * obje
     if(this->_propertyObservers.count(property) != 0){
         HSSObservable::observed &theObserved = this->_propertyObservers[property];
         theObserved[object] = callback;
+        std_log3("added observer for "+HSSObservable::observablePropertyStringRepresentation(property));
     } else {
         HSSObservable::observed theObserved;
         theObserved[object] = callback;
         this->_propertyObservers[property] = theObserved;
+        std_log3("added observer for new "+HSSObservable::observablePropertyStringRepresentation(property));
     }
 }
 
 void HSSObservable::removeObserver(HSSObservableProperty property, HSSObservable * object)
 {
-    //std_log1("removing observer");
     if(this->_propertyObservers.count(property) != 0){
         HSSObservable::observed &theObserved = this->_propertyObservers[property];
         theObserved.erase(object);
+        std_log3("removing observer for "+HSSObservable::observablePropertyStringRepresentation(property));
     } else {
-        throw "removing non existent observer";
+        std_log3("tried to remove non existent observer for "+HSSObservable::observablePropertyStringRepresentation(property));
     }
 }
 
@@ -103,6 +118,9 @@ void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
         for (it=theObserved.begin(); it != theObserved.end() ; it++) {
             //std_log1("notifying observer: "+(*(*it).second).ptr->name);
             HSSCallback * callback = (*it).second;
+            if((long double*)data == NULL){
+                std_log1("data is null");
+            }
             callback->call(property, data);
         }
     }

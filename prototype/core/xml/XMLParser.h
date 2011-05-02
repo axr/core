@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/15
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -96,6 +96,7 @@ namespace AXR {
         virtual void StartElement(const XML_Char *name, const XML_Char **attrs);
         virtual void EndElement(const XML_Char *name);
         virtual void ProcessingInstruction(const XML_Char *target, const XML_Char *data);
+        virtual void CharacterData(const XML_Char *s, int len);
         
     private:
         FILE *filehandle;

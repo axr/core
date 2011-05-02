@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/27
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 9
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -411,13 +411,44 @@ bool HSSParser::isChildrenCombinator()
 //this function assumes currentToken to be an identifier
 bool HSSParser::isPropertyDefinition()
 {
+    bool ret = true;
+    
     std_log4("----- peeking ------ ");
-    //if the next token is a colon, BINGO!
     HSSToken::p peekToken = this->tokenizer->peekNextToken();
     std_log4(peekToken->toString());
-    bool ret = peekToken->isA(HSSColon);
-    this->tokenizer->resetPeek();
+    //if the next token is a colon, it is either a property definition or a filter
+    if(peekToken->isA(HSSColon)){
+        //we'll peek until we find a end of statement, a closing block or an opening one
+        peekToken = this->tokenizer->peekNextToken();
+        while(! peekToken->isA(HSSEndOfStatement) && !peekToken->isA(HSSBlockClose) && !peekToken->isA(HSSBlockOpen))
+        {
+            std_log1(peekToken->toString());
+            peekToken = this->tokenizer->peekNextToken();
+            this->checkForUnexpectedEndOfSource();
+        }
+        //if we find an opening block, we're dealing with a selector
+        if(peekToken->isA(HSSBlockOpen)){
+            ret = false;
+        }
+        
+//        peekToken = this->tokenizer->peekNextToken();
+//        //now, if we're dealing with an identifier it may be a filter
+//        if(peekToken->isA(HSSIdentifier)) {
+//            //if it is, after the identifier can only come a parenthesis open or a whitespace
+//            peekToken = this->tokenizer->peekNextToken();
+//            if(! peekToken->isA(HSSParenthesisOpen) && ! peekToken->isA(HSSWhitespace) )
+//            {
+//                //we still don't know... continue peeking
+//                peekToken = this->tokenizer->peekNextToken();
+//                
+//            }
+//        }
+    } else {
+        //no colon, no property definiton
+        ret = false;
+    }
     std_log4("----- finished peeking ------ ");
+    this->tokenizer->resetPeek();
     return ret;
 }
 
@@ -427,7 +458,7 @@ HSSCombinator::p HSSParser::readChildrenCombinatorOrSkip()
     //are we dealing with whitespace?
     if(this->currentToken->isA(HSSWhitespace)){
         if(this->isChildrenCombinator()){
-            HSSCombinator::p newCombinator = HSSCombinator::p(new HSSCombinator(HSSChildrenCombinator));
+            HSSCombinator::p newCombinator = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeChildren));
             this->readNextToken();
             return newCombinator;
         } else {
@@ -449,19 +480,19 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
     const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->value).c_str();
     switch (currentTokenChar) {
         case '=':
-            ret = HSSCombinator::p(new HSSCombinator(HSSSiblingsCombinator));
+            ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeSiblings));
             break;
         case '-':
-            ret = HSSCombinator::p(new HSSCombinator(HSSPreviousSiblingsCombinator));
+            ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypePreviousSiblings));
             break;
         case '+':
-            ret = HSSCombinator::p(new HSSCombinator(HSSNextSiblingsCombinator));
+            ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeNextSiblings));
             break;
         case '.':
             if(VALUE_TOKEN(this->currentToken)->value == ".."){
-                ret = HSSCombinator::p(new HSSCombinator(HSSDescendantsCombinator));
+                ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeDescendants));
             } else if (VALUE_TOKEN(this->currentToken)->value == "..."){
-                ret = HSSCombinator::p(new HSSCombinator(HSSAllDescendantsCombinator));
+                ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeAllDescendants));
             }
             
             break;

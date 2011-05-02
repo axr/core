@@ -1,0 +1,6 @@
+<?xml version="1.0" charset="UTF-8"?>
+<?xml-stylesheet type="application/x-hss" src="style4.hss"?>
+<parent>
+	<child1>This is a child</child1>
+	<child2>This is another child</child2>
+</parent>

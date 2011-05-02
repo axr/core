@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/27
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 11
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -150,17 +150,6 @@ void HSSContainer::add(HSSDisplayObject::p child)
 void HSSContainer::remove(unsigned index)
 {
     this->children.erase(this->children.begin()+index);
-}
-
-
-std::string HSSContainer::getContentText()
-{
-    return this->contentText;
-}
-
-void HSSContainer::setContentText(std::string newText)
-{
-    this->contentText = newText;
 }
 
 void HSSContainer::recursiveReadDefinitionObjects()

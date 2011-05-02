@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -60,13 +60,13 @@
 namespace AXR {
     enum HSSCombinatorType
     {
-        HSSSiblingsCombinator,
-        HSSPreviousSiblingsCombinator,
-        HSSNextSiblingsCombinator,
-        HSSChildrenCombinator,
-        HSSDescendantsCombinator,
-        HSSAllDescendantsCombinator,
-        HSSTextSelectionCombinator
+        HSSCombinatorTypeSiblings,
+        HSSCombinatorTypePreviousSiblings,
+        HSSCombinatorTypeNextSiblings,
+        HSSCombinatorTypeChildren,
+        HSSCombinatorTypeDescendants,
+        HSSCombinatorTypeAllDescendants,
+        HSSCombinatorTypeTextSelection
     };
     
     class HSSCombinator : public HSSParserNode {
@@ -75,13 +75,13 @@ namespace AXR {
         
         HSSCombinator(HSSCombinatorType type);
         
-        HSSCombinatorType type;
-        
         static std::string combinatorStringRepresentation(HSSCombinatorType type);
-        bool isA(HSSCombinatorType type);
+        bool isA(HSSCombinatorType otherType);
+        const HSSCombinatorType & getCombinatorType() const;
         
         virtual std::string toString();
-        
+    protected:
+        HSSCombinatorType combinatorType;
     };
 }
 

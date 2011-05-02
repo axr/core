@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -56,27 +56,32 @@ using namespace AXR;
 
 HSSCombinator::HSSCombinator(HSSCombinatorType type)
 {
-    this->type = type;
+    this->combinatorType = type;
     this->nodeType = HSSParserNodeTypeCombinator;
 }
 
-bool HSSCombinator::isA(HSSCombinatorType type)
+bool HSSCombinator::isA(HSSCombinatorType otherType)
 {
-    return this->type == type;
+    return this->combinatorType == otherType;
+}
+
+const HSSCombinatorType & HSSCombinator::getCombinatorType() const
+{
+    return this->combinatorType;
 }
 
 std::string HSSCombinator::toString(){
-    return "HSSCombinator of type  "+this->combinatorStringRepresentation(this->type);
+    return "HSSCombinator of type  "+this->combinatorStringRepresentation(this->combinatorType);
 }
 
 std::string HSSCombinator::combinatorStringRepresentation(HSSCombinatorType type){
     std::string types[20];
-	types[ HSSSiblingsCombinator ] =          "HSSSiblingsCombinator";
-	types[ HSSPreviousSiblingsCombinator ] =  "HSSPreviousSiblingsCombinator";
-	types[ HSSNextSiblingsCombinator ] =      "HSSNextSiblingsCombinator";
-	types[ HSSChildrenCombinator ] =          "HSSChildrenCombinator";
-	types[ HSSDescendantsCombinator ] =       "HSSDescendantsCombinator";
-	types[ HSSAllDescendantsCombinator ] =    "HSSAllDescendantsCombinator";
-	types[ HSSTextSelectionCombinator ] =     "HSSTextSelectionCombinator";
+	types[ HSSCombinatorTypeSiblings ] =          "HSSCombinatorTypeSiblings";
+	types[ HSSCombinatorTypePreviousSiblings ] =  "HSSCombinatorTypePreviousSiblings";
+	types[ HSSCombinatorTypeNextSiblings ] =      "HSSCombinatorTypeNextSiblings";
+	types[ HSSCombinatorTypeChildren ] =          "HSSCombinatorTypeChildren";
+	types[ HSSCombinatorTypeDescendants ] =       "HSSCombinatorTypeDescendants";
+	types[ HSSCombinatorTypeAllDescendants ] =    "HSSCombinatorTypeAllDescendants";
+	types[ HSSCombinatorTypeTextSelection ] =     "HSSCombinatorTypeTextSelection";
     return types[type];
 }

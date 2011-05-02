@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/15
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -141,6 +141,11 @@ void XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)
     }
 }
 
+void XMLParser::CharacterData(const XML_Char *s, int len)
+{
+    this->controller->setContentText(std::string(s, len));
+}
+
 void XMLParser::EndElement(const XML_Char *name)
 {
     this->controller->exitElement();
@@ -229,6 +234,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
     }
     delete [] temp;
 }
+
 
 std::string XMLParser::getFilePath(){
     return this->filepath;

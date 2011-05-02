@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -68,8 +68,8 @@ namespace AXR {
         ~HSSSelectorChain();
         std::string toString();
         
-        HSSParserNode::p & operator[] (const int i);
-        
+        const HSSParserNode::p & operator[] (const int i) const;
+        const HSSParserNode::p & get(const int i) const;
         //adds a pointer to newNode to the selector chain
         //this function acquires ownership of the parser node
         void add(HSSParserNode::p newNode);

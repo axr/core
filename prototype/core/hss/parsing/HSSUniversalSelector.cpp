@@ -43,7 +43,7 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
  *      Revision: 2
@@ -56,12 +56,10 @@ using namespace AXR;
 
 HSSUniversalSelector::HSSUniversalSelector()
 {
-    
+    this->nodeType = HSSParserNodeTypeUniversalSelector;
 }
 
 std::string HSSUniversalSelector::toString(){
     return "Universal selector";
 }
-
-
 

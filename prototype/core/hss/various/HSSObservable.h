@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -56,12 +56,15 @@
 #include "HSSObservableProperties.h"
 #include "HSSCallback.h"
 #include <map>
+#include <string>
 
 namespace AXR {
     
     class HSSObservable
     {
     public:
+        static std::string observablePropertyStringRepresentation(HSSObservableProperty property);
+        
         typedef std::map<HSSObservable *, HSSCallback* > observed;
         
         HSSObservable();

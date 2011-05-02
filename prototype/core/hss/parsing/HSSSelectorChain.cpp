@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -84,7 +84,12 @@ std::string HSSSelectorChain::toString()
 }
 
 
-HSSParserNode::p & HSSSelectorChain::operator[] (const int i)
+const HSSParserNode::p & HSSSelectorChain::operator[] (const int i) const
+{
+    return this->nodeList[i];
+}
+
+const HSSParserNode::p & HSSSelectorChain::get(const int i) const
 {
     return this->nodeList[i];
 }

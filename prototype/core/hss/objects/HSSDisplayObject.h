@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/28
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 12
+ *      Revision: 13
  *
  ********************************************************************/
 
@@ -76,12 +76,15 @@ namespace AXR {
         HSSDisplayObject(std::string name);
         virtual ~HSSDisplayObject();
         virtual std::string toString();
+        virtual bool canHaveChildren();
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
         boost::shared_ptr<HSSContainer> getParent();
         void setParent(boost::shared_ptr<HSSContainer> parent);
         void attributesAdd(std::string name, std::string value);
         void attributesRemove(std::string name);
+        std::string getContentText();
+        void setContentText(std::string text);
         
         void rulesAdd(HSSRule::p newRule);
         HSSRule::p rulesGet(unsigned index);
@@ -159,13 +162,17 @@ namespace AXR {
         long double y;
         long double height;
         HSSObservable * observedHeight;
+        HSSObservableProperty observedHeightProperty;
         long double width;
         HSSObservable * observedWidth;
+        HSSObservableProperty observedWidthProperty;
         //FIXME: bounds
         long double anchorX;
         HSSObservable * observedAnchorX;
+        HSSObservableProperty observedAnchorXProperty;
         long double anchorY;
         HSSObservable * observedAnchorY;
+        HSSObservableProperty observedAnchorYProperty;
         bool flow;
         bool does_float;
         long double alignX;
@@ -198,6 +205,8 @@ namespace AXR {
                                    long double              percentageBase,
                                    HSSObservableProperty    observedProperty,
                                    HSSObservable *          observedObject,
+                                   HSSObservable *          &observedStore,
+                                   HSSObservableProperty    &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
         

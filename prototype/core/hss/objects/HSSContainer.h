@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 9
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -76,9 +76,6 @@ namespace AXR {
         void add(HSSDisplayObject::p child);
         void remove(unsigned index);
         
-        std::string getContentText();
-        void setContentText(std::string newText);
-        
         virtual void recursiveReadDefinitionObjects();
         virtual void recursiveRegenerateSurfaces();
         virtual void recursiveDraw(cairo_t * cairo);
@@ -86,9 +83,6 @@ namespace AXR {
         //FIXME: make protected and provide accessors
         std::vector<HSSDisplayObject::p>children;
         const std::vector<HSSDisplayObject::p>& getChildren() const;
-    
-    protected:
-        std::string contentText;
     };
 }
 

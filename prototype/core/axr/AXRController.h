@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/05/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 7
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -92,6 +92,7 @@ namespace AXR {
         
         void enterElement(std::string elementName);
         void addAttribute(std::string name, std::string value);
+        void setContentText(std::string text);
         void exitElement();
         
         void add(HSSContainer::p & newContainer);
@@ -128,7 +129,17 @@ namespace AXR {
         
         bool _hasLoadedFile;
         
-        void recursiveMatchRulesToDisplayObject(HSSRule::p & rule, HSSDisplayObject::p & displayObject);
+        void recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope);
+        
+        const std::vector<HSSDisplayObject::p> selectHierarchical(const std::vector<HSSDisplayObject::p> & scope);
+        const std::vector<HSSDisplayObject::p> selectOnLevel(const std::vector<HSSDisplayObject::p> & scope);
+        const std::vector<HSSDisplayObject::p> selectSimple(const std::vector<HSSDisplayObject::p> & scope);
+        
+        HSSSelectorChain::p currentChain;
+        HSSParserNode::p currentSelectorNode;
+        unsigned currentChainCount;
+        unsigned currentChainSize;
+        bool readNextSelectorNode();
         
     };
 }

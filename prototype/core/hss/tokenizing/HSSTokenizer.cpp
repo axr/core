@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/11
+ *      Last changed: 2011/05/01
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -243,27 +243,23 @@ HSSToken::p HSSTokenizer::peekNextToken()
     std_log4("bufpos: " << this->bufpos);
     //store the current position in the buffer
     int curpos = this->bufpos;
-    //offset the position
-    //FIXME: check off-bounds offsets
-    this->bufpos += this->peekpos;  
-    std_log4("peekpos: " << this->peekpos << " -> new bufpos: " << this->bufpos);
     HSSToken::p ret = this->readNextToken();
     //store the new offset
-    this->peekpos = (this->bufpos - curpos);
+    this->peekpos += (this->bufpos - curpos);
     std_log4("new peekpos: " << this->peekpos << " because bufpos: " << this->bufpos << " and curpos: " << curpos);
-    
-    //restore the position in the buffer
-    //we start one position before we were before, since we are re-reading the char
-    this->bufpos = curpos - 1;
-    std_log4("end bufpos: " << this->bufpos);
-    this->readNextChar();
     
     return ret;
 }
 
 void HSSTokenizer::resetPeek()
 {
-    //just reset the offset to 0
+    //restore the position in the buffer
+    //we start one position before we were before, since we are re-reading the char
+    this->bufpos -= this->peekpos + 1;
+    std_log4("end bufpos: " << this->bufpos);
+    this->readNextChar();
+    
+    //reset the offset to 0
     this->peekpos = 0;
 }
 
