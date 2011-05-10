@@ -65,6 +65,8 @@ HSSExpression::HSSExpression(HSSParserNode::p _left, HSSParserNode::p _right)
     this->expressionType = HSSExpressionTypeGeneric;
     this->setLeft(_left);
     this->setRight(_right);
+    
+    this->percentageObserved = NULL;
 }
 
 HSSExpression::~HSSExpression()
@@ -204,9 +206,13 @@ void HSSExpression::setPercentageBase(long double value)
 
 void HSSExpression::setPercentageObserved(HSSObservableProperty property, HSSObservable *observed)
 {
+    if(this->percentageObserved != NULL)
+    {
+        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
+    }
     this->percentageObservedProperty = property;
     this->percentageObserved = observed;
-    observed->observe(property, this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::propertyChanged));
+    observed->observe(property, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::propertyChanged));
     
     //propagate values
     if (this->left && this->left->isA(HSSParserNodeTypeExpression)) {

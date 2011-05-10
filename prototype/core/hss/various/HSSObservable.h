@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2011/05/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -57,6 +57,7 @@
 #include "HSSCallback.h"
 #include <map>
 #include <string>
+#include <boost/unordered_map.hpp>
 
 namespace AXR {
     
@@ -65,13 +66,14 @@ namespace AXR {
     public:
         static std::string observablePropertyStringRepresentation(HSSObservableProperty property);
         
-        typedef std::map<HSSObservable *, HSSCallback* > observed;
+        //the key is a hash of HSSObservable * observed and HSObservableProperty source
+        typedef boost::unordered_map<std::size_t, HSSCallback* > observed;
         
         HSSObservable();
         virtual ~HSSObservable();
         
-        void observe(HSSObservableProperty property, HSSObservable * object, HSSCallback *callback);
-        void removeObserver(HSSObservableProperty property, HSSObservable * object);
+        void observe(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object, HSSCallback *callback);
+        void removeObserver(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object);
         virtual void propertyChanged(HSSObservableProperty property, void * data);
         void notifyObservers(HSSObservableProperty property, void * data);
         

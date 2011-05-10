@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2011/05/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 13
+ *      Revision: 15
  *
  ********************************************************************/
 
@@ -69,6 +69,9 @@ namespace AXR {
     class HSSDisplayObject : public HSSObject
     {
     public:
+        
+        friend class HSSContainer;
+        
         typedef boost::shared_ptr<HSSDisplayObject> p;
         typedef boost::weak_ptr<HSSContainer> parentPointer;
         
@@ -91,7 +94,7 @@ namespace AXR {
         void rulesRemove(unsigned index);
         void rulesRemoveLast();
         const int rulesSize();
-        void readDefinitionObjects();
+        virtual void readDefinitionObjects();
         virtual void recursiveReadDefinitionObjects();
         void setNeedsRereadRules(bool value);
         bool needsRereadRules();
@@ -106,6 +109,11 @@ namespace AXR {
         bool isDirty();
         virtual void draw(cairo_t * cairo);
         virtual void recursiveDraw(cairo_t * cairo);
+        
+        void setNeedsLayout(bool value);
+        const bool needsLayout() const;
+        virtual void layout();
+        virtual void recursiveLayout();
         
         std::string getElementName();
         void setElementName(std::string name);
@@ -132,9 +140,11 @@ namespace AXR {
         //alignX
         HSSParserNode::p getDAlignX();
         void setDAlignX(HSSParserNode::p value);
+        void alignXChanged(HSSObservableProperty source, void*data);
         //alignY
         HSSParserNode::p getDAlignY();
         void setDAlignY(HSSParserNode::p value);
+        void alignYChanged(HSSObservableProperty source, void*data);
         
         virtual void setDefaults();
         
@@ -157,26 +167,42 @@ namespace AXR {
         //if it needs to redraw
         bool _isDirty;
         
+        //if it needs to layout
+        bool _needsLayout;
+        std::vector<std::vector<HSSDisplayObject::p> >layoutLines;
+        
         //here go the final computed values
         long double x;
         long double y;
-        long double height;
-        HSSObservable * observedHeight;
-        HSSObservableProperty observedHeightProperty;
+        HSSParserNode::p dWidth;
         long double width;
         HSSObservable * observedWidth;
         HSSObservableProperty observedWidthProperty;
+        HSSParserNode::p dHeight;
+        long double height;
+        HSSObservable * observedHeight;
+        HSSObservableProperty observedHeightProperty;
+        
         //FIXME: bounds
+        HSSParserNode::p dAnchorX;
         long double anchorX;
         HSSObservable * observedAnchorX;
         HSSObservableProperty observedAnchorXProperty;
+        HSSParserNode::p dAnchorY;
         long double anchorY;
         HSSObservable * observedAnchorY;
         HSSObservableProperty observedAnchorYProperty;
+        HSSParserNode::p dFlow;
         bool flow;
         bool does_float;
+        HSSParserNode::p dAlignX;
         long double alignX;
+        HSSObservable * observedAlignX;
+        HSSObservableProperty observedAlignXProperty;
+        HSSParserNode::p dAlignY;
         long double alignY;
+        HSSObservable * observedAlignY;
+        HSSObservableProperty observedAlignYProperty;
         //FIXME: margin
         //FIXME: border
         long double zoomFactor;
@@ -190,14 +216,6 @@ namespace AXR {
         //FIXME: focused
         //FIXME: mask
         
-        //here go the definition objects
-        HSSParserNode::p dWidth;
-        HSSParserNode::p dHeight;
-        HSSParserNode::p dAnchorX;
-        HSSParserNode::p dAnchorY;
-        HSSParserNode::p dFlow;
-        HSSParserNode::p dAlignX;
-        HSSParserNode::p dAlignY;
     private:
         long double _setLDProperty(
                                    void(HSSDisplayObject::*callback)(HSSObservableProperty property, void* data),
@@ -205,6 +223,7 @@ namespace AXR {
                                    long double              percentageBase,
                                    HSSObservableProperty    observedProperty,
                                    HSSObservable *          observedObject,
+                                   HSSObservableProperty    observedSourceProperty,
                                    HSSObservable *          &observedStore,
                                    HSSObservableProperty    &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope

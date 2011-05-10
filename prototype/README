@@ -13,17 +13,23 @@ First, we are going to compile the core library:
 1 - Go to http://expat.sourceforge.net/ and download Expat, install it according to	their
 	instructions
 
-2 - Go to http://cairographics.org/ and download Cairo*, install it according to their 
-	instructions.
+2 - Go to http://cairographics.org/ and download Cairo, install it according to their 
+	instructions. I've had no luck installing the MacPorts version, but compiling everything
+	from source code should work just fine.
+	
+2.a If you don't have Freetype on your system, download it from http://www.freetype.org/ and
+	compile it as well. AXR doesn't use it, but somehow I didn't manage to build with static
+	libraries without it. Probably something with the configure script of Cairo. I need to
+	check if it is possible to get away with this.
 
 3 - Open the Xcode 4 project in the "core" folder. Hit build. If it doesn't work check if
 	all the necessary headers are added to the project (not red) and that you are linking
-	to libexpat.a and libcairo*
+	to libexpat.a, libfreetype.a, libpixman.a, libpng.a, libz.a, and libcairo.a
 
 The core library is actually a direct dependency in the Test App project, so it will be built
-automatically together with the Test App. You can find the Xcode 4 project in the "Test App" folder.
+automatically together with the Test App. You can find the Xcode 4 project in the "mac" folder.
+
+NOTE: this is all written down from memory, therefore it's possible that I'm forgetting something.
+If it doesn't work, please write me an email at veosotano@gmail.com and I'll be glad to help you out :D
 
 //FIXME: test if this works and continue writing this to use automake
-
-
-*this step is not necessary yet, but will be very soon

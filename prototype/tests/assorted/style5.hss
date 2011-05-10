@@ -1,0 +1,21 @@
+parent
+{
+	child
+	{
+		width: 150;
+		height: 150;
+		alignX: 20%;
+	}
+	child2
+	{
+		width: 150;
+		height: 150;
+		alignX: 50%;
+	}
+	child3
+	{
+		width: 150;
+		height: 150;
+		alignX: 80%;
+	}
+}

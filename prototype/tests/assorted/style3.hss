@@ -1,0 +1,26 @@
+parent
+{
+	child
+	{
+		width: 50%;
+		height: 50%;
+		
+		subchild
+		{
+			width: 100% - 10;
+			height: 100% - 10;
+		}
+		
+		subchild + subchild
+		{
+			width: 90%;
+			height: 50%;
+		}
+	}
+	
+	child2
+	{
+		width: 10% + 20;
+		height: 10% + 20;
+	}
+}

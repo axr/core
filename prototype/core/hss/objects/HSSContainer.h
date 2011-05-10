@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2011/05/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 10
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -59,12 +59,21 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <cairo/cairo.h>
+#include <list>
 
 namespace AXR {
     class HSSContainer : public boost::enable_shared_from_this<HSSContainer>, public HSSDisplayObject
     {
     public:
         typedef boost::shared_ptr<HSSContainer> p;
+        struct displayGroup
+        {
+            long double x;
+            long double y;
+            long double width;
+            long double height;
+            std::vector<HSSDisplayObject::p>objects;
+        };
         
         HSSContainer();
         HSSContainer(std::string name);
@@ -76,13 +85,52 @@ namespace AXR {
         void add(HSSDisplayObject::p child);
         void remove(unsigned index);
         
-        virtual void recursiveReadDefinitionObjects();
-        virtual void recursiveRegenerateSurfaces();
-        virtual void recursiveDraw(cairo_t * cairo);
+        void readDefinitionObjects();
+        void recursiveReadDefinitionObjects();
+        void recursiveRegenerateSurfaces();
+        void recursiveDraw(cairo_t * cairo);
+        
+        void layout();
+        void recursiveLayout();
         
         //FIXME: make protected and provide accessors
         std::vector<HSSDisplayObject::p>children;
         const std::vector<HSSDisplayObject::p>& getChildren() const;
+        
+        //alignX
+        HSSParserNode::p getDContentAlignX();
+        void setDContentAlignX(HSSParserNode::p value);
+        void contentAlignXChanged(HSSObservableProperty source, void*data);
+        //alignY
+        HSSParserNode::p getDContentAlignY();
+        void setDContentAlignY(HSSParserNode::p value);
+        void contentAlignYChanged(HSSObservableProperty source, void*data);
+        
+        void setDefaults();
+        
+    protected:
+        HSSParserNode::p dContentAlignX;
+        long double contentAlignX;
+        HSSObservable * observedContentAlignX;
+        HSSObservableProperty observedContentAlignXProperty;
+        HSSParserNode::p dContentAlignY;
+        long double contentAlignY;
+        HSSObservable * observedContentAlignY;
+        HSSObservableProperty observedContentAlignYProperty;
+        
+    private:
+        long double _setLDProperty(
+                                   void(HSSContainer::*callback)(HSSObservableProperty property, void* data),
+                                   HSSParserNode::p         value,
+                                   long double              percentageBase,
+                                   HSSObservableProperty    observedProperty,
+                                   HSSObservable *          observedObject,
+                                   HSSObservableProperty    observedSourceProperty,
+                                   HSSObservable *          &observedStore,
+                                   HSSObservableProperty    &observedStoreProperty,
+                                   const std::vector<HSSDisplayObject::p> * scope
+                                   );
+        long double weightedCenter(std::list<long double> &alignmentPoints);
     };
 }
 

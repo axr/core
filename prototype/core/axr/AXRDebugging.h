@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/27
+ *      Last changed: 2011/05/08
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -63,7 +63,7 @@
 //you can set this as a preprocessor macros in your IDE to override
 #ifndef AXR_DEBUG_LEVEL
 //default level
-#define AXR_DEBUG_LEVEL 1
+#define AXR_DEBUG_LEVEL 3
 #endif
 
 //logging
@@ -108,7 +108,7 @@
 #define AXR_DEBUG_BRAKE 9999
 #define security_brake_init() int __axr_security_count = 0;
 #define security_brake_reset() __axr_security_count = 0;
-#define security_brake() if(__axr_security_count > AXR_DEBUG_BRAKE ){ break; } else { __axr_security_count++; }
+#define security_brake() if(__axr_security_count > AXR_DEBUG_BRAKE ){ std_log1("################ error: security brake activated ####################"); break; } else { __axr_security_count++; }
 
 #else // AXR_DEBUG_LEVEL == 0
 
