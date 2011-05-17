@@ -1,21 +1,22 @@
 parent
 {
+	contentAlignX: 50%;
+	
 	child
 	{
-		width: 150;
+		width: 50% - 50;
 		height: 150;
-		alignX: 20%;
 	}
 	child2
 	{
 		width: 150;
 		height: 150;
-		alignX: 50%;
+		anchorX: 0
 	}
 	child3
 	{
 		width: 150;
 		height: 150;
-		alignX: 80%;
+		alignX: 100% - 100;
 	}
 }

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/07
+ *      Last changed: 2011/05/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 19
+ *      Revision: 21
  *
  ********************************************************************/
 
@@ -71,7 +71,7 @@ HSSDisplayObject::HSSDisplayObject()
     this->type = HSSObjectTypeDisplayObject;
     
     this->_isDirty= true;
-    this->_needsRereadRules = false;
+    this->_needsRereadRules = true;
     this->_needsSurface = true;
     this->_needsLayout = true;
     this->backgroundSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
@@ -100,7 +100,7 @@ HSSDisplayObject::HSSDisplayObject(std::string name)
     this->type = HSSObjectTypeDisplayObject;
     
     this->_isDirty = true;
-    this->_needsRereadRules = false;
+    this->_needsRereadRules = true;
     this->_needsSurface = true;
     this->_needsLayout = true;
     this->backgroundSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
@@ -351,6 +351,7 @@ bool HSSDisplayObject::needsSurface()
 
 void HSSDisplayObject::setDirty(bool value)
 {
+    //std_log1("setting "+this->name+" dirty");
     this->_isDirty = value;
 }
 
@@ -411,7 +412,16 @@ void HSSDisplayObject::draw(cairo_t * cairo)
         cairo_destroy(cairo);
     }
     
-    cairo_set_source_surface(cairo, this->foregroundSurface, this->x, this->y);
+    double long parentX = 0;
+    double long parentY = 0;
+    HSSContainer::p parent = this->getParent();
+    if(parent)
+    {
+        parentX = parent->x;
+        parentY = parent->y;
+    }
+    
+    cairo_set_source_surface(cairo, this->foregroundSurface, parentX + this->x, parentY + this->y);
     cairo_paint(cairo);
 }
 
@@ -870,15 +880,34 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
 HSSParserNode::p HSSDisplayObject::getDAlignX() { return this->dAlignX; }
 void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
 {
+    this->dAlignX = value;
+    if(this->observedAlignX != NULL)
+    {
+        this->observedAlignX->removeObserver(this->observedAlignXProperty, HSSObservablePropertyAlignX, this);
+    }
+    
     if(value->isA(HSSParserNodeTypeKeywordConstant)){
-        this->dAlignX = value;
-    } else {
-        this->dAlignX = value;
-        HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
-        if(this->observedAlignX != NULL)
-        {
-            this->observedAlignX->removeObserver(this->observedAlignXProperty, HSSObservablePropertyAlignX, this);
+        
+        HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        if(keywordValue->getValue() == "auto"){
+            HSSContainer::p parentContainer = this->getParent();
+            if(parentContainer){
+                this->alignX = parentContainer->contentAlignX;
+                parentContainer->observe(HSSObservablePropertyContentAlignX, HSSObservablePropertyAlignX, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignXChanged));
+                this->observedAlignX = parentContainer.get();
+                this->observedAlignXProperty = HSSObservablePropertyContentAlignX;
+            } else {
+                this->alignX = 0;
+            }
+//            this->alignX = 0;
+            
+        } else {
+            std_log1("any keyword other than auto has not been implemented yet");
+            throw;
         }
+        
+    } else {
+        HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
         HSSContainer::p parentContainer = this->getParent();
         if(parentContainer){
             this->alignX = this->_setLDProperty(
@@ -906,10 +935,9 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
                                                NULL
                                                );
         }
-        
-        
-        this->notifyObservers(HSSObservablePropertyAlignX, &this->alignX);
     }
+    
+    this->notifyObservers(HSSObservablePropertyAlignX, &this->alignX);
 }
 
 void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
@@ -930,14 +958,16 @@ void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
             break;
         }
             
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            this->alignX = *(long double*)data;
+        }
+            
         default:
             break;
     }
     
     this->notifyObservers(HSSObservablePropertyAlignX, &this->alignX);
-#if AXR_DEBUG_LEVEL > 0
-    this->setDirty(true);
-#endif
 }
 
 //alignY

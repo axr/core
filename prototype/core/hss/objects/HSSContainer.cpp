@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/08
+ *      Last changed: 2011/05/16
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 16
+ *      Revision: 17
  *
  ********************************************************************/
 
@@ -57,6 +57,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <boost/pointer_cast.hpp>
 
 using namespace AXR;
 
@@ -201,7 +202,7 @@ void HSSContainer::recursiveReadDefinitionObjects()
     
     unsigned i;
     for (i=0; i<this->children.size(); i++) {
-        this->children[i]->readDefinitionObjects();
+        this->children[i]->recursiveReadDefinitionObjects();
     }
 }
 
@@ -233,26 +234,11 @@ void HSSContainer::layout()
     unsigned i, j = 0, k = 0, l, size, size2, size3;
     long double accWidth = 0;
     
-    //sort the elements in two arrays: those aligned by contentAlign and those by align
-    std::vector<HSSDisplayObject::p>byContentAlign;
-    std::vector<HSSDisplayObject::p>byAlign;
-    
-    for (i=0, size = this->children.size(); i<size; i++) {
-        HSSDisplayObject::p child = this->children[i];
-        //FIXME: instead of just looking for a keyword, check to see if the end value is "auto"
-        if (! child->dAlignX->isA(HSSParserNodeTypeKeywordConstant) || ! child->dAlignY->isA(HSSParserNodeTypeKeywordConstant)) {
-            byAlign.push_back(child);
-        } else {
-            byContentAlign.push_back(child);
-        }
-    }
-    
-    
     std::vector<displayGroup>groups;
     
     //first layout the elments with align set
-    for (i=0, size = byAlign.size(); i<size; i++) {
-        HSSDisplayObject::p child = byAlign[i];
+    for (i=0, size = this->children.size(); i<size; i++) {
+        HSSDisplayObject::p child = this->children[i];
         
         //place it on the alignment point for the primary direction
         child->x = child->alignX - child->anchorX;
@@ -280,33 +266,32 @@ void HSSContainer::layout()
                 currentGroup.objects.push_back(child);
                 currentGroup.width += child->width;
                 
-                //calculate the new alignment point for the group
-                //std::list<long double> alignmentPoints;
+                //calculate the new alignment and anchor point for the group
+                HSSDisplayObject::p & currentGroupFirst = currentGroup.objects.front();
                 long double alignmentTotal = 0;
+                accWidth = currentGroupFirst->width - currentGroupFirst->anchorX;
+                long double anchorsTotal = 0;
                 for (k=0, size3 = currentGroup.objects.size(); k<size3; k++) {
-                    //alignmentPoints.push_back(currentGroup.objects[k]->alignX);
-                    alignmentTotal += currentGroup.objects[k]->alignX;
+                    HSSDisplayObject::p & currentChild = currentGroup.objects[k];
+                    alignmentTotal += currentChild->alignX;
+                    if(k>0){
+                        anchorsTotal += accWidth + currentChild->anchorX;
+                        accWidth += currentChild->width;
+                    }
                 }
                 double long groupAlignX = alignmentTotal / size3;
-                //fixme: add each (50% - anchorx) / size3
-                //find the weighted middle for all points
-                //double long groupAlignX = this->weightedCenter(alignmentPoints);
-
-                HSSDisplayObject::p & currentGroupFirst = currentGroup.objects.front();
-                HSSDisplayObject::p & currentGroupLast = child;
-                double long anchorSpace = currentGroup.width - (currentGroupFirst->anchorX + (currentGroupLast->width - currentGroupLast->anchorX));
+                double long groupAnchorX = anchorsTotal / size3;
                 
                 //reposition the elements in the group
-                double long startX = groupAlignX - (anchorSpace/2) - currentGroupFirst->anchorX;
+                double long startX = groupAlignX - groupAnchorX - currentGroupFirst->anchorX;
                 if(startX > this->width - currentGroup.width) startX = this->width - currentGroup.width;
                 if(startX < 0) startX = 0;
+                accWidth = 0;
                 for (k=0, size3 = currentGroup.objects.size(); k<size3; k++) {
                     HSSDisplayObject::p & otherChild = currentGroup.objects[k];
                     otherChild->x = startX + accWidth;
                     accWidth += otherChild->width;
                 }
-                
-                
                 currentGroup.x = currentGroup.objects.front()->x;
                 currentGroup.y = currentGroup.objects.front()->y;
                 
@@ -326,58 +311,33 @@ void HSSContainer::layout()
                             
                             std_log1("######### reducing groups");
                             
-                            //calculate the new alignment point for the group
-                            long double alignmentTotal2 = 0;
-                            for (l=0, size3 = otherGroup.objects.size(); l<size3; l++) {
-                                //alignmentPoints.push_back(currentGroup.objects[k]->alignX);
-                                alignmentTotal2 += otherGroup.objects[l]->alignX;
-                            }
-                            double long groupAlignX2 = alignmentTotal2 / size3;
-//                            std::list<long double> alignmentPoints;
-//                            for (l=0, size3 = otherGroup.objects.size(); l<size3; l++) {
-//                                alignmentPoints.push_back(otherGroup.objects[l]->alignX);
-//                            }
-//                            //find the weighted middle for all points
-//                            double long groupAlignX2 = this->weightedCenter(alignmentPoints);
                             
+                            //calculate the new alignment and anchor point for the other group
                             HSSDisplayObject::p & otherGroupFirst = otherGroup.objects.front();
-                            HSSDisplayObject::p & otherGroupLast = otherGroup.objects.back();
-                            double long ogw = otherGroup.width;
-                            double long ogfax = otherGroupFirst->anchorX;
-                            double long oglw = otherGroupLast->width;
-                            double long oglax = otherGroupLast->anchorX;
-                            double long anchorSpace2 = ogw - (ogfax + (oglw - oglax));
+                            alignmentTotal = 0;
+                            accWidth = otherGroupFirst->width - otherGroupFirst->anchorX;
+                            anchorsTotal = 0;
+                            for (l=0, size3 = otherGroup.objects.size(); l<size3; l++) {
+                                HSSDisplayObject::p & currentChild2 = otherGroup.objects[l];
+                                alignmentTotal += currentChild2->alignX;
+                                if(l>0){
+                                    anchorsTotal += accWidth + currentChild2->anchorX;
+                                    accWidth += currentChild2->width;
+                                }
+                            }
+                            groupAlignX = alignmentTotal / size3;
+                            groupAnchorX = anchorsTotal / size3;
                             
                             //reposition the elements in the group
-                            double long startX = groupAlignX2 - (anchorSpace2/2) - otherGroupFirst->anchorX;
+                            startX = groupAlignX - groupAnchorX - otherGroupFirst->anchorX;
                             if(startX > this->width - otherGroup.width) startX = this->width - otherGroup.width;
                             if(startX < 0) startX = 0;
+                            accWidth = 0;
                             for (l=0, size3 = otherGroup.objects.size(); l<size3; l++) {
                                 HSSDisplayObject::p & otherChild2 = otherGroup.objects[l];
                                 otherChild2->x = startX + accWidth;
                                 accWidth += otherChild2->width;
                             }
-                            
-                            
-//                            //calculate the new alignment point for the otherGroup
-//                            //it will always be the midpoint between the alignment points of the first and last elements
-//                            //but staying inside the parent
-//                            HSSDisplayObject::p & otherGroupFirst = otherGroup.objects.front();
-//                            HSSDisplayObject::p & otherGroupLast = otherGroup.objects.back();
-//                            double long anchorSpace = otherGroup.width - (otherGroupFirst->anchorX + (otherGroupLast->width - otherGroupLast->anchorX));
-//                            double long anchorMid = (otherGroupFirst->x + otherGroupFirst->anchorX) + (((otherGroupLast->x + otherGroupLast->anchorX) - otherGroupFirst->alignX) / 2);
-//                            
-//                            //reposition the elements in the group
-//                            double long startX = anchorMid - otherGroupFirst->anchorX - (anchorSpace / 2);
-//                            if(startX > this->width - otherGroup.width) startX = this->width - otherGroup.width;
-//                            if(startX < 0) startX = 0;
-//                            for (l=0, size3 = otherGroup.objects.size(); l<size3; l++) {
-//                                HSSDisplayObject::p & otherChild2 = otherGroup.objects[l];
-//                                
-//                                otherChild2->x = startX + accWidth;
-//                                accWidth += otherChild2->width;
-//                            }
-                            
                             
                             otherGroup.x = otherGroup.objects.front()->x;
                             otherGroup.y = otherGroup.objects.front()->y;
@@ -427,41 +387,41 @@ void HSSContainer::layout()
     
     //insert elements into line
     
-    long double accHeight = 0;
-    long double lineHeight = 0;
-    std::vector<HSSDisplayObject::p> tempLine;
-    for (i=0, size = byContentAlign.size(); i<size; i++) {
-        HSSDisplayObject::p child = byContentAlign[i];
-        
-        //force the first one into the line
-        if(i==0){
-            tempLine.push_back(child);
-            child->x = this->contentAlignX - child->anchorX + accWidth;
-            accWidth += child->width;
-            lineHeight = child->height;
-        } else {
-            if(accWidth + child->width <= this->width){
-                tempLine.push_back(child);
-                child->x = this->contentAlignX - child->anchorX + accWidth;
-                child->y = accHeight;
-                accWidth += child->width;
-                if(child->height > lineHeight){
-                    lineHeight = child->height;
-                }
-            } else {
-                //push the templine onto the stack and initialize a new one
-                this->layoutLines.push_back(tempLine);
-                tempLine = std::vector<HSSDisplayObject::p>();
-                accWidth = 0;
-                accHeight += lineHeight;
-                tempLine.push_back(child);
-                child->x = this->contentAlignX - child->anchorX + accWidth;
-                child->y = accHeight;
-                accWidth += child->width;
-                lineHeight = child->height;
-            }
-        }
-    }
+//    long double accHeight = 0;
+//    long double lineHeight = 0;
+//    std::vector<HSSDisplayObject::p> tempLine;
+//    for (i=0, size = byContentAlign.size(); i<size; i++) {
+//        HSSDisplayObject::p child = byContentAlign[i];
+//        
+//        //force the first one into the line
+//        if(i==0){
+//            tempLine.push_back(child);
+//            child->x = this->contentAlignX - child->anchorX + accWidth;
+//            accWidth += child->width;
+//            lineHeight = child->height;
+//        } else {
+//            if(accWidth + child->width <= this->width){
+//                tempLine.push_back(child);
+//                child->x = this->contentAlignX - child->anchorX + accWidth;
+//                child->y = accHeight;
+//                accWidth += child->width;
+//                if(child->height > lineHeight){
+//                    lineHeight = child->height;
+//                }
+//            } else {
+//                //push the templine onto the stack and initialize a new one
+//                this->layoutLines.push_back(tempLine);
+//                tempLine = std::vector<HSSDisplayObject::p>();
+//                accWidth = 0;
+//                accHeight += lineHeight;
+//                tempLine.push_back(child);
+//                child->x = this->contentAlignX - child->anchorX + accWidth;
+//                child->y = accHeight;
+//                accWidth += child->width;
+//                lineHeight = child->height;
+//            }
+//        }
+//    }
     
     
 //    unsigned i, size;

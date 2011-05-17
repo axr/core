@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/06
+ *      Last changed: 2011/05/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 12
+ *      Revision: 13
  *
  ********************************************************************/
 
@@ -66,6 +66,9 @@ namespace AXR {
     {
     public:
         typedef boost::shared_ptr<HSSContainer> p;
+        
+        friend class HSSDisplayObject;
+        
         struct displayGroup
         {
             long double x;

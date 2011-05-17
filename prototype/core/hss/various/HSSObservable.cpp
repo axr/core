@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/06
+ *      Last changed: 2011/05/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -66,6 +66,8 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
 	types[HSSObservablePropertyFlow] = "HSSObservablePropertyFlow";
 	types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
 	types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
+	types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
+	types[HSSObservablePropertyContentAlignY] = "HSSObservablePropertyContentAlignY";
     return types[property];
 }
 
@@ -82,7 +84,7 @@ HSSObservable::~HSSObservable()
 void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object, HSSCallback *callback)
 {
     //std_log1("added observer: "+object->name);
-    std::size_t hash;
+    std::size_t hash = 0;
     boost::hash_combine(hash, object);
     boost::hash_combine(hash, source);
     
@@ -102,14 +104,16 @@ void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservablePr
 {
     if(this->_propertyObservers.count(target) != 0){
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
-        std::size_t hash;
+        std::size_t hash = 0;
         boost::hash_combine(hash, object);
         boost::hash_combine(hash, source);
-        theObserved.erase(hash);
-        std_log3("removing observer for "+HSSObservable::observablePropertyStringRepresentation(target));
-    } else {
-        std_log3("tried to remove non existent observer for "+HSSObservable::observablePropertyStringRepresentation(target));
+        if(theObserved.count(hash) != 0){
+            theObserved.erase(hash);
+            std_log3("removing observer for "+HSSObservable::observablePropertyStringRepresentation(target));
+            return;
+        }
     }
+    std_log3("tried to remove non existent observer for "+HSSObservable::observablePropertyStringRepresentation(target));
 }
 
 void HSSObservable::propertyChanged(HSSObservableProperty property, void *data)
