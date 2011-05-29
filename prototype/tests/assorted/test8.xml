@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="application/x-hss" src="style8.hss"?>
+<document>
+	<partA>
+		<child>red</child>
+		<child>green</child>
+		<child>blue</child>
+		<child>black</child>
+	</partA>
+	<partB>
+		<child>white</child>
+		<child2>black</child2>
+	</partB>
+	<partC>
+		<child>red</child>
+		<child>green</child>
+		<child>blue</child>
+		<child>black</child>
+		<child>white</child>
+	</partC>
+	<partD>
+		<child1>red</child1>
+		<child2>green</child2>
+		<child3>blue</child3>
+		<child4>black</child4>
+		<child5>white</child5>
+	</partD>
+</document>

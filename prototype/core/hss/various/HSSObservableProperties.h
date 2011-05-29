@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/06
+ *      Last changed: 2011/05/28
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -56,6 +56,7 @@
 namespace AXR {
     enum HSSObservableProperty
     {
+        //HSSDisplayObject
         HSSObservablePropertyValue,
         HSSObservablePropertyWidth,
         HSSObservablePropertyHeight,
@@ -64,8 +65,12 @@ namespace AXR {
         HSSObservablePropertyFlow,
         HSSObservablePropertyAlignX,
         HSSObservablePropertyAlignY,
+        
+        //HSSContainer
         HSSObservablePropertyContentAlignX,
-        HSSObservablePropertyContentAlignY
+        HSSObservablePropertyContentAlignY,
+        HSSObservablePropertyDirectionPrimary,
+        HSSObservablePropertyDirectionSecondary
     };
 }
 

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/17
+ *      Last changed: 2011/05/21
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 21
+ *      Revision: 22
  *
  ********************************************************************/
 
@@ -923,7 +923,7 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
                                                );
             parentContainer->setNeedsLayout(true);
         } else {
-            this->width = this->_setLDProperty(
+            this->alignX = this->_setLDProperty(
                                                NULL,
                                                value,
                                                0,
@@ -974,15 +974,34 @@ void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
 HSSParserNode::p HSSDisplayObject::getDAlignY() { return this->dAlignX; }
 void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
 {
+    this->dAlignY = value;
+    if(this->observedAlignY != NULL)
+    {
+        this->observedAlignY->removeObserver(this->observedAlignYProperty, HSSObservablePropertyAlignY, this);
+    }
+    
     if(value->isA(HSSParserNodeTypeKeywordConstant)){
-        this->dAlignY = value;
-    } else {
-        this->dAlignY = value;
-        HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
-        if(this->observedAlignY != NULL)
-        {
-            this->observedAlignY->removeObserver(this->observedAlignYProperty, HSSObservablePropertyAlignY, this);
+        
+        HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        if(keywordValue->getValue() == "auto"){
+            HSSContainer::p parentContainer = this->getParent();
+            if(parentContainer){
+                this->alignY = parentContainer->contentAlignY;
+                parentContainer->observe(HSSObservablePropertyContentAlignY, HSSObservablePropertyAlignY, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignYChanged));
+                this->observedAlignY = parentContainer.get();
+                this->observedAlignYProperty = HSSObservablePropertyContentAlignY;
+            } else {
+                this->alignY = 0;
+            }
+            //            this->alignY = 0;
+            
+        } else {
+            std_log1("any keyword other than auto has not been implemented yet");
+            throw;
         }
+        
+    } else {
+        HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
         HSSContainer::p parentContainer = this->getParent();
         if(parentContainer){
             this->alignY = this->_setLDProperty(
@@ -998,7 +1017,7 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
                                                 );
             parentContainer->setNeedsLayout(true);
         } else {
-            this->width = this->_setLDProperty(
+            this->alignY = this->_setLDProperty(
                                                NULL,
                                                value,
                                                0,
@@ -1010,10 +1029,9 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
                                                NULL
                                                );
         }
-        
-        
-        this->notifyObservers(HSSObservablePropertyAlignY, &this->alignY);
     }
+    
+    this->notifyObservers(HSSObservablePropertyAlignY, &this->alignY);
 }
 
 void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
@@ -1034,14 +1052,16 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
             break;
         }
             
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            this->alignY = *(long double*)data;
+        }
+            
         default:
             break;
     }
     
     this->notifyObservers(HSSObservablePropertyAlignY, &this->alignY);
-#if AXR_DEBUG_LEVEL > 0
-    this->setDirty(true);
-#endif
 }
 
 //defaults

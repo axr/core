@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/17
+ *      Last changed: 2011/05/29
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 13
+ *      Revision: 15
  *
  ********************************************************************/
 
@@ -62,6 +62,14 @@
 #include <list>
 
 namespace AXR {
+    enum HSSDirectionValue
+    {
+        HSSDirectionLeftToRight,
+        HSSDirectionRightToLeft,
+        HSSDirectionTopToBottom,
+        HSSDirectionBottomToTop
+    };
+    
     class HSSContainer : public boost::enable_shared_from_this<HSSContainer>, public HSSDisplayObject
     {
     public:
@@ -75,6 +83,8 @@ namespace AXR {
             long double y;
             long double width;
             long double height;
+            bool complete;
+            std::vector<displayGroup>lines;
             std::vector<HSSDisplayObject::p>objects;
         };
         
@@ -109,6 +119,15 @@ namespace AXR {
         void setDContentAlignY(HSSParserNode::p value);
         void contentAlignYChanged(HSSObservableProperty source, void*data);
         
+        //directionPrimary
+        HSSParserNode::p getDDirectionPrimary();
+        void setDDirectionPrimary(HSSParserNode::p value);
+        void directionPrimaryChanged(HSSObservableProperty source, void*data);
+        //directionSecondary
+        HSSParserNode::p getDDirectionSecondary();
+        void setDDirectionSecondary(HSSParserNode::p value);
+        void directionSecondaryChanged(HSSObservableProperty source, void*data);
+        
         void setDefaults();
         
     protected:
@@ -120,6 +139,16 @@ namespace AXR {
         long double contentAlignY;
         HSSObservable * observedContentAlignY;
         HSSObservableProperty observedContentAlignYProperty;
+        
+        HSSParserNode::p dDirectionPrimary;
+        HSSDirectionValue directionPrimary;
+        HSSObservable * observedDirectionPrimary;
+        HSSObservableProperty observedDirectionPrimaryProperty;
+        HSSParserNode::p dDirectionSecondary;
+        HSSDirectionValue directionSecondary;
+        HSSObservable * observedDirectionSecondary;
+        HSSObservableProperty observedDirectionSecondaryProperty;
+
         
     private:
         long double _setLDProperty(
@@ -133,7 +162,9 @@ namespace AXR {
                                    HSSObservableProperty    &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
-        long double weightedCenter(std::list<long double> &alignmentPoints);
+        
+        void _arrange(displayGroup &group, HSSDirectionValue direction);
+        bool _addChildToGroupIfNeeded(HSSDisplayObject::p &child, displayGroup &group, HSSDirectionValue direction);
     };
 }
 

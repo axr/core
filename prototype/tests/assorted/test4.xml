@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="application/x-hss" src="style4.hss"?>
 <parent>
-	<left>1</left>
-	<middle>2</middle>
-	<right>3</right>
-	<left>1</left>
-	<middle>2</middle>
-	<right>3</right>
+	<left>red</left>
+	<middle>green</middle>
+	<right>blue</right>
+	<left>red</left>
+	<middle>green</middle>
+	<right>blue</right>
 </parent>
