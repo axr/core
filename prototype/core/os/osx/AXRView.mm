@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/17
+ *      Last changed: 2011/06/04
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -150,6 +150,10 @@
     std_log1("loading file");
     
     AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
+    if(controller->hasLoadedFile()){
+        AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
+        render->reset();
+    }
     bool loaded = controller->loadFile();
     [self setNeedsDisplay:YES];
     return loaded;

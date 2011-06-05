@@ -1,0 +1,12 @@
+home
+{
+    content
+    {
+        #remove metadata;
+        
+        about, nextSteps
+        {
+            isA: paragraph;
+        }
+    }
+}

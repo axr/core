@@ -1,9 +1,12 @@
 parent
 {
+    contentAlignY: 50%;
+    
 	child
 	{
 		width: 50%;
 		height: 50%;
+		contentAlignY: 50%;
 		
 		subchild
 		{
@@ -22,5 +25,10 @@ parent
 	{
 		width: 10% + 20;
 		height: 10% + 20;
+	}
+	
+	child3
+	{
+	    height: 10;
 	}
 }

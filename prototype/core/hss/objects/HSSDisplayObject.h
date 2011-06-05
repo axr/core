@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/06
+ *      Last changed: 2011/06/05
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 15
+ *      Revision: 16
  *
  ********************************************************************/
 
@@ -174,6 +174,8 @@ namespace AXR {
         //here go the final computed values
         long double x;
         long double y;
+        long double globalX;
+        long double globalY;
         HSSParserNode::p dWidth;
         long double width;
         HSSObservable * observedWidth;

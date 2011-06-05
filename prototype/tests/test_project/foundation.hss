@@ -1,0 +1,67 @@
+@shadow normalShadow
+{
+    size: 10;
+    color: @rgba {
+        isA: foreground1Color;
+        alpha: 0.4;
+    };
+}
+
+@container button1
+{
+    font: title2Font;
+    
+    @this:hover {
+        font: title2FontAcc;
+        shape: @roundedRect { 4 };
+        background: boxGradientGloss;
+        effects: normalShadow;
+    }
+}
+
+@container paragraph
+{
+    font: bodyFont;
+    width: max(400, min(150, 80%));
+    margin: @{ 10 top }, @{ 10 bottom };
+}
+
+:root
+{
+    #new menu
+    {
+        height: max(150, min(50, 20%));
+        background: darkBarGradientGloss;
+        alignModePrimary: distribute;
+        foreground: @request { "navigation.xml" };
+        padding: @{ 50 left }, @{ 50 right};
+        
+        navigation * { parent: @this }
+        #remove navigation;
+        
+        * {
+            isA: button1;
+            behavior: @click {
+                @request { attr("href") }
+            };
+        }
+    }
+    
+    #new content
+    {
+        height: 100% - (ref(height of menu) + ref(height of footer));
+        contentAlignY: 50%;
+    }
+    
+    #new footer
+    {
+        height: max(150, min(50, 20%));
+    }
+    
+    *
+    {
+        parent: content;
+    }
+    
+    #remove ... :prefix(a);
+}

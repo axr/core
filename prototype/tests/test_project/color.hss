@@ -1,0 +1,39 @@
+#F mainBGColor;
+#C foreground1Color;
+#0 foreground2Color;
+#F00 highlight1Color;
+#FF0 highlight2Color;
+
+#A darkBarTopColor;
+#0 darkBarBottomColor;
+
+#AE boxTopColor;
+#BE boxBottomColor;
+
+@linearGradient glossColor {
+    colorStops: 
+        @{ @modifier { ref(startColor) @colorBC { 10 0 } } 50% },
+        @{ @modifier { ref(endColor) @colorBC { 5 0 } } 50% };
+}
+
+@linearGradient darkBarGradient {
+    startX: 0;
+    startY: 0;
+    endX: 0;
+    endY: 100%;
+    startColor: darkBarTopColor;
+    endColor: darkBarBottomColor;
+    
+    @ darkBarGradientGloss { isA: glossColor }
+}
+
+@linearGradient boxGradient {
+    startX: 0;
+    startY: 0;
+    endX: 0;
+    endY: 100%;
+    startColor: boxTopColor;
+    endColor: boxBottomColor;
+    
+    @ boxGradientGloss { isA: glossColor }
+}

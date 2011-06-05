@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/29
+ *      Last changed: 2011/06/05
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 20
+ *      Revision: 22
  *
  ********************************************************************/
 
@@ -244,7 +244,7 @@ void HSSContainer::layout()
     this->_needsLayout = false;
     std::vector<displayGroup>primaryGroups;
     std::vector<displayGroup>secondaryGroups;
-    unsigned i, size, j, k, size2;
+    unsigned i, size, j, k;
     //long double acc2 = 0;
     security_brake_init(); 
     
@@ -293,7 +293,24 @@ void HSSContainer::layout()
                         primaryGroups[j] = newGroup;
                         
                         addedToGroup = true;
-                        
+                    }
+                    
+                    if(addedToGroup){
+                        k=0;
+                        while (k<primaryGroups.size()){
+                            if(k != j){
+                                displayGroup & otherPGroup = primaryGroups[k];
+                                bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
+                                if(merged){
+                                    primaryGroups.erase(primaryGroups.begin()+j);
+                                    j = k;
+                                } else {
+                                    k++;
+                                }
+                            } else {
+                                k++;
+                            }
+                        }
                     }
                     
                 } else {
@@ -312,6 +329,24 @@ void HSSContainer::layout()
                         
                         addedToGroup = true;
                     }
+                    
+                    if(addedToGroup){
+                        k=0;
+                        while (k<primaryGroups.size()){
+                            if(k != j){
+                                displayGroup & otherPGroup = primaryGroups[k];
+                                bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
+                                if(merged){
+                                    primaryGroups.erase(primaryGroups.begin()+j);
+                                    j = k;
+                                } else {
+                                    k++;
+                                }
+                            } else {
+                                k++;
+                            }
+                        }
+                    }
                 }
                 
                 j++;
@@ -329,13 +364,15 @@ void HSSContainer::layout()
             newGroup.objects.push_back(child);
             primaryGroups.push_back(newGroup);
         }
+        
+        
     }
     
     security_brake_reset();
     
     //now align the lines in the secondary direction
     for(i=0, size = this->children.size(); i<size; i++){
-        HSSDisplayObject::p child = this->children[i];
+        HSSDisplayObject::p &child = this->children[i];
         
         bool addedToGroup = false;
         if( i!=0 ) {
@@ -359,6 +396,147 @@ void HSSContainer::layout()
             secondaryGroups.push_back(newGroup);
         }
     }
+    //assign the globalX and globalY
+    for(i=0, size = this->children.size(); i<size; i++){
+        HSSDisplayObject::p &child = this->children[i];
+        child->globalX = this->globalX + child->x;
+        child->globalY = this->globalY + child->y;
+    }
+}
+
+bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSSContainer::displayGroup &group, HSSDirectionValue direction)
+{
+    unsigned i, size;
+    bool isHorizontal = (direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft);
+    bool addedToGroup = false;
+    long double lineTotalPrimary = 0;
+    
+    long double originalX = child->x;
+    long double originalY = child->y;
+    
+    for (i=0, size = group.objects.size(); i<size; i++) {
+        HSSDisplayObject::p & otherChild = group.objects[i];
+        if( isHorizontal ){
+            lineTotalPrimary += otherChild->width;
+        } else {
+            lineTotalPrimary += otherChild->height;
+        }
+        if (
+            ((child->x + child->width)  > otherChild->x) && (child->x < (otherChild->x + otherChild->width))
+            && ((child->y + child->height) > otherChild->y) && (child->y < (otherChild->y + otherChild->height))
+            ){
+            //it will go into a group
+            
+            //if it is the last one
+            if(i>=size-1){
+                //check if we have enough space to add it to the end of the line
+                if( isHorizontal ){
+                    if( lineTotalPrimary + child->width > this->width){
+                        group.complete = true;
+                    }
+                } else {
+                    if( lineTotalPrimary + child->height > this->height){
+                        group.complete = true;
+                    }
+                }
+                
+                if (!group.complete){
+                    //put it into the group
+                    group.objects.push_back(child);
+                    addedToGroup = true;
+                    
+                    switch (direction) {
+                        case HSSDirectionTopToBottom:
+                        case HSSDirectionBottomToTop:
+                            group.height += child->height;
+                            break;
+                            
+                        case HSSDirectionRightToLeft:
+                        default:
+                            group.width += child->width;
+                            break;
+                    }
+                    
+                    this->_arrange(group, direction);
+                } else {
+                    //restore the original position
+                    child->x = originalX;
+                    child->y = originalY;
+                }
+                
+            } else {
+                
+                //push it further in the primary direction, and check again
+                switch (direction) {
+                    case HSSDirectionRightToLeft:
+                    {
+                        child->x = otherChild->x - child->width;
+                        break;
+                    }
+                        
+                    case HSSDirectionTopToBottom:
+                    {
+                        child->y = otherChild->y + otherChild->height;
+                        break;
+                    }
+                        
+                    case HSSDirectionBottomToTop:
+                    {
+                        child->y = otherChild->y - child->height;
+                        break;
+                    }
+                        
+                    default:
+                    {
+                        child->x = otherChild->x + otherChild->width;
+                        break;
+                    }
+                }
+                
+            }
+        }//if overlap
+        
+    }// for each child
+    
+    return addedToGroup;
+}
+
+bool HSSContainer::_mergeGroupsIfNeeded(displayGroup &group, displayGroup &otherGroup, HSSDirectionValue direction)
+{
+    unsigned i, size, j, size2;
+    if (
+        ((group.x + group.width) > otherGroup.x) && (group.x < (otherGroup.x + otherGroup.width))
+        && ((group.y + group.height) > otherGroup.y) && (group.y < (otherGroup.y + otherGroup.height))
+        ){
+        //if the group bounds overlap, check each individual element against each other
+        for (i=0, size = group.objects.size(); i<size; i++) {
+            HSSDisplayObject::p & child = group.objects[i];
+            for (j=0, size2 = otherGroup.objects.size(); j<size; j++) {
+                HSSDisplayObject::p &otherChild = otherGroup.objects[j];
+                if (
+                    ((child->x + child->width)  > otherChild->x) && (child->x < (otherChild->x + otherChild->width))
+                    && ((child->y + child->height) > otherChild->y) && (child->y < (otherChild->y + otherChild->height))
+                    ){
+                    //there is an overlap, merge the groups
+                    //add all the elements of this group to the overlapping one
+                    group.objects.insert(group.objects.end(), otherGroup.objects.begin(), otherGroup.objects.end());
+                    if(direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft){
+                        group.width += otherGroup.width;
+                    } else {
+                        group.height += otherGroup.height;
+                    }
+                    
+                    this->_arrange(group, direction);
+                       
+                    return true;
+                }
+            }
+        }
+    }
+    
+    
+    
+    return false;
 }
 
 void HSSContainer::_arrange(displayGroup &group, HSSDirectionValue direction)
@@ -498,103 +676,6 @@ void HSSContainer::_arrange(displayGroup &group, HSSDirectionValue direction)
             break;
         }
     }
-}
-
-bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSSContainer::displayGroup &group, HSSDirectionValue direction)
-{
-    unsigned i, size;
-    bool isHorizontal = (direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft);
-    bool addedToGroup = false;
-    long double lineTotalPrimary = 0;
-    
-    long double originalX = child->x;
-    long double originalY = child->y;
-    
-    for (i=0, size = group.objects.size(); i<size; i++) {
-        HSSDisplayObject::p & otherChild = group.objects[i];
-        if( isHorizontal ){
-            lineTotalPrimary += otherChild->width;
-        } else {
-            lineTotalPrimary += otherChild->height;
-        }
-        if (
-            ((child->x + child->width)  > otherChild->x) && (child->x < (otherChild->x + otherChild->width))
-            && ((child->y + child->height) > otherChild->y) && (child->y < (otherChild->y + otherChild->height))
-            ){
-            //it will go into a group
-            
-            //if it is the last one
-            if(i>=size-1){
-                //check if we have enough space to add it to the end of the line
-                if( isHorizontal ){
-                    if( lineTotalPrimary + child->width > this->width){
-                        group.complete = true;
-                    }
-                } else {
-                    if( lineTotalPrimary + child->height > this->height){
-                        group.complete = true;
-                    }
-                }
-                
-                if (!group.complete){
-                    //put it into the group
-                    group.objects.push_back(child);
-                    addedToGroup = true;
-                    
-                    switch (direction) {
-                        case HSSDirectionTopToBottom:
-                        case HSSDirectionBottomToTop:
-                            group.height += child->height;
-                            break;
-                            
-                        case HSSDirectionRightToLeft:
-                        default:
-                            group.width += child->width;
-                            break;
-                    }
-                    
-                    this->_arrange(group, direction);
-                } else {
-                    //restore the original position
-                    child->x = originalX;
-                    child->y = originalY;
-                }
-                
-            } else {
-                
-                //push it further in the primary direction, and check again
-                switch (direction) {
-                    case HSSDirectionRightToLeft:
-                    {
-                        child->x = otherChild->x - child->width;
-                        break;
-                    }
-                        
-                    case HSSDirectionTopToBottom:
-                    {
-                        child->y = otherChild->y + otherChild->height;
-                        break;
-                    }
-                        
-                    case HSSDirectionBottomToTop:
-                    {
-                        child->y = otherChild->y - child->height;
-                        break;
-                    }
-                        
-                    default:
-                    {
-                        child->x = otherChild->x + otherChild->width;
-                        break;
-                    }
-                }
-                
-            }
-        }//if overlap
-        
-    }// for each child
-    
-    return addedToGroup;
 }
 
 void HSSContainer::recursiveLayout()

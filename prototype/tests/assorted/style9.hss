@@ -1,0 +1,38 @@
+document
+{
+    header
+    {
+        width: 100% - 40;
+        height: 100;
+        contentAlignY: 50%;
+        anchorY: 0;
+        alignY: 20;
+        
+        logo
+        {
+            width: 120;
+            height: 80;
+            alignX: 70;
+        }
+        
+        navigation
+        {
+            width: 100% - 150;
+            height: 80;
+            alignX: 100% - 10;
+            anchorX: 100%;
+            contentAlignY: 50%;
+            
+            *{
+                width: 100;
+                height: 40;
+            }
+            
+            home { alignX: 20% }
+            about { alignX: 40% }
+            features { alignX: 60% }
+            contact { alignX: 80% }
+        }
+    }
+    
+}

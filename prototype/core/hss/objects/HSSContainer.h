@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/29
+ *      Last changed: 2011/06/04
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 15
+ *      Revision: 16
  *
  ********************************************************************/
 
@@ -163,8 +163,9 @@ namespace AXR {
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
         
-        void _arrange(displayGroup &group, HSSDirectionValue direction);
         bool _addChildToGroupIfNeeded(HSSDisplayObject::p &child, displayGroup &group, HSSDirectionValue direction);
+        bool _mergeGroupsIfNeeded(displayGroup &group, displayGroup &otherGroup, HSSDirectionValue direction);
+        void _arrange(displayGroup &group, HSSDirectionValue direction);
     };
 }
 

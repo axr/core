@@ -1,0 +1,39 @@
+@font fontStyle1
+{
+    family: "Century Gothic";
+    weight: bold;
+    color: foreground2Color;
+    kerning: -3;
+    
+    fallback: @{
+        family: "Futura";
+        color: foreground2Color;
+    };
+}
+
+@font title1Font
+{
+    isA: fontStyle1;
+    size: 20;
+    
+    @ title2Font {
+        size: 16;
+        @title2FontAcc { color: highlight1Color }
+    }
+    @ title3Font {
+        size: 14;
+        @title3FontAcc { color: highlight1Color }
+    }
+    @ title4Font {
+        size: 12;
+        @title4FontAcc { color: highlight1Color }
+    }
+}
+
+@font bodyFont
+{
+    isA: fontStyle1;
+    size: 12;
+    
+    @ bodyFontAcc { color: highlight1Color }
+}

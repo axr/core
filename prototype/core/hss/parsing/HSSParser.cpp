@@ -280,6 +280,9 @@ HSSRule::p HSSParser::readRule()
                 //recursive omg!
                 ret->childrenAdd(this->readRule());
             }
+        } else if(this->currentToken->isA(HSSSymbol)){
+            ret->childrenAdd(this->readRule());
+            
         } else {
             throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         }

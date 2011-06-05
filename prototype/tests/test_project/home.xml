@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-sitemap type="application/xml" src="navigation.xml"?>
+<home>
+	<metadata xmlns="vg.axr.document.metadata">
+		<author>Miro Keller</author>
+		<lastModified>2011/06/05</lastModified>
+	</metadata>
+	<about>This is a test project, where I try out how it would be to create a simple site using AXR.</about>
+	<nextSteps>Please select where you want to go next from the main menu.</nextSteps>
+</home>

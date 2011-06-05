@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/21
+ *      Last changed: 2011/06/05
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 22
+ *      Revision: 23
  *
  ********************************************************************/
 
@@ -78,7 +78,7 @@ HSSDisplayObject::HSSDisplayObject()
     this->foregroundSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
     this->bordersSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
     
-    x = y = width = height = anchorX = anchorY = alignX = alignY = 0.;
+    x = y = globalX = globalY = width = height = anchorX = anchorY = alignX = alignY = 0.;
     drawIndex = 0;
     tabIndex = zoomFactor = 1;
     flow = visible = true;
@@ -107,7 +107,7 @@ HSSDisplayObject::HSSDisplayObject(std::string name)
     this->foregroundSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
     this->bordersSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
     
-    x = y = width = height = anchorX = anchorY = alignX = alignY = 0.;
+    x = y = globalX = globalY = width = height = anchorX = anchorY = alignX = alignY = 0.;
     drawIndex = 0;
     tabIndex = zoomFactor = 1;
     flow = visible = true;
@@ -412,16 +412,7 @@ void HSSDisplayObject::draw(cairo_t * cairo)
         cairo_destroy(cairo);
     }
     
-    double long parentX = 0;
-    double long parentY = 0;
-    HSSContainer::p parent = this->getParent();
-    if(parent)
-    {
-        parentX = parent->x;
-        parentY = parent->y;
-    }
-    
-    cairo_set_source_surface(cairo, this->foregroundSurface, parentX + this->x, parentY + this->y);
+    cairo_set_source_surface(cairo, this->foregroundSurface, this->globalX, this->globalY);
     cairo_paint(cairo);
 }
 

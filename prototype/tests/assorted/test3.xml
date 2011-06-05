@@ -2,9 +2,9 @@
 <?xml-stylesheet type="application/x-hss" src="style3.hss"?>
 <parent>
 	<child>
-		<subchild>Subchild 1</subchild>
-		<subchild>Subchild 2</subchild>
+		<subchild>black</subchild>
+		<subchild>blue</subchild>
 	</child>
-	<child2>This is a test element</child2>
-	<child3></child3>
+	<child2>red</child2>
+	<child3>green</child3>
 </parent>
