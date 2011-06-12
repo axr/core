@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/06/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -82,7 +82,7 @@ std::string HSSMultipleValue::toString()
     return tempstr;
 }
 
-void HSSMultipleValue::add(HSSValue::p newValue)
+void HSSMultipleValue::add(HSSParserNode::p newValue)
 {
     if(newValue != NULL)
     {
@@ -96,7 +96,7 @@ void HSSMultipleValue::removeLast()
     this->valueList.pop_back();
 }
 
-HSSValue::p HSSMultipleValue::last()
+HSSParserNode::p HSSMultipleValue::last()
 {
     return this->valueList.back();
 }
@@ -105,3 +105,8 @@ const int HSSMultipleValue::size()
 {
     return this->valueList.size();
 }
+
+const std::vector<HSSParserNode::p> HSSMultipleValue::getValueList() const {
+    return this->valueList;
+}
+

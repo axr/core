@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/05
+ *      Last changed: 2011/06/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 16
+ *      Revision: 17
  *
  ********************************************************************/
 
@@ -61,6 +61,7 @@
 #include <boost/weak_ptr.hpp>
 #include "../parsing/HSSRule.h"
 #include <cairo/cairo.h>
+#include "HSSMultipleValue.h"
 
 namespace AXR {
     
@@ -88,6 +89,7 @@ namespace AXR {
         void attributesRemove(std::string name);
         std::string getContentText();
         void setContentText(std::string text);
+        void appendContentText(std::string text);
         
         void rulesAdd(HSSRule::p newRule);
         HSSRule::p rulesGet(unsigned index);
@@ -108,6 +110,9 @@ namespace AXR {
         void setDirty(bool value);
         bool isDirty();
         virtual void draw(cairo_t * cairo);
+        virtual void drawBackground();
+        virtual void drawForeground();
+        virtual void drawBorders();
         virtual void recursiveDraw(cairo_t * cairo);
         
         void setNeedsLayout(bool value);
@@ -145,6 +150,12 @@ namespace AXR {
         HSSParserNode::p getDAlignY();
         void setDAlignY(HSSParserNode::p value);
         void alignYChanged(HSSObservableProperty source, void*data);
+        
+        //background
+        const HSSMultipleValue getDBackground() const;
+        void setDBackground(HSSParserNode::p value);
+        void addDBackground(HSSParserNode::p value);
+        
         
         virtual void setDefaults();
         
@@ -205,6 +216,8 @@ namespace AXR {
         long double alignY;
         HSSObservable * observedAlignY;
         HSSObservableProperty observedAlignYProperty;
+        HSSMultipleValue dBackground;
+        
         //FIXME: margin
         //FIXME: border
         long double zoomFactor;

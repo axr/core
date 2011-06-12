@@ -13,6 +13,7 @@ document
             width: 120;
             height: 80;
             alignX: 70;
+            background: @rgba { red: 255; green: 0; blue: 0 };
         }
         
         navigation
@@ -28,10 +29,10 @@ document
                 height: 40;
             }
             
-            home { alignX: 20% }
-            about { alignX: 40% }
-            features { alignX: 60% }
-            contact { alignX: 80% }
+            home { alignX: 20%; background: @rgba { red: 255; green: 0; blue: 0; alpha: 50 } }
+            about { alignX: 40%; background: @rgba { red: 0; green: 255; blue: 0; alpha: 50 } }
+            features { alignX: 60%; background: @rgba { red: 0; green: 0; blue: 255; alpha: 50 } }
+            contact { alignX: 80%; background: @rgba { red: 0; green: 0; blue: 0; alpha: 50 } }
         }
     }
     

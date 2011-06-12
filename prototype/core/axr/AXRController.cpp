@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2011/06/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 11
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -485,6 +485,11 @@ void AXRController::addAttribute(std::string name, std::string value)
 void AXRController::setContentText(std::string text)
 {
     this->currentContext.top()->setContentText(text);
+}
+
+void AXRController::appendContentText(std::string text)
+{
+    this->currentContext.top()->appendContentText(text);
 }
 
 void AXRController::exitElement()

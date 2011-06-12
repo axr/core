@@ -46,19 +46,68 @@
  *      Last changed: 2011/06/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSOBJECTS_H
-#define HSSOBJECTS_H
+#ifndef HSSRGBA_H
+#define HSSRGBA_H
 
+#include <string>
 #include "HSSObject.h"
-#include "HSSDisplayObject.h"
-#include "HSSContainer.h"
-#include "HSSLineBorder.h"
-#include "HSSValue.h"
-#include "HSSMargin.h"
-#include "HSSRgba.h"
+#include <boost/shared_ptr.hpp>
+
+namespace AXR {
+    class HSSRgba : public HSSObject
+    {
+    public:
+        HSSRgba();
+        virtual ~HSSRgba();
+        
+        typedef boost::shared_ptr<HSSRgba> p;
+        
+        virtual std::string toString();
+        virtual std::string defaultObjectType(std::string property);
+//        virtual bool isKeyword(std::string value, std::string property);
+        
+        virtual void setProperty(std::string name, HSSParserNode::p value);
+        
+        long double getRed();
+        void redChanged(HSSObservableProperty source, void*data);
+        long double getGreen();
+        void greenChanged(HSSObservableProperty source, void*data);
+        long double getBlue();
+        void blueChanged(HSSObservableProperty source, void*data);
+        long double getAlpha();
+        void alphaChanged(HSSObservableProperty source, void*data);
+        
+    private:
+        long double red;
+        long double green;
+        long double blue;
+        long double alpha;
+        
+        
+        HSSObservable * observedRed;
+        HSSObservableProperty observedRedProperty;
+        HSSObservable * observedGreen;
+        HSSObservableProperty observedGreenProperty;
+        HSSObservable * observedBlue;
+        HSSObservableProperty observedBlueProperty;
+        HSSObservable * observedAlpha;
+        HSSObservableProperty observedAlphaProperty;
+        
+        long double _setLDProperty(
+                                   void(HSSRgba::*callback)(HSSObservableProperty property, void* data),
+                                   HSSParserNode::p         value,
+                                   long double              percentageBase,
+                                   HSSObservableProperty    observedSourceProperty,
+                                   HSSObservable *          &observedStore,
+                                   HSSObservableProperty    &observedStoreProperty
+                                   );
+    };
+
+}
+
 
 #endif

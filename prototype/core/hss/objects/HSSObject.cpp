@@ -71,6 +71,8 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
         return HSSValue::p(new HSSValue());
     } else if (type == "margin"){
         return HSSMargin::p(new HSSMargin());
+    } else if (type == "rgba"){
+        return HSSRgba::p(new HSSRgba());
     } else {
         throw HSSUnknownObjectTypeException(type);
     }
@@ -148,5 +150,12 @@ bool HSSObject::isKeyword(std::string value, std::string property)
         return false;
     }
 }
+
+void HSSObject::setProperty(std::string name, HSSParserNode::p value)
+{
+    std_log1("unknown property "+name);
+}
+
+
 
 

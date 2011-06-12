@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2011/06/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 7
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -71,7 +71,7 @@ void HSSNumberConstant::setValue(long double newValue)
     this->value = newValue;
 }
 
-double HSSNumberConstant::getValue()
+long double HSSNumberConstant::getValue()
 {
     return this->value;
 }

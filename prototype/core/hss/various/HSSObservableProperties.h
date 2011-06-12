@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/28
+ *      Last changed: 2011/06/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -70,7 +70,13 @@ namespace AXR {
         HSSObservablePropertyContentAlignX,
         HSSObservablePropertyContentAlignY,
         HSSObservablePropertyDirectionPrimary,
-        HSSObservablePropertyDirectionSecondary
+        HSSObservablePropertyDirectionSecondary,
+        
+        //HSSRgba
+        HSSObservablePropertyRed,
+        HSSObservablePropertyGreen,
+        HSSObservablePropertyBlue,
+        HSSObservablePropertyAlpha,
     };
 }
 

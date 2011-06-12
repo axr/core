@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2011/06/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 10
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -423,16 +423,22 @@ bool HSSParser::isPropertyDefinition()
     if(peekToken->isA(HSSColon)){
         //we'll peek until we find a end of statement, a closing block or an opening one
         peekToken = this->tokenizer->peekNextToken();
-        while(! peekToken->isA(HSSEndOfStatement) && !peekToken->isA(HSSBlockClose) && !peekToken->isA(HSSBlockOpen))
-        {
-            std_log1(peekToken->toString());
-            peekToken = this->tokenizer->peekNextToken();
-            this->checkForUnexpectedEndOfSource();
+        //if we find a whitespace or an object sign here, we can be sure it's a property definition
+        if( peekToken->isA(HSSWhitespace) || peekToken->isA(HSSObjectSign) ){
+            ret = true;
+        } else {
+            while(! peekToken->isA(HSSEndOfStatement) && !peekToken->isA(HSSBlockClose) && !peekToken->isA(HSSBlockOpen))
+            {
+                std_log1(peekToken->toString());
+                peekToken = this->tokenizer->peekNextToken();
+                this->checkForUnexpectedEndOfSource();
+            }
+            //if we find an opening block, we're dealing with a selector
+            if(peekToken->isA(HSSBlockOpen)){
+                ret = false;
+            }
         }
-        //if we find an opening block, we're dealing with a selector
-        if(peekToken->isA(HSSBlockOpen)){
-            ret = false;
-        }
+        
         
 //        peekToken = this->tokenizer->peekNextToken();
 //        //now, if we're dealing with an identifier it may be a filter
@@ -591,7 +597,8 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition()
     
     //read the inner part of the block
     while (!this->currentToken->isA(HSSBlockClose)){
-        ret->propertiesAdd(this->readPropertyDefinition());
+        const HSSPropertyDefinition::p &property = this->readPropertyDefinition();
+        ret->propertiesAdd(property);
     }
     
     //we're out of the block, we expect a closing brace

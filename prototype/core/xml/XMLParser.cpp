@@ -143,7 +143,12 @@ void XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)
 
 void XMLParser::CharacterData(const XML_Char *s, int len)
 {
-    this->controller->setContentText(std::string(s, len));
+    //FIXME: make this better
+    //for now, just ignore pure newlines and tabs
+    std::string tempstr = std::string(s, len);
+    if(tempstr != "\n" && tempstr != "\r" && tempstr != "\t"){
+        this->controller->appendContentText(tempstr);
+    }
 }
 
 void XMLParser::EndElement(const XML_Char *name)

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/06/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -54,7 +54,7 @@
 #define HSSMULTIPLEVALUE_H
 
 #include "HSSObject.h"
-#include "HSSValue.h"
+#include "../parsing/HSSParserNode.h"
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
@@ -70,16 +70,18 @@ namespace AXR {
         
         //adds a pointer to newStatement to the properties list
         //this function acquires ownership of the statement
-        void add(HSSValue::p newValue);
+        void add(HSSParserNode::p newValue);
         //removes last statement from the list and then deletes it
         void removeLast();
         //returns a pointer to the last statement in the list
-        HSSValue::p last();
+        HSSParserNode::p last();
         //returns how many statements there are in the properties list
         const int size();
         
+        const std::vector<HSSParserNode::p> getValueList() const;
+        
     protected:
-        std::vector<HSSValue::p>valueList;
+        std::vector<HSSParserNode::p>valueList;
     };
 }
 

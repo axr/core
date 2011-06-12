@@ -2,5 +2,6 @@ parent
 {
 	child {
 		width: 150;
+		
 	}
 }

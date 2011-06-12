@@ -3,12 +3,12 @@
 <!--<?xml-sitemap type="application/xml" src="sitemap.xml"?>-->
 <document>
 	<header>
-		<logo>black</logo>
+		<logo>Logo</logo>
 		<navigation>
-			<home href="home.xml">red</home>
-			<about href="about.xml">green</about>
-			<features href="features.xml">white</features>
-			<contact href="contact.xml">blue</contact>
+			<home href="home.xml">Home</home>
+			<about href="about.xml">About</about>
+			<features href="features.xml">Features</features>
+			<contact href="contact.xml">Contact</contact>
 		</navigation>
 	</header>
 	<content>

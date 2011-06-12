@@ -56,6 +56,7 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include "../various/HSSObservable.h"
+#include "../parsing/HSSParserNode.h"
 #include <map>
 
 namespace AXR {
@@ -70,6 +71,7 @@ namespace AXR {
         HSSObjectTypeMarginGeneric,
         HSSObjectTypeStraightMargin,
         HSSObjectTypeProjectedMargin,
+        HSSObjectTypeRgba,
         HSSObjectTypeValue,
         HSSObjectTypeMultipleValue
     };
@@ -97,6 +99,7 @@ namespace AXR {
         
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
+        virtual void setProperty(std::string name, HSSParserNode::p value);
         
     protected:
         HSSObjectType type;

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2011/06/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 8
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -93,6 +93,7 @@ namespace AXR {
         void enterElement(std::string elementName);
         void addAttribute(std::string name, std::string value);
         void setContentText(std::string text);
+        void appendContentText(std::string text);
         void exitElement();
         
         void add(HSSContainer::p & newContainer);

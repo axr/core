@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/06/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -70,17 +70,20 @@ namespace AXR {
         ~HSSObjectDefinition();
         virtual std::string toString();
         
-        //adds a pointer to newStatement to the properties list
-        //this function acquires ownership of the statement
-        void propertiesAdd(HSSStatement::p newStatement);
+        //adds a new statement to the properties list
+        void propertiesAdd(HSSPropertyDefinition::p &newProperty);
+        void propertiesAdd(const HSSPropertyDefinition::p &newProperty);
         //removes last statement from the list and then deletes it
         void propertiesRemoveLast();
         //returns a pointer to the last statement in the list
-        HSSStatement::p propertiesLast();
+        HSSPropertyDefinition::p &propertiesLast();
         //returns how many statements there are in the properties list
         const int propertiesSize();
+        
+        HSSObject::p getObject();
+        
     protected:
-        std::vector<HSSStatement::p> properties;
+        std::vector<HSSPropertyDefinition::p> properties;
         
     private:
         HSSObject::p prototype;

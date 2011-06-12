@@ -15,6 +15,8 @@
 		4E12B91F1365BB0200BBAD6C /* HSSDivision.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E12B91D1365BB0200BBAD6C /* HSSDivision.h */; };
 		4E12B9221365BEA600BBAD6C /* HSSObservable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E12B9201365BEA600BBAD6C /* HSSObservable.cpp */; };
 		4E12B9231365BEA600BBAD6C /* HSSObservable.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E12B9211365BEA600BBAD6C /* HSSObservable.h */; };
+		4E1BE18013A3F5F300D7C6DB /* HSSRgba.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BE17E13A3F5F300D7C6DB /* HSSRgba.cpp */; };
+		4E1BE18113A3F5F300D7C6DB /* HSSRgba.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E1BE17F13A3F5F300D7C6DB /* HSSRgba.h */; };
 		4E351B771350784B00FEB909 /* AXRView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C87713505DEA00D88409 /* AXRView.mm */; };
 		4E5457AB136443E900D67571 /* HSSObservableProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5457AA136443E900D67571 /* HSSObservableProperties.h */; };
 		4E5457B01364523D00D67571 /* HSSCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E5457AE1364523D00D67571 /* HSSCallback.cpp */; };
@@ -110,10 +112,11 @@
 		4EACEAFC138316FC00FD76B8 /* libcairo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EACEAFB138316FC00FD76B8 /* libcairo.a */; };
 		4EACEAFE1383170300FD76B8 /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EACEAFD1383170300FD76B8 /* libexpat.a */; };
 		4EACEB001383171100FD76B8 /* libpixman-1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EACEAFF1383171100FD76B8 /* libpixman-1.a */; };
-		4EACEB021383172300FD76B8 /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EACEB011383172300FD76B8 /* libfreetype.a */; };
-		4EACEB041383172F00FD76B8 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EACEB031383172F00FD76B8 /* libz.a */; };
 		4EBEABF61351CE0B000D6CE7 /* AXRExceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EBEABF41351CE0B000D6CE7 /* AXRExceptions.cpp */; };
 		4EBEABF71351CE0B000D6CE7 /* AXRExceptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EBEABF51351CE0B000D6CE7 /* AXRExceptions.h */; };
+		4ED8F22E13A3D8F900022632 /* libpangocairo-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ED8F22D13A3D8F900022632 /* libpangocairo-1.0.0.dylib */; };
+		4EFE2713139E822400F17117 /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EFE2712139E822400F17117 /* libfreetype.a */; };
+		4EFE2715139E82F300F17117 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EFE2714139E82F300F17117 /* libz.a */; };
 		4EFEBB10135C7E1400352CC0 /* OSXRender.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4EFEBB0E135C7E1400352CC0 /* OSXRender.mm */; };
 		4EFEBB11135C7E1400352CC0 /* OSXRender.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EFEBB0F135C7E1400352CC0 /* OSXRender.h */; };
 /* End PBXBuildFile section */
@@ -127,6 +130,8 @@
 		4E12B91D1365BB0200BBAD6C /* HSSDivision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSDivision.h; sourceTree = "<group>"; };
 		4E12B9201365BEA600BBAD6C /* HSSObservable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSObservable.cpp; sourceTree = "<group>"; };
 		4E12B9211365BEA600BBAD6C /* HSSObservable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservable.h; sourceTree = "<group>"; };
+		4E1BE17E13A3F5F300D7C6DB /* HSSRgba.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRgba.cpp; sourceTree = "<group>"; };
+		4E1BE17F13A3F5F300D7C6DB /* HSSRgba.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRgba.h; sourceTree = "<group>"; };
 		4E5457AA136443E900D67571 /* HSSObservableProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservableProperties.h; sourceTree = "<group>"; };
 		4E5457AE1364523D00D67571 /* HSSCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSCallback.cpp; sourceTree = "<group>"; };
 		4E5457AF1364523D00D67571 /* HSSCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSCallback.h; sourceTree = "<group>"; };
@@ -217,15 +222,16 @@
 		4E9AB08713589DA600837091 /* AXRDebugging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRDebugging.cpp; sourceTree = "<group>"; };
 		4E9AB08813589DA600837091 /* AXRDebugging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRDebugging.h; sourceTree = "<group>"; };
 		4E9AB08B1358A08700837091 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
-		4EACEAFB138316FC00FD76B8 /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../usr/local/lib/libcairo.a; sourceTree = "<group>"; };
+		4EACEAFB138316FC00FD76B8 /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../usr/local/Cellar/cairo/1.10.2/lib/libcairo.a; sourceTree = "<group>"; };
 		4EACEAFD1383170300FD76B8 /* libexpat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libexpat.a; path = ../../../../../usr/local/lib/libexpat.a; sourceTree = "<group>"; };
 		4EACEAFF1383171100FD76B8 /* libpixman-1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpixman-1.a"; path = "../../../../../usr/local/lib/libpixman-1.a"; sourceTree = "<group>"; };
-		4EACEB011383172300FD76B8 /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = ../../../../../usr/local/lib/libfreetype.a; sourceTree = "<group>"; };
-		4EACEB031383172F00FD76B8 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = ../../../../../usr/local/lib/libz.a; sourceTree = "<group>"; };
 		4EBEABF41351CE0B000D6CE7 /* AXRExceptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = AXRExceptions.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		4EBEABF51351CE0B000D6CE7 /* AXRExceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AXRExceptions.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4ED1A8981309A4F5001EAEA9 /* AXR.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; name = AXR.cpp; path = ../core/AXR.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		4ED1A8991309A4F5001EAEA9 /* AXR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = AXR.h; path = ../core/AXR.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4ED8F22D13A3D8F900022632 /* libpangocairo-1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libpangocairo-1.0.0.dylib"; path = "../../../../../usr/local/Cellar/pango/1.28.4/lib/libpangocairo-1.0.0.dylib"; sourceTree = "<group>"; };
+		4EFE2712139E822400F17117 /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = "../../../Developer/usr-local-backup/lib/libfreetype.a"; sourceTree = "<group>"; };
+		4EFE2714139E82F300F17117 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = "../../../Developer/usr-local-backup/lib/libz.a"; sourceTree = "<group>"; };
 		4EFEBB0E135C7E1400352CC0 /* OSXRender.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXRender.mm; sourceTree = "<group>"; };
 		4EFEBB0F135C7E1400352CC0 /* OSXRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXRender.h; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -236,11 +242,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4EACEB021383172300FD76B8 /* libfreetype.a in Frameworks */,
 				4EACEAFC138316FC00FD76B8 /* libcairo.a in Frameworks */,
 				4EACEAFE1383170300FD76B8 /* libexpat.a in Frameworks */,
 				4EACEB001383171100FD76B8 /* libpixman-1.a in Frameworks */,
-				4EACEB041383172F00FD76B8 /* libz.a in Frameworks */,
+				4EFE2713139E822400F17117 /* libfreetype.a in Frameworks */,
+				4EFE2715139E82F300F17117 /* libz.a in Frameworks */,
+				4ED8F22E13A3D8F900022632 /* libpangocairo-1.0.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,11 +257,12 @@
 		08FB7794FE84155DC02AAC07 /* core */ = {
 			isa = PBXGroup;
 			children = (
-				4EACEB011383172300FD76B8 /* libfreetype.a */,
+				4ED8F22D13A3D8F900022632 /* libpangocairo-1.0.0.dylib */,
+				4EFE2714139E82F300F17117 /* libz.a */,
+				4EFE2712139E822400F17117 /* libfreetype.a */,
 				4EACEAFB138316FC00FD76B8 /* libcairo.a */,
 				4EACEAFD1383170300FD76B8 /* libexpat.a */,
 				4EACEAFF1383171100FD76B8 /* libpixman-1.a */,
-				4EACEB031383172F00FD76B8 /* libz.a */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				C6A0FF2B0290797F04C91782 /* Documentation */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -341,6 +349,8 @@
 				4E80C7FF13505DD200D88409 /* HSSObjects.h */,
 				4E80C80013505DD200D88409 /* HSSValue.cpp */,
 				4E80C80113505DD200D88409 /* HSSValue.h */,
+				4E1BE17E13A3F5F300D7C6DB /* HSSRgba.cpp */,
+				4E1BE17F13A3F5F300D7C6DB /* HSSRgba.h */,
 			);
 			path = objects;
 			sourceTree = "<group>";
@@ -533,6 +543,7 @@
 				4E12B91B1365B95200BBAD6C /* HSSMultiplication.h in Headers */,
 				4E12B91F1365BB0200BBAD6C /* HSSDivision.h in Headers */,
 				4E12B9231365BEA600BBAD6C /* HSSObservable.h in Headers */,
+				4E1BE18113A3F5F300D7C6DB /* HSSRgba.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -633,6 +644,7 @@
 				4E12B91A1365B95200BBAD6C /* HSSMultiplication.cpp in Sources */,
 				4E12B91E1365BB0200BBAD6C /* HSSDivision.cpp in Sources */,
 				4E12B9221365BEA600BBAD6C /* HSSObservable.cpp in Sources */,
+				4E1BE18013A3F5F300D7C6DB /* HSSRgba.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -653,8 +665,15 @@
 					"$(inherited)",
 					"\"$(SDKROOT)/usr/local/lib/cairo\"",
 					/usr/X11/lib,
+					"\"$(SRCROOT)/../../../Developer/usr-local-backup/lib\"",
+					/usr/local/Cellar/pango/1.28.4/lib,
 				);
 				OTHER_CFLAGS = "-DAXR_PLATFORM_OSX";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-I/usr/local/Cellar/cairo/1.10.2/include",
+				);
+				OTHER_LDFLAGS = "-L/usr/local/Cellar/cairo/1.10.2/lib";
 				PRODUCT_NAME = core;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				USER_HEADER_SEARCH_PATHS = /usr/local/include/;
@@ -672,8 +691,15 @@
 					"$(inherited)",
 					"\"$(SDKROOT)/usr/local/lib/cairo\"",
 					/usr/X11/lib,
+					"\"$(SRCROOT)/../../../Developer/usr-local-backup/lib\"",
+					/usr/local/Cellar/pango/1.28.4/lib,
 				);
 				OTHER_CFLAGS = "-DAXR_PLATFORM_OSX";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-I/usr/local/Cellar/cairo/1.10.2/include",
+				);
+				OTHER_LDFLAGS = "-L/usr/local/Cellar/cairo/1.10.2/lib";
 				PRODUCT_NAME = core;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				USER_HEADER_SEARCH_PATHS = /usr/local/include/;

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/05
+ *      Last changed: 2011/06/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 22
+ *      Revision: 23
  *
  ********************************************************************/
 
@@ -380,6 +380,24 @@ void HSSContainer::layout()
             while (j<secondaryGroups.size()) {
                 displayGroup & currentSGroup = secondaryGroups[j];
                 addedToGroup = this->_addChildToGroupIfNeeded(child, currentSGroup, this->directionSecondary);
+                
+                if(addedToGroup){
+                    k=0;
+                    while (k<secondaryGroups.size()){
+                        if(k != j){
+                            displayGroup & otherSGroup = secondaryGroups[k];
+                            bool merged = this->_mergeGroupsIfNeeded(otherSGroup, currentSGroup,  this->directionSecondary);
+                            if(merged){
+                                secondaryGroups.erase(secondaryGroups.begin()+j);
+                                j = k;
+                            } else {
+                                k++;
+                            }
+                        } else {
+                            k++;
+                        }
+                    }
+                }
                 
                 j++;
                 security_brake();

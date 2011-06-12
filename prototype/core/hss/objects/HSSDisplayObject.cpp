@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/05
+ *      Last changed: 2011/06/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 23
+ *      Revision: 24
  *
  ********************************************************************/
 
@@ -58,7 +58,9 @@
 #include "../parsing/HSSParserNode.h"
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
+#include "../parsing/HSSObjectDefinition.h"
 #include "HSSContainer.h"
+#include "HSSRgba.h"
 #include <sstream>
 #include <string>
 
@@ -91,6 +93,8 @@ HSSDisplayObject::HSSDisplayObject()
     = observedAnchorX = observedAnchorY
     = observedAlignX = observedAlignY
     = NULL;
+    
+    this->dBackground = HSSMultipleValue();
 }
 
 HSSDisplayObject::HSSDisplayObject(std::string name)
@@ -120,6 +124,8 @@ HSSDisplayObject::HSSDisplayObject(std::string name)
     = observedAnchorX = observedAnchorY
     = observedAlignX = observedAlignY
     = NULL;
+    
+    this->dBackground = HSSMultipleValue();
 }
 
 HSSDisplayObject::~HSSDisplayObject()
@@ -217,6 +223,11 @@ void HSSDisplayObject::setContentText(std::string text)
     this->contentText = text;
 }
 
+void HSSDisplayObject::appendContentText(std::string text)
+{
+    this->contentText.append(text);
+}
+
 std::string HSSDisplayObject::getElementName()
 {
     return this->elementName;
@@ -288,6 +299,9 @@ void HSSDisplayObject::readDefinitionObjects()
                 } else if(propertyName == "alignY"){
                     //store a copy of the value
                     this->setDAlignY(propertyDefinition->getValue());
+                } else if(propertyName == "background"){
+                    //store a copy of the value
+                    this->setDBackground(propertyDefinition->getValue());
                 }
             }
         }
@@ -385,35 +399,73 @@ void HSSDisplayObject::draw(cairo_t * cairo)
         std_log1("redrawing contents of "+this->elementName+" with x: "+xStream.str()+" and y: "+yStream.str());
 #endif
         this->_isDirty = false;
-        cairo_t * cairo = cairo_create(this->foregroundSurface);
-        cairo_rectangle(cairo, 0., 0., this->width, this->height);
-        if(this->contentText == "red"){
-            cairo_set_source_rgba(cairo, 1,0,0,0.5);
-        } else if(this->contentText == "green"){
-            cairo_set_source_rgba(cairo, 0,1,0,0.5);
-        } else if(this->contentText == "blue"){
-            cairo_set_source_rgba(cairo, 0,0,1,0.5);
-        } else if(this->contentText == "white"){
-            cairo_set_source_rgba(cairo, 1,1,1,0.5);
-        } else if (this->contentText == "black"){
-            cairo_set_source_rgba(cairo, 0,0,0,0.5);
-        } else {
-            cairo_set_source_rgba(cairo, 0.8,0.8,0.8,0.5);
-        }
-        cairo_fill_preserve(cairo);
-        cairo_set_source_rgb(cairo, 0,0,0);
-        cairo_stroke(cairo);
-        
-        //draw a small rectangle to be able to see the anchor X and Y
-        cairo_rectangle(cairo, this->anchorX-1., this->anchorY-1., 2, 2);
-        cairo_set_source_rgb(cairo, 1,0,0);
-        cairo_fill(cairo);
-        
-        cairo_destroy(cairo);
+        this->drawBackground();
+        this->drawForeground();
+        this->drawBorders();
     }
     
+    cairo_set_source_surface(cairo, this->backgroundSurface, this->globalX, this->globalY);
+    cairo_paint(cairo);
     cairo_set_source_surface(cairo, this->foregroundSurface, this->globalX, this->globalY);
     cairo_paint(cairo);
+    cairo_set_source_surface(cairo, this->bordersSurface, this->globalX, this->globalY);
+    cairo_paint(cairo);
+}
+
+void HSSDisplayObject::drawBackground()
+{
+    //look at what is in the background property
+    const std::vector<HSSParserNode::p> &bglist = this->getDBackground().getValueList();
+    unsigned i, size;
+    long double r = 0., g = 0., b = 0., a = 0;
+    for (i=0, size = bglist.size(); i<size; i++) {
+        if (bglist[i]->isA(HSSParserNodeTypeObjectDefinition)){
+            HSSObject::p bgObject = boost::static_pointer_cast<HSSObjectDefinition>(bglist[i])->getObject();
+            if(bgObject->isA(HSSObjectTypeRgba)){
+                HSSRgba::p rgbaObject = boost::static_pointer_cast<HSSRgba>(bgObject);
+                r = rgbaObject->getRed();
+                g = rgbaObject->getGreen();
+                b = rgbaObject->getBlue();
+                a = rgbaObject->getAlpha();
+            }
+        }
+    }
+    
+    
+    cairo_t * cairo = cairo_create(this->backgroundSurface);
+    cairo_rectangle(cairo, 0., 0., this->width, this->height);
+    cairo_set_source_rgba(cairo, (r/255), (g/255), (b/255), (a/255));
+    cairo_fill(cairo);
+    
+    //draw a small rectangle to be able to see the anchor X and Y
+    cairo_rectangle(cairo, this->anchorX-1., this->anchorY-1., 2, 2);
+    cairo_set_source_rgb(cairo, 1,0,0);
+    cairo_fill(cairo);
+    
+    cairo_destroy(cairo);
+}
+
+void HSSDisplayObject::drawForeground()
+{
+    cairo_t * cairo = cairo_create(this->foregroundSurface);
+    cairo_select_font_face (cairo, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+    cairo_set_font_size (cairo, 12.0);
+    cairo_set_source_rgb (cairo, 0.0, 0.0, 0.0);
+    cairo_move_to (cairo, 0.0, 12.0);
+    std_log1(this->getContentText());
+    cairo_show_text (cairo, this->getContentText().c_str());
+    
+    cairo_destroy(cairo);
+}
+
+void HSSDisplayObject::drawBorders()
+{
+    cairo_t * cairo = cairo_create(this->bordersSurface);
+    cairo_rectangle(cairo, 0., 0., this->width, this->height);
+    cairo_set_source_rgb(cairo, 0,0,0);
+    cairo_stroke(cairo);
+    
+    cairo_destroy(cairo);
 }
 
 void HSSDisplayObject::recursiveDraw(cairo_t * cairo)
@@ -1055,6 +1107,20 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyAlignY, &this->alignY);
 }
 
+
+//background
+const HSSMultipleValue HSSDisplayObject::getDBackground() const { return this->dBackground; }
+void HSSDisplayObject::setDBackground(HSSParserNode::p value)
+{
+    HSSMultipleValue newBackground;
+    newBackground.add(value);
+    this->dBackground = newBackground;
+    
+    //this->notifyObservers(HSSObservablePropertyAlignY, &this->alignY);
+}
+
+
+
 //defaults
 void HSSDisplayObject::setDefaults()
 {
@@ -1079,6 +1145,9 @@ void HSSDisplayObject::setDefaults()
     //alignY
     HSSKeywordConstant::p newDAlignY(new HSSKeywordConstant("auto"));
     this->setDAlignY(newDAlignY);
+    //background
+    HSSKeywordConstant::p newDBackground(new HSSKeywordConstant("none"));
+    this->setDBackground(newDBackground);
 }
 
 

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/06/12
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -61,6 +61,7 @@ HSSObjectDefinition::HSSObjectDefinition(HSSObject::p prototype)
 {
     this->prototype = prototype;
     this->type = HSSStatementTypeObjectDefinition;
+    this->nodeType = HSSParserNodeTypeObjectDefinition;
 }
 
 HSSObjectDefinition::~HSSObjectDefinition()
@@ -85,12 +86,23 @@ std::string HSSObjectDefinition::toString()
     return tempstr;
 }
 
-void HSSObjectDefinition::propertiesAdd(HSSStatement::p newStatement)
+void HSSObjectDefinition::propertiesAdd(HSSPropertyDefinition::p &newProperty)
 {
-    if(newStatement != NULL)
+    if(newProperty != NULL)
     {
-        std_log3("Added node of type " << newStatement->toString());
-        this->properties.push_back(newStatement);
+        std_log3("Added node of type " << newProperty->toString());
+        this->properties.push_back(newProperty);
+        this->prototype->setProperty(newProperty->getName(), newProperty->getValue());
+    }
+}
+
+void HSSObjectDefinition::propertiesAdd(const HSSPropertyDefinition::p &newProperty)
+{
+    if(newProperty != NULL)
+    {
+        std_log3("Added node of type " << newProperty->toString());
+        this->properties.push_back(newProperty);
+        this->prototype->setProperty(newProperty->getName(), newProperty->getValue());
     }
 }
 
@@ -99,7 +111,7 @@ void HSSObjectDefinition::propertiesRemoveLast()
     this->properties.pop_back();
 }
 
-HSSStatement::p HSSObjectDefinition::propertiesLast()
+HSSPropertyDefinition::p &HSSObjectDefinition::propertiesLast()
 {
     return this->properties.back();
 }
@@ -109,6 +121,9 @@ const int HSSObjectDefinition::propertiesSize()
     return this->properties.size();
 }
 
-
+HSSObject::p HSSObjectDefinition::getObject()
+{
+    return this->prototype;
+}
 
 
