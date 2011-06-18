@@ -347,6 +347,7 @@ Those properties that accept multiple values are marked with [].
 		@jsFunction
 			name
 			arguments
+                        callback
 		
 		@javascript
 			script
