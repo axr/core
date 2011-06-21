@@ -1,3 +1,37 @@
+@container
+{
+    font: fontStyle1;
+    
+    @ button1
+    {
+        font: title2Font;
+
+        @this:hover {
+            font: title2FontAcc;
+            shape: @roundedRect { 4 };
+            background: boxGradientGloss;
+            effects: normalShadow;
+        }
+    }
+
+    @ textfield
+    {
+        contentText: searchFormLabel;
+        border: @{ 1 };
+        effects: @glow { 5 #0 10 inside };
+        contentAlignY: 50%;
+        editable: yes;
+        innerMargin: @{ 10 };
+    }
+
+    @ paragraph
+    {
+        font: bodyFont;
+        width: max(400, min(150, 80%));
+        margin: @{ 10 top }, @{ 10 bottom };
+    }
+}
+
 @shadow normalShadow
 {
     size: 10;
@@ -7,24 +41,6 @@
     };
 }
 
-@container button1
-{
-    font: title2Font;
-    
-    @this:hover {
-        font: title2FontAcc;
-        shape: @roundedRect { 4 };
-        background: boxGradientGloss;
-        effects: normalShadow;
-    }
-}
-
-@container paragraph
-{
-    font: bodyFont;
-    width: max(400, min(150, 80%));
-    margin: @{ 10 top }, @{ 10 bottom };
-}
 
 :root
 {
@@ -33,7 +49,7 @@
         height: max(150, min(50, 20%));
         background: darkBarGradientGloss;
         alignModePrimary: distribute;
-        foreground: @request { "navigation.xml" };
+        content: @request { "navigation.xml" };
         padding: @{ 50 left }, @{ 50 right};
         
         navigation * { parent: @this }

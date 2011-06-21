@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://axr.vg/axr2html.xsl" about="legacy"?>
 <?xml-sitemap type="application/xml" src="navigation.xml"?>
 <home>
-	<metadata xmlns="vg.axr.document.metadata">
+	<metadata xmlns="urn:vg.axr.document.metadata">
 		<author>Miro Keller</author>
-		<lastModified>2011/06/05</lastModified>
+		<lastModified format="YY/MM/DD">2011/06/05</lastModified>
+		<language code="en">English</language>
 	</metadata>
 	<about>This is a test project, where I try out how it would be to create a simple site using AXR.</about>
 	<nextSteps>Please select where you want to go next from the main menu.</nextSteps>

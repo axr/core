@@ -9,4 +9,12 @@ home
             isA: paragraph;
         }
     }
+    
+    #new search
+    {
+        isA: textfield;
+        alignX: 100%;
+        alignY: 100%;
+        flow: no;
+    }
 }

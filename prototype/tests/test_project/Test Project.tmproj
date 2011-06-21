@@ -10,13 +10,13 @@
 			<key>filename</key>
 			<string>color.hss</string>
 			<key>lastUsed</key>
-			<date>2011-06-05T17:17:56Z</date>
+			<date>2011-06-21T21:00:40Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>style.hss</string>
 			<key>lastUsed</key>
-			<date>2011-06-05T17:17:56Z</date>
+			<date>2011-06-21T21:02:00Z</date>
 			<key>selected</key>
 			<true/>
 		</dict>
@@ -24,45 +24,97 @@
 			<key>filename</key>
 			<string>home.xml</string>
 			<key>lastUsed</key>
-			<date>2011-06-05T17:17:43Z</date>
+			<date>2011-06-21T20:58:57Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>navigation.xml</string>
 			<key>lastUsed</key>
-			<date>2011-06-05T17:17:44Z</date>
+			<date>2011-06-21T20:58:59Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>home.hss</string>
 			<key>lastUsed</key>
-			<date>2011-06-05T17:17:54Z</date>
+			<date>2011-06-21T21:00:55Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>foundation.hss</string>
 			<key>lastUsed</key>
-			<date>2011-06-05T17:17:55Z</date>
+			<date>2011-06-21T21:01:18Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>typography.hss</string>
 			<key>lastUsed</key>
-			<date>2011-06-05T17:17:56Z</date>
+			<date>2011-06-21T21:02:00Z</date>
+		</dict>
+		<dict>
+			<key>expanded</key>
+			<true/>
+			<key>name</key>
+			<string>en</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>en</string>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
 	<integer>200</integer>
 	<key>metaData</key>
 	<dict>
+		<key>color.hss</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>10</integer>
+				<key>line</key>
+				<integer>1</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>en/strings.hss</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>45</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>foundation.hss</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>41</integer>
+				<key>line</key>
+				<integer>60</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>home.hss</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>9</integer>
+				<integer>17</integer>
 				<key>line</key>
-				<integer>9</integer>
+				<integer>17</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -74,9 +126,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>7</integer>
+				<integer>59</integer>
 				<key>line</key>
-				<integer>9</integer>
+				<integer>2</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -88,9 +140,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>52</integer>
+				<integer>13</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>6</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -102,7 +154,7 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>41</integer>
+				<integer>19</integer>
 				<key>line</key>
 				<integer>4</integer>
 			</dict>
@@ -116,12 +168,15 @@
 	<array>
 		<string>home.xml</string>
 		<string>navigation.xml</string>
+		<string>foundation.hss</string>
+		<string>color.hss</string>
 		<string>style.hss</string>
 		<string>home.hss</string>
+		<string>en/strings.hss</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{1273, 232}, {1069, 1054}}</string>
+	<string>{{676, 236}, {1069, 1054}}</string>
 </dict>
 </plist>
