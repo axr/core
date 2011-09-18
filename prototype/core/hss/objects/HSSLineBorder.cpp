@@ -43,16 +43,28 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/09/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 5
  *
  ********************************************************************/
 
 #include "HSSLineBorder.h"
 
 using namespace AXR;
+
+bool HSSLineBorder::isKeyword(std::string value, std::string property)
+{
+    if (value == "rounded" || value == "projected"){
+        if (property == "caps") {
+            return true;
+        }
+    }
+    
+    //if we reached this far, let the superclass handle it
+    return HSSBorder::isKeyword(value, property);
+}
 
 HSSLineBorder::HSSLineBorder()
 :HSSBorder()
@@ -85,18 +97,6 @@ std::string HSSLineBorder::defaultObjectType(std::string property)
     } else {
         return HSSObject::defaultObjectType(property);
     }
-}
-
-bool HSSLineBorder::isKeyword(std::string value, std::string property)
-{
-    if (value == "rounded" || value == "projected"){
-        if (property == "caps") {
-            return true;
-        }
-    }
-    
-    //if we reached this far, let the superclass handle it
-    return HSSBorder::isKeyword(value, property);
 }
 
 

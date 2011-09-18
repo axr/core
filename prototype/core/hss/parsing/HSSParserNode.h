@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/12
+ *      Last changed: 2011/09/04
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 7
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -69,7 +69,8 @@ namespace AXR {
         HSSParserNodeTypePercentageConstant,
         HSSParserNodeTypeStringConstant,
         HSSParserNodeTypeKeywordConstant,
-        HSSParserNodeTypeObjectDefinition
+        HSSParserNodeTypeObjectDefinition,
+        HSSParserNodeTypeObjectNameConstant
     };
 
     

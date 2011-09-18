@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2011/09/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 7
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -180,7 +180,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
     security_brake_init();
     if(instructionName == "xml-stylesheet"){
         while (data[datai] != '\0') {
-            if (isspace(data[datai])){
+            if (readingAttr && isspace(data[datai])){
                 //ignore the whitespace
                 //FIXME: set behavior according to XML spec
             } else if(data[datai] == '=') {
@@ -226,12 +226,14 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
             security_brake();
         }
         
-        if(sheetType != "application/x-hss" && sheetType != "text/hss"){
-            throw XMLUnknownSheetTypeException(this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser));
+        if(sheetType == "application/x-hss" || sheetType == "text/hss"){
+            //add to load later
+            this->controller->loadSheetsAdd(sheetName);
+        } else {
+            std_log1("Ignoring stylesheet with unknown type");
         }
         
-        //add to load later
-        this->controller->loadSheetsAdd(sheetName);
+        
         
     } else {
         //balk

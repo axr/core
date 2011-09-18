@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2011/09/04
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -58,6 +58,7 @@
 #include "../various/HSSObservable.h"
 #include "../parsing/HSSParserNode.h"
 #include <map>
+//#include "../../axr/AXRController.h"
 
 namespace AXR {
     
@@ -76,12 +77,15 @@ namespace AXR {
         HSSObjectTypeMultipleValue
     };
     
+    class AXRController;
+    
     class HSSObject : public HSSObservable
     {
     public:
         typedef boost::shared_ptr<HSSObject> p;
         
         static HSSObject::p newObjectWithType(std::string type);
+        static bool isKeyword(std::string value, std::string property);
         
         std::string name;
         
@@ -98,8 +102,9 @@ namespace AXR {
         HSSObjectType getType();
         
         virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
         virtual void setProperty(std::string name, HSSParserNode::p value);
+        
+        AXRController * axrController;
         
     protected:
         HSSObjectType type;

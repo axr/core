@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="application/x-hss" src="style12.hss"?>
+<!--<?xml-sitemap type="application/xml" src="sitemap.xml"?>-->
+<?xml-stylesheet type="text/xsl" src="axr2html.xsl" about="legacy"?>
+<document>
+	<test>Red</test>
+	<test1>Green</test1>
+	<test2>Blue</test2>
+</document>

@@ -1,0 +1,26 @@
+@rgba grayColor { red:50%; green: 50%; blue: 50% }
+@rgba redColor { red: 100;}
+@rgba greenColor { green: 100 }
+@rgba blueColor { blue: 100; alpha: 50% }
+
+
+document
+{
+	background: grayColor;
+	contentAlignY: 50%;
+	
+	*
+	{
+		width: 150;
+		height: 50;
+		background: redColor;
+	}
+	test1
+	{
+		background: greenColor;
+	}
+	test2
+	{
+		background: blueColor;
+	}
+}

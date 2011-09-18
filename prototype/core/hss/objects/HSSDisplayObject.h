@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/11
+ *      Last changed: 2011/09/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 17
+ *      Revision: 19
  *
  ********************************************************************/
 
@@ -62,6 +62,7 @@
 #include "../parsing/HSSRule.h"
 #include <cairo/cairo.h>
 #include "HSSMultipleValue.h"
+#include "HSSRgba.h"
 
 namespace AXR {
     
@@ -70,6 +71,7 @@ namespace AXR {
     class HSSDisplayObject : public HSSObject
     {
     public:
+        static bool isKeyword(std::string value, std::string property);
         
         friend class HSSContainer;
         
@@ -82,7 +84,6 @@ namespace AXR {
         virtual std::string toString();
         virtual bool canHaveChildren();
         virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
         boost::shared_ptr<HSSContainer> getParent();
         void setParent(boost::shared_ptr<HSSContainer> parent);
         void attributesAdd(std::string name, std::string value);
@@ -187,36 +188,47 @@ namespace AXR {
         long double y;
         long double globalX;
         long double globalY;
+        //width
         HSSParserNode::p dWidth;
         long double width;
         HSSObservable * observedWidth;
         HSSObservableProperty observedWidthProperty;
+        //height
         HSSParserNode::p dHeight;
         long double height;
+        bool heightByContent;
         HSSObservable * observedHeight;
         HSSObservableProperty observedHeightProperty;
         
         //FIXME: bounds
+        
+        //anchorX
         HSSParserNode::p dAnchorX;
         long double anchorX;
         HSSObservable * observedAnchorX;
         HSSObservableProperty observedAnchorXProperty;
+        //anchorY
         HSSParserNode::p dAnchorY;
         long double anchorY;
         HSSObservable * observedAnchorY;
         HSSObservableProperty observedAnchorYProperty;
+        //flow
         HSSParserNode::p dFlow;
         bool flow;
         bool does_float;
+        //alignX
         HSSParserNode::p dAlignX;
         long double alignX;
         HSSObservable * observedAlignX;
         HSSObservableProperty observedAlignXProperty;
+        //alignY
         HSSParserNode::p dAlignY;
         long double alignY;
         HSSObservable * observedAlignY;
         HSSObservableProperty observedAlignYProperty;
+        //background
         HSSMultipleValue dBackground;
+        HSSRgba::p backgroundColor;
         
         //FIXME: margin
         //FIXME: border

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/09/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -73,11 +73,24 @@ HSSInstruction::~HSSInstruction()
     
 }
 
+HSSInstructionType HSSInstruction::getInstructionType()
+{
+    return this->instructionType;
+}
+
+std::string HSSInstruction::getValue()
+{
+    return this->value;
+}
+
 std::string HSSInstruction::toString()
 {
     std::string tempstr = "HSSInstruction of type: "+this->instructionStringRepresentation(this->instructionType);
-    if (this->instructionType == HSSColorInstruction)
-    {
+    if (
+        this->instructionType != HSSNewInstruction
+        && this->instructionType != HSSEnsureInstruction
+        && this->instructionType != HSSImportInstruction
+    ){
         tempstr.append(" and value: "+this->value);
     }
     return tempstr;
@@ -88,6 +101,11 @@ std::string HSSInstruction::instructionStringRepresentation(HSSInstructionType t
 	types[HSSNewInstruction] = "HSSNewInstruction";
 	types[HSSEnsureInstruction] = "HSSEnsureInstruction";
 	types[HSSImportInstruction] = "HSSImportInstruction";
-	types[HSSColorInstruction] = "HSSColorInstruction";
+	types[HSSGrayscale1Instruction] = "HSSGrayscale1Instruction";
+	types[HSSGrayscale2Instruction] = "HSSGrayscale2Instruction";
+	types[HSSRGBInstruction] = "HSSRGBInstruction";
+	types[HSSRGBAInstruction] = "HSSRGBAInstruction";
+	types[HSSRRGGBBInstruction] = "HSSRRGGBBInstruction";
+	types[HSSRRGGBBAAInstruction] = "HSSRRGGBBAAInstruction";
     return types[type];
 }

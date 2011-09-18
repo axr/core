@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/11
+ *      Last changed: 2011/09/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -61,6 +61,10 @@ namespace AXR {
     class HSSRgba : public HSSObject
     {
     public:
+        //static bool isKeyword(std::string value, std::string property);
+        
+        friend class HSSParser;
+        
         HSSRgba();
         virtual ~HSSRgba();
         
@@ -68,17 +72,20 @@ namespace AXR {
         
         virtual std::string toString();
         virtual std::string defaultObjectType(std::string property);
-//        virtual bool isKeyword(std::string value, std::string property);
         
         virtual void setProperty(std::string name, HSSParserNode::p value);
         
         long double getRed();
+        void setDRed(HSSParserNode::p);
         void redChanged(HSSObservableProperty source, void*data);
         long double getGreen();
+        void setDGreen(HSSParserNode::p);
         void greenChanged(HSSObservableProperty source, void*data);
         long double getBlue();
+        void setDBlue(HSSParserNode::p);
         void blueChanged(HSSObservableProperty source, void*data);
         long double getAlpha();
+        void setDAlpha(HSSParserNode::p);
         void alphaChanged(HSSObservableProperty source, void*data);
         
     private:
@@ -87,13 +94,16 @@ namespace AXR {
         long double blue;
         long double alpha;
         
-        
+        HSSParserNode::p dRed;
         HSSObservable * observedRed;
         HSSObservableProperty observedRedProperty;
+        HSSParserNode::p dGreen;
         HSSObservable * observedGreen;
         HSSObservableProperty observedGreenProperty;
+        HSSParserNode::p dBlue;
         HSSObservable * observedBlue;
         HSSObservableProperty observedBlueProperty;
+        HSSParserNode::p dAlpha;
         HSSObservable * observedAlpha;
         HSSObservableProperty observedAlphaProperty;
         

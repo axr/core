@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/12
+ *      Last changed: 2011/09/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 11
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -60,6 +60,7 @@
 #include "../../axr/AXRController.h"
 #include <boost/pointer_cast.hpp>
 #include "HSSExpressions.h"
+#include "../objects/HSSRgba.h"
 
 using namespace AXR;
 
@@ -140,6 +141,7 @@ bool HSSParser::loadFile(std::string filepath)
     fclose(hssfile);
     
     this->readNextToken();
+    this->skip(HSSWhitespace);
     
     HSSStatement::p statement;
     
@@ -182,6 +184,19 @@ bool HSSParser::loadFile(std::string filepath)
                     this->controller->rulesAdd(theRule);
                     break; 
                 }
+                    
+                case HSSStatementTypeObjectDefinition:
+                {
+                    HSSObject::p theObj = boost::static_pointer_cast<HSSObjectDefinition>(statement)->getObject();
+                    this->controller->objectTreeAdd(theObj);
+                    break;
+                }
+                    
+                case HSSStatementTypeComment:
+                {
+                    std_log1(statement->toString());
+                    break;
+                }
                 
                 default:
                     std_log1("unknown statement");
@@ -207,33 +222,50 @@ HSSStatement::p HSSParser::readNextStatement()
         if(this->atEndOfSource())
             return ret;
         
-        if(this->currentToken->isA(HSSInstructionSign)){
-            this->tokenizer->preferHex = true;
-            ret = this->readInstruction();
-            this->tokenizer->preferHex = false;
-            return ret;
-        }
         
-        //if the statement starts with an object sign, it is an object definition
-        if(this->currentToken->isA(HSSObjectSign)){
-            //create an object definition
-            ret = this->readObjectDefinition();
-            return ret;
-        }
-        
-        //if the statement starts with an identifier, universal selector or combinator it is a rule
-        if(this->currentToken->isA(HSSIdentifier)
-           || (this->currentToken->isA(HSSSymbol) && VALUE_TOKEN(this->currentToken)->equals(HSSSymbol, "*"))
-           || this->isCombinator()){ //FIXME: search for combinators as well
-            ret = this->readRule();
-            return ret;
-        }
-        
-        if(this->currentToken->isA(HSSBlockComment) || this->currentToken->isA(HSSLineComment)){
-            ret = HSSComment::p(new HSSComment(VALUE_TOKEN(this->currentToken)->value));
-            this->readNextToken();
-            this->skip(HSSWhitespace);
-            return ret;
+        switch (this->currentToken->getType()) {
+            case HSSInstructionSign:
+            {
+                HSSInstruction::p instruction = this->readInstruction();
+                //FIXME: what do do here?
+                std_log1("******************** unimplemented ***********************");
+                break;
+            }
+            
+            //if the statement starts with an object sign, it is an object definition
+            case HSSObjectSign:
+            {
+                //create an object definition
+                ret = this->readObjectDefinition();
+                break;
+            }
+            
+            //if the statement starts with an identifier, universal selector or combinator it is a rule
+            case HSSIdentifier:
+            {
+                ret = this->readRule();
+                break;
+            }
+            case HSSSymbol:
+            {
+                if(VALUE_TOKEN(this->currentToken)->equals(HSSSymbol, "*") 	|| this->isCombinator()){
+                    ret = this->readRule();
+                    break;
+                }
+            }
+            //if it is a comment
+            case HSSBlockComment:
+            case HSSLineComment:
+            {
+                ret = HSSComment::p(new HSSComment(VALUE_TOKEN(this->currentToken)->getString()));
+                this->readNextToken();
+                this->skip(HSSWhitespace);
+                break;
+            }
+                
+                
+            default:
+                break;
         }
         
         return ret;
@@ -282,7 +314,10 @@ HSSRule::p HSSParser::readRule()
             }
         } else if(this->currentToken->isA(HSSSymbol)){
             ret->childrenAdd(this->readRule());
-            
+        } else if(this->currentToken->isA(HSSLineComment) || this->currentToken->isA(HSSBlockComment)){
+            //ignore
+            this->readNextToken();
+            this->skip(HSSWhitespace);
         } else {
             throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         }
@@ -327,7 +362,7 @@ HSSSelectorChain::p HSSParser::readSelectorChain()
             
             //a symbol, probably a combinator
         } else if (this->currentToken->isA(HSSSymbol)) {
-            const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->value).c_str();
+            const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
             switch (currentTokenValue) {
                 case '=':
                 case '-':
@@ -344,8 +379,8 @@ HSSSelectorChain::p HSSParser::readSelectorChain()
                     break;
                 case '.':
                     //we need to check if it is really a combinator or just a syntax error
-                    if(   VALUE_TOKEN(this->currentToken)->value == ".."
-                       || VALUE_TOKEN(this->currentToken)->value == "..."  ){
+                    if(   VALUE_TOKEN(this->currentToken)->getString() == ".."
+                       || VALUE_TOKEN(this->currentToken)->getString() == "..."  ){
                         ret->add(this->readSymbolCombinator());
                         break;
                     }
@@ -379,7 +414,7 @@ bool HSSParser::isCombinator(HSSToken::p token)
     }
     //all combinators are symbols
     if(token->isA(HSSSymbol) ){
-        const char currentTokenChar = *(VALUE_TOKEN(token).get()->value).c_str();
+        const char currentTokenChar = *(VALUE_TOKEN(token).get()->getString()).c_str();
         switch (currentTokenChar) {
             case '=':
             case '-':
@@ -486,7 +521,7 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
 {
     //FIXME: check the context
     HSSCombinator::p ret;
-    const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->value).c_str();
+    const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
     switch (currentTokenChar) {
         case '=':
             ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeSiblings));
@@ -498,9 +533,9 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
             ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeNextSiblings));
             break;
         case '.':
-            if(VALUE_TOKEN(this->currentToken)->value == ".."){
+            if(VALUE_TOKEN(this->currentToken)->getString() == ".."){
                 ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeDescendants));
-            } else if (VALUE_TOKEN(this->currentToken)->value == "..."){
+            } else if (VALUE_TOKEN(this->currentToken)->getString() == "..."){
                 ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeAllDescendants));
             }
             
@@ -518,7 +553,7 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
 //this assumes that the currentToken is an identifier
 HSSSelector::p HSSParser::readSelector()
 {
-    std::string theValue = VALUE_TOKEN(this->currentToken)->value;
+    std::string theValue = VALUE_TOKEN(this->currentToken)->getString();
     HSSSelector::p ret = HSSSelector::p(new HSSSelector(theValue));
     this->readNextToken();
     return ret;
@@ -554,7 +589,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition()
         }
     } else if(this->currentToken->isA(HSSIdentifier)){
         //alright, we've got a type, look it up
-        objtype = VALUE_TOKEN(this->currentToken)->value;
+        objtype = VALUE_TOKEN(this->currentToken)->getString();
         this->readNextToken();
         this->checkForUnexpectedEndOfSource();
     } else {
@@ -575,7 +610,8 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition()
         this->skip(HSSWhitespace);
     }
     if (this->currentToken->isA(HSSIdentifier)) {
-        obj->setName(VALUE_TOKEN(this->currentToken)->value);
+        obj->setName(VALUE_TOKEN(this->currentToken)->getString());
+        std_log3("setting its name to "+VALUE_TOKEN(this->currentToken)->getString());
         this->readNextToken();
     } else if (this->currentToken->isA(HSSBlockOpen)){
         //it is the opening curly brace, therefore an annonymous object:
@@ -625,7 +661,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
     HSSPropertyDefinition::p ret;
     
     if (this->currentToken->isA(HSSIdentifier)){
-        propertyName = VALUE_TOKEN(this->currentToken)->value;
+        propertyName = VALUE_TOKEN(this->currentToken)->getString();
         ret = HSSPropertyDefinition::p(new HSSPropertyDefinition(propertyName));
         this->readNextToken();
         //now must come a colon
@@ -639,7 +675,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
             //this->readNextToken();
             
         } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
-            ret->setValue(HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->value)));
+            ret->setValue(HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString())));
             this->checkForUnexpectedEndOfSource();
             this->readNextToken();
             
@@ -653,7 +689,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
         } else if (this->currentToken->isA(HSSIdentifier)){
             //this is either a keyword or an object name
             //check if it is a keyword
-            std::string valuestr = VALUE_TOKEN(this->currentToken)->value;
+            std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
             if(this->currentObjectContext.top()->isKeyword(valuestr, propertyName)){
                 ret->setValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr))); 
             } else {
@@ -662,9 +698,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
             }
             this->readNextToken();
         } else if (this->currentToken->isA(HSSInstructionSign)){
-            this->tokenizer->preferHex = true;
-            ret->setValue(this->readInstruction());
-            this->tokenizer->preferHex = false;
+            ret->setValue(this->getObjectFromInstruction(this->readInstruction()));
             
         } else {
             throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
@@ -697,26 +731,43 @@ HSSInstruction::p HSSParser::readInstruction()
     HSSInstruction::p ret;
     std::string currentval;
     
+    this->tokenizer->preferHex = true;
+    
     this->skipExpected(HSSInstructionSign);
     this->checkForUnexpectedEndOfSource();
     //we are looking at
     //if it starts with a number, we are looking at a color instruction
     if (this->currentToken->isA(HSSHexNumber)){
-        currentval = VALUE_TOKEN(this->currentToken)->value;
+        currentval = VALUE_TOKEN(this->currentToken)->getString();
         switch (currentval.length()) {
             //1 digit grayscale
             case 1:
+                ret = HSSInstruction::p(new HSSInstruction(HSSGrayscale1Instruction, currentval));
+                this->readNextToken();
+                break;
             //2 digit grayscale
             case 2:
+                ret = HSSInstruction::p(new HSSInstruction(HSSGrayscale2Instruction, currentval));
+                this->readNextToken();
+                break;
             //rgb
             case 3:
+                ret = HSSInstruction::p(new HSSInstruction(HSSRGBInstruction, currentval));
+                this->readNextToken();
+                break;
             //rgba
             case 4:
+                ret = HSSInstruction::p(new HSSInstruction(HSSRGBAInstruction, currentval));
+                this->readNextToken();
+                break;
             //rrggbb
             case 6:
+                ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBInstruction, currentval));
+                this->readNextToken();
+                break;
             //rrggbbaa
             case 8:
-                ret = HSSInstruction::p(new HSSInstruction(HSSColorInstruction, currentval));
+                ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBAAInstruction, currentval));
                 this->readNextToken();
                 break;
                 
@@ -726,7 +777,7 @@ HSSInstruction::p HSSParser::readInstruction()
         }
                 
     } else if (this->currentToken->isA(HSSIdentifier)){
-        currentval = VALUE_TOKEN(this->currentToken)->value;
+        currentval = VALUE_TOKEN(this->currentToken)->getString();
         if (currentval == "new"){
             ret = HSSInstruction::p(new HSSInstruction(HSSNewInstruction));
         } else if (currentval == "ensure") {
@@ -744,8 +795,118 @@ HSSInstruction::p HSSParser::readInstruction()
         return ret;
     }
     
+    this->tokenizer->preferHex = false;
+    
     this->checkForUnexpectedEndOfSource();
     this->skip(HSSWhitespace);
+    return ret;
+}
+
+HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p instruction)
+{
+    HSSObjectDefinition::p ret;
+    HSSInstructionType instructionType = instruction->getInstructionType();
+    switch (instructionType) {
+        case HSSGrayscale1Instruction:
+        case HSSGrayscale2Instruction:
+        {
+            //try to create an object of that type
+            HSSRgba::p obj = HSSRgba::p(new HSSRgba());
+            
+            unsigned int hexValue;
+            std::string tempstr = instruction->getValue();
+            if(instructionType == HSSGrayscale1Instruction){
+                tempstr = tempstr + tempstr;
+            }
+            sscanf(tempstr.c_str(), "%X", &hexValue);
+            
+            obj->setDRed(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+            obj->setDGreen(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+            obj->setDBlue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+            
+            ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
+            break;
+        }
+            
+        case HSSRGBInstruction:
+        case HSSRGBAInstruction:
+        case HSSRRGGBBInstruction:
+        case HSSRRGGBBAAInstruction:
+        {
+            //try to create an object of that type
+            HSSRgba::p obj = HSSRgba::p(new HSSRgba());
+            
+            std::string red;
+            unsigned int redHex;
+            std::string green;
+            unsigned int greenHex;
+            std::string blue;
+            unsigned int blueHex;
+            
+            unsigned int alphaHex;
+            std::string alpha;
+            
+            switch (instructionType) {
+                case HSSRGBInstruction:
+                    red = instruction->getValue().substr(0, 1);
+                    red = red + red;
+                    green = instruction->getValue().substr(1, 1);
+                    green = green + green;
+                    blue = instruction->getValue().substr(2, 1);
+                    blue = blue + blue;
+                    alpha = "FF";
+                    
+                    break;
+                case HSSRGBAInstruction:
+                    red = instruction->getValue().substr(0, 1);
+                    red = red + red;
+                    green = instruction->getValue().substr(1, 1);
+                    green = green + green;
+                    blue = instruction->getValue().substr(2, 1);
+                    blue = blue + blue;
+                    alpha = instruction->getValue().substr(3, 1);
+                    alpha = alpha + alpha;
+                    
+                    break;
+                    
+                case HSSRRGGBBInstruction:
+                    red = instruction->getValue().substr(0, 2);
+                    green = instruction->getValue().substr(2, 2);
+                    blue = instruction->getValue().substr(4, 2);
+                    alpha = "FF";
+                    
+                    break;
+                
+                case HSSRRGGBBAAInstruction:
+                    red = instruction->getValue().substr(0, 2);
+                    green = instruction->getValue().substr(2, 2);
+                    blue = instruction->getValue().substr(4, 2);
+                    alpha = instruction->getValue().substr(6, 2);
+                    
+                    break;
+                
+                default:
+                    break;
+            }
+            
+            sscanf(red.c_str(), "%X", &redHex);
+            sscanf(green.c_str(), "%X", &greenHex);
+            sscanf(blue.c_str(), "%X", &blueHex);
+            sscanf(alpha.c_str(), "%X", &alphaHex);
+            
+            obj->setDRed(HSSNumberConstant::p(new HSSNumberConstant(redHex)));
+            obj->setDGreen(HSSNumberConstant::p(new HSSNumberConstant(greenHex)));
+            obj->setDBlue(HSSNumberConstant::p(new HSSNumberConstant(blueHex)));
+            obj->setDAlpha(HSSNumberConstant::p(new HSSNumberConstant(alphaHex)));
+            
+            ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
+            break;
+        }
+            
+        default:
+            std_log1("*********** eror: unknown instruction type ****************");
+            break;
+    }
     return ret;
 }
 
@@ -761,7 +922,7 @@ HSSParserNode::p HSSParser::readAdditiveExpression()
     this->checkForUnexpectedEndOfSource();
     HSSParserNode::p left = this->readMultiplicativeExpression();
     while (!this->atEndOfSource() && this->currentToken->isA(HSSSymbol)) {
-        const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->value).c_str();
+        const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
         switch (currentTokenChar) {
             case '+':
             {
@@ -798,7 +959,7 @@ HSSParserNode::p HSSParser::readMultiplicativeExpression()
     HSSParserNode::p left = this->readBaseExpression();
     while (!this->atEndOfSource() && this->currentToken->isA(HSSSymbol)) {
         
-        const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->value).c_str();
+        const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
         switch (currentTokenChar) {
             case '*':
             {
@@ -835,7 +996,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
     switch (this->currentToken->getType()) {
         case HSSNumber:
         {
-            left = HSSNumberConstant::p(new HSSNumberConstant(strtold(VALUE_TOKEN(this->currentToken)->value.c_str(), NULL)));
+            left = HSSNumberConstant::p(new HSSNumberConstant(strtold(VALUE_TOKEN(this->currentToken)->getString().c_str(), NULL)));
             this->readNextToken();
             this->skip(HSSWhitespace);
             break;
@@ -843,7 +1004,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
         
         case HSSPercentageNumber:
         {
-            left = HSSPercentageConstant::p(new HSSPercentageConstant(strtold(VALUE_TOKEN(this->currentToken)->value.c_str(), NULL)));
+            left = HSSPercentageConstant::p(new HSSPercentageConstant(strtold(VALUE_TOKEN(this->currentToken)->getString().c_str(), NULL)));
             this->readNextToken();
             this->skip(HSSWhitespace);
             break;

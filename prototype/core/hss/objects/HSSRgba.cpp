@@ -43,16 +43,18 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/11
+ *      Last changed: 2011/09/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
 #include "HSSRgba.h"
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
+#include <sstream>
+#include "../../axr/AXRDebugging.h"
 
 using namespace AXR;
 
@@ -75,7 +77,13 @@ std::string HSSRgba::toString()
     if (this->isNamed()) {
         return std::string("HSSRgba: ").append(this->name);
     } else {
-        return "Annonymous HSSRgba";
+        std::ostringstream rs, gs, bs, as;
+        rs << this->red;
+        gs << this->green;
+        bs << this->blue;
+        as << this->alpha;
+        
+        return "Annonymous HSSRgba with red: "+rs.str()+" green: "+gs.str()+" blue: "+bs.str()+" alpha: "+as.str();
     }
 }
 
@@ -103,14 +111,7 @@ std::string HSSRgba::defaultObjectType(std::string property)
 void HSSRgba::setProperty(std::string name, HSSParserNode::p value)
 {
     if( name == "red" ){
-        this->red = this->_setLDProperty(
-                                        &HSSRgba::redChanged,
-                                        value,
-                                        255.,
-                                        HSSObservablePropertyRed,
-                                        this->observedRed,
-                                        this->observedRedProperty
-                                        );
+        this->setDRed(value);
         
     } else if( name == "green" ){
         this->green = this->_setLDProperty(
@@ -145,27 +146,72 @@ void HSSRgba::setProperty(std::string name, HSSParserNode::p value)
 }
 
 long double HSSRgba::getRed() { return this->red; }
+void HSSRgba::setDRed(HSSParserNode::p value){
+    this->dRed = value;
+    this->red = this->_setLDProperty(
+                                     &HSSRgba::redChanged,
+                                     value,
+                                     255.,
+                                     HSSObservablePropertyRed,
+                                     this->observedRed,
+                                     this->observedRedProperty
+                                     );
+}
+
 void HSSRgba::redChanged(AXR::HSSObservableProperty source, void *data)
 {
-    
+    std_log1("********************** redChanged unimplemented ****************************");
 }
 
 long double HSSRgba::getGreen() { return this->green; }
+void HSSRgba::setDGreen(HSSParserNode::p value){
+    this->dGreen = value;
+    this->green = this->_setLDProperty(
+                                     &HSSRgba::greenChanged,
+                                     value,
+                                     255.,
+                                     HSSObservablePropertyGreen,
+                                     this->observedGreen,
+                                     this->observedGreenProperty
+                                     );
+}
 void HSSRgba::greenChanged(AXR::HSSObservableProperty source, void *data)
 {
-    
+    std_log1("********************** greenChanged unimplemented ****************************");
 }
 
 long double HSSRgba::getBlue() { return this->blue; }
+void HSSRgba::setDBlue(HSSParserNode::p value){
+    this->dBlue = value;
+    this->blue = this->_setLDProperty(
+                                       &HSSRgba::blueChanged,
+                                       value,
+                                       255.,
+                                       HSSObservablePropertyBlue,
+                                       this->observedBlue,
+                                       this->observedBlueProperty
+                                       );
+}
 void HSSRgba::blueChanged(AXR::HSSObservableProperty source, void *data)
 {
-    
+    std_log1("********************** blueChanged unimplemented ****************************");
 }
 
 long double HSSRgba::getAlpha() { return this->alpha; }
+void HSSRgba::setDAlpha(HSSParserNode::p value){
+    this->dAlpha = value;
+    this->alpha = this->_setLDProperty(
+                                       &HSSRgba::alphaChanged,
+                                       value,
+                                       255.,
+                                       HSSObservablePropertyAlpha,
+                                       this->observedAlpha,
+                                       this->observedAlphaProperty
+                                       );
+}
 void HSSRgba::alphaChanged(AXR::HSSObservableProperty source, void *data)
 {
-    
+    std_log1("********************** alphaChanged unimplemented ****************************");
 }
 
 long double HSSRgba::_setLDProperty(

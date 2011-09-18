@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/11
+ *      Last changed: 2011/09/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 24
+ *      Revision: 26
  *
  ********************************************************************/
 
@@ -60,11 +60,31 @@
 #include "../parsing/HSSConstants.h"
 #include "../parsing/HSSObjectDefinition.h"
 #include "HSSContainer.h"
-#include "HSSRgba.h"
 #include <sstream>
 #include <string>
+#include "../../axr/AXRController.h"
 
 using namespace AXR;
+
+bool HSSDisplayObject::isKeyword(std::string value, std::string property)
+{
+    if (value == "center"){
+        if (   property == "anchorX"
+            || property == "anchorY"
+            || property == "alignX"
+            || property == "alignY"
+            ) {
+            return true;
+        }
+    } else if (value == "yes" || value == "no"){
+        if (property == "flow") {
+            return true;
+        }
+    }
+    
+    //if we reached this far, let the superclass handle it
+    return HSSObject::isKeyword(value, property);
+}
 
 HSSDisplayObject::HSSDisplayObject()
 : HSSObject()
@@ -84,7 +104,9 @@ HSSDisplayObject::HSSDisplayObject()
     drawIndex = 0;
     tabIndex = zoomFactor = 1;
     flow = visible = true;
+    //fixme: change to camelCase
     does_float = false;
+    this->heightByContent = false;
     
     elementName = std::string();
     contentText = std::string();
@@ -115,7 +137,9 @@ HSSDisplayObject::HSSDisplayObject(std::string name)
     drawIndex = 0;
     tabIndex = zoomFactor = 1;
     flow = visible = true;
+    //fixme: change to camelCase
     does_float = false;
+    this->heightByContent = false;
     
     elementName = std::string();
     contentText = std::string();
@@ -169,26 +193,6 @@ std::string HSSDisplayObject::defaultObjectType(std::string property)
     } else {
         return HSSObject::defaultObjectType(property);
     }
-}
-
-bool HSSDisplayObject::isKeyword(std::string value, std::string property)
-{
-    if (value == "center"){
-        if (   property == "anchorX"
-            || property == "anchorY"
-            || property == "alignX"
-            || property == "alignY"
-            ) {
-            return true;
-        }
-    } else if (value == "yes" || value == "no"){
-        if (property == "flow") {
-            return true;
-        }
-    }
-    
-    //if we reached this far, let the superclass handle it
-    return HSSObject::isKeyword(value, property);
 }
 
 boost::shared_ptr<HSSContainer> HSSDisplayObject::getParent()
@@ -381,13 +385,13 @@ void HSSDisplayObject::draw(cairo_t * cairo)
         std_log1("rereading rules of "+this->elementName);
         this->readDefinitionObjects();
     }
-    if(this->_needsSurface){
-        std_log1("regenerating surfaces of "+this->elementName);
-        this->regenerateSurfaces();
-    }
     if(this->_needsLayout){
         std_log1("recalculating layout of "+this->elementName);
         this->layout();
+    }
+    if(this->_needsSurface){
+        std_log1("regenerating surfaces of "+this->elementName);
+        this->regenerateSurfaces();
     }
     if(this->_isDirty){
 #if AXR_DEBUG_LEVEL > 0
@@ -414,33 +418,23 @@ void HSSDisplayObject::draw(cairo_t * cairo)
 
 void HSSDisplayObject::drawBackground()
 {
-    //look at what is in the background property
-    const std::vector<HSSParserNode::p> &bglist = this->getDBackground().getValueList();
-    unsigned i, size;
     long double r = 0., g = 0., b = 0., a = 0;
-    for (i=0, size = bglist.size(); i<size; i++) {
-        if (bglist[i]->isA(HSSParserNodeTypeObjectDefinition)){
-            HSSObject::p bgObject = boost::static_pointer_cast<HSSObjectDefinition>(bglist[i])->getObject();
-            if(bgObject->isA(HSSObjectTypeRgba)){
-                HSSRgba::p rgbaObject = boost::static_pointer_cast<HSSRgba>(bgObject);
-                r = rgbaObject->getRed();
-                g = rgbaObject->getGreen();
-                b = rgbaObject->getBlue();
-                a = rgbaObject->getAlpha();
-            }
-        }
+    if(this->backgroundColor){
+        r = this->backgroundColor->getRed();
+        g = this->backgroundColor->getGreen();
+        b = this->backgroundColor->getBlue();
+        a = this->backgroundColor->getAlpha();
     }
-    
-    
+
     cairo_t * cairo = cairo_create(this->backgroundSurface);
     cairo_rectangle(cairo, 0., 0., this->width, this->height);
     cairo_set_source_rgba(cairo, (r/255), (g/255), (b/255), (a/255));
     cairo_fill(cairo);
     
     //draw a small rectangle to be able to see the anchor X and Y
-    cairo_rectangle(cairo, this->anchorX-1., this->anchorY-1., 2, 2);
-    cairo_set_source_rgb(cairo, 1,0,0);
-    cairo_fill(cairo);
+//    cairo_rectangle(cairo, this->anchorX-1., this->anchorY-1., 2, 2);
+//    cairo_set_source_rgb(cairo, 1,0,0);
+//    cairo_fill(cairo);
     
     cairo_destroy(cairo);
 }
@@ -460,12 +454,12 @@ void HSSDisplayObject::drawForeground()
 
 void HSSDisplayObject::drawBorders()
 {
-    cairo_t * cairo = cairo_create(this->bordersSurface);
-    cairo_rectangle(cairo, 0., 0., this->width, this->height);
-    cairo_set_source_rgb(cairo, 0,0,0);
-    cairo_stroke(cairo);
-    
-    cairo_destroy(cairo);
+//    cairo_t * cairo = cairo_create(this->bordersSurface);
+//    cairo_rectangle(cairo, 0., 0., this->width, this->height);
+//    cairo_set_source_rgb(cairo, 0,0,0);
+//    cairo_stroke(cairo);
+//    
+//    cairo_destroy(cairo);
 }
 
 void HSSDisplayObject::recursiveDraw(cairo_t * cairo)
@@ -647,14 +641,15 @@ HSSParserNode::p HSSDisplayObject::getDHeight() { return this->dHeight; }
 void HSSDisplayObject::setDHeight(HSSParserNode::p value)
 {
     if(value->isA(HSSParserNodeTypeKeywordConstant)){
+        this->heightByContent = true;
         
     } else {
         this->dHeight = value;
+        this->heightByContent = false;
         HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
         if(this->observedHeight != NULL)
         {
             this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
-            //we're cheating a bit here (maybe FIXME?)
         }
         HSSContainer::p parentContainer = this->getParent();
         if(parentContainer){
@@ -688,74 +683,6 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         this->setNeedsLayout(true);
         this->setDirty(true);
     }
-    
-    
-    
-//    //std_log1("setting height of "+this->name+":");
-//    this->dHeight = value;
-//    HSSParserNodeType nodeType = value->getType();
-//    
-//    if(observedHeight != NULL)
-//    {
-//        observedHeight->removeObserver(HSSObservablePropertyHeight, this);
-//    }
-//    
-//    switch (nodeType) {
-//        case HSSParserNodeTypeNumberConstant:
-//        {
-//            HSSNumberConstant::p heightValue = boost::static_pointer_cast<HSSNumberConstant>(value);
-//            this->height = heightValue->getValue();
-//            break;
-//        }
-//            
-//        case HSSParserNodeTypePercentageConstant:
-//        {
-//            HSSPercentageConstant::p heightValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
-//            HSSContainer::p parentContainer = this->getParent();
-//            if(parentContainer){
-//                this->height = heightValue->getValue(parentContainer->height);
-//                parentContainer->observe(HSSObservablePropertyHeight, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::heightChanged));
-//                this->observedHeight = parentContainer.get();
-//            }
-//            break;
-//        }
-//        
-//        case HSSParserNodeTypeExpression:
-//        {
-//            HSSExpression::p heightExpression = boost::static_pointer_cast<HSSExpression>(value);
-//            HSSContainer::p parentContainer = this->getParent();
-//            if(parentContainer){
-//                heightExpression->setPercentageBase(parentContainer->height);
-//                heightExpression->setPercentageObserved(HSSObservablePropertyHeight, parentContainer.get());
-//                heightExpression->setScope(&(parentContainer->getChildren()));
-//                this->height = heightExpression->evaluate();
-//                heightExpression->observe(HSSObservablePropertyHeight, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::heightChanged));
-//            } else {
-//                heightExpression->setPercentageBase(this->height);
-//                heightExpression->setPercentageObserved(HSSObservablePropertyHeight, this);
-//                if(this->isA(HSSObjectTypeContainer)){
-//                    HSSContainer * thisContainer = static_cast<HSSContainer *>(this);
-//                    heightExpression->setScope(&(thisContainer->getChildren()));
-//                }
-//                this->height = heightExpression->evaluate();
-//                heightExpression->observe(HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::heightChanged));
-//            }
-//            break; 
-//        }
-//            
-//        case HSSParserNodeTypeKeywordConstant:
-//            
-//            break;
-//            
-//        default:
-//            throw "unknown parser node type while setting dHeight";
-//            break;
-//    }
-//    
-//    //fprintf(stderr, "%f\n", this->height);
-//    this->notifyObservers(HSSObservablePropertyHeight, &this->height);
-//    this->setNeedsSurface(true);
-//    this->setDirty(true);
 }
 
 void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
@@ -773,6 +700,12 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
         {
             HSSExpression::p heightExpression = boost::static_pointer_cast<HSSExpression>(this->dHeight);
             this->height = heightExpression->evaluate();
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            this->height = *(long double*)data;
             break;
         }
             
@@ -1116,6 +1049,34 @@ void HSSDisplayObject::setDBackground(HSSParserNode::p value)
     newBackground.add(value);
     this->dBackground = newBackground;
     
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            this->backgroundColor = boost::static_pointer_cast<HSSRgba>(objdef->getObject());
+            std_log1("added background rgba object: "+this->backgroundColor->toString());
+            break;
+        }
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try {
+                HSSObjectNameConstant::p objdef = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                this->backgroundColor = boost::static_pointer_cast<HSSRgba>(this->axrController->objectTreeGet(objdef->getValue()));
+            } catch (HSSObjectNotFoundException * e) {
+                std_log1(e->toString());
+            }
+            
+            break;
+        }
+            
+        default:
+        {
+            std_log1("unkown parser node type in background property of display object "+this->name+": "+HSSParserNode::parserNodeStringRepresentation(value->getType()));
+            break;
+        }
+    }
+    
     //this->notifyObservers(HSSObservablePropertyAlignY, &this->alignY);
 }
 
@@ -1171,6 +1132,7 @@ long double HSSDisplayObject::_setLDProperty(
         {
             HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant>(value);
             ret = numberValue->getValue();
+            observedStore = NULL;
             break;
         }
             

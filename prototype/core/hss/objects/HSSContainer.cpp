@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/06
+ *      Last changed: 2011/09/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 23
+ *      Revision: 25
  *
  ********************************************************************/
 
@@ -58,8 +58,26 @@
 #include <string>
 #include <sstream>
 #include <boost/pointer_cast.hpp>
+#include <cmath>
 
 using namespace AXR;
+
+bool HSSContainer::isKeyword(std::string value, std::string property)
+{
+    if (value == "center"){
+        if (property == "contentAlignX" || property == "contentAlignY") {
+            return true;
+        }
+    } else if (value == "leftToRight" || value == "rightToLeft" || value == "topToBottom" || value == "bottomToTop"){
+        if ( property == "directionPrimary" || property == "directionSecondary"){
+            return true;
+        }
+    }
+    
+    //if we reached this far, let the superclass handle it
+    return HSSDisplayObject::isKeyword(value, property);
+}
+
 
 HSSContainer::HSSContainer()
 : HSSDisplayObject()
@@ -146,22 +164,6 @@ std::string HSSContainer::defaultObjectType(std::string property)
     } else {
         return HSSDisplayObject::defaultObjectType(property);
     }
-}
-
-bool HSSContainer::isKeyword(std::string value, std::string property)
-{
-    if (value == "center"){
-        if (property == "contentAlignX" || property == "contentAlignY") {
-            return true;
-        }
-    } else if (value == "leftToRight" || value == "rightToLeft" || value == "topToBottom" || value == "bottomToTop"){
-        if ( property == "directionPrimary" || property == "directionSecondary"){
-            return true;
-        }
-    }
-    
-    //if we reached this far, let the superclass handle it
-    return HSSDisplayObject::isKeyword(value, property);
 }
 
 void HSSContainer::add(HSSDisplayObject::p child)
@@ -417,8 +419,24 @@ void HSSContainer::layout()
     //assign the globalX and globalY
     for(i=0, size = this->children.size(); i<size; i++){
         HSSDisplayObject::p &child = this->children[i];
-        child->globalX = this->globalX + child->x;
-        child->globalY = this->globalY + child->y;
+        child->globalX = floor(this->globalX + child->x);
+        child->globalY = floor(this->globalY + child->y);
+    }
+    
+    if(this->heightByContent){
+        long double maxHeight = 0.;
+        
+        for (i=0, size = secondaryGroups.size(); i<size; i++) {
+            if(secondaryGroups[i].height > maxHeight){
+                maxHeight = secondaryGroups[i].height;
+            }
+        }
+        if(size > 0){
+            this->height = maxHeight;
+            this->setNeedsSurface(true);
+            this->setDirty(true);
+            this->notifyObservers(HSSObservablePropertyHeight, &this->height);
+        }
     }
 }
 

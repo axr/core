@@ -1,0 +1,25 @@
+document
+{
+    background: @rgba { alpha: 10%; };
+    contentAlignY: 50%;
+    
+    container
+    {
+        background: @rgba { alpha: 10%; };
+        contentAlignY: 50%;
+        
+        child
+        {
+            background: @rgba { alpha: 10%; };
+            width: 100;
+            height: 100;
+        }
+        
+        child+child
+        {
+            background: @rgba { alpha: 20%; };
+            height: 220;
+            alignX: 100%;
+        }
+    }
+}

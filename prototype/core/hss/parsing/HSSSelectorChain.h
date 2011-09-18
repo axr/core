@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2011/09/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -55,7 +55,7 @@
 
 #include "HSSParserNode.h"
 #include <string>
-#include <vector>
+#include <deque>
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
@@ -73,6 +73,9 @@ namespace AXR {
         //adds a pointer to newNode to the selector chain
         //this function acquires ownership of the parser node
         void add(HSSParserNode::p newNode);
+        //adds a pointer to newNode to the beginning of the selector chain
+        //this function acquires ownership of the parser node
+        void prepend(HSSParserNode::p newNode);
         //removes last newNode from the chain and then deletes it
         void removeLast();
         //returns a pointer to the last node in the chain
@@ -82,7 +85,7 @@ namespace AXR {
         
         
     protected:
-        std::vector<HSSParserNode::p> nodeList;
+        std::deque<HSSParserNode::p> nodeList;
     };
 }
 

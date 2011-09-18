@@ -1,19 +1,29 @@
+@rgba pageBg { red:163; green:180; blue:196 }
+@rgba logoBg { red: 123; green: 140; blue: 156 }
+@rgba softDark { alpha: 5% }
+@rgba softWhite { red: 255; green: 255; blue: 255; alpha: 10% }
+@rgba strongWhite { red: 255; green: 255; blue: 255; alpha: 50% }
+@rgba solidWhite { red: 255; green: 255; blue: 255; }
+
 document
 {
+    contentAlignY: 50%;
+    background: pageBg;
+    
     header
     {
         width: 100% - 40;
         height: 100;
         contentAlignY: 50%;
-        anchorY: 0;
-        alignY: 20;
+        background: softDark;
+
         
         logo
         {
             width: 120;
             height: 80;
             alignX: 70;
-            background: @rgba { red: 255; green: 0; blue: 0 };
+            background: logoBg;
         }
         
         navigation
@@ -23,17 +33,22 @@ document
             alignX: 100% - 10;
             anchorX: 100%;
             contentAlignY: 50%;
+            background: softWhite;
             
             *{
                 width: 100;
                 height: 40;
+                background: strongWhite;
             }
             
-            home { alignX: 20%; background: @rgba { red: 255; green: 0; blue: 0; alpha: 50 } }
-            about { alignX: 40%; background: @rgba { red: 0; green: 255; blue: 0; alpha: 50 } }
-            features { alignX: 60%; background: @rgba { red: 0; green: 0; blue: 255; alpha: 50 } }
-            contact { alignX: 80%; background: @rgba { red: 0; green: 0; blue: 0; alpha: 50 } }
+            home { background: solidWhite }
         }
     }
     
+    content
+    {
+		width: 100% - 40;
+        background: softDark;
+		height: 50%;
+    }
 }

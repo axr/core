@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/09/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -61,6 +61,8 @@ namespace AXR {
     class HSSBorder : public HSSObject
     {
     public:
+        static bool isKeyword(std::string value, std::string property);
+        
         HSSBorder();
         virtual ~HSSBorder();
         
@@ -68,7 +70,6 @@ namespace AXR {
         
         virtual std::string toString();
         virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
     };
 }
 

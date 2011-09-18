@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/12
+ *      Last changed: 2011/09/04
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -88,6 +88,7 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
 	types[HSSParserNodeTypeStringConstant] = "HSSStringConstant";
 	types[HSSParserNodeTypeKeywordConstant] = "HSSKeywordConstant";
 	types[HSSParserNodeTypeObjectDefinition] = "HSSObjectDefinition";
+	types[HSSParserNodeTypeObjectNameConstant] = "HSSObjectNameConstant";
     
     return types[type];
 }

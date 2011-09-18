@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/26
+ *      Last changed: 2011/09/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -78,6 +78,15 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
     }
     
     return HSSObject::p();
+}
+
+bool HSSObject::isKeyword(std::string value, std::string property)
+{
+    if(value == "default" || value == "inherit" || value == "undefined" || value == "none"){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -140,15 +149,6 @@ void HSSObject::dropName()
 
 std::string HSSObject::defaultObjectType(std::string property){
     return "value";
-}
-
-bool HSSObject::isKeyword(std::string value, std::string property)
-{
-    if(value == "default" || value == "inherit" || value == "undefined" || value == "none"){
-        return true;
-    } else {
-        return false;
-    }
 }
 
 void HSSObject::setProperty(std::string name, HSSParserNode::p value)

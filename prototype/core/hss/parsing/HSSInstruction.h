@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/09/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -61,7 +61,12 @@ namespace AXR {
         HSSNewInstruction,
         HSSEnsureInstruction,
         HSSImportInstruction,
-        HSSColorInstruction
+        HSSGrayscale1Instruction,
+        HSSGrayscale2Instruction,
+        HSSRGBInstruction,
+        HSSRGBAInstruction,
+        HSSRRGGBBInstruction,
+        HSSRRGGBBAAInstruction
     };
     
     class HSSInstruction : public HSSStatement
@@ -72,6 +77,10 @@ namespace AXR {
         HSSInstruction(HSSInstructionType type);
         HSSInstruction(HSSInstructionType type, std::string value);
         ~HSSInstruction();
+        
+        HSSInstructionType getInstructionType();
+        std::string getValue();
+        
         
         static std::string instructionStringRepresentation(HSSInstructionType type);
         

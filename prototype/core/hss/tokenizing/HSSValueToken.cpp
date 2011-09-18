@@ -43,14 +43,15 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/09/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
 #include "HSSValueToken.h"
+#include <sstream>
 
 using namespace AXR;
 
@@ -59,7 +60,7 @@ HSSValueToken::HSSValueToken(HSSTokenType type, std::string value)
 {
     
 	this->type = type;
-	this->value = value;
+	this->stringValue = value;
 }
 
 HSSValueToken::HSSValueToken(HSSTokenType type, char value)
@@ -67,18 +68,52 @@ HSSValueToken::HSSValueToken(HSSTokenType type, char value)
 {
     //std::string tempstr (1, value);
 	this->type = type;
-	this->value = std::string(1, value);
+	this->stringValue = std::string(1, value);
+}
+
+HSSValueToken::HSSValueToken(HSSTokenType type, double long value)
+:HSSToken(type)
+{
+    this->type = type;
+    this->longValue = value;
+}
+
+std::string HSSValueToken::getString()
+{
+    return this->stringValue;
+}
+
+double long HSSValueToken::getLong()
+{
+    return this->longValue;
 }
 
 bool HSSValueToken::equals(HSSTokenType otherType, std::string otherValue)
 {
-	return otherType == this->type && otherValue == this->value;
+	return otherType == this->type && otherValue == this->stringValue;
+}
+
+bool HSSValueToken::equals(HSSTokenType otherType, double long otherValue)
+{
+	return otherType == this->type && otherValue == this->longValue;
 }
 
 std::string HSSValueToken::toString()
 {
     std::string tokenstr = this->tokenStringRepresentation(this->type);
-	return "HSSValueToken of type: " + tokenstr + " and value: " + this->value;
+    if(this->isNumeric()){
+        std::ostringstream tempstream;
+        tempstream << this->longValue;
+        return "HSSValueToken of type: " + tokenstr + " and value: " + tempstream.str();
+    } else {
+        return "HSSValueToken of type: " + tokenstr + " and value: " + this->stringValue;
+    }
+	
+}
+
+bool HSSValueToken::isNumeric()
+{
+    return this->type == HSSNumber || this->type == HSSPercentageNumber || this->type == HSSHexNumber;
 }
 
 

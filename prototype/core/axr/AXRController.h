@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/11
+ *      Last changed: 2011/09/11
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 9
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -101,6 +101,7 @@ namespace AXR {
         void objectTreeAdd(HSSObject::p & newObject);
         void objectTreeRemove(unsigned index);
         HSSObject::p & objectTreeGet(unsigned index);
+        HSSObject::p & objectTreeGet(std::string name);
         
         void loadSheetsAdd(std::string sheet);
         void loadSheetsRemove(unsigned index);
@@ -130,9 +131,10 @@ namespace AXR {
         
         bool _hasLoadedFile;
         
-        void recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope);
+        void recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container);
         
         const std::vector<HSSDisplayObject::p> selectHierarchical(const std::vector<HSSDisplayObject::p> & scope);
+        const std::vector<HSSDisplayObject::p> selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope);
         const std::vector<HSSDisplayObject::p> selectOnLevel(const std::vector<HSSDisplayObject::p> & scope);
         const std::vector<HSSDisplayObject::p> selectSimple(const std::vector<HSSDisplayObject::p> & scope);
         
@@ -140,7 +142,8 @@ namespace AXR {
         HSSParserNode::p currentSelectorNode;
         unsigned currentChainCount;
         unsigned currentChainSize;
-        bool readNextSelectorNode();
+        void readNextSelectorNode();
+        bool isAtEndOfSelector();
         
     };
 }

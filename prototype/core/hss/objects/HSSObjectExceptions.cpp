@@ -43,7 +43,7 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/09/04
  *      HSS version: 1.0
  *      Core version: 0.3
  *      Revision: 2
@@ -68,3 +68,15 @@ std::string HSSUnknownValueTypeException::toString()
 {
     return "HSSValue Error: unkown value type";
 }
+
+HSSObjectNotFoundException::HSSObjectNotFoundException(std::string name)
+{
+    this->name = name;
+}
+
+std::string HSSObjectNotFoundException::toString()
+{
+    return "Object with name "+this->name+" not found";
+}
+
+

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/01
+ *      Last changed: 2011/09/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -188,7 +188,7 @@ HSSToken::p HSSTokenizer::readNextToken()
 	//if it starts with a number it is either a number or a percentage
 	if (isdigit(cc)) {
         if(this->preferHex){
-            return this->readHex();
+            return this->readHexOrIdentifier();
         } else {
             return this->readNumberOrPercentage();
         }
@@ -331,40 +331,40 @@ HSSToken::p HSSTokenizer::readIdentifier()
 }
 
 //reads and returns a hexadecimal number
-HSSToken::p HSSTokenizer::readHex()
-{
-    security_brake_init();
-	while (1) {
-        switch (this->currentChar) {
-            case 'a':
-            case 'A':
-            case 'b':
-            case 'B':
-            case 'c':
-            case 'C':
-            case 'd':
-            case 'D':
-            case 'e':
-            case 'E':
-            case 'f':
-            case 'F':
-                this->storeCurrentCharAndReadNext();
-                continue;
-                
-            default:
-                if (isdigit(this->currentChar)){
-                    this->storeCurrentCharAndReadNext();
-                    continue;
-                    
-                } else {
-                    break;
-                }
-        }
-        security_brake();
-	}
-    
-    return HSSValueToken::p(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText()));
-}
+//HSSToken::p HSSTokenizer::readHex()
+//{
+//    security_brake_init();
+//	while (1) {
+//        switch (this->currentChar) {
+//            case 'a':
+//            case 'A':
+//            case 'b':
+//            case 'B':
+//            case 'c':
+//            case 'C':
+//            case 'd':
+//            case 'D':
+//            case 'e':
+//            case 'E':
+//            case 'f':
+//            case 'F':
+//                this->storeCurrentCharAndReadNext();
+//                continue;
+//                
+//            default:
+//                if (isdigit(this->currentChar)){
+//                    this->storeCurrentCharAndReadNext();
+//                    continue;
+//                    
+//                } else {
+//                    break;
+//                }
+//        }
+//        security_brake();
+//	}
+//    
+//    return HSSValueToken::p(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText()));
+//}
 
 //reads and returns a hexadecimal number or an identifier
 HSSToken::p HSSTokenizer::readHexOrIdentifier()
@@ -392,7 +392,7 @@ HSSToken::p HSSTokenizer::readHexOrIdentifier()
                     this->storeCurrentCharAndReadNext();
                     continue;
                 } else {
-                    break;
+                    return HSSValueToken::p(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText()));
                 }
         }
         security_brake();

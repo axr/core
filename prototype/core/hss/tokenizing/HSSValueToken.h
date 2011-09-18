@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/09/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -66,9 +66,17 @@ namespace AXR {
         
         HSSValueToken(HSSTokenType type, std::string value);
         HSSValueToken(HSSTokenType type, char value);
-        std::string value;
+        HSSValueToken(HSSTokenType type, double long value);
+        std::string getString();
+        double long getLong();
         bool equals(HSSTokenType otherType, std::string otherValue);
+        bool equals(HSSTokenType otherType, double long otherValue);
         std::string toString();
+        bool isNumeric();
+        
+    private:
+        std::string stringValue;
+        double long longValue;
     };
 }
 

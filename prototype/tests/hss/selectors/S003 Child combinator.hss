@@ -1,0 +1,19 @@
+test
+{
+	parent child
+	{
+		background: #C;
+	}
+	
+	parent child subchild
+	{
+		background: #A;
+	}
+	
+	
+	//FIXME: this is needed because the prototype is not capable of auto calculate the heights yet
+	.. *
+	{
+		height: 50;
+	}
+}

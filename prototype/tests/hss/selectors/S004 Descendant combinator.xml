@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	Test S001 - Simple Selectors
+	Created by Miro Keller on 2011-09-17.
+-->
+<?xml-stylesheet type="application/x-hss" src="S004 Descendant combinator.hss"?>
+<test>
+	<parent>
+		<child>Child 1</child>
+	</parent>
+	<parent>
+		<child>
+			<subchild>Subchild</subchild>
+		</child>
+	</parent>
+	<parent2>
+		<child>
+			<subchild>Subchild of parent2</subchild>
+		</child>
+	</parent2>
+</test>

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2011/09/18
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -98,8 +98,17 @@ void HSSSelectorChain::add(HSSParserNode::p newNode)
 {
     if(newNode != NULL)
     {
-        std_log3("Added node of type " << newNode->toString());
+        std_log3("HSSSelectorChain: Added node of type " << newNode->toString());
         this->nodeList.push_back(newNode);
+    }
+}
+
+void HSSSelectorChain::prepend(HSSParserNode::p newNode)
+{
+    if(newNode != NULL)
+    {
+        std_log3("HSSSelectorChain: Added node of type " << newNode->toString() + " to the front of the selector");
+        this->nodeList.push_front(newNode);
     }
 }
 

@@ -1,0 +1,19 @@
+test
+{
+	element1
+	{
+		background: #E;
+	}
+
+	element2
+	{
+		background: #C;
+	}
+
+	element3
+	{
+		background: #A;
+	}
+	
+	* { height: 50 } //this should not be necessary
+}

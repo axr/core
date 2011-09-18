@@ -43,7 +43,7 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2011/09/04
  *      HSS version: 1.0
  *      Core version: 0.3
  *      Revision: 2
@@ -70,6 +70,14 @@ namespace AXR {
     {
     public:
         virtual std::string toString();
+    };
+    
+    class HSSObjectNotFoundException
+    {
+    public:
+        HSSObjectNotFoundException(std::string name);
+        virtual std::string toString();
+        std::string name;
     };
 }
 

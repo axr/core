@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/18
+ *      Last changed: 2011/09/04
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -57,6 +57,7 @@ using namespace AXR;
 HSSObjectNameConstant::HSSObjectNameConstant(std::string value)
 {
     this->value = value;
+    this->nodeType = HSSParserNodeTypeObjectNameConstant;
 }
 
 HSSObjectNameConstant::~HSSObjectNameConstant()

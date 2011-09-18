@@ -43,7 +43,7 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/11
+ *      Last changed: 2011/09/04
  *      HSS version: 1.0
  *      Core version: 0.3
  *      Revision: 2
@@ -54,11 +54,12 @@
 #define HSSOBJECTS_H
 
 #include "HSSObject.h"
+#include "HSSValue.h"
+#include "HSSMultipleValue.h"
+#include "HSSRgba.h"
 #include "HSSDisplayObject.h"
 #include "HSSContainer.h"
 #include "HSSLineBorder.h"
-#include "HSSValue.h"
 #include "HSSMargin.h"
-#include "HSSRgba.h"
 
 #endif

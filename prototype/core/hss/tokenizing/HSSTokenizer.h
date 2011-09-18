@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/11
+ *      Last changed: 2011/09/17
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -142,7 +142,7 @@ namespace AXR {
         //reads and returns an identifier token
         HSSToken::p readIdentifier();
         //reads and returns a hexadecimal number
-        HSSToken::p readHex();
+        //HSSToken::p readHex();
         //reads and returns a hexadecimal number or an identifier token
         HSSToken::p readHexOrIdentifier();
         //reads and returns either a number or a percentage token

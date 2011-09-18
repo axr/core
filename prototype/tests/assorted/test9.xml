@@ -11,7 +11,5 @@
 			<contact href="contact.xml">Contact</contact>
 		</navigation>
 	</header>
-	<content>
-		
-	</content>
+	<content>This is the content</content>
 </document>
