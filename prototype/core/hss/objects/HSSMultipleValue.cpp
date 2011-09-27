@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/12
+ *      Last changed: 2011/09/27
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -94,6 +94,11 @@ void HSSMultipleValue::add(HSSParserNode::p newValue)
 void HSSMultipleValue::removeLast()
 {
     this->valueList.pop_back();
+}
+
+HSSParserNode::p HSSMultipleValue::first()
+{
+    return this->valueList.front();
 }
 
 HSSParserNode::p HSSMultipleValue::last()

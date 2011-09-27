@@ -10,6 +10,11 @@
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* AXRTestAppAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* AXRTestAppAppDelegate.mm */; };
 		4E351B7913507C2F00FEB909 /* libcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E351B7813507C2F00FEB909 /* libcore.a */; };
+		4ECDAE69142FE33200E2384B /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECDAE68142FE33200E2384B /* libexpat.a */; };
+		4ECDAE6B142FE34E00E2384B /* libcairo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECDAE6A142FE34E00E2384B /* libcairo.a */; };
+		4ECDAE6D142FE36000E2384B /* libpango-1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECDAE6C142FE36000E2384B /* libpango-1.0.a */; };
+		4ECDAE6F142FE37000E2384B /* libpangocairo-1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECDAE6E142FE37000E2384B /* libpangocairo-1.0.a */; };
+		4ECDAE71142FE38C00E2384B /* libgobject-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECDAE70142FE38C00E2384B /* libgobject-2.0.a */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -46,6 +51,11 @@
 		4E351B7813507C2F00FEB909 /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E95BFCE135076F100117354 /* core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = core.xcodeproj; path = ../core/core.xcodeproj; sourceTree = "<group>"; };
 		4EAF82581331690C00AFF970 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		4ECDAE68142FE33200E2384B /* libexpat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libexpat.a; path = ../../../../../usr/local/Cellar/expat/2.0.1/lib/libexpat.a; sourceTree = "<group>"; };
+		4ECDAE6A142FE34E00E2384B /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../usr/local/lib/libcairo.a; sourceTree = "<group>"; };
+		4ECDAE6C142FE36000E2384B /* libpango-1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpango-1.0.a"; path = "../../../../../usr/local/lib/libpango-1.0.a"; sourceTree = "<group>"; };
+		4ECDAE6E142FE37000E2384B /* libpangocairo-1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpangocairo-1.0.a"; path = "../../../../../usr/local/lib/libpangocairo-1.0.a"; sourceTree = "<group>"; };
+		4ECDAE70142FE38C00E2384B /* libgobject-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libgobject-2.0.a"; path = "../../../../../usr/local/Cellar/glib/2.28.8/lib/libgobject-2.0.a"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* mac-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "mac-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* AXR Test App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AXR Test App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -57,6 +67,11 @@
 			files = (
 				4E351B7913507C2F00FEB909 /* libcore.a in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				4ECDAE69142FE33200E2384B /* libexpat.a in Frameworks */,
+				4ECDAE6B142FE34E00E2384B /* libcairo.a in Frameworks */,
+				4ECDAE6D142FE36000E2384B /* libpango-1.0.a in Frameworks */,
+				4ECDAE6F142FE37000E2384B /* libpangocairo-1.0.a in Frameworks */,
+				4ECDAE71142FE38C00E2384B /* libgobject-2.0.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,6 +116,11 @@
 		29B97314FDCFA39411CA2CEA /* mac */ = {
 			isa = PBXGroup;
 			children = (
+				4ECDAE70142FE38C00E2384B /* libgobject-2.0.a */,
+				4ECDAE6E142FE37000E2384B /* libpangocairo-1.0.a */,
+				4ECDAE6C142FE36000E2384B /* libpango-1.0.a */,
+				4ECDAE6A142FE34E00E2384B /* libcairo.a */,
+				4ECDAE68142FE33200E2384B /* libexpat.a */,
 				4E351B7813507C2F00FEB909 /* libcore.a */,
 				4E95BFCE135076F100117354 /* core.xcodeproj */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -276,10 +296,17 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "mac-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/lib,
+					/usr/local/Cellar/expat/2.0.1/lib,
+					/usr/local/Cellar/glib/2.28.8/lib,
+				);
 				OTHER_CFLAGS = "-DAXR_PLATFORM_OSX";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "AXR Test App";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				USER_HEADER_SEARCH_PATHS = /usr/local/include/;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include/ /usr/local/Cellar/cairo/1.10.2/include/";
 			};
 			name = Debug;
 		};
@@ -292,10 +319,17 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "mac-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/lib,
+					/usr/local/Cellar/expat/2.0.1/lib,
+					/usr/local/Cellar/glib/2.28.8/lib,
+				);
 				OTHER_CFLAGS = "-DAXR_PLATFORM_OSX";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "AXR Test App";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				USER_HEADER_SEARCH_PATHS = /usr/local/include/;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include/ /usr/local/Cellar/cairo/1.10.2/include/";
 			};
 			name = Release;
 		};

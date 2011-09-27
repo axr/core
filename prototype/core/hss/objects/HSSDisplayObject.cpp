@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/11
+ *      Last changed: 2011/09/26
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 26
+ *      Revision: 27
  *
  ********************************************************************/
 
@@ -63,21 +63,36 @@
 #include <sstream>
 #include <string>
 #include "../../axr/AXRController.h"
+#include <pango/pangocairo.h>
+#include "HSSRgba.h"
 
 using namespace AXR;
 
 bool HSSDisplayObject::isKeyword(std::string value, std::string property)
 {
-    if (value == "center"){
-        if (   property == "anchorX"
-            || property == "anchorY"
-            || property == "alignX"
-            || property == "alignY"
-            ) {
+    if (   property == "anchorX"
+        || property == "anchorY"
+        || property == "alignX"
+        || property == "alignY"
+        ) {
+        if (value == "center"){
             return true;
         }
-    } else if (value == "yes" || value == "no"){
-        if (property == "flow") {
+    } else if (property == "flow") {
+        if (value == "yes" || value == "no"){
+            return true;
+        }
+    } else if (property == "font") {
+        if (   value == "thin"
+            || value == "ultralight"
+            || value == "light"
+            || value == "normal"
+            || value == "medium"
+            || value == "semibold"
+            || value == "bold"
+            || value == "ultrabold"
+            || value == "heavy"
+            || value == "ultraheavy"){
             return true;
         }
     }
@@ -117,6 +132,7 @@ HSSDisplayObject::HSSDisplayObject()
     = NULL;
     
     this->dBackground = HSSMultipleValue();
+    this->dFont = HSSMultipleValue();
 }
 
 HSSDisplayObject::HSSDisplayObject(std::string name)
@@ -190,6 +206,8 @@ std::string HSSDisplayObject::defaultObjectType(std::string property)
         return "click";
     } else if (property == "mask") {
         return "image";
+    } else if (property == "font") {
+        return "font";    
     } else {
         return HSSObject::defaultObjectType(property);
     }
@@ -306,6 +324,9 @@ void HSSDisplayObject::readDefinitionObjects()
                 } else if(propertyName == "background"){
                     //store a copy of the value
                     this->setDBackground(propertyDefinition->getValue());
+                } else if(propertyName == "font"){
+                    //store a copy of the value
+                    this->setDFont(propertyDefinition->getValue());
                 }
             }
         }
@@ -442,12 +463,58 @@ void HSSDisplayObject::drawBackground()
 void HSSDisplayObject::drawForeground()
 {
     cairo_t * cairo = cairo_create(this->foregroundSurface);
-    cairo_select_font_face (cairo, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-    cairo_set_font_size (cairo, 12.0);
-    cairo_set_source_rgb (cairo, 0.0, 0.0, 0.0);
-    cairo_move_to (cairo, 0.0, 12.0);
-    std_log1(this->getContentText());
-    cairo_show_text (cairo, this->getContentText().c_str());
+    
+    PangoLayout *layout;
+    PangoFontDescription *font_description;
+    
+    
+    layout = pango_cairo_create_layout (cairo);
+    pango_layout_set_width(layout, this->width * PANGO_SCALE);
+    
+    font_description = pango_font_description_new ();
+    
+    if (this->font){
+        pango_font_description_set_family (font_description, this->font->getFace().c_str());
+        
+        pango_font_description_set_weight (font_description, PANGO_WEIGHT_NORMAL);
+        pango_font_description_set_absolute_size (font_description, this->font->getSize() * PANGO_SCALE);
+        
+        if (this->font->getColor()){
+            HSSRgba::p textColor = boost::static_pointer_cast<HSSRgba>(this->font->getColor());
+            cairo_set_source_rgb (cairo, textColor->getRed()/255, textColor->getGreen()/255, textColor->getBlue()/255);
+        } else {
+            cairo_set_source_rgb (cairo, 0, 0, 0);
+        }
+        
+    } else {
+        pango_font_description_set_family (font_description, "monospace");
+        pango_font_description_set_weight (font_description, PANGO_WEIGHT_NORMAL);
+        pango_font_description_set_absolute_size (font_description, 12 * PANGO_SCALE);
+        cairo_set_source_rgb (cairo, 0, 0, 0);
+    }
+    
+    pango_layout_set_font_description (layout, font_description);
+    pango_layout_set_text (layout, this->getContentText().c_str(), -1);
+    
+    
+    cairo_move_to (cairo, 0, 0);
+    pango_cairo_show_layout (cairo, layout);
+    
+    g_object_unref (layout);
+    pango_font_description_free (font_description);
+    
+    
+    
+    
+    
+    
+//    cairo_t * cairo = cairo_create(this->foregroundSurface);
+//    cairo_select_font_face (cairo, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+//    cairo_set_font_size (cairo, 12.0);
+//    cairo_set_source_rgb (cairo, 0.0, 0.0, 0.0);
+//    cairo_move_to (cairo, 0.0, 12.0);
+//    std_log1(this->getContentText());
+//    cairo_show_text (cairo, this->getContentText().c_str());
     
     cairo_destroy(cairo);
 }
@@ -1081,6 +1148,63 @@ void HSSDisplayObject::setDBackground(HSSParserNode::p value)
 }
 
 
+
+//font
+const HSSMultipleValue HSSDisplayObject::getDFont() const { return this->dFont; }
+void HSSDisplayObject::setDFont(HSSParserNode::p value)
+{
+    HSSMultipleValue newFont;
+    newFont.add(value);
+    this->dFont = newFont;
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            this->font = boost::static_pointer_cast<HSSFont>(objdef->getObject());
+            std_log1("added font object: "+this->font->toString());
+            break;
+        }
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try {
+                HSSObjectNameConstant::p objdef = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                this->font = boost::static_pointer_cast<HSSFont>(this->axrController->objectTreeGet(objdef->getValue()));
+            } catch (HSSObjectNotFoundException * e) {
+                std_log1(e->toString());
+            }
+            
+            break;
+        }
+            
+        default:
+        {
+            std_log1("unkown parser node type in font property of display object "+this->name+": "+HSSParserNode::parserNodeStringRepresentation(value->getType()));
+            break;
+        }
+    }
+    
+    //this->notifyObservers(HSSObservablePropertyAlignY, &this->alignY);
+}
+
+void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
+{
+    HSSParserNodeType nodeType = this->dFont.last()->getType();
+    switch (nodeType) {
+        case HSSParserNodeTypeObjectDefinition:
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            this->setDirty(true);
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    this->notifyObservers(HSSObservablePropertyFont, &this->font);
+}
 
 //defaults
 void HSSDisplayObject::setDefaults()

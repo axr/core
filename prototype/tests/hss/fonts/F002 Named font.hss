@@ -1,0 +1,31 @@
+/*
+	Test F002 - Named font
+	Created by Miro Keller on 2011-09-26.
+*/
+
+@font impact {
+	size: 50;
+	face: "Impact";
+	color: #C;
+}
+
+@font helvetica {
+	size: 54;
+	face: "Helvetica";
+	color: #A;
+}
+
+test
+{
+	background: #C;
+	
+	.. *
+	{
+		height: 75; //this is needed because of a bug in the prototype
+		alignY: 50%;
+		background: #D;
+	}
+	
+	hello { font: impact; }
+	hello2 { font: helvetica; }
+}

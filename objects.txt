@@ -46,6 +46,7 @@ Those properties that accept multiple values are marked with [].
 					contentAlignX
 					contentAlignY
 					background
+					font[]
 				
 				@textBlock
 					text

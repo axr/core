@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/11
+ *      Last changed: 2011/09/26
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 8
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -73,6 +73,8 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
         return HSSMargin::p(new HSSMargin());
     } else if (type == "rgba"){
         return HSSRgba::p(new HSSRgba());
+    } else if (type == "font"){
+        return HSSFont::p(new HSSFont());
     } else {
         throw HSSUnknownObjectTypeException(type);
     }

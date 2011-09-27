@@ -1,0 +1,26 @@
+/*
+	Test F001 - Basic
+	Created by Miro Keller on 2011-09-26.
+*/
+
+test
+{
+	background: #C;
+	
+	hello
+	{
+		background: #D;
+		font: @font {
+			size: 50;
+			face: "Century Gothic";
+			color: #A;
+		}
+	}
+	
+	
+	.. *
+	{
+		height: 58; //this is needed because of a bug in the prototype
+		alignY: 50%;
+	}
+}

@@ -63,6 +63,7 @@
 #include <cairo/cairo.h>
 #include "HSSMultipleValue.h"
 #include "HSSRgba.h"
+#include "HSSFont.h"
 
 namespace AXR {
     
@@ -157,6 +158,12 @@ namespace AXR {
         void setDBackground(HSSParserNode::p value);
         void addDBackground(HSSParserNode::p value);
         
+        //font
+        
+        const HSSMultipleValue getDFont() const;
+        void setDFont(HSSParserNode::p value);
+        void fontChanged(HSSObservableProperty source, void*data);
+        
         
         virtual void setDefaults();
         
@@ -229,6 +236,10 @@ namespace AXR {
         //background
         HSSMultipleValue dBackground;
         HSSRgba::p backgroundColor;
+        
+        //font
+        HSSMultipleValue dFont;
+        HSSFont::p font;
         
         //FIXME: margin
         //FIXME: border

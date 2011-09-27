@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/04
+ *      Last changed: 2011/09/26
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -61,5 +61,6 @@
 #include "HSSContainer.h"
 #include "HSSLineBorder.h"
 #include "HSSMargin.h"
+#include "HSSFont.h"
 
 #endif

@@ -141,11 +141,13 @@ bool HSSParser::loadFile(std::string filepath)
     fclose(hssfile);
     
     this->readNextToken();
-    this->skip(HSSWhitespace);
     
     HSSStatement::p statement;
+
+    bool done = this->atEndOfSource();
     
-    bool done = false;
+    if (!done) this->skip(HSSWhitespace);
+    
     while (!done) {
         std_log1("read statement");
         if(statement){
@@ -259,6 +261,8 @@ HSSStatement::p HSSParser::readNextStatement()
             {
                 ret = HSSComment::p(new HSSComment(VALUE_TOKEN(this->currentToken)->getString()));
                 this->readNextToken();
+                if(this->atEndOfSource())
+                    return ret;
                 this->skip(HSSWhitespace);
                 break;
             }

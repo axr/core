@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/12
+ *      Last changed: 2011/09/27
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -73,6 +73,8 @@ namespace AXR {
         void add(HSSParserNode::p newValue);
         //removes last statement from the list and then deletes it
         void removeLast();
+        //returns a pointer to the first statement in the list
+        HSSParserNode::p first();
         //returns a pointer to the last statement in the list
         HSSParserNode::p last();
         //returns how many statements there are in the properties list

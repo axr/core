@@ -1,0 +1,28 @@
+test
+{
+	child2 - child
+	{
+		background: #D;
+	}
+	
+	child + child
+	{
+		background: #B;
+	}
+	
+	child = child2
+	{
+		background: #8;
+	}
+	
+	child2 + child2
+	{
+		background: #4;
+	}
+	
+	//FIXME: this is needed because the prototype is not capable of auto calculate the heights yet
+	.. *
+	{
+		height: 50;
+	}
+}

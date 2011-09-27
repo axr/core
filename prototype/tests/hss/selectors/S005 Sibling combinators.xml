@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	Test S001 - Simple Selectors
+	Created by Miro Keller on 2011-09-17.
+-->
+<?xml-stylesheet type="application/x-hss" src="S005 Sibling combinators.hss"?>
+<test>
+	<child>Child 1</child>
+	<child>Child 1</child>
+	<child2>Child 2</child2>
+	<child2>Child 2</child2>
+</test>

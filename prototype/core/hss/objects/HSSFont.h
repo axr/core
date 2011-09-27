@@ -43,48 +43,80 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/27
+ *      Last changed: 2011/09/26
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSOBSERVABLEPROPERTIES_H
-#define HSSOBSERVABLEPROPERTIES_H
+#ifndef HSSFONT_H
+#define HSSFONT_H
+
+#include <string>
+#include "HSSObject.h"
+#include "../parsing/HSSKeywordConstant.h"
+#include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    enum HSSObservableProperty
+    class HSSFont : public HSSObject
     {
-        //HSSDisplayObject
-        HSSObservablePropertyValue,
-        HSSObservablePropertyWidth,
-        HSSObservablePropertyHeight,
-        HSSObservablePropertyAnchorX,
-        HSSObservablePropertyAnchorY,
-        HSSObservablePropertyFlow,
-        HSSObservablePropertyAlignX,
-        HSSObservablePropertyAlignY,
-        HSSObservablePropertyFont,
+    public:        
+        friend class HSSParser;
         
-        //HSSContainer
-        HSSObservablePropertyContentAlignX,
-        HSSObservablePropertyContentAlignY,
-        HSSObservablePropertyDirectionPrimary,
-        HSSObservablePropertyDirectionSecondary,
+        HSSFont();
+        virtual ~HSSFont();
         
-        //HSSRgba
-        HSSObservablePropertyRed,
-        HSSObservablePropertyGreen,
-        HSSObservablePropertyBlue,
-        HSSObservablePropertyAlpha,
+        typedef boost::shared_ptr<HSSFont> p;
         
-        //HSSFont
-        HSSObservablePropertySize,
+        virtual std::string toString();
+        virtual std::string defaultObjectType(std::string property);
+        
+        virtual void setProperty(std::string name, HSSParserNode::p value);
+        
+        long double getSize();
+        void setDSize(HSSParserNode::p);
+        void sizeChanged(HSSObservableProperty source, void*data);
+        std::string getFace();
+        void setDFace(HSSParserNode::p);
+        void faceChanged(HSSObservableProperty source, void*data);
+        HSSObject::p getColor();
+        void setDColor(HSSParserNode::p);
+        void colorChanged(HSSObservableProperty source, void*data);
+        HSSKeywordConstant::p getWeight();
+        void setDWeight(HSSParserNode::p);
+        void weightChanged(HSSObservableProperty source, void*data);
+        
+    private:
+        long double size;
+        std::string face;
+        HSSObject::p color;
+        HSSKeywordConstant::p weight;
+        
+        HSSParserNode::p dFace;
+        HSSObservable * observedFace;
+        HSSObservableProperty observedFaceProperty;
+        HSSParserNode::p dColor;
+        HSSObservable * observedColor;
+        HSSObservableProperty observedColorProperty;
+        HSSParserNode::p dWeight;
+        HSSObservable * observedWeight;
+        HSSObservableProperty observedWeightProperty;
+        HSSParserNode::p dSize;
+        HSSObservable * observedSize;
+        HSSObservableProperty observedSizeProperty;
+        
+        long double _setLDProperty(
+                                   void(HSSFont::*callback)(HSSObservableProperty property, void* data),
+                                   HSSParserNode::p         value,
+                                   long double              percentageBase,
+                                   HSSObservableProperty    observedSourceProperty,
+                                   HSSObservable *          &observedStore,
+                                   HSSObservableProperty    &observedStoreProperty
+                                   );
     };
+    
 }
 
-#endif //HSSOBSERVABLEPROPERTIES_H
 
-
-
+#endif
