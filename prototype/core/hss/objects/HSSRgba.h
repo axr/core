@@ -43,7 +43,7 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/11
+ *      Last changed: 2011/10/02
  *      HSS version: 1.0
  *      Core version: 0.3
  *      Revision: 2
@@ -61,7 +61,7 @@ namespace AXR {
     class HSSRgba : public HSSObject
     {
     public:
-        //static bool isKeyword(std::string value, std::string property);
+        //virtual bool isKeyword(std::string value, std::string property);
         
         friend class HSSParser;
         

@@ -43,10 +43,14 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/10/02
  *      HSS version: 1.0
  *      Core version: 0.3
  *      Revision: 3
+ *
+ *      WARNING!
+ *      =================
+ *      This class has not been implemented yet. Don't expecti it to work
  *
  ********************************************************************/
 

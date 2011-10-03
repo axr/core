@@ -43,61 +43,79 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/09/29
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "HSSLineBorder.h"
 
-using namespace AXR;
+#ifndef HSSFUNCTIONCALL_H
+#define HSSFUNCTIONCALL_H
 
-HSSLineBorder::HSSLineBorder()
-:HSSBorder()
-{
-    this->type = HSSObjectTypeLineBorder;
+#include "HSSParserNode.h"
+#include <string>
+#include <deque>
+#include "../objects/HSSFunction.h"
+#include "../objects/HSSDisplayObject.h"
+
+namespace AXR {
+    class HSSFunctionCall : public HSSParserNode, public HSSObservable
+    {
+    public:
+        
+        typedef boost::shared_ptr<HSSFunctionCall> p;
+        
+        friend class HSSParser;
+        friend class HSSDisplayObject;
+        
+        HSSFunctionCall();
+        virtual ~HSSFunctionCall();
+        std::string toString();
+        
+        const HSSFunction::p & getFunction() const;
+        void setFunction(HSSFunction::p newFunction);
+        
+        const std::deque<HSSParserNode::p> & getArguments() const;
+        void setArguments(std::deque<HSSParserNode::p> newArguments);
+        void argumentsAdd(HSSParserNode::p newArgument);
+        HSSParserNode::p argumentsFirst();
+        const HSSParserNode::p argumentsFirst() const;
+        HSSParserNode::p argumentsLast();
+        const HSSParserNode::p argumentsLast() const;
+        unsigned int argumentsSize();
+        void argumentsRemoveFirst();
+        void argumentsRemoveLast();
+                
+        virtual void setPercentageBase(long double value);
+        virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
+        
+        virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
+        
+        virtual long double evaluate();
+        void setDirty(bool value);
+        bool isDirty();
+        
+        void setValue(void * newValue);
+        void * getValue();
+        
+    private:
+        HSSFunction::p function;
+        std::deque<HSSParserNode::p>arguments;
+        
+        long double percentageBase;
+        HSSObservableProperty percentageObservedProperty;
+        HSSObservable * percentageObserved;
+        const std::vector<HSSDisplayObject::p> * scope;
+        
+        bool _isDirty;
+        void * _value;
+        
+    };
 }
 
-HSSLineBorder::~HSSLineBorder()
-{
-    
-}
-
-std::string HSSLineBorder::toString()
-{
-    if (this->isNamed()) {
-        return std::string("HSSLineBorder: ").append(this->name);
-    } else {
-        return "Annonymous HSSLineBorder";
-    }
-}
-
-std::string HSSLineBorder::defaultObjectType(std::string property)
-{
-    if (property == "color"){
-        return "rgb";
-    } else if (property == "joins"){
-        return "mitered";
-    }  else if (property == "caps"){
-        return "mitered";
-    } else {
-        return HSSObject::defaultObjectType(property);
-    }
-}
-
-bool HSSLineBorder::isKeyword(std::string value, std::string property)
-{
-    if (value == "rounded" || value == "projected"){
-        if (property == "caps") {
-            return true;
-        }
-    }
-    
-    //if we reached this far, let the superclass handle it
-    return HSSBorder::isKeyword(value, property);
-}
 
 
 
+#endif

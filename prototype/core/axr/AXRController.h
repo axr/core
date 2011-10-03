@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/11
+ *      Last changed: 2011/10/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 11
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -117,6 +117,12 @@ namespace AXR {
         void rulesRemove(unsigned index);
         HSSRule::p & rulesGet(unsigned index);
         
+        void setSelectorChain(HSSSelectorChain::p selectorChain);
+        const std::vector<HSSDisplayObject::p> selectHierarchical(const std::vector<HSSDisplayObject::p> & scope);
+        const std::vector<HSSDisplayObject::p> selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope);
+        const std::vector<HSSDisplayObject::p> selectOnLevel(const std::vector<HSSDisplayObject::p> & scope);
+        const std::vector<HSSDisplayObject::p> selectSimple(const std::vector<HSSDisplayObject::p> & scope);
+        
     protected:
         std::stack<HSSContainer::p>currentContext;
         HSSContainer::p root;
@@ -132,11 +138,6 @@ namespace AXR {
         bool _hasLoadedFile;
         
         void recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container);
-        
-        const std::vector<HSSDisplayObject::p> selectHierarchical(const std::vector<HSSDisplayObject::p> & scope);
-        const std::vector<HSSDisplayObject::p> selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope);
-        const std::vector<HSSDisplayObject::p> selectOnLevel(const std::vector<HSSDisplayObject::p> & scope);
-        const std::vector<HSSDisplayObject::p> selectSimple(const std::vector<HSSDisplayObject::p> & scope);
         
         HSSSelectorChain::p currentChain;
         HSSParserNode::p currentSelectorNode;

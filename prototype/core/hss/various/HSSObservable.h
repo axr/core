@@ -65,6 +65,7 @@ namespace AXR {
     {
     public:
         static std::string observablePropertyStringRepresentation(HSSObservableProperty property);
+        static HSSObservableProperty observablePropertyFromString(std::string name);
         
         //the key is a hash of HSSObservable * observed and HSObservableProperty source
         typedef boost::unordered_map<std::size_t, HSSCallback* > observed;

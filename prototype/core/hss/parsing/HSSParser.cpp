@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/11
+ *      Last changed: 2011/09/29
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 12
+ *      Revision: 14
  *
  ********************************************************************/
 
@@ -61,6 +61,8 @@
 #include <boost/pointer_cast.hpp>
 #include "HSSExpressions.h"
 #include "../objects/HSSRgba.h"
+#include "HSSFunctionCall.h"
+#include "../objects/HSSFunctions.h"
 
 using namespace AXR;
 
@@ -70,8 +72,6 @@ HSSParser::HSSParser(AXRController * theController)
     this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
     
     this->currentContext.push_back(HSSParserContextRoot);
-    //FIXME: will there be a root object? Now defaults to container
-    this->currentObjectContext.push(HSSContainer::p(new HSSContainer()));
     std_log1("creating hss parser");
 }
 
@@ -92,7 +92,7 @@ HSSParser::~HSSParser()
     std_log1("destructing hss parser");
     unsigned i;
     for (i=0; i<this->currentObjectContext.size(); i++){
-        this->currentObjectContextRemoveLast();
+        this->currentObjectContext.pop();
     }
 }
 
@@ -287,21 +287,11 @@ HSSRule::p HSSParser::readRule()
     this->checkForUnexpectedEndOfSource();
     
     //initialize the rule
-    HSSSelectorChain::p selectorChain = this->readSelectorChain();
+    HSSSelectorChain::p selectorChain = this->readSelectorChain(HSSBlockOpen);
     HSSRule::p ret = HSSRule::p(new HSSRule(selectorChain));
     
-    //we're not in a selector anymore
-    this->currentContext.pop_back();
     //now we're inside the block
     this->currentContext.push_back(HSSParserContextBlock);
-    
-    //if the file ends here, fuuuuuuu[...]
-    this->checkForUnexpectedEndOfSource();
-    
-    //we expect a block to open
-    this->skipExpected(HSSBlockOpen);
-    //skip any whitespace
-    this->skip(HSSWhitespace);
     
     //read the inner part of the block
     while (!this->currentToken->isA(HSSBlockClose))
@@ -342,7 +332,7 @@ HSSRule::p HSSParser::readRule()
     return ret;
 }
 
-HSSSelectorChain::p HSSParser::readSelectorChain()
+HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
 {
     security_brake_init();
     
@@ -352,7 +342,7 @@ HSSSelectorChain::p HSSParser::readSelectorChain()
     //set the appropriate context
     this->currentContext.push_back(HSSParserContextSelectorChain);
     //parse the selector chain until we find the block
-    while (this->currentToken && !this->currentToken->isA(HSSBlockOpen)) {
+    while (this->currentToken && !this->currentToken->isA(stopOn)) {
         std_log3(this->currentToken->toString());
         
         //if it's an identifier, it's a simple selector
@@ -400,6 +390,18 @@ HSSSelectorChain::p HSSParser::readSelectorChain()
         security_brake();
     }
     security_brake_reset();
+    
+    //we're not in a selector anymore
+    this->currentContext.pop_back();
+    
+    //we expect a block to open
+    this->skipExpected(stopOn);
+    //if the file ends here, fuuuuuuu[...]
+    this->checkForUnexpectedEndOfSource();
+    //skip any whitespace
+    this->skip(HSSWhitespace);
+    //if the file ends here, fuuuuuuu[...]
+    this->checkForUnexpectedEndOfSource();
     
     return ret;
 }
@@ -598,7 +600,6 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition()
         this->checkForUnexpectedEndOfSource();
     } else {
         throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
-        return ret;
     }
     
     //try to create an object of that type
@@ -636,10 +637,12 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition()
     this->checkForUnexpectedEndOfSource();
     
     //read the inner part of the block
+    this->currentObjectContext.push(obj);
     while (!this->currentToken->isA(HSSBlockClose)){
         const HSSPropertyDefinition::p &property = this->readPropertyDefinition();
         ret->propertiesAdd(property);
     }
+    this->currentObjectContext.pop();
     
     //we're out of the block, we expect a closing brace
     this->skipExpected(HSSBlockClose);
@@ -691,16 +694,25 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
             ret->setValue(exp);
             
         } else if (this->currentToken->isA(HSSIdentifier)){
-            //this is either a keyword or an object name
-            //check if it is a keyword
+            //this is either a function, a keyword or an object name
+            
             std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
-            if(this->currentObjectContext.top()->isKeyword(valuestr, propertyName)){
+            //check if it is a function
+            HSSObject::p objectContext = this->currentObjectContext.top();
+            
+            if (objectContext->isFunction(valuestr, propertyName)){
+                ret->setValue(this->readExpression());
+            //check if it is a keyword
+            } else if (objectContext->isKeyword(valuestr, propertyName)){
                 ret->setValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr))); 
+                this->readNextToken();
+            //we assume it is an object name at this point
             } else {
-                //FIXME
+                //FIXME (?)
                 ret->setValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr)));
+                this->readNextToken();
             }
-            this->readNextToken();
+            
         } else if (this->currentToken->isA(HSSInstructionSign)){
             ret->setValue(this->getObjectFromInstruction(this->readInstruction()));
             
@@ -1024,6 +1036,12 @@ HSSParserNode::p HSSParser::readBaseExpression()
             break;
         }
         
+        case HSSIdentifier:
+        {
+            left = this->readFunction();
+            break;
+        }
+        
         default:
             throw "Unknown token type while parsing base expression";
             break;
@@ -1036,6 +1054,100 @@ void HSSParser::readNextToken()
 {
     //read next one
     this->currentToken = this->tokenizer->readNextToken();
+}
+
+HSSParserNode::p HSSParser::readFunction()
+{
+    HSSParserNode::p ret;
+    
+    this->checkForUnexpectedEndOfSource();
+    if (this->currentToken->isA(HSSIdentifier)){
+        //create new function
+        std::string name = VALUE_TOKEN(this->currentToken)->getString();
+        if(name == "ref"){
+            HSSFunctionCall::p functionCall = HSSFunctionCall::p(new HSSFunctionCall());
+            HSSRefFunction::p refFunction = HSSRefFunction::p(new HSSRefFunction(this->controller));
+            
+            this->checkForUnexpectedEndOfSource();
+            this->readNextToken();
+            this->skip(HSSWhitespace);
+            this->skipExpected(HSSParenthesisOpen);
+            this->skip(HSSWhitespace);
+            //read the arguments
+            //first, we expect either "min", "max", "avg" or a property name
+            if (! this->currentToken->isA(HSSIdentifier)){
+                std_log1("HSSParser: unexpected token while reading ref function "+name);
+            } else {
+                std::string firstValue = VALUE_TOKEN(this->currentToken)->getString();
+                if (   firstValue == "min"
+                    || firstValue == "max"
+                    || firstValue == "avg"   ){
+                    
+                    refFunction->setModifier(firstValue);
+                    
+                    //after this there comes the property name
+                    this->checkForUnexpectedEndOfSource();
+                    this->readNextToken();
+                    this->skip(HSSWhitespace);
+                    if (! this->currentToken->isA(HSSIdentifier)){
+                        std_log1("HSSParser: unexpected token while reading ref function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+                    } else {
+                        refFunction->setPropertyName(HSSObservable::observablePropertyFromString(VALUE_TOKEN(this->currentToken)->getString()));
+                    }
+                    
+                    
+                } else {
+                    //just the property name
+                    refFunction->setPropertyName(HSSObservable::observablePropertyFromString(firstValue));
+                }
+            }
+            
+            this->checkForUnexpectedEndOfSource();
+            this->readNextToken();
+            this->skipExpected(HSSWhitespace);
+            if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of"){
+                std_log1("HSSParser: unexpected token while reading ref function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+            }
+            this->checkForUnexpectedEndOfSource();
+            this->readNextToken();
+            this->skipExpected(HSSWhitespace);
+            
+            
+            //now read the selector chain
+            refFunction->setSelectorChain(this->readSelectorChain(HSSParenthesisClose));
+            
+            
+            
+            functionCall->setFunction(refFunction);
+            ret = functionCall;
+            
+        } else if (name == "sel") {
+            
+            
+        } else if (name == "min") {
+            
+        } else if (name == "max") {
+            
+        } else if (name == "ceil") {
+            
+        } else if (name == "floor") {
+            
+        } else if (name == "round") {
+            
+        } else {
+            std_log1("HSSParser: unexpected function name "+name);
+        }
+
+        
+        
+        
+        
+        
+    } else {
+        throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+    }
+    
+    return ret;
 }
 
 bool HSSParser::atEndOfSource()
@@ -1084,5 +1196,15 @@ void HSSParser::skip(HSSTokenType type)
 void HSSParser::currentObjectContextRemoveLast()
 {
     this->currentObjectContext.pop();
+}
+
+unsigned int HSSParser::currentObjectContextSize()
+{
+    return this->currentObjectContext.size();
+}
+
+void HSSParser::currentObjectContextAdd(HSSObject::p theObject)
+{
+    this->currentObjectContext.push(theObject);
 }
 

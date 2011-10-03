@@ -53,6 +53,7 @@
 #include "HSSObservable.h"
 #include <iostream>
 #include "../../axr/AXRDebugging.h"
+#include <boost/unordered_map.hpp>
 
 using namespace AXR;
 
@@ -69,6 +70,23 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
 	types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
 	types[HSSObservablePropertyContentAlignY] = "HSSObservablePropertyContentAlignY";
     return types[property];
+}
+
+HSSObservableProperty HSSObservable::observablePropertyFromString(std::string name)
+{
+    boost::unordered_map<std::string, HSSObservableProperty> properties;
+    
+	properties["value"] = HSSObservablePropertyValue;
+	properties["width"] = HSSObservablePropertyWidth;
+	properties["height"] = HSSObservablePropertyHeight;
+	properties["anchorX"] = HSSObservablePropertyAnchorX;
+	properties["anchorY"] = HSSObservablePropertyAnchorY;
+	properties["flow"] = HSSObservablePropertyFlow;
+	properties["alignX"] = HSSObservablePropertyAlignX;
+	properties["alignY"] = HSSObservablePropertyAlignY;
+	properties["contentAlignX"] = HSSObservablePropertyContentAlignX;
+	properties["contentAlignY"] = HSSObservablePropertyContentAlignY;
+    return properties[name];
 }
 
 HSSObservable::HSSObservable()
@@ -127,9 +145,8 @@ void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
     if(this->_propertyObservers.count(property) != 0){
         HSSObservable::observed &theObserved = this->_propertyObservers[property];
         for (it=theObserved.begin(); it != theObserved.end() ; it++) {
-            //std_log1("notifying observer: "+(*(*it).second).ptr->name);
             HSSCallback * callback = (*it).second;
-            if((long double*)data == NULL){
+            if(data == NULL){
                 std_log1("data is null");
             }
             callback->call(property, data);

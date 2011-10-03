@@ -89,6 +89,7 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
 	types[HSSParserNodeTypeKeywordConstant] = "HSSKeywordConstant";
 	types[HSSParserNodeTypeObjectDefinition] = "HSSObjectDefinition";
 	types[HSSParserNodeTypeObjectNameConstant] = "HSSObjectNameConstant";
+	types[HSSParserNodeTypeFunctionCall] = "HSSFunctionCall";
     
     return types[type];
 }

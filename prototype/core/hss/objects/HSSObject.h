@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/26
+ *      Last changed: 2011/09/30
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 9
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -57,8 +57,8 @@
 #include <boost/shared_ptr.hpp>
 #include "../various/HSSObservable.h"
 #include "../parsing/HSSParserNode.h"
-#include <map>
 //#include "../../axr/AXRController.h"
+#include <boost/unordered_map.hpp>
 
 namespace AXR {
     
@@ -75,7 +75,8 @@ namespace AXR {
         HSSObjectTypeRgba,
         HSSObjectTypeFont,
         HSSObjectTypeValue,
-        HSSObjectTypeMultipleValue
+        HSSObjectTypeMultipleValue,
+        HSSObjectTypeFunction
     };
     
     class AXRController;
@@ -86,7 +87,6 @@ namespace AXR {
         typedef boost::shared_ptr<HSSObject> p;
         
         static HSSObject::p newObjectWithType(std::string type);
-        static bool isKeyword(std::string value, std::string property);
         
         std::string name;
         
@@ -94,21 +94,29 @@ namespace AXR {
         HSSObject(std::string name);
         ~HSSObject();
         
+        bool isA(HSSObjectType otherType);
+        HSSObjectType getType();
+        
+        virtual bool isKeyword(std::string value, std::string property);
+        virtual bool isFunction(std::string value, std::string property);
+        
         virtual std::string toString();
         bool isNamed();
         void setName(std::string newName);
         void dropName();
         
-        bool isA(HSSObjectType otherType);
-        HSSObjectType getType();
-        
         virtual std::string defaultObjectType(std::string property);
+        
         virtual void setProperty(std::string name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, void* value);
+        virtual void * getProperty(HSSObservableProperty name);
+        virtual void registerProperty(HSSObservableProperty name, void* property);
         
         AXRController * axrController;
         
     protected:
         HSSObjectType type;
+        boost::unordered_map<HSSObservableProperty, void*> properties;
         
     private:
         bool _isNamed;

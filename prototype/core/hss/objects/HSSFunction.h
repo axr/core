@@ -43,61 +43,66 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/09/28
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "HSSLineBorder.h"
+#ifndef HSSFUNCTION_H
+#define HSSFUNCTION_H
 
-using namespace AXR;
+#include <string>
+#include "HSSObject.h"
+#include "../parsing/HSSKeywordConstant.h"
+#include <boost/shared_ptr.hpp>
+#include <deque>
+#include <vector>
+#include "HSSDisplayObject.h"
 
-HSSLineBorder::HSSLineBorder()
-:HSSBorder()
-{
-    this->type = HSSObjectTypeLineBorder;
+namespace AXR {
+    class HSSFunction : public HSSObject
+    {
+    public:        
+        friend class HSSParser;
+        
+        HSSFunction();
+        virtual ~HSSFunction();
+        
+        typedef boost::shared_ptr<HSSFunction> p;
+        
+        virtual std::string toString();
+        virtual std::string defaultObjectType(std::string property);
+        
+        virtual void setProperty(std::string name, HSSParserNode::p value);
+        
+        void * evaluate();
+        void * evaluate(std::deque<HSSParserNode::p> arguments);
+        
+        virtual void * _evaluate();
+        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments) =0;
+        
+        virtual void propertyChanged(HSSObservableProperty property, void* data);
+        
+        virtual void setPercentageBase(long double value);
+        virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
+        
+        virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
+        
+        void setDirty(bool value);
+        bool isDirty();
+        
+    protected:
+        bool _isDirty;
+        void * _value;
+        
+        long double percentageBase;
+        HSSObservableProperty percentageObservedProperty;
+        HSSObservable * percentageObserved;
+        const std::vector<HSSDisplayObject::p> * scope;
+        
+    };
 }
 
-HSSLineBorder::~HSSLineBorder()
-{
-    
-}
-
-std::string HSSLineBorder::toString()
-{
-    if (this->isNamed()) {
-        return std::string("HSSLineBorder: ").append(this->name);
-    } else {
-        return "Annonymous HSSLineBorder";
-    }
-}
-
-std::string HSSLineBorder::defaultObjectType(std::string property)
-{
-    if (property == "color"){
-        return "rgb";
-    } else if (property == "joins"){
-        return "mitered";
-    }  else if (property == "caps"){
-        return "mitered";
-    } else {
-        return HSSObject::defaultObjectType(property);
-    }
-}
-
-bool HSSLineBorder::isKeyword(std::string value, std::string property)
-{
-    if (value == "rounded" || value == "projected"){
-        if (property == "caps") {
-            return true;
-        }
-    }
-    
-    //if we reached this far, let the superclass handle it
-    return HSSBorder::isKeyword(value, property);
-}
-
-
-
+#endif

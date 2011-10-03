@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/17
+ *      Last changed: 2011/09/29
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 8
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -97,6 +97,10 @@ namespace AXR {
         //reads and returns a shared pointer to the next statement in the buffer
         HSSStatement::p readNextStatement();
         
+        void currentObjectContextRemoveLast();
+        unsigned int currentObjectContextSize();
+        void currentObjectContextAdd(HSSObject::p theObject);
+        
     protected:
         HSSTokenizer::p tokenizer;
         //weak pointer
@@ -108,7 +112,7 @@ namespace AXR {
         
         
         HSSRule::p readRule();
-        HSSSelectorChain::p readSelectorChain(); //FIXME
+        HSSSelectorChain::p readSelectorChain(HSSTokenType stopOn); //FIXME (?)
         
         bool isCombinator();
         bool isCombinator(HSSToken::p token);
@@ -123,6 +127,7 @@ namespace AXR {
         HSSInstruction::p readInstruction();
         HSSObjectDefinition::p getObjectFromInstruction(HSSInstruction::p instruction);
         HSSParserNode::p readExpression();
+        HSSParserNode::p readFunction();
         
         HSSParserNode::p readAdditiveExpression();
         HSSParserNode::p readMultiplicativeExpression();
@@ -136,7 +141,6 @@ namespace AXR {
         void skipExpected(HSSTokenType type, std::string value);
         void skip(HSSTokenType type);
         
-        void currentObjectContextRemoveLast();
     };
 }
 

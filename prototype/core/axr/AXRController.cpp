@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/18
+ *      Last changed: 2011/10/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 14
+ *      Revision: 15
  *
  ********************************************************************/
 
@@ -163,10 +163,7 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
 
 void AXRController::recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container)
 {
-    this->currentChain = rule->selectorChain;
-    this->currentChainSize = this->currentChain->size();
-    this->currentChainCount = 0;
-    this->currentSelectorNode = this->currentChain->get(0);
+    this->setSelectorChain(rule->selectorChain);
     
     //if it starts with a combinator, adjust the scope and selector chain
     bool useAdjustedScope = false;
@@ -198,6 +195,15 @@ void AXRController::recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const
             }
         }
     }
+}
+
+void AXRController::setSelectorChain(HSSSelectorChain::p selectorChain)
+{
+    this->currentChain = selectorChain;
+    this->currentChainSize = selectorChain->size();
+    this->currentChainCount = 0;
+    this->currentSelectorNode = selectorChain->get(0);
+    
 }
 
 void AXRController::readNextSelectorNode()
@@ -428,9 +434,13 @@ void AXRController::reset()
     {
         this->currentContext.pop();
     }
-    //the operator -> is very important here
     this->parserHSS->reset();
     this->parserXML = XMLParser::p(new XMLParser(this));
+    
+    this->currentChain.reset();
+    this->currentSelectorNode.reset();
+    this->currentChainCount = 0;
+    this->currentChainSize = 0;
 }
 
 
@@ -452,6 +462,9 @@ HSSContainer::p & AXRController::getRoot()
 
 void AXRController::setRoot(HSSContainer::p & newRoot){
     this->root = newRoot;
+    if(this->parserHSS->currentObjectContextSize() == 0){
+        this->parserHSS->currentObjectContextAdd(newRoot);
+    }
 }
 
 void AXRController::enterElement(std::string elementName)
@@ -491,7 +504,7 @@ void AXRController::add(HSSContainer::p & newContainer)
     newContainer->axrController = this;
     
     if(!this->root){
-        this->root = newContainer;
+        this->setRoot(newContainer);
     } else {
         if(this->currentContext.size() != 0){
             HSSContainer::p theCurrent = this->currentContext.top();

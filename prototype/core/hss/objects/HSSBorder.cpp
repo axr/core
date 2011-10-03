@@ -43,28 +43,16 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/11
+ *      Last changed: 2011/10/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
 #include "HSSBorder.h"
 
 using namespace AXR;
-
-bool HSSBorder::isKeyword(std::string value, std::string property)
-{
-    if (value == "inside" || value == "centered" || value == "outside"){
-        if (property == "position") {
-            return true;
-        }
-    }
-    
-    //if we reached this far, let the superclass handle it
-    return HSSObject::isKeyword(value, property);
-}
 
 HSSBorder::HSSBorder()
 :HSSObject()
@@ -93,6 +81,18 @@ std::string HSSBorder::defaultObjectType(std::string property)
     } else {
         return HSSObject::defaultObjectType(property);
     }
+}
+
+bool HSSBorder::isKeyword(std::string value, std::string property)
+{
+    if (value == "inside" || value == "centered" || value == "outside"){
+        if (property == "position") {
+            return true;
+        }
+    }
+    
+    //if we reached this far, let the superclass handle it
+    return HSSObject::isKeyword(value, property);
 }
 
 

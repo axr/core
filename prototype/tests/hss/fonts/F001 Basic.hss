@@ -9,18 +9,22 @@ test
 	
 	hello
 	{
-		background: #D;
+		width: 350;
+		height: 50%;
+		alignX: 100% - 15;
+		alignY: 15;
+		anchorX: 100%;
+		anchorY: 0;
+		
+		background: @rgba {
+			red: 255;
+			green: 250;
+			blue: 150;
+			alpha: 50%;
+		};
 		font: @font {
 			size: 50;
-			face: "Century Gothic";
-			color: #A;
+			face: "Helvetica";
 		}
-	}
-	
-	
-	.. *
-	{
-		height: 58; //this is needed because of a bug in the prototype
-		alignY: 50%;
 	}
 }

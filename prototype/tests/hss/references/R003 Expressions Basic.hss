@@ -1,0 +1,16 @@
+test
+{
+	halfHeight
+	{
+		height: 50%;
+		background: #D;
+	}
+	
+	relative
+	{
+		height: ref(height of halfHeight) + 50;
+		background: #A0;
+	}
+	
+	* { width: 50% }
+}

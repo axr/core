@@ -1,0 +1,104 @@
+test
+{
+	*
+	{
+		width: 50%;
+		height: 50%;
+		
+		master
+		{
+			width: 50%;
+			background: #C;
+		}
+		
+		master2
+		{
+			width: 50%;
+			background: #B;
+		}
+		
+		slave
+		{
+			width: 50%;
+			background: #A;
+		}
+	}
+	
+	testA
+	{
+		master
+		{
+			width: 50%;
+			height: 50%;
+		}
+		
+		master2
+		{
+			width: 50%;
+			height: 50%;
+			alignX: 0;
+			alignY: 100%;
+		}
+		
+		slave
+		{
+			height: ref(height of master) + ref(height of master2);
+		}
+	}
+	
+	testB
+	{
+		background: #EFE;
+		
+		master
+		{
+			height: 50%;
+		}
+		
+		slave
+		{
+			height: ref(height of master) + 20%;
+		}
+	}
+	
+	testC
+	{
+		background: #EEF;
+		
+		master
+		{
+			width: 25%;
+			height: 50%;
+		}
+		
+		slave
+		{
+			width: 25%;
+			height: ref(height of master) + 10;
+		}
+		
+		slave2
+		{
+			width: 25%;
+			height: ref(height of slave) + 10;
+			background: #9;
+		}
+	}
+	
+	testD
+	{
+		background: #FEE;
+		
+		master
+		{
+			width: 25%;
+			height: 50%;
+		}
+		
+		slave
+		{
+			width: 25%;
+			height: (ref(height of master) + 20) + 100; /* FIXME: this fails */
+		}
+	}
+}

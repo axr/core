@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/11
+ *      Last changed: 2011/10/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 18
+ *      Revision: 19
  *
  ********************************************************************/
 
@@ -74,7 +74,6 @@ namespace AXR {
     {
     public:
         typedef boost::shared_ptr<HSSContainer> p;
-        static bool isKeyword(std::string value, std::string property);
         
         friend class HSSDisplayObject;
         
@@ -94,6 +93,7 @@ namespace AXR {
         virtual ~HSSContainer();
         virtual std::string toString();
         virtual std::string defaultObjectType(std::string property);
+        virtual bool isKeyword(std::string value, std::string property);
         
         void add(HSSDisplayObject::p child);
         void remove(unsigned index);

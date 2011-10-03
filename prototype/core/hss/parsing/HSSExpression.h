@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/27
+ *      Last changed: 2011/10/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 9
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -92,6 +92,9 @@ namespace AXR {
         
         virtual void propertyChanged(HSSObservableProperty property, void* data);
         
+        virtual void leftChanged(HSSObservableProperty property, void* data);
+        virtual void rightChanged(HSSObservableProperty property, void* data);
+        
         virtual void setPercentageBase(long double value);
         virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
         virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
@@ -105,12 +108,21 @@ namespace AXR {
     protected:
         HSSExpressionType expressionType;
         HSSParserNode::p left;
+        long double leftval;
+        long double rightval;
         HSSParserNode::p right;
         
         long double percentageBase;
         HSSObservableProperty percentageObservedProperty;
         HSSObservable * percentageObserved;
-        const std::vector<boost::shared_ptr<HSSDisplayObject> > * scope;
+        
+        
+        HSSObservableProperty leftObservedProperty;
+        HSSObservable * leftObserved;
+        HSSObservableProperty rightObservedProperty;
+        HSSObservable * rightObserved;
+        
+        const std::vector<HSSDisplayObject::p> * scope;
         
         bool _isDirty;
         long double _value;

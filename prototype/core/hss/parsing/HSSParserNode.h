@@ -70,7 +70,8 @@ namespace AXR {
         HSSParserNodeTypeStringConstant,
         HSSParserNodeTypeKeywordConstant,
         HSSParserNodeTypeObjectDefinition,
-        HSSParserNodeTypeObjectNameConstant
+        HSSParserNodeTypeObjectNameConstant,
+        HSSParserNodeTypeFunctionCall
     };
 
     

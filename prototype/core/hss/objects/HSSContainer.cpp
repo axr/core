@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/11
+ *      Last changed: 2011/10/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 25
+ *      Revision: 26
  *
  ********************************************************************/
 
@@ -61,22 +61,6 @@
 #include <cmath>
 
 using namespace AXR;
-
-bool HSSContainer::isKeyword(std::string value, std::string property)
-{
-    if (value == "center"){
-        if (property == "contentAlignX" || property == "contentAlignY") {
-            return true;
-        }
-    } else if (value == "leftToRight" || value == "rightToLeft" || value == "topToBottom" || value == "bottomToTop"){
-        if ( property == "directionPrimary" || property == "directionSecondary"){
-            return true;
-        }
-    }
-    
-    //if we reached this far, let the superclass handle it
-    return HSSDisplayObject::isKeyword(value, property);
-}
 
 
 HSSContainer::HSSContainer()
@@ -165,6 +149,24 @@ std::string HSSContainer::defaultObjectType(std::string property)
         return HSSDisplayObject::defaultObjectType(property);
     }
 }
+
+bool HSSContainer::isKeyword(std::string value, std::string property)
+{
+    if (value == "center"){
+        if (property == "contentAlignX" || property == "contentAlignY") {
+            return true;
+        }
+    } else if (value == "leftToRight" || value == "rightToLeft" || value == "topToBottom" || value == "bottomToTop"){
+        if ( property == "directionPrimary" || property == "directionSecondary"){
+            return true;
+        }
+    }
+    
+    //if we reached this far, let the superclass handle it
+    return HSSDisplayObject::isKeyword(value, property);
+}
+
+
 
 void HSSContainer::add(HSSDisplayObject::p child)
 {

@@ -1,0 +1,33 @@
+test
+{
+	* { width: 120 }
+	master
+	{
+		height: 150;
+		background: #E;
+	}
+	
+	master + master
+	{
+		height: 200;
+		background: #D;
+	}
+
+	refmin
+	{
+		height: ref(min height of master);
+		background: #B;
+	}
+	
+	refmax
+	{
+		height: ref(max height of master);
+		background: #A;
+	}
+	
+	refavg
+	{
+		height: ref(avg height of master);
+		background: #9;
+	}
+}

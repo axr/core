@@ -43,61 +43,56 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/09/29
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "HSSLineBorder.h"
+#ifndef HSSREFFUNCTION_H
+#define HSSREFFUNCTION_H
 
-using namespace AXR;
+#include "HSSFunction.h"
+#include "../parsing/HSSSelectorChain.h"
 
-HSSLineBorder::HSSLineBorder()
-:HSSBorder()
-{
-    this->type = HSSObjectTypeLineBorder;
-}
-
-HSSLineBorder::~HSSLineBorder()
-{
-    
-}
-
-std::string HSSLineBorder::toString()
-{
-    if (this->isNamed()) {
-        return std::string("HSSLineBorder: ").append(this->name);
-    } else {
-        return "Annonymous HSSLineBorder";
-    }
-}
-
-std::string HSSLineBorder::defaultObjectType(std::string property)
-{
-    if (property == "color"){
-        return "rgb";
-    } else if (property == "joins"){
-        return "mitered";
-    }  else if (property == "caps"){
-        return "mitered";
-    } else {
-        return HSSObject::defaultObjectType(property);
-    }
-}
-
-bool HSSLineBorder::isKeyword(std::string value, std::string property)
-{
-    if (value == "rounded" || value == "projected"){
-        if (property == "caps") {
-            return true;
-        }
-    }
-    
-    //if we reached this far, let the superclass handle it
-    return HSSBorder::isKeyword(value, property);
+namespace AXR {
+    class HSSRefFunction : public HSSFunction
+    {
+    public:
+        
+        typedef boost::shared_ptr<HSSRefFunction> p;
+        
+        HSSRefFunction(AXRController * theController);
+        virtual ~HSSRefFunction();
+        
+        const std::string & getModifier() const;
+        void setModifier(std::string newValue);
+        
+        const HSSObservableProperty & getPropertyName() const;
+        void setPropertyName(HSSObservableProperty newValue);
+        
+        const HSSSelectorChain::p & getSelectorChain() const;
+        void setSelectorChain(HSSSelectorChain::p newValue);
+        
+        virtual void * _evaluate();
+        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
+        
+        void valueChanged(HSSObservableProperty source, void*data);
+        
+    protected:
+        //weak pointer
+        AXRController * controller;
+        
+    private:
+        std::string modifier;
+        HSSObservableProperty propertyName;
+        HSSSelectorChain::p selectorChain;
+        
+        HSSObservable * observed;
+    };
 }
 
 
 
+#endif

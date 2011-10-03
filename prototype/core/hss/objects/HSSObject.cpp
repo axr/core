@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/26
+ *      Last changed: 2011/09/28
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 9
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -82,15 +82,6 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
     return HSSObject::p();
 }
 
-bool HSSObject::isKeyword(std::string value, std::string property)
-{
-    if(value == "default" || value == "inherit" || value == "undefined" || value == "none"){
-        return true;
-    } else {
-        return false;
-    }
-}
-
 
 HSSObject::HSSObject()
 {
@@ -121,6 +112,34 @@ HSSObjectType HSSObject::getType()
 {
     return this->type;
 }
+
+bool HSSObject::isKeyword(std::string value, std::string property)
+{
+    if(   value == "default"
+       || value == "inherit"
+       || value == "undefined"
+       || value == "none"      ){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool HSSObject::isFunction(std::string value, std::string property)
+{
+    if(   value == "min"
+       || value == "max"
+       || value == "floor"
+       || value == "ceil"
+       || value == "round"
+       || value == "ref"
+       || value == "sel"       ){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 std::string HSSObject::toString()
 {
@@ -155,8 +174,24 @@ std::string HSSObject::defaultObjectType(std::string property){
 
 void HSSObject::setProperty(std::string name, HSSParserNode::p value)
 {
-    std_log1("unknown property "+name);
+    std_log1("HSSObject::setProperty() - unknown property "+name);
 }
+
+void HSSObject::setProperty(HSSObservableProperty name, void * value)
+{
+    std_log1("HSSObject::setProperty() - unknown property "+HSSObservable::observablePropertyStringRepresentation(name));
+}
+
+void * HSSObject::getProperty(HSSObservableProperty name)
+{
+    return this->properties[name];
+}
+
+void HSSObject::registerProperty(HSSObservableProperty name, void * property)
+{
+    this->properties[name] = property;
+}
+
 
 
 
