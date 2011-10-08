@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/17
+ *      Last changed: 2011/10/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -56,6 +56,7 @@
 #import "HSSStatement.h"
 #import "HSSPropertyDefinition.h"
 #import "HSSSelectorChain.h"
+#import "HSSInstruction.h"
 #import <string>
 #import <vector>
 #import <boost/shared_ptr.hpp>
@@ -70,9 +71,10 @@ namespace AXR {
         HSSRule(HSSSelectorChain::p selectorChain);
         ~HSSRule();
         
-        HSSSelectorChain::p selectorChain;
-        
         std::string toString();
+        
+        void setSelectorChain(HSSSelectorChain::p newChain);
+        HSSSelectorChain::p getSelectorChain();
         
         void propertiesAdd(HSSPropertyDefinition::p & newProperty);
         HSSPropertyDefinition::p &propertiesGet(unsigned index);
@@ -87,9 +89,15 @@ namespace AXR {
         void childrenRemoveLast();
         const int childrenSize();
         
+        void setInstruction(HSSInstruction::p newInstruction);
+        HSSInstruction::p getInstruction();
+        
     protected:
+        HSSSelectorChain::p selectorChain;
         std::vector<HSSPropertyDefinition::p> properties;
         std::vector<HSSRule::p>children;
+        HSSInstruction::p instruction;
+        
     };
 }
 

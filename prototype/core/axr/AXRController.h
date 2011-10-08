@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/10/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 12
+ *      Revision: 13
  *
  ********************************************************************/
 
@@ -88,7 +88,7 @@ namespace AXR {
         bool loadHSSFile(std::string filepath, std::string filename);
         
         HSSContainer::p & getRoot();
-        void setRoot(HSSContainer::p & newRoot);
+        void setRoot(HSSContainer::p newRoot);
         
         void enterElement(std::string elementName);
         void addAttribute(std::string name, std::string value);
@@ -96,7 +96,7 @@ namespace AXR {
         void appendContentText(std::string text);
         void exitElement();
         
-        void add(HSSContainer::p & newContainer);
+        void add(HSSDisplayObject::p newContainer);
         
         void objectTreeAdd(HSSObject::p & newObject);
         void objectTreeRemove(unsigned index);

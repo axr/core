@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/18
+ *      Last changed: 2011/10/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -57,6 +57,7 @@
 #include <string>
 #include <deque>
 #include <boost/shared_ptr.hpp>
+#include "HSSSelector.h"
 
 namespace AXR {
     class HSSSelectorChain : public HSSParserNode
@@ -82,6 +83,8 @@ namespace AXR {
         HSSParserNode::p last();
         //returns how many nodes there are in the selector chain
         const int size();
+        
+        HSSSelector::p subject();
         
         
     protected:

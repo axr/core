@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/10/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 28
+ *      Revision: 29
  *
  ********************************************************************/
 
@@ -84,7 +84,7 @@ HSSDisplayObject::HSSDisplayObject()
     this->bordersSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
     
     x = y = globalX = globalY = width = height = anchorX = anchorY = alignX = alignY = 0.;
-    drawIndex = 0;
+    drawIndex = _index = 0;
     tabIndex = zoomFactor = 1;
     flow = visible = true;
     //fixme: change to camelCase
@@ -126,7 +126,7 @@ HSSDisplayObject::HSSDisplayObject(std::string name)
     this->bordersSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
     
     x = y = globalX = globalY = width = height = anchorX = anchorY = alignX = alignY = 0.;
-    drawIndex = 0;
+    drawIndex = _index = 0;
     tabIndex = zoomFactor = 1;
     flow = visible = true;
     //fixme: change to camelCase
@@ -199,7 +199,13 @@ bool HSSDisplayObject::isKeyword(std::string value, std::string property)
         || property == "alignX"
         || property == "alignY"
         ) {
-        if (value == "center"){
+        if (   value == "top"
+            || value == "middle"
+            || value == "center"
+            || value == "bottom"
+            || value == "left"
+            || value == "right"
+            ){
             return true;
         }
     } else if (property == "flow") {
@@ -241,6 +247,20 @@ void HSSDisplayObject::setParent(boost::shared_ptr<HSSContainer> parent)
     this->parent = parentPointer(parent);
 }
 
+void HSSDisplayObject::removeFromParent()
+{
+    this->getParent()->remove(this->getIndex());
+}
+
+void HSSDisplayObject::setIndex(unsigned newIndex)
+{
+    this->_index = newIndex;
+}
+
+unsigned HSSDisplayObject::getIndex()
+{
+    return this->_index;
+}
 
 void HSSDisplayObject::attributesAdd(std::string name, std::string value)
 {
@@ -570,6 +590,18 @@ void HSSDisplayObject::layout()
 void HSSDisplayObject::recursiveLayout()
 {
     this->layout();
+}
+
+
+void HSSDisplayObject::setGlobalX(long double newValue)
+{
+    this->globalX = newValue;
+}
+
+
+void HSSDisplayObject::setGlobalY(long double newValue)
+{
+    this->globalY = newValue;
 }
 
 //width
@@ -914,8 +946,14 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
             }
 //            this->alignX = 0;
             
+        } else if (keywordValue->getValue() == "left"){
+            this->setDAlignX(HSSParserNode::p(new HSSNumberConstant(0)));
+        } else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center"){
+            this->setDAlignX(HSSParserNode::p(new HSSPercentageConstant(50)));
+        } else if (keywordValue->getValue() == "right"){
+            this->setDAlignX(HSSParserNode::p(new HSSPercentageConstant(100)));
         } else {
-            std_log1("any keyword other than auto has not been implemented yet");
+            std_log1("unknown keyword");
             throw;
         }
         
@@ -1007,9 +1045,14 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
                 this->alignY = 0;
             }
             //            this->alignY = 0;
-            
+        } else if (keywordValue->getValue() == "top"){
+            this->setDAlignY(HSSParserNode::p(new HSSNumberConstant(0)));
+        } else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center"){
+            this->setDAlignY(HSSParserNode::p(new HSSPercentageConstant(50)));
+        } else if (keywordValue->getValue() == "bottom"){
+            this->setDAlignY(HSSParserNode::p(new HSSPercentageConstant(100)));
         } else {
-            std_log1("any keyword other than auto has not been implemented yet");
+            std_log1("any keyword other than auto, top, middle or bottom has not been implemented yet");
             throw;
         }
         

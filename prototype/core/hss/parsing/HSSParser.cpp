@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/29
+ *      Last changed: 2011/10/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 14
+ *      Revision: 15
  *
  ********************************************************************/
 
@@ -312,6 +312,12 @@ HSSRule::p HSSParser::readRule()
             //ignore
             this->readNextToken();
             this->skip(HSSWhitespace);
+        } else if (this->currentToken->isA(HSSInstructionSign)){
+            HSSRule::p childRule = this->readInstructionRule();
+            if(childRule){
+                ret->childrenAdd(childRule);
+            }
+            
         } else {
             throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
         }
@@ -800,6 +806,8 @@ HSSInstruction::p HSSParser::readInstruction()
             ret = HSSInstruction::p(new HSSInstruction(HSSEnsureInstruction));
         } else if (currentval == "import") {
             ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction));
+        } else if (currentval == "move") {
+            ret = HSSInstruction::p(new HSSInstruction(HSSMoveInstruction));
         } else {
             throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
             return ret;
@@ -923,6 +931,29 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
             std_log1("*********** eror: unknown instruction type ****************");
             break;
     }
+    return ret;
+}
+
+//this function assumes currentToken is a instruction sign
+HSSRule::p HSSParser::readInstructionRule()
+{
+    HSSInstruction::p instruction = this->readInstruction();
+    HSSRule::p ret;
+    switch (instruction->getInstructionType()) {
+        case HSSNewInstruction:
+        case HSSEnsureInstruction:
+        case HSSMoveInstruction:
+        {
+            ret = this->readRule();
+            ret->setInstruction(instruction);
+            break;
+        }
+            
+        default:
+            std_log1("*********** eror: unknown instruction type ****************");
+            break;
+    }
+    
     return ret;
 }
 

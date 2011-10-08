@@ -53,6 +53,7 @@
 #include "HSSSelectorChain.h"
 #include <iostream>
 #include "../../axr/AXRDebugging.h"
+#include <boost/pointer_cast.hpp>
 
 using namespace AXR;
 
@@ -125,4 +126,16 @@ HSSParserNode::p HSSSelectorChain::last()
 const int HSSSelectorChain::size()
 {
     return this->nodeList.size();
+}
+
+HSSSelector::p HSSSelectorChain::subject()
+{
+    HSSSelector::p ret;
+    //FIXME: subject selectors need to be implemented
+    if(this->nodeList.back()->isA(HSSParserNodeTypeSelector)){
+        ret = boost::static_pointer_cast<HSSSelector>(this->nodeList.back());
+    } else {
+        std_log1("########### subject in selector chain could not be determined");
+    }
+    return ret;
 }

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/10/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 20
+ *      Revision: 21
  *
  ********************************************************************/
 
@@ -87,6 +87,9 @@ namespace AXR {
         virtual bool canHaveChildren();
         boost::shared_ptr<HSSContainer> getParent();
         void setParent(boost::shared_ptr<HSSContainer> parent);
+        void removeFromParent();
+        void setIndex(unsigned newIndex);
+        unsigned getIndex();
         void attributesAdd(std::string name, std::string value);
         void attributesRemove(std::string name);
         std::string getContentText();
@@ -121,6 +124,8 @@ namespace AXR {
         const bool needsLayout() const;
         virtual void layout();
         virtual void recursiveLayout();
+        virtual void setGlobalX(long double newValue);
+        virtual void setGlobalY(long double newValue);
         
         std::string getElementName();
         void setElementName(std::string name);
@@ -260,6 +265,8 @@ namespace AXR {
         unsigned int tabIndex;
         //FIXME: focused
         //FIXME: mask
+        
+        unsigned _index;
         
     private:
         long double _setLDProperty(

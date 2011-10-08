@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/10/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 26
+ *      Revision: 27
  *
  ********************************************************************/
 
@@ -62,6 +62,21 @@
 
 using namespace AXR;
 
+
+HSSDisplayObject::p HSSContainer::asDisplayObject(HSSContainer::p theContainer)
+{
+    return boost::static_pointer_cast<HSSDisplayObject>(theContainer);
+}
+
+//always test the return of this function. E.g. "HSSContainer::p cont = HSSContainer::asContainer(myDO); if(cont) { /* ... */ }
+HSSContainer::p HSSContainer::asContainer(HSSDisplayObject::p theDisplayObject)
+{
+    HSSContainer::p ret;
+    if (theDisplayObject->isA(HSSObjectTypeContainer)) {
+        ret = boost::static_pointer_cast<HSSContainer>(theDisplayObject);
+    }
+    return ret;
+}
 
 HSSContainer::HSSContainer()
 : HSSDisplayObject()
@@ -166,17 +181,27 @@ bool HSSContainer::isKeyword(std::string value, std::string property)
     return HSSDisplayObject::isKeyword(value, property);
 }
 
-
-
 void HSSContainer::add(HSSDisplayObject::p child)
 {
+    HSSContainer::p sharedThis = this->shared_from_this();
+    child->setParent(sharedThis);
+    std_log1("HSSContainer: added child "+child->getElementName()+" to "+this->getElementName());
+    child->setIndex(this->children.size());
     this->children.push_back(child);
-    child->setParent(shared_from_this());
 }
 
 void HSSContainer::remove(unsigned index)
 {
     this->children.erase(this->children.begin()+index);
+    this->resetChildrenIndexes();
+}
+
+void HSSContainer::resetChildrenIndexes()
+{
+    unsigned i,size;
+    for (i=0, size=this->children.size(); i<size; i++) {
+        this->children[i]->setIndex(i);
+    }
 }
 
 void HSSContainer::readDefinitionObjects()
@@ -421,8 +446,8 @@ void HSSContainer::layout()
     //assign the globalX and globalY
     for(i=0, size = this->children.size(); i<size; i++){
         HSSDisplayObject::p &child = this->children[i];
-        child->globalX = floor(this->globalX + child->x);
-        child->globalY = floor(this->globalY + child->y);
+        child->setGlobalX(floor(this->globalX + child->x));
+        child->setGlobalY(floor(this->globalY + child->y));
     }
     
     if(this->heightByContent){
@@ -725,6 +750,36 @@ void HSSContainer::recursiveLayout()
     }
 }
 
+void HSSContainer::setGlobalX(long double newValue)
+{
+    long double delta = newValue - this->globalX;
+    HSSDisplayObject::setGlobalX(newValue);
+    unsigned i, size;
+    for (i=0, size=this->children.size(); i<size; i++){
+        HSSDisplayObject::p theChild = this->children[i];
+        theChild->setGlobalX(theChild->globalX + delta);
+    }
+}
+
+void HSSContainer::setGlobalY(long double newValue)
+{
+    long double delta = newValue - this->globalY;
+    HSSDisplayObject::setGlobalY(newValue);
+    unsigned i, size;
+    for (i=0, size=this->children.size(); i<size; i++){
+        HSSDisplayObject::p theChild = this->children[i];
+        theChild->setGlobalY(theChild->globalY + delta);
+    }
+}
+
+void HSSContainer::setChildren(std::vector<HSSDisplayObject::p> newChildren)
+{
+    this->children = newChildren;
+    unsigned i, size;
+    for (i=0, size = this->children.size(); i<size; i++) {
+        this->children[i]->setParent(this->shared_from_this());
+    }
+}
 
 const std::vector<HSSDisplayObject::p>& HSSContainer::getChildren() const
 {

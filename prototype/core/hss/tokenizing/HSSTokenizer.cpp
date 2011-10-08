@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/17
+ *      Last changed: 2011/10/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -370,7 +370,8 @@ HSSToken::p HSSTokenizer::readIdentifier()
 HSSToken::p HSSTokenizer::readHexOrIdentifier()
 {
     security_brake_init();
-	while (1) {
+    bool done = false;
+	while (!done) {
         switch (this->currentChar) {
             case 'a':
             case 'A':
@@ -392,7 +393,12 @@ HSSToken::p HSSTokenizer::readHexOrIdentifier()
                     this->storeCurrentCharAndReadNext();
                     continue;
                 } else {
-                    return HSSValueToken::p(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText()));
+                    if (this->currentTokenText.size() > 0){
+                        return HSSValueToken::p(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText()));
+                    } else {
+                        done = true;
+                        break;
+                    }
                 }
         }
         security_brake();

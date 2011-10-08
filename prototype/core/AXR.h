@@ -43,12 +43,15 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/15
+ *      Last changed: 2011/10/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
+
+//This line is deditacted to the memory of Steven P. Jobs, may he rest in peace.
+//Farewell, Steve!
 
 #ifndef AXR_H
 #define AXR_H

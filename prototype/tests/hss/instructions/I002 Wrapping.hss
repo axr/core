@@ -1,0 +1,19 @@
+test
+{
+	#new content {
+		width: 600;
+		height: 300;
+		background: #E;
+		alignY: 50%;
+		
+		#move *
+		{
+			width: 150;
+			height: 150;
+			alignY: 50%;
+			background: #D;
+		}
+		
+		child2 { background: #C }
+	}
+}

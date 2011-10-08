@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/10/06
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 19
+ *      Revision: 20
  *
  ********************************************************************/
 
@@ -88,15 +88,20 @@ namespace AXR {
             std::vector<HSSDisplayObject::p>objects;
         };
         
+        static HSSDisplayObject::p asDisplayObject(HSSContainer::p theContainer);
+        static HSSContainer::p asContainer(HSSDisplayObject::p theDisplayObject);
+        
         HSSContainer();
         HSSContainer(std::string name);
         virtual ~HSSContainer();
         virtual std::string toString();
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
+        HSSDisplayObject::p asDisplayObject();
         
         void add(HSSDisplayObject::p child);
         void remove(unsigned index);
+        void resetChildrenIndexes();
         
         void readDefinitionObjects();
         void recursiveReadDefinitionObjects();
@@ -105,9 +110,10 @@ namespace AXR {
         
         void layout();
         void recursiveLayout();
+        virtual void setGlobalX(long double newValue);
+        virtual void setGlobalY(long double newValue);
         
-        //FIXME: make protected and provide accessors
-        std::vector<HSSDisplayObject::p>children;
+        void setChildren(std::vector<HSSDisplayObject::p> newChildren);
         const std::vector<HSSDisplayObject::p>& getChildren() const;
         
         //alignX
@@ -131,6 +137,8 @@ namespace AXR {
         void setDefaults();
         
     protected:
+        std::vector<HSSDisplayObject::p>children;
+        
         HSSParserNode::p dContentAlignX;
         long double contentAlignX;
         HSSObservable * observedContentAlignX;
@@ -148,6 +156,7 @@ namespace AXR {
         HSSDirectionValue directionSecondary;
         HSSObservable * observedDirectionSecondary;
         HSSObservableProperty observedDirectionSecondaryProperty;
+        
 
         
     private:

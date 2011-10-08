@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/17
+ *      Last changed: 2011/10/02
  *      HSS version: 1.0
  *      Core version: 0.3
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -98,6 +98,16 @@ std::string HSSRule::toString()
     }
     
     return tempstr;
+}
+
+void HSSRule::setSelectorChain(HSSSelectorChain::p newChain)
+{
+    this->selectorChain = newChain;
+}
+
+HSSSelectorChain::p HSSRule::getSelectorChain()
+{
+    return this->selectorChain;
 }
 
 void HSSRule::propertiesAdd(HSSPropertyDefinition::p & newProperty)
@@ -158,6 +168,16 @@ void HSSRule::childrenRemoveLast()
 const int HSSRule::childrenSize()
 {
     return this->children.size();
+}
+
+void HSSRule::setInstruction(HSSInstruction::p newInstruction)
+{
+    this->instruction = newInstruction;
+}
+
+HSSInstruction::p HSSRule::getInstruction()
+{
+    return this->instruction;
 }
 
 
