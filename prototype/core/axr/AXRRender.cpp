@@ -43,16 +43,17 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/21
+ *      Last changed: 2011/10/11
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.4
+ *      Revision: 5
  *
  ********************************************************************/
 
 #include "AXRRender.h"
 #include <iostream>
 #include "../axr/AXRDebugging.h"
+#include "../axr/errors/errors.h"
 #include "../hss/objects/HSSDisplayObject.h"
 #include "../axr/AXRController.h"
 
@@ -76,7 +77,7 @@ void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
     std_log1("drawing in rect");
     
     if(this->cairo == NULL){
-        throw "AXRRender Error: cairo was not defined";
+        throw AXRError::p(new AXRError("AXRRender", "Fatal error: Cairo was not defined"));
     }
     
     //prepare values

@@ -43,15 +43,16 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/06
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 27
+ *      Core version: 0.4
+ *      Revision: 28
  *
  ********************************************************************/
 
 #include "HSSContainer.h"
 #include "../../axr/AXRDebugging.h"
+#include "../../axr/errors/errors.h"
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
 #include <map>
@@ -152,6 +153,11 @@ std::string HSSContainer::toString()
     return tempstr;
 }
 
+std::string HSSContainer::defaultObjectType()
+{
+    return "container";
+}
+
 std::string HSSContainer::defaultObjectType(std::string property)
 {
     if (property == "shape"){
@@ -159,7 +165,7 @@ std::string HSSContainer::defaultObjectType(std::string property)
     } else if (property == "innerMargin"){
         return "margin";
     } else if (property == "background"){
-        return "image";
+        return "rgba";
     } else {
         return HSSDisplayObject::defaultObjectType(property);
     }
@@ -204,35 +210,25 @@ void HSSContainer::resetChildrenIndexes()
     }
 }
 
-void HSSContainer::readDefinitionObjects()
+void HSSContainer::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    //this->setDefaults();
-    
-    HSSDisplayObject::readDefinitionObjects();
-    
-    unsigned i, j;
-    
-    std::string propertyName;
-    for (i=0; i<this->rules.size(); i++) {
-        HSSRule::p& rule = this->rules[i];
-        
-        for (j=0; j<rule->propertiesSize(); j++) {
-            HSSPropertyDefinition::p& propertyDefinition = rule->propertiesGet(j);
-            propertyName = propertyDefinition->getName();
+    switch (name) {
+        case HSSObservablePropertyContentAlignX:
+            this->setDContentAlignX(value);
+            break;
+        case HSSObservablePropertyContentAlignY:
+            this->setDContentAlignY(value);
+            break;
+        case HSSObservablePropertyDirectionPrimary:
+            this->setDDirectionPrimary(value);
+            break;
+        case HSSObservablePropertyDirectionSecondary:
+            this->setDDirectionSecondary(value);
+            break;
             
-            if(propertyName == "contentAlignX"){
-                this->setDContentAlignX(propertyDefinition->getValue());
-                
-            } else if(propertyName == "contentAlignY"){
-                this->setDContentAlignY(propertyDefinition->getValue());
-            
-            } else if(propertyName == "directionPrimary"){
-                this->setDDirectionPrimary(propertyDefinition->getValue());
-            
-//            } else if(propertyName == "directionSecondary"){
-//                this->setDDirectionSecondary(propertyDefinition->getValue());
-            }
-        }
+        default:
+            HSSDisplayObject::setProperty(name, value);
+            break;
     }
 }
 
@@ -958,6 +954,54 @@ void HSSContainer::directionPrimaryChanged(HSSObservableProperty source, void *d
     this->notifyObservers(HSSObservablePropertyDirectionPrimary, &this->directionPrimary);
 }
 
+//directionSecondary
+HSSParserNode::p HSSContainer::getDDirectionSecondary() { return this->dDirectionSecondary; }
+void HSSContainer::setDDirectionSecondary(HSSParserNode::p value)
+{
+    this->dDirectionSecondary = value;
+    if(this->observedDirectionSecondary != NULL)
+    {
+        this->observedDirectionSecondary->removeObserver(this->observedDirectionSecondaryProperty, HSSObservablePropertyDirectionSecondary, this);
+    }
+    
+    if (value->isA(HSSParserNodeTypeKeywordConstant)){
+        std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
+        if(stringValue == "leftToRight" || stringValue == "rightToLeft"){
+            if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft){
+                this->directionSecondary = HSSDirectionTopToBottom;
+                this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
+            }
+            if(stringValue == "leftToRight"){
+                this->directionSecondary = HSSDirectionLeftToRight;
+            } else {
+                this->directionSecondary = HSSDirectionRightToLeft;
+            }
+            
+        } else if (stringValue == "topToBottom" || stringValue == "bottomToTop") {
+            if (this->directionSecondary == HSSDirectionTopToBottom || this->directionSecondary == HSSDirectionBottomToTop){
+                this->directionSecondary = HSSDirectionLeftToRight;
+                this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
+            }
+            if(stringValue == "topToBottom"){
+                this->directionSecondary = HSSDirectionTopToBottom;
+            } else {
+                this->directionSecondary = HSSDirectionBottomToTop;
+            }
+        }
+    }
+    
+    this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
+}
+
+void HSSContainer::directionSecondaryChanged(HSSObservableProperty source, void *data)
+{
+    if(this->dDirectionSecondary->isA(HSSParserNodeTypeKeywordConstant)){
+        
+    }
+    
+    this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
+}
+
 
 
 void HSSContainer::setDefaults()
@@ -1037,8 +1081,7 @@ long double HSSContainer::_setLDProperty(
             break;
             
         default:
-            throw "unknown parser node type while setting LDProperty";
-            break;
+            throw AXRError::p(new AXRError("HSSContainer", "Unknown parser node type while setting LDProperty"));
     }
     
     return ret;

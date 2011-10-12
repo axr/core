@@ -43,36 +43,16 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/04
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 7
+ *      Core version: 0.4
+ *      Revision: 8
  *
  ********************************************************************/
 
 #include "HSSParserNode.h"
 
 using namespace AXR;
-
-HSSParserNode::HSSParserNode()
-{
-    this->nodeType = HSSParserNodeTypeGeneric;
-}
-
-std::string HSSParserNode::toString()
-{
-    return "Generic parser node";
-}
-
-bool HSSParserNode::isA(HSSParserNodeType otherType)
-{
-	return otherType == this->nodeType;
-}
-
-HSSParserNodeType HSSParserNode::getType()
-{
-    return this->nodeType;
-}
 
 std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type){
     std::string types[20];
@@ -92,6 +72,26 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
 	types[HSSParserNodeTypeFunctionCall] = "HSSFunctionCall";
     
     return types[type];
+}
+
+HSSParserNode::HSSParserNode()
+{
+    this->nodeType = HSSParserNodeTypeGeneric;
+}
+
+std::string HSSParserNode::toString()
+{
+    return "Generic parser node";
+}
+
+bool HSSParserNode::isA(HSSParserNodeType otherType)
+{
+	return otherType == this->nodeType;
+}
+
+HSSParserNodeType HSSParserNode::getType()
+{
+    return this->nodeType;
 }
 
 

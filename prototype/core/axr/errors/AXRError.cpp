@@ -43,120 +43,64 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/09
+ *      Last changed: 2011/10/08
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 2
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "HSSFunction.h"
-#include "../../axr/AXRDebugging.h"
-#include <string>
-//#include "../parsing/HSSExpression.h"
-//#include "../parsing/HSSConstants.h"
-//#include <sstream>
-//#include "../parsing/HSSObjectDefinition.h"
+#include "AXRError.h"
+#include "AXRErrorsManager.h"
+#include <sstream>
 
 using namespace AXR;
 
-HSSFunction::HSSFunction()
-:HSSObject()
+AXRError::AXRError(std::string origin, std::string message)
 {
-    this->type = HSSObjectTypeFunction;
-    this->scope = NULL;
-    this->percentageObserved = NULL;
-    this->_isDirty = true;
-    this->_value = NULL;
+    this->origin = origin;
+    this->message = message;
+    this->in_file = false;
 }
 
-HSSFunction::~HSSFunction()
+AXRError::AXRError(std::string origin, std::string message, std::string filename, int line, int column)
+{
+    this->origin = origin;
+    this->message = message;
+    this->filename = filename;
+    this->line = line;
+    this->column = column;
+    this->in_file = true;
+}
+
+AXRError::~AXRError()
 {
     
 }
 
-std::string HSSFunction::toString()
-{    
-    std::string tempstr = std::string("HSSFunction\n");
-    return tempstr;
-}
-
-void * HSSFunction::evaluate()
+void AXRError::raise()
 {
-    if(this->_isDirty){
-        this->_isDirty = false;
-        
-        this->_value = this->_evaluate();
-    }
+    AXRErrorsManager::p manager = AXRErrorsManager::getInstance();
+    manager->add(this->shared_from_this());
+    manager->display();
     
-    return this->_value;
 }
 
-void * HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
+std::string AXRError::toString()
 {
-    if(this->_isDirty){
-        this->_isDirty = false;
-        
-        this->_value = this->_evaluate(arguments);
+    if (this->in_file) {
+        std::ostringstream linnum;
+        linnum << this->line;
+        std::ostringstream colnum;
+        colnum << this->column;
+        return "Error: "+this->message+" in "+this->filename+" on line "+linnum.str()+" on column "+colnum.str();
+    } else {
+        return "Error: "+this->message;
     }
-    
-    return this->_value;
 }
 
-void * HSSFunction::_evaluate()
+std::string AXRError::getMessage()
 {
-    return this->_evaluate(std::deque<HSSParserNode::p>());
+    return this->message;
 }
-
-std::string HSSFunction::defaultObjectType(){
-    return "function";
-}
-
-std::string HSSFunction::defaultObjectType(std::string property){
-    return "value";
-}
-
-void HSSFunction::setProperty(std::string name, HSSParserNode::p value)
-{
-    std_log1("unimplemented");
-}
-
-
-
-void HSSFunction::propertyChanged(HSSObservableProperty property, void* data)
-{
-    this->notifyObservers(HSSObservablePropertyValue, data);
-}
-
-void HSSFunction::setPercentageBase(long double value)
-{
-    this->percentageBase = value;
-}
-
-void HSSFunction::setPercentageObserved(HSSObservableProperty property, HSSObservable *observed)
-{
-    if(this->percentageObserved != NULL)
-    {
-        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
-    }
-    this->percentageObservedProperty = property;
-    this->percentageObserved = observed;
-    //observed->observe(property, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSFunction>(this, &HSSFunction::propertyChanged));
-}
-
-void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
-{
-    this->scope = newScope;
-}
-
-void HSSFunction::setDirty(bool value)
-{
-    this->_isDirty = value;
-}
-
-bool HSSFunction::isDirty()
-{
-    return this->_isDirty;
-}
-
 

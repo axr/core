@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/18
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -58,34 +58,80 @@
 using namespace AXR;
 
 std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property){
-    std::string types[20];
-	types[HSSObservablePropertyValue] = "HSSObservablePropertyValue";
-	types[HSSObservablePropertyWidth] = "HSSObservablePropertyWidth";
-	types[HSSObservablePropertyHeight] = "HSSObservablePropertyHeight";
-	types[HSSObservablePropertyAnchorX] = "HSSObservablePropertyAnchorX";
-	types[HSSObservablePropertyAnchorY] = "HSSObservablePropertyAnchorY";
-	types[HSSObservablePropertyFlow] = "HSSObservablePropertyFlow";
-	types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
-	types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
-	types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
-	types[HSSObservablePropertyContentAlignY] = "HSSObservablePropertyContentAlignY";
+    static std::string types[30];
+    static bool HSSObservableHasInitializedTypes = false;
+    if (!HSSObservableHasInitializedTypes) {
+        HSSObservableHasInitializedTypes = true;
+        //HSSDisplayObject
+        types[HSSObservablePropertyValue] = "HSSObservablePropertyValue";
+        types[HSSObservablePropertyWidth] = "HSSObservablePropertyWidth";
+        types[HSSObservablePropertyHeight] = "HSSObservablePropertyHeight";
+        types[HSSObservablePropertyAnchorX] = "HSSObservablePropertyAnchorX";
+        types[HSSObservablePropertyAnchorY] = "HSSObservablePropertyAnchorY";
+        types[HSSObservablePropertyFlow] = "HSSObservablePropertyFlow";
+        types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
+        types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
+        
+        //HSSContainer
+        types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
+        types[HSSObservablePropertyContentAlignY] = "HSSObservablePropertyContentAlignY";
+        types[HSSObservablePropertyDirectionPrimary] = "HSSObservablePropertyDirectionPrimary";
+        types[HSSObservablePropertyDirectionSecondary] = "HSSObservablePropertyDirectionSecondary";
+        types[HSSObservablePropertyBackground] = "HSSObservablePropertyBackground";
+        types[HSSObservablePropertyFont] = "HSSObservablePropertyFont";
+        
+        //HSSRgba
+        types[HSSObservablePropertyRed] = "HSSObservablePropertyRed";
+        types[HSSObservablePropertyGreen] = "HSSObservablePropertyGreen";
+        types[HSSObservablePropertyBlue] = "HSSObservablePropertyBlue";
+        types[HSSObservablePropertyAlpha] = "HSSObservablePropertyAlpha";
+        //HSSFont
+        types[HSSObservablePropertySize] = "HSSObservablePropertySize";
+        types[HSSObservablePropertyFace] = "HSSObservablePropertyFace";
+        types[HSSObservablePropertyColor] = "HSSObservablePropertyColor";
+        types[HSSObservablePropertyWeight] = "HSSObservablePropertyWeight";
+    }
+    
     return types[property];
 }
 
 HSSObservableProperty HSSObservable::observablePropertyFromString(std::string name)
 {
-    boost::unordered_map<std::string, HSSObservableProperty> properties;
+    static boost::unordered_map<std::string, HSSObservableProperty> properties;
     
-	properties["value"] = HSSObservablePropertyValue;
-	properties["width"] = HSSObservablePropertyWidth;
-	properties["height"] = HSSObservablePropertyHeight;
-	properties["anchorX"] = HSSObservablePropertyAnchorX;
-	properties["anchorY"] = HSSObservablePropertyAnchorY;
-	properties["flow"] = HSSObservablePropertyFlow;
-	properties["alignX"] = HSSObservablePropertyAlignX;
-	properties["alignY"] = HSSObservablePropertyAlignY;
-	properties["contentAlignX"] = HSSObservablePropertyContentAlignX;
-	properties["contentAlignY"] = HSSObservablePropertyContentAlignY;
+    if (properties.size() == 0) {
+        //HSSDisplayObject
+        properties["value"] = HSSObservablePropertyValue;
+        properties["width"] = HSSObservablePropertyWidth;
+        properties["height"] = HSSObservablePropertyHeight;
+        properties["anchorX"] = HSSObservablePropertyAnchorX;
+        properties["anchorY"] = HSSObservablePropertyAnchorY;
+        properties["flow"] = HSSObservablePropertyFlow;
+        properties["alignX"] = HSSObservablePropertyAlignX;
+        properties["alignY"] = HSSObservablePropertyAlignY;
+        
+        //HSSContainer
+        properties["contentAlignX"] = HSSObservablePropertyContentAlignX;
+        properties["contentAlignY"] = HSSObservablePropertyContentAlignY;
+        
+        properties["directionPrimary"] = HSSObservablePropertyDirectionPrimary;
+        properties["directionSecondary"] = HSSObservablePropertyDirectionSecondary;
+        properties["background"] = HSSObservablePropertyBackground;
+        properties["font"] = HSSObservablePropertyFont;
+        
+        //HSSRgba
+        properties["red"] = HSSObservablePropertyRed;
+        properties["green"] = HSSObservablePropertyGreen;
+        properties["blue"] = HSSObservablePropertyBlue;
+        properties["alpha"] = HSSObservablePropertyAlpha;
+        //HSSFont
+        properties["size"] = HSSObservablePropertySize;
+        properties["face"] = HSSObservablePropertyFace;
+        properties["color"] = HSSObservablePropertyColor;
+        properties["weight"] = HSSObservablePropertyWeight;
+    }
+    
+    
     return properties[name];
 }
 

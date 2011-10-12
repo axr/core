@@ -43,15 +43,16 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/10/09
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.4
+ *      Revision: 4
  *
  ********************************************************************/
 
 #include "HSSValue.h"
 #include <sstream>
+#include "../../axr/errors/errors.h"
 
 using namespace AXR;
 
@@ -118,11 +119,16 @@ std::string HSSValue::toString()
             ret.append(this->stringValue);
             break;
         default:
-            throw HSSUnknownValueTypeException();
+            ret.append("### Unknown value type ###");
             break;
     }
     
     return ret;
+}
+
+std::string HSSValue::defaultObjectType()
+{
+    return "value";
 }
 
 std::string HSSValue::defaultObjectType(std::string property)
@@ -172,7 +178,7 @@ std::string HSSValue::getStringValue()
         tempstream << (this->valueType == HSSValueNumberInt ? this->intValue : this->floatValue);
         return tempstream.str();
     } else {
-        throw HSSUnknownValueTypeException();
+        throw AXRError::p(new AXRError("HSSValue", "Unknown value type"));
     }
 }
 
@@ -182,7 +188,7 @@ long int HSSValue::getIntValue()
         return this->intValue;
     } else {
         //FIXME: parse string to int
-        throw HSSUnknownValueTypeException();
+        throw AXRError::p(new AXRError("HSSValue", "Unknown value type"));
     }
 }
 
@@ -192,7 +198,7 @@ long double HSSValue::getFloatValue()
         return this->floatValue;
     } else {
         //FIXME: parse string to float
-        throw HSSUnknownValueTypeException();
+        throw AXRError::p(new AXRError("HSSValue", "Unknown value type"));
     }
 }
 

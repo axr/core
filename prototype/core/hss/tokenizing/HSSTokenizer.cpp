@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/06
+ *      Last changed: 2011/10/08
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 7
+ *      Core version: 0.4
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -57,6 +57,7 @@
 #include <iostream>
 #include <sstream>
 #include "../../axr/AXRDebugging.h"
+#include "../../axr/errors/errors.h"
 
 using namespace AXR;
 
@@ -77,9 +78,9 @@ HSSTokenizer::HSSTokenizer()
 	this->buflen = 0;
 	//we start at the beginning of the buffer
 	this->bufpos = 0;
-    //the peeking position is the same as the bufpos
-    this->peekpos = 0;
-    //we start at line 0 and column 0
+    //the peeking offset is 0
+    this->peekpos = this->peekColumn = this->peekLine =  0;
+    //we start at line 1 and column 1
     this->currentLine = this->currentColumn = 1;
     
     //by default, numbers are read as real numbers and A-F will be an identifier
@@ -100,9 +101,9 @@ HSSTokenizer::HSSTokenizer(HSSTokenizer::buf_p buffer, unsigned buflen)
 	this->buflen = buflen;
 	//we start at the beginning of the buffer
 	this->bufpos = 0;
-    //the peeking position is the same as the bufpos
-    this->peekpos = 0;
-    //we start at line 0 and column 0
+    //the peeking offset is 0
+    this->peekpos = this->peekColumn = this->peekLine =  0;
+    //we start at line 1 and column 1
     this->currentLine = this->currentColumn = 1;
 	
 	//start by reading the first character
@@ -200,35 +201,35 @@ HSSToken::p HSSTokenizer::readNextToken()
 		case '\'':
 			return this->readString();
         case '#':
-            ret = HSSToken::p(new HSSToken(HSSInstructionSign));
+            ret = HSSToken::p(new HSSToken(HSSInstructionSign, this->currentLine, this->currentColumn -1));
             this->readNextChar();
             return ret;
 		case '@':
-			ret = HSSToken::p(new HSSToken(HSSObjectSign));
+			ret = HSSToken::p(new HSSToken(HSSObjectSign, this->currentLine, this->currentColumn -1));
 			this->readNextChar();
 			return ret;
 		case '{':
-			ret = HSSToken::p(new HSSToken(HSSBlockOpen));
+			ret = HSSToken::p(new HSSToken(HSSBlockOpen, this->currentLine, this->currentColumn -1));
 			this->readNextChar();
 			return ret;
 		case '}':
-			ret = HSSToken::p(new HSSToken(HSSBlockClose));
+			ret = HSSToken::p(new HSSToken(HSSBlockClose, this->currentLine, this->currentColumn -1));
 			this->readNextChar();
 			return ret;
         case ':':
-			ret = HSSToken::p(new HSSToken(HSSColon));
+			ret = HSSToken::p(new HSSToken(HSSColon, this->currentLine, this->currentColumn -1));
 			this->readNextChar();
 			return ret;
 		case ';':
-			ret = HSSToken::p(new HSSToken(HSSEndOfStatement));
+			ret = HSSToken::p(new HSSToken(HSSEndOfStatement, this->currentLine, this->currentColumn -1));
 			this->readNextChar();
 			return ret;
 		case '(':
-			ret = HSSToken::p(new HSSToken(HSSParenthesisOpen));
+			ret = HSSToken::p(new HSSToken(HSSParenthesisOpen, this->currentLine, this->currentColumn -1));
 			this->readNextChar();
 			return ret;
 		case ')':
-			ret = HSSToken::p(new HSSToken(HSSParenthesisClose));
+			ret = HSSToken::p(new HSSToken(HSSParenthesisClose, this->currentLine, this->currentColumn -1));
 			this->readNextChar();
 			return ret;
         case '/':
@@ -243,9 +244,14 @@ HSSToken::p HSSTokenizer::peekNextToken()
     std_log4("bufpos: " << this->bufpos);
     //store the current position in the buffer
     int curpos = this->bufpos;
+    unsigned curline = this->currentLine;
+    unsigned curcol = this->currentColumn;
     HSSToken::p ret = this->readNextToken();
     //store the new offset
     this->peekpos += (this->bufpos - curpos);
+    this->peekLine += (this->currentLine - curline);
+    this->peekColumn += (this->currentColumn - curcol);
+    
     std_log4("new peekpos: " << this->peekpos << " because bufpos: " << this->bufpos << " and curpos: " << curpos);
     
     return ret;
@@ -256,11 +262,15 @@ void HSSTokenizer::resetPeek()
     //restore the position in the buffer
     //we start one position before we were before, since we are re-reading the char
     this->bufpos -= this->peekpos + 1;
+    this->currentLine -= this->peekLine;
+    this->currentColumn -= this->peekColumn+1;
     std_log4("end bufpos: " << this->bufpos);
     this->readNextChar();
     
     //reset the offset to 0
     this->peekpos = 0;
+    this->peekLine = 0;
+    this->peekColumn = 0;
 }
 
 
@@ -279,7 +289,7 @@ HSS_TOKENIZING_STATUS HSSTokenizer::skipWhitespace()
 	while (isspace(this->currentChar)){
         if(this->currentChar == '\n' || this->currentChar == '\r'){
             this->currentLine++;
-            this->currentColumn = 0;
+            this->currentColumn = 1;
         }
 		this->readNextChar();
 	}
@@ -317,17 +327,23 @@ std::string HSSTokenizer::extractCurrentTokenText()
 //reads and returns a whitespace token
 HSSToken::p HSSTokenizer::readWhitespace()
 {
+    unsigned line = this->currentLine;
+    unsigned column = this->currentColumn - 1;
+    
 	this->skipWhitespace();
-	return HSSToken::p(new HSSToken(HSSWhitespace));
+	return HSSToken::p(new HSSToken(HSSWhitespace, line, column));
 }
 
 //reads and returns an identifier token
 HSSToken::p HSSTokenizer::readIdentifier()
 {
+    unsigned line = this->currentLine;
+    unsigned column = this->currentColumn - 1;
+    
 	while (isalnum(this->currentChar)) {
 		this->storeCurrentCharAndReadNext();
 	}
-	return HSSValueToken::p(new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText()));
+	return HSSValueToken::p(new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText(), line, column));
 }
 
 //reads and returns a hexadecimal number
@@ -369,8 +385,12 @@ HSSToken::p HSSTokenizer::readIdentifier()
 //reads and returns a hexadecimal number or an identifier
 HSSToken::p HSSTokenizer::readHexOrIdentifier()
 {
+    unsigned line = this->currentLine;
+    unsigned column = this->currentColumn -1;
+    
     security_brake_init();
     bool done = false;
+    this->currentTokenText.clear();
 	while (!done) {
         switch (this->currentChar) {
             case 'a':
@@ -393,8 +413,11 @@ HSSToken::p HSSTokenizer::readHexOrIdentifier()
                     this->storeCurrentCharAndReadNext();
                     continue;
                 } else {
-                    if (this->currentTokenText.size() > 0){
-                        return HSSValueToken::p(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText()));
+                    if(isalpha(this->currentChar)){
+                        done = true;
+                        break;
+                    } else if (this->currentTokenText.size() > 0){
+                        return HSSValueToken::p(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText(), line, column));
                     } else {
                         done = true;
                         break;
@@ -412,15 +435,18 @@ HSSToken::p HSSTokenizer::readHexOrIdentifier()
 //the currentChar is assumed to be a number
 HSSToken::p HSSTokenizer::readNumberOrPercentage()
 {
+    unsigned line = this->currentLine;
+    unsigned column = this->currentColumn -1;
+    
 	while (isnumber(this->currentChar)){
 		this->storeCurrentCharAndReadNext();
 	}
     HSSToken::p ret;
    if(currentChar == '%'){
-	   ret = HSSValueToken::p(new HSSValueToken(HSSPercentageNumber, this->extractCurrentTokenText()));
+	   ret = HSSValueToken::p(new HSSValueToken(HSSPercentageNumber, this->extractCurrentTokenText(), line, column));
        this->readNextChar();
    } else {
-	   ret = HSSValueToken::p(new HSSValueToken(HSSNumber, this->extractCurrentTokenText()));
+	   ret = HSSValueToken::p(new HSSValueToken(HSSNumber, this->extractCurrentTokenText(), line, column));
    }
 	return ret;
 }
@@ -429,29 +455,28 @@ HSSToken::p HSSTokenizer::readNumberOrPercentage()
 //the currentChar is assumed to be either " or '
 HSSToken::p HSSTokenizer::readString()
 {
+    unsigned line = this->currentLine;
+    unsigned column = this->currentColumn -1;
+    
     HSSToken::p ret;
     if(this->currentChar == '"'){
         this->readNextChar();
         while (this->currentChar != '"') {
             if(this->atEndOfSource()){
-                //FIXME
-                throw HSSUnexpectedEndOfSourceException("unknown", this->currentLine, this->currentColumn);
-                return ret;
+                throw AXRError::p(new AXRError("HSSTokenizer", "Unexpected end of source"));
             }
             this->storeCurrentCharAndReadNext();
         }
-        ret = HSSValueToken::p(new HSSValueToken(HSSDoubleQuoteString, this->extractCurrentTokenText()));
+        ret = HSSValueToken::p(new HSSValueToken(HSSDoubleQuoteString, this->extractCurrentTokenText(), line, column));
     } else if(this->currentChar == '\'') {
         this->readNextChar();
         while (this->currentChar != '\'') {
             if(this->atEndOfSource()){
-                //FIXME
-                throw HSSUnexpectedEndOfSourceException("unknown", this->currentLine, this->currentColumn);
-                return ret;
+                throw AXRError::p(new AXRError("HSSTokenizer", "Unexpected end of source"));
             }
             this->storeCurrentCharAndReadNext();
         }
-        ret = HSSValueToken::p(new HSSValueToken(HSSSingleQuoteString, this->extractCurrentTokenText()));
+        ret = HSSValueToken::p(new HSSValueToken(HSSSingleQuoteString, this->extractCurrentTokenText(), line, column));
     }
     
     this->readNextChar();
@@ -462,6 +487,9 @@ HSSToken::p HSSTokenizer::readString()
 //assumes currentChar == '/'
 HSSToken::p HSSTokenizer::readCommentOrSymbol()
 {
+    unsigned line = this->currentLine;
+    unsigned column = this->currentColumn -1;
+    
     HSSValueToken::p ret;
     this->readNextChar();
     if (this->currentChar == '/'){
@@ -470,7 +498,7 @@ HSSToken::p HSSTokenizer::readCommentOrSymbol()
         while (this->currentChar != '\n' && this->currentChar != '\r' && this->currentChar != '\f' && !this->atEndOfSource()) {
             this->storeCurrentCharAndReadNext();
         }
-        ret = HSSValueToken::p(new HSSValueToken(HSSLineComment, this->extractCurrentTokenText()));
+        ret = HSSValueToken::p(new HSSValueToken(HSSLineComment, this->extractCurrentTokenText(), line, column));
     } else if (this->currentChar == '*'){
         readNextChar(); //skip '*'
         while (1) {
@@ -489,10 +517,10 @@ HSSToken::p HSSTokenizer::readCommentOrSymbol()
             
             this->storeCurrentCharAndReadNext();
         }
-        ret = HSSValueToken::p(new HSSValueToken(HSSBlockComment, this->extractCurrentTokenText()));
+        ret = HSSValueToken::p(new HSSValueToken(HSSBlockComment, this->extractCurrentTokenText(), line, column));
         readNextChar();
     } else {
-        ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, '/'));
+        ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, '/', line, column));
     }
     
     return ret;
@@ -501,6 +529,9 @@ HSSToken::p HSSTokenizer::readCommentOrSymbol()
 //reads and returns a symbol token
 HSSToken::p HSSTokenizer::readSymbol()
 {
+    unsigned line = this->currentLine;
+    unsigned column = this->currentColumn -1;
+    
     HSSToken::p ret;
     
     switch (this->currentChar) {
@@ -512,16 +543,16 @@ HSSToken::p HSSTokenizer::readSymbol()
                     this->storeCurrentCharAndReadNext();
                 }
                 
-                ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText()));
+                ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText(), line, column));
                 return ret;
             }
             
-            ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText()));
+            ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText(), line, column));
             readNextChar();
             return ret;
                         
         default:
-            ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->currentChar));
+            ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->currentChar, line, column));
             this->readNextChar();
             return ret;
     }

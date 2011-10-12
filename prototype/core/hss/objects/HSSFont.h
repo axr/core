@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/26
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 1
+ *      Core version: 0.4
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -70,9 +70,10 @@ namespace AXR {
         typedef boost::shared_ptr<HSSFont> p;
         
         virtual std::string toString();
+        virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         
-        virtual void setProperty(std::string name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
         long double getSize();
         void setDSize(HSSParserNode::p);

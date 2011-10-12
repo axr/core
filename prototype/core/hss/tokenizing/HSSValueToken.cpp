@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/17
+ *      Last changed: 2011/10/09
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.4
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -55,24 +55,24 @@
 
 using namespace AXR;
 
-HSSValueToken::HSSValueToken(HSSTokenType type, std::string value)
-:HSSToken(type)
+HSSValueToken::HSSValueToken(HSSTokenType type, std::string value, unsigned line, unsigned column)
+:HSSToken(type, line, column)
 {
     
 	this->type = type;
 	this->stringValue = value;
 }
 
-HSSValueToken::HSSValueToken(HSSTokenType type, char value)
-:HSSToken(type)
+HSSValueToken::HSSValueToken(HSSTokenType type, char value, unsigned line, unsigned column)
+:HSSToken(type, line, column)
 {
     //std::string tempstr (1, value);
 	this->type = type;
 	this->stringValue = std::string(1, value);
 }
 
-HSSValueToken::HSSValueToken(HSSTokenType type, double long value)
-:HSSToken(type)
+HSSValueToken::HSSValueToken(HSSTokenType type, double long value, unsigned line, unsigned column)
+:HSSToken(type, line, column)
 {
     this->type = type;
     this->longValue = value;

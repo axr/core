@@ -43,120 +43,30 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/09
+ *      Last changed: 2011/10/08
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 2
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "HSSFunction.h"
-#include "../../axr/AXRDebugging.h"
-#include <string>
-//#include "../parsing/HSSExpression.h"
-//#include "../parsing/HSSConstants.h"
-//#include <sstream>
-//#include "../parsing/HSSObjectDefinition.h"
+#ifndef OSXERRORSMANAGER_H
+#define OSXERRORSMANAGER_H
 
-using namespace AXR;
+#include <boost/shared_ptr.hpp>
+#include "../../axr/errors/AXRAbstractErrorsManager.h"
 
-HSSFunction::HSSFunction()
-:HSSObject()
-{
-    this->type = HSSObjectTypeFunction;
-    this->scope = NULL;
-    this->percentageObserved = NULL;
-    this->_isDirty = true;
-    this->_value = NULL;
-}
-
-HSSFunction::~HSSFunction()
-{
-    
-}
-
-std::string HSSFunction::toString()
-{    
-    std::string tempstr = std::string("HSSFunction\n");
-    return tempstr;
-}
-
-void * HSSFunction::evaluate()
-{
-    if(this->_isDirty){
-        this->_isDirty = false;
+namespace AXR {
+    class OSXErrorsManager : public AXRAbstractErrorsManager {
+    public:
+        typedef boost::shared_ptr<OSXErrorsManager>p;
         
-        this->_value = this->_evaluate();
-    }
-    
-    return this->_value;
-}
-
-void * HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
-{
-    if(this->_isDirty){
-        this->_isDirty = false;
+        OSXErrorsManager();
+        virtual ~OSXErrorsManager();
         
-        this->_value = this->_evaluate(arguments);
-    }
-    
-    return this->_value;
-}
-
-void * HSSFunction::_evaluate()
-{
-    return this->_evaluate(std::deque<HSSParserNode::p>());
-}
-
-std::string HSSFunction::defaultObjectType(){
-    return "function";
-}
-
-std::string HSSFunction::defaultObjectType(std::string property){
-    return "value";
-}
-
-void HSSFunction::setProperty(std::string name, HSSParserNode::p value)
-{
-    std_log1("unimplemented");
+        virtual void display();
+    };
 }
 
 
-
-void HSSFunction::propertyChanged(HSSObservableProperty property, void* data)
-{
-    this->notifyObservers(HSSObservablePropertyValue, data);
-}
-
-void HSSFunction::setPercentageBase(long double value)
-{
-    this->percentageBase = value;
-}
-
-void HSSFunction::setPercentageObserved(HSSObservableProperty property, HSSObservable *observed)
-{
-    if(this->percentageObserved != NULL)
-    {
-        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
-    }
-    this->percentageObservedProperty = property;
-    this->percentageObserved = observed;
-    //observed->observe(property, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSFunction>(this, &HSSFunction::propertyChanged));
-}
-
-void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
-{
-    this->scope = newScope;
-}
-
-void HSSFunction::setDirty(bool value)
-{
-    this->_isDirty = value;
-}
-
-bool HSSFunction::isDirty()
-{
-    return this->_isDirty;
-}
-
-
+#endif

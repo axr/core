@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 2
+ *      Core version: 0.4
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -71,9 +71,10 @@ namespace AXR {
         typedef boost::shared_ptr<HSSRgba> p;
         
         virtual std::string toString();
+        virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         
-        virtual void setProperty(std::string name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
         long double getRed();
         void setDRed(HSSParserNode::p);

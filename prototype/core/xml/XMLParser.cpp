@@ -43,16 +43,17 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/17
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 9
+ *      Core version: 0.4
+ *      Revision: 10
  *
  ********************************************************************/
 
 #include "XMLParser.h"
 #include <iostream>
 #include "../axr/AXRDebugging.h"
+#include "../axr/errors/errors.h"
 #include "../axr/AXRController.h"
 
 using namespace AXR;
@@ -119,7 +120,8 @@ ssize_t XMLParser::read_block(void) {
         if(ferror(this->filehandle)) {
             this->setStatus(XML_STATUS_ERROR);
             this->setLastError(XML_ERROR_NO_ELEMENTS);
-            throw XMLNoElementsException(this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser));
+            throw AXRError::p(new AXRError("XMLParser", "No elements were found in the document", this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)));
+            
             fseek(this->filehandle, -size, SEEK_CUR);
         }
 	}
@@ -162,7 +164,7 @@ void XMLParser::EndElement(const XML_Char *name)
 void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *data)
 {
     if(this->controller == NULL){
-        throw new XMLControllerNotSetException(this->filepath);
+        throw AXRError::p(new AXRError("XMLParser", "The controller was not set on the XML parser"));
     }
     
     std::string instructionName = std::string(target);
@@ -193,7 +195,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
                     //we now expect a double quote
                     datai++;
                     if(data[datai] != '"'){
-                        throw XMLMalformedProcessingInstructionException(this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4);
+                        throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4));
                     }
                     
                     //std_log1(attribute);
@@ -205,7 +207,8 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
                 
             } else if(data[datai] == '"'){
                 if(readingAttr){
-                    throw XMLMalformedProcessingInstructionException(this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4);
+                    throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4));
+                    
                 } else {
                     readingAttr = true;
                     temp[tempi] = '\0';
@@ -229,16 +232,20 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
         if(sheetType == "application/x-hss" || sheetType == "text/hss"){
             //add to load later
             this->controller->loadSheetsAdd(sheetName);
+        } else if (sheetType == "application/xsl"){
+            //ignore silently
         } else {
-            std_log1("Ignoring stylesheet with unknown type");
+            //warn
+            AXRWarning::p(new AXRWarning("XMLParser", "Ignoring stylesheet of unknown type", this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+1))->raise();
         }
         
         
         
     } else {
         //balk
-        throw XMLUnknownProcessingInstructionException(this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser));
+        AXRWarning::p(new AXRWarning("XMLParser", "Unknown XML processing instruction", this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+1))->raise();
     }
+    
     delete [] temp;
 }
 

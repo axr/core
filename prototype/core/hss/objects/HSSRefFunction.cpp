@@ -43,15 +43,16 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/29
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 1
+ *      Core version: 0.4
+ *      Revision: 2
  *
  ********************************************************************/
 
 #include "HSSRefFunction.h"
 #include "../../axr/AXRDebugging.h"
+#include "../../axr/errors/errors.h"
 #include "../../axr/AXRController.h"
 
 using namespace AXR;
@@ -118,6 +119,7 @@ void * HSSRefFunction::_evaluate()
         
         this->observed = container.get();
     } else {
+        /*
         if (this->modifier == "min"){
             unsigned i, size;
             long double tempval;
@@ -140,6 +142,8 @@ void * HSSRefFunction::_evaluate()
         } else if (this->modifier == "avg"){
             
         }
+         */
+        throw AXRError::p(new AXRError("HSSRefFunciton", "Using modifiers in ref functions is not implemented yet"));
     }
     return this->_value;
 }

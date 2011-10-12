@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/28
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 10
+ *      Core version: 0.4
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -54,6 +54,7 @@
 #include "HSSObjects.h"
 #include "HSSObjectExceptions.h"
 #include "../../axr/AXRDebugging.h"
+#include "../../axr/errors/errors.h"
 
 using namespace AXR;
 
@@ -76,7 +77,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
     } else if (type == "font"){
         return HSSFont::p(new HSSFont());
     } else {
-        throw HSSUnknownObjectTypeException(type);
+        throw AXRError::p(new AXRError("HSSObject", type));
     }
     
     return HSSObject::p();
@@ -168,18 +169,32 @@ void HSSObject::dropName()
 }
 
 
+std::string HSSObject::defaultObjectType(){
+    return "value";
+}
+
 std::string HSSObject::defaultObjectType(std::string property){
     return "value";
 }
 
-void HSSObject::setProperty(std::string name, HSSParserNode::p value)
+void HSSObject::setPropertyWithName(std::string name, HSSParserNode::p value)
 {
-    std_log1("HSSObject::setProperty() - unknown property "+name);
+    HSSObservableProperty property = HSSObservable::observablePropertyFromString(name);
+    if(property != HSSObservablePropertyNone){
+        this->setProperty(property, value);
+    } else {
+        AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property "+name+", ignoring value"))->raise();
+    }
+}
+
+void HSSObject::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+{
+    AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property "+HSSObservable::observablePropertyStringRepresentation(name)+", ignoring value"))->raise();
 }
 
 void HSSObject::setProperty(HSSObservableProperty name, void * value)
 {
-    std_log1("HSSObject::setProperty() - unknown property "+HSSObservable::observablePropertyStringRepresentation(name));
+    AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property "+HSSObservable::observablePropertyStringRepresentation(name)+", ignoring value"))->raise();
 }
 
 void * HSSObject::getProperty(HSSObservableProperty name)

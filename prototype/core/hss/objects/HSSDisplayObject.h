@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/06
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 21
+ *      Core version: 0.4
+ *      Revision: 22
  *
  ********************************************************************/
 
@@ -82,6 +82,7 @@ namespace AXR {
         HSSDisplayObject(std::string name);
         virtual ~HSSDisplayObject();
         virtual std::string toString();
+        virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
         virtual bool canHaveChildren();
@@ -103,6 +104,7 @@ namespace AXR {
         const int rulesSize();
         virtual void readDefinitionObjects();
         virtual void recursiveReadDefinitionObjects();
+        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         void setNeedsRereadRules(bool value);
         bool needsRereadRules();
         

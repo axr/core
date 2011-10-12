@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/04
+ *      Last changed: 2011/10/08
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 7
+ *      Core version: 0.4
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -155,6 +155,22 @@
         render->reset();
     }
     bool loaded = controller->loadFile();
+    [self setNeedsDisplay:YES];
+    return loaded;
+}
+
+- (bool)loadFile:(NSString *)xmlPath
+{
+    std_log1("loading file");
+    
+    AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
+    if(controller->hasLoadedFile()){
+        AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
+        render->reset();
+    }
+    std::string filePath = std::string([xmlPath UTF8String]);
+    std::string fileName = std::string([[xmlPath lastPathComponent] UTF8String]);
+    bool loaded = controller->loadFile(filePath, fileName);
     [self setNeedsDisplay:YES];
     return loaded;
 }

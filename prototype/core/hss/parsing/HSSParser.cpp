@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/06
+ *      Last changed: 2011/10/08
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 15
+ *      Core version: 0.4
+ *      Revision: 16
  *
  ********************************************************************/
 
@@ -57,6 +57,7 @@
 #include <cstdlib>
 #include <stdio.h>
 #include "../../axr/AXRDebugging.h"
+#include "../../axr/errors/errors.h"
 #include "../../axr/AXRController.h"
 #include <boost/pointer_cast.hpp>
 #include "HSSExpressions.h"
@@ -73,6 +74,8 @@ HSSParser::HSSParser(AXRController * theController)
     
     this->currentContext.push_back(HSSParserContextRoot);
     std_log1("creating hss parser");
+    this->line = 1;
+    this->column = 1;
 }
 
 //HSSParser::HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, std::string filename)
@@ -126,6 +129,15 @@ bool HSSParser::loadFile(std::string filepath)
     
     //open the file for reading
     FILE * hssfile = fopen(filepath.c_str(), "r");
+    if( hssfile == NULL ){
+        AXRError::p error(new AXRError("HSSParser", "the file"+filepath+" doesn't exist"));
+        error->raise();
+        return false;
+    } else if( ferror(hssfile) ){
+        AXRError::p error(new AXRError("HSSParser", "the file"+filepath+" couldn't be read"));
+        error->raise();
+        return false;
+    }
     //read the file into the buffer of the tokenizer
     HSSTokenizer::buf_p hssbuffer = this->tokenizer->getBuffer();
     int len = (int)fread(hssbuffer.get(), 1, AXR_HSS_BUFFER_SIZE, hssfile);
@@ -156,6 +168,13 @@ bool HSSParser::loadFile(std::string filepath)
         try {
             statement = this->readNextStatement();
         }
+        catch (AXR::AXRError::p e){
+            e->raise();
+            this->readNextToken();
+            if (!this->atEndOfSource()){
+                this->skip(HSSWhitespace);
+            }
+        }
         catch(AXR::HSSUnexpectedTokenException e){
             std::cout << e.toString() << std::endl;
             continue;
@@ -175,7 +194,10 @@ bool HSSParser::loadFile(std::string filepath)
         
         
         if(!statement){
-            done = true;
+            if (this->atEndOfSource()){
+                done = true;
+            }
+            
         } else {
 //            std::cout << std::endl << "-----------------------------" << std::endl
 //            <<  statement->toString() << std::endl << "-----------------------------" << std::endl;
@@ -218,8 +240,8 @@ bool HSSParser::loadFile(std::string filepath)
 HSSStatement::p HSSParser::readNextStatement()
 {
     HSSStatement::p ret;
-    if(this->currentContext.back() == HSSParserContextRoot)
-    {
+    //if(this->currentContext.back() == HSSParserContextRoot)
+    //{
         //the file was empty
         if(this->atEndOfSource())
             return ret;
@@ -229,8 +251,7 @@ HSSStatement::p HSSParser::readNextStatement()
             case HSSInstructionSign:
             {
                 HSSInstruction::p instruction = this->readInstruction();
-                //FIXME: what do do here?
-                std_log1("******************** unimplemented ***********************");
+                //FIXME: what should happen here?
                 break;
             }
             
@@ -238,7 +259,7 @@ HSSStatement::p HSSParser::readNextStatement()
             case HSSObjectSign:
             {
                 //create an object definition
-                ret = this->readObjectDefinition();
+                ret = this->readObjectDefinition("");
                 break;
             }
             
@@ -269,14 +290,16 @@ HSSStatement::p HSSParser::readNextStatement()
                 
                 
             default:
+                throw AXRWarning::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
+                
                 break;
         }
         
         return ret;
-    } else {
-        std_log1("reading in anything other than root context is not implemented yet");
-        return ret;
-    }
+//    } else {
+//        std_log1("reading in anything other than root context is not implemented yet");
+//        return ret;
+//    }
 }
 
 HSSRule::p HSSParser::readRule()
@@ -287,7 +310,21 @@ HSSRule::p HSSParser::readRule()
     this->checkForUnexpectedEndOfSource();
     
     //initialize the rule
-    HSSSelectorChain::p selectorChain = this->readSelectorChain(HSSBlockOpen);
+    HSSSelectorChain::p selectorChain;
+    try {
+        selectorChain = this->readSelectorChain(HSSBlockOpen);
+    } catch (AXRError::p e) {
+        this->readNextToken();
+        this->checkForUnexpectedEndOfSource();
+        this->skip(HSSWhitespace);
+        
+        e->raise();
+        
+        //return an empty rule
+        HSSRule::p ret;
+        return ret;
+    }
+    
     HSSRule::p ret = HSSRule::p(new HSSRule(selectorChain));
     
     //now we're inside the block
@@ -296,30 +333,56 @@ HSSRule::p HSSParser::readRule()
     //read the inner part of the block
     while (!this->currentToken->isA(HSSBlockClose))
     {
-        //std_log1(this->currentToken->toString());
-        //if we find an identifier, we must peek forward to see if it is a property name
-        if(this->currentToken->isA(HSSIdentifier)){
-            if (this->isPropertyDefinition()){
-                HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition();
-                ret->propertiesAdd(propertyDefinition);
+        try {
+            //std_log1(this->currentToken->toString());
+            //if we find an identifier, we must peek forward to see if it is a property name
+            if(this->currentToken->isA(HSSIdentifier)){
+                if (this->isPropertyDefinition()){
+                    HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition();
+                    if (propertyDefinition)
+                        ret->propertiesAdd(propertyDefinition);
+                } else {
+                    HSSRule::p theRule = this->readRule();
+                    if(theRule)
+                        ret->childrenAdd(theRule);
+                }
+                
+            } else if(this->currentToken->isA(HSSSymbol)){
+                HSSRule::p theRule = this->readRule();
+                if(theRule)
+                    ret->childrenAdd(theRule);
+                
+            } else if(this->currentToken->isA(HSSLineComment) || this->currentToken->isA(HSSBlockComment)){
+                //ignore
+                this->readNextToken();
+                this->skip(HSSWhitespace);
+                
+            } else if (this->currentToken->isA(HSSInstructionSign)){
+                HSSRule::p childRule = this->readInstructionRule();
+                if(childRule)
+                    ret->childrenAdd(childRule);
+            
             } else {
-                //recursive omg!
-                ret->childrenAdd(this->readRule());
-            }
-        } else if(this->currentToken->isA(HSSSymbol)){
-            ret->childrenAdd(this->readRule());
-        } else if(this->currentToken->isA(HSSLineComment) || this->currentToken->isA(HSSBlockComment)){
-            //ignore
-            this->readNextToken();
-            this->skip(HSSWhitespace);
-        } else if (this->currentToken->isA(HSSInstructionSign)){
-            HSSRule::p childRule = this->readInstructionRule();
-            if(childRule){
-                ret->childrenAdd(childRule);
+                AXRWarning::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType())+" while reading rule", this->filename, this->line, this->column))->raise();
+                this->readNextToken();
+                this->skip(HSSWhitespace);
             }
             
-        } else {
-            throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+        } catch (AXRError::p e) {
+            AXRWarning::p(new AXRWarning("HSSParser", "Invalid value for "+e->getMessage(), this->filename, this->line, this->column))->raise();
+            if(!this->atEndOfSource()){
+                this->skipUntilEndOfStatement();
+                this->readNextToken();
+                this->checkForUnexpectedEndOfSource();
+                this->skip(HSSWhitespace);
+            }
+        }
+        
+        if (this->atEndOfSource()) {
+            AXRWarning::p(new AXRWarning("HSSParser", "Auto closing block of rule targeting "+ret->getSelectorChain()->subject()->getElementName()+" because of unexpected end of file", this->filename, this->line, this->column))->raise();
+            //leave the block context
+            this->currentContext.pop_back();
+            return ret;
         }
         
         security_brake()
@@ -347,7 +410,7 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
     //first we need to look at the selector chain
     //set the appropriate context
     this->currentContext.push_back(HSSParserContextSelectorChain);
-    //parse the selector chain until we find the block
+    //parse the selector chain until we find the token to stop on
     while (this->currentToken && !this->currentToken->isA(stopOn)) {
         std_log3(this->currentToken->toString());
         
@@ -386,11 +449,11 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                     }
                     //huh? we didn't expect any other symbol
                 default:
-                    throw HSSUnexpectedTokenException(HSSSymbol, std::string(1,currentTokenValue), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+                    throw AXRError::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
             }
             //we didn't expect any other type of token
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+            throw AXRError::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
         }
         
         security_brake();
@@ -553,8 +616,7 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
             
             break;
         default:
-            throw HSSUnexpectedTokenException(HSSSymbol, std::string(1, currentTokenChar), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
-            return ret;
+            throw AXRError::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
     }
     
     this->readNextToken();
@@ -573,7 +635,7 @@ HSSSelector::p HSSParser::readSelector()
 
 
 //this assumes currentToken is an object sign
-HSSObjectDefinition::p HSSParser::readObjectDefinition()
+HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
 {
     HSSObjectDefinition::p ret;
     std::string objtype;
@@ -584,20 +646,21 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition()
     //end of file would be fatal
     this->checkForUnexpectedEndOfSource();
     
-    //store the current context for later use
-    HSSParserContext outerContext = this->currentContext.back();
     //set the appropriate context
     this->currentContext.push_back(HSSParserContextObjectDefinition);
     
     //first we need to know what type of object it is
-    if (this->currentToken->isA(HSSWhitespace)) {
+    if (this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) ) {
         //damn, we'll have to derive that from the context
-        if (outerContext == HSSParserContextRoot){
-            objtype = "container";
+        if (this->currentObjectContext.size() > 0){
+            if (propertyName == ""){
+                objtype = this->currentObjectContext.top()->defaultObjectType();
+            } else {
+                objtype = this->currentObjectContext.top()->defaultObjectType(propertyName);
+            }
+            
         } else {
-            //FIXME
-            std_log1("deriving object types from context is only supported in root context yet");
-            objtype = "object";
+            objtype = "container";
         }
     } else if(this->currentToken->isA(HSSIdentifier)){
         //alright, we've got a type, look it up
@@ -605,14 +668,29 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition()
         this->readNextToken();
         this->checkForUnexpectedEndOfSource();
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+        throw AXRError::p(new AXRError("HSSParser", "Unexpected token while reading object definition: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
     }
     
     //try to create an object of that type
     try {
         obj = HSSObject::newObjectWithType(objtype);
-    } catch (HSSUnknownObjectTypeException e) {
-        throw HSSUnexpectedObjectTypeException(e.type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+    } catch (AXRError::p e) {
+        AXRWarning::p(new AXRWarning("HSSParser", "Invalid object name "+e->getMessage(), this->filename, this->line, this->column))->raise();
+        if (this->currentObjectContext.size() > 0){
+            if (propertyName == ""){
+                objtype = this->currentObjectContext.top()->defaultObjectType();
+            } else {
+                objtype = this->currentObjectContext.top()->defaultObjectType(propertyName);
+            }
+        } else {
+            objtype = "value";
+        }
+        
+        try {
+            obj = HSSObject::newObjectWithType(objtype);
+        } catch (AXRError::p e) {
+            obj = HSSObject::newObjectWithType("value");
+        }
     }
     
     
@@ -628,7 +706,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition()
         //it is the opening curly brace, therefore an annonymous object:
         //do nothing
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+        throw AXRError::p(new AXRError("HSSParser", "Unexpected token while reading object definition: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
     }
     
     ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
@@ -645,8 +723,16 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition()
     //read the inner part of the block
     this->currentObjectContext.push(obj);
     while (!this->currentToken->isA(HSSBlockClose)){
-        const HSSPropertyDefinition::p &property = this->readPropertyDefinition();
-        ret->propertiesAdd(property);
+        try {
+            const HSSPropertyDefinition::p &property = this->readPropertyDefinition();
+            ret->propertiesAdd(property);
+        } catch (AXRError::p e) {
+            e->raise();
+            this->readNextToken();
+            if (!this->atEndOfSource())
+                this->skip(HSSWhitespace);
+        }
+        
     }
     this->currentObjectContext.pop();
     
@@ -672,77 +758,105 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
     this->checkForUnexpectedEndOfSource();
     
     HSSPropertyDefinition::p ret;
+    bool valid = true;
     
     if (this->currentToken->isA(HSSIdentifier)){
         propertyName = VALUE_TOKEN(this->currentToken)->getString();
         ret = HSSPropertyDefinition::p(new HSSPropertyDefinition(propertyName));
-        this->readNextToken();
-        //now must come a colon
-        this->skipExpected(HSSColon);
-        //we don't give a f$%# about whitespace
-        this->skip(HSSWhitespace);
-        //now comes either an object definition, a literal value or an expression
-        //object
-        if (this->currentToken->isA(HSSObjectSign)){
-            ret->setValue(this->readObjectDefinition());
-            //this->readNextToken();
-            
-        } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
-            ret->setValue(HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString())));
-            this->checkForUnexpectedEndOfSource();
+        try {
             this->readNextToken();
-            
-        //number literal
-        } else if (this->currentToken->isA(HSSNumber) || this->currentToken->isA(HSSPercentageNumber) || this->currentToken->isA(HSSParenthesisOpen)){
-            
-            //FIXME: parse the number and see if it is an int or a float
-            HSSParserNode::p exp = this->readExpression();
-            ret->setValue(exp);
-            
-        } else if (this->currentToken->isA(HSSIdentifier)){
-            //this is either a function, a keyword or an object name
-            
-            std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
-            //check if it is a function
-            HSSObject::p objectContext = this->currentObjectContext.top();
-            
-            if (objectContext->isFunction(valuestr, propertyName)){
-                ret->setValue(this->readExpression());
-            //check if it is a keyword
-            } else if (objectContext->isKeyword(valuestr, propertyName)){
-                ret->setValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr))); 
-                this->readNextToken();
-            //we assume it is an object name at this point
-            } else {
-                //FIXME (?)
-                ret->setValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr)));
-                this->readNextToken();
-            }
-            
-        } else if (this->currentToken->isA(HSSInstructionSign)){
-            ret->setValue(this->getObjectFromInstruction(this->readInstruction()));
-            
-        } else {
-            throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
-        }
-        
-        this->skip(HSSWhitespace);
-        //expect a semicolon or the closing brace
-        if(this->currentToken->isA(HSSEndOfStatement)){
-            this->readNextToken();
+            //now must come a colon
+            this->skipExpected(HSSColon);
+            //we don't give a f$%# about whitespace
             this->skip(HSSWhitespace);
-            
-        } else if (this->currentToken->isA(HSSBlockClose)){
-            //alright, this is the end of the property definition
-            std_log3("end of property definition");
-        } else {
-            throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+            //now comes either an object definition, a literal value or an expression
+            //object
+            security_brake_init();
+            while (!this->currentToken->isA(HSSBlockClose) && !this->currentToken->isA(HSSEndOfStatement) ) {
+                    if (this->currentToken->isA(HSSObjectSign)){
+                        ret->setValue(this->readObjectDefinition(propertyName));
+                        //this->readNextToken();
+                        
+                    } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
+                        ret->setValue(HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString())));
+                        this->checkForUnexpectedEndOfSource();
+                        this->readNextToken();
+                        this->skip(HSSWhitespace);
+                        
+                        //number literal
+                    } else if (this->currentToken->isA(HSSNumber) || this->currentToken->isA(HSSPercentageNumber) || this->currentToken->isA(HSSParenthesisOpen)){
+                        //FIXME: parse the number and see if it is an int or a float
+                        HSSParserNode::p exp = this->readExpression();
+                        ret->setValue(exp);                
+                        
+                    } else if (this->currentToken->isA(HSSIdentifier)){
+                        //this is either a function, a keyword or an object name
+                        
+                        std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
+                        //check if it is a function
+                        HSSObject::p objectContext = this->currentObjectContext.top();
+                        
+                        if (objectContext->isFunction(valuestr, propertyName)){
+                            ret->setValue(this->readExpression());
+                            //check if it is a keyword
+                        } else if (objectContext->isKeyword(valuestr, propertyName)){
+                            ret->setValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr))); 
+                            this->readNextToken();
+                            //we assume it is an object name at this point
+                        } else {
+                            //FIXME (?)
+                            ret->setValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr)));
+                            this->readNextToken();
+                        }
+                        
+                        
+                    } else if (this->currentToken->isA(HSSInstructionSign)){
+                        HSSInstruction::p theInstruction;
+                        
+                        theInstruction = this->readInstruction();
+                        
+                        if (theInstruction){
+                            ret->setValue(this->getObjectFromInstruction(theInstruction));
+                        } else {
+                            valid = false;
+                        }
+                        
+                    } else {
+                        valid = false;
+                    }
+                
+                if (!valid && !this->atEndOfSource())
+                    this->skipUntilEndOfStatement();
+                
+                security_brake();
+            }
+        } catch (AXRError::p e) {
+            e->raise();
+            valid = false;
         }
         
-        return ret;
+        if (valid) {
+            //expect a semicolon or the closing brace
+            if(this->currentToken->isA(HSSEndOfStatement)){
+                this->readNextToken();
+                this->skip(HSSWhitespace);
+                
+            } else if (this->currentToken->isA(HSSBlockClose)){
+                //alright, this is the end of the property definition
+                std_log3("end of property definition");
+            } else {
+                valid = false;
+            }
+        } else if (!this->atEndOfSource()){
+            this->skipUntilEndOfStatement();
+        }
+        
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
-        this->readNextToken();
+        valid = false;
+    }
+    
+    if (!valid) {
+        throw AXRError::p(new AXRError("HSSParser", propertyName, this->filename, this->line, this->column));
     }
     return ret;
 }
@@ -750,10 +864,15 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
 
 HSSInstruction::p HSSParser::readInstruction()
 {
+    return this->readInstruction(true);
+}
+
+HSSInstruction::p HSSParser::readInstruction(bool preferHex)
+{
     HSSInstruction::p ret;
     std::string currentval;
     
-    this->tokenizer->preferHex = true;
+    this->tokenizer->preferHex = preferHex;
     
     this->skipExpected(HSSInstructionSign);
     this->checkForUnexpectedEndOfSource();
@@ -794,7 +913,10 @@ HSSInstruction::p HSSParser::readInstruction()
                 break;
                 
             default:
-                throw HSSWrongHexLengthException(currentval.length(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+                //restore
+                this->tokenizer->preferHex = false;
+                //balk
+                AXRError::p(new AXRWarning("HSSParser", "Wrong length for hexadecimal number (should be 1, 2, 3, 4, 6 or 8 digits long)", this->filename, this->line, this->column))->raise();
                 return ret;
         }
                 
@@ -809,14 +931,18 @@ HSSInstruction::p HSSParser::readInstruction()
         } else if (currentval == "move") {
             ret = HSSInstruction::p(new HSSInstruction(HSSMoveInstruction));
         } else {
-            throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
-            return ret;
+            //restore
+            this->tokenizer->preferHex = false;
+            //balk
+            throw AXRWarning::p(new AXRWarning("HSSParser", "Unknown instruction "+currentval, this->filename, this->line, this->column));
         }
         this->readNextToken();
         
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
-        return ret;
+        //restore
+        this->tokenizer->preferHex = false;
+        //balk
+        throw AXRWarning::p(new AXRWarning("HSSParser", "Unexpected token "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
     }
     
     this->tokenizer->preferHex = false;
@@ -937,7 +1063,7 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
 //this function assumes currentToken is a instruction sign
 HSSRule::p HSSParser::readInstructionRule()
 {
-    HSSInstruction::p instruction = this->readInstruction();
+    HSSInstruction::p instruction = this->readInstruction(false);
     HSSRule::p ret;
     switch (instruction->getInstructionType()) {
         case HSSNewInstruction:
@@ -1074,8 +1200,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
         }
         
         default:
-            throw "Unknown token type while parsing base expression";
-            break;
+            throw AXRError::p(new AXRError("HSSParser", "Unknown token type "+HSSToken::tokenStringRepresentation(this->currentToken->getType())+" while parsing base expression", this->filename, this->line, this->column));
     }
     
     return left;
@@ -1084,7 +1209,20 @@ HSSParserNode::p HSSParser::readBaseExpression()
 void HSSParser::readNextToken()
 {
     //read next one
-    this->currentToken = this->tokenizer->readNextToken();
+    try {
+        this->currentToken = this->tokenizer->readNextToken();
+    } catch (AXRError::p e) {
+        this->currentToken = HSSToken::p();
+        throw;
+    }
+    
+    if (!this->atEndOfSource()) {
+        this->line = this->currentToken->line;
+        this->column = this->currentToken->column;
+    } else {
+        this->line = this->tokenizer->currentLine;
+        this->column = this->tokenizer->currentColumn - 1;
+    }
 }
 
 HSSParserNode::p HSSParser::readFunction()
@@ -1166,7 +1304,7 @@ HSSParserNode::p HSSParser::readFunction()
         } else if (name == "round") {
             
         } else {
-            std_log1("HSSParser: unexpected function name "+name);
+            throw AXRError::p(new AXRError("HSSParser", "Unexpected function name: "+name, this->filename, this->line, this->column));
         }
 
         
@@ -1175,7 +1313,7 @@ HSSParserNode::p HSSParser::readFunction()
         
         
     } else {
-        throw HSSUnexpectedTokenException(this->currentToken->getType(), this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+        throw AXRError::p(new AXRError("HSSParser", "Unexpected token while reading function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
     }
     
     return ret;
@@ -1193,7 +1331,7 @@ bool HSSParser::atEndOfSource()
 void HSSParser::checkForUnexpectedEndOfSource()
 {
     if (this->atEndOfSource()) {
-        throw HSSUnexpectedEndOfSourceException(this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+        throw AXRError::p(new AXRError("HSSParser", "The file ended unexpectedly", this->filename, this->line, this->column));
     }
 }
 
@@ -1201,7 +1339,7 @@ void HSSParser::skipExpected(HSSTokenType type)
 {
     this->checkForUnexpectedEndOfSource();
     if (!this->currentToken->isA(type)) {
-        throw HSSExpectedTokenException(type, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+        throw AXRError::p(new AXRError("HSSParser", "Expected token of type "+HSSToken::tokenStringRepresentation(type), this->filename, this->line, this->column));
     }
     this->readNextToken();
 }
@@ -1212,7 +1350,7 @@ void HSSParser::skipExpected(HSSTokenType type, std::string value)
     //FIXME: I'm not sure if this works as expected
     HSSValueToken::p currentToken = HSSValueToken::p(VALUE_TOKEN(this->currentToken));
     if (!currentToken->equals(type, value)) {
-        throw HSSExpectedTokenException(type, value, this->filename, this->tokenizer->currentLine, this->tokenizer->currentColumn);
+        throw AXRError::p(new AXRError("HSSParser", "Expected token of type "+HSSToken::tokenStringRepresentation(type)+" and value "+value, this->filename, this->line, this->column));
     }
     this->readNextToken();
 }
@@ -1221,6 +1359,18 @@ void HSSParser::skip(HSSTokenType type)
 {
     if(this->currentToken->isA(type)){
         this->readNextToken();
+    }
+}
+
+void HSSParser::skipUntilEndOfStatement()
+{
+    while (!this->currentToken->isA(HSSEndOfStatement) && !this->currentToken->isA(HSSBlockClose)) {
+        this->readNextToken();
+        if (this->currentToken->isA(HSSBlockOpen)) {
+            this->skipUntilEndOfStatement();
+            this->readNextToken();
+        }
+        this->checkForUnexpectedEndOfSource();
     }
 }
 

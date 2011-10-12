@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 8
+ *      Core version: 0.4
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -77,6 +77,12 @@ HSSExpression::~HSSExpression()
     
 }
 
+std::string HSSExpression::toString()
+{    
+    std::string tempstr = std::string("HSSExpression with following components:\n");
+    tempstr.append(this->getLeft()->toString()+"\n"+this->getRight()->toString());
+    return tempstr;
+}
 
 bool HSSExpression::isA(HSSExpressionType otherType)
 {

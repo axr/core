@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/11
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 2
+ *      Core version: 0.4
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -55,6 +55,7 @@
 #include "../parsing/HSSConstants.h"
 #include <sstream>
 #include "../../axr/AXRDebugging.h"
+#include "../../axr/errors/errors.h"
 
 using namespace AXR;
 
@@ -87,6 +88,11 @@ std::string HSSRgba::toString()
     }
 }
 
+std::string HSSRgba::defaultObjectType()
+{
+    return "rgba";
+}
+
 std::string HSSRgba::defaultObjectType(std::string property)
 {
     if (property == "red" || property == "green" || property == "blue" || property == "alpha" ){
@@ -108,40 +114,25 @@ std::string HSSRgba::defaultObjectType(std::string property)
 
 
 //FIXME: split into individual setters and call them from here
-void HSSRgba::setProperty(std::string name, HSSParserNode::p value)
+void HSSRgba::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    if( name == "red" ){
-        this->setDRed(value);
-        
-    } else if( name == "green" ){
-        this->green = this->_setLDProperty(
-                                         &HSSRgba::greenChanged,
-                                         value,
-                                         255.,
-                                         HSSObservablePropertyGreen,
-                                         this->observedGreen,
-                                         this->observedGreenProperty
-                                         );
-    } else if( name == "blue" ){
-        this->blue = this->_setLDProperty(
-                                         &HSSRgba::blueChanged,
-                                         value,
-                                         255.,
-                                         HSSObservablePropertyBlue,
-                                         this->observedBlue,
-                                         this->observedBlueProperty
-                                         );
-    } else if( name == "alpha" ){
-        this->alpha = this->_setLDProperty(
-                                         &HSSRgba::alphaChanged,
-                                         value,
-                                         255.,
-                                         HSSObservablePropertyAlpha,
-                                         this->observedAlpha,
-                                         this->observedAlphaProperty
-                                         );
-    } else {
-        HSSObject::setProperty(name, value);
+    switch (name) {
+        case HSSObservablePropertyRed:
+            this->setDRed(value);
+            break;
+        case HSSObservablePropertyGreen:
+            this->setDGreen(value);
+            break;
+        case HSSObservablePropertyBlue:
+            this->setDBlue(value);
+            break;
+        case HSSObservablePropertyAlpha:
+            this->setDAlpha(value);
+            break;
+            
+        default:
+            HSSObject::setProperty(name, value);
+            break;
     }
 }
 
@@ -261,7 +252,7 @@ long double HSSRgba::_setLDProperty(
             break;
             
         default:
-            throw "unknown parser node type while setting value for HSSRGBA property";
+            throw AXRError::p(new AXRError("HSSRgba", "Unknown parser node type "+HSSParserNode::parserNodeStringRepresentation(nodeType)+" while setting value for HSSRGBA property"));
             break;
     }
     

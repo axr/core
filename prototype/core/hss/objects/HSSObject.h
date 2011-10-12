@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/30
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 11
+ *      Core version: 0.4
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -57,7 +57,6 @@
 #include <boost/shared_ptr.hpp>
 #include "../various/HSSObservable.h"
 #include "../parsing/HSSParserNode.h"
-//#include "../../axr/AXRController.h"
 #include <boost/unordered_map.hpp>
 
 namespace AXR {
@@ -105,9 +104,11 @@ namespace AXR {
         void setName(std::string newName);
         void dropName();
         
+        virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         
-        virtual void setProperty(std::string name, HSSParserNode::p value);
+        virtual void setPropertyWithName(std::string name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         virtual void setProperty(HSSObservableProperty name, void* value);
         virtual void * getProperty(HSSObservableProperty name);
         virtual void registerProperty(HSSObservableProperty name, void* property);

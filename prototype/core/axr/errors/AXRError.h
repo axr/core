@@ -43,120 +43,45 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/09
+ *      Last changed: 2011/10/08
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 2
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "HSSFunction.h"
-#include "../../axr/AXRDebugging.h"
+#ifndef AXRERROR_H
+#define AXRERROR_H
+
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <string>
-//#include "../parsing/HSSExpression.h"
-//#include "../parsing/HSSConstants.h"
-//#include <sstream>
-//#include "../parsing/HSSObjectDefinition.h"
 
-using namespace AXR;
-
-HSSFunction::HSSFunction()
-:HSSObject()
-{
-    this->type = HSSObjectTypeFunction;
-    this->scope = NULL;
-    this->percentageObserved = NULL;
-    this->_isDirty = true;
-    this->_value = NULL;
-}
-
-HSSFunction::~HSSFunction()
-{
-    
-}
-
-std::string HSSFunction::toString()
-{    
-    std::string tempstr = std::string("HSSFunction\n");
-    return tempstr;
-}
-
-void * HSSFunction::evaluate()
-{
-    if(this->_isDirty){
-        this->_isDirty = false;
-        
-        this->_value = this->_evaluate();
-    }
-    
-    return this->_value;
-}
-
-void * HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
-{
-    if(this->_isDirty){
-        this->_isDirty = false;
-        
-        this->_value = this->_evaluate(arguments);
-    }
-    
-    return this->_value;
-}
-
-void * HSSFunction::_evaluate()
-{
-    return this->_evaluate(std::deque<HSSParserNode::p>());
-}
-
-std::string HSSFunction::defaultObjectType(){
-    return "function";
-}
-
-std::string HSSFunction::defaultObjectType(std::string property){
-    return "value";
-}
-
-void HSSFunction::setProperty(std::string name, HSSParserNode::p value)
-{
-    std_log1("unimplemented");
-}
-
-
-
-void HSSFunction::propertyChanged(HSSObservableProperty property, void* data)
-{
-    this->notifyObservers(HSSObservablePropertyValue, data);
-}
-
-void HSSFunction::setPercentageBase(long double value)
-{
-    this->percentageBase = value;
-}
-
-void HSSFunction::setPercentageObserved(HSSObservableProperty property, HSSObservable *observed)
-{
-    if(this->percentageObserved != NULL)
+namespace AXR {
+    class AXRError : public boost::enable_shared_from_this<AXRError>
     {
-        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
-    }
-    this->percentageObservedProperty = property;
-    this->percentageObserved = observed;
-    //observed->observe(property, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSFunction>(this, &HSSFunction::propertyChanged));
+    public:
+        typedef boost::shared_ptr<AXRError>p;
+        
+        AXRError(std::string origin, std::string message);
+        AXRError(std::string origin, std::string message, std::string filename, int line, int column);
+        virtual ~AXRError();
+        
+        void raise();
+        
+        virtual std::string toString();
+        std::string getMessage();
+        
+    protected:
+        std::string origin;
+        std::string message;
+        
+        std::string filename;
+        int line;
+        int column;
+        
+        bool in_file;
+    };
 }
 
-void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
-{
-    this->scope = newScope;
-}
-
-void HSSFunction::setDirty(bool value)
-{
-    this->_isDirty = value;
-}
-
-bool HSSFunction::isDirty()
-{
-    return this->_isDirty;
-}
-
-
+#endif

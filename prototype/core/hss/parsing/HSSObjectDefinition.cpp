@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/11
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 6
+ *      Core version: 0.4
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -92,7 +92,7 @@ void HSSObjectDefinition::propertiesAdd(HSSPropertyDefinition::p &newProperty)
     {
         std_log3("HSSObjectDefinition: Added node of type " << newProperty->toString());
         this->properties.push_back(newProperty);
-        this->prototype->setProperty(newProperty->getName(), newProperty->getValue());
+        this->prototype->setPropertyWithName(newProperty->getName(), newProperty->getValue());
     }
 }
 
@@ -102,7 +102,7 @@ void HSSObjectDefinition::propertiesAdd(const HSSPropertyDefinition::p &newPrope
     {
         std_log3("HSSObjectDefinition: Added node of type " << newProperty->toString());
         this->properties.push_back(newProperty);
-        this->prototype->setProperty(newProperty->getName(), newProperty->getValue());
+        this->prototype->setPropertyWithName(newProperty->getName(), newProperty->getValue());
     }
 }
 

@@ -43,15 +43,16 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/06
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 29
+ *      Core version: 0.4
+ *      Revision: 30
  *
  ********************************************************************/
 
 #include "HSSDisplayObject.h"
 #include "../../axr/AXRDebugging.h"
+#include "../../axr/errors/errors.h"
 #include <math.h>
 #include <boost/pointer_cast.hpp>
 #include <cairo/cairo.h>
@@ -167,6 +168,11 @@ std::string HSSDisplayObject::toString()
     } else {
         return "Annonymous HSSDisplayObject";
     }
+}
+
+std::string HSSDisplayObject::defaultObjectType()
+{
+    return "displayObject";
 }
 
 std::string HSSDisplayObject::defaultObjectType(std::string property)
@@ -334,42 +340,56 @@ void HSSDisplayObject::readDefinitionObjects()
         std::string propertyName;
         for (i=0; i<this->rules.size(); i++) {
             HSSRule::p& rule = this->rules[i];
-            
             for (j=0; j<rule->propertiesSize(); j++) {
-                HSSPropertyDefinition::p& propertyDefinition = rule->propertiesGet(j);
-                propertyName = propertyDefinition->getName();
-                
-                if(propertyName == "width"){
-                    //store a copy of the value
-                    this->setDWidth(propertyDefinition->getValue());
-                    
-                } else if(propertyName == "height"){
-                    //store a copy of the value
-                    this->setDHeight(propertyDefinition->getValue());
-                } else if(propertyName == "anchorX"){
-                    //store a copy of the value
-                    this->setDAnchorX(propertyDefinition->getValue());
-                } else if(propertyName == "anchorY"){
-                    //store a copy of the value
-                    this->setDAnchorY(propertyDefinition->getValue());
-                } else if(propertyName == "alignX"){
-                    //store a copy of the value
-                    this->setDAlignX(propertyDefinition->getValue());
-                } else if(propertyName == "alignY"){
-                    //store a copy of the value
-                    this->setDAlignY(propertyDefinition->getValue());
-                } else if(propertyName == "background"){
-                    //store a copy of the value
-                    this->setDBackground(propertyDefinition->getValue());
-                } else if(propertyName == "font"){
-                    //store a copy of the value
-                    this->setDFont(propertyDefinition->getValue());
+                try
+                {
+                    HSSPropertyDefinition::p& propertyDefinition = rule->propertiesGet(j);
+                    propertyName = propertyDefinition->getName();
+                    this->setPropertyWithName(propertyName, propertyDefinition->getValue());
+                }
+                catch (AXRError::p e){
+                    e->raise();
                 }
             }
+            
         }
         
         this->_needsRereadRules = false;
 //    }
+}
+
+void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+{
+    switch (name) {
+        case HSSObservablePropertyWidth:
+            this->setDWidth(value);
+            break;
+        case HSSObservablePropertyHeight:
+            this->setDHeight(value);
+            break;
+        case HSSObservablePropertyAnchorX:
+            this->setDAnchorX(value);
+            break;
+        case HSSObservablePropertyAnchorY:
+            this->setDAnchorY(value);
+            break;
+        case HSSObservablePropertyAlignX:
+            this->setDAlignX(value);
+            break;
+        case HSSObservablePropertyAlignY:
+            this->setDAlignY(value);
+            break;
+        case HSSObservablePropertyBackground:
+            this->setDBackground(value);
+            break;
+        case HSSObservablePropertyFont:
+            this->setDFont(value);
+            break;
+            
+        default:
+            HSSObject::setProperty(name, value);
+            break;
+    }
 }
 
 void HSSDisplayObject::setNeedsRereadRules(bool value)
@@ -608,6 +628,17 @@ void HSSDisplayObject::setGlobalY(long double newValue)
 HSSParserNode::p HSSDisplayObject::getDWidth()  {   return this->dWidth; }
 void HSSDisplayObject::setDWidth(HSSParserNode::p value)
 {
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for width of "+this->getElementName()));
+    }
+    
     
     if(value->isA(HSSParserNodeTypeKeywordConstant)){
         
@@ -690,6 +721,18 @@ void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
 HSSParserNode::p HSSDisplayObject::getDHeight() { return this->dHeight; }
 void HSSDisplayObject::setDHeight(HSSParserNode::p value)
 {
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for height of "+this->getElementName()));
+    }
+    
+    
     if(value->isA(HSSParserNodeTypeKeywordConstant)){
         this->heightByContent = true;
         
@@ -782,6 +825,17 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
 HSSParserNode::p HSSDisplayObject::getDAnchorX() { return this->dAnchorX; }
 void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
 {
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for anchorX of "+this->getElementName()));
+    }
+    
     this->dAnchorX = value;
     HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
     if(this->observedAnchorX != NULL)
@@ -850,6 +904,17 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
 HSSParserNode::p HSSDisplayObject::getDAnchorY() { return this->dAnchorY; }
 void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
 {
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for anchorY of "+this->getElementName()));
+    }
+    
     this->dAnchorY = value;
     HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
     if(this->observedAnchorY != NULL)
@@ -925,6 +990,17 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
 HSSParserNode::p HSSDisplayObject::getDAlignX() { return this->dAlignX; }
 void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
 {
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for alignX of "+this->getElementName()));
+    }
+    
     this->dAlignX = value;
     if(this->observedAlignX != NULL)
     {
@@ -953,8 +1029,7 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
         } else if (keywordValue->getValue() == "right"){
             this->setDAlignX(HSSParserNode::p(new HSSPercentageConstant(100)));
         } else {
-            std_log1("unknown keyword");
-            throw;
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for alignX of "+this->getElementName()));
         }
         
     } else {
@@ -1025,6 +1100,17 @@ void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
 HSSParserNode::p HSSDisplayObject::getDAlignY() { return this->dAlignX; }
 void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
 {
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for alignY of "+this->getElementName()));
+    }
+    
     this->dAlignY = value;
     if(this->observedAlignY != NULL)
     {
@@ -1052,8 +1138,7 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
         } else if (keywordValue->getValue() == "bottom"){
             this->setDAlignY(HSSParserNode::p(new HSSPercentageConstant(100)));
         } else {
-            std_log1("any keyword other than auto, top, middle or bottom has not been implemented yet");
-            throw;
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for alignY of "+this->getElementName()));
         }
         
     } else {
@@ -1125,9 +1210,15 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
 const HSSMultipleValue HSSDisplayObject::getDBackground() const { return this->dBackground; }
 void HSSDisplayObject::setDBackground(HSSParserNode::p value)
 {
-    HSSMultipleValue newBackground;
-    newBackground.add(value);
-    this->dBackground = newBackground;
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        case HSSParserNodeTypeObjectNameConstant:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for background of "+this->getElementName()));
+    }
     
     switch (value->getType()) {
         case HSSParserNodeTypeObjectDefinition:
@@ -1157,6 +1248,10 @@ void HSSDisplayObject::setDBackground(HSSParserNode::p value)
         }
     }
     
+    HSSMultipleValue newBackground;
+    newBackground.add(value);
+    this->dBackground = newBackground;
+    
     //this->notifyObservers(HSSObservablePropertyAlignY, &this->alignY);
 }
 
@@ -1166,6 +1261,16 @@ void HSSDisplayObject::setDBackground(HSSParserNode::p value)
 const HSSMultipleValue HSSDisplayObject::getDFont() const { return this->dFont; }
 void HSSDisplayObject::setDFont(HSSParserNode::p value)
 {
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        case HSSParserNodeTypeObjectNameConstant:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for font of "+this->getElementName()));
+    }
+    
     HSSMultipleValue newFont;
     newFont.add(value);
     this->dFont = newFont;
@@ -1191,6 +1296,11 @@ void HSSDisplayObject::setDFont(HSSParserNode::p value)
             break;
         }
             
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            break;
+        }
+            
         default:
         {
             std_log1("unkown parser node type in font property of display object "+this->name+": "+HSSParserNode::parserNodeStringRepresentation(value->getType()));
@@ -1207,6 +1317,7 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
     switch (nodeType) {
         case HSSParserNodeTypeObjectDefinition:
         case HSSParserNodeTypeObjectNameConstant:
+        case HSSParserNodeTypeFunctionCall:
         {
             this->setDirty(true);
             break;
@@ -1321,9 +1432,8 @@ long double HSSDisplayObject::_setLDProperty(
             }
             break;
         }
-            
+        
         default:
-            throw "unknown parser node type while setting dHeight";
             break;
     }
     

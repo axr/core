@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2011/10/11
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 15
+ *      Core version: 0.4
+ *      Revision: 16
  *
  ********************************************************************/
 
@@ -54,6 +54,7 @@
 #include "AXRExceptions.h"
 #include <sstream>
 #include "../axr/AXRDebugging.h"
+#include "../axr/errors/errors.h"
 #include "../hss/objects/HSSDisplayObject.h"
 #include <boost/pointer_cast.hpp>
 #include "../hss/parsing/HSSSelectorChain.h"
@@ -105,8 +106,7 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
     
     //the xml parser will call the enterElement, addAttribute and exitElement functions to construct the initial tree
     if(!this->loadXMLFile(xmlfilepath, xmlfilename)){
-        //FIXME: handle the error
-        std_log1("could not load the xml file");
+        AXRError::p(new AXRError("AXRController", "Could not load the XML file"))->raise();
         loadingSuccess = false;
     } else {
         //needs reset on next load
@@ -114,7 +114,8 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
         
         //load the obtained stylesheets
         if(this->loadSheets.size() == 0){
-            throw AXRNoStylesheetsException(xmlfilepath);
+            AXRWarning::p(new AXRWarning("AXRController", "There was no stylesheet linked in your XML file"))->raise();
+            loadingSuccess = false;
         } else {
             for (i=0; i<this->loadSheets.size(); i++) {
                 
@@ -448,8 +449,7 @@ const std::vector<HSSDisplayObject::p> AXRController::selectSimple(const std::ve
         }
         
         default:
-            throw "unexpected selector node type";
-            break;
+            throw AXRError::p(new AXRError("AXRController", "Unknown node type "+HSSParserNode::parserNodeStringRepresentation(selectorType)+" in selector"));
     }
     
     this->readNextSelectorNode();
@@ -515,6 +515,8 @@ void AXRController::reset()
     this->currentSelectorNode.reset();
     this->currentChainCount = 0;
     this->currentChainSize = 0;
+    
+    AXRErrorsManager::reset();
 }
 
 
@@ -616,6 +618,7 @@ HSSObject::p & AXRController::objectTreeGet(unsigned index)
 HSSObject::p & AXRController::objectTreeGet(std::string name)
 {
     HSSObject::p ret = HSSObject::p();
+    //FIXME: do this with an unordered_map for better performance
     unsigned i, size;
     for (i=0, size=this->objectTree.size(); i<size; i++) {
         HSSObject::p & theObj = this->objectTreeGet(i);
@@ -624,7 +627,7 @@ HSSObject::p & AXRController::objectTreeGet(std::string name)
         }
     }
     
-    throw new HSSObjectNotFoundException(name);
+    throw AXRError::p(new AXRError("AXRController", "No object with name "+name+" was found"));
 }
 
 //loadSheets

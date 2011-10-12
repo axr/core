@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 10
+ *      Core version: 0.4
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -77,6 +77,7 @@ namespace AXR {
         
         HSSExpression(HSSParserNode::p _left, HSSParserNode::p _right);
         virtual ~HSSExpression();
+        std::string toString();
         long double evaluate();
         virtual long double calculate(long double leftval, long double rightval) =0;
         

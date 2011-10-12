@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/08
+ *      Last changed: 2011/10/08
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.4
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -63,10 +63,12 @@
 //you can set this as a preprocessor macros in your IDE to override
 #ifndef AXR_DEBUG_LEVEL
 //default level
-#define AXR_DEBUG_LEVEL 3
+#define AXR_DEBUG_LEVEL 0
 #endif
 
 //logging
+#define std_log(what) std::cout << what << std::endl
+
 #if AXR_DEBUG_LEVEL > 0
 #define std_log1(what) std::cout << what << std::endl
 

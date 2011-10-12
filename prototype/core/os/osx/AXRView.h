@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/17
+ *      Last changed: 2011/10/08
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 5
+ *      Core version: 0.4
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -73,6 +73,7 @@
 - (void *)axrRender;
 
 - (bool)loadFile;
+- (bool)loadFile:(NSString *)xmlPath;
 - (bool)reload;
 
 @end

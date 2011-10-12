@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/10/09
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -77,6 +77,7 @@ namespace AXR {
         HSSValue(void * passNULL, std::string keyword);
         
         virtual std::string toString();
+        virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         HSSValueType getValueType();
         

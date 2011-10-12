@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/06
+ *      Last changed: 2011/10/08
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 11
+ *      Core version: 0.4
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -122,9 +122,11 @@ namespace AXR {
         HSSCombinator::p readChildrenCombinatorOrSkip();
         HSSCombinator::p readSymbolCombinator();
         HSSSelector::p readSelector();
-        HSSObjectDefinition::p readObjectDefinition();
+        //pass "" to this function if you're not in a property definition
+        HSSObjectDefinition::p readObjectDefinition(std::string propertyName);
         HSSPropertyDefinition::p readPropertyDefinition();
         HSSInstruction::p readInstruction();
+        HSSInstruction::p readInstruction(bool preferHex);
         HSSObjectDefinition::p getObjectFromInstruction(HSSInstruction::p instruction);
         HSSRule::p readInstructionRule();
         HSSParserNode::p readExpression();
@@ -141,6 +143,10 @@ namespace AXR {
         void skipExpected(HSSTokenType type);
         void skipExpected(HSSTokenType type, std::string value);
         void skip(HSSTokenType type);
+        void skipUntilEndOfStatement();
+        
+        unsigned line;
+        unsigned column;
         
     };
 }

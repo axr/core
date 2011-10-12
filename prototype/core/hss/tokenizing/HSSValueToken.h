@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/17
+ *      Last changed: 2011/10/09
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -64,9 +64,9 @@ namespace AXR {
     public:
         typedef boost::shared_ptr<HSSValueToken> p;
         
-        HSSValueToken(HSSTokenType type, std::string value);
-        HSSValueToken(HSSTokenType type, char value);
-        HSSValueToken(HSSTokenType type, double long value);
+        HSSValueToken(HSSTokenType type, std::string value, unsigned line, unsigned column);
+        HSSValueToken(HSSTokenType type, char value, unsigned line, unsigned column);
+        HSSValueToken(HSSTokenType type, double long value, unsigned line, unsigned column);
         std::string getString();
         double long getLong();
         bool equals(HSSTokenType otherType, std::string otherValue);

@@ -43,15 +43,16 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/26
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 1
+ *      Core version: 0.4
+ *      Revision: 2
  *
  ********************************************************************/
 
 #include "HSSFont.h"
 #include "../../axr/AXRDebugging.h"
+#include "../../axr/errors/errors.h"
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
 //#include <sstream>
@@ -81,6 +82,11 @@ std::string HSSFont::toString()
     }
 }
 
+std::string HSSFont::defaultObjectType()
+{
+    return "font";
+}
+
 std::string HSSFont::defaultObjectType(std::string property)
 {
     if (property == "color"){
@@ -90,29 +96,39 @@ std::string HSSFont::defaultObjectType(std::string property)
     }
 }
 
-
-//FIXME: split into individual setters and call them from here
-void HSSFont::setProperty(std::string name, HSSParserNode::p value)
+void HSSFont::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    if( name == "size" ){
-        this->setDSize(value);
-        
-    } else if (name == "face"){
-        this->setDFace(value);
-        
-    } else if (name == "color"){
-        this->setDColor(value);
-        
-    } else if (name == "weight"){
-        this->setDWeight(value);
-        
-    } else {
-        HSSObject::setProperty(name, value);
+    switch (name) {
+        case HSSObservablePropertySize:
+            this->setDSize(value);
+            break;
+        case HSSObservablePropertyFace:
+            this->setDFace(value);
+            break;
+        case HSSObservablePropertyColor:
+            this->setDColor(value);
+            break;
+        case HSSObservablePropertyWeight:
+            this->setDWeight(value);
+            break;
+            
+        default:
+            HSSObject::setProperty(name, value);
+            break;
     }
 }
 
 long double HSSFont::getSize() { return this->size; }
 void HSSFont::setDSize(HSSParserNode::p value){
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for size of @font object "+this->name));
+    }
+    
     this->dSize = value;
     this->size = this->_setLDProperty(
                                        &HSSFont::sizeChanged,
@@ -131,10 +147,13 @@ void HSSFont::sizeChanged(AXR::HSSObservableProperty source, void *data)
 
 std::string HSSFont::getFace() { return this->face; }
 void HSSFont::setDFace(HSSParserNode::p value){
-    this->dFace = value;
+    
     if (value->isA(HSSParserNodeTypeStringConstant)){
+        this->dFace = value;
         HSSStringConstant::p theString = boost::static_pointer_cast<HSSStringConstant>(value);
         this->face = theString->getValue();
+    } else {
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for face of @font object "+this->name));
     }
 }
 void HSSFont::faceChanged(AXR::HSSObservableProperty source, void *data)
@@ -144,10 +163,13 @@ void HSSFont::faceChanged(AXR::HSSObservableProperty source, void *data)
 
 HSSObject::p HSSFont::getColor() { return this->color; }
 void HSSFont::setDColor(HSSParserNode::p value){
-    this->dColor = value;
+    
     if (value->isA(HSSParserNodeTypeObjectDefinition)){
+        this->dColor = value;
         HSSObjectDefinition::p dColor = boost::static_pointer_cast<HSSObjectDefinition>(value);
         this->color = dColor->getObject();
+    } else {
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for color of @font object "+this->name));
     }
 }
 
@@ -213,7 +235,7 @@ long double HSSFont::_setLDProperty(
             break;
             
         default:
-            throw "unknown parser node type while setting value for HSSFont property";
+            AXRWarning::p(new AXRWarning("HSSFont", "Unknown parser node type while setting value for HSSFont property"))->raise();
             break;
     }
     

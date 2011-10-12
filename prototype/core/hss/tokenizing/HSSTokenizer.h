@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/17
+ *      Last changed: 2011/10/11
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 5
+ *      Core version: 0.4
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -126,6 +126,8 @@ namespace AXR {
         unsigned bufpos;
         //the position into the buffer when peeking - it is an offset from bufpos
         int peekpos;
+        unsigned peekLine;
+        unsigned peekColumn;
         
         //skips over any whitespace
         HSS_TOKENIZING_STATUS skipWhitespace();

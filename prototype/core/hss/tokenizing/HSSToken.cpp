@@ -56,9 +56,11 @@
 
 using namespace AXR;
 
-HSSToken::HSSToken(HSSTokenType type)
+HSSToken::HSSToken(HSSTokenType type, unsigned line, unsigned column)
 {
 	this->type = type;
+    this->line = line;
+    this->column = column;
 }
 
 bool HSSToken::isA(HSSTokenType otherType)

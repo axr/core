@@ -22,6 +22,7 @@
 		4E12B9231365BEA600BBAD6C /* HSSObservable.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E12B9211365BEA600BBAD6C /* HSSObservable.h */; };
 		4E1BE18013A3F5F300D7C6DB /* HSSRgba.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BE17E13A3F5F300D7C6DB /* HSSRgba.cpp */; };
 		4E1BE18113A3F5F300D7C6DB /* HSSRgba.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E1BE17F13A3F5F300D7C6DB /* HSSRgba.h */; };
+		4E23091B144098880006A3BC /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E23091A144098880006A3BC /* errors.h */; };
 		4E351B771350784B00FEB909 /* AXRView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C87713505DEA00D88409 /* AXRView.mm */; };
 		4E5457AB136443E900D67571 /* HSSObservableProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5457AA136443E900D67571 /* HSSObservableProperties.h */; };
 		4E5457B01364523D00D67571 /* HSSCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E5457AE1364523D00D67571 /* HSSCallback.cpp */; };
@@ -116,6 +117,16 @@
 		4E9AB08913589DA600837091 /* AXRDebugging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E9AB08713589DA600837091 /* AXRDebugging.cpp */; };
 		4E9AB08A13589DA600837091 /* AXRDebugging.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E9AB08813589DA600837091 /* AXRDebugging.h */; };
 		4E9AB08C1358A08700837091 /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E9AB08B1358A08700837091 /* platform.h */; };
+		4EA6EAD514405EB700309E10 /* AXRErrorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EA6EAD314405EB700309E10 /* AXRErrorsManager.cpp */; };
+		4EA6EAD614405EB700309E10 /* AXRErrorsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA6EAD414405EB700309E10 /* AXRErrorsManager.h */; };
+		4EA6EAD91440629500309E10 /* AXRError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EA6EAD71440629500309E10 /* AXRError.cpp */; };
+		4EA6EADA1440629500309E10 /* AXRError.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA6EAD81440629500309E10 /* AXRError.h */; };
+		4EA6EB081440850300309E10 /* AXRWarning.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EA6EB061440850300309E10 /* AXRWarning.cpp */; };
+		4EA6EB091440850300309E10 /* AXRWarning.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA6EB071440850300309E10 /* AXRWarning.h */; };
+		4EA6EB0C144089A600309E10 /* OSXErrorsManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4EA6EB0A144089A500309E10 /* OSXErrorsManager.mm */; };
+		4EA6EB0D144089A600309E10 /* OSXErrorsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA6EB0B144089A600309E10 /* OSXErrorsManager.h */; };
+		4EA6EB1014408D4F00309E10 /* AXRAbstractErrorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EA6EB0E14408D4E00309E10 /* AXRAbstractErrorsManager.cpp */; };
+		4EA6EB1114408D4F00309E10 /* AXRAbstractErrorsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA6EB0F14408D4F00309E10 /* AXRAbstractErrorsManager.h */; };
 		4EBEABF61351CE0B000D6CE7 /* AXRExceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EBEABF41351CE0B000D6CE7 /* AXRExceptions.cpp */; };
 		4EBEABF71351CE0B000D6CE7 /* AXRExceptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EBEABF51351CE0B000D6CE7 /* AXRExceptions.h */; };
 		4ECB84EC1431195B00F112E0 /* HSSFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4ECB84EA1431195B00F112E0 /* HSSFont.cpp */; };
@@ -140,6 +151,7 @@
 		4E12B9211365BEA600BBAD6C /* HSSObservable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservable.h; sourceTree = "<group>"; };
 		4E1BE17E13A3F5F300D7C6DB /* HSSRgba.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRgba.cpp; sourceTree = "<group>"; };
 		4E1BE17F13A3F5F300D7C6DB /* HSSRgba.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRgba.h; sourceTree = "<group>"; };
+		4E23091A144098880006A3BC /* errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errors.h; sourceTree = "<group>"; };
 		4E5457AA136443E900D67571 /* HSSObservableProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservableProperties.h; sourceTree = "<group>"; };
 		4E5457AE1364523D00D67571 /* HSSCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSCallback.cpp; sourceTree = "<group>"; };
 		4E5457AF1364523D00D67571 /* HSSCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSCallback.h; sourceTree = "<group>"; };
@@ -232,6 +244,16 @@
 		4E9AB08713589DA600837091 /* AXRDebugging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRDebugging.cpp; sourceTree = "<group>"; };
 		4E9AB08813589DA600837091 /* AXRDebugging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRDebugging.h; sourceTree = "<group>"; };
 		4E9AB08B1358A08700837091 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
+		4EA6EAD314405EB700309E10 /* AXRErrorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRErrorsManager.cpp; sourceTree = "<group>"; };
+		4EA6EAD414405EB700309E10 /* AXRErrorsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRErrorsManager.h; sourceTree = "<group>"; };
+		4EA6EAD71440629500309E10 /* AXRError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRError.cpp; sourceTree = "<group>"; };
+		4EA6EAD81440629500309E10 /* AXRError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRError.h; sourceTree = "<group>"; };
+		4EA6EB061440850300309E10 /* AXRWarning.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRWarning.cpp; sourceTree = "<group>"; };
+		4EA6EB071440850300309E10 /* AXRWarning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRWarning.h; sourceTree = "<group>"; };
+		4EA6EB0A144089A500309E10 /* OSXErrorsManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXErrorsManager.mm; sourceTree = "<group>"; };
+		4EA6EB0B144089A600309E10 /* OSXErrorsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXErrorsManager.h; sourceTree = "<group>"; };
+		4EA6EB0E14408D4E00309E10 /* AXRAbstractErrorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRAbstractErrorsManager.cpp; sourceTree = "<group>"; };
+		4EA6EB0F14408D4F00309E10 /* AXRAbstractErrorsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRAbstractErrorsManager.h; sourceTree = "<group>"; };
 		4EBEABF41351CE0B000D6CE7 /* AXRExceptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = AXRExceptions.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		4EBEABF51351CE0B000D6CE7 /* AXRExceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AXRExceptions.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4ECB84EA1431195B00F112E0 /* HSSFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFont.cpp; sourceTree = "<group>"; };
@@ -297,6 +319,7 @@
 		4E80C7DE13505CA200D88409 /* axr */ = {
 			isa = PBXGroup;
 			children = (
+				4EA6EAD214405E8700309E10 /* errors */,
 				4E80C7DF13505CA200D88409 /* AXRController.cpp */,
 				4E80C7E013505CA200D88409 /* AXRController.h */,
 				4EBEABF41351CE0B000D6CE7 /* AXRExceptions.cpp */,
@@ -445,6 +468,8 @@
 				4E80C87913505DEA00D88409 /* OSX.h */,
 				4EFEBB0E135C7E1400352CC0 /* OSXRender.mm */,
 				4EFEBB0F135C7E1400352CC0 /* OSXRender.h */,
+				4EA6EB0A144089A500309E10 /* OSXErrorsManager.mm */,
+				4EA6EB0B144089A600309E10 /* OSXErrorsManager.h */,
 			);
 			path = osx;
 			sourceTree = "<group>";
@@ -461,6 +486,22 @@
 			);
 			name = core;
 			path = ../mac;
+			sourceTree = "<group>";
+		};
+		4EA6EAD214405E8700309E10 /* errors */ = {
+			isa = PBXGroup;
+			children = (
+				4EA6EB0E14408D4E00309E10 /* AXRAbstractErrorsManager.cpp */,
+				4EA6EB0F14408D4F00309E10 /* AXRAbstractErrorsManager.h */,
+				4EA6EAD314405EB700309E10 /* AXRErrorsManager.cpp */,
+				4EA6EAD414405EB700309E10 /* AXRErrorsManager.h */,
+				4EA6EAD71440629500309E10 /* AXRError.cpp */,
+				4EA6EAD81440629500309E10 /* AXRError.h */,
+				4EA6EB061440850300309E10 /* AXRWarning.cpp */,
+				4EA6EB071440850300309E10 /* AXRWarning.h */,
+				4E23091A144098880006A3BC /* errors.h */,
+			);
+			path = errors;
 			sourceTree = "<group>";
 		};
 		4ECC1D681360C62500344DE8 /* various */ = {
@@ -551,6 +592,12 @@
 				4E07C4691434DD3300B1B7CA /* HSSFunctionCall.h in Headers */,
 				4E07C46B1434F22900B1B7CA /* HSSFunctions.h in Headers */,
 				4E07C46F1434F2CF00B1B7CA /* HSSRefFunction.h in Headers */,
+				4EA6EAD614405EB700309E10 /* AXRErrorsManager.h in Headers */,
+				4EA6EADA1440629500309E10 /* AXRError.h in Headers */,
+				4EA6EB091440850300309E10 /* AXRWarning.h in Headers */,
+				4EA6EB0D144089A600309E10 /* OSXErrorsManager.h in Headers */,
+				4EA6EB1114408D4F00309E10 /* AXRAbstractErrorsManager.h in Headers */,
+				4E23091B144098880006A3BC /* errors.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -659,6 +706,11 @@
 				4E58ED7E1433AA7E004FD8DC /* HSSFunction.cpp in Sources */,
 				4E07C4681434DD3300B1B7CA /* HSSFunctionCall.cpp in Sources */,
 				4E07C46E1434F2CF00B1B7CA /* HSSRefFunction.cpp in Sources */,
+				4EA6EAD514405EB700309E10 /* AXRErrorsManager.cpp in Sources */,
+				4EA6EAD91440629500309E10 /* AXRError.cpp in Sources */,
+				4EA6EB081440850300309E10 /* AXRWarning.cpp in Sources */,
+				4EA6EB0C144089A600309E10 /* OSXErrorsManager.mm in Sources */,
+				4EA6EB1014408D4F00309E10 /* AXRAbstractErrorsManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

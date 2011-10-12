@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/04
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 8
+ *      Core version: 0.4
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -79,13 +79,14 @@ namespace AXR {
     {
     public:
         typedef boost::shared_ptr<HSSParserNode> p;
+        
+        static std::string parserNodeStringRepresentation(HSSParserNodeType type);
+        
         HSSParserNode();
         virtual std::string toString();
         
         bool isA(HSSParserNodeType otherType);
         HSSParserNodeType getType();
-        
-        static std::string parserNodeStringRepresentation(HSSParserNodeType type);
         
     protected:
         HSSParserNodeType nodeType;

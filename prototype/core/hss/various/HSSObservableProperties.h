@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/27
+ *      Last changed: 2011/10/12
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 6
+ *      Core version: 0.4
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -56,6 +56,8 @@
 namespace AXR {
     enum HSSObservableProperty
     {
+        HSSObservablePropertyNone = 0,
+        
         //HSSDisplayObject
         HSSObservablePropertyValue,
         HSSObservablePropertyWidth,
@@ -65,13 +67,14 @@ namespace AXR {
         HSSObservablePropertyFlow,
         HSSObservablePropertyAlignX,
         HSSObservablePropertyAlignY,
-        HSSObservablePropertyFont,
         
         //HSSContainer
         HSSObservablePropertyContentAlignX,
         HSSObservablePropertyContentAlignY,
         HSSObservablePropertyDirectionPrimary,
         HSSObservablePropertyDirectionSecondary,
+        HSSObservablePropertyBackground,
+        HSSObservablePropertyFont,
         
         //HSSRgba
         HSSObservablePropertyRed,
@@ -81,6 +84,9 @@ namespace AXR {
         
         //HSSFont
         HSSObservablePropertySize,
+        HSSObservablePropertyFace,
+        HSSObservablePropertyColor,
+        HSSObservablePropertyWeight
     };
 }
 

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/10/09
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 7
+ *      Core version: 0.4
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -68,6 +68,7 @@ namespace AXR {
         typedef boost::shared_ptr<HSSBorder> p;
         
         virtual std::string toString();
+        virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
     };
