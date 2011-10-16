@@ -116,6 +116,13 @@ long double HSSExpression::evaluate()
             {
                 HSSExpression::p leftExpression = boost::static_pointer_cast<HSSExpression>(this->getLeft());
                 this->leftval = leftExpression->evaluate();
+                if(this->leftObserved != NULL)
+                {
+                    this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
+                }
+                leftExpression->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
+                this->leftObserved = leftExpression.get();
+                this->leftObservedProperty = HSSObservablePropertyValue;
                 break;
             }
                 
@@ -167,6 +174,13 @@ long double HSSExpression::evaluate()
             {
                 HSSExpression::p rightExpression = boost::static_pointer_cast<HSSExpression>(this->getRight());
                 this->rightval = rightExpression->evaluate();
+                if(this->rightObserved != NULL)
+                {
+                    this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
+                }
+                rightExpression->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
+                this->rightObserved = rightExpression.get();
+                this->rightObservedProperty = HSSObservablePropertyValue;
                 break;
             }
                 

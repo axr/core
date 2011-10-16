@@ -14,7 +14,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8D1107260486CEB800E47090"
-               BuildableName = "AXR Test App.app"
+               BuildableName = "AXR Prototype.app"
                BlueprintName = "AXR Test App"
                ReferencedContainer = "container:AXR Test App.xcodeproj">
             </BuildableReference>
@@ -41,7 +41,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8D1107260486CEB800E47090"
-            BuildableName = "AXR Test App.app"
+            BuildableName = "AXR Prototype.app"
             BlueprintName = "AXR Test App"
             ReferencedContainer = "container:AXR Test App.xcodeproj">
          </BuildableReference>
@@ -67,7 +67,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8D1107260486CEB800E47090"
-            BuildableName = "AXR Test App.app"
+            BuildableName = "AXR Prototype.app"
             BlueprintName = "AXR Test App"
             ReferencedContainer = "container:AXR Test App.xcodeproj">
          </BuildableReference>
@@ -79,5 +79,23 @@
    <ArchiveAction
       buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">
+      <PostActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Run Script"
+               scriptText = "">
+               <EnvironmentBuildable>
+                  <BuildableReference
+                     BuildableIdentifier = "primary"
+                     BlueprintIdentifier = "8D1107260486CEB800E47090"
+                     BuildableName = "AXR Prototype.app"
+                     BlueprintName = "AXR Test App"
+                     ReferencedContainer = "container:AXR Test App.xcodeproj">
+                  </BuildableReference>
+               </EnvironmentBuildable>
+            </ActionContent>
+         </ExecutionAction>
+      </PostActions>
    </ArchiveAction>
 </Scheme>

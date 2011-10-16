@@ -10,12 +10,31 @@
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* AXRTestAppAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* AXRTestAppAppDelegate.mm */; };
 		4E351B7913507C2F00FEB909 /* libcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E351B7813507C2F00FEB909 /* libcore.a */; };
+		4E3843F8144998EB001DF47A /* libcairo.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3843F1144998EB001DF47A /* libcairo.2.dylib */; };
+		4E3843F9144998EB001DF47A /* libexpat.1.5.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3843F2144998EB001DF47A /* libexpat.1.5.2.dylib */; };
+		4E3843FB144998EB001DF47A /* libgobject-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3843F4144998EB001DF47A /* libgobject-2.0.0.dylib */; };
+		4E3843FC144998EB001DF47A /* libpango-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3843F5144998EB001DF47A /* libpango-1.0.0.dylib */; };
+		4E3843FD144998EB001DF47A /* libpangocairo-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3843F6144998EB001DF47A /* libpangocairo-1.0.0.dylib */; };
+		4E3843FE144998EB001DF47A /* libpixman-1.0.22.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3843F7144998EB001DF47A /* libpixman-1.0.22.2.dylib */; };
+		4E3843FF14499994001DF47A /* libcairo.2.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3843F1144998EB001DF47A /* libcairo.2.dylib */; };
+		4E3844001449999E001DF47A /* libexpat.1.5.2.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3843F2144998EB001DF47A /* libexpat.1.5.2.dylib */; };
+		4E3844021449999E001DF47A /* libgobject-2.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3843F4144998EB001DF47A /* libgobject-2.0.0.dylib */; };
+		4E3844031449999E001DF47A /* libpango-1.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3843F5144998EB001DF47A /* libpango-1.0.0.dylib */; };
+		4E3844041449999E001DF47A /* libpangocairo-1.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3843F6144998EB001DF47A /* libpangocairo-1.0.0.dylib */; };
+		4E3844051449999E001DF47A /* libpixman-1.0.22.2.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3843F7144998EB001DF47A /* libpixman-1.0.22.2.dylib */; };
+		4E3844071449B685001DF47A /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3844061449B685001DF47A /* libiconv.2.dylib */; };
+		4E3844081449B68D001DF47A /* libiconv.2.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3844061449B685001DF47A /* libiconv.2.dylib */; };
+		4E38440A1449B8D7001DF47A /* libgthread-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3844091449B8D7001DF47A /* libgthread-2.0.0.dylib */; };
+		4E38440B1449BACD001DF47A /* libgthread-2.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3844091449B8D7001DF47A /* libgthread-2.0.0.dylib */; };
+		4E38440D1449C046001DF47A /* libintl.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E38440C1449C046001DF47A /* libintl.8.dylib */; };
+		4E38440E1449C04E001DF47A /* libintl.8.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E38440C1449C046001DF47A /* libintl.8.dylib */; };
+		4E3844101449C1B7001DF47A /* libglib-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E38440F1449C1B7001DF47A /* libglib-2.0.0.dylib */; };
+		4E3844111449C3C0001DF47A /* libglib-2.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E38440F1449C1B7001DF47A /* libglib-2.0.0.dylib */; };
+		4E3844131449C7FB001DF47A /* libgmodule-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3844121449C7FB001DF47A /* libgmodule-2.0.0.dylib */; };
+		4E3844141449C7FE001DF47A /* libgmodule-2.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3844121449C7FB001DF47A /* libgmodule-2.0.0.dylib */; };
+		4E3844161449C996001DF47A /* libpangoft2-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3844151449C996001DF47A /* libpangoft2-1.0.0.dylib */; };
+		4E3844171449CA22001DF47A /* libpangoft2-1.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3844151449C996001DF47A /* libpangoft2-1.0.0.dylib */; };
 		4EA6EAFE14407B3200309E10 /* views in Resources */ = {isa = PBXBuildFile; fileRef = 4EA6EAFD14407B3200309E10 /* views */; };
-		4ECDAE69142FE33200E2384B /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECDAE68142FE33200E2384B /* libexpat.a */; };
-		4ECDAE6B142FE34E00E2384B /* libcairo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECDAE6A142FE34E00E2384B /* libcairo.a */; };
-		4ECDAE6D142FE36000E2384B /* libpango-1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECDAE6C142FE36000E2384B /* libpango-1.0.a */; };
-		4ECDAE6F142FE37000E2384B /* libpangocairo-1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECDAE6E142FE37000E2384B /* libpangocairo-1.0.a */; };
-		4ECDAE71142FE38C00E2384B /* libgobject-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ECDAE70142FE38C00E2384B /* libgobject-2.0.a */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -50,16 +69,23 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		4E351B7813507C2F00FEB909 /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E3843F1144998EB001DF47A /* libcairo.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcairo.2.dylib; path = ../../../../../usr/local/lib/libcairo.2.dylib; sourceTree = "<group>"; };
+		4E3843F2144998EB001DF47A /* libexpat.1.5.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libexpat.1.5.2.dylib; path = ../../../../../usr/local/Cellar/expat/2.0.1/lib/libexpat.1.5.2.dylib; sourceTree = "<group>"; };
+		4E3843F4144998EB001DF47A /* libgobject-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libgobject-2.0.0.dylib"; path = "../../../../../usr/local/Cellar/glib/2.28.8/lib/libgobject-2.0.0.dylib"; sourceTree = "<group>"; };
+		4E3843F5144998EB001DF47A /* libpango-1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libpango-1.0.0.dylib"; path = "../../../../../usr/local/lib/libpango-1.0.0.dylib"; sourceTree = "<group>"; };
+		4E3843F6144998EB001DF47A /* libpangocairo-1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libpangocairo-1.0.0.dylib"; path = "../../../../../usr/local/lib/libpangocairo-1.0.0.dylib"; sourceTree = "<group>"; };
+		4E3843F7144998EB001DF47A /* libpixman-1.0.22.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libpixman-1.0.22.2.dylib"; path = "../../../../../usr/local/Cellar/pixman/0.22.2/lib/libpixman-1.0.22.2.dylib"; sourceTree = "<group>"; };
+		4E3844061449B685001DF47A /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = ../../../../../usr/local/lib/libiconv.2.dylib; sourceTree = "<group>"; };
+		4E3844091449B8D7001DF47A /* libgthread-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libgthread-2.0.0.dylib"; path = "../../../../../usr/local/Cellar/glib/2.28.8/lib/libgthread-2.0.0.dylib"; sourceTree = "<group>"; };
+		4E38440C1449C046001DF47A /* libintl.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libintl.8.dylib; path = ../../../../../usr/local/Cellar/gettext/0.18.1.1/lib/libintl.8.dylib; sourceTree = "<group>"; };
+		4E38440F1449C1B7001DF47A /* libglib-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libglib-2.0.0.dylib"; path = "../../../../../usr/local/lib/libglib-2.0.0.dylib"; sourceTree = "<group>"; };
+		4E3844121449C7FB001DF47A /* libgmodule-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libgmodule-2.0.0.dylib"; path = "../../../../../usr/local/Cellar/glib/2.28.8/lib/libgmodule-2.0.0.dylib"; sourceTree = "<group>"; };
+		4E3844151449C996001DF47A /* libpangoft2-1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libpangoft2-1.0.0.dylib"; path = "../../../../../usr/local/lib/libpangoft2-1.0.0.dylib"; sourceTree = "<group>"; };
 		4E95BFCE135076F100117354 /* core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = core.xcodeproj; path = ../core/core.xcodeproj; sourceTree = "<group>"; };
 		4EA6EAFD14407B3200309E10 /* views */ = {isa = PBXFileReference; lastKnownFileType = folder; path = views; sourceTree = "<group>"; };
 		4EAF82581331690C00AFF970 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		4ECDAE68142FE33200E2384B /* libexpat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libexpat.a; path = ../../../../../usr/local/Cellar/expat/2.0.1/lib/libexpat.a; sourceTree = "<group>"; };
-		4ECDAE6A142FE34E00E2384B /* libcairo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcairo.a; path = ../../../../../usr/local/lib/libcairo.a; sourceTree = "<group>"; };
-		4ECDAE6C142FE36000E2384B /* libpango-1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpango-1.0.a"; path = "../../../../../usr/local/lib/libpango-1.0.a"; sourceTree = "<group>"; };
-		4ECDAE6E142FE37000E2384B /* libpangocairo-1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libpangocairo-1.0.a"; path = "../../../../../usr/local/lib/libpangocairo-1.0.a"; sourceTree = "<group>"; };
-		4ECDAE70142FE38C00E2384B /* libgobject-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libgobject-2.0.a"; path = "../../../../../usr/local/Cellar/glib/2.28.8/lib/libgobject-2.0.a"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* mac-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "mac-Info.plist"; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* AXR Test App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AXR Test App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* AXR Prototype.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AXR Prototype.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,11 +95,18 @@
 			files = (
 				4E351B7913507C2F00FEB909 /* libcore.a in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				4ECDAE69142FE33200E2384B /* libexpat.a in Frameworks */,
-				4ECDAE6B142FE34E00E2384B /* libcairo.a in Frameworks */,
-				4ECDAE6D142FE36000E2384B /* libpango-1.0.a in Frameworks */,
-				4ECDAE6F142FE37000E2384B /* libpangocairo-1.0.a in Frameworks */,
-				4ECDAE71142FE38C00E2384B /* libgobject-2.0.a in Frameworks */,
+				4E3843F8144998EB001DF47A /* libcairo.2.dylib in Frameworks */,
+				4E3843F9144998EB001DF47A /* libexpat.1.5.2.dylib in Frameworks */,
+				4E3843FB144998EB001DF47A /* libgobject-2.0.0.dylib in Frameworks */,
+				4E3843FC144998EB001DF47A /* libpango-1.0.0.dylib in Frameworks */,
+				4E3843FD144998EB001DF47A /* libpangocairo-1.0.0.dylib in Frameworks */,
+				4E3843FE144998EB001DF47A /* libpixman-1.0.22.2.dylib in Frameworks */,
+				4E3844071449B685001DF47A /* libiconv.2.dylib in Frameworks */,
+				4E38440A1449B8D7001DF47A /* libgthread-2.0.0.dylib in Frameworks */,
+				4E38440D1449C046001DF47A /* libintl.8.dylib in Frameworks */,
+				4E3844101449C1B7001DF47A /* libglib-2.0.0.dylib in Frameworks */,
+				4E3844131449C7FB001DF47A /* libgmodule-2.0.0.dylib in Frameworks */,
+				4E3844161449C996001DF47A /* libpangoft2-1.0.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,7 +143,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* AXR Test App.app */,
+				8D1107320486CEB800E47090 /* AXR Prototype.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -118,12 +151,19 @@
 		29B97314FDCFA39411CA2CEA /* mac */ = {
 			isa = PBXGroup;
 			children = (
-				4ECDAE70142FE38C00E2384B /* libgobject-2.0.a */,
-				4ECDAE6E142FE37000E2384B /* libpangocairo-1.0.a */,
-				4ECDAE6C142FE36000E2384B /* libpango-1.0.a */,
-				4ECDAE6A142FE34E00E2384B /* libcairo.a */,
-				4ECDAE68142FE33200E2384B /* libexpat.a */,
+				4E3844151449C996001DF47A /* libpangoft2-1.0.0.dylib */,
+				4E3844121449C7FB001DF47A /* libgmodule-2.0.0.dylib */,
+				4E3844061449B685001DF47A /* libiconv.2.dylib */,
+				4E3843F1144998EB001DF47A /* libcairo.2.dylib */,
+				4E3843F2144998EB001DF47A /* libexpat.1.5.2.dylib */,
+				4E3843F4144998EB001DF47A /* libgobject-2.0.0.dylib */,
+				4E3844091449B8D7001DF47A /* libgthread-2.0.0.dylib */,
+				4E3843F5144998EB001DF47A /* libpango-1.0.0.dylib */,
+				4E3843F6144998EB001DF47A /* libpangocairo-1.0.0.dylib */,
+				4E3843F7144998EB001DF47A /* libpixman-1.0.22.2.dylib */,
 				4E351B7813507C2F00FEB909 /* libcore.a */,
+				4E38440C1449C046001DF47A /* libintl.8.dylib */,
+				4E38440F1449C1B7001DF47A /* libglib-2.0.0.dylib */,
 				4E95BFCE135076F100117354 /* core.xcodeproj */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -191,7 +231,7 @@
 			name = "AXR Test App";
 			productInstallPath = "$(HOME)/Applications";
 			productName = mac;
-			productReference = 8D1107320486CEB800E47090 /* AXR Test App.app */;
+			productReference = 8D1107320486CEB800E47090 /* AXR Prototype.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -246,6 +286,18 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				4EA6EAFE14407B3200309E10 /* views in Resources */,
+				4E3843FF14499994001DF47A /* libcairo.2.dylib in Resources */,
+				4E3844001449999E001DF47A /* libexpat.1.5.2.dylib in Resources */,
+				4E3844021449999E001DF47A /* libgobject-2.0.0.dylib in Resources */,
+				4E38440B1449BACD001DF47A /* libgthread-2.0.0.dylib in Resources */,
+				4E3844031449999E001DF47A /* libpango-1.0.0.dylib in Resources */,
+				4E3844141449C7FE001DF47A /* libgmodule-2.0.0.dylib in Resources */,
+				4E3844041449999E001DF47A /* libpangocairo-1.0.0.dylib in Resources */,
+				4E3844051449999E001DF47A /* libpixman-1.0.22.2.dylib in Resources */,
+				4E3844081449B68D001DF47A /* libiconv.2.dylib in Resources */,
+				4E38440E1449C04E001DF47A /* libintl.8.dylib in Resources */,
+				4E3844111449C3C0001DF47A /* libglib-2.0.0.dylib in Resources */,
+				4E3844171449CA22001DF47A /* libpangoft2-1.0.0.dylib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,10 +359,12 @@
 					/usr/local/lib,
 					/usr/local/Cellar/expat/2.0.1/lib,
 					/usr/local/Cellar/glib/2.28.8/lib,
+					/usr/local/Cellar/pixman/0.22.2/lib,
+					/usr/local/Cellar/gettext/0.18.1.1/lib,
 				);
 				OTHER_CFLAGS = "-DAXR_PLATFORM_OSX";
 				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "AXR Test App";
+				PRODUCT_NAME = "AXR Prototype";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				USER_HEADER_SEARCH_PATHS = "/usr/local/include/ /usr/local/Cellar/cairo/1.10.2/include/";
 			};
@@ -320,6 +374,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
@@ -330,10 +385,13 @@
 					/usr/local/lib,
 					/usr/local/Cellar/expat/2.0.1/lib,
 					/usr/local/Cellar/glib/2.28.8/lib,
+					/usr/local/Cellar/pixman/0.22.2/lib,
+					/usr/local/Cellar/gettext/0.18.1.1/lib,
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DAXR_PLATFORM_OSX";
 				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "AXR Test App";
+				PRODUCT_NAME = "AXR Prototype";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				USER_HEADER_SEARCH_PATHS = "/usr/local/include/ /usr/local/Cellar/cairo/1.10.2/include/";
 			};
