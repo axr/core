@@ -46,84 +46,56 @@
  *      Last changed: 2011/10/16
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 13
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSOBJECT_H
-#define HSSOBJECT_H
+#import "HSSCircle.h"
 
-#include <string>
-#include <boost/shared_ptr.hpp>
-#include "../various/HSSObservable.h"
-#include "../parsing/HSSParserNode.h"
-#include <boost/unordered_map.hpp>
+using namespace AXR;
 
-namespace AXR {
-    
-    enum HSSObjectType
-    {
-        HSSObjectTypeGeneric,
-        HSSObjectTypeDisplayObject,
-        HSSObjectTypeContainer,
-        HSSObjectTypeBorderGeneric,
-        HSSObjectTypeLineBorder,
-        HSSObjectTypeMarginGeneric,
-        HSSObjectTypeStraightMargin,
-        HSSObjectTypeProjectedMargin,
-        HSSObjectTypeRgba,
-        HSSObjectTypeFont,
-        HSSObjectTypeValue,
-        HSSObjectTypeMultipleValue,
-        HSSObjectTypeFunction,
-        HSSObjectTypeShape //this is for all shapes the same
-    };
-    
-    class AXRController;
-    
-    class HSSObject : public HSSObservable
-    {
-    public:
-        typedef boost::shared_ptr<HSSObject> p;
-        
-        static HSSObject::p newObjectWithType(std::string type);
-        
-        std::string name;
-        
-        HSSObject();
-        HSSObject(std::string name);
-        ~HSSObject();
-        
-        bool isA(HSSObjectType otherType);
-        HSSObjectType getType();
-        
-        virtual bool isKeyword(std::string value, std::string property);
-        virtual bool isFunction(std::string value, std::string property);
-        
-        virtual std::string toString();
-        bool isNamed();
-        void setName(std::string newName);
-        void dropName();
-        
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        
-        virtual void setPropertyWithName(std::string name, HSSParserNode::p value);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-        virtual void setProperty(HSSObservableProperty name, void* value);
-        virtual void * getProperty(HSSObservableProperty name);
-        virtual void registerProperty(HSSObservableProperty name, void* property);
-        
-        AXRController * axrController;
-        
-    protected:
-        HSSObjectType type;
-        boost::unordered_map<HSSObservableProperty, void*> properties;
-        
-    private:
-        bool _isNamed;
-    };
-
+HSSCircle::HSSCircle()
+: HSSShape()
+{
+    this->shapeType = HSSShapeTypeCircle;
 }
 
-#endif
+HSSCircle::HSSCircle(std::string name)
+: HSSShape(name)
+{
+    this->shapeType = HSSShapeTypeCircle;
+}
+
+HSSCircle::~HSSCircle()
+{
+    
+}
+
+std::string HSSCircle::toString()
+{
+    return "HSSCircle";
+}
+
+std::string HSSCircle::defaultObjectType()
+{
+    return "HSSCircle";
+}
+
+std::string HSSCircle::defaultObjectType(std::string property)
+{
+    return HSSShape::defaultObjectType(property);
+}
+
+bool HSSCircle::isKeyword(std::string value, std::string property)
+{
+    return HSSShape::isKeyword(value, property);
+}
+
+void HSSCircle::draw(cairo_t * cairo, double long width, double long height)
+{
+    double long halfWidth = width * 0.5;
+    cairo_arc(cairo, halfWidth, height * 0.5, halfWidth, 0., 2*M_PI);
+}
+
+
+

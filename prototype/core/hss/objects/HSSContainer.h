@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/10/16
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 21
+ *      Revision: 22
  *
  ********************************************************************/
 
@@ -60,6 +60,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <cairo/cairo.h>
 #include <list>
+#include "HSSShape.h"
 
 namespace AXR {
     enum HSSDirectionValue
@@ -109,6 +110,7 @@ namespace AXR {
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         void recursiveRegenerateSurfaces();
         void recursiveDraw(cairo_t * cairo);
+        virtual void drawBackground();
         
         void layout();
         void recursiveLayout();
@@ -136,6 +138,11 @@ namespace AXR {
         void setDDirectionSecondary(HSSParserNode::p value);
         void directionSecondaryChanged(HSSObservableProperty source, void*data);
         
+        //shape
+        HSSParserNode::p getDShape();
+        void setDShape(HSSParserNode::p value);
+        void shapeChanged(HSSObservableProperty source, void*data);
+        
         void setDefaults();
         
     protected:
@@ -158,6 +165,10 @@ namespace AXR {
         HSSDirectionValue directionSecondary;
         HSSObservable * observedDirectionSecondary;
         HSSObservableProperty observedDirectionSecondaryProperty;
+        HSSParserNode::p dShape;
+        HSSShape::p shape;
+        HSSObservable * observedShape;
+        HSSObservableProperty observedShapeProperty;
         
 
         

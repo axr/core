@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/10/16
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -79,17 +79,22 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyDirectionSecondary] = "HSSObservablePropertyDirectionSecondary";
         types[HSSObservablePropertyBackground] = "HSSObservablePropertyBackground";
         types[HSSObservablePropertyFont] = "HSSObservablePropertyFont";
+        types[HSSObservablePropertyShape] = "HSSObservablePropertyShape";
         
         //HSSRgba
         types[HSSObservablePropertyRed] = "HSSObservablePropertyRed";
         types[HSSObservablePropertyGreen] = "HSSObservablePropertyGreen";
         types[HSSObservablePropertyBlue] = "HSSObservablePropertyBlue";
         types[HSSObservablePropertyAlpha] = "HSSObservablePropertyAlpha";
+        
         //HSSFont
         types[HSSObservablePropertySize] = "HSSObservablePropertySize";
         types[HSSObservablePropertyFace] = "HSSObservablePropertyFace";
         types[HSSObservablePropertyColor] = "HSSObservablePropertyColor";
         types[HSSObservablePropertyWeight] = "HSSObservablePropertyWeight";
+        
+        //HSSRoundedRect
+        types[HSSObservablePropertyCorners] = "HSSObservablePropertyCorners";
     }
     
     return types[property];
@@ -113,22 +118,26 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         //HSSContainer
         properties["contentAlignX"] = HSSObservablePropertyContentAlignX;
         properties["contentAlignY"] = HSSObservablePropertyContentAlignY;
-        
         properties["directionPrimary"] = HSSObservablePropertyDirectionPrimary;
         properties["directionSecondary"] = HSSObservablePropertyDirectionSecondary;
         properties["background"] = HSSObservablePropertyBackground;
         properties["font"] = HSSObservablePropertyFont;
+        properties["shape"] = HSSObservablePropertyShape;
         
         //HSSRgba
         properties["red"] = HSSObservablePropertyRed;
         properties["green"] = HSSObservablePropertyGreen;
         properties["blue"] = HSSObservablePropertyBlue;
         properties["alpha"] = HSSObservablePropertyAlpha;
+        
         //HSSFont
         properties["size"] = HSSObservablePropertySize;
         properties["face"] = HSSObservablePropertyFace;
         properties["color"] = HSSObservablePropertyColor;
         properties["weight"] = HSSObservablePropertyWeight;
+        
+        //HSSRoundedRect
+        properties["corners"] = HSSObservablePropertyCorners;
     }
     
     

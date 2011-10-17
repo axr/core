@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/10/16
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 11
+ *      Revision: 13
  *
  ********************************************************************/
 
@@ -60,6 +60,7 @@ using namespace AXR;
 
 HSSObject::p HSSObject::newObjectWithType(std::string type){
     
+    //FIXME: this is UH-gly
     if (type == "container"){
         return HSSContainer::p(new HSSContainer());
     } else if (type == "displayObject"){
@@ -76,6 +77,12 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
         return HSSRgba::p(new HSSRgba());
     } else if (type == "font"){
         return HSSFont::p(new HSSFont());
+    } else if (type == "rectangle"){
+        return HSSRectangle::p(new HSSRectangle());
+    } else if (type == "roundedRect"){
+        return HSSRoundedRect::p(new HSSRoundedRect());
+    } else if (type == "circle"){
+        return HSSCircle::p(new HSSCircle());
     } else {
         throw AXRError::p(new AXRError("HSSObject", type));
     }

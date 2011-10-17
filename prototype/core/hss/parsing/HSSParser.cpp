@@ -698,15 +698,29 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
     if (this->currentToken->isA(HSSWhitespace)) {
         this->skip(HSSWhitespace);
     }
-    if (this->currentToken->isA(HSSIdentifier)) {
-        obj->setName(VALUE_TOKEN(this->currentToken)->getString());
-        std_log3("setting its name to "+VALUE_TOKEN(this->currentToken)->getString());
-        this->readNextToken();
-    } else if (this->currentToken->isA(HSSBlockOpen)){
-        //it is the opening curly brace, therefore an annonymous object:
-        //do nothing
-    } else {
-        throw AXRError::p(new AXRError("HSSParser", "Unexpected token while reading object definition: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
+    
+    switch (this->currentToken->getType()) {
+        case HSSIdentifier:
+            obj->setName(VALUE_TOKEN(this->currentToken)->getString());
+            std_log3("setting its name to "+VALUE_TOKEN(this->currentToken)->getString());
+            this->readNextToken();
+            break;
+        case HSSBlockOpen:
+            //it is the opening curly brace, therefore an annonymous object:
+            //do nothing
+            break;
+        case HSSEndOfStatement:
+        case HSSBlockClose:
+        case HSSParenthesisClose:
+        {
+            //the property definition ends here
+            ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
+            return ret;
+        }
+            
+        default:
+            throw AXRError::p(new AXRError("HSSParser", "Unexpected token while reading object definition: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
+            break;
     }
     
     ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));

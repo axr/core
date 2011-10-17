@@ -46,84 +46,68 @@
  *      Last changed: 2011/10/16
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 13
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSOBJECT_H
-#define HSSOBJECT_H
+#ifndef HSSROUNDEDRECT_H
+#define HSSROUNDEDRECT_H
 
-#include <string>
-#include <boost/shared_ptr.hpp>
-#include "../various/HSSObservable.h"
-#include "../parsing/HSSParserNode.h"
-#include <boost/unordered_map.hpp>
+#import "HSSShape.h"
+#import "HSSMultipleValue.h"
+#import "HSSDisplayObject.h"
 
 namespace AXR {
-    
-    enum HSSObjectType
-    {
-        HSSObjectTypeGeneric,
-        HSSObjectTypeDisplayObject,
-        HSSObjectTypeContainer,
-        HSSObjectTypeBorderGeneric,
-        HSSObjectTypeLineBorder,
-        HSSObjectTypeMarginGeneric,
-        HSSObjectTypeStraightMargin,
-        HSSObjectTypeProjectedMargin,
-        HSSObjectTypeRgba,
-        HSSObjectTypeFont,
-        HSSObjectTypeValue,
-        HSSObjectTypeMultipleValue,
-        HSSObjectTypeFunction,
-        HSSObjectTypeShape //this is for all shapes the same
-    };
-    
-    class AXRController;
-    
-    class HSSObject : public HSSObservable
+    class HSSRoundedRect : public HSSShape
     {
     public:
-        typedef boost::shared_ptr<HSSObject> p;
+        typedef boost::shared_ptr<HSSRoundedRect> p;
         
-        static HSSObject::p newObjectWithType(std::string type);
-        
-        std::string name;
-        
-        HSSObject();
-        HSSObject(std::string name);
-        ~HSSObject();
-        
-        bool isA(HSSObjectType otherType);
-        HSSObjectType getType();
-        
-        virtual bool isKeyword(std::string value, std::string property);
-        virtual bool isFunction(std::string value, std::string property);
+        HSSRoundedRect();
+        HSSRoundedRect(std::string name);
+        virtual ~HSSRoundedRect();
         
         virtual std::string toString();
-        bool isNamed();
-        void setName(std::string newName);
-        void dropName();
-        
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
+        virtual bool isKeyword(std::string value, std::string property);
         
-        virtual void setPropertyWithName(std::string name, HSSParserNode::p value);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-        virtual void setProperty(HSSObservableProperty name, void* value);
-        virtual void * getProperty(HSSObservableProperty name);
-        virtual void registerProperty(HSSObservableProperty name, void* property);
+        virtual void draw(cairo_t * cairo, double long width, double long height);
         
-        AXRController * axrController;
-        
+        HSSMultipleValue::p getCorners();
+        void setDCorners(HSSParserNode::p);
+        void cornerTLChanged(HSSObservableProperty source, void*data);
+        void cornerTRChanged(HSSObservableProperty source, void*data);
+        void cornerBRChanged(HSSObservableProperty source, void*data);
+        void cornerBLChanged(HSSObservableProperty source, void*data);
+    
     protected:
-        HSSObjectType type;
-        boost::unordered_map<HSSObservableProperty, void*> properties;
+        HSSMultipleValue::p corners;
+        HSSParserNode::p dCorners;
+        HSSObservable * observedTLCorner;
+        HSSObservableProperty observedTLCornerProperty;
+        HSSObservable * observedTRCorner;
+        HSSObservableProperty observedTRCornerProperty;
+        HSSObservable * observedBRCorner;
+        HSSObservableProperty observedBRCornerProperty;
+        HSSObservable * observedBLCorner;
+        HSSObservableProperty observedBLCornerProperty;
+        double long cornerTL, cornerTR, cornerBR, cornerBL;
         
     private:
-        bool _isNamed;
+        long double _setLDProperty(
+                                   void(HSSRoundedRect::*callback)(HSSObservableProperty property, void* data),
+                                   HSSParserNode::p       value,
+                                   long double            percentageBase,
+                                   HSSObservableProperty  observedProperty,
+                                   HSSObservable *        observedObject,
+                                   HSSObservableProperty  observedSourceProperty,
+                                   HSSObservable *        &observedStore,
+                                   HSSObservableProperty  &observedStoreProperty,
+                                   const std::vector<HSSDisplayObject::p> * scope
+        );
     };
-
 }
 
 #endif

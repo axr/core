@@ -43,16 +43,17 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/10/16
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 28
+ *      Revision: 29
  *
  ********************************************************************/
 
 #include "HSSContainer.h"
 #include "../../axr/AXRDebugging.h"
 #include "../../axr/errors/errors.h"
+#include "../parsing/HSSObjectDefinition.h"
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
 #include <map>
@@ -60,6 +61,7 @@
 #include <sstream>
 #include <boost/pointer_cast.hpp>
 #include <cmath>
+#include "HSSShapes.h"
 
 using namespace AXR;
 
@@ -91,6 +93,7 @@ HSSContainer::HSSContainer()
     
     this->observedContentAlignX = this->observedContentAlignY
     = this->observedDirectionPrimary = this->observedDirectionSecondary
+    = this->observedShape
     = NULL;
 }
 
@@ -106,6 +109,7 @@ HSSContainer::HSSContainer(std::string name)
     
     this->observedContentAlignX = this->observedContentAlignY
     = this->observedDirectionPrimary = this->observedDirectionSecondary
+    = this->observedShape
     = NULL;
 }
 
@@ -225,6 +229,9 @@ void HSSContainer::setProperty(HSSObservableProperty name, HSSParserNode::p valu
         case HSSObservablePropertyDirectionSecondary:
             this->setDDirectionSecondary(value);
             break;
+        case HSSObservablePropertyShape:
+            this->setDShape(value);
+            break;
             
         default:
             HSSDisplayObject::setProperty(name, value);
@@ -262,6 +269,50 @@ void HSSContainer::recursiveDraw(cairo_t * cairo)
         this->children[i]->recursiveDraw(cairo);
     }
 }
+
+void HSSContainer::drawBackground()
+{
+    long double r = 0., g = 0., b = 0., a = 0;
+    if(this->backgroundColor){
+        r = this->backgroundColor->getRed();
+        g = this->backgroundColor->getGreen();
+        b = this->backgroundColor->getBlue();
+        a = this->backgroundColor->getAlpha();
+    }
+    
+    cairo_t * cairo = cairo_create(this->backgroundSurface);
+    this->shape->draw(cairo, this->width, this->height);
+    cairo_set_source_rgba(cairo, (r/255), (g/255), (b/255), (a/255));
+    cairo_fill(cairo);
+    
+    
+    
+    //draw a small rectangle to be able to see the anchor X and Y
+    //    cairo_rectangle(cairo, this->anchorX-1., this->anchorY-1., 2, 2);
+    //    cairo_set_source_rgb(cairo, 1,0,0);
+    //    cairo_fill(cairo);
+    
+    cairo_destroy(cairo);
+}
+
+//void HSSContainer::drawShape(cairo_t *cairo)
+//{
+//    switch (this->shape->getShapeType()) {
+//        case HSSShapeTypeRectangle:
+//            cairo_rectangle(cairo, 0., 0., this->width, this->height);
+//            break;
+//        case HSSShapeTypeCircle:
+//        {
+//            double long halfWidth = this->width * 0.5;
+//            cairo_arc(cairo, halfWidth, this->height * 0.5, halfWidth, 0., 2*M_PI);
+//            break;
+//        }
+//            
+//        default:
+//            throw AXRError::p(new AXRError("HSSContainer", "Unknown shape type"));
+//            break;
+//    }
+//}
 
 void HSSContainer::layout()
 {
@@ -1003,6 +1054,50 @@ void HSSContainer::directionSecondaryChanged(HSSObservableProperty source, void 
 }
 
 
+//directionSecondary
+HSSParserNode::p HSSContainer::getDShape() { return this->dShape; }
+void HSSContainer::setDShape(HSSParserNode::p value)
+{
+    this->dShape = value;
+    if(this->observedShape != NULL)
+    {
+        this->observedShape->removeObserver(this->observedShapeProperty, HSSObservablePropertyShape, this);
+    }
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
+            if(stringValue == "default"){
+                this->shape = HSSRectangle::p(new HSSRectangle());
+            }
+            break;
+        }
+        
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            HSSObject::p objValue = boost::static_pointer_cast<HSSObjectDefinition>(value)->getObject();
+            if(objValue->isA(HSSObjectTypeShape)){
+                this->shape = boost::static_pointer_cast<HSSShape>(objValue);
+            }
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    this->notifyObservers(HSSObservablePropertyShape, &this->shape);
+}
+
+void HSSContainer::shapeChanged(HSSObservableProperty source, void *data)
+{
+    this->setDirty(true);
+    this->shape = *(HSSShape::p *)data;
+    this->notifyObservers(HSSObservablePropertyShape, &this->shape);
+}
+
+
 
 void HSSContainer::setDefaults()
 {
@@ -1018,8 +1113,11 @@ void HSSContainer::setDefaults()
     HSSKeywordConstant::p newDDirectionPrimary(new HSSKeywordConstant("leftToRight"));
     this->setDDirectionPrimary(newDDirectionPrimary);
     //directionSecondary
-//    HSSKeywordConstant::p newDDirectionSecondary(new HSSKeywordConstant("topToBottom"));
-//    this->setDDirectionSecondary(newDDirectionSecondary);
+    HSSKeywordConstant::p newDDirectionSecondary(new HSSKeywordConstant("topToBottom"));
+    this->setDDirectionSecondary(newDDirectionSecondary);
+    //shape
+    HSSKeywordConstant::p newDShape(new HSSKeywordConstant("default"));
+    this->setDShape(newDShape);
 }
 
 

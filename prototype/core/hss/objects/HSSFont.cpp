@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/10/16
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -138,6 +138,8 @@ void HSSFont::setDSize(HSSParserNode::p value){
                                        this->observedSize,
                                        this->observedSizeProperty
                                        );
+    
+    this->notifyObservers(HSSObservablePropertySize, &this->size);
 }
 
 void HSSFont::sizeChanged(AXR::HSSObservableProperty source, void *data)
