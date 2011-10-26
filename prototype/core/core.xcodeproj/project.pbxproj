@@ -25,6 +25,8 @@
 		4E1BE18013A3F5F300D7C6DB /* HSSRgba.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BE17E13A3F5F300D7C6DB /* HSSRgba.cpp */; };
 		4E1BE18113A3F5F300D7C6DB /* HSSRgba.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E1BE17F13A3F5F300D7C6DB /* HSSRgba.h */; };
 		4E23091B144098880006A3BC /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E23091A144098880006A3BC /* errors.h */; };
+		4E24B32214533FBB00F40154 /* HSSMultipleValueDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E24B32014533FBB00F40154 /* HSSMultipleValueDefinition.cpp */; };
+		4E24B32314533FBB00F40154 /* HSSMultipleValueDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E24B32114533FBB00F40154 /* HSSMultipleValueDefinition.h */; };
 		4E351B771350784B00FEB909 /* AXRView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C87713505DEA00D88409 /* AXRView.mm */; };
 		4E5457AB136443E900D67571 /* HSSObservableProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5457AA136443E900D67571 /* HSSObservableProperties.h */; };
 		4E5457B01364523D00D67571 /* HSSCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E5457AE1364523D00D67571 /* HSSCallback.cpp */; };
@@ -163,6 +165,8 @@
 		4E1BE17E13A3F5F300D7C6DB /* HSSRgba.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRgba.cpp; sourceTree = "<group>"; };
 		4E1BE17F13A3F5F300D7C6DB /* HSSRgba.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRgba.h; sourceTree = "<group>"; };
 		4E23091A144098880006A3BC /* errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errors.h; sourceTree = "<group>"; };
+		4E24B32014533FBB00F40154 /* HSSMultipleValueDefinition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMultipleValueDefinition.cpp; sourceTree = "<group>"; };
+		4E24B32114533FBB00F40154 /* HSSMultipleValueDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSMultipleValueDefinition.h; sourceTree = "<group>"; };
 		4E5457AA136443E900D67571 /* HSSObservableProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservableProperties.h; sourceTree = "<group>"; };
 		4E5457AE1364523D00D67571 /* HSSCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSCallback.cpp; sourceTree = "<group>"; };
 		4E5457AF1364523D00D67571 /* HSSCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSCallback.h; sourceTree = "<group>"; };
@@ -460,6 +464,8 @@
 				4E80C82A13505DD300D88409 /* HSSUniversalSelector.h */,
 				4E07C4661434DD3300B1B7CA /* HSSFunctionCall.cpp */,
 				4E07C4671434DD3300B1B7CA /* HSSFunctionCall.h */,
+				4E24B32014533FBB00F40154 /* HSSMultipleValueDefinition.cpp */,
+				4E24B32114533FBB00F40154 /* HSSMultipleValueDefinition.h */,
 			);
 			path = parsing;
 			sourceTree = "<group>";
@@ -630,6 +636,7 @@
 				4E8C255C144B6D8000FE626D /* HSSShapes.h in Headers */,
 				4E8C2560144B773100FE626D /* HSSCircle.h in Headers */,
 				4E8C2564144B7EB600FE626D /* HSSRoundedRect.h in Headers */,
+				4E24B32314533FBB00F40154 /* HSSMultipleValueDefinition.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -747,6 +754,7 @@
 				4E8C2559144B6C4A00FE626D /* HSSRectangle.cpp in Sources */,
 				4E8C255F144B773100FE626D /* HSSCircle.cpp in Sources */,
 				4E8C2563144B7EB600FE626D /* HSSRoundedRect.cpp in Sources */,
+				4E24B32214533FBB00F40154 /* HSSMultipleValueDefinition.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

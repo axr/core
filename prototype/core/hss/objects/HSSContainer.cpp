@@ -43,25 +43,28 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2011/10/22
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 29
+ *      Revision: 30
  *
  ********************************************************************/
 
 #include "HSSContainer.h"
 #include "../../axr/AXRDebugging.h"
 #include "../../axr/errors/errors.h"
+#include "../../axr/AXRController.h"
 #include "../parsing/HSSObjectDefinition.h"
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
+#include "../parsing/HSSObjectNameConstant.h"
 #include <map>
 #include <string>
 #include <sstream>
 #include <boost/pointer_cast.hpp>
 #include <cmath>
 #include "HSSShapes.h"
+#include <vector>
 
 using namespace AXR;
 
@@ -95,6 +98,18 @@ HSSContainer::HSSContainer()
     = this->observedDirectionPrimary = this->observedDirectionSecondary
     = this->observedShape
     = NULL;
+    
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("isA");
+    shorthandProperties.push_back("width");
+    shorthandProperties.push_back("height");
+    shorthandProperties.push_back("contentAlignX");
+    shorthandProperties.push_back("contentAlignY");
+    shorthandProperties.push_back("font");
+    shorthandProperties.push_back("background");
+    shorthandProperties.push_back("shape");
+    
+    this->setShorthandProperties(shorthandProperties);
 }
 
 HSSContainer::HSSContainer(std::string name)
@@ -111,6 +126,18 @@ HSSContainer::HSSContainer(std::string name)
     = this->observedDirectionPrimary = this->observedDirectionSecondary
     = this->observedShape
     = NULL;
+    
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("isA");
+    shorthandProperties.push_back("width");
+    shorthandProperties.push_back("height");
+    shorthandProperties.push_back("contentAlignX");
+    shorthandProperties.push_back("contentAlignY");
+    shorthandProperties.push_back("font");
+    shorthandProperties.push_back("background");
+    shorthandProperties.push_back("shape");
+    
+    this->setShorthandProperties(shorthandProperties);
 }
 
 HSSContainer::~HSSContainer()
@@ -237,6 +264,32 @@ void HSSContainer::setProperty(HSSObservableProperty name, HSSParserNode::p valu
             HSSDisplayObject::setProperty(name, value);
             break;
     }
+}
+
+void HSSContainer::setProperty(HSSObservableProperty name, void * value)
+{
+    switch (name) {
+        case HSSObservablePropertyContentAlignX:
+            this->contentAlignX = *(long double*) value;
+            break;
+        case HSSObservablePropertyContentAlignY:
+            this->contentAlignY = *(long double*) value;
+            break;
+        case HSSObservablePropertyDirectionPrimary:
+            this->directionPrimary = *(HSSDirectionValue*) value;
+            break;
+        case HSSObservablePropertyDirectionSecondary:
+            this->directionSecondary = *(HSSDirectionValue*) value;
+            break;
+        case HSSObservablePropertyShape:
+            this->shape = *(HSSShape::p*) value;
+            break;
+            
+        default:
+            return HSSDisplayObject::setProperty(name, value);
+    }
+    
+    this->notifyObservers(name, value);
 }
 
 void HSSContainer::recursiveReadDefinitionObjects()
@@ -1058,6 +1111,16 @@ void HSSContainer::directionSecondaryChanged(HSSObservableProperty source, void 
 HSSParserNode::p HSSContainer::getDShape() { return this->dShape; }
 void HSSContainer::setDShape(HSSParserNode::p value)
 {
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        case HSSParserNodeTypeObjectNameConstant:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for font of "+this->getElementName()));
+    }
+    
     this->dShape = value;
     if(this->observedShape != NULL)
     {
@@ -1076,14 +1139,35 @@ void HSSContainer::setDShape(HSSParserNode::p value)
         
         case HSSParserNodeTypeObjectDefinition:
         {
-            HSSObject::p objValue = boost::static_pointer_cast<HSSObjectDefinition>(value)->getObject();
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->apply();
+            HSSObject::p objValue = objdef->getObject();
             if(objValue->isA(HSSObjectTypeShape)){
                 this->shape = boost::static_pointer_cast<HSSShape>(objValue);
             }
             break;
         }
             
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                objdef->apply();
+                HSSObject::p theObject = objdef->getObject();
+                if (theObject->isA(HSSObjectTypeShape)){
+                    this->shape = boost::static_pointer_cast<HSSShape>(theObject);
+                }
+                
+            } catch (HSSObjectNotFoundException * e) {
+                std_log(e->toString());
+            }
+            
+            break;
+        }
+            
         default:
+            
             break;
     }
     

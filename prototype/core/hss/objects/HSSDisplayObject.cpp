@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/10/22
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 30
+ *      Revision: 31
  *
  ********************************************************************/
 
@@ -392,6 +392,38 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
     }
 }
 
+void HSSDisplayObject::setProperty(HSSObservableProperty name, void * value)
+{
+    switch (name) {
+        case HSSObservablePropertyWidth:
+            this->width = *(long double*) value;
+            break;
+        case HSSObservablePropertyHeight:
+            this->height = *(long double*) value;
+            break;
+        case HSSObservablePropertyAnchorX:
+            this->anchorX = *(long double*) value;
+            break;
+        case HSSObservablePropertyAnchorY:
+            this->anchorY = *(long double*) value;
+            break;
+        case HSSObservablePropertyAlignX:
+            this->alignX = *(long double*) value;
+            break;
+        case HSSObservablePropertyAlignY:
+            this->alignY = *(long double*) value;
+            break;
+        case HSSObservablePropertyBackground:
+        case HSSObservablePropertyFont:
+            return; //FIXME
+            
+        default:
+            return HSSObject::setProperty(name, value);
+    }
+    
+    this->notifyObservers(name, value);
+}
+
 void HSSDisplayObject::setNeedsRereadRules(bool value)
 {
     this->_needsRereadRules = value;
@@ -524,7 +556,8 @@ void HSSDisplayObject::drawForeground()
     PangoLayout *layout;
     PangoFontDescription *font_description;
     
-    
+    //FIXME: precalculate this layout somehow earlier, to get the height for the container
+    //based on the text height
     layout = pango_cairo_create_layout (cairo);
     pango_layout_set_width(layout, this->width * PANGO_SCALE);
     
@@ -533,6 +566,7 @@ void HSSDisplayObject::drawForeground()
     if (this->font){
         pango_font_description_set_family (font_description, this->font->getFace().c_str());
         
+        //FIXME: add support for weights in fonts
         pango_font_description_set_weight (font_description, PANGO_WEIGHT_NORMAL);
         pango_font_description_set_absolute_size (font_description, this->font->getSize() * PANGO_SCALE);
         
@@ -1224,6 +1258,7 @@ void HSSDisplayObject::setDBackground(HSSParserNode::p value)
         case HSSParserNodeTypeObjectDefinition:
         {
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->apply();
             this->backgroundColor = boost::static_pointer_cast<HSSRgba>(objdef->getObject());
             std_log1("added background rgba object: "+this->backgroundColor->toString());
             break;
@@ -1232,8 +1267,13 @@ void HSSDisplayObject::setDBackground(HSSParserNode::p value)
         case HSSParserNodeTypeObjectNameConstant:
         {
             try {
-                HSSObjectNameConstant::p objdef = boost::static_pointer_cast<HSSObjectNameConstant>(value);
-                this->backgroundColor = boost::static_pointer_cast<HSSRgba>(this->axrController->objectTreeGet(objdef->getValue()));
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                objdef->apply();
+                HSSObject::p theObject = objdef->getObject();
+                if (theObject->isA(HSSObjectTypeRgba)){
+                    this->backgroundColor = boost::static_pointer_cast<HSSRgba>(theObject);
+                }
             } catch (HSSObjectNotFoundException * e) {
                 std_log1(e->toString());
             }
@@ -1279,6 +1319,7 @@ void HSSDisplayObject::setDFont(HSSParserNode::p value)
         case HSSParserNodeTypeObjectDefinition:
         {
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->apply();
             this->font = boost::static_pointer_cast<HSSFont>(objdef->getObject());
             std_log1("added font object: "+this->font->toString());
             break;
@@ -1287,8 +1328,14 @@ void HSSDisplayObject::setDFont(HSSParserNode::p value)
         case HSSParserNodeTypeObjectNameConstant:
         {
             try {
-                HSSObjectNameConstant::p objdef = boost::static_pointer_cast<HSSObjectNameConstant>(value);
-                this->font = boost::static_pointer_cast<HSSFont>(this->axrController->objectTreeGet(objdef->getValue()));
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                objdef->apply();
+                HSSObject::p theObject = objdef->getObject();
+                if (theObject->isA(HSSObjectTypeFont)){
+                    this->font = boost::static_pointer_cast<HSSFont>(theObject);
+                }
+                
             } catch (HSSObjectNotFoundException * e) {
                 std_log1(e->toString());
             }

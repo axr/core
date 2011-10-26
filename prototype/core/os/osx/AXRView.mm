@@ -54,6 +54,7 @@
 //#include <cairo/cairo.h>
 #include "../../hss/objects/HSSContainer.h"
 #include "../../axr/AXRController.h"
+#include "../../axr/errors/AXRErrorsManager.h"
 #include "OSXRender.h"
 #include <iostream>
 #include "../../axr/AXRDebugging.h"
@@ -82,6 +83,8 @@
     [self setAxrController:theController];
     AXR::OSXRender * theRender =  new AXR::OSXRender::OSXRender(theController);
     [self setAxrRender:theRender];
+    AXR::AXRErrorsManager * theErrorsManager = AXR::AXRErrorsManager::getInstance().get();
+    [self setErrorsManager:theErrorsManager];
 }
 
 - (void)dealloc
@@ -143,6 +146,16 @@
 - (void *)axrRender
 {
     return axrRender;
+}
+
+- (void *)errorsManager
+{
+    return errorsManager;
+}
+
+- (void)setErrorsManager:(void *)theErrorsManager
+{
+    errorsManager = theErrorsManager;
 }
 
 - (bool)loadFile

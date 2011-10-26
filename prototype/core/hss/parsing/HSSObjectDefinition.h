@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/12
+ *      Last changed: 2011/10/23
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -56,9 +56,11 @@
 #import "HSSStatement.h"
 #import <string>
 #import <vector>
+#import <deque>
 #import "HSSParserNodes.h"
 #import "../objects/HSSObject.h"
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 
 namespace AXR {
     class HSSObjectDefinition : public HSSStatement
@@ -70,20 +72,45 @@ namespace AXR {
         ~HSSObjectDefinition();
         virtual std::string toString();
         
-        //adds a new statement to the properties list
+        void apply();
+        
+        //adds a new property definition to the properties list
         void propertiesAdd(HSSPropertyDefinition::p &newProperty);
         void propertiesAdd(const HSSPropertyDefinition::p &newProperty);
+        void propertiesPrepend(HSSPropertyDefinition::p &newProperty);
+        void propertiesPrepend(const HSSPropertyDefinition::p &newProperty);
         //removes last statement from the list and then deletes it
         void propertiesRemoveLast();
         //returns a pointer to the last statement in the list
         HSSPropertyDefinition::p &propertiesLast();
         //returns how many statements there are in the properties list
         const int propertiesSize();
+        //returns all the properties
+        std::deque<HSSPropertyDefinition::p> getProperties();
+        
+        
+        //adds a new object definition to the children
+        void childrenAdd(HSSObjectDefinition::p &child);
+        void childrenAdd(const HSSObjectDefinition::p &child);
+        //removes last statement from the list and then deletes it
+        void childrenRemoveLast();
+        //returns a pointer to the last statement in the list
+        HSSObjectDefinition::p &childrenLast();
+        //returns how many statements there are in the children list
+        const int childrenSize();
+        //returns all the children
+        const std::vector<HSSObjectDefinition::p> getChildren() const;
+        
         
         HSSObject::p getObject();
+        HSSObjectDefinition::p getParent();
+        void setParent(HSSObjectDefinition::p newParent);
         
     protected:
-        std::vector<HSSPropertyDefinition::p> properties;
+        std::deque<HSSPropertyDefinition::p> properties;
+        std::vector<HSSObjectDefinition::p> children;
+        
+        boost::weak_ptr<HSSObjectDefinition> parent;
         
     private:
         HSSObject::p prototype;

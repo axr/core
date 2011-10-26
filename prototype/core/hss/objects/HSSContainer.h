@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2011/10/22
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 22
+ *      Revision: 23
  *
  ********************************************************************/
 
@@ -108,6 +108,7 @@ namespace AXR {
         //void readDefinitionObjects();
         void recursiveReadDefinitionObjects();
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, void * value);
         void recursiveRegenerateSurfaces();
         void recursiveDraw(cairo_t * cairo);
         virtual void drawBackground();

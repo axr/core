@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2011/10/23
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 8
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -56,7 +56,9 @@
 namespace AXR {
     enum HSSObservableProperty
     {
+        //HSSObject
         HSSObservablePropertyNone = 0,
+        HSSObservablePropertyIsA,
         
         //HSSDisplayObject
         HSSObservablePropertyValue,

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2011/10/23
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 12
+ *      Revision: 13
  *
  ********************************************************************/
 
@@ -117,14 +117,16 @@ namespace AXR {
         bool isCombinator();
         bool isCombinator(HSSToken::p token);
         bool isChildrenCombinator();
-        bool isPropertyDefinition();
+        bool isPropertyDefinition(bool * isShorthand);
         
         HSSCombinator::p readChildrenCombinatorOrSkip();
         HSSCombinator::p readSymbolCombinator();
         HSSSelector::p readSelector();
         //pass "" to this function if you're not in a property definition
         HSSObjectDefinition::p readObjectDefinition(std::string propertyName);
+        void recursiveAddObjectDefinition(HSSObjectDefinition::p objDef);
         HSSPropertyDefinition::p readPropertyDefinition();
+        HSSPropertyDefinition::p readPropertyDefinition(bool shorthandChecked, bool isShorthand);
         HSSInstruction::p readInstruction();
         HSSInstruction::p readInstruction(bool preferHex);
         HSSObjectDefinition::p getObjectFromInstruction(HSSInstruction::p instruction);

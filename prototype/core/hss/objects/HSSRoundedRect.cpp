@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2011/10/19
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -66,6 +66,10 @@ HSSRoundedRect::HSSRoundedRect()
     this->shapeType = HSSShapeTypeRoundedRect;
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
     this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
+    
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("corners");
+    this->setShorthandProperties(shorthandProperties);
 }
 
 HSSRoundedRect::HSSRoundedRect(std::string name)
@@ -74,6 +78,11 @@ HSSRoundedRect::HSSRoundedRect(std::string name)
     this->shapeType = HSSShapeTypeRoundedRect;
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
     this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
+    
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("corners");
+    this->setShorthandProperties(shorthandProperties);
+
 }
 
 HSSRoundedRect::~HSSRoundedRect()
@@ -88,7 +97,7 @@ std::string HSSRoundedRect::toString()
 
 std::string HSSRoundedRect::defaultObjectType()
 {
-    return "HSSRoundedRect";
+    return "roundedRect";
 }
 
 std::string HSSRoundedRect::defaultObjectType(std::string property)

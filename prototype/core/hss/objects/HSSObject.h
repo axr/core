@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2011/10/22
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 13
+ *      Revision: 14
  *
  ********************************************************************/
 
@@ -58,6 +58,7 @@
 #include "../various/HSSObservable.h"
 #include "../parsing/HSSParserNode.h"
 #include <boost/unordered_map.hpp>
+#include <vector>
 
 namespace AXR {
     
@@ -80,6 +81,7 @@ namespace AXR {
     };
     
     class AXRController;
+    class HSSMultipleValueDefinition;
     
     class HSSObject : public HSSObservable
     {
@@ -108,6 +110,19 @@ namespace AXR {
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         
+        std::string getPropertyForCurrentValue();
+        void setShorthandProperties(std::vector<std::string> newValues);
+        void shorthandSkip(std::string propertyName);
+        bool shorthandNext();
+        void shorthandReset();
+        unsigned getShorthandIndex();
+        void setShorthandIndex(unsigned newValue);
+        
+        //isA
+        HSSParserNode::p getDIsA();
+        void setDIsA(HSSParserNode::p value);
+        void isAChanged(HSSObservableProperty source, void*data);
+        
         virtual void setPropertyWithName(std::string name, HSSParserNode::p value);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         virtual void setProperty(HSSObservableProperty name, void* value);
@@ -116,9 +131,16 @@ namespace AXR {
         
         AXRController * axrController;
         
+        
+        
     protected:
         HSSObjectType type;
         boost::unordered_map<HSSObservableProperty, void*> properties;
+        std::vector<std::string> shorthandProperties;
+        boost::unordered_map<std::string, bool> skipShorthand;
+        unsigned shorthandIndex;
+        
+        boost::shared_ptr<HSSMultipleValueDefinition> dIsA;
         
     private:
         bool _isNamed;

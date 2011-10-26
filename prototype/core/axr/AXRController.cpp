@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/11
+ *      Last changed: 2011/10/23
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 16
+ *      Revision: 17
  *
  ********************************************************************/
 
@@ -471,13 +471,15 @@ bool AXRController::reload()
 
 std::string AXRController::toString()
 {
-    std::string tempstr;
+    std::string tempstr = "AXR Controller\n";
     if(this->root != NULL){
+        tempstr.append("\n\n\nROOT:");
         tempstr = this->root->toString();  
     }
     unsigned i;
     if(this->objectTree.size() > 0)
     {
+        tempstr.append("\n\n\nOBJECT TREE:");
         for (i=0; i<this->objectTree.size(); i++) {
             tempstr.append("\n").append(this->objectTree[i]->toString());
         }
@@ -599,8 +601,7 @@ void AXRController::add(HSSDisplayObject::p newElement)
 }
 
 //object tree
-
-void AXRController::objectTreeAdd(HSSObject::p & newObject)
+void AXRController::objectTreeAdd(HSSObjectDefinition::p & newObject)
 {
     this->objectTree.push_back(newObject);
 }
@@ -610,19 +611,19 @@ void AXRController::objectTreeRemove(unsigned index)
     this->objectTree.erase(this->objectTree.begin()+index);
 }
 
-HSSObject::p & AXRController::objectTreeGet(unsigned index)
+HSSObjectDefinition::p & AXRController::objectTreeGet(unsigned index)
 {
     return this->objectTree[index];
 }
 
-HSSObject::p & AXRController::objectTreeGet(std::string name)
+HSSObjectDefinition::p & AXRController::objectTreeGet(std::string name)
 {
     HSSObject::p ret = HSSObject::p();
     //FIXME: do this with an unordered_map for better performance
     unsigned i, size;
     for (i=0, size=this->objectTree.size(); i<size; i++) {
-        HSSObject::p & theObj = this->objectTreeGet(i);
-        if(theObj->name == name){
+        HSSObjectDefinition::p & theObj = this->objectTreeGet(i);
+        if(theObj && theObj->getObject()->name == name){
             return theObj;
         }
     }

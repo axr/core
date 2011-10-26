@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/10/23
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 3
+ *      Revision: 34
  *
  ********************************************************************/
 
@@ -66,6 +66,13 @@ HSSRgba::HSSRgba()
     
     this->red = this->green = this->blue = 0.;
     this->alpha = 255.;
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("red");
+    shorthandProperties.push_back("green");
+    shorthandProperties.push_back("blue");
+    shorthandProperties.push_back("alpha");
+    
+    this->setShorthandProperties(shorthandProperties);
 }
 
 HSSRgba::~HSSRgba()

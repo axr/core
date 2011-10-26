@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2011/10/23
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -62,6 +62,9 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
     static bool HSSObservableHasInitializedTypes = false;
     if (!HSSObservableHasInitializedTypes) {
         HSSObservableHasInitializedTypes = true;
+        //HSSObject
+        types[HSSObservablePropertyIsA] = "HSSObservablePropertyIsA";
+        
         //HSSDisplayObject
         types[HSSObservablePropertyValue] = "HSSObservablePropertyValue";
         types[HSSObservablePropertyWidth] = "HSSObservablePropertyWidth";
@@ -105,6 +108,9 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
     static boost::unordered_map<std::string, HSSObservableProperty> properties;
     
     if (properties.size() == 0) {
+        //HSSObject
+        properties["isA"] = HSSObservablePropertyIsA;
+        
         //HSSDisplayObject
         properties["value"] = HSSObservablePropertyValue;
         properties["width"] = HSSObservablePropertyWidth;

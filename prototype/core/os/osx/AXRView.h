@@ -62,6 +62,11 @@
     //so that we don't need to include the c++ header, which would
     //create the requirement to rename main.m to main.mm
     void * axrRender;
+    
+    //this is actually always AXR::ErrorsManager *, but we hide it
+    //so that we don't need to include the c++ header, which would
+    //create the requirement to rename main.m to main.mm
+    void * errorsManager;
 }
 
 //hack to make it work with IB from a dependent target
@@ -71,6 +76,8 @@
 - (void *)axrController;
 - (void)setAxrRender:(void *)theRender;
 - (void *)axrRender;
+- (void)setErrorsManager:(void *)theErrorsManager;
+- (void *)errorsManager;
 
 - (bool)loadFile;
 - (bool)loadFile:(NSString *)xmlPath;

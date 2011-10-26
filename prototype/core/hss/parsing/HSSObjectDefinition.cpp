@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/10/23
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 7
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -86,23 +86,49 @@ std::string HSSObjectDefinition::toString()
     return tempstr;
 }
 
+void HSSObjectDefinition::apply()
+{
+    unsigned i,size;
+    for (i=0, size=this->propertiesSize(); i<size; i++) {
+        HSSPropertyDefinition::p theProperty = this->properties[i];
+        this->prototype->setPropertyWithName(theProperty->getName(), theProperty->getValue());
+    }
+}
+
 void HSSObjectDefinition::propertiesAdd(HSSPropertyDefinition::p &newProperty)
 {
-    if(newProperty != NULL)
+    if(newProperty)
     {
         std_log3("HSSObjectDefinition: Added node of type " << newProperty->toString());
         this->properties.push_back(newProperty);
-        this->prototype->setPropertyWithName(newProperty->getName(), newProperty->getValue());
     }
 }
 
 void HSSObjectDefinition::propertiesAdd(const HSSPropertyDefinition::p &newProperty)
 {
-    if(newProperty != NULL)
+    if(newProperty)
     {
         std_log3("HSSObjectDefinition: Added node of type " << newProperty->toString());
         this->properties.push_back(newProperty);
-        this->prototype->setPropertyWithName(newProperty->getName(), newProperty->getValue());
+        //this->prototype->setPropertyWithName(newProperty->getName(), newProperty->getValue());
+    }
+}
+
+void HSSObjectDefinition::propertiesPrepend(HSSPropertyDefinition::p &newProperty)
+{
+    if(newProperty)
+    {
+        std_log3("HSSObjectDefinition: Prepended node of type " << newProperty->toString());
+        this->properties.push_front(newProperty);
+    }
+}
+
+void HSSObjectDefinition::propertiesPrepend(const HSSPropertyDefinition::p &newProperty)
+{
+    if(newProperty)
+    {
+        std_log3("HSSObjectDefinition: Prepended node of type " << newProperty->toString());
+        this->properties.push_front(newProperty);
     }
 }
 
@@ -121,9 +147,62 @@ const int HSSObjectDefinition::propertiesSize()
     return this->properties.size();
 }
 
+std::deque<HSSPropertyDefinition::p> HSSObjectDefinition::getProperties()
+{
+    return this->properties;
+}
+
+void HSSObjectDefinition::childrenAdd(HSSObjectDefinition::p &child)
+{
+    if(child)
+    {
+        this->children.push_back(child);
+    }
+}
+
+void HSSObjectDefinition::childrenAdd(const HSSObjectDefinition::p &child)
+{
+    if(child)
+    {
+        this->children.push_back(child);
+    }
+}
+
+void HSSObjectDefinition::childrenRemoveLast()
+{
+    this->children.pop_back();
+}
+
+HSSObjectDefinition::p &HSSObjectDefinition::childrenLast()
+{
+    return this->children.back();
+}
+
+const int HSSObjectDefinition::childrenSize()
+{
+    return this->children.size();
+}
+
+const std::vector<HSSObjectDefinition::p> HSSObjectDefinition::getChildren() const
+{
+    return this->children;
+}
+
 HSSObject::p HSSObjectDefinition::getObject()
 {
     return this->prototype;
 }
+
+
+HSSObjectDefinition::p HSSObjectDefinition::getParent()
+{
+    return this->parent.lock();
+}
+
+void HSSObjectDefinition::setParent(HSSObjectDefinition::p newParent)
+{
+    this->parent = boost::weak_ptr<HSSObjectDefinition>(newParent);
+}
+
 
 

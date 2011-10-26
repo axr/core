@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2011/10/23
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 16
+ *      Revision: 17
  *
  ********************************************************************/
 
@@ -211,8 +211,8 @@ bool HSSParser::loadFile(std::string filepath)
                     
                 case HSSStatementTypeObjectDefinition:
                 {
-                    HSSObject::p theObj = boost::static_pointer_cast<HSSObjectDefinition>(statement)->getObject();
-                    this->controller->objectTreeAdd(theObj);
+                    HSSObjectDefinition::p theObj = boost::static_pointer_cast<HSSObjectDefinition>(statement);
+                    this->recursiveAddObjectDefinition(theObj);
                     break;
                 }
                     
@@ -334,17 +334,19 @@ HSSRule::p HSSParser::readRule()
     while (!this->currentToken->isA(HSSBlockClose))
     {
         try {
-            //std_log1(this->currentToken->toString());
-            //if we find an identifier, we must peek forward to see if it is a property name
             if(this->currentToken->isA(HSSIdentifier)){
-                if (this->isPropertyDefinition()){
-                    HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition();
-                    if (propertyDefinition)
+                bool isShorthand;
+                if (this->isPropertyDefinition(&isShorthand)){
+                    HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition(true, isShorthand);
+                    if (propertyDefinition){
                         ret->propertiesAdd(propertyDefinition);
+                    }
                 } else {
+                    this->currentObjectContextAdd(HSSObject::p(new HSSContainer()));
                     HSSRule::p theRule = this->readRule();
                     if(theRule)
                         ret->childrenAdd(theRule);
+                    this->currentObjectContextRemoveLast();
                 }
                 
             } else if(this->currentToken->isA(HSSSymbol)){
@@ -358,9 +360,11 @@ HSSRule::p HSSParser::readRule()
                 this->skip(HSSWhitespace);
                 
             } else if (this->currentToken->isA(HSSInstructionSign)){
+                this->currentObjectContextAdd(HSSObject::p(new HSSContainer()));
                 HSSRule::p childRule = this->readInstructionRule();
                 if(childRule)
                     ret->childrenAdd(childRule);
+                this->currentObjectContextRemoveLast();
             
             } else {
                 AXRWarning::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType())+" while reading rule", this->filename, this->line, this->column))->raise();
@@ -388,6 +392,9 @@ HSSRule::p HSSParser::readRule()
         security_brake()
     }
     security_brake_reset()
+    
+    //reset the index of the shorthand properties
+    this->currentObjectContext.top()->shorthandReset();
     
     //we're out of the block, read next token
     this->readNextToken();
@@ -522,13 +529,20 @@ bool HSSParser::isChildrenCombinator()
 }
 
 //this function assumes currentToken to be an identifier
-bool HSSParser::isPropertyDefinition()
+//wether it is or not a shorthand will be passed to the isShorthand pointer
+bool HSSParser::isPropertyDefinition(bool * isShorthand)
 {
     bool ret = true;
+    *isShorthand = false;
     
     std_log4("----- peeking ------ ");
     HSSToken::p peekToken = this->tokenizer->peekNextToken();
     std_log4(peekToken->toString());
+    //skip all whitespace and comments
+    while (peekToken && (peekToken->isA(HSSWhitespace) || peekToken->isA(HSSBlockComment) || peekToken->isA(HSSLineComment)))
+    {
+        peekToken = this->tokenizer->peekNextToken();
+    }
     //if the next token is a colon, it is either a property definition or a filter
     if(peekToken->isA(HSSColon)){
         //we'll peek until we find a end of statement, a closing block or an opening one
@@ -539,7 +553,7 @@ bool HSSParser::isPropertyDefinition()
         } else {
             while(! peekToken->isA(HSSEndOfStatement) && !peekToken->isA(HSSBlockClose) && !peekToken->isA(HSSBlockOpen))
             {
-                std_log1(peekToken->toString());
+                std_log4(peekToken->toString());
                 peekToken = this->tokenizer->peekNextToken();
                 this->checkForUnexpectedEndOfSource();
             }
@@ -549,22 +563,36 @@ bool HSSParser::isPropertyDefinition()
             }
         }
         
-        
-//        peekToken = this->tokenizer->peekNextToken();
-//        //now, if we're dealing with an identifier it may be a filter
-//        if(peekToken->isA(HSSIdentifier)) {
-//            //if it is, after the identifier can only come a parenthesis open or a whitespace
-//            peekToken = this->tokenizer->peekNextToken();
-//            if(! peekToken->isA(HSSParenthesisOpen) && ! peekToken->isA(HSSWhitespace) )
-//            {
-//                //we still don't know... continue peeking
-//                peekToken = this->tokenizer->peekNextToken();
-//                
-//            }
-//        }
     } else {
-        //no colon, no property definiton
-        ret = false;
+        //no colon, it may be a rule -- we peek until we find the end of the statement
+        //or we can conclude it actually is a rule
+        bool done = false;
+        while(!done)
+        {
+            switch (peekToken->getType()) {
+                case HSSBlockClose:
+                case HSSEndOfStatement:
+                    //it is a shorthand
+                    ret = true;
+                    done = true;
+                    *isShorthand = true;
+                    break;
+                    
+                case HSSBlockOpen:
+                    //it is a 
+                    ret = false;
+                    done = true;
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            if(!done){
+                peekToken = this->tokenizer->peekNextToken();
+                this->checkForUnexpectedEndOfSource();
+            }
+        }
     }
     std_log4("----- finished peeking ------ ");
     this->tokenizer->resetPeek();
@@ -692,6 +720,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
             obj = HSSObject::newObjectWithType("value");
         }
     }
+    obj->axrController = this->controller;
     
     
     //get the name of the object
@@ -737,17 +766,38 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
     //read the inner part of the block
     this->currentObjectContext.push(obj);
     while (!this->currentToken->isA(HSSBlockClose)){
-        try {
-            const HSSPropertyDefinition::p &property = this->readPropertyDefinition();
-            ret->propertiesAdd(property);
-        } catch (AXRError::p e) {
-            e->raise();
-            this->readNextToken();
-            if (!this->atEndOfSource())
-                this->skip(HSSWhitespace);
+        switch (this->currentToken->getType()) {
+            case HSSObjectSign:
+            {
+                try {
+                    HSSObjectDefinition::p childDef = this->readObjectDefinition(propertyName);
+                    childDef->setParent(ret);
+                    ret->childrenAdd(childDef);
+                } catch (AXRError::p e) {
+                    e->raise();
+                    this->readNextToken();
+                    if (!this->atEndOfSource())
+                        this->skip(HSSWhitespace);
+                }
+                break;
+            }
+                
+            default:
+                try {
+                    const HSSPropertyDefinition::p &property = this->readPropertyDefinition();
+                    ret->propertiesAdd(property);
+                } catch (AXRError::p e) {
+                    e->raise();
+                    this->readNextToken();
+                    if (!this->atEndOfSource())
+                        this->skip(HSSWhitespace);
+                }
+                break;
         }
-        
     }
+    //reset the index of the shorthand properties
+    obj->shorthandReset();
+    //out we are
     this->currentObjectContext.pop();
     
     //we're out of the block, we expect a closing brace
@@ -764,110 +814,167 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
     return ret;
 }
 
+
+void HSSParser::recursiveAddObjectDefinition(HSSObjectDefinition::p objDef)
+{
+    this->controller->objectTreeAdd(objDef);
+    unsigned i, size;
+    const std::vector<HSSObjectDefinition::p>children = objDef->getChildren();
+    for (i=0, size=children.size(); i<size; i++) {
+        HSSObjectDefinition::p child = children[i];
+        std::deque<HSSPropertyDefinition::p> properties = objDef->getProperties();
+        unsigned i;
+        //prepend backwards
+        for (i=properties.size(); i>0; i--){
+            child->propertiesPrepend(properties[i-1]);
+        }
+        this->recursiveAddObjectDefinition(child);
+    }
+}
+
 HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
+{
+    return this->readPropertyDefinition(false, false);
+}
+
+HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked, bool isShorthand)
 {
     std::string propertyName;
     
-    //end of source is no good
+    //end of source is no goodf
     this->checkForUnexpectedEndOfSource();
     
     HSSPropertyDefinition::p ret;
     bool valid = true;
     
-    if (this->currentToken->isA(HSSIdentifier)){
-        propertyName = VALUE_TOKEN(this->currentToken)->getString();
-        ret = HSSPropertyDefinition::p(new HSSPropertyDefinition(propertyName));
-        try {
-            this->readNextToken();
-            //now must come a colon
-            this->skipExpected(HSSColon);
-            //we don't give a f$%# about whitespace
-            this->skip(HSSWhitespace);
-            //now comes either an object definition, a literal value or an expression
-            //object
-            security_brake_init();
-            while (!this->currentToken->isA(HSSBlockClose) && !this->currentToken->isA(HSSEndOfStatement) ) {
-                    if (this->currentToken->isA(HSSObjectSign)){
-                        ret->setValue(this->readObjectDefinition(propertyName));
-                        //this->readNextToken();
-                        
-                    } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
-                        ret->setValue(HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString())));
-                        this->checkForUnexpectedEndOfSource();
+    switch (this->currentToken->getType()) {
+        case HSSIdentifier:
+        {
+            bool isPropertyDef = true;
+            if (!shorthandChecked){
+                isPropertyDef = this->isPropertyDefinition(&isShorthand);
+            }
+            if (isPropertyDef) {
+                if (!isShorthand){
+                    try {
+                        propertyName = VALUE_TOKEN(this->currentToken)->getString();
                         this->readNextToken();
+                        //now must come a colon
+                        this->skipExpected(HSSColon);
+                        //we don't give a f$%# about whitespace
                         this->skip(HSSWhitespace);
-                        
-                        //number literal
-                    } else if (this->currentToken->isA(HSSNumber) || this->currentToken->isA(HSSPercentageNumber) || this->currentToken->isA(HSSParenthesisOpen)){
-                        //FIXME: parse the number and see if it is an int or a float
-                        HSSParserNode::p exp = this->readExpression();
-                        ret->setValue(exp);                
-                        
-                    } else if (this->currentToken->isA(HSSIdentifier)){
-                        //this is either a function, a keyword or an object name
-                        
-                        std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
-                        //check if it is a function
-                        HSSObject::p objectContext = this->currentObjectContext.top();
-                        
-                        if (objectContext->isFunction(valuestr, propertyName)){
-                            ret->setValue(this->readExpression());
-                            //check if it is a keyword
-                        } else if (objectContext->isKeyword(valuestr, propertyName)){
-                            ret->setValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr))); 
-                            this->readNextToken();
-                            //we assume it is an object name at this point
-                        } else {
-                            //FIXME (?)
-                            ret->setValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr)));
-                            this->readNextToken();
-                        }
-                        
-                        
-                    } else if (this->currentToken->isA(HSSInstructionSign)){
-                        HSSInstruction::p theInstruction;
-                        
-                        theInstruction = this->readInstruction();
-                        
-                        if (theInstruction){
-                            ret->setValue(this->getObjectFromInstruction(theInstruction));
-                        } else {
-                            valid = false;
-                        }
-                        
-                    } else {
+                        this->currentObjectContext.top()->shorthandSkip(propertyName);
+                    } catch (AXRError::p e) {
+                        e->raise();
                         valid = false;
                     }
+                    break;
+                }
                 
-                if (!valid && !this->atEndOfSource())
-                    this->skipUntilEndOfStatement();
+                //fall through to 'default:'
                 
-                security_brake();
+            } else {
+                //it is not a property definition, abort
+                throw AXRError::p(new AXRError("HSSParser", "Failed to read property definition", this->filename, this->line, this->column));
             }
+            
+            //fall through to 'default:'
+        }
+        
+        default:
+        {
+            //we assume we are dealing with shorthand notation
+            //get the property name for the current value
+            try {
+                propertyName = this->currentObjectContext.top()->getPropertyForCurrentValue();
+                //consume the property
+                this->currentObjectContext.top()->shorthandNext();
+            } catch (AXRError::p e) {
+                AXRError("HSSParser", "Could not get property for current value").raise();
+                valid = false;
+            }
+            break;
+        }
+    }
+            
+    if (valid) {
+        ret = HSSPropertyDefinition::p(new HSSPropertyDefinition(propertyName));
+        try {
+            //now comes either an object definition, a literal value or an expression
+            //object
+            if (this->currentToken->isA(HSSObjectSign)){
+                ret->setValue(this->readObjectDefinition(propertyName));
+                //this->readNextToken();
+                
+            } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
+                ret->setValue(HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString())));
+                this->checkForUnexpectedEndOfSource();
+                this->readNextToken();
+                this->skip(HSSWhitespace);
+                
+                //number literal
+            } else if (this->currentToken->isA(HSSNumber) || this->currentToken->isA(HSSPercentageNumber) || this->currentToken->isA(HSSParenthesisOpen)){
+                //FIXME: parse the number and see if it is an int or a float
+                HSSParserNode::p exp = this->readExpression();
+                ret->setValue(exp);                
+                
+            } else if (this->currentToken->isA(HSSIdentifier)){
+                //this is either a function, a keyword or an object name
+                
+                std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
+                //check if it is a function
+                HSSObject::p objectContext = this->currentObjectContext.top();
+                
+                if (objectContext->isFunction(valuestr, propertyName)){
+                    ret->setValue(this->readExpression());
+                    //check if it is a keyword
+                } else if (objectContext->isKeyword(valuestr, propertyName)){
+                    ret->setValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr))); 
+                    this->readNextToken();
+                    //we assume it is an object name at this point
+                } else {
+                    //FIXME (?)
+                    ret->setValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr)));
+                    this->readNextToken();
+                }
+                
+                
+            } else if (this->currentToken->isA(HSSInstructionSign)){
+                HSSInstruction::p theInstruction;
+                
+                theInstruction = this->readInstruction();
+                
+                if (theInstruction){
+                    ret->setValue(this->getObjectFromInstruction(theInstruction));
+                } else {
+                    valid = false;
+                }
+                
+            } else {
+                valid = false;
+            }
+            
+            if (!valid && !this->atEndOfSource())
+                this->skipUntilEndOfStatement();
+//            security_brake_init();
+//            while (!this->currentToken->isA(HSSBlockClose) && !this->currentToken->isA(HSSEndOfStatement) ) {
+//
+//                security_brake();
+//            }
         } catch (AXRError::p e) {
             e->raise();
             valid = false;
         }
         
         if (valid) {
-            //expect a semicolon or the closing brace
-            if(this->currentToken->isA(HSSEndOfStatement)){
-                this->readNextToken();
-                this->skip(HSSWhitespace);
-                
-            } else if (this->currentToken->isA(HSSBlockClose)){
-                //alright, this is the end of the property definition
-                std_log3("end of property definition");
-            } else {
-                valid = false;
-            }
+            //skip the semicolon
+            this->skip(HSSEndOfStatement);
+            this->skip(HSSWhitespace);
         } else if (!this->atEndOfSource()){
             this->skipUntilEndOfStatement();
         }
-        
-    } else {
-        valid = false;
     }
+    
     
     if (!valid) {
         throw AXRError::p(new AXRError("HSSParser", propertyName, this->filename, this->line, this->column));
@@ -1224,7 +1331,13 @@ void HSSParser::readNextToken()
 {
     //read next one
     try {
-        this->currentToken = this->tokenizer->readNextToken();
+        HSSToken::p theToken = this->tokenizer->readNextToken();
+        if(theToken && (theToken->isA(HSSBlockComment) || theToken->isA(HSSLineComment))){
+            this->readNextToken();
+        } else {
+            this->currentToken = theToken;
+        }
+        
     } catch (AXRError::p e) {
         this->currentToken = HSSToken::p();
         throw;
@@ -1372,7 +1485,13 @@ void HSSParser::skipExpected(HSSTokenType type, std::string value)
 void HSSParser::skip(HSSTokenType type)
 {
     if(this->currentToken->isA(type)){
-        this->readNextToken();
+        if(type == HSSWhitespace){
+            while (!this->atEndOfSource() && this->currentToken->isA(type)) {
+                this->readNextToken();
+            }
+        } else {
+            this->readNextToken();
+        }
     }
 }
 

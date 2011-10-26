@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2011/10/22
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 13
+ *      Revision: 14
  *
  ********************************************************************/
 
@@ -55,6 +55,10 @@
 #include "HSSObjectExceptions.h"
 #include "../../axr/AXRDebugging.h"
 #include "../../axr/errors/errors.h"
+#include "HSSMultipleValue.h"
+#include "../parsing/HSSMultipleValueDefinition.h"
+#include "../parsing/HSSObjectNameConstant.h"
+#include "../../axr/AXRController.h"
 
 using namespace AXR;
 
@@ -96,6 +100,7 @@ HSSObject::HSSObject()
     this->_isNamed = false;
     this->name = "";
     this->type = HSSObjectTypeGeneric;
+    this->shorthandIndex = 0;
 }
 
 HSSObject::HSSObject(std::string name)
@@ -103,6 +108,7 @@ HSSObject::HSSObject(std::string name)
     this->name = name;
     this->_isNamed = true;
     this->type = HSSObjectTypeGeneric;
+    this->shorthandIndex = 0;
 }
 
 
@@ -184,6 +190,129 @@ std::string HSSObject::defaultObjectType(std::string property){
     return "value";
 }
 
+std::string HSSObject::getPropertyForCurrentValue()
+{
+    bool done = false;
+    std::string ret;
+    
+    security_brake_init();
+    while (!done) {
+        ret = this->shorthandProperties[this->shorthandIndex];
+        if (!this->skipShorthand[ret]){
+            return ret;
+        } else {
+            done = !this->shorthandNext();
+        }
+        security_brake();
+    }
+    security_brake_reset();
+    return "";
+}
+
+void HSSObject::setShorthandProperties(std::vector<std::string> newValues)
+{
+    this->shorthandProperties = newValues;
+    this->shorthandReset();
+}
+
+void HSSObject::shorthandSkip(std::string propertyName)
+{
+    this->skipShorthand[propertyName] = true;
+}
+
+bool HSSObject::shorthandNext()
+{
+    if( this->shorthandIndex < this->shorthandProperties.size() + 1){
+        this->shorthandIndex++;
+        return true;
+    }
+    return false;
+}
+
+void HSSObject::shorthandReset()
+{
+    this->shorthandIndex = 0;
+}
+
+unsigned HSSObject::getShorthandIndex()
+{
+    return this->shorthandIndex;
+}
+
+void HSSObject::setShorthandIndex(unsigned newValue)
+{
+    if( newValue < this->shorthandProperties.size()){
+        this->shorthandIndex = newValue;
+    } else {
+        this->shorthandIndex = this->shorthandProperties.size();
+    }
+}
+
+HSSParserNode::p HSSObject::getDIsA() { return this->dIsA; }
+void HSSObject::setDIsA(HSSParserNode::p value)
+{
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        case HSSParserNodeTypeObjectNameConstant:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeMultipleValueDefinition:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSObject", "Invalid value for font of "+this->name));
+    }
+    
+    if(!this->dIsA){
+        this->dIsA = boost::shared_ptr<HSSMultipleValueDefinition>(new HSSMultipleValueDefinition());
+    }
+    this->dIsA->getValues()->add(value);
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            AXRError("HSSObject", "Unimplemented").raise();
+        }
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                objdef->apply();
+                std::deque<HSSPropertyDefinition::p> properties = objdef->getProperties();
+                unsigned i, size;
+                for (i = 0, size = properties.size(); i<size; i++){
+                    this->setProperty(HSSObservable::observablePropertyFromString(properties[i]->getName()), properties[i]->getValue());
+                }
+                
+                
+            } catch (HSSObjectNotFoundException * e) {
+                std_log(e->toString());
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            break;
+        }
+            
+        default:
+        {
+            std_log1("unkown parser node type in font property of display object "+this->name+": "+HSSParserNode::parserNodeStringRepresentation(value->getType()));
+            break;
+        }
+    }
+    
+    this->notifyObservers(HSSObservablePropertyIsA, &this->dIsA);
+}
+
+void HSSObject::isAChanged(AXR::HSSObservableProperty source, void *data)
+{
+    
+}
+
 void HSSObject::setPropertyWithName(std::string name, HSSParserNode::p value)
 {
     HSSObservableProperty property = HSSObservable::observablePropertyFromString(name);
@@ -196,7 +325,12 @@ void HSSObject::setPropertyWithName(std::string name, HSSParserNode::p value)
 
 void HSSObject::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property "+HSSObservable::observablePropertyStringRepresentation(name)+", ignoring value"))->raise();
+    if (name == HSSObservablePropertyIsA) {
+        this->setDIsA(value);
+        
+    } else {
+        AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property "+HSSObservable::observablePropertyStringRepresentation(name)+", ignoring value"))->raise();
+    }
 }
 
 void HSSObject::setProperty(HSSObservableProperty name, void * value)

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/06
+ *      Last changed: 2011/10/23
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 13
+ *      Core version: 0.4
+ *      Revision: 14
  *
  ********************************************************************/
 
@@ -98,10 +98,10 @@ namespace AXR {
         
         void add(HSSDisplayObject::p newContainer);
         
-        void objectTreeAdd(HSSObject::p & newObject);
+        void objectTreeAdd(HSSObjectDefinition::p & newObject);
         void objectTreeRemove(unsigned index);
-        HSSObject::p & objectTreeGet(unsigned index);
-        HSSObject::p & objectTreeGet(std::string name);
+        HSSObjectDefinition::p & objectTreeGet(unsigned index);
+        HSSObjectDefinition::p & objectTreeGet(std::string name);
         
         void loadSheetsAdd(std::string sheet);
         void loadSheetsRemove(unsigned index);
@@ -127,7 +127,7 @@ namespace AXR {
         std::stack<HSSContainer::p>currentContext;
         HSSContainer::p root;
         
-        std::vector<HSSObject::p>objectTree;
+        std::vector<HSSObjectDefinition::p>objectTree;
         std::vector<std::string>loadSheets;
         std::vector<HSSStatement::p>statements;
         std::vector<HSSRule::p>rules;

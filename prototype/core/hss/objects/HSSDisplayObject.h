@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/10/22
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 22
+ *      Revision: 23
  *
  ********************************************************************/
 
@@ -105,6 +105,7 @@ namespace AXR {
         virtual void readDefinitionObjects();
         virtual void recursiveReadDefinitionObjects();
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, void * value);
         void setNeedsRereadRules(bool value);
         bool needsRereadRules();
         

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2011/10/19
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -66,6 +66,12 @@ HSSFont::HSSFont()
     this->type = HSSObjectTypeFont;
     
     this->size = 0.;
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("face");
+    shorthandProperties.push_back("size");
+    shorthandProperties.push_back("color");
+    shorthandProperties.push_back("weight");
+    this->setShorthandProperties(shorthandProperties);
 }
 
 HSSFont::~HSSFont()
@@ -169,6 +175,7 @@ void HSSFont::setDColor(HSSParserNode::p value){
     if (value->isA(HSSParserNodeTypeObjectDefinition)){
         this->dColor = value;
         HSSObjectDefinition::p dColor = boost::static_pointer_cast<HSSObjectDefinition>(value);
+        dColor->apply();
         this->color = dColor->getObject();
     } else {
         throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for color of @font object "+this->name));

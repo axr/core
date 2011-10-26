@@ -46,52 +46,34 @@
  *      Last changed: 2011/10/22
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 10
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSPARSERNODE_H
-#define HSSPARSERNODE_H
-#include <string>
+#ifndef HSSMULTIPLEVALUEDEFINITION_H
+#define HSSMULTIPLEVALUEDEFINITION_H
+
+#include "HSSParserNode.h"
+#include "../objects/HSSMultipleValue.h"
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    enum HSSParserNodeType
-    {
-        HSSParserNodeTypeGeneric = 0,
-        HSSParserNodeTypeSelector,
-        HSSParserNodeTypeUniversalSelector,
-        HSSParserNodeTypeCombinator,
-        HSSParserNodeTypeFilter,
-        HSSParserNodeTypeStatement,
-        HSSParserNodeTypeExpression,
-        HSSParserNodeTypeNumberConstant,
-        HSSParserNodeTypePercentageConstant,
-        HSSParserNodeTypeStringConstant,
-        HSSParserNodeTypeKeywordConstant,
-        HSSParserNodeTypeObjectDefinition,
-        HSSParserNodeTypeObjectNameConstant,
-        HSSParserNodeTypeFunctionCall,
-        HSSParserNodeTypeMultipleValueDefinition
-    };
-
-    
-    class HSSParserNode
+    class HSSMultipleValueDefinition : public HSSParserNode
     {
     public:
-        typedef boost::shared_ptr<HSSParserNode> p;
+        typedef boost::shared_ptr<HSSMultipleValueDefinition> p;
         
-        static std::string parserNodeStringRepresentation(HSSParserNodeType type);
+        HSSMultipleValueDefinition();
+        virtual ~HSSMultipleValueDefinition();
         
-        HSSParserNode();
-        virtual std::string toString();
+        const HSSMultipleValue::p getValues() const;
+        void setValues(HSSMultipleValue::p newValues);
         
-        bool isA(HSSParserNodeType otherType);
-        HSSParserNodeType getType();
         
     protected:
-        HSSParserNodeType nodeType;
+        HSSMultipleValue::p values;
     };
 }
+
 
 #endif

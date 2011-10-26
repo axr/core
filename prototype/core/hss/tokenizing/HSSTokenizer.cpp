@@ -182,7 +182,9 @@ HSSToken::p HSSTokenizer::readNextToken()
         }
 	}
 	
-	if (isspace(cc)) {
+    //the \302 is the character that appears when pressing
+    //alt+space in TextMate, a weird unicode space
+	if (isspace(cc) || cc == '\302') {
 		return this->readWhitespace();
 	}
 	
@@ -286,7 +288,11 @@ void HSSTokenizer::setBufferLength(unsigned length)
 
 HSS_TOKENIZING_STATUS HSSTokenizer::skipWhitespace()
 {
-	while (isspace(this->currentChar)){
+	while (isspace(this->currentChar) || this->currentChar == '\302'){
+        //if there is this weird space char, skip another byte
+        if (this->currentChar == '\302') {
+            this->readNextChar();
+        }
         if(this->currentChar == '\n' || this->currentChar == '\r'){
             this->currentLine++;
             this->currentColumn = 1;
