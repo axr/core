@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/06
+ *      Last changed: 2011/11/04
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.42
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -96,6 +96,7 @@ std::string HSSInstruction::toString()
         && this->instructionType != HSSEnsureInstruction
         && this->instructionType != HSSImportInstruction
         && this->instructionType != HSSMoveInstruction
+        && this->instructionType != HSSDeleteInstruction
     ){
         tempstr.append(" and value: "+this->value);
     }
@@ -108,6 +109,7 @@ std::string HSSInstruction::instructionStringRepresentation(HSSInstructionType t
 	types[HSSEnsureInstruction] = "HSSEnsureInstruction";
 	types[HSSImportInstruction] = "HSSImportInstruction";
 	types[HSSMoveInstruction] = "HSSMoveInstruction";
+	types[HSSDeleteInstruction] = "HSSDeleteInstruction";
 	types[HSSGrayscale1Instruction] = "HSSGrayscale1Instruction";
 	types[HSSGrayscale2Instruction] = "HSSGrayscale2Instruction";
 	types[HSSRGBInstruction] = "HSSRGBInstruction";

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/22
+ *      Last changed: 2011/11/24
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 9
+ *      Core version: 0.42
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -82,7 +82,7 @@ HSSParserNode::HSSParserNode()
 
 std::string HSSParserNode::toString()
 {
-    return "Generic parser node";
+    return "Generic parser node - you forgot to override toString in your subclass or somehow using HSSParserNode directly";
 }
 
 bool HSSParserNode::isA(HSSParserNodeType otherType)

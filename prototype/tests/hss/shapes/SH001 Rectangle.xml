@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	Test SH001 Rectangle
+	Created by Miro Keller on 2011-09-26.
+-->
+<?xml-stylesheet type="application/x-hss" src="SH001 Rectangle.hss"?>
+<test>
+	<shapeElement />
+</test>

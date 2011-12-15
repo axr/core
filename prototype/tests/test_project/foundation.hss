@@ -35,7 +35,7 @@
 @shadow normalShadow
 {
     size: 10;
-    color: @rgba {
+    color: @rgb {
         isA: foreground1Color;
         alpha: 0.4;
     };

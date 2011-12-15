@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 2
+ *      Core version: 0.42
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -57,11 +57,11 @@
 
 using namespace AXR;
 
-HSSRefFunction::HSSRefFunction(AXRController * theController)
+HSSRefFunction::HSSRefFunction()
 : HSSFunction()
 {
-    this->controller = theController;
     this->observed = NULL;
+    this->functionType = HSSFunctionTypeRef;
 }
 
 HSSRefFunction::~HSSRefFunction()
@@ -107,12 +107,12 @@ void * HSSRefFunction::_evaluate()
     //FIXME: this works only on numeric values, with other kind of data I don't know what will happen
     //we need to figure out how to deal with non-numeric values here
     
-    this->controller->setSelectorChain(this->selectorChain);
-    const std::vector<HSSDisplayObject::p> selection = this->controller->selectHierarchical(*this->scope);
+    this->axrController->setSelectorChain(this->selectorChain);
+    std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->selectHierarchical(*this->scope);
     if (selection.size() == 0){
         // ignore
-    } else if (selection.size() == 1){
-        HSSDisplayObject::p container = selection[0];
+    } else if (selection.size() == 1 && selection[0].size() == 1){
+        HSSDisplayObject::p container = selection[0][0];
         this->_value = container->getProperty(this->propertyName);
         
         container->observe(this->propertyName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRefFunction>(this, &HSSRefFunction::valueChanged));

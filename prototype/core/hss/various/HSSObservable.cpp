@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/23
+ *      Last changed: 2011/11/24
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 7
+ *      Core version: 0.42
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -58,7 +58,7 @@
 using namespace AXR;
 
 std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property){
-    static std::string types[30];
+    static std::string types[40];
     static bool HSSObservableHasInitializedTypes = false;
     if (!HSSObservableHasInitializedTypes) {
         HSSObservableHasInitializedTypes = true;
@@ -74,6 +74,10 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyFlow] = "HSSObservablePropertyFlow";
         types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
         types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
+        types[HSSObservablePropertyBehavior] = "HSSObservablePropertyBehavior";
+        types[HSSObservablePropertyMargin] = "HSSObservablePropertyMargin";
+        types[HSSObservablePropertyPadding] = "HSSObservablePropertyPadding";
+        types[HSSObservablePropertyBorder] = "HSSObservablePropertyBorder";
         
         //HSSContainer
         types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
@@ -84,7 +88,7 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyFont] = "HSSObservablePropertyFont";
         types[HSSObservablePropertyShape] = "HSSObservablePropertyShape";
         
-        //HSSRgba
+        //HSSRgb
         types[HSSObservablePropertyRed] = "HSSObservablePropertyRed";
         types[HSSObservablePropertyGreen] = "HSSObservablePropertyGreen";
         types[HSSObservablePropertyBlue] = "HSSObservablePropertyBlue";
@@ -98,6 +102,15 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         
         //HSSRoundedRect
         types[HSSObservablePropertyCorners] = "HSSObservablePropertyCorners";
+        
+        //HSSEvent
+        types[HSSObservablePropertyAction] = "HSSObservablePropertyAction";
+        
+        //HSSRequest
+        types[HSSObservablePropertySrc] = "HSSObservablePropertySrc";
+        types[HSSObservablePropertyTarget] = "HSSObservablePropertyTarget";
+        types[HSSObservablePropertyMode] = "HSSObservablePropertyMode";
+        types[HSSObservablePropertyContentTarget] = "HSSObservablePropertyContentTarget";
     }
     
     return types[property];
@@ -120,6 +133,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["flow"] = HSSObservablePropertyFlow;
         properties["alignX"] = HSSObservablePropertyAlignX;
         properties["alignY"] = HSSObservablePropertyAlignY;
+        properties["behavior"] = HSSObservablePropertyBehavior;
         
         //HSSContainer
         properties["contentAlignX"] = HSSObservablePropertyContentAlignX;
@@ -129,8 +143,12 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["background"] = HSSObservablePropertyBackground;
         properties["font"] = HSSObservablePropertyFont;
         properties["shape"] = HSSObservablePropertyShape;
+        properties["behavior"] = HSSObservablePropertyBehavior;
+        properties["margin"] = HSSObservablePropertyMargin;
+        properties["padding"] = HSSObservablePropertyPadding;
+        properties["border"] = HSSObservablePropertyBorder;
         
-        //HSSRgba
+        //HSSRgb
         properties["red"] = HSSObservablePropertyRed;
         properties["green"] = HSSObservablePropertyGreen;
         properties["blue"] = HSSObservablePropertyBlue;
@@ -144,6 +162,15 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         
         //HSSRoundedRect
         properties["corners"] = HSSObservablePropertyCorners;
+        
+        //HSSEvent
+        properties["action"] = HSSObservablePropertyAction;
+        
+        //HSSRequest
+        properties["src"] = HSSObservablePropertySrc;
+        properties["target"] = HSSObservablePropertyTarget;
+        properties["mode"] = HSSObservablePropertyMode;
+        properties["contentTarget"] = HSSObservablePropertyContentTarget;
     }
     
     

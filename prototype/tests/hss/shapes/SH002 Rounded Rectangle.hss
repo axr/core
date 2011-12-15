@@ -1,0 +1,27 @@
+/*
+	Test SH002 Rounded Rectangle
+	Created by Miro Keller on 2011-10-19.
+*/
+
+test
+{
+	shapeElement
+	{
+	    width: 200;
+	    height: 200;
+	    shape: @roundedRect { corners: 8 };
+	    background: #C;
+	    alignX: 33%;
+	    alignY: 50%;
+	}
+	
+	#new shorthandNotation
+	{
+	    width: 200;
+	    height: 200;
+	    shape: @{25};
+	    background: #C;
+	    alignX: 66%;
+	    alignY: 50%;
+	}
+}

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/19
+ *      Last changed: 2011/11/24
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 2
+ *      Core version: 0.42
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -227,10 +227,8 @@ void HSSRoundedRect::cornerBLChanged(AXR::HSSObservableProperty source, void *da
     this->notifyObservers(HSSObservablePropertyCorners, &this->corners);
 }
 
-void HSSRoundedRect::draw(cairo_t * cairo, double long width, double long height)
+void HSSRoundedRect::draw(cairo_t * cairo, double long x, double long y, double long width, double long height)
 {
-    double long y = 0.;
-    double long x = 0.;
     double long degrees = M_PI / 180.0;
     
     cairo_new_sub_path (cairo);

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.42
+ *      Revision: 4
  *
  *      WARNING!
  *      =================
@@ -61,7 +61,7 @@ using namespace AXR;
 HSSMargin::HSSMargin()
 {
     this->segments = HSSMultipleValue();
-    this->type = HSSObjectTypeMarginGeneric;
+    this->type = HSSObjectTypeMargin;
 }
 
 HSSMargin::~HSSMargin()

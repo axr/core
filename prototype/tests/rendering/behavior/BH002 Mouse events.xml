@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	Test BH002 Mouse events
+	Created by Miro Keller on 2011-11-20.
+-->
+<?xml-stylesheet type="application/x-hss" src="BH002 Mouse events.hss"?>
+<test>
+	<mouseDown>mouseDown</mouseDown>
+	<mouseUp>mouseUp</mouseUp>
+	<mouseOver>mouseOver</mouseOver>
+	<mouseOut>mouseOut</mouseOut>
+	<click>click</click>
+	<doubleClick>doubleClick</doubleClick>
+</test>

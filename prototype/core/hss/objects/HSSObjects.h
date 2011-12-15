@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2011/11/05
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 4
+ *      Core version: 0.42
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -56,7 +56,7 @@
 #include "HSSObject.h"
 #include "HSSValue.h"
 #include "HSSMultipleValue.h"
-#include "HSSRgba.h"
+#include "HSSRgb.h"
 #include "HSSDisplayObject.h"
 #include "HSSContainer.h"
 #include "HSSLineBorder.h"
@@ -65,5 +65,8 @@
 #include "HSSRectangle.h"
 #include "HSSRoundedRect.h"
 #include "HSSCircle.h"
+#include "HSSEvent.h"
+#include "HSSRequest.h"
+#include "HSSLog.h"
 
 #endif

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	Test I003 Import
+	Created by Miro Keller on 2011-11-04.
+-->
+<?xml-stylesheet type="application/x-hss" src="I003 Import master.hss"?>
+<test>
+	<test />
+	<test />
+	<test />
+</test>

@@ -1,0 +1,22 @@
+/*
+	Test BR001 Basic
+	Created by Miro Keller on 2011-11-05.
+*/
+
+master
+{
+    contentAlignY: 50%;
+    background: #3;
+    
+    #new test
+    {
+        width: 200;
+        height: 200;
+        background: #4;
+        shape: @circle;
+        border: @lineBorder {
+            size: 3;
+            color: #E0FABB30;
+        };
+    }
+}

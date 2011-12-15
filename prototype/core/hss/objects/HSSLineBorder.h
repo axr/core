@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/09
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 8
+ *      Core version: 0.42
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -56,6 +56,7 @@
 #include <string>
 #include "HSSBorder.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSRgb.h"
 
 namespace AXR {
     class HSSLineBorder : public HSSBorder
@@ -70,6 +71,22 @@ namespace AXR {
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
+        
+        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        
+        //color
+        HSSObject::p getColor();
+        void setDColor(HSSParserNode::p);
+        void colorChanged(HSSObservableProperty source, void*data);
+        
+        virtual void draw(cairo_t * cairo);
+        
+    protected:
+        //color
+        HSSRgb::p color;
+        HSSParserNode::p dColor;
+        HSSObservable * observedColor;
+        HSSObservableProperty observedColorProperty;
     };
 }
 

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/22
+ *      Last changed: 2011/11/20
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 23
+ *      Core version: 0.42
+ *      Revision: 26
  *
  ********************************************************************/
 
@@ -62,14 +62,17 @@
 #include "../parsing/HSSRule.h"
 #include <cairo/cairo.h>
 #include "HSSMultipleValue.h"
-#include "HSSRgba.h"
+#include "HSSRgb.h"
 #include "HSSFont.h"
+#include "HSSEvent.h"
+#include "HSSBorder.h"
+#include <boost/enable_shared_from_this.hpp>
 
 namespace AXR {
     
     class HSSContainer;
 
-    class HSSDisplayObject : public HSSObject
+    class HSSDisplayObject :  public HSSObject
     {
     public:
         
@@ -77,9 +80,14 @@ namespace AXR {
         
         typedef boost::shared_ptr<HSSDisplayObject> p;
         typedef boost::weak_ptr<HSSContainer> parentPointer;
+        typedef std::vector<HSSDisplayObject::p> c;
+        typedef std::vector<HSSDisplayObject::p>::iterator it;
         
         HSSDisplayObject();
         HSSDisplayObject(std::string name);
+        
+        void initialize();
+        
         virtual ~HSSDisplayObject();
         virtual std::string toString();
         virtual std::string defaultObjectType();
@@ -167,8 +175,6 @@ namespace AXR {
         void setDWidth(HSSParserNode::p value);
         void widthChanged(HSSObservableProperty source, void*data);
         
-        
-        
         //background
         const HSSMultipleValue getDBackground() const;
         void setDBackground(HSSParserNode::p value);
@@ -179,8 +185,19 @@ namespace AXR {
         void setDFont(HSSParserNode::p value);
         void fontChanged(HSSObservableProperty source, void*data);
         
+        //behavior
+        const HSSMultipleValueDefinition::p getDBehavior() const;
+        void setDBehavior(HSSParserNode::p value);
+        bool fireEvent(HSSEventType type);
+        
+        //border
+        const HSSParserNode::p getDBorder() const;
+        void setDBorder(HSSParserNode::p value);
+        void borderChanged(HSSObservableProperty source, void*data);
         
         virtual void setDefaults();
+        
+        virtual bool handleEvent(HSSEventType, void* data);
         
     protected:
         parentPointer parent;
@@ -250,19 +267,27 @@ namespace AXR {
         HSSObservableProperty observedAlignYProperty;
         //background
         HSSMultipleValue dBackground;
-        HSSRgba::p backgroundColor;
-        
+        HSSRgb::p backgroundColor;
         //font
         HSSMultipleValue dFont;
         HSSFont::p font;
+        //behavior
+        HSSMultipleValueDefinition::p dBehavior;
+        boost::unordered_map<HSSEventType, std::vector<HSSEvent::p> > behavior;
         
         //FIXME: margin
-        //FIXME: border
+        
+        //border
+        HSSParserNode::p dBorder;
+        HSSObservable * observedBorder;
+        HSSObservableProperty observedBorderProperty;
+        std::vector<HSSBorder::p> border;
+        long double borderBleeding;
+        
         long double zoomFactor;
         //FIXME: transform
         //FIXME: effects
         //FIXME: animation
-        //FIXME: behavior
         bool visible;
         signed int drawIndex;
         unsigned int tabIndex;

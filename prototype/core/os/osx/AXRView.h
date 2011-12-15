@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2011/11/08
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 6
+ *      Core version: 0.42
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -72,6 +72,12 @@
 //hack to make it work with IB from a dependent target
 +(void)_keepAtLinkTime;
 
+//osx specific methods
+- (BOOL)isOpaque;
+- (void)drawRect:(NSRect)dirtyRect;
+- (BOOL)acceptsFirstResponder;
+
+//connections
 - (void)setAxrController:(void *)theController;
 - (void *)axrController;
 - (void)setAxrRender:(void *)theRender;
@@ -79,6 +85,7 @@
 - (void)setErrorsManager:(void *)theErrorsManager;
 - (void *)errorsManager;
 
+//loading files
 - (bool)loadFile;
 - (bool)loadFile:(NSString *)xmlPath;
 - (bool)reload;

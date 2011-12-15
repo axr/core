@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2011/11/24
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.42
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -91,10 +91,10 @@ bool HSSCircle::isKeyword(std::string value, std::string property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSCircle::draw(cairo_t * cairo, double long width, double long height)
+void HSSCircle::draw(cairo_t * cairo, double long x, double long y, double long width, double long height)
 {
-    double long halfWidth = width * 0.5;
-    cairo_arc(cairo, halfWidth, height * 0.5, halfWidth, 0., 2*M_PI);
+    double long halfWidth = x + width * 0.5;
+    cairo_arc(cairo, halfWidth, y + (height * 0.5), halfWidth, 0., 2*M_PI);
 }
 
 

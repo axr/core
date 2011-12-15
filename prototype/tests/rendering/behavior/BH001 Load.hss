@@ -1,0 +1,49 @@
+/*
+	Test BH001 Load
+	Created by Miro Keller on 2011-11-05.
+*/
+
+master
+{
+    #new target
+    {
+        width: 600;
+        height: 500;
+        background: #F00;
+        alignY: top;
+        
+        shape: @{85};
+        
+        behavior: @mouseUp
+        {
+            action: @request
+            {
+                src: "BH001 Load slave.xml";
+                //target: sel(@root target2);
+            }
+        }
+    }
+    
+    #new target2
+    {
+        width: 600;
+        height: 200;
+        background: #D;
+        alignY: bottom;
+        
+        slave
+        {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    
+    behavior: @mouseUp
+    {
+        @request
+        {
+            src: "BH001 Load slave.xml";
+            target: sel(target2);
+        }
+    }
+}

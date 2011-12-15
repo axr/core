@@ -43,21 +43,26 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/09
+ *      Last changed: 2011/11/24
  *      HSS version: 1.0
- *      Core version: 0.4
+ *      Core version: 0.42
  *      Revision: 7
  *
  ********************************************************************/
 
 #include "HSSBorder.h"
+#include "../../axr/AXRDebugging.h"
+#include "../../axr/errors/errors.h"
+#include "../parsing/HSSExpression.h"
+#include "../parsing/HSSConstants.h"
 
 using namespace AXR;
 
 HSSBorder::HSSBorder()
 :HSSObject()
 {
-    this->type = HSSObjectTypeBorderGeneric;
+    this->type = HSSObjectTypeBorder;
+    this->registerProperty(HSSObservablePropertySize, (void *) &this->size);
 }
 
 HSSBorder::~HSSBorder()
@@ -100,5 +105,99 @@ bool HSSBorder::isKeyword(std::string value, std::string property)
     return HSSObject::isKeyword(value, property);
 }
 
+void HSSBorder::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+{
+    switch (name) {
+        case HSSObservablePropertySize:
+            this->setDSize(value);
+            break;
+        default:
+            HSSObject::setProperty(name, value);
+            break;
+    }
+}
+
+long double HSSBorder::getSize() { return this->size; }
+void HSSBorder::setDSize(HSSParserNode::p value){
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSBorder", "Invalid value for size of "+this->name));
+    }
+    
+    this->dSize = value;
+    this->size = this->_setLDProperty(
+                                      &HSSBorder::sizeChanged,
+                                      value,
+                                      18.,
+                                      HSSObservablePropertySize,
+                                      this->observedSize,
+                                      this->observedSizeProperty
+                                      );
+    
+    this->notifyObservers(HSSObservablePropertySize, &this->size);
+}
+
+void HSSBorder::sizeChanged(AXR::HSSObservableProperty source, void *data)
+{
+    std_log1("********************** sizeChanged unimplemented ****************************");
+}
+
+long double HSSBorder::_setLDProperty(
+                                          void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
+                                          HSSParserNode::p         value,
+                                          long double              percentageBase,
+                                          HSSObservableProperty    observedSourceProperty,
+                                          HSSObservable *          &observedStore,
+                                          HSSObservableProperty    &observedStoreProperty
+                                          )
+{
+    long double ret;
+    
+    HSSParserNodeType nodeType = value->getType();
+    switch (nodeType) {
+        case HSSParserNodeTypeNumberConstant:
+        {
+            HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant>(value);
+            ret = numberValue->getValue();
+            break;
+        }
+            
+        case HSSParserNodeTypePercentageConstant:
+        {
+            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
+            ret = percentageValue->getValue(255.0);
+            break;
+        }
+            
+        case HSSParserNodeTypeExpression:
+        {
+            HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
+            expressionValue->setPercentageBase(255.0);
+            //expressionValue->setScope(scope);
+            ret = expressionValue->evaluate();
+            if(callback != NULL){
+                expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSBorder>(this, callback));
+                observedStore = expressionValue.get();
+                observedStoreProperty = HSSObservablePropertyValue;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+            
+            break;
+            
+        default:
+            AXRWarning::p(new AXRWarning("HSSLineBorder", "Unknown parser node type while setting value for HSSLineBorder property"))->raise();
+            break;
+    }
+    
+    return ret;
+}
 
 

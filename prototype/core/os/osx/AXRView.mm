@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2011/11/19
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 8
+ *      Core version: 0.42
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -83,6 +83,7 @@
     [self setAxrController:theController];
     AXR::OSXRender * theRender =  new AXR::OSXRender::OSXRender(theController);
     [self setAxrRender:theRender];
+    theController->setRender(theRender);
     AXR::AXRErrorsManager * theErrorsManager = AXR::AXRErrorsManager::getInstance().get();
     [self setErrorsManager:theErrorsManager];
 }
@@ -128,6 +129,29 @@
     }
 }
 
+- (BOOL)acceptsFirstResponder
+{
+    return YES;
+}
+
+- (void)mouseDown:(NSEvent *)theEvent
+{
+    AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
+    NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSRect bounds = [self bounds];
+    render->mouseDown(thePoint.x, bounds.size.height - thePoint.y);
+    [self setNeedsDisplay:TRUE];
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
+{
+    AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
+    NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSRect bounds = [self bounds];
+    render->mouseUp(thePoint.x, bounds.size.height - thePoint.y);
+    [self setNeedsDisplay:TRUE];
+}
+
 - (void)setAxrController:(void *)theController
 {
     axrController = theController;
@@ -163,10 +187,6 @@
     std_log1("loading file");
     
     AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
-    if(controller->hasLoadedFile()){
-        AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
-        render->reset();
-    }
     bool loaded = controller->loadFile();
     [self setNeedsDisplay:YES];
     return loaded;
@@ -177,10 +197,6 @@
     std_log1("loading file");
     
     AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
-    if(controller->hasLoadedFile()){
-        AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
-        render->reset();
-    }
     std::string filePath = std::string([xmlPath UTF8String]);
     std::string fileName = std::string([[xmlPath lastPathComponent] UTF8String]);
     bool loaded = controller->loadFile(filePath, fileName);
@@ -194,8 +210,6 @@
     if(controller->hasLoadedFile()){
         std_log1("reloading file");
         bool loaded = controller->reload();
-        AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
-        render->reset();
         [self setNeedsDisplay:YES];
         return loaded;
     }

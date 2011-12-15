@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/19
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 4
+ *      Core version: 0.42
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -65,7 +65,7 @@ HSSFont::HSSFont()
 {
     this->type = HSSObjectTypeFont;
     
-    this->size = 0.;
+    this->size = 18.;
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("face");
     shorthandProperties.push_back("size");
@@ -96,7 +96,7 @@ std::string HSSFont::defaultObjectType()
 std::string HSSFont::defaultObjectType(std::string property)
 {
     if (property == "color"){
-        return "rgba";
+        return "rgb";
     } else {
         return HSSObject::defaultObjectType(property);
     }

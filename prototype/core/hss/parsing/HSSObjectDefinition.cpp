@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/23
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 8
+ *      Core version: 0.42
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -62,6 +62,7 @@ HSSObjectDefinition::HSSObjectDefinition(HSSObject::p prototype)
     this->prototype = prototype;
     this->type = HSSStatementTypeObjectDefinition;
     this->nodeType = HSSParserNodeTypeObjectDefinition;
+    this->scope = NULL;
 }
 
 HSSObjectDefinition::~HSSObjectDefinition()
@@ -204,5 +205,11 @@ void HSSObjectDefinition::setParent(HSSObjectDefinition::p newParent)
     this->parent = boost::weak_ptr<HSSObjectDefinition>(newParent);
 }
 
+void HSSObjectDefinition::setScope(const std::vector<HSSDisplayObject::p> * newScope)
+{
+    this->scope = newScope;
+    //propagate values
+    this->prototype->setScope(newScope);
+}
 
 

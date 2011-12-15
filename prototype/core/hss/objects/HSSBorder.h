@@ -45,7 +45,7 @@
  *      =================
  *      Last changed: 2011/10/09
  *      HSS version: 1.0
- *      Core version: 0.4
+ *      Core version: 0.42
  *      Revision: 8
  *
  ********************************************************************/
@@ -56,6 +56,7 @@
 #include <string>
 #include "HSSObject.h"
 #include <boost/shared_ptr.hpp>
+#include <cairo/cairo.h>
 
 namespace AXR {
     class HSSBorder : public HSSObject
@@ -66,11 +67,37 @@ namespace AXR {
         virtual ~HSSBorder();
         
         typedef boost::shared_ptr<HSSBorder> p;
+        typedef std::vector<HSSBorder::p>::iterator it;
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
+        
+        virtual void draw(cairo_t * cairo) = 0;
+        
+        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        
+        //size
+        long double getSize();
+        void setDSize(HSSParserNode::p);
+        void sizeChanged(HSSObservableProperty source, void*data);
+        
+    protected:
+        //size
+        long double size;
+        HSSParserNode::p dSize;
+        HSSObservable * observedSize;
+        HSSObservableProperty observedSizeProperty;
+        
+        long double _setLDProperty(
+                                   void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
+                                   HSSParserNode::p         value,
+                                   long double              percentageBase,
+                                   HSSObservableProperty    observedSourceProperty,
+                                   HSSObservable *          &observedStore,
+                                   HSSObservableProperty    &observedStoreProperty
+                                   );
     };
 }
 

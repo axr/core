@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	Test BH001 Load slave
+	Created by Miro Keller on 2011-11-05.
+-->
+<?xml-stylesheet type="application/x-hss" src="BH001 Load slave.hss"?>
+<slave>
+	<hello>Yayyyyy!!!</hello>
+</slave>

@@ -16,7 +16,7 @@ test
 		anchorX: 100%;
 		anchorY: 0;
 		
-		background: @rgba {
+		background: @rgb {
 			red: 255;
 			green: 250;
 			blue: 150;

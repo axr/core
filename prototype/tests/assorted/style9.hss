@@ -1,9 +1,9 @@
-@rgba pageBg { red:163; green:180; blue:196 }
-@rgba logoBg { red: 123; green: 140; blue: 156 }
-@rgba softDark { alpha: 5% }
-@rgba softWhite { red: 255; green: 255; blue: 255; alpha: 10% }
-@rgba strongWhite { red: 255; green: 255; blue: 255; alpha: 50% }
-@rgba solidWhite { red: 255; green: 255; blue: 255; }
+@rgb pageBg { red:163; green:180; blue:196 }
+@rgb logoBg { red: 123; green: 140; blue: 156 }
+@rgb softDark { alpha: 5% }
+@rgb softWhite { red: 255; green: 255; blue: 255; alpha: 10% }
+@rgb strongWhite { red: 255; green: 255; blue: 255; alpha: 50% }
+@rgb solidWhite { red: 255; green: 255; blue: 255; }
 
 document
 {

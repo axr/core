@@ -1,0 +1,14 @@
+@path triangle { @line{100% 0}, @line{100% 100%}, @line{0 100%} }
+
+test
+{
+    .. * { alignY: 50% }
+    
+	shapeElement
+	{
+	    width: 200;
+	    height: 200;
+	    background: #C;
+	    shape: triangle;
+	}
+}

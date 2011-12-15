@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2011/11/24
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.42
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -92,8 +92,8 @@ bool HSSRectangle::isKeyword(std::string value, std::string property)
 }
 
 
-void HSSRectangle::draw(cairo_t * cairo, double long width, double long height)
+void HSSRectangle::draw(cairo_t * cairo, double long x, double long y, double long width, double long height)
 {
-    cairo_rectangle(cairo, 0., 0., width, height);
+    cairo_rectangle(cairo, x, y, width, height);
 }
 

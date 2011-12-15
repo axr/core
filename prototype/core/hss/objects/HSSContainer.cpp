@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/22
+ *      Last changed: 2011/11/24
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 30
+ *      Core version: 0.42
+ *      Revision: 31
  *
  ********************************************************************/
 
@@ -58,6 +58,7 @@
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
 #include "../parsing/HSSObjectNameConstant.h"
+#include "../parsing/HSSFunctionCall.h"
 #include <map>
 #include <string>
 #include <sstream>
@@ -196,7 +197,7 @@ std::string HSSContainer::defaultObjectType(std::string property)
     } else if (property == "innerMargin"){
         return "margin";
     } else if (property == "background"){
-        return "rgba";
+        return "rgb";
     } else {
         return HSSDisplayObject::defaultObjectType(property);
     }
@@ -204,7 +205,12 @@ std::string HSSContainer::defaultObjectType(std::string property)
 
 bool HSSContainer::isKeyword(std::string value, std::string property)
 {
-    if (value == "center"){
+    if (   value == "center"
+        || value == "middle"
+        || value == "top"
+        || value == "bottom"
+        || value == "left"
+        || value == "right"){
         if (property == "contentAlignX" || property == "contentAlignY") {
             return true;
         }
@@ -224,6 +230,7 @@ void HSSContainer::add(HSSDisplayObject::p child)
     child->setParent(sharedThis);
     std_log1("HSSContainer: added child "+child->getElementName()+" to "+this->getElementName());
     child->setIndex(this->children.size());
+    child->setController(this->getController());
     this->children.push_back(child);
 }
 
@@ -334,7 +341,7 @@ void HSSContainer::drawBackground()
     }
     
     cairo_t * cairo = cairo_create(this->backgroundSurface);
-    this->shape->draw(cairo, this->width, this->height);
+    this->shape->draw(cairo, 0., 0., this->width, this->height);
     cairo_set_source_rgba(cairo, (r/255), (g/255), (b/255), (a/255));
     cairo_fill(cairo);
     
@@ -345,6 +352,34 @@ void HSSContainer::drawBackground()
     //    cairo_set_source_rgb(cairo, 1,0,0);
     //    cairo_fill(cairo);
     
+    cairo_destroy(cairo);
+}
+
+void HSSContainer::drawBorders()
+{
+    HSSBorder::it it;
+    cairo_t * cairo = cairo_create(this->bordersSurface);
+    long double total = 0., i = 0., offset = 0., correction = 0.;
+    
+    for (it=this->border.begin(); it!=this->border.end(); it++) {
+        total += (*it)->getSize();
+    }
+    
+    if ((int)total % 2){
+        correction = 0.5;
+    }
+    
+    for (it=this->border.begin(); it!=this->border.end(); it++) {
+        HSSBorder::p theBorder = *it;
+        long double theSize = theBorder->getSize();
+        
+        offset = (total/2) - i - (theSize / 2) + correction;
+        
+        this->shape->draw(cairo, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset*2, this->height - offset*2);
+        theBorder->draw(cairo);
+        
+        i += theSize;
+    }
     cairo_destroy(cairo);
 }
 
@@ -890,33 +925,61 @@ const std::vector<HSSDisplayObject::p>& HSSContainer::getChildren() const
 HSSParserNode::p HSSContainer::getDContentAlignX() { return this->dContentAlignX; }
 void HSSContainer::setDContentAlignX(HSSParserNode::p value)
 {
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of "+this->getElementName()));
+    }
+    
     this->dContentAlignX = value;
-    if(this->observedContentAlignX != NULL)
-    {
-        this->observedContentAlignX->removeObserver(this->observedContentAlignXProperty, HSSObservablePropertyAlignX, this);
-    }
-    HSSContainer::p parentContainer = this->getParent();
-    const std::vector<HSSDisplayObject::p> * scope;
-    if(parentContainer){
-        scope = &(parentContainer->getChildren());
+    
+    if(value->isA(HSSParserNodeTypeKeywordConstant)){
+        
+        HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        if (keywordValue->getValue() == "left"){
+            this->setDContentAlignX(HSSParserNode::p(new HSSNumberConstant(0)));
+        } else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center"){
+            this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(50)));
+        } else if (keywordValue->getValue() == "right"){
+            this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(100)));
+        } else {
+            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of "+this->getElementName()));
+        }
+        
     } else {
-        scope = NULL;
+        
+        if(this->observedContentAlignX != NULL)
+        {
+            this->observedContentAlignX->removeObserver(this->observedContentAlignXProperty, HSSObservablePropertyAlignX, this);
+        }
+        HSSContainer::p parentContainer = this->getParent();
+        const std::vector<HSSDisplayObject::p> * scope;
+        if(parentContainer){
+            scope = &(parentContainer->getChildren());
+        } else {
+            scope = NULL;
+        }
+        this->contentAlignX = this->_setLDProperty(
+                                            &HSSContainer::contentAlignXChanged,
+                                            value,
+                                            this->width,
+                                            HSSObservablePropertyWidth,
+                                            this,
+                                            HSSObservablePropertyAlignX,
+                                            this->observedContentAlignX,
+                                            this->observedContentAlignXProperty,
+                                            scope
+                                            );
+        this->notifyObservers(HSSObservablePropertyContentAlignX, &this->contentAlignX);
+        #if AXR_DEBUG_LEVEL > 0
+        this->setDirty(true);
+        #endif
     }
-    this->contentAlignX = this->_setLDProperty(
-                                        &HSSContainer::contentAlignXChanged,
-                                        value,
-                                        this->width,
-                                        HSSObservablePropertyWidth,
-                                        this,
-                                        HSSObservablePropertyAlignX,
-                                        this->observedContentAlignX,
-                                        this->observedContentAlignXProperty,
-                                        scope
-                                        );
-    this->notifyObservers(HSSObservablePropertyContentAlignX, &this->contentAlignX);
-#if AXR_DEBUG_LEVEL > 0
-    this->setDirty(true);
-#endif
 }
 
 void HSSContainer::contentAlignXChanged(HSSObservableProperty source, void *data)
@@ -951,34 +1014,68 @@ void HSSContainer::contentAlignXChanged(HSSObservableProperty source, void *data
 HSSParserNode::p HSSContainer::getDContentAlignY() { return this->dContentAlignX; }
 void HSSContainer::setDContentAlignY(HSSParserNode::p value)
 {
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+            break;
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of "+this->getElementName()));
+    }
+    
+    
     this->dContentAlignY = value;
-    HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
-    if(this->observedContentAlignY != NULL)
-    {
-        this->observedContentAlignY->removeObserver(this->observedContentAlignYProperty, HSSObservablePropertyAlignY, this);
-    }
-    HSSContainer::p parentContainer = this->getParent();
-    const std::vector<HSSDisplayObject::p> * scope;
-    if(parentContainer){
-        scope = &(parentContainer->getChildren());
+    
+    
+    if(value->isA(HSSParserNodeTypeKeywordConstant)){
+        
+        HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        if (keywordValue->getValue() == "top"){
+            this->setDContentAlignY(HSSParserNode::p(new HSSNumberConstant(0)));
+        } else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center"){
+            this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(50)));
+        } else if (keywordValue->getValue() == "bottom"){
+            this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(100)));
+        } else {
+            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of "+this->getElementName()));
+        }
+        
     } else {
-        scope = NULL;
+    
+    
+        HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
+        if(this->observedContentAlignY != NULL)
+        {
+            this->observedContentAlignY->removeObserver(this->observedContentAlignYProperty, HSSObservablePropertyAlignY, this);
+        }
+        
+        
+        
+        HSSContainer::p parentContainer = this->getParent();
+        const std::vector<HSSDisplayObject::p> * scope;
+        if(parentContainer){
+            scope = &(parentContainer->getChildren());
+        } else {
+            scope = NULL;
+        }
+        this->contentAlignY = this->_setLDProperty(
+                                            &HSSContainer::contentAlignYChanged,
+                                            value,
+                                            this->height,
+                                            observedProperty,
+                                            this,
+                                            HSSObservablePropertyAlignY,
+                                            this->observedContentAlignY,
+                                            this->observedContentAlignYProperty,
+                                            scope
+                                            );
+        this->notifyObservers(HSSObservablePropertyContentAlignY, &this->contentAlignY);
+        #if AXR_DEBUG_LEVEL > 0
+        this->setDirty(true);
+        #endif
     }
-    this->contentAlignY = this->_setLDProperty(
-                                        &HSSContainer::contentAlignYChanged,
-                                        value,
-                                        this->height,
-                                        observedProperty,
-                                        this,
-                                        HSSObservablePropertyAlignY,
-                                        this->observedContentAlignY,
-                                        this->observedContentAlignYProperty,
-                                        scope
-                                        );
-    this->notifyObservers(HSSObservablePropertyContentAlignY, &this->contentAlignY);
-#if AXR_DEBUG_LEVEL > 0
-    this->setDirty(true);
-#endif
 }
 
 void HSSContainer::contentAlignYChanged(HSSObservableProperty source, void *data)
@@ -1259,8 +1356,23 @@ long double HSSContainer::_setLDProperty(
         }
             
         case HSSParserNodeTypeKeywordConstant:
-            
             break;
+        
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSFunctionCall::p functionCallValue = boost::static_pointer_cast<HSSFunctionCall>(value);
+            functionCallValue->setPercentageBase(percentageBase);
+            functionCallValue->setPercentageObserved(observedProperty, observedObject);
+            functionCallValue->setScope(scope);
+            
+            ret = functionCallValue->evaluate();
+            if(callback != NULL){
+                functionCallValue->getFunction()->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer>(this, callback));
+                observedStore = functionCallValue->getFunction().get();
+                observedStoreProperty = HSSObservablePropertyValue;
+            }
+            break;
+        }
             
         default:
             throw AXRError::p(new AXRError("HSSContainer", "Unknown parser node type while setting LDProperty"));
@@ -1269,3 +1381,37 @@ long double HSSContainer::_setLDProperty(
     return ret;
 }
 
+
+
+
+
+bool HSSContainer::handleEvent(HSSEventType type, void* data)
+{
+    HSSDisplayObject::it it;
+    bool handled = false;
+    for (it=this->children.begin(); it < this->children.end(); it++) {
+        if (!handled) {
+            HSSDisplayObject::p child = *it;
+            handled = child->handleEvent(type, data);
+        }
+    }
+    
+    if(!handled){
+        return HSSDisplayObject::handleEvent(type, data);
+    }
+    
+    return false;
+}
+
+
+void HSSContainer::setController(AXRController * controller)
+{
+    //propagate
+    HSSDisplayObject::it it;
+    for (it=this->children.begin(); it < this->children.end(); it++) {
+        HSSDisplayObject::p child = *it;
+        child->setController(controller);
+    }
+    
+    HSSDisplayObject::setController(controller);
+}

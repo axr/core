@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/23
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 5
+ *      Core version: 0.42
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -61,6 +61,7 @@
 #import "../objects/HSSObject.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
+#include "../objects/HSSDisplayObject.h"
 
 namespace AXR {
     class HSSObjectDefinition : public HSSStatement
@@ -106,11 +107,15 @@ namespace AXR {
         HSSObjectDefinition::p getParent();
         void setParent(HSSObjectDefinition::p newParent);
         
+        void setScope(const std::vector<HSSDisplayObject::p> * newScope);
+        
     protected:
         std::deque<HSSPropertyDefinition::p> properties;
         std::vector<HSSObjectDefinition::p> children;
         
         boost::weak_ptr<HSSObjectDefinition> parent;
+        
+        const std::vector<HSSDisplayObject::p> * scope;
         
     private:
         HSSObject::p prototype;

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/23
+ *      Last changed: 2011/11/24
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 9
+ *      Core version: 0.42
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -69,6 +69,9 @@ namespace AXR {
         HSSObservablePropertyFlow,
         HSSObservablePropertyAlignX,
         HSSObservablePropertyAlignY,
+        HSSObservablePropertyMargin,
+        HSSObservablePropertyPadding,
+        HSSObservablePropertyBorder,
         
         //HSSContainer
         HSSObservablePropertyContentAlignX,
@@ -78,8 +81,9 @@ namespace AXR {
         HSSObservablePropertyBackground,
         HSSObservablePropertyFont,
         HSSObservablePropertyShape,
+        HSSObservablePropertyBehavior,
         
-        //HSSRgba
+        //HSSRgb
         HSSObservablePropertyRed,
         HSSObservablePropertyGreen,
         HSSObservablePropertyBlue,
@@ -92,7 +96,16 @@ namespace AXR {
         HSSObservablePropertyWeight,
         
         //HSSRoundedRect
-        HSSObservablePropertyCorners
+        HSSObservablePropertyCorners,
+        
+        //HSSEvent
+        HSSObservablePropertyAction,
+        
+        //HSSRequest
+        HSSObservablePropertySrc,
+        HSSObservablePropertyTarget,
+        HSSObservablePropertyMode,
+        HSSObservablePropertyContentTarget,
     };
 }
 

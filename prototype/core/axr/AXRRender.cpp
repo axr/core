@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/11
+ *      Last changed: 2011/11/08
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 5
+ *      Core version: 0.42
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -102,6 +102,31 @@ void AXRRender::reset()
     this->windowHeight = 0;
 }
 
+
+void AXRRender::mouseDown(long double x, long double y)
+{
+    //prepare values
+    HSSContainer::p root = this->controller->getRoot();
+    struct point { long double x; long double y; } thePoint;
+    thePoint.x = x;
+    thePoint.y = y;
+    root->handleEvent(HSSEventTypeMouseDown, (void*)&thePoint);
+}
+
+void AXRRender::mouseUp(long double x, long double y)
+{
+    //prepare values
+    HSSContainer::p root = this->controller->getRoot();
+    struct point { long double x; long double y; } thePoint;
+    thePoint.x = x;
+    thePoint.y = y;
+    try {
+        root->handleEvent(HSSEventTypeMouseUp, (void*)&thePoint);
+    } catch (AXRError::p e) {
+        e->raise();
+    }
+    
+}
 
 
 

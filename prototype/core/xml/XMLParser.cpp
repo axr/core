@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/11/20
  *      HSS version: 1.0
  *      Core version: 0.4
- *      Revision: 10
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -101,7 +101,16 @@ bool XMLParser::loadFile(std::string filepath, std::string filename)
         return false;
     }
     
-    return this->Parse();
+    bool ret;
+    
+    try {
+        ret = this->Parse();
+    } catch (AXRError::p e) {
+        e->raise();
+        ret = false;
+    }
+    
+    return ret;
 }
 
 ssize_t XMLParser::read_block(void) {
@@ -238,12 +247,6 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
             //warn
             AXRWarning::p(new AXRWarning("XMLParser", "Ignoring stylesheet of unknown type", this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+1))->raise();
         }
-        
-        
-        
-    } else {
-        //balk
-        AXRWarning::p(new AXRWarning("XMLParser", "Unknown XML processing instruction", this->filename, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+1))->raise();
     }
     
     delete [] temp;

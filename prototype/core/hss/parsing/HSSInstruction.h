@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/06
+ *      Last changed: 2011/11/04
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 6
+ *      Core version: 0.42
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -62,6 +62,7 @@ namespace AXR {
         HSSEnsureInstruction,
         HSSImportInstruction,
         HSSMoveInstruction,
+        HSSDeleteInstruction,
         HSSGrayscale1Instruction,
         HSSGrayscale2Instruction,
         HSSRGBInstruction,

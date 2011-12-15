@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/04
+ *      Last changed: 2011/11/05
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 1
+ *      Core version: 0.42
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -67,7 +67,7 @@ OSHelper::~OSHelper()
     
 }
 
-bool OSHelper::openFileDialog(std::string &filePath, std::string &fileName)
+bool OSHelper::openFileDialog(std::string &filePath, std::string &fileName, std::string &basePath)
 {
     //load a XML file
 	NSArray *xmlFileType = [NSArray arrayWithObject:@"xml"];
@@ -82,6 +82,7 @@ bool OSHelper::openFileDialog(std::string &filePath, std::string &fileName)
             std_log1(std::string("******************************************************************\n* opening document:\n* ").append([filepath_s UTF8String]).append("\n******************************************************************"));
             filePath = std::string([filepath_s UTF8String]);
             fileName = std::string([[filepath_s lastPathComponent] UTF8String]);
+            basePath = std::string([[filepath_s stringByDeletingLastPathComponent] UTF8String]) + "/";
             return true;
         }
     }

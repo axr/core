@@ -1,0 +1,29 @@
+/*
+	Test BR002 Multiple Borders
+	Created by Miro Keller on 2011-12-15.
+*/
+
+@lineBorder shadowBorder { 1 #6 }
+@lineBorder highlightBorder { 1 #DF }
+
+@container test
+{
+    width: 200;
+    height: 200;
+    background: #A;
+    border: shadowBorder, highlightBorder;
+    shape: @{ 10 };
+    alignY: middle;
+}
+
+*
+{
+    background: #C;
+    
+    #new test
+    {
+        isA: test;
+    }
+    
+    #new test { isA: test; }
+}

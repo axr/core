@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/23
+ *      Last changed: 2011/11/04
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 13
+ *      Core version: 0.42
+ *      Revision: 15
  *
  ********************************************************************/
 
@@ -62,6 +62,7 @@
 #include <vector>
 #include <stack>
 #include <boost/shared_ptr.hpp>
+#include <boost/unordered_set.hpp>
 
 namespace AXR {
     enum HSSParserContext {
@@ -79,8 +80,6 @@ namespace AXR {
         
     public:
         typedef boost::shared_ptr<HSSParser> p;
-        
-        std::string filename;
         
         HSSParser(AXRController * theController);
         //initialize with a pointer to the buffer where the HSS code is stored, and the lenght of the buffer
@@ -101,7 +100,7 @@ namespace AXR {
         unsigned int currentObjectContextSize();
         void currentObjectContextAdd(HSSObject::p theObject);
         
-    protected:
+    private:
         HSSTokenizer::p tokenizer;
         //weak pointer
         AXRController * controller;
@@ -132,23 +131,35 @@ namespace AXR {
         HSSObjectDefinition::p getObjectFromInstruction(HSSInstruction::p instruction);
         HSSRule::p readInstructionRule();
         HSSParserNode::p readExpression();
-        HSSParserNode::p readFunction();
         
         HSSParserNode::p readAdditiveExpression();
         HSSParserNode::p readMultiplicativeExpression();
         HSSParserNode::p readBaseExpression();
+        HSSParserNode::p readFunction();
+        
+        HSSParserNode::p readFilter();
         
         void readNextToken();
+        void readNextToken(bool checkForUnexpectedEndOfSource);
         
         bool atEndOfSource();
         void checkForUnexpectedEndOfSource();
         void skipExpected(HSSTokenType type);
+        void skipExpected(HSSTokenType type, bool checkForUnexpectedEndOfSource);
         void skipExpected(HSSTokenType type, std::string value);
+        void skipExpected(HSSTokenType type, std::string value, bool checkForUnexpectedEndOfSource);
         void skip(HSSTokenType type);
+        void skip(HSSTokenType type, bool checkForUnexpectedEndOfSource);
         void skipUntilEndOfStatement();
+        void expect(HSSTokenType type);
         
         unsigned line;
         unsigned column;
+        
+        std::string basepath;
+        std::string filename;
+        
+        boost::unordered_set<std::string> loadedFiles;
         
     };
 }

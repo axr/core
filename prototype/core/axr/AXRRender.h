@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/21
+ *      Last changed: 2011/11/08
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.42
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -83,6 +83,9 @@ namespace AXR {
         //root surface should be created in platform specific subclass
         //before calling this as base class' method
         virtual void drawInRectWithBounds(AXRRect rect, AXRRect bounds);
+        
+        void mouseDown(long double x, long double y);
+        void mouseUp(long double x, long double y);
         
         void reset();
         

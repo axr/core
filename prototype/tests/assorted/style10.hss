@@ -1,13 +1,13 @@
 document
 {
     contentAlignY: 50%;
-    background: @rgba { red:163; green:180; blue:196 };
+    background: @rgb { red:163; green:180; blue:196 };
     
     message
     {
         width: 80%;
         height: 100;
-        background: @rgba {
+        background: @rgb {
             red: 255;
             green: 255;
             blue: 255;

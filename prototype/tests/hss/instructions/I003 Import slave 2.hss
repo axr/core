@@ -1,0 +1,20 @@
+@container box
+{
+    width: 150;
+    height: 150;
+    background: @{ alpha: 20% };
+    shape: @{10};
+}
+
+@rgb background
+{
+    red: 255;
+    green: 255;
+    blue: 245;
+}
+
+@rgb boxHighlight
+{
+    red: 255;
+    alpha: 50%;
+}

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/29
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 1
+ *      Core version: 0.42
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -54,7 +54,7 @@
 #define HSSFUNCTIONS_H
 
 #include "HSSRefFunction.h"
-//#include "HSSSelFunction.h"
+#include "HSSSelFunction.h"
 //#include "HSSMinFunction.h"
 //#include "HSSMaxFunction.h"
 //#include "HSSFloorFunction.h"

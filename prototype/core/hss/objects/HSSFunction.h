@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/09
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 2
+ *      Core version: 0.42
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -62,6 +62,18 @@
 #include "HSSDisplayObject.h"
 
 namespace AXR {
+    enum HSSFunctionType
+    {
+        HSSFunctionTypeNone = 0,
+        HSSFunctionTypeRef,
+        HSSFunctionTypeSel,
+        HSSFunctionTypeMin,
+        HSSFunctionTypeMax,
+        HSSFunctionTypeFloor,
+        HSSFunctionTypeCeil,
+        HSSFunctionTypeRound
+    };
+    
     class HSSFunction : public HSSObject
     {
     public:        
@@ -93,10 +105,13 @@ namespace AXR {
         
         void setDirty(bool value);
         bool isDirty();
+        void * getValue();
+        virtual bool isA(HSSFunctionType type);
         
     protected:
         bool _isDirty;
         void * _value;
+        HSSFunctionType functionType;
         
         long double percentageBase;
         HSSObservableProperty percentageObservedProperty;

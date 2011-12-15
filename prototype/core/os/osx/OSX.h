@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/11/05
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.42
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -65,7 +65,7 @@ namespace AXR {
         
         OSHelper();
         virtual ~OSHelper();
-        bool openFileDialog(std::string &filePath, std::string &fileName);
+        bool openFileDialog(std::string &filePath, std::string &fileName, std::string &basePath);
     };
 }
 

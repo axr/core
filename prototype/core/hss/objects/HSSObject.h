@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/22
+ *      Last changed: 2011/11/20
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 14
+ *      Core version: 0.42
+ *      Revision: 15
  *
  ********************************************************************/
 
@@ -58,30 +58,33 @@
 #include "../various/HSSObservable.h"
 #include "../parsing/HSSParserNode.h"
 #include <boost/unordered_map.hpp>
+#include "../../axr/AXRDebugging.h"
+#include "../../axr/errors/errors.h"
 #include <vector>
 
 namespace AXR {
     
     enum HSSObjectType
     {
+        HSSObjectTypeNone = 0,
         HSSObjectTypeGeneric,
-        HSSObjectTypeDisplayObject,
-        HSSObjectTypeContainer,
-        HSSObjectTypeBorderGeneric,
-        HSSObjectTypeLineBorder,
-        HSSObjectTypeMarginGeneric,
-        HSSObjectTypeStraightMargin,
-        HSSObjectTypeProjectedMargin,
-        HSSObjectTypeRgba,
-        HSSObjectTypeFont,
         HSSObjectTypeValue,
         HSSObjectTypeMultipleValue,
+        HSSObjectTypeDisplayObject,
+        HSSObjectTypeContainer,
+        HSSObjectTypeBorder,
+        HSSObjectTypeMargin,
+        HSSObjectTypeRgb,
+        HSSObjectTypeFont,
         HSSObjectTypeFunction,
-        HSSObjectTypeShape //this is for all shapes the same
+        HSSObjectTypeShape,
+        HSSObjectTypeEvent,
+        HSSObjectTypeAction,
     };
     
     class AXRController;
     class HSSMultipleValueDefinition;
+    class HSSDisplayObject;
     
     class HSSObject : public HSSObservable
     {
@@ -129,8 +132,10 @@ namespace AXR {
         virtual void * getProperty(HSSObservableProperty name);
         virtual void registerProperty(HSSObservableProperty name, void* property);
         
-        AXRController * axrController;
+        void setScope(const std::vector<boost::shared_ptr<HSSDisplayObject> > * newScope);
         
+        virtual void setController(AXRController * controller);
+        virtual AXRController * getController();
         
         
     protected:
@@ -141,6 +146,9 @@ namespace AXR {
         unsigned shorthandIndex;
         
         boost::shared_ptr<HSSMultipleValueDefinition> dIsA;
+        
+        const std::vector<boost::shared_ptr<HSSDisplayObject> > * scope;
+        AXRController * axrController;
         
     private:
         bool _isNamed;

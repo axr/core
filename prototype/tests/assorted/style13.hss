@@ -1,11 +1,11 @@
 @container box
 {
-	background: @rgba { alpha: 50% };
+	background: @rgb { alpha: 50% };
 }
 
 document
 {
-	background: @rgba { red: 190; green: 234; blue: 190; };
+	background: @rgb { red: 190; green: 234; blue: 190; };
 	
 	message
 	{
@@ -13,6 +13,6 @@ document
 		width: 150;
 		height: 50;
 		alignY: 50%;
-		background: @rgba { alpha: 50% };
+		background: @rgb { alpha: 50% };
 	}
 }

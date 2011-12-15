@@ -35,6 +35,7 @@
 		4E3844161449C996001DF47A /* libpangoft2-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3844151449C996001DF47A /* libpangoft2-1.0.0.dylib */; };
 		4E3844171449CA22001DF47A /* libpangoft2-1.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3844151449C996001DF47A /* libpangoft2-1.0.0.dylib */; };
 		4EA6EAFE14407B3200309E10 /* views in Resources */ = {isa = PBXBuildFile; fileRef = 4EA6EAFD14407B3200309E10 /* views */; };
+		4EDF1F4C14703E9F00E70BCA /* AXR.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4EDF1F4B14703E9F00E70BCA /* AXR.icns */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -84,6 +85,7 @@
 		4E95BFCE135076F100117354 /* core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = core.xcodeproj; path = ../core/core.xcodeproj; sourceTree = "<group>"; };
 		4EA6EAFD14407B3200309E10 /* views */ = {isa = PBXFileReference; lastKnownFileType = folder; path = views; sourceTree = "<group>"; };
 		4EAF82581331690C00AFF970 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		4EDF1F4B14703E9F00E70BCA /* AXR.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AXR.icns; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* mac-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "mac-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* AXR Prototype.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AXR Prototype.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -186,6 +188,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4EDF1F4B14703E9F00E70BCA /* AXR.icns */,
 				8D1107310486CEB800E47090 /* mac-Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
@@ -298,6 +301,7 @@
 				4E38440E1449C04E001DF47A /* libintl.8.dylib in Resources */,
 				4E3844111449C3C0001DF47A /* libglib-2.0.0.dylib in Resources */,
 				4E3844171449CA22001DF47A /* libpangoft2-1.0.0.dylib in Resources */,
+				4EDF1F4C14703E9F00E70BCA /* AXR.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

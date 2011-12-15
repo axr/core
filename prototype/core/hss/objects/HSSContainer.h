@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/22
+ *      Last changed: 2011/11/24
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 23
+ *      Core version: 0.42
+ *      Revision: 24
  *
  ********************************************************************/
 
@@ -61,6 +61,7 @@
 #include <cairo/cairo.h>
 #include <list>
 #include "HSSShape.h"
+#include "HSSEvent.h"
 
 namespace AXR {
     enum HSSDirectionValue
@@ -112,6 +113,7 @@ namespace AXR {
         void recursiveRegenerateSurfaces();
         void recursiveDraw(cairo_t * cairo);
         virtual void drawBackground();
+        virtual void drawBorders();
         
         void layout();
         void recursiveLayout();
@@ -145,6 +147,10 @@ namespace AXR {
         void shapeChanged(HSSObservableProperty source, void*data);
         
         void setDefaults();
+        
+        virtual bool handleEvent(HSSEventType type, void* data);
+        
+        virtual void setController(AXRController * controller);
         
     protected:
         std::vector<HSSDisplayObject::p>children;

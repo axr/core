@@ -43,52 +43,154 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/22
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 14
+ *      Core version: 0.42
+ *      Revision: 15
  *
  ********************************************************************/
 
 #include "HSSObject.h"
 #include "HSSObjects.h"
 #include "HSSObjectExceptions.h"
-#include "../../axr/AXRDebugging.h"
-#include "../../axr/errors/errors.h"
 #include "HSSMultipleValue.h"
 #include "../parsing/HSSMultipleValueDefinition.h"
 #include "../parsing/HSSObjectNameConstant.h"
 #include "../../axr/AXRController.h"
+#include <boost/unordered_map.hpp>
+
 
 using namespace AXR;
 
 HSSObject::p HSSObject::newObjectWithType(std::string type){
     
-    //FIXME: this is UH-gly
-    if (type == "container"){
-        return HSSContainer::p(new HSSContainer());
-    } else if (type == "displayObject"){
-        return HSSDisplayObject::p(new HSSDisplayObject());
-    } else if (type == "lineBorder") {
-        return HSSLineBorder::p(new HSSLineBorder());
-    } else if (type == "object") {
-        return HSSObject::p(new HSSObject());
-    } else if (type == "value") {
-        return HSSValue::p(new HSSValue());
-    } else if (type == "margin"){
-        return HSSMargin::p(new HSSMargin());
-    } else if (type == "rgba"){
-        return HSSRgba::p(new HSSRgba());
-    } else if (type == "font"){
-        return HSSFont::p(new HSSFont());
-    } else if (type == "rectangle"){
-        return HSSRectangle::p(new HSSRectangle());
-    } else if (type == "roundedRect"){
-        return HSSRoundedRect::p(new HSSRoundedRect());
-    } else if (type == "circle"){
-        return HSSCircle::p(new HSSCircle());
-    } else {
-        throw AXRError::p(new AXRError("HSSObject", type));
+    static boost::unordered_map<std::string, HSSObjectType>types;
+    if (types.size() == 0) {
+        types["container"] = HSSObjectTypeContainer;
+        types["displayObject"] = HSSObjectTypeDisplayObject;
+        types["lineBorder"] = HSSObjectTypeBorder;
+        types["object"] = HSSObjectTypeGeneric;
+        types["value"] = HSSObjectTypeValue;
+        types["margin"] = HSSObjectTypeMargin;
+        types["rgb"] = HSSObjectTypeRgb;
+        types["font"] = HSSObjectTypeFont;
+        types["rectangle"] = HSSObjectTypeShape;
+        types["roundedRect"] = HSSObjectTypeShape;
+        types["circle"] = HSSObjectTypeShape;
+        types["load"] = HSSObjectTypeEvent;
+        types["click"] = HSSObjectTypeEvent;
+        types["doubleClick"] = HSSObjectTypeEvent;
+        types["tripleClick"] = HSSObjectTypeEvent;
+        types["mouseDown"] = HSSObjectTypeEvent;
+        types["mouseUp"] = HSSObjectTypeEvent;
+        types["mouseOver"] = HSSObjectTypeEvent;
+        types["mouseOut"] = HSSObjectTypeEvent;
+        types["mouseHold"] = HSSObjectTypeEvent;
+        types["mouseMove"] = HSSObjectTypeEvent;
+        types["clickSecondary"] = HSSObjectTypeEvent;
+        types["clickTertiary"] = HSSObjectTypeEvent;
+        types["scroll"] = HSSObjectTypeEvent;
+        types["request"] = HSSObjectTypeAction;
+        types["log"] = HSSObjectTypeAction;
+    }
+    
+    HSSObjectType objectType = HSSObjectTypeNone;
+    if(types.find(type) != types.end()){
+        objectType = types[type];
+    }
+    
+    switch (objectType) {
+        case HSSObjectTypeContainer:
+        {
+            return HSSContainer::p(new HSSContainer());
+        }
+            
+        case HSSObjectTypeDisplayObject:
+        {
+            return HSSDisplayObject::p(new HSSDisplayObject());
+        }
+            
+        case HSSObjectTypeBorder:
+        {
+            //FIXME: border tyes?
+            return HSSLineBorder::p(new HSSLineBorder());
+        }
+            
+        case HSSObjectTypeGeneric:
+        {
+            return HSSObject::p(new HSSObject());
+        }
+            
+        case HSSObjectTypeValue:
+        {
+            return HSSValue::p(new HSSValue());
+        }
+            
+        case HSSObjectTypeMargin:
+        {
+            return HSSMargin::p(new HSSMargin());
+        }
+            
+        case HSSObjectTypeRgb:
+        {
+            return HSSRgb::p(new HSSRgb());
+        }
+            
+        case HSSObjectTypeFont:
+        {
+            return HSSFont::p(new HSSFont());
+        }
+            
+        case HSSObjectTypeShape:
+        {
+            if (type == "rectangle"){
+                return HSSRectangle::p(new HSSRectangle());
+            } else if (type == "roundedRect"){
+                return HSSRoundedRect::p(new HSSRoundedRect());
+            } else if (type == "circle"){
+                return HSSCircle::p(new HSSCircle());
+//            } else if (type == "polygon"){
+//                return HSSRoundedRect::p(new HSSRoundedRect());
+            }
+        }
+            
+        case HSSObjectTypeEvent:
+        {
+            static boost::unordered_map<std::string, HSSEventType>eventTypes;
+            if (eventTypes.size() == 0) {
+                eventTypes["load"] = HSSEventTypeLoad;
+                eventTypes["click"] = HSSEventTypeClick;
+                eventTypes["doubleClick"] = HSSEventTypeDoubleClick;
+                eventTypes["tripleClick"] = HSSEventTypeTripleClick;
+                eventTypes["mouseDown"] = HSSEventTypeMouseDown;
+                eventTypes["mouseUp"] = HSSEventTypeMouseUp;
+                eventTypes["mouseOver"] = HSSEventTypeMouseOver;
+                eventTypes["mouseOut"] = HSSEventTypeMouseOut;
+                eventTypes["mouseHold"] = HSSEventTypeMouseHold;
+                eventTypes["mouseMove"] = HSSEventTypeMouseMove;
+                eventTypes["clickSecondary"] = HSSEventTypeClickSecondary;
+                eventTypes["clickTertiary"] = HSSEventTypeClickTertiary;
+                eventTypes["scroll"] = HSSEventTypeScroll;
+            }
+            
+            if(eventTypes.find(type) != eventTypes.end()){
+                return HSSEvent::p(new HSSEvent(eventTypes[type]));
+            }
+            
+            //fall through
+        }
+            
+        case HSSObjectTypeAction:
+        {
+            if (type == "request"){
+                return HSSRequest::p(new HSSRequest());
+            } else if (type == "log"){
+                return HSSLog::p(new HSSLog());
+            }
+        }
+            
+        default:
+            throw AXRError::p(new AXRError("HSSObject", type));
     }
     
     return HSSObject::p();
@@ -270,7 +372,7 @@ void HSSObject::setDIsA(HSSParserNode::p value)
     switch (value->getType()) {
         case HSSParserNodeTypeObjectDefinition:
         {
-            AXRError("HSSObject", "Unimplemented").raise();
+            AXRError::p(new AXRError("HSSObject", "Unimplemented"))->raise();
         }
             
         case HSSParserNodeTypeObjectNameConstant:
@@ -348,7 +450,21 @@ void HSSObject::registerProperty(HSSObservableProperty name, void * property)
     this->properties[name] = property;
 }
 
+void HSSObject::setScope(const std::vector<HSSDisplayObject::p> * newScope)
+{
+    this->scope = newScope;
+}
 
+
+void HSSObject::setController(AXRController * controller)
+{
+    this->axrController = controller;
+}
+
+AXRController * HSSObject::getController()
+{
+    return this->axrController;
+}
 
 
 

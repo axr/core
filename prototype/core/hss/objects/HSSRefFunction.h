@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/29
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 1
+ *      Core version: 0.42
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -63,7 +63,7 @@ namespace AXR {
         
         typedef boost::shared_ptr<HSSRefFunction> p;
         
-        HSSRefFunction(AXRController * theController);
+        HSSRefFunction();
         virtual ~HSSRefFunction();
         
         const std::string & getModifier() const;
@@ -79,10 +79,6 @@ namespace AXR {
         virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
         
         void valueChanged(HSSObservableProperty source, void*data);
-        
-    protected:
-        //weak pointer
-        AXRController * controller;
         
     private:
         std::string modifier;

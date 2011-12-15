@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/09
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 2
+ *      Core version: 0.42
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -64,6 +64,7 @@ HSSFunction::HSSFunction()
 :HSSObject()
 {
     this->type = HSSObjectTypeFunction;
+    this->functionType = HSSFunctionTypeNone;
     this->scope = NULL;
     this->percentageObserved = NULL;
     this->_isDirty = true;
@@ -121,8 +122,6 @@ void HSSFunction::setProperty(std::string name, HSSParserNode::p value)
     std_log1("unimplemented");
 }
 
-
-
 void HSSFunction::propertyChanged(HSSObservableProperty property, void* data)
 {
     this->notifyObservers(HSSObservablePropertyValue, data);
@@ -157,6 +156,16 @@ void HSSFunction::setDirty(bool value)
 bool HSSFunction::isDirty()
 {
     return this->_isDirty;
+}
+
+void * HSSFunction::getValue()
+{
+    return this->_value;
+}
+
+bool HSSFunction::isA(HSSFunctionType type)
+{
+    return this->functionType == type;
 }
 
 

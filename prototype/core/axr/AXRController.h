@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/23
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 14
+ *      Core version: 0.42
+ *      Revision: 15
  *
  ********************************************************************/
 
@@ -66,6 +66,8 @@
 
 namespace AXR {
     
+    class AXRRender;
+    
     class AXRController
     {
     public:
@@ -74,6 +76,8 @@ namespace AXR {
         AXRController();
         virtual ~AXRController();
         virtual std::string toString();
+        
+        void setRender(AXRRender * render);
         
         //use this to clean up and start from fresh
         void reset();
@@ -116,14 +120,22 @@ namespace AXR {
         void rulesAdd(HSSRule::p & statement);
         void rulesRemove(unsigned index);
         HSSRule::p & rulesGet(unsigned index);
+        unsigned const rulesSize();
         
         void setSelectorChain(HSSSelectorChain::p selectorChain);
-        const std::vector<HSSDisplayObject::p> selectHierarchical(const std::vector<HSSDisplayObject::p> & scope);
-        const std::vector<HSSDisplayObject::p> selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope);
-        const std::vector<HSSDisplayObject::p> selectOnLevel(const std::vector<HSSDisplayObject::p> & scope);
-        const std::vector<HSSDisplayObject::p> selectSimple(const std::vector<HSSDisplayObject::p> & scope);
+        std::vector< std::vector<HSSDisplayObject::p> > selectHierarchical(const std::vector<HSSDisplayObject::p> & scope);
+        std::vector< std::vector<HSSDisplayObject::p> > selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope);
+        std::vector< std::vector<HSSDisplayObject::p> > selectOnLevel(const std::vector<HSSDisplayObject::p> & scope);
+        std::vector< std::vector<HSSDisplayObject::p> > selectSimple(const std::vector<HSSDisplayObject::p> & scope);
+        std::vector< std::vector<HSSDisplayObject::p> > filterSelection(std::vector< HSSDisplayObject::p> &selection);
+        
+        std::string basepath;
+        
+        void recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container);
         
     protected:
+        AXRRender * _render;
+        
         std::stack<HSSContainer::p>currentContext;
         HSSContainer::p root;
         
@@ -136,8 +148,6 @@ namespace AXR {
         OSHelper::p osHelper;
         
         bool _hasLoadedFile;
-        
-        void recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container);
         
         HSSSelectorChain::p currentChain;
         HSSParserNode::p currentSelectorNode;
