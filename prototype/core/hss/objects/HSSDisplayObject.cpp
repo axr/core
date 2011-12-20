@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/20
+ *      Last changed: 2011/12/20
  *      HSS version: 1.0
  *      Core version: 0.42
- *      Revision: 33
+ *      Revision: 34
  *
  ********************************************************************/
 
@@ -1403,7 +1403,7 @@ void HSSDisplayObject::setDBehavior(HSSParserNode::p value)
         this->dBehavior = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition());
     }
     
-    this->dBehavior->getValues()->add(value);
+    this->dBehavior->add(value);
     
     switch (value->getType()) {
         case HSSParserNodeTypeObjectDefinition:
@@ -1487,11 +1487,22 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
 const HSSParserNode::p HSSDisplayObject::getDBorder() const { return this->dBorder; }
 void HSSDisplayObject::setDBorder(HSSParserNode::p value)
 {
+    this->border.clear();
+    this->dBorder = value;
+    this->addDBorder(value);
+}
+
+void HSSDisplayObject::addDBorder(HSSParserNode::p value)
+{
     switch (value->getType()) {
         case HSSParserNodeTypeMultipleValueDefinition:
         {
-            this->dBorder = value;
-            
+            HSSParserNode::it iterator;
+            HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(value);
+            std::vector<HSSParserNode::p> values = multiDef->getValues();
+            for (iterator = values.begin(); iterator != values.end(); iterator++) {
+                this->addDBorder(*iterator);
+            }
             break;
         }
             
@@ -1516,20 +1527,36 @@ void HSSDisplayObject::setDBorder(HSSParserNode::p value)
             
         case HSSParserNodeTypeObjectNameConstant:
         {
-            this->dBorder = value;
-            
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                objdef->apply();
+                
+                HSSObject::p obj = boost::static_pointer_cast<HSSObject>(objdef->getObject());
+                switch (obj->getObjectType()) {
+                    case HSSObjectTypeBorder:
+                        this->border.push_back(boost::static_pointer_cast<HSSBorder>(obj));
+                        break;
+                        
+                    default:
+                        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for border of "+this->getElementName()));
+                        break;
+                }
+                
+            } catch (AXRError::p e) {
+                e->raise();
+            }
             break;
         }
             
         case HSSParserNodeTypeKeywordConstant:
         {
-            this->dBorder = value;
+            
             
             break;
         }
         case HSSParserNodeTypeFunctionCall:
         {
-            this->dBorder = value;
             
             break;
         }
