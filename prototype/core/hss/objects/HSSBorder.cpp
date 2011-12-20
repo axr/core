@@ -55,6 +55,7 @@
 #include "../../axr/errors/errors.h"
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
+#include "../parsing/HSSFunctionCall.h"
 
 using namespace AXR;
 
@@ -123,27 +124,58 @@ void HSSBorder::setDSize(HSSParserNode::p value){
         case HSSParserNodeTypeNumberConstant:
         case HSSParserNodeTypePercentageConstant:
         case HSSParserNodeTypeExpression:
+            this->dSize = value;
+            this->size = this->_setLDProperty(
+                                              &HSSBorder::sizeChanged,
+                                              value,
+                                              18.,
+                                              HSSObservablePropertySize,
+                                              this->observedSize,
+                                              this->observedSizeProperty
+                                              );
+            
             break;
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->dSize = value;
+            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
+            HSSFunction::p fnct = fcall->getFunction();
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                fnct->setScope(this->scope);
+                this->size = *(long double *)fnct->evaluate();
+                
+                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertySize, this, new HSSValueChangedCallback<HSSBorder>(this, &HSSBorder::sizeChanged));
+                
+            } else {
+                throw AXRWarning::p(new AXRWarning("HSSDBorder", "Invalid function type size of "+this->name));
+            }
+            
+            break;
+        }
+        
         default:
             throw AXRWarning::p(new AXRWarning("HSSBorder", "Invalid value for size of "+this->name));
     }
-    
-    this->dSize = value;
-    this->size = this->_setLDProperty(
-                                      &HSSBorder::sizeChanged,
-                                      value,
-                                      18.,
-                                      HSSObservablePropertySize,
-                                      this->observedSize,
-                                      this->observedSizeProperty
-                                      );
-    
     this->notifyObservers(HSSObservablePropertySize, &this->size);
 }
 
 void HSSBorder::sizeChanged(AXR::HSSObservableProperty source, void *data)
 {
-    std_log1("********************** sizeChanged unimplemented ****************************");
+    switch (this->dSize->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+            this->size = *(long double*)data;
+            break;
+            
+        default:
+            break;
+    }
+    
+    this->notifyObservers(HSSObservablePropertySize, data);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
 long double HSSBorder::_setLDProperty(
@@ -177,12 +209,10 @@ long double HSSBorder::_setLDProperty(
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
             expressionValue->setPercentageBase(255.0);
-            //expressionValue->setScope(scope);
+            expressionValue->setScope(this->scope);
             ret = expressionValue->evaluate();
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSBorder>(this, callback));
-                observedStore = expressionValue.get();
-                observedStoreProperty = HSSObservablePropertyValue;
             }
             
             break;
