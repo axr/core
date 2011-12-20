@@ -996,18 +996,20 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             break;
         }
     }
-            
-    if (valid) {
-        ret = HSSPropertyDefinition::p(new HSSPropertyDefinition(propertyName));
+    
+    bool done = false;
+    ret = HSSPropertyDefinition::p(new HSSPropertyDefinition(propertyName));
+    
+    while (!done && valid) {
         try {
             //now comes either an object definition, a literal value or an expression
             //object
             if (this->currentToken->isA(HSSObjectSign)){
-                ret->setValue(this->readObjectDefinition(propertyName));
+                ret->addValue(this->readObjectDefinition(propertyName));
                 //this->readNextToken();
                 
             } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
-                ret->setValue(HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString())));
+                ret->addValue(HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString())));
                 this->checkForUnexpectedEndOfSource();
                 this->readNextToken();
                 this->skip(HSSWhitespace);
@@ -1016,7 +1018,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             } else if (this->currentToken->isA(HSSNumber) || this->currentToken->isA(HSSPercentageNumber) || this->currentToken->isA(HSSParenthesisOpen)){
                 //FIXME: parse the number and see if it is an int or a float
                 HSSParserNode::p exp = this->readExpression();
-                ret->setValue(exp);                
+                ret->addValue(exp);                
                 
             } else if (this->currentToken->isA(HSSIdentifier)){
                 //this is either a function, a keyword or an object name
@@ -1026,15 +1028,15 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 HSSObject::p objectContext = this->currentObjectContext.top();
                 
                 if (objectContext->isFunction(valuestr, propertyName)){
-                    ret->setValue(this->readExpression());
+                    ret->addValue(this->readExpression());
                     //check if it is a keyword
                 } else if (objectContext->isKeyword(valuestr, propertyName)){
-                    ret->setValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr))); 
+                    ret->addValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr))); 
                     this->readNextToken();
                     //we assume it is an object name at this point
                 } else {
                     //FIXME (?)
-                    ret->setValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr)));
+                    ret->addValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr)));
                     this->readNextToken();
                 }
                 
@@ -1045,7 +1047,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 theInstruction = this->readInstruction();
                 
                 if (theInstruction){
-                    ret->setValue(this->getObjectFromInstruction(theInstruction));
+                    ret->addValue(this->getObjectFromInstruction(theInstruction));
                 } else {
                     valid = false;
                 }
@@ -1054,30 +1056,36 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 valid = false;
             }
             
-            if (!valid && !this->atEndOfSource())
+            if (!valid && !this->atEndOfSource()){
                 this->skipUntilEndOfStatement();
-//            security_brake_init();
-//            while (!this->currentToken->isA(HSSBlockClose) && !this->currentToken->isA(HSSEndOfStatement) ) {
-//
-//                security_brake();
-//            }
+                done = true;
+            }
         } catch (AXRError::p e) {
             e->raise();
             valid = false;
+            done = true;
         }
         
-        if (valid) {
-            //skip the semicolon
-            this->skip(HSSEndOfStatement);
-            this->skip(HSSWhitespace);
-        } else if (!this->atEndOfSource()){
-            this->skipUntilEndOfStatement();
+        if(valid){
+            this->skip(HSSWhitespace, true);
+            if(this->currentToken->isA(HSSComma)){
+                this->readNextToken();
+                this->skip(HSSWhitespace, true);
+            } else {
+                done = true;
+            }
         }
     }
-    
+    if (valid) {
+        //skip the semicolon
+        this->skip(HSSEndOfStatement);
+        this->skip(HSSWhitespace);
+    } else if (!this->atEndOfSource()){
+        this->skipUntilEndOfStatement();
+    }
     
     if (!valid) {
-        throw AXRError::p(new AXRError("HSSParser", propertyName, this->filename, this->line, this->column));
+        throw AXRError::p(new AXRError("HSSParser", "Errors found while reading "+propertyName, this->filename, this->line, this->column));
     }
     return ret;
 }

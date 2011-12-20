@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/08
+ *      Last changed: 2011/12/19
  *      HSS version: 1.0
  *      Core version: 0.42
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -156,7 +156,7 @@ void HSSEvent::setDAction(HSSParserNode::p value)
     if(!this->dAction){
         this->dAction = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition());
     }
-    this->dAction->getValues()->add(value);
+    this->dAction->add(value);
     
     switch (value->getType()) {
         case HSSParserNodeTypeObjectDefinition:
@@ -197,7 +197,7 @@ void HSSEvent::actionChanged(AXR::HSSObservableProperty source, void *data)
 
 void HSSEvent::fire()
 {
-    const std::vector<HSSParserNode::p> & actions = this->dAction->getValues()->getValueList();
+    const std::vector<HSSParserNode::p> & actions = this->dAction->getValues();
     unsigned i, size;
     for (i=0, size=actions.size(); i<size; i++) {
         if(actions[i]->isA(HSSParserNodeTypeObjectDefinition)){

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/22
+ *      Last changed: 2011/12/19
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 10
+ *      Core version: 0.42
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -54,6 +54,7 @@
 #define HSSPARSERNODE_H
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <vector>
 
 namespace AXR {
     enum HSSParserNodeType
@@ -80,6 +81,7 @@ namespace AXR {
     {
     public:
         typedef boost::shared_ptr<HSSParserNode> p;
+        typedef std::vector<HSSParserNode::p>::iterator it;
         
         static std::string parserNodeStringRepresentation(HSSParserNodeType type);
         

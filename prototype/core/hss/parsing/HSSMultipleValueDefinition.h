@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/22
+ *      Last changed: 2011/12/19
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.42
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -66,12 +66,14 @@ namespace AXR {
         HSSMultipleValueDefinition();
         virtual ~HSSMultipleValueDefinition();
         
-        const HSSMultipleValue::p getValues() const;
-        void setValues(HSSMultipleValue::p newValues);
+        std::vector<HSSParserNode::p> getValues();
+        void setValues(std::vector<HSSParserNode::p> newValues);
+        
+        void add(HSSParserNode::p newValue);
         
         
     protected:
-        HSSMultipleValue::p values;
+        std::vector<HSSParserNode::p> values;
     };
 }
 

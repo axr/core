@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/20
+ *      Last changed: 2011/12/19
  *      HSS version: 1.0
  *      Core version: 0.42
- *      Revision: 26
+ *      Revision: 27
  *
  ********************************************************************/
 
@@ -193,6 +193,7 @@ namespace AXR {
         //border
         const HSSParserNode::p getDBorder() const;
         void setDBorder(HSSParserNode::p value);
+        void addDBorder(HSSParserNode::p value);
         void borderChanged(HSSObservableProperty source, void*data);
         
         virtual void setDefaults();

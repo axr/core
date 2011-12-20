@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/12/19
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.42
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -94,6 +94,7 @@ std::string HSSToken::tokenStringRepresentation(HSSTokenType type){
 	types[HSSObjectSign] = "HSSObjectSign";
 	types[HSSBlockOpen] = "HSSBlockOpen";
 	types[HSSBlockClose] = "HSSBlockClose";
+	types[HSSComma] = "HSSComma";
 	types[HSSColon] = "HSSColon";
 	types[HSSEndOfStatement] = "HSSEndOfStatement";
 	types[HSSParenthesisOpen] = "HSSParenthesisOpen";

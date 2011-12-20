@@ -24,6 +24,4 @@
     {
         isA: test;
     }
-    
-    #new test { isA: test; }
 }
