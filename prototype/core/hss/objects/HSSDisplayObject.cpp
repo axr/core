@@ -61,6 +61,7 @@
 #include "../parsing/HSSConstants.h"
 #include "../parsing/HSSObjectDefinition.h"
 #include "../parsing/HSSFunctionCall.h"
+#include "HSSFunctions.h"
 #include "HSSContainer.h"
 #include <sstream>
 #include <string>
@@ -1552,12 +1553,28 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
         case HSSParserNodeTypeKeywordConstant:
         {
             
-            
             break;
         }
         case HSSParserNodeTypeFunctionCall:
         {
-            
+            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
+            HSSFunction::p fnct = fcall->getFunction();
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    fnct->setScope(&(thisCont->getChildren()));
+                }
+                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
+                this->addDBorder(remoteValue);
+                
+            } else {
+                throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid function type for border of "+this->getElementName()));
+            }
+
             break;
         }
         
