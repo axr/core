@@ -1519,8 +1519,11 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     objdef->setScope(&(thisCont->getChildren()));
                 }
+                
                 objdef->apply();
-                this->border.push_back(boost::static_pointer_cast<HSSBorder>(objdef->getObject()));
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::borderChanged));
+                this->border.push_back(boost::static_pointer_cast<HSSBorder>(theObj));
             }
             
             break;
