@@ -1,0 +1,35 @@
+/*
+	Test BR003 Ref borders
+	Created by Miro Keller on 2011-12-20.
+*/
+
+@lineBorder shadowBorder { 1 #6 }
+@lineBorder highlightBorder { 1 #DF }
+
+@container test
+{
+    width: 200;
+    height: 200;
+    background: #A;
+    shape: @{ 10 };
+    alignY: middle;
+}
+
+*
+{
+    background: #C;
+    
+    #new test
+    {
+        isA: test;
+        border: shadowBorder, highlightBorder;
+        alignX: 30%;
+    }
+    
+    #new test2
+    {
+        isA: test;
+        border: ref(border of test);
+        alignX: 70%;
+    }
+}
