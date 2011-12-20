@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2011/12/19
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.42
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -72,6 +72,7 @@ namespace AXR {
         void setName(std::string name);
         std::string getName();
         void setValue(HSSParserNode::p value);
+        void addValue(HSSParserNode::p value);
         HSSParserNode::p getValue();
         
     protected:

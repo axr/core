@@ -43,14 +43,15 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2011/12/19
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.42
+ *      Revision: 5
  *
  ********************************************************************/
 
 #include "HSSPropertyDefinition.h"
+#include "HSSMultipleValueDefinition.h"
 
 using namespace AXR;
 
@@ -94,12 +95,29 @@ std::string HSSPropertyDefinition::getName()
     return this->name;
 }
 
-void HSSPropertyDefinition::setValue(HSSParserNode::p value)
-{
+void HSSPropertyDefinition::setValue(HSSParserNode::p value){
     this->value = value;
+}
+
+void HSSPropertyDefinition::addValue(HSSParserNode::p value)
+{
+    if (this->value){
+        if(this->value->isA(HSSParserNodeTypeMultipleValueDefinition)) {
+            HSSMultipleValueDefinition::p mvDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(this->value);
+            mvDef->getValues().push_back(value);
+        } else {
+            HSSMultipleValueDefinition::p mvDef = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition());
+            mvDef->add(this->value);
+            mvDef->add(value);
+            this->value = mvDef;
+        }
+    } else {
+        this->value = value;
+    }
 }
 
 HSSParserNode::p HSSPropertyDefinition::getValue()
 {
     return this->value;
 }
+

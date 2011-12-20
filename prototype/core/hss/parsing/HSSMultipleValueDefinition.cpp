@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/22
+ *      Last changed: 2011/12/19
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.42
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -57,7 +57,7 @@ using namespace AXR;
 HSSMultipleValueDefinition::HSSMultipleValueDefinition()
 : HSSParserNode()
 {
-    this->values = HSSMultipleValue::p(new HSSMultipleValue());
+    this->nodeType = HSSParserNodeTypeMultipleValueDefinition;
 }
 
 HSSMultipleValueDefinition::~HSSMultipleValueDefinition()
@@ -65,12 +65,16 @@ HSSMultipleValueDefinition::~HSSMultipleValueDefinition()
     
 }
 
-const HSSMultipleValue::p HSSMultipleValueDefinition::getValues() const
+std::vector<HSSParserNode::p> HSSMultipleValueDefinition::getValues()
 {
     return this->values;
 }
 
-void HSSMultipleValueDefinition::setValues(HSSMultipleValue::p newValues)
+void HSSMultipleValueDefinition::setValues(std::vector<HSSParserNode::p> newValues)
 {
     this->values = newValues;
+}
+
+void HSSMultipleValueDefinition::add(HSSParserNode::p newValue){
+    this->values.push_back(newValue);
 }

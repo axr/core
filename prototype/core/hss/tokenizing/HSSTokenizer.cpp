@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2011/12/19
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 8
+ *      Core version: 0.42
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -216,6 +216,10 @@ HSSToken::p HSSTokenizer::readNextToken()
 			return ret;
 		case '}':
 			ret = HSSToken::p(new HSSToken(HSSBlockClose, this->currentLine, this->currentColumn -1));
+			this->readNextChar();
+			return ret;
+        case ',':
+			ret = HSSToken::p(new HSSToken(HSSComma, this->currentLine, this->currentColumn -1));
 			this->readNextChar();
 			return ret;
         case ':':

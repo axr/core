@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/08
+ *      Last changed: 2011/12/19
  *      HSS version: 1.0
  *      Core version: 0.42
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -110,7 +110,8 @@ void AXRRender::mouseDown(long double x, long double y)
     struct point { long double x; long double y; } thePoint;
     thePoint.x = x;
     thePoint.y = y;
-    root->handleEvent(HSSEventTypeMouseDown, (void*)&thePoint);
+    if(root)
+        root->handleEvent(HSSEventTypeMouseDown, (void*)&thePoint);
 }
 
 void AXRRender::mouseUp(long double x, long double y)
