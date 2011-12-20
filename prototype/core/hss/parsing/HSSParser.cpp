@@ -1149,7 +1149,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
                 return ret;
         }
         
-        this->readNextToken();
+        this->skip(HSSWhitespace, true);
                 
     } else if (this->currentToken->isA(HSSIdentifier)){
         currentval = VALUE_TOKEN(this->currentToken)->getString();
