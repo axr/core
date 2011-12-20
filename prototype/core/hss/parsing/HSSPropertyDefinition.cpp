@@ -104,7 +104,7 @@ void HSSPropertyDefinition::addValue(HSSParserNode::p value)
     if (this->value){
         if(this->value->isA(HSSParserNodeTypeMultipleValueDefinition)) {
             HSSMultipleValueDefinition::p mvDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(this->value);
-            mvDef->getValues().push_back(value);
+            mvDef->add(value);
         } else {
             HSSMultipleValueDefinition::p mvDef = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition());
             mvDef->add(this->value);
