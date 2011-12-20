@@ -121,12 +121,13 @@ void AXRRender::mouseUp(long double x, long double y)
     struct point { long double x; long double y; } thePoint;
     thePoint.x = x;
     thePoint.y = y;
-    try {
-        root->handleEvent(HSSEventTypeMouseUp, (void*)&thePoint);
-    } catch (AXRError::p e) {
-        e->raise();
+    if(root){
+        try {
+            root->handleEvent(HSSEventTypeMouseUp, (void*)&thePoint);
+        } catch (AXRError::p e) {
+            e->raise();
+        }
     }
-    
 }
 
 
