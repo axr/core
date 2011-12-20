@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2011/12/19
  *      HSS version: 1.0
  *      Core version: 0.42
- *      Revision: 15
+ *      Revision: 16
  *
  ********************************************************************/
 
@@ -367,7 +367,7 @@ void HSSObject::setDIsA(HSSParserNode::p value)
     if(!this->dIsA){
         this->dIsA = boost::shared_ptr<HSSMultipleValueDefinition>(new HSSMultipleValueDefinition());
     }
-    this->dIsA->getValues()->add(value);
+    this->dIsA->add(value);
     
     switch (value->getType()) {
         case HSSParserNodeTypeObjectDefinition:
@@ -466,5 +466,8 @@ AXRController * HSSObject::getController()
     return this->axrController;
 }
 
-
+HSSObjectType HSSObject::getObjectType()
+{
+    return this->type;
+}
 
