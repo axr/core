@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2011/12/22
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 18
+ *      Core version: 0.43
+ *      Revision: 19
  *
  ********************************************************************/
 
@@ -70,7 +70,9 @@ AXRController::AXRController()
     this->parserXML = XMLParser::p(new XMLParser(this));
     this->parserHSS = HSSParser::p(new HSSParser(this));
     this->_hasLoadedFile = false;
+    this->_isHSSOnly = false;
     this->_render = NULL;
+    this->currentContext = std::stack<HSSContainer::p>();
 }
 
 AXRController::~AXRController()
@@ -88,11 +90,23 @@ void AXRController::setRender(AXRRender * render)
 
 bool AXRController::loadFile()
 {
-    std::string xmlfilepath = std::string();
-    std::string xmlfilename = std::string();
-    bool success = this->osHelper->openFileDialog(xmlfilepath, xmlfilename, this->basepath);
+    std::string filepath = std::string();
+    std::string filename = std::string();
+    std::string fileextension = std::string();
+    bool success = this->osHelper->openFileDialog(filepath, filename, this->basepath);
     if(success){
-        return this->loadFile(xmlfilepath, xmlfilename);
+        fileextension = filename.substr(filename.rfind(".") + 1, filename.length());
+        if(fileextension == "xml"){
+            this->_isHSSOnly = false;
+            return this->loadFile(filepath, filename);
+        } else if (fileextension == "hss") {
+            this->_isHSSOnly = true;
+            return this->loadFileHSS(filepath, filename);
+        } else {
+            AXRError::p(new AXRError("AXRController", "Unknown file extension"))->raise();
+            return false;
+        }
+        
     } else {
         return false;
     }
@@ -163,6 +177,43 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
                 }
             }
         //}
+    }
+    
+    return loadingSuccess;
+}
+
+
+bool AXRController::loadFileHSS(std::string hssfilepath, std::string hssfilename)
+{
+    //we assume success unless noted otherwise
+    bool loadingSuccess = true;
+    unsigned i;
+    
+    if(this->_hasLoadedFile){
+        //prepare itself for loading a new file
+        this->reset();
+    }
+    
+    this->enterElement("root");
+    this->exitElement();
+    
+    loadingSuccess = this->loadHSSFile(hssfilepath, hssfilename.substr(hssfilename.rfind("/", hssfilename.length())+1));
+    if(!loadingSuccess){
+        AXRError::p(new AXRError("AXRController", "Could not load the HSS file"))->raise();
+    } else {
+        //needs reset on next load
+        this->_hasLoadedFile = true;
+        
+        HSSDisplayObject::p rootObj = boost::static_pointer_cast<HSSDisplayObject>(this->root);
+        //assign the rules to the object
+        for (i=0; i<this->rules.size(); i++) {
+            HSSRule::p& rule = this->rules[i];
+            const HSSDisplayObject::p rootScopeArr[1] = {root};
+            const std::vector<HSSDisplayObject::p>rootScope(rootScopeArr, rootScopeArr+1);
+            this->recursiveMatchRulesToDisplayObjects(rule, rootScope, root);
+        }
+        //read the rules into values
+        rootObj->recursiveReadDefinitionObjects();
     }
     
     return loadingSuccess;
@@ -629,9 +680,19 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::filterSelection( 
 bool AXRController::reload()
 {
     if(this->_hasLoadedFile){
-        std::string filepath = this->parserXML->getFilePath();
-        std::string filename = this->parserXML->getFileName();
-        return this->loadFile(filepath, filename);
+        std::string filepath;
+        std::string filename;
+        
+        if(this->_isHSSOnly){
+            filepath = (this->parserHSS->basepath)+"/"+(this->parserHSS->filename);
+            filename = this->parserHSS->filename;
+            return this->loadFileHSS(filepath, filename);
+            
+        } else {
+            filepath = this->parserXML->getFilePath();
+            filename = this->parserXML->getFileName();
+            return this->loadFile(filepath, filename);
+        }
     }
     
     return false;

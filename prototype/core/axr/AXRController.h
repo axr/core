@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2011/12/22
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 15
+ *      Core version: 0.43
+ *      Revision: 16
  *
  ********************************************************************/
 
@@ -87,6 +87,7 @@ namespace AXR {
         
         bool loadFile();
         bool loadFile(std::string xmlfilepath, std::string xmlfilename);
+        bool loadFileHSS(std::string hssfilepath, std::string hssfilename);
         bool reload();
         bool loadXMLFile(std::string filepath, std::string filename);
         bool loadHSSFile(std::string filepath, std::string filename);
@@ -148,6 +149,7 @@ namespace AXR {
         OSHelper::p osHelper;
         
         bool _hasLoadedFile;
+        bool _isHSSOnly;
         
         HSSSelectorChain::p currentChain;
         HSSParserNode::p currentSelectorNode;

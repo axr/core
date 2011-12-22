@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/04
+ *      Last changed: 2011/12/22
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 15
+ *      Core version: 0.43
+ *      Revision: 16
  *
  ********************************************************************/
 
@@ -99,6 +99,8 @@ namespace AXR {
         void currentObjectContextRemoveLast();
         unsigned int currentObjectContextSize();
         void currentObjectContextAdd(HSSObject::p theObject);
+        
+        friend class AXRController;
         
     private:
         HSSTokenizer::p tokenizer;
