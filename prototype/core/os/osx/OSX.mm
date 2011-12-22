@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/05
+ *      Last changed: 2011/12/22
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 2
+ *      Core version: 0.43
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -69,13 +69,13 @@ OSHelper::~OSHelper()
 
 bool OSHelper::openFileDialog(std::string &filePath, std::string &fileName, std::string &basePath)
 {
-    //load a XML file
-	NSArray *xmlFileType = [NSArray arrayWithObject:@"xml"];
+    //load a file
+	NSArray *fileTypes = [NSArray arrayWithObjects: @"xml", @"hss", nil];
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	int result;
 	[openPanel setCanChooseFiles:TRUE];
 	[openPanel setAllowsMultipleSelection:FALSE];
-	result = [openPanel runModalForTypes:xmlFileType];
+	result = [openPanel runModalForTypes:fileTypes];
 	if(result == NSOKButton){
 		if([[openPanel filenames] count] > 0){
 			NSString *filepath_s = [[openPanel filenames] objectAtIndex:0];
