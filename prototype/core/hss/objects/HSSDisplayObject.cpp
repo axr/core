@@ -1552,12 +1552,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
             }
             break;
         }
-            
-        case HSSParserNodeTypeKeywordConstant:
-        {
-            
-            break;
-        }
+        
         case HSSParserNodeTypeFunctionCall:
         {
             HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
