@@ -197,12 +197,14 @@ void HSSEvent::actionChanged(AXR::HSSObservableProperty source, void *data)
 
 void HSSEvent::fire()
 {
-    const std::vector<HSSParserNode::p> & actions = this->dAction->getValues();
-    unsigned i, size;
-    for (i=0, size=actions.size(); i<size; i++) {
-        if(actions[i]->isA(HSSParserNodeTypeObjectDefinition)){
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(actions[i]);
-            boost::static_pointer_cast<HSSAction>(objdef->getObject())->fire();
+    if(this->dAction){
+        const std::vector<HSSParserNode::p> & actions = this->dAction->getValues();
+        unsigned i, size;
+        for (i=0, size=actions.size(); i<size; i++) {
+            if(actions[i]->isA(HSSParserNodeTypeObjectDefinition)){
+                HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(actions[i]);
+                boost::static_pointer_cast<HSSAction>(objdef->getObject())->fire();
+            } 
         } 
     }
 }

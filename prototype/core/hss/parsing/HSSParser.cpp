@@ -345,7 +345,6 @@ HSSStatement::p HSSParser::readNextStatement()
                 
             default:
                 throw AXRWarning::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
-                
                 break;
         }
         
@@ -888,7 +887,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
                     ret->propertiesAdd(property);
                 } catch (AXRError::p e) {
                     e->raise();
-                    this->readNextToken();
+                    //this->readNextToken();
                     if (!this->atEndOfSource())
                         this->skip(HSSWhitespace);
                 }
@@ -1005,7 +1004,12 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             //now comes either an object definition, a literal value or an expression
             //object
             if (this->currentToken->isA(HSSObjectSign)){
-                ret->addValue(this->readObjectDefinition(propertyName));
+                HSSObjectDefinition::p objdef = this->readObjectDefinition(propertyName);
+                if(objdef){
+                    ret->addValue(objdef);
+                } else {
+                    valid = false;
+                }
                 //this->readNextToken();
                 
             } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
@@ -1018,7 +1022,12 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             } else if (this->currentToken->isA(HSSNumber) || this->currentToken->isA(HSSPercentageNumber) || this->currentToken->isA(HSSParenthesisOpen)){
                 //FIXME: parse the number and see if it is an int or a float
                 HSSParserNode::p exp = this->readExpression();
-                ret->addValue(exp);                
+                if(exp){
+                    ret->addValue(exp);
+                } else {
+                    valid = false;
+                }
+                                
                 
             } else if (this->currentToken->isA(HSSIdentifier)){
                 //this is either a function, a keyword or an object name
@@ -1028,7 +1037,13 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 HSSObject::p objectContext = this->currentObjectContext.top();
                 
                 if (objectContext->isFunction(valuestr, propertyName)){
-                    ret->addValue(this->readExpression());
+                    HSSParserNode::p exp = this->readExpression();
+                    if (exp){
+                        ret->addValue(exp);
+                    } else {
+                        valid = false;
+                    }
+                    
                     //check if it is a keyword
                 } else if (objectContext->isKeyword(valuestr, propertyName)){
                     ret->addValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr))); 
@@ -1056,8 +1071,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 valid = false;
             }
             
-            if (!valid && !this->atEndOfSource()){
-                this->skipUntilEndOfStatement();
+            if (!valid){
                 done = true;
             }
         } catch (AXRError::p e) {
