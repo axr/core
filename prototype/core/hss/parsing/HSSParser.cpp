@@ -859,7 +859,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
         switch (this->currentToken->getType()) {
             case HSSSymbol:
             {
-                if(VALUE_TOKEN(this->currentToken)->getString() == "+"){
+                if(VALUE_TOKEN(this->currentToken)->getString() == "&"){
                     HSSToken::p peekToken = this->tokenizer->peekNextToken();
                     if(peekToken->isA(HSSObjectSign)){
                         this->tokenizer->resetPeek();
