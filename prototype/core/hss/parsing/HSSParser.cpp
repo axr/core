@@ -305,7 +305,36 @@ HSSStatement::p HSSParser::readNextStatement()
         switch (this->currentToken->getType()) {
             case HSSInstructionSign:
             {
-                ret = this->readInstruction();
+                HSSInstruction::p theinstr = this->readInstruction();
+                
+                switch (theinstr->getInstructionType()) {
+                    case HSSGrayscale1Instruction:
+                    case HSSGrayscale2Instruction:
+                    case HSSRGBInstruction:
+                    case HSSRRGGBBInstruction:
+                    case HSSRGBAInstruction:
+                    case HSSRRGGBBAAInstruction:
+                    {
+                        HSSObjectDefinition::p objdef = this->getObjectFromInstruction(theinstr);
+                        this->skip(HSSWhitespace);
+                        if(this->currentToken->isA(HSSIdentifier)){
+                            objdef->getObject()->setName(VALUE_TOKEN(this->currentToken)->getString());
+                            this->readNextToken(true);
+                        }
+                        ret = objdef;
+                        this->skipExpected(HSSEndOfStatement);
+                        if(!this->atEndOfSource()){
+                            this->skip(HSSWhitespace);
+                        }
+                        
+                        break;
+                    }
+                        
+                    default:
+                        ret = theinstr;
+                        break;
+                }
+                
                 break;
             }
             
