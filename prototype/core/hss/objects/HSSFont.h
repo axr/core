@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2011/12/28
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 2
+ *      Core version: 0.43
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -55,8 +55,8 @@
 
 #include <string>
 #include "HSSObject.h"
+#include "HSSRgb.h"
 #include "../parsing/HSSKeywordConstant.h"
-#include <boost/shared_ptr.hpp>
 
 namespace AXR {
     class HSSFont : public HSSObject
@@ -75,37 +75,49 @@ namespace AXR {
         
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
+        //size
         long double getSize();
         void setDSize(HSSParserNode::p);
         void sizeChanged(HSSObservableProperty source, void*data);
+        
+        //face
         std::string getFace();
         void setDFace(HSSParserNode::p);
         void faceChanged(HSSObservableProperty source, void*data);
-        HSSObject::p getColor();
+        
+        //color
+        HSSRgb::p getColor();
+        HSSParserNode::p getDColor();
         void setDColor(HSSParserNode::p);
         void colorChanged(HSSObservableProperty source, void*data);
+        
+        //weight
         HSSKeywordConstant::p getWeight();
         void setDWeight(HSSParserNode::p);
         void weightChanged(HSSObservableProperty source, void*data);
         
     private:
+        //size
         long double size;
-        std::string face;
-        HSSObject::p color;
-        HSSKeywordConstant::p weight;
-        
-        HSSParserNode::p dFace;
-        HSSObservable * observedFace;
-        HSSObservableProperty observedFaceProperty;
-        HSSParserNode::p dColor;
-        HSSObservable * observedColor;
-        HSSObservableProperty observedColorProperty;
-        HSSParserNode::p dWeight;
-        HSSObservable * observedWeight;
-        HSSObservableProperty observedWeightProperty;
         HSSParserNode::p dSize;
         HSSObservable * observedSize;
         HSSObservableProperty observedSizeProperty;
+        //face
+        std::string face;
+        HSSParserNode::p dFace;
+        HSSObservable * observedFace;
+        HSSObservableProperty observedFaceProperty;
+        //startColor
+        HSSRgb::p color;
+        HSSParserNode::p dColor;
+        HSSObservable * observedColor;
+        HSSObservableProperty observedColorProperty;
+        //weight
+        HSSKeywordConstant::p weight;
+        HSSParserNode::p dWeight;
+        HSSObservable * observedWeight;
+        HSSObservableProperty observedWeightProperty;
+        
         
         long double _setLDProperty(
                                    void(HSSFont::*callback)(HSSObservableProperty property, void* data),
