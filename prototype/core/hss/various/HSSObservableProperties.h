@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/24
+ *      Last changed: 2011/12/26
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 10
+ *      Core version: 0.43
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -88,6 +88,18 @@ namespace AXR {
         HSSObservablePropertyGreen,
         HSSObservablePropertyBlue,
         HSSObservablePropertyAlpha,
+        
+        //HSSGradient
+        HSSObservablePropertyStartColor,
+        HSSObservablePropertyEndColor,
+        HSSObservablePropertyColorStops,
+        HSSObservablePropertyBalance,
+        
+        //HSSLinearGradient
+        HSSObservablePropertyStartX,
+        HSSObservablePropertyStartY,
+        HSSObservablePropertyEndX,
+        HSSObservablePropertyEndY,
         
         //HSSFont
         HSSObservablePropertySize,

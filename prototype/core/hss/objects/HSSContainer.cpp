@@ -332,26 +332,9 @@ void HSSContainer::recursiveDraw(cairo_t * cairo)
 
 void HSSContainer::drawBackground()
 {
-    long double r = 0., g = 0., b = 0., a = 0;
-    if(this->backgroundColor){
-        r = this->backgroundColor->getRed();
-        g = this->backgroundColor->getGreen();
-        b = this->backgroundColor->getBlue();
-        a = this->backgroundColor->getAlpha();
-    }
-    
     cairo_t * cairo = cairo_create(this->backgroundSurface);
     this->shape->draw(cairo, 0., 0., this->width, this->height);
-    cairo_set_source_rgba(cairo, (r/255), (g/255), (b/255), (a/255));
-    cairo_fill(cairo);
-    
-    
-    
-    //draw a small rectangle to be able to see the anchor X and Y
-    //    cairo_rectangle(cairo, this->anchorX-1., this->anchorY-1., 2, 2);
-    //    cairo_set_source_rgb(cairo, 1,0,0);
-    //    cairo_fill(cairo);
-    
+    HSSDisplayObject::_drawBackground(cairo);
     cairo_destroy(cairo);
 }
 
@@ -1382,9 +1365,6 @@ long double HSSContainer::_setLDProperty(
 }
 
 
-
-
-
 bool HSSContainer::handleEvent(HSSEventType type, void* data)
 {
     HSSDisplayObject::it it;
@@ -1417,4 +1397,9 @@ void HSSContainer::setController(AXRController * controller)
     }
     
     HSSDisplayObject::setController(controller);
+}
+
+HSSContainer::p HSSContainer::shared_from_this()
+{
+    return boost::static_pointer_cast<HSSContainer>(HSSDisplayObject::shared_from_this());
 }

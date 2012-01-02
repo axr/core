@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2011/12/26
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 9
+ *      Core version: 0.43
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -210,6 +210,18 @@ void HSSObjectDefinition::setScope(const std::vector<HSSDisplayObject::p> * newS
     this->scope = newScope;
     //propagate values
     this->prototype->setScope(newScope);
+}
+
+void HSSObjectDefinition::setThisObj(HSSDisplayObject::p value)
+{
+    this->thisObj = value;
+    //propagate values
+    this->prototype->setThisObj(value);
+}
+
+HSSDisplayObject::p HSSObjectDefinition::getThisObj()
+{
+    return thisObj;
 }
 
 

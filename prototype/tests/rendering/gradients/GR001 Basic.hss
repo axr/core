@@ -1,0 +1,27 @@
+/*
+	Test GR001 Basic
+	Created by Miro Keller on 2011-12-26.
+*/
+
+#0 bgColor;
+#5 bgColor2;
+
+master
+{
+    contentAlignY: 50%;
+    background: #3;
+    
+    #new test
+    {
+        width: 200;
+        height: 50%;
+        shape: @{10};
+        border: @{ 1 #FFF5 }, @{ 1 #0008 };
+        background: @linearGradient blackGrad {
+            startColor: bgColor;
+            endColor: bgColor2;
+            startY: 0;
+            endY: 100%;
+        };
+    }
+}

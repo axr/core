@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2011/12/26
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 6
+ *      Core version: 0.43
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -109,12 +109,16 @@ namespace AXR {
         
         void setScope(const std::vector<HSSDisplayObject::p> * newScope);
         
+        void setThisObj(HSSDisplayObject::p value);
+        HSSDisplayObject::p getThisObj();
+        
     protected:
         std::deque<HSSPropertyDefinition::p> properties;
         std::vector<HSSObjectDefinition::p> children;
         
         boost::weak_ptr<HSSObjectDefinition> parent;
         
+        HSSDisplayObject::p thisObj;
         const std::vector<HSSDisplayObject::p> * scope;
         
     private:

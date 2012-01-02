@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/24
+ *      Last changed: 2011/12/26
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 8
+ *      Core version: 0.43
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -58,7 +58,7 @@
 using namespace AXR;
 
 std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property){
-    static std::string types[40];
+    static std::string types[50];
     static bool HSSObservableHasInitializedTypes = false;
     if (!HSSObservableHasInitializedTypes) {
         HSSObservableHasInitializedTypes = true;
@@ -93,6 +93,18 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyGreen] = "HSSObservablePropertyGreen";
         types[HSSObservablePropertyBlue] = "HSSObservablePropertyBlue";
         types[HSSObservablePropertyAlpha] = "HSSObservablePropertyAlpha";
+        
+        //HSSGradient
+        types[HSSObservablePropertyStartColor] = "HSSObservablePropertyStartColor";
+        types[HSSObservablePropertyEndColor] = "HSSObservablePropertyEndColor";
+        types[HSSObservablePropertyBalance] = "HSSObservablePropertyBalance";
+        types[HSSObservablePropertyColorStops] = "HSSObservablePropertyColorStops";
+        
+        //HSSLinearGradient
+        types[HSSObservablePropertyStartX] = "HSSObservablePropertyStartX";
+        types[HSSObservablePropertyStartY] = "HSSObservablePropertyStartY";
+        types[HSSObservablePropertyEndX] = "HSSObservablePropertyEndX";
+        types[HSSObservablePropertyEndY] = "HSSObservablePropertyEndY";
         
         //HSSFont
         types[HSSObservablePropertySize] = "HSSObservablePropertySize";
@@ -153,6 +165,17 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["green"] = HSSObservablePropertyGreen;
         properties["blue"] = HSSObservablePropertyBlue;
         properties["alpha"] = HSSObservablePropertyAlpha;
+        
+        //HSSGradient
+        properties["startColor"] = HSSObservablePropertyStartColor;
+        properties["endColor"] = HSSObservablePropertyEndColor;
+        properties["balance"] = HSSObservablePropertyBalance;
+        
+        //HSSLinearGradient
+        properties["startX"] = HSSObservablePropertyStartX;
+        properties["startY"] = HSSObservablePropertyStartY;
+        properties["endX"] = HSSObservablePropertyEndX;
+        properties["endY"] = HSSObservablePropertyEndY;
         
         //HSSFont
         properties["size"] = HSSObservablePropertySize;
