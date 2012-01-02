@@ -60,6 +60,7 @@
 #include <boost/pointer_cast.hpp>
 #include "../hss/parsing/HSSSelectorChain.h"
 #include "../hss/parsing/HSSFilters.h"
+#include <boost/algorithm/string.hpp>
 
 using namespace AXR;
 
@@ -802,7 +803,10 @@ void AXRController::appendContentText(std::string text)
 
 void AXRController::exitElement()
 {
-    //std_log1("exit element");
+    const HSSContainer::p &cc = this->currentContext.top();
+    std::string newContentText = cc->getContentText();
+    boost::trim(newContentText);
+    cc->setContentText(newContentText);
     this->currentContext.pop();
 }
 
