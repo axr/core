@@ -143,10 +143,16 @@
 		4EA6EB0D144089A600309E10 /* OSXErrorsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA6EB0B144089A600309E10 /* OSXErrorsManager.h */; };
 		4EA6EB1014408D4F00309E10 /* AXRAbstractErrorsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EA6EB0E14408D4E00309E10 /* AXRAbstractErrorsManager.cpp */; };
 		4EA6EB1114408D4F00309E10 /* AXRAbstractErrorsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA6EB0F14408D4F00309E10 /* AXRAbstractErrorsManager.h */; };
+		4EAF985D14AD02630060E1F0 /* HSSThisSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EAF985B14AD02610060E1F0 /* HSSThisSelector.cpp */; };
+		4EAF985E14AD02630060E1F0 /* HSSThisSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EAF985C14AD02620060E1F0 /* HSSThisSelector.h */; };
 		4EAF9D0E145DC8CB00E92B33 /* HSSLastFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EAF9D0C145DC8CB00E92B33 /* HSSLastFilter.cpp */; };
 		4EAF9D0F145DC8CB00E92B33 /* HSSLastFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EAF9D0D145DC8CB00E92B33 /* HSSLastFilter.h */; };
 		4EBEABF61351CE0B000D6CE7 /* AXRExceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EBEABF41351CE0B000D6CE7 /* AXRExceptions.cpp */; };
 		4EBEABF71351CE0B000D6CE7 /* AXRExceptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EBEABF51351CE0B000D6CE7 /* AXRExceptions.h */; };
+		4EC1891614A69DD0009715F1 /* HSSGradient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EC1891414A69DD0009715F1 /* HSSGradient.cpp */; };
+		4EC1891714A69DD0009715F1 /* HSSGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EC1891514A69DD0009715F1 /* HSSGradient.h */; };
+		4EC1891A14A6A55A009715F1 /* HSSLinearGradient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EC1891814A6A55A009715F1 /* HSSLinearGradient.cpp */; };
+		4EC1891B14A6A55A009715F1 /* HSSLinearGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EC1891914A6A55A009715F1 /* HSSLinearGradient.h */; };
 		4ECB84EC1431195B00F112E0 /* HSSFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4ECB84EA1431195B00F112E0 /* HSSFont.cpp */; };
 		4ECB84ED1431195B00F112E0 /* HSSFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 4ECB84EB1431195B00F112E0 /* HSSFont.h */; };
 		4ECBE655145C89BE0027B199 /* HSSFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4ECBE653145C89BE0027B199 /* HSSFilter.cpp */; };
@@ -298,10 +304,16 @@
 		4EA6EB0B144089A600309E10 /* OSXErrorsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXErrorsManager.h; sourceTree = "<group>"; };
 		4EA6EB0E14408D4E00309E10 /* AXRAbstractErrorsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRAbstractErrorsManager.cpp; sourceTree = "<group>"; };
 		4EA6EB0F14408D4F00309E10 /* AXRAbstractErrorsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRAbstractErrorsManager.h; sourceTree = "<group>"; };
+		4EAF985B14AD02610060E1F0 /* HSSThisSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSThisSelector.cpp; sourceTree = "<group>"; };
+		4EAF985C14AD02620060E1F0 /* HSSThisSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSThisSelector.h; sourceTree = "<group>"; };
 		4EAF9D0C145DC8CB00E92B33 /* HSSLastFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSLastFilter.cpp; sourceTree = "<group>"; };
 		4EAF9D0D145DC8CB00E92B33 /* HSSLastFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSLastFilter.h; sourceTree = "<group>"; };
 		4EBEABF41351CE0B000D6CE7 /* AXRExceptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = AXRExceptions.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		4EBEABF51351CE0B000D6CE7 /* AXRExceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AXRExceptions.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4EC1891414A69DD0009715F1 /* HSSGradient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSGradient.cpp; sourceTree = "<group>"; };
+		4EC1891514A69DD0009715F1 /* HSSGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSGradient.h; sourceTree = "<group>"; };
+		4EC1891814A6A55A009715F1 /* HSSLinearGradient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSLinearGradient.cpp; sourceTree = "<group>"; };
+		4EC1891914A6A55A009715F1 /* HSSLinearGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSLinearGradient.h; sourceTree = "<group>"; };
 		4ECB84EA1431195B00F112E0 /* HSSFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFont.cpp; sourceTree = "<group>"; };
 		4ECB84EB1431195B00F112E0 /* HSSFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFont.h; sourceTree = "<group>"; };
 		4ECBE653145C89BE0027B199 /* HSSFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFilter.cpp; sourceTree = "<group>"; };
@@ -449,6 +461,10 @@
 				4EFDA75B147991290051565B /* HSSLog.h */,
 				4E80C7FD13505DD200D88409 /* HSSObjectExceptions.cpp */,
 				4E80C7FE13505DD200D88409 /* HSSObjectExceptions.h */,
+				4EC1891414A69DD0009715F1 /* HSSGradient.cpp */,
+				4EC1891514A69DD0009715F1 /* HSSGradient.h */,
+				4EC1891814A6A55A009715F1 /* HSSLinearGradient.cpp */,
+				4EC1891914A6A55A009715F1 /* HSSLinearGradient.h */,
 			);
 			path = objects;
 			sourceTree = "<group>";
@@ -505,6 +521,8 @@
 				4E80C82813505DD300D88409 /* HSSStringConstant.h */,
 				4E80C82913505DD300D88409 /* HSSUniversalSelector.cpp */,
 				4E80C82A13505DD300D88409 /* HSSUniversalSelector.h */,
+				4EAF985B14AD02610060E1F0 /* HSSThisSelector.cpp */,
+				4EAF985C14AD02620060E1F0 /* HSSThisSelector.h */,
 				4E07C4661434DD3300B1B7CA /* HSSFunctionCall.cpp */,
 				4E07C4671434DD3300B1B7CA /* HSSFunctionCall.h */,
 				4E24B32014533FBB00F40154 /* HSSMultipleValueDefinition.cpp */,
@@ -697,6 +715,9 @@
 				4EDE70961465F62800D645EA /* HSSRequest.h in Headers */,
 				4E07FF2F1466B31000626BDC /* HSSSelFunction.h in Headers */,
 				4EFDA75D147991290051565B /* HSSLog.h in Headers */,
+				4EC1891714A69DD0009715F1 /* HSSGradient.h in Headers */,
+				4EC1891B14A6A55A009715F1 /* HSSLinearGradient.h in Headers */,
+				4EAF985E14AD02630060E1F0 /* HSSThisSelector.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -823,6 +844,9 @@
 				4EDE70951465F62800D645EA /* HSSRequest.cpp in Sources */,
 				4E07FF2E1466B31000626BDC /* HSSSelFunction.cpp in Sources */,
 				4EFDA75C147991290051565B /* HSSLog.cpp in Sources */,
+				4EC1891614A69DD0009715F1 /* HSSGradient.cpp in Sources */,
+				4EC1891A14A6A55A009715F1 /* HSSLinearGradient.cpp in Sources */,
+				4EAF985D14AD02630060E1F0 /* HSSThisSelector.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
