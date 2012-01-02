@@ -43,84 +43,81 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/28
+ *      Last changed: 2011/12/24
  *      HSS version: 1.0
  *      Core version: 0.43
- *      Revision: 3
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSFONT_H
-#define HSSFONT_H
+#ifndef HSSGRADIENT_H
+#define HSSGRADIENT_H
 
 #include <string>
 #include "HSSObject.h"
 #include "HSSRgb.h"
-#include "../parsing/HSSKeywordConstant.h"
+#include <boost/shared_ptr.hpp>
+#include <cairo/cairo.h>
 
 namespace AXR {
-    class HSSFont : public HSSObject
+    class HSSGradient : public HSSObject
     {
-    public:        
-        friend class HSSParser;
+    public:
         
-        HSSFont();
-        virtual ~HSSFont();
+        HSSGradient();
+        virtual ~HSSGradient();
         
-        typedef boost::shared_ptr<HSSFont> p;
+        typedef boost::shared_ptr<HSSGradient> p;
+        typedef std::vector<HSSGradient::p>::iterator it;
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
+        virtual bool isKeyword(std::string value, std::string property);
+        
+        virtual void draw(cairo_t * cairo) = 0;
         
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
-        //size
-        long double getSize();
-        void setDSize(HSSParserNode::p);
-        void sizeChanged(HSSObservableProperty source, void*data);
-        
-        //face
-        std::string getFace();
-        void setDFace(HSSParserNode::p);
-        void faceChanged(HSSObservableProperty source, void*data);
-        
-        //color
-        HSSRgb::p getColor();
-        HSSParserNode::p getDColor();
-        void setDColor(HSSParserNode::p);
-        void colorChanged(HSSObservableProperty source, void*data);
-        
-        //weight
-        HSSKeywordConstant::p getWeight();
-        void setDWeight(HSSParserNode::p);
-        void weightChanged(HSSObservableProperty source, void*data);
-        
-    private:
-        //size
-        long double size;
-        HSSParserNode::p dSize;
-        HSSObservable * observedSize;
-        HSSObservableProperty observedSizeProperty;
-        //face
-        std::string face;
-        HSSParserNode::p dFace;
-        HSSObservable * observedFace;
-        HSSObservableProperty observedFaceProperty;
         //startColor
-        HSSRgb::p color;
-        HSSParserNode::p dColor;
-        HSSObservable * observedColor;
-        HSSObservableProperty observedColorProperty;
-        //weight
-        HSSKeywordConstant::p weight;
-        HSSParserNode::p dWeight;
-        HSSObservable * observedWeight;
-        HSSObservableProperty observedWeightProperty;
+        HSSRgb::p getStartColor();
+        HSSParserNode::p getDStartColor();
+        void setDStartColor(HSSParserNode::p);
+        void startColorChanged(HSSObservableProperty source, void*data);
         
+        //endColor
+        HSSRgb::p getEndColor();
+        HSSParserNode::p getDEndColor();
+        void setDEndColor(HSSParserNode::p);
+        void endColorChanged(HSSObservableProperty source, void*data);
+        
+        //balance
+        long double getBalance();
+        HSSParserNode::p getDBalance();
+        void setDBalance(HSSParserNode::p);
+        void balanceChanged(HSSObservableProperty source, void*data);
+        
+    protected:
+        //startColor
+        HSSRgb::p startColor;
+        HSSParserNode::p dStartColor;
+        HSSObservable * observedStartColor;
+        HSSObservableProperty observedStartColorProperty;
+        
+        //endColor
+        HSSRgb::p endColor;
+        HSSParserNode::p dEndColor;
+        HSSObservable * observedEndColor;
+        HSSObservableProperty observedEndColorProperty;
+        
+        //balance
+        long double balance;
+        HSSParserNode::p dBalance;
+        HSSObservable * observedBalance;
+        HSSObservableProperty observedBalanceProperty;
         
         long double _setLDProperty(
-                                   void(HSSFont::*callback)(HSSObservableProperty property, void* data),
+                                   void(HSSGradient::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p         value,
                                    long double              percentageBase,
                                    HSSObservableProperty    observedSourceProperty,
@@ -128,7 +125,6 @@ namespace AXR {
                                    HSSObservableProperty    &observedStoreProperty
                                    );
     };
-    
 }
 
 

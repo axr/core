@@ -55,6 +55,7 @@
 
 #include "HSSObject.h"
 #include "../parsing/HSSMultipleValueDefinition.h"
+#include "HSSAction.h"
 
 namespace AXR {
     
@@ -96,8 +97,11 @@ namespace AXR {
         bool isA(HSSEventType type);
         HSSEventType getEventType();
         
-        HSSParserNode::p getDAction();
-        void setDAction(HSSParserNode::p);
+        //action
+        std::vector<HSSAction::p> getAction();
+        const HSSParserNode::p getDAction() const;
+        void setDAction(HSSParserNode::p value);
+        void addDAction(HSSParserNode::p value);
         void actionChanged(HSSObservableProperty source, void*data);
         
         virtual void fire();
@@ -105,7 +109,13 @@ namespace AXR {
         
     protected:
         HSSEventType eventType;
-        HSSMultipleValueDefinition::p dAction;
+        
+        
+        //action
+        HSSParserNode::p dAction;
+        HSSObservable * observedAction;
+        HSSObservableProperty observedActionProperty;
+        std::vector<HSSAction::p> action;
         
         
     };

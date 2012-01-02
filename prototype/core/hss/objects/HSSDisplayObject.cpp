@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/20
+ *      Last changed: 2011/12/26
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 34
+ *      Core version: 0.43
+ *      Revision: 35
  *
  ********************************************************************/
 
@@ -111,9 +111,8 @@ void HSSDisplayObject::initialize()
     observedWidth = observedHeight
     = observedAnchorX = observedAnchorY
     = observedAlignX = observedAlignY
+    = observedBackground
     = NULL;
-    
-    this->dBackground = HSSMultipleValue();
     
     this->borderBleeding = 0.;
     
@@ -124,6 +123,7 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyFlow, (void *) &this->flow);
     this->registerProperty(HSSObservablePropertyHeight, (void *) &this->height);
     this->registerProperty(HSSObservablePropertyWidth, (void *) &this->width);
+    this->registerProperty(HSSObservablePropertyBackground, (void *) &this->dBackground);
     this->registerProperty(HSSObservablePropertyBehavior, (void *) &this->behavior);
     this->registerProperty(HSSObservablePropertyBorder, (void *) &this->dBorder);
 }
@@ -156,6 +156,8 @@ std::string HSSDisplayObject::defaultObjectType(std::string property)
         return "margin";
     } else if (property == "border"){
         return "lineBorder";
+    } else if (property == "background") {
+        return "linearGradient";  
     } else if (property == "transform"){
         return "rotate";
     } else if (property == "effects"){
@@ -535,25 +537,47 @@ void HSSDisplayObject::draw(cairo_t * cairo)
 
 void HSSDisplayObject::drawBackground()
 {
-    long double r = 0., g = 0., b = 0., a = 0;
-    if(this->backgroundColor){
-        r = this->backgroundColor->getRed();
-        g = this->backgroundColor->getGreen();
-        b = this->backgroundColor->getBlue();
-        a = this->backgroundColor->getAlpha();
-    }
-
     cairo_t * cairo = cairo_create(this->backgroundSurface);
     cairo_rectangle(cairo, 0., 0., this->width, this->height);
-    cairo_set_source_rgba(cairo, (r/255), (g/255), (b/255), (a/255));
-    cairo_fill(cairo);
-    
-    //draw a small rectangle to be able to see the anchor X and Y
-//    cairo_rectangle(cairo, this->anchorX-1., this->anchorY-1., 2, 2);
-//    cairo_set_source_rgb(cairo, 1,0,0);
-//    cairo_fill(cairo);
-    
+    this->_drawBackground(cairo);
     cairo_destroy(cairo);
+}
+
+void HSSDisplayObject::_drawBackground(cairo_t * cairo)
+{
+    std::vector<HSSObject::p>::iterator it;
+    for (it=this->background.begin(); it!= this->background.end(); it++) {
+        HSSObject::p theobj = *it;
+        switch (theobj->getType()) {
+            case HSSObjectTypeRgb:
+            {
+                HSSRgb::p color = boost::static_pointer_cast<HSSRgb>(theobj);
+                
+                long double r = 0., g = 0., b = 0., a = 0;
+                if(color){
+                    r = color->getRed();
+                    g = color->getGreen();
+                    b = color->getBlue();
+                    a = color->getAlpha();
+                }
+                
+                cairo_set_source_rgba(cairo, (r/255), (g/255), (b/255), (a/255));
+                cairo_fill_preserve(cairo);
+                
+                break;
+            }
+                
+            case HSSObjectTypeGradient:
+            {
+                HSSLinearGradient::p grad = boost::static_pointer_cast<HSSLinearGradient>(theobj);
+                grad->draw(cairo);
+                break;
+            }
+                                
+            default:
+                break;
+        }
+    }
 }
 
 void HSSDisplayObject::drawForeground()
@@ -666,6 +690,7 @@ void HSSDisplayObject::setGlobalY(long double newValue)
 }
 
 //width
+long double HSSDisplayObject::getWidth() { return this->width; }
 HSSParserNode::p HSSDisplayObject::getDWidth()  {   return this->dWidth; }
 void HSSDisplayObject::setDWidth(HSSParserNode::p value)
 {
@@ -735,19 +760,19 @@ void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
             this->width = widthValue->getValue(*(long double*)data);
             break;
         }
-            
+        
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p widthExpression = boost::static_pointer_cast<HSSExpression>(this->dWidth);
             this->width = widthExpression->evaluate();
             break;
         }
-            
+        
         case HSSParserNodeTypeFunctionCall:
         {
             this->width = *(long double*)data;
         }
-            
+        
         default:
             break;
     }
@@ -759,6 +784,7 @@ void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
 }
 
 //height
+long double HSSDisplayObject::getHeight() { return this->height; }
 HSSParserNode::p HSSDisplayObject::getDHeight() { return this->dHeight; }
 void HSSDisplayObject::setDHeight(HSSParserNode::p value)
 {
@@ -833,7 +859,7 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
             this->height = heightValue->getValue(*(long double*)data);
             break;
         }
-            
+        
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p heightExpression = boost::static_pointer_cast<HSSExpression>(this->dHeight);
@@ -863,6 +889,7 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
 }
 
 //anchorX
+long double HSSDisplayObject::getAnchorX() { return this->anchorX; }
 HSSParserNode::p HSSDisplayObject::getDAnchorX() { return this->dAnchorX; }
 void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
 {
@@ -942,6 +969,7 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
 
 
 //anchorY
+long double HSSDisplayObject::getAnchorY() { return this->anchorY; }
 HSSParserNode::p HSSDisplayObject::getDAnchorY() { return this->dAnchorY; }
 void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
 {
@@ -1028,6 +1056,7 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
 }
 
 //alignX
+long double HSSDisplayObject::getAlignX() { return this->alignX; }
 HSSParserNode::p HSSDisplayObject::getDAlignX() { return this->dAlignX; }
 void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
 {
@@ -1138,6 +1167,7 @@ void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
 }
 
 //alignY
+long double HSSDisplayObject::getAlignY() { return this->alignY; }
 HSSParserNode::p HSSDisplayObject::getDAlignY() { return this->dAlignX; }
 void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
 {
@@ -1248,26 +1278,28 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
 
 
 //background
-const HSSMultipleValue HSSDisplayObject::getDBackground() const { return this->dBackground; }
+HSSParserNode::p HSSDisplayObject::getDBackground() { return this->dBackground; }
 void HSSDisplayObject::setDBackground(HSSParserNode::p value)
 {
-    switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        case HSSParserNodeTypeObjectNameConstant:
-        case HSSParserNodeTypeKeywordConstant:
-        case HSSParserNodeTypeFunctionCall:
-            break;
-        default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for background of "+this->getElementName()));
-    }
+    this->background.clear();
+    this->dBackground = value;
+    this->addDBackground(value);
+}
+
+
+void HSSDisplayObject::addDBackground(HSSParserNode::p value)
+{
+    bool valid = true;
     
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
+        case HSSParserNodeTypeMultipleValueDefinition:
         {
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->apply();
-            this->backgroundColor = boost::static_pointer_cast<HSSRgb>(objdef->getObject());
-            std_log1("added background rgb object: "+this->backgroundColor->toString());
+            HSSParserNode::it iterator;
+            HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(value);
+            std::vector<HSSParserNode::p> values = multiDef->getValues();
+            for (iterator = values.begin(); iterator != values.end(); iterator++) {
+                this->addDBackground(*iterator);
+            }
             break;
         }
             
@@ -1275,34 +1307,95 @@ void HSSDisplayObject::setDBackground(HSSParserNode::p value)
         {
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
-                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
-                objdef->apply();
-                HSSObject::p theObject = objdef->getObject();
-                if (theObject->isA(HSSObjectTypeRgb)){
-                    this->backgroundColor = boost::static_pointer_cast<HSSRgb>(theObject);
+                this->addDBackground(this->axrController->objectTreeGet(objname->getValue()));
+                
+            } catch (AXRError::p e) {
+                e->raise();
+            }
+            break;
+        }
+            
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            this->dBackground = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            if (objdef->getObject()->isA(HSSObjectTypeRgb) || objdef->getObject()->isA(HSSObjectTypeGradient)) {
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
                 }
-            } catch (HSSObjectNotFoundException * e) {
-                std_log1(e->toString());
+                objdef->setThisObj(this->shared_from_this());
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyBackground, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::backgroundChanged));
+                this->background.push_back(theObj);
+            } else {
+                valid = false;
             }
             
             break;
         }
             
-        default:
+        case HSSParserNodeTypeFunctionCall:
         {
-            std_log1("unkown parser node type in background property of display object "+this->name+": "+HSSParserNode::parserNodeStringRepresentation(value->getType()));
+            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
+            HSSFunction::p fnct = fcall->getFunction();
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    fnct->setScope(&(thisCont->getChildren()));
+                }
+                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
+                if(remoteValue){
+                    try {
+                        this->addDBackground(remoteValue);
+                    } catch (AXRError::p e) {
+                        e->raise();
+                    }
+                }
+                
+                
+            } else {
+                valid = false;
+            }
+            
             break;
         }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            if(boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue() == "none"){
+                //ignore
+            } else {
+                valid = false;
+            }
+            break;
+        }
+            
+        default:
+            valid = false;
+            break;
     }
     
-    HSSMultipleValue newBackground;
-    newBackground.add(value);
-    this->dBackground = newBackground;
+    if(!valid){
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for border of "+this->getElementName()));
+    }
     
-    //this->notifyObservers(HSSObservablePropertyAlignY, &this->alignY);
+    this->notifyObservers(HSSObservablePropertyBackground, &this->background);
 }
 
 
+void HSSDisplayObject::backgroundChanged(HSSObservableProperty source, void*data)
+{
+    
+}
 
 //font
 const HSSMultipleValue HSSDisplayObject::getDFont() const { return this->dFont; }
@@ -1425,6 +1518,7 @@ void HSSDisplayObject::setDBehavior(HSSParserNode::p value)
                 std::vector<HSSEvent::p>newVector;
                 this->behavior[eventType] = newVector;
             }
+            this->behavior[eventType].clear();
             this->behavior[eventType].push_back(theEvent);
 
             
@@ -1443,6 +1537,7 @@ void HSSDisplayObject::setDBehavior(HSSParserNode::p value)
                     std::vector<HSSEvent::p>newVector;
                     this->behavior[eventType] = newVector;
                 }
+                this->behavior[eventType].clear();
                 this->behavior[eventType].push_back(theEvent);
                 
             } catch (AXRError::p e) {
@@ -1552,12 +1647,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
             }
             break;
         }
-            
-        case HSSParserNodeTypeKeywordConstant:
-        {
-            
-            break;
-        }
+        
         case HSSParserNodeTypeFunctionCall:
         {
             HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
@@ -1722,6 +1812,11 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
                 return this->fireEvent(type);
             }
             break;
+        }
+            
+        case HSSEventTypeLoad:
+        {
+            return this->fireEvent(type);
         }
             
         default:

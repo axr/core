@@ -68,7 +68,11 @@
 @property (assign) IBOutlet NSTextView *errorLog;
 @property (assign) IBOutlet NSWindow *axrWindow;
 @property (assign) IBOutlet AXRView *axrView;
+@property (assign) BOOL needsFile;
 
+- (id)init;
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification;
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 
 void listHSSStatements(NSString * filepath);
 void listHSSTokens(NSString * filepath);

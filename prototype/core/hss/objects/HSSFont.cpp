@@ -43,18 +43,20 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2011/12/28
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 5
+ *      Core version: 0.43
+ *      Revision: 6
  *
  ********************************************************************/
 
 #include "HSSFont.h"
 #include "../../axr/AXRDebugging.h"
 #include "../../axr/errors/errors.h"
+#include "../../axr/AXRController.h"
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
+#include "../parsing/HSSFunctionCall.h"
 //#include <sstream>
 #include "../parsing/HSSObjectDefinition.h"
 
@@ -169,17 +171,73 @@ void HSSFont::faceChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** faceChanged unimplemented ****************************");
 }
 
-HSSObject::p HSSFont::getColor() { return this->color; }
-void HSSFont::setDColor(HSSParserNode::p value){
+HSSRgb::p HSSFont::getColor() { return this->color; }
+HSSParserNode::p HSSFont::getDColor() { return this->dColor; }
+void HSSFont::setDColor(HSSParserNode::p value)
+{
+    bool valid = true;
     
-    if (value->isA(HSSParserNodeTypeObjectDefinition)){
-        this->dColor = value;
-        HSSObjectDefinition::p dColor = boost::static_pointer_cast<HSSObjectDefinition>(value);
-        dColor->apply();
-        this->color = dColor->getObject();
-    } else {
-        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for color of @font object "+this->name));
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            this->dColor = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeRgb)) {
+                this->color = boost::static_pointer_cast<HSSRgb>(theobj);
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            this->dColor = value;
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                this->setDColor(objdef);
+                
+            } catch (HSSObjectNotFoundException * e) {
+                std_log(e->toString());
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->dColor = value;
+            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
+            HSSFunction::p fnct = fcall->getFunction();
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                fnct->setScope(this->scope);
+                this->color = *(HSSRgb::p *)fnct->evaluate();
+                
+                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSFont>(this, &HSSFont::colorChanged));
+                
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+        default:
+            valid = false;
     }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for color of "+this->name));
+    
+    this->notifyObservers(HSSObservablePropertyColor, &this->color);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
 void HSSFont::colorChanged(AXR::HSSObservableProperty source, void *data)

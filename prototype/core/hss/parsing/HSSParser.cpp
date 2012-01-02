@@ -63,6 +63,7 @@
 #include "HSSExpressions.h"
 #include "../objects/HSSRgb.h"
 #include "HSSFunctionCall.h"
+#include "HSSThisSelector.h"
 #include "../objects/HSSFunctions.h"
 #include "HSSFilter.h"
 
@@ -305,7 +306,36 @@ HSSStatement::p HSSParser::readNextStatement()
         switch (this->currentToken->getType()) {
             case HSSInstructionSign:
             {
-                ret = this->readInstruction();
+                HSSInstruction::p theinstr = this->readInstruction();
+                
+                switch (theinstr->getInstructionType()) {
+                    case HSSGrayscale1Instruction:
+                    case HSSGrayscale2Instruction:
+                    case HSSRGBInstruction:
+                    case HSSRRGGBBInstruction:
+                    case HSSRGBAInstruction:
+                    case HSSRRGGBBAAInstruction:
+                    {
+                        HSSObjectDefinition::p objdef = this->getObjectFromInstruction(theinstr);
+                        this->skip(HSSWhitespace);
+                        if(this->currentToken->isA(HSSIdentifier)){
+                            objdef->getObject()->setName(VALUE_TOKEN(this->currentToken)->getString());
+                            this->readNextToken(true);
+                        }
+                        ret = objdef;
+                        this->skipExpected(HSSEndOfStatement);
+                        if(!this->atEndOfSource()){
+                            this->skip(HSSWhitespace);
+                        }
+                        
+                        break;
+                    }
+                        
+                    default:
+                        ret = theinstr;
+                        break;
+                }
+                
                 break;
             }
             
@@ -345,7 +375,6 @@ HSSStatement::p HSSParser::readNextStatement()
                 
             default:
                 throw AXRWarning::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->filename, this->line, this->column));
-                
                 break;
         }
         
@@ -540,6 +569,32 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                 //adds only if needed
                 ret->add(this->readChildrenCombinatorOrSkip());
                 break;
+            }
+                
+            case HSSObjectSign:
+            {
+                this->readNextToken(true);
+                if(this->currentToken->isA(HSSIdentifier)){
+                    std::string objtype = VALUE_TOKEN(this->currentToken)->getString();
+                    if (objtype == "this") {
+                        ret->add(HSSThisSelector::p(new HSSThisSelector()));
+                        this->readNextToken(true);
+                        break;
+                    } else if (objtype == "super"){
+                        //FIXME
+                        std_log("@super not implemented yet");
+                    } else if (objtype == "parent"){
+                        //FIXME
+                        std_log("@parent not implemented yet");
+                    } else if (objtype == "root"){
+                        //FIXME
+                        std_log("@root not implemented yet");
+                    } else {
+                        throw AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->filename, this->line, this->column));
+                    }
+                }
+                
+                //fall through
             }
                 
             default:
@@ -859,7 +914,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
         switch (this->currentToken->getType()) {
             case HSSSymbol:
             {
-                if(VALUE_TOKEN(this->currentToken)->getString() == "+"){
+                if(VALUE_TOKEN(this->currentToken)->getString() == "&"){
                     HSSToken::p peekToken = this->tokenizer->peekNextToken();
                     if(peekToken->isA(HSSObjectSign)){
                         this->tokenizer->resetPeek();
@@ -888,7 +943,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
                     ret->propertiesAdd(property);
                 } catch (AXRError::p e) {
                     e->raise();
-                    this->readNextToken();
+                    //this->readNextToken();
                     if (!this->atEndOfSource())
                         this->skip(HSSWhitespace);
                 }
@@ -1005,7 +1060,12 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             //now comes either an object definition, a literal value or an expression
             //object
             if (this->currentToken->isA(HSSObjectSign)){
-                ret->addValue(this->readObjectDefinition(propertyName));
+                HSSObjectDefinition::p objdef = this->readObjectDefinition(propertyName);
+                if(objdef){
+                    ret->addValue(objdef);
+                } else {
+                    valid = false;
+                }
                 //this->readNextToken();
                 
             } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
@@ -1018,7 +1078,12 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             } else if (this->currentToken->isA(HSSNumber) || this->currentToken->isA(HSSPercentageNumber) || this->currentToken->isA(HSSParenthesisOpen)){
                 //FIXME: parse the number and see if it is an int or a float
                 HSSParserNode::p exp = this->readExpression();
-                ret->addValue(exp);                
+                if(exp){
+                    ret->addValue(exp);
+                } else {
+                    valid = false;
+                }
+                                
                 
             } else if (this->currentToken->isA(HSSIdentifier)){
                 //this is either a function, a keyword or an object name
@@ -1028,7 +1093,13 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 HSSObject::p objectContext = this->currentObjectContext.top();
                 
                 if (objectContext->isFunction(valuestr, propertyName)){
-                    ret->addValue(this->readExpression());
+                    HSSParserNode::p exp = this->readExpression();
+                    if (exp){
+                        ret->addValue(exp);
+                    } else {
+                        valid = false;
+                    }
+                    
                     //check if it is a keyword
                 } else if (objectContext->isKeyword(valuestr, propertyName)){
                     ret->addValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr))); 
@@ -1056,8 +1127,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 valid = false;
             }
             
-            if (!valid && !this->atEndOfSource()){
-                this->skipUntilEndOfStatement();
+            if (!valid){
                 done = true;
             }
         } catch (AXRError::p e) {
@@ -1560,20 +1630,28 @@ HSSParserNode::p HSSParser::readFunction()
             
             this->checkForUnexpectedEndOfSource();
             this->readNextToken();
-            this->skipExpected(HSSWhitespace);
-            if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of"){
-                std_log1("HSSParser: unexpected token while reading ref function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+            this->skip(HSSWhitespace, true);
+            //if shorthand notation -- assumes 'of @this'
+            HSSSelectorChain::p selectorChain;
+            if(this->currentToken->isA(HSSParenthesisClose)){
+                selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
+                selectorChain->add(HSSThisSelector::p(new HSSThisSelector()));
+                this->readNextToken(true);
+                
+            } else {
+                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of"){
+                    std_log1("HSSParser: unexpected token while reading ref function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+                }
+                this->checkForUnexpectedEndOfSource();
+                this->readNextToken(true);
+                this->skipExpected(HSSWhitespace, true);
+                
+                
+                //now read the selector chain
+                selectorChain = this->readSelectorChain(HSSParenthesisClose);
             }
-            this->checkForUnexpectedEndOfSource();
-            this->readNextToken();
-            this->skipExpected(HSSWhitespace);
             
-            
-            //now read the selector chain
-            refFunction->setSelectorChain(this->readSelectorChain(HSSParenthesisClose));
-            
-            
-            
+           refFunction->setSelectorChain(selectorChain);
             functionCall->setFunction(refFunction);
             ret = functionCall;
             

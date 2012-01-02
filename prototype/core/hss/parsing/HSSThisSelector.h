@@ -43,85 +43,30 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/26
+ *      Last changed: 2011/12/29
  *      HSS version: 1.0
  *      Core version: 0.43
- *      Revision: 11
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSOBSERVABLEPROPERTIES_H
-#define HSSOBSERVABLEPROPERTIES_H
+#ifndef HSSTHISSELECTOR_H
+#define HSSTHISSELECTOR_H
+
+#include "HSSParserNode.h"
+#include <string>
 
 namespace AXR {
-    enum HSSObservableProperty
-    {
-        //HSSObject
-        HSSObservablePropertyNone = 0,
-        HSSObservablePropertyIsA,
+    class HSSThisSelector : public HSSParserNode {
         
-        //HSSDisplayObject
-        HSSObservablePropertyValue,
-        HSSObservablePropertyWidth,
-        HSSObservablePropertyHeight,
-        HSSObservablePropertyAnchorX,
-        HSSObservablePropertyAnchorY,
-        HSSObservablePropertyFlow,
-        HSSObservablePropertyAlignX,
-        HSSObservablePropertyAlignY,
-        HSSObservablePropertyMargin,
-        HSSObservablePropertyPadding,
-        HSSObservablePropertyBorder,
+    public:
+        typedef boost::shared_ptr<HSSThisSelector> p;
         
-        //HSSContainer
-        HSSObservablePropertyContentAlignX,
-        HSSObservablePropertyContentAlignY,
-        HSSObservablePropertyDirectionPrimary,
-        HSSObservablePropertyDirectionSecondary,
-        HSSObservablePropertyBackground,
-        HSSObservablePropertyFont,
-        HSSObservablePropertyShape,
-        HSSObservablePropertyBehavior,
-        
-        //HSSRgb
-        HSSObservablePropertyRed,
-        HSSObservablePropertyGreen,
-        HSSObservablePropertyBlue,
-        HSSObservablePropertyAlpha,
-        
-        //HSSGradient
-        HSSObservablePropertyStartColor,
-        HSSObservablePropertyEndColor,
-        HSSObservablePropertyColorStops,
-        HSSObservablePropertyBalance,
-        
-        //HSSLinearGradient
-        HSSObservablePropertyStartX,
-        HSSObservablePropertyStartY,
-        HSSObservablePropertyEndX,
-        HSSObservablePropertyEndY,
-        
-        //HSSFont
-        HSSObservablePropertySize,
-        HSSObservablePropertyFace,
-        HSSObservablePropertyColor,
-        HSSObservablePropertyWeight,
-        
-        //HSSRoundedRect
-        HSSObservablePropertyCorners,
-        
-        //HSSEvent
-        HSSObservablePropertyAction,
-        
-        //HSSRequest
-        HSSObservablePropertySrc,
-        HSSObservablePropertyTarget,
-        HSSObservablePropertyMode,
-        HSSObservablePropertyContentTarget,
+        HSSThisSelector();
+        virtual std::string toString();
     };
 }
 
-#endif //HSSOBSERVABLEPROPERTIES_H
 
 
-
+#endif

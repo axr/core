@@ -60,6 +60,7 @@
 #include "HSSDisplayObject.h"
 #include "HSSContainer.h"
 #include "HSSLineBorder.h"
+#include "HSSLinearGradient.h"
 #include "HSSMargin.h"
 #include "HSSFont.h"
 #include "HSSRectangle.h"
