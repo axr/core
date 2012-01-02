@@ -63,6 +63,7 @@
 #include "HSSExpressions.h"
 #include "../objects/HSSRgb.h"
 #include "HSSFunctionCall.h"
+#include "HSSThisSelector.h"
 #include "../objects/HSSFunctions.h"
 #include "HSSFilter.h"
 
@@ -568,6 +569,32 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                 //adds only if needed
                 ret->add(this->readChildrenCombinatorOrSkip());
                 break;
+            }
+                
+            case HSSObjectSign:
+            {
+                this->readNextToken(true);
+                if(this->currentToken->isA(HSSIdentifier)){
+                    std::string objtype = VALUE_TOKEN(this->currentToken)->getString();
+                    if (objtype == "this") {
+                        ret->add(HSSThisSelector::p(new HSSThisSelector()));
+                        this->readNextToken(true);
+                        break;
+                    } else if (objtype == "super"){
+                        //FIXME
+                        std_log("@super not implemented yet");
+                    } else if (objtype == "parent"){
+                        //FIXME
+                        std_log("@parent not implemented yet");
+                    } else if (objtype == "root"){
+                        //FIXME
+                        std_log("@root not implemented yet");
+                    } else {
+                        throw AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->filename, this->line, this->column));
+                    }
+                }
+                
+                //fall through
             }
                 
             default:
@@ -1603,20 +1630,28 @@ HSSParserNode::p HSSParser::readFunction()
             
             this->checkForUnexpectedEndOfSource();
             this->readNextToken();
-            this->skipExpected(HSSWhitespace);
-            if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of"){
-                std_log1("HSSParser: unexpected token while reading ref function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+            this->skip(HSSWhitespace, true);
+            //if shorthand notation -- assumes 'of @this'
+            HSSSelectorChain::p selectorChain;
+            if(this->currentToken->isA(HSSParenthesisClose)){
+                selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
+                selectorChain->add(HSSThisSelector::p(new HSSThisSelector()));
+                this->readNextToken(true);
+                
+            } else {
+                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of"){
+                    std_log1("HSSParser: unexpected token while reading ref function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+                }
+                this->checkForUnexpectedEndOfSource();
+                this->readNextToken(true);
+                this->skipExpected(HSSWhitespace, true);
+                
+                
+                //now read the selector chain
+                selectorChain = this->readSelectorChain(HSSParenthesisClose);
             }
-            this->checkForUnexpectedEndOfSource();
-            this->readNextToken();
-            this->skipExpected(HSSWhitespace);
             
-            
-            //now read the selector chain
-            refFunction->setSelectorChain(this->readSelectorChain(HSSParenthesisClose));
-            
-            
-            
+           refFunction->setSelectorChain(selectorChain);
             functionCall->setFunction(refFunction);
             ret = functionCall;
             

@@ -46,58 +46,27 @@
  *      Last changed: 2011/12/29
  *      HSS version: 1.0
  *      Core version: 0.43
- *      Revision: 12
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSPARSERNODE_H
-#define HSSPARSERNODE_H
+#ifndef HSSTHISSELECTOR_H
+#define HSSTHISSELECTOR_H
+
+#include "HSSParserNode.h"
 #include <string>
-#include <boost/shared_ptr.hpp>
-#include <vector>
 
 namespace AXR {
-    enum HSSParserNodeType
-    {
-        HSSParserNodeTypeGeneric = 0,
-        HSSParserNodeTypeSelector,
-        HSSParserNodeTypeUniversalSelector,
-        HSSParserNodeTypeThisSelector,
-        HSSParserNodeTypeParentSelector,
-        HSSParserNodeTypeSuperSelector,
-        HSSParserNodeTypeSubjectSelector,
-        HSSParserNodeTypeCombinator,
-        HSSParserNodeTypeFilter,
-        HSSParserNodeTypeStatement,
-        HSSParserNodeTypeExpression,
-        HSSParserNodeTypeNumberConstant,
-        HSSParserNodeTypePercentageConstant,
-        HSSParserNodeTypeStringConstant,
-        HSSParserNodeTypeKeywordConstant,
-        HSSParserNodeTypeObjectDefinition,
-        HSSParserNodeTypeObjectNameConstant,
-        HSSParserNodeTypeFunctionCall,
-        HSSParserNodeTypeMultipleValueDefinition
-    };
-
-    
-    class HSSParserNode
-    {
+    class HSSThisSelector : public HSSParserNode {
+        
     public:
-        typedef boost::shared_ptr<HSSParserNode> p;
-        typedef std::vector<HSSParserNode::p>::iterator it;
+        typedef boost::shared_ptr<HSSThisSelector> p;
         
-        static std::string parserNodeStringRepresentation(HSSParserNodeType type);
-        
-        HSSParserNode();
+        HSSThisSelector();
         virtual std::string toString();
-        
-        bool isA(HSSParserNodeType otherType);
-        HSSParserNodeType getType();
-        
-    protected:
-        HSSParserNodeType nodeType;
     };
 }
+
+
 
 #endif

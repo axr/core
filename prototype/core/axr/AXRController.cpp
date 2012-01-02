@@ -639,6 +639,11 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(cons
             currentSelection = scope;
             break;
         }
+            
+        case HSSParserNodeTypeThisSelector:
+        {
+            std_log("select this unimplemented");
+        }
         
         default:
             throw AXRError::p(new AXRError("AXRController", "Unknown node type "+HSSParserNode::parserNodeStringRepresentation(selectorType)+" in selector"));
