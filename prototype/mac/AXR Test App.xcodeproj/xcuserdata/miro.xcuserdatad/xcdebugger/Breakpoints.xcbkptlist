@@ -23,58 +23,6 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSParser.cpp"
-         timestampString = "342146780.325483"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "371"
-         endingLineNumber = "371"
-         landmarkName = "HSSParser::readRule()"
-         landmarkType = "5">
-         <Locations>
-            <Location
-               shouldBeEnabled = "No"
-               ignoreCount = "0"
-               continueAfterRunningActions = "No"
-               symbolName = "AXR::HSSParser::readRule()"
-               urlString = "file://localhost/HSSParser.cpp"
-               timestampString = "342843288.662068"
-               startingColumnNumber = "9223372036854775807"
-               endingColumnNumber = "9223372036854775807"
-               startingLineNumber = "371"
-               endingLineNumber = "371">
-            </Location>
-            <Location
-               shouldBeEnabled = "No"
-               ignoreCount = "0"
-               continueAfterRunningActions = "No"
-               symbolName = "boost::unordered_detail::hash_table&lt;boost::unordered_detail::set&lt;boost::hash&lt;std::string&gt;, std::equal_to&lt;std::string&gt;, std::allocator&lt;std::string&gt; &gt; &gt;::rehash_impl(unsigned long)"
-               urlString = "file://localhost/HSSParser.cpp"
-               timestampString = "342843288.662264"
-               startingColumnNumber = "9223372036854775807"
-               endingColumnNumber = "9223372036854775807"
-               startingLineNumber = "371"
-               endingLineNumber = "371">
-            </Location>
-            <Location
-               shouldBeEnabled = "No"
-               ignoreCount = "0"
-               continueAfterRunningActions = "No"
-               symbolName = "boost::unordered_detail::hash_table&lt;boost::unordered_detail::set&lt;boost::hash&lt;std::string&gt;, std::equal_to&lt;std::string&gt;, std::allocator&lt;std::string&gt; &gt; &gt;::create_for_insert(unsigned long)"
-               urlString = "file://localhost/HSSParser.cpp"
-               timestampString = "342843288.662406"
-               startingColumnNumber = "9223372036854775807"
-               endingColumnNumber = "9223372036854775807"
-               startingLineNumber = "371"
-               endingLineNumber = "371">
-            </Location>
-         </Locations>
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "0"
-         filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSParser.cpp"
          timestampString = "342199010.972185"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
@@ -183,12 +131,40 @@
          continueAfterRunningActions = "No"
          isPathRelative = "0"
          filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSDisplayObject.cpp"
-         timestampString = "343850255.163426"
+         timestampString = "346097262.270628"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "383"
-         endingLineNumber = "383"
+         startingLineNumber = "384"
+         endingLineNumber = "384"
          landmarkName = "HSSDisplayObject::setProperty(HSSObservableProperty name, void * value)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/prototype/core/hss/parsing/HSSParser.cpp"
+         timestampString = "346097885.008059"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1001"
+         endingLineNumber = "1001"
+         landmarkName = "HSSParser::readPropertyDefinition(bool shorthandChecked, bool isShorthand)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/parsing/HSSParser.cpp"
+         timestampString = "346884290.989493"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1055"
+         endingLineNumber = "1055"
+         landmarkName = "HSSParser::readPropertyDefinition(bool shorthandChecked, bool isShorthand)"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -196,13 +172,69 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "0"
-         filePath = "/Users/miro/AXR/prototype/core/hss/objects/HSSRefFunction.cpp"
-         timestampString = "343521979.168584"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/parsing/HSSParser.cpp"
+         timestampString = "346882795.697948"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "107"
-         endingLineNumber = "107"
-         landmarkName = "HSSRefFunction::_evaluate()"
+         startingLineNumber = "185"
+         endingLineNumber = "185"
+         landmarkName = "HSSParser::loadFile(std::string filepath)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/parsing/HSSParser.cpp"
+         timestampString = "346884290.989493"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "945"
+         endingLineNumber = "945"
+         landmarkName = "HSSParser::readObjectDefinition(std::string propertyName)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/objects/HSSDisplayObject.cpp"
+         timestampString = "346805716.489454"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1522"
+         endingLineNumber = "1522"
+         landmarkName = "HSSDisplayObject::setDBehavior(HSSParserNode::p value)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/objects/HSSDisplayObject.cpp"
+         timestampString = "346876471.397693"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "499"
+         endingLineNumber = "499"
+         landmarkName = "HSSDisplayObject::draw(cairo_t * cairo)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/axr/AXRController.cpp"
+         timestampString = "346887960.880633"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "645"
+         endingLineNumber = "645"
+         landmarkName = "AXRController::selectSimple(const std::vector&lt;HSSDisplayObject::p&gt; &amp; scope)"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

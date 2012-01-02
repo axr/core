@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/06
+ *      Last changed: 2011/12/29
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.43
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -88,7 +88,6 @@ void * HSSSelFunction::_evaluate()
     this->axrController->setSelectorChain(this->selectorChain);
     this->selection = this->axrController->selectHierarchical(*this->scope);
     this->_value = (void*) &this->selection;
-    std_log(selection.size());
     return this->_value;
 }
 

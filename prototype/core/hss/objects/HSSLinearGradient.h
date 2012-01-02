@@ -43,92 +43,97 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/28
+ *      Last changed: 2011/12/15
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 3
+ *      Core version: 0.42
+ *      Revision: 9
  *
  ********************************************************************/
 
-#ifndef HSSFONT_H
-#define HSSFONT_H
+#ifndef HSSLINEARGRADIENT_H
+#define HSSLINEARGRADIENT_H
 
 #include <string>
-#include "HSSObject.h"
+#include "HSSGradient.h"
+#include <boost/shared_ptr.hpp>
 #include "HSSRgb.h"
-#include "../parsing/HSSKeywordConstant.h"
 
 namespace AXR {
-    class HSSFont : public HSSObject
+    class HSSLinearGradient : public HSSGradient
     {
-    public:        
-        friend class HSSParser;
+    public:
+        typedef boost::shared_ptr<HSSLinearGradient> p;
         
-        HSSFont();
-        virtual ~HSSFont();
-        
-        typedef boost::shared_ptr<HSSFont> p;
+        HSSLinearGradient();
+        virtual ~HSSLinearGradient();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
+        virtual bool isKeyword(std::string value, std::string property);
         
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
-        //size
-        long double getSize();
-        void setDSize(HSSParserNode::p);
-        void sizeChanged(HSSObservableProperty source, void*data);
+        //startX
+        long double getStartX();
+        HSSParserNode::p getDStartX();
+        void setDStartX(HSSParserNode::p value);
+        void startXChanged(HSSObservableProperty source, void *data);
+        //startY
+        long double getStartY();
+        HSSParserNode::p getDStartY();
+        void setDStartY(HSSParserNode::p value);
+        void startYChanged(HSSObservableProperty source, void *data);
+        //endX
+        long double getEndX();
+        HSSParserNode::p getDEndX();
+        void setDEndX(HSSParserNode::p value);
+        void endXChanged(HSSObservableProperty source, void *data);
+        //endY
+        long double getEndY();
+        HSSParserNode::p getDEndY();
+        void setDEndY(HSSParserNode::p value);
+        void endYChanged(HSSObservableProperty source, void *data);
         
-        //face
-        std::string getFace();
-        void setDFace(HSSParserNode::p);
-        void faceChanged(HSSObservableProperty source, void*data);
+        virtual void draw(cairo_t * cairo);
         
-        //color
-        HSSRgb::p getColor();
-        HSSParserNode::p getDColor();
-        void setDColor(HSSParserNode::p);
-        void colorChanged(HSSObservableProperty source, void*data);
+    protected:
+        //startX
+        long double startX;
+        HSSParserNode::p dStartX;
+        HSSObservable * observedStartX;
+        HSSObservableProperty observedStartXProperty;
         
-        //weight
-        HSSKeywordConstant::p getWeight();
-        void setDWeight(HSSParserNode::p);
-        void weightChanged(HSSObservableProperty source, void*data);
+        //startY
+        long double startY;
+        HSSParserNode::p dStartY;
+        HSSObservable * observedStartY;
+        HSSObservableProperty observedStartYProperty;
         
-    private:
-        //size
-        long double size;
-        HSSParserNode::p dSize;
-        HSSObservable * observedSize;
-        HSSObservableProperty observedSizeProperty;
-        //face
-        std::string face;
-        HSSParserNode::p dFace;
-        HSSObservable * observedFace;
-        HSSObservableProperty observedFaceProperty;
-        //startColor
-        HSSRgb::p color;
-        HSSParserNode::p dColor;
-        HSSObservable * observedColor;
-        HSSObservableProperty observedColorProperty;
-        //weight
-        HSSKeywordConstant::p weight;
-        HSSParserNode::p dWeight;
-        HSSObservable * observedWeight;
-        HSSObservableProperty observedWeightProperty;
+        //endX
+        long double endX;
+        HSSParserNode::p dEndX;
+        HSSObservable * observedEndX;
+        HSSObservableProperty observedEndXProperty;
         
+        //endY
+        long double endY;
+        HSSParserNode::p dEndY;
+        HSSObservable * observedEndY;
+        HSSObservableProperty observedEndYProperty;
         
         long double _setLDProperty(
-                                   void(HSSFont::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p         value,
-                                   long double              percentageBase,
-                                   HSSObservableProperty    observedSourceProperty,
-                                   HSSObservable *          &observedStore,
-                                   HSSObservableProperty    &observedStoreProperty
+                                   void(HSSLinearGradient::*callback)(HSSObservableProperty property, void* data),
+                                   HSSParserNode::p       value,
+                                   long double            percentageBase,
+                                   HSSObservableProperty  observedProperty,
+                                   HSSObservable *        observedObject,
+                                   HSSObservableProperty  observedSourceProperty,
+                                   HSSObservable *        &observedStore,
+                                   HSSObservableProperty  &observedStoreProperty
                                    );
+
     };
-    
 }
 
 

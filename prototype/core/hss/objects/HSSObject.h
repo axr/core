@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2011/12/25
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 16
+ *      Core version: 0.43
+ *      Revision: 17
  *
  ********************************************************************/
 
@@ -75,6 +75,7 @@ namespace AXR {
         HSSObjectTypeBorder,
         HSSObjectTypeMargin,
         HSSObjectTypeRgb,
+        HSSObjectTypeGradient,
         HSSObjectTypeFont,
         HSSObjectTypeFunction,
         HSSObjectTypeShape,
@@ -139,6 +140,8 @@ namespace AXR {
         
         HSSObjectType getObjectType();
         
+        void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        boost::shared_ptr<HSSDisplayObject> getThisObj();
         
     protected:
         HSSObjectType type;
@@ -150,6 +153,7 @@ namespace AXR {
         boost::shared_ptr<HSSMultipleValueDefinition> dIsA;
         
         const std::vector<boost::shared_ptr<HSSDisplayObject> > * scope;
+        boost::shared_ptr<HSSDisplayObject> thisObj;
         AXRController * axrController;
         
     private:

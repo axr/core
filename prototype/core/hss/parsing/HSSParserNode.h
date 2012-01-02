@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2011/12/29
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 11
+ *      Core version: 0.43
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -62,6 +62,10 @@ namespace AXR {
         HSSParserNodeTypeGeneric = 0,
         HSSParserNodeTypeSelector,
         HSSParserNodeTypeUniversalSelector,
+        HSSParserNodeTypeThisSelector,
+        HSSParserNodeTypeParentSelector,
+        HSSParserNodeTypeSuperSelector,
+        HSSParserNodeTypeSubjectSelector,
         HSSParserNodeTypeCombinator,
         HSSParserNodeTypeFilter,
         HSSParserNodeTypeStatement,

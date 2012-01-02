@@ -65,13 +65,31 @@ char Buff[BUFFSIZE];
 @synthesize errorLog;
 @synthesize axrWindow;
 @synthesize axrView;
+@synthesize needsFile;
+
+- (id)init
+{
+    [self setNeedsFile:YES];
+    return self;
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
     //NSString * filepath = [[NSBundle mainBundle] pathForResource:@"blank" ofType:@"xml" inDirectory:@"views"];
     //[[self axrView] loadFile:filepath];
     
-    [self openDocument:self];
+    if([self needsFile]){
+        [self openDocument:self];
+        [self setNeedsFile:NO];
+    }
+}
+
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
+{
+    [[self axrWindow] makeKeyAndOrderFront:self];
+    bool ret = [[self axrView] loadFile:filename];
+    [self setNeedsFile:NO];
+    return ret;
 }
 
 void listHSSStatements(NSString *filepath)

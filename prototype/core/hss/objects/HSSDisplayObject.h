@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2011/12/26
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 27
+ *      Core version: 0.43
+ *      Revision: 28
  *
  ********************************************************************/
 
@@ -72,7 +72,7 @@ namespace AXR {
     
     class HSSContainer;
 
-    class HSSDisplayObject :  public HSSObject
+    class HSSDisplayObject : public boost::enable_shared_from_this<HSSDisplayObject>,  public HSSObject
     {
     public:
         
@@ -127,6 +127,7 @@ namespace AXR {
         bool isDirty();
         virtual void draw(cairo_t * cairo);
         virtual void drawBackground();
+        virtual void _drawBackground(cairo_t * cairo);
         virtual void drawForeground();
         virtual void drawBorders();
         virtual void recursiveDraw(cairo_t * cairo);
@@ -142,43 +143,51 @@ namespace AXR {
         void setElementName(std::string name);
         
         //alignX
+        long double getAlignX();
         HSSParserNode::p getDAlignX();
         void setDAlignX(HSSParserNode::p value);
         void alignXChanged(HSSObservableProperty source, void*data);
         
         //alignY
+        long double getAlignY();
         HSSParserNode::p getDAlignY();
         void setDAlignY(HSSParserNode::p value);
         void alignYChanged(HSSObservableProperty source, void*data);
         
         //anchorX
+        long double getAnchorX();
         HSSParserNode::p getDAnchorX();
         void setDAnchorX(HSSParserNode::p value);
         void anchorXChanged(HSSObservableProperty source, void*data);
         
         //anchorY
+        long double getAnchorY();
         HSSParserNode::p getDAnchorY();
         void setDAnchorY(HSSParserNode::p value);
         void anchorYChanged(HSSObservableProperty source, void*data);
         
         //flow
+        bool getFlow();
         HSSParserNode::p getDFlow();
         void setDFlow(HSSParserNode::p value);
         
         //height
+        long double getHeight();
         HSSParserNode::p getDHeight();
         void setDHeight(HSSParserNode::p value);
         void heightChanged(HSSObservableProperty source, void*data);
         
         //width
+        long double getWidth();
         HSSParserNode::p getDWidth();
         void setDWidth(HSSParserNode::p value);
         void widthChanged(HSSObservableProperty source, void*data);
         
         //background
-        const HSSMultipleValue getDBackground() const;
+        HSSParserNode::p getDBackground();
         void setDBackground(HSSParserNode::p value);
         void addDBackground(HSSParserNode::p value);
+        void backgroundChanged(HSSObservableProperty source, void*data);
         
         //font
         const HSSMultipleValue getDFont() const;
@@ -267,8 +276,10 @@ namespace AXR {
         HSSObservable * observedAlignY;
         HSSObservableProperty observedAlignYProperty;
         //background
-        HSSMultipleValue dBackground;
-        HSSRgb::p backgroundColor;
+        HSSParserNode::p dBackground;
+        HSSObservable * observedBackground;
+        HSSObservableProperty observedBackgroundProperty;
+        std::vector<HSSObject::p> background;
         //font
         HSSMultipleValue dFont;
         HSSFont::p font;

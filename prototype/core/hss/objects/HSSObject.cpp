@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2011/12/26
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 16
+ *      Core version: 0.43
+ *      Revision: 17
  *
  ********************************************************************/
 
@@ -73,6 +73,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
         types["value"] = HSSObjectTypeValue;
         types["margin"] = HSSObjectTypeMargin;
         types["rgb"] = HSSObjectTypeRgb;
+        types["linearGradient"] = HSSObjectTypeGradient;
         types["font"] = HSSObjectTypeFont;
         types["rectangle"] = HSSObjectTypeShape;
         types["roundedRect"] = HSSObjectTypeShape;
@@ -114,6 +115,12 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
         {
             //FIXME: border tyes?
             return HSSLineBorder::p(new HSSLineBorder());
+        }
+            
+        case HSSObjectTypeGradient:
+        {
+            //FIXME: gradient tyes?
+            return HSSLinearGradient::p(new HSSLinearGradient());
         }
             
         case HSSObjectTypeGeneric:
@@ -299,12 +306,15 @@ std::string HSSObject::getPropertyForCurrentValue()
     
     security_brake_init();
     while (!done) {
-        ret = this->shorthandProperties[this->shorthandIndex];
-        if (!this->skipShorthand[ret]){
-            return ret;
-        } else {
-            done = !this->shorthandNext();
+        if(this->shorthandProperties.size() > this->shorthandIndex){
+            ret = this->shorthandProperties[this->shorthandIndex];
+            if(this->skipShorthand.find(ret) == this->skipShorthand.end()){
+                return ret;
+            }
         }
+        
+        done = !this->shorthandNext();
+        
         security_brake();
     }
     security_brake_reset();
@@ -469,5 +479,15 @@ AXRController * HSSObject::getController()
 HSSObjectType HSSObject::getObjectType()
 {
     return this->type;
+}
+
+void HSSObject::setThisObj(HSSDisplayObject::p value)
+{
+    this->thisObj = value;
+}
+
+HSSDisplayObject::p HSSObject::getThisObj()
+{
+    return thisObj;
 }
 

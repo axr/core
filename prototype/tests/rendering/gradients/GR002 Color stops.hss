@@ -1,0 +1,32 @@
+/*
+	Test GR002 Color stops
+	Created by Miro Keller on 2011-12-27.
+*/
+
+#F00 bgColor;
+#0F0 bgColor2;
+#00F bgColor3;
+
+master
+{
+    contentAlignY: 50%;
+    background: #3;
+    
+    #new test
+    {
+        width: 200;
+        height: 50%;
+        shape: @{10};
+        border: @{ 1 #FFF5 }, @{ 1 #0008 };
+        background: @linearGradient blackGrad {
+            startColor: bgColor;
+            endColor: bgColor3;
+            startY: 0;
+            endY: 100%;
+            colorStops: @colorStop{
+                color: bgColor2;
+                position: 50%;
+            }
+        };
+    }
+}

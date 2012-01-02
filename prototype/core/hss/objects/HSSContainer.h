@@ -72,7 +72,7 @@ namespace AXR {
         HSSDirectionBottomToTop
     };
     
-    class HSSContainer : public boost::enable_shared_from_this<HSSContainer>, public HSSDisplayObject
+    class HSSContainer : public HSSDisplayObject
     {
     public:
         typedef boost::shared_ptr<HSSContainer> p;
@@ -177,7 +177,7 @@ namespace AXR {
         HSSObservable * observedShape;
         HSSObservableProperty observedShapeProperty;
         
-
+        HSSContainer::p shared_from_this();
         
     private:
         long double _setLDProperty(
