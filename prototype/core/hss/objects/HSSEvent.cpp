@@ -53,6 +53,7 @@
 #import "HSSEvent.h"
 #import "../parsing/HSSObjectNameConstant.h"
 #import "../parsing/HSSObjectDefinition.h"
+#import "../parsing/HSSFunctionCall.h"
 #import <boost/unordered_map.hpp>
 #import <boost/pointer_cast.hpp>
 #import "../../axr/AXRController.h"
@@ -139,31 +140,39 @@ HSSEventType HSSEvent::getEventType()
     return this->eventType;
 }
 
-HSSParserNode::p HSSEvent::getDAction() { return this->dAction; }
+std::vector<HSSAction::p> HSSEvent::getAction() { return this->action; }
+const HSSParserNode::p HSSEvent::getDAction() const { return this->dAction; }
 void HSSEvent::setDAction(HSSParserNode::p value)
 {
+    this->action.clear();
+    this->dAction = value;
+    this->addDAction(value);
+}
+
+void HSSEvent::addDAction(HSSParserNode::p value)
+{
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        case HSSParserNodeTypeObjectNameConstant:
-        case HSSParserNodeTypeKeywordConstant:
-        case HSSParserNodeTypeFunctionCall:
         case HSSParserNodeTypeMultipleValueDefinition:
+        {
+            HSSParserNode::it iterator;
+            HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(value);
+            std::vector<HSSParserNode::p> values = multiDef->getValues();
+            for (iterator = values.begin(); iterator != values.end(); iterator++) {
+                this->addDAction(*iterator);
+            }
             break;
-        default:
-            throw AXRWarning::p(new AXRWarning("HSSEvent", "Invalid value for event "+this->name));
-    }
-    
-    if(!this->dAction){
-        this->dAction = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition());
-    }
-    this->dAction->add(value);
-    
-    switch (value->getType()) {
+        }
+            
         case HSSParserNodeTypeObjectDefinition:
         {
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->apply();
+            if (objdef->getObject()->isA(HSSObjectTypeAction)) {
+                objdef->setScope(this->scope);
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyAction, this, new HSSValueChangedCallback<HSSEvent>(this, &HSSEvent::actionChanged));
+                this->action.push_back(boost::static_pointer_cast<HSSAction>(theObj));
+            }
             
             break;
         }
@@ -173,40 +182,60 @@ void HSSEvent::setDAction(HSSParserNode::p value)
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                objdef->setScope(this->scope);
                 objdef->apply();
                 
-            } catch (HSSObjectNotFoundException * e) {
-                std_log(e->toString());
+                HSSObject::p obj = objdef->getObject();
+                switch (obj->getObjectType()) {
+                    case HSSObjectTypeAction:
+                        this->action.push_back(boost::static_pointer_cast<HSSAction>(obj));
+                        break;
+                        
+                    default:
+                        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for action of @event "+this->name));
+                        break;
+                }
+                
+            } catch (AXRError::p e) {
+                e->raise();
+            }
+            break;
+        }
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
+            HSSFunction::p fnct = fcall->getFunction();
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                
+                fnct->setScope(this->scope);
+                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
+                this->addDAction(remoteValue);
+                
+            } else {
+                throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid function type for action of @event "+this->name));
             }
             
             break;
         }
-        
+            
         default:
-            break;
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for border of @event "+this->name));
     }
-    
-    this->notifyObservers(HSSObservablePropertyAction, &this->dAction);
 }
 
-void HSSEvent::actionChanged(AXR::HSSObservableProperty source, void *data)
+void HSSEvent::actionChanged(HSSObservableProperty source, void*data)
 {
-    AXRWarning::p(new AXRWarning("HSSEvent", "unimplemented"))->raise();
+    std_log("HSSEvent::actionChanged unimplemented");
 }
-
 
 void HSSEvent::fire()
 {
-    if(this->dAction){
-        const std::vector<HSSParserNode::p> & actions = this->dAction->getValues();
-        unsigned i, size;
-        for (i=0, size=actions.size(); i<size; i++) {
-            if(actions[i]->isA(HSSParserNodeTypeObjectDefinition)){
-                HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(actions[i]);
-                boost::static_pointer_cast<HSSAction>(objdef->getObject())->fire();
-            } 
-        } 
-    }
+    std::vector<HSSAction::p> actions = this->getAction();
+    unsigned i, size;
+    for (i=0, size=actions.size(); i<size; i++) {
+        actions[i]->fire();
+    } 
 }
 
 

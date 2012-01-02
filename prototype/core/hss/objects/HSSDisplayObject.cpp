@@ -1425,6 +1425,7 @@ void HSSDisplayObject::setDBehavior(HSSParserNode::p value)
                 std::vector<HSSEvent::p>newVector;
                 this->behavior[eventType] = newVector;
             }
+            this->behavior[eventType].clear();
             this->behavior[eventType].push_back(theEvent);
 
             
@@ -1443,6 +1444,7 @@ void HSSDisplayObject::setDBehavior(HSSParserNode::p value)
                     std::vector<HSSEvent::p>newVector;
                     this->behavior[eventType] = newVector;
                 }
+                this->behavior[eventType].clear();
                 this->behavior[eventType].push_back(theEvent);
                 
             } catch (AXRError::p e) {
@@ -1717,6 +1719,11 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
                 return this->fireEvent(type);
             }
             break;
+        }
+            
+        case HSSEventTypeLoad:
+        {
+            return this->fireEvent(type);
         }
             
         default:

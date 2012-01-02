@@ -109,6 +109,8 @@ void HSSRequest::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 
 void HSSRequest::fire()
 {
+    
+    std_log("----------------------------------\nFiring request: loading file "+this->axrController->basepath+this->src+"\n----------------------------------\n");
     //if there is no target
     if (this->target.size() == 0) {
         this->axrController->loadFile(this->axrController->basepath+this->src, this->src);
@@ -227,13 +229,10 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                         fnct->setScope(this->scope);
                         std::vector< std::vector<HSSDisplayObject::p> > selection = *(std::vector< std::vector<HSSDisplayObject::p> >*) fnct->evaluate();
                         unsigned i, size;
-                        std_log(selection.size());
                         for (i=0, size=selection.size(); i<size; i++) {
                             std::vector<HSSDisplayObject::p> inner = selection[i];
-                            std_log(inner.size());
                             this->target.insert(this->target.end(), inner.begin(), inner.end());
                         }
-                        std_log(this->target.size());
                         
                         //FIXME: potentially leaking
                         fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSRequest>(this, &HSSRequest::targetChanged));

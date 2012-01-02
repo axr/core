@@ -135,6 +135,8 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
         //needs reset on next load
         this->_hasLoadedFile = true;
         
+        HSSDisplayObject::p rootObj;
+        
         //load the obtained stylesheets
         // if(this->loadSheets.size() == 0){
         //    AXRWarning::p(new AXRWarning("AXRController", "There was no stylesheet linked in your XML file"))->raise();
@@ -165,19 +167,23 @@ bool AXRController::loadFile(std::string xmlfilepath, std::string xmlfilename)
                         std_log1("error loading hss file");
                     } else {
                         //assign the rules to the objects
-                        HSSDisplayObject::p rootObj = boost::static_pointer_cast<HSSDisplayObject>(this->root);
+                        rootObj = boost::static_pointer_cast<HSSDisplayObject>(this->root);
                         for (j=0; j<this->rules.size(); j++) {
                             HSSRule::p& rule = this->rules[j];
                             const HSSDisplayObject::p rootScopeArr[1] = {root};
                             const std::vector<HSSDisplayObject::p>rootScope(rootScopeArr, rootScopeArr+1);
                             this->recursiveMatchRulesToDisplayObjects(rule, rootScope, root);
                         }
-                        //read the rules into values
-                        rootObj->recursiveReadDefinitionObjects();
+                        rootObj->setNeedsRereadRules(true);
                     }
                 }
             }
         //}
+        
+        if (rootObj) {
+            rootObj->recursiveReadDefinitionObjects();
+            rootObj->handleEvent(HSSEventTypeLoad, NULL);
+        }
     }
     
     return loadingSuccess;
@@ -215,6 +221,7 @@ bool AXRController::loadFileHSS(std::string hssfilepath, std::string hssfilename
         }
         //read the rules into values
         rootObj->recursiveReadDefinitionObjects();
+        rootObj->fireEvent(HSSEventTypeLoad);
     }
     
     return loadingSuccess;
@@ -242,8 +249,8 @@ void AXRController::recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const
                     HSSRule::p childRule = rule->childrenGet(i);
                     this->recursiveMatchRulesToDisplayObjects(childRule, newContainer->getChildren(), newContainer);
                 }
-                newContainer->readDefinitionObjects();
-                newContainer->fireEvent(HSSEventTypeLoad);
+                newContainer->setNeedsRereadRules(true);
+                //newContainer->fireEvent(HSSEventTypeLoad);
                 this->currentContext.pop();
                 break;
             }
@@ -281,8 +288,8 @@ void AXRController::recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const
                                     } 
                                 }
                                 
-                                theDO->readDefinitionObjects();
-                                theDO->fireEvent(HSSEventTypeLoad);
+                                theDO->setNeedsRereadRules(true);
+                                //theDO->fireEvent(HSSEventTypeLoad);
                             }
                             
                         }
@@ -353,8 +360,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const
                     this->currentContext.pop();
                 }
                 
-                displayObject->readDefinitionObjects();
-                displayObject->fireEvent(HSSEventTypeLoad);
+                displayObject->setNeedsRereadRules(true);
             }
         }
     }

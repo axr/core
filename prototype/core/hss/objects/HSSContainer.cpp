@@ -1390,17 +1390,20 @@ bool HSSContainer::handleEvent(HSSEventType type, void* data)
     HSSDisplayObject::it it;
     bool handled = false;
     for (it=this->children.begin(); it < this->children.end(); it++) {
-        if (!handled) {
-            HSSDisplayObject::p child = *it;
-            handled = child->handleEvent(type, data);
+        HSSDisplayObject::p child = *it;
+        bool childHandled = false;
+        childHandled = child->handleEvent(type, data);
+        if (childHandled) {
+            handled = true;
         }
     }
     
-    if(!handled){
-        return HSSDisplayObject::handleEvent(type, data);
+    bool superHandled = HSSDisplayObject::handleEvent(type, data);
+    if(superHandled){
+        handled = true;
     }
     
-    return false;
+    return handled;
 }
 
 
