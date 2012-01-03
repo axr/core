@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/22
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 16
+ *      Core version: 0.44
+ *      Revision: 17
  *
  ********************************************************************/
 
@@ -61,36 +61,29 @@
 #include "../hss/objects/HSSObject.h"
 #include "../hss/objects/HSSContainer.h"
 #include "../hss/parsing/HSSParser.h"
-#include "../xml/XMLParser.h"
-#include "../os/platform.h"
 
 namespace AXR {
     
     class AXRRender;
+    class AXRCore;
     
     class AXRController
     {
     public:
         typedef boost::shared_ptr<AXRController> p;
         
-        AXRController();
+        AXRController(AXRCore * core);
         virtual ~AXRController();
         virtual std::string toString();
-        
-        void setRender(AXRRender * render);
         
         //use this to clean up and start from fresh
         void reset();
         
-        //tells wether a file has been loaded or not
-        bool hasLoadedFile();
-        
-        bool loadFile();
-        bool loadFile(std::string xmlfilepath, std::string xmlfilename);
-        bool loadFileHSS(std::string hssfilepath, std::string hssfilename);
-        bool reload();
-        bool loadXMLFile(std::string filepath, std::string filename);
-        bool loadHSSFile(std::string filepath, std::string filename);
+        //bool loadFile(std::string xmlfilepath, std::string xmlfilename);
+        //bool loadFileHSS(std::string hssfilepath, std::string hssfilename);
+        //bool reload();
+        //bool loadXMLFile(std::string filepath, std::string filename);
+        //bool loadHSSFile(std::string filepath, std::string filename);
         
         HSSContainer::p & getRoot();
         void setRoot(HSSContainer::p newRoot);
@@ -111,6 +104,7 @@ namespace AXR {
         void loadSheetsAdd(std::string sheet);
         void loadSheetsRemove(unsigned index);
         std::string loadSheetsGet(unsigned index);
+        const std::vector<std::string> loadSheetsGet() const;
         
         const std::vector<HSSStatement::p>& getStatements() const;
         void statementsAdd(HSSStatement::p & statement);
@@ -135,7 +129,7 @@ namespace AXR {
         void recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container);
         
     protected:
-        AXRRender * _render;
+        AXRCore * core;
         
         std::stack<HSSContainer::p>currentContext;
         HSSContainer::p root;
@@ -144,12 +138,6 @@ namespace AXR {
         std::vector<std::string>loadSheets;
         std::vector<HSSStatement::p>statements;
         std::vector<HSSRule::p>rules;
-        XMLParser::p parserXML;
-        HSSParser::p parserHSS;
-        OSHelper::p osHelper;
-        
-        bool _hasLoadedFile;
-        bool _isHSSOnly;
         
         HSSSelectorChain::p currentChain;
         HSSParserNode::p currentSelectorNode;
@@ -157,7 +145,6 @@ namespace AXR {
         unsigned currentChainSize;
         void readNextSelectorNode();
         bool isAtEndOfSelector();
-        
     };
 }
 

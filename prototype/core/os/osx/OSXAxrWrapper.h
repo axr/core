@@ -43,18 +43,34 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/15
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.44
+ *      Revision: 1
  *
  ********************************************************************/
 
 
-#ifdef AXR_PLATFORM_OSX
-#include "osx/OSX.h"
-#elif defined AXR_PLATFORM_WIN
-#include "windows/win.h"
-#elif defined AXR_PLATFORM_GNU
-#include "gnu/gnu.h"
+#ifndef OSXAXRWRAPPER_H
+#define OSXAXRWRAPPER_H
+
+#include "../../axr/AXRWrapper.h"
+
+namespace AXR
+{
+    class OSXAxrWrapper : public AXRWrapper
+    {
+    public:
+        OSXAxrWrapper();
+        virtual ~OSXAxrWrapper();
+        
+        virtual AXRFile::p getFile(std::string url);
+        virtual size_t readFile(AXRFile::p theFile);
+        virtual void closeFile(AXRFile::p theFile);
+        virtual void handleError();
+        virtual bool openFileDialog(std::string &filePath);
+    };
+}
+
+
 #endif

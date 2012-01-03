@@ -43,53 +43,26 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/22
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 3
+ *      Core version: 0.44
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "OSX.h"
-#include "../../axr/AXRDebugging.h"
-#import <Cocoa/Cocoa.h>
-
+#import "AXRFile.h"
 
 using namespace AXR;
 
-OSHelper::OSHelper()
+AXRFile::AXRFile()
 {
     
 }
 
-OSHelper::~OSHelper()
+AXRFile::~AXRFile()
 {
-    
-}
-
-bool OSHelper::openFileDialog(std::string &filePath, std::string &fileName, std::string &basePath)
-{
-    //load a file
-	NSArray *fileTypes = [NSArray arrayWithObjects: @"xml", @"hss", nil];
-	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	int result;
-	[openPanel setCanChooseFiles:TRUE];
-	[openPanel setAllowsMultipleSelection:FALSE];
-	result = [openPanel runModalForTypes:fileTypes];
-	if(result == NSOKButton){
-		if([[openPanel filenames] count] > 0){
-			NSString *filepath_s = [[openPanel filenames] objectAtIndex:0];
-            std_log1(std::string("******************************************************************\n* opening document:\n* ").append([filepath_s UTF8String]).append("\n******************************************************************"));
-            filePath = std::string([filepath_s UTF8String]);
-            fileName = std::string([[filepath_s lastPathComponent] UTF8String]);
-            basePath = std::string([[filepath_s stringByDeletingLastPathComponent] UTF8String]) + "/";
-            return true;
-        }
+    if(this->fileHandle != NULL){
+        fclose(this->fileHandle);
     }
-    
-    return false;
+    delete [] this->buffer;
 }
-
-
-
-

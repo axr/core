@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 9
+ *      Core version: 0.44
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -63,17 +63,12 @@ using namespace AXR;
 
 HSSTokenizer::HSSTokenizer()
 {
-    //create a new, empty buffer - it will be filled later
-    HSSTokenizer::buf_p aBuf = HSSTokenizer::buf_p(new char[AXR_HSS_BUFFER_SIZE]);
-    this->bufferlist.push_back(aBuf);
     //these start out empty
 	this->currentChar = NULL;
 	
 	//initialize the currentTokenText
 	this->currentTokenText = std::string();
 	
-	//store the pointer to the buffer
-	this->buffer = aBuf;
 	//we start out with an empty buffer
 	this->buflen = 0;
 	//we start at the beginning of the buffer
@@ -87,53 +82,20 @@ HSSTokenizer::HSSTokenizer()
     this->preferHex = false;
 }
 
-HSSTokenizer::HSSTokenizer(HSSTokenizer::buf_p buffer, unsigned buflen)
-{
-	//these start out empty
-	this->currentChar = NULL;
-	
-	//initialize the currentTokenText
-	this->currentTokenText = std::string();
-	
-	//store the pointer to the buffer
-	this->buffer = HSSTokenizer::buf_p(buffer);
-	//store the length of the buffer
-	this->buflen = buflen;
-	//we start at the beginning of the buffer
-	this->bufpos = 0;
-    //the peeking offset is 0
-    this->peekpos = this->peekColumn = this->peekLine =  0;
-    //we start at line 1 and column 1
-    this->currentLine = this->currentColumn = 1;
-	
-	//start by reading the first character
-	this->readNextChar();
-    
-    //by default, numbers are read as real numbers and A-F will be an identifier
-    this->preferHex = false;
-}
-
 HSSTokenizer::~HSSTokenizer()
 {
-    this->bufferlist.clear();
+    
 }
 
 void HSSTokenizer::reset()
 {
-    //empty the buffer list
-    this->bufferlist.clear();
-    
-    //create a new, empty buffer - it will be filled later
-    HSSTokenizer::buf_p aBuf = HSSTokenizer::buf_p(new char[AXR_HSS_BUFFER_SIZE]);
-    this->bufferlist.push_back(aBuf);
+    this->file.reset();
     //this starts out empty
 	this->currentChar = NULL;
 	
 	//initialize the currentTokenText
 	this->currentTokenText = std::string();
 	
-	//store the pointer to the buffer
-	this->buffer = aBuf;
 	//we start out at the beginning of an empty buffer
 	this->buflen = this->bufpos = this->peekpos = 0;
     //we start at line 0 and column 0
@@ -143,12 +105,15 @@ void HSSTokenizer::reset()
     this->preferHex = false;
 }
 
+void HSSTokenizer::setFile(AXRFile::p file) { this->file = file; }
+AXRFile::p HSSTokenizer::getFile() { return this->file; }
+
 HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
 {
 	if(this->buflen == this->bufpos){
 		this->currentChar = '\0';
 	} else {
-		this->currentChar = buffer[this->bufpos];
+		this->currentChar = this->file->buffer[this->bufpos];
 	}
 #if AXR_DEBUG_LEVEL > 3
     std::ostringstream tempstream;
@@ -277,12 +242,6 @@ void HSSTokenizer::resetPeek()
     this->peekpos = 0;
     this->peekLine = 0;
     this->peekColumn = 0;
-}
-
-
-HSSTokenizer::buf_p HSSTokenizer::getBuffer()
-{
-    return this->buffer;
 }
 
 void HSSTokenizer::setBufferLength(unsigned length)

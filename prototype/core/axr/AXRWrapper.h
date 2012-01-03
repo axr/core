@@ -43,37 +43,61 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/21
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 2
+ *      Core version: 0.44
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef OSXRENDER_H
-#define OSXRENDER_H
+#ifndef AXRWRAPPER_H
+#define AXRWRAPPER_H
 
-#include "../../axr/AXRRender.h"
-#include <cairo/cairo.h>
+#include <string>
+#include <boost/shared_ptr.hpp>
+#include <boost/unordered_map.hpp>
+#include <stdio.h>
+#include "AXRFile.h"
 
-namespace AXR {
+namespace AXR
+{
+    typedef unsigned AXRFileHandle;
     
-    class AXRController;
+    class AXRCore;
     
-    class OSXRender : public AXRRender {
+    class AXRWrapper
+    {
     public:
-        OSXRender(AXRController * controller);
-        virtual ~OSXRender();
         
-        void drawInRectWithBounds(AXRRect rect, AXRRect bounds);
+        typedef boost::shared_ptr<AXRWrapper> p;
+        
+        AXRWrapper();
+        virtual ~AXRWrapper();
+        virtual AXRFile::p getFile(std::string url) = 0;
+        virtual size_t readFile(AXRFile::p theFile) = 0;
+        virtual void closeFile(AXRFile::p theFile) = 0;
+        virtual void handleError() = 0;
+        virtual bool openFileDialog(std::string &filePath) = 0; 
+        
+        boost::shared_ptr<AXRCore> getCore();
+        void setCore(boost::shared_ptr<AXRCore> xcr);
+        AXRFile::p createDummyXML(std::string stylesheet);
+        
+        bool loadFile();
+        bool loadXMLFile(std::string xmlfilepath);
+        bool loadHSSFile(std::string hssfilepath);
+        bool reload();
+        bool hasLoadedFile();
+        
+        boost::unordered_map<AXRFileHandle, AXRFile::p> files;
+        
+    protected:
+        boost::shared_ptr<AXRCore> core;
+        
+    private:
+        bool _isHSSOnly;
+        bool _hasLoadedFile;
     };
 }
 
-#endif //OSXRENDER_H
-
-
-
-
-
-
-
+#endif

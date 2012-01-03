@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/08
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 7
+ *      Core version: 0.44
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -54,20 +54,13 @@
 
 @interface AXRView : NSView {
 @private
-    //this is actually always AXR::AXRController *, but we hide it
+    //this is actually always AXR::AXRWrapper *, but we hide it
     //so that we don't need to include the c++ header, which would
     //create the requirement to rename main.m to main.mm
-    void * axrController;
-    //this is actually always AXR::AXRRender *, but we hide it
-    //so that we don't need to include the c++ header, which would
-    //create the requirement to rename main.m to main.mm
-    void * axrRender;
-    
-    //this is actually always AXR::ErrorsManager *, but we hide it
-    //so that we don't need to include the c++ header, which would
-    //create the requirement to rename main.m to main.mm
-    void * errorsManager;
+    void * axrWrapper;
 }
+
+@property (assign) BOOL needsFile;
 
 //hack to make it work with IB from a dependent target
 +(void)_keepAtLinkTime;
@@ -78,12 +71,8 @@
 - (BOOL)acceptsFirstResponder;
 
 //connections
-- (void)setAxrController:(void *)theController;
-- (void *)axrController;
-- (void)setAxrRender:(void *)theRender;
-- (void *)axrRender;
-- (void)setErrorsManager:(void *)theErrorsManager;
-- (void *)errorsManager;
+- (void)setAxrWrapper:(void *)theWrapper;
+- (void *)axrWrapper;
 
 //loading files
 - (bool)loadFile;

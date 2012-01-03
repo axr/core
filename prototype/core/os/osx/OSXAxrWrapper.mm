@@ -43,65 +43,96 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/21
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 2
+ *      Core version: 0.44
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "OSXRender.h"
-#import <Cocoa/Cocoa.h>
-#include <cairo/cairo-quartz.h>
-#include "../../axr/AXRController.h"
-#include "../../hss/objects/HSSContainer.h"
-#include "../../hss/parsing/HSSRule.h"
-#include <iostream>
+#include "OSXAxrWrapper.h"
+#include "../../AXR.h"
+#include "../../axr/errors/AXRError.h"
 #include "../../axr/AXRDebugging.h"
+#include <Cocoa/Cocoa.h>
 
 using namespace AXR;
 
-OSXRender::OSXRender(AXRController * controller)
-: AXRRender(controller)
+OSXAxrWrapper::OSXAxrWrapper()
+: AXRWrapper()
 {
     
 }
 
-OSXRender::~OSXRender()
+OSXAxrWrapper::~OSXAxrWrapper()
 {
     
 }
 
-void OSXRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
+AXRFile::p OSXAxrWrapper::getFile(std::string url)
 {
-    //FIXME: is there a more elegant way to transport rectangle data?
-    //eg. inline function, x,y,width,height arguments, etc
-    [[NSColor whiteColor] set];
-    NSRect boundsRect;
-    boundsRect.size.width = bounds.size.width;
-    boundsRect.size.height = bounds.size.height;
-    boundsRect.origin.x = bounds.origin.x;
-    boundsRect.origin.y = bounds.origin.y;
-    NSRectFill(boundsRect);
+    AXRFile::p ret = AXRFile::p(new AXRFile());
     
+    if(url.substr(0, 7) == "file://"){
+        std::string clean_path = url.substr(7, url.size());
+        int slashpos = clean_path.rfind("/");
+        ret->fileName = clean_path.substr(slashpos+1, clean_path.size());
+        ret->basePath = clean_path.substr(0, slashpos);
+        
+        ret->bufferSize = 1024;
+        ret->buffer = new char[ret->bufferSize];
+        ret->fileHandle = fopen(clean_path.c_str(), "r");
+        if( ret->fileHandle == NULL ){
+            AXRError::p(new AXRError("OSXAxrWrapper", "the file"+ret->fileName+" doesn't exist"))->raise();
+        } else if( ferror(ret->fileHandle) ){
+            AXRError::p(new AXRError("OSXAxrWrapper", "the file"+ret->fileName+" couldn't be read"))->raise();
+        }
+        
+    } else {
+        std_log("http is not implemented yet");
+    }
     
-    CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
-    //invert the coordinate system
-    CGContextTranslateCTM (ctxt, 0.0, (int)bounds.size.height);
-    CGContextScaleCTM (ctxt, 1.0, -1.0);
-    
-    cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, rect.size.width, rect.size.height);
-    cairo_t * tempcairo = cairo_create(targetSurface);
-    cairo_surface_destroy(targetSurface);
-    
-    this->cairo = tempcairo;
-    AXRRender::drawInRectWithBounds(rect, bounds);
-    cairo_destroy(this->cairo);
-    this->cairo = NULL;
+    return ret;
+}
 
+size_t OSXAxrWrapper::readFile(AXRFile::p theFile)
+{
+    size_t size = fread(theFile->buffer, sizeof(theFile->buffer[0]), theFile->bufferSize, theFile->fileHandle);
+    if (ferror(theFile->fileHandle)) {
+        fclose(theFile->fileHandle);
+        return -1;
+    }
+    return size;
+}
+
+void OSXAxrWrapper::closeFile(AXRFile::p theFile)
+{
+    fclose(theFile->fileHandle);
+}
+
+void OSXAxrWrapper::handleError()
+{
+    
 }
 
 
-
-
-
+bool OSXAxrWrapper::openFileDialog(std::string &filePath)
+{
+    //load a file
+	NSArray *fileTypes = [NSArray arrayWithObjects: @"xml", @"hss", nil];
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+	int result;
+	[openPanel setCanChooseFiles:TRUE];
+	[openPanel setAllowsMultipleSelection:FALSE];
+	result = [openPanel runModalForTypes:fileTypes];
+	if(result == NSOKButton){
+		if([[openPanel filenames] count] > 0){
+			NSString *filepath_s = [[openPanel filenames] objectAtIndex:0];
+            std_log1(std::string("******************************************************************\n* opening document:\n* ").append([filepath_s UTF8String]).append("\n******************************************************************"));
+            filePath = std::string([filepath_s UTF8String]);
+            return true;
+        }
+    }
+    
+    return false;
+}

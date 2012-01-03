@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/11
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 6
+ *      Core version: 0.44
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -58,6 +58,7 @@
 #include <boost/shared_array.hpp>
 #include <string>
 #include <vector>
+#include "../../axr/AXRFile.h"
 
 namespace AXR {
     //the return states any part of the tokenizer will report
@@ -71,16 +72,16 @@ namespace AXR {
     {
     public:
         typedef boost::shared_ptr<HSSTokenizer> p;
-        typedef boost::shared_array<char> buf_p;
         
         HSSTokenizer();
-        //initialize with a pointer to the buffer where the HSS code is stored, and the lenght of the buffer
-        HSSTokenizer(buf_p buffer, unsigned buflen);
         //destructor
         ~HSSTokenizer();
         
         //this will reset all the properties of the tokenizer to default
         void reset();
+        
+        void setFile(AXRFile::p file);
+        AXRFile::p getFile();
         
         //reads a the next character and stores it, also keeps track of the position in the buffer
         //it will also set the appropriate state if the end of the buffer is reached, but expects
@@ -106,11 +107,10 @@ namespace AXR {
         long int currentLine;
         long int currentColumn;
         
-        buf_p getBuffer();
         void setBufferLength(unsigned length);
         
     protected:
-        std::vector<buf_p>bufferlist;
+        AXRFile::p file;
         
         //the current character that has been read
         char currentChar;
@@ -118,8 +118,6 @@ namespace AXR {
         std::vector<HSSToken::p> tokenList;
         //here's where the current token's text is stored
         std::string currentTokenText;
-        //pointer to the buffer where it will be read
-        buf_p buffer;
         //how long is the buffer?
         unsigned buflen;
         //the position into the buffer

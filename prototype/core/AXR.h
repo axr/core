@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/06
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.44
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -57,11 +57,67 @@
 #define AXR_H
 
 #include "axr/AXRDebugging.h"
-
+#include "axr/AXRRender.h"
+#include "axr/AXRController.h"
+#include "axr/AXRWrapper.h"
 #include "xml/xml.h"
 #include "hss/hss.h"
-#include "axr/AXRController.h"
-#include "os/platform.h"
+#include <cairo/cairo.h>
+#include <boost/shared_ptr.hpp>
+
+namespace AXR
+{
+    class AXRCore
+    {
+    public:
+        typedef boost::shared_ptr<AXRCore> p;
+        
+        AXRCore(AXRWrapper * wrpr);
+        virtual ~AXRCore();
+        
+        //set this before drawing
+        void setCairo(cairo_t * cr);
+        cairo_t * getCairo();
+        
+        //whenever you need to draw, call this
+        virtual void drawInRectWithBounds(AXRRect rect, AXRRect bounds);
+        //this puts everything in motion: loads xml, loads hss, applies rules, etc
+        void run();
+        //restart from fresh
+        void reset();
+        //tells wether a file has been loaded or not
+        bool hasLoadedFile();
+        
+        AXRFile::p getFile();
+        void setFile(AXRFile::p file);
+        
+        AXRWrapper * getWrapper();
+        void setWrapper(AXRWrapper * wrapper);
+        
+        AXRController::p getController();
+        void setController(AXRController::p controller);
+        
+        AXRRender::p getRender();
+        void setRender(AXRRender::p parser);
+        
+        XMLParser::p getParserXML();
+        void setParserXML(XMLParser::p parser);
+        
+        HSSParser::p getParserHSS();
+        void setParserHSS(HSSParser::p parser);
+        
+    protected:
+        AXRWrapper * wrapper;
+        AXRRender::p render;
+        AXRController::p controller;
+        AXRFile::p file;
+        
+        XMLParser::p parserXML;
+        HSSParser::p parserHSS;
+        
+        bool _hasLoadedFile;
+    };
+}
 
 #endif //AXR_H
 

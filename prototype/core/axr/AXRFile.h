@@ -43,31 +43,36 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/05
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 5
+ *      Core version: 0.44
+ *      Revision: 1
  *
  ********************************************************************/
 
+#ifndef AXRFILE_H
+#define AXRFILE_H
 
-#ifndef OS_OSX_H
-#define OS_OSX_H
-
-#include <string>
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    class OSHelper
+    class AXRFile
     {
     public:
-        typedef boost::shared_ptr<OSHelper> p;
+        typedef boost::shared_ptr<AXRFile> p;
         
-        OSHelper();
-        virtual ~OSHelper();
-        bool openFileDialog(std::string &filePath, std::string &fileName, std::string &basePath);
+        AXRFile();
+        virtual ~AXRFile();
+        
+        std::string fileName;
+        char * buffer;
+        long int bufferSize;
+        long int fileSize;
+        std::string mimeType;
+        std::string basePath;
+        std::string extension;
+        FILE * fileHandle;
     };
 }
-
 
 #endif

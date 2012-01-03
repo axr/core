@@ -43,23 +43,23 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/19
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 9
+ *      Core version: 0.44
+ *      Revision: 10
  *
  ********************************************************************/
 
 #import "AXRView.h"
-//#include <cairo/cairo.h>
-#include "../../hss/objects/HSSContainer.h"
-#include "../../axr/AXRController.h"
-#include "../../axr/errors/AXRErrorsManager.h"
-#include "OSXRender.h"
+#include "OSXAxrWrapper.h"
 #include <iostream>
+#include "../../AXR.h"
 #include "../../axr/AXRDebugging.h"
+#include "../../axr/AXRController.h"
+#include <cairo/cairo-quartz.h>
 
 @implementation AXRView
+@synthesize needsFile;
 
 //hack to make it work with IB from a dependent target
 +(void)_keepAtLinkTime
@@ -71,7 +71,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // nothing here
+        //nothing here
     }
     
     return self;
@@ -79,19 +79,14 @@
 
 - (void)awakeFromNib
 {
-    AXR::AXRController * theController = new AXR::AXRController::AXRController();
-    [self setAxrController:theController];
-    AXR::OSXRender * theRender =  new AXR::OSXRender::OSXRender(theController);
-    [self setAxrRender:theRender];
-    theController->setRender(theRender);
-    AXR::AXRErrorsManager * theErrorsManager = AXR::AXRErrorsManager::getInstance().get();
-    [self setErrorsManager:theErrorsManager];
+    [self setNeedsFile:YES];
+    axrWrapper = NULL;
 }
 
 - (void)dealloc
 {
-    delete (AXR::AXRController *)[self axrController];
-    delete (AXR::OSXRender *)[self axrRender];
+    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
+    delete wrapper;
     [super dealloc];
 }
 
@@ -105,23 +100,39 @@
     
     NSRect bounds = [self bounds];
     
-    AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
-    AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
-    
-    if(controller != NULL && controller->hasLoadedFile() && render != NULL){
-        AXR::AXRRect axrRect;
-        axrRect.size.width = dirtyRect.size.width;
-        axrRect.size.height = dirtyRect.size.height;
-        axrRect.origin.x = dirtyRect.origin.x;
-        axrRect.origin.y = dirtyRect.origin.y;
-        AXR::AXRRect axrBounds;
-        axrBounds.size.width = bounds.size.width;
-        axrBounds.size.height = bounds.size.height;
-        axrBounds.origin.x = bounds.origin.x;
-        axrBounds.origin.y = bounds.origin.y;
-        render->drawInRectWithBounds(axrRect, axrBounds);
-        //std_log1(controller->toString());
-                
+    if(![self needsFile]){
+        AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
+        AXR::AXRCore::p core = wrapper->getCore();
+        if(core){
+            
+            [[NSColor whiteColor] set];
+            NSRectFill(bounds);
+            
+            AXR::AXRRect axrRect;
+            axrRect.size.width = dirtyRect.size.width;
+            axrRect.size.height = dirtyRect.size.height;
+            axrRect.origin.x = dirtyRect.origin.x;
+            axrRect.origin.y = dirtyRect.origin.y;
+            AXR::AXRRect axrBounds;
+            axrBounds.size.width = bounds.size.width;
+            axrBounds.size.height = bounds.size.height;
+            axrBounds.origin.x = bounds.origin.x;
+            axrBounds.origin.y = bounds.origin.y;
+            
+            
+            CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+            //invert the coordinate system
+            CGContextTranslateCTM (ctxt, 0.0, (int)bounds.size.height);
+            CGContextScaleCTM (ctxt, 1.0, -1.0);
+            
+            cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, axrRect.size.width, axrRect.size.height);
+            cairo_t * tempcairo = cairo_create(targetSurface);
+            cairo_surface_destroy(targetSurface);
+            core->setCairo(tempcairo);
+            core->drawInRectWithBounds(axrRect, axrBounds);
+            cairo_destroy(tempcairo);
+            core->setCairo(NULL);
+        }
     } else {
         //fill with light gray
         [[NSColor colorWithCalibratedWhite:0.8 alpha:1.] set];
@@ -136,80 +147,69 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
-    NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    NSRect bounds = [self bounds];
-    render->mouseDown(thePoint.x, bounds.size.height - thePoint.y);
-    [self setNeedsDisplay:TRUE];
+//    AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
+//    NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+//    NSRect bounds = [self bounds];
+//    render->mouseDown(thePoint.x, bounds.size.height - thePoint.y);
+//    [self setNeedsDisplay:TRUE];
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-    AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
-    NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    NSRect bounds = [self bounds];
-    render->mouseUp(thePoint.x, bounds.size.height - thePoint.y);
-    [self setNeedsDisplay:TRUE];
+//    AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
+//    NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+//    NSRect bounds = [self bounds];
+//    render->mouseUp(thePoint.x, bounds.size.height - thePoint.y);
+//    [self setNeedsDisplay:TRUE];
 }
 
-- (void)setAxrController:(void *)theController
+- (void)setAxrWrapper:(void *)theWrapper
 {
-    axrController = theController;
+    axrWrapper = theWrapper;
 }
 
-- (void *)axrController
+- (void *)axrWrapper
 {
-    return axrController;
-}
-
-- (void)setAxrRender:(void *)theRender
-{
-    axrRender = theRender;
-}
-
-- (void *)axrRender
-{
-    return axrRender;
-}
-
-- (void *)errorsManager
-{
-    return errorsManager;
-}
-
-- (void)setErrorsManager:(void *)theErrorsManager
-{
-    errorsManager = theErrorsManager;
+    return axrWrapper;
 }
 
 - (bool)loadFile
 {
-    std_log1("loading file");
+    AXR::OSXAxrWrapper * wrapper = new AXR::OSXAxrWrapper();
+    bool loaded = false;
+    if(wrapper!=NULL){
+        loaded = wrapper->loadFile();
+    }
+    if(loaded){
+        [self setNeedsDisplay:YES];
+        [self setNeedsFile:NO];
+        [self setAxrWrapper:wrapper];
+    } else {
+        delete wrapper;
+    }
     
-    AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
-    bool loaded = controller->loadFile();
-    [self setNeedsDisplay:YES];
     return loaded;
 }
 
 - (bool)loadFile:(NSString *)xmlPath
 {
     std_log1("loading file");
-    
-    AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
-    std::string filePath = std::string([xmlPath UTF8String]);
-    std::string fileName = std::string([[xmlPath lastPathComponent] UTF8String]);
-    bool loaded = controller->loadFile(filePath, fileName);
-    [self setNeedsDisplay:YES];
-    return loaded;
+//    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
+    return false;    
+//    AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
+//    std::string filePath = std::string([xmlPath UTF8String]);
+//    std::string fileName = std::string([[xmlPath lastPathComponent] UTF8String]);
+//    bool loaded = controller->loadFile(filePath, fileName);
+//    [self setNeedsDisplay:YES];
+//    return loaded;
 }
 
 - (bool)reload
 {
-    AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
-    if(controller->hasLoadedFile()){
+    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
+    if(wrapper->hasLoadedFile()){
         std_log1("reloading file");
-        bool loaded = controller->reload();
+        bool loaded = wrapper->reload();
         [self setNeedsDisplay:YES];
         return loaded;
     }

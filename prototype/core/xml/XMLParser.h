@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 7
+ *      Core version: 0.44
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -62,8 +62,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include <boost/function.hpp>
-#include <vector>
 #include "../hss/objects/HSSContainer.h"
+#include "../axr/AXRWrapper.h"
 
 namespace AXR {
     
@@ -83,7 +83,7 @@ namespace AXR {
         //XMLParser(AXRController * controller, std::string filepath, std::string filename);
         virtual ~XMLParser();
         
-        bool loadFile(std::string filepath, std::string filename);
+        bool loadFile(AXRFile::p file);
         
         std::string getFilePath();
         std::string getFileName();
@@ -92,6 +92,8 @@ namespace AXR {
         AXRController * controller;
         
     protected:
+        virtual XML_Char *getBuffer(void);
+        virtual size_t getBlockSize(void);
         virtual ssize_t read_block(void);
         virtual void StartElement(const XML_Char *name, const XML_Char **attrs);
         virtual void EndElement(const XML_Char *name);
@@ -99,9 +101,7 @@ namespace AXR {
         virtual void CharacterData(const XML_Char *s, int len);
         
     private:
-        FILE *filehandle;
-        std::string filepath;
-        std::string filename;
+        AXRFile::p file;
         
         XML_Char currentPIChar;
         void readPIChar(XML_Char nextChar);

@@ -46,96 +46,113 @@
  *      Last changed: 2012/01/03
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 8
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "AXRRender.h"
-#include <iostream>
-#include "AXRDebugging.h"
-#include "errors/errors.h"
-#include "../hss/objects/HSSDisplayObject.h"
-#include "AXRController.h"
+#include "AXRWrapper.h"
 #include "../AXR.h"
 
 using namespace AXR;
 
-AXRRender::AXRRender(AXRController * controller, AXRCore * core)
+AXRWrapper::AXRWrapper()
 {
-    this->controller = controller;
-    this->core = core;
-    this->windowWidth = 0;
-    this->windowHeight = 0;
-    this->cairo = NULL;
+    this->_isHSSOnly = false;
+    AXRCore::p axr = AXRCore::p(new AXRCore(this));
+    this->setCore(axr);
 }
 
-AXRRender::~AXRRender()
+AXRWrapper::~AXRWrapper()
 {
     
 }
 
-void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
+boost::shared_ptr<AXRCore> AXRWrapper::getCore() { return this->core; }
+void AXRWrapper::setCore(boost::shared_ptr<AXRCore> xcr) { this->core = xcr; }
+
+AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
 {
-    std_log1("drawing in rect");
-    
-    if(this->cairo == NULL){
-        AXRError::p(new AXRError("AXRRender", "Fatal error: Cairo was not defined"))->raise();
-        exit(0);
+    AXRFile::p ret = AXRFile::p(new AXRFile());
+    ret->fileName = "dummyXML";
+    ret->mimeType = "text/xml";
+    size_t found = stylesheet.rfind("/");
+    if(found != std::string::npos){
+        ret->basePath = stylesheet.substr(0, found+1);
     }
+    ret->extension = "xml";
+    std::string dummyXML = "\
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+<?xml-stylesheet type=\"application/x-hss\" src=\""+stylesheet+"\" version=\"1.0\"?>\
+<root></root>\
+";
+    ret->bufferSize = dummyXML.size();
+    ret->buffer = new char[ret->bufferSize];
+    dummyXML.copy(ret->buffer, ret->bufferSize, 0);
+    ret->bufferSize = ret->fileSize = dummyXML.size();
     
-    //prepare values
-    HSSContainer::p root = this->controller->getRoot();
-    //find out what objects lie in that rect
+    return ret;
+}
+
+
+bool AXRWrapper::loadFile()
+{
+    std::string filepath = std::string();
+    std::string filename = std::string();
+    std::string fileextension = std::string();
     
-    //if the window size has changed, make new size
-    if(bounds.size.width != this->windowWidth || bounds.size.height != this->windowHeight){
-        this->windowWidth = bounds.size.width;
-        this->windowHeight = bounds.size.height;
-        root->setDWidth(HSSNumberConstant::p(new HSSNumberConstant(this->windowWidth)));
-        root->setDHeight(HSSNumberConstant::p(new HSSNumberConstant(this->windowHeight)));
+    bool success = this->openFileDialog(filepath);
+    if(success){
+        fileextension = filepath.substr(filepath.rfind(".") + 1, filepath.length());
+        if(fileextension == "xml"){
+            this->_isHSSOnly = false;
+            return this->loadXMLFile(filepath);
+        } else if (fileextension == "hss") {
+            this->_isHSSOnly = true;
+            return this->loadHSSFile(filepath);
+        } else {
+            AXRError::p(new AXRError("AXRController", "Unknown file extension"))->raise();
+            return false;
+        }
+        
+    } else {
+        return false;
     }
-    //draw the elements
-    root->recursiveDraw(this->cairo);
 }
 
-//this will maintain the reference to controller
-void AXRRender::reset()
+bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 {
-    this->windowWidth = 0;
-    this->windowHeight = 0;
-}
-
-
-void AXRRender::mouseDown(long double x, long double y)
-{
-    //prepare values
-    HSSContainer::p root = this->controller->getRoot();
-    struct point { long double x; long double y; } thePoint;
-    thePoint.x = x;
-    thePoint.y = y;
-    if(root)
-        root->handleEvent(HSSEventTypeMouseDown, (void*)&thePoint);
-}
-
-void AXRRender::mouseUp(long double x, long double y)
-{
-    //prepare values
-    HSSContainer::p root = this->controller->getRoot();
-    struct point { long double x; long double y; } thePoint;
-    thePoint.x = x;
-    thePoint.y = y;
-    if(root){
+    if (!this->core->getFile()) {
+        std::string fullpath = "file://"+xmlfilepath;
         try {
-            root->handleEvent(HSSEventTypeMouseUp, (void*)&thePoint);
+            AXRFile::p theFile = this->getFile(fullpath);
+            this->core->setFile(theFile);
+            
         } catch (AXRError::p e) {
             e->raise();
+            return false;
         }
     }
+    
+    this->core->run();
+    
+    return true;
 }
 
-void AXRRender::setCairo(cairo_t * cairo) {
-    this->cairo = cairo;
+bool AXRWrapper::reload()
+{
+    std::string cur_path = "file://"+this->core->getFile()->basePath+"/"+this->core->getFile()->fileName;
+    this->core->reset();
+    this->core->setFile(this->getFile(cur_path));
+    return this->loadXMLFile(cur_path);
 }
 
-cairo_t * AXRRender::getCairo() { return this->cairo; }
+bool AXRWrapper::loadHSSFile(std::string hssfilepath)
+{
+    return false;
+}
 
+//has loaded file
+bool AXRWrapper::hasLoadedFile()
+{
+    return this->core->hasLoadedFile();
+}
