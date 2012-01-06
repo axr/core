@@ -407,7 +407,7 @@ HSSToken::p HSSTokenizer::readNumberOrPercentage()
     unsigned line = this->currentLine;
     unsigned column = this->currentColumn -1;
     
-	while (isnumber(this->currentChar)){
+	while (isdigit(this->currentChar)){
 		this->storeCurrentCharAndReadNext();
 	}
     HSSToken::p ret;
