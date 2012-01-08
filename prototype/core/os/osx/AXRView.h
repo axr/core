@@ -58,6 +58,7 @@
     //so that we don't need to include the c++ header, which would
     //create the requirement to rename main.m to main.mm
     void * axrWrapper;
+    BOOL needsFile;
 }
 
 @property (assign) BOOL needsFile;
