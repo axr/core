@@ -43,12 +43,14 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2012/01/08
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.44
+ *      Revision: 2
  *
  ********************************************************************/
+
+/* 2012/01/08 ------- disabled for now 
 
 #ifndef OSXERRORSMANAGER_H
 #define OSXERRORSMANAGER_H
@@ -70,3 +72,5 @@ namespace AXR {
 
 
 #endif
+ 
+---------------- */

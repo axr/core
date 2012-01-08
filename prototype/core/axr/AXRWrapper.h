@@ -58,10 +58,11 @@
 #include <boost/unordered_map.hpp>
 #include <stdio.h>
 #include "AXRFile.h"
+#include "errors/AXRError.h"
 
 namespace AXR
 {
-    typedef unsigned AXRFileHandle;
+    typedef unsigned AXRFileHandle; //FIXME: are we going to use this?
     
     class AXRCore;
     
@@ -76,7 +77,7 @@ namespace AXR
         virtual AXRFile::p getFile(std::string url) = 0;
         virtual size_t readFile(AXRFile::p theFile) = 0;
         virtual void closeFile(AXRFile::p theFile) = 0;
-        virtual void handleError() = 0;
+        virtual void handleError(AXRError::p theError) = 0;
         virtual bool openFileDialog(std::string &filePath) = 0; 
         
         boost::shared_ptr<AXRCore> getCore();

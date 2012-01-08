@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/01/08
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 20
+ *      Revision: 21
  *
  ********************************************************************/
 
@@ -723,7 +723,7 @@ void AXRController::reset()
     this->currentChainCount = 0;
     this->currentChainSize = 0;
     
-    AXRErrorsManager::reset();
+    //AXRErrorsManager::reset();
 }
 
 

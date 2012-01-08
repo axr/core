@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2012/01/08
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.44
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -55,6 +55,5 @@
 
 #include "AXRError.h"
 #include "AXRWarning.h"
-#include "AXRErrorsManager.h"
 
 #endif
