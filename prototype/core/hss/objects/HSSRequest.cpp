@@ -109,7 +109,7 @@ void HSSRequest::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 
 void HSSRequest::fire()
 {
-    
+    /*
     std_log("----------------------------------\nFiring request: loading file "+this->axrController->basepath+this->src+"\n----------------------------------\n");
     //if there is no target
     if (this->target.size() == 0) {
@@ -152,7 +152,7 @@ void HSSRequest::fire()
                 break;
             }
         }
-    }
+    }/**/
 }
 
 

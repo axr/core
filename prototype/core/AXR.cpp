@@ -168,3 +168,6 @@ void AXRCore::setParserXML(XMLParser::p parser) { this->parserXML = parser; }
 
 HSSParser::p AXRCore::getParserHSS() { return this->parserHSS; }
 void AXRCore::setParserHSS(HSSParser::p parser) { this->parserHSS = parser; }
+
+
+
