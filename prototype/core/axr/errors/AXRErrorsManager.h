@@ -63,12 +63,14 @@
 #define AXRERRORSMANAGER_SUPERCLASS OSXErrorsManager
 
 #elif defined AXR_PLATFORM_WIN
+#include "../../os/win/WINErrorsManager.h"
+#define AXRERRORSMANAGER_SUPERCLASS WINErrorsManager
 //FIXME: add stuff here
 
 #elif defined AXR_PLATFORM_GNU
 //FIXME: add stuff here
 #endif
-
+/**/
 namespace AXR {
     class AXRErrorsManager : public AXRERRORSMANAGER_SUPERCLASS
 

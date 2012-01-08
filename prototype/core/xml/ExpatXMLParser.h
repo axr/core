@@ -36,7 +36,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <stdio.h>
-#include <expat.h>
+#include <expat/expat.h>
 //#include "expatmm-libdef.h"
 
 #define XML_CHUNK_SIZE 10240

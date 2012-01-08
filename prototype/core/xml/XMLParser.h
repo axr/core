@@ -56,7 +56,7 @@
 
 #include <sys/types.h>
 #include <string>
-#include <expat.h>
+#include <expat/expat.h>
 #include "ExpatXMLParser.h"
 #include "XMLParserExceptions.h"
 #include <boost/shared_ptr.hpp>

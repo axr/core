@@ -51,7 +51,7 @@
  ********************************************************************/
 
 #include "../hss.h"
-#include "HSSValueToken.h"
+#include "../tokenizing/HSSValueToken.h"
 #include "HSSConstants.h"
 #include <iostream>
 #include <cstdlib>
@@ -69,8 +69,8 @@
 
 using namespace AXR;
 
-HSSParser::HSSParser(AXRController * theController)
-{
+HSSParser::HSSParser(AXRController * theController, AXRWrapper * wrapper){
+    this->wrapper = wrapper;
     this->controller = theController;
     this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
     
@@ -125,9 +125,9 @@ void HSSParser::reset()
     this->currentObjectContext.push(HSSContainer::p(new HSSContainer()));
     
 }
-
-bool HSSParser::loadFile(std::string filepath)
+bool HSSParser::loadFile(AXRFile::p file)
 {
+ 	 /*
     security_brake_init();
     
     //check if the file has been loaded already
@@ -289,7 +289,7 @@ bool HSSParser::loadFile(std::string filepath)
     }
     std_log1("reached end of source");
     std_log1("\n\n\n\n");
-    
+    /**/
     return true;
 }
 
