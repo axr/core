@@ -67,7 +67,7 @@ namespace AXR
         virtual AXRFile::p getFile(std::string url);
         virtual size_t readFile(AXRFile::p theFile);
         virtual void closeFile(AXRFile::p theFile);
-        virtual void handleError();
+        virtual void handleError(AXRError::p theError);
         virtual bool openFileDialog(std::string &filePath);
     };
 }

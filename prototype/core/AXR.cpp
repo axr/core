@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/01/21
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -54,7 +54,21 @@
 
 using namespace AXR;
 
-AXRCore::AXRCore(AXRWrapper * wrpr)
+AXRCore::p & AXRCore::getInstance()
+{
+    static AXRCore::p theInstance;
+    if(!theInstance)
+        theInstance = AXRCore::p(new AXRCore());
+    
+    return theInstance;
+}
+
+AXRCore::AXRCore()
+{
+    
+}
+
+void AXRCore::initialize(AXRWrapper * wrpr)
 {
     AXRController::p ctrlr = AXRController::p(new AXRController(this));
     AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.get(), this));
@@ -65,7 +79,6 @@ AXRCore::AXRCore(AXRWrapper * wrpr)
     this->setParserHSS(HSSParser::p(new HSSParser(ctrlr.get(), wrpr)));
     this->_hasLoadedFile = false;
 }
-
 
 AXRCore::~AXRCore()
 {
@@ -87,6 +100,11 @@ void AXRCore::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
 
 void AXRCore::run()
 {
+    //check for wrapper
+    if(this->getWrapper() == NULL){
+        AXRError::p(new AXRError("AXRCore", "The wrapper was not defined"))->raise();
+        return;
+    }
     bool loadingSuccess = this->parserXML->loadFile(this->file);
     if(!loadingSuccess){
         AXRError::p(new AXRError("AXRCore", "Could not load the XML file"))->raise();

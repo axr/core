@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/01/21
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -72,7 +72,11 @@ namespace AXR
     public:
         typedef boost::shared_ptr<AXRCore> p;
         
-        AXRCore(AXRWrapper * wrpr);
+        static AXRCore::p &getInstance();
+        
+        AXRCore();
+        //needs to be called the first time the core is used
+        void initialize(AXRWrapper * wrpr);
         virtual ~AXRCore();
         
         //set this before drawing

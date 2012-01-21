@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/01/08
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -110,9 +110,9 @@ void OSXAxrWrapper::closeFile(AXRFile::p theFile)
     fclose(theFile->fileHandle);
 }
 
-void OSXAxrWrapper::handleError()
+void OSXAxrWrapper::handleError(AXRError::p theError)
 {
-    
+    std_log(theError->toString());
 }
 
 

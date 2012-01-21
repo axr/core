@@ -53,6 +53,7 @@
 #include "AXRError.h"
 #include "../AXRDebugging.h"
 #include <sstream>
+#include "../../AXR.h"
 
 using namespace AXR;
 
@@ -80,11 +81,9 @@ AXRError::~AXRError()
 
 void AXRError::raise()
 {
-    std_log(this->toString());
-//    AXRErrorsManager::p manager = AXRErrorsManager::getInstance();
-//    manager->add(this->shared_from_this());
-//    manager->display();
-    
+    AXRCore::p core = AXRCore::getInstance();
+    AXRWrapper * wrapper = core->getWrapper();
+    wrapper->handleError(this->shared_from_this());
 }
 
 std::string AXRError::toString()

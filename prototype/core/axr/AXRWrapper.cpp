@@ -43,7 +43,7 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/01/21
  *      HSS version: 1.0
  *      Core version: 0.44
  *      Revision: 1
@@ -58,7 +58,8 @@ using namespace AXR;
 AXRWrapper::AXRWrapper()
 {
     this->_isHSSOnly = false;
-    AXRCore::p axr = AXRCore::p(new AXRCore(this));
+    AXRCore::p axr = AXRCore::getInstance();
+    axr->initialize(this);
     this->setCore(axr);
 }
 
