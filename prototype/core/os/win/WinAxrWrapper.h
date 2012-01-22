@@ -25,7 +25,7 @@
  *            MM,
  *
  * 
- *      AUTHORS: Miro Keller
+ *      AUTHORS: Valerij Primachenko
  *      
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
@@ -43,69 +43,35 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/01/08
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 8
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef AXR_XMLPARSER_H
-#define AXR_XMLPARSER_H
 
+#ifndef WinAxrWrapper_H
+#define WinAxrWrapper_H
 
-#include <sys/types.h>
-#include <string>
-#include <expat.h>
-#include "ExpatXMLParser.h"
-#include "XMLParserExceptions.h"
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <boost/function.hpp>
-#include "../hss/objects/HSSContainer.h"
-#include "../axr/AXRWrapper.h"
+#include <windows.h>
+#include "../../axr/AXRWrapper.h"
 
-namespace AXR {
-    
-    
-    class AXRController;
-    
-    class XMLParser : public expatmm::ExpatXMLParser {
+namespace AXR
+{
+    class WinAxrWrapper : public AXRWrapper
+    {
     public:
+        HWND hwnd;
+        WinAxrWrapper();
+        virtual ~WinAxrWrapper();
         
-        typedef boost::shared_ptr<XMLParser> p;
-        typedef boost::function<void (std::string)> addSheetCallback;
-        typedef boost::function<void (HSSContainer::p)> addContainerCallback;
-        
-        XMLParser(AXRController * theController);
-        //the caller is responsible for maintaining the existence of the controller
-        //until after the parser is deallocated
-        //XMLParser(AXRController * controller, std::string filepath, std::string filename);
-        virtual ~XMLParser();
-        
-        bool loadFile(AXRFile::p file);
-        
-        std::string getFilePath();
-        std::string getFileName();
-        
-        //weak ptr
-        AXRController * controller;
-        
-    protected:
-        virtual XML_Char *getBuffer(void);
-        virtual size_t getBlockSize(void);
-        virtual ssize_t read_block(void);
-        virtual void StartElement(const XML_Char *name, const XML_Char **attrs);
-        virtual void EndElement(const XML_Char *name);
-        virtual void ProcessingInstruction(const XML_Char *target, const XML_Char *data);
-        virtual void CharacterData(const XML_Char *s, int len);
-        
-    private:
-        AXRFile::p file;
-        
-        XML_Char currentPIChar;
-        void readPIChar(XML_Char nextChar);
-        void readNextPIAttr();
+        virtual AXRFile::p getFile(std::string url);
+        virtual size_t readFile(AXRFile::p theFile);
+        virtual void closeFile(AXRFile::p theFile);
+        virtual void handleError(AXRError::p theError);
+        virtual bool openFileDialog(std::string &filePath);
+
     };
 }
 
