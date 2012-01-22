@@ -43,25 +43,27 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 7
+ *      Core version: 0.44
+ *      Revision: 8
  *
  ********************************************************************/
 
 #include "AXRRender.h"
 #include <iostream>
-#include "../axr/AXRDebugging.h"
-#include "../axr/errors/errors.h"
+#include "AXRDebugging.h"
+#include "errors/errors.h"
 #include "../hss/objects/HSSDisplayObject.h"
-#include "../axr/AXRController.h"
+#include "AXRController.h"
+#include "../AXR.h"
 
 using namespace AXR;
 
-AXRRender::AXRRender(AXRController * theController)
+AXRRender::AXRRender(AXRController * controller, AXRCore * core)
 {
-    this->controller = theController;
+    this->controller = controller;
+    this->core = core;
     this->windowWidth = 0;
     this->windowHeight = 0;
     this->cairo = NULL;
@@ -77,7 +79,8 @@ void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
     std_log1("drawing in rect");
     
     if(this->cairo == NULL){
-        throw AXRError::p(new AXRError("AXRRender", "Fatal error: Cairo was not defined"));
+        AXRError::p(new AXRError("AXRRender", "Fatal error: Cairo was not defined"))->raise();
+        exit(0);
     }
     
     //prepare values
@@ -130,5 +133,9 @@ void AXRRender::mouseUp(long double x, long double y)
     }
 }
 
+void AXRRender::setCairo(cairo_t * cairo) {
+    this->cairo = cairo;
+}
 
+cairo_t * AXRRender::getCairo() { return this->cairo; }
 

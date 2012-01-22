@@ -43,34 +43,32 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.4
+ *      Core version: 0.44
  *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef AXRABSTRACTERRORSMANAGER_H
-#define AXRABSTRACTERRORSMANAGER_H
 
-#include <boost/shared_ptr.hpp>
-#include <deque>
-#include "AXRError.h"
+#ifndef OSXAXRWRAPPER_H
+#define OSXAXRWRAPPER_H
 
-namespace AXR {
-    class AXRAbstractErrorsManager {
+#include "../../axr/AXRWrapper.h"
+
+namespace AXR
+{
+    class OSXAxrWrapper : public AXRWrapper
+    {
     public:
-        typedef boost::shared_ptr<AXRAbstractErrorsManager>p;
+        OSXAxrWrapper();
+        virtual ~OSXAxrWrapper();
         
-        AXRAbstractErrorsManager();
-        virtual ~AXRAbstractErrorsManager();
-        
-        void add(AXRError::p error);
-        
-        virtual void display() =0;
-        
-    protected:
-        std::deque<AXRError::p> errors;
+        virtual AXRFile::p getFile(std::string url);
+        virtual size_t readFile(AXRFile::p theFile);
+        virtual void closeFile(AXRFile::p theFile);
+        virtual void handleError(AXRError::p theError);
+        virtual bool openFileDialog(std::string &filePath);
     };
 }
 

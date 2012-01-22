@@ -43,30 +43,26 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.4
+ *      Core version: 0.44
  *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef OSXERRORSMANAGER_H
-#define OSXERRORSMANAGER_H
+#import "AXRFile.h"
 
-#include <boost/shared_ptr.hpp>
-#include "../../axr/errors/AXRAbstractErrorsManager.h"
+using namespace AXR;
 
-namespace AXR {
-    class OSXErrorsManager : public AXRAbstractErrorsManager {
-    public:
-        typedef boost::shared_ptr<OSXErrorsManager>p;
-        
-        OSXErrorsManager();
-        virtual ~OSXErrorsManager();
-        
-        virtual void display();
-    };
+AXRFile::AXRFile()
+{
+    
 }
 
-
-#endif
+AXRFile::~AXRFile()
+{
+    if(this->fileHandle != NULL){
+        fclose(this->fileHandle);
+    }
+    delete [] this->buffer;
+}

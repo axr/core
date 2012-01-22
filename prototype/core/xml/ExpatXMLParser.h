@@ -36,7 +36,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <stdio.h>
-#include <expat.h>
+#include <expat/expat.h>
 //#include "expatmm-libdef.h"
 
 #define XML_CHUNK_SIZE 10240
@@ -66,8 +66,8 @@ namespace expatmm {
 	  XML_Parser expat_parser;
       
 	  /* Temporary buffer where data is streamed in */
-	  XML_Char *xml_buffer;
-	  size_t xml_buffer_size;
+	  //XML_Char *xml_buffer;
+	  //size_t xml_buffer_size;
       
 	  /* Tells if the parser is ready to accept data */
 	  bool valid_parser;
@@ -93,8 +93,10 @@ namespace expatmm {
 		   Use setReadiness, setStatus, and setLastError to handle
 		   error, status, and control events and codes. 
       */
-	  virtual XML_Char *getBuffer(void) { return xml_buffer; };
-	  virtual size_t getBlockSize(void) { return xml_buffer_size; };
+      virtual XML_Char *getBuffer(void) = 0;
+	  //virtual XML_Char *getBuffer(void) { return xml_buffer; };
+      virtual size_t getBlockSize(void) = 0;
+	  //virtual size_t getBlockSize(void) { return xml_buffer_size; };
 	  virtual ssize_t read_block(void);
 	  virtual void setReadiness(bool ready) { valid_parser = ready; };
 	  virtual void setStatus(XML_Status new_status) { status = new_status; };

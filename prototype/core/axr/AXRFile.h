@@ -43,37 +43,36 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/21
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 2
+ *      Core version: 0.44
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef OSXRENDER_H
-#define OSXRENDER_H
+#ifndef AXRFILE_H
+#define AXRFILE_H
 
-#include "../../axr/AXRRender.h"
-#include <cairo/cairo.h>
+#include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    
-    class AXRController;
-    
-    class OSXRender : public AXRRender {
+    class AXRFile
+    {
     public:
-        OSXRender(AXRController * controller);
-        virtual ~OSXRender();
+        typedef boost::shared_ptr<AXRFile> p;
         
-        void drawInRectWithBounds(AXRRect rect, AXRRect bounds);
+        AXRFile();
+        virtual ~AXRFile();
+        
+        std::string fileName;
+        char * buffer;
+        long int bufferSize;
+        long int fileSize;
+        std::string mimeType;
+        std::string basePath;
+        std::string extension;
+        FILE * fileHandle;
     };
 }
 
-#endif //OSXRENDER_H
-
-
-
-
-
-
-
+#endif

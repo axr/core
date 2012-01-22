@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.44
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -88,75 +88,75 @@ char Buff[BUFFSIZE];
 {
     [[self axrWindow] makeKeyAndOrderFront:self];
     bool ret = [[self axrView] loadFile:filename];
-    [self setNeedsFile:NO];
+    [self setNeedsFile:YES];
     return ret;
 }
 
 void listHSSStatements(NSString *filepath)
 {
-    std_log1(std::string("******************************************************************\n* reading all statements from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
-    
-    //FIXME: this is uh-gly
-    AXR::AXRController controller = AXR::AXRController() ;
-    AXR::HSSParser hssparser = AXR::HSSParser(&controller);
-    bool loaded = hssparser.loadFile(std::string([filepath UTF8String]));
-    if(loaded){
-        unsigned i;
-        const std::vector<AXR::HSSStatement::p> statements = controller.getStatements();
-        for(i=0; i<statements.size(); i++){
-            std_log1(statements[i]->toString());
-        }
-    } else {
-        std_log1("error loading file");
-    }
-    
-    std_log1("reached end of source");
-    std_log1("\n\n\n\n");
-
-    //std_log1("sorry, this is not working yet");
-#if AXR_DEBUG_LEVEL > 1
-    exit(0);
-#endif
+//    std_log1(std::string("******************************************************************\n* reading all statements from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
+//    
+//    //FIXME: this is uh-gly
+//    AXR::AXRController controller = AXR::AXRController() ;
+//    AXR::HSSParser hssparser = AXR::HSSParser(&controller);
+//    bool loaded = hssparser.loadFile(std::string([filepath UTF8String]));
+//    if(loaded){
+//        unsigned i;
+//        const std::vector<AXR::HSSStatement::p> statements = controller.getStatements();
+//        for(i=0; i<statements.size(); i++){
+//            std_log1(statements[i]->toString());
+//        }
+//    } else {
+//        std_log1("error loading file");
+//    }
+//    
+//    std_log1("reached end of source");
+//    std_log1("\n\n\n\n");
+//
+//    //std_log1("sorry, this is not working yet");
+//#if AXR_DEBUG_LEVEL > 1
+//    exit(0);
+//#endif
 }
 
 void listHSSTokens(NSString *filepath)
 {
-    std_log1(std::string("******************************************************************\n* reading all tokens from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
-    
-    FILE * hssfile = fopen([filepath UTF8String], "r");
-    AXR::HSSTokenizer tokenizer = AXR::HSSTokenizer();
-    int len = (int)fread(tokenizer.getBuffer().get(), 1, AXR_HSS_BUFFER_SIZE, hssfile);
-    tokenizer.setBufferLength(len);
-    tokenizer.readNextChar();
-    fclose(hssfile);
-    
-    
-    AXR::HSSToken::p token;
-    bool done = FALSE;
-    int security_count = 0;
-    while (!done) {
-        if(token){
-            token.reset();
-        }
-        token = tokenizer.readNextToken();
-        if(!token){
-            done = TRUE;
-        } else {
-            std::cout << token->toString() << std::endl;
-        }
-        
-        if(security_count == 99999)
-        {
-            break;
-        } else {
-            security_count++;
-        }
-    }
-    std_log1("reached end of source");
-    std_log1("\n\n\n\n");
-#if AXR_DEBUG_LEVEL > 1
-    exit(0);
-#endif
+//    std_log1(std::string("******************************************************************\n* reading all tokens from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
+//    
+//    FILE * hssfile = fopen([filepath UTF8String], "r");
+//    AXR::HSSTokenizer tokenizer = AXR::HSSTokenizer();
+//    int len = (int)fread(tokenizer.getBuffer().get(), 1, AXR_HSS_BUFFER_SIZE, hssfile);
+//    tokenizer.setBufferLength(len);
+//    tokenizer.readNextChar();
+//    fclose(hssfile);
+//    
+//    
+//    AXR::HSSToken::p token;
+//    bool done = FALSE;
+//    int security_count = 0;
+//    while (!done) {
+//        if(token){
+//            token.reset();
+//        }
+//        token = tokenizer.readNextToken();
+//        if(!token){
+//            done = TRUE;
+//        } else {
+//            std::cout << token->toString() << std::endl;
+//        }
+//        
+//        if(security_count == 99999)
+//        {
+//            break;
+//        } else {
+//            security_count++;
+//        }
+//    }
+//    std_log1("reached end of source");
+//    std_log1("\n\n\n\n");
+//#if AXR_DEBUG_LEVEL > 1
+//    exit(0);
+//#endif
 }
 
 void listXMLElements(NSString *filepath)
@@ -184,53 +184,53 @@ void listXMLElements(NSString *filepath)
 
 - (void)listXMLElements
 {
-    //load the XML file
-	NSArray *xmlFileType = [NSArray arrayWithObject:@"xml"];
-	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	int result;
-	[openPanel setCanChooseFiles:TRUE];
-	[openPanel setAllowsMultipleSelection:FALSE];
-	result = [openPanel runModalForTypes:xmlFileType];
-	if(result == NSOKButton){
-		if([[openPanel filenames] count] > 0){
-			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
-            listXMLElements(filepath);
-		}
-	}
-    std_log1("reached end of source");
-    std_log1("\n\n\n\n");
+//    //load the XML file
+//	NSArray *xmlFileType = [NSArray arrayWithObject:@"xml"];
+//	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+//	int result;
+//	[openPanel setCanChooseFiles:TRUE];
+//	[openPanel setAllowsMultipleSelection:FALSE];
+//	result = [openPanel runModalForTypes:xmlFileType];
+//	if(result == NSOKButton){
+//		if([[openPanel filenames] count] > 0){
+//			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
+//            listXMLElements(filepath);
+//		}
+//	}
+//    std_log1("reached end of source");
+//    std_log1("\n\n\n\n");
 }
 
 - (IBAction)listStatements:(id)sender {
-    //load the HSS file
-	NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
-	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	int result;
-	[openPanel setCanChooseFiles:TRUE];
-	[openPanel setAllowsMultipleSelection:FALSE];
-	result = [openPanel runModalForTypes:hssFileType];
-	if(result == NSOKButton){
-		if([[openPanel filenames] count] > 0){
-			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
-            listHSSStatements(filepath);
-		}
-	}
+//    //load the HSS file
+//	NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
+//	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+//	int result;
+//	[openPanel setCanChooseFiles:TRUE];
+//	[openPanel setAllowsMultipleSelection:FALSE];
+//	result = [openPanel runModalForTypes:hssFileType];
+//	if(result == NSOKButton){
+//		if([[openPanel filenames] count] > 0){
+//			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
+//            listHSSStatements(filepath);
+//		}
+//	}
 }
 
 - (IBAction)listTokens:(id)sender {
-    //load the HSS file
-	NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
-	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	int result;
-	[openPanel setCanChooseFiles:TRUE];
-	[openPanel setAllowsMultipleSelection:FALSE];
-	result = [openPanel runModalForTypes:hssFileType];
-	if(result == NSOKButton){
-		if([[openPanel filenames] count] > 0){
-			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
-            listHSSTokens(filepath);
-		}
-	}
+//    //load the HSS file
+//	NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
+//	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+//	int result;
+//	[openPanel setCanChooseFiles:TRUE];
+//	[openPanel setAllowsMultipleSelection:FALSE];
+//	result = [openPanel runModalForTypes:hssFileType];
+//	if(result == NSOKButton){
+//		if([[openPanel filenames] count] > 0){
+//			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
+//            listHSSTokens(filepath);
+//		}
+//	}
 }
 
 - (IBAction)listXMLElements:(id)sender {

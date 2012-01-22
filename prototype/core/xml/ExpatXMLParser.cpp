@@ -30,7 +30,7 @@
 
 /*
  * File Modified by Miro Keller
- *
+ * last modified: 2012/01/03
  */
 #include "ExpatXMLParser.h"
 
@@ -42,22 +42,23 @@ ExpatXMLParser::ExpatXMLParser(void) {
   expat_parser = NULL;
 
   /* Allocate a buffer for streaming in data */
-  xml_buffer_size = XML_CHUNK_SIZE;
-  xml_buffer = new XML_Char[xml_buffer_size];
+    //MK: we don't need this since the buffers are stored in AXRFiles
+    //xml_buffer_size = XML_CHUNK_SIZE;
+    //xml_buffer = new XML_Char[xml_buffer_size];
 
-  if(xml_buffer == NULL)
-	return;
+    //if(xml_buffer == NULL)
+	//return;
 
   /* Allocate a new parser state-object */
   expat_parser = XML_ParserCreate(NULL);
 
   if(expat_parser == NULL) {
-	delete xml_buffer;
-	xml_buffer = NULL;
+      //delete xml_buffer;
+      //xml_buffer = NULL;
 	return;
   }
 
-  memset(xml_buffer, 0, XML_CHUNK_SIZE * sizeof(XML_Char));
+    //memset(xml_buffer, 0, XML_CHUNK_SIZE * sizeof(XML_Char));
 
   /* Set the "ready" flag on this parser */
   valid_parser = true;
@@ -71,22 +72,23 @@ ExpatXMLParser::ExpatXMLParser(size_t chunk_size) {
   expat_parser = NULL;
 
   /* Allocate a buffer for streaming in data */
-  xml_buffer_size = chunk_size;
-  xml_buffer = new XML_Char[xml_buffer_size];
+    //MK: we don't need this since the buffers are stored in AXRFiles
+    //xml_buffer_size = chunk_size;
+    //xml_buffer = new XML_Char[xml_buffer_size];
 
-  if(xml_buffer == NULL)
-	return;
+    //if(xml_buffer == NULL)
+	//return;
 
   /* Allocate a new parser state-object */
   expat_parser = XML_ParserCreate(NULL);
 
   if(expat_parser == NULL) {
-	delete xml_buffer;
-	xml_buffer = NULL;
+      //delete xml_buffer;
+      //xml_buffer = NULL;
 	return;
   }
 
-  memset(xml_buffer, 0, chunk_size * sizeof(XML_Char));
+    //memset(xml_buffer, 0, chunk_size * sizeof(XML_Char));
 
   /* Set the "ready" flag on this parser */
   valid_parser = true;
@@ -102,10 +104,10 @@ ExpatXMLParser::~ExpatXMLParser(void) {
 	expat_parser = NULL;
   }
 
-  if(xml_buffer != NULL) {
-	delete xml_buffer;
-	xml_buffer = NULL;
-  }
+    //if(xml_buffer != NULL) {
+      //delete xml_buffer;
+      //xml_buffer = NULL;
+    //}
 }
 
 /* 
@@ -159,7 +161,6 @@ ExpatXMLParser::Parse(void) {
 
   /* Loop, reading the XML source block by block */
   while((bytes_read = read_block()) > 0) { //MK: fixed a bug here that caused an infinite loop when the file was empty
-	if(bytes_read > 0) {
 	  XML_Status local_status = 
 		XML_Parse(expat_parser, getBuffer(), bytes_read, XML_FALSE);
 
@@ -172,7 +173,6 @@ ExpatXMLParser::Parse(void) {
 	  /* Break on successful "short read", in event of EOF */
 	  if(getLastError() == XML_ERROR_FINISHED)
 		break;
-	}
   }
 
   /* Finalize the parser */
