@@ -43,38 +43,96 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2012/01/08
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.44
+ *      Revision: 2
  *
  ********************************************************************/
 
-#include "OSXErrorsManager.h"
+#include "OSXAxrWrapper.h"
+#include "../../AXR.h"
 #include "../../axr/errors/AXRError.h"
 #include "../../axr/AXRDebugging.h"
 #include <Cocoa/Cocoa.h>
 
 using namespace AXR;
 
-OSXErrorsManager::OSXErrorsManager()
-: AXRAbstractErrorsManager()
+OSXAxrWrapper::OSXAxrWrapper()
+: AXRWrapper()
 {
     
 }
 
-OSXErrorsManager::~OSXErrorsManager()
+OSXAxrWrapper::~OSXAxrWrapper()
 {
     
 }
 
-void OSXErrorsManager::display()
+AXRFile::p OSXAxrWrapper::getFile(std::string url)
 {
-    for( std::deque<AXRError::p>::iterator i(this->errors.begin()), end(this->errors.end()); i != end;
-        ++i ){
-        std_log((*i)->toString());
+    AXRFile::p ret = AXRFile::p(new AXRFile());
+    
+    if(url.substr(0, 7) == "file://"){
+        std::string clean_path = url.substr(7, url.size());
+        int slashpos = clean_path.rfind("/");
+        ret->fileName = clean_path.substr(slashpos+1, clean_path.size());
+        ret->basePath = clean_path.substr(0, slashpos);
+        
+        ret->bufferSize = 1024;
+        ret->buffer = new char[ret->bufferSize];
+        ret->fileHandle = fopen(clean_path.c_str(), "r");
+        if( ret->fileHandle == NULL ){
+            AXRError::p(new AXRError("OSXAxrWrapper", "the file"+ret->fileName+" doesn't exist"))->raise();
+        } else if( ferror(ret->fileHandle) ){
+            AXRError::p(new AXRError("OSXAxrWrapper", "the file"+ret->fileName+" couldn't be read"))->raise();
+        }
+        
+    } else {
+        std_log("http is not implemented yet");
     }
-    this->errors.clear();
+    
+    return ret;
+}
+
+size_t OSXAxrWrapper::readFile(AXRFile::p theFile)
+{
+    size_t size = fread(theFile->buffer, sizeof(theFile->buffer[0]), theFile->bufferSize, theFile->fileHandle);
+    if (ferror(theFile->fileHandle)) {
+        fclose(theFile->fileHandle);
+        return -1;
+    }
+    return size;
+}
+
+void OSXAxrWrapper::closeFile(AXRFile::p theFile)
+{
+    fclose(theFile->fileHandle);
+}
+
+void OSXAxrWrapper::handleError(AXRError::p theError)
+{
+    std_log(theError->toString());
 }
 
 
+bool OSXAxrWrapper::openFileDialog(std::string &filePath)
+{
+    //load a file
+	NSArray *fileTypes = [NSArray arrayWithObjects: @"xml", @"hss", nil];
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+	int result;
+	[openPanel setCanChooseFiles:TRUE];
+	[openPanel setAllowsMultipleSelection:FALSE];
+	result = [openPanel runModalForTypes:fileTypes];
+	if(result == NSOKButton){
+		if([[openPanel filenames] count] > 0){
+			NSString *filepath_s = [[openPanel filenames] objectAtIndex:0];
+            std_log1(std::string("******************************************************************\n* opening document:\n* ").append([filepath_s UTF8String]).append("\n******************************************************************"));
+            filePath = std::string([filepath_s UTF8String]);
+            return true;
+        }
+    }
+    
+    return false;
+}

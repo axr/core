@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/22
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 16
+ *      Core version: 0.44
+ *      Revision: 17
  *
  ********************************************************************/
 
@@ -63,6 +63,7 @@
 #include <stack>
 #include <boost/shared_ptr.hpp>
 #include <boost/unordered_set.hpp>
+#include "../../axr/AXRFile.h"
 
 namespace AXR {
     enum HSSParserContext {
@@ -74,6 +75,7 @@ namespace AXR {
     };
     
     class AXRController;
+    class AXRWrapper;
     
     class HSSParser
     {
@@ -81,9 +83,8 @@ namespace AXR {
     public:
         typedef boost::shared_ptr<HSSParser> p;
         
-        HSSParser(AXRController * theController);
-        //initialize with a pointer to the buffer where the HSS code is stored, and the lenght of the buffer
-        //HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, std::string filename);
+        HSSParser(AXRController * theController, AXRWrapper * wrapper);
+
         //destructor
         ~HSSParser();
         
@@ -91,7 +92,7 @@ namespace AXR {
         void reset();
         
         //reads the specified file
-        bool loadFile(std::string filepath);
+        bool loadFile(AXRFile::p file);
         
         //reads and returns a shared pointer to the next statement in the buffer
         HSSStatement::p readNextStatement();
@@ -106,6 +107,7 @@ namespace AXR {
         HSSTokenizer::p tokenizer;
         //weak pointer
         AXRController * controller;
+        AXRWrapper * wrapper;
         
         HSSToken::p currentToken;
         std::vector<HSSParserContext> currentContext;
@@ -161,7 +163,7 @@ namespace AXR {
         std::string basepath;
         std::string filename;
         
-        boost::unordered_set<std::string> loadedFiles;
+        boost::unordered_set<AXRFile::p> loadedFiles;
         
     };
 }

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/08
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 4
+ *      Core version: 0.44
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -55,10 +55,12 @@
 
 #include "../hss/parsing/HSSNumberConstant.h"
 #include <cairo/cairo.h>
+#include <boost/shared_ptr.hpp>
 
 namespace AXR {
     
     class AXRController;
+    class AXRCore;
     
     typedef struct {
         double width;
@@ -77,7 +79,9 @@ namespace AXR {
     
     class AXRRender {
     public:
-        AXRRender(AXRController * controller);
+        typedef boost::shared_ptr<AXRRender> p;
+        
+        AXRRender(AXRController * controller, AXRCore * core);
         virtual ~AXRRender();
         
         //root surface should be created in platform specific subclass
@@ -89,9 +93,13 @@ namespace AXR {
         
         void reset();
         
+        void setCairo(cairo_t * cairo);
+        cairo_t * getCairo();
+        
     protected:
         //weak pointer
         AXRController * controller;
+        AXRCore * core;
         double windowWidth;
         double windowHeight;
         cairo_t * cairo;

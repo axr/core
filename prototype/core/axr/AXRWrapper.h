@@ -43,53 +43,62 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/22
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 3
+ *      Core version: 0.44
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "OSX.h"
-#include "../../axr/AXRDebugging.h"
-#import <Cocoa/Cocoa.h>
+#ifndef AXRWRAPPER_H
+#define AXRWRAPPER_H
 
+#include <string>
+#include <boost/shared_ptr.hpp>
+#include <boost/unordered_map.hpp>
+#include <stdio.h>
+#include "AXRFile.h"
+#include "errors/AXRError.h"
 
-using namespace AXR;
-
-OSHelper::OSHelper()
+namespace AXR
 {
+    typedef unsigned AXRFileHandle; //FIXME: are we going to use this?
     
+    class AXRCore;
+    
+    class AXRWrapper
+    {
+    public:
+        
+        typedef boost::shared_ptr<AXRWrapper> p;
+        
+        AXRWrapper();
+        virtual ~AXRWrapper();
+        virtual AXRFile::p getFile(std::string url) = 0;
+        virtual size_t readFile(AXRFile::p theFile) = 0;
+        virtual void closeFile(AXRFile::p theFile) = 0;
+        virtual void handleError(AXRError::p theError) = 0;
+        virtual bool openFileDialog(std::string &filePath) = 0; 
+        
+        boost::shared_ptr<AXRCore> getCore();
+        void setCore(boost::shared_ptr<AXRCore> xcr);
+        AXRFile::p createDummyXML(std::string stylesheet);
+        
+        bool loadFile();
+        bool loadXMLFile(std::string xmlfilepath);
+        bool loadHSSFile(std::string hssfilepath);
+        bool reload();
+        bool hasLoadedFile();
+        
+        boost::unordered_map<AXRFileHandle, AXRFile::p> files;
+        
+    protected:
+        boost::shared_ptr<AXRCore> core;
+        
+    private:
+        bool _isHSSOnly;
+        bool _hasLoadedFile;
+    };
 }
 
-OSHelper::~OSHelper()
-{
-    
-}
-
-bool OSHelper::openFileDialog(std::string &filePath, std::string &fileName, std::string &basePath)
-{
-    //load a file
-	NSArray *fileTypes = [NSArray arrayWithObjects: @"xml", @"hss", nil];
-	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	int result;
-	[openPanel setCanChooseFiles:TRUE];
-	[openPanel setAllowsMultipleSelection:FALSE];
-	result = [openPanel runModalForTypes:fileTypes];
-	if(result == NSOKButton){
-		if([[openPanel filenames] count] > 0){
-			NSString *filepath_s = [[openPanel filenames] objectAtIndex:0];
-            std_log1(std::string("******************************************************************\n* opening document:\n* ").append([filepath_s UTF8String]).append("\n******************************************************************"));
-            filePath = std::string([filepath_s UTF8String]);
-            fileName = std::string([[filepath_s lastPathComponent] UTF8String]);
-            basePath = std::string([[filepath_s stringByDeletingLastPathComponent] UTF8String]) + "/";
-            return true;
-        }
-    }
-    
-    return false;
-}
-
-
-
-
+#endif

@@ -43,15 +43,15 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/20
+ *      Last changed: 2012/01/03
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 20
+ *      Core version: 0.44
+ *      Revision: 21
  *
  ********************************************************************/
 
 #include "../hss.h"
-#include "HSSValueToken.h"
+#include "../tokenizing/HSSValueToken.h"
 #include "HSSConstants.h"
 #include <iostream>
 #include <cstdlib>
@@ -59,6 +59,7 @@
 #include "../../axr/AXRDebugging.h"
 #include "../../axr/errors/errors.h"
 #include "../../axr/AXRController.h"
+#include "../../axr/AXRWrapper.h"
 #include <boost/pointer_cast.hpp>
 #include "HSSExpressions.h"
 #include "../objects/HSSRgb.h"
@@ -69,9 +70,10 @@
 
 using namespace AXR;
 
-HSSParser::HSSParser(AXRController * theController)
+HSSParser::HSSParser(AXRController * theController, AXRWrapper * wrapper)
 {
     this->controller = theController;
+    this->wrapper = wrapper;
     this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
     
     this->currentContext.push_back(HSSParserContextRoot);
@@ -126,44 +128,30 @@ void HSSParser::reset()
     
 }
 
-bool HSSParser::loadFile(std::string filepath)
+bool HSSParser::loadFile(AXRFile::p file)
 {
     security_brake_init();
     
     //check if the file has been loaded already
-    if (this->loadedFiles.find(filepath) != this->loadedFiles.end()){
-        AXRError::p(new AXRError("HSSParser", "Failed loading file "+filepath+" because of circular reference"))->raise();
+    if (this->loadedFiles.find(file) != this->loadedFiles.end()){
+        AXRError::p(new AXRError("HSSParser", "Failed loading file "+file->fileName+" because of circular reference"))->raise();
         return false;
     }
     
     //get the filename from the path
-    this->loadedFiles.insert(filepath);
-    int slashpos = filepath.rfind("/", filepath.size());
-    this->basepath = filepath.substr(0, slashpos+1);
-    this->filename = filepath.substr(slashpos+1);
+    this->loadedFiles.insert(file);
     
-    //open the file for reading
-    FILE * hssfile = fopen(filepath.c_str(), "r");
-    if( hssfile == NULL ){
-        AXRError::p(new AXRError("HSSParser", "the file"+filepath+" doesn't exist"))->raise();
-        return false;
-    } else if( ferror(hssfile) ){
-        AXRError::p(new AXRError("HSSParser", "the file"+filepath+" couldn't be read"))->raise();
-        return false;
-    }
-    //read the file into the buffer of the tokenizer
-    HSSTokenizer::buf_p hssbuffer = this->tokenizer->getBuffer();
-    int len = (int)fread(hssbuffer.get(), 1, AXR_HSS_BUFFER_SIZE, hssfile);
-    if (ferror(hssfile)) {
-        fclose(hssfile);
-        return false;
-    }
+    //propagate the file to the tokenizer
+    this->tokenizer->setFile(file);
+    //read the file
+    int len = this->wrapper->readFile(file);
+    
     //initialize
     this->tokenizer->setBufferLength(len);
     this->tokenizer->readNextChar();
     
     //FIXME: what if the file is longer than the buffer?
-    fclose(hssfile);
+    this->wrapper->closeFile(file);
     
     this->readNextToken();
     
@@ -257,7 +245,7 @@ bool HSSParser::loadFile(std::string filepath)
                             this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
                             this->line = 1;
                             this->column = 1;
-                            this->loadFile(this->basepath+theInstr->getValue());
+                            this->loadFile(this->wrapper->getFile(this->basepath+theInstr->getValue()));
                             
                             //restore
                             this->tokenizer = currentTokenizer;
