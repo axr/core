@@ -1,0 +1,3 @@
+[submodule "prototype/win/cairosdl"]
+	path = prototype/win/cairosdl
+	url = git://people.freedesktop.org/~joonas/cairosdl
