@@ -94,8 +94,8 @@ int main(int argc, char **argv) {
 				cr = cairosdl_create (screen);
 				cairo_translate(cr,0.5,0.5);
 			} else {
-				render();
 			}
+			render();
 
 			SDL_Flip(screen);
 			//SDL_Delay(1000/30);
