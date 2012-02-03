@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/26
+ *      Last changed: 2012/02/02
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 11
+ *      Core version: 0.44
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -82,6 +82,11 @@ namespace AXR {
         HSSObservablePropertyFont,
         HSSObservablePropertyShape,
         HSSObservablePropertyBehavior,
+        
+        //HSSTextBlock
+        HSSObservablePropertyTransform,
+        HSSObservablePropertyTextAlign,
+        HSSObservablePropertyText,
         
         //HSSRgb
         HSSObservablePropertyRed,
