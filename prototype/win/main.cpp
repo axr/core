@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
 	SDL_Init( SDL_INIT_VIDEO );
 	screen = SDL_SetVideoMode( WINDOW_WIDTH, WINDOW_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE );
 	cr = cairosdl_create (screen);
-	cairo_translate(cr,0.5,0.5);
+	//cairo_translate(cr,0.5,0.5);
 
 	SDL_WM_SetCaption( WINDOW_TITLE, 0 );
 
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
 				screen = SDL_SetVideoMode (event.resize.w, event.resize.h, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
 				SDL_SetAlpha(screen,SDL_SRCALPHA,CAIROSDL_AMASK);
 				cr = cairosdl_create (screen);
-				cairo_translate(cr,0.5,0.5);
+				//cairo_translate(cr,0.5,0.5);
 			} else {
 			}
 			render();
