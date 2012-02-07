@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/26
+ *      Last changed: 2011/02/02
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 9
+ *      Core version: 0.44
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -87,6 +87,11 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyBackground] = "HSSObservablePropertyBackground";
         types[HSSObservablePropertyFont] = "HSSObservablePropertyFont";
         types[HSSObservablePropertyShape] = "HSSObservablePropertyShape";
+        
+        //HSSTextBlock
+        types[HSSObservablePropertyTransform] = "HSSObservablePropertyTransform";
+        types[HSSObservablePropertyTextAlign] = "HSSObservablePropertyTextAlign";
+        types[HSSObservablePropertyText] = "HSSObservablePropertyText";
         
         //HSSRgb
         types[HSSObservablePropertyRed] = "HSSObservablePropertyRed";
@@ -159,6 +164,11 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["margin"] = HSSObservablePropertyMargin;
         properties["padding"] = HSSObservablePropertyPadding;
         properties["border"] = HSSObservablePropertyBorder;
+        
+        //HSSTextBlock
+        properties["transform"] = HSSObservablePropertyTransform;
+        properties["textAlign"] = HSSObservablePropertyTextAlign;
+        properties["text"] = HSSObservablePropertyText;
         
         //HSSRgb
         properties["red"] = HSSObservablePropertyRed;

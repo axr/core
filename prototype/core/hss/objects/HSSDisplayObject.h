@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/26
+ *      Last changed: 2012/02/01
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 28
+ *      Core version: 0.44
+ *      Revision: 30
  *
  ********************************************************************/
 
@@ -101,9 +101,9 @@ namespace AXR {
         unsigned getIndex();
         void attributesAdd(std::string name, std::string value);
         void attributesRemove(std::string name);
-        std::string getContentText();
-        void setContentText(std::string text);
-        void appendContentText(std::string text);
+        virtual std::string getContentText();
+        virtual void setContentText(std::string text);
+        virtual void appendContentText(std::string text);
         
         void rulesAdd(HSSRule::p newRule);
         HSSRule::p rulesGet(unsigned index);
@@ -190,8 +190,9 @@ namespace AXR {
         void backgroundChanged(HSSObservableProperty source, void*data);
         
         //font
-        const HSSMultipleValue getDFont() const;
+        const HSSParserNode::p getDFont() const;
         void setDFont(HSSParserNode::p value);
+        void addDFont(HSSParserNode::p value);
         void fontChanged(HSSObservableProperty source, void*data);
         
         //behavior
@@ -281,8 +282,10 @@ namespace AXR {
         HSSObservableProperty observedBackgroundProperty;
         std::vector<HSSObject::p> background;
         //font
-        HSSMultipleValue dFont;
-        HSSFont::p font;
+        HSSParserNode::p dFont;
+        HSSObservable * observedFont;
+        HSSObservableProperty observedFontProperty;
+        std::vector<HSSFont::p> font;
         //behavior
         HSSMultipleValueDefinition::p dBehavior;
         boost::unordered_map<HSSEventType, std::vector<HSSEvent::p> > behavior;

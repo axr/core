@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/02/02
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 8
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -95,6 +95,17 @@ void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
         root->setDHeight(HSSNumberConstant::p(new HSSNumberConstant(this->windowHeight)));
     }
     //draw the elements
+    root->recursiveReadDefinitionObjects();
+//    if(this->_needsRereadRules){
+//        std_log1("rereading rules of "+this->elementName);
+//        this->readDefinitionObjects();
+//    }
+    root->recursiveLayout();
+    root->recursiveRegenerateSurfaces();
+//    if(this->_needsSurface){
+//        std_log1("regenerating surfaces of "+this->elementName);
+//        this->regenerateSurfaces();
+//    }
     root->recursiveDraw(this->cairo);
 }
 
