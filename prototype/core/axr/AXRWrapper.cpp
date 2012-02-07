@@ -122,16 +122,18 @@ bool AXRWrapper::loadFile()
 
 bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 {
-    if (!this->core->getFile()) {
-        std::string fullpath = "file://"+xmlfilepath;
-        try {
-            AXRFile::p theFile = this->getFile(fullpath);
-            this->core->setFile(theFile);
-            
-        } catch (AXRError::p e) {
-            e->raise();
-            return false;
-        }
+    if (this->core->getFile()) {
+        this->core->reset();
+    }
+    
+    std::string fullpath = "file://"+xmlfilepath;
+    try {
+        AXRFile::p theFile = this->getFile(fullpath);
+        this->core->setFile(theFile);
+        
+    } catch (AXRError::p e) {
+        e->raise();
+        return false;
     }
     
     this->core->run();
@@ -141,9 +143,8 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 
 bool AXRWrapper::reload()
 {
-    std::string cur_path = "file://"+this->core->getFile()->basePath+"/"+this->core->getFile()->fileName;
+    std::string cur_path = this->core->getFile()->basePath+"/"+this->core->getFile()->fileName;
     this->core->reset();
-    this->core->setFile(this->getFile(cur_path));
     return this->loadXMLFile(cur_path);
 }
 

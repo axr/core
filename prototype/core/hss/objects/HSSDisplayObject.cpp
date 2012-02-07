@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/26
+ *      Last changed: 2012/01/28
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 35
+ *      Core version: 0.44
+ *      Revision: 36
  *
  ********************************************************************/
 
@@ -66,7 +66,6 @@
 #include <sstream>
 #include <string>
 #include "../../axr/AXRController.h"
-#include <pango/pangocairo.h>
 #include "HSSRgb.h"
 
 using namespace AXR;
@@ -74,14 +73,12 @@ using namespace AXR;
 HSSDisplayObject::HSSDisplayObject()
 : HSSObject()
 {
-    std_log1(std::string("creating annonymous display object"));
     this->initialize();
 }
 
 HSSDisplayObject::HSSDisplayObject(std::string name)
 : HSSObject(name)
 {
-    std_log1(std::string("creating display object with name").append(name));   
     this->initialize();
 }
 
@@ -97,21 +94,27 @@ void HSSDisplayObject::initialize()
     this->foregroundSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
     this->bordersSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
     
-    x = y = globalX = globalY = width = height = anchorX = anchorY = alignX = alignY = 0.;
-    drawIndex = _index = 0;
-    tabIndex = zoomFactor = 1;
-    flow = visible = true;
+    this->x = this->y
+    = this->globalX = this->globalY
+    = this->width = this->height
+    = this->anchorX = this->anchorY
+    = this->alignX = this->alignY
+    = 0.;
+    
+    this->drawIndex = this->_index = 0;
+    this->tabIndex = this->zoomFactor = 1;
+    this->flow = this->visible = true;
     //fixme: change to camelCase
-    does_float = false;
+    this->does_float = false;
     this->heightByContent = false;
     
-    elementName = std::string();
-    contentText = std::string();
+    this->elementName = std::string();
+    this->contentText = std::string();
     
-    observedWidth = observedHeight
-    = observedAnchorX = observedAnchorY
-    = observedAlignX = observedAlignY
-    = observedBackground
+    this->observedWidth = this->observedHeight
+    = this->observedAnchorX = this->observedAnchorY
+    = this->observedAlignX = this->observedAlignY
+    = this->observedBackground = this->observedFont
     = NULL;
     
     this->borderBleeding = 0.;
@@ -124,6 +127,7 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyHeight, (void *) &this->height);
     this->registerProperty(HSSObservablePropertyWidth, (void *) &this->width);
     this->registerProperty(HSSObservablePropertyBackground, (void *) &this->dBackground);
+    this->registerProperty(HSSObservablePropertyFont, (void *) &this->font);
     this->registerProperty(HSSObservablePropertyBehavior, (void *) &this->behavior);
     this->registerProperty(HSSObservablePropertyBorder, (void *) &this->dBorder);
 }
@@ -315,7 +319,7 @@ const int HSSDisplayObject::rulesSize()
 
 void HSSDisplayObject::readDefinitionObjects()
 {
-//    if(this->_needsRereadRules){
+    if(this->_needsRereadRules){
         unsigned i, j;
     
         this->setDefaults();
@@ -338,7 +342,7 @@ void HSSDisplayObject::readDefinitionObjects()
         }
         
         this->_needsRereadRules = false;
-//    }
+    }
 }
 
 void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p value)
@@ -434,7 +438,7 @@ void HSSDisplayObject::recursiveReadDefinitionObjects()
 
 void HSSDisplayObject::regenerateSurfaces()
 {
-//    if(this->_needsSurface){
+    if(this->_needsSurface){
         cairo_surface_destroy(this->backgroundSurface);
         cairo_surface_destroy(this->foregroundSurface);
         if(this->border.size() > 0)
@@ -462,7 +466,7 @@ void HSSDisplayObject::regenerateSurfaces()
         hstr << this->height;
         std_log1("created a new surface width:"+wstr.str()+" height:"+hstr.str());
 #endif
-//    }
+    }
 }
 
 void HSSDisplayObject::recursiveRegenerateSurfaces()
@@ -496,18 +500,6 @@ bool HSSDisplayObject::isDirty()
 void HSSDisplayObject::draw(cairo_t * cairo)
 {
     std_log1("drawing "+this->elementName);
-    if(this->_needsRereadRules){
-        std_log1("rereading rules of "+this->elementName);
-        this->readDefinitionObjects();
-    }
-    if(this->_needsLayout){
-        std_log1("recalculating layout of "+this->elementName);
-        this->layout();
-    }
-    if(this->_needsSurface){
-        std_log1("regenerating surfaces of "+this->elementName);
-        this->regenerateSurfaces();
-    }
     if(this->_isDirty){
 #if AXR_DEBUG_LEVEL > 0
         std::ostringstream xStream;
@@ -531,8 +523,8 @@ void HSSDisplayObject::draw(cairo_t * cairo)
     cairo_paint(cairo);
     if(this->border.size() > 0){
         cairo_set_source_surface(cairo, this->bordersSurface, this->globalX - this->borderBleeding, this->globalY - this->borderBleeding);
+        cairo_paint(cairo);
     }
-    cairo_paint(cairo);
 }
 
 void HSSDisplayObject::drawBackground()
@@ -582,48 +574,48 @@ void HSSDisplayObject::_drawBackground(cairo_t * cairo)
 
 void HSSDisplayObject::drawForeground()
 {
-    cairo_t * cairo = cairo_create(this->foregroundSurface);
-    
-    PangoLayout *layout;
-    PangoFontDescription *font_description;
-    
-    //FIXME: precalculate this layout somehow earlier, to get the height for the container
-    //based on the text height
-    layout = pango_cairo_create_layout (cairo);
-    pango_layout_set_width(layout, this->width * PANGO_SCALE);
-    
-    font_description = pango_font_description_new ();
-    
-    if (this->font){
-        pango_font_description_set_family (font_description, this->font->getFace().c_str());
-        
-        //FIXME: add support for weights in fonts
-        pango_font_description_set_weight (font_description, PANGO_WEIGHT_NORMAL);
-        pango_font_description_set_absolute_size (font_description, this->font->getSize() * PANGO_SCALE);
-        
-        if (this->font->getColor()){
-            HSSRgb::p textColor = boost::static_pointer_cast<HSSRgb>(this->font->getColor());
-            cairo_set_source_rgb (cairo, textColor->getRed()/255, textColor->getGreen()/255, textColor->getBlue()/255);
-        } else {
-            cairo_set_source_rgb (cairo, 0, 0, 0);
-        }
-        
-    } else {
-        pango_font_description_set_family (font_description, "monospace");
-        pango_font_description_set_weight (font_description, PANGO_WEIGHT_NORMAL);
-        pango_font_description_set_absolute_size (font_description, 12 * PANGO_SCALE);
-        cairo_set_source_rgb (cairo, 0, 0, 0);
-    }
-    
-    pango_layout_set_font_description (layout, font_description);
-    pango_layout_set_text (layout, this->getContentText().c_str(), -1);
-    
-    
-    cairo_move_to (cairo, 0, 0);
-    pango_cairo_show_layout (cairo, layout);
-    
-    g_object_unref (layout);
-    pango_font_description_free (font_description);
+//    cairo_t * cairo = cairo_create(this->foregroundSurface);
+//    
+//    PangoLayout *layout;
+//    PangoFontDescription *font_description;
+//    
+//    //FIXME: precalculate this layout somehow earlier, to get the height for the container
+//    //based on the text height
+//    layout = pango_cairo_create_layout (cairo);
+//    pango_layout_set_width(layout, this->width * PANGO_SCALE);
+//    
+//    font_description = pango_font_description_new ();
+//    
+//    if (this->font){
+//        pango_font_description_set_family (font_description, this->font->getFace().c_str());
+//        
+//        //FIXME: add support for weights in fonts
+//        pango_font_description_set_weight (font_description, PANGO_WEIGHT_NORMAL);
+//        pango_font_description_set_absolute_size (font_description, this->font->getSize() * PANGO_SCALE);
+//        
+//        if (this->font->getColor()){
+//            HSSRgb::p textColor = boost::static_pointer_cast<HSSRgb>(this->font->getColor());
+//            cairo_set_source_rgb (cairo, textColor->getRed()/255, textColor->getGreen()/255, textColor->getBlue()/255);
+//        } else {
+//            cairo_set_source_rgb (cairo, 0, 0, 0);
+//        }
+//        
+//    } else {
+//        pango_font_description_set_family (font_description, "monospace");
+//        pango_font_description_set_weight (font_description, PANGO_WEIGHT_NORMAL);
+//        pango_font_description_set_absolute_size (font_description, 12 * PANGO_SCALE);
+//        cairo_set_source_rgb (cairo, 0, 0, 0);
+//    }
+//    
+//    pango_layout_set_font_description (layout, font_description);
+//    pango_layout_set_text (layout, this->getContentText().c_str(), -1);
+//    
+//    
+//    cairo_move_to (cairo, 0, 0);
+//    pango_cairo_show_layout (cairo, layout);
+//    
+//    g_object_unref (layout);
+//    pango_font_description_free (font_description);
     
     
     
@@ -638,7 +630,7 @@ void HSSDisplayObject::drawForeground()
 //    std_log1(this->getContentText());
 //    cairo_show_text (cairo, this->getContentText().c_str());
     
-    cairo_destroy(cairo);
+//    cairo_destroy(cairo);
 }
 
 void HSSDisplayObject::drawBorders()
@@ -1397,31 +1389,47 @@ void HSSDisplayObject::backgroundChanged(HSSObservableProperty source, void*data
     
 }
 
-//font
-const HSSMultipleValue HSSDisplayObject::getDFont() const { return this->dFont; }
+const HSSParserNode::p HSSDisplayObject::getDFont() const { return this->dFont; }
 void HSSDisplayObject::setDFont(HSSParserNode::p value)
 {
+    this->font.clear();
+    this->dFont = value;
+    this->addDFont(value);
+}
+
+void HSSDisplayObject::addDFont(HSSParserNode::p value)
+{
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        case HSSParserNodeTypeObjectNameConstant:
-        case HSSParserNodeTypeKeywordConstant:
-        case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeMultipleValueDefinition:
+        {
+            HSSParserNode::it iterator;
+            HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(value);
+            std::vector<HSSParserNode::p> values = multiDef->getValues();
+            for (iterator = values.begin(); iterator != values.end(); iterator++) {
+                this->addDFont(*iterator);
+            }
             break;
-        default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for font of "+this->getElementName()));
-    }
-    
-    HSSMultipleValue newFont;
-    newFont.add(value);
-    this->dFont = newFont;
-    
-    switch (value->getType()) {
+        }
+            
         case HSSParserNodeTypeObjectDefinition:
         {
+            this->dFont = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->apply();
-            this->font = boost::static_pointer_cast<HSSFont>(objdef->getObject());
-            std_log1("added font object: "+this->font->toString());
+            if (objdef->getObject()->isA(HSSObjectTypeFont)) {
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
+                this->font.push_back(boost::static_pointer_cast<HSSFont>(theObj));
+            }
+            
             break;
         }
             
@@ -1431,13 +1439,42 @@ void HSSDisplayObject::setDFont(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 objdef->apply();
-                HSSObject::p theObject = objdef->getObject();
-                if (theObject->isA(HSSObjectTypeFont)){
-                    this->font = boost::static_pointer_cast<HSSFont>(theObject);
+                
+                HSSObject::p obj = boost::static_pointer_cast<HSSObject>(objdef->getObject());
+                switch (obj->getObjectType()) {
+                    case HSSObjectTypeFont:
+                        this->font.push_back(boost::static_pointer_cast<HSSFont>(obj));
+                        break;
+                        
+                    default:
+                        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for font of "+this->getElementName()));
+                        break;
                 }
                 
-            } catch (HSSObjectNotFoundException * e) {
-                std_log1(e->toString());
+            } catch (AXRError::p e) {
+                e->raise();
+            }
+            break;
+        }
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
+            HSSFunction::p fnct = fcall->getFunction();
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    fnct->setScope(&(thisCont->getChildren()));
+                }
+                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
+                this->addDFont(remoteValue);
+                
+            } else {
+                throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid function type for font of "+this->getElementName()));
             }
             
             break;
@@ -1445,27 +1482,35 @@ void HSSDisplayObject::setDFont(HSSParserNode::p value)
             
         case HSSParserNodeTypeKeywordConstant:
         {
+            std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
+            if(kwValue == "inherit"){
+                if(this->observedFont != NULL){
+                    this->observedFont->removeObserver(this->observedFontProperty, HSSObservablePropertyFont, this);
+                }
+                HSSContainer::p parent = this->getParent();
+                this->font = *(std::vector<HSSFont::p> *) parent->getProperty(HSSObservablePropertyFont);
+                parent->observe(HSSObservablePropertyFont, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
+                
+            } else {
+                AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown keyword value for font of "+this->getElementName()))->raise();
+            }
             break;
         }
             
         default:
-        {
-            std_log1("unkown parser node type in font property of display object "+this->name+": "+HSSParserNode::parserNodeStringRepresentation(value->getType()));
-            break;
-        }
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for font of "+this->getElementName()));
     }
-    
-    //this->notifyObservers(HSSObservablePropertyAlignY, &this->alignY);
 }
 
 void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
 {
-    HSSParserNodeType nodeType = this->dFont.last()->getType();
+    HSSParserNodeType nodeType = this->dFont->getType();
     switch (nodeType) {
         case HSSParserNodeTypeObjectDefinition:
         case HSSParserNodeTypeObjectNameConstant:
         case HSSParserNodeTypeFunctionCall:
         {
+            this->font = *(std::vector<HSSFont::p> *) data;
             this->setDirty(true);
             break;
         }
@@ -1476,7 +1521,6 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
     
     this->notifyObservers(HSSObservablePropertyFont, &this->font);
 }
-
 
 
 //behavior

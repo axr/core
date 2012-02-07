@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/02/02
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -56,7 +56,14 @@ using namespace AXR;
 
 AXRFile::AXRFile()
 {
-    
+    this->fileName = "";
+    this->buffer = NULL;
+    this->bufferSize = 0;
+    this->fileSize = 0;
+    this->mimeType = "";
+    this->basePath = "";
+    this->extension = "";
+    this->fileHandle = NULL;
 }
 
 AXRFile::~AXRFile()
@@ -65,4 +72,19 @@ AXRFile::~AXRFile()
         fclose(this->fileHandle);
     }
     delete [] this->buffer;
+}
+
+void AXRFile::setFileName(std::string value)
+{
+    this->fileName = value;
+}
+
+std::string AXRFile::getFileName()
+{
+    return this->fileName;
+}
+
+std::string AXRFile::toString()
+{
+    return "AXRFile:\nFilename: "+this->fileName+"\nBasepath: "+this->basePath+"\n-------------------------\n";
 }

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/09
+ *      Last changed: 2012/01/28
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 4
+ *      Core version: 0.44
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -171,7 +171,7 @@ void HSSValue::setKWValue(std::string keyword)
 
 std::string HSSValue::getStringValue()
 {
-    if (this->valueType == HSSValueString) {
+    if (this->valueType == HSSValueString || this->valueType == HSSValueKeyword) {
         return this->stringValue;
     } else if (this->valueType == HSSValueNumberInt || this->valueType == HSSValueNumberFloat){
         std::ostringstream tempstream;

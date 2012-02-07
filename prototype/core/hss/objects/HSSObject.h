@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/25
+ *      Last changed: 2011/02/02
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 17
+ *      Core version: 0.44
+ *      Revision: 18
  *
  ********************************************************************/
 
@@ -72,6 +72,7 @@ namespace AXR {
         HSSObjectTypeMultipleValue,
         HSSObjectTypeDisplayObject,
         HSSObjectTypeContainer,
+        HSSObjectTypeTextBlock,
         HSSObjectTypeBorder,
         HSSObjectTypeMargin,
         HSSObjectTypeRgb,

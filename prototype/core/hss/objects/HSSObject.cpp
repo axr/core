@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/26
+ *      Last changed: 2011/02/02
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 17
+ *      Core version: 0.44
+ *      Revision: 18
  *
  ********************************************************************/
 
@@ -452,6 +452,10 @@ void HSSObject::setProperty(HSSObservableProperty name, void * value)
 
 void * HSSObject::getProperty(HSSObservableProperty name)
 {
+    if (this->properties.find(name) == this->properties.end()){
+        AXRError::p(new AXRError("HSSObject", "Unknown property "+HSSObservable::observablePropertyStringRepresentation(name)))->raise();
+        return NULL;
+    }
     return this->properties[name];
 }
 

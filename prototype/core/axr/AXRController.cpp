@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/08
+ *      Last changed: 2012/02/02
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 21
+ *      Revision: 22
  *
  ********************************************************************/
 
@@ -777,10 +777,7 @@ void AXRController::appendContentText(std::string text)
 
 void AXRController::exitElement()
 {
-    const HSSContainer::p &cc = this->currentContext.top();
-    std::string newContentText = cc->getContentText();
-    boost::trim(newContentText);
-    cc->setContentText(newContentText);
+    //FIXME: trim the text of all text block elements
     this->currentContext.pop();
 }
 

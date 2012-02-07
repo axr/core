@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/08
+ *      Last changed: 2012/02/07
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 #define AXR_PLATFORM_WIN
@@ -81,7 +81,7 @@ AXRFile::p WinAxrWrapper::getFile(std::string url)
         ret->basePath = clean_path.substr(0, slashpos);
         
        
-        ret->bufferSize = 1024;
+        ret->bufferSize = 10240;
         ret->buffer = new char[ret->bufferSize];
         ret->fileHandle = fopen(clean_path.c_str(), "r");
         
