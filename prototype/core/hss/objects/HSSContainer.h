@@ -43,9 +43,9 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/24
+ *      Last changed: 2012/01/28
  *      HSS version: 1.0
- *      Core version: 0.42
+ *      Core version: 0.44
  *      Revision: 24
  *
  ********************************************************************/
@@ -53,15 +53,12 @@
 #ifndef HSSCONTAINER_H
 #define HSSCONTAINER_H
 
-#include <string>
-#include <vector>
 #include "HSSDisplayObject.h"
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <cairo/cairo.h>
 #include <list>
 #include "HSSShape.h"
 #include "HSSEvent.h"
+#include "HSSTextBlock.h"
 
 namespace AXR {
     enum HSSDirectionValue
@@ -95,6 +92,8 @@ namespace AXR {
         
         HSSContainer();
         HSSContainer(std::string name);
+        void initialize();
+        
         virtual ~HSSContainer();
         virtual std::string toString();
         virtual std::string defaultObjectType();
@@ -105,6 +104,10 @@ namespace AXR {
         void add(HSSDisplayObject::p child);
         void remove(unsigned index);
         void resetChildrenIndexes();
+        
+        virtual void setContentText(std::string text);
+        virtual void appendContentText(std::string text);
+        virtual std::string getContentText();
         
         //void readDefinitionObjects();
         void recursiveReadDefinitionObjects();
@@ -122,6 +125,7 @@ namespace AXR {
         
         void setChildren(std::vector<HSSDisplayObject::p> newChildren);
         const std::vector<HSSDisplayObject::p>& getChildren() const;
+        const std::vector<HSSDisplayObject::p>& getChildren(bool includeTextBlocks) const;
         
         //alignX
         HSSParserNode::p getDContentAlignX();
@@ -146,6 +150,12 @@ namespace AXR {
         void setDShape(HSSParserNode::p value);
         void shapeChanged(HSSObservableProperty source, void*data);
         
+        //textAlign
+        HSSTextAlignType getTextAlign();
+        HSSParserNode::p getDTextAlign();
+        void setDTextAlign(HSSParserNode::p value);
+        void textAlignChanged(HSSObservableProperty source, void*data);
+        
         void setDefaults();
         
         virtual bool handleEvent(HSSEventType type, void* data);
@@ -154,6 +164,7 @@ namespace AXR {
         
     protected:
         std::vector<HSSDisplayObject::p>children;
+        std::vector<HSSDisplayObject::p>allChildren;
         
         HSSParserNode::p dContentAlignX;
         long double contentAlignX;
@@ -177,6 +188,12 @@ namespace AXR {
         HSSObservable * observedShape;
         HSSObservableProperty observedShapeProperty;
         
+        //textAlign
+        HSSTextAlignType textAlign;
+        HSSParserNode::p dTextAlign;
+        HSSObservable * observedTextAlign;
+        HSSObservableProperty observedTextAlignProperty;
+        
         HSSContainer::p shared_from_this();
         
     private:
@@ -192,7 +209,7 @@ namespace AXR {
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
         
-        bool _addChildToGroupIfNeeded(HSSDisplayObject::p &child, displayGroup &group, HSSDirectionValue direction);
+        bool _addChildToGroupIfNeeded(HSSDisplayObject::p &child, displayGroup &group, HSSDirectionValue direction, bool overflow);
         bool _mergeGroupsIfNeeded(displayGroup &group, displayGroup &otherGroup, HSSDirectionValue direction);
         void _arrange(displayGroup &group, HSSDirectionValue direction);
     };

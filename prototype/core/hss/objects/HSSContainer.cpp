@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/24
+ *      Last changed: 2012/01/29
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 31
+ *      Core version: 0.44
+ *      Revision: 32
  *
  ********************************************************************/
 
@@ -88,34 +88,17 @@ HSSContainer::p HSSContainer::asContainer(HSSDisplayObject::p theDisplayObject)
 HSSContainer::HSSContainer()
 : HSSDisplayObject()
 {
-    this->contentText = std::string();
-    this->type = HSSObjectTypeContainer;
-    
-    this->contentAlignX = this->contentAlignY = 0;
-    this->directionPrimary = HSSDirectionLeftToRight;
-    this->directionSecondary = HSSDirectionTopToBottom;
-    
-    this->observedContentAlignX = this->observedContentAlignY
-    = this->observedDirectionPrimary = this->observedDirectionSecondary
-    = this->observedShape
-    = NULL;
-    
-    std::vector<std::string> shorthandProperties;
-    shorthandProperties.push_back("isA");
-    shorthandProperties.push_back("width");
-    shorthandProperties.push_back("height");
-    shorthandProperties.push_back("contentAlignX");
-    shorthandProperties.push_back("contentAlignY");
-    shorthandProperties.push_back("font");
-    shorthandProperties.push_back("background");
-    shorthandProperties.push_back("shape");
-    
-    this->setShorthandProperties(shorthandProperties);
+    this->initialize();
 }
 
 HSSContainer::HSSContainer(std::string name)
 : HSSDisplayObject(name)
 {
+    this->initialize();
+}
+
+void HSSContainer::initialize()
+{
     this->contentText = std::string();
     this->type = HSSObjectTypeContainer;
     
@@ -125,7 +108,7 @@ HSSContainer::HSSContainer(std::string name)
     
     this->observedContentAlignX = this->observedContentAlignY
     = this->observedDirectionPrimary = this->observedDirectionSecondary
-    = this->observedShape
+    = this->observedShape = this->observedTextAlign
     = NULL;
     
     std::vector<std::string> shorthandProperties;
@@ -137,16 +120,22 @@ HSSContainer::HSSContainer(std::string name)
     shorthandProperties.push_back("font");
     shorthandProperties.push_back("background");
     shorthandProperties.push_back("shape");
+    shorthandProperties.push_back("textAlign");
     
     this->setShorthandProperties(shorthandProperties);
+    
+    this->registerProperty(HSSObservablePropertyContentAlignX, (void *) &this->contentAlignX);
+    this->registerProperty(HSSObservablePropertyContentAlignY, (void *) &this->contentAlignY);
+    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) &this->directionPrimary);
+    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) &this->directionSecondary);
+    this->registerProperty(HSSObservablePropertyShape, (void *) &this->shape);
+    this->registerProperty(HSSObservablePropertyTextAlign, (void *) &this->textAlign);
 }
 
 HSSContainer::~HSSContainer()
 {
-    unsigned i;
-    for(i=0; i<this->children.size(); i++){
-        this->children.pop_back();
-    }
+    this->children.clear();
+    this->allChildren.clear();
 }
 
 std::string HSSContainer::toString()
@@ -205,17 +194,27 @@ std::string HSSContainer::defaultObjectType(std::string property)
 
 bool HSSContainer::isKeyword(std::string value, std::string property)
 {
-    if (   value == "center"
-        || value == "middle"
-        || value == "top"
-        || value == "bottom"
-        || value == "left"
-        || value == "right"){
-        if (property == "contentAlignX" || property == "contentAlignY") {
+    if (property == "contentAlignX" || property == "contentAlignY") {
+        if (   value == "center"
+            || value == "middle"
+            || value == "top"
+            || value == "bottom"
+            || value == "left"
+            || value == "right"){
             return true;
         }
-    } else if (value == "leftToRight" || value == "rightToLeft" || value == "topToBottom" || value == "bottomToTop"){
-        if ( property == "directionPrimary" || property == "directionSecondary"){
+    } else if (property == "directionPrimary" || property == "directionSecondary"){
+        if (   value == "leftToRight"
+            || value == "rightToLeft"
+            || value == "topToBottom"
+            || value == "bottomToTop"){
+            return true;
+        }
+    } else if (property == "textAlign"){
+        if (   value == "left"
+            || value == "right"
+            || value == "center"
+            || value == "justify"){
             return true;
         }
     }
@@ -229,23 +228,58 @@ void HSSContainer::add(HSSDisplayObject::p child)
     HSSContainer::p sharedThis = this->shared_from_this();
     child->setParent(sharedThis);
     std_log1("HSSContainer: added child "+child->getElementName()+" to "+this->getElementName());
-    child->setIndex(this->children.size());
+    child->setIndex(this->allChildren.size());
     child->setController(this->getController());
-    this->children.push_back(child);
+    if(!child->isA(HSSObjectTypeTextBlock)){
+        this->children.push_back(child);
+    }
+    this->allChildren.push_back(child);
 }
 
 void HSSContainer::remove(unsigned index)
 {
-    this->children.erase(this->children.begin()+index);
+    HSSDisplayObject::it it;
+    for (it=this->children.begin(); it!=this->children.end(); it++) {
+        HSSDisplayObject::p child = *it;
+        if(child->getIndex() == index){
+            this->children.erase(it);
+        }
+    }
+    for (it=this->allChildren.begin(); it!=this->allChildren.end(); it++) {
+        HSSDisplayObject::p child = *it;
+        if(child->getIndex() == index){
+            this->allChildren.erase(it);
+        }
+    }
     this->resetChildrenIndexes();
 }
 
 void HSSContainer::resetChildrenIndexes()
 {
     unsigned i,size;
-    for (i=0, size=this->children.size(); i<size; i++) {
-        this->children[i]->setIndex(i);
+    for (i=0, size=this->allChildren.size(); i<size; i++) {
+        this->allChildren[i]->setIndex(i);
     }
+}
+
+void HSSContainer::setContentText(std::string text)
+{
+    HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
+    txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+    this->add(txtBlck);
+}
+
+void HSSContainer::appendContentText(std::string text)
+{
+    HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
+    txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+    this->add(txtBlck);
+}
+
+std::string HSSContainer::getContentText()
+{
+    std_log("whateva");
+    return "bla";
 }
 
 void HSSContainer::setProperty(HSSObservableProperty name, HSSParserNode::p value)
@@ -265,6 +299,10 @@ void HSSContainer::setProperty(HSSObservableProperty name, HSSParserNode::p valu
             break;
         case HSSObservablePropertyShape:
             this->setDShape(value);
+            break;
+            
+        case HSSObservablePropertyTextAlign:
+            this->setDTextAlign(value);
             break;
             
         default:
@@ -291,6 +329,9 @@ void HSSContainer::setProperty(HSSObservableProperty name, void * value)
         case HSSObservablePropertyShape:
             this->shape = *(HSSShape::p*) value;
             break;
+        case HSSObservablePropertyTextAlign:
+            this->textAlign = *(HSSTextAlignType *) value;
+            break;
             
         default:
             return HSSDisplayObject::setProperty(name, value);
@@ -306,8 +347,8 @@ void HSSContainer::recursiveReadDefinitionObjects()
     }
     
     unsigned i;
-    for (i=0; i<this->children.size(); i++) {
-        this->children[i]->recursiveReadDefinitionObjects();
+    for (i=0; i<this->allChildren.size(); i++) {
+        this->allChildren[i]->recursiveReadDefinitionObjects();
     }
 }
 
@@ -316,8 +357,8 @@ void HSSContainer::recursiveRegenerateSurfaces()
     this->regenerateSurfaces();
     
     unsigned i, size;
-    for (i=0, size = this->children.size(); i<size; i++) {
-        this->children[i]->regenerateSurfaces();
+    for (i=0, size = this->allChildren.size(); i<size; i++) {
+        this->allChildren[i]->recursiveRegenerateSurfaces();
     }
 }
 
@@ -325,8 +366,8 @@ void HSSContainer::recursiveDraw(cairo_t * cairo)
 {
     this->draw(cairo);
     unsigned i, size;
-    for (i=0, size = this->children.size(); i<size; i++) {
-        this->children[i]->recursiveDraw(cairo);
+    for (i=0, size = this->allChildren.size(); i<size; i++) {
+        this->allChildren[i]->recursiveDraw(cairo);
     }
 }
 
@@ -398,8 +439,8 @@ void HSSContainer::layout()
     //bool secondaryIsHorizontal = (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft);
     
     //create groups and lines
-    for (i=0, size = this->children.size(); i<size; i++) {
-        HSSDisplayObject::p child = this->children[i];
+    for (i=0, size = this->allChildren.size(); i<size; i++) {
+        HSSDisplayObject::p child = this->allChildren[i];
         //place it on the alignment point
         //horizontal
         child->x = child->alignX - child->anchorX;
@@ -417,7 +458,7 @@ void HSSContainer::layout()
             while (j<primaryGroups.size()) {
                 if(primaryGroups[j].lines.size() == 0){
                     displayGroup & currentPGroup = primaryGroups[j];
-                    addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary);
+                    addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
                     if (!addedToGroup && currentPGroup.complete){
                         //transform the current group into a line
                         displayGroup newGroup;
@@ -462,7 +503,7 @@ void HSSContainer::layout()
                     
                 } else {
                     displayGroup & currentPGroup = primaryGroups[j].lines.back();
-                    addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary);
+                    addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
                     if (!addedToGroup && currentPGroup.complete){
                         //create new line
                         displayGroup newLine;
@@ -518,15 +559,15 @@ void HSSContainer::layout()
     security_brake_reset();
     
     //now align the lines in the secondary direction
-    for(i=0, size = this->children.size(); i<size; i++){
-        HSSDisplayObject::p &child = this->children[i];
+    for(i=0, size = this->allChildren.size(); i<size; i++){
+        HSSDisplayObject::p &child = this->allChildren[i];
         
         bool addedToGroup = false;
         if( i!=0 ) {
             j = 0;
             while (j<secondaryGroups.size()) {
                 displayGroup & currentSGroup = secondaryGroups[j];
-                addedToGroup = this->_addChildToGroupIfNeeded(child, currentSGroup, this->directionSecondary);
+                addedToGroup = this->_addChildToGroupIfNeeded(child, currentSGroup, this->directionSecondary, true);
                 
                 if(addedToGroup){
                     k=0;
@@ -562,8 +603,8 @@ void HSSContainer::layout()
         }
     }
     //assign the globalX and globalY
-    for(i=0, size = this->children.size(); i<size; i++){
-        HSSDisplayObject::p &child = this->children[i];
+    for(i=0, size = this->allChildren.size(); i<size; i++){
+        HSSDisplayObject::p &child = this->allChildren[i];
         child->setGlobalX(floor(this->globalX + child->x));
         child->setGlobalY(floor(this->globalY + child->y));
     }
@@ -585,7 +626,7 @@ void HSSContainer::layout()
     }
 }
 
-bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSSContainer::displayGroup &group, HSSDirectionValue direction)
+bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSSContainer::displayGroup &group, HSSDirectionValue direction, bool overflow)
 {
     unsigned i, size;
     bool isHorizontal = (direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft);
@@ -611,13 +652,15 @@ bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSS
             //if it is the last one
             if(i>=size-1){
                 //check if we have enough space to add it to the end of the line
-                if( isHorizontal ){
-                    if( lineTotalPrimary + child->width > this->width){
-                        group.complete = true;
-                    }
-                } else {
-                    if( lineTotalPrimary + child->height > this->height){
-                        group.complete = true;
+                if(!overflow){
+                    if( isHorizontal ){
+                        if( lineTotalPrimary + child->width > this->width){
+                            group.complete = true;
+                        }
+                    } else {
+                        if( lineTotalPrimary + child->height > this->height){
+                            group.complete = true;
+                        }
                     }
                 }
                 
@@ -861,11 +904,11 @@ void HSSContainer::_arrange(displayGroup &group, HSSDirectionValue direction)
 
 void HSSContainer::recursiveLayout()
 {
-    this->layout();
     unsigned i, size;
-    for (i=0, size = this->children.size(); i<size; i++) {
-        this->children[i]->recursiveLayout();
+    for (i=0, size = this->allChildren.size(); i<size; i++) {
+        this->allChildren[i]->recursiveLayout();
     }
+    this->layout();
 }
 
 void HSSContainer::setGlobalX(long double newValue)
@@ -873,8 +916,8 @@ void HSSContainer::setGlobalX(long double newValue)
     long double delta = newValue - this->globalX;
     HSSDisplayObject::setGlobalX(newValue);
     unsigned i, size;
-    for (i=0, size=this->children.size(); i<size; i++){
-        HSSDisplayObject::p theChild = this->children[i];
+    for (i=0, size=this->allChildren.size(); i<size; i++){
+        HSSDisplayObject::p theChild = this->allChildren[i];
         theChild->setGlobalX(theChild->globalX + delta);
     }
 }
@@ -884,8 +927,8 @@ void HSSContainer::setGlobalY(long double newValue)
     long double delta = newValue - this->globalY;
     HSSDisplayObject::setGlobalY(newValue);
     unsigned i, size;
-    for (i=0, size=this->children.size(); i<size; i++){
-        HSSDisplayObject::p theChild = this->children[i];
+    for (i=0, size=this->allChildren.size(); i<size; i++){
+        HSSDisplayObject::p theChild = this->allChildren[i];
         theChild->setGlobalY(theChild->globalY + delta);
     }
 }
@@ -893,6 +936,7 @@ void HSSContainer::setGlobalY(long double newValue)
 void HSSContainer::setChildren(std::vector<HSSDisplayObject::p> newChildren)
 {
     this->children = newChildren;
+    this->allChildren = newChildren;
     unsigned i, size;
     for (i=0, size = this->children.size(); i<size; i++) {
         this->children[i]->setParent(this->shared_from_this());
@@ -901,7 +945,16 @@ void HSSContainer::setChildren(std::vector<HSSDisplayObject::p> newChildren)
 
 const std::vector<HSSDisplayObject::p>& HSSContainer::getChildren() const
 {
-    return this->children;
+    return this->getChildren(false);
+}
+
+const std::vector<HSSDisplayObject::p>& HSSContainer::getChildren(bool includeTextBlocks) const
+{
+    if (includeTextBlocks) {
+        return this->allChildren;
+    } else {
+        return this->children;
+    }
 }
 
 //contentAlignX
@@ -1261,7 +1314,97 @@ void HSSContainer::shapeChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyShape, &this->shape);
 }
 
+HSSTextAlignType HSSContainer::getTextAlign() { return this->textAlign; }
+HSSParserNode::p HSSContainer::getDTextAlign() { return this->dTextAlign; }
+void HSSContainer::setDTextAlign(HSSParserNode::p value)
+{
+    bool valid = true;
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            this->dTextAlign = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            this->dTextAlign = value;
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                this->setDTextAlign(objdef);
+                
+            } catch (AXRError::p e) {
+                e->raise();
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->dTextAlign = value;
+            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
+            HSSFunction::p fnct = fcall->getFunction();
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                fnct->setScope(this->scope);
+                this->textAlign = *(HSSTextAlignType *)fnct->evaluate();
+                
+                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSContainer>(this, &HSSContainer::textAlignChanged));
+                
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            this->dTextAlign = value;
+            this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue());
+            break;
+        }
+            
+        default:
+            valid = false;
+    }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for textAlign of "+this->name));
+    
+    this->notifyObservers(HSSObservablePropertyTextAlign, &this->textAlign);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
+}
 
+void HSSContainer::textAlignChanged(HSSObservableProperty source, void *data)
+{
+    switch (this->dTextAlign->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        case HSSParserNodeTypeFunctionCall:
+            this->textAlign = *(HSSTextAlignType *)data;
+            break;
+            
+        default:
+            break;
+    }
+    
+    this->notifyObservers(HSSObservablePropertyTextAlign, data);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
+}
 
 void HSSContainer::setDefaults()
 {
@@ -1282,6 +1425,8 @@ void HSSContainer::setDefaults()
     //shape
     HSSKeywordConstant::p newDShape(new HSSKeywordConstant("default"));
     this->setDShape(newDShape);
+    //textAlign
+    this->setDTextAlign(HSSKeywordConstant::p(new HSSKeywordConstant("left")));
 }
 
 
@@ -1369,7 +1514,7 @@ bool HSSContainer::handleEvent(HSSEventType type, void* data)
 {
     HSSDisplayObject::it it;
     bool handled = false;
-    for (it=this->children.begin(); it < this->children.end(); it++) {
+    for (it=this->allChildren.begin(); it < this->allChildren.end(); it++) {
         HSSDisplayObject::p child = *it;
         bool childHandled = false;
         childHandled = child->handleEvent(type, data);
@@ -1391,7 +1536,7 @@ void HSSContainer::setController(AXRController * controller)
 {
     //propagate
     HSSDisplayObject::it it;
-    for (it=this->children.begin(); it < this->children.end(); it++) {
+    for (it=this->allChildren.begin(); it < this->allChildren.end(); it++) {
         HSSDisplayObject::p child = *it;
         child->setController(controller);
     }

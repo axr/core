@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/21
+ *      Last changed: 2012/02/02
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -112,7 +112,7 @@ void AXRCore::run()
         //needs reset on next load
         this->_hasLoadedFile = true;
         
-        HSSContainer::p root;
+        HSSContainer::p root = boost::static_pointer_cast<HSSContainer>(this->controller->getRoot());
         unsigned i, size, j, size2;
         std::string hssfilename, hssfilepath;
         
@@ -125,14 +125,20 @@ void AXRCore::run()
                 //FIXME: add support for absolute paths
             } else {
                 hssfilepath = this->file->basePath +"/"+ hssfilename;
-                AXRFile::p hssfile = this->wrapper->getFile("file://"+this->file->basePath+"/"+hssfilename);
+                AXRFile::p hssfile;
+                try {
+                    hssfile = this->wrapper->getFile("file://"+this->file->basePath+"/"+hssfilename);
+                } catch (AXRError::p e) {
+                    e->raise();
+                    continue;
+                }
+                
+                this->parserHSS->setBasePath(this->file->basePath);
                 if(! this->parserHSS->loadFile(hssfile)){
-                    //FIXME: handle the error
-                    loadingSuccess = false;
                     AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
                 } else {
                     //assign the rules to the objects
-                    root = boost::static_pointer_cast<HSSContainer>(this->controller->getRoot());
+                    
                     std::vector<HSSRule::p> rules = this->controller->getRules();
                     for (j=0, size2=rules.size(); j<size2; j++) {
                         HSSRule::p& rule = rules[j];
@@ -143,11 +149,10 @@ void AXRCore::run()
                     root->setNeedsRereadRules(true);
                 }
             }
-        
-            if (root) {
-                root->recursiveReadDefinitionObjects();
-                root->handleEvent(HSSEventTypeLoad, NULL);
-            }
+        }
+        if (root) {
+            root->recursiveReadDefinitionObjects();
+            root->handleEvent(HSSEventTypeLoad, NULL);
         }
     }
 }
@@ -160,7 +165,7 @@ void AXRCore::reset()
     this->parserXML.reset();
     this->parserXML = XMLParser::p(new XMLParser(this->controller.get()));
     this->_hasLoadedFile = false;
-    this->file = AXRFile::p();
+    this->file.reset();
 }
 
 //has loaded file

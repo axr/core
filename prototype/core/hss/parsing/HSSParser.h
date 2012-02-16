@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/01/21
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 17
+ *      Revision: 18
  *
  ********************************************************************/
 
@@ -81,6 +81,10 @@ namespace AXR {
     {
         
     public:
+        
+        //FIXME: remove this friend and fix access control
+        friend class AXRController;
+        
         typedef boost::shared_ptr<HSSParser> p;
         
         HSSParser(AXRController * theController, AXRWrapper * wrapper);
@@ -101,7 +105,8 @@ namespace AXR {
         unsigned int currentObjectContextSize();
         void currentObjectContextAdd(HSSObject::p theObject);
         
-        friend class AXRController;
+        void setBasePath(std::string value);
+        std::string getBasePath();
         
     private:
         HSSTokenizer::p tokenizer;
@@ -161,7 +166,7 @@ namespace AXR {
         unsigned column;
         
         std::string basepath;
-        std::string filename;
+        AXRFile::p currentFile;
         
         boost::unordered_set<AXRFile::p> loadedFiles;
         

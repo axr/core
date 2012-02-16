@@ -69,6 +69,7 @@ OSXAxrWrapper::~OSXAxrWrapper()
     
 }
 
+//throws AXRError::p
 AXRFile::p OSXAxrWrapper::getFile(std::string url)
 {
     AXRFile::p ret = AXRFile::p(new AXRFile());
@@ -76,16 +77,16 @@ AXRFile::p OSXAxrWrapper::getFile(std::string url)
     if(url.substr(0, 7) == "file://"){
         std::string clean_path = url.substr(7, url.size());
         int slashpos = clean_path.rfind("/");
-        ret->fileName = clean_path.substr(slashpos+1, clean_path.size());
+        ret->setFileName(clean_path.substr(slashpos+1, clean_path.size()));
         ret->basePath = clean_path.substr(0, slashpos);
         
-        ret->bufferSize = 1024;
+        ret->bufferSize = 10240;
         ret->buffer = new char[ret->bufferSize];
         ret->fileHandle = fopen(clean_path.c_str(), "r");
         if( ret->fileHandle == NULL ){
-            AXRError::p(new AXRError("OSXAxrWrapper", "the file"+ret->fileName+" doesn't exist"))->raise();
+            throw AXRError::p(new AXRError("OSXAxrWrapper", "the file "+url+" doesn't exist"));
         } else if( ferror(ret->fileHandle) ){
-            AXRError::p(new AXRError("OSXAxrWrapper", "the file"+ret->fileName+" couldn't be read"))->raise();
+            throw AXRError::p(new AXRError("OSXAxrWrapper", "the file "+url+" couldn't be read"));
         }
         
     } else {
@@ -100,6 +101,8 @@ size_t OSXAxrWrapper::readFile(AXRFile::p theFile)
     size_t size = fread(theFile->buffer, sizeof(theFile->buffer[0]), theFile->bufferSize, theFile->fileHandle);
     if (ferror(theFile->fileHandle)) {
         fclose(theFile->fileHandle);
+        perror("");
+        std_log(theFile->toString());
         return -1;
     }
     return size;
