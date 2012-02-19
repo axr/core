@@ -87,7 +87,8 @@ void AXRController::recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const
             case HSSNewInstruction:
             {
                 std::string elementName = rule->getSelectorChain()->subject()->getElementName();
-                HSSContainer::p newContainer = HSSContainer::p(new HSSContainer(elementName));
+                HSSContainer::p newContainer = HSSContainer::p(new HSSContainer());
+                newContainer->setName(elementName);
                 newContainer->setElementName(elementName);
                 this->add(newContainer);
                 std_log1("created "+newContainer->getElementName());
@@ -545,7 +546,8 @@ void AXRController::setRoot(HSSContainer::p newRoot){
 void AXRController::enterElement(std::string elementName)
 {
     //std_log1("enter element " + elementName);
-    HSSContainer::p newContainer(new HSSContainer(elementName+"_source_obj"));
+    HSSContainer::p newContainer(new HSSContainer());
+    newContainer->setName(elementName+"_source_obj");
     newContainer->setElementName(elementName);
     this->add(newContainer);
     this->currentContext.push(newContainer);

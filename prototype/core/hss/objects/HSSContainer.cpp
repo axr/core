@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/29
+ *      Last changed: 2012/02/19
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 32
+ *      Core version: 0.45
+ *      Revision: 33
  *
  ********************************************************************/
 
@@ -66,6 +66,7 @@
 #include <cmath>
 #include "HSSShapes.h"
 #include <vector>
+#include <boost/algorithm/string.hpp>
 
 using namespace AXR;
 
@@ -87,12 +88,6 @@ HSSContainer::p HSSContainer::asContainer(HSSDisplayObject::p theDisplayObject)
 
 HSSContainer::HSSContainer()
 : HSSDisplayObject()
-{
-    this->initialize();
-}
-
-HSSContainer::HSSContainer(std::string name)
-: HSSDisplayObject(name)
 {
     this->initialize();
 }
@@ -271,9 +266,24 @@ void HSSContainer::setContentText(std::string text)
 
 void HSSContainer::appendContentText(std::string text)
 {
-    HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
-    txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
-    this->add(txtBlck);
+    boost::algorithm::trim(text);
+    if (text != "") {
+        if (this->allChildren.size() == 0) {
+            HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
+            txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+            this->add(txtBlck);
+        } else {
+            HSSDisplayObject::p lastChild = this->allChildren.back();
+            if (lastChild->isA(HSSObjectTypeTextBlock)){
+                HSSTextBlock::p textBlock = boost::static_pointer_cast<HSSTextBlock>(lastChild);
+                textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(textBlock->getText() + " " + text)));
+            } else {
+                HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
+                txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+                this->add(txtBlck);
+            }
+        }
+    }
 }
 
 std::string HSSContainer::getContentText()
@@ -605,8 +615,8 @@ void HSSContainer::layout()
     //assign the globalX and globalY
     for(i=0, size = this->allChildren.size(); i<size; i++){
         HSSDisplayObject::p &child = this->allChildren[i];
-        child->setGlobalX(floor(this->globalX + child->x));
-        child->setGlobalY(floor(this->globalY + child->y));
+        child->setGlobalX(round(this->globalX + child->x));
+        child->setGlobalY(round(this->globalY + child->y));
     }
     
     if(this->heightByContent){
@@ -735,7 +745,7 @@ bool HSSContainer::_mergeGroupsIfNeeded(displayGroup &group, displayGroup &other
         //if the group bounds overlap, check each individual element against each other
         for (i=0, size = group.objects.size(); i<size; i++) {
             HSSDisplayObject::p & child = group.objects[i];
-            for (j=0, size2 = otherGroup.objects.size(); j<size; j++) {
+            for (j=0, size2 = otherGroup.objects.size(); j<size2; j++) {
                 HSSDisplayObject::p &otherChild = otherGroup.objects[j];
                 if (
                     ((child->x + child->width)  > otherChild->x) && (child->x < (otherChild->x + otherChild->width))

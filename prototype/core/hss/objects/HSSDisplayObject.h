@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/01
+ *      Last changed: 2012/02/19
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 30
+ *      Core version: 0.45
+ *      Revision: 32
  *
  ********************************************************************/
 
@@ -83,9 +83,7 @@ namespace AXR {
         typedef std::vector<HSSDisplayObject::p> c;
         typedef std::vector<HSSDisplayObject::p>::iterator it;
         
-        HSSDisplayObject();
-        HSSDisplayObject(std::string name);
-        
+        HSSDisplayObject();        
         void initialize();
         
         virtual ~HSSDisplayObject();

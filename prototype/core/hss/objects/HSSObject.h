@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/02/02
+ *      Last changed: 2011/02/19
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 18
+ *      Core version: 0.45
+ *      Revision: 19
  *
  ********************************************************************/
 
@@ -98,7 +98,6 @@ namespace AXR {
         std::string name;
         
         HSSObject();
-        HSSObject(std::string name);
         ~HSSObject();
         
         bool isA(HSSObjectType otherType);

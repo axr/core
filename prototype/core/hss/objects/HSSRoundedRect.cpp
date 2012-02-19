@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/24
+ *      Last changed: 2012/02/19
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -70,19 +70,6 @@ HSSRoundedRect::HSSRoundedRect()
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("corners");
     this->setShorthandProperties(shorthandProperties);
-}
-
-HSSRoundedRect::HSSRoundedRect(std::string name)
-: HSSShape(name)
-{
-    this->shapeType = HSSShapeTypeRoundedRect;
-    this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
-    this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
-    
-    std::vector<std::string> shorthandProperties;
-    shorthandProperties.push_back("corners");
-    this->setShorthandProperties(shorthandProperties);
-
 }
 
 HSSRoundedRect::~HSSRoundedRect()

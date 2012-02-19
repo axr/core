@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/28
+ *      Last changed: 2012/02/19
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 36
+ *      Core version: 0.45
+ *      Revision: 37
  *
  ********************************************************************/
 
@@ -72,12 +72,6 @@ using namespace AXR;
 
 HSSDisplayObject::HSSDisplayObject()
 : HSSObject()
-{
-    this->initialize();
-}
-
-HSSDisplayObject::HSSDisplayObject(std::string name)
-: HSSObject(name)
 {
     this->initialize();
 }

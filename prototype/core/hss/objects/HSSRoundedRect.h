@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/24
+ *      Last changed: 2012/02/19
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -64,7 +64,6 @@ namespace AXR {
         typedef boost::shared_ptr<HSSRoundedRect> p;
         
         HSSRoundedRect();
-        HSSRoundedRect(std::string name);
         virtual ~HSSRoundedRect();
         
         virtual std::string toString();

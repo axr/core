@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2012/02/19
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -56,12 +56,6 @@ using namespace AXR;
 
 HSSCircle::HSSCircle()
 : HSSShape()
-{
-    this->shapeType = HSSShapeTypeCircle;
-}
-
-HSSCircle::HSSCircle(std::string name)
-: HSSShape(name)
 {
     this->shapeType = HSSShapeTypeCircle;
 }
