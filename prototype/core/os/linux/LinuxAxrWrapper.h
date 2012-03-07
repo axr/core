@@ -25,7 +25,7 @@
  *            MM,
  *
  * 
- *      AUTHORS: Miro Keller
+ *      AUTHORS: Valerij Primachenko
  *      
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
@@ -43,49 +43,33 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/02
+ *      Last changed: 2012/03/07
  *      HSS version: 1.0
  *      Core version: 0.44
- *      Revision: 2
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include <cstdio>
-#import "AXRFile.h"
+#ifndef LinuxAxrWrapper_H
+#define LinuxAxrWrapper_H
 
-using namespace AXR;
+#include "../../axr/AXRWrapper.h"
 
-AXRFile::AXRFile()
+namespace AXR
 {
-    this->fileName = "";
-    this->buffer = NULL;
-    this->bufferSize = 0;
-    this->fileSize = 0;
-    this->mimeType = "";
-    this->basePath = "";
-    this->extension = "";
-    this->fileHandle = NULL;
+	class LinuxAxrWrapper : public AXRWrapper
+	{
+		public:
+		LinuxAxrWrapper();
+		virtual ~LinuxAxrWrapper();
+
+		virtual AXRFile::p getFile(std::string url);
+		virtual size_t readFile(AXRFile::p theFile);
+		virtual void closeFile(AXRFile::p theFile);
+		virtual void handleError(AXRError::p theError);
+		virtual bool openFileDialog(std::string &filePath);
+	};
 }
 
-AXRFile::~AXRFile()
-{
-    if(this->fileHandle != NULL){
-        fclose(this->fileHandle);
-    }
-    delete [] this->buffer;
-}
+#endif
 
-void AXRFile::setFileName(std::string value)
-{
-    this->fileName = value;
-}
-
-std::string AXRFile::getFileName()
-{
-    return this->fileName;
-}
-
-std::string AXRFile::toString()
-{
-    return "AXRFile:\nFilename: "+this->fileName+"\nBasepath: "+this->basePath+"\n-------------------------\n";
-}
