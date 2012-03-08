@@ -25,7 +25,7 @@
  *            MM,
  *
  * 
- *      AUTHORS: Valerij Primachenko
+ *      AUTHORS: Valerij Primachenko, Ragnis Armus
  *      
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
