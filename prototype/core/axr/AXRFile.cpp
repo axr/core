@@ -43,13 +43,14 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/02
+ *      Last changed: 2012/02/22
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
+#include <cstdio>
 #import "AXRFile.h"
 
 using namespace AXR;
@@ -64,6 +65,7 @@ AXRFile::AXRFile()
     this->basePath = "";
     this->extension = "";
     this->fileHandle = NULL;
+    this->_atEndOfFile = false;
 }
 
 AXRFile::~AXRFile()
@@ -87,4 +89,14 @@ std::string AXRFile::getFileName()
 std::string AXRFile::toString()
 {
     return "AXRFile:\nFilename: "+this->fileName+"\nBasepath: "+this->basePath+"\n-------------------------\n";
+}
+
+bool AXRFile::isAtEndOfFile()
+{
+    return this->_atEndOfFile;
+}
+
+void AXRFile::setAtEndOfFile(bool newValue)
+{
+    this->_atEndOfFile = newValue;
 }
