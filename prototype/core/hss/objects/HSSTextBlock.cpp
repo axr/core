@@ -54,11 +54,12 @@
 #include "HSSValue.h"
 #include "../parsing/HSSObjectDefinition.h"
 #include "../parsing/HSSFunctionCall.h"
-#include "../../AXR/AXRController.h"
-#include "../../AXR/AXRDebugging.h"
+#include "../../axr/AXRController.h"
+#include "../../axr/AXRDebugging.h"
 #include "HSSFunctions.h"
 #include "../parsing/HSSSelectorChain.h"
 #include "../parsing/HSSThisSelector.h"
+#include <boost/algorithm/string.hpp>
 
 using namespace AXR;
 
@@ -578,7 +579,13 @@ void HSSTextBlock::textChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-
+void HSSTextBlock::trimContentText()
+{
+    std::string trmstr = this->text;
+    boost::algorithm::trim(trmstr)
+    ;
+    this->text = trmstr;
+}
 
 
 
