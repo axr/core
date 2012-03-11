@@ -23,7 +23,7 @@ WinAxrWrapper *wrapper;
 SDL_Surface* screen;
 
 void render(){
-	SDL_FillRect(screen, NULL, 0x00000000);
+	SDL_FillRect(screen, NULL, 0xffffff00);
 
 	AXRRect axrRect;
 	axrRect.size.width = screen->w;
