@@ -67,10 +67,11 @@ HSSRgb::HSSRgb()
     this->red = this->green = this->blue = 0.;
     this->alpha = 255.;
     std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("isA");
+    shorthandProperties.push_back("alpha");
     shorthandProperties.push_back("red");
     shorthandProperties.push_back("green");
     shorthandProperties.push_back("blue");
-    shorthandProperties.push_back("alpha");
     
     this->setShorthandProperties(shorthandProperties);
 }
