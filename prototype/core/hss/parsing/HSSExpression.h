@@ -70,12 +70,14 @@ namespace AXR {
         HSSExpressionTypeDivision,
     };
     
-    class HSSExpression : public HSSParserNode, public HSSObservable
+    class HSSExpression : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSExpression> p;
         
         HSSExpression(HSSParserNode::p _left, HSSParserNode::p _right);
+        HSSExpression(const HSSExpression &orig);
+        
         virtual ~HSSExpression();
         std::string toString();
         long double evaluate();

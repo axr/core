@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/29
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -183,6 +183,10 @@ HSSFilter::HSSFilter()
     this->nodeType = HSSParserNodeTypeFilter;
 }
 
+HSSFilter::p HSSFilter::clone() const{
+    return boost::static_pointer_cast<HSSFilter, HSSClonable>(this->cloneImpl());
+}
+
 HSSFilter::~HSSFilter()
 {
     
@@ -208,4 +212,6 @@ const std::vector<HSSDisplayObject::p> HSSFilter::apply(const std::vector<HSSDis
     return scope;
 }
 
-
+HSSClonable::p HSSFilter::cloneImpl() const{
+    return HSSClonable::p(new HSSFilter(*this));
+}

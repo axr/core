@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/26
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 10
+ *      Core version: 0.45
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -56,13 +56,17 @@
 
 using namespace AXR;
 
-//this acquires ownership of the pointer
 HSSObjectDefinition::HSSObjectDefinition(HSSObject::p prototype)
+: HSSStatement()
 {
     this->prototype = prototype;
     this->type = HSSStatementTypeObjectDefinition;
     this->nodeType = HSSParserNodeTypeObjectDefinition;
     this->scope = NULL;
+}
+
+HSSObjectDefinition::p HSSObjectDefinition::clone() const{
+    return boost::static_pointer_cast<HSSObjectDefinition, HSSClonable>(this->cloneImpl());
 }
 
 HSSObjectDefinition::~HSSObjectDefinition()
@@ -224,4 +228,11 @@ HSSDisplayObject::p HSSObjectDefinition::getThisObj()
     return thisObj;
 }
 
+HSSObjectDefinition::p HSSObjectDefinition::shared_from_this()
+{
+    return boost::static_pointer_cast<HSSObjectDefinition>(HSSStatement::shared_from_this());
+}
+HSSClonable::p HSSObjectDefinition::cloneImpl() const{
+    return HSSClonable::p(new HSSObjectDefinition(*this));
+}
 

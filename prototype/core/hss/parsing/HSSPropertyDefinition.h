@@ -63,10 +63,14 @@ namespace AXR {
     {
     public:
         typedef boost::shared_ptr<HSSPropertyDefinition> p;
-        
+        typedef std::vector<p>::iterator it;
+        typedef std::vector<p>::const_iterator const_it;
+
         HSSPropertyDefinition();
         HSSPropertyDefinition(std::string name);
         HSSPropertyDefinition(std::string name, HSSParserNode::p value);
+        HSSPropertyDefinition(const HSSPropertyDefinition &orig);
+        p clone() const;
         ~HSSPropertyDefinition();
         std::string toString();
         void setName(std::string name);
@@ -80,6 +84,9 @@ namespace AXR {
         
         std::string name;
         HSSParserNode::p value;
+        
+    private:
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

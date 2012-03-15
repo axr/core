@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/06
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 6
+ *      Core version: 0.45
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -57,15 +57,22 @@
 #include <string>
 #include <deque>
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 #include "HSSSelector.h"
 
 namespace AXR {
+    
+    class HSSRule;
+    
     class HSSSelectorChain : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSSelectorChain> p;
+        typedef boost::weak_ptr<HSSRule> pp;
         
         HSSSelectorChain();
+        HSSSelectorChain(const HSSSelectorChain &orig);
+        p clone() const;
         ~HSSSelectorChain();
         std::string toString();
         
@@ -86,9 +93,16 @@ namespace AXR {
         
         HSSSelector::p subject();
         
-        
     protected:
+        HSSSelectorChain::p shared_from_this();
+        
+        
         std::deque<HSSParserNode::p> nodeList;
+        
+    private:
+        virtual HSSClonable::p cloneImpl() const;
+        
+        pp rule;
     };
 }
 

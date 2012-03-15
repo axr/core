@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 5
+ *      Core version: 0.45
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -67,8 +67,12 @@ namespace AXR {
     {    
     public:
         typedef boost::shared_ptr<HSSRule> p;
+        typedef std::deque<p>::iterator it;
+        typedef std::deque<p>::const_iterator const_it;
         
-        HSSRule(HSSSelectorChain::p selectorChain);
+        HSSRule();
+        HSSRule(const HSSRule &orig);
+        p clone() const;
         ~HSSRule();
         
         std::string toString();
@@ -93,10 +97,15 @@ namespace AXR {
         HSSInstruction::p getInstruction();
         
     protected:
+        HSSRule::p shared_from_this();
+        
         HSSSelectorChain::p selectorChain;
         std::vector<HSSPropertyDefinition::p> properties;
         std::vector<HSSRule::p>children;
         HSSInstruction::p instruction;
+    private:
+        virtual HSSClonable::p cloneImpl() const;
+        
         
     };
 }

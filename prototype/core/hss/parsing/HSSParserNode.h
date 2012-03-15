@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/29
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 12
+ *      Core version: 0.45
+ *      Revision: 13
  *
  ********************************************************************/
 
@@ -57,6 +57,7 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <vector>
+#include "../various/HSSClonable.h"
 
 namespace AXR {
     enum HSSParserNodeType
@@ -90,10 +91,14 @@ namespace AXR {
     public:
         typedef boost::shared_ptr<HSSParserNode> p;
         typedef std::vector<HSSParserNode::p>::iterator it;
+        typedef std::vector<HSSParserNode::p>::const_iterator const_it;
+        typedef boost::weak_ptr<HSSParserNode> pp;
         
         static std::string parserNodeStringRepresentation(HSSParserNodeType type);
         
         HSSParserNode();
+        HSSParserNode(const HSSParserNode &orig);
+        p clone() const;
         virtual std::string toString();
         
         bool isA(HSSParserNodeType otherType);
@@ -116,6 +121,8 @@ namespace AXR {
     protected:
         HSSParserNodeType nodeType;
         boost::shared_ptr<HSSDisplayObject> thisObj;
+    private:
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

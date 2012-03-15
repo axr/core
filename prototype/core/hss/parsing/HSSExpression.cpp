@@ -72,9 +72,27 @@ HSSExpression::HSSExpression(HSSParserNode::p _left, HSSParserNode::p _right)
     this->rightObserved = NULL;
 }
 
+HSSExpression::HSSExpression(const HSSExpression &orig)
+:HSSParserNode(orig)
+{
+    this->expressionType = orig.expressionType;
+    this->setLeft(orig.left->clone());
+    this->setRight(orig.right->clone());
+    this->percentageObserved = NULL;
+    this->leftObserved = NULL;
+    this->rightObserved = NULL;
+}
+
 HSSExpression::~HSSExpression()
 {
-    
+    if(this->leftObserved != NULL)
+    {
+        this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
+    }
+    if(this->rightObserved != NULL)
+    {
+        this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
+    }
 }
 
 std::string HSSExpression::toString()

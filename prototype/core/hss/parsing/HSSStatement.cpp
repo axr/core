@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -55,8 +55,16 @@
 using namespace AXR;
 
 HSSStatement::HSSStatement()
+: HSSParserNode()
 {
+    this->nodeType = HSSParserNodeTypeStatement;
     this->type = HSSStatementTypeGeneric;
+}
+
+HSSStatement::HSSStatement(const HSSStatement &orig)
+: HSSParserNode(orig)
+{
+    this->type = orig.type;
 }
 
 bool HSSStatement::isA(HSSStatementType otherType)
@@ -81,4 +89,8 @@ std::string HSSStatement::statementStringRepresentation(HSSStatementType type){
     return types[type];
 }
 
+HSSStatement::p HSSStatement::shared_from_this()
+{
+    return boost::static_pointer_cast<HSSStatement>(HSSParserNode::shared_from_this());
+}
 

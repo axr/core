@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/30
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -58,6 +58,10 @@ HSSFirstFilter::HSSFirstFilter()
 : HSSFilter()
 {
     this->filterType = HSSFilterTypeFirst;
+}
+
+HSSFirstFilter::p HSSFirstFilter::clone() const{
+    return boost::static_pointer_cast<HSSFirstFilter, HSSClonable>(this->cloneImpl());
 }
 
 HSSFirstFilter::~HSSFirstFilter()
@@ -80,4 +84,8 @@ const std::vector<HSSDisplayObject::p> HSSFirstFilter::apply(const std::vector<H
     } else {
         return scope;
     }
+}
+
+HSSClonable::p HSSFirstFilter::cloneImpl() const{
+    return HSSClonable::p(new HSSFirstFilter(*this));
 }

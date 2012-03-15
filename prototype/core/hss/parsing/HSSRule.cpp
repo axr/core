@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 6
+ *      Core version: 0.45
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -56,10 +56,23 @@
 
 using namespace AXR;
 
-HSSRule::HSSRule(HSSSelectorChain::p selectorChain)
+HSSRule::HSSRule()
+: HSSStatement()
 {
     this->selectorChain = selectorChain;
     this->type = HSSStatementTypeRule;
+}
+
+HSSRule::HSSRule(const HSSRule & orig)
+: HSSStatement(orig)
+{
+    this->_isActive = orig._isActive;
+    this->_interactors = boost::unordered_map<HSSFilterType, std::vector<boost::shared_ptr<HSSDisplayObject> > >(orig._interactors);
+}
+
+HSSRule::p HSSRule::clone() const
+{
+    return boost::static_pointer_cast<HSSRule, HSSClonable>(this->cloneImpl());
 }
 
 HSSRule::~HSSRule()
@@ -180,4 +193,27 @@ HSSInstruction::p HSSRule::getInstruction()
     return this->instruction;
 }
 
+HSSRule::p HSSRule::shared_from_this()
+{
+    return boost::static_pointer_cast<HSSRule>(HSSStatement::shared_from_this());
+}
 
+HSSClonable::p HSSRule::cloneImpl() const
+{
+    HSSRule::p clone = HSSRule::p(new HSSRule(*this));
+    
+    if(this->selectorChain) clone->setSelectorChain(this->selectorChain->clone());
+    HSSPropertyDefinition::const_it pIt;
+    for (pIt=this->properties.begin(); pIt!=this->properties.end(); pIt++) {
+        HSSPropertyDefinition::p clonedPropDef = (*pIt)->clone();
+        clone->propertiesAdd(clonedPropDef);
+    }
+    std::vector<HSSRule::p>::const_iterator rIt;
+    for (rIt=this->children.begin(); rIt!=this->children.end(); rIt++) {
+        HSSRule::p clonedRule = (*rIt)->clone();
+        clone->childrenAdd(clonedRule);
+    }
+    if(this->instruction) clone->setInstruction(this->instruction->clone());
+    
+    return clone;
+}

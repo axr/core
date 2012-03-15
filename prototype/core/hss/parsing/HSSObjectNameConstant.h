@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/18
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.45
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -63,6 +63,7 @@ namespace AXR {
         typedef boost::shared_ptr<HSSObjectNameConstant> p;
         
         HSSObjectNameConstant(std::string value);
+        p clone() const;
         virtual ~HSSObjectNameConstant();
         
         void setValue(std::string newValue);
@@ -72,6 +73,8 @@ namespace AXR {
         
     protected:
         std::string value;
+    private:
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -55,11 +55,20 @@
 using namespace AXR;
 
 HSSUniversalSelector::HSSUniversalSelector()
+: HSSParserNode()
 {
     this->nodeType = HSSParserNodeTypeUniversalSelector;
+}
+
+HSSUniversalSelector::p HSSUniversalSelector::clone() const
+{
+    return boost::static_pointer_cast<HSSUniversalSelector, HSSClonable>(this->cloneImpl());
 }
 
 std::string HSSUniversalSelector::toString(){
     return "Universal selector";
 }
 
+HSSClonable::p HSSUniversalSelector::cloneImpl() const{
+    return HSSClonable::p(new HSSUniversalSelector(*this));
+}

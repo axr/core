@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/27
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -63,9 +63,13 @@ namespace AXR {
         typedef boost::shared_ptr<HSSMultiplication> p;
         
         HSSMultiplication(HSSParserNode::p left, HSSParserNode::p right);
+        HSSMultiplication(const HSSMultiplication &orig);
+        p clone() const;
         virtual ~HSSMultiplication();
         
         long double calculate(long double leftval, long double rightval);
+    private:
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

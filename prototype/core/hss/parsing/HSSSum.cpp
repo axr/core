@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/27
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -60,6 +60,16 @@ HSSSum::HSSSum(HSSParserNode::p _left, HSSParserNode::p _right)
     this->expressionType = HSSExpressionTypeSum;
 }
 
+HSSSum::HSSSum(const HSSSum &orig)
+: HSSExpression(orig)
+{
+    
+}
+
+HSSSum::p HSSSum::clone() const{
+    return boost::static_pointer_cast<HSSSum, HSSClonable>(this->cloneImpl());
+}
+
 HSSSum::~HSSSum()
 {
     
@@ -68,6 +78,10 @@ HSSSum::~HSSSum()
 long double HSSSum::calculate(long double leftval, long double rightval)
 {
     return leftval + rightval;
+}
+
+HSSClonable::p HSSSum::cloneImpl() const{
+    return HSSClonable::p(new HSSSum(*this));
 }
 
 

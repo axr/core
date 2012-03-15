@@ -81,6 +81,17 @@ HSSParserNode::HSSParserNode()
     this->nodeType = HSSParserNodeTypeGeneric;
 }
 
+//doesn't clone any part of the node tree, nor the observers array
+HSSParserNode::HSSParserNode(const HSSParserNode &orig)
+{
+    this->nodeType = orig.nodeType;
+}
+
+HSSParserNode::p HSSParserNode::clone() const
+{
+    return boost::static_pointer_cast<HSSParserNode, HSSClonable>(this->cloneImpl());
+}
+
 std::string HSSParserNode::toString()
 {
     return "Generic parser node - you forgot to override toString in your subclass or somehow using HSSParserNode directly";
@@ -96,6 +107,10 @@ HSSParserNodeType HSSParserNode::getType()
     return this->nodeType;
 }
 
+HSSClonable::p HSSParserNode::cloneImpl() const
+{
+    return HSSClonable::p(new HSSParserNode(*this));
+}
 
 void HSSParserNode::setThisObj(HSSDisplayObject::p value)
 {

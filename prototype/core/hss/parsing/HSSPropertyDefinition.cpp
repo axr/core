@@ -43,10 +43,9 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 5
+ *      Core version: 0.45
  *
  ********************************************************************/
 
@@ -56,19 +55,34 @@
 using namespace AXR;
 
 HSSPropertyDefinition::HSSPropertyDefinition()
+: HSSStatement()
 {
     this->name = "";
     this->type = HSSStatementTypePropertyDefinition;
 }
 
 HSSPropertyDefinition::HSSPropertyDefinition(std::string name)
+: HSSStatement()
 {
     this->name = name;
 }
 
 HSSPropertyDefinition::HSSPropertyDefinition(std::string name, HSSParserNode::p value)
+: HSSStatement()
 {
     this->name = name;
+    this->setValue(value);
+}
+
+HSSPropertyDefinition::HSSPropertyDefinition(const HSSPropertyDefinition &orig)
+: HSSStatement(orig)
+{
+    this->name = orig.name;
+}
+
+HSSPropertyDefinition::p HSSPropertyDefinition::clone() const
+{
+    return boost::static_pointer_cast<HSSPropertyDefinition, HSSClonable>(this->cloneImpl());
 }
 
 HSSPropertyDefinition::~HSSPropertyDefinition()
@@ -121,3 +135,14 @@ HSSParserNode::p HSSPropertyDefinition::getValue()
     return this->value;
 }
 
+HSSPropertyDefinition::p HSSPropertyDefinition::shared_from_this()
+{
+    return boost::static_pointer_cast<HSSPropertyDefinition>(HSSStatement::shared_from_this());
+}
+
+HSSClonable::p HSSPropertyDefinition::cloneImpl() const
+{
+    HSSPropertyDefinition::p clone = HSSPropertyDefinition::p(new HSSPropertyDefinition(*this));
+    clone->setValue(this->value->clone());
+    return clone;
+}

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/12
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 8
+ *      Core version: 0.45
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -56,9 +56,14 @@
 using namespace AXR;
 
 HSSNumberConstant::HSSNumberConstant(long double value)
+: HSSParserNode()
 {
     this->value = value;
     this->nodeType = HSSParserNodeTypeNumberConstant;
+}
+
+HSSNumberConstant::p HSSNumberConstant::clone() const{
+    return boost::static_pointer_cast<HSSNumberConstant, HSSClonable>(this->cloneImpl());
 }
 
 HSSNumberConstant::~HSSNumberConstant()
@@ -84,6 +89,10 @@ std::string HSSNumberConstant::toString()
     tempstream << this->value;
     ret.append(tempstream.str());
     return ret;
+}
+
+HSSClonable::p HSSNumberConstant::cloneImpl() const{
+    return HSSClonable::p(new HSSNumberConstant(*this));
 }
 
 

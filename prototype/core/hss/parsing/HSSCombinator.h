@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.45
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -74,6 +74,7 @@ namespace AXR {
         typedef boost::shared_ptr<HSSCombinator> p;
         
         HSSCombinator(HSSCombinatorType type);
+        p clone() const;
         
         static std::string combinatorStringRepresentation(HSSCombinatorType type);
         bool isA(HSSCombinatorType otherType);
@@ -82,6 +83,8 @@ namespace AXR {
         virtual std::string toString();
     protected:
         HSSCombinatorType combinatorType;
+    private:
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

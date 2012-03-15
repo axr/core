@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/19
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 37
+ *      Revision: 38
  *
  ********************************************************************/
 
@@ -1796,6 +1796,7 @@ long double HSSDisplayObject::_setLDProperty(
             expressionValue->setPercentageBase(percentageBase);
             expressionValue->setPercentageObserved(observedProperty, observedObject);
             expressionValue->setScope(scope);
+            expressionValue->setThisObj(this->shared_from_this());
             ret = expressionValue->evaluate();
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject>(this, callback));

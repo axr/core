@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/20
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -130,6 +130,7 @@ HSSParserNode::p HSSLog::getDValue() { return this->dValue; }
 void HSSLog::setDValue(HSSParserNode::p value)
 {
     this->dValue = value;
+    this->dValue->setThisObj(this->getThisObj());
     if(this->observedValue != NULL)
     {
         this->observedValue->removeObserver(this->observedValueProperty, HSSObservablePropertyValue, this);

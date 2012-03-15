@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 5
+ *      Core version: 0.45
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -55,9 +55,14 @@
 using namespace AXR;
 
 HSSKeywordConstant::HSSKeywordConstant(std::string value)
+: HSSParserNode()
 {
     this->value = value;
     this->nodeType = HSSParserNodeTypeKeywordConstant;
+}
+
+HSSKeywordConstant::p HSSKeywordConstant::clone() const{
+    return boost::static_pointer_cast<HSSKeywordConstant, HSSClonable>(this->cloneImpl());
 }
 
 HSSKeywordConstant::~HSSKeywordConstant()
@@ -78,6 +83,10 @@ std::string HSSKeywordConstant::getValue()
 std::string HSSKeywordConstant::toString()
 {
     return "HSSKeywordConstant with value "+this->value;
+}
+
+HSSClonable::p HSSKeywordConstant::cloneImpl() const{
+    return HSSClonable::p(new HSSKeywordConstant(*this));
 }
 
 
