@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/29
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -211,6 +211,13 @@ void HSSFunctionCall::setValue(void * newValue){
 void * HSSFunctionCall::getValue()
 {
     return this->_value;
+}
+
+void HSSFunctionCall::setThisObj(HSSDisplayObject::p value)
+{
+    //propagate values
+    this->function->setThisObj(value);
+    HSSParserNode::setThisObj(value);
 }
 
 

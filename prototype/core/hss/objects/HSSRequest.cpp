@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/05
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -227,6 +227,7 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                     HSSFunction::p fnct = fcall->getFunction();
                     if(fnct){
                         fnct->setScope(this->scope);
+                        fnct->setThisObj(this->getThisObj());
                         std::vector< std::vector<HSSDisplayObject::p> > selection = *(std::vector< std::vector<HSSDisplayObject::p> >*) fnct->evaluate();
                         unsigned i, size;
                         for (i=0, size=selection.size(); i<size; i++) {

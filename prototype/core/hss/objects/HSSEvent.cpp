@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -168,6 +168,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             if (objdef->getObject()->isA(HSSObjectTypeAction)) {
                 objdef->setScope(this->scope);
+                objdef->setThisObj(this->getThisObj());
                 objdef->apply();
                 HSSObject::p theObj = objdef->getObject();
                 theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyAction, this, new HSSValueChangedCallback<HSSEvent>(this, &HSSEvent::actionChanged));
@@ -183,6 +184,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 objdef->setScope(this->scope);
+                objdef->setThisObj(this->getThisObj());
                 objdef->apply();
                 
                 HSSObject::p obj = objdef->getObject();
@@ -209,6 +211,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
                 this->addDAction(remoteValue);
                 

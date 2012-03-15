@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/19
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 32
+ *      Revision: 33
  *
  ********************************************************************/
 
@@ -72,7 +72,7 @@ namespace AXR {
     
     class HSSContainer;
 
-    class HSSDisplayObject : public boost::enable_shared_from_this<HSSDisplayObject>,  public HSSObject
+    class HSSDisplayObject : public HSSObject
     {
     public:
         
@@ -308,6 +308,9 @@ namespace AXR {
         //FIXME: mask
         
         unsigned _index;
+        
+        HSSDisplayObject::p shared_from_this();
+        
         
     private:
         long double _setLDProperty(

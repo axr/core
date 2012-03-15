@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 17
+ *      Core version: 0.45
+ *      Revision: 18
  *
  ********************************************************************/
 
@@ -106,37 +106,38 @@ namespace AXR {
         std::string loadSheetsGet(unsigned index);
         const std::vector<std::string> loadSheetsGet() const;
         
-        const std::vector<HSSStatement::p>& getStatements() const;
-        void statementsAdd(HSSStatement::p & statement);
-        void statementsRemove(unsigned index);
-        HSSStatement::p & statementsGet(unsigned index);
+        void setParserTree(std::vector<HSSParserNode::p> newTree);
+        const std::vector<HSSParserNode::p> getParserTree() const;
+        void parserTreeAdd(HSSParserNode::p node);
+        void parserTreeRemove(HSSParserNode::p node);
         
         const std::vector<HSSRule::p>& getRules() const;
-        void rulesAdd(HSSRule::p & statement);
+        void rulesAdd(HSSRule::p & rule);
         void rulesRemove(unsigned index);
         HSSRule::p & rulesGet(unsigned index);
         unsigned const rulesSize();
         
         void setSelectorChain(HSSSelectorChain::p selectorChain);
-        std::vector< std::vector<HSSDisplayObject::p> > selectHierarchical(const std::vector<HSSDisplayObject::p> & scope);
-        std::vector< std::vector<HSSDisplayObject::p> > selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope);
-        std::vector< std::vector<HSSDisplayObject::p> > selectOnLevel(const std::vector<HSSDisplayObject::p> & scope);
-        std::vector< std::vector<HSSDisplayObject::p> > selectSimple(const std::vector<HSSDisplayObject::p> & scope);
+        std::vector< std::vector<HSSDisplayObject::p> > selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
+        std::vector< std::vector<HSSDisplayObject::p> > selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
+        std::vector< std::vector<HSSDisplayObject::p> > selectOnLevel(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
+        std::vector< std::vector<HSSDisplayObject::p> > selectSimple(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
         std::vector< std::vector<HSSDisplayObject::p> > filterSelection(std::vector< HSSDisplayObject::p> &selection);
         
         std::string basepath;
         
-        void recursiveMatchRulesToDisplayObjects(HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container);
+        void recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container);
+        
+        std::stack<HSSContainer::p>currentContext;
         
     protected:
         AXRCore * core;
         
-        std::stack<HSSContainer::p>currentContext;
         HSSContainer::p root;
         
         std::vector<HSSObjectDefinition::p>objectTree;
         std::vector<std::string>loadSheets;
-        std::vector<HSSStatement::p>statements;
+        std::vector<HSSParserNode::p>parserTree;
         std::vector<HSSRule::p>rules;
         
         HSSSelectorChain::p currentChain;

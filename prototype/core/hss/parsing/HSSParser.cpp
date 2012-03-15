@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/21
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 22
+ *      Core version: 0.45
+ *      Revision: 23
  *
  ********************************************************************/
 
@@ -569,6 +569,11 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                     if (objtype == "this") {
                         ret->add(HSSThisSelector::p(new HSSThisSelector()));
                         this->readNextToken(true);
+                        //adds only if needed
+                        HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+                        if(childrenCombinator){
+                            ret->add(childrenCombinator);
+                        }
                         break;
                     } else if (objtype == "super"){
                         //FIXME
@@ -697,35 +702,57 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
                 ret = false;
             }
         }
-        
     } else {
-        //no colon, it may be a rule -- we peek until we find the end of the statement
-        //or we can conclude it actually is a rule
-        bool done = false;
-        while(!done)
-        {
-            switch (peekToken->getType()) {
-                case HSSBlockClose:
-                case HSSEndOfStatement:
-                    //it is a shorthand
-                    ret = true;
-                    done = true;
-                    *isShorthand = true;
-                    break;
-                    
-                case HSSBlockOpen:
-                    //it is a 
+        if(this->currentToken->isA(HSSObjectSign)){
+            if(peekToken->isA(HSSIdentifier)){
+                std::string objtype = VALUE_TOKEN(peekToken)->getString();
+                if (    (objtype == "this")
+                    ||  (objtype == "super")
+                    ||  (objtype == "parent")
+                    ||  (objtype == "root") ){
+                    //it is a selector
                     ret = false;
-                    done = true;
-                    break;
-                    
-                default:
-                    break;
+                    *isShorthand = false;
+                } else {
+                    //it is a shorthand with an object definition
+                    ret = true;
+                    *isShorthand = true;
+                }
+            } else {
+                //it is a shorthand with an object definition
+                ret = true;
+                *isShorthand = true;
             }
             
-            if(!done){
-                peekToken = this->tokenizer->peekNextToken();
-                this->checkForUnexpectedEndOfSource();
+        } else {
+            //no colon, it may be a rule -- we peek until we find the end of the statement
+            //or we can conclude it actually is a rule
+            bool done = false;
+            while(!done)
+            {
+                switch (peekToken->getType()) {
+                    case HSSBlockClose:
+                    case HSSEndOfStatement:
+                        //it is a shorthand
+                        ret = true;
+                        done = true;
+                        *isShorthand = true;
+                        break;
+                        
+                    case HSSBlockOpen:
+                        //it is a 
+                        ret = false;
+                        done = true;
+                        break;
+                        
+                    default:
+                        break;
+                }
+                
+                if(!done){
+                    peekToken = this->tokenizer->peekNextToken();
+                    this->checkForUnexpectedEndOfSource();
+                }
             }
         }
     }
@@ -900,46 +927,109 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
     
     //read the inner part of the block
     this->currentObjectContext.push(obj);
-    while (!this->currentToken->isA(HSSBlockClose)){
-        switch (this->currentToken->getType()) {
-            case HSSSymbol:
-            {
-                if(VALUE_TOKEN(this->currentToken)->getString() == "&"){
-                    HSSToken::p peekToken = this->tokenizer->peekNextToken();
-                    if(peekToken->isA(HSSObjectSign)){
-                        this->tokenizer->resetPeek();
-                        this->readNextToken(true);
-                        try {
+    
+    security_brake_init()
+    while (!this->currentToken->isA(HSSBlockClose))
+    {
+        try {
+            switch (this->currentToken->getType()) {
+                case HSSSymbol:
+                {
+                    if(VALUE_TOKEN(this->currentToken)->getString() == "&"){
+                        HSSToken::p peekToken = this->tokenizer->peekNextToken();
+                        if(peekToken->isA(HSSObjectSign)){
+                            this->tokenizer->resetPeek();
+                            this->readNextToken(true);
                             HSSObjectDefinition::p childDef = this->readObjectDefinition(propertyName);
-                            childDef->setParent(ret);
+                            childDef->setParentNode(ret);
                             ret->childrenAdd(childDef);
-                        } catch (AXRError::p e) {
-                            e->raise();
-                            this->readNextToken();
-                            if (!this->atEndOfSource())
-                                this->skip(HSSWhitespace);
+                            break;
+                        } else {
+                            this->tokenizer->resetPeek();
+                            //fall through (to default, or else FIXME)
                         }
-                        this->tokenizer->resetPeek();
+                    } else {
+                        HSSRule::p theRule = this->readRule();
+                        if(theRule)
+                            ret->rulesAdd(theRule);
                         break;
                     }
                 }
-                
-                //else fall through
-            }
-                
-            default:
-                try {
-                    const HSSPropertyDefinition::p &property = this->readPropertyDefinition();
-                    ret->propertiesAdd(property);
-                } catch (AXRError::p e) {
-                    e->raise();
-                    //this->readNextToken();
-                    if (!this->atEndOfSource())
-                        this->skip(HSSWhitespace);
+                    
+                case HSSIdentifier:
+                case HSSColon:
+                case HSSObjectSign:
+                {
+                    bool isShorthand;
+                    if (this->isPropertyDefinition(&isShorthand)){
+                        HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition(true, isShorthand);
+                        if (propertyDefinition){
+                            ret->propertiesAdd(propertyDefinition);
+                        }
+                    } else {
+                        this->currentObjectContextAdd(HSSObject::p(new HSSContainer()));
+                        HSSRule::p theRule = this->readRule();
+                        if(theRule)
+                            ret->rulesAdd(theRule);
+                        this->currentObjectContextRemoveLast();
+                    }
+                    break;
                 }
-                break;
+                
+                case HSSInstructionSign:
+                {
+                    bool isShorthand;
+                    if (this->isPropertyDefinition(&isShorthand)){
+                        HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition(true, isShorthand);
+                        if (propertyDefinition){
+                            ret->propertiesAdd(propertyDefinition);
+                        }
+                    } else {
+                        HSSRule::p childRule = this->readInstructionRule();
+                        if(childRule)
+                            ret->rulesAdd(childRule);
+                    }
+                    break;
+                }
+                    
+                default:
+                {
+                    bool isShorthand;
+                    if (this->isPropertyDefinition(&isShorthand)){
+                        HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition(true, isShorthand);
+                        if (propertyDefinition){
+                            ret->propertiesAdd(propertyDefinition);
+                        }
+                    } else {
+                        AXRWarning::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType())+" while reading object definition", this->currentFile->fileName, this->line, this->column))->raise();
+                        this->readNextToken();
+                        this->skip(HSSWhitespace);
+                    }
+                    break;
+                }
+            }
+            
+        } catch (AXRError::p e) {
+            AXRWarning::p(new AXRWarning("HSSParser", "Invalid value for "+e->getMessage(), this->currentFile->fileName, this->line, this->column))->raise();
+            if(!this->atEndOfSource()){
+                this->skipUntilEndOfStatement();
+                this->readNextToken();
+                this->checkForUnexpectedEndOfSource();
+                this->skip(HSSWhitespace);
+            }
         }
+        
+        if (this->atEndOfSource()) {
+            AXRWarning::p(new AXRWarning("HSSParser", "Auto closing block of object definition with name "+obj->getName()+" because of unexpected end of file", this->currentFile->fileName, this->line, this->column))->raise();
+            //leave the block context
+            this->currentContext.pop_back();
+            return ret;
+        }
+        
+        security_brake()
     }
+    security_brake_reset()
+    
     //reset the index of the shorthand properties
     obj->shorthandReset();
     //out we are

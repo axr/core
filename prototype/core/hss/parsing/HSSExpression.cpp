@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/12
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 9
+ *      Core version: 0.45
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -402,4 +402,13 @@ void HSSExpression::setScope(const std::vector<HSSDisplayObject::p> * newScope)
     }
     
     this->setDirty(true);
+}
+
+void HSSExpression::setThisObj(HSSDisplayObject::p value)
+{
+    //propagate values
+    if(this->left) this->left->setThisObj(value);
+    if(this->right) this->right->setThisObj(value);
+    
+    HSSParserNode::setThisObj(value);
 }

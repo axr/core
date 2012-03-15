@@ -54,6 +54,8 @@
 #define HSSPARSERNODE_H
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <vector>
 
 namespace AXR {
@@ -79,9 +81,11 @@ namespace AXR {
         HSSParserNodeTypeFunctionCall,
         HSSParserNodeTypeMultipleValueDefinition
     };
+    
+    class HSSDisplayObject;
 
     
-    class HSSParserNode
+    class HSSParserNode : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSParserNode>
     {
     public:
         typedef boost::shared_ptr<HSSParserNode> p;
@@ -95,8 +99,23 @@ namespace AXR {
         bool isA(HSSParserNodeType otherType);
         HSSParserNodeType getType();
         
+        
+        /**
+         *  Setter for the "this object", which is a shared pointer to the nearest display object
+         *  (including itself).
+         *  @param value        A shared pointer to the nearest display object.
+         */
+        virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        /**
+         *  Getter for the "this object", which is a shared pointer to the nearest display object
+         *  (including itself).
+         *  @return A shared pointer to the nearest display object.
+         */
+        virtual boost::shared_ptr<HSSDisplayObject> getThisObj();
+        
     protected:
         HSSParserNodeType nodeType;
+        boost::shared_ptr<HSSDisplayObject> thisObj;
     };
 }
 

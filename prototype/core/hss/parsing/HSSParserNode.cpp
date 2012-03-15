@@ -43,14 +43,15 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/24
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 10
+ *      Core version: 0.45
+ *      Revision: 11
  *
  ********************************************************************/
 
 #include "HSSParserNode.h"
+#include "../objects/HSSDisplayObject.h"
 
 using namespace AXR;
 
@@ -96,6 +97,15 @@ HSSParserNodeType HSSParserNode::getType()
 }
 
 
+void HSSParserNode::setThisObj(HSSDisplayObject::p value)
+{
+    this->thisObj = value;
+}
+
+HSSDisplayObject::p HSSParserNode::getThisObj()
+{
+    return thisObj;
+}
 
 
 
