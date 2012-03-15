@@ -79,9 +79,10 @@ namespace AXR {
         friend class HSSContainer;
         
         typedef boost::shared_ptr<HSSDisplayObject> p;
-        typedef boost::weak_ptr<HSSContainer> parentPointer;
+        typedef boost::weak_ptr<HSSContainer> pp;
         typedef std::vector<HSSDisplayObject::p> c;
         typedef std::vector<HSSDisplayObject::p>::iterator it;
+        typedef std::vector<HSSDisplayObject::p>::const_iterator const_it;
         
         HSSDisplayObject();        
         void initialize();
@@ -193,9 +194,11 @@ namespace AXR {
         void addDFont(HSSParserNode::p value);
         void fontChanged(HSSObservableProperty source, void*data);
         
-        //behavior
-        const HSSMultipleValueDefinition::p getDBehavior() const;
-        void setDBehavior(HSSParserNode::p value);
+        //on
+        HSSParserNode::p getDOn();
+        void setDOn(HSSParserNode::p value);
+        void addDOn(HSSParserNode::p value);
+        void onChanged(HSSObservableProperty source, void*data);
         bool fireEvent(HSSEventType type);
         
         //border
@@ -209,7 +212,7 @@ namespace AXR {
         virtual bool handleEvent(HSSEventType, void* data);
         
     protected:
-        parentPointer parent;
+        pp parent;
         std::map<std::string, std::string>attributes;
         std::string elementName;
         std::string contentText;
@@ -284,9 +287,12 @@ namespace AXR {
         HSSObservable * observedFont;
         HSSObservableProperty observedFontProperty;
         std::vector<HSSFont::p> font;
-        //behavior
-        HSSMultipleValueDefinition::p dBehavior;
-        boost::unordered_map<HSSEventType, std::vector<HSSEvent::p> > behavior;
+        
+        //on
+        HSSParserNode::p dOn;
+        HSSObservable * observedOn;
+        HSSObservableProperty observedOnProperty;
+        boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > on;
         
         //FIXME: margin
         

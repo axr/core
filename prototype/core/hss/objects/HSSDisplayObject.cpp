@@ -122,8 +122,8 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyWidth, (void *) &this->width);
     this->registerProperty(HSSObservablePropertyBackground, (void *) &this->dBackground);
     this->registerProperty(HSSObservablePropertyFont, (void *) &this->font);
-    this->registerProperty(HSSObservablePropertyBehavior, (void *) &this->behavior);
     this->registerProperty(HSSObservablePropertyBorder, (void *) &this->dBorder);
+    this->registerProperty(HSSObservablePropertyOn, (void *) &this->on);
 }
 
 HSSDisplayObject::~HSSDisplayObject()
@@ -162,13 +162,13 @@ std::string HSSDisplayObject::defaultObjectType(std::string property)
         return "shadow";
     } else if (property == "animation") {
         return "transition";
-    } else if (property == "behavior") {
+    } else if (property == "on") {
         return "click";
     } else if (property == "mask") {
         return "image";
     } else if (property == "font") {
         return "font";
-    } else if (property == "behavior") {
+    } else if (property == "on") {
         return "click";   
     } else {
         return HSSObject::defaultObjectType(property);
@@ -229,7 +229,7 @@ boost::shared_ptr<HSSContainer> HSSDisplayObject::getParent()
 
 void HSSDisplayObject::setParent(boost::shared_ptr<HSSContainer> parent)
 {
-    this->parent = parentPointer(parent);
+    this->parent = pp(parent);
 }
 
 void HSSDisplayObject::removeFromParent()
@@ -366,8 +366,8 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
         case HSSObservablePropertyFont:
             this->setDFont(value);
             break;
-        case HSSObservablePropertyBehavior:
-            this->setDBehavior(value);
+        case HSSObservablePropertyOn:
+            this->setDOn(value);
             break;
         case HSSObservablePropertyBorder:
             this->setDBorder(value);
@@ -405,7 +405,7 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, void * value)
         case HSSObservablePropertyBorder:
             return; //FIXME
             
-        case HSSObservablePropertyBehavior:
+        case HSSObservablePropertyOn:
             std_log("lakjdflad");
             
         default:
@@ -1516,49 +1516,29 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
 }
 
 
-//behavior
-const HSSMultipleValueDefinition::p HSSDisplayObject::getDBehavior() const { return this->dBehavior; }
-void HSSDisplayObject::setDBehavior(HSSParserNode::p value)
+//on
+HSSParserNode::p HSSDisplayObject::getDOn() { return this->dOn; }
+void HSSDisplayObject::setDOn(HSSParserNode::p value)
 {
-    switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        case HSSParserNodeTypeObjectNameConstant:
-        case HSSParserNodeTypeKeywordConstant:
-        case HSSParserNodeTypeFunctionCall:
-            break;
-        default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for behavior of "+this->getElementName()));
-    }
-    
-    if(!this->dBehavior){
-        this->dBehavior = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition());
-    }
-    
-    this->dBehavior->add(value);
-    
-    switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            HSSContainer::p parent = this->getParent();
-            if(parent){
-                objdef->setScope(&(parent->getChildren()));
-            } else if(this->isA(HSSObjectTypeContainer)){
-                HSSContainer * thisCont = static_cast<HSSContainer *>(this);
-                objdef->setScope(&(thisCont->getChildren()));
-            }
-            
-            objdef->apply();
-            HSSEvent::p theEvent = boost::static_pointer_cast<HSSEvent>(objdef->getObject());
-            HSSEventType eventType = theEvent->getEventType();
-            if(this->behavior.find(eventType) == this->behavior.end()){
-                std::vector<HSSEvent::p>newVector;
-                this->behavior[eventType] = newVector;
-            }
-            this->behavior[eventType].clear();
-            this->behavior[eventType].push_back(theEvent);
+    this->on.clear();
+    this->dOn = value;
+    this->addDOn(value);
+}
 
-            
+
+void HSSDisplayObject::addDOn(HSSParserNode::p value)
+{
+    bool valid = true;
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeMultipleValueDefinition:
+        {
+            HSSParserNode::it iterator;
+            HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(value);
+            std::vector<HSSParserNode::p> values = multiDef->getValues();
+            for (iterator = values.begin(); iterator != values.end(); iterator++) {
+                this->addDOn(*iterator);
+            }
             break;
         }
             
@@ -1566,19 +1546,71 @@ void HSSDisplayObject::setDBehavior(HSSParserNode::p value)
         {
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
-                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
-                objdef->apply();
-                HSSEvent::p theEvent = boost::static_pointer_cast<HSSEvent>(objdef->getObject());
-                HSSEventType eventType = theEvent->getEventType();
-                if(this->behavior.find(eventType) == this->behavior.end()){
-                    std::vector<HSSEvent::p>newVector;
-                    this->behavior[eventType] = newVector;
-                }
-                this->behavior[eventType].clear();
-                this->behavior[eventType].push_back(theEvent);
+                this->addDOn(this->axrController->objectTreeGet(objname->getValue()));
                 
             } catch (AXRError::p e) {
                 e->raise();
+            }
+            break;
+        }
+            
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            this->dOn = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            if (objdef->getObject()->isA(HSSObjectTypeEvent)) {
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+
+                objdef->setThisObj(this->shared_from_this());
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                
+                HSSEvent::p theEvent = boost::static_pointer_cast<HSSEvent>(objdef->getObject());
+                HSSEventType eventType = theEvent->getEventType();
+                if(this->on.find(eventType) == this->on.end()){
+                    std::vector<HSSObject::p>newVector;
+                    this->on[eventType] = newVector;
+                }
+                this->on[eventType].push_back(theEvent);
+                
+                theEvent->observe(HSSObservablePropertyValue, HSSObservablePropertyOn, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::onChanged));
+                
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    fnct->setScope(&(thisCont->getChildren()));
+                }
+                fnct->setThisObj(this->shared_from_this());
+                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
+                if(remoteValue){
+                    try {
+                        this->addDOn(remoteValue);
+                    } catch (AXRError::p e) {
+                        e->raise();
+                    }
+                }
+                
+            } else {
+                valid = false;
             }
             
             break;
@@ -1586,32 +1618,43 @@ void HSSDisplayObject::setDBehavior(HSSParserNode::p value)
             
         case HSSParserNodeTypeKeywordConstant:
         {
-            HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
-            if (theKW->getValue() != "none") {
-                AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown keyword "+theKW->getValue()+" while setting behavior of "+this->elementName))->raise();
+            if(boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue() == "none"){
+                //ignore
+            } else {
+                valid = false;
             }
             break;
         }
             
         default:
-        {
-            AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown parser node while setting behavior of "+this->elementName))->raise();
+            valid = false;
             break;
-        }
     }
     
-    this->notifyObservers(HSSObservablePropertyBehavior, &this->behavior);
+    if(!valid){
+        throw AXRWarning::p(new AXRWarning("HSSGradient", "Invalid value for colorStops of "+this->getName()));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyOn, &this->on);
+}
+
+
+void HSSDisplayObject::onChanged(HSSObservableProperty source, void*data)
+{
+    
 }
 
 bool HSSDisplayObject::fireEvent(HSSEventType type)
 {
     bool fired = false;
-    if(this->behavior.find(type) != this->behavior.end()){
-        unsigned i, size;
-        std::vector<HSSEvent::p> events = this->behavior[type];
-        for (i=0, size=events.size(); i<size; i++) {
-            events[i]->fire();
-            fired = true;
+    if(this->on.find(type) != this->on.end()){
+        std::vector<HSSObject::p> events = this->on[type];
+        HSSObject::it it;
+        for (it=events.begin(); it!=events.end(); it++) {
+            if((*it)->isA(HSSObjectTypeEvent)){
+                boost::static_pointer_cast<HSSEvent>(*it)->fire();
+                fired = true;
+            }
         }
     }
     return fired;
@@ -1706,6 +1749,14 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
 
             break;
         }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+            if (keywordValue->getValue() == "none"){
+                break;
+            }
+        }
         
         default:
             throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for border of "+this->getElementName()));
@@ -1745,9 +1796,12 @@ void HSSDisplayObject::setDefaults()
     //background
     HSSKeywordConstant::p newDBackground(new HSSKeywordConstant("none"));
     this->setDBackground(newDBackground);
-    //behavior
-    HSSKeywordConstant::p newDBehavior(new HSSKeywordConstant("none"));
-    this->setDBehavior(newDBehavior);
+    //on
+    HSSKeywordConstant::p newDOn(new HSSKeywordConstant("none"));
+    this->setDOn(newDOn);
+    //border
+    HSSKeywordConstant::p newDBorder(new HSSKeywordConstant("none"));
+    this->setDBorder(newDBorder);
 }
 
 
@@ -1800,6 +1854,8 @@ long double HSSDisplayObject::_setLDProperty(
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject>(this, callback));
                 observedStore = expressionValue.get();
                 observedStoreProperty = HSSObservablePropertyValue;
+            } else {
+                observedStore = NULL;
             }
             
             break;
@@ -1868,3 +1924,7 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
 
 
 
+HSSDisplayObject::p HSSDisplayObject::shared_from_this()
+{
+    return boost::static_pointer_cast<HSSDisplayObject>(HSSObject::shared_from_this());
+}

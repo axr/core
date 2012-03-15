@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/02/02
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 10
+ *      Core version: 0.45
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -74,7 +74,7 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyFlow] = "HSSObservablePropertyFlow";
         types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
         types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
-        types[HSSObservablePropertyBehavior] = "HSSObservablePropertyBehavior";
+        types[HSSObservablePropertyOn] = "HSSObservablePropertyOn";
         types[HSSObservablePropertyMargin] = "HSSObservablePropertyMargin";
         types[HSSObservablePropertyPadding] = "HSSObservablePropertyPadding";
         types[HSSObservablePropertyBorder] = "HSSObservablePropertyBorder";
@@ -150,7 +150,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["flow"] = HSSObservablePropertyFlow;
         properties["alignX"] = HSSObservablePropertyAlignX;
         properties["alignY"] = HSSObservablePropertyAlignY;
-        properties["behavior"] = HSSObservablePropertyBehavior;
+        properties["on"] = HSSObservablePropertyOn;
         
         //HSSContainer
         properties["contentAlignX"] = HSSObservablePropertyContentAlignX;
@@ -160,7 +160,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["background"] = HSSObservablePropertyBackground;
         properties["font"] = HSSObservablePropertyFont;
         properties["shape"] = HSSObservablePropertyShape;
-        properties["behavior"] = HSSObservablePropertyBehavior;
+        properties["on"] = HSSObservablePropertyOn;
         properties["margin"] = HSSObservablePropertyMargin;
         properties["padding"] = HSSObservablePropertyPadding;
         properties["border"] = HSSObservablePropertyBorder;
