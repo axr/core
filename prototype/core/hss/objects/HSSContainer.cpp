@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/19
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 33
+ *      Revision: 34
  *
  ********************************************************************/
 
@@ -58,7 +58,7 @@
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
 #include "../parsing/HSSObjectNameConstant.h"
-#include "../parsing/HSSFunctionCall.h"
+#include "../parsing/HSSFunction.h"
 #include <map>
 #include <string>
 #include <sstream>
@@ -1367,8 +1367,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dTextAlign = value;
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 this->textAlign = *(HSSTextAlignType *)fnct->evaluate();
@@ -1498,15 +1497,15 @@ long double HSSContainer::_setLDProperty(
         
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunctionCall::p functionCallValue = boost::static_pointer_cast<HSSFunctionCall>(value);
-            functionCallValue->setPercentageBase(percentageBase);
-            functionCallValue->setPercentageObserved(observedProperty, observedObject);
-            functionCallValue->setScope(scope);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            fnct->setPercentageBase(percentageBase);
+            fnct->setPercentageObserved(observedProperty, observedObject);
+            fnct->setScope(scope);
             
-            ret = functionCallValue->evaluate();
+            ret = *(long double*)fnct->evaluate();
             if(callback != NULL){
-                functionCallValue->getFunction()->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer>(this, callback));
-                observedStore = functionCallValue->getFunction().get();
+                fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer>(this, callback));
+                observedStore = fnct.get();
                 observedStoreProperty = HSSObservablePropertyValue;
             }
             break;

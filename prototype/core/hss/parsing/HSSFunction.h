@@ -43,40 +43,94 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/06
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
-#ifndef HSSSELFUNCTION_H
-#define HSSSELFUNCTION_H
+#ifndef HSSFUNCTION_H
+#define HSSFUNCTION_H
 
-#import "HSSFunction.h"
+#include <string>
+#include "../objects/HSSObject.h"
+#include "../objects/HSSDisplayObject.h"
+#include "HSSKeywordConstant.h"
+#include <boost/shared_ptr.hpp>
+#include <deque>
+#include <vector>
 
 namespace AXR {
-    class HSSSelFunction : public HSSFunction
+    enum HSSFunctionType
     {
-    public:
-        HSSSelFunction();
-        virtual ~HSSSelFunction();
+        HSSFunctionTypeNone = 0,
+        HSSFunctionTypeRef,
+        HSSFunctionTypeSel,
+        HSSFunctionTypeMin,
+        HSSFunctionTypeMax,
+        HSSFunctionTypeFloor,
+        HSSFunctionTypeCeil,
+        HSSFunctionTypeRound
+    };
+    
+    class AXRController;
+    
+    class HSSFunction : public HSSParserNode
+    {
+    public:        
+        friend class HSSParser;
         
-        typedef boost::shared_ptr<HSSSelFunction> p;
+        HSSFunction();
+        HSSFunction(const HSSFunction & orig);
+        virtual ~HSSFunction();
+        
+        typedef boost::shared_ptr<HSSFunction> p;
         
         virtual std::string toString();
         
-        const HSSSelectorChain::p & getSelectorChain() const;
-        void setSelectorChain(HSSSelectorChain::p newValue);
+        void * evaluate();
+        void * evaluate(std::deque<HSSParserNode::p> arguments);
         
         virtual void * _evaluate();
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
+        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments) =0;
         
-//        void valueChanged(HSSObservableProperty source, void*data);
+        virtual void propertyChanged(HSSObservableProperty property, void* data);
+        
+        virtual void setPercentageBase(long double value);
+        virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
+        
+        virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
+        
+        void setDirty(bool value);
+        bool isDirty();
+        void * getValue();
+        virtual bool isA(HSSFunctionType type);
+        
+        /**
+         *  Setter for the controller. The controller needs to be propagated across all
+         *  HSSObject subclasses, so they get access to the DOM and such.
+         *  @param controller       A pointer to the AXRController that owns this object
+         */
+        virtual void setController(AXRController * controller);
+        /**
+         *  Getter for the controller.
+         *  @return A pointer to the AXRController that owns this object
+         */
+        virtual AXRController * getController();
         
     protected:
-        HSSSelectorChain::p selectorChain;
-        std::vector< std::vector<HSSDisplayObject::p> > selection;
+        bool _isDirty;
+        void * _value;
+        HSSFunctionType functionType;
+        
+        long double percentageBase;
+        HSSObservableProperty percentageObservedProperty;
+        HSSObservable * percentageObserved;
+        const std::vector<HSSDisplayObject::p> * scope;
+        
+        AXRController * axrController;
+        
     };
 }
 

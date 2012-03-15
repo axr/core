@@ -56,7 +56,7 @@
 #include "../../axr/AXRController.h"
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
-#include "../parsing/HSSFunctionCall.h"
+#include "../parsing/HSSFunction.h"
 #include "../parsing/HSSObjectDefinition.h"
 
 using namespace AXR;
@@ -172,8 +172,7 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dStartColor = value;
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 this->startColor = *(HSSRgb::p *)fnct->evaluate();
@@ -245,8 +244,7 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dEndColor = value;
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 this->endColor = *(HSSRgb::p *)fnct->evaluate();
@@ -299,8 +297,7 @@ void HSSGradient::setDBalance(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dBalance = value;
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 this->balance = *(long double *)fnct->evaluate();

@@ -43,82 +43,22 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
+ *      Core version: 0.45
  *      Revision: 3
  *
  ********************************************************************/
 
-#ifndef HSSFUNCTION_H
-#define HSSFUNCTION_H
+#ifndef HSSFUNCTIONS_H
+#define HSSFUNCTIONS_H
 
-#include <string>
-#include "HSSObject.h"
-#include "../parsing/HSSKeywordConstant.h"
-#include <boost/shared_ptr.hpp>
-#include <deque>
-#include <vector>
-#include "HSSDisplayObject.h"
-
-namespace AXR {
-    enum HSSFunctionType
-    {
-        HSSFunctionTypeNone = 0,
-        HSSFunctionTypeRef,
-        HSSFunctionTypeSel,
-        HSSFunctionTypeMin,
-        HSSFunctionTypeMax,
-        HSSFunctionTypeFloor,
-        HSSFunctionTypeCeil,
-        HSSFunctionTypeRound
-    };
-    
-    class HSSFunction : public HSSObject
-    {
-    public:        
-        friend class HSSParser;
-        
-        HSSFunction();
-        virtual ~HSSFunction();
-        
-        typedef boost::shared_ptr<HSSFunction> p;
-        
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        
-        virtual void setProperty(std::string name, HSSParserNode::p value);
-        
-        void * evaluate();
-        void * evaluate(std::deque<HSSParserNode::p> arguments);
-        
-        virtual void * _evaluate();
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments) =0;
-        
-        virtual void propertyChanged(HSSObservableProperty property, void* data);
-        
-        virtual void setPercentageBase(long double value);
-        virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
-        
-        virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
-        
-        void setDirty(bool value);
-        bool isDirty();
-        void * getValue();
-        virtual bool isA(HSSFunctionType type);
-        
-    protected:
-        bool _isDirty;
-        void * _value;
-        HSSFunctionType functionType;
-        
-        long double percentageBase;
-        HSSObservableProperty percentageObservedProperty;
-        HSSObservable * percentageObserved;
-        const std::vector<HSSDisplayObject::p> * scope;
-        
-    };
-}
+#include "HSSRefFunction.h"
+#include "HSSSelFunction.h"
+//#include "HSSMinFunction.h"
+//#include "HSSMaxFunction.h"
+//#include "HSSFloorFunction.h"
+//#include "HSSCeilFunction.h"
+//#include "HSSRoundFunction.h"
 
 #endif

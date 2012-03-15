@@ -52,8 +52,7 @@
 
 #import "HSSRequest.h"
 #import "../../axr/AXRController.h"
-#import "../parsing/HSSFunctionCall.h"
-#import "HSSSelFunction.h"
+#import "../parsing/HSSSelFunction.h"
 
 using namespace AXR;
 
@@ -223,8 +222,7 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                     
                 case HSSParserNodeTypeFunctionCall:
                 {
-                    HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-                    HSSFunction::p fnct = fcall->getFunction();
+                    HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
                     if(fnct){
                         fnct->setScope(this->scope);
                         fnct->setThisObj(this->getThisObj());
@@ -247,8 +245,6 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                 default:
                     break;
             }
-            
-            
             
             this->notifyObservers(HSSObservablePropertySrc, &this->src);
             

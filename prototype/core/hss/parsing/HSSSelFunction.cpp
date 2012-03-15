@@ -46,77 +46,63 @@
  *      Last changed: 2012/03/15
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
+#import "HSSSelFunction.h"
+#import "../../axr/AXRController.h"
 
-#ifndef HSSFUNCTIONCALL_H
-#define HSSFUNCTIONCALL_H
+using namespace AXR;
 
-#include "HSSParserNode.h"
-#include <string>
-#include <deque>
-#include "../objects/HSSFunction.h"
-#include "../objects/HSSDisplayObject.h"
-
-namespace AXR {
-    class HSSFunctionCall : public HSSParserNode, public HSSObservable
-    {
-    public:
-        
-        typedef boost::shared_ptr<HSSFunctionCall> p;
-        
-        friend class HSSParser;
-        friend class HSSDisplayObject;
-        
-        HSSFunctionCall();
-        virtual ~HSSFunctionCall();
-        std::string toString();
-        
-        const HSSFunction::p & getFunction() const;
-        void setFunction(HSSFunction::p newFunction);
-        
-        const std::deque<HSSParserNode::p> & getArguments() const;
-        void setArguments(std::deque<HSSParserNode::p> newArguments);
-        void argumentsAdd(HSSParserNode::p newArgument);
-        HSSParserNode::p argumentsFirst();
-        const HSSParserNode::p argumentsFirst() const;
-        HSSParserNode::p argumentsLast();
-        const HSSParserNode::p argumentsLast() const;
-        unsigned int argumentsSize();
-        void argumentsRemoveFirst();
-        void argumentsRemoveLast();
-                
-        virtual void setPercentageBase(long double value);
-        virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
-        
-        virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
-        virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
-        
-        virtual long double evaluate();
-        void setDirty(bool value);
-        bool isDirty();
-        
-        void setValue(void * newValue);
-        void * getValue();
-        
-    private:
-        HSSFunction::p function;
-        std::deque<HSSParserNode::p>arguments;
-        
-        long double percentageBase;
-        HSSObservableProperty percentageObservedProperty;
-        HSSObservable * percentageObserved;
-        const std::vector<HSSDisplayObject::p> * scope;
-        
-        bool _isDirty;
-        void * _value;
-        
-    };
+HSSSelFunction::HSSSelFunction()
+: HSSFunction()
+{
+    this->functionType = HSSFunctionTypeSel;
 }
 
+HSSSelFunction::~HSSSelFunction()
+{
+    
+}
+
+std::string HSSSelFunction::toString()
+{    
+    std::string tempstr = std::string("HSSSelFunction\n");
+    return tempstr;
+}
+
+const HSSSelectorChain::p & HSSSelFunction::getSelectorChain() const
+{
+    return this->selectorChain;
+}
+
+void HSSSelFunction::setSelectorChain(HSSSelectorChain::p newValue)
+{
+    this->selectorChain = newValue;
+    this->setDirty(true);
+}
+
+void * HSSSelFunction::_evaluate()
+{
+    this->axrController->setSelectorChain(this->selectorChain);
+    this->selection = this->axrController->selectHierarchical(*this->scope, this->getThisObj());
+    this->_value = (void*) &this->selection;
+    return this->_value;
+}
+
+void * HSSSelFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+{
+    return this->_evaluate();
+}
+
+//void HSSSelFunction::valueChanged(HSSObservableProperty source, void*data)
+//{
+//    std_log1("######################### valueChanged");
+//    this->setDirty(true);
+//    this->_value = data;
+//    this->notifyObservers(HSSObservablePropertyValue, this->_value);
+//}
 
 
 
-#endif

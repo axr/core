@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -64,9 +64,24 @@ HSSRefFunction::HSSRefFunction()
     this->functionType = HSSFunctionTypeRef;
 }
 
+HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
+: HSSFunction(orig)
+{
+    this->modifier = orig.modifier;
+    this->propertyName = orig.propertyName;
+    this->selectorChain = orig.selectorChain->clone();
+    this->observed = NULL;
+}
+
+HSSRefFunction::p HSSRefFunction::clone() const
+{
+    return boost::static_pointer_cast<HSSRefFunction, HSSClonable>(this->cloneImpl());
+}
 HSSRefFunction::~HSSRefFunction()
 {
-    
+    if(this->observed != NULL){
+        this->observed->removeObserver(this->propertyName, HSSObservablePropertyValue, this);
+    }
 }
 
 const std::string & HSSRefFunction::getModifier() const
@@ -108,7 +123,7 @@ void * HSSRefFunction::_evaluate()
     //we need to figure out how to deal with non-numeric values here
     
     this->axrController->setSelectorChain(this->selectorChain);
-    std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->selectHierarchical(*this->scope);
+    std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->selectHierarchical(*this->scope, this->getThisObj());
     if (selection.size() == 0){
         // ignore
     } else if (selection.size() == 1 && selection[0].size() == 1){
@@ -159,4 +174,8 @@ void HSSRefFunction::valueChanged(HSSObservableProperty source, void*data)
     this->setDirty(true);
     this->_value = data;
     this->notifyObservers(HSSObservablePropertyValue, this->_value);
+}
+
+HSSClonable::p HSSRefFunction::cloneImpl() const{
+    return HSSClonable::p(new HSSRefFunction(*this));
 }

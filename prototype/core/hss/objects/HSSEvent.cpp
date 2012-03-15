@@ -53,7 +53,7 @@
 #import "HSSEvent.h"
 #import "../parsing/HSSObjectNameConstant.h"
 #import "../parsing/HSSObjectDefinition.h"
-#import "../parsing/HSSFunctionCall.h"
+#import "../parsing/HSSFunction.h"
 #import <boost/unordered_map.hpp>
 #import <boost/pointer_cast.hpp>
 #import "../../axr/AXRController.h"
@@ -206,8 +206,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 
                 fnct->setScope(this->scope);
@@ -223,7 +222,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
         }
             
         default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for border of @event "+this->name));
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for action of @event "+this->name));
     }
 }
 

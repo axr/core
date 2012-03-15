@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/24
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 7
+ *      Core version: 0.45
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -55,7 +55,7 @@
 #include "../../axr/errors/errors.h"
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
-#include "../parsing/HSSFunctionCall.h"
+#include "../parsing/HSSFunction.h"
 
 using namespace AXR;
 
@@ -139,8 +139,7 @@ void HSSBorder::setDSize(HSSParserNode::p value){
         case HSSParserNodeTypeFunctionCall:
         {
             this->dSize = value;
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 this->size = *(long double *)fnct->evaluate();

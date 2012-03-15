@@ -63,9 +63,8 @@
 #include <boost/pointer_cast.hpp>
 #include "HSSExpressions.h"
 #include "../objects/HSSRgb.h"
-#include "HSSFunctionCall.h"
 #include "HSSThisSelector.h"
-#include "../objects/HSSFunctions.h"
+#include "HSSFunctions.h"
 #include "HSSFilter.h"
 
 using namespace AXR;
@@ -1671,7 +1670,6 @@ HSSParserNode::p HSSParser::readFunction()
         //create new function
         std::string name = VALUE_TOKEN(this->currentToken)->getString();
         if(name == "ref"){
-            HSSFunctionCall::p functionCall = HSSFunctionCall::p(new HSSFunctionCall());
             HSSRefFunction::p refFunction = HSSRefFunction::p(new HSSRefFunction());
             refFunction->setController(this->controller);
             
@@ -1731,9 +1729,8 @@ HSSParserNode::p HSSParser::readFunction()
                 selectorChain = this->readSelectorChain(HSSParenthesisClose);
             }
             
-           refFunction->setSelectorChain(selectorChain);
-            functionCall->setFunction(refFunction);
-            ret = functionCall;
+            refFunction->setSelectorChain(selectorChain);
+            ret = refFunction;
             
         } else if (name == "sel") {
             this->readNextToken(true);
@@ -1754,13 +1751,11 @@ HSSParserNode::p HSSParser::readFunction()
                 return ret;
             }
             
-            HSSFunctionCall::p functionCall = HSSFunctionCall::p(new HSSFunctionCall());
             HSSSelFunction::p selFunction = HSSSelFunction::p(new HSSSelFunction());
             selFunction->setController(this->controller);
             selFunction->setSelectorChain(selectorChain);
-            functionCall->setFunction(selFunction);
             
-            ret = functionCall;
+            ret = selFunction;
             
         } else if (name == "min") {
             
@@ -1775,11 +1770,6 @@ HSSParserNode::p HSSParser::readFunction()
         } else {
             throw AXRError::p(new AXRError("HSSParser", "Unexpected function name: "+name, this->currentFile->fileName, this->line, this->column));
         }
-        
-        
-        
-        
-        
         
     } else {
         throw AXRError::p(new AXRError("HSSParser", "Unexpected token while reading function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->fileName, this->line, this->column));

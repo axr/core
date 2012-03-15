@@ -43,14 +43,15 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/12
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 8
+ *      Core version: 0.45
+ *      Revision: 9
  *
  ********************************************************************/
 
 #include "HSSLineBorder.h"
+#include "../parsing/HSSFunction.h"
 #include "../parsing/HSSObjectDefinition.h"
 
 using namespace AXR;

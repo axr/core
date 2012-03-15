@@ -43,66 +43,41 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/29
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.43
+ *      Core version: 0.45
  *      Revision: 2
  *
  ********************************************************************/
 
-#import "HSSSelFunction.h"
-#import "../../axr/AXRController.h"
+#ifndef HSSSELFUNCTION_H
+#define HSSSELFUNCTION_H
 
-using namespace AXR;
+#import "HSSFunction.h"
 
-HSSSelFunction::HSSSelFunction()
-: HSSFunction()
-{
-    this->functionType = HSSFunctionTypeSel;
+namespace AXR {
+    class HSSSelFunction : public HSSFunction
+    {
+    public:
+        HSSSelFunction();
+        virtual ~HSSSelFunction();
+        
+        typedef boost::shared_ptr<HSSSelFunction> p;
+        
+        virtual std::string toString();
+        
+        const HSSSelectorChain::p & getSelectorChain() const;
+        void setSelectorChain(HSSSelectorChain::p newValue);
+        
+        virtual void * _evaluate();
+        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
+        
+//        void valueChanged(HSSObservableProperty source, void*data);
+        
+    protected:
+        HSSSelectorChain::p selectorChain;
+        std::vector< std::vector<HSSDisplayObject::p> > selection;
+    };
 }
 
-HSSSelFunction::~HSSSelFunction()
-{
-    
-}
-
-std::string HSSSelFunction::toString()
-{    
-    std::string tempstr = std::string("HSSSelFunction\n");
-    return tempstr;
-}
-
-const HSSSelectorChain::p & HSSSelFunction::getSelectorChain() const
-{
-    return this->selectorChain;
-}
-
-void HSSSelFunction::setSelectorChain(HSSSelectorChain::p newValue)
-{
-    this->selectorChain = newValue;
-    this->setDirty(true);
-}
-
-void * HSSSelFunction::_evaluate()
-{
-    this->axrController->setSelectorChain(this->selectorChain);
-    this->selection = this->axrController->selectHierarchical(*this->scope);
-    this->_value = (void*) &this->selection;
-    return this->_value;
-}
-
-void * HSSSelFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
-{
-    return this->_evaluate();
-}
-
-//void HSSSelFunction::valueChanged(HSSObservableProperty source, void*data)
-//{
-//    std_log1("######################### valueChanged");
-//    this->setDirty(true);
-//    this->_value = data;
-//    this->notifyObservers(HSSObservablePropertyValue, this->_value);
-//}
-
-
-
+#endif

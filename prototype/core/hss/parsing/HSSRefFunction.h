@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -64,6 +64,8 @@ namespace AXR {
         typedef boost::shared_ptr<HSSRefFunction> p;
         
         HSSRefFunction();
+        HSSRefFunction(const HSSRefFunction & orig);
+        p clone() const;
         virtual ~HSSRefFunction();
         
         const std::string & getModifier() const;
@@ -86,6 +88,8 @@ namespace AXR {
         HSSSelectorChain::p selectorChain;
         
         HSSObservable * observed;
+        
+        HSSClonable::p cloneImpl() const;
     };
 }
 

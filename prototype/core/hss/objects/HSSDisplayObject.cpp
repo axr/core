@@ -51,6 +51,7 @@
  ********************************************************************/
 
 #include "HSSDisplayObject.h"
+#include "../../AXR.h"
 #include "../../axr/AXRDebugging.h"
 #include "../../axr/errors/errors.h"
 #include <math.h>
@@ -60,8 +61,7 @@
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
 #include "../parsing/HSSObjectDefinition.h"
-#include "../parsing/HSSFunctionCall.h"
-#include "HSSFunctions.h"
+#include "../parsing/HSSFunctions.h"
 #include "HSSContainer.h"
 #include <sstream>
 #include <string>
@@ -1327,8 +1327,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 
                 HSSContainer::p parent = this->getParent();
@@ -1688,8 +1687,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
         
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 
                 HSSContainer::p parent = this->getParent();
@@ -1813,16 +1811,19 @@ long double HSSDisplayObject::_setLDProperty(
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunctionCall::p functionCallValue = boost::static_pointer_cast<HSSFunctionCall>(value);
-            functionCallValue->setPercentageBase(percentageBase);
-            functionCallValue->setPercentageObserved(observedProperty, observedObject);
-            functionCallValue->setScope(scope);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            fnct->setPercentageBase(percentageBase);
+            fnct->setPercentageObserved(observedProperty, observedObject);
+            fnct->setScope(scope);
+            fnct->setThisObj(this->shared_from_this());
             
-            ret = functionCallValue->evaluate();
+            ret = *(long double*)fnct->evaluate();
             if(callback != NULL){
-                functionCallValue->function->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject>(this, callback));
-                observedStore = functionCallValue->function.get();
+                fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject>(this, callback));
+                observedStore = fnct.get();
                 observedStoreProperty = HSSObservablePropertyValue;
+            } else {
+                observedStore = NULL;
             }
             break;
         }
