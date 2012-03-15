@@ -1460,8 +1460,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 
                 HSSContainer::p parent = this->getParent();
