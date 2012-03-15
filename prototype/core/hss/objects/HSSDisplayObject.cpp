@@ -340,7 +340,6 @@ void HSSDisplayObject::readDefinitionObjects()
                     }
                 }
             }
-            
         }
         
         this->_needsRereadRules = false;
@@ -703,12 +702,13 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
     if(value->isA(HSSParserNodeTypeKeywordConstant)){
         
     } else {
-        this->dWidth = value;
+        
         HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
         if(this->observedWidth != NULL)
         {
             this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
         }
+        this->dWidth = value;
         HSSContainer::p parentContainer = this->getParent();
         if(parentContainer){
             this->width = floor(this->_setLDProperty(
@@ -721,7 +721,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
                                                this->observedWidth,
                                                this->observedWidthProperty,
                                                &(parentContainer->getChildren())
-                                               );
+                                               ));
         } else {
             this->width = floor(this->_setLDProperty(
                                                NULL,
@@ -808,6 +808,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         if(this->observedHeight != NULL)
         {
             this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
+            this->observedHeight = NULL;
         }
         HSSContainer::p parentContainer = this->getParent();
         if(parentContainer){
@@ -1176,11 +1177,12 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
             throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for alignY of "+this->getElementName()));
     }
     
-    this->dAlignY = value;
     if(this->observedAlignY != NULL)
     {
         this->observedAlignY->removeObserver(this->observedAlignYProperty, HSSObservablePropertyAlignY, this);
+        this->observedAlignY = NULL;
     }
+    this->dAlignY = value;
     
     if(value->isA(HSSParserNodeTypeKeywordConstant)){
         
@@ -1510,7 +1512,7 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypeObjectNameConstant:
         case HSSParserNodeTypeFunctionCall:
         {
-            this->font = *(std::vector<HSSFont::p> *) data;
+            //this->font = *(std::vector<HSSFont::p> *) data;
             this->setDirty(true);
             break;
         }
@@ -1905,8 +1907,7 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
         case HSSEventTypeMouseDown:
         case HSSEventTypeMouseUp:
         {
-            struct point { long double x; long double y; };
-            point thePoint = *(point*)data;
+            HSSPoint thePoint = *(HSSPoint*)data;
             
             if(     this->globalX <= thePoint.x && this->globalX + this->width >= thePoint.x
                &&   this->globalY <= thePoint.y && this->globalY + this->height >= thePoint.y){
