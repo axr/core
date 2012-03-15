@@ -124,6 +124,9 @@ namespace AXR {
         HSSObservablePropertyTarget,
         HSSObservablePropertyMode,
         HSSObservablePropertyContentTarget,
+        
+        //HSSColorStop
+        HSSObservablePropertyPosition,
     };
 }
 

@@ -74,6 +74,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
         types["margin"] = HSSObjectTypeMargin;
         types["rgb"] = HSSObjectTypeRgb;
         types["linearGradient"] = HSSObjectTypeGradient;
+        types["colorStop"] = HSSObjectTypeColorStop;
         types["font"] = HSSObjectTypeFont;
         types["rectangle"] = HSSObjectTypeShape;
         types["roundedRect"] = HSSObjectTypeShape;
@@ -121,6 +122,11 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
         {
             //FIXME: gradient tyes?
             return HSSLinearGradient::p(new HSSLinearGradient());
+        }
+            
+        case HSSObjectTypeColorStop:
+        {
+            return HSSColorStop::p(new HSSColorStop());
         }
             
         case HSSObjectTypeGeneric:

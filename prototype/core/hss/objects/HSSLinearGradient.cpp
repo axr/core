@@ -43,15 +43,18 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/24
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
+//FIXME: set defaults
+
 #include "HSSLinearGradient.h"
 #include "../parsing/HSSObjectDefinition.h"
+#include "HSSColorStop.h"
 
 using namespace AXR;
 
@@ -61,12 +64,7 @@ HSSLinearGradient::HSSLinearGradient()
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("startColor");
     shorthandProperties.push_back("endColor");
-    shorthandProperties.push_back("startX");
-    shorthandProperties.push_back("startY");
-    shorthandProperties.push_back("endX");
     shorthandProperties.push_back("endY");
-    shorthandProperties.push_back("colorStops");
-    shorthandProperties.push_back("balance");
     this->setShorthandProperties(shorthandProperties);
     
     this->registerProperty(HSSObservablePropertyStartX, (void *) &this->startX);
@@ -457,6 +455,26 @@ void HSSLinearGradient::draw(cairo_t * cairo)
     cairo_pattern_t * pat = cairo_pattern_create_linear (this->startX, this->startY, this->endX, this->endY);
     cairo_pattern_add_color_stop_rgba (pat, 0., this->startColor->getRed()/255., this->startColor->getGreen()/255., this->startColor->getBlue()/255., this->startColor->getAlpha()/255.);
     //add color stops
+    std::vector<HSSObject::p>::iterator it;
+    for(it=this->colorStops.begin(); it!=this->colorStops.end(); it++){
+        HSSObject::p theStopObj = *it;
+        if(theStopObj->isA(HSSObjectTypeColorStop)){
+            HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop>(theStopObj);
+            HSSRgb::p theColor = theStop->getColor();
+            if(theColor){
+                cairo_pattern_add_color_stop_rgba (pat, theStop->getPosition(), theColor->getRed()/255., theColor->getGreen()/255., theColor->getBlue()/255., theColor->getAlpha()/255.);
+            } else {
+                AXRWarning::p(new AXRWarning("HSSLinearGradient", "The color stop had no color defined"))->raise();
+            }
+        } else if (theStopObj->isA(HSSObjectTypeRgb)){
+            HSSRgb::p theColor = boost::static_pointer_cast<HSSRgb>(theStopObj);
+            cairo_pattern_add_color_stop_rgba (pat, 0.5, theColor->getRed()/255., theColor->getGreen()/255., theColor->getBlue()/255., theColor->getAlpha()/255.);
+        } else {
+            AXRWarning::p(new AXRWarning("HSSLinearGradient", "The color stop had no color defined"))->raise();
+        }
+        
+    }
+    
     cairo_pattern_add_color_stop_rgba (pat, 1., this->endColor->getRed()/255., this->endColor->getGreen()/255., this->endColor->getBlue()/255., this->endColor->getAlpha()/255.);
     cairo_set_source (cairo, pat);
     cairo_fill_preserve (cairo);

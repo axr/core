@@ -112,6 +112,9 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyEndX] = "HSSObservablePropertyEndX";
         types[HSSObservablePropertyEndY] = "HSSObservablePropertyEndY";
         
+        //HSSColorStop
+        types[HSSObservablePropertyPosition] = "HSSObservablePropertyPosition";
+        
         //HSSFont
         types[HSSObservablePropertySize] = "HSSObservablePropertySize";
         types[HSSObservablePropertyFace] = "HSSObservablePropertyFace";
@@ -181,12 +184,16 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["startColor"] = HSSObservablePropertyStartColor;
         properties["endColor"] = HSSObservablePropertyEndColor;
         properties["balance"] = HSSObservablePropertyBalance;
+        properties["colorStops"] = HSSObservablePropertyColorStops;
         
         //HSSLinearGradient
         properties["startX"] = HSSObservablePropertyStartX;
         properties["startY"] = HSSObservablePropertyStartY;
         properties["endX"] = HSSObservablePropertyEndX;
         properties["endY"] = HSSObservablePropertyEndY;
+        
+        //HSSColorStop
+        properties["position"] = HSSObservablePropertyPosition;
         
         //HSSFont
         properties["size"] = HSSObservablePropertySize;

@@ -43,15 +43,15 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/08
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 2
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSGRADIENT_H
-#define HSSGRADIENT_H
+#ifndef HSSCOLORSTOP_H
+#define HSSCOLORSTOP_H
 
 #include <string>
 #include "HSSObject.h"
@@ -60,36 +60,34 @@
 #include <cairo/cairo.h>
 
 namespace AXR {
-    class HSSGradient : public HSSObject
+    class HSSColorStop : public HSSObject
     {
     public:
         
-        HSSGradient();
-        virtual ~HSSGradient();
+        HSSColorStop();
+        virtual ~HSSColorStop();
         
-        typedef boost::shared_ptr<HSSGradient> p;
-        typedef std::vector<HSSGradient::p>::iterator it;
+        typedef boost::shared_ptr<HSSColorStop> p;
+        typedef std::vector<HSSColorStop::p>::iterator it;
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
         
-        virtual void draw(cairo_t * cairo) = 0;
-        
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
-        //startColor
-        HSSRgb::p getStartColor();
-        HSSParserNode::p getDStartColor();
-        void setDStartColor(HSSParserNode::p);
-        void startColorChanged(HSSObservableProperty source, void*data);
+        //color
+        HSSRgb::p getColor();
+        HSSParserNode::p getDColor();
+        void setDColor(HSSParserNode::p);
+        void colorChanged(HSSObservableProperty source, void*data);
         
-        //endColor
-        HSSRgb::p getEndColor();
-        HSSParserNode::p getDEndColor();
-        void setDEndColor(HSSParserNode::p);
-        void endColorChanged(HSSObservableProperty source, void*data);
+        //position
+        long double getPosition();
+        HSSParserNode::p getDPosition();
+        void setDPosition(HSSParserNode::p);
+        void positionChanged(HSSObservableProperty source, void*data);
         
         //balance
         long double getBalance();
@@ -97,24 +95,18 @@ namespace AXR {
         void setDBalance(HSSParserNode::p);
         void balanceChanged(HSSObservableProperty source, void*data);
         
-        //colorStops
-        HSSParserNode::p getDColorStops();
-        void setDColorStops(HSSParserNode::p value);
-        void addDColorStops(HSSParserNode::p value);
-        void colorStopsChanged(HSSObservableProperty source, void*data);
-        
     protected:
-        //startColor
-        HSSRgb::p startColor;
-        HSSParserNode::p dStartColor;
-        HSSObservable * observedStartColor;
-        HSSObservableProperty observedStartColorProperty;
+        //color
+        HSSRgb::p color;
+        HSSParserNode::p dColor;
+        HSSObservable * observedColor;
+        HSSObservableProperty observedColorProperty;
         
-        //endColor
-        HSSRgb::p endColor;
-        HSSParserNode::p dEndColor;
-        HSSObservable * observedEndColor;
-        HSSObservableProperty observedEndColorProperty;
+        //position
+        long double position;
+        HSSParserNode::p dPosition;
+        HSSObservable * observedPosition;
+        HSSObservableProperty observedPositionProperty;
         
         //balance
         long double balance;
@@ -122,14 +114,8 @@ namespace AXR {
         HSSObservable * observedBalance;
         HSSObservableProperty observedBalanceProperty;
         
-        //colorStops
-        HSSParserNode::p dColorStops;
-        HSSObservable * observedColorStops;
-        HSSObservableProperty observedColorStopsProperty;
-        std::vector<HSSObject::p> colorStops;
-        
         long double _setLDProperty(
-                                   void(HSSGradient::*callback)(HSSObservableProperty property, void* data),
+                                   void(HSSColorStop::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p         value,
                                    long double              percentageBase,
                                    HSSObservableProperty    observedSourceProperty,
@@ -138,6 +124,5 @@ namespace AXR {
                                    );
     };
 }
-
 
 #endif
