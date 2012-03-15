@@ -107,6 +107,44 @@ HSSParserNodeType HSSParserNode::getType()
     return this->nodeType;
 }
 
+HSSParserNode::p HSSParserNode::getParentNode()
+{
+    if (!this->_parentNode.expired()) {
+        HSSParserNode::p parent = this->_parentNode.lock();
+        return parent;
+    } else {
+        return HSSParserNode::p();
+    }
+}
+
+void HSSParserNode::setParentNode(HSSParserNode::p newParent)
+{
+    this->_parentNode = pp(newParent);
+}
+
+void HSSParserNode::removeFromParentNode()
+{
+    this->getParentNode()->removeNode(this->shared_from_this());
+}
+
+void HSSParserNode::addNode(HSSParserNode::p child)
+{
+    this->_childNodes.push_back(child);
+}
+
+void HSSParserNode::removeNode(HSSParserNode::p child)
+{
+    HSSParserNode::it it = find(this->_childNodes.begin(), this->_childNodes.end(), child);
+    if(it != this->_childNodes.end()){
+        this->_childNodes.erase(it);
+    }
+}
+
+const std::vector<HSSParserNode::p> HSSParserNode::getChildNodes() const
+{
+    return this->_childNodes;
+}
+
 HSSClonable::p HSSParserNode::cloneImpl() const
 {
     return HSSClonable::p(new HSSParserNode(*this));

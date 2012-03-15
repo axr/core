@@ -57,6 +57,7 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <vector>
+#include "../various/HSSObservable.h"
 #include "../various/HSSClonable.h"
 
 namespace AXR {
@@ -80,7 +81,8 @@ namespace AXR {
         HSSParserNodeTypeObjectDefinition,
         HSSParserNodeTypeObjectNameConstant,
         HSSParserNodeTypeFunctionCall,
-        HSSParserNodeTypeMultipleValueDefinition
+        HSSParserNodeTypeMultipleValueDefinition,
+        HSSParserNodeTypeSelectorChain
     };
     
     class HSSDisplayObject;
@@ -104,6 +106,12 @@ namespace AXR {
         bool isA(HSSParserNodeType otherType);
         HSSParserNodeType getType();
         
+        p getParentNode();
+        void setParentNode(p newParent);
+        void removeFromParentNode();
+        void addNode(p child);
+        void removeNode(p child);
+        const std::vector<HSSParserNode::p> getChildNodes() const;
         
         /**
          *  Setter for the "this object", which is a shared pointer to the nearest display object
@@ -122,6 +130,8 @@ namespace AXR {
         HSSParserNodeType nodeType;
         boost::shared_ptr<HSSDisplayObject> thisObj;
     private:
+        pp _parentNode;
+        std::vector<p> _childNodes;
         virtual HSSClonable::p cloneImpl() const;
     };
 }

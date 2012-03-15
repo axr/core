@@ -199,13 +199,12 @@ bool HSSParser::loadFile(AXRFile::p file)
             }
             
         } else {
-//            std::cout << std::endl << "-----------------------------" << std::endl
-//            <<  statement->toString() << std::endl << "-----------------------------" << std::endl;
             switch (statement->getType()) {
                 case HSSStatementTypeRule:
                 {
                     HSSRule::p theRule = boost::static_pointer_cast<HSSRule>(statement);
                     this->controller->rulesAdd(theRule);
+                    this->controller->parserTreeAdd(statement);
                     break; 
                 }
                     
@@ -213,12 +212,14 @@ bool HSSParser::loadFile(AXRFile::p file)
                 {
                     HSSObjectDefinition::p theObj = boost::static_pointer_cast<HSSObjectDefinition>(statement);
                     this->recursiveAddObjectDefinition(theObj);
+                    this->controller->parserTreeAdd(statement);
                     break;
                 }
                     
                 case HSSStatementTypeComment:
                 {
                     std_log1(statement->toString());
+                    this->controller->parserTreeAdd(statement);
                     break;
                 }
                     
@@ -238,8 +239,6 @@ bool HSSParser::loadFile(AXRFile::p file)
                             std::vector<HSSParserContext> currentCurrentContext = this->currentContext;
                             std::stack<HSSObject::p> currentCurrentObjectContext = this->currentObjectContext;
                             
-                            
-                            
                             //load
                             this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
                             this->line = 1;
@@ -256,6 +255,8 @@ bool HSSParser::loadFile(AXRFile::p file)
                             this->currentContext = currentCurrentContext;
                             this->currentObjectContext = currentCurrentObjectContext;
                             
+                            this->controller->parserTreeAdd(statement);
+                            
                             break;
                         }
                         default:
@@ -269,7 +270,6 @@ bool HSSParser::loadFile(AXRFile::p file)
                     std_log("Error: Unknown statement type");
                     break;
             }
-            this->controller->statementsAdd(statement);
         }
         
         security_brake();

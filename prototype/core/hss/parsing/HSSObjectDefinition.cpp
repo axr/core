@@ -105,6 +105,7 @@ void HSSObjectDefinition::propertiesAdd(HSSPropertyDefinition::p &newProperty)
     if(newProperty)
     {
         std_log3("HSSObjectDefinition: Added node of type " << newProperty->toString());
+        newProperty->setParentNode(this->shared_from_this());
         this->properties.push_back(newProperty);
     }
 }
@@ -114,6 +115,7 @@ void HSSObjectDefinition::propertiesAdd(const HSSPropertyDefinition::p &newPrope
     if(newProperty)
     {
         std_log3("HSSObjectDefinition: Added node of type " << newProperty->toString());
+        newProperty->setParentNode(this->shared_from_this());
         this->properties.push_back(newProperty);
         //this->prototype->setPropertyWithName(newProperty->getName(), newProperty->getValue());
     }
@@ -124,6 +126,7 @@ void HSSObjectDefinition::propertiesPrepend(HSSPropertyDefinition::p &newPropert
     if(newProperty)
     {
         std_log3("HSSObjectDefinition: Prepended node of type " << newProperty->toString());
+        newProperty->setParentNode(this->shared_from_this());
         this->properties.push_front(newProperty);
     }
 }
@@ -133,6 +136,7 @@ void HSSObjectDefinition::propertiesPrepend(const HSSPropertyDefinition::p &newP
     if(newProperty)
     {
         std_log3("HSSObjectDefinition: Prepended node of type " << newProperty->toString());
+        newProperty->setParentNode(this->shared_from_this());
         this->properties.push_front(newProperty);
     }
 }
@@ -162,6 +166,7 @@ void HSSObjectDefinition::childrenAdd(HSSObjectDefinition::p &child)
     if(child)
     {
         this->children.push_back(child);
+        child->setParentNode(this->shared_from_this());
     }
 }
 
@@ -170,6 +175,7 @@ void HSSObjectDefinition::childrenAdd(const HSSObjectDefinition::p &child)
     if(child)
     {
         this->children.push_back(child);
+        child->setParentNode(this->shared_from_this());
     }
 }
 
@@ -196,17 +202,6 @@ const std::vector<HSSObjectDefinition::p> HSSObjectDefinition::getChildren() con
 HSSObject::p HSSObjectDefinition::getObject()
 {
     return this->prototype;
-}
-
-
-HSSObjectDefinition::p HSSObjectDefinition::getParent()
-{
-    return this->parent.lock();
-}
-
-void HSSObjectDefinition::setParent(HSSObjectDefinition::p newParent)
-{
-    this->parent = boost::weak_ptr<HSSObjectDefinition>(newParent);
 }
 
 void HSSObjectDefinition::setScope(const std::vector<HSSDisplayObject::p> * newScope)

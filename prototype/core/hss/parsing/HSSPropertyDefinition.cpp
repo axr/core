@@ -46,6 +46,7 @@
  *      Last changed: 2012/03/15
  *      HSS version: 1.0
  *      Core version: 0.45
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -111,6 +112,7 @@ std::string HSSPropertyDefinition::getName()
 
 void HSSPropertyDefinition::setValue(HSSParserNode::p value){
     this->value = value;
+    this->value->setParentNode(this->shared_from_this());
 }
 
 void HSSPropertyDefinition::addValue(HSSParserNode::p value)
@@ -118,10 +120,13 @@ void HSSPropertyDefinition::addValue(HSSParserNode::p value)
     if (this->value){
         if(this->value->isA(HSSParserNodeTypeMultipleValueDefinition)) {
             HSSMultipleValueDefinition::p mvDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(this->value);
+            value->setParentNode(this->shared_from_this());
             mvDef->add(value);
         } else {
             HSSMultipleValueDefinition::p mvDef = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition());
+            mvDef->setParentNode(this->shared_from_this());
             mvDef->add(this->value);
+            value->setParentNode(this->shared_from_this());
             mvDef->add(value);
             this->value = mvDef;
         }

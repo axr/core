@@ -53,6 +53,7 @@
 #include "HSSRule.h"
 #include <iostream>
 #include "../../axr/AXRDebugging.h"
+#include "../objects/HSSDisplayObject.h"
 #include "HSSFilter.h"
 
 using namespace AXR;
@@ -60,7 +61,6 @@ using namespace AXR;
 HSSRule::HSSRule()
 : HSSStatement()
 {
-    this->selectorChain = selectorChain;
     this->type = HSSStatementTypeRule;
     this->_isActive = true;
 }
@@ -118,6 +118,7 @@ std::string HSSRule::toString()
 void HSSRule::setSelectorChain(HSSSelectorChain::p newChain)
 {
     this->selectorChain = newChain;
+    this->selectorChain->setParentNode(this->shared_from_this());
 }
 
 HSSSelectorChain::p HSSRule::getSelectorChain()
@@ -130,6 +131,7 @@ void HSSRule::propertiesAdd(HSSPropertyDefinition::p & newProperty)
     if(newProperty)
     {
         std_log3("Added property: " << newProperty->toString());
+        newProperty->setParentNode(this->shared_from_this());
         this->properties.push_back(newProperty);
     }
 }
@@ -162,6 +164,7 @@ const int HSSRule::propertiesSize()
 
 void HSSRule::childrenAdd(HSSRule::p newRule)
 {
+    newRule->setParentNode(this->shared_from_this()); //parent in the node tree
     this->children.push_back(newRule);
 }
 
@@ -188,6 +191,7 @@ const int HSSRule::childrenSize()
 void HSSRule::setInstruction(HSSInstruction::p newInstruction)
 {
     this->instruction = newInstruction;
+    this->instruction->setParentNode(this->shared_from_this());
 }
 
 HSSInstruction::p HSSRule::getInstruction()
