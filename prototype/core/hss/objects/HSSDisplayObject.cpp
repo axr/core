@@ -67,6 +67,8 @@
 #include <string>
 #include "../../axr/AXRController.h"
 #include "HSSRgb.h"
+#include <cmath>
+
 
 using namespace AXR;
 
@@ -709,7 +711,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
         }
         HSSContainer::p parentContainer = this->getParent();
         if(parentContainer){
-            this->width = this->_setLDProperty(
+            this->width = floor(this->_setLDProperty(
                                                &HSSDisplayObject::widthChanged,
                                                value,
                                                parentContainer->width,
@@ -721,7 +723,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
                                                &(parentContainer->getChildren())
                                                );
         } else {
-            this->width = this->_setLDProperty(
+            this->width = floor(this->_setLDProperty(
                                                NULL,
                                                value,
                                                0,
@@ -731,7 +733,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
                                                this->observedWidth,
                                                this->observedWidthProperty,
                                                NULL
-                                               );
+                                               ));
         }
         
         
@@ -749,20 +751,20 @@ void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p widthValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dWidth);
-            this->width = widthValue->getValue(*(long double*)data);
+            this->width = floor(widthValue->getValue(*(long double*)data));
             break;
         }
         
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p widthExpression = boost::static_pointer_cast<HSSExpression>(this->dWidth);
-            this->width = widthExpression->evaluate();
+            this->width = floor(widthExpression->evaluate());
             break;
         }
         
         case HSSParserNodeTypeFunctionCall:
         {
-            this->width = *(long double*)data;
+            this->width = floor(*(long double*)data);
         }
         
         default:
