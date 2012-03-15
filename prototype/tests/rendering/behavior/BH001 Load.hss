@@ -3,47 +3,69 @@
 	Created by Miro Keller on 2011-11-05.
 */
 
+#import "BH001 Common Styles.hss";
+
 master
 {
-    #new target
+    background: bgGrad;
+    
+    #new top
     {
-        width: 600;
-        height: 500;
-        background: #F00;
-        alignY: top;
+        height: 50% - 40;
+        contentAlignY: middle;
         
-        shape: @{85};
-        
-        behavior: @mouseUp
+        #move changeLocation
         {
-            action: @request
-            {
-                src: "BH001 Load slave.xml";
-                //target: sel(@root target2);
-            }
+            isA: button;
+            width: 250;
+            height: 100;
+            behavior: @mouseUp {
+                action: @request{ src: "BH001 Load slave.xml" }
+            };
         }
     }
     
-    #new target2
+    #new highlight
     {
-        width: 600;
-        height: 200;
-        background: #D;
-        alignY: bottom;
-        
-        slave
-        {
-            width: 100%;
-            height: 100%;
-        }
+        height: 1;
+        background: #F;
+        alignY: 50% - 30;
+    }
+     
+    #new shadow
+    {
+        height: 1;
+        background: #BE;
+        alignY: 50% - 30;
     }
     
-    behavior: @mouseUp
+    #new shadow
     {
-        @request
+        height: 10;
+        background: @linearGradient {
+            startColor: #0002;
+            endColor: #0000;
+            endY: 100%;
+        };
+        alignY: 50% - 30;
+    }
+    
+    #new bottom
+    {
+        width: 100% - 100;
+        height: 50% - 50;
+        border: @{ 1 #BE };
+        alignY: 73%;
+        contentAlignY: 50%;
+        background: #F;
+        shape: @{3};
+       
+        
+        #move loadInto
         {
-            src: "BH001 Load slave.xml";
-            target: sel(target2);
+            isA: button;
+            width: 300;
+            height: 80;
         }
     }
 }

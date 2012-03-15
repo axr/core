@@ -5,5 +5,6 @@
 -->
 <?xml-stylesheet type="application/x-hss" src="BH001 Load.hss"?>
 <master>
-	
+	<changeLocation>Click here to load another page</changeLocation>
+	<loadInto>Click here to load the page into here</loadInto>
 </master>

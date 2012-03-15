@@ -1,0 +1,36 @@
+/*
+	Test FL001 - Basic
+	Created by Miro Keller on 2012-02-23.
+*/
+
+#A66 red;
+#6A6 green;
+#66A blue;
+
+@container box
+{
+    height: 50;
+    border: @{ 1 #D }
+    background: #C;
+    contentAlignY: middle;
+    textAlign: center;
+}
+
+test
+{
+    background: #E;
+    
+	* { isA: box }
+	:first
+	{
+	    background: red;
+	}
+    :last
+    {
+        background: green;
+    }
+    // :even
+    // {
+    //     background: blue;
+    // }
+}

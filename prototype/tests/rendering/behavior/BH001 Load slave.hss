@@ -3,38 +3,40 @@
 	Created by Miro Keller on 2011-11-05.
 */
 
+#import "BH001 Common Styles.hss";
+
 slave
 {
-    width: 600;
-    height: 100%;
-	background: #C;
-	
-	hello
-	{
-		width: 350;
-		height: 50%;
-		alignX: 100% - 15;
-		alignY: 15;
-		anchorX: 100%;
-		anchorY: 0;
-		
-		background: @rgb {
-			red: 255;
-			green: 250;
-			blue: 150;
-			alpha: 50%;
-		};
-		font: @font {
-			size: 50;
-			face: "Helvetica";
-		}
-		
-		behavior: @mouseUp
-        {
-            action: @request
-            {
-                src: "BH001 Load.xml";
-            }
-        }
-	}
+   background: bgGrad;
+   contentAlignY: middle;
+   
+   #new wrapper
+   {
+      width: 60%;
+      
+      #move message
+      {
+          font: heading1;
+          textAlign: center;
+      }
+
+      #move tip
+      {
+          font: stdFont;
+          height: 60;
+          textAlign: center;
+          contentAlignY: middle;
+      }
+
+      #move button
+      {
+          isA: button;
+          width: 120;
+          height: 40;
+          shape: @{5}
+          behavior: @mouseUp{
+              @request { src: "BH001 Load.xml" }
+          }
+      }
+   }
 }

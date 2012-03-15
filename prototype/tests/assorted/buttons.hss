@@ -1,0 +1,112 @@
+@container hl1px
+{
+    height: 1;
+    background: #FFF6;
+    alignY: bottom;
+    
+    &@ sh1px
+    {
+        background: #0003;
+    }
+}
+
+@container button1
+{
+    width: 200;
+    height: 50;
+    contentAlignY: middle;
+    background: @linearGradient{
+        startColor: #FF6;
+        endColor: #FD0;
+        endY: 100%;
+    };
+    shape: @{4};
+    border: @ hl{1 #FFF8}, @ sh{1 #EA08 };
+    
+    // @:hover
+    // {
+    //     background.endColor: #FF6;
+    //     background.startColor: #FD0;
+    // }
+}
+
+@container button1hover
+{
+    background: @linearGradient{
+        startColor: #FD0;
+        endColor: #FF6;
+        endY: 100%;
+    };
+    border: @ hl{1 #FFFB}, @ sh{1 #EA0 };
+}
+
+@container button2
+{
+    width: 40;
+    height: 40;
+    shape: @circle;
+    contentAlignY: middle;
+    textAlign: center;
+    background: @linearGradient{
+        startColor: #FFF;
+        endColor: #E;
+        endY: 100%;
+    };
+    border: @{1 #FFF}, @{1 #0002 };
+}
+
+@container button3
+{
+    width: 200;
+    height: 30;
+    contentAlignY: middle;
+    background: @linearGradient{
+        startColor: #F;
+        endColor: #D;
+        startY: 14;
+        endY: 100%;
+    };
+    shape: @{15};
+    border: @{1 #0003 }, @{1 #FFF4};
+}
+
+root
+{
+    background: #D;
+    
+    #new line1
+    {
+        height: 150;
+        contentAlignY: middle;
+        
+        #new button1
+        {
+            isA: button1;
+            alignX: 30;
+            anchorX: 0;
+            content: "sample text";
+        }
+        
+        button1:hover
+        {
+            isA: button1hover;
+        }
+
+        #new button2
+        {
+            isA: button2;
+            alignX: 280;
+            content: "round";
+        }
+
+        #new button3
+        {
+            isA: button3;
+            alignX: 480;
+            content: "round";
+        }
+        
+        #new sh { isA: sh1px }
+        #new hl { isA: hl1px }
+    }
+}
