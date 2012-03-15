@@ -201,14 +201,14 @@ long double HSSBorder::_setLDProperty(
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
-            ret = percentageValue->getValue(255.0);
+            ret = percentageValue->getValue(percentageBase);
             break;
         }
             
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
-            expressionValue->setPercentageBase(255.0);
+            expressionValue->setPercentageBase(percentageBase);
             expressionValue->setScope(this->scope);
             ret = expressionValue->evaluate();
             if(callback != NULL){

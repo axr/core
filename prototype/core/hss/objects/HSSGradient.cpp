@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/24
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
  *      Core version: 0.43
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -325,11 +325,17 @@ void HSSGradient::balanceChanged(AXR::HSSObservableProperty source, void *data)
 {
     switch (this->dBalance->getType()) {
         case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypePercentageConstant:
         case HSSParserNodeTypeExpression:
         case HSSParserNodeTypeFunctionCall:
             this->balance = *(long double*)data;
             break;
+            
+        case HSSParserNodeTypePercentageConstant:
+        {
+            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dBalance);
+            this->balance = percentageValue->getValue(*(long double*)data);
+            break;
+        }
             
         default:
             break;
@@ -362,14 +368,14 @@ long double HSSGradient::_setLDProperty(
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
-            ret = percentageValue->getValue(255.0);
+            ret = percentageValue->getValue(percentageBase);
             break;
         }
             
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
-            expressionValue->setPercentageBase(255.0);
+            expressionValue->setPercentageBase(percentageBase);
             expressionValue->setScope(this->scope);
             ret = expressionValue->evaluate();
             if(callback != NULL){
