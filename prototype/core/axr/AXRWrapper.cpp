@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/21
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -74,22 +74,28 @@ void AXRWrapper::setCore(boost::shared_ptr<AXRCore> xcr) { this->core = xcr; }
 AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
 {
     AXRFile::p ret = AXRFile::p(new AXRFile());
-    ret->fileName = "dummyXML";
+    ret->bufferSize = 10240;
     ret->mimeType = "text/xml";
-    size_t found = stylesheet.rfind("/");
-    if(found != std::string::npos){
-        ret->basePath = stylesheet.substr(0, found+1);
+    size_t slashpos = stylesheet.rfind("/");
+    if(slashpos != std::string::npos){
+        ret->basePath = stylesheet.substr(0, slashpos);
+        ret->fileName = stylesheet.substr(slashpos+1);
+    } else {
+        AXRError::p(new AXRError("AXRWrapper", "Could not find a slash in the file path"))->raise();
+        return ret;
     }
     ret->extension = "xml";
-    std::string dummyXML = "\
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
-<?xml-stylesheet type=\"application/x-hss\" src=\""+stylesheet+"\" version=\"1.0\"?>\
-<root></root>\
-";
-    ret->bufferSize = dummyXML.size();
+    std::string dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" src=\"file://"+stylesheet+"\" version=\"1.0\"?><root></root>";
+    
+    ret->fileHandle = tmpfile();
     ret->buffer = new char[ret->bufferSize];
     dummyXML.copy(ret->buffer, ret->bufferSize, 0);
-    ret->bufferSize = ret->fileSize = dummyXML.size();
+    
+    size_t bfsz = dummyXML.size();
+    ret->fileSize = ret->bufferSize = bfsz;
+    
+    fwrite(ret->buffer, sizeof(ret->buffer[0]), ret->bufferSize, ret->fileHandle);
+    rewind(ret->fileHandle);
     
     return ret;
 }
@@ -137,6 +143,7 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
     }
     
     this->core->run();
+    this->setNeedsDisplay(true);
     
     return true;
 }
@@ -144,13 +151,31 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 bool AXRWrapper::reload()
 {
     std::string cur_path = this->core->getFile()->basePath+"/"+this->core->getFile()->fileName;
+    std::string fileextension = cur_path.substr(cur_path.rfind(".") + 1, cur_path.length());
     this->core->reset();
-    return this->loadXMLFile(cur_path);
+    if(fileextension == "xml"){
+        this->_isHSSOnly = false;
+        return this->loadXMLFile(cur_path);
+    } else if (fileextension == "hss") {
+        this->_isHSSOnly = true;
+        return this->loadHSSFile(cur_path);
+    } else {
+        AXRError::p(new AXRError("AXRController", "Unknown file extension"))->raise();
+        return false;
+    }
 }
 
 bool AXRWrapper::loadHSSFile(std::string hssfilepath)
 {
-    return false;
+    if (this->core->getFile()) {
+        this->core->reset();
+    }
+    
+    this->core->setFile(this->createDummyXML(hssfilepath));
+    this->core->run();
+    this->setNeedsDisplay(true);
+    
+    return true;
 }
 
 //has loaded file
