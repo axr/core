@@ -43,40 +43,30 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/02/23
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 2
+ *      Revision: 1
  *
  ********************************************************************/
 
+#ifndef HSSHOVERFILTER_H
+#define HSSHOVERFILTER_H
 
-#ifndef OSXAXRWRAPPER_H
-#define OSXAXRWRAPPER_H
+#include "HSSFilter.h"
 
-#include "../../axr/AXRWrapper.h"
-#include "AXRView.h"
-
-namespace AXR
-{
-    class OSXAxrWrapper : public AXRWrapper
+namespace AXR {
+    class HSSHoverFilter : public HSSFilter
     {
     public:
-        OSXAxrWrapper(AXRView * mainView);
-        virtual ~OSXAxrWrapper();
-        
-        virtual AXRFile::p getFile(std::string url);
-        virtual size_t readFile(AXRFile::p theFile);
-        virtual void closeFile(AXRFile::p theFile);
-        virtual void handleError(AXRError::p theError);
-        virtual bool openFileDialog(std::string &filePath);
-        
-        void setNeedsDisplay(bool newValue);
-        
+        HSSHoverFilter();
+        p clone() const;
+        virtual ~HSSHoverFilter();
+        virtual std::string toString();
+        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope);
     private:
-        AXRView * mainView;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

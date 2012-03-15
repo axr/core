@@ -554,7 +554,11 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                 
             case HSSColon:
             {
-                ret->add(this->readFilter());
+                HSSParserNode::p theFilter = this->readFilter();
+                if(theFilter){
+                    ret->add(theFilter);
+                }
+                
                 //adds only if needed
                 ret->add(this->readChildrenCombinatorOrSkip());
                 break;
@@ -670,9 +674,9 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
     *isShorthand = false;
     
     //property definitions always start with identifiers (the property)
-    if(!this->currentToken->isA(HSSIdentifier)){
-        return false;
-    }
+//    if(!this->currentToken->isA(HSSIdentifier)){
+//        return false;
+//    }
     
     std_log4("----- peeking ------ ");
     HSSToken::p peekToken = this->tokenizer->peekNextToken();

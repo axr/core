@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/02/23
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 10
+ *      Core version: 0.45
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -57,6 +57,8 @@
 #include "../../axr/AXRDebugging.h"
 #include "../../axr/AXRController.h"
 #include <cairo/cairo-quartz.h>
+#include "../../hss/objects/HSSEvent.h"
+#include "../../hss/objects/HSSContainer.h"
 
 @implementation AXRView
 @synthesize needsFile;
@@ -80,7 +82,9 @@
 - (void)awakeFromNib
 {
     [self setNeedsFile:YES];
-    axrWrapper = NULL;
+    AXR::OSXAxrWrapper * wrapper = new AXR::OSXAxrWrapper(self);
+    
+    [self setAxrWrapper:wrapper];
 }
 
 - (void)dealloc
@@ -145,22 +149,56 @@
     return YES;
 }
 
+- (void)viewDidMoveToWindow
+{
+    if([self window] != nil){
+        [[self window] setAcceptsMouseMovedEvents: TRUE];
+    }
+}
+
 - (void)mouseDown:(NSEvent *)theEvent
 {
-//    AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
-//    NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-//    NSRect bounds = [self bounds];
-//    render->mouseDown(thePoint.x, bounds.size.height - thePoint.y);
-//    [self setNeedsDisplay:TRUE];
+    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
+    AXR::AXRCore::p core = wrapper->getCore();
+    AXR::HSSContainer::p root = core->getController()->getRoot();
+    if(root){
+        AXR::HSSPoint thePoint;
+        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSRect bounds = [self bounds];
+        thePoint.x = sysPoint.x;
+        thePoint.y = bounds.size.height - sysPoint.y;
+        root->handleEvent(AXR::HSSEventTypeMouseDown, (void*) &thePoint);
+    }
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-//    AXR::OSXRender * render = (AXR::OSXRender *)[self axrRender];
-//    NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-//    NSRect bounds = [self bounds];
-//    render->mouseUp(thePoint.x, bounds.size.height - thePoint.y);
-//    [self setNeedsDisplay:TRUE];
+    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
+    AXR::AXRCore::p core = wrapper->getCore();
+    AXR::HSSContainer::p root = core->getController()->getRoot();
+    if(root){
+        AXR::HSSPoint thePoint;
+        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSRect bounds = [self bounds];
+        thePoint.x = sysPoint.x;
+        thePoint.y = bounds.size.height - sysPoint.y;
+        root->handleEvent(AXR::HSSEventTypeMouseUp, (void*) &thePoint);
+    }
+}
+
+- (void)mouseMoved:(NSEvent *)theEvent
+{
+    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
+    AXR::AXRCore::p core = wrapper->getCore();
+    AXR::HSSContainer::p root = core->getController()->getRoot();
+    if(root){
+        AXR::HSSPoint thePoint;
+        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSRect bounds = [self bounds];
+        thePoint.x = sysPoint.x;
+        thePoint.y = bounds.size.height - sysPoint.y;
+        root->handleEvent(AXR::HSSEventTypeMouseMove, (void*) &thePoint);
+    }
 }
 
 - (void)setAxrWrapper:(void *)theWrapper
@@ -175,7 +213,7 @@
 
 - (bool)loadFile
 {
-    AXR::OSXAxrWrapper * wrapper = new AXR::OSXAxrWrapper();
+    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
     bool loaded = false;
     if(wrapper!=NULL){
         loaded = wrapper->loadFile();
@@ -183,9 +221,6 @@
     if(loaded){
         [self setNeedsDisplay:YES];
         [self setNeedsFile:NO];
-        [self setAxrWrapper:wrapper];
-    } else {
-        delete wrapper;
     }
     
     return loaded;
@@ -193,15 +228,18 @@
 
 - (bool)loadFile:(NSString *)xmlPath
 {
-    std_log1("loading file");
-//    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
-    return false;    
-//    AXR::AXRController * controller = (AXR::AXRController *)[self axrController];
-//    std::string filePath = std::string([xmlPath UTF8String]);
-//    std::string fileName = std::string([[xmlPath lastPathComponent] UTF8String]);
-//    bool loaded = controller->loadFile(filePath, fileName);
-//    [self setNeedsDisplay:YES];
-//    return loaded;
+    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
+    bool loaded = false;
+    if(wrapper!=NULL){
+        loaded = wrapper->loadXMLFile(std::string([xmlPath UTF8String]));
+    }
+    if(loaded){
+        [self setNeedsDisplay:YES];
+        [self setNeedsFile:NO];
+        [self setAxrWrapper:wrapper];
+    }
+    
+    return loaded;
 }
 
 - (bool)reload

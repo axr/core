@@ -60,8 +60,13 @@
 #import <string>
 #import <vector>
 #import <boost/shared_ptr.hpp>
+#import <boost/unordered_map.hpp>
+#import "HSSFilterType.h"
 
 namespace AXR {
+    
+    class HSSDisplayObject;
+    class HSSFilter;
     
     class HSSRule : public HSSStatement
     {    
@@ -96,6 +101,12 @@ namespace AXR {
         void setInstruction(HSSInstruction::p newInstruction);
         HSSInstruction::p getInstruction();
         
+        void connectInteractionFilter(HSSFilterType filterType, boost::shared_ptr<HSSDisplayObject> object);
+        void hoverChanged(AXR::HSSObservableProperty source, void *data);
+        
+        void setActive(bool newValue);
+        bool isActive();
+        
     protected:
         HSSRule::p shared_from_this();
         
@@ -106,6 +117,8 @@ namespace AXR {
     private:
         virtual HSSClonable::p cloneImpl() const;
         
+        boost::unordered_map<HSSFilterType, std::vector<boost::shared_ptr<HSSDisplayObject> > > _interactors;
+        bool _isActive;
         
     };
 }

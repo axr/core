@@ -43,40 +43,51 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/02/24
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 2
+ *      Revision: 1
  *
  ********************************************************************/
 
+#ifndef HSSFILTERTYPE_H
+#define HSSFILTERTYPE_H
 
-#ifndef OSXAXRWRAPPER_H
-#define OSXAXRWRAPPER_H
-
-#include "../../axr/AXRWrapper.h"
-#include "AXRView.h"
-
-namespace AXR
-{
-    class OSXAxrWrapper : public AXRWrapper
-    {
-    public:
-        OSXAxrWrapper(AXRView * mainView);
-        virtual ~OSXAxrWrapper();
-        
-        virtual AXRFile::p getFile(std::string url);
-        virtual size_t readFile(AXRFile::p theFile);
-        virtual void closeFile(AXRFile::p theFile);
-        virtual void handleError(AXRError::p theError);
-        virtual bool openFileDialog(std::string &filePath);
-        
-        void setNeedsDisplay(bool newValue);
-        
-    private:
-        AXRView * mainView;
-    };
-}
-
+enum HSSFilterType {
+    //position
+    HSSFilterTypeFirst,
+    HSSFilterTypeLast,
+    HSSFilterTypeEven,
+    HSSFilterTypeOdd,
+    HSSFilterTypeIndex,
+    HSSFiltertypeRange,
+    HSSFilterTypeNth,
+    //hierarchy
+    HSSFilterTypeParent,
+    HSSFilterTypeParentOf,
+    HSSFilterTypeAncestorOf,
+    HSSFilterTypeHas,
+    //interaction
+    HSSFilterTypeHover,
+    HSSFilterTypePressed,
+    HSSFilterTypeDragged,
+    HSSFilterTypeDestination,
+    HSSFilterTypeTarget,
+    HSSFilterTypeFocused,
+    HSSFilterTypeBlurred,
+    HSSFilterTypeAnimated,
+    //text matching
+    HSSFilterTypeContains,
+    HSSFilterTypeEquals,
+    HSSFilterTypeStartsWith,
+    HSSFilterTypeEndsWith,
+    HSSFilterTypeMatch,
+    HSSFilterTypeEmpty,
+    HSSFilterTypeLength,
+    //special
+    HSSFilterTypeEach,
+    HSSFilterTypeCustom
+    
+};
 
 #endif

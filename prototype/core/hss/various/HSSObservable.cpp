@@ -78,6 +78,7 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyMargin] = "HSSObservablePropertyMargin";
         types[HSSObservablePropertyPadding] = "HSSObservablePropertyPadding";
         types[HSSObservablePropertyBorder] = "HSSObservablePropertyBorder";
+        types[HSSObservablePropertyHover] = "HSSObservablePropertyHover";
         
         //HSSContainer
         types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";

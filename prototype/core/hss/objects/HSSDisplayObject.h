@@ -211,6 +211,11 @@ namespace AXR {
         
         virtual bool handleEvent(HSSEventType, void* data);
         
+        void setHover(bool newValue);
+        bool isHover();
+        
+        void ruleChanged(HSSObservableProperty source, void*data);
+        
     protected:
         pp parent;
         std::map<std::string, std::string>attributes;
@@ -330,7 +335,7 @@ namespace AXR {
                                    HSSObservableProperty    &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
-        
+        bool _isHover;
     };
 }
 

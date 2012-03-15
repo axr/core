@@ -53,6 +53,7 @@
 #include "HSSRule.h"
 #include <iostream>
 #include "../../axr/AXRDebugging.h"
+#include "HSSFilter.h"
 
 using namespace AXR;
 
@@ -61,6 +62,7 @@ HSSRule::HSSRule()
 {
     this->selectorChain = selectorChain;
     this->type = HSSStatementTypeRule;
+    this->_isActive = true;
 }
 
 HSSRule::HSSRule(const HSSRule & orig)
@@ -196,6 +198,57 @@ HSSInstruction::p HSSRule::getInstruction()
 HSSRule::p HSSRule::shared_from_this()
 {
     return boost::static_pointer_cast<HSSRule>(HSSStatement::shared_from_this());
+}
+
+void HSSRule::connectInteractionFilter(HSSFilterType filterType, HSSDisplayObject::p object)
+{
+    switch (filterType) {
+        case HSSFilterTypeHover:
+        {
+            object->observe(HSSObservablePropertyHover, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRule>(this, &HSSRule::hoverChanged));
+            break;
+        }
+            
+        default:
+            throw AXRError::p(new AXRError("HSSRule", "Unknown filter type while connecting with display object"));
+            break;
+    }
+    
+    if(this->_interactors.count(filterType) != 0){
+        std::vector<HSSDisplayObject::p> &theList = this->_interactors[filterType];
+        theList.push_back(object);
+    } else {
+        std::vector<HSSDisplayObject::p> newList;
+        newList.push_back(object);
+        this->_interactors[filterType] = newList;
+    }
+}
+
+void HSSRule::hoverChanged(AXR::HSSObservableProperty source, void *data){
+    bool doesApply = true;
+    HSSFilterType filterType = HSSFilterTypeHover;
+    if(this->_interactors.count(filterType) != 0){
+        std::vector<HSSDisplayObject::p>::iterator it;
+        for (it=this->_interactors[filterType].begin(); it!=this->_interactors[filterType].end(); it++) {
+            if(!(*it)->isHover()){
+                doesApply = false;
+                break;
+            }
+        }
+    }
+    
+    this->setActive(doesApply);
+}
+
+void HSSRule::setActive(bool newValue)
+{
+    this->_isActive = newValue;
+    this->notifyObservers(HSSObservablePropertyValue, this);
+}
+
+bool HSSRule::isActive()
+{
+    return this->_isActive;
 }
 
 HSSClonable::p HSSRule::cloneImpl() const

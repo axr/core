@@ -43,40 +43,58 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/02/23
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 2
+ *      Revision: 1
  *
  ********************************************************************/
 
+#include "HSSHoverFilter.h"
 
-#ifndef OSXAXRWRAPPER_H
-#define OSXAXRWRAPPER_H
+using namespace AXR;
 
-#include "../../axr/AXRWrapper.h"
-#include "AXRView.h"
-
-namespace AXR
+HSSHoverFilter::HSSHoverFilter()
+: HSSFilter()
 {
-    class OSXAxrWrapper : public AXRWrapper
-    {
-    public:
-        OSXAxrWrapper(AXRView * mainView);
-        virtual ~OSXAxrWrapper();
-        
-        virtual AXRFile::p getFile(std::string url);
-        virtual size_t readFile(AXRFile::p theFile);
-        virtual void closeFile(AXRFile::p theFile);
-        virtual void handleError(AXRError::p theError);
-        virtual bool openFileDialog(std::string &filePath);
-        
-        void setNeedsDisplay(bool newValue);
-        
-    private:
-        AXRView * mainView;
-    };
+    this->filterType = HSSFilterTypeHover;
+}
+
+HSSHoverFilter::p HSSHoverFilter::clone() const{
+    return boost::static_pointer_cast<HSSHoverFilter, HSSClonable>(this->cloneImpl());
+}
+
+HSSHoverFilter::~HSSHoverFilter()
+{
+    
+}
+
+std::string HSSHoverFilter::toString()
+{
+    return "Hover Filter";
 }
 
 
-#endif
+const std::vector<HSSDisplayObject::p> HSSHoverFilter::apply(const std::vector<HSSDisplayObject::p> &scope)
+{
+    //parent is selector chain, grandparent is the rule
+    HSSParserNode::p ruleNode = this->getParentNode()->getParentNode();
+    if(ruleNode->isA(HSSParserNodeTypeStatement)){
+        HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement>(ruleNode);
+        if(ruleStatement->isA(HSSStatementTypeRule)){
+            HSSRule::p theRule = boost::static_pointer_cast<HSSRule>(ruleStatement);
+            HSSDisplayObject::const_it it;
+            for (it=scope.begin(); it!=scope.end(); it++) {
+                theRule->connectInteractionFilter(HSSFilterTypeHover, (*it));
+            }
+            theRule->setActive(false);
+        }
+    }
+    
+    //the entire scope will be selected
+    return scope;
+}
+
+HSSClonable::p HSSHoverFilter::cloneImpl() const{
+    return HSSClonable::p(new HSSHoverFilter(*this));
+}

@@ -124,6 +124,7 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyFont, (void *) &this->font);
     this->registerProperty(HSSObservablePropertyBorder, (void *) &this->dBorder);
     this->registerProperty(HSSObservablePropertyOn, (void *) &this->on);
+    this->_isHover = false;
 }
 
 HSSDisplayObject::~HSSDisplayObject()
@@ -288,6 +289,8 @@ void HSSDisplayObject::setElementName(std::string newName)
 
 void HSSDisplayObject::rulesAdd(HSSRule::p newRule)
 {
+    //the target property is set to HSSObservablePropertyValue -- should this be something else?
+    newRule->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::ruleChanged));
     this->rules.push_back(newRule);
 }
 
@@ -1915,6 +1918,26 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
             return this->fireEvent(type);
         }
             
+            
+        case HSSEventTypeMouseMove:
+        {
+            HSSPoint thePoint = *(HSSPoint*)data;
+            
+            if(     this->globalX <= thePoint.x && this->globalX + this->width >= thePoint.x
+               &&   this->globalY <= thePoint.y && this->globalY + this->height >= thePoint.y){
+                
+                if(!this->_isHover)
+                {
+                    this->setHover(true);
+                }
+                //std_log(this->getElementName());
+                return this->fireEvent(type);
+            } else if (this->_isHover) {
+                this->setHover(false);
+            }
+            break;
+        }
+            
         default:
             throw AXRError::p(new AXRError("HSSDisplayObject", "Unknown event type"));
     }
@@ -1922,7 +1945,26 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
     return false;
 }
 
+void HSSDisplayObject::setHover(bool newValue)
+{
+    if(this->_isHover != newValue)
+    {
+        this->_isHover = newValue;
+        this->notifyObservers(HSSObservablePropertyHover, &this->_isHover);
+    }
+}
 
+bool HSSDisplayObject::isHover()
+{
+    return this->_isHover;
+}
+
+void HSSDisplayObject::ruleChanged(HSSObservableProperty source, void*data)
+{
+    //HSSRule * theRule = (HSSRule*)data;
+    this->setNeedsRereadRules(true);
+    AXRCore::getInstance()->getWrapper()->setNeedsDisplay(true);
+}
 
 HSSDisplayObject::p HSSDisplayObject::shared_from_this()
 {
