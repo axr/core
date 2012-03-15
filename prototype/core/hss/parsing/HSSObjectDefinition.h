@@ -62,6 +62,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "../objects/HSSDisplayObject.h"
+#include "HSSRule.h"
 
 namespace AXR {
     class HSSObjectDefinition : public HSSStatement
@@ -104,21 +105,24 @@ namespace AXR {
         const std::vector<HSSObjectDefinition::p> getChildren() const;
         
         HSSObject::p getObject();
-        HSSObjectDefinition::p getParent();
-        void setParent(HSSObjectDefinition::p newParent);
         
         void setScope(const std::vector<HSSDisplayObject::p> * newScope);
         
         void setThisObj(HSSDisplayObject::p value);
         HSSDisplayObject::p getThisObj();
         
+        void setRules(std::deque<HSSRule::p> newRules);
+        const std::deque<HSSRule::p> getRules() const;
+        void rulesAdd(HSSRule::p rule);
+        void rulesPrepend(HSSRule::p rule);
+        void rulesRemove(HSSRule::p rule);
+        
     protected:
         HSSObjectDefinition::p shared_from_this();
         
         std::deque<HSSPropertyDefinition::p> properties;
         std::vector<HSSObjectDefinition::p> children;
-        
-        boost::weak_ptr<HSSObjectDefinition> parent;
+
         
         HSSDisplayObject::p thisObj;
         const std::vector<HSSDisplayObject::p> * scope;
@@ -126,6 +130,7 @@ namespace AXR {
     private:
         virtual HSSClonable::p cloneImpl() const;
         HSSObject::p prototype;
+        std::deque<HSSRule::p> _rules;
     };
 }
 

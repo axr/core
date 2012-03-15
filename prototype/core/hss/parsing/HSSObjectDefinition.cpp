@@ -227,6 +227,36 @@ HSSObjectDefinition::p HSSObjectDefinition::shared_from_this()
 {
     return boost::static_pointer_cast<HSSObjectDefinition>(HSSStatement::shared_from_this());
 }
+
+
+void HSSObjectDefinition::setRules(std::deque<HSSRule::p> newRules)
+{
+    this->_rules = newRules;
+}
+
+const std::deque<HSSRule::p> HSSObjectDefinition::getRules() const
+{
+    return this->_rules;
+}
+
+void HSSObjectDefinition::rulesAdd(HSSRule::p rule)
+{
+    this->_rules.push_back(rule);
+}
+
+void HSSObjectDefinition::rulesPrepend(HSSRule::p rule)
+{
+    this->_rules.push_front(rule);
+}
+
+void HSSObjectDefinition::rulesRemove(HSSRule::p rule)
+{
+    std::deque<HSSRule::p>::iterator it = find(this->_rules.begin(), this->_rules.end(), rule);
+    if(it != this->_rules.end()){
+        this->_rules.erase(it);
+    }
+}
+
 HSSClonable::p HSSObjectDefinition::cloneImpl() const{
     return HSSClonable::p(new HSSObjectDefinition(*this));
 }
