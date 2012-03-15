@@ -120,10 +120,11 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyFlow, (void *) &this->flow);
     this->registerProperty(HSSObservablePropertyHeight, (void *) &this->height);
     this->registerProperty(HSSObservablePropertyWidth, (void *) &this->width);
-    this->registerProperty(HSSObservablePropertyBackground, (void *) &this->dBackground);
+    this->registerProperty(HSSObservablePropertyBackground, (void *) &this->background);
     this->registerProperty(HSSObservablePropertyFont, (void *) &this->font);
-    this->registerProperty(HSSObservablePropertyBorder, (void *) &this->dBorder);
     this->registerProperty(HSSObservablePropertyOn, (void *) &this->on);
+    this->registerProperty(HSSObservablePropertyBorder, (void *) &this->border);
+    
     this->_isHover = false;
 }
 

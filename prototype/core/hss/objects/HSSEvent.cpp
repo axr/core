@@ -91,6 +91,8 @@ HSSEvent::HSSEvent(HSSEventType type)
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
+    
+    this->registerProperty(HSSObservablePropertyAction, &this->action);
 }
 
 HSSEvent::~HSSEvent()
