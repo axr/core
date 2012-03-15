@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 10
+ *      Core version: 0.45
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -89,6 +89,7 @@ HSSTokenizer::~HSSTokenizer()
 
 void HSSTokenizer::reset()
 {
+    
     this->file.reset();
     //this starts out empty
 	this->currentChar = NULL;

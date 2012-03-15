@@ -1376,7 +1376,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
     }
     
     if(!valid){
-        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for border of "+this->getElementName()));
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for background of "+this->getElementName()));
     }
     
     this->notifyObservers(HSSObservablePropertyBackground, &this->background);

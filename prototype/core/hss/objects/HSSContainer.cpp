@@ -180,8 +180,6 @@ std::string HSSContainer::defaultObjectType(std::string property)
         return "roundedRect";
     } else if (property == "innerMargin"){
         return "margin";
-    } else if (property == "background"){
-        return "rgb";
     } else {
         return HSSDisplayObject::defaultObjectType(property);
     }
@@ -352,10 +350,7 @@ void HSSContainer::setProperty(HSSObservableProperty name, void * value)
 
 void HSSContainer::recursiveReadDefinitionObjects()
 {
-    if (this->_needsRereadRules) {
-        this->readDefinitionObjects();
-    }
-    
+    this->readDefinitionObjects();
     unsigned i;
     for (i=0; i<this->allChildren.size(); i++) {
         this->allChildren[i]->recursiveReadDefinitionObjects();
@@ -979,7 +974,7 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
             break;
         default:
-            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of "+this->getElementName()));
+            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of "+this->getElementName()));
     }
     
     this->dContentAlignX = value;
