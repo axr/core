@@ -310,7 +310,7 @@ HSSToken::p HSSTokenizer::readIdentifier()
     unsigned line = this->currentLine;
     unsigned column = this->currentColumn - 1;
     
-	while (isalnum(this->currentChar)) {
+	while (isalnum(this->currentChar) || this->currentChar == '_') {
 		this->storeCurrentCharAndReadNext();
 	}
 	return HSSValueToken::p(new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText(), line, column));
