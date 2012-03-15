@@ -323,16 +323,18 @@ void HSSDisplayObject::readDefinitionObjects()
         
         std::string propertyName;
         for (i=0; i<this->rules.size(); i++) {
-            HSSRule::p& rule = this->rules[i];
-            for (j=0; j<rule->propertiesSize(); j++) {
-                try
-                {
-                    HSSPropertyDefinition::p& propertyDefinition = rule->propertiesGet(j);
-                    propertyName = propertyDefinition->getName();
-                    this->setPropertyWithName(propertyName, propertyDefinition->getValue());
-                }
-                catch (AXRError::p e){
-                    e->raise();
+            HSSRule::p rule = this->rules[i];
+            if(rule->isActive()){
+                for (j=0; j<rule->propertiesSize(); j++) {
+                    try
+                    {
+                        HSSPropertyDefinition::p& propertyDefinition = rule->propertiesGet(j);
+                        propertyName = propertyDefinition->getName();
+                        this->setPropertyWithName(propertyName, propertyDefinition->getValue());
+                    }
+                    catch (AXRError::p e){
+                        e->raise();
+                    }
                 }
             }
             

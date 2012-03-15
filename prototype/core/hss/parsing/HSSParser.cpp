@@ -243,7 +243,25 @@ bool HSSParser::loadFile(AXRFile::p file)
                             this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
                             this->line = 1;
                             this->column = 1;
-                            this->loadFile(this->wrapper->getFile("file://"+this->basepath+"/"+theInstr->getValue()));
+                            try {
+                                AXRFile::p theFile = this->wrapper->getFile("file://"+this->basepath+"/"+theInstr->getValue());
+                                this->loadFile(theFile);
+                                
+                            } catch (AXRError::p e) {
+                                e->raise();
+                                //restore
+                                this->tokenizer = currentTokenizer;
+                                this->basepath = currentBasepath;
+                                this->currentFile = currentFile;
+                                this->line = currentLine;
+                                this->column = currentColumn;
+                                this->currentToken = currentCurrentToken;
+                                this->currentContext = currentCurrentContext;
+                                this->currentObjectContext = currentCurrentObjectContext;
+                                
+                                break;
+                            }
+                            
                             
                             //restore
                             this->tokenizer = currentTokenizer;
@@ -395,7 +413,8 @@ HSSRule::p HSSParser::readRule()
         return ret;
     }
     
-    HSSRule::p ret = HSSRule::p(new HSSRule(selectorChain));
+    HSSRule::p ret = HSSRule::p(new HSSRule());
+    ret->setSelectorChain(selectorChain);
     
     //now we're inside the block
     this->currentContext.push_back(HSSParserContextBlock);
@@ -407,6 +426,7 @@ HSSRule::p HSSParser::readRule()
             switch (this->currentToken->getType()) {
                 case HSSIdentifier:
                 case HSSColon:
+                case HSSObjectSign:
                 {
                     bool isShorthand;
                     if (this->isPropertyDefinition(&isShorthand)){
@@ -590,6 +610,10 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                     } else {
                         throw AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->currentFile->fileName, this->line, this->column));
                     }
+                } else if(this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) || this->currentToken->isA(HSSColon)){
+                    ret->add(HSSThisSelector::p(new HSSThisSelector()));
+                    this->skip(HSSWhitespace, true);
+                    break;
                 }
                 
                 //fall through
@@ -1066,6 +1090,11 @@ void HSSParser::recursiveAddObjectDefinition(HSSObjectDefinition::p objDef)
         for (i=properties.size(); i>0; i--){
             child->propertiesPrepend(properties[i-1]);
         }
+        std::deque<HSSRule::p>::const_reverse_iterator it;
+        const std::deque<HSSRule::p> rules = objDef->getRules();
+        for (it=rules.rbegin(); it!=rules.rend(); it++) {
+            child->rulesPrepend((*it));
+        }
         this->recursiveAddObjectDefinition(child);
     }
 }
@@ -1254,9 +1283,13 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
     HSSInstruction::p ret;
     std::string currentval;
     
+    //set preference
     this->tokenizer->preferHex = preferHex;
-    
+    //skip the instruction sign -- this will automatically read the next token
     this->skipExpected(HSSInstructionSign);
+    //restore
+    this->tokenizer->preferHex = false;
+    
     this->checkForUnexpectedEndOfSource();
     //we are looking at
     //if it starts with a number, we are looking at a color instruction
@@ -1295,8 +1328,6 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
                 break;
                 
             default:
-                //restore
-                this->tokenizer->preferHex = false;
                 //balk
                 AXRError::p(new AXRWarning("HSSParser", "Wrong length for hexadecimal number (should be 1, 2, 3, 4, 6 or 8 digits long)", this->currentFile->fileName, this->line, this->column))->raise();
                 return ret;
@@ -1345,20 +1376,14 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
             ret = HSSInstruction::p(new HSSInstruction(HSSDeleteInstruction));
             
         } else {
-            //restore
-            this->tokenizer->preferHex = false;
             //balk
             throw AXRWarning::p(new AXRWarning("HSSParser", "Unknown instruction "+currentval, this->currentFile->fileName, this->line, this->column));
         }
         
     } else {
-        //restore
-        this->tokenizer->preferHex = false;
         //balk
         throw AXRWarning::p(new AXRWarning("HSSParser", "Unexpected token "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->fileName, this->line, this->column));
     }
-    
-    this->tokenizer->preferHex = false;
     
     if(!this->atEndOfSource()){
         this->skip(HSSWhitespace);
@@ -1507,7 +1532,8 @@ HSSRule::p HSSParser::readInstructionRule()
                 return ret;
             }
             
-            ret = HSSRule::p(new HSSRule(selectorChain));
+            ret = HSSRule::p(new HSSRule());
+            ret->setSelectorChain(selectorChain);
             ret->setInstruction(instruction);
             break;
         }
@@ -1719,6 +1745,7 @@ HSSParserNode::p HSSParser::readFunction()
                 selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
                 selectorChain->add(HSSThisSelector::p(new HSSThisSelector()));
                 this->readNextToken(true);
+                this->skip(HSSWhitespace, true);
                 
             } else {
                 if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of"){

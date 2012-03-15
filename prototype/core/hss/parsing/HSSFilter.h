@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/29
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -56,45 +56,13 @@
 #include "HSSParserNode.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 #include "../objects/HSSDisplayObject.h"
+#include "HSSFilterType.h"
 
 namespace AXR {
-    enum HSSFilterType {
-        //position
-        HSSFilterTypeFirst,
-        HSSFilterTypeLast,
-        HSSFilterTypeEven,
-        HSSFilterTypeOdd,
-        HSSFilterTypeIndex,
-        HSSFiltertypeRange,
-        HSSFilterTypeNth,
-        //hierarchy
-        HSSFilterTypeParent,
-        HSSFilterTypeParentOf,
-        HSSFilterTypeAncestorOf,
-        HSSFilterTypeHas,
-        //interaction
-        HSSFilterTypeHover,
-        HSSFilterTypePressed,
-        HSSFilterTypeDragged,
-        HSSFilterTypeDestination,
-        HSSFilterTypeTarget,
-        HSSFilterTypeFocused,
-        HSSFilterTypeBlurred,
-        HSSFilterTypeAnimated,
-        //text matching
-        HSSFilterTypeContains,
-        HSSFilterTypeEquals,
-        HSSFilterTypeStartsWith,
-        HSSFilterTypeEndsWith,
-        HSSFilterTypeMatch,
-        HSSFilterTypeEmpty,
-        HSSFilterTypeLength,
-        //special
-        HSSFilterTypeEach,
-        HSSFilterTypeCustom
-        
-    };
+    
+    class HSSSelectorChain;
     
     class HSSFilter : public HSSParserNode
     {
@@ -107,6 +75,7 @@ namespace AXR {
         static HSSFilter::p newFilterWithType(HSSFilterType filterType);
         
         HSSFilter();
+        p clone() const;
         virtual ~HSSFilter();
         
         virtual std::string toString();
@@ -116,8 +85,11 @@ namespace AXR {
         bool isA(HSSFilterType type);
         HSSFilterType getFilterType();
         
+        
     protected:
         HSSFilterType filterType;
+    private:
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

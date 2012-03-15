@@ -166,11 +166,20 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
             
             
         case HSSFilterTypeEach:
+        {
             ret = HSSFilter::p(new HSSFilter());
             ret->filterType = filterType;
+            break;
+        }
+            
+        case HSSFilterTypeHover:
+        {
+            ret = HSSHoverFilter::p(new HSSHoverFilter());
+            break;
+        }
             
         default:
-            break;
+            throw AXRError::p(new AXRError("HSSFilter", "Unknown filter type."));
     }
     
     return ret;
