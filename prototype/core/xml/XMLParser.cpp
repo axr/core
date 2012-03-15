@@ -43,14 +43,15 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 12
+ *      Core version: 0.45
+ *      Revision: 13
  *
  ********************************************************************/
 
 #include "XMLParser.h"
+#include "../AXR.h"
 #include <iostream>
 #include "../axr/AXRDebugging.h"
 #include "../axr/errors/errors.h"
@@ -120,22 +121,21 @@ ssize_t XMLParser::read_block(void) {
         return -1;
     }
     
-	size_t size = fread(this->getBuffer(), sizeof(this->getBuffer()[0]), file->bufferSize, file->fileHandle);
-	ssize_t code = (ssize_t)size;
+    size_t bytesRead = AXRCore::getInstance()->getWrapper()->readFile(this->file);
+	ssize_t code = (ssize_t)bytesRead;
     
-	if(size < this->getBlockSize()) {
+	if(bytesRead <= this->getBlockSize()) {
         if(feof(file->fileHandle)) {
             this->setLastError(XML_ERROR_FINISHED);
-            return size;
+            return bytesRead;
         }
         if(ferror(file->fileHandle)) {
             this->setStatus(XML_STATUS_ERROR);
-            this->setLastError(XML_ERROR_NO_ELEMENTS);
-            throw AXRError::p(new AXRError("XMLParser", "No elements were found in the document", file->fileName, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)));
+            
         }
 	}
     
-	if(size == 0) {
+	if(bytesRead == 0) {
         this->setStatus(XML_STATUS_OK);
         this->setLastError(XML_ERROR_FINISHED);
         code = -1;

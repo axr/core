@@ -249,7 +249,7 @@ void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty 
 
 void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object)
 {
-    if(this->_propertyObservers.count(target) != 0){
+    if(this->_propertyObservers.find(target) != this->_propertyObservers.end()){
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
         std::size_t hash = 0;
         boost::hash_combine(hash, object);
