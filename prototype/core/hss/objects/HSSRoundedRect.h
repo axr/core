@@ -53,9 +53,9 @@
 #ifndef HSSROUNDEDRECT_H
 #define HSSROUNDEDRECT_H
 
-#import "HSSShape.h"
-#import "HSSMultipleValue.h"
-#import "HSSDisplayObject.h"
+#include "HSSShape.h"
+#include "HSSMultipleValue.h"
+#include "HSSDisplayObject.h"
 
 namespace AXR {
     class HSSRoundedRect : public HSSShape

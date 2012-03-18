@@ -53,13 +53,13 @@
 #ifndef HSSRULE_H
 #define HSSRULE_H
 
-#import "HSSStatement.h"
-#import "HSSPropertyDefinition.h"
-#import "HSSSelectorChain.h"
-#import "HSSInstruction.h"
-#import <string>
-#import <vector>
-#import <boost/shared_ptr.hpp>
+#include "HSSStatement.h"
+#include "HSSPropertyDefinition.h"
+#include "HSSSelectorChain.h"
+#include "HSSInstruction.h"
+#include <string>
+#include <vector>
+#include <boost/shared_ptr.hpp>
 
 namespace AXR {
     
