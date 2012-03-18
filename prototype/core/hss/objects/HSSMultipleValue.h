@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/27
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.45
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -59,27 +59,50 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    /**
+     *  @brief MultipleValue objects contain other values, and stores them
+     *  together under the same object name.
+     */
     class HSSMultipleValue : public HSSObject
     {
     public:
-        typedef boost::shared_ptr<HSSMultipleValue> p;
         
+        typedef boost::shared_ptr<HSSMultipleValue> p;
+        /**
+         *  Constructor for MultipleValue objects
+         */
         HSSMultipleValue();
+        /**
+         *  Destructor for MultipleValue objects
+         */
         virtual ~HSSMultipleValue();
         virtual std::string toString();
-        
-        //adds a pointer to newStatement to the properties list
-        //this function acquires ownership of the statement
+        /**
+         *  Adds a parser node defining a value to the storage.
+         *  @param newValue     A shared pointer to the parser node that defines the value
+         *                      (definition object)
+         */
         void add(HSSParserNode::p newValue);
-        //removes last statement from the list and then deletes it
+        /**
+         *  Removes the last definition object from the storage
+         */
         void removeLast();
-        //returns a pointer to the first statement in the list
+        /**
+         *  @return The first definition object in the storage.
+         */
         HSSParserNode::p first();
-        //returns a pointer to the last statement in the list
+        /**
+         *  @return The last definition object in the storage.
+         */
         HSSParserNode::p last();
-        //returns how many statements there are in the properties list
+        /**
+         *  @return The amount of definition objects in the storage.
+         */
         const int size();
-        
+        /**
+         *  @return The entire storage as a STL vector containing shared pointers to definition
+         *  objects. Read only.
+         */
         const std::vector<HSSParserNode::p> getValueList() const;
         
     protected:

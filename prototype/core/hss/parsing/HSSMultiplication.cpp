@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/27
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -61,6 +61,16 @@ HSSMultiplication::HSSMultiplication(HSSParserNode::p _left, HSSParserNode::p _r
     this->expressionType = HSSExpressionTypeMultiplication;
 }
 
+HSSMultiplication::HSSMultiplication(const HSSMultiplication &orig)
+: HSSExpression(orig)
+{
+    
+}
+
+HSSMultiplication::p HSSMultiplication::clone() const{
+    return boost::static_pointer_cast<HSSMultiplication, HSSClonable>(this->cloneImpl());
+}
+
 HSSMultiplication::~HSSMultiplication()
 {
     
@@ -69,6 +79,10 @@ HSSMultiplication::~HSSMultiplication()
 long double HSSMultiplication::calculate(long double leftval, long double rightval)
 {
     return leftval * rightval;
+}
+
+HSSClonable::p HSSMultiplication::cloneImpl() const{
+    return HSSClonable::p(new HSSMultiplication(*this));
 }
 
 

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/02/02
+ *      Last changed: 2012/03/13
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 6
+ *      Core version: 0.45
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -62,6 +62,7 @@
 #include "HSSTextBlock.h"
 #include "HSSLineBorder.h"
 #include "HSSLinearGradient.h"
+#include "HSSColorStop.h"
 #include "HSSMargin.h"
 #include "HSSFont.h"
 #include "HSSRectangle.h"

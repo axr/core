@@ -43,82 +43,58 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2012/02/23
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
-#ifndef HSSFUNCTION_H
-#define HSSFUNCTION_H
+#include "HSSHoverFilter.h"
 
-#include <string>
-#include "HSSObject.h"
-#include "../parsing/HSSKeywordConstant.h"
-#include <boost/shared_ptr.hpp>
-#include <deque>
-#include <vector>
-#include "HSSDisplayObject.h"
+using namespace AXR;
 
-namespace AXR {
-    enum HSSFunctionType
-    {
-        HSSFunctionTypeNone = 0,
-        HSSFunctionTypeRef,
-        HSSFunctionTypeSel,
-        HSSFunctionTypeMin,
-        HSSFunctionTypeMax,
-        HSSFunctionTypeFloor,
-        HSSFunctionTypeCeil,
-        HSSFunctionTypeRound
-    };
-    
-    class HSSFunction : public HSSObject
-    {
-    public:        
-        friend class HSSParser;
-        
-        HSSFunction();
-        virtual ~HSSFunction();
-        
-        typedef boost::shared_ptr<HSSFunction> p;
-        
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        
-        virtual void setProperty(std::string name, HSSParserNode::p value);
-        
-        void * evaluate();
-        void * evaluate(std::deque<HSSParserNode::p> arguments);
-        
-        virtual void * _evaluate();
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments) =0;
-        
-        virtual void propertyChanged(HSSObservableProperty property, void* data);
-        
-        virtual void setPercentageBase(long double value);
-        virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
-        
-        virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
-        
-        void setDirty(bool value);
-        bool isDirty();
-        void * getValue();
-        virtual bool isA(HSSFunctionType type);
-        
-    protected:
-        bool _isDirty;
-        void * _value;
-        HSSFunctionType functionType;
-        
-        long double percentageBase;
-        HSSObservableProperty percentageObservedProperty;
-        HSSObservable * percentageObserved;
-        const std::vector<HSSDisplayObject::p> * scope;
-        
-    };
+HSSHoverFilter::HSSHoverFilter()
+: HSSFilter()
+{
+    this->filterType = HSSFilterTypeHover;
 }
 
-#endif
+HSSHoverFilter::p HSSHoverFilter::clone() const{
+    return boost::static_pointer_cast<HSSHoverFilter, HSSClonable>(this->cloneImpl());
+}
+
+HSSHoverFilter::~HSSHoverFilter()
+{
+    
+}
+
+std::string HSSHoverFilter::toString()
+{
+    return "Hover Filter";
+}
+
+
+const std::vector<HSSDisplayObject::p> HSSHoverFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
+{
+    //parent is selector chain, grandparent is the rule
+    HSSParserNode::p ruleNode = this->getParentNode()->getParentNode();
+    if(ruleNode->isA(HSSParserNodeTypeStatement)){
+        HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement>(ruleNode);
+        if(ruleStatement->isA(HSSStatementTypeRule)){
+            HSSRule::p theRule = boost::static_pointer_cast<HSSRule>(ruleStatement);
+            HSSDisplayObject::const_it it;
+            for (it=scope.begin(); it!=scope.end(); it++) {
+                theRule->connectInteractionFilter(HSSFilterTypeHover, (*it));
+            }
+            theRule->setActive(false);
+        }
+    }
+    
+    //the entire scope will be selected
+    return scope;
+}
+
+HSSClonable::p HSSHoverFilter::cloneImpl() const{
+    return HSSClonable::p(new HSSHoverFilter(*this));
+}

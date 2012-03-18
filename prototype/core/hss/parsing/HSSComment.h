@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/10
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -64,9 +64,12 @@ namespace AXR {
         typedef boost::shared_ptr<HSSComment> p;
         
         HSSComment(std::string value);
+        p clone() const;
         std::string getValue();
         void setValue(std::string newValue);
         virtual std::string toString();
+    private:
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/02/02
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 18
+ *      Core version: 0.45
+ *      Revision: 20
  *
  ********************************************************************/
 
@@ -74,6 +74,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
         types["margin"] = HSSObjectTypeMargin;
         types["rgb"] = HSSObjectTypeRgb;
         types["linearGradient"] = HSSObjectTypeGradient;
+        types["colorStop"] = HSSObjectTypeColorStop;
         types["font"] = HSSObjectTypeFont;
         types["rectangle"] = HSSObjectTypeShape;
         types["roundedRect"] = HSSObjectTypeShape;
@@ -121,6 +122,11 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
         {
             //FIXME: gradient tyes?
             return HSSLinearGradient::p(new HSSLinearGradient());
+        }
+            
+        case HSSObjectTypeColorStop:
+        {
+            return HSSColorStop::p(new HSSColorStop());
         }
             
         case HSSObjectTypeGeneric:
@@ -212,15 +218,6 @@ HSSObject::HSSObject()
     this->shorthandIndex = 0;
 }
 
-HSSObject::HSSObject(std::string name)
-{
-    this->name = name;
-    this->_isNamed = true;
-    this->type = HSSObjectTypeGeneric;
-    this->shorthandIndex = 0;
-}
-
-
 HSSObject::~HSSObject()
 {
     
@@ -282,6 +279,11 @@ void HSSObject::setName(std::string newName)
 {
     this->name = newName;
     this->_isNamed = true;
+}
+
+std::string HSSObject::getName()
+{
+    return this->name;
 }
 
 void HSSObject::dropName()
@@ -382,7 +384,8 @@ void HSSObject::setDIsA(HSSParserNode::p value)
     switch (value->getType()) {
         case HSSParserNodeTypeObjectDefinition:
         {
-            AXRError::p(new AXRError("HSSObject", "Unimplemented"))->raise();
+            AXRError::p(new AXRError("HSSObject", "HSSParserNodeTypeObjectDefinition Unimplemented in isA"))->raise();
+            break;
         }
             
         case HSSParserNodeTypeObjectNameConstant:
@@ -390,13 +393,27 @@ void HSSObject::setDIsA(HSSParserNode::p value)
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
-                objdef->apply();
+                //objdef->apply();
                 std::deque<HSSPropertyDefinition::p> properties = objdef->getProperties();
                 unsigned i, size;
                 for (i = 0, size = properties.size(); i<size; i++){
-                    this->setProperty(HSSObservable::observablePropertyFromString(properties[i]->getName()), properties[i]->getValue());
+                    HSSObservableProperty propertyName = HSSObservable::observablePropertyFromString(properties[i]->getName());
+                    if(propertyName != HSSObservablePropertyNone){
+                        this->setProperty(propertyName, properties[i]->getValue()->clone());
+                    }
+                    
+                    //else store as value
                 }
-                
+                if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer::p thisCont = boost::static_pointer_cast<HSSContainer>(this->shared_from_this());
+                    this->axrController->currentContext.push(thisCont);
+                    HSSRule::const_it it;
+                    const std::deque<HSSRule::p> rules = objdef->getRules();
+                    for (it=rules.begin(); it!=rules.end(); it++) {
+                        this->axrController->recursiveMatchRulesToDisplayObjects((*it)->clone(), thisCont->getChildren(), thisCont);
+                    }
+                    this->axrController->currentContext.pop();
+                }
                 
             } catch (HSSObjectNotFoundException * e) {
                 std_log(e->toString());
@@ -407,6 +424,7 @@ void HSSObject::setDIsA(HSSParserNode::p value)
             
         case HSSParserNodeTypeKeywordConstant:
         {
+            AXRError::p(new AXRError("HSSObject", "HSSParserNodeTypeKeywordConstant Unimplemented"))->raise();
             break;
         }
             
@@ -464,11 +482,15 @@ void HSSObject::registerProperty(HSSObservableProperty name, void * property)
     this->properties[name] = property;
 }
 
+const std::vector<HSSDisplayObject::p> * HSSObject::getScope() const
+{
+    return this->scope;
+}
+
 void HSSObject::setScope(const std::vector<HSSDisplayObject::p> * newScope)
 {
     this->scope = newScope;
 }
-
 
 void HSSObject::setController(AXRController * controller)
 {

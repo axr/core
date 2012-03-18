@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/24
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -55,7 +55,7 @@
 #import "../parsing/HSSNumberConstant.h"
 #import "../parsing/HSSPercentageConstant.h"
 #import "../parsing/HSSExpression.h"
-#import "../parsing/HSSFunctionCall.h"
+#import "../parsing/HSSFunction.h"
 #import <boost/pointer_cast.hpp>
 
 using namespace AXR;
@@ -70,19 +70,6 @@ HSSRoundedRect::HSSRoundedRect()
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("corners");
     this->setShorthandProperties(shorthandProperties);
-}
-
-HSSRoundedRect::HSSRoundedRect(std::string name)
-: HSSShape(name)
-{
-    this->shapeType = HSSShapeTypeRoundedRect;
-    this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
-    this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
-    
-    std::vector<std::string> shorthandProperties;
-    shorthandProperties.push_back("corners");
-    this->setShorthandProperties(shorthandProperties);
-
 }
 
 HSSRoundedRect::~HSSRoundedRect()
@@ -298,15 +285,15 @@ long double HSSRoundedRect::_setLDProperty(
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunctionCall::p functionCallValue = boost::static_pointer_cast<HSSFunctionCall>(value);
-            functionCallValue->setPercentageBase(percentageBase);
-            functionCallValue->setPercentageObserved(observedProperty, observedObject);
-            functionCallValue->setScope(scope);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            fnct->setPercentageBase(percentageBase);
+            fnct->setPercentageObserved(observedProperty, observedObject);
+            fnct->setScope(scope);
             
-            ret = functionCallValue->evaluate();
+            ret = *(long double*)fnct->evaluate();
             if(callback != NULL){
-                functionCallValue->getFunction()->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect>(this, callback));
-                observedStore = functionCallValue->getFunction().get();
+                fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect>(this, callback));
+                observedStore = fnct.get();
                 observedStoreProperty = HSSObservablePropertyValue;
             }
             break;

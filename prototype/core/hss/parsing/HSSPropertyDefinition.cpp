@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 5
+ *      Core version: 0.45
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -56,19 +56,34 @@
 using namespace AXR;
 
 HSSPropertyDefinition::HSSPropertyDefinition()
+: HSSStatement()
 {
     this->name = "";
     this->type = HSSStatementTypePropertyDefinition;
 }
 
 HSSPropertyDefinition::HSSPropertyDefinition(std::string name)
+: HSSStatement()
 {
     this->name = name;
 }
 
 HSSPropertyDefinition::HSSPropertyDefinition(std::string name, HSSParserNode::p value)
+: HSSStatement()
 {
     this->name = name;
+    this->setValue(value);
+}
+
+HSSPropertyDefinition::HSSPropertyDefinition(const HSSPropertyDefinition &orig)
+: HSSStatement(orig)
+{
+    this->name = orig.name;
+}
+
+HSSPropertyDefinition::p HSSPropertyDefinition::clone() const
+{
+    return boost::static_pointer_cast<HSSPropertyDefinition, HSSClonable>(this->cloneImpl());
 }
 
 HSSPropertyDefinition::~HSSPropertyDefinition()
@@ -97,6 +112,7 @@ std::string HSSPropertyDefinition::getName()
 
 void HSSPropertyDefinition::setValue(HSSParserNode::p value){
     this->value = value;
+    this->value->setParentNode(this->shared_from_this());
 }
 
 void HSSPropertyDefinition::addValue(HSSParserNode::p value)
@@ -104,10 +120,13 @@ void HSSPropertyDefinition::addValue(HSSParserNode::p value)
     if (this->value){
         if(this->value->isA(HSSParserNodeTypeMultipleValueDefinition)) {
             HSSMultipleValueDefinition::p mvDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(this->value);
+            value->setParentNode(this->shared_from_this());
             mvDef->add(value);
         } else {
             HSSMultipleValueDefinition::p mvDef = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition());
+            mvDef->setParentNode(this->shared_from_this());
             mvDef->add(this->value);
+            value->setParentNode(this->shared_from_this());
             mvDef->add(value);
             this->value = mvDef;
         }
@@ -121,3 +140,14 @@ HSSParserNode::p HSSPropertyDefinition::getValue()
     return this->value;
 }
 
+HSSPropertyDefinition::p HSSPropertyDefinition::shared_from_this()
+{
+    return boost::static_pointer_cast<HSSPropertyDefinition>(HSSStatement::shared_from_this());
+}
+
+HSSClonable::p HSSPropertyDefinition::cloneImpl() const
+{
+    HSSPropertyDefinition::p clone = HSSPropertyDefinition::p(new HSSPropertyDefinition(*this));
+    clone->setValue(this->value->clone());
+    return clone;
+}

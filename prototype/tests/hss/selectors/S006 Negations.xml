@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	Test S006 Negations
+	Created by Miro Keller on 2012-03-15.
+-->
+<?xml-stylesheet type="application/x-hss" src="S006 Negations.hss"?>
+<test>
+	<child>Child 1</child>
+	<child>Child 1</child>
+	<child>Child 1</child>
+	<child2>Child 2</child2>
+	<child2>Child 2</child2>
+</test>

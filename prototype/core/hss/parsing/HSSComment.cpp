@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/11
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -55,9 +55,14 @@
 using namespace AXR;
 
 HSSComment::HSSComment(std::string value)
+: HSSStatement()
 {
     this->value = value;
     this->type = HSSStatementTypeComment;
+}
+
+HSSComment::p HSSComment::clone() const{
+    return boost::static_pointer_cast<HSSComment, HSSClonable>(this->cloneImpl());
 }
 
 std::string HSSComment::getValue()
@@ -73,4 +78,8 @@ void HSSComment::setValue(std::string newValue)
 std::string HSSComment::toString()
 {
     return "HSSComment with value:\n"+this->value;
+}
+
+HSSClonable::p HSSComment::cloneImpl() const{
+    return HSSClonable::p(new HSSComment(*this));
 }

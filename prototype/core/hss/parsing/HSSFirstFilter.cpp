@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/30
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -60,6 +60,10 @@ HSSFirstFilter::HSSFirstFilter()
     this->filterType = HSSFilterTypeFirst;
 }
 
+HSSFirstFilter::p HSSFirstFilter::clone() const{
+    return boost::static_pointer_cast<HSSFirstFilter, HSSClonable>(this->cloneImpl());
+}
+
 HSSFirstFilter::~HSSFirstFilter()
 {
     
@@ -71,13 +75,24 @@ std::string HSSFirstFilter::toString()
 }
 
 
-const std::vector<HSSDisplayObject::p> HSSFirstFilter::apply(const std::vector<HSSDisplayObject::p> &scope)
+const std::vector<HSSDisplayObject::p> HSSFirstFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
 {
     if(scope.size() > 0){
-        std::vector<HSSDisplayObject::p> ret;
-        ret.push_back(scope[0]);
-        return ret;
+        if(negating){
+            std::vector<HSSDisplayObject::p> ret;
+            HSSDisplayObject::const_it it;
+            ret.insert(ret.begin(), scope.begin() + 1, scope.end());
+            return ret;
+        } else {
+            std::vector<HSSDisplayObject::p> ret;
+            ret.push_back(scope[0]);
+            return ret;
+        }
     } else {
         return scope;
     }
+}
+
+HSSClonable::p HSSFirstFilter::cloneImpl() const{
+    return HSSClonable::p(new HSSFirstFilter(*this));
 }

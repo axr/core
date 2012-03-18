@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/02
+ *      Last changed: 2012/02/22
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -76,6 +76,12 @@ namespace AXR {
         void setFileName(std::string value);
         std::string getFileName();
         std::string toString();
+        
+        bool isAtEndOfFile();
+        void setAtEndOfFile(bool newValue);
+        
+    private:
+        bool _atEndOfFile;
     };
 }
 

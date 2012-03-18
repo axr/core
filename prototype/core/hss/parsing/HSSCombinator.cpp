@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/05/02
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.45
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -55,9 +55,14 @@
 using namespace AXR;
 
 HSSCombinator::HSSCombinator(HSSCombinatorType type)
+:HSSParserNode()
 {
     this->combinatorType = type;
     this->nodeType = HSSParserNodeTypeCombinator;
+}
+
+HSSCombinator::p HSSCombinator::clone() const{
+    return boost::static_pointer_cast<HSSCombinator, HSSClonable>(this->cloneImpl());
 }
 
 bool HSSCombinator::isA(HSSCombinatorType otherType)
@@ -84,4 +89,8 @@ std::string HSSCombinator::combinatorStringRepresentation(HSSCombinatorType type
 	types[ HSSCombinatorTypeAllDescendants ] =    "HSSCombinatorTypeAllDescendants";
 	types[ HSSCombinatorTypeTextSelection ] =     "HSSCombinatorTypeTextSelection";
     return types[type];
+}
+
+HSSClonable::p HSSCombinator::cloneImpl() const{
+    return HSSClonable::p(new HSSCombinator(*this));
 }

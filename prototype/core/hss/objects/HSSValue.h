@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/09
+ *      Last changed: 2012/02/21
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 5
+ *      Core version: 0.45
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -58,36 +58,106 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSValueType
+     *  The type of the value, to be able to determine the correct storage
+     *  of the data.
+     *
+     *  //FIXME: is this a good design? and if so, aren't object definitions, object
+     *  names and functions missing?
+     */
     enum HSSValueType {
-        HSSValueNumberInt,
-        HSSValueNumberFloat,
-        HSSValueString,
-        HSSValueKeyword
+        HSSValueNumberInt, /**< Long Integer */
+        HSSValueNumberFloat, /**< Long double */
+        HSSValueString, /**< std::string */
+        HSSValueKeyword/**< std::string */
     };
+    /** @}*/
     
+    /**
+     *  @brief Value objects wrap other values, to be reused with an object name. Numbers, strings
+     *  and keywords are prime candidates for this, since they are written literally, without any
+     *  object related syntax.
+     *  @see HSSValueType
+     */
     class HSSValue : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSValue> p;
-        
+        /**
+         *  Constructor for value objects. Defaults to integer type and 0 as the value.
+         */
         HSSValue();
+        /**
+         *  Constructor for value objects, initialized to an integer of given value.
+         *  @param value        A long int containing the new value.
+         */
         HSSValue(long int value);
+        /**
+         *  Constructor for value objects, initialized to a floating point number of given value.
+         *  @param value        A long double containing the new value.
+         */
         HSSValue(long double value);
+        /**
+         *  Constructor for value objects, initialized to a string of given content.
+         *  @param value        A std::string containing the new value.
+         */
         HSSValue(std::string value);
-        HSSValue(void * passNULL, std::string keyword);
+        /**
+         *  Constructor for value objects, initialized to the given type with given content.
+         *  @param type         The type of value. The only two valid types are HSSValueString
+         *                      and HSSValueKeyword.
+         *  @param value        A std::string containing the new value.
+         */
+        HSSValue(HSSValueType type, std::string value);
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
+        /**
+         *  @return The value type of this object.
+         */
         HSSValueType getValueType();
-        
+        /**
+         *  Sets the value object to be of type HSSValueNumberInt and of given value.
+         *  @param value        A long int containing the new value.
+         */
         void setValue(long int value);
+        /**
+         *  Sets the value object to be of type HSSValueNumberFloat and of given value.
+         *  @param value        A long double containing the new value.
+         */
         void setValue(long double value);
+        /**
+         *  Sets the value object to be of type HSSValueString and of given value.
+         *  @param value        A std::string containing the new value.
+         */
         void setValue(std::string value);
+        /**
+         *  Sets the value object to be of type HSSValueKeyword and of given value.
+         *  @param value        A std::string containing the new value.
+         */
         void setKWValue(std::string keyword);
-        
+        /**
+         *  Returns the value of the object as a string, converting it if needed.
+         *  @return The value as a std::string.
+         */
         std::string getStringValue();
+        /**
+         *  Returns the value of the object as an integer, converting it if needed.
+         *
+         *  FIXME: right now just works with ints, no conversion is happening yet
+         *  @return The value as a long int.
+         */
         long int getIntValue();
+        /**
+         *  Returns the value of the object as a floating point number, converting it if needed.
+         *
+         *  FIXME: right now just works with floats, no conversion is happening yet
+         *  @return The value as a long double.
+         */
         long double getFloatValue();
         
     protected:

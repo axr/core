@@ -43,40 +43,34 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/06
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
+ *      Core version: 0.45
  *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSSELFUNCTION_H
-#define HSSSELFUNCTION_H
+#ifndef HSSCLONABLE_H
+#define HSSCLONABLE_H
 
-#import "HSSFunction.h"
+#include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    class HSSSelFunction : public HSSFunction
+    class HSSClonable
     {
     public:
-        HSSSelFunction();
-        virtual ~HSSSelFunction();
         
-        typedef boost::shared_ptr<HSSSelFunction> p;
+        typedef boost::shared_ptr<HSSClonable> p;
         
-        virtual std::string toString();
-        
-        const HSSSelectorChain::p & getSelectorChain() const;
-        void setSelectorChain(HSSSelectorChain::p newValue);
-        
-        virtual void * _evaluate();
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
-        
-//        void valueChanged(HSSObservableProperty source, void*data);
-        
-    protected:
-        HSSSelectorChain::p selectorChain;
-        std::vector< std::vector<HSSDisplayObject::p> > selection;
+        p clone() const
+        {
+            return this->cloneImpl();
+        }
+    private:
+        virtual p cloneImpl() const
+        {
+            return p(new HSSClonable(*this));
+        }
     };
 }
 
