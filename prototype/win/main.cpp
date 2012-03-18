@@ -119,10 +119,12 @@ int main(int argc, char **argv) {
 					thePoint.y = event.motion.y;
 					root->handleEvent(HSSEventTypeMouseMove, &thePoint);
 				}
-			} else if (event.type == SDL_KEYUP) {
 			} else if (event.type == SDL_KEYDOWN) {
+			} else if (event.type == SDL_KEYUP) {
 				if(event.key.keysym.sym == SDLK_F5) {
 					reload();
+				} else if(event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL) ) {
+					wrapper->loadFile();
 				}
 			} else if(event.type == SDL_VIDEORESIZE) {
 				cairosdl_destroy (cr);
