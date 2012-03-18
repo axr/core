@@ -23,7 +23,7 @@ WinAxrWrapper *wrapper;
 SDL_Surface* screen;
 
 void render(){
-	SDL_FillRect(screen, NULL, 0xffffff00);
+	SDL_FillRect(screen, NULL, 0x00ffffff);
 
 	AXRRect axrRect;
 	axrRect.size.width = screen->w;
@@ -43,6 +43,12 @@ void render(){
 	core->drawInRectWithBounds(axrRect, axrBounds);
 	core->setCairo(NULL);
 
+}
+bool reload(){
+	if(wrapper->hasLoadedFile()) {
+		std::cout << "reloading file\n";
+		return wrapper->reload();
+	}
 }
 
 int main(int argc, char **argv) {
@@ -86,7 +92,9 @@ int main(int argc, char **argv) {
 			} else if (event.type == SDL_MOUSEMOTION) {
 			} else if (event.type == SDL_KEYUP) {
 			} else if (event.type == SDL_KEYDOWN) {
-				Beep(400,400);
+				if(event.key.keysym.sym == SDLK_F5) {
+					reload();
+				}
 			} else if(event.type == SDL_VIDEORESIZE) {
 				cairosdl_destroy (cr);
 				screen = SDL_SetVideoMode (event.resize.w, event.resize.h, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
