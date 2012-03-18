@@ -61,6 +61,7 @@ using namespace AXR;
 
 LinuxAxrWrapper::LinuxAxrWrapper() : AXRWrapper()
 {
+	this->needsDisplay = true;
 }
 
 LinuxAxrWrapper::~LinuxAxrWrapper()
@@ -152,3 +153,9 @@ bool LinuxAxrWrapper::openFileDialog(std::string &filePath)
 
 	return true;
 }
+
+void LinuxAxrWrapper::setNeedsDisplay(bool newValue)
+{
+	this->needsDisplay = newValue;
+}
+
