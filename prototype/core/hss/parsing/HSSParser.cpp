@@ -564,6 +564,7 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                     {
                         //its a filter
                         ret->add(this->readFilter());
+                        break;
                     }
                         
                     case '!':
@@ -1519,7 +1520,10 @@ HSSRule::p HSSParser::readInstructionRule()
         case HSSMoveInstruction:
         {
             ret = this->readRule();
-            ret->setInstruction(instruction);
+            if(ret){
+                ret->setInstruction(instruction);
+            }
+            
             break;
         }
             

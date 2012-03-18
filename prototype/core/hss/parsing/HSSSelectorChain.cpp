@@ -46,7 +46,7 @@
  *      Last changed: 2012/03/15
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 7
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -109,7 +109,7 @@ const HSSParserNode::p & HSSSelectorChain::get(const int i) const
 
 void HSSSelectorChain::add(HSSParserNode::p newNode)
 {
-    if(newNode != NULL)
+    if(newNode)
     {
         std_log3("HSSSelectorChain: Added node of type " << newNode->toString());
         newNode->setParentNode(this->shared_from_this());
@@ -119,7 +119,7 @@ void HSSSelectorChain::add(HSSParserNode::p newNode)
 
 void HSSSelectorChain::prepend(HSSParserNode::p newNode)
 {
-    if(newNode != NULL)
+    if(newNode)
     {
         std_log3("HSSSelectorChain: Added node of type " << newNode->toString() + " to the front of the selector");
         newNode->setParentNode(this->shared_from_this());

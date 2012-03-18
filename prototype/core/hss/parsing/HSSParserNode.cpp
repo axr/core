@@ -61,7 +61,7 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
 	types[HSSParserNodeTypeSelector] = "HSSRule";
 	types[HSSParserNodeTypeUniversalSelector] = "HSSRule";
 	types[HSSParserNodeTypeCombinator] = "HSSPropertyDefinition";
-	types[HSSParserNodeTypeFilter] = "HSSObjectDefinition";
+	types[HSSParserNodeTypeFilter] = "HSSFilter";
 	types[HSSParserNodeTypeStatement] = "HSSStatement";
 	types[HSSParserNodeTypeExpression] = "HSSExpression";
 	types[HSSParserNodeTypeNumberConstant] = "HSSNumberConstant";
