@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/26
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 10
+ *      Core version: 0.45
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -56,13 +56,17 @@
 
 using namespace AXR;
 
-//this acquires ownership of the pointer
 HSSObjectDefinition::HSSObjectDefinition(HSSObject::p prototype)
+: HSSStatement()
 {
     this->prototype = prototype;
     this->type = HSSStatementTypeObjectDefinition;
     this->nodeType = HSSParserNodeTypeObjectDefinition;
     this->scope = NULL;
+}
+
+HSSObjectDefinition::p HSSObjectDefinition::clone() const{
+    return boost::static_pointer_cast<HSSObjectDefinition, HSSClonable>(this->cloneImpl());
 }
 
 HSSObjectDefinition::~HSSObjectDefinition()
@@ -101,6 +105,7 @@ void HSSObjectDefinition::propertiesAdd(HSSPropertyDefinition::p &newProperty)
     if(newProperty)
     {
         std_log3("HSSObjectDefinition: Added node of type " << newProperty->toString());
+        newProperty->setParentNode(this->shared_from_this());
         this->properties.push_back(newProperty);
     }
 }
@@ -110,6 +115,7 @@ void HSSObjectDefinition::propertiesAdd(const HSSPropertyDefinition::p &newPrope
     if(newProperty)
     {
         std_log3("HSSObjectDefinition: Added node of type " << newProperty->toString());
+        newProperty->setParentNode(this->shared_from_this());
         this->properties.push_back(newProperty);
         //this->prototype->setPropertyWithName(newProperty->getName(), newProperty->getValue());
     }
@@ -120,6 +126,7 @@ void HSSObjectDefinition::propertiesPrepend(HSSPropertyDefinition::p &newPropert
     if(newProperty)
     {
         std_log3("HSSObjectDefinition: Prepended node of type " << newProperty->toString());
+        newProperty->setParentNode(this->shared_from_this());
         this->properties.push_front(newProperty);
     }
 }
@@ -129,6 +136,7 @@ void HSSObjectDefinition::propertiesPrepend(const HSSPropertyDefinition::p &newP
     if(newProperty)
     {
         std_log3("HSSObjectDefinition: Prepended node of type " << newProperty->toString());
+        newProperty->setParentNode(this->shared_from_this());
         this->properties.push_front(newProperty);
     }
 }
@@ -158,6 +166,7 @@ void HSSObjectDefinition::childrenAdd(HSSObjectDefinition::p &child)
     if(child)
     {
         this->children.push_back(child);
+        child->setParentNode(this->shared_from_this());
     }
 }
 
@@ -166,6 +175,7 @@ void HSSObjectDefinition::childrenAdd(const HSSObjectDefinition::p &child)
     if(child)
     {
         this->children.push_back(child);
+        child->setParentNode(this->shared_from_this());
     }
 }
 
@@ -194,17 +204,6 @@ HSSObject::p HSSObjectDefinition::getObject()
     return this->prototype;
 }
 
-
-HSSObjectDefinition::p HSSObjectDefinition::getParent()
-{
-    return this->parent.lock();
-}
-
-void HSSObjectDefinition::setParent(HSSObjectDefinition::p newParent)
-{
-    this->parent = boost::weak_ptr<HSSObjectDefinition>(newParent);
-}
-
 void HSSObjectDefinition::setScope(const std::vector<HSSDisplayObject::p> * newScope)
 {
     this->scope = newScope;
@@ -224,4 +223,41 @@ HSSDisplayObject::p HSSObjectDefinition::getThisObj()
     return thisObj;
 }
 
+HSSObjectDefinition::p HSSObjectDefinition::shared_from_this()
+{
+    return boost::static_pointer_cast<HSSObjectDefinition>(HSSStatement::shared_from_this());
+}
+
+
+void HSSObjectDefinition::setRules(std::deque<HSSRule::p> newRules)
+{
+    this->_rules = newRules;
+}
+
+const std::deque<HSSRule::p> HSSObjectDefinition::getRules() const
+{
+    return this->_rules;
+}
+
+void HSSObjectDefinition::rulesAdd(HSSRule::p rule)
+{
+    this->_rules.push_back(rule);
+}
+
+void HSSObjectDefinition::rulesPrepend(HSSRule::p rule)
+{
+    this->_rules.push_front(rule);
+}
+
+void HSSObjectDefinition::rulesRemove(HSSRule::p rule)
+{
+    std::deque<HSSRule::p>::iterator it = find(this->_rules.begin(), this->_rules.end(), rule);
+    if(it != this->_rules.end()){
+        this->_rules.erase(it);
+    }
+}
+
+HSSClonable::p HSSObjectDefinition::cloneImpl() const{
+    return HSSClonable::p(new HSSObjectDefinition(*this));
+}
 

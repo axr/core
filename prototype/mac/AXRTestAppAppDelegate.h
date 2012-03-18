@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -54,13 +54,18 @@
 #import "../core/AXR.h"
 #import "../core/os/osx/AXRView.h"
 
+#if (MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_5)
+@interface AXRTestAppAppDelegate : NSObject {
+#else
 @interface AXRTestAppAppDelegate : NSObject <NSApplicationDelegate> {
+#endif
     NSWindow *window;
     NSWindow * testsWindow;
     NSWindow * errorsWindow;
     NSTextView * errorLog;
     NSWindow * axrWindow;
     AXRView * axrView;
+    BOOL needsFile;
 }
 
 @property (assign) IBOutlet NSWindow *testsWindow;

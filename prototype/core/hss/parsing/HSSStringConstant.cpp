@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/26
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.45
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -55,9 +55,14 @@
 using namespace AXR;
 
 HSSStringConstant::HSSStringConstant(std::string value)
+: HSSParserNode()
 {
     this->value = value;
     this->nodeType = HSSParserNodeTypeStringConstant;
+}
+
+HSSStringConstant::p HSSStringConstant::clone() const{
+    return boost::static_pointer_cast<HSSStringConstant, HSSClonable>(this->cloneImpl());
 }
 
 HSSStringConstant::~HSSStringConstant()
@@ -78,4 +83,8 @@ std::string HSSStringConstant::getValue()
 std::string HSSStringConstant::toString()
 {
     return "HSSStringConstant with value "+this->value;
+}
+
+HSSClonable::p HSSStringConstant::cloneImpl() const{
+    return HSSClonable::p(new HSSStringConstant(*this));
 }

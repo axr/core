@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/20
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 35
+ *      Core version: 0.45
+ *      Revision: 36
  *
  ********************************************************************/
 
@@ -67,10 +67,11 @@ HSSRgb::HSSRgb()
     this->red = this->green = this->blue = 0.;
     this->alpha = 255.;
     std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("isA");
+    shorthandProperties.push_back("alpha");
     shorthandProperties.push_back("red");
     shorthandProperties.push_back("green");
     shorthandProperties.push_back("blue");
-    shorthandProperties.push_back("alpha");
     
     this->setShorthandProperties(shorthandProperties);
 }
@@ -235,14 +236,14 @@ long double HSSRgb::_setLDProperty(
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
-            ret = percentageValue->getValue(255.0);
+            ret = percentageValue->getValue(percentageBase);
             break;
         }
             
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
-            expressionValue->setPercentageBase(255.0);
+            expressionValue->setPercentageBase(percentageBase);
             //expressionValue->setScope(scope);
             ret = expressionValue->evaluate();
             if(callback != NULL){

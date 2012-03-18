@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="http://axr.vg/axr2html.xsl" about="legacy"?>
+<?xml-stylesheet type="application/x-hss" src="style.hss" version="1.0"?>
 <?xml-sitemap type="application/xml" src="navigation.xml"?>
 <home>
 	<metadata xmlns="urn:vg.axr.document.metadata">

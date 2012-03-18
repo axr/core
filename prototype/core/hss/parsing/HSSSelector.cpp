@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -55,9 +55,20 @@
 using namespace AXR;
 
 HSSSelector::HSSSelector(std::string elementName)
+: HSSParserNode()
 {
     this->elementName = elementName;
     this->nodeType = HSSParserNodeTypeSelector;
+}
+
+HSSSelector::HSSSelector(const HSSSelector &orig)
+: HSSParserNode(orig)
+{
+    this->elementName = orig.elementName;
+}
+
+HSSSelector::p HSSSelector::clone() const{
+    return boost::static_pointer_cast<HSSSelector, HSSClonable>(this->cloneImpl());
 }
 
 std::string HSSSelector::getElementName()
@@ -69,6 +80,9 @@ std::string HSSSelector::toString(){
     return "Simple selector targeting an element with name "+this->elementName;
 }
 
-
+HSSClonable::p HSSSelector::cloneImpl() const
+{
+    return HSSClonable::p(new HSSSelector(*this));
+}
 
 

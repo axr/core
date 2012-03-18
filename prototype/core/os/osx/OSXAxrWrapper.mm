@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/08
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -58,10 +58,10 @@
 
 using namespace AXR;
 
-OSXAxrWrapper::OSXAxrWrapper()
+OSXAxrWrapper::OSXAxrWrapper(AXRView * mainView)
 : AXRWrapper()
 {
-    
+    this->mainView = mainView;
 }
 
 OSXAxrWrapper::~OSXAxrWrapper()
@@ -99,10 +99,11 @@ AXRFile::p OSXAxrWrapper::getFile(std::string url)
 size_t OSXAxrWrapper::readFile(AXRFile::p theFile)
 {
     size_t size = fread(theFile->buffer, sizeof(theFile->buffer[0]), theFile->bufferSize, theFile->fileHandle);
+    if(feof(theFile->fileHandle)){
+        theFile->setAtEndOfFile(true);
+    }
     if (ferror(theFile->fileHandle)) {
-        fclose(theFile->fileHandle);
-        perror("");
-        std_log(theFile->toString());
+        AXRError::p(new AXRError("OSXAxrWrapper", "The file "+theFile->fileName+" couldn't be read"))->raise();
         return -1;
     }
     return size;
@@ -138,4 +139,9 @@ bool OSXAxrWrapper::openFileDialog(std::string &filePath)
     }
     
     return false;
+}
+
+void OSXAxrWrapper::setNeedsDisplay(bool newValue)
+{
+    [this->mainView setNeedsDisplay:newValue];
 }

@@ -43,66 +43,36 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/29
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 1
  *
  ********************************************************************/
 
-#import "HSSSelFunction.h"
-#import "../../axr/AXRController.h"
+#include "HSSNegation.h"
 
 using namespace AXR;
 
-HSSSelFunction::HSSSelFunction()
-: HSSFunction()
+HSSNegation::HSSNegation()
+: HSSParserNode()
 {
-    this->functionType = HSSFunctionTypeSel;
+    this->nodeType = HSSParserNodeTypeNegation;
 }
 
-HSSSelFunction::~HSSSelFunction()
+HSSNegation::p HSSNegation::clone() const{
+    return boost::static_pointer_cast<HSSNegation, HSSClonable>(this->cloneImpl());
+}
+
+HSSNegation::~HSSNegation()
 {
     
 }
 
-std::string HSSSelFunction::toString()
-{    
-    std::string tempstr = std::string("HSSSelFunction\n");
-    return tempstr;
-}
-
-const HSSSelectorChain::p & HSSSelFunction::getSelectorChain() const
+std::string HSSNegation::toString()
 {
-    return this->selectorChain;
+    return "Negation";
 }
-
-void HSSSelFunction::setSelectorChain(HSSSelectorChain::p newValue)
-{
-    this->selectorChain = newValue;
-    this->setDirty(true);
+HSSClonable::p HSSNegation::cloneImpl() const{
+    return HSSClonable::p(new HSSNegation(*this));
 }
-
-void * HSSSelFunction::_evaluate()
-{
-    this->axrController->setSelectorChain(this->selectorChain);
-    this->selection = this->axrController->selectHierarchical(*this->scope);
-    this->_value = (void*) &this->selection;
-    return this->_value;
-}
-
-void * HSSSelFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
-{
-    return this->_evaluate();
-}
-
-//void HSSSelFunction::valueChanged(HSSObservableProperty source, void*data)
-//{
-//    std_log1("######################### valueChanged");
-//    this->setDirty(true);
-//    this->_value = data;
-//    this->notifyObservers(HSSObservablePropertyValue, this->_value);
-//}
-
-
-

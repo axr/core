@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/02
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 9
+ *      Core version: 0.45
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -85,28 +85,33 @@ void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
     
     //prepare values
     HSSContainer::p root = this->controller->getRoot();
-    //find out what objects lie in that rect
     
-    //if the window size has changed, make new size
-    if(bounds.size.width != this->windowWidth || bounds.size.height != this->windowHeight){
-        this->windowWidth = bounds.size.width;
-        this->windowHeight = bounds.size.height;
-        root->setDWidth(HSSNumberConstant::p(new HSSNumberConstant(this->windowWidth)));
-        root->setDHeight(HSSNumberConstant::p(new HSSNumberConstant(this->windowHeight)));
+    if(root){
+        //find out what objects lie in that rect
+        
+        //if the window size has changed, make new size
+        if(bounds.size.width != this->windowWidth || bounds.size.height != this->windowHeight){
+            this->windowWidth = bounds.size.width;
+            this->windowHeight = bounds.size.height;
+            root->setDWidth(HSSNumberConstant::p(new HSSNumberConstant(this->windowWidth)));
+            root->setDHeight(HSSNumberConstant::p(new HSSNumberConstant(this->windowHeight)));
+        }
+        //draw the elements
+        root->recursiveReadDefinitionObjects();
+        //    if(this->_needsRereadRules){
+        //        std_log1("rereading rules of "+this->elementName);
+        //        this->readDefinitionObjects();
+        //    }
+        root->recursiveLayout();
+        root->recursiveRegenerateSurfaces();
+        //    if(this->_needsSurface){
+        //        std_log1("regenerating surfaces of "+this->elementName);
+        //        this->regenerateSurfaces();
+        //    }
+        root->recursiveDraw(this->cairo);
+    } else {
+        AXRError::p(new AXRError("AXRRender", "Fatal error: No root"))->raise();
     }
-    //draw the elements
-    root->recursiveReadDefinitionObjects();
-//    if(this->_needsRereadRules){
-//        std_log1("rereading rules of "+this->elementName);
-//        this->readDefinitionObjects();
-//    }
-    root->recursiveLayout();
-    root->recursiveRegenerateSurfaces();
-//    if(this->_needsSurface){
-//        std_log1("regenerating surfaces of "+this->elementName);
-//        this->regenerateSurfaces();
-//    }
-    root->recursiveDraw(this->cairo);
 }
 
 //this will maintain the reference to controller

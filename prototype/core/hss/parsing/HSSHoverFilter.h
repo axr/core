@@ -43,79 +43,30 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/29
+ *      Last changed: 2012/02/23
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
+#ifndef HSSHOVERFILTER_H
+#define HSSHOVERFILTER_H
 
-#ifndef HSSFUNCTIONCALL_H
-#define HSSFUNCTIONCALL_H
-
-#include "HSSParserNode.h"
-#include <string>
-#include <deque>
-#include "../objects/HSSFunction.h"
-#include "../objects/HSSDisplayObject.h"
+#include "HSSFilter.h"
 
 namespace AXR {
-    class HSSFunctionCall : public HSSParserNode, public HSSObservable
+    class HSSHoverFilter : public HSSFilter
     {
     public:
-        
-        typedef boost::shared_ptr<HSSFunctionCall> p;
-        
-        friend class HSSParser;
-        friend class HSSDisplayObject;
-        
-        HSSFunctionCall();
-        virtual ~HSSFunctionCall();
-        std::string toString();
-        
-        const HSSFunction::p & getFunction() const;
-        void setFunction(HSSFunction::p newFunction);
-        
-        const std::deque<HSSParserNode::p> & getArguments() const;
-        void setArguments(std::deque<HSSParserNode::p> newArguments);
-        void argumentsAdd(HSSParserNode::p newArgument);
-        HSSParserNode::p argumentsFirst();
-        const HSSParserNode::p argumentsFirst() const;
-        HSSParserNode::p argumentsLast();
-        const HSSParserNode::p argumentsLast() const;
-        unsigned int argumentsSize();
-        void argumentsRemoveFirst();
-        void argumentsRemoveLast();
-                
-        virtual void setPercentageBase(long double value);
-        virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
-        
-        virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
-        
-        virtual long double evaluate();
-        void setDirty(bool value);
-        bool isDirty();
-        
-        void setValue(void * newValue);
-        void * getValue();
-        
+        HSSHoverFilter();
+        p clone() const;
+        virtual ~HSSHoverFilter();
+        virtual std::string toString();
+        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool negating);
     private:
-        HSSFunction::p function;
-        std::deque<HSSParserNode::p>arguments;
-        
-        long double percentageBase;
-        HSSObservableProperty percentageObservedProperty;
-        HSSObservable * percentageObserved;
-        const std::vector<HSSDisplayObject::p> * scope;
-        
-        bool _isDirty;
-        void * _value;
-        
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
-
-
-
 
 #endif

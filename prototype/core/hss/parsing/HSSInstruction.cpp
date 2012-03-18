@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/04
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 5
+ *      Core version: 0.45
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -55,6 +55,7 @@
 using namespace AXR;
 
 HSSInstruction::HSSInstruction(HSSInstructionType type)
+: HSSStatement()
 {
     this->instructionType = type;
     this->type = HSSStatementTypeInstruction;
@@ -62,10 +63,23 @@ HSSInstruction::HSSInstruction(HSSInstructionType type)
 
 
 HSSInstruction::HSSInstruction(HSSInstructionType type, std::string value)
+: HSSStatement()
 {
     this->instructionType = type;
     this->value = value;
     this->type = HSSStatementTypeInstruction;
+}
+
+HSSInstruction::HSSInstruction(const HSSInstruction &orig)
+: HSSStatement(orig)
+{
+    this->instructionType = orig.instructionType;
+    this->value = orig.value;
+}
+
+HSSInstruction::p HSSInstruction::clone() const
+{
+    return boost::static_pointer_cast<HSSInstruction, HSSClonable>(this->cloneImpl());
 }
 
 HSSInstruction::~HSSInstruction()
@@ -117,4 +131,9 @@ std::string HSSInstruction::instructionStringRepresentation(HSSInstructionType t
 	types[HSSRRGGBBInstruction] = "HSSRRGGBBInstruction";
 	types[HSSRRGGBBAAInstruction] = "HSSRRGGBBAAInstruction";
     return types[type];
+}
+
+HSSClonable::p HSSInstruction::cloneImpl() const
+{
+    return HSSClonable::p(new HSSInstruction(*this));
 }

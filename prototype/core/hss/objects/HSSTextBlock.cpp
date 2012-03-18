@@ -43,22 +43,22 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/29
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
 #include "HSSTextBlock.h"
 #include "HSSValue.h"
 #include "../parsing/HSSObjectDefinition.h"
-#include "../parsing/HSSFunctionCall.h"
+#include "../parsing/HSSFunctions.h"
 #include "../../axr/AXRController.h"
 #include "../../axr/AXRDebugging.h"
-#include "HSSFunctions.h"
 #include "../parsing/HSSSelectorChain.h"
 #include "../parsing/HSSThisSelector.h"
+#include <boost/algorithm/string.hpp>
 
 using namespace AXR;
 
@@ -325,8 +325,7 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dTransform = value;
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 this->transform = *(HSSTextTransformType *)fnct->evaluate();
@@ -417,8 +416,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dTextAlign = value;
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 this->textAlign = *(HSSTextAlignType *)fnct->evaluate();
@@ -527,8 +525,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dText = value;
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 this->text = *(std::string *)fnct->evaluate();
@@ -578,7 +575,13 @@ void HSSTextBlock::textChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-
+void HSSTextBlock::trimContentText()
+{
+    std::string trmstr = this->text;
+    boost::algorithm::trim(trmstr)
+    ;
+    this->text = trmstr;
+}
 
 
 

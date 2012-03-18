@@ -43,17 +43,17 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/20
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
 #include "HSSLog.h"
-#include "HSSRefFunction.h"
 #include <boost/pointer_cast.hpp>
-#include "../parsing/HSSFunctionCall.h"
+#include "../parsing/HSSFunction.h"
+#include "../parsing/HSSRefFunction.h"
 #include "../parsing/HSSStringConstant.h"
 
 using namespace AXR;
@@ -101,15 +101,111 @@ void HSSLog::fire()
     switch (this->dValue->getType()) {
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(this->dValue);
-            HSSFunction::p func = fcall->getFunction();
-            if(func->isA(HSSFunctionTypeRef)){
-                func->setScope(this->scope);
-                std_log(func->evaluate());
-                break;
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(this->dValue);
+            if(fnct->isA(HSSFunctionTypeRef)){
+                HSSRefFunction::p refFnct = boost::static_pointer_cast<HSSRefFunction>(fnct);
+                refFnct->setScope(this->scope);
+                void * data = refFnct->evaluate();
+                switch (refFnct->getPropertyName()) {
+                    case HSSObservablePropertyWidth:
+                    case HSSObservablePropertyHeight:
+                    case HSSObservablePropertyAnchorX:
+                    case HSSObservablePropertyAnchorY:
+                    case HSSObservablePropertyAlignX:
+                    case HSSObservablePropertyAlignY:
+                    case HSSObservablePropertyContentAlignX:
+                    case HSSObservablePropertyContentAlignY:
+                    case HSSObservablePropertyStartX:
+                    case HSSObservablePropertyStartY:
+                    case HSSObservablePropertyEndX:
+                    case HSSObservablePropertyEndY:
+                    case HSSObservablePropertyPosition:
+                    case HSSObservablePropertyRed:
+                    case HSSObservablePropertyGreen:
+                    case HSSObservablePropertyBlue:
+                    case HSSObservablePropertyAlpha:
+                    case HSSObservablePropertySize:
+                    case HSSObservablePropertyCorners:
+                    {
+                        std_log(*(long double*)data);
+                        break;
+                    }
+                        
+                    case HSSObservablePropertyMargin:
+                    case HSSObservablePropertyPadding:
+                    case HSSObservablePropertyShape:
+                    case HSSObservablePropertyStartColor:
+                    case HSSObservablePropertyEndColor:
+                    case HSSObservablePropertyColorStops:
+                    case HSSObservablePropertyBalance:
+                    case HSSObservablePropertyFace:
+                    case HSSObservablePropertyColor:
+                    case HSSObservablePropertyAction:
+                    {
+                        std_log((*(HSSObject::p *)data)->toString());
+                        break;
+                    }
+                        
+                    case HSSObservablePropertyBackground:
+                    case HSSObservablePropertyBorder:
+                    case HSSObservablePropertyFont:
+                    {
+                        std::vector<HSSObject::p> v_data = *(std::vector<HSSObject::p>*)data;
+                        std::vector<HSSObject::p>::iterator it;
+                        if (v_data.size() == 0) {
+                            std_log("empty");
+                        } else {
+                            for (it=v_data.begin(); it!=v_data.end(); it++) {
+                                std_log((*it)->toString());
+                            }
+                        }
+                        break;
+                    }
+                        
+                    case HSSObservablePropertyOn:
+                    {
+                        boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > m_data = *(boost::unordered_map<HSSEventType, std::vector<HSSObject::p> >*)data;
+                        boost::unordered_map<HSSEventType, std::vector<HSSObject::p> >::iterator it;
+                        if (m_data.size() == 0) {
+                            std_log("empty");
+                        } else {
+                            for (it=m_data.begin(); it!=m_data.end(); it++) {
+                                std::vector<HSSObject::p> v_data = (*it).second;
+                                std::vector<HSSObject::p>::iterator it2;
+                                for (it2=v_data.begin(); it2!=v_data.end(); it2++) {
+                                    std_log((*it2)->toString());
+                                }
+                            }
+                        }
+                        break;
+                    }
+                        
+                    case HSSObservablePropertyDirectionPrimary:
+                    case HSSObservablePropertyDirectionSecondary:
+                    case HSSObservablePropertyTransform:
+                    case HSSObservablePropertyTextAlign:
+                    case HSSObservablePropertyWeight:
+                    case HSSObservablePropertySrc:
+                    case HSSObservablePropertyMode:
+                    case HSSObservablePropertyContentTarget:
+                    {
+                        std_log(*(std::string*)data);
+                        break;
+                    }
+                        
+                    case HSSObservablePropertyHover:
+                    case HSSObservablePropertyText:
+                    case HSSObservablePropertyTarget:
+                    default:
+                    {
+                        std_log("logging this property is not supported");
+                        break;
+                    }
+                }
             }
+            break;
         }
-            
+        
         case HSSParserNodeTypeStringConstant:
         {
             HSSStringConstant::p str = boost::static_pointer_cast<HSSStringConstant>(this->dValue);
@@ -130,6 +226,7 @@ HSSParserNode::p HSSLog::getDValue() { return this->dValue; }
 void HSSLog::setDValue(HSSParserNode::p value)
 {
     this->dValue = value;
+    this->dValue->setThisObj(this->getThisObj());
     if(this->observedValue != NULL)
     {
         this->observedValue->removeObserver(this->observedValueProperty, HSSObservablePropertyValue, this);

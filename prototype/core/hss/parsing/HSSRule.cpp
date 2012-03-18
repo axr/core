@@ -43,23 +43,38 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/02
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 6
+ *      Core version: 0.45
+ *      Revision: 7
  *
  ********************************************************************/
 
 #include "HSSRule.h"
 #include <iostream>
 #include "../../axr/AXRDebugging.h"
+#include "../objects/HSSDisplayObject.h"
+#include "HSSFilter.h"
 
 using namespace AXR;
 
-HSSRule::HSSRule(HSSSelectorChain::p selectorChain)
+HSSRule::HSSRule()
+: HSSStatement()
 {
-    this->selectorChain = selectorChain;
     this->type = HSSStatementTypeRule;
+    this->_isActive = true;
+}
+
+HSSRule::HSSRule(const HSSRule & orig)
+: HSSStatement(orig)
+{
+    this->_isActive = orig._isActive;
+    this->_interactors = boost::unordered_map<HSSFilterType, std::vector<boost::shared_ptr<HSSDisplayObject> > >(orig._interactors);
+}
+
+HSSRule::p HSSRule::clone() const
+{
+    return boost::static_pointer_cast<HSSRule, HSSClonable>(this->cloneImpl());
 }
 
 HSSRule::~HSSRule()
@@ -103,6 +118,7 @@ std::string HSSRule::toString()
 void HSSRule::setSelectorChain(HSSSelectorChain::p newChain)
 {
     this->selectorChain = newChain;
+    this->selectorChain->setParentNode(this->shared_from_this());
 }
 
 HSSSelectorChain::p HSSRule::getSelectorChain()
@@ -115,6 +131,7 @@ void HSSRule::propertiesAdd(HSSPropertyDefinition::p & newProperty)
     if(newProperty)
     {
         std_log3("Added property: " << newProperty->toString());
+        newProperty->setParentNode(this->shared_from_this());
         this->properties.push_back(newProperty);
     }
 }
@@ -147,6 +164,7 @@ const int HSSRule::propertiesSize()
 
 void HSSRule::childrenAdd(HSSRule::p newRule)
 {
+    newRule->setParentNode(this->shared_from_this()); //parent in the node tree
     this->children.push_back(newRule);
 }
 
@@ -173,6 +191,7 @@ const int HSSRule::childrenSize()
 void HSSRule::setInstruction(HSSInstruction::p newInstruction)
 {
     this->instruction = newInstruction;
+    this->instruction->setParentNode(this->shared_from_this());
 }
 
 HSSInstruction::p HSSRule::getInstruction()
@@ -180,4 +199,78 @@ HSSInstruction::p HSSRule::getInstruction()
     return this->instruction;
 }
 
+HSSRule::p HSSRule::shared_from_this()
+{
+    return boost::static_pointer_cast<HSSRule>(HSSStatement::shared_from_this());
+}
 
+void HSSRule::connectInteractionFilter(HSSFilterType filterType, HSSDisplayObject::p object)
+{
+    switch (filterType) {
+        case HSSFilterTypeHover:
+        {
+            object->observe(HSSObservablePropertyHover, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRule>(this, &HSSRule::hoverChanged));
+            break;
+        }
+            
+        default:
+            throw AXRError::p(new AXRError("HSSRule", "Unknown filter type while connecting with display object"));
+            break;
+    }
+    
+    if(this->_interactors.count(filterType) != 0){
+        std::vector<HSSDisplayObject::p> &theList = this->_interactors[filterType];
+        theList.push_back(object);
+    } else {
+        std::vector<HSSDisplayObject::p> newList;
+        newList.push_back(object);
+        this->_interactors[filterType] = newList;
+    }
+}
+
+void HSSRule::hoverChanged(AXR::HSSObservableProperty source, void *data){
+    bool doesApply = true;
+    HSSFilterType filterType = HSSFilterTypeHover;
+    if(this->_interactors.count(filterType) != 0){
+        std::vector<HSSDisplayObject::p>::iterator it;
+        for (it=this->_interactors[filterType].begin(); it!=this->_interactors[filterType].end(); it++) {
+            if(!(*it)->isHover()){
+                doesApply = false;
+                break;
+            }
+        }
+    }
+    
+    this->setActive(doesApply);
+}
+
+void HSSRule::setActive(bool newValue)
+{
+    this->_isActive = newValue;
+    this->notifyObservers(HSSObservablePropertyValue, this);
+}
+
+bool HSSRule::isActive()
+{
+    return this->_isActive;
+}
+
+HSSClonable::p HSSRule::cloneImpl() const
+{
+    HSSRule::p clone = HSSRule::p(new HSSRule(*this));
+    
+    if(this->selectorChain) clone->setSelectorChain(this->selectorChain->clone());
+    HSSPropertyDefinition::const_it pIt;
+    for (pIt=this->properties.begin(); pIt!=this->properties.end(); pIt++) {
+        HSSPropertyDefinition::p clonedPropDef = (*pIt)->clone();
+        clone->propertiesAdd(clonedPropDef);
+    }
+    std::vector<HSSRule::p>::const_iterator rIt;
+    for (rIt=this->children.begin(); rIt!=this->children.end(); rIt++) {
+        HSSRule::p clonedRule = (*rIt)->clone();
+        clone->childrenAdd(clonedRule);
+    }
+    if(this->instruction) clone->setInstruction(this->instruction->clone());
+    
+    return clone;
+}

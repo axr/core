@@ -1,7 +1,7 @@
 #import "color.hss";
 #import "typography.hss";
 #import "foundation.hss";
-#import attr("code" of :root metadata language)+"/strings.hss";
-#import AXRWidgets;
+// #import attr("code" of :root metadata language)~"/strings.hss";
+// #import AXRWidgets;
 
-#import ref(elementName of :root)+".hss";
+//#import ref(elementName of :root)~".hss";

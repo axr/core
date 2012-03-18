@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/16
+ *      Last changed: 2012/02/19
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -56,12 +56,6 @@ using namespace AXR;
 
 HSSShape::HSSShape()
 : HSSObject()
-{
-    this->type = HSSObjectTypeShape;
-}
-
-HSSShape::HSSShape(std::string name)
-: HSSObject(name)
 {
     this->type = HSSObjectTypeShape;
 }

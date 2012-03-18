@@ -1,6 +1,6 @@
 /*
-	Test BR002 Multiple Borders
-	Created by Miro Keller on 2011-12-15.
+Test BR002 Multiple Borders
+Created by Miro Keller on 2011-12-15.
 */
 
 @lineBorder shadowBorder { 1 #6 }
@@ -8,20 +8,20 @@
 
 @container test
 {
-    width: 200;
-    height: 200;
-    background: #A;
-    border: shadowBorder, highlightBorder;
-    shape: @{ 10 };
-    alignY: middle;
+width: 200;
+height: 200;
+background: #A;
+border: shadowBorder, highlightBorder;
+shape: @{ 10 };
+alignY: middle;
 }
 
 *
 {
-    background: #C;
-    
-    #new test
-    {
-        isA: test;
-    }
+background: #C;
+
+#new test
+{
+isA: test;
+}
 }

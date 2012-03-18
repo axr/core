@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/28
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 6
+ *      Core version: 0.45
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -56,7 +56,7 @@
 #include "../../axr/AXRController.h"
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
-#include "../parsing/HSSFunctionCall.h"
+#include "../parsing/HSSFunction.h"
 //#include <sstream>
 #include "../parsing/HSSObjectDefinition.h"
 
@@ -214,8 +214,7 @@ void HSSFont::setDColor(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dColor = value;
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 this->color = *(HSSRgb::p *)fnct->evaluate();
@@ -278,14 +277,14 @@ long double HSSFont::_setLDProperty(
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
-            ret = percentageValue->getValue(255.0);
+            ret = percentageValue->getValue(percentageBase);
             break;
         }
             
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
-            expressionValue->setPercentageBase(255.0);
+            expressionValue->setPercentageBase(percentageBase);
             //expressionValue->setScope(scope);
             ret = expressionValue->evaluate();
             if(callback != NULL){

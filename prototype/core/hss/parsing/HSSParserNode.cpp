@@ -43,14 +43,15 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/24
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 10
+ *      Core version: 0.45
+ *      Revision: 11
  *
  ********************************************************************/
 
 #include "HSSParserNode.h"
+#include "../objects/HSSDisplayObject.h"
 
 using namespace AXR;
 
@@ -60,7 +61,7 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
 	types[HSSParserNodeTypeSelector] = "HSSRule";
 	types[HSSParserNodeTypeUniversalSelector] = "HSSRule";
 	types[HSSParserNodeTypeCombinator] = "HSSPropertyDefinition";
-	types[HSSParserNodeTypeFilter] = "HSSObjectDefinition";
+	types[HSSParserNodeTypeFilter] = "HSSFilter";
 	types[HSSParserNodeTypeStatement] = "HSSStatement";
 	types[HSSParserNodeTypeExpression] = "HSSExpression";
 	types[HSSParserNodeTypeNumberConstant] = "HSSNumberConstant";
@@ -71,6 +72,7 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
 	types[HSSParserNodeTypeObjectNameConstant] = "HSSObjectNameConstant";
 	types[HSSParserNodeTypeFunctionCall] = "HSSFunctionCall";
 	types[HSSParserNodeTypeMultipleValueDefinition] = "HSSParserNodeTypeMultipleValueDefinition";
+	types[HSSParserNodeTypeNegation] = "HSSParserNodeTypeNegation";
     
     return types[type];
 }
@@ -78,6 +80,17 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
 HSSParserNode::HSSParserNode()
 {
     this->nodeType = HSSParserNodeTypeGeneric;
+}
+
+//doesn't clone any part of the node tree, nor the observers array
+HSSParserNode::HSSParserNode(const HSSParserNode &orig)
+{
+    this->nodeType = orig.nodeType;
+}
+
+HSSParserNode::p HSSParserNode::clone() const
+{
+    return boost::static_pointer_cast<HSSParserNode, HSSClonable>(this->cloneImpl());
 }
 
 std::string HSSParserNode::toString()
@@ -95,7 +108,58 @@ HSSParserNodeType HSSParserNode::getType()
     return this->nodeType;
 }
 
+HSSParserNode::p HSSParserNode::getParentNode()
+{
+    if (!this->_parentNode.expired()) {
+        HSSParserNode::p parent = this->_parentNode.lock();
+        return parent;
+    } else {
+        return HSSParserNode::p();
+    }
+}
 
+void HSSParserNode::setParentNode(HSSParserNode::p newParent)
+{
+    this->_parentNode = pp(newParent);
+}
+
+void HSSParserNode::removeFromParentNode()
+{
+    this->getParentNode()->removeNode(this->shared_from_this());
+}
+
+void HSSParserNode::addNode(HSSParserNode::p child)
+{
+    this->_childNodes.push_back(child);
+}
+
+void HSSParserNode::removeNode(HSSParserNode::p child)
+{
+    HSSParserNode::it it = find(this->_childNodes.begin(), this->_childNodes.end(), child);
+    if(it != this->_childNodes.end()){
+        this->_childNodes.erase(it);
+    }
+}
+
+const std::vector<HSSParserNode::p> HSSParserNode::getChildNodes() const
+{
+    return this->_childNodes;
+}
+
+HSSClonable::p HSSParserNode::cloneImpl() const
+{
+    return HSSClonable::p(new HSSParserNode(*this));
+}
+
+void HSSParserNode::setThisObj(HSSDisplayObject::p value)
+{
+    this->thisObj = value;
+}
+
+HSSDisplayObject::p HSSParserNode::getThisObj()
+{
+    return thisObj;
+}
 
 
 

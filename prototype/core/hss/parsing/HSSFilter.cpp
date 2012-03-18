@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/29
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -166,11 +166,20 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
             
             
         case HSSFilterTypeEach:
+        {
             ret = HSSFilter::p(new HSSFilter());
             ret->filterType = filterType;
+            break;
+        }
+            
+        case HSSFilterTypeHover:
+        {
+            ret = HSSHoverFilter::p(new HSSHoverFilter());
+            break;
+        }
             
         default:
-            break;
+            throw AXRError::p(new AXRError("HSSFilter", "Unknown filter type."));
     }
     
     return ret;
@@ -181,6 +190,10 @@ HSSFilter::HSSFilter()
 : HSSParserNode()
 {
     this->nodeType = HSSParserNodeTypeFilter;
+}
+
+HSSFilter::p HSSFilter::clone() const{
+    return boost::static_pointer_cast<HSSFilter, HSSClonable>(this->cloneImpl());
 }
 
 HSSFilter::~HSSFilter()
@@ -203,9 +216,11 @@ HSSFilterType HSSFilter::getFilterType()
     return this->filterType;
 }
 
-const std::vector<HSSDisplayObject::p> HSSFilter::apply(const std::vector<HSSDisplayObject::p> &scope)
+const std::vector<HSSDisplayObject::p> HSSFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
 {
     return scope;
 }
 
-
+HSSClonable::p HSSFilter::cloneImpl() const{
+    return HSSClonable::p(new HSSFilter(*this));
+}

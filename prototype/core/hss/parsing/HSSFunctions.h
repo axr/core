@@ -43,52 +43,22 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
-#ifndef HSSREFFUNCTION_H
-#define HSSREFFUNCTION_H
+#ifndef HSSFUNCTIONS_H
+#define HSSFUNCTIONS_H
 
-#include "HSSFunction.h"
-#include "../parsing/HSSSelectorChain.h"
-
-namespace AXR {
-    class HSSRefFunction : public HSSFunction
-    {
-    public:
-        
-        typedef boost::shared_ptr<HSSRefFunction> p;
-        
-        HSSRefFunction();
-        virtual ~HSSRefFunction();
-        
-        const std::string & getModifier() const;
-        void setModifier(std::string newValue);
-        
-        const HSSObservableProperty & getPropertyName() const;
-        void setPropertyName(HSSObservableProperty newValue);
-        
-        const HSSSelectorChain::p & getSelectorChain() const;
-        void setSelectorChain(HSSSelectorChain::p newValue);
-        
-        virtual void * _evaluate();
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
-        
-        void valueChanged(HSSObservableProperty source, void*data);
-        
-    private:
-        std::string modifier;
-        HSSObservableProperty propertyName;
-        HSSSelectorChain::p selectorChain;
-        
-        HSSObservable * observed;
-    };
-}
-
-
+#include "HSSRefFunction.h"
+#include "HSSSelFunction.h"
+//#include "HSSMinFunction.h"
+//#include "HSSMaxFunction.h"
+//#include "HSSFloorFunction.h"
+//#include "HSSCeilFunction.h"
+//#include "HSSRoundFunction.h"
 
 #endif

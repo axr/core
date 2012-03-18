@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -75,8 +75,8 @@ char Buff[BUFFSIZE];
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
-    //NSString * filepath = [[NSBundle mainBundle] pathForResource:@"blank" ofType:@"xml" inDirectory:@"views"];
-    //[[self axrView] loadFile:filepath];
+//    NSString * filepath = [[NSBundle mainBundle] pathForResource:@"blank" ofType:@"xml" inDirectory:@"views"];
+//    [[self axrView] loadFile:filepath];
     
     if([self needsFile]){
         [self openDocument:self];
@@ -88,7 +88,7 @@ char Buff[BUFFSIZE];
 {
     [[self axrWindow] makeKeyAndOrderFront:self];
     bool ret = [[self axrView] loadFile:filename];
-    [self setNeedsFile:YES];
+    [self setNeedsFile:NO];
     return ret;
 }
 
@@ -245,10 +245,7 @@ void listXMLElements(NSString *filepath)
 }
 
 - (IBAction)reload:(id)sender {
-    bool loaded = [[self axrView] reload];
-    if(!loaded){
-        NSLog(@"Could not reload file because of an unknown error.");
-    }
+    [[self axrView] reload];
 }
 
 

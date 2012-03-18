@@ -1,0 +1,22 @@
+@container button1
+{
+    width: 100;
+    height: 50;
+    shape: @{10};
+    border: @{ 1 #0 };
+    background: #C;
+    
+    @:hover
+    {
+        background: #F00;
+    }
+}
+
+root
+{
+    #new test
+    {
+        isA: button1;
+        alignY: middle;
+    }
+}

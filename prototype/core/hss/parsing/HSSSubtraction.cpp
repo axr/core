@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/27
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -60,6 +60,17 @@ HSSSubtraction::HSSSubtraction(HSSParserNode::p _left, HSSParserNode::p _right)
     this->expressionType = HSSExpressionTypeSubtraction;
 }
 
+HSSSubtraction::HSSSubtraction(const HSSSubtraction &orig)
+: HSSExpression(orig)
+{
+    
+}
+
+HSSSubtraction::p HSSSubtraction::clone() const
+{
+    return boost::static_pointer_cast<HSSSubtraction, HSSClonable>(this->cloneImpl());
+}
+
 HSSSubtraction::~HSSSubtraction()
 {
     
@@ -68,5 +79,9 @@ HSSSubtraction::~HSSSubtraction()
 long double HSSSubtraction::calculate(long double leftval, long double rightval)
 {
     return leftval - rightval;
+}
+
+HSSClonable::p HSSSubtraction::cloneImpl() const{
+    return HSSClonable::p(new HSSSubtraction(*this));
 }
 
