@@ -46,7 +46,7 @@
  *      Last changed: 2012/03/15
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -75,12 +75,18 @@ std::string HSSLastFilter::toString()
 }
 
 
-const std::vector<HSSDisplayObject::p> HSSLastFilter::apply(const std::vector<HSSDisplayObject::p> &scope)
+const std::vector<HSSDisplayObject::p> HSSLastFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
 {
     if(scope.size() > 0){
-        std::vector<HSSDisplayObject::p> ret;
-        ret.push_back(scope[scope.size()-1]);
-        return ret;
+        if(negating){
+            std::vector<HSSDisplayObject::p> ret;
+            ret.insert(ret.begin(), scope.begin(), scope.end() - 1);
+            return ret;
+        } else {
+            std::vector<HSSDisplayObject::p> ret;
+            ret.push_back(scope[scope.size()-1]);
+            return ret;
+        }
     } else {
         return scope;
     }

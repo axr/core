@@ -60,6 +60,7 @@
 #include <boost/pointer_cast.hpp>
 #include "../hss/parsing/HSSSelectorChain.h"
 #include "../hss/parsing/HSSFilters.h"
+#include "../hss/parsing/HSSNegation.h"
 
 using namespace AXR;
 
@@ -231,19 +232,24 @@ void AXRController::setSelectorChain(HSSSelectorChain::p selectorChain)
 void AXRController::readNextSelectorNode()
 {
     if(this->currentChainCount < this->currentChainSize-1){
+        this->currentSelectorNode = this->currentChain->get(this->currentChainCount+1);
         this->currentChainCount++;
-        this->currentSelectorNode = this->currentChain->get(this->currentChainCount);
     }
 }
 
 bool AXRController::isAtEndOfSelector()
 {
-    return this->currentChainCount >= this->currentChainSize;
+    return this->currentChainCount >= this->currentChainSize-1;
 }
 
 std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj)
 {
-    std::vector< std::vector<HSSDisplayObject::p> > selections = this->selectOnLevel(scope, thisObj);
+    return this->selectHierarchical(scope, thisObj, false);
+}
+
+std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating)
+{
+    std::vector< std::vector<HSSDisplayObject::p> > selections = this->selectOnLevel(scope, thisObj, negating);
     unsigned i, size;
     for (i=0, size=selections.size(); i<size; i++) {
         std::vector<HSSDisplayObject::p> selection = selections[i];
@@ -286,7 +292,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectHierarchica
                             }
                             
                             this->readNextSelectorNode();
-                            return this->selectAllHierarchical(newScope, thisObj);
+                            return this->selectAllHierarchical(newScope, thisObj, false);
                             break;
                         }
                             
@@ -301,9 +307,9 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectHierarchica
     return selections;
 }
 
-std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj)
+std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating)
 {
-    std::vector< std::vector<HSSDisplayObject::p> > selections = this->selectOnLevel(scope, thisObj);
+    std::vector< std::vector<HSSDisplayObject::p> > selections = this->selectOnLevel(scope, thisObj, negating);
     
     unsigned i, j, k, size, size2, size3;
     for (i=0, size=selections.size(); i<size; i++) {
@@ -321,7 +327,9 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectAllHierarch
         
         std::vector< std::vector<HSSDisplayObject::p> > childSelection;
         if(newSearch.size() > 0){
-            childSelection = this->selectAllHierarchical(newSearch, thisObj);
+            this->currentChainCount -= 1;
+            this->readNextSelectorNode();
+            childSelection = this->selectAllHierarchical(newSearch, thisObj, false);
             for (j=0, size2=selections.size(); j<size2; j++) {
                 //std::vector<HSSDisplayObject::p> & selection = selections[j];
                 for (k=0, size3=childSelection.size(); k<size3; k++) {
@@ -334,9 +342,9 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectAllHierarch
     return selections;
 }
 
-std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj)
+std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating)
 {
-    std::vector< std::vector<HSSDisplayObject::p> > selections = this->selectSimple(scope, thisObj);
+    std::vector< std::vector<HSSDisplayObject::p> > selections = this->selectSimple(scope, thisObj, negating);
     bool atEnd = this->isAtEndOfSelector();
     if(!atEnd){
         if(this->currentSelectorNode->isA(HSSParserNodeTypeCombinator))
@@ -352,7 +360,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(con
                     unsigned i, size;
                     for (i=0, size=selections.size(); i<size; i++) {
                         std::vector<HSSDisplayObject::p> selection = selections[i];
-                        std::vector< std::vector<HSSDisplayObject::p> > newSelection = this->selectSimple(scope, thisObj);
+                        std::vector< std::vector<HSSDisplayObject::p> > newSelection = this->selectSimple(scope, thisObj, negating);
                         ret.insert(ret.end(), newSelection.begin(), newSelection.end());
                     }
                     return ret;
@@ -365,12 +373,14 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(con
                     for (i=0, size=selections.size(); i<size; i++) {
                         std::vector<HSSDisplayObject::p> selection = selections[i];
                         std::vector<HSSDisplayObject::p> vect(scope);
-                        std::vector<HSSDisplayObject::p>::iterator it;
-                        it = std::find(vect.begin(), vect.end(), selection.front());
-                        std::vector<HSSDisplayObject::p> right(it+1, vect.end());
-                        this->readNextSelectorNode();
-                        std::vector< std::vector<HSSDisplayObject::p> > newSelection = this->selectSimple(right, thisObj);
-                        ret.insert(ret.end(), newSelection.begin(), newSelection.end());
+                        if(selection.size() > 0){
+                            std::vector<HSSDisplayObject::p>::iterator it;
+                            it = std::find(vect.begin(), vect.end(), selection.front());
+                            std::vector<HSSDisplayObject::p> right(it+1, vect.end());
+                            this->readNextSelectorNode();
+                            std::vector< std::vector<HSSDisplayObject::p> > newSelection = this->selectSimple(right, thisObj, negating);
+                            ret.insert(ret.end(), newSelection.begin(), newSelection.end());
+                        }
                     }
                     return ret;
                 }
@@ -387,7 +397,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(con
                         it = std::find(vect.begin(), vect.end(), selection.back());
                         std::vector<HSSDisplayObject::p> right(vect.begin(), it);
                         this->readNextSelectorNode();
-                        std::vector< std::vector<HSSDisplayObject::p> > newSelection = this->selectSimple(right, thisObj);
+                        std::vector< std::vector<HSSDisplayObject::p> > newSelection = this->selectSimple(right, thisObj, negating);
                         ret.insert(ret.end(), newSelection.begin(), newSelection.end());
                     }
                     return ret;
@@ -402,7 +412,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(con
     return selections;
 }
 
-std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj)
+std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating)
 {
     std::vector< std::vector<HSSDisplayObject::p> >ret;
     std::vector<HSSDisplayObject::p> currentSelection;
@@ -415,10 +425,13 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(cons
             //select only elements with matching element name
             HSSSelector::p selector = boost::static_pointer_cast<HSSSelector>(this->currentSelectorNode);
             for (i=0, size=scope.size(); i<size; i++) {
-                if(scope[i]->getElementName() == selector->getElementName()){
+                bool match = scope[i]->getElementName() == selector->getElementName();
+                if((match && !negating) || (!match && negating) ){
                     currentSelection.push_back(scope[i]);
                 }
             }
+            //we're done negating for now
+            negating = false;
             
             this->readNextSelectorNode();
             break;
@@ -426,8 +439,14 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(cons
         
         case HSSParserNodeTypeUniversalSelector:
         {
-            //the entire scope will be selected
-            currentSelection = scope;
+            if(negating){
+                //nothing will be selected
+            } else {
+                //the entire scope will be selected
+                currentSelection = scope;
+            }
+            //we're done negating for now
+            negating = false;
             this->readNextSelectorNode();
             break;
         }
@@ -436,29 +455,40 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(cons
         {
             //the entire scope will be selected
             currentSelection = scope;
-            this->readNextSelectorNode();
             break;
         }
             
         case HSSParserNodeTypeThisSelector:
         {
+            if(negating){
+                throw AXRError::p(new AXRError("AXRController", "Cannot negate the @this object "));
+            }
             const HSSDisplayObject::p tobjArr[1] = {thisObj};
             const std::vector<HSSDisplayObject::p>tobjScope(tobjArr, tobjArr+1);
             currentSelection = tobjScope;
             this->readNextSelectorNode();
+            //we're done negating for now
+            negating = false;
             break;
+        }
+            
+        case HSSParserNodeTypeNegation:
+        {
+            HSSNegation::p negation = boost::static_pointer_cast<HSSNegation>(this->currentSelectorNode);
+            this->readNextSelectorNode();
+            return this->selectSimple(scope, thisObj, true);
         }
         
         default:
             throw AXRError::p(new AXRError("AXRController", "Unknown node type "+HSSParserNode::parserNodeStringRepresentation(selectorType)+" in selector"));
     }
     
-    ret = this->filterSelection(currentSelection);
+    ret = this->filterSelection(currentSelection, negating);
     
     return ret;
 }
 
-std::vector< std::vector<HSSDisplayObject::p> > AXRController::filterSelection( std::vector<HSSDisplayObject::p> &selection)
+std::vector< std::vector<HSSDisplayObject::p> > AXRController::filterSelection( std::vector<HSSDisplayObject::p> &selection, bool negating)
 {
     std::vector< std::vector<HSSDisplayObject::p> >ret;
     
@@ -473,20 +503,28 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::filterSelection( 
                     sel.push_back(selection[i]);
                     ret.push_back(sel);
                 }
+                this->readNextSelectorNode();
                 break;
             }
                 
             default:
             {
-                ret.push_back(theFilter->apply(selection));
+                std::vector<HSSDisplayObject::p> tempSel = theFilter->apply(selection, negating);
+                if(!this->isAtEndOfSelector()){
+                    this->readNextSelectorNode();
+                    return this->filterSelection(tempSel, false);
+                } else {
+                    this->readNextSelectorNode();
+                    ret.push_back(tempSel);
+                }
                 break;
             }
         }
         
+    } else if (this->currentSelectorNode->isA(HSSParserNodeTypeNegation)){
         this->readNextSelectorNode();
-        
-        
-    } else {
+        return this->filterSelection(selection, true);
+    } else {	
         ret.push_back(selection);
     }
     

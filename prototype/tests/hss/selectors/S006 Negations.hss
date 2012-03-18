@@ -1,0 +1,22 @@
+#C00 red;
+#0C0 green;
+#00C blue;
+#CC0 yellow;
+#FA0 orange;
+
+*
+{
+    * {
+        height: 50;
+        background: #E;
+    }
+    
+    //Comment and uncomment these lines as needed to understand what's
+    //going on. Also, a good idea is to remove filters from the right
+    //and see how the selection is affected.
+    !:last { background: red }
+    !:first { background: blue }
+    !child { background: green}
+    !:last!:first:first { background: yellow }
+    !:first!:first!:first!:last { background: orange }
+}

@@ -46,7 +46,7 @@
  *      Last changed: 2012/02/23
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -75,7 +75,7 @@ std::string HSSHoverFilter::toString()
 }
 
 
-const std::vector<HSSDisplayObject::p> HSSHoverFilter::apply(const std::vector<HSSDisplayObject::p> &scope)
+const std::vector<HSSDisplayObject::p> HSSHoverFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
 {
     //parent is selector chain, grandparent is the rule
     HSSParserNode::p ruleNode = this->getParentNode()->getParentNode();

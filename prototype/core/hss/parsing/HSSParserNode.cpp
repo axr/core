@@ -72,6 +72,7 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
 	types[HSSParserNodeTypeObjectNameConstant] = "HSSObjectNameConstant";
 	types[HSSParserNodeTypeFunctionCall] = "HSSFunctionCall";
 	types[HSSParserNodeTypeMultipleValueDefinition] = "HSSParserNodeTypeMultipleValueDefinition";
+	types[HSSParserNodeTypeNegation] = "HSSParserNodeTypeNegation";
     
     return types[type];
 }

@@ -82,7 +82,8 @@ namespace AXR {
         HSSParserNodeTypeObjectNameConstant,
         HSSParserNodeTypeFunctionCall,
         HSSParserNodeTypeMultipleValueDefinition,
-        HSSParserNodeTypeSelectorChain
+        HSSParserNodeTypeSelectorChain,
+        HSSParserNodeTypeNegation
     };
     
     class HSSDisplayObject;

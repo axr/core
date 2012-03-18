@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		4E07AEB9150938A80004E621 /* HSSColorStop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E07AEB7150938A80004E621 /* HSSColorStop.cpp */; };
 		4E07AEBA150938A80004E621 /* HSSColorStop.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E07AEB8150938A80004E621 /* HSSColorStop.h */; };
-		4E07C4691434DD3300B1B7CA /* HSSFunctionCall.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E07C4671434DD3300B1B7CA /* HSSFunctionCall.h */; };
 		4E07C46B1434F22900B1B7CA /* HSSFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E07C46A1434F22900B1B7CA /* HSSFunctions.h */; };
 		4E07C46E1434F2CF00B1B7CA /* HSSRefFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E07C46C1434F2CE00B1B7CA /* HSSRefFunction.cpp */; };
 		4E07C46F1434F2CF00B1B7CA /* HSSRefFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E07C46D1434F2CE00B1B7CA /* HSSRefFunction.h */; };
@@ -30,6 +29,8 @@
 		4E23091B144098880006A3BC /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E23091A144098880006A3BC /* errors.h */; };
 		4E24B32214533FBB00F40154 /* HSSMultipleValueDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E24B32014533FBB00F40154 /* HSSMultipleValueDefinition.cpp */; };
 		4E24B32314533FBB00F40154 /* HSSMultipleValueDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E24B32114533FBB00F40154 /* HSSMultipleValueDefinition.h */; };
+		4E2C54801512A86700DAAFC4 /* HSSNegation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E2C547E1512A86700DAAFC4 /* HSSNegation.cpp */; };
+		4E2C54811512A86700DAAFC4 /* HSSNegation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E2C547F1512A86700DAAFC4 /* HSSNegation.h */; };
 		4E351B771350784B00FEB909 /* AXRView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C87713505DEA00D88409 /* AXRView.mm */; };
 		4E5406DE14FA92F4009D59B0 /* HSSClonable.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5406DC14FA92F4009D59B0 /* HSSClonable.h */; };
 		4E5457AB136443E900D67571 /* HSSObservableProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5457AA136443E900D67571 /* HSSObservableProperties.h */; };
@@ -174,8 +175,6 @@
 /* Begin PBXFileReference section */
 		4E07AEB7150938A80004E621 /* HSSColorStop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSColorStop.cpp; sourceTree = "<group>"; };
 		4E07AEB8150938A80004E621 /* HSSColorStop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSColorStop.h; sourceTree = "<group>"; };
-		4E07C4661434DD3300B1B7CA /* HSSFunctionCall.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFunctionCall.cpp; sourceTree = "<group>"; };
-		4E07C4671434DD3300B1B7CA /* HSSFunctionCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFunctionCall.h; sourceTree = "<group>"; };
 		4E07C46A1434F22900B1B7CA /* HSSFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFunctions.h; sourceTree = "<group>"; };
 		4E07C46C1434F2CE00B1B7CA /* HSSRefFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRefFunction.cpp; sourceTree = "<group>"; };
 		4E07C46D1434F2CE00B1B7CA /* HSSRefFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRefFunction.h; sourceTree = "<group>"; };
@@ -196,6 +195,8 @@
 		4E23091A144098880006A3BC /* errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errors.h; sourceTree = "<group>"; };
 		4E24B32014533FBB00F40154 /* HSSMultipleValueDefinition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMultipleValueDefinition.cpp; sourceTree = "<group>"; };
 		4E24B32114533FBB00F40154 /* HSSMultipleValueDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSMultipleValueDefinition.h; sourceTree = "<group>"; };
+		4E2C547E1512A86700DAAFC4 /* HSSNegation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSNegation.cpp; sourceTree = "<group>"; };
+		4E2C547F1512A86700DAAFC4 /* HSSNegation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSNegation.h; sourceTree = "<group>"; };
 		4E5406DC14FA92F4009D59B0 /* HSSClonable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSClonable.h; sourceTree = "<group>"; };
 		4E5457AA136443E900D67571 /* HSSObservableProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservableProperties.h; sourceTree = "<group>"; };
 		4E5457AE1364523D00D67571 /* HSSCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSCallback.cpp; sourceTree = "<group>"; };
@@ -537,8 +538,6 @@
 				4E80C82813505DD300D88409 /* HSSStringConstant.h */,
 				4E80C82913505DD300D88409 /* HSSUniversalSelector.cpp */,
 				4E80C82A13505DD300D88409 /* HSSUniversalSelector.h */,
-				4E07C4661434DD3300B1B7CA /* HSSFunctionCall.cpp */,
-				4E07C4671434DD3300B1B7CA /* HSSFunctionCall.h */,
 				4E24B32014533FBB00F40154 /* HSSMultipleValueDefinition.cpp */,
 				4E24B32114533FBB00F40154 /* HSSMultipleValueDefinition.h */,
 				4EAF985B14AD02610060E1F0 /* HSSThisSelector.cpp */,
@@ -553,6 +552,8 @@
 				4EAF9D0D145DC8CB00E92B33 /* HSSLastFilter.h */,
 				4E7325B714F6AC750067F913 /* HSSHoverFilter.cpp */,
 				4E7325B814F6AC750067F913 /* HSSHoverFilter.h */,
+				4E2C547E1512A86700DAAFC4 /* HSSNegation.cpp */,
+				4E2C547F1512A86700DAAFC4 /* HSSNegation.h */,
 			);
 			path = parsing;
 			sourceTree = "<group>";
@@ -708,7 +709,6 @@
 				4E1BE18113A3F5F300D7C6DB /* HSSRgb.h in Headers */,
 				4ECB84ED1431195B00F112E0 /* HSSFont.h in Headers */,
 				4E58ED7F1433AA7E004FD8DC /* HSSFunction.h in Headers */,
-				4E07C4691434DD3300B1B7CA /* HSSFunctionCall.h in Headers */,
 				4E07C46B1434F22900B1B7CA /* HSSFunctions.h in Headers */,
 				4E07C46F1434F2CF00B1B7CA /* HSSRefFunction.h in Headers */,
 				4EA6EADA1440629500309E10 /* AXRError.h in Headers */,
@@ -740,6 +740,7 @@
 				4EC5927C14F817C300726AE6 /* HSSFilterType.h in Headers */,
 				4E5406DE14FA92F4009D59B0 /* HSSClonable.h in Headers */,
 				4E07AEBA150938A80004E621 /* HSSColorStop.h in Headers */,
+				4E2C54811512A86700DAAFC4 /* HSSNegation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -869,6 +870,7 @@
 				4EA5715F14D445890083ACDA /* HSSTextBlock.cpp in Sources */,
 				4E7325B914F6AC750067F913 /* HSSHoverFilter.cpp in Sources */,
 				4E07AEB9150938A80004E621 /* HSSColorStop.cpp in Sources */,
+				4E2C54801512A86700DAAFC4 /* HSSNegation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

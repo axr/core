@@ -46,7 +46,7 @@
  *      Last changed: 2012/03/15
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -216,7 +216,7 @@ HSSFilterType HSSFilter::getFilterType()
     return this->filterType;
 }
 
-const std::vector<HSSDisplayObject::p> HSSFilter::apply(const std::vector<HSSDisplayObject::p> &scope)
+const std::vector<HSSDisplayObject::p> HSSFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
 {
     return scope;
 }

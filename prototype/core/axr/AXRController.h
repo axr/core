@@ -119,10 +119,11 @@ namespace AXR {
         
         void setSelectorChain(HSSSelectorChain::p selectorChain);
         std::vector< std::vector<HSSDisplayObject::p> > selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
-        std::vector< std::vector<HSSDisplayObject::p> > selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
-        std::vector< std::vector<HSSDisplayObject::p> > selectOnLevel(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
-        std::vector< std::vector<HSSDisplayObject::p> > selectSimple(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
-        std::vector< std::vector<HSSDisplayObject::p> > filterSelection(std::vector< HSSDisplayObject::p> &selection);
+        std::vector< std::vector<HSSDisplayObject::p> > selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating);
+        std::vector< std::vector<HSSDisplayObject::p> > selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating);
+        std::vector< std::vector<HSSDisplayObject::p> > selectOnLevel(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating);
+        std::vector< std::vector<HSSDisplayObject::p> > selectSimple(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating);
+        std::vector< std::vector<HSSDisplayObject::p> > filterSelection(std::vector< HSSDisplayObject::p> &selection, bool negating);
         
         std::string basepath;
         

@@ -43,27 +43,26 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/23
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 2
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSHOVERFILTER_H
-#define HSSHOVERFILTER_H
+#ifndef HSSNEGATION_H
+#define HSSNEGATION_H
 
-#include "HSSFilter.h"
+#include "HSSParserNode.h"
 
 namespace AXR {
-    class HSSHoverFilter : public HSSFilter
+    class HSSNegation : public HSSParserNode
     {
     public:
-        HSSHoverFilter();
+        HSSNegation();
         p clone() const;
-        virtual ~HSSHoverFilter();
+        virtual ~HSSNegation();
         virtual std::string toString();
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool negating);
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

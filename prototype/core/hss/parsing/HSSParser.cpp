@@ -46,7 +46,7 @@
  *      Last changed: 2012/03/15
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 23
+ *      Revision: 24
  *
  ********************************************************************/
 
@@ -66,6 +66,7 @@
 #include "HSSThisSelector.h"
 #include "HSSFunctions.h"
 #include "HSSFilter.h"
+#include "HSSNegation.h"
 
 using namespace AXR;
 
@@ -563,6 +564,14 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                     {
                         //its a filter
                         ret->add(this->readFilter());
+                    }
+                        
+                    case '!':
+                    {
+                        //it's a negation
+                        ret->add(HSSNegation::p(new HSSNegation()));
+                        this->readNextToken();
+                        break;
                     }
                         
                         //huh? we didn't expect any other symbol
