@@ -53,15 +53,16 @@
 #ifndef HSSRULE_H
 #define HSSRULE_H
 
-#import "HSSStatement.h"
-#import "HSSPropertyDefinition.h"
-#import "HSSSelectorChain.h"
-#import "HSSInstruction.h"
-#import <string>
-#import <vector>
-#import <boost/shared_ptr.hpp>
-#import <boost/unordered_map.hpp>
-#import "HSSFilterType.h"
+
+#include "HSSStatement.h"
+#include "HSSPropertyDefinition.h"
+#include "HSSSelectorChain.h"
+#include "HSSInstruction.h"
+#include <string>
+#include <vector>
+#include <boost/shared_ptr.hpp>
+#include <boost/unordered_map.hpp>
+#include "HSSFilterType.h"
 
 namespace AXR {
     

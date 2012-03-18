@@ -53,7 +53,7 @@
 #ifndef HSSRECTANGLE_H
 #define HSSRECTANGLE_H
 
-#import "HSSShape.h"
+#include "HSSShape.h"
 
 namespace AXR {
     class HSSRectangle : public HSSShape
