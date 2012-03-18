@@ -53,7 +53,7 @@
 #ifndef HSSCIRCLE_H
 #define HSSCIRCLE_H
 
-#import "HSSShape.h"
+#include "HSSShape.h"
 
 namespace AXR {
     class HSSCircle : public HSSShape
