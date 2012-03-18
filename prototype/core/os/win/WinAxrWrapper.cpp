@@ -60,7 +60,7 @@ using namespace AXR;
 WinAxrWrapper::WinAxrWrapper()
 : AXRWrapper()
 {
-    
+    this->needsDisplay = true;
 }
 
 WinAxrWrapper::~WinAxrWrapper()
@@ -146,4 +146,9 @@ bool WinAxrWrapper::openFileDialog(std::string &filePath)
     std::replace(filePath.begin(),filePath.end(),'\\','/');
 
     return true;
+}
+
+void WinAxrWrapper::setNeedsDisplay(bool newValue)
+{
+    this->needsDisplay = newValue;
 }

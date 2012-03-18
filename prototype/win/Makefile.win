@@ -4,9 +4,9 @@
 CPP  = g++.exe -D__DEBUG__
 CC   = gcc.exe -D__DEBUG__
 WINDRES = windres.exe
-RES  = 
-OBJ  = o/main.o o/AXR.o o/AXRController.o o/AXRDebugging.o o/AXRExceptions.o o/AXRFile.o o/AXRRender.o o/AXRWrapper.o o/AXRError.o o/AXRWarning.o o/HSSAction.o o/HSSBorder.o o/HSSCircle.o o/HSSContainer.o o/HSSDisplayObject.o o/HSSEvent.o o/HSSFont.o o/HSSFunction.o o/HSSGradient.o o/HSSLinearGradient.o o/HSSLineBorder.o o/HSSLog.o o/HSSMargin.o o/HSSMultipleValue.o o/HSSObject.o o/HSSObjectExceptions.o o/HSSRectangle.o o/HSSRefFunction.o o/HSSRequest.o o/HSSRgb.o o/HSSRoundedRect.o o/HSSSelFunction.o o/HSSShape.o o/HSSValue.o o/HSSCombinator.o o/HSSComment.o o/HSSDivision.o o/HSSExpression.o o/HSSFilter.o o/HSSFirstFilter.o o/HSSFunctionCall.o o/HSSInstruction.o o/HSSKeywordConstant.o o/HSSLastFilter.o o/HSSMultipleValueDefinition.o o/HSSMultiplication.o o/HSSNumberConstant.o o/HSSObjectDefinition.o o/HSSObjectNameConstant.o o/HSSParser.o o/HSSParserExceptions.o o/HSSParserNode.o o/HSSPercentageConstant.o o/HSSPropertyDefinition.o o/HSSRule.o o/HSSSelector.o o/HSSSelectorChain.o o/HSSStatement.o o/HSSStringConstant.o o/HSSSubtraction.o o/HSSSum.o o/HSSThisSelector.o o/HSSUniversalSelector.o o/HSSToken.o o/HSSTokenizer.o o/HSSValueToken.o o/HSSCallback.o o/HSSObservable.o o/WinAxrWrapper.o o/ExpatXMLParser.o o/XMLParser.o o/XMLParserExceptions.o o/cairosdl.o o/HSSTextBlock.o $(RES)
-LINKOBJ  = o/main.o o/AXR.o o/AXRController.o o/AXRDebugging.o o/AXRExceptions.o o/AXRFile.o o/AXRRender.o o/AXRWrapper.o o/AXRError.o o/AXRWarning.o o/HSSAction.o o/HSSBorder.o o/HSSCircle.o o/HSSContainer.o o/HSSDisplayObject.o o/HSSEvent.o o/HSSFont.o o/HSSFunction.o o/HSSGradient.o o/HSSLinearGradient.o o/HSSLineBorder.o o/HSSLog.o o/HSSMargin.o o/HSSMultipleValue.o o/HSSObject.o o/HSSObjectExceptions.o o/HSSRectangle.o o/HSSRefFunction.o o/HSSRequest.o o/HSSRgb.o o/HSSRoundedRect.o o/HSSSelFunction.o o/HSSShape.o o/HSSValue.o o/HSSCombinator.o o/HSSComment.o o/HSSDivision.o o/HSSExpression.o o/HSSFilter.o o/HSSFirstFilter.o o/HSSFunctionCall.o o/HSSInstruction.o o/HSSKeywordConstant.o o/HSSLastFilter.o o/HSSMultipleValueDefinition.o o/HSSMultiplication.o o/HSSNumberConstant.o o/HSSObjectDefinition.o o/HSSObjectNameConstant.o o/HSSParser.o o/HSSParserExceptions.o o/HSSParserNode.o o/HSSPercentageConstant.o o/HSSPropertyDefinition.o o/HSSRule.o o/HSSSelector.o o/HSSSelectorChain.o o/HSSStatement.o o/HSSStringConstant.o o/HSSSubtraction.o o/HSSSum.o o/HSSThisSelector.o o/HSSUniversalSelector.o o/HSSToken.o o/HSSTokenizer.o o/HSSValueToken.o o/HSSCallback.o o/HSSObservable.o o/WinAxrWrapper.o o/ExpatXMLParser.o o/XMLParser.o o/XMLParserExceptions.o o/cairosdl.o o/HSSTextBlock.o $(RES)
+RES  = o/AXR_private.res
+OBJ  = o/main.o o/AXR.o o/AXRController.o o/AXRDebugging.o o/AXRExceptions.o o/AXRFile.o o/AXRRender.o o/AXRWrapper.o o/AXRError.o o/AXRWarning.o o/HSSAction.o o/HSSBorder.o o/HSSCircle.o o/HSSContainer.o o/HSSDisplayObject.o o/HSSEvent.o o/HSSFont.o o/HSSGradient.o o/HSSLinearGradient.o o/HSSLineBorder.o o/HSSLog.o o/HSSMargin.o o/HSSMultipleValue.o o/HSSObject.o o/HSSObjectExceptions.o o/HSSRectangle.o o/HSSRequest.o o/HSSRgb.o o/HSSRoundedRect.o o/HSSShape.o o/HSSValue.o o/HSSCombinator.o o/HSSComment.o o/HSSDivision.o o/HSSExpression.o o/HSSFilter.o o/HSSFirstFilter.o o/HSSInstruction.o o/HSSKeywordConstant.o o/HSSLastFilter.o o/HSSMultipleValueDefinition.o o/HSSMultiplication.o o/HSSNumberConstant.o o/HSSObjectDefinition.o o/HSSObjectNameConstant.o o/HSSParser.o o/HSSParserExceptions.o o/HSSParserNode.o o/HSSPercentageConstant.o o/HSSPropertyDefinition.o o/HSSRule.o o/HSSSelector.o o/HSSSelectorChain.o o/HSSStatement.o o/HSSStringConstant.o o/HSSSubtraction.o o/HSSSum.o o/HSSThisSelector.o o/HSSUniversalSelector.o o/HSSToken.o o/HSSTokenizer.o o/HSSValueToken.o o/HSSCallback.o o/HSSObservable.o o/WinAxrWrapper.o o/ExpatXMLParser.o o/XMLParser.o o/XMLParserExceptions.o o/cairosdl.o o/HSSTextBlock.o o/HSSColorStop.o o/HSSFunction.o o/HSSRefFunction.o o/HSSSelFunction.o o/HSSHoverFilter.o o/HSSNegation.o $(RES)
+LINKOBJ  = o/main.o o/AXR.o o/AXRController.o o/AXRDebugging.o o/AXRExceptions.o o/AXRFile.o o/AXRRender.o o/AXRWrapper.o o/AXRError.o o/AXRWarning.o o/HSSAction.o o/HSSBorder.o o/HSSCircle.o o/HSSContainer.o o/HSSDisplayObject.o o/HSSEvent.o o/HSSFont.o o/HSSGradient.o o/HSSLinearGradient.o o/HSSLineBorder.o o/HSSLog.o o/HSSMargin.o o/HSSMultipleValue.o o/HSSObject.o o/HSSObjectExceptions.o o/HSSRectangle.o o/HSSRequest.o o/HSSRgb.o o/HSSRoundedRect.o o/HSSShape.o o/HSSValue.o o/HSSCombinator.o o/HSSComment.o o/HSSDivision.o o/HSSExpression.o o/HSSFilter.o o/HSSFirstFilter.o o/HSSInstruction.o o/HSSKeywordConstant.o o/HSSLastFilter.o o/HSSMultipleValueDefinition.o o/HSSMultiplication.o o/HSSNumberConstant.o o/HSSObjectDefinition.o o/HSSObjectNameConstant.o o/HSSParser.o o/HSSParserExceptions.o o/HSSParserNode.o o/HSSPercentageConstant.o o/HSSPropertyDefinition.o o/HSSRule.o o/HSSSelector.o o/HSSSelectorChain.o o/HSSStatement.o o/HSSStringConstant.o o/HSSSubtraction.o o/HSSSum.o o/HSSThisSelector.o o/HSSUniversalSelector.o o/HSSToken.o o/HSSTokenizer.o o/HSSValueToken.o o/HSSCallback.o o/HSSObservable.o o/WinAxrWrapper.o o/ExpatXMLParser.o o/XMLParser.o o/XMLParserExceptions.o o/cairosdl.o o/HSSTextBlock.o o/HSSColorStop.o o/HSSFunction.o o/HSSRefFunction.o o/HSSSelFunction.o o/HSSHoverFilter.o o/HSSNegation.o $(RES)
 LIBS =  -L"F:/Dev-Cpp/lib" -mwindows -mconsole -lmingw32 -lSDLmain -lSDL -lexpat -lcairo -lpango-1.0 -lpangocairo-1.0  -lgobject-2.0   -g3 -s 
 INCS =  -I"F:/Dev-Cpp/include" 
 CXXINCS =  -I"F:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"F:/Dev-Cpp/include" 
@@ -77,9 +77,6 @@ o/HSSEvent.o: ../core/hss/objects/HSSEvent.cpp
 o/HSSFont.o: ../core/hss/objects/HSSFont.cpp
 	$(CPP) -c ../core/hss/objects/HSSFont.cpp -o o/HSSFont.o $(CXXFLAGS)
 
-o/HSSFunction.o: ../core/hss/objects/HSSFunction.cpp
-	$(CPP) -c ../core/hss/objects/HSSFunction.cpp -o o/HSSFunction.o $(CXXFLAGS)
-
 o/HSSGradient.o: ../core/hss/objects/HSSGradient.cpp
 	$(CPP) -c ../core/hss/objects/HSSGradient.cpp -o o/HSSGradient.o $(CXXFLAGS)
 
@@ -107,9 +104,6 @@ o/HSSObjectExceptions.o: ../core/hss/objects/HSSObjectExceptions.cpp
 o/HSSRectangle.o: ../core/hss/objects/HSSRectangle.cpp
 	$(CPP) -c ../core/hss/objects/HSSRectangle.cpp -o o/HSSRectangle.o $(CXXFLAGS)
 
-o/HSSRefFunction.o: ../core/hss/objects/HSSRefFunction.cpp
-	$(CPP) -c ../core/hss/objects/HSSRefFunction.cpp -o o/HSSRefFunction.o $(CXXFLAGS)
-
 o/HSSRequest.o: ../core/hss/objects/HSSRequest.cpp
 	$(CPP) -c ../core/hss/objects/HSSRequest.cpp -o o/HSSRequest.o $(CXXFLAGS)
 
@@ -118,9 +112,6 @@ o/HSSRgb.o: ../core/hss/objects/HSSRgb.cpp
 
 o/HSSRoundedRect.o: ../core/hss/objects/HSSRoundedRect.cpp
 	$(CPP) -c ../core/hss/objects/HSSRoundedRect.cpp -o o/HSSRoundedRect.o $(CXXFLAGS)
-
-o/HSSSelFunction.o: ../core/hss/objects/HSSSelFunction.cpp
-	$(CPP) -c ../core/hss/objects/HSSSelFunction.cpp -o o/HSSSelFunction.o $(CXXFLAGS)
 
 o/HSSShape.o: ../core/hss/objects/HSSShape.cpp
 	$(CPP) -c ../core/hss/objects/HSSShape.cpp -o o/HSSShape.o $(CXXFLAGS)
@@ -145,9 +136,6 @@ o/HSSFilter.o: ../core/hss/parsing/HSSFilter.cpp
 
 o/HSSFirstFilter.o: ../core/hss/parsing/HSSFirstFilter.cpp
 	$(CPP) -c ../core/hss/parsing/HSSFirstFilter.cpp -o o/HSSFirstFilter.o $(CXXFLAGS)
-
-o/HSSFunctionCall.o: ../core/hss/parsing/HSSFunctionCall.cpp
-	$(CPP) -c ../core/hss/parsing/HSSFunctionCall.cpp -o o/HSSFunctionCall.o $(CXXFLAGS)
 
 o/HSSInstruction.o: ../core/hss/parsing/HSSInstruction.cpp
 	$(CPP) -c ../core/hss/parsing/HSSInstruction.cpp -o o/HSSInstruction.o $(CXXFLAGS)
@@ -247,3 +235,24 @@ o/cairosdl.o: cairosdl/cairosdl.c
 
 o/HSSTextBlock.o: ../core/hss/objects/HSSTextBlock.cpp
 	$(CPP) -c ../core/hss/objects/HSSTextBlock.cpp -o o/HSSTextBlock.o $(CXXFLAGS)
+
+o/HSSColorStop.o: ../core/hss/objects/HSSColorStop.cpp
+	$(CPP) -c ../core/hss/objects/HSSColorStop.cpp -o o/HSSColorStop.o $(CXXFLAGS)
+
+o/HSSFunction.o: ../core/hss/parsing/HSSFunction.cpp
+	$(CPP) -c ../core/hss/parsing/HSSFunction.cpp -o o/HSSFunction.o $(CXXFLAGS)
+
+o/HSSRefFunction.o: ../core/hss/parsing/HSSRefFunction.cpp
+	$(CPP) -c ../core/hss/parsing/HSSRefFunction.cpp -o o/HSSRefFunction.o $(CXXFLAGS)
+
+o/HSSSelFunction.o: ../core/hss/parsing/HSSSelFunction.cpp
+	$(CPP) -c ../core/hss/parsing/HSSSelFunction.cpp -o o/HSSSelFunction.o $(CXXFLAGS)
+
+o/HSSHoverFilter.o: ../core/hss/parsing/HSSHoverFilter.cpp
+	$(CPP) -c ../core/hss/parsing/HSSHoverFilter.cpp -o o/HSSHoverFilter.o $(CXXFLAGS)
+
+o/HSSNegation.o: ../core/hss/parsing/HSSNegation.cpp
+	$(CPP) -c ../core/hss/parsing/HSSNegation.cpp -o o/HSSNegation.o $(CXXFLAGS)
+
+o/AXR_private.res: AXR_private.rc 
+	$(WINDRES) -i AXR_private.rc --input-format=rc -o o/AXR_private.res -O coff 

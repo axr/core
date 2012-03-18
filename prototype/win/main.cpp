@@ -23,25 +23,31 @@ WinAxrWrapper *wrapper;
 SDL_Surface* screen;
 
 void render(){
+
+	if(wrapper->needsDisplay) {
+
 	SDL_FillRect(screen, NULL, 0x00ffffff);
 
-	AXRRect axrRect;
-	axrRect.size.width = screen->w;
-	axrRect.size.height = screen->h;
-	axrRect.origin.x = 0;
-	axrRect.origin.y = 0;
+		AXRRect axrRect;
+		axrRect.size.width = screen->w;
+		axrRect.size.height = screen->h;
+		axrRect.origin.x = 0;
+		axrRect.origin.y = 0;
 
-	AXRRect axrBounds;
-	axrBounds.size.width = screen->w;
-	axrBounds.size.height = screen->h;
-	axrBounds.origin.x = 0;
-	axrBounds.origin.y = 0;
+		AXRRect axrBounds;
+		axrBounds.size.width = screen->w;
+		axrBounds.size.height = screen->h;
+		axrBounds.origin.x = 0;
+		axrBounds.origin.y = 0;
 
-	AXRCore::p core = wrapper->getCore();
+		AXRCore::p core = wrapper->getCore();
 
-	core->setCairo(cr);
-	core->drawInRectWithBounds(axrRect, axrBounds);
-	core->setCairo(NULL);
+		core->setCairo(cr);
+		core->drawInRectWithBounds(axrRect, axrBounds);
+		core->setCairo(NULL);
+		
+		wrapper->setNeedsDisplay(false);
+	}
 
 }
 bool reload(){
@@ -57,7 +63,6 @@ int main(int argc, char **argv) {
 	SDL_Init( SDL_INIT_VIDEO );
 	screen = SDL_SetVideoMode( WINDOW_WIDTH, WINDOW_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE );
 	cr = cairosdl_create (screen);
-	//cairo_translate(cr,0.5,0.5);
 
 	SDL_WM_SetCaption( WINDOW_TITLE, 0 );
 
@@ -88,8 +93,32 @@ int main(int argc, char **argv) {
 			if (event.type == SDL_QUIT) {
 				break;
 			} else if (event.type == SDL_MOUSEBUTTONDOWN) {
+				AXRCore::p core = wrapper->getCore();
+				HSSContainer::p root = core->getController()->getRoot();
+				if (root) {
+					HSSPoint thePoint;
+					thePoint.x = event.button.x;
+					thePoint.y = event.button.y;
+					root->handleEvent(HSSEventTypeMouseDown, &thePoint);
+				}
 			} else if (event.type == SDL_MOUSEBUTTONUP) {
+				AXRCore::p core = wrapper->getCore();
+				HSSContainer::p root = core->getController()->getRoot();
+				if (root) {
+					HSSPoint thePoint;
+					thePoint.x = event.button.x;
+					thePoint.y = event.button.y;
+					root->handleEvent(HSSEventTypeMouseUp, &thePoint);
+				}
 			} else if (event.type == SDL_MOUSEMOTION) {
+				AXRCore::p core = wrapper->getCore();
+				HSSContainer::p root = core->getController()->getRoot();
+				if (root) {
+					HSSPoint thePoint;
+					thePoint.x = event.motion.x;
+					thePoint.y = event.motion.y;
+					root->handleEvent(HSSEventTypeMouseMove, &thePoint);
+				}
 			} else if (event.type == SDL_KEYUP) {
 			} else if (event.type == SDL_KEYDOWN) {
 				if(event.key.keysym.sym == SDLK_F5) {
@@ -100,7 +129,7 @@ int main(int argc, char **argv) {
 				screen = SDL_SetVideoMode (event.resize.w, event.resize.h, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
 				SDL_SetAlpha(screen,SDL_SRCALPHA,CAIROSDL_AMASK);
 				cr = cairosdl_create (screen);
-				//cairo_translate(cr,0.5,0.5);
+				wrapper->setNeedsDisplay(true);
 			} else {
 			}
 			render();
@@ -109,8 +138,8 @@ int main(int argc, char **argv) {
 			//SDL_Delay(1000/30);
 	}
 	SDL_Quit();
-#ifdef __WIN32__
-	::DestroyIcon(mainicon);
-#endif
+	#ifdef __WIN32__
+		::DestroyIcon(mainicon);
+	#endif
 	return 0;
 }
