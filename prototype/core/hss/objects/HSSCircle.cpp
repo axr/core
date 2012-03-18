@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -56,12 +56,6 @@ using namespace AXR;
 
 HSSCircle::HSSCircle()
 : HSSShape()
-{
-    this->shapeType = HSSShapeTypeCircle;
-}
-
-HSSCircle::HSSCircle(std::string name)
-: HSSShape(name)
 {
     this->shapeType = HSSShapeTypeCircle;
 }
@@ -93,8 +87,11 @@ bool HSSCircle::isKeyword(std::string value, std::string property)
 
 void HSSCircle::draw(cairo_t * cairo, double long x, double long y, double long width, double long height)
 {
-    double long size = (width > height)? height*.5 : width*.5;
-    cairo_arc(cairo, x + size, y + size, size, 0., 2*M_PI);
+    cairo_save(cairo);
+    cairo_translate(cairo, x + width / 2., y + height / 2.);
+    cairo_scale(cairo, 1. * (width / 2.), 1. * (height / 2.));
+    cairo_arc(cairo, 0., 0., 1., 0., 2 * M_PI);
+    cairo_restore(cairo);
 }
 
 

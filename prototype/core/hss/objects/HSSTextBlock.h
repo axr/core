@@ -114,6 +114,8 @@ namespace AXR {
         void setDText(HSSParserNode::p value);
         void textChanged(HSSObservableProperty source, void*data);
         
+        void trimContentText();
+        
     protected:
         //transform
         HSSTextTransformType transform;

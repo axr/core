@@ -43,17 +43,17 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
 #import "HSSEvent.h"
 #import "../parsing/HSSObjectNameConstant.h"
 #import "../parsing/HSSObjectDefinition.h"
-#import "../parsing/HSSFunctionCall.h"
+#import "../parsing/HSSFunction.h"
 #import <boost/unordered_map.hpp>
 #import <boost/pointer_cast.hpp>
 #import "../../axr/AXRController.h"
@@ -91,6 +91,8 @@ HSSEvent::HSSEvent(HSSEventType type)
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
+    
+    this->registerProperty(HSSObservablePropertyAction, &this->action);
 }
 
 HSSEvent::~HSSEvent()
@@ -168,6 +170,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             if (objdef->getObject()->isA(HSSObjectTypeAction)) {
                 objdef->setScope(this->scope);
+                objdef->setThisObj(this->getThisObj());
                 objdef->apply();
                 HSSObject::p theObj = objdef->getObject();
                 theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyAction, this, new HSSValueChangedCallback<HSSEvent>(this, &HSSEvent::actionChanged));
@@ -183,6 +186,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 objdef->setScope(this->scope);
+                objdef->setThisObj(this->getThisObj());
                 objdef->apply();
                 
                 HSSObject::p obj = objdef->getObject();
@@ -204,11 +208,11 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
                 this->addDAction(remoteValue);
                 
@@ -220,7 +224,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
         }
             
         default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for border of @event "+this->name));
+            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for action of @event "+this->name));
     }
 }
 

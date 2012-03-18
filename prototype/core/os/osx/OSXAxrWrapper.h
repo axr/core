@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -55,13 +55,14 @@
 #define OSXAXRWRAPPER_H
 
 #include "../../axr/AXRWrapper.h"
+#include "AXRView.h"
 
 namespace AXR
 {
     class OSXAxrWrapper : public AXRWrapper
     {
     public:
-        OSXAxrWrapper();
+        OSXAxrWrapper(AXRView * mainView);
         virtual ~OSXAxrWrapper();
         
         virtual AXRFile::p getFile(std::string url);
@@ -69,6 +70,11 @@ namespace AXR
         virtual void closeFile(AXRFile::p theFile);
         virtual void handleError(AXRError::p theError);
         virtual bool openFileDialog(std::string &filePath);
+        
+        void setNeedsDisplay(bool newValue);
+        
+    private:
+        AXRView * mainView;
     };
 }
 

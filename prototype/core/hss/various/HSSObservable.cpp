@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/02/02
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 10
+ *      Core version: 0.45
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -74,10 +74,11 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyFlow] = "HSSObservablePropertyFlow";
         types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
         types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
-        types[HSSObservablePropertyBehavior] = "HSSObservablePropertyBehavior";
+        types[HSSObservablePropertyOn] = "HSSObservablePropertyOn";
         types[HSSObservablePropertyMargin] = "HSSObservablePropertyMargin";
         types[HSSObservablePropertyPadding] = "HSSObservablePropertyPadding";
         types[HSSObservablePropertyBorder] = "HSSObservablePropertyBorder";
+        types[HSSObservablePropertyHover] = "HSSObservablePropertyHover";
         
         //HSSContainer
         types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
@@ -110,6 +111,9 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyStartY] = "HSSObservablePropertyStartY";
         types[HSSObservablePropertyEndX] = "HSSObservablePropertyEndX";
         types[HSSObservablePropertyEndY] = "HSSObservablePropertyEndY";
+        
+        //HSSColorStop
+        types[HSSObservablePropertyPosition] = "HSSObservablePropertyPosition";
         
         //HSSFont
         types[HSSObservablePropertySize] = "HSSObservablePropertySize";
@@ -150,7 +154,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["flow"] = HSSObservablePropertyFlow;
         properties["alignX"] = HSSObservablePropertyAlignX;
         properties["alignY"] = HSSObservablePropertyAlignY;
-        properties["behavior"] = HSSObservablePropertyBehavior;
+        properties["on"] = HSSObservablePropertyOn;
         
         //HSSContainer
         properties["contentAlignX"] = HSSObservablePropertyContentAlignX;
@@ -160,7 +164,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["background"] = HSSObservablePropertyBackground;
         properties["font"] = HSSObservablePropertyFont;
         properties["shape"] = HSSObservablePropertyShape;
-        properties["behavior"] = HSSObservablePropertyBehavior;
+        properties["on"] = HSSObservablePropertyOn;
         properties["margin"] = HSSObservablePropertyMargin;
         properties["padding"] = HSSObservablePropertyPadding;
         properties["border"] = HSSObservablePropertyBorder;
@@ -180,12 +184,16 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["startColor"] = HSSObservablePropertyStartColor;
         properties["endColor"] = HSSObservablePropertyEndColor;
         properties["balance"] = HSSObservablePropertyBalance;
+        properties["colorStops"] = HSSObservablePropertyColorStops;
         
         //HSSLinearGradient
         properties["startX"] = HSSObservablePropertyStartX;
         properties["startY"] = HSSObservablePropertyStartY;
         properties["endX"] = HSSObservablePropertyEndX;
         properties["endY"] = HSSObservablePropertyEndY;
+        
+        //HSSColorStop
+        properties["position"] = HSSObservablePropertyPosition;
         
         //HSSFont
         properties["size"] = HSSObservablePropertySize;
@@ -230,29 +238,29 @@ void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty 
     if(this->_propertyObservers.count(target) != 0){
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
         theObserved[hash] = callback;
-        std_log3("added observer for "+HSSObservable::observablePropertyStringRepresentation(target));
+        std_log1("added observer for "+HSSObservable::observablePropertyStringRepresentation(target));
     } else {
         HSSObservable::observed theObserved;
         theObserved[hash] = callback;
         this->_propertyObservers[target] = theObserved;
-        std_log3("added observer for new "+HSSObservable::observablePropertyStringRepresentation(target));
+        std_log1("added observer for new "+HSSObservable::observablePropertyStringRepresentation(target));
     }
 }
 
 void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object)
 {
-    if(this->_propertyObservers.count(target) != 0){
+    if(this->_propertyObservers.find(target) != this->_propertyObservers.end()){
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
         std::size_t hash = 0;
         boost::hash_combine(hash, object);
         boost::hash_combine(hash, source);
         if(theObserved.count(hash) != 0){
             theObserved.erase(hash);
-            std_log3("removing observer for "+HSSObservable::observablePropertyStringRepresentation(target));
+            std_log1("removing observer for "+HSSObservable::observablePropertyStringRepresentation(target));
             return;
         }
     }
-    std_log3("tried to remove non existent observer for "+HSSObservable::observablePropertyStringRepresentation(target));
+    std_log("####### tried to remove non existent observer for "+HSSObservable::observablePropertyStringRepresentation(target));
 }
 
 void HSSObservable::propertyChanged(HSSObservableProperty property, void *data)

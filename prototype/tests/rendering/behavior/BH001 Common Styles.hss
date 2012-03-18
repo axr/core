@@ -1,0 +1,47 @@
+@font stdFont{
+    face: "Trebuchet MS";
+    size: 12;
+    color: #6;
+    
+    &@ buttonFont
+    {
+        size: 14;
+        color: #F;
+    }
+    
+    &@ heading1
+    {
+        size: 40;
+        color: #3;
+    }
+}
+
+@container button
+{
+    background: @linearGradient{
+        startColor: #6C6;
+        endColor: #181;
+        endY: 100%;
+    };
+    border: @{ 1 #FFF5}, @{ 1 #282};
+    shape: @{ 10 };
+    contentAlignY: middle;
+    textAlign: center;
+    font: buttonFont;
+    
+    @:hover
+    {
+        background: @linearGradient{
+            startColor: #181;
+            endColor: #6C6;
+            endY: 100%;
+        };
+    }
+}
+
+@linearGradient bgGrad
+{
+    startColor: #E;
+    endColor: #D;
+    endY: 50%;
+}

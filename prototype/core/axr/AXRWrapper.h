@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -78,7 +78,8 @@ namespace AXR
         virtual size_t readFile(AXRFile::p theFile) = 0;
         virtual void closeFile(AXRFile::p theFile) = 0;
         virtual void handleError(AXRError::p theError) = 0;
-        virtual bool openFileDialog(std::string &filePath) = 0; 
+        virtual bool openFileDialog(std::string &filePath) = 0;
+        virtual void setNeedsDisplay(bool newValue) = 0;
         
         boost::shared_ptr<AXRCore> getCore();
         void setCore(boost::shared_ptr<AXRCore> xcr);

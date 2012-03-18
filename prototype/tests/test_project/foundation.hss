@@ -2,58 +2,57 @@
 {
     font: fontStyle1;
     
-    @ button1
+    &@ button1
     {
         font: title2Font;
 
-        @this:hover {
-            font: title2FontAcc;
-            shape: @roundedRect { 4 };
-            background: boxGradientGloss;
-            effects: normalShadow;
-        }
+        // @this:hover {
+        //     font: title2FontAcc;
+        //     shape: @roundedRect { 4 };
+        //     background: boxGradientGloss;
+        //     effects: normalShadow;
+        // }
     }
 
-    @ textfield
+    &@ textfield
     {
         contentText: searchFormLabel;
         border: @{ 1 };
-        effects: @glow { 5 #0 10 inside };
+        // effects: @glow { 5 #0 10 inside };
         contentAlignY: 50%;
-        editable: yes;
-        innerMargin: @{ 10 };
+        // editable: yes;
+        // padding: @{ 10 };
     }
 
-    @ paragraph
+    &@ paragraph
     {
         font: bodyFont;
-        width: max(400, min(150, 80%));
-        margin: @{ 10 top }, @{ 10 bottom };
+        // width: max(400, min(150, 80%));
+        // margin: @{ 10 top }, @{ 10 bottom };
     }
 }
 
-@shadow normalShadow
-{
-    size: 10;
-    color: @rgb {
-        isA: foreground1Color;
-        alpha: 0.4;
-    };
-}
+// @shadow normalShadow
+// {
+//     size: 10;
+//     color: @rgb {
+//         isA: foreground1Color;
+//         alpha: 40%;
+//     };
+// }
 
 
-:root
+*
 {
     #new menu
     {
-        height: max(150, min(50, 20%));
+        // height: max(150, min(50, 20%));
         background: darkBarGradientGloss;
         alignModePrimary: distribute;
         content: @request { "navigation.xml" };
-        padding: @{ 50 left }, @{ 50 right};
+        // padding: @{ 50 left }, @{ 50 right};
         
-        navigation * { parent: @this }
-        #remove navigation;
+        // #unwrap navigation;
         
         * {
             isA: button1;
@@ -79,5 +78,5 @@
         parent: content;
     }
     
-    #remove ... :prefix(a);
+    #delete metadata;
 }

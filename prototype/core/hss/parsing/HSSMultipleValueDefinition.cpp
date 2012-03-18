@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -58,6 +58,10 @@ HSSMultipleValueDefinition::HSSMultipleValueDefinition()
 : HSSParserNode()
 {
     this->nodeType = HSSParserNodeTypeMultipleValueDefinition;
+}
+
+HSSMultipleValueDefinition::p HSSMultipleValueDefinition::clone() const{
+    return boost::static_pointer_cast<HSSMultipleValueDefinition, HSSClonable>(this->cloneImpl());
 }
 
 HSSMultipleValueDefinition::~HSSMultipleValueDefinition()
@@ -77,4 +81,8 @@ void HSSMultipleValueDefinition::setValues(std::vector<HSSParserNode::p> newValu
 
 void HSSMultipleValueDefinition::add(HSSParserNode::p newValue){
     this->values.push_back(newValue);
+}
+
+HSSClonable::p HSSMultipleValueDefinition::cloneImpl() const{
+    return HSSClonable::p(new HSSMultipleValueDefinition(*this));
 }

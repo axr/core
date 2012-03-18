@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/29
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 12
+ *      Core version: 0.45
+ *      Revision: 13
  *
  ********************************************************************/
 
@@ -54,7 +54,11 @@
 #define HSSPARSERNODE_H
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <vector>
+#include "../various/HSSObservable.h"
+#include "../various/HSSClonable.h"
 
 namespace AXR {
     enum HSSParserNodeType
@@ -77,26 +81,59 @@ namespace AXR {
         HSSParserNodeTypeObjectDefinition,
         HSSParserNodeTypeObjectNameConstant,
         HSSParserNodeTypeFunctionCall,
-        HSSParserNodeTypeMultipleValueDefinition
+        HSSParserNodeTypeMultipleValueDefinition,
+        HSSParserNodeTypeSelectorChain,
+        HSSParserNodeTypeNegation
     };
+    
+    class HSSDisplayObject;
 
     
-    class HSSParserNode
+    class HSSParserNode : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSParserNode>
     {
     public:
         typedef boost::shared_ptr<HSSParserNode> p;
         typedef std::vector<HSSParserNode::p>::iterator it;
+        typedef std::vector<HSSParserNode::p>::const_iterator const_it;
+        typedef boost::weak_ptr<HSSParserNode> pp;
         
         static std::string parserNodeStringRepresentation(HSSParserNodeType type);
         
         HSSParserNode();
+        HSSParserNode(const HSSParserNode &orig);
+        p clone() const;
         virtual std::string toString();
         
         bool isA(HSSParserNodeType otherType);
         HSSParserNodeType getType();
         
+        p getParentNode();
+        void setParentNode(p newParent);
+        void removeFromParentNode();
+        void addNode(p child);
+        void removeNode(p child);
+        const std::vector<HSSParserNode::p> getChildNodes() const;
+        
+        /**
+         *  Setter for the "this object", which is a shared pointer to the nearest display object
+         *  (including itself).
+         *  @param value        A shared pointer to the nearest display object.
+         */
+        virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        /**
+         *  Getter for the "this object", which is a shared pointer to the nearest display object
+         *  (including itself).
+         *  @return A shared pointer to the nearest display object.
+         */
+        virtual boost::shared_ptr<HSSDisplayObject> getThisObj();
+        
     protected:
         HSSParserNodeType nodeType;
+        boost::shared_ptr<HSSDisplayObject> thisObj;
+    private:
+        pp _parentNode;
+        std::vector<p> _childNodes;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

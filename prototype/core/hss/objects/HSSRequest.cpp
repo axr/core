@@ -43,17 +43,17 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/05
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
+#import "../../AXR.h"
 #import "HSSRequest.h"
 #import "../../axr/AXRController.h"
-#import "../parsing/HSSFunctionCall.h"
-#import "HSSSelFunction.h"
+#import "../parsing/HSSSelFunction.h"
 
 using namespace AXR;
 
@@ -109,50 +109,57 @@ void HSSRequest::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 
 void HSSRequest::fire()
 {
-    /*
+    
     std_log("----------------------------------\nFiring request: loading file "+this->axrController->basepath+this->src+"\n----------------------------------\n");
     //if there is no target
     if (this->target.size() == 0) {
-        this->axrController->loadFile(this->axrController->basepath+this->src, this->src);
+        AXRCore::p core = AXRCore::getInstance();
+        AXRWrapper * wrapper = core->getWrapper();
+        wrapper->loadXMLFile(core->getFile()->basePath+"/"+this->src);
     } else {
         switch (this->mode) {
             default:
             {
-                AXRController fileController;
-                bool loadingSuccess = fileController.loadFile(this->axrController->basepath+this->src, this->src);
-                if(loadingSuccess){
-                    unsigned i, size;
-                    for (i=0, size=this->target.size(); i<size; i++) {
-                        std_log1("Adding loaded file to target");
-                        
-                        if(this->target[i]->isA(HSSObjectTypeContainer)){
-                            const HSSContainer::p & theCont = boost::static_pointer_cast<HSSContainer>(this->target[i]);
-                            const HSSContainer::p & loadedRoot = fileController.getRoot();
-                            theCont->add(loadedRoot);
-                            
-                            unsigned j, k, size2, size3;
-                            const std::vector<HSSDisplayObject::p> &scope = theCont->getChildren();
-                            for (j=0, size2=fileController.rulesSize(); j<size2; j++) {
-                                HSSRule::p & theRule = fileController.rulesGet(j);
-                                theRule->childrenAdd(theRule);
-                            }
-                            for (j=0, size2=theCont->rulesSize(); j<size2; j++) {
-                                HSSRule::p theRule = theCont->rulesGet(j);
-                                for (k=0, size3=theRule->childrenSize(); k<size3; k++) {
-                                    HSSRule::p childRule = theRule->childrenGet(k);
-                                    this->axrController->recursiveMatchRulesToDisplayObjects(childRule, scope, theCont);
-                                }
-                            }
-                            
-                            theCont->recursiveReadDefinitionObjects();
-                            theCont->setNeedsLayout(true);
-                        }
-                    }
-                }
+                std_log("this ain't doing nothin' yet");
+                
+//                AXRCore::p core = AXRCore::getInstance();
+//                AXRWrapper * wrapper = core->getWrapper();
+//                AXRFile::p baseFile = core->getFile();
+//                
+//                bool loadingSuccess = wrapper->loadFile(baseFile->basePath+this->src, this->src);
+//                if(loadingSuccess){
+//                    unsigned i, size;
+//                    for (i=0, size=this->target.size(); i<size; i++) {
+//                        std_log1("Adding loaded file to target");
+//                        
+//                        if(this->target[i]->isA(HSSObjectTypeContainer)){
+//                            const HSSContainer::p & theCont = boost::static_pointer_cast<HSSContainer>(this->target[i]);
+//                            const HSSContainer::p & loadedRoot = fileController.getRoot();
+//                            theCont->add(loadedRoot);
+//                            
+//                            unsigned j, k, size2, size3;
+//                            const std::vector<HSSDisplayObject::p> &scope = theCont->getChildren();
+//                            for (j=0, size2=fileController.rulesSize(); j<size2; j++) {
+//                                HSSRule::p & theRule = fileController.rulesGet(j);
+//                                theRule->childrenAdd(theRule);
+//                            }
+//                            for (j=0, size2=theCont->rulesSize(); j<size2; j++) {
+//                                HSSRule::p theRule = theCont->rulesGet(j);
+//                                for (k=0, size3=theRule->childrenSize(); k<size3; k++) {
+//                                    HSSRule::p childRule = theRule->childrenGet(k);
+//                                    this->axrController->recursiveMatchRulesToDisplayObjects(childRule, scope, theCont);
+//                                }
+//                            }
+//                            
+//                            theCont->recursiveReadDefinitionObjects();
+//                            theCont->setNeedsLayout(true);
+//                        }
+//                    }
+//                }
                 break;
             }
         }
-    }/**/
+    }
 }
 
 
@@ -223,10 +230,10 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                     
                 case HSSParserNodeTypeFunctionCall:
                 {
-                    HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-                    HSSFunction::p fnct = fcall->getFunction();
+                    HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
                     if(fnct){
                         fnct->setScope(this->scope);
+                        fnct->setThisObj(this->getThisObj());
                         std::vector< std::vector<HSSDisplayObject::p> > selection = *(std::vector< std::vector<HSSDisplayObject::p> >*) fnct->evaluate();
                         unsigned i, size;
                         for (i=0, size=selection.size(); i<size; i++) {
@@ -246,8 +253,6 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                 default:
                     break;
             }
-            
-            
             
             this->notifyObservers(HSSObservablePropertySrc, &this->src);
             

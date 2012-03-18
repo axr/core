@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/28
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 5
+ *      Core version: 0.45
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -84,12 +84,19 @@ HSSValue::HSSValue(std::string value)
     this->stringValue = value;
 }
 
-//this is used to set a keyword
-HSSValue::HSSValue(void * passNULL, std::string keyword)
+HSSValue::HSSValue(HSSValueType type, std::string value)
 {
-    this->valueType = HSSValueKeyword;
+    if (type == HSSValueString) {
+        this->valueType = type;
+        this->setValue(value);
+    } else if (type == HSSValueKeyword){
+        this->valueType = type;
+        this->setKWValue(value);
+    } else {
+        this->valueType = HSSValueNumberInt;
+        this->setValue((long int)0);
+    }
     this->type = HSSObjectTypeValue;
-    this->stringValue = keyword;
 }
 
 std::string HSSValue::toString()

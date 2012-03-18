@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/18
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 6
+ *      Core version: 0.45
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -54,12 +54,24 @@
 #include <iostream>
 #include "../../axr/AXRDebugging.h"
 #include <boost/pointer_cast.hpp>
+#include "HSSRule.h"
 
 using namespace AXR;
 
 HSSSelectorChain::HSSSelectorChain()
+: HSSParserNode()
+{
+    this->nodeType = HSSParserNodeTypeSelectorChain;
+}
+
+HSSSelectorChain::HSSSelectorChain(const HSSSelectorChain &orig)
+: HSSParserNode(orig)
 {
     
+}
+
+HSSSelectorChain::p HSSSelectorChain::clone() const{
+    return boost::static_pointer_cast<HSSSelectorChain, HSSClonable>(this->cloneImpl());
 }
 
 HSSSelectorChain::~HSSSelectorChain()
@@ -97,18 +109,20 @@ const HSSParserNode::p & HSSSelectorChain::get(const int i) const
 
 void HSSSelectorChain::add(HSSParserNode::p newNode)
 {
-    if(newNode != NULL)
+    if(newNode)
     {
         std_log3("HSSSelectorChain: Added node of type " << newNode->toString());
+        newNode->setParentNode(this->shared_from_this());
         this->nodeList.push_back(newNode);
     }
 }
 
 void HSSSelectorChain::prepend(HSSParserNode::p newNode)
 {
-    if(newNode != NULL)
+    if(newNode)
     {
         std_log3("HSSSelectorChain: Added node of type " << newNode->toString() + " to the front of the selector");
+        newNode->setParentNode(this->shared_from_this());
         this->nodeList.push_front(newNode);
     }
 }
@@ -138,4 +152,20 @@ HSSSelector::p HSSSelectorChain::subject()
         std_log1("########### subject in selector chain could not be determined");
     }
     return ret;
+}
+
+HSSSelectorChain::p HSSSelectorChain::shared_from_this()
+{
+    return boost::static_pointer_cast<HSSSelectorChain>(HSSParserNode::shared_from_this());
+}
+
+HSSClonable::p HSSSelectorChain::cloneImpl() const
+{
+    HSSSelectorChain::p clone = HSSSelectorChain::p(new HSSSelectorChain(*this));
+    std::deque<HSSParserNode::p>::const_iterator it;
+    for (it=this->nodeList.begin(); it!=this->nodeList.end(); it++) {
+        HSSParserNode::p clonedNode = (*it)->clone();
+        clone->add(clonedNode);
+    }
+    return clone;
 }

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/01
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 30
+ *      Core version: 0.45
+ *      Revision: 33
  *
  ********************************************************************/
 
@@ -72,20 +72,19 @@ namespace AXR {
     
     class HSSContainer;
 
-    class HSSDisplayObject : public boost::enable_shared_from_this<HSSDisplayObject>,  public HSSObject
+    class HSSDisplayObject : public HSSObject
     {
     public:
         
         friend class HSSContainer;
         
         typedef boost::shared_ptr<HSSDisplayObject> p;
-        typedef boost::weak_ptr<HSSContainer> parentPointer;
+        typedef boost::weak_ptr<HSSContainer> pp;
         typedef std::vector<HSSDisplayObject::p> c;
         typedef std::vector<HSSDisplayObject::p>::iterator it;
+        typedef std::vector<HSSDisplayObject::p>::const_iterator const_it;
         
-        HSSDisplayObject();
-        HSSDisplayObject(std::string name);
-        
+        HSSDisplayObject();        
         void initialize();
         
         virtual ~HSSDisplayObject();
@@ -195,9 +194,11 @@ namespace AXR {
         void addDFont(HSSParserNode::p value);
         void fontChanged(HSSObservableProperty source, void*data);
         
-        //behavior
-        const HSSMultipleValueDefinition::p getDBehavior() const;
-        void setDBehavior(HSSParserNode::p value);
+        //on
+        HSSParserNode::p getDOn();
+        void setDOn(HSSParserNode::p value);
+        void addDOn(HSSParserNode::p value);
+        void onChanged(HSSObservableProperty source, void*data);
         bool fireEvent(HSSEventType type);
         
         //border
@@ -210,8 +211,13 @@ namespace AXR {
         
         virtual bool handleEvent(HSSEventType, void* data);
         
+        void setHover(bool newValue);
+        bool isHover();
+        
+        void ruleChanged(HSSObservableProperty source, void*data);
+        
     protected:
-        parentPointer parent;
+        pp parent;
         std::map<std::string, std::string>attributes;
         std::string elementName;
         std::string contentText;
@@ -286,9 +292,12 @@ namespace AXR {
         HSSObservable * observedFont;
         HSSObservableProperty observedFontProperty;
         std::vector<HSSFont::p> font;
-        //behavior
-        HSSMultipleValueDefinition::p dBehavior;
-        boost::unordered_map<HSSEventType, std::vector<HSSEvent::p> > behavior;
+        
+        //on
+        HSSParserNode::p dOn;
+        HSSObservable * observedOn;
+        HSSObservableProperty observedOnProperty;
+        boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > on;
         
         //FIXME: margin
         
@@ -311,6 +320,9 @@ namespace AXR {
         
         unsigned _index;
         
+        HSSDisplayObject::p shared_from_this();
+        
+        
     private:
         long double _setLDProperty(
                                    void(HSSDisplayObject::*callback)(HSSObservableProperty property, void* data),
@@ -323,7 +335,7 @@ namespace AXR {
                                    HSSObservableProperty    &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
-        
+        bool _isHover;
     };
 }
 

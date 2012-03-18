@@ -43,9 +43,9 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/02
+ *      Last changed: 2012/03/14
  *      HSS version: 1.0
- *      Core version: 0.44
+ *      Core version: 0.45
  *      Revision: 7
  *
  ********************************************************************/
@@ -53,6 +53,8 @@
 #include "AXR.h"
 
 using namespace AXR;
+
+
 
 AXRCore::p & AXRCore::getInstance()
 {
@@ -120,34 +122,37 @@ void AXRCore::run()
         for (i=0, size = loadSheets.size(); i<size; i++) {
             
             hssfilename = loadSheets[i];
-            
-            if(hssfilename.substr(0,1) == "/"){
-                //FIXME: add support for absolute paths
+            if(hssfilename.substr(0,7) == "file://"){
+                hssfilepath = hssfilename;
+            } else if(hssfilename.substr(0,7) == "http://"){
+                AXRError::p(new AXRError("AXRCore", "HTTP has not been implemented yet"))->raise();
+            } else if(hssfilename.substr(0,1) == "/"){
+                hssfilepath = this->file->basePath + hssfilename;
             } else {
-                hssfilepath = this->file->basePath +"/"+ hssfilename;
-                AXRFile::p hssfile;
-                try {
-                    hssfile = this->wrapper->getFile("file://"+this->file->basePath+"/"+hssfilename);
-                } catch (AXRError::p e) {
-                    e->raise();
-                    continue;
-                }
+                hssfilepath = "file://"+this->file->basePath +"/"+ hssfilename;
+            }
+            AXRFile::p hssfile;
+            try {
+                hssfile = this->wrapper->getFile(hssfilepath);
+            } catch (AXRError::p e) {
+                e->raise();
+                continue;
+            }
+            
+            this->parserHSS->setBasePath(this->file->basePath);
+            if(! this->parserHSS->loadFile(hssfile)){
+                AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
+            } else {
+                //assign the rules to the objects
                 
-                this->parserHSS->setBasePath(this->file->basePath);
-                if(! this->parserHSS->loadFile(hssfile)){
-                    AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
-                } else {
-                    //assign the rules to the objects
-                    
-                    std::vector<HSSRule::p> rules = this->controller->getRules();
-                    for (j=0, size2=rules.size(); j<size2; j++) {
-                        HSSRule::p& rule = rules[j];
-                        const HSSDisplayObject::p rootScopeArr[1] = {root};
-                        const std::vector<HSSDisplayObject::p>rootScope(rootScopeArr, rootScopeArr+1);
-                        this->controller->recursiveMatchRulesToDisplayObjects(rule, rootScope, root);
-                    }
-                    root->setNeedsRereadRules(true);
+                const std::vector<HSSRule::p> rules = this->controller->getRules();
+                for (j=0, size2=rules.size(); j<size2; j++) {
+                    const HSSRule::p& rule = rules[j];
+                    const HSSDisplayObject::p rootScopeArr[1] = {root};
+                    const std::vector<HSSDisplayObject::p>rootScope(rootScopeArr, rootScopeArr+1);
+                    this->controller->recursiveMatchRulesToDisplayObjects(rule, rootScope, root);
                 }
+                root->setNeedsRereadRules(true);
             }
         }
         if (root) {

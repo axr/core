@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/19
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 4
+ *      Core version: 0.45
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -63,10 +63,14 @@ namespace AXR {
     {
     public:
         typedef boost::shared_ptr<HSSPropertyDefinition> p;
-        
+        typedef std::vector<p>::iterator it;
+        typedef std::vector<p>::const_iterator const_it;
+
         HSSPropertyDefinition();
         HSSPropertyDefinition(std::string name);
         HSSPropertyDefinition(std::string name, HSSParserNode::p value);
+        HSSPropertyDefinition(const HSSPropertyDefinition &orig);
+        p clone() const;
         ~HSSPropertyDefinition();
         std::string toString();
         void setName(std::string name);
@@ -76,8 +80,13 @@ namespace AXR {
         HSSParserNode::p getValue();
         
     protected:
+        HSSPropertyDefinition::p shared_from_this();
+        
         std::string name;
         HSSParserNode::p value;
+        
+    private:
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

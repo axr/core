@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 3
+ *      Core version: 0.45
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -61,14 +61,25 @@
 using namespace AXR;
 
 HSSFunction::HSSFunction()
-:HSSObject()
+:HSSParserNode()
 {
-    this->type = HSSObjectTypeFunction;
+    this->nodeType = HSSParserNodeTypeFunctionCall;
     this->functionType = HSSFunctionTypeNone;
     this->scope = NULL;
     this->percentageObserved = NULL;
     this->_isDirty = true;
     this->_value = NULL;
+}
+
+HSSFunction::HSSFunction(const HSSFunction & orig)
+: HSSParserNode(orig)
+{
+    this->functionType = orig.functionType;
+    this->scope = NULL;
+    this->percentageObserved = NULL;
+    this->_isDirty = orig._isDirty;
+    this->_value = orig._value;
+    this->axrController = orig.axrController;
 }
 
 HSSFunction::~HSSFunction()
@@ -107,19 +118,6 @@ void * HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
 void * HSSFunction::_evaluate()
 {
     return this->_evaluate(std::deque<HSSParserNode::p>());
-}
-
-std::string HSSFunction::defaultObjectType(){
-    return "function";
-}
-
-std::string HSSFunction::defaultObjectType(std::string property){
-    return "value";
-}
-
-void HSSFunction::setProperty(std::string name, HSSParserNode::p value)
-{
-    std_log1("unimplemented");
 }
 
 void HSSFunction::propertyChanged(HSSObservableProperty property, void* data)
@@ -166,6 +164,16 @@ void * HSSFunction::getValue()
 bool HSSFunction::isA(HSSFunctionType type)
 {
     return this->functionType == type;
+}
+
+void HSSFunction::setController(AXRController * controller)
+{
+    this->axrController = controller;
+}
+
+AXRController * HSSFunction::getController()
+{
+    return this->axrController;
 }
 
 

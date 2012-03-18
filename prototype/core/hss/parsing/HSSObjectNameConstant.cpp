@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/04
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 5
+ *      Core version: 0.45
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -55,9 +55,14 @@
 using namespace AXR;
 
 HSSObjectNameConstant::HSSObjectNameConstant(std::string value)
+: HSSParserNode()
 {
     this->value = value;
     this->nodeType = HSSParserNodeTypeObjectNameConstant;
+}
+
+HSSObjectNameConstant::p HSSObjectNameConstant::clone() const{
+    return boost::static_pointer_cast<HSSObjectNameConstant, HSSClonable>(this->cloneImpl());
 }
 
 HSSObjectNameConstant::~HSSObjectNameConstant()
@@ -78,4 +83,8 @@ std::string HSSObjectNameConstant::getValue()
 std::string HSSObjectNameConstant::toString()
 {
     return "HSSObjectNameConstant with value "+this->value;
+}
+
+HSSClonable::p HSSObjectNameConstant::cloneImpl() const{
+    return HSSClonable::p(new HSSObjectNameConstant(*this));
 }

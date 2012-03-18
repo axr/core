@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/06/12
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 6
+ *      Core version: 0.45
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -63,6 +63,7 @@ namespace AXR {
         typedef boost::shared_ptr<HSSNumberConstant> p;
         
         HSSNumberConstant(long double value);
+        p clone() const;
         virtual ~HSSNumberConstant();
         
         void setValue(long double newValue);
@@ -72,6 +73,8 @@ namespace AXR {
         
     protected:
         long double value;
+    private:
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

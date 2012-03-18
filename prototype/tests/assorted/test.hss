@@ -1,17 +1,137 @@
-@projectedMargin myMargin1
+#FFE9CC cream;
+#FFEEDD creamLighter;
+#EECCBB creamDarker;
+#620 brown;
+#410 brownDarker;
+#6203 brownTrans;
+#FFF3 whiteTrans;
+
+@font stdFont
 {
-	size: 12;
+    face: "Helvetica";
+    size: 15;
+    color: brown;
+    
+    &@ titleFont1
+    {
+        size: 18;
+        color: brownDarker;
+    }
+    
+    &@ smallFont
+    {
+        size: 12;
+    }
 }
 
-
-root
+@container box
 {
-	parent
-	{
-		child
-		{
-			width: 100%;
-			margin: myMargin1;
-		}
-	}
+    shape: @{6};
+    border: @{ 1 #6203 }, @{ 1 #FFF3 };
+}
+
+@container boxTitle
+{
+    width: 80%;
+    font: titleFont1;
+    textAlign: center;
+    height: 60;
+    contentAlignY: middle;
+}
+
+@container priceTag
+{
+    textAlign: center;
+    height: 30;
+    background: creamDarker;
+    contentAlignY: middle;
+    width: 80%;
+    shape: @{3};
+    border: @{ 1 #6203 }, @{ 1 #FFF3 };
+    font: @{ isA: stdFont; color: brownDarker };
+}
+
+@container paragraph
+{
+    width: 80%;
+    textAlign: center;
+}
+
+@container calories
+{
+    textAlign: center;
+    font: smallFont;
+    height: 30;
+    contentAlignY: middle;
+    background: whiteTrans;
+}
+
+@container shadow1
+{
+    height: 10;
+    background: @linearGradient{
+        startColor: #0002;
+        endColor: #0000;
+        endY: 10;
+    };
+}
+
+*{
+    background: @linearGradient{
+        startColor: creamLighter;
+        endColor: cream;
+        startY: 80;
+        endY: 150;
+    };
+    
+    .. * { font: stdFont }
+    
+    #new menu
+    {
+        height: 60;
+        alignY: top;
+        background: @linearGradient {
+            startColor: brownDarker;
+            endColor: brown;
+            endY: 100%;
+        };
+        
+        #new menuLightPx
+        {
+            height: 1;
+            background: #FFF3;
+            alignY: bottom;
+        }
+        #new menuDarkPx
+        {
+            height: 1;
+            background: brownDarker;
+            alignY: bottom;
+        }
+    }
+    
+    
+    
+    #new shadow
+    {
+        isA: shadow1;
+    }
+    
+    #new wrapper
+    {
+        width: 100% - 100;
+        alignY: 50% + 6;
+        
+        #move food
+        {
+            isA: box;
+            width: 220;
+            height: 220;
+            
+            name { isA: boxTitle; alignY: top }
+            price { isA: priceTag; alignY: top }
+            description { isA: paragraph; alignY: 63%; }
+            calories { isA: calories; alignY: bottom }
+        }
+    }
 }

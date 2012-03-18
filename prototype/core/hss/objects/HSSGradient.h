@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/24
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 1
+ *      Core version: 0.45
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -97,6 +97,12 @@ namespace AXR {
         void setDBalance(HSSParserNode::p);
         void balanceChanged(HSSObservableProperty source, void*data);
         
+        //colorStops
+        HSSParserNode::p getDColorStops();
+        void setDColorStops(HSSParserNode::p value);
+        void addDColorStops(HSSParserNode::p value);
+        void colorStopsChanged(HSSObservableProperty source, void*data);
+        
     protected:
         //startColor
         HSSRgb::p startColor;
@@ -115,6 +121,12 @@ namespace AXR {
         HSSParserNode::p dBalance;
         HSSObservable * observedBalance;
         HSSObservableProperty observedBalanceProperty;
+        
+        //colorStops
+        HSSParserNode::p dColorStops;
+        HSSObservable * observedColorStops;
+        HSSObservableProperty observedColorStopsProperty;
+        std::vector<HSSObject::p> colorStops;
         
         long double _setLDProperty(
                                    void(HSSGradient::*callback)(HSSObservableProperty property, void* data),

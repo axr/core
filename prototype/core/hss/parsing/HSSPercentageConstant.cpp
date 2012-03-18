@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/25
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.45
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -58,9 +58,14 @@
 using namespace AXR;
 
 HSSPercentageConstant::HSSPercentageConstant(long double value)
+: HSSParserNode()
 {
     this->nodeType = HSSParserNodeTypePercentageConstant;
     this->value = value / 100.;
+}
+
+HSSPercentageConstant::p HSSPercentageConstant::clone() const{
+    return boost::static_pointer_cast<HSSPercentageConstant, HSSClonable>(this->cloneImpl());
 }
 
 HSSPercentageConstant::~HSSPercentageConstant()
@@ -87,5 +92,9 @@ void HSSPercentageConstant::setValue(long double newValue)
 long double HSSPercentageConstant::getValue(long double baseValue)
 {
     return this->value * baseValue;
+}
+
+HSSClonable::p HSSPercentageConstant::cloneImpl() const{
+    return HSSClonable::p(new HSSPercentageConstant(*this));
 }
 

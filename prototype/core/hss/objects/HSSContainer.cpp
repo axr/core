@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/29
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 32
+ *      Core version: 0.45
+ *      Revision: 34
  *
  ********************************************************************/
 
@@ -58,7 +58,7 @@
 #include "../parsing/HSSExpression.h"
 #include "../parsing/HSSConstants.h"
 #include "../parsing/HSSObjectNameConstant.h"
-#include "../parsing/HSSFunctionCall.h"
+#include "../parsing/HSSFunction.h"
 #include <map>
 #include <string>
 #include <sstream>
@@ -66,6 +66,7 @@
 #include <cmath>
 #include "HSSShapes.h"
 #include <vector>
+#include <boost/algorithm/string.hpp>
 
 using namespace AXR;
 
@@ -87,12 +88,6 @@ HSSContainer::p HSSContainer::asContainer(HSSDisplayObject::p theDisplayObject)
 
 HSSContainer::HSSContainer()
 : HSSDisplayObject()
-{
-    this->initialize();
-}
-
-HSSContainer::HSSContainer(std::string name)
-: HSSDisplayObject(name)
 {
     this->initialize();
 }
@@ -185,8 +180,6 @@ std::string HSSContainer::defaultObjectType(std::string property)
         return "roundedRect";
     } else if (property == "innerMargin"){
         return "margin";
-    } else if (property == "background"){
-        return "rgb";
     } else {
         return HSSDisplayObject::defaultObjectType(property);
     }
@@ -271,9 +264,24 @@ void HSSContainer::setContentText(std::string text)
 
 void HSSContainer::appendContentText(std::string text)
 {
-    HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
-    txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
-    this->add(txtBlck);
+    boost::algorithm::trim(text);
+    if (text != "") {
+        if (this->allChildren.size() == 0) {
+            HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
+            txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+            this->add(txtBlck);
+        } else {
+            HSSDisplayObject::p lastChild = this->allChildren.back();
+            if (lastChild->isA(HSSObjectTypeTextBlock)){
+                HSSTextBlock::p textBlock = boost::static_pointer_cast<HSSTextBlock>(lastChild);
+                textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(textBlock->getText() + " " + text)));
+            } else {
+                HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
+                txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+                this->add(txtBlck);
+            }
+        }
+    }
 }
 
 std::string HSSContainer::getContentText()
@@ -342,10 +350,7 @@ void HSSContainer::setProperty(HSSObservableProperty name, void * value)
 
 void HSSContainer::recursiveReadDefinitionObjects()
 {
-    if (this->_needsRereadRules) {
-        this->readDefinitionObjects();
-    }
-    
+    this->readDefinitionObjects();
     unsigned i;
     for (i=0; i<this->allChildren.size(); i++) {
         this->allChildren[i]->recursiveReadDefinitionObjects();
@@ -605,8 +610,8 @@ void HSSContainer::layout()
     //assign the globalX and globalY
     for(i=0, size = this->allChildren.size(); i<size; i++){
         HSSDisplayObject::p &child = this->allChildren[i];
-        child->setGlobalX(floor(this->globalX + child->x));
-        child->setGlobalY(floor(this->globalY + child->y));
+        child->setGlobalX(round(this->globalX + child->x));
+        child->setGlobalY(round(this->globalY + child->y));
     }
     
     if(this->heightByContent){
@@ -735,7 +740,7 @@ bool HSSContainer::_mergeGroupsIfNeeded(displayGroup &group, displayGroup &other
         //if the group bounds overlap, check each individual element against each other
         for (i=0, size = group.objects.size(); i<size; i++) {
             HSSDisplayObject::p & child = group.objects[i];
-            for (j=0, size2 = otherGroup.objects.size(); j<size; j++) {
+            for (j=0, size2 = otherGroup.objects.size(); j<size2; j++) {
                 HSSDisplayObject::p &otherChild = otherGroup.objects[j];
                 if (
                     ((child->x + child->width)  > otherChild->x) && (child->x < (otherChild->x + otherChild->width))
@@ -969,7 +974,7 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
             break;
         default:
-            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of "+this->getElementName()));
+            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of "+this->getElementName()));
     }
     
     this->dContentAlignX = value;
@@ -1357,8 +1362,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dTextAlign = value;
-            HSSFunctionCall::p fcall = boost::static_pointer_cast<HSSFunctionCall>(value);
-            HSSFunction::p fnct = fcall->getFunction();
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 this->textAlign = *(HSSTextAlignType *)fnct->evaluate();
@@ -1488,15 +1492,15 @@ long double HSSContainer::_setLDProperty(
         
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunctionCall::p functionCallValue = boost::static_pointer_cast<HSSFunctionCall>(value);
-            functionCallValue->setPercentageBase(percentageBase);
-            functionCallValue->setPercentageObserved(observedProperty, observedObject);
-            functionCallValue->setScope(scope);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            fnct->setPercentageBase(percentageBase);
+            fnct->setPercentageObserved(observedProperty, observedObject);
+            fnct->setScope(scope);
             
-            ret = functionCallValue->evaluate();
+            ret = *(long double*)fnct->evaluate();
             if(callback != NULL){
-                functionCallValue->getFunction()->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer>(this, callback));
-                observedStore = functionCallValue->getFunction().get();
+                fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer>(this, callback));
+                observedStore = fnct.get();
                 observedStoreProperty = HSSObservablePropertyValue;
             }
             break;

@@ -1,0 +1,18 @@
+state
+{
+	background: #D;
+	
+	message
+	{
+		width: 80%;
+		height: 100;
+		alignY: 50%;
+		anchorY: 30;
+		
+		font: @font{
+			face: "Lucida Grande";
+			size: 16;
+			color: #9;
+		}
+	}
+}

@@ -1,11 +1,28 @@
 /*
 	Test GR002 Color stops
 	Created by Miro Keller on 2011-12-27.
+	Last modified: 2011-03-08
 */
 
 #F00 bgColor;
 #0F0 bgColor2;
 #00F bgColor3;
+
+@container pane
+{
+    width: 200;
+    height: 50%;
+    shape: @{10};
+    border: @{ 1 #FFF5 }, @{ 1 #0008 }; 
+}
+
+@linearGradient glossGradient
+{
+    startColor: #FFF4;
+    endColor: #FFF0;
+    endY: 100%;
+    colorStops: #FFF2, #FFF1;
+}
 
 master
 {
@@ -14,19 +31,30 @@ master
     
     #new test
     {
-        width: 200;
-        height: 50%;
-        shape: @{10};
-        border: @{ 1 #FFF5 }, @{ 1 #0008 };
-        background: @linearGradient blackGrad {
+        isA: pane;
+        background: @linearGradient {
             startColor: bgColor;
             endColor: bgColor3;
             startY: 0;
             endY: 100%;
-            colorStops: @colorStop{
+            colorStops: @colorStop {
                 color: bgColor2;
                 position: 50%;
-            }
+            };
         };
+        
+        alignX: 50% - 120;
+    }
+    
+    #new test2
+    {
+        isA: pane;
+        background: glossGradient;
+        alignX: 50% + 120;
+        
+        @:hover
+        {
+            background: #0004, glossGradient;
+        }
     }
 }

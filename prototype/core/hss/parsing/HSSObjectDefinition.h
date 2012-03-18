@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/26
+ *      Last changed: 2012/03/15
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 7
+ *      Core version: 0.45
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -62,6 +62,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "../objects/HSSDisplayObject.h"
+#include "HSSRule.h"
 
 namespace AXR {
     class HSSObjectDefinition : public HSSStatement
@@ -70,6 +71,7 @@ namespace AXR {
         typedef boost::shared_ptr<HSSObjectDefinition> p;
         
         HSSObjectDefinition(HSSObject::p prototype);
+        p clone() const;
         ~HSSObjectDefinition();
         virtual std::string toString();
         
@@ -102,27 +104,33 @@ namespace AXR {
         //returns all the children
         const std::vector<HSSObjectDefinition::p> getChildren() const;
         
-        
         HSSObject::p getObject();
-        HSSObjectDefinition::p getParent();
-        void setParent(HSSObjectDefinition::p newParent);
         
         void setScope(const std::vector<HSSDisplayObject::p> * newScope);
         
         void setThisObj(HSSDisplayObject::p value);
         HSSDisplayObject::p getThisObj();
         
+        void setRules(std::deque<HSSRule::p> newRules);
+        const std::deque<HSSRule::p> getRules() const;
+        void rulesAdd(HSSRule::p rule);
+        void rulesPrepend(HSSRule::p rule);
+        void rulesRemove(HSSRule::p rule);
+        
     protected:
+        HSSObjectDefinition::p shared_from_this();
+        
         std::deque<HSSPropertyDefinition::p> properties;
         std::vector<HSSObjectDefinition::p> children;
-        
-        boost::weak_ptr<HSSObjectDefinition> parent;
+
         
         HSSDisplayObject::p thisObj;
         const std::vector<HSSDisplayObject::p> * scope;
         
     private:
+        virtual HSSClonable::p cloneImpl() const;
         HSSObject::p prototype;
+        std::deque<HSSRule::p> _rules;
     };
 }
 
