@@ -1,1 +1,8 @@
-*/.DS_Store
+# xcode noise
+# the following two lines ignore everything inside .xcodeproj 
+# folder except project.pbxproj file
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+
+# OS X noise
+.DS_Store
