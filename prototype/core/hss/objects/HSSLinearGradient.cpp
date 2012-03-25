@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.46
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -77,6 +77,36 @@ HSSLinearGradient::HSSLinearGradient()
     this->observedStartX = this->observedStartY
     = this->observedEndX = this->observedEndY
     = NULL;
+}
+
+HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
+: HSSGradient(orig)
+{
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("startColor");
+    shorthandProperties.push_back("endColor");
+    shorthandProperties.push_back("endY");
+    this->setShorthandProperties(shorthandProperties);
+    
+    this->registerProperty(HSSObservablePropertyStartX, (void *) &this->startX);
+    this->registerProperty(HSSObservablePropertyStartY, (void *) &this->startY);
+    this->registerProperty(HSSObservablePropertyEndX, (void *) &this->startY);
+    this->registerProperty(HSSObservablePropertyEndY, (void *) &this->startY);
+    
+    this->startX = this->startY = this->endX = endY = 0.;
+    
+    this->observedStartX = this->observedStartY
+    = this->observedEndX = this->observedEndY
+    = NULL;
+
+}
+
+HSSLinearGradient::p HSSLinearGradient::clone() const{
+    return boost::static_pointer_cast<HSSLinearGradient, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSLinearGradient::cloneImpl() const{
+    return HSSClonable::p(new HSSLinearGradient(*this));
 }
 
 HSSLinearGradient::~HSSLinearGradient()
@@ -462,7 +492,16 @@ void HSSLinearGradient::draw(cairo_t * cairo)
             HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop>(theStopObj);
             HSSRgb::p theColor = theStop->getColor();
             if(theColor){
-                cairo_pattern_add_color_stop_rgba (pat, theStop->getPosition(), theColor->getRed()/255., theColor->getGreen()/255., theColor->getBlue()/255., theColor->getAlpha()/255.);
+                long double position;
+                if(theStop->getDPosition()->isA(HSSParserNodeTypePercentageConstant)){
+                    position = theStop->getPosition();
+                } else {
+                    long double width = (this->endX - this->startX);
+                    long double height = (this->endY - this->startY);
+                    long double hypotenuse = hypot(width, height);
+                    position = theStop->getPosition() / hypotenuse;
+                }
+                cairo_pattern_add_color_stop_rgba (pat, position, theColor->getRed()/255., theColor->getGreen()/255., theColor->getBlue()/255., theColor->getAlpha()/255.);
             } else {
                 AXRWarning::p(new AXRWarning("HSSLinearGradient", "The color stop had no color defined"))->raise();
             }

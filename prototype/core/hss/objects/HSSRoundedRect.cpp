@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 5
+ *      Core version: 0.46
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -70,6 +70,25 @@ HSSRoundedRect::HSSRoundedRect()
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("corners");
     this->setShorthandProperties(shorthandProperties);
+}
+
+HSSRoundedRect::HSSRoundedRect(const HSSRoundedRect & orig)
+: HSSShape(orig)
+{
+    this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
+    this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
+    
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("corners");
+    this->setShorthandProperties(shorthandProperties);
+}
+
+HSSRoundedRect::p HSSRoundedRect::clone() const{
+    return boost::static_pointer_cast<HSSRoundedRect, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSRoundedRect::cloneImpl() const{
+    return HSSClonable::p(new HSSRoundedRect(*this));
 }
 
 HSSRoundedRect::~HSSRoundedRect()

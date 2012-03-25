@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.46
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -119,6 +119,38 @@ HSSTextBlock::HSSTextBlock()
     
     PangoFontMap * fontMap = pango_cairo_font_map_new();
     this->_layout = pango_layout_new(pango_font_map_create_context(fontMap));
+}
+
+HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
+: HSSDisplayObject(orig)
+{
+    this->observedTextAlign = this->observedTransform = this->observedText
+    = NULL;
+    
+    this->registerProperty(HSSObservablePropertyText, (void *) &this->text);
+    this->registerProperty(HSSObservablePropertyTransform, (void *) &this->transform);
+    this->registerProperty(HSSObservablePropertyTextAlign, (void *) &this->textAlign);
+    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) &this->directionPrimary);
+    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) &this->directionSecondary);
+    
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("text");
+    shorthandProperties.push_back("textAlign");
+    shorthandProperties.push_back("transform");
+    shorthandProperties.push_back("directionPrimary");
+    shorthandProperties.push_back("directionSecondary");
+    this->setShorthandProperties(shorthandProperties);
+    
+    PangoFontMap * fontMap = pango_cairo_font_map_new();
+    this->_layout = pango_layout_new(pango_font_map_create_context(fontMap));
+}
+
+HSSTextBlock::p HSSTextBlock::clone() const{
+    return boost::static_pointer_cast<HSSTextBlock, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSTextBlock::cloneImpl() const{
+    return HSSClonable::p(new HSSTextBlock(*this));
 }
 
 HSSTextBlock::~HSSTextBlock()

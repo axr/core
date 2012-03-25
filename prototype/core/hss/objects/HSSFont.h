@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/28
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 3
+ *      Core version: 0.46
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -64,10 +64,23 @@ namespace AXR {
     public:        
         friend class HSSParser;
         
-        HSSFont();
-        virtual ~HSSFont();
-        
         typedef boost::shared_ptr<HSSFont> p;
+        
+        /**
+         *  Constructor for HSSFont objects
+         */
+        HSSFont();
+        /**
+         *  Copy constructor for HSSFont objects
+         */
+        HSSFont(const HSSFont & orig);
+        /**
+         *  Clones an instance of HSSFont and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSFont
+         */
+        p clone() const;
+        virtual ~HSSFont();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
@@ -127,6 +140,7 @@ namespace AXR {
                                    HSSObservable *          &observedStore,
                                    HSSObservableProperty    &observedStoreProperty
                                    );
+        HSSClonable::p cloneImpl() const;
     };
     
 }

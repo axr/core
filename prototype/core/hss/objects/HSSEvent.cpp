@@ -43,10 +43,9 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 4
+ *      Core version: 0.46
  *
  ********************************************************************/
 
@@ -93,6 +92,25 @@ HSSEvent::HSSEvent(HSSEventType type)
     this->setShorthandProperties(shorthandProperties);
     
     this->registerProperty(HSSObservablePropertyAction, &this->action);
+}
+
+HSSEvent::HSSEvent(const HSSEvent & orig)
+: HSSObject(orig)
+{
+    this->eventType = orig.eventType;
+    
+    shorthandProperties.push_back("action");
+    this->setShorthandProperties(shorthandProperties);
+    
+    this->registerProperty(HSSObservablePropertyAction, &this->action);
+}
+
+HSSEvent::p HSSEvent::clone() const{
+    return boost::static_pointer_cast<HSSEvent, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSEvent::cloneImpl() const{
+    return HSSClonable::p(new HSSEvent(*this));
 }
 
 HSSEvent::~HSSEvent()

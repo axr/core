@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.43
- *      Revision: 2
+ *      Core version: 0.46
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -65,6 +65,15 @@ HSSGradient::HSSGradient()
 :HSSObject()
 {
     this->type = HSSObjectTypeGradient;
+    this->registerProperty(HSSObservablePropertyStartColor, (void *) &this->startColor);
+    this->registerProperty(HSSObservablePropertyEndColor, (void *) &this->endColor);
+    this->registerProperty(HSSObservablePropertyBalance, (void *) &this->balance);
+    this->registerProperty(HSSObservablePropertyColorStops, (void *) &this->colorStops);
+}
+
+HSSGradient::HSSGradient(const HSSGradient & orig)
+: HSSObject(orig)
+{
     this->registerProperty(HSSObservablePropertyStartColor, (void *) &this->startColor);
     this->registerProperty(HSSObservablePropertyEndColor, (void *) &this->endColor);
     this->registerProperty(HSSObservablePropertyBalance, (void *) &this->balance);

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 33
+ *      Core version: 0.46
+ *      Revision: 34
  *
  ********************************************************************/
 
@@ -84,8 +84,24 @@ namespace AXR {
         typedef std::vector<HSSDisplayObject::p>::iterator it;
         typedef std::vector<HSSDisplayObject::p>::const_iterator const_it;
         
-        HSSDisplayObject();        
+        /**
+         *  Constructor for HSSDisplayObject objects
+         */
+        HSSDisplayObject();      
+        /**
+         *  Initializes all ivars to default values.
+         */
         void initialize();
+        /**
+         *  Copy constructor for HSSDisplayObject objects
+         */
+        HSSDisplayObject(const HSSDisplayObject & orig);
+        /**
+         *  Clones an instance of HSSDisplayObject and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSDisplayObject
+         */
+        p clone() const;
         
         virtual ~HSSDisplayObject();
         virtual std::string toString();
@@ -335,6 +351,7 @@ namespace AXR {
                                    HSSObservableProperty    &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
+        HSSClonable::p cloneImpl() const;
         bool _isHover;
     };
 }

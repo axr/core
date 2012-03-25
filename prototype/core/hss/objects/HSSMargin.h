@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/16
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 4
+ *      Core version: 0.46
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -64,7 +64,20 @@ namespace AXR {
     public:
         typedef boost::shared_ptr<HSSMargin> p;
         
+        /**
+         *  Constructor for HSSMargin objects
+         */
         HSSMargin();
+        /**
+         *  Copy constructor for HSSMargin objects
+         */
+        HSSMargin(const HSSMargin & orig);
+        /**
+         *  Clones an instance of HSSMargin and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSMargin
+         */
+        p clone() const;
         virtual ~HSSMargin();
         
         HSSMultipleValue segments;
@@ -76,6 +89,8 @@ namespace AXR {
         
     protected:
         HSSValue size;
+    private:
+        HSSClonable::p cloneImpl() const;
     };
 }
 

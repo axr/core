@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 38
+ *      Core version: 0.46
+ *      Revision: 39
  *
  ********************************************************************/
 
@@ -128,6 +128,23 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyBorder, (void *) &this->border);
     
     this->_isHover = false;
+}
+
+HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
+: HSSObject(orig)
+    this->initialize();
+    this->elementName = orig.elementName;
+    this->rules = orig.rules; //shallow copy
+    
+    this->_index = orig._index;
+}
+
+HSSDisplayObject::p HSSDisplayObject::clone() const{
+    return boost::static_pointer_cast<HSSDisplayObject, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSDisplayObject::cloneImpl() const{
+    return HSSClonable::p(new HSSDisplayObject(*this));
 }
 
 HSSDisplayObject::~HSSDisplayObject()

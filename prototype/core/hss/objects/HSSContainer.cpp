@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 34
+ *      Core version: 0.46
+ *      Revision: 35
  *
  ********************************************************************/
 
@@ -125,6 +125,20 @@ void HSSContainer::initialize()
     this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) &this->directionSecondary);
     this->registerProperty(HSSObservablePropertyShape, (void *) &this->shape);
     this->registerProperty(HSSObservablePropertyTextAlign, (void *) &this->textAlign);
+}
+
+HSSContainer::HSSContainer(const HSSContainer & orig)
+: HSSDisplayObject(orig)
+{
+    this->initialize();
+}
+
+HSSContainer::p HSSContainer::clone() const{
+    return boost::static_pointer_cast<HSSContainer, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSContainer::cloneImpl() const{
+    return HSSClonable::p(new HSSContainer(*this));
 }
 
 HSSContainer::~HSSContainer()

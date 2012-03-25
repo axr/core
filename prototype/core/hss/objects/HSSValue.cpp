@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 6
+ *      Core version: 0.46
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -57,6 +57,7 @@
 using namespace AXR;
 
 HSSValue::HSSValue()
+: HSSObject()
 {
     this->valueType = HSSValueNumberInt;
     this->type = HSSObjectTypeValue;
@@ -64,6 +65,7 @@ HSSValue::HSSValue()
 }
 
 HSSValue::HSSValue(long int value)
+: HSSObject()
 {
     this->valueType = HSSValueNumberInt;
     this->type = HSSObjectTypeValue;
@@ -71,6 +73,7 @@ HSSValue::HSSValue(long int value)
 }
 
 HSSValue::HSSValue(long double value)
+: HSSObject()
 {
     this->valueType = HSSValueNumberFloat;
     this->type = HSSObjectTypeValue;
@@ -78,6 +81,7 @@ HSSValue::HSSValue(long double value)
 }
 
 HSSValue::HSSValue(std::string value)
+: HSSObject()
 {
     this->valueType = HSSValueString;
     this->type = HSSObjectTypeValue;
@@ -85,6 +89,7 @@ HSSValue::HSSValue(std::string value)
 }
 
 HSSValue::HSSValue(HSSValueType type, std::string value)
+: HSSObject()
 {
     if (type == HSSValueString) {
         this->valueType = type;
@@ -97,6 +102,24 @@ HSSValue::HSSValue(HSSValueType type, std::string value)
         this->setValue((long int)0);
     }
     this->type = HSSObjectTypeValue;
+}
+
+HSSValue::HSSValue(const HSSValue & orig)
+: HSSObject(orig)
+{
+    this->valueType = orig.valueType;
+    this->stringValue = orig.stringValue;
+    this->intValue = orig.intValue;
+    this->floatValue = orig.floatValue;
+    
+}
+
+HSSValue::p HSSValue::clone() const{
+    return boost::static_pointer_cast<HSSValue, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSValue::cloneImpl() const{
+    return HSSClonable::p(new HSSValue(*this));
 }
 
 std::string HSSValue::toString()

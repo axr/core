@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.46
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -65,6 +65,23 @@ HSSLog::HSSLog()
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
+}
+
+HSSLog::HSSLog(const HSSLog & orig)
+: HSSAction(orig)
+{
+    this->observedValue = NULL;
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("value");
+    this->setShorthandProperties(shorthandProperties);
+}
+
+HSSLog::p HSSLog::clone() const{
+    return boost::static_pointer_cast<HSSLog, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSLog::cloneImpl() const{
+    return HSSClonable::p(new HSSLog(*this));
 }
 
 HSSLog::~HSSLog()

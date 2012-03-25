@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/05
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.46
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -73,12 +73,28 @@ namespace AXR {
     {
     public:
         
+        typedef boost::shared_ptr<HSSAction> p;
+        
         static std::string actionTypeStringRepresentation(HSSActionType actionType);
         
+        /**
+         *  Constructor for HSSAction objects
+         *  @param  type    The HSSActionType that this action corresponds to. Usually set
+         *                  from withing a subclass' constructor method.
+         */
         HSSAction(HSSActionType type);
-        virtual ~HSSAction();
+        /**
+         *  Copy constructor for HSSAction objects
+         */
+        HSSAction(const HSSAction & orig);
+        /**
+         *  Clones an instance of HSSAction and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSAction
+         */
+        p clone() const;
         
-        typedef boost::shared_ptr<HSSAction> p;
+        virtual ~HSSAction();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
@@ -95,7 +111,8 @@ namespace AXR {
     protected:
         HSSActionType actionType;
         
-        
+    private:
+        HSSClonable::p cloneImpl() const;
     };
 }
 

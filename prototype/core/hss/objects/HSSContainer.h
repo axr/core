@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/28
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 24
+ *      Core version: 0.46
+ *      Revision: 25
  *
  ********************************************************************/
 
@@ -90,9 +90,25 @@ namespace AXR {
         static HSSDisplayObject::p asDisplayObject(HSSContainer::p theContainer);
         static HSSContainer::p asContainer(HSSDisplayObject::p theDisplayObject);
         
+        
+        /**
+         *  Constructor for HSSContainer objects
+         */
         HSSContainer();
-        HSSContainer(std::string name);
+        /**
+         *  Initializes all ivars to default values.
+         */
         void initialize();
+        /**
+         *  Copy constructor for HSSContainer objects
+         */
+        HSSContainer(const HSSContainer & orig);
+        /**
+         *  Clones an instance of HSSContainer and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSContainer
+         */
+        p clone() const;
         
         virtual ~HSSContainer();
         virtual std::string toString();
@@ -212,6 +228,7 @@ namespace AXR {
         bool _addChildToGroupIfNeeded(HSSDisplayObject::p &child, displayGroup &group, HSSDirectionValue direction, bool overflow);
         bool _mergeGroupsIfNeeded(displayGroup &group, displayGroup &otherGroup, HSSDirectionValue direction);
         void _arrange(displayGroup &group, HSSDirectionValue direction);
+        HSSClonable::p cloneImpl() const;
     };
 }
 

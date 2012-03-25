@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/19
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.46
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -58,6 +58,12 @@ HSSShape::HSSShape()
 : HSSObject()
 {
     this->type = HSSObjectTypeShape;
+}
+
+HSSShape::HSSShape(const HSSShape & orig)
+: HSSObject(orig)
+{
+    this->shapeType = orig.shapeType;
 }
 
 HSSShape::~HSSShape()

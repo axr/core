@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/19
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.46
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -72,7 +72,14 @@ namespace AXR {
     public:
         typedef boost::shared_ptr<HSSShape> p;
         
+        /**
+         *  Constructor for HSSShape objects
+         */
         HSSShape();
+        /**
+         *  Copy constructor for HSSShape objects
+         */
+        HSSShape(const HSSShape & orig);
         virtual ~HSSShape();
         
         bool isA(HSSShapeType type);
@@ -87,7 +94,6 @@ namespace AXR {
         
     protected:
         HSSShapeType shapeType;
-        
     };
 }
 

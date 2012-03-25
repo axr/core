@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/05
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.46
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -81,6 +81,24 @@ HSSAction::HSSAction(HSSActionType type)
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
+}
+
+HSSAction::HSSAction(const HSSAction & orig)
+: HSSObject(orig)
+{
+    this->actionType = orig.actionType;
+    
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("action");
+    this->setShorthandProperties(shorthandProperties);
+}
+
+HSSAction::p HSSAction::clone() const{
+    return boost::static_pointer_cast<HSSAction, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSAction::cloneImpl() const{
+    return HSSClonable::p(new HSSAction(*this));
 }
 
 HSSAction::~HSSAction()

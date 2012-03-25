@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 4
+ *      Core version: 0.46
+ *      Revision: 5
  *
  *      WARNING!
  *      =================
@@ -59,9 +59,24 @@
 using namespace AXR;
 
 HSSMargin::HSSMargin()
+: HSSObject()
 {
     this->segments = HSSMultipleValue();
     this->type = HSSObjectTypeMargin;
+}
+
+HSSMargin::HSSMargin(const HSSMargin & orig)
+: HSSObject(orig)
+{
+    //fixme
+}
+
+HSSMargin::p HSSMargin::clone() const{
+    return boost::static_pointer_cast<HSSMargin, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSMargin::cloneImpl() const{
+    return HSSClonable::p(new HSSMargin(*this));
 }
 
 HSSMargin::~HSSMargin()

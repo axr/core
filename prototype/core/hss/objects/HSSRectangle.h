@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/19
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.46
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -61,7 +61,20 @@ namespace AXR {
     public:
         typedef boost::shared_ptr<HSSRectangle> p;
         
+        /**
+         *  Constructor for HSSRectangle objects
+         */
         HSSRectangle();
+        /**
+         *  Copy constructor for HSSRectangle objects
+         */
+        HSSRectangle(const HSSRectangle & orig);
+        /**
+         *  Clones an instance of HSSRectangle and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSRectangle
+         */
+        p clone() const;
         virtual ~HSSRectangle();
         
         virtual std::string toString();
@@ -71,6 +84,8 @@ namespace AXR {
         
         virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
         
+    private:
+        HSSClonable::p cloneImpl() const;
     };
 }
 

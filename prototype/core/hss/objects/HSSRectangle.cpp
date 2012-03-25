@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/19
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.46
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -58,6 +58,20 @@ HSSRectangle::HSSRectangle()
 : HSSShape()
 {
     this->shapeType = HSSShapeTypeRectangle;
+}
+
+HSSRectangle::HSSRectangle(const HSSRectangle & orig)
+: HSSShape(orig)
+{
+    
+}
+
+HSSRectangle::p HSSRectangle::clone() const{
+    return boost::static_pointer_cast<HSSRectangle, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSRectangle::cloneImpl() const{
+    return HSSClonable::p(new HSSRectangle(*this));
 }
 
 HSSRectangle::~HSSRectangle()

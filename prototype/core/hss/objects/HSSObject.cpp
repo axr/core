@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 20
+ *      Core version: 0.46
+ *      Revision: 21
  *
  ********************************************************************/
 
@@ -216,6 +216,27 @@ HSSObject::HSSObject()
     this->name = "";
     this->type = HSSObjectTypeGeneric;
     this->shorthandIndex = 0;
+}
+
+HSSObject::HSSObject(const HSSObject & orig)
+{
+    this->name = orig.name;
+    this->type = orig.type;
+    this->_isNamed = orig._isNamed;
+    this->scope = orig.scope;
+    this->thisObj = orig.thisObj;
+    this->axrController = orig.axrController;
+    this->shorthandIndex = orig.shorthandIndex;
+    
+}
+
+HSSObject::p HSSObject::clone() const{
+    return boost::static_pointer_cast<HSSObject, HSSClonable>(this->cloneImpl());
+}
+
+
+HSSClonable::p HSSObject::cloneImpl() const{
+    return HSSClonable::p(new HSSObject(*this));
 }
 
 HSSObject::~HSSObject()

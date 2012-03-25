@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 20
+ *      Core version: 0.46
+ *      Revision: 21
  *
  ********************************************************************/
 
@@ -103,7 +103,7 @@ namespace AXR {
      *  isA.
      *  @see HSSObjectType
      */
-    class HSSObject : public HSSObservable, public boost::enable_shared_from_this<HSSObject>
+    class HSSObject : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSObject>
     {
     public:
         /**
@@ -136,6 +136,17 @@ namespace AXR {
          *  Constructor for HSSObject.
          */
         HSSObject();
+        /**
+         *  Copy constructor for HSSObject. Doesn't copy registered properties or shorhand positions. If your
+         *  subclass needs that, you have to copy them yourself after the construction.
+         */
+        HSSObject(const HSSObject & orig);
+        /**
+         *  Clones an instance of HSSObject and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSObject
+         */
+        p clone() const;
         /**
          *  Destructor for HSSObject.
          */
@@ -347,6 +358,9 @@ namespace AXR {
         
     private:
         bool _isNamed;
+        
+        virtual HSSClonable::p cloneImpl() const;
+        
     };
 
 }

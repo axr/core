@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 9
+ *      Core version: 0.46
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -64,7 +64,20 @@ namespace AXR {
     public:
         typedef boost::shared_ptr<HSSLinearGradient> p;
         
+        /**
+         *  Constructor for HSSLinearGradient objects
+         */
         HSSLinearGradient();
+        /**
+         *  Copy constructor for HSSLinearGradient objects
+         */
+        HSSLinearGradient(const HSSLinearGradient & orig);
+        /**
+         *  Clones an instance of HSSLinearGradient and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSLinearGradient
+         */
+        p clone() const;
         virtual ~HSSLinearGradient();
         
         virtual std::string toString();
@@ -132,6 +145,8 @@ namespace AXR {
                                    HSSObservable *        &observedStore,
                                    HSSObservableProperty  &observedStoreProperty
                                    );
+    private:
+        virtual HSSClonable::p cloneImpl() const;
 
     };
 }
