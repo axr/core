@@ -1365,6 +1365,11 @@ void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
             this->alignX = *(long double*)data;
         }
             
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->alignX = *(long double*)data;
+        }
+            
         default:
             break;
     }
@@ -1472,6 +1477,11 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
         }
             
         case HSSParserNodeTypeKeywordConstant:
+        {
+            this->alignY = *(long double*)data;
+        }
+            
+        case HSSParserNodeTypeFunctionCall:
         {
             this->alignY = *(long double*)data;
         }
@@ -1640,7 +1650,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                 
                 objdef->apply();
                 HSSObject::p theObj = objdef->getObject();
-                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
                 this->font.push_back(boost::static_pointer_cast<HSSFont>(theObj));
             }
             
@@ -1713,6 +1723,8 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
         default:
             throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for font of "+this->getElementName()));
     }
+    
+    this->notifyObservers(HSSObservablePropertyFont, &this->font);
 }
 
 void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
@@ -1722,6 +1734,7 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypeObjectDefinition:
         case HSSParserNodeTypeObjectNameConstant:
         case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeKeywordConstant:
         {
             //this->font = *(std::vector<HSSFont::p> *) data;
             this->setDirty(true);

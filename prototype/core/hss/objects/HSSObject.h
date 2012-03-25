@@ -264,6 +264,7 @@ namespace AXR {
         void setDIsA(HSSParserNode::p value);
         /**
          *  Callback to receive notifications of when the isA property has changed.
+         *  @warning Currently unimplemented
          *  @param source   The property which triggers the notification
          *  @param data     A pointer to the data that has been passed along with the notification.
          */

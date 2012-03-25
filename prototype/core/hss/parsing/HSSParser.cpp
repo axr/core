@@ -485,7 +485,13 @@ HSSRule::p HSSParser::readRule()
         
         if (this->atEndOfSource()) {
             HSSSelector::p sbjct = selectorChain->subject();
-            std::string lmntnm = sbjct->getElementName();
+            std::string lmntnm;
+            if(sbjct){
+                lmntnm = sbjct->getElementName();
+            } else {
+                lmntnm = "unknown element";
+            }
+            
             AXRWarning::p(new AXRWarning("HSSParser", "Auto closing block of rule targeting "+lmntnm+" because of unexpected end of file", this->currentFile->fileName, this->line, this->column))->raise();
             //leave the block context
             this->currentContext.pop_back();
@@ -1425,11 +1431,23 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
             }
             sscanf(tempstr.c_str(), "%X", &hexValue);
             
-            obj->setDRed(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
-            obj->setDGreen(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
-            obj->setDBlue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
-            
             ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
+            
+            HSSPropertyDefinition::p newRed = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newRed->setName("red");
+            newRed->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+            ret->propertiesAdd(newRed);
+            
+            HSSPropertyDefinition::p newGreen = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newGreen->setName("green");
+            newGreen->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+            ret->propertiesAdd(newGreen);
+            
+            HSSPropertyDefinition::p newBlue = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newBlue->setName("blue");
+            newBlue->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+            ret->propertiesAdd(newBlue);
+            
             break;
         }
             
@@ -1499,12 +1517,28 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
             sscanf(blue.c_str(), "%X", &blueHex);
             sscanf(alpha.c_str(), "%X", &alphaHex);
             
-            obj->setDRed(HSSNumberConstant::p(new HSSNumberConstant(redHex)));
-            obj->setDGreen(HSSNumberConstant::p(new HSSNumberConstant(greenHex)));
-            obj->setDBlue(HSSNumberConstant::p(new HSSNumberConstant(blueHex)));
-            obj->setDAlpha(HSSNumberConstant::p(new HSSNumberConstant(alphaHex)));
-            
             ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
+            
+            HSSPropertyDefinition::p newRed = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newRed->setName("red");
+            newRed->setValue(HSSNumberConstant::p(new HSSNumberConstant(redHex)));
+            ret->propertiesAdd(newRed);
+            
+            HSSPropertyDefinition::p newGreen = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newGreen->setName("green");
+            newGreen->setValue(HSSNumberConstant::p(new HSSNumberConstant(greenHex)));
+            ret->propertiesAdd(newGreen);
+            
+            HSSPropertyDefinition::p newBlue = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newBlue->setName("blue");
+            newBlue->setValue(HSSNumberConstant::p(new HSSNumberConstant(blueHex)));
+            ret->propertiesAdd(newBlue);
+            
+            HSSPropertyDefinition::p newAlpha = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newAlpha->setName("alpha");
+            newAlpha->setValue(HSSNumberConstant::p(new HSSNumberConstant(alphaHex)));
+            ret->propertiesAdd(newAlpha);
+            
             break;
         }
             
