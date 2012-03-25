@@ -2253,12 +2253,13 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
 
 void HSSDisplayObject::flagsToggle(std::string name)
 {
-    std_log3("toggle flag with name "+name+" on element "+this->getElementName());
     if(this->hasFlag(name)){
+        std_log3("toggle flag with name "+name+" on element "+this->getElementName());
         HSSRuleState newValue = (this->_flagsStatus[name] == HSSRuleStateOn ? HSSRuleStateOff : HSSRuleStateOn);
-        this->_flagsStatus[name] = newValue;
         HSSFlag::p theFlag = this->_flags[name];
+        this->_flagsStatus[name] = (newValue == HSSRuleStateOn ? HSSRuleStateActivate : HSSRuleStatePurge);
         theFlag->flagChanged(newValue);
+        this->_flagsStatus[name] = newValue;
     } else {
         //std_log("No flag with name "+name+" on element "+this->getElementName());
     }
