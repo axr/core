@@ -241,6 +241,7 @@ void HSSContainer::add(HSSDisplayObject::p child)
         this->children.push_back(child);
     }
     this->allChildren.push_back(child);
+    this->notifyObservers(HSSObservablePropertyTreeChange, this);
 }
 
 void HSSContainer::remove(unsigned index)
@@ -259,6 +260,7 @@ void HSSContainer::remove(unsigned index)
         }
     }
     this->resetChildrenIndexes();
+    this->notifyObservers(HSSObservablePropertyTreeChange, this);
 }
 
 void HSSContainer::resetChildrenIndexes()

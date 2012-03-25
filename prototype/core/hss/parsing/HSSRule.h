@@ -119,6 +119,8 @@ namespace AXR {
         HSSInstruction::p getInstruction();
         
         virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        void treeChanged(HSSObservableProperty source, void*data);
+        
         bool getActiveByDefault();
         void setActiveByDefault(bool newValue);
         

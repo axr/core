@@ -226,6 +226,13 @@ void HSSRule::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
     HSSStatement::setThisObj(value);
 }
 
+void HSSRule::treeChanged(HSSObservableProperty source, void*data)
+{
+    HSSDisplayObject::p thisObj = this->getThisObj();
+    AXRController * theController = thisObj->getController();
+    if(thisObj->isA(HSSObjectTypeContainer)){
+        HSSContainer::p thisContainer = HSSContainer::asContainer(thisObj);
+        theController->recursiveMatchRulesToDisplayObjects(this->shared_from_this(), thisContainer->getChildren(), thisContainer, false);
     }
 }
 
@@ -242,6 +249,7 @@ void HSSRule::setActiveByDefault(bool newValue)
 const std::vector<boost::weak_ptr<HSSDisplayObject> > HSSRule::getAppliedTo() const
 {
     return this->appliedTo;
+}
 
 void HSSRule::setAppliedTo(std::vector<boost::weak_ptr<HSSDisplayObject> > newObjects)
 {

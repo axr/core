@@ -127,6 +127,8 @@ namespace AXR {
         
         //HSSColorStop
         HSSObservablePropertyPosition,
+        
+        HSSObservablePropertyTreeChange
     };
 }
 
