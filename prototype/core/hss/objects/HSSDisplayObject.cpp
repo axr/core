@@ -2130,11 +2130,12 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
     switch (type) {
         case HSSEventTypeMouseDown:
         case HSSEventTypeMouseUp:
+        case HSSEventTypeClick:
         {
             HSSPoint thePoint = *(HSSPoint*)data;
             
-            if(     this->globalX <= thePoint.x && this->globalX + this->width >= thePoint.x
-               &&   this->globalY <= thePoint.y && this->globalY + this->height >= thePoint.y){
+            if(     this->globalX < thePoint.x && this->globalX + this->width >= thePoint.x
+               &&   this->globalY < thePoint.y && this->globalY + this->height >= thePoint.y){
                
                 //std_log(this->getElementName());
                 return this->fireEvent(type);
@@ -2152,8 +2153,8 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
         {
             HSSPoint thePoint = *(HSSPoint*)data;
             
-            if(     this->globalX <= thePoint.x && this->globalX + this->width >= thePoint.x
-               &&   this->globalY <= thePoint.y && this->globalY + this->height >= thePoint.y){
+            if(     this->globalX < thePoint.x && this->globalX + this->width >= thePoint.x
+               &&   this->globalY < thePoint.y && this->globalY + this->height >= thePoint.y){
                 
                 if(!this->_isHover)
                 {

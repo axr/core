@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/23
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 11
+ *      Core version: 0.46
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -183,6 +183,7 @@
         thePoint.x = sysPoint.x;
         thePoint.y = bounds.size.height - sysPoint.y;
         root->handleEvent(AXR::HSSEventTypeMouseUp, (void*) &thePoint);
+        root->handleEvent(AXR::HSSEventTypeClick, (void*) &thePoint);
     }
 }
 
