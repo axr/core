@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 10
+ *      Core version: 0.46
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -93,8 +93,9 @@ void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
         if(bounds.size.width != this->windowWidth || bounds.size.height != this->windowHeight){
             this->windowWidth = bounds.size.width;
             this->windowHeight = bounds.size.height;
-            root->setDWidth(HSSNumberConstant::p(new HSSNumberConstant(this->windowWidth)));
-            root->setDHeight(HSSNumberConstant::p(new HSSNumberConstant(this->windowHeight)));
+        //    root->setDWidth(HSSNumberConstant::p(new HSSNumberConstant(this->windowWidth)));
+        //    root->setDHeight(HSSNumberConstant::p(new HSSNumberConstant(this->windowHeight)));
+            root->setNeedsRereadRules(true);
         }
         //draw the elements
         root->recursiveReadDefinitionObjects();
@@ -155,3 +156,12 @@ void AXRRender::setCairo(cairo_t * cairo) {
 
 cairo_t * AXRRender::getCairo() { return this->cairo; }
 
+double AXRRender::getWindowWidth()
+{
+    return this->windowWidth;
+}
+
+double AXRRender::getWindowHeight()
+{
+    return this->windowHeight;
+}

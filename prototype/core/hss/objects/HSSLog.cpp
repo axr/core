@@ -210,7 +210,7 @@ void HSSLog::fire()
                         break;
                     }
                         
-                    case HSSObservablePropertyHover:
+                    case HSSObservablePropertyFlagChanged:
                     case HSSObservablePropertyText:
                     case HSSObservablePropertyTarget:
                     default:

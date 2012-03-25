@@ -274,7 +274,11 @@ bool HSSObject::isFunction(std::string value, std::string property)
        || value == "ceil"
        || value == "round"
        || value == "ref"
-       || value == "sel"       ){
+       || value == "sel"
+       || value == "flag"
+       || value == "unflag"
+       || value == "toggleFlag"
+    ){
         return true;
     } else {
         return false;
@@ -424,16 +428,6 @@ void HSSObject::setDIsA(HSSParserNode::p value)
                     }
                     
                     //else store as value
-                }
-                if(this->isA(HSSObjectTypeContainer)){
-                    HSSContainer::p thisCont = boost::static_pointer_cast<HSSContainer>(this->shared_from_this());
-                    this->axrController->currentContext.push(thisCont);
-                    HSSRule::const_it it;
-                    const std::deque<HSSRule::p> rules = objdef->getRules();
-                    for (it=rules.begin(); it!=rules.end(); it++) {
-                        this->axrController->recursiveMatchRulesToDisplayObjects((*it)->clone(), thisCont->getChildren(), thisCont);
-                    }
-                    this->axrController->currentContext.pop();
                 }
                 
             } catch (HSSObjectNotFoundException * e) {

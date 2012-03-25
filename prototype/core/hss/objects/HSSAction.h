@@ -66,7 +66,8 @@ namespace AXR {
         HSSActionTypeJavascript,
         HSSActionTypeJsFunction,
         HSSActionTypeAlert,
-        HSSActionTypeLog
+        HSSActionTypeLog,
+        HSSActionTypeFlag
     };
     
     class HSSAction : public HSSObject

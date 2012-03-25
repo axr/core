@@ -43,17 +43,19 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 7
+ *      Core version: 0.46
+ *      Revision: 8
  *
  ********************************************************************/
 
 #include "HSSRule.h"
 #include <iostream>
 #include "../../axr/AXRDebugging.h"
+#include "../../axr/AXRController.h"
 #include "../objects/HSSDisplayObject.h"
+#include "../objects/HSSContainer.h"
 #include "HSSFilter.h"
 
 using namespace AXR;
@@ -62,14 +64,14 @@ HSSRule::HSSRule()
 : HSSStatement()
 {
     this->type = HSSStatementTypeRule;
-    this->_isActive = true;
+    this->_activeByDefault = true;
 }
 
 HSSRule::HSSRule(const HSSRule & orig)
 : HSSStatement(orig)
 {
-    this->_isActive = orig._isActive;
     this->_interactors = boost::unordered_map<HSSFilterType, std::vector<boost::shared_ptr<HSSDisplayObject> > >(orig._interactors);
+    this->_activeByDefault = orig._activeByDefault;
 }
 
 HSSRule::p HSSRule::clone() const
@@ -124,6 +126,11 @@ void HSSRule::setSelectorChain(HSSSelectorChain::p newChain)
 HSSSelectorChain::p HSSRule::getSelectorChain()
 {
     return this->selectorChain;
+}
+
+const std::vector<HSSPropertyDefinition::p> & HSSRule::getProperties() const
+{
+    return this->properties;
 }
 
 void HSSRule::propertiesAdd(HSSPropertyDefinition::p & newProperty)
@@ -204,62 +211,54 @@ HSSRule::p HSSRule::shared_from_this()
     return boost::static_pointer_cast<HSSRule>(HSSStatement::shared_from_this());
 }
 
-void HSSRule::connectInteractionFilter(HSSFilterType filterType, HSSDisplayObject::p object)
+
+void HSSRule::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
 {
-    switch (filterType) {
-        case HSSFilterTypeHover:
-        {
-            object->observe(HSSObservablePropertyHover, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRule>(this, &HSSRule::hoverChanged));
-            break;
-        }
-            
-        default:
-            throw AXRError::p(new AXRError("HSSRule", "Unknown filter type while connecting with display object"));
-            break;
+    this->selectorChain->setThisObj(value);
+    std::vector<HSSPropertyDefinition::p>::iterator it;
+    for (it=this->properties.begin(); it!=this->properties.end(); it++) {
+        (*it)->setThisObj(value);
     }
-    
-    if(this->_interactors.count(filterType) != 0){
-        std::vector<HSSDisplayObject::p> &theList = this->_interactors[filterType];
-        theList.push_back(object);
-    } else {
-        std::vector<HSSDisplayObject::p> newList;
-        newList.push_back(object);
-        this->_interactors[filterType] = newList;
+    std::vector<HSSRule::p>::iterator it2;
+    for (it2=this->children.begin(); it2!=this->children.end(); it2++) {
+        (*it2)->setThisObj(value);
+    }
+    HSSStatement::setThisObj(value);
+}
+
     }
 }
 
-void HSSRule::hoverChanged(AXR::HSSObservableProperty source, void *data){
-    bool doesApply = true;
-    HSSFilterType filterType = HSSFilterTypeHover;
-    if(this->_interactors.count(filterType) != 0){
-        std::vector<HSSDisplayObject::p>::iterator it;
-        for (it=this->_interactors[filterType].begin(); it!=this->_interactors[filterType].end(); it++) {
-            if(!(*it)->isHover()){
-                doesApply = false;
-                break;
-            }
-        }
-    }
-    
-    this->setActive(doesApply);
+bool HSSRule::getActiveByDefault()
+{
+    return this->_activeByDefault;
 }
 
-void HSSRule::setActive(bool newValue)
+void HSSRule::setActiveByDefault(bool newValue)
 {
-    this->_isActive = newValue;
-    this->notifyObservers(HSSObservablePropertyValue, this);
+    this->_activeByDefault = newValue;
 }
 
-bool HSSRule::isActive()
+const std::vector<boost::weak_ptr<HSSDisplayObject> > HSSRule::getAppliedTo() const
 {
-    return this->_isActive;
+    return this->appliedTo;
+
+void HSSRule::setAppliedTo(std::vector<boost::weak_ptr<HSSDisplayObject> > newObjects)
+{
+    this->appliedTo = newObjects;
+}
+
+void HSSRule::appliedToAdd(HSSDisplayObject::p displayObject)
+{
+    this->appliedTo.push_back(boost::weak_ptr<HSSDisplayObject>(displayObject));
 }
 
 HSSClonable::p HSSRule::cloneImpl() const
 {
     HSSRule::p clone = HSSRule::p(new HSSRule(*this));
     
-    if(this->selectorChain) clone->setSelectorChain(this->selectorChain->clone());
+    HSSSelectorChain::p newSelectorChain = this->selectorChain->clone();
+    if(this->selectorChain) clone->setSelectorChain(newSelectorChain);
     HSSPropertyDefinition::const_it pIt;
     for (pIt=this->properties.begin(); pIt!=this->properties.end(); pIt++) {
         HSSPropertyDefinition::p clonedPropDef = (*pIt)->clone();
@@ -274,3 +273,17 @@ HSSClonable::p HSSRule::cloneImpl() const
     
     return clone;
 }
+
+const std::vector<boost::shared_ptr<HSSDisplayObject> > HSSRule::getOriginalScope() const
+{
+    return this->_originalScope;
+}
+void HSSRule::setOriginalScope(const std::vector<boost::shared_ptr<HSSDisplayObject> > & scope)
+{
+    this->_originalScope = scope;
+}
+
+
+
+
+

@@ -60,6 +60,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "../parsing/HSSRule.h"
+#include "../parsing/HSSFlag.h"
 #include <cairo/cairo.h>
 #include "HSSMultipleValue.h"
 #include "HSSRgb.h"
@@ -71,7 +72,7 @@
 namespace AXR {
     
     class HSSContainer;
-
+    
     class HSSDisplayObject : public HSSObject
     {
     public:
@@ -120,11 +121,13 @@ namespace AXR {
         virtual void setContentText(std::string text);
         virtual void appendContentText(std::string text);
         
-        void rulesAdd(HSSRule::p newRule);
+        void rulesAdd(HSSRule::p newRule, HSSRuleState defaultState);
+        void rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSSRuleState defaultState);
         HSSRule::p rulesGet(unsigned index);
         void rulesRemove(unsigned index);
         void rulesRemoveLast();
         const int rulesSize();
+        void setRuleStatus(HSSRule::p rule, HSSRuleState newValue);
         virtual void readDefinitionObjects();
         virtual void recursiveReadDefinitionObjects();
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
@@ -232,12 +235,22 @@ namespace AXR {
         
         void ruleChanged(HSSObservableProperty source, void*data);
         
+        void createFlag(HSSFlag::p flag, HSSRuleState defaultValue);
+        bool hasFlag(std::string name);
+        HSSRuleState flagState(std::string name);
+        void flagsActivate(std::string name);
+        void flagsDeactivate(std::string name);
+        void flagsToggle(std::string name);
+        
+        bool isRoot();
+        void setRoot(bool newValue);
+        
     protected:
         pp parent;
         std::map<std::string, std::string>attributes;
         std::string elementName;
         std::string contentText;
-        std::vector<HSSRule::p> rules;
+        std::vector<HSSRuleStatus::p> rules;
         
         //if the rules have changed
         bool _needsRereadRules;
@@ -247,6 +260,10 @@ namespace AXR {
         cairo_surface_t * backgroundSurface;
         cairo_surface_t * foregroundSurface;
         cairo_surface_t * bordersSurface;
+        
+        //flags
+        boost::unordered_map<std::string, HSSRuleState> _flagsStatus;
+        boost::unordered_map<std::string, HSSFlag::p> _flags;
         
         //if it needs to redraw
         bool _isDirty;
@@ -353,6 +370,7 @@ namespace AXR {
                                    );
         HSSClonable::p cloneImpl() const;
         bool _isHover;
+        bool _isRoot;
     };
 }
 

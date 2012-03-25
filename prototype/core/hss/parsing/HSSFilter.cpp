@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.46
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -76,7 +76,6 @@ std::string HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType){
         types[HSSFilterTypeAncestorOf] = "HSSFilterTypeAncestorOf";
         types[HSSFilterTypeHas] = "HSSFilterTypeHas";
         //interaction
-        types[HSSFilterTypeHover] = "HSSFilterTypeHover";
         types[HSSFilterTypePressed] = "HSSFilterTypePressed";
         types[HSSFilterTypeDragged] = "HSSFilterTypeDragged";
         types[HSSFilterTypeDestination] = "HSSFilterTypeDestination";
@@ -119,7 +118,6 @@ HSSFilterType HSSFilter::filterTypeFromString(std::string name)
         filterTypes["ancestorOf"] = HSSFilterTypeAncestorOf;
         filterTypes["has"] = HSSFilterTypeHas;
         //interaction
-        filterTypes["hover"] = HSSFilterTypeHover;
         filterTypes["pressed"] = HSSFilterTypePressed;
         filterTypes["dragged"] = HSSFilterTypeDragged;
         filterTypes["destination"] = HSSFilterTypeDestination;
@@ -169,12 +167,6 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
         {
             ret = HSSFilter::p(new HSSFilter());
             ret->filterType = filterType;
-            break;
-        }
-            
-        case HSSFilterTypeHover:
-        {
-            ret = HSSHoverFilter::p(new HSSHoverFilter());
             break;
         }
             

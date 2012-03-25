@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 6
+ *      Core version: 0.46
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -68,6 +68,22 @@ namespace AXR {
     class HSSDisplayObject;
     class HSSFilter;
     
+    enum HSSRuleState
+    {
+        HSSRuleStateOff = 0,
+        HSSRuleStateOn = 1,
+        HSSRuleStateActivate,
+        HSSRuleStatePurge
+    };
+    
+    class HSSRuleStatus
+    {
+    public:
+        typedef boost::shared_ptr<HSSRuleStatus> p;
+        HSSRuleState state;
+        boost::shared_ptr<HSSRule> rule;
+    };
+    
     class HSSRule : public HSSStatement
     {    
     public:
@@ -85,6 +101,7 @@ namespace AXR {
         void setSelectorChain(HSSSelectorChain::p newChain);
         HSSSelectorChain::p getSelectorChain();
         
+        const std::vector<HSSPropertyDefinition::p> & getProperties() const;
         void propertiesAdd(HSSPropertyDefinition::p & newProperty);
         HSSPropertyDefinition::p &propertiesGet(unsigned index);
         void propertiesRemove(unsigned index);
@@ -101,11 +118,16 @@ namespace AXR {
         void setInstruction(HSSInstruction::p newInstruction);
         HSSInstruction::p getInstruction();
         
-        void connectInteractionFilter(HSSFilterType filterType, boost::shared_ptr<HSSDisplayObject> object);
-        void hoverChanged(AXR::HSSObservableProperty source, void *data);
+        virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        bool getActiveByDefault();
+        void setActiveByDefault(bool newValue);
         
-        void setActive(bool newValue);
-        bool isActive();
+        const std::vector<boost::weak_ptr<HSSDisplayObject> > getAppliedTo() const;
+        void setAppliedTo(std::vector<boost::weak_ptr<HSSDisplayObject> > newObjects);
+        void appliedToAdd(boost::shared_ptr<HSSDisplayObject> displayObject);
+        
+        const std::vector<boost::shared_ptr<HSSDisplayObject> > getOriginalScope() const;
+        void setOriginalScope(const std::vector<boost::shared_ptr<HSSDisplayObject> > & scope);
         
     protected:
         HSSRule::p shared_from_this();
@@ -114,11 +136,17 @@ namespace AXR {
         std::vector<HSSPropertyDefinition::p> properties;
         std::vector<HSSRule::p>children;
         HSSInstruction::p instruction;
+        
+        bool _activeByDefault;
+        
+        std::vector<boost::weak_ptr<HSSDisplayObject> > appliedTo;
+        
+        std::vector<boost::shared_ptr<HSSDisplayObject> > _originalScope;
+        
     private:
         virtual HSSClonable::p cloneImpl() const;
         
         boost::unordered_map<HSSFilterType, std::vector<boost::shared_ptr<HSSDisplayObject> > > _interactors;
-        bool _isActive;
         
     };
 }

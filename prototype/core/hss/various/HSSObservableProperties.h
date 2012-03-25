@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 13
+ *      Core version: 0.46
+ *      Revision: 14
  *
  ********************************************************************/
 
@@ -72,7 +72,7 @@ namespace AXR {
         HSSObservablePropertyMargin,
         HSSObservablePropertyPadding,
         HSSObservablePropertyBorder,
-        HSSObservablePropertyHover,
+        HSSObservablePropertyFlagChanged,
         
         //HSSContainer
         HSSObservablePropertyContentAlignX,

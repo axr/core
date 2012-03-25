@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.46
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -55,6 +55,5 @@
 
 #include "HSSFirstFilter.h"
 #include "HSSLastFilter.h"
-#include "HSSHoverFilter.h"
 
 #endif

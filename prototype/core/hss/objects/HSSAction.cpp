@@ -68,6 +68,7 @@ std::string HSSAction::actionTypeStringRepresentation(AXR::HSSActionType actionT
     types[HSSActionTypeJsFunction ] = "HSSActionTypeJsFunction";
     types[HSSActionTypeAlert      ] = "HSSActionTypeAlert";
     types[HSSActionTypeLog        ] = "HSSActionTypeLog";
+    types[HSSActionTypeFlag       ] = "HSSActionTypeFlag";
     
     return types[actionType];
 }

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 24
+ *      Core version: 0.46
+ *      Revision: 25
  *
  ********************************************************************/
 
@@ -67,6 +67,7 @@
 #include "HSSFunctions.h"
 #include "HSSFilter.h"
 #include "HSSNegation.h"
+#include "HSSFlag.h"
 
 using namespace AXR;
 
@@ -560,12 +561,6 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                             ret->add(this->readSymbolCombinator());
                             break;
                         }
-                    case ':':
-                    {
-                        //its a filter
-                        ret->add(this->readFilter());
-                        break;
-                    }
                         
                     case '!':
                     {
@@ -584,11 +579,22 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                 
             case HSSColon:
             {
-                HSSParserNode::p theFilter = this->readFilter();
-                if(theFilter){
-                    ret->add(theFilter);
+                //if there is another colon, it is a flag
+                this->readNextToken(true);
+                if(this->currentToken->isA(HSSColon)){
+                    this->readNextToken(true);
+                    HSSParserNode::p theFlag = this->readFlag();
+                    if(theFlag){
+                        ret->add(theFlag);
+                    }
+                    
+                } else {
+                    //it is a filter
+                    HSSParserNode::p theFilter = this->readFilter();
+                    if(theFilter){
+                        ret->add(theFilter);
+                    }
                 }
-                
                 //adds only if needed
                 ret->add(this->readChildrenCombinatorOrSkip());
                 break;
@@ -1688,15 +1694,30 @@ HSSParserNode::p HSSParser::readBaseExpression()
     return left;
 }
 
-//this method expects the currentToken to be a HSSColon
+//this method expects the currentToken to be an identifier
 HSSParserNode::p HSSParser::readFilter()
 {
     HSSFilter::p ret;
-    this->skipExpected(HSSColon);
     this->expect(HSSIdentifier);
     
     std::string filterName = VALUE_TOKEN(this->currentToken)->getString();
     ret = HSSFilter::newFilterWithStringType(filterName);
+    
+    this->readNextToken();
+    this->checkForUnexpectedEndOfSource();
+    
+    return ret;
+}
+
+//this method expects the currentToken to be an identifier
+HSSParserNode::p HSSParser::readFlag()
+{
+    HSSFlag::p ret;
+    this->expect(HSSIdentifier);
+    
+    std::string flagName = VALUE_TOKEN(this->currentToken)->getString();
+    ret = HSSFlag::p(new HSSFlag());
+    ret->setName(flagName);
     
     this->readNextToken();
     this->checkForUnexpectedEndOfSource();
@@ -1800,6 +1821,54 @@ HSSParserNode::p HSSParser::readFunction()
             selFunction->setSelectorChain(selectorChain);
             
             ret = selFunction;
+            
+        } else if(
+                    name == "flag"
+                ||  name == "unflag"
+                ||  name == "toggleFlag"
+            ){
+            
+            HSSFlagFunction::p flagFunction = HSSFlagFunction::p(new HSSFlagFunction(HSSFlagFunction::flagFunctionTypeFromString(name)));
+            flagFunction->setController(this->controller);
+            
+            this->readNextToken(true);
+            this->skip(HSSWhitespace, true);
+            this->skipExpected(HSSParenthesisOpen, true);
+            this->skip(HSSWhitespace, true);
+            //read the arguments
+            //first, we expect the name
+            if (! this->currentToken->isA(HSSIdentifier)){
+                std_log1("HSSParser: unexpected token while reading ref function "+name);
+            } else {
+                flagFunction->setName(VALUE_TOKEN(this->currentToken)->getString());
+            }
+            
+            this->checkForUnexpectedEndOfSource();
+            this->readNextToken();
+            this->skip(HSSWhitespace, true);
+            //if shorthand notation -- assumes 'of @this'
+            HSSSelectorChain::p selectorChain;
+            if(this->currentToken->isA(HSSParenthesisClose)){
+                selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
+                selectorChain->add(HSSThisSelector::p(new HSSThisSelector()));
+                this->readNextToken(true);
+                this->skip(HSSWhitespace, true);
+                
+            } else {
+                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of"){
+                    std_log1("HSSParser: unexpected token while reading ref function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+                }
+                this->checkForUnexpectedEndOfSource();
+                this->readNextToken(true);
+                this->skipExpected(HSSWhitespace, true);
+                
+                
+                //now read the selector chain
+                selectorChain = this->readSelectorChain(HSSParenthesisClose);
+            }
+            
+            flagFunction->setSelectorChain(selectorChain);
+            ret = flagFunction;
             
         } else if (name == "min") {
             

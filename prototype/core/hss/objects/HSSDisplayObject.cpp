@@ -103,6 +103,7 @@ void HSSDisplayObject::initialize()
     //fixme: change to camelCase
     this->does_float = false;
     this->heightByContent = false;
+    this->_isRoot = false;
     
     this->elementName = std::string();
     this->contentText = std::string();
@@ -132,11 +133,17 @@ void HSSDisplayObject::initialize()
 
 HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
 : HSSObject(orig)
+{
     this->initialize();
+    this->attributes = orig.attributes;
     this->elementName = orig.elementName;
+    this->contentText = orig.contentText;
     this->rules = orig.rules; //shallow copy
+    this->_flagsStatus = orig._flagsStatus;
     
+    this->drawIndex = orig.drawIndex;
     this->_index = orig._index;
+    this->tabIndex = orig.tabIndex;
 }
 
 HSSDisplayObject::p HSSDisplayObject::clone() const{
@@ -303,20 +310,71 @@ void HSSDisplayObject::setElementName(std::string newName)
     this->elementName = newName;
 }
 
-
-
 //rules
-
-void HSSDisplayObject::rulesAdd(HSSRule::p newRule)
+void HSSDisplayObject::rulesAdd(HSSRule::p newRule, HSSRuleState defaultState)
 {
     //the target property is set to HSSObservablePropertyValue -- should this be something else?
     newRule->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::ruleChanged));
-    this->rules.push_back(newRule);
+    
+    newRule->appliedToAdd(this->shared_from_this());
+    
+    HSSRuleStatus::p newRS = HSSRuleStatus::p(new HSSRuleStatus());
+    newRS->state = defaultState;
+    newRS->rule = newRule;
+    
+    this->rules.push_back(newRS);
+    
+    //iterate over the property defs and try to find an isA property
+    const std::vector<HSSPropertyDefinition::p> & props = newRule->getProperties();
+    HSSPropertyDefinition::const_it it;
+    for (it = props.begin(); it!=props.end(); it++) {
+        HSSPropertyDefinition::p propdef = *it;
+        if(propdef->getName() == "isA"){
+            this->rulesAddIsAChildren(propdef, defaultState);
+        }
+    }
+    
+}
+
+void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSSRuleState defaultState)
+{
+    HSSParserNode::p value = propdef->getValue();
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                
+                if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer::p thisCont = boost::static_pointer_cast<HSSContainer>(this->shared_from_this());
+                    this->axrController->currentContext.push(thisCont);
+                    HSSRule::const_it it;
+                    const std::deque<HSSRule::p> rules = objdef->getRules();
+                    for (it=rules.begin(); it!=rules.end(); it++) {
+                        HSSRule::p clonedRule = (*it)->clone();
+                        this->axrController->recursiveMatchRulesToDisplayObjects(clonedRule, thisCont->getChildren(), thisCont, true);
+                    }
+                    this->axrController->currentContext.pop();
+                }
+            } catch (AXRError::p e) {
+                e->raise();
+            }
+            
+            break;
+        }
+            
+        default:
+        {
+            break;
+        }
+    }
 }
 
 HSSRule::p HSSDisplayObject::rulesGet(unsigned index)
 {
-    return this->rules[index];
+    return this->rules[index]->rule;
 }
 
 void HSSDisplayObject::rulesRemove(unsigned index)
@@ -334,6 +392,36 @@ const int HSSDisplayObject::rulesSize()
     return this->rules.size();
 }
 
+void HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)
+{
+    bool changed = false;
+    bool found = false;
+
+    std::vector<HSSRuleStatus::p>::iterator it;
+    for (it=this->rules.begin(); it!=this->rules.end(); it++) {
+        HSSRuleStatus::p rs = *it;
+        HSSRule::p existingRule = rs->rule;
+        if(existingRule.get()==rule.get()){
+            found = true;
+            if(rs->state != newValue){
+                rs->state = newValue;
+                changed = true;
+                break;
+            }
+        }
+    }
+    
+    if(!found){
+        this->rulesAdd(rule, newValue);
+        changed = true;
+    }
+    
+    if(changed){
+        this->setNeedsRereadRules(true);
+        AXRCore::getInstance()->getWrapper()->setNeedsDisplay(true);
+    }
+}
+
 void HSSDisplayObject::readDefinitionObjects()
 {
     if(this->_needsRereadRules){
@@ -341,10 +429,22 @@ void HSSDisplayObject::readDefinitionObjects()
     
         this->setDefaults();
         
+        //if this is root, we use the window width and height of the render
+        if(this->isRoot()){
+            AXRCore::p core = AXRCore::getInstance();
+            //width
+            HSSNumberConstant::p newDWidth(new HSSNumberConstant(core->getRender()->getWindowWidth()));
+            this->setDWidth(newDWidth);
+            //height
+            HSSNumberConstant::p newDHeight(new HSSNumberConstant(core->getRender()->getWindowHeight()));
+            this->setDHeight(newDHeight);
+        }
+        
         std::string propertyName;
         for (i=0; i<this->rules.size(); i++) {
-            HSSRule::p rule = this->rules[i];
-            if(rule->isActive()){
+            HSSRuleStatus::p & ruleStatus = this->rules[i];
+            if(ruleStatus->state == HSSRuleStateOn){
+                HSSRule::p & rule = ruleStatus->rule;
                 for (j=0; j<rule->propertiesSize(); j++) {
                     try
                     {
@@ -1972,7 +2072,11 @@ void HSSDisplayObject::setHover(bool newValue)
     if(this->_isHover != newValue)
     {
         this->_isHover = newValue;
-        this->notifyObservers(HSSObservablePropertyHover, &this->_isHover);
+        if(newValue == TRUE){
+            this->flagsActivate("hover");
+        } else {
+            this->flagsDeactivate("hover");
+        }
     }
 }
 
@@ -1987,6 +2091,81 @@ void HSSDisplayObject::ruleChanged(HSSObservableProperty source, void*data)
     this->setNeedsRereadRules(true);
     AXRCore::getInstance()->getWrapper()->setNeedsDisplay(true);
 }
+
+void HSSDisplayObject::createFlag(HSSFlag::p flag, HSSRuleState defaultValue)
+{
+    this->_flagsStatus[flag->getName()] = defaultValue;
+    this->_flags[flag->getName()] = flag;
+}
+
+bool HSSDisplayObject::hasFlag(std::string name)
+{
+    if(this->_flagsStatus.find(name) != this->_flagsStatus.end()){
+        return true;
+    }
+    return false;
+}
+
+HSSRuleState HSSDisplayObject::flagState(std::string name)
+{
+    if(this->_flagsStatus.find(name) != this->_flagsStatus.end()){
+        return this->_flagsStatus[name];
+    }
+    return HSSRuleStateOff;
+}
+
+void HSSDisplayObject::flagsActivate(std::string name)
+{
+    if(this->hasFlag(name)){
+        std_log3("activate flag with name "+name+" on element "+this->getElementName());
+        HSSRuleState newValue = HSSRuleStateOn;
+        HSSFlag::p theFlag = this->_flags[name];
+        this->_flagsStatus[name] = HSSRuleStateActivate;
+        theFlag->flagChanged(newValue);     
+        this->_flagsStatus[name] = newValue;   
+    } else {
+        //std_log("No flag with name "+name+" on element "+this->getElementName());
+    }
+}
+
+void HSSDisplayObject::flagsDeactivate(std::string name)
+{
+    if(this->hasFlag(name)){
+        std_log3("deactivate flag with name "+name+" on element "+this->getElementName());
+        HSSRuleState newValue = HSSRuleStateOff;
+        HSSFlag::p theFlag = this->_flags[name];
+        this->_flagsStatus[name] = HSSRuleStatePurge;
+        theFlag->flagChanged(newValue);
+        this->_flagsStatus[name] = newValue;
+        
+    } else {
+        //std_log("No flag with name "+name+" on element "+this->getElementName());
+    }
+}
+
+void HSSDisplayObject::flagsToggle(std::string name)
+{
+    std_log3("toggle flag with name "+name+" on element "+this->getElementName());
+    if(this->hasFlag(name)){
+        HSSRuleState newValue = (this->_flagsStatus[name] == HSSRuleStateOn ? HSSRuleStateOff : HSSRuleStateOn);
+        this->_flagsStatus[name] = newValue;
+        HSSFlag::p theFlag = this->_flags[name];
+        theFlag->flagChanged(newValue);
+    } else {
+        //std_log("No flag with name "+name+" on element "+this->getElementName());
+    }
+}
+
+bool HSSDisplayObject::isRoot()
+{
+    return this->_isRoot;
+}
+
+void HSSDisplayObject::setRoot(bool newValue)
+{
+    this->_isRoot = newValue;
+}
+
 
 HSSDisplayObject::p HSSDisplayObject::shared_from_this()
 {
