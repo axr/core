@@ -188,6 +188,7 @@ namespace AXR {
         bool getFlow();
         HSSParserNode::p getDFlow();
         void setDFlow(HSSParserNode::p value);
+        void flowChanged(HSSObservableProperty source, void*data);
         
         //height
         long double getHeight();

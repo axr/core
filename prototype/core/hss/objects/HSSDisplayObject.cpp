@@ -478,6 +478,9 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
         case HSSObservablePropertyAnchorY:
             this->setDAnchorY(value);
             break;
+        case HSSObservablePropertyFlow:
+            this->setDFlow(value);
+            break;
         case HSSObservablePropertyAlignX:
             this->setDAlignX(value);
             break;
@@ -1161,10 +1164,101 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
 
 
 //flow
+bool HSSDisplayObject::getFlow() { return this->flow; }
 HSSParserNode::p HSSDisplayObject::getDFlow() { return this->dFlow; }
 void HSSDisplayObject::setDFlow(HSSParserNode::p value)
 {
-    this->dFlow = value;
+    bool valid = true;
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            this->dFlow = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                this->flow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            this->dFlow = value;
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                this->setDFlow(objdef);
+                
+            } catch (HSSObjectNotFoundException * e) {
+                std_log(e->toString());
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->dFlow = value;
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                fnct->setScope(this->scope);
+                this->flow = *(bool *)fnct->evaluate();
+                
+                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyFlow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::flowChanged));
+                
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+            if(keywordValue->getValue() == "yes"){
+                this->flow = true;
+                break;
+            } else if (keywordValue->getValue() == "no"){
+                this->flow = false;
+                break;
+            } else {
+                //fall through
+            }
+        }
+            
+        default:
+            valid = false;
+    }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for flow of "+this->name));
+    
+    this->notifyObservers(HSSObservablePropertyFlow, &this->flow);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
+}
+
+void HSSDisplayObject::flowChanged(HSSObservableProperty source, void*data)
+{
+    switch (this->dFlow->getType()) {
+        case HSSParserNodeTypeFunctionCall:
+            this->flow = *(bool*)data;
+            break;
+            
+        default:
+            break;
+    }
+    
+    this->notifyObservers(HSSObservablePropertyFlow, data);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
 //alignX

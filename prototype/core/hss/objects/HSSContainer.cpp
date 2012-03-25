@@ -472,104 +472,106 @@ void HSSContainer::layout()
         
         bool addedToGroup = false;
         
-        if( i!=0 ) {
-            j = 0;
-            while (j<primaryGroups.size()) {
-                if(primaryGroups[j].lines.size() == 0){
-                    displayGroup & currentPGroup = primaryGroups[j];
-                    addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
-                    if (!addedToGroup && currentPGroup.complete){
-                        //transform the current group into a line
-                        displayGroup newGroup;
-                        newGroup.x = currentPGroup.x;
-                        newGroup.y = currentPGroup.y;
-                        newGroup.width = currentPGroup.width;
-                        newGroup.height = currentPGroup.height;
-                        newGroup.complete = false;
-                        newGroup.lines.push_back(currentPGroup);
+        if(child->getFlow() == true){
+            if( i!=0 ) {
+                j = 0;
+                while (j<primaryGroups.size()) {
+                    if(primaryGroups[j].lines.size() == 0){
+                        displayGroup & currentPGroup = primaryGroups[j];
+                        addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
+                        if (!addedToGroup && currentPGroup.complete){
+                            //transform the current group into a line
+                            displayGroup newGroup;
+                            newGroup.x = currentPGroup.x;
+                            newGroup.y = currentPGroup.y;
+                            newGroup.width = currentPGroup.width;
+                            newGroup.height = currentPGroup.height;
+                            newGroup.complete = false;
+                            newGroup.lines.push_back(currentPGroup);
+                            
+                            displayGroup newLine;
+                            newLine.x = child->x;
+                            newLine.y = child->y;
+                            newLine.width = child->width;
+                            newLine.height = child->height;
+                            newLine.complete = false;
+                            newLine.objects.push_back(child);
+                            newGroup.lines.push_back(newLine);
+                            
+                            primaryGroups[j] = newGroup;
+                            
+                            addedToGroup = true;
+                        }
                         
-                        displayGroup newLine;
-                        newLine.x = child->x;
-                        newLine.y = child->y;
-                        newLine.width = child->width;
-                        newLine.height = child->height;
-                        newLine.complete = false;
-                        newLine.objects.push_back(child);
-                        newGroup.lines.push_back(newLine);
-                        
-                        primaryGroups[j] = newGroup;
-                        
-                        addedToGroup = true;
-                    }
-                    
-                    if(addedToGroup){
-                        k=0;
-                        while (k<primaryGroups.size()){
-                            if(k != j){
-                                displayGroup & otherPGroup = primaryGroups[k];
-                                bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
-                                if(merged){
-                                    primaryGroups.erase(primaryGroups.begin()+j);
-                                    j = k;
+                        if(addedToGroup){
+                            k=0;
+                            while (k<primaryGroups.size()){
+                                if(k != j){
+                                    displayGroup & otherPGroup = primaryGroups[k];
+                                    bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
+                                    if(merged){
+                                        primaryGroups.erase(primaryGroups.begin()+j);
+                                        j = k;
+                                    } else {
+                                        k++;
+                                    }
                                 } else {
                                     k++;
                                 }
-                            } else {
-                                k++;
+                            }
+                        }
+                        
+                    } else {
+                        displayGroup & currentPGroup = primaryGroups[j].lines.back();
+                        addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
+                        if (!addedToGroup && currentPGroup.complete){
+                            //create new line
+                            displayGroup newLine;
+                            newLine.x = child->x;
+                            newLine.y = child->y;
+                            newLine.width = child->width;
+                            newLine.height = child->height;
+                            newLine.complete = false;
+                            newLine.objects.push_back(child);
+                            primaryGroups[j].lines.push_back(newLine);
+                            
+                            addedToGroup = true;
+                        }
+                        
+                        if(addedToGroup){
+                            k=0;
+                            while (k<primaryGroups.size()){
+                                if(k != j){
+                                    displayGroup & otherPGroup = primaryGroups[k];
+                                    bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
+                                    if(merged){
+                                        primaryGroups.erase(primaryGroups.begin()+j);
+                                        j = k;
+                                    } else {
+                                        k++;
+                                    }
+                                } else {
+                                    k++;
+                                }
                             }
                         }
                     }
                     
-                } else {
-                    displayGroup & currentPGroup = primaryGroups[j].lines.back();
-                    addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
-                    if (!addedToGroup && currentPGroup.complete){
-                        //create new line
-                        displayGroup newLine;
-                        newLine.x = child->x;
-                        newLine.y = child->y;
-                        newLine.width = child->width;
-                        newLine.height = child->height;
-                        newLine.complete = false;
-                        newLine.objects.push_back(child);
-                        primaryGroups[j].lines.push_back(newLine);
-                        
-                        addedToGroup = true;
-                    }
-                    
-                    if(addedToGroup){
-                        k=0;
-                        while (k<primaryGroups.size()){
-                            if(k != j){
-                                displayGroup & otherPGroup = primaryGroups[k];
-                                bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
-                                if(merged){
-                                    primaryGroups.erase(primaryGroups.begin()+j);
-                                    j = k;
-                                } else {
-                                    k++;
-                                }
-                            } else {
-                                k++;
-                            }
-                        }
-                    }
+                    j++;
+                    security_brake();
                 }
-                
-                j++;
-                security_brake();
             }
-        }
-        
-        if(!addedToGroup){
-            displayGroup newGroup;
-            newGroup.x = child->x;
-            newGroup.y = child->y;
-            newGroup.width = child->width;
-            newGroup.height = child->height;
-            newGroup.complete = false;
-            newGroup.objects.push_back(child);
-            primaryGroups.push_back(newGroup);
+            
+            if(!addedToGroup){
+                displayGroup newGroup;
+                newGroup.x = child->x;
+                newGroup.y = child->y;
+                newGroup.width = child->width;
+                newGroup.height = child->height;
+                newGroup.complete = false;
+                newGroup.objects.push_back(child);
+                primaryGroups.push_back(newGroup);
+            }
         }
         
         
@@ -581,44 +583,46 @@ void HSSContainer::layout()
     for(i=0, size = this->allChildren.size(); i<size; i++){
         HSSDisplayObject::p &child = this->allChildren[i];
         
-        bool addedToGroup = false;
-        if( i!=0 ) {
-            j = 0;
-            while (j<secondaryGroups.size()) {
-                displayGroup & currentSGroup = secondaryGroups[j];
-                addedToGroup = this->_addChildToGroupIfNeeded(child, currentSGroup, this->directionSecondary, true);
-                
-                if(addedToGroup){
-                    k=0;
-                    while (k<secondaryGroups.size()){
-                        if(k != j){
-                            displayGroup & otherSGroup = secondaryGroups[k];
-                            bool merged = this->_mergeGroupsIfNeeded(otherSGroup, currentSGroup,  this->directionSecondary);
-                            if(merged){
-                                secondaryGroups.erase(secondaryGroups.begin()+j);
-                                j = k;
+        if(child->getFlow() == true){
+            bool addedToGroup = false;
+            if( i!=0 ) {
+                j = 0;
+                while (j<secondaryGroups.size()) {
+                    displayGroup & currentSGroup = secondaryGroups[j];
+                    addedToGroup = this->_addChildToGroupIfNeeded(child, currentSGroup, this->directionSecondary, true);
+                    
+                    if(addedToGroup){
+                        k=0;
+                        while (k<secondaryGroups.size()){
+                            if(k != j){
+                                displayGroup & otherSGroup = secondaryGroups[k];
+                                bool merged = this->_mergeGroupsIfNeeded(otherSGroup, currentSGroup,  this->directionSecondary);
+                                if(merged){
+                                    secondaryGroups.erase(secondaryGroups.begin()+j);
+                                    j = k;
+                                } else {
+                                    k++;
+                                }
                             } else {
                                 k++;
                             }
-                        } else {
-                            k++;
                         }
                     }
+                    
+                    j++;
+                    security_brake();
                 }
-                
-                j++;
-                security_brake();
             }
-        }
-        if(!addedToGroup){
-            displayGroup newGroup;
-            newGroup.x = child->x;
-            newGroup.y = child->y;
-            newGroup.width = child->width;
-            newGroup.height = child->height;
-            newGroup.complete = false;
-            newGroup.objects.push_back(child);
-            secondaryGroups.push_back(newGroup);
+            if(!addedToGroup){
+                displayGroup newGroup;
+                newGroup.x = child->x;
+                newGroup.y = child->y;
+                newGroup.width = child->width;
+                newGroup.height = child->height;
+                newGroup.complete = false;
+                newGroup.objects.push_back(child);
+                secondaryGroups.push_back(newGroup);
+            }
         }
     }
     //assign the globalX and globalY
