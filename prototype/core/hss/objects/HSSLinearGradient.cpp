@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/03/26
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -111,7 +111,18 @@ HSSClonable::p HSSLinearGradient::cloneImpl() const{
 
 HSSLinearGradient::~HSSLinearGradient()
 {
-    
+    if(this->observedStartX != NULL){
+        this->observedStartX->removeObserver(this->observedStartXProperty, HSSObservablePropertyStartX, this);
+    }
+    if(this->observedStartY != NULL){
+        this->observedStartY->removeObserver(this->observedStartYProperty, HSSObservablePropertyStartY, this);
+    }
+    if(this->observedEndX != NULL){
+        this->observedEndX->removeObserver(this->observedEndXProperty, HSSObservablePropertyEndX, this);
+    }
+    if(this->observedEndY != NULL){
+        this->observedEndY->removeObserver(this->observedEndYProperty, HSSObservablePropertyEndY, this);
+    }
 }
 
 std::string HSSLinearGradient::toString()

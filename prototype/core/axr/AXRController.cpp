@@ -399,13 +399,16 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(con
                     unsigned i, size;
                     for (i=0, size=selections.size(); i<size; i++) {
                         std::vector<HSSDisplayObject::p> selection = selections[i];
-                        std::vector<HSSDisplayObject::p> vect(scope);
-                        std::vector<HSSDisplayObject::p>::iterator it;
-                        it = std::find(vect.begin(), vect.end(), selection.back());
-                        std::vector<HSSDisplayObject::p> right(vect.begin(), it);
-                        this->readNextSelectorNode();
-                        std::vector< std::vector<HSSDisplayObject::p> > newSelection = this->selectSimple(right, thisObj, negating, processing);
-                        ret.insert(ret.end(), newSelection.begin(), newSelection.end());
+                        if(selection.size() > 0){
+                            std::vector<HSSDisplayObject::p> vect(scope);
+                            std::vector<HSSDisplayObject::p>::iterator it;
+                            it = std::find(vect.begin(), vect.end(), selection.back());
+                            std::vector<HSSDisplayObject::p> right(vect.begin(), it);
+                            this->readNextSelectorNode();
+                            std::vector< std::vector<HSSDisplayObject::p> > newSelection = this->selectSimple(right, thisObj, negating, processing);
+                            ret.insert(ret.end(), newSelection.begin(), newSelection.end());
+                        }
+                        
                     }
                     return ret;
                 }
