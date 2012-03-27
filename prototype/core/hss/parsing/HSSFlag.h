@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/03/26
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -84,15 +84,15 @@ namespace AXR {
         HSSFlag::p shared_from_this();
         const std::vector<boost::shared_ptr<HSSDisplayObject> > filter(const std::vector<boost::shared_ptr<HSSDisplayObject> > &scope, bool negating);
         
-        bool isPurging();
-        void setPurging(bool newValue);
+        HSSRuleState getPurging();
+        void setPurging(HSSRuleState newValue);
 
     protected:
         std::string _name;
         
     private:
         virtual HSSClonable::p cloneImpl() const;
-        bool _purging;
+        HSSRuleState _purging;
     };
 }
 

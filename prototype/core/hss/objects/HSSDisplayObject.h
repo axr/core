@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/03/26
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 34
+ *      Revision: 35
  *
  ********************************************************************/
 
@@ -264,7 +264,7 @@ namespace AXR {
         
         //flags
         boost::unordered_map<std::string, HSSRuleState> _flagsStatus;
-        boost::unordered_map<std::string, HSSFlag::p> _flags;
+        boost::unordered_map<std::string, std::vector<HSSFlag::p> > _flags;
         
         //if it needs to redraw
         bool _isDirty;

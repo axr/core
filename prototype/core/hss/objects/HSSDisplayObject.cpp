@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/03/26
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 39
+ *      Revision: 40
  *
  ********************************************************************/
 
@@ -403,10 +403,18 @@ void HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)
         HSSRule::p existingRule = rs->rule;
         if(existingRule.get()==rule.get()){
             found = true;
-            if(rs->state != newValue){
-                rs->state = newValue;
-                changed = true;
-                break;
+            if(newValue == HSSRuleStatePurge){
+                if(rs->state == HSSRuleStateOn){
+                    rs->state = newValue;
+                    changed = true;
+                    break;
+                }
+            } else {
+                if(rs->state != newValue){
+                    rs->state = newValue;
+                    changed = true;
+                    break;
+                }
             }
         }
     }
@@ -443,19 +451,38 @@ void HSSDisplayObject::readDefinitionObjects()
         std::string propertyName;
         for (i=0; i<this->rules.size(); i++) {
             HSSRuleStatus::p & ruleStatus = this->rules[i];
-            if(ruleStatus->state == HSSRuleStateOn){
-                HSSRule::p & rule = ruleStatus->rule;
-                for (j=0; j<rule->propertiesSize(); j++) {
-                    try
-                    {
-                        HSSPropertyDefinition::p& propertyDefinition = rule->propertiesGet(j);
-                        propertyName = propertyDefinition->getName();
-                        this->setPropertyWithName(propertyName, propertyDefinition->getValue());
-                    }
-                    catch (AXRError::p e){
-                        e->raise();
-                    }
+            switch (ruleStatus->state) {
+                case HSSRuleStateActivate:
+                {
+                    ruleStatus->state = HSSRuleStateOn;
+                    //fall through
                 }
+                    
+                case HSSRuleStateOn:
+                {
+                    HSSRule::p & rule = ruleStatus->rule;
+                    for (j=0; j<rule->propertiesSize(); j++) {
+                        try
+                        {
+                            HSSPropertyDefinition::p& propertyDefinition = rule->propertiesGet(j);
+                            propertyName = propertyDefinition->getName();
+                            this->setPropertyWithName(propertyName, propertyDefinition->getValue());
+                        }
+                        catch (AXRError::p e){
+                            e->raise();
+                        }
+                    }
+                    break;
+                }
+                
+                case HSSRuleStatePurge:
+                {
+                    ruleStatus->state = HSSRuleStateOff;
+                    break;
+                }
+                    
+                default:
+                    break;
             }
         }
         
@@ -2203,7 +2230,7 @@ void HSSDisplayObject::ruleChanged(HSSObservableProperty source, void*data)
 void HSSDisplayObject::createFlag(HSSFlag::p flag, HSSRuleState defaultValue)
 {
     this->_flagsStatus[flag->getName()] = defaultValue;
-    this->_flags[flag->getName()] = flag;
+    this->_flags[flag->getName()].push_back(flag);
 }
 
 bool HSSDisplayObject::hasFlag(std::string name)
@@ -2226,11 +2253,14 @@ void HSSDisplayObject::flagsActivate(std::string name)
 {
     if(this->hasFlag(name)){
         std_log3("activate flag with name "+name+" on element "+this->getElementName());
-        HSSRuleState newValue = HSSRuleStateOn;
-        HSSFlag::p theFlag = this->_flags[name];
-        this->_flagsStatus[name] = HSSRuleStateActivate;
-        theFlag->flagChanged(newValue);     
-        this->_flagsStatus[name] = newValue;   
+        HSSRuleState newValue = HSSRuleStateActivate;
+        std::vector<HSSFlag::p> flags = this->_flags[name];
+        this->_flagsStatus[name] = newValue;
+        std::vector<HSSFlag::p>::iterator it;
+        for(it=flags.begin(); it!=flags.end(); it++){
+            (*it)->flagChanged(newValue);    
+        }   
+        this->_flagsStatus[name] = HSSRuleStateOn;
     } else {
         //std_log("No flag with name "+name+" on element "+this->getElementName());
     }
@@ -2240,11 +2270,14 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
 {
     if(this->hasFlag(name)){
         std_log3("deactivate flag with name "+name+" on element "+this->getElementName());
-        HSSRuleState newValue = HSSRuleStateOff;
-        HSSFlag::p theFlag = this->_flags[name];
-        this->_flagsStatus[name] = HSSRuleStatePurge;
-        theFlag->flagChanged(newValue);
+        HSSRuleState newValue = HSSRuleStatePurge;
+        std::vector<HSSFlag::p> flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
+        std::vector<HSSFlag::p>::iterator it;
+        for(it=flags.begin(); it!=flags.end(); it++){
+            (*it)->flagChanged(newValue);    
+        }
+        this->_flagsStatus[name] = HSSRuleStateOff;
         
     } else {
         //std_log("No flag with name "+name+" on element "+this->getElementName());
@@ -2255,11 +2288,14 @@ void HSSDisplayObject::flagsToggle(std::string name)
 {
     if(this->hasFlag(name)){
         std_log3("toggle flag with name "+name+" on element "+this->getElementName());
-        HSSRuleState newValue = (this->_flagsStatus[name] == HSSRuleStateOn ? HSSRuleStateOff : HSSRuleStateOn);
-        HSSFlag::p theFlag = this->_flags[name];
-        this->_flagsStatus[name] = (newValue == HSSRuleStateOn ? HSSRuleStateActivate : HSSRuleStatePurge);
-        theFlag->flagChanged(newValue);
+        HSSRuleState newValue = (this->_flagsStatus[name] == HSSRuleStateOn ? HSSRuleStatePurge : HSSRuleStateActivate);
+        std::vector<HSSFlag::p> flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
+        std::vector<HSSFlag::p>::iterator it;
+        for(it=flags.begin(); it!=flags.end(); it++){
+            (*it)->flagChanged(newValue);    
+        }
+        this->_flagsStatus[name] = (newValue == HSSRuleStateActivate ? HSSRuleStateOn : HSSRuleStateOff);
     } else {
         //std_log("No flag with name "+name+" on element "+this->getElementName());
     }

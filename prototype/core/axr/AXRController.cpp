@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/03/26
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 25
+ *      Revision: 26
  *
  ********************************************************************/
 
@@ -554,11 +554,11 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::filterSelection( 
                 std::vector<HSSDisplayObject::p> tempSel = theFlag->filter(selection, negating);
                 if(!this->isAtEndOfSelector()){
                     this->readNextSelectorNode();
-                    if(theFlag->isPurging()){
-                        return this->filterSelection(selection, false, processing); //FIXME?
-                    } else {
+                    //if(!theFlag->getPurging()){
+                    //    return this->filterSelection(selection, false, processing); //FIXME?
+                    //} else {
                         return this->filterSelection(tempSel, false, processing); //FIXME?
-                    }
+                    //}
                     
                 } else {
                     this->readNextSelectorNode();

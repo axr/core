@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/03/26
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -62,7 +62,7 @@ HSSFlag::HSSFlag()
 : HSSParserNode()
 {
     this->nodeType = HSSParserNodeTypeFlag;
-    this->_purging = false;
+    this->_purging = HSSRuleStateOff;
 }
 
 HSSFlag::p HSSFlag::clone() const{
@@ -115,9 +115,9 @@ void HSSFlag::flagChanged(HSSRuleState newStatus){
             std::vector<HSSDisplayObject::p> scope = theRule->getOriginalScope();
             AXRController::p controller = AXRCore::getInstance()->getController();
             controller->setSelectorChain(theRule->getSelectorChain());
-            this->setPurging(true);
+            this->setPurging(newStatus);
             std::vector<std::vector<HSSDisplayObject::p> > selection = controller->selectHierarchical(scope, this->getThisObj(), false, false);
-            
+            this->setPurging(HSSRuleStateOff);
             std::vector<std::vector<HSSDisplayObject::p> >::const_iterator outer;
             std::vector<HSSDisplayObject::p>::const_iterator inner;
             for (outer=selection.begin(); outer!=selection.end(); outer++) {
@@ -137,16 +137,11 @@ const std::vector<HSSDisplayObject::p> HSSFlag::filter(const std::vector<HSSDisp
         HSSDisplayObject::const_it it;
         for (it=scope.begin(); it!=scope.end(); it++) {
             const HSSDisplayObject::p & theDO = *it;
-            if(this->isPurging()){
+            HSSRuleState purgingState = this->getPurging();
+            if(purgingState){
                 HSSRuleState state = theDO->flagState(this->getName());
-                switch (state) {
-                    case HSSRuleStatePurge:
-                    case HSSRuleStateActivate:
-                        ret.push_back(theDO);
-                        break;
-                        
-                    default:
-                        break;
+                if(state == purgingState){
+                    ret.push_back(theDO);
                 }
                 
             } else {
@@ -157,20 +152,18 @@ const std::vector<HSSDisplayObject::p> HSSFlag::filter(const std::vector<HSSDisp
                 }
             }
         }
-        this->setPurging(false);
         return ret;
     } else {
-        this->setPurging(false);
         return scope;
     }
 }
 
-bool HSSFlag::isPurging()
+HSSRuleState HSSFlag::getPurging()
 {
     return this->_purging;
 }
 
-void HSSFlag::setPurging(bool newValue)
+void HSSFlag::setPurging(HSSRuleState newValue)
 {
     this->_purging = newValue;
 }
