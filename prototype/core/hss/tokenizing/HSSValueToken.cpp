@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/09
+ *      Last changed: 2012/03/29
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 4
+ *      Core version: 0.45
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -60,7 +60,11 @@ HSSValueToken::HSSValueToken(HSSTokenType type, std::string value, unsigned line
 {
     
 	this->type = type;
-	this->stringValue = value;
+    if(this->isNumeric()){
+        this->longValue = strtold(value.c_str(), NULL);
+    } else {
+        this->stringValue = value;
+    }
 }
 
 HSSValueToken::HSSValueToken(HSSTokenType type, char value, unsigned line, unsigned column)
@@ -113,7 +117,7 @@ std::string HSSValueToken::toString()
 
 bool HSSValueToken::isNumeric()
 {
-    return this->type == HSSNumber || this->type == HSSPercentageNumber || this->type == HSSHexNumber;
+    return this->type == HSSNumber || this->type == HSSPercentageNumber;
 }
 
 

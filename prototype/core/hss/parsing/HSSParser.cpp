@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/03/29
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 25
+ *      Revision: 26
  *
  ********************************************************************/
 
@@ -1361,7 +1361,21 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
         currentval = VALUE_TOKEN(this->currentToken)->getString();
         if (currentval == "new"){
             ret = HSSInstruction::p(new HSSInstruction(HSSNewInstruction));
-            this->readNextToken();
+            this->readNextToken(true);
+            if (this->currentToken->isA(HSSParenthesisOpen)) {
+                this->readNextToken(true);
+                this->skip(HSSWhitespace);
+                if (this->currentToken->isA(HSSNumber)) {
+                    long double number = VALUE_TOKEN(this->currentToken)->getLong();
+                    ret->setArgument(HSSNumberConstant::p(new HSSNumberConstant(number)));
+                    this->readNextToken(true);
+                    this->skip(HSSWhitespace);
+                    this->skipExpected(HSSParenthesisClose);
+                    this->skip(HSSWhitespace);
+                } else {
+                    throw AXRError::p(new AXRError("HSSParser", "Unknown value in argument of new statement", this->currentFile->fileName, this->line, this->column));
+                }
+            }
         } else if (currentval == "ensure") {
             ret = HSSInstruction::p(new HSSInstruction(HSSEnsureInstruction));
             this->readNextToken();
@@ -1691,7 +1705,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
     switch (this->currentToken->getType()) {
         case HSSNumber:
         {
-            left = HSSNumberConstant::p(new HSSNumberConstant(strtold(VALUE_TOKEN(this->currentToken)->getString().c_str(), NULL)));
+            left = HSSNumberConstant::p(new HSSNumberConstant(VALUE_TOKEN(this->currentToken)->getLong()));
             this->readNextToken();
             this->skip(HSSWhitespace);
             break;
@@ -1699,7 +1713,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
         
         case HSSPercentageNumber:
         {
-            left = HSSPercentageConstant::p(new HSSPercentageConstant(strtold(VALUE_TOKEN(this->currentToken)->getString().c_str(), NULL)));
+            left = HSSPercentageConstant::p(new HSSPercentageConstant(VALUE_TOKEN(this->currentToken)->getLong()));
             this->readNextToken();
             this->skip(HSSWhitespace);
             break;

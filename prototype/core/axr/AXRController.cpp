@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/26
+ *      Last changed: 2012/03/29
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 26
+ *      Revision: 27
  *
  ********************************************************************/
 
@@ -88,24 +88,37 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
             case HSSNewInstruction:
             {
                 std::string elementName = rule->getSelectorChain()->subject()->getElementName();
-                HSSContainer::p newContainer = HSSContainer::p(new HSSContainer());
-                newContainer->setName(elementName);
-                newContainer->setElementName(elementName);;
-                this->add(newContainer);
-                newContainer->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff ));
-                std_log1("created "+newContainer->getElementName());
-                newContainer->setNeedsRereadRules(true);
-                newContainer->setNeedsSurface(true);
-                newContainer->setDirty(true);
-                unsigned i, size;
-                this->currentContext.push(newContainer);
-                for (i=0, size=rule->childrenSize(); i<size; i++) {
-                    const HSSRule::p childRule = rule->childrenGet(i);
-                    this->recursiveMatchRulesToDisplayObjects(childRule, newContainer->getChildren(), newContainer, applyingInstructions);
+                unsigned i;
+                unsigned argssize = 1;
+                HSSParserNode::p argument = instruction->getArgument();
+                if(argument){
+                    if (argument->isA(HSSParserNodeTypeNumberConstant)) {
+                        HSSNumberConstant::p argnum = boost::static_pointer_cast<HSSNumberConstant>(argument);
+                        argssize = (int)argnum->getValue();
+                    }
                 }
-                newContainer->setNeedsRereadRules(true);
-                //newContainer->fireEvent(HSSEventTypeLoad);
-                this->currentContext.pop();
+                
+                for (i=0; i<argssize; i++) {
+                    HSSContainer::p newContainer = HSSContainer::p(new HSSContainer());
+                    newContainer->setName(elementName);
+                    newContainer->setElementName(elementName);;
+                    this->add(newContainer);
+                    newContainer->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff ));
+                    std_log1("created "+newContainer->getElementName());
+                    newContainer->setNeedsRereadRules(true);
+                    newContainer->setNeedsSurface(true);
+                    newContainer->setDirty(true);
+                    unsigned i, size;
+                    this->currentContext.push(newContainer);
+                    for (i=0, size=rule->childrenSize(); i<size; i++) {
+                        const HSSRule::p childRule = rule->childrenGet(i);
+                        this->recursiveMatchRulesToDisplayObjects(childRule, newContainer->getChildren(), newContainer, applyingInstructions);
+                    }
+                    newContainer->setNeedsRereadRules(true);
+                    //newContainer->fireEvent(HSSEventTypeLoad);
+                    this->currentContext.pop();
+                }
+                
                 break;
             }
                 
