@@ -465,12 +465,16 @@ void HSSContainer::layout()
         //place it on the alignment point
         //horizontal
         child->x = child->alignX - child->anchorX;
-        if ((child->x + child->width) > this->width) child->x = this->width - child->width;
-        if (child->x < 0) child->x = 0;
         //vertical
         child->y = child->alignY - child->anchorY;
-        if ((child->y + child->height) > this->height) child->y = this->height - child->height;
-        if (child->y < 0) child->y = 0;
+        
+        if(!child->getOverflow()){
+            if (child->x < 0) child->x = 0;
+            if ((child->x + child->width) > this->width) child->x = this->width - child->width;
+            
+            if (child->y < 0) child->y = 0;
+            if ((child->y + child->height) > this->height) child->y = this->height - child->height;
+        }
         
         bool addedToGroup = false;
         

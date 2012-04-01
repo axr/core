@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/26
+ *      Last changed: 2012/04/01
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 35
+ *      Revision: 36
  *
  ********************************************************************/
 
@@ -190,6 +190,12 @@ namespace AXR {
         void setDFlow(HSSParserNode::p value);
         void flowChanged(HSSObservableProperty source, void*data);
         
+        //overflow
+        bool getOverflow();
+        HSSParserNode::p getDOverflow();
+        void setDOverflow(HSSParserNode::p value);
+        void overflowChanged(HSSObservableProperty source, void*data);
+        
         //height
         long double getHeight();
         HSSParserNode::p getDHeight();
@@ -306,6 +312,9 @@ namespace AXR {
         HSSParserNode::p dFlow;
         bool flow;
         bool does_float;
+        //overflow
+        HSSParserNode::p dOverflow;
+        bool overflow;
         //alignX
         HSSParserNode::p dAlignX;
         long double alignX;

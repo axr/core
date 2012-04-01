@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/26
+ *      Last changed: 2012/04/01
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 40
+ *      Revision: 41
  *
  ********************************************************************/
 
@@ -100,6 +100,7 @@ void HSSDisplayObject::initialize()
     this->drawIndex = this->_index = 0;
     this->tabIndex = this->zoomFactor = 1;
     this->flow = this->visible = true;
+    this->overflow = false;
     //fixme: change to camelCase
     this->does_float = false;
     this->heightByContent = false;
@@ -121,6 +122,7 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyAnchorX, (void *) &this->anchorX);
     this->registerProperty(HSSObservablePropertyAnchorY, (void *) &this->anchorY);
     this->registerProperty(HSSObservablePropertyFlow, (void *) &this->flow);
+    this->registerProperty(HSSObservablePropertyOverflow, (void *) &this->overflow);
     this->registerProperty(HSSObservablePropertyHeight, (void *) &this->height);
     this->registerProperty(HSSObservablePropertyWidth, (void *) &this->width);
     this->registerProperty(HSSObservablePropertyBackground, (void *) &this->background);
@@ -219,7 +221,7 @@ bool HSSDisplayObject::isKeyword(std::string value, std::string property)
             ){
             return true;
         }
-    } else if (property == "flow") {
+    } else if (property == "flow" || property == "overflow") {
         if (value == "yes" || value == "no"){
             return true;
         }
@@ -508,6 +510,9 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
         case HSSObservablePropertyFlow:
             this->setDFlow(value);
             break;
+        case HSSObservablePropertyOverflow:
+            this->setDOverflow(value);
+            break;
         case HSSObservablePropertyAlignX:
             this->setDAlignX(value);
             break;
@@ -533,6 +538,7 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
     }
 }
 
+//deprecated I think, use the previous one
 void HSSDisplayObject::setProperty(HSSObservableProperty name, void * value)
 {
     switch (name) {
@@ -1285,6 +1291,104 @@ void HSSDisplayObject::flowChanged(HSSObservableProperty source, void*data)
     }
     
     this->notifyObservers(HSSObservablePropertyFlow, data);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
+}
+
+//overflow
+bool HSSDisplayObject::getOverflow() { return this->overflow; }
+HSSParserNode::p HSSDisplayObject::getDOverflow() { return this->dOverflow; }
+void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
+{
+    bool valid = true;
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            this->dOverflow = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                this->overflow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            this->dOverflow = value;
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                this->setDOverflow(objdef);
+                
+            } catch (HSSObjectNotFoundException * e) {
+                std_log(e->toString());
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->dOverflow = value;
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                fnct->setScope(this->scope);
+                this->overflow = *(bool *)fnct->evaluate();
+                
+                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyOverflow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::overflowChanged));
+                
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+            if(keywordValue->getValue() == "yes"){
+                this->overflow = true;
+                break;
+            } else if (keywordValue->getValue() == "no"){
+                this->overflow = false;
+                break;
+            } else {
+                //fall through
+            }
+        }
+            
+        default:
+            valid = false;
+    }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for overflow of "+this->name));
+    
+    this->notifyObservers(HSSObservablePropertyOverflow, &this->overflow);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
+}
+
+void HSSDisplayObject::overflowChanged(HSSObservableProperty source, void*data)
+{
+    switch (this->dOverflow->getType()) {
+        case HSSParserNodeTypeFunctionCall:
+            this->overflow = *(bool*)data;
+            break;
+            
+        default:
+            break;
+    }
+    
+    this->notifyObservers(HSSObservablePropertyOverflow, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 

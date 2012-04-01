@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/04/01
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 12
+ *      Revision: 13
  *
  ********************************************************************/
 
@@ -72,6 +72,7 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyAnchorX] = "HSSObservablePropertyAnchorX";
         types[HSSObservablePropertyAnchorY] = "HSSObservablePropertyAnchorY";
         types[HSSObservablePropertyFlow] = "HSSObservablePropertyFlow";
+        types[HSSObservablePropertyOverflow] = "HSSObservablePropertyOverflow";
         types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
         types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
         types[HSSObservablePropertyOn] = "HSSObservablePropertyOn";
@@ -155,6 +156,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["anchorX"] = HSSObservablePropertyAnchorX;
         properties["anchorY"] = HSSObservablePropertyAnchorY;
         properties["flow"] = HSSObservablePropertyFlow;
+        properties["overflow"] = HSSObservablePropertyOverflow;
         properties["alignX"] = HSSObservablePropertyAlignX;
         properties["alignY"] = HSSObservablePropertyAlignY;
         properties["on"] = HSSObservablePropertyOn;

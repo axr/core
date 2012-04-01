@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/04/01
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 14
+ *      Revision: 15
  *
  ********************************************************************/
 
@@ -128,7 +128,8 @@ namespace AXR {
         //HSSColorStop
         HSSObservablePropertyPosition,
         
-        HSSObservablePropertyTreeChange
+        HSSObservablePropertyTreeChange,
+        HSSObservablePropertyOverflow,
     };
 }
 
