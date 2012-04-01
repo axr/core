@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/04/01
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 8
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -219,10 +219,10 @@ void HSSRule::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
     for (it=this->properties.begin(); it!=this->properties.end(); it++) {
         (*it)->setThisObj(value);
     }
-    std::vector<HSSRule::p>::iterator it2;
-    for (it2=this->children.begin(); it2!=this->children.end(); it2++) {
-        (*it2)->setThisObj(value);
-    }
+//    std::vector<HSSRule::p>::iterator it2;
+//    for (it2=this->children.begin(); it2!=this->children.end(); it2++) {
+//        (*it2)->setThisObj(value);
+//    }
     HSSStatement::setThisObj(value);
 }
 
