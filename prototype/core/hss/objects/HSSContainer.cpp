@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/04/01
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 35
+ *      Revision: 36
  *
  ********************************************************************/
 
@@ -451,8 +451,8 @@ void HSSContainer::layout()
 {
     //reset flag
     this->_needsLayout = false;
-    std::vector<displayGroup>primaryGroups;
-    std::vector<displayGroup>secondaryGroups;
+    std::vector<displayGroup::p>primaryGroups;
+    std::vector<displayGroup::p>secondaryGroups;
     unsigned i, size, j, k;
     //long double acc2 = 0;
     security_brake_init(); 
@@ -482,27 +482,27 @@ void HSSContainer::layout()
             if( i!=0 ) {
                 j = 0;
                 while (j<primaryGroups.size()) {
-                    if(primaryGroups[j].lines.size() == 0){
-                        displayGroup & currentPGroup = primaryGroups[j];
+                    if(primaryGroups[j]->lines.size() == 0){
+                        displayGroup::p & currentPGroup = primaryGroups[j];
                         addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
-                        if (!addedToGroup && currentPGroup.complete){
+                        if (!addedToGroup && currentPGroup->complete){
                             //transform the current group into a line
-                            displayGroup newGroup;
-                            newGroup.x = currentPGroup.x;
-                            newGroup.y = currentPGroup.y;
-                            newGroup.width = currentPGroup.width;
-                            newGroup.height = currentPGroup.height;
-                            newGroup.complete = false;
-                            newGroup.lines.push_back(currentPGroup);
+                            displayGroup::p newGroup = displayGroup::p(new displayGroup());
+                            newGroup->x = currentPGroup->x;
+                            newGroup->y = currentPGroup->y;
+                            newGroup->width = currentPGroup->width;
+                            newGroup->height = currentPGroup->height;
+                            newGroup->complete = false;
+                            newGroup->lines.push_back(currentPGroup);
                             
-                            displayGroup newLine;
-                            newLine.x = child->x;
-                            newLine.y = child->y;
-                            newLine.width = child->width;
-                            newLine.height = child->height;
-                            newLine.complete = false;
-                            newLine.objects.push_back(child);
-                            newGroup.lines.push_back(newLine);
+                            displayGroup::p newLine = displayGroup::p(new displayGroup());
+                            newLine->x = child->x;
+                            newLine->y = child->y;
+                            newLine->width = child->width;
+                            newLine->height = child->height;
+                            newLine->complete = false;
+                            newLine->objects.push_back(child);
+                            newGroup->lines.push_back(newLine);
                             
                             primaryGroups[j] = newGroup;
                             
@@ -513,7 +513,7 @@ void HSSContainer::layout()
                             k=0;
                             while (k<primaryGroups.size()){
                                 if(k != j){
-                                    displayGroup & otherPGroup = primaryGroups[k];
+                                    displayGroup::p & otherPGroup = primaryGroups[k];
                                     bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
                                     if(merged){
                                         primaryGroups.erase(primaryGroups.begin()+j);
@@ -528,18 +528,18 @@ void HSSContainer::layout()
                         }
                         
                     } else {
-                        displayGroup & currentPGroup = primaryGroups[j].lines.back();
+                        displayGroup::p & currentPGroup = primaryGroups[j]->lines.back();
                         addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
-                        if (!addedToGroup && currentPGroup.complete){
+                        if (!addedToGroup && currentPGroup->complete){
                             //create new line
-                            displayGroup newLine;
-                            newLine.x = child->x;
-                            newLine.y = child->y;
-                            newLine.width = child->width;
-                            newLine.height = child->height;
-                            newLine.complete = false;
-                            newLine.objects.push_back(child);
-                            primaryGroups[j].lines.push_back(newLine);
+                            displayGroup::p newLine = displayGroup::p(new displayGroup());
+                            newLine->x = child->x;
+                            newLine->y = child->y;
+                            newLine->width = child->width;
+                            newLine->height = child->height;
+                            newLine->complete = false;
+                            newLine->objects.push_back(child);
+                            primaryGroups[j]->lines.push_back(newLine);
                             
                             addedToGroup = true;
                         }
@@ -548,7 +548,7 @@ void HSSContainer::layout()
                             k=0;
                             while (k<primaryGroups.size()){
                                 if(k != j){
-                                    displayGroup & otherPGroup = primaryGroups[k];
+                                    displayGroup::p & otherPGroup = primaryGroups[k];
                                     bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
                                     if(merged){
                                         primaryGroups.erase(primaryGroups.begin()+j);
@@ -569,13 +569,13 @@ void HSSContainer::layout()
             }
             
             if(!addedToGroup){
-                displayGroup newGroup;
-                newGroup.x = child->x;
-                newGroup.y = child->y;
-                newGroup.width = child->width;
-                newGroup.height = child->height;
-                newGroup.complete = false;
-                newGroup.objects.push_back(child);
+                displayGroup::p newGroup = displayGroup::p(new displayGroup());
+                newGroup->x = child->x;
+                newGroup->y = child->y;
+                newGroup->width = child->width;
+                newGroup->height = child->height;
+                newGroup->complete = false;
+                newGroup->objects.push_back(child);
                 primaryGroups.push_back(newGroup);
             }
         }
@@ -586,6 +586,7 @@ void HSSContainer::layout()
     security_brake_reset();
     
     //now align the lines in the secondary direction
+    bool secondaryIsHorizontal = (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft);
     for(i=0, size = this->allChildren.size(); i<size; i++){
         HSSDisplayObject::p &child = this->allChildren[i];
         
@@ -593,40 +594,158 @@ void HSSContainer::layout()
             bool addedToGroup = false;
             if( i!=0 ) {
                 j = 0;
-                while (j<secondaryGroups.size()) {
-                    displayGroup & currentSGroup = secondaryGroups[j];
-                    addedToGroup = this->_addChildToGroupIfNeeded(child, currentSGroup, this->directionSecondary, true);
-                    
-                    if(addedToGroup){
-                        k=0;
-                        while (k<secondaryGroups.size()){
-                            if(k != j){
-                                displayGroup & otherSGroup = secondaryGroups[k];
-                                bool merged = this->_mergeGroupsIfNeeded(otherSGroup, currentSGroup,  this->directionSecondary);
-                                if(merged){
-                                    secondaryGroups.erase(secondaryGroups.begin()+j);
-                                    j = k;
-                                } else {
-                                    k++;
-                                }
-                            } else {
-                                k++;
+                std::vector<displayGroup::p> overlappingGroups = this->_getGroupsOverlapping(child, secondaryGroups, this->directionSecondary);
+                if(overlappingGroups.size() > 0){
+                    addedToGroup = true;
+                    long double biggest = 0;
+                    displayGroup::p biggestGroup;
+                    std::vector<displayGroup::p>::iterator olg_it;
+                    for (olg_it=overlappingGroups.begin(); olg_it!=overlappingGroups.end(); olg_it++) {
+                        displayGroup::p olg = *olg_it;
+                        if(secondaryIsHorizontal){
+                            if(olg->width > biggest){
+                                biggest = olg->width;
+                                biggestGroup = olg;
+                            }
+                        } else {
+                            if(olg->height > biggest){
+                                biggest = olg->height;
+                                biggestGroup = olg;
                             }
                         }
                     }
                     
-                    j++;
-                    security_brake();
+                    HSSDisplayObject::const_it bgobj_it;
+                    std::vector<displayGroup::p>::iterator bgline_it;
+                    displayGroup::p lastbgline = biggestGroup->lines.back();
+                    for (bgobj_it=lastbgline->objects.begin(); bgobj_it!=lastbgline->objects.end(); bgobj_it++) {
+                        HSSDisplayObject::p bgobj = *bgobj_it;
+                        bool overlaps = false;
+                        if(secondaryIsHorizontal){
+                            if( ((child->y + child->height) > bgobj->y) && (child->y < (bgobj->y + bgobj->height)) ){
+                                overlaps = true;
+                            }
+                        } else {
+                            if( ((child->x + child->width) > bgobj->x) && (child->x < (bgobj->x + bgobj->width)) ){
+                                overlaps = true;
+                            }
+                        }
+                        
+                        if ( overlaps ){
+                            //add a new line
+                            displayGroup::p newLine = displayGroup::p(new displayGroup());
+                            newLine->x = child->x;
+                            newLine->y = child->y;
+                            newLine->width = child->width;
+                            newLine->height = child->height;
+                            newLine->complete = false;
+                            newLine->objects.push_back(child);
+                            newLine->name = child->name+"_line";
+                            biggestGroup->lines.push_back(newLine);
+                            
+                            switch (this->directionSecondary) {
+                                case HSSDirectionTopToBottom:
+                                case HSSDirectionBottomToTop:
+                                    biggestGroup->height += child->height;
+                                    break;
+                                    
+                                case HSSDirectionRightToLeft:
+                                default:
+                                    biggestGroup->width += child->width;
+                                    break;
+                            }
+                            //we're done
+                            break;
+                            
+                        //if it is the last one
+                        } else if(bgobj.get() == lastbgline->objects.back().get()){
+                            //no overlap and it is the last one
+                            //add it to the last line
+                            lastbgline->objects.push_back(child);
+                            switch (this->directionSecondary) {
+                                case HSSDirectionTopToBottom:
+                                case HSSDirectionBottomToTop:
+                                    lastbgline->width += child->width;
+                                    if(child->height > lastbgline->height){
+                                        lastbgline->height = child->height;
+                                    }
+                                    break;
+                                    
+                                case HSSDirectionRightToLeft:
+                                default:
+                                    lastbgline->height += child->height;
+                                    if(child->width > lastbgline->width){
+                                        lastbgline->width = child->width;
+                                    }
+                                    break;
+                            }
+                            
+                            //we're done
+                            break;
+                        }
+                    }
+                    
+                    
+                    
+                    this->_arrangeLines(biggestGroup, this->directionSecondary);
+                    
+                    //cross check against the overlapping group and resolve overlaps
+                    std::vector<displayGroup::p>::iterator olgline_it;
+                    HSSDisplayObject::const_it olgobj_it;
+                    for (olg_it=overlappingGroups.begin(); olg_it!=overlappingGroups.end(); olg_it++) {
+                        displayGroup::p & olg = *olg_it;
+                        if(olg.get() != biggestGroup.get()){
+                            for (olgline_it=olg->lines.begin(); olgline_it!=olg->lines.end(); olgline_it++) {
+                                displayGroup::p olgline = *olgline_it;
+                                for (olgobj_it=olgline->objects.begin(); olgobj_it!=olgline->objects.end(); olgobj_it++) {
+                                    HSSDisplayObject::p olgobj = *olgobj_it;
+                                    
+                                    for (bgline_it=biggestGroup->lines.begin(); bgline_it!=biggestGroup->lines.end(); bgline_it++) {
+                                        displayGroup::p bgline = *bgline_it;
+                                        for (bgobj_it=bgline->objects.begin(); bgobj_it!=bgline->objects.end(); bgobj_it++) {
+                                            HSSDisplayObject::p bgobj = *bgobj_it;
+                                            if (
+                                                ((olgobj->x + olgobj->width)  > bgobj->x) && (olgobj->x < (bgobj->x + bgobj->width))
+                                                && ((olgobj->y + olgobj->height) > bgobj->y) && (olgobj->y < (bgobj->y + bgobj->height))
+                                                ){
+                                                long double overlapDistance;
+                                                if(secondaryIsHorizontal){
+                                                    overlapDistance = (olgobj->x + olgobj->width) - bgobj->x;
+                                                } else {
+                                                    overlapDistance = (olgobj->y + olgobj->height) - bgobj->y;
+                                                }
+                                                if (secondaryIsHorizontal) {
+                                                    olgobj->x -= overlapDistance;
+                                                } else {
+                                                    olgobj->y -= overlapDistance;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             if(!addedToGroup){
-                displayGroup newGroup;
-                newGroup.x = child->x;
-                newGroup.y = child->y;
-                newGroup.width = child->width;
-                newGroup.height = child->height;
-                newGroup.complete = false;
-                newGroup.objects.push_back(child);
+                displayGroup::p newGroup = displayGroup::p(new displayGroup());
+                newGroup->x = child->x;
+                newGroup->y = child->y;
+                newGroup->width = child->width;
+                newGroup->height = child->height;
+                newGroup->complete = false;
+                newGroup->name = child->name+"_group";
+                
+                displayGroup::p newLine = displayGroup::p(new displayGroup());
+                newLine->x = child->x;
+                newLine->y = child->y;
+                newLine->width = child->width;
+                newLine->height = child->height;
+                newLine->complete = false;
+                newLine->objects.push_back(child);
+                newLine->name = child->name+"_line";
+                newGroup->lines.push_back(newLine);
                 secondaryGroups.push_back(newGroup);
             }
         }
@@ -642,8 +761,8 @@ void HSSContainer::layout()
         long double maxHeight = 0.;
         
         for (i=0, size = secondaryGroups.size(); i<size; i++) {
-            if(secondaryGroups[i].height > maxHeight){
-                maxHeight = secondaryGroups[i].height;
+            if(secondaryGroups[i]->height > maxHeight){
+                maxHeight = secondaryGroups[i]->height;
             }
         }
         if(size > 0){
@@ -655,7 +774,7 @@ void HSSContainer::layout()
     }
 }
 
-bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSSContainer::displayGroup &group, HSSDirectionValue direction, bool overflow)
+bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSSContainer::displayGroup::p &group, HSSDirectionValue direction, bool overflow)
 {
     unsigned i, size;
     bool isHorizontal = (direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft);
@@ -665,8 +784,8 @@ bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSS
     long double originalX = child->x;
     long double originalY = child->y;
     
-    for (i=0, size = group.objects.size(); i<size; i++) {
-        HSSDisplayObject::p & otherChild = group.objects[i];
+    for (i=0, size = group->objects.size(); i<size; i++) {
+        HSSDisplayObject::p & otherChild = group->objects[i];
         if( isHorizontal ){
             lineTotalPrimary += otherChild->width;
         } else {
@@ -684,29 +803,29 @@ bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSS
                 if(!overflow){
                     if( isHorizontal ){
                         if( lineTotalPrimary + child->width > this->width){
-                            group.complete = true;
+                            group->complete = true;
                         }
                     } else {
                         if( lineTotalPrimary + child->height > this->height){
-                            group.complete = true;
+                            group->complete = true;
                         }
                     }
                 }
                 
-                if (!group.complete){
+                if (!group->complete){
                     //put it into the group
-                    group.objects.push_back(child);
+                    group->objects.push_back(child);
                     addedToGroup = true;
                     
                     switch (direction) {
                         case HSSDirectionTopToBottom:
                         case HSSDirectionBottomToTop:
-                            group.height += child->height;
+                            group->height += child->height;
                             break;
                             
                         case HSSDirectionRightToLeft:
                         default:
-                            group.width += child->width;
+                            group->width += child->width;
                             break;
                     }
                     
@@ -754,29 +873,69 @@ bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSS
     return addedToGroup;
 }
 
-bool HSSContainer::_mergeGroupsIfNeeded(displayGroup &group, displayGroup &otherGroup, HSSDirectionValue direction)
+std::vector<HSSContainer::displayGroup::p> HSSContainer::_getGroupsOverlapping(HSSDisplayObject::p &child, std::vector<HSSContainer::displayGroup::p> &groups, HSSDirectionValue direction)
+{
+    std::vector<HSSContainer::displayGroup::p>::iterator it;
+    std::vector<HSSContainer::displayGroup::p> ret;
+    unsigned i, size, j, size2;
+    bool overlaps = false;
+    
+    for (it=groups.begin(); it!=groups.end(); it++) {
+        HSSContainer::displayGroup::p group = *it;
+        for (j=0, size2=group->lines.size(); j<size2; j++) {
+            const HSSContainer::displayGroup::p & otherGroup = group->lines[j];
+            if(
+               ((child->x + child->width) > otherGroup->x) && (child->x < (otherGroup->x + otherGroup->width))
+               && ((child->y + child->height) > otherGroup->y) && (child->y < (otherGroup->y + otherGroup->height))
+               ){
+                for (i=0, size = otherGroup->objects.size(); i<size; i++) {
+                    const HSSDisplayObject::p & otherChild = otherGroup->objects[i];
+                    if(direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft){
+                        if( ((child->y + child->height) > otherChild->y) && (child->y < (otherChild->y + otherChild->height)) ){
+                            overlaps = true;
+                        }
+                    } else {
+                        if( ((child->x + child->width) > otherChild->x) && (child->x < (otherChild->x + otherChild->width)) ){
+                            overlaps = true;
+                        }
+                    }
+                    
+                    if (overlaps) {
+                        ret.push_back(group);
+                        overlaps = false;
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+    
+    return ret;
+}
+
+bool HSSContainer::_mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p &otherGroup, HSSDirectionValue direction)
 {
     unsigned i, size, j, size2;
     if (
-        ((group.x + group.width) > otherGroup.x) && (group.x < (otherGroup.x + otherGroup.width))
-        && ((group.y + group.height) > otherGroup.y) && (group.y < (otherGroup.y + otherGroup.height))
+        ((group->x + group->width) > otherGroup->x) && (group->x < (otherGroup->x + otherGroup->width))
+        && ((group->y + group->height) > otherGroup->y) && (group->y < (otherGroup->y + otherGroup->height))
         ){
         //if the group bounds overlap, check each individual element against each other
-        for (i=0, size = group.objects.size(); i<size; i++) {
-            HSSDisplayObject::p & child = group.objects[i];
-            for (j=0, size2 = otherGroup.objects.size(); j<size2; j++) {
-                HSSDisplayObject::p &otherChild = otherGroup.objects[j];
+        for (i=0, size = group->objects.size(); i<size; i++) {
+            HSSDisplayObject::p & child = group->objects[i];
+            for (j=0, size2 = otherGroup->objects.size(); j<size2; j++) {
+                HSSDisplayObject::p &otherChild = otherGroup->objects[j];
                 if (
                     ((child->x + child->width)  > otherChild->x) && (child->x < (otherChild->x + otherChild->width))
                     && ((child->y + child->height) > otherChild->y) && (child->y < (otherChild->y + otherChild->height))
                     ){
                     //there is an overlap, merge the groups
                     //add all the elements of this group to the overlapping one
-                    group.objects.insert(group.objects.end(), otherGroup.objects.begin(), otherGroup.objects.end());
+                    group->objects.insert(group->objects.end(), otherGroup->objects.begin(), otherGroup->objects.end());
                     if(direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft){
-                        group.width += otherGroup.width;
+                        group->width += otherGroup->width;
                     } else {
-                        group.height += otherGroup.height;
+                        group->height += otherGroup->height;
                     }
                     
                     this->_arrange(group, direction);
@@ -792,7 +951,7 @@ bool HSSContainer::_mergeGroupsIfNeeded(displayGroup &group, displayGroup &other
     return false;
 }
 
-void HSSContainer::_arrange(displayGroup &group, HSSDirectionValue direction)
+void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
 {
     unsigned i, size;
     
@@ -800,12 +959,12 @@ void HSSContainer::_arrange(displayGroup &group, HSSDirectionValue direction)
         case HSSDirectionRightToLeft:
         {            
             //calculate the new alignment and anchor point for the group
-            HSSDisplayObject::p & groupFirst = group.objects.front();
+            HSSDisplayObject::p & groupFirst = group->objects.front();
             long double alignmentTotal = 0;
             long double accWidth = groupFirst->anchorX;
             long double anchorsTotal = 0;
-            for (i=0, size = group.objects.size(); i<size; i++) {
-                HSSDisplayObject::p & currentChild = group.objects[i];
+            for (i=0, size = group->objects.size(); i<size; i++) {
+                HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignX;
                 if(i>0){
                     anchorsTotal += accWidth + currentChild->anchorX;
@@ -817,28 +976,28 @@ void HSSContainer::_arrange(displayGroup &group, HSSDirectionValue direction)
             
             //reposition the elements in the group
             double long startX = groupAlignX +  groupAnchorX + (groupFirst->width - groupFirst->anchorX);
-            if(startX - group.width < 0) startX = group.width;
+            if(startX - group->width < 0) startX = group->width;
             if(startX > this->width) startX = this->width;
             accWidth = 0;
-            for (i=0, size = group.objects.size(); i<size; i++) {
-                HSSDisplayObject::p & otherChild2 = group.objects[i];
+            for (i=0, size = group->objects.size(); i<size; i++) {
+                HSSDisplayObject::p & otherChild2 = group->objects[i];
                 otherChild2->x = startX - otherChild2->width - accWidth;
                 accWidth += otherChild2->width;
             }
-            group.x = group.objects.front()->x;
-            group.y = group.objects.front()->y;
+            group->x = group->objects.front()->x;
+            group->y = group->objects.front()->y;
             break;
         }
             
         case HSSDirectionTopToBottom:
         {            
             //calculate the new alignment and anchor point for the group
-            HSSDisplayObject::p & groupFirst = group.objects.front();
+            HSSDisplayObject::p & groupFirst = group->objects.front();
             long double alignmentTotal = 0;
             long double accHeight = groupFirst->height - groupFirst->anchorY;
             long double anchorsTotal = 0;
-            for (i=0, size = group.objects.size(); i<size; i++) {
-                HSSDisplayObject::p & currentChild = group.objects[i];
+            for (i=0, size = group->objects.size(); i<size; i++) {
+                HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignY;
                 if(i>0){
                     anchorsTotal += accHeight + currentChild->anchorY;
@@ -850,28 +1009,28 @@ void HSSContainer::_arrange(displayGroup &group, HSSDirectionValue direction)
             
             //reposition the elements in the group
             double long startY = groupAlignY - groupAnchorY - groupFirst->anchorY;
-            if(startY > this->height - group.height) startY = this->height - group.height;
+            if(startY > this->height - group->height) startY = this->height - group->height;
             if(startY < 0) startY = 0;
             accHeight = 0;
-            for (i=0, size = group.objects.size(); i<size; i++) {
-                HSSDisplayObject::p & otherChild2 = group.objects[i];
+            for (i=0, size = group->objects.size(); i<size; i++) {
+                HSSDisplayObject::p & otherChild2 = group->objects[i];
                 otherChild2->y = startY + accHeight;
                 accHeight += otherChild2->height;
             }
-            group.x = group.objects.front()->x;
-            group.y = group.objects.front()->y;
+            group->x = group->objects.front()->x;
+            group->y = group->objects.front()->y;
             break;
         }
             
         case HSSDirectionBottomToTop:
         {            
             //calculate the new alignment and anchor point for the group
-            HSSDisplayObject::p & groupFirst = group.objects.front();
+            HSSDisplayObject::p & groupFirst = group->objects.front();
             long double alignmentTotal = 0;
             long double accHeight = groupFirst->anchorY;
             long double anchorsTotal = 0;
-            for (i=0, size = group.objects.size(); i<size; i++) {
-                HSSDisplayObject::p & currentChild = group.objects[i];
+            for (i=0, size = group->objects.size(); i<size; i++) {
+                HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignY;
                 if(i>0){
                     anchorsTotal += accHeight + currentChild->anchorY;
@@ -883,28 +1042,28 @@ void HSSContainer::_arrange(displayGroup &group, HSSDirectionValue direction)
             
             //reposition the elements in the group
             double long startY = groupAlignY +  groupAnchorY + (groupFirst->height - groupFirst->anchorY);
-            if(startY - group.height < 0) startY = group.height;
+            if(startY - group->height < 0) startY = group->height;
             if(startY > this->height) startY = this->height;
             accHeight = 0;
-            for (i=0, size = group.objects.size(); i<size; i++) {
-                HSSDisplayObject::p & otherChild2 = group.objects[i];
+            for (i=0, size = group->objects.size(); i<size; i++) {
+                HSSDisplayObject::p & otherChild2 = group->objects[i];
                 otherChild2->y = startY - otherChild2->height - accHeight;
                 accHeight += otherChild2->height;
             }
-            group.x = group.objects.front()->x;
-            group.y = group.objects.front()->y;
+            group->x = group->objects.front()->x;
+            group->y = group->objects.front()->y;
             break;
         }
             
         default:
         {            
             //calculate the new alignment and anchor point for the group
-            HSSDisplayObject::p & groupFirst = group.objects.front();
+            HSSDisplayObject::p & groupFirst = group->objects.front();
             long double alignmentTotal = 0;
             long double accWidth = groupFirst->width - groupFirst->anchorX;
             long double anchorsTotal = 0;
-            for (i=0, size = group.objects.size(); i<size; i++) {
-                HSSDisplayObject::p & currentChild = group.objects[i];
+            for (i=0, size = group->objects.size(); i<size; i++) {
+                HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignX;
                 if(i>0){
                     anchorsTotal += accWidth + currentChild->anchorX;
@@ -916,16 +1075,89 @@ void HSSContainer::_arrange(displayGroup &group, HSSDirectionValue direction)
             
             //reposition the elements in the group
             double long startX = groupAlignX - groupAnchorX - groupFirst->anchorX;
-            if(startX > this->width - group.width) startX = this->width - group.width;
+            if(startX > this->width - group->width) startX = this->width - group->width;
             if(startX < 0) startX = 0;
             accWidth = 0;
-            for (i=0, size = group.objects.size(); i<size; i++) {
-                HSSDisplayObject::p & otherChild2 = group.objects[i];
+            for (i=0, size = group->objects.size(); i<size; i++) {
+                HSSDisplayObject::p & otherChild2 = group->objects[i];
                 otherChild2->x = startX + accWidth;
                 accWidth += otherChild2->width;
             }
-            group.x = group.objects.front()->x;
-            group.y = group.objects.front()->y;
+            group->x = group->objects.front()->x;
+            group->y = group->objects.front()->y;
+            break;
+        }
+    }
+}
+
+void HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direction)
+{
+    unsigned i, j, size, size2;
+    
+    switch (direction) {
+        case HSSDirectionRightToLeft:
+        {            
+            throw AXRError::p(new AXRError("HSSContainer", "no overlap and not the last one"));
+            break;
+        }
+            
+        case HSSDirectionTopToBottom:
+        {            
+            //calculate the new alignment and anchor point for the group
+            HSSDisplayObject::p & groupFirst = group->lines.front()->objects.front();
+            long double alignmentTotal = 0;
+            long double accHeight = groupFirst->height - groupFirst->anchorY;
+            long double anchorsTotal = 0;
+            for (i=0, size=group->lines.size(); i<size; i++) {
+                displayGroup::p & line = group->lines[i];
+                long double biggest = 0;
+                HSSDisplayObject::p biggestObj;
+                for (j=0, size2 = line->objects.size(); j<size2; j++) {
+                    HSSDisplayObject::p & currentChild = line->objects[j];
+                    if(currentChild->height > biggest){
+                        biggest = currentChild->height;
+                        biggestObj = currentChild;
+                    }
+                }
+                
+                alignmentTotal += biggestObj->alignY;
+                if(i>0){
+                    anchorsTotal += accHeight + biggestObj->anchorY;
+                    accHeight += biggestObj->height;
+                }
+            }
+            
+            double long groupAlignY = alignmentTotal / size;
+            double long groupAnchorY = anchorsTotal / size;
+            
+            //reposition the elements in the group
+            double long startY = groupAlignY - groupAnchorY - groupFirst->anchorY;
+            if(startY > this->height - group->height) startY = this->height - group->height;
+            if(startY < 0) startY = 0;
+            accHeight = 0;
+            
+            for (i=0, size=group->lines.size(); i<size; i++) {
+                displayGroup::p & line = group->lines[i];
+                for (j=0, size2 = line->objects.size(); j<size2; j++) {
+                    HSSDisplayObject::p & otherChild2 = line->objects[j];
+                    otherChild2->y = startY + accHeight;
+                }
+                accHeight += line->height;
+            }
+            
+            group->y = groupFirst->y;
+            break;
+        }
+            
+        case HSSDirectionBottomToTop:
+        {            
+            throw AXRError::p(new AXRError("HSSContainer", "no overlap and not the last one"));
+            break;
+        }
+            
+        default:
+        {            
+            throw AXRError::p(new AXRError("HSSContainer", "no overlap and not the last one"));
             break;
         }
     }
