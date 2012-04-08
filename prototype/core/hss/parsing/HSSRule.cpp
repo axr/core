@@ -237,7 +237,7 @@ void HSSRule::treeChanged(HSSObservableProperty source, void*data)
     AXRController * theController = thisObj->getController();
     if(thisObj->isA(HSSObjectTypeContainer)){
         HSSContainer::p thisContainer = HSSContainer::asContainer(thisObj);
-        theController->recursiveMatchRulesToDisplayObjects(this->shared_from_this(), thisContainer->getChildren(), thisContainer, false);
+        //theController->recursiveMatchRulesToDisplayObjects(this->shared_from_this(), thisContainer->getChildren(), thisContainer, false);
     }
 }
 
