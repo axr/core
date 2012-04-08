@@ -1782,7 +1782,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                 
                 objdef->apply();
                 HSSObject::p theObj = objdef->getObject();
-                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
+                theObj->observe(HSSObservablePropertyFont, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
                 this->font.push_back(boost::static_pointer_cast<HSSFont>(theObj));
             }
             
@@ -1868,7 +1868,7 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypeFunctionCall:
         case HSSParserNodeTypeKeywordConstant:
         {
-            //this->font = *(std::vector<HSSFont::p> *) data;
+            this->font = *(std::vector<HSSFont::p> *) data;
             this->setDirty(true);
             break;
         }
