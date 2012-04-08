@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/21
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 6
+ *      Core version: 0.46
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -112,6 +112,16 @@ namespace AXR {
          *  @param value        A std::string containing the new value.
          */
         HSSValue(HSSValueType type, std::string value);
+        /**
+         *  Copy constructor for value objects
+         */
+        HSSValue(const HSSValue & orig);
+        /**
+         *  Clones an instance of HSSValue and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSValue
+         */
+        p clone() const;
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
@@ -165,6 +175,9 @@ namespace AXR {
         std::string stringValue;
         long int intValue;
         long double floatValue;
+        
+    private:
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/04/01
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 11
+ *      Core version: 0.46
+ *      Revision: 13
  *
  ********************************************************************/
 
@@ -72,13 +72,14 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyAnchorX] = "HSSObservablePropertyAnchorX";
         types[HSSObservablePropertyAnchorY] = "HSSObservablePropertyAnchorY";
         types[HSSObservablePropertyFlow] = "HSSObservablePropertyFlow";
+        types[HSSObservablePropertyOverflow] = "HSSObservablePropertyOverflow";
         types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
         types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
         types[HSSObservablePropertyOn] = "HSSObservablePropertyOn";
         types[HSSObservablePropertyMargin] = "HSSObservablePropertyMargin";
         types[HSSObservablePropertyPadding] = "HSSObservablePropertyPadding";
         types[HSSObservablePropertyBorder] = "HSSObservablePropertyBorder";
-        types[HSSObservablePropertyHover] = "HSSObservablePropertyHover";
+        types[HSSObservablePropertyFlagChanged] = "HSSObservablePropertyFlagChanged";
         
         //HSSContainer
         types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
@@ -132,6 +133,9 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyTarget] = "HSSObservablePropertyTarget";
         types[HSSObservablePropertyMode] = "HSSObservablePropertyMode";
         types[HSSObservablePropertyContentTarget] = "HSSObservablePropertyContentTarget";
+        
+        //various
+        types[HSSObservablePropertyTreeChange] = "HSSObservablePropertyTreeChange";
     }
     
     return types[property];
@@ -152,6 +156,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["anchorX"] = HSSObservablePropertyAnchorX;
         properties["anchorY"] = HSSObservablePropertyAnchorY;
         properties["flow"] = HSSObservablePropertyFlow;
+        properties["overflow"] = HSSObservablePropertyOverflow;
         properties["alignX"] = HSSObservablePropertyAlignX;
         properties["alignY"] = HSSObservablePropertyAlignY;
         properties["on"] = HSSObservablePropertyOn;

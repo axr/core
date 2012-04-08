@@ -43,29 +43,56 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/23
+ *      Last changed: 2012/03/26
  *      HSS version: 1.0
- *      Core version: 0.45
+ *      Core version: 0.46
  *      Revision: 2
  *
  ********************************************************************/
 
-#ifndef HSSHOVERFILTER_H
-#define HSSHOVERFILTER_H
+#ifndef HSSFLAG_H
+#define HSSFLAG_H
 
-#include "HSSFilter.h"
+#include "HSSParserNode.h"
+#include <string>
+#include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
+#include "HSSRule.h"
 
 namespace AXR {
-    class HSSHoverFilter : public HSSFilter
+    
+    class HSSSelectorChain;
+    class HSSDisplayObject;
+    
+    class HSSFlag : public HSSParserNode
     {
     public:
-        HSSHoverFilter();
+        typedef boost::shared_ptr<HSSFlag> p;
+        
+        HSSFlag();
         p clone() const;
-        virtual ~HSSHoverFilter();
+        virtual ~HSSFlag();
+        
         virtual std::string toString();
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool negating);
+        
+        std::string getName();
+        void setName(std::string newValue);
+        void apply(boost::shared_ptr<HSSDisplayObject> displayObject, bool negating);
+        
+        void flagChanged(HSSRuleState newStatus);
+        
+        HSSFlag::p shared_from_this();
+        const std::vector<boost::shared_ptr<HSSDisplayObject> > filter(const std::vector<boost::shared_ptr<HSSDisplayObject> > &scope, bool negating);
+        
+        HSSRuleState getPurging();
+        void setPurging(HSSRuleState newValue);
+
+    protected:
+        std::string _name;
+        
     private:
         virtual HSSClonable::p cloneImpl() const;
+        HSSRuleState _purging;
     };
 }
 

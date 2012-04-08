@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 6
+ *      Core version: 0.46
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -66,12 +66,14 @@ HSSPropertyDefinition::HSSPropertyDefinition(std::string name)
 : HSSStatement()
 {
     this->name = name;
+    this->type = HSSStatementTypePropertyDefinition;
 }
 
 HSSPropertyDefinition::HSSPropertyDefinition(std::string name, HSSParserNode::p value)
 : HSSStatement()
 {
     this->name = name;
+    this->type = HSSStatementTypePropertyDefinition;
     this->setValue(value);
 }
 

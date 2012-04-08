@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/29
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -136,4 +136,10 @@ std::string HSSInstruction::instructionStringRepresentation(HSSInstructionType t
 HSSClonable::p HSSInstruction::cloneImpl() const
 {
     return HSSClonable::p(new HSSInstruction(*this));
+}
+
+HSSParserNode::p HSSInstruction::getArgument() { return this->argument; }
+void HSSInstruction::setArgument(HSSParserNode::p newValue)
+{
+    this->argument = newValue;
 }

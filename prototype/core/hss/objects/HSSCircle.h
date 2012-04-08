@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/19
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.46
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -61,7 +61,20 @@ namespace AXR {
     public:
         typedef boost::shared_ptr<HSSCircle> p;
         
+        /**
+         *  Constructor for HSSCircle objects
+         */
         HSSCircle();
+        /**
+         *  Copy constructor for HSSCircle objects
+         */
+        HSSCircle(const HSSCircle & orig);
+        /**
+         *  Clones an instance of HSSCircle and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSCircle
+         */
+        p clone() const;
         virtual ~HSSCircle();
         
         virtual std::string toString();
@@ -70,6 +83,9 @@ namespace AXR {
         virtual bool isKeyword(std::string value, std::string property);
         
         virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
+        
+    private:
+        HSSClonable::p cloneImpl() const;
     };
 }
 

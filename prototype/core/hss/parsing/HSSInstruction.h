@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/29
  *      HSS version: 1.0
  *      Core version: 0.45
- *      Revision: 8
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -91,9 +91,13 @@ namespace AXR {
         
         virtual std::string toString();
         
+        void setArgument(HSSParserNode::p newValue);
+        HSSParserNode::p getArgument();
+        
     protected:
         HSSInstructionType instructionType;
         std::string value;
+        HSSParserNode::p argument;
         
     private:
         virtual HSSClonable::p cloneImpl() const;

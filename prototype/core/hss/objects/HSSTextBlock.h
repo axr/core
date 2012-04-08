@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/28
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 1
+ *      Core version: 0.46
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -85,7 +85,20 @@ namespace AXR {
         typedef boost::shared_ptr<HSSTextBlock> p;
         typedef std::vector<HSSTextBlock::p>::iterator it;
         
+        /**
+         *  Constructor for HSSTextBlock objects
+         */
         HSSTextBlock();
+        /**
+         *  Copy constructor for HSSTextBlock objects
+         */
+        HSSTextBlock(const HSSTextBlock & orig);
+        /**
+         *  Clones an instance of HSSTextBlock and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSTextBlock
+         */
+        p clone() const;
         virtual ~HSSTextBlock();
         
         virtual std::string defaultObjectType();
@@ -136,6 +149,9 @@ namespace AXR {
         HSSObservableProperty observedTextProperty;
         
         PangoLayout * _layout;
+        
+    private:
+        HSSClonable::p cloneImpl() const;
     };
 }
 

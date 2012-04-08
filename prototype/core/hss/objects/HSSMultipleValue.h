@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 5
+ *      Core version: 0.46
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -72,6 +72,16 @@ namespace AXR {
          *  Constructor for MultipleValue objects
          */
         HSSMultipleValue();
+        /**
+         *  Copy constructor for HSSMultipleValue objects
+         */
+        HSSMultipleValue(const HSSMultipleValue & orig);
+        /**
+         *  Clones an instance of HSSMultipleValue and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSMultipleValue
+         */
+        p clone() const;
         /**
          *  Destructor for MultipleValue objects
          */
@@ -107,6 +117,9 @@ namespace AXR {
         
     protected:
         std::vector<HSSParserNode::p>valueList;
+        
+    private:
+        HSSClonable::p cloneImpl() const;
     };
 }
 

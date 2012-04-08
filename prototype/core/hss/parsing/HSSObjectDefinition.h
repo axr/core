@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 8
+ *      Core version: 0.46
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -71,6 +71,7 @@ namespace AXR {
         typedef boost::shared_ptr<HSSObjectDefinition> p;
         
         HSSObjectDefinition(HSSObject::p prototype);
+        HSSObjectDefinition(const HSSObjectDefinition & orig);
         p clone() const;
         ~HSSObjectDefinition();
         virtual std::string toString();

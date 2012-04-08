@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/08
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 2
+ *      Core version: 0.46
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -80,13 +80,27 @@ namespace AXR {
     class HSSEvent : public HSSObject
     {
     public:
+        typedef boost::shared_ptr<HSSEvent> p;
         
         static std::string eventTypeStringRepresentation(HSSEventType eventType);
         
+        /**
+         *  Constructor for HSSEvent objects
+         *  @param  type    The event type that this event will respond to
+         */
         HSSEvent(HSSEventType type);
-        virtual ~HSSEvent();
+        /**
+         *  Copy constructor for HSSEvent objects
+         */
+        HSSEvent(const HSSEvent & orig);
+        /**
+         *  Clones an instance of HSSEvent and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSEvent
+         */
+        p clone() const;
         
-        typedef boost::shared_ptr<HSSEvent> p;
+        virtual ~HSSEvent();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
@@ -118,6 +132,8 @@ namespace AXR {
         std::vector<HSSAction::p> action;
         
         
+    private:
+        HSSClonable::p cloneImpl() const;
     };
 }
 

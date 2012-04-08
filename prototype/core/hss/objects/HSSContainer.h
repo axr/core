@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/28
+ *      Last changed: 2012/04/01
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 24
+ *      Core version: 0.46
+ *      Revision: 26
  *
  ********************************************************************/
 
@@ -76,23 +76,42 @@ namespace AXR {
         
         friend class HSSDisplayObject;
         
-        struct displayGroup
+        class displayGroup
         {
+        public:
+            typedef boost::shared_ptr<HSSContainer::displayGroup> p;
             long double x;
             long double y;
             long double width;
             long double height;
+            std::string name;
             bool complete;
-            std::vector<displayGroup>lines;
+            std::vector<HSSContainer::displayGroup::p>lines;
             std::vector<HSSDisplayObject::p>objects;
         };
         
         static HSSDisplayObject::p asDisplayObject(HSSContainer::p theContainer);
         static HSSContainer::p asContainer(HSSDisplayObject::p theDisplayObject);
         
+        
+        /**
+         *  Constructor for HSSContainer objects
+         */
         HSSContainer();
-        HSSContainer(std::string name);
+        /**
+         *  Initializes all ivars to default values.
+         */
         void initialize();
+        /**
+         *  Copy constructor for HSSContainer objects
+         */
+        HSSContainer(const HSSContainer & orig);
+        /**
+         *  Clones an instance of HSSContainer and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSContainer
+         */
+        p clone() const;
         
         virtual ~HSSContainer();
         virtual std::string toString();
@@ -209,9 +228,12 @@ namespace AXR {
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
         
-        bool _addChildToGroupIfNeeded(HSSDisplayObject::p &child, displayGroup &group, HSSDirectionValue direction, bool overflow);
-        bool _mergeGroupsIfNeeded(displayGroup &group, displayGroup &otherGroup, HSSDirectionValue direction);
-        void _arrange(displayGroup &group, HSSDirectionValue direction);
+        bool _addChildToGroupIfNeeded(HSSDisplayObject::p &child, displayGroup::p &group, HSSDirectionValue direction, bool overflow);
+        std::vector<HSSContainer::displayGroup::p> _getGroupsOverlapping(HSSDisplayObject::p &child, std::vector<HSSContainer::displayGroup::p> &group, HSSDirectionValue direction);
+        bool _mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p &otherGroup, HSSDirectionValue direction);
+        void _arrange(displayGroup::p &groups, HSSDirectionValue direction);
+        void _arrangeLines(displayGroup::p &groups, HSSDirectionValue direction);
+        HSSClonable::p cloneImpl() const;
     };
 }
 

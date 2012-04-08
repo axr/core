@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 5
+ *      Core version: 0.46
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -95,6 +95,9 @@ namespace AXR {
         
         void setCairo(cairo_t * cairo);
         cairo_t * getCairo();
+        
+        double getWindowWidth();
+        double getWindowHeight();
         
     protected:
         //weak pointer

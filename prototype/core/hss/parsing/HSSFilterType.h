@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/24
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 1
+ *      Core version: 0.46
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -68,7 +68,7 @@ enum HSSFilterType {
     HSSFilterTypeAncestorOf,
     HSSFilterTypeHas,
     //interaction
-    HSSFilterTypeHover,
+    HSSFilterTypeHover, //deprecated
     HSSFilterTypePressed,
     HSSFilterTypeDragged,
     HSSFilterTypeDestination,

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/05
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.46
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -71,7 +71,20 @@ namespace AXR {
     class HSSRequest : public HSSAction
     {
     public:
+        /**
+         *  Constructor for HSSRequest objects
+         */
         HSSRequest();
+        /**
+         *  Copy constructor for HSSRequest objects
+         */
+        HSSRequest(const HSSRequest & orig);
+        /**
+         *  Clones an instance of HSSRequest and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSRequest
+         */
+        p clone() const;
         virtual ~HSSRequest();
         
         virtual std::string toString();
@@ -115,6 +128,8 @@ namespace AXR {
         
         HSSRequestModeType mode;
         
+    private:
+        HSSClonable::p cloneImpl() const;
     };
 }
 

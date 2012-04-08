@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/09
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 8
+ *      Core version: 0.46
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -62,12 +62,18 @@ namespace AXR {
     class HSSBorder : public HSSObject
     {
     public:
-        
-        HSSBorder();
-        virtual ~HSSBorder();
-        
         typedef boost::shared_ptr<HSSBorder> p;
         typedef std::vector<HSSBorder::p>::iterator it;
+        
+        /**
+         *  Constructor for HSSBorder objects
+         */
+        HSSBorder();
+        /**
+         *  Copy constructor for HSSBorder objects
+         */
+        HSSBorder(const HSSBorder & orig);
+        virtual ~HSSBorder();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();

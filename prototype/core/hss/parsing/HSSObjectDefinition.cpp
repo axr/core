@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 11
+ *      Core version: 0.46
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -62,6 +62,22 @@ HSSObjectDefinition::HSSObjectDefinition(HSSObject::p prototype)
     this->prototype = prototype;
     this->type = HSSStatementTypeObjectDefinition;
     this->nodeType = HSSParserNodeTypeObjectDefinition;
+    this->scope = NULL;
+}
+
+HSSObjectDefinition::HSSObjectDefinition(const HSSObjectDefinition & orig)
+: HSSStatement(orig)
+{
+    this->prototype = orig.prototype->clone();
+    std::deque<HSSPropertyDefinition::p>::const_iterator p_it;
+    for (p_it=orig.properties.begin(); p_it!=orig.properties.end(); p_it++) {
+        this->properties.push_back((*p_it)->clone());
+    }
+    std::vector<HSSObjectDefinition::p>::const_iterator c_it;
+    for (c_it=orig.children.begin(); c_it!=orig.children.end(); c_it++) {
+        this->children.push_back((*c_it)->clone());
+    }
+    //shallow copy
     this->scope = NULL;
 }
 

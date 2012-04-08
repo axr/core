@@ -43,58 +43,66 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/23
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.46
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "HSSHoverFilter.h"
+#ifndef HSSFLAGFUNCTION_H
+#define HSSFLAGFUNCTION_H
 
-using namespace AXR;
+#import "HSSFunction.h"
+#import "../objects/HSSAction.h"
 
-HSSHoverFilter::HSSHoverFilter()
-: HSSFilter()
-{
-    this->filterType = HSSFilterTypeHover;
-}
-
-HSSHoverFilter::p HSSHoverFilter::clone() const{
-    return boost::static_pointer_cast<HSSHoverFilter, HSSClonable>(this->cloneImpl());
-}
-
-HSSHoverFilter::~HSSHoverFilter()
-{
+namespace AXR {
     
-}
-
-std::string HSSHoverFilter::toString()
-{
-    return "Hover Filter";
-}
-
-
-const std::vector<HSSDisplayObject::p> HSSHoverFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
-{
-    //parent is selector chain, grandparent is the rule
-    HSSParserNode::p ruleNode = this->getParentNode()->getParentNode();
-    if(ruleNode->isA(HSSParserNodeTypeStatement)){
-        HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement>(ruleNode);
-        if(ruleStatement->isA(HSSStatementTypeRule)){
-            HSSRule::p theRule = boost::static_pointer_cast<HSSRule>(ruleStatement);
-            HSSDisplayObject::const_it it;
-            for (it=scope.begin(); it!=scope.end(); it++) {
-                theRule->connectInteractionFilter(HSSFilterTypeHover, (*it));
-            }
-            theRule->setActive(false);
-        }
-    }
+    enum HSSFlagFunctionType
+    {
+        HSSFlagFunctionTypeNone = 0,
+        HSSFlagFunctionTypeFlag,
+        HSSFlagFunctionTypeUnflag,
+        HSSFlagFunctionTypeToggleFlag
+    };
     
-    //the entire scope will be selected
-    return scope;
+    
+    class HSSFlagFunction : public HSSFunction
+    {
+    public:
+        
+        typedef boost::shared_ptr<HSSFlagFunction> p;
+        
+        static HSSFlagFunctionType flagFunctionTypeFromString(std::string name);
+        
+        HSSFlagFunction(HSSFlagFunctionType flagFunctionType);
+        HSSFlagFunction(const HSSFlagFunction & orig);
+        p clone() const;
+        virtual ~HSSFlagFunction();
+        
+        const std::string & getName();
+        void setName(std::string newValue);
+
+        const HSSSelectorChain::p & getSelectorChain() const;
+        void setSelectorChain(HSSSelectorChain::p newValue);
+        
+        virtual void * _evaluate();
+        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
+        
+        void valueChanged(HSSObservableProperty source, void*data);
+        
+        HSSFlagFunctionType getFlagFunctionType();
+        
+    protected:
+        std::string _name;
+        HSSSelectorChain::p selectorChain;
+        HSSFlagFunctionType _flagFunctionType;
+        
+    private:
+        HSSClonable::p cloneImpl() const;
+    };
 }
 
-HSSClonable::p HSSHoverFilter::cloneImpl() const{
-    return HSSClonable::p(new HSSHoverFilter(*this));
-}
+
+
+#endif

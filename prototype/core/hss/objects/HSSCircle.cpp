@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 5
+ *      Core version: 0.46
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -58,6 +58,20 @@ HSSCircle::HSSCircle()
 : HSSShape()
 {
     this->shapeType = HSSShapeTypeCircle;
+}
+
+HSSCircle::HSSCircle(const HSSCircle & orig)
+: HSSShape(orig)
+{
+    
+}
+
+HSSCircle::p HSSCircle::clone() const{
+    return boost::static_pointer_cast<HSSCircle, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSCircle::cloneImpl() const{
+    return HSSClonable::p(new HSSCircle(*this));
 }
 
 HSSCircle::~HSSCircle()

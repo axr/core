@@ -43,9 +43,9 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/14
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
+ *      Core version: 0.46
  *      Revision: 7
  *
  ********************************************************************/
@@ -150,7 +150,7 @@ void AXRCore::run()
                     const HSSRule::p& rule = rules[j];
                     const HSSDisplayObject::p rootScopeArr[1] = {root};
                     const std::vector<HSSDisplayObject::p>rootScope(rootScopeArr, rootScopeArr+1);
-                    this->controller->recursiveMatchRulesToDisplayObjects(rule, rootScope, root);
+                    this->controller->recursiveMatchRulesToDisplayObjects(rule, rootScope, root, true);
                 }
                 root->setNeedsRereadRules(true);
             }

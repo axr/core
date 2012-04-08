@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/12/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 9
+ *      Core version: 0.46
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -64,7 +64,20 @@ namespace AXR {
     public:
         typedef boost::shared_ptr<HSSLineBorder> p;
         
+        /**
+         *  Constructor for HSSLineBorder objects
+         */
         HSSLineBorder();
+        /**
+         *  Copy constructor for HSSLineBorder objects
+         */
+        HSSLineBorder(const HSSLineBorder & orig);
+        /**
+         *  Clones an instance of HSSLineBorder and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSLineBorder
+         */
+        p clone() const;
         virtual ~HSSLineBorder();
         
         virtual std::string toString();
@@ -87,6 +100,8 @@ namespace AXR {
         HSSParserNode::p dColor;
         HSSObservable * observedColor;
         HSSObservableProperty observedColorProperty;
+    private:
+        HSSClonable::p cloneImpl() const;
     };
 }
 

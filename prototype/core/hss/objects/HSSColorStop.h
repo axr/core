@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/08
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 1
+ *      Core version: 0.46
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -64,11 +64,24 @@ namespace AXR {
     {
     public:
         
-        HSSColorStop();
-        virtual ~HSSColorStop();
-        
         typedef boost::shared_ptr<HSSColorStop> p;
         typedef std::vector<HSSColorStop::p>::iterator it;
+        
+        /**
+         *  Constructor for HSSColorStop objects
+         */
+        HSSColorStop();
+        /**
+         *  Copy constructor for HSSColorStop objects
+         */
+        HSSColorStop(const HSSColorStop & orig);
+        /**
+         *  Clones an instance of HSSColorStop and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSColorStop
+         */
+        p clone() const;
+        virtual ~HSSColorStop();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
@@ -122,6 +135,8 @@ namespace AXR {
                                    HSSObservable *          &observedStore,
                                    HSSObservableProperty    &observedStoreProperty
                                    );
+    private:
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 
