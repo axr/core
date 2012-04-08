@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/01
+ *      Last changed: 2012/04/08
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 41
+ *      Revision: 42
  *
  ********************************************************************/
 
@@ -1408,11 +1408,12 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
             throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for alignX of "+this->getElementName()));
     }
     
-    this->dAlignX = value;
     if(this->observedAlignX != NULL)
     {
         this->observedAlignX->removeObserver(this->observedAlignXProperty, HSSObservablePropertyAlignX, this);
+        this->observedAlignX = NULL;
     }
+    this->dAlignX = value;
     
     if(value->isA(HSSParserNodeTypeKeywordConstant)){
         
