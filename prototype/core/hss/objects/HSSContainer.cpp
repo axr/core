@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/01
+ *      Last changed: 2012/04/08
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 36
+ *      Revision: 37
  *
  ********************************************************************/
 
@@ -469,11 +469,11 @@ void HSSContainer::layout()
         child->y = child->alignY - child->anchorY;
         
         if(!child->getOverflow()){
-            if (child->x < 0) child->x = 0;
             if ((child->x + child->width) > this->width) child->x = this->width - child->width;
+            if (child->x < 0) child->x = 0;
             
-            if (child->y < 0) child->y = 0;
             if ((child->y + child->height) > this->height) child->y = this->height - child->height;
+            if (child->y < 0) child->y = 0;
         }
         
         bool addedToGroup = false;
@@ -599,7 +599,7 @@ void HSSContainer::layout()
                     addedToGroup = true;
                     long double biggest = 0;
                     displayGroup::p biggestGroup;
-                    std::vector<displayGroup::p>::iterator olg_it;
+                    std::vector<displayGroup::p>::iterator olg_it, olg_it2;
                     for (olg_it=overlappingGroups.begin(); olg_it!=overlappingGroups.end(); olg_it++) {
                         displayGroup::p olg = *olg_it;
                         if(secondaryIsHorizontal){
@@ -690,8 +690,9 @@ void HSSContainer::layout()
                     this->_arrangeLines(biggestGroup, this->directionSecondary);
                     
                     //cross check against the overlapping group and resolve overlaps
-                    std::vector<displayGroup::p>::iterator olgline_it;
-                    HSSDisplayObject::const_it olgobj_it;
+                    std::vector<displayGroup::p>::iterator olgline_it, olgline_it2;
+                    HSSDisplayObject::const_it olgobj_it, olgobj_it2;
+                    long double overlapDistance = 0.;
                     for (olg_it=overlappingGroups.begin(); olg_it!=overlappingGroups.end(); olg_it++) {
                         displayGroup::p & olg = *olg_it;
                         if(olg.get() != biggestGroup.get()){
@@ -708,17 +709,29 @@ void HSSContainer::layout()
                                                 ((olgobj->x + olgobj->width)  > bgobj->x) && (olgobj->x < (bgobj->x + bgobj->width))
                                                 && ((olgobj->y + olgobj->height) > bgobj->y) && (olgobj->y < (bgobj->y + bgobj->height))
                                                 ){
-                                                long double overlapDistance;
+                                                
                                                 if(secondaryIsHorizontal){
                                                     overlapDistance = (olgobj->x + olgobj->width) - bgobj->x;
                                                 } else {
                                                     overlapDistance = (olgobj->y + olgobj->height) - bgobj->y;
                                                 }
-                                                if (secondaryIsHorizontal) {
-                                                    olgobj->x -= overlapDistance;
-                                                } else {
-                                                    olgobj->y -= overlapDistance;
+                                                for (olg_it2=overlappingGroups.begin(); olg_it2!=overlappingGroups.end(); olg_it2++) {
+                                                    displayGroup::p & olg2 = *olg_it2;
+                                                    if(olg2.get() != biggestGroup.get()){
+                                                        for (olgline_it2=olg->lines.begin(); olgline_it2!=olg->lines.end(); olgline_it2++) {
+                                                            displayGroup::p olgline2 = *olgline_it2;
+                                                            for (olgobj_it2=olgline2->objects.begin(); olgobj_it2!=olgline2->objects.end(); olgobj_it2++) {
+                                                                HSSDisplayObject::p olgobj2 = *olgobj_it2;
+                                                                if (secondaryIsHorizontal) {
+                                                                    olgobj2->x -= overlapDistance;
+                                                                } else {
+                                                                    olgobj2->y -= overlapDistance;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
+                                                break;
                                             }
                                         }
                                     }
@@ -728,6 +741,8 @@ void HSSContainer::layout()
                     }
                 }
             }
+            
+            
             if(!addedToGroup){
                 displayGroup::p newGroup = displayGroup::p(new displayGroup());
                 newGroup->x = child->x;
@@ -1346,6 +1361,7 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
         if(this->observedContentAlignY != NULL)
         {
             this->observedContentAlignY->removeObserver(this->observedContentAlignYProperty, HSSObservablePropertyAlignY, this);
+            this->observedContentAlignY = NULL;
         }
         
         
