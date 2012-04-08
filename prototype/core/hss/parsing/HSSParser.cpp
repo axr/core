@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/29
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 24
+ *      Core version: 0.46
+ *      Revision: 26
  *
  ********************************************************************/
 
@@ -67,6 +67,7 @@
 #include "HSSFunctions.h"
 #include "HSSFilter.h"
 #include "HSSNegation.h"
+#include "HSSFlag.h"
 
 using namespace AXR;
 
@@ -484,7 +485,13 @@ HSSRule::p HSSParser::readRule()
         
         if (this->atEndOfSource()) {
             HSSSelector::p sbjct = selectorChain->subject();
-            std::string lmntnm = sbjct->getElementName();
+            std::string lmntnm;
+            if(sbjct){
+                lmntnm = sbjct->getElementName();
+            } else {
+                lmntnm = "unknown element";
+            }
+            
             AXRWarning::p(new AXRWarning("HSSParser", "Auto closing block of rule targeting "+lmntnm+" because of unexpected end of file", this->currentFile->fileName, this->line, this->column))->raise();
             //leave the block context
             this->currentContext.pop_back();
@@ -560,12 +567,6 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                             ret->add(this->readSymbolCombinator());
                             break;
                         }
-                    case ':':
-                    {
-                        //its a filter
-                        ret->add(this->readFilter());
-                        break;
-                    }
                         
                     case '!':
                     {
@@ -584,11 +585,22 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                 
             case HSSColon:
             {
-                HSSParserNode::p theFilter = this->readFilter();
-                if(theFilter){
-                    ret->add(theFilter);
+                //if there is another colon, it is a flag
+                this->readNextToken(true);
+                if(this->currentToken->isA(HSSColon)){
+                    this->readNextToken(true);
+                    HSSParserNode::p theFlag = this->readFlag();
+                    if(theFlag){
+                        ret->add(theFlag);
+                    }
+                    
+                } else {
+                    //it is a filter
+                    HSSParserNode::p theFilter = this->readFilter();
+                    if(theFilter){
+                        ret->add(theFilter);
+                    }
                 }
-                
                 //adds only if needed
                 ret->add(this->readChildrenCombinatorOrSkip());
                 break;
@@ -1349,7 +1361,21 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
         currentval = VALUE_TOKEN(this->currentToken)->getString();
         if (currentval == "new"){
             ret = HSSInstruction::p(new HSSInstruction(HSSNewInstruction));
-            this->readNextToken();
+            this->readNextToken(true);
+            if (this->currentToken->isA(HSSParenthesisOpen)) {
+                this->readNextToken(true);
+                this->skip(HSSWhitespace);
+                if (this->currentToken->isA(HSSNumber)) {
+                    long double number = VALUE_TOKEN(this->currentToken)->getLong();
+                    ret->setArgument(HSSNumberConstant::p(new HSSNumberConstant(number)));
+                    this->readNextToken(true);
+                    this->skip(HSSWhitespace);
+                    this->skipExpected(HSSParenthesisClose);
+                    this->skip(HSSWhitespace);
+                } else {
+                    throw AXRError::p(new AXRError("HSSParser", "Unknown value in argument of new statement", this->currentFile->fileName, this->line, this->column));
+                }
+            }
         } else if (currentval == "ensure") {
             ret = HSSInstruction::p(new HSSInstruction(HSSEnsureInstruction));
             this->readNextToken();
@@ -1419,11 +1445,23 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
             }
             sscanf(tempstr.c_str(), "%X", &hexValue);
             
-            obj->setDRed(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
-            obj->setDGreen(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
-            obj->setDBlue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
-            
             ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
+            
+            HSSPropertyDefinition::p newRed = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newRed->setName("red");
+            newRed->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+            ret->propertiesAdd(newRed);
+            
+            HSSPropertyDefinition::p newGreen = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newGreen->setName("green");
+            newGreen->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+            ret->propertiesAdd(newGreen);
+            
+            HSSPropertyDefinition::p newBlue = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newBlue->setName("blue");
+            newBlue->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+            ret->propertiesAdd(newBlue);
+            
             break;
         }
             
@@ -1493,12 +1531,28 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
             sscanf(blue.c_str(), "%X", &blueHex);
             sscanf(alpha.c_str(), "%X", &alphaHex);
             
-            obj->setDRed(HSSNumberConstant::p(new HSSNumberConstant(redHex)));
-            obj->setDGreen(HSSNumberConstant::p(new HSSNumberConstant(greenHex)));
-            obj->setDBlue(HSSNumberConstant::p(new HSSNumberConstant(blueHex)));
-            obj->setDAlpha(HSSNumberConstant::p(new HSSNumberConstant(alphaHex)));
-            
             ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
+            
+            HSSPropertyDefinition::p newRed = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newRed->setName("red");
+            newRed->setValue(HSSNumberConstant::p(new HSSNumberConstant(redHex)));
+            ret->propertiesAdd(newRed);
+            
+            HSSPropertyDefinition::p newGreen = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newGreen->setName("green");
+            newGreen->setValue(HSSNumberConstant::p(new HSSNumberConstant(greenHex)));
+            ret->propertiesAdd(newGreen);
+            
+            HSSPropertyDefinition::p newBlue = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newBlue->setName("blue");
+            newBlue->setValue(HSSNumberConstant::p(new HSSNumberConstant(blueHex)));
+            ret->propertiesAdd(newBlue);
+            
+            HSSPropertyDefinition::p newAlpha = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+            newAlpha->setName("alpha");
+            newAlpha->setValue(HSSNumberConstant::p(new HSSNumberConstant(alphaHex)));
+            ret->propertiesAdd(newAlpha);
+            
             break;
         }
             
@@ -1651,7 +1705,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
     switch (this->currentToken->getType()) {
         case HSSNumber:
         {
-            left = HSSNumberConstant::p(new HSSNumberConstant(strtold(VALUE_TOKEN(this->currentToken)->getString().c_str(), NULL)));
+            left = HSSNumberConstant::p(new HSSNumberConstant(VALUE_TOKEN(this->currentToken)->getLong()));
             this->readNextToken();
             this->skip(HSSWhitespace);
             break;
@@ -1659,7 +1713,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
         
         case HSSPercentageNumber:
         {
-            left = HSSPercentageConstant::p(new HSSPercentageConstant(strtold(VALUE_TOKEN(this->currentToken)->getString().c_str(), NULL)));
+            left = HSSPercentageConstant::p(new HSSPercentageConstant(VALUE_TOKEN(this->currentToken)->getLong()));
             this->readNextToken();
             this->skip(HSSWhitespace);
             break;
@@ -1688,15 +1742,30 @@ HSSParserNode::p HSSParser::readBaseExpression()
     return left;
 }
 
-//this method expects the currentToken to be a HSSColon
+//this method expects the currentToken to be an identifier
 HSSParserNode::p HSSParser::readFilter()
 {
     HSSFilter::p ret;
-    this->skipExpected(HSSColon);
     this->expect(HSSIdentifier);
     
     std::string filterName = VALUE_TOKEN(this->currentToken)->getString();
     ret = HSSFilter::newFilterWithStringType(filterName);
+    
+    this->readNextToken();
+    this->checkForUnexpectedEndOfSource();
+    
+    return ret;
+}
+
+//this method expects the currentToken to be an identifier
+HSSParserNode::p HSSParser::readFlag()
+{
+    HSSFlag::p ret;
+    this->expect(HSSIdentifier);
+    
+    std::string flagName = VALUE_TOKEN(this->currentToken)->getString();
+    ret = HSSFlag::p(new HSSFlag());
+    ret->setName(flagName);
     
     this->readNextToken();
     this->checkForUnexpectedEndOfSource();
@@ -1800,6 +1869,54 @@ HSSParserNode::p HSSParser::readFunction()
             selFunction->setSelectorChain(selectorChain);
             
             ret = selFunction;
+            
+        } else if(
+                    name == "flag"
+                ||  name == "unflag"
+                ||  name == "toggleFlag"
+            ){
+            
+            HSSFlagFunction::p flagFunction = HSSFlagFunction::p(new HSSFlagFunction(HSSFlagFunction::flagFunctionTypeFromString(name)));
+            flagFunction->setController(this->controller);
+            
+            this->readNextToken(true);
+            this->skip(HSSWhitespace, true);
+            this->skipExpected(HSSParenthesisOpen, true);
+            this->skip(HSSWhitespace, true);
+            //read the arguments
+            //first, we expect the name
+            if (! this->currentToken->isA(HSSIdentifier)){
+                std_log1("HSSParser: unexpected token while reading ref function "+name);
+            } else {
+                flagFunction->setName(VALUE_TOKEN(this->currentToken)->getString());
+            }
+            
+            this->checkForUnexpectedEndOfSource();
+            this->readNextToken();
+            this->skip(HSSWhitespace, true);
+            //if shorthand notation -- assumes 'of @this'
+            HSSSelectorChain::p selectorChain;
+            if(this->currentToken->isA(HSSParenthesisClose)){
+                selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
+                selectorChain->add(HSSThisSelector::p(new HSSThisSelector()));
+                this->readNextToken(true);
+                this->skip(HSSWhitespace, true);
+                
+            } else {
+                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of"){
+                    std_log1("HSSParser: unexpected token while reading ref function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+                }
+                this->checkForUnexpectedEndOfSource();
+                this->readNextToken(true);
+                this->skipExpected(HSSWhitespace, true);
+                
+                
+                //now read the selector chain
+                selectorChain = this->readSelectorChain(HSSParenthesisClose);
+            }
+            
+            flagFunction->setSelectorChain(selectorChain);
+            ret = flagFunction;
             
         } else if (name == "min") {
             

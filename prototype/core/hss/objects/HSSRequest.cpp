@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.46
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -65,6 +65,24 @@ HSSRequest::HSSRequest()
     = NULL;
     
     this->mode = HSSRequestModeTypeAuto;
+}
+
+HSSRequest::HSSRequest(const HSSRequest & orig)
+: HSSAction(orig)
+{
+    this->observedSrc
+    = this->observedTarget
+    = NULL;
+    
+    this->mode = orig.mode;
+}
+
+HSSRequest::p HSSRequest::clone() const{
+    return boost::static_pointer_cast<HSSRequest, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSRequest::cloneImpl() const{
+    return HSSClonable::p(new HSSRequest(*this));
 }
 
 HSSRequest::~HSSRequest()

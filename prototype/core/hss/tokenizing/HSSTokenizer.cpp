@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/26
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 11
+ *      Core version: 0.46
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -407,8 +407,16 @@ HSSToken::p HSSTokenizer::readNumberOrPercentage()
 {
     unsigned line = this->currentLine;
     unsigned column = this->currentColumn -1;
-    
-	while (isdigit(this->currentChar)){
+    bool dotFound = false;
+	while (isdigit(this->currentChar) || this->currentChar == '.'){
+        if(this->currentChar == '.'){
+            if(dotFound){
+                break; 
+            } else {
+                dotFound = true;
+            }
+        }
+        
 		this->storeCurrentCharAndReadNext();
 	}
     HSSToken::p ret;

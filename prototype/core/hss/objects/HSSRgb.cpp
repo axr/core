@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 36
+ *      Core version: 0.46
+ *      Revision: 37
  *
  ********************************************************************/
 
@@ -66,6 +66,9 @@ HSSRgb::HSSRgb()
     
     this->red = this->green = this->blue = 0.;
     this->alpha = 255.;
+    
+    this->observedRed = this->observedGreen = this->observedBlue = this->observedAlpha = NULL;
+    
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("isA");
     shorthandProperties.push_back("alpha");
@@ -74,6 +77,30 @@ HSSRgb::HSSRgb()
     shorthandProperties.push_back("blue");
     
     this->setShorthandProperties(shorthandProperties);
+}
+
+HSSRgb::HSSRgb(const HSSRgb & orig)
+: HSSObject(orig)
+{
+    this->red = this->green = this->blue = 0.;
+    this->alpha = 255.;
+    this->observedRed = this->observedGreen = this->observedBlue = this->observedAlpha = NULL;
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("isA");
+    shorthandProperties.push_back("alpha");
+    shorthandProperties.push_back("red");
+    shorthandProperties.push_back("green");
+    shorthandProperties.push_back("blue");
+    
+    this->setShorthandProperties(shorthandProperties);
+}
+
+HSSRgb::p HSSRgb::clone() const{
+    return boost::static_pointer_cast<HSSRgb, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSRgb::cloneImpl() const{
+    return HSSClonable::p(new HSSRgb(*this));
 }
 
 HSSRgb::~HSSRgb()

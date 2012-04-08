@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 11
+ *      Core version: 0.46
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -73,6 +73,7 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
 	types[HSSParserNodeTypeFunctionCall] = "HSSFunctionCall";
 	types[HSSParserNodeTypeMultipleValueDefinition] = "HSSParserNodeTypeMultipleValueDefinition";
 	types[HSSParserNodeTypeNegation] = "HSSParserNodeTypeNegation";
+	types[HSSParserNodeTypeFlag] = "HSSParserNodeTypeFlag";
     
     return types[type];
 }
@@ -86,6 +87,7 @@ HSSParserNode::HSSParserNode()
 HSSParserNode::HSSParserNode(const HSSParserNode &orig)
 {
     this->nodeType = orig.nodeType;
+    this->thisObj = orig.thisObj;
 }
 
 HSSParserNode::p HSSParserNode::clone() const
@@ -125,7 +127,8 @@ void HSSParserNode::setParentNode(HSSParserNode::p newParent)
 
 void HSSParserNode::removeFromParentNode()
 {
-    this->getParentNode()->removeNode(this->shared_from_this());
+    HSSParserNode::p parentNode = this->getParentNode();
+    if(parentNode) parentNode->removeNode(this->shared_from_this());
 }
 
 void HSSParserNode::addNode(HSSParserNode::p child)

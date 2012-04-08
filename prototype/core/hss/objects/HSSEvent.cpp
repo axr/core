@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 4
+ *      Core version: 0.46
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -58,6 +58,7 @@
 #import <boost/pointer_cast.hpp>
 #import "../../axr/AXRController.h"
 #import "HSSAction.h"
+#import "HSSFlagAction.h"
 
 using namespace AXR;
 
@@ -93,6 +94,26 @@ HSSEvent::HSSEvent(HSSEventType type)
     this->setShorthandProperties(shorthandProperties);
     
     this->registerProperty(HSSObservablePropertyAction, &this->action);
+}
+
+HSSEvent::HSSEvent(const HSSEvent & orig)
+: HSSObject(orig)
+{
+    this->eventType = orig.eventType;
+    
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("action");
+    this->setShorthandProperties(shorthandProperties);
+    
+    this->registerProperty(HSSObservablePropertyAction, &this->action);
+}
+
+HSSEvent::p HSSEvent::clone() const{
+    return boost::static_pointer_cast<HSSEvent, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSEvent::cloneImpl() const{
+    return HSSClonable::p(new HSSEvent(*this));
 }
 
 HSSEvent::~HSSEvent()
@@ -209,15 +230,32 @@ void HSSEvent::addDAction(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
-            if(fnct && fnct->isA(HSSFunctionTypeRef)){
-                
-                fnct->setScope(this->scope);
-                fnct->setThisObj(this->getThisObj());
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                this->addDAction(remoteValue);
-                
-            } else {
-                throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid function type for action of @event "+this->name));
+            switch (fnct->getFunctionType()) {
+                case HSSFunctionTypeRef:
+                {
+                    fnct->setScope(this->scope);
+                    fnct->setThisObj(this->getThisObj());
+                    HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
+                    this->addDAction(remoteValue);
+                    break;
+                }
+                    
+                case HSSFunctionTypeFlag:
+                {
+                    fnct->setScope(this->scope);
+                    fnct->setThisObj(this->getThisObj());
+                    HSSFlagFunction::p flagFnct = boost::static_pointer_cast<HSSFlagFunction>(fnct);
+                    HSSFlagAction::p flagAction = HSSFlagAction::p(new HSSFlagAction());
+                    flagAction->setFlagFunction(flagFnct);
+                    flagAction->setController(this->getController());
+                    flagAction->setScope(this->scope);
+                    flagAction->setThisObj(this->getThisObj());
+                    this->action.push_back(flagAction);
+                    break;
+                }
+                    
+                default:
+                    throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid function type for action of @event "+this->name));
             }
             
             break;

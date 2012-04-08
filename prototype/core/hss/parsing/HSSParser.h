@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/21
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 18
+ *      Core version: 0.46
+ *      Revision: 19
  *
  ********************************************************************/
 
@@ -147,6 +147,7 @@ namespace AXR {
         HSSParserNode::p readFunction();
         
         HSSParserNode::p readFilter();
+        HSSParserNode::p readFlag();
         
         void readNextToken();
         void readNextToken(bool checkForUnexpectedEndOfSource);

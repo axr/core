@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 20
+ *      Core version: 0.46
+ *      Revision: 21
  *
  ********************************************************************/
 
@@ -218,6 +218,27 @@ HSSObject::HSSObject()
     this->shorthandIndex = 0;
 }
 
+HSSObject::HSSObject(const HSSObject & orig)
+{
+    this->name = orig.name;
+    this->type = orig.type;
+    this->_isNamed = orig._isNamed;
+    this->scope = orig.scope;
+    this->thisObj = orig.thisObj;
+    this->axrController = orig.axrController;
+    this->shorthandIndex = orig.shorthandIndex;
+    
+}
+
+HSSObject::p HSSObject::clone() const{
+    return boost::static_pointer_cast<HSSObject, HSSClonable>(this->cloneImpl());
+}
+
+
+HSSClonable::p HSSObject::cloneImpl() const{
+    return HSSClonable::p(new HSSObject(*this));
+}
+
 HSSObject::~HSSObject()
 {
     
@@ -253,7 +274,11 @@ bool HSSObject::isFunction(std::string value, std::string property)
        || value == "ceil"
        || value == "round"
        || value == "ref"
-       || value == "sel"       ){
+       || value == "sel"
+       || value == "flag"
+       || value == "unflag"
+       || value == "toggleFlag"
+    ){
         return true;
     } else {
         return false;
@@ -403,16 +428,6 @@ void HSSObject::setDIsA(HSSParserNode::p value)
                     }
                     
                     //else store as value
-                }
-                if(this->isA(HSSObjectTypeContainer)){
-                    HSSContainer::p thisCont = boost::static_pointer_cast<HSSContainer>(this->shared_from_this());
-                    this->axrController->currentContext.push(thisCont);
-                    HSSRule::const_it it;
-                    const std::deque<HSSRule::p> rules = objdef->getRules();
-                    for (it=rules.begin(); it!=rules.end(); it++) {
-                        this->axrController->recursiveMatchRulesToDisplayObjects((*it)->clone(), thisCont->getChildren(), thisCont);
-                    }
-                    this->axrController->currentContext.pop();
                 }
                 
             } catch (HSSObjectNotFoundException * e) {

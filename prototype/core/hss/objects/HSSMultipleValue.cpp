@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/27
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 6
+ *      Core version: 0.46
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -57,8 +57,26 @@
 using namespace AXR;
 
 HSSMultipleValue::HSSMultipleValue()
+: HSSObject()
 {
     this->type = HSSObjectTypeMultipleValue;
+}
+
+HSSMultipleValue::HSSMultipleValue(const HSSMultipleValue & orig)
+: HSSObject(orig)
+{
+    HSSParserNode::const_it it;
+    for (it=orig.valueList.begin(); it!=orig.valueList.end(); it++) {
+        this->valueList.push_back((*it)->clone());
+    }
+}
+
+HSSMultipleValue::p HSSMultipleValue::clone() const{
+    return boost::static_pointer_cast<HSSMultipleValue, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSMultipleValue::cloneImpl() const{
+    return HSSClonable::p(new HSSMultipleValue(*this));
 }
 
 HSSMultipleValue::~HSSMultipleValue()

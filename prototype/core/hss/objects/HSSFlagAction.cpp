@@ -46,58 +46,101 @@
  *      Last changed: 2012/03/25
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 5
- *
- *      WARNING!
- *      =================
- *      This class has not been implemented yet. Don't expecti it to work
+ *      Revision: 1
  *
  ********************************************************************/
 
-#include "HSSMargin.h"
+#import "HSSFlagAction.h"
+#import "../../axr/AXRController.h"
 
 using namespace AXR;
 
-HSSMargin::HSSMargin()
-: HSSObject()
-{
-    this->segments = HSSMultipleValue();
-    this->type = HSSObjectTypeMargin;
-}
-
-HSSMargin::HSSMargin(const HSSMargin & orig)
-: HSSObject(orig)
-{
-    //fixme
-}
-
-HSSMargin::p HSSMargin::clone() const{
-    return boost::static_pointer_cast<HSSMargin, HSSClonable>(this->cloneImpl());
-}
-
-HSSClonable::p HSSMargin::cloneImpl() const{
-    return HSSClonable::p(new HSSMargin(*this));
-}
-
-HSSMargin::~HSSMargin()
+HSSFlagAction::HSSFlagAction()
+: HSSAction(HSSActionTypeFlag)
 {
     
 }
 
-std::string HSSMargin::toString()
+HSSFlagAction::HSSFlagAction(const HSSFlagAction & orig)
+: HSSAction(orig.actionType)
 {
-    return "HSSMargin with size: "+this->size.getStringValue();
+    this->_flagFunction = orig._flagFunction->clone();
 }
 
-void HSSMargin::setSize(HSSValue newSize){
-    this->size = newSize;
-}
-
-HSSValue HSSMargin::getSize()
+HSSFlagAction::p HSSFlagAction::clone() const
 {
-    return this->size;
+    return boost::static_pointer_cast<HSSFlagAction, HSSClonable>(this->cloneImpl());
 }
 
+HSSClonable::p HSSFlagAction::cloneImpl() const
+{
+    HSSFlagAction::p clone = HSSFlagAction::p(new HSSFlagAction(*this));
+    return clone;
+}
+
+HSSFlagAction::~HSSFlagAction()
+{
+    
+}
+
+
+std::string HSSFlagAction::toString()
+{
+    return "HSSFlag";
+}
+
+std::string HSSFlagAction::defaultObjectType()
+{
+    return "Flag";
+}
+
+
+void HSSFlagAction::fire()
+{
+    HSSFlagFunction::p flagFunction = this->getFlagFunction();
+    this->axrController->setSelectorChain(flagFunction->getSelectorChain());
+    std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->selectHierarchical(*this->scope, this->getThisObj(), false, false);
+    if (selection.size() == 0){
+        // ignore
+    } else {
+        
+        std::vector< std::vector<HSSDisplayObject::p> >::iterator outerIt;
+        std::vector<HSSDisplayObject::p>::iterator innerIt;
+        
+        for (outerIt=selection.begin(); outerIt!=selection.end(); outerIt++) {
+            std::vector<HSSDisplayObject::p> & inner = *outerIt;
+            for (innerIt=inner.begin(); innerIt!=inner.end(); innerIt++) {
+                HSSDisplayObject::p container = *innerIt;
+                switch (flagFunction->getFlagFunctionType()) {
+                    case HSSFlagFunctionTypeFlag:
+                        container->flagsActivate(flagFunction->getName());
+                        break;
+                    case HSSFlagFunctionTypeUnflag:
+                        container->flagsDeactivate(flagFunction->getName());
+                        break;
+                    case HSSFlagFunctionTypeToggleFlag:
+                        container->flagsToggle(flagFunction->getName());
+                        break;
+                        
+                    default:
+                        throw AXRWarning::p(new AXRWarning("HSSFlagAction", "Invalid flag function type for flag action"));
+                        break;
+                }
+            }
+        }
+        
+    }
+}
+
+HSSFlagFunction::p HSSFlagAction::getFlagFunction()
+{
+    return this->_flagFunction;
+}
+
+void HSSFlagAction::setFlagFunction(HSSFlagFunction::p newValue)
+{
+    this->_flagFunction = newValue;
+}
 
 
 

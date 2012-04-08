@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 4
+ *      Core version: 0.46
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -164,6 +164,11 @@ void * HSSFunction::getValue()
 bool HSSFunction::isA(HSSFunctionType type)
 {
     return this->functionType == type;
+}
+
+HSSFunctionType HSSFunction::getFunctionType()
+{
+    return this->functionType;
 }
 
 void HSSFunction::setController(AXRController * controller)

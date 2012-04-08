@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 7
+ *      Core version: 0.46
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -67,6 +67,8 @@ HSSFont::HSSFont()
 {
     this->type = HSSObjectTypeFont;
     
+    this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;
+    
     this->size = 18.;
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("face");
@@ -74,6 +76,27 @@ HSSFont::HSSFont()
     shorthandProperties.push_back("color");
     shorthandProperties.push_back("weight");
     this->setShorthandProperties(shorthandProperties);
+}
+
+HSSFont::HSSFont(const HSSFont & orig)
+: HSSObject(orig)
+{
+    this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;
+    this->size = 18.;
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("face");
+    shorthandProperties.push_back("size");
+    shorthandProperties.push_back("color");
+    shorthandProperties.push_back("weight");
+    this->setShorthandProperties(shorthandProperties);
+}
+
+HSSFont::p HSSFont::clone() const{
+    return boost::static_pointer_cast<HSSFont, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSFont::cloneImpl() const{
+    return HSSClonable::p(new HSSFont(*this));
 }
 
 HSSFont::~HSSFont()

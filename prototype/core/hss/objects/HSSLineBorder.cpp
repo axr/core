@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 9
+ *      Core version: 0.46
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -68,6 +68,26 @@ HSSLineBorder::HSSLineBorder()
     
     this->setShorthandProperties(shorthandProperties);
     this->registerProperty(HSSObservablePropertyColor, (void *) &this->color);
+}
+
+HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
+: HSSBorder(orig)
+{
+    this->observedColor = NULL;
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("size");
+    shorthandProperties.push_back("color");
+    
+    this->setShorthandProperties(shorthandProperties);
+    this->registerProperty(HSSObservablePropertyColor, (void *) &this->color);
+}
+
+HSSLineBorder::p HSSLineBorder::clone() const{
+    return boost::static_pointer_cast<HSSLineBorder, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSLineBorder::cloneImpl() const{
+    return HSSClonable::p(new HSSLineBorder(*this));
 }
 
 HSSLineBorder::~HSSLineBorder()

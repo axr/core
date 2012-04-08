@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 7
+ *      Core version: 0.46
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -92,6 +92,8 @@ namespace AXR {
         const int size();
         
         HSSSelector::p subject();
+        
+        virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
         
     protected:
         HSSSelectorChain::p shared_from_this();

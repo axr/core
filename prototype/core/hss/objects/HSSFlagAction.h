@@ -43,50 +43,55 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 4
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSRECTANGLE_H
-#define HSSRECTANGLE_H
+#ifndef HSSFLAGACTION_H
+#define HSSFLAGACTION_H
 
-#include "HSSShape.h"
+#include "HSSAction.h"
+#include "../parsing/HSSFlagFunction.h"
 
 namespace AXR {
-    class HSSRectangle : public HSSShape
+    
+    class HSSFlagAction : public HSSAction
     {
     public:
-        typedef boost::shared_ptr<HSSRectangle> p;
+        typedef boost::shared_ptr<HSSFlagAction> p;
         
         /**
-         *  Constructor for HSSRectangle objects
+         *  Constructor for HSSFlagAction objects
          */
-        HSSRectangle();
+        HSSFlagAction();
         /**
-         *  Copy constructor for HSSRectangle objects
+         *  Copy constructor for HSSFlagAction objects
          */
-        HSSRectangle(const HSSRectangle & orig);
+        HSSFlagAction(const HSSFlagAction & orig);
         /**
-         *  Clones an instance of HSSRectangle and gives a shared pointer of the
+         *  Clones an instance of HSSFlagAction and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSRectangle
+         *  @return A shared pointer to the new HSSFlagAction
          */
         p clone() const;
-        virtual ~HSSRectangle();
+        virtual ~HSSFlagAction();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
         
-        virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
+        virtual void fire();
+        
+        HSSFlagFunction::p getFlagFunction();
+        void setFlagFunction(HSSFlagFunction::p newValue);
         
     private:
-        HSSClonable::p cloneImpl() const;
+        HSSFlagFunction::p _flagFunction;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
+
 
 #endif

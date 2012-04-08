@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 8
+ *      Core version: 0.46
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -153,6 +153,16 @@ HSSSelector::p HSSSelectorChain::subject()
     }
     return ret;
 }
+
+void HSSSelectorChain::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
+{
+    std::deque<HSSParserNode::p>::iterator it;
+    for (it=this->nodeList.begin(); it!=this->nodeList.end(); it++) {
+        (*it)->setThisObj(value);
+    }
+    HSSParserNode::setThisObj(value);
+}
+
 
 HSSSelectorChain::p HSSSelectorChain::shared_from_this()
 {

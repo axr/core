@@ -45,8 +45,12 @@
 		4E5F0D6314B21044006A2467 /* AXRWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5F0D6114B21044006A2467 /* AXRWrapper.h */; };
 		4E5F0D6614B21F60006A2467 /* OSXAxrWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4E5F0D6414B21F60006A2467 /* OSXAxrWrapper.mm */; };
 		4E5F0D6714B21F60006A2467 /* OSXAxrWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E5F0D6514B21F60006A2467 /* OSXAxrWrapper.h */; };
-		4E7325B914F6AC750067F913 /* HSSHoverFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E7325B714F6AC750067F913 /* HSSHoverFilter.cpp */; };
-		4E7325BA14F6AC750067F913 /* HSSHoverFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E7325B814F6AC750067F913 /* HSSHoverFilter.h */; };
+		4E6FC793151A37ED00003DB3 /* HSSFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E6FC791151A37EC00003DB3 /* HSSFlag.cpp */; };
+		4E6FC794151A37ED00003DB3 /* HSSFlag.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E6FC792151A37ED00003DB3 /* HSSFlag.h */; };
+		4E6FC799151A3C8E00003DB3 /* HSSFlagFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E6FC797151A3C8C00003DB3 /* HSSFlagFunction.cpp */; };
+		4E6FC79A151A3C8E00003DB3 /* HSSFlagFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E6FC798151A3C8D00003DB3 /* HSSFlagFunction.h */; };
+		4E6FC79D151A49A000003DB3 /* HSSFlagAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E6FC79B151A499E00003DB3 /* HSSFlagAction.cpp */; };
+		4E6FC79E151A49A000003DB3 /* HSSFlagAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E6FC79C151A499F00003DB3 /* HSSFlagAction.h */; };
 		4E7AA998145D6EC600BB8555 /* HSSFirstFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E7AA996145D6EC600BB8555 /* HSSFirstFilter.cpp */; };
 		4E7AA999145D6EC600BB8555 /* HSSFirstFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E7AA997145D6EC600BB8555 /* HSSFirstFilter.h */; };
 		4E7AA99B145D6EE000BB8555 /* HSSFilters.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E7AA99A145D6EE000BB8555 /* HSSFilters.h */; };
@@ -210,8 +214,12 @@
 		4E5F0D6114B21044006A2467 /* AXRWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRWrapper.h; sourceTree = "<group>"; };
 		4E5F0D6414B21F60006A2467 /* OSXAxrWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXAxrWrapper.mm; sourceTree = "<group>"; };
 		4E5F0D6514B21F60006A2467 /* OSXAxrWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXAxrWrapper.h; sourceTree = "<group>"; };
-		4E7325B714F6AC750067F913 /* HSSHoverFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSHoverFilter.cpp; sourceTree = "<group>"; };
-		4E7325B814F6AC750067F913 /* HSSHoverFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSHoverFilter.h; sourceTree = "<group>"; };
+		4E6FC791151A37EC00003DB3 /* HSSFlag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFlag.cpp; sourceTree = "<group>"; };
+		4E6FC792151A37ED00003DB3 /* HSSFlag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFlag.h; sourceTree = "<group>"; };
+		4E6FC797151A3C8C00003DB3 /* HSSFlagFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFlagFunction.cpp; sourceTree = "<group>"; };
+		4E6FC798151A3C8D00003DB3 /* HSSFlagFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFlagFunction.h; sourceTree = "<group>"; };
+		4E6FC79B151A499E00003DB3 /* HSSFlagAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFlagAction.cpp; sourceTree = "<group>"; };
+		4E6FC79C151A499F00003DB3 /* HSSFlagAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFlagAction.h; sourceTree = "<group>"; };
 		4E7AA996145D6EC600BB8555 /* HSSFirstFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFirstFilter.cpp; sourceTree = "<group>"; };
 		4E7AA997145D6EC600BB8555 /* HSSFirstFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFirstFilter.h; sourceTree = "<group>"; };
 		4E7AA99A145D6EE000BB8555 /* HSSFilters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFilters.h; sourceTree = "<group>"; };
@@ -334,8 +342,6 @@
 		4EDE70901465F1D700D645EA /* HSSAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSAction.h; sourceTree = "<group>"; };
 		4EDE70931465F62700D645EA /* HSSRequest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRequest.cpp; sourceTree = "<group>"; };
 		4EDE70941465F62800D645EA /* HSSRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRequest.h; sourceTree = "<group>"; };
-		4EE12F9214E16A16000C2230 /* WinAxrWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WinAxrWrapper.cpp; path = win/WinAxrWrapper.cpp; sourceTree = "<group>"; };
-		4EE12F9314E16A16000C2230 /* WinAxrWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WinAxrWrapper.h; path = win/WinAxrWrapper.h; sourceTree = "<group>"; };
 		4EFDA75A147991290051565B /* HSSLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSLog.cpp; sourceTree = "<group>"; };
 		4EFDA75B147991290051565B /* HSSLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSLog.h; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -467,6 +473,8 @@
 				4EDE70941465F62800D645EA /* HSSRequest.h */,
 				4EFDA75A147991290051565B /* HSSLog.cpp */,
 				4EFDA75B147991290051565B /* HSSLog.h */,
+				4E6FC79B151A499E00003DB3 /* HSSFlagAction.cpp */,
+				4E6FC79C151A499F00003DB3 /* HSSFlagAction.h */,
 				4E80C7FD13505DD200D88409 /* HSSObjectExceptions.cpp */,
 				4E80C7FE13505DD200D88409 /* HSSObjectExceptions.h */,
 				4EC1891414A69DD0009715F1 /* HSSGradient.cpp */,
@@ -505,6 +513,8 @@
 				4E07C46D1434F2CE00B1B7CA /* HSSRefFunction.h */,
 				4E07FF2C1466B31000626BDC /* HSSSelFunction.cpp */,
 				4E07FF2D1466B31000626BDC /* HSSSelFunction.h */,
+				4E6FC797151A3C8C00003DB3 /* HSSFlagFunction.cpp */,
+				4E6FC798151A3C8D00003DB3 /* HSSFlagFunction.h */,
 				4E80C80A13505DD300D88409 /* HSSInstruction.cpp */,
 				4E80C80B13505DD300D88409 /* HSSInstruction.h */,
 				4E80C80C13505DD300D88409 /* HSSKeywordConstant.cpp */,
@@ -550,8 +560,8 @@
 				4E7AA997145D6EC600BB8555 /* HSSFirstFilter.h */,
 				4EAF9D0C145DC8CB00E92B33 /* HSSLastFilter.cpp */,
 				4EAF9D0D145DC8CB00E92B33 /* HSSLastFilter.h */,
-				4E7325B714F6AC750067F913 /* HSSHoverFilter.cpp */,
-				4E7325B814F6AC750067F913 /* HSSHoverFilter.h */,
+				4E6FC791151A37EC00003DB3 /* HSSFlag.cpp */,
+				4E6FC792151A37ED00003DB3 /* HSSFlag.h */,
 				4E2C547E1512A86700DAAFC4 /* HSSNegation.cpp */,
 				4E2C547F1512A86700DAAFC4 /* HSSNegation.h */,
 			);
@@ -574,7 +584,6 @@
 		4E80C87413505DEA00D88409 /* os */ = {
 			isa = PBXGroup;
 			children = (
-				4EE12F9114E16A09000C2230 /* win */,
 				4E80C87513505DEA00D88409 /* osx */,
 			);
 			path = os;
@@ -628,15 +637,6 @@
 				4E5406DC14FA92F4009D59B0 /* HSSClonable.h */,
 			);
 			path = various;
-			sourceTree = "<group>";
-		};
-		4EE12F9114E16A09000C2230 /* win */ = {
-			isa = PBXGroup;
-			children = (
-				4EE12F9214E16A16000C2230 /* WinAxrWrapper.cpp */,
-				4EE12F9314E16A16000C2230 /* WinAxrWrapper.h */,
-			);
-			name = win;
 			sourceTree = "<group>";
 		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
@@ -736,11 +736,13 @@
 				4E5F0D6714B21F60006A2467 /* OSXAxrWrapper.h in Headers */,
 				4EBFE39314B35DB700C0114F /* AXRFile.h in Headers */,
 				4EA5716014D445890083ACDA /* HSSTextBlock.h in Headers */,
-				4E7325BA14F6AC750067F913 /* HSSHoverFilter.h in Headers */,
 				4EC5927C14F817C300726AE6 /* HSSFilterType.h in Headers */,
 				4E5406DE14FA92F4009D59B0 /* HSSClonable.h in Headers */,
 				4E07AEBA150938A80004E621 /* HSSColorStop.h in Headers */,
 				4E2C54811512A86700DAAFC4 /* HSSNegation.h in Headers */,
+				4E6FC794151A37ED00003DB3 /* HSSFlag.h in Headers */,
+				4E6FC79A151A3C8E00003DB3 /* HSSFlagFunction.h in Headers */,
+				4E6FC79E151A49A000003DB3 /* HSSFlagAction.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -868,9 +870,11 @@
 				4E5F0D6614B21F60006A2467 /* OSXAxrWrapper.mm in Sources */,
 				4EBFE39214B35DB700C0114F /* AXRFile.cpp in Sources */,
 				4EA5715F14D445890083ACDA /* HSSTextBlock.cpp in Sources */,
-				4E7325B914F6AC750067F913 /* HSSHoverFilter.cpp in Sources */,
 				4E07AEB9150938A80004E621 /* HSSColorStop.cpp in Sources */,
 				4E2C54801512A86700DAAFC4 /* HSSNegation.cpp in Sources */,
+				4E6FC793151A37ED00003DB3 /* HSSFlag.cpp in Sources */,
+				4E6FC799151A3C8E00003DB3 /* HSSFlagFunction.cpp in Sources */,
+				4E6FC79D151A49A000003DB3 /* HSSFlagAction.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

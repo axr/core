@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/04/08
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 38
+ *      Core version: 0.46
+ *      Revision: 42
  *
  ********************************************************************/
 
@@ -100,9 +100,11 @@ void HSSDisplayObject::initialize()
     this->drawIndex = this->_index = 0;
     this->tabIndex = this->zoomFactor = 1;
     this->flow = this->visible = true;
+    this->overflow = false;
     //fixme: change to camelCase
     this->does_float = false;
     this->heightByContent = false;
+    this->_isRoot = false;
     
     this->elementName = std::string();
     this->contentText = std::string();
@@ -120,6 +122,7 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyAnchorX, (void *) &this->anchorX);
     this->registerProperty(HSSObservablePropertyAnchorY, (void *) &this->anchorY);
     this->registerProperty(HSSObservablePropertyFlow, (void *) &this->flow);
+    this->registerProperty(HSSObservablePropertyOverflow, (void *) &this->overflow);
     this->registerProperty(HSSObservablePropertyHeight, (void *) &this->height);
     this->registerProperty(HSSObservablePropertyWidth, (void *) &this->width);
     this->registerProperty(HSSObservablePropertyBackground, (void *) &this->background);
@@ -128,6 +131,29 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyBorder, (void *) &this->border);
     
     this->_isHover = false;
+}
+
+HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
+: HSSObject(orig)
+{
+    this->initialize();
+    this->attributes = orig.attributes;
+    this->elementName = orig.elementName;
+    this->contentText = orig.contentText;
+    this->rules = orig.rules; //shallow copy
+    this->_flagsStatus = orig._flagsStatus;
+    
+    this->drawIndex = orig.drawIndex;
+    this->_index = orig._index;
+    this->tabIndex = orig.tabIndex;
+}
+
+HSSDisplayObject::p HSSDisplayObject::clone() const{
+    return boost::static_pointer_cast<HSSDisplayObject, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSDisplayObject::cloneImpl() const{
+    return HSSClonable::p(new HSSDisplayObject(*this));
 }
 
 HSSDisplayObject::~HSSDisplayObject()
@@ -195,7 +221,7 @@ bool HSSDisplayObject::isKeyword(std::string value, std::string property)
             ){
             return true;
         }
-    } else if (property == "flow") {
+    } else if (property == "flow" || property == "overflow") {
         if (value == "yes" || value == "no"){
             return true;
         }
@@ -286,20 +312,71 @@ void HSSDisplayObject::setElementName(std::string newName)
     this->elementName = newName;
 }
 
-
-
 //rules
-
-void HSSDisplayObject::rulesAdd(HSSRule::p newRule)
+void HSSDisplayObject::rulesAdd(HSSRule::p newRule, HSSRuleState defaultState)
 {
     //the target property is set to HSSObservablePropertyValue -- should this be something else?
     newRule->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::ruleChanged));
-    this->rules.push_back(newRule);
+    
+    newRule->appliedToAdd(this->shared_from_this());
+    
+    HSSRuleStatus::p newRS = HSSRuleStatus::p(new HSSRuleStatus());
+    newRS->state = defaultState;
+    newRS->rule = newRule;
+    
+    this->rules.push_back(newRS);
+    
+    //iterate over the property defs and try to find an isA property
+    const std::vector<HSSPropertyDefinition::p> & props = newRule->getProperties();
+    HSSPropertyDefinition::const_it it;
+    for (it = props.begin(); it!=props.end(); it++) {
+        HSSPropertyDefinition::p propdef = *it;
+        if(propdef->getName() == "isA"){
+            this->rulesAddIsAChildren(propdef, defaultState);
+        }
+    }
+    
+}
+
+void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSSRuleState defaultState)
+{
+    HSSParserNode::p value = propdef->getValue();
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                
+                if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer::p thisCont = boost::static_pointer_cast<HSSContainer>(this->shared_from_this());
+                    this->axrController->currentContext.push(thisCont);
+                    HSSRule::const_it it;
+                    const std::deque<HSSRule::p> rules = objdef->getRules();
+                    for (it=rules.begin(); it!=rules.end(); it++) {
+                        HSSRule::p clonedRule = (*it)->clone();
+                        this->axrController->recursiveMatchRulesToDisplayObjects(clonedRule, thisCont->getChildren(), thisCont, true);
+                    }
+                    this->axrController->currentContext.pop();
+                }
+            } catch (AXRError::p e) {
+                e->raise();
+            }
+            
+            break;
+        }
+            
+        default:
+        {
+            break;
+        }
+    }
 }
 
 HSSRule::p HSSDisplayObject::rulesGet(unsigned index)
 {
-    return this->rules[index];
+    return this->rules[index]->rule;
 }
 
 void HSSDisplayObject::rulesRemove(unsigned index)
@@ -317,6 +394,44 @@ const int HSSDisplayObject::rulesSize()
     return this->rules.size();
 }
 
+void HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)
+{
+    bool changed = false;
+    bool found = false;
+
+    std::vector<HSSRuleStatus::p>::iterator it;
+    for (it=this->rules.begin(); it!=this->rules.end(); it++) {
+        HSSRuleStatus::p rs = *it;
+        HSSRule::p existingRule = rs->rule;
+        if(existingRule.get()==rule.get()){
+            found = true;
+            if(newValue == HSSRuleStatePurge){
+                if(rs->state == HSSRuleStateOn){
+                    rs->state = newValue;
+                    changed = true;
+                    break;
+                }
+            } else {
+                if(rs->state != newValue){
+                    rs->state = newValue;
+                    changed = true;
+                    break;
+                }
+            }
+        }
+    }
+    
+    if(!found){
+        this->rulesAdd(rule, newValue);
+        changed = true;
+    }
+    
+    if(changed){
+        this->setNeedsRereadRules(true);
+        AXRCore::getInstance()->getWrapper()->setNeedsDisplay(true);
+    }
+}
+
 void HSSDisplayObject::readDefinitionObjects()
 {
     if(this->_needsRereadRules){
@@ -324,21 +439,52 @@ void HSSDisplayObject::readDefinitionObjects()
     
         this->setDefaults();
         
+        //if this is root, we use the window width and height of the render
+        if(this->isRoot()){
+            AXRCore::p core = AXRCore::getInstance();
+            //width
+            HSSNumberConstant::p newDWidth(new HSSNumberConstant(core->getRender()->getWindowWidth()));
+            this->setDWidth(newDWidth);
+            //height
+            HSSNumberConstant::p newDHeight(new HSSNumberConstant(core->getRender()->getWindowHeight()));
+            this->setDHeight(newDHeight);
+        }
+        
         std::string propertyName;
         for (i=0; i<this->rules.size(); i++) {
-            HSSRule::p rule = this->rules[i];
-            if(rule->isActive()){
-                for (j=0; j<rule->propertiesSize(); j++) {
-                    try
-                    {
-                        HSSPropertyDefinition::p& propertyDefinition = rule->propertiesGet(j);
-                        propertyName = propertyDefinition->getName();
-                        this->setPropertyWithName(propertyName, propertyDefinition->getValue());
-                    }
-                    catch (AXRError::p e){
-                        e->raise();
-                    }
+            HSSRuleStatus::p & ruleStatus = this->rules[i];
+            switch (ruleStatus->state) {
+                case HSSRuleStateActivate:
+                {
+                    ruleStatus->state = HSSRuleStateOn;
+                    //fall through
                 }
+                    
+                case HSSRuleStateOn:
+                {
+                    HSSRule::p & rule = ruleStatus->rule;
+                    for (j=0; j<rule->propertiesSize(); j++) {
+                        try
+                        {
+                            HSSPropertyDefinition::p& propertyDefinition = rule->propertiesGet(j);
+                            propertyName = propertyDefinition->getName();
+                            this->setPropertyWithName(propertyName, propertyDefinition->getValue());
+                        }
+                        catch (AXRError::p e){
+                            e->raise();
+                        }
+                    }
+                    break;
+                }
+                
+                case HSSRuleStatePurge:
+                {
+                    ruleStatus->state = HSSRuleStateOff;
+                    break;
+                }
+                    
+                default:
+                    break;
             }
         }
         
@@ -360,6 +506,12 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
             break;
         case HSSObservablePropertyAnchorY:
             this->setDAnchorY(value);
+            break;
+        case HSSObservablePropertyFlow:
+            this->setDFlow(value);
+            break;
+        case HSSObservablePropertyOverflow:
+            this->setDOverflow(value);
             break;
         case HSSObservablePropertyAlignX:
             this->setDAlignX(value);
@@ -386,6 +538,7 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
     }
 }
 
+//deprecated I think, use the previous one
 void HSSDisplayObject::setProperty(HSSObservableProperty name, void * value)
 {
     switch (name) {
@@ -1044,10 +1197,199 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
 
 
 //flow
+bool HSSDisplayObject::getFlow() { return this->flow; }
 HSSParserNode::p HSSDisplayObject::getDFlow() { return this->dFlow; }
 void HSSDisplayObject::setDFlow(HSSParserNode::p value)
 {
-    this->dFlow = value;
+    bool valid = true;
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            this->dFlow = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                this->flow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            this->dFlow = value;
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                this->setDFlow(objdef);
+                
+            } catch (HSSObjectNotFoundException * e) {
+                std_log(e->toString());
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->dFlow = value;
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                fnct->setScope(this->scope);
+                this->flow = *(bool *)fnct->evaluate();
+                
+                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyFlow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::flowChanged));
+                
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+            if(keywordValue->getValue() == "yes"){
+                this->flow = true;
+                break;
+            } else if (keywordValue->getValue() == "no"){
+                this->flow = false;
+                break;
+            } else {
+                //fall through
+            }
+        }
+            
+        default:
+            valid = false;
+    }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for flow of "+this->name));
+    
+    this->notifyObservers(HSSObservablePropertyFlow, &this->flow);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
+}
+
+void HSSDisplayObject::flowChanged(HSSObservableProperty source, void*data)
+{
+    switch (this->dFlow->getType()) {
+        case HSSParserNodeTypeFunctionCall:
+            this->flow = *(bool*)data;
+            break;
+            
+        default:
+            break;
+    }
+    
+    this->notifyObservers(HSSObservablePropertyFlow, data);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
+}
+
+//overflow
+bool HSSDisplayObject::getOverflow() { return this->overflow; }
+HSSParserNode::p HSSDisplayObject::getDOverflow() { return this->dOverflow; }
+void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
+{
+    bool valid = true;
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            this->dOverflow = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                this->overflow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            this->dOverflow = value;
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                this->setDOverflow(objdef);
+                
+            } catch (HSSObjectNotFoundException * e) {
+                std_log(e->toString());
+            }
+            
+            break;
+        }
+            
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->dOverflow = value;
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                fnct->setScope(this->scope);
+                this->overflow = *(bool *)fnct->evaluate();
+                
+                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyOverflow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::overflowChanged));
+                
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+            if(keywordValue->getValue() == "yes"){
+                this->overflow = true;
+                break;
+            } else if (keywordValue->getValue() == "no"){
+                this->overflow = false;
+                break;
+            } else {
+                //fall through
+            }
+        }
+            
+        default:
+            valid = false;
+    }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for overflow of "+this->name));
+    
+    this->notifyObservers(HSSObservablePropertyOverflow, &this->overflow);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
+}
+
+void HSSDisplayObject::overflowChanged(HSSObservableProperty source, void*data)
+{
+    switch (this->dOverflow->getType()) {
+        case HSSParserNodeTypeFunctionCall:
+            this->overflow = *(bool*)data;
+            break;
+            
+        default:
+            break;
+    }
+    
+    this->notifyObservers(HSSObservablePropertyOverflow, data);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
 //alignX
@@ -1066,11 +1408,12 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
             throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for alignX of "+this->getElementName()));
     }
     
-    this->dAlignX = value;
     if(this->observedAlignX != NULL)
     {
         this->observedAlignX->removeObserver(this->observedAlignXProperty, HSSObservablePropertyAlignX, this);
+        this->observedAlignX = NULL;
     }
+    this->dAlignX = value;
     
     if(value->isA(HSSParserNodeTypeKeywordConstant)){
         
@@ -1150,6 +1493,11 @@ void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
         }
             
         case HSSParserNodeTypeKeywordConstant:
+        {
+            this->alignX = *(long double*)data;
+        }
+            
+        case HSSParserNodeTypeFunctionCall:
         {
             this->alignX = *(long double*)data;
         }
@@ -1261,6 +1609,11 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
         }
             
         case HSSParserNodeTypeKeywordConstant:
+        {
+            this->alignY = *(long double*)data;
+        }
+            
+        case HSSParserNodeTypeFunctionCall:
         {
             this->alignY = *(long double*)data;
         }
@@ -1429,7 +1782,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                 
                 objdef->apply();
                 HSSObject::p theObj = objdef->getObject();
-                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
+                theObj->observe(HSSObservablePropertyFont, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
                 this->font.push_back(boost::static_pointer_cast<HSSFont>(theObj));
             }
             
@@ -1502,6 +1855,8 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
         default:
             throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for font of "+this->getElementName()));
     }
+    
+    this->notifyObservers(HSSObservablePropertyFont, &this->font);
 }
 
 void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
@@ -1511,8 +1866,9 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypeObjectDefinition:
         case HSSParserNodeTypeObjectNameConstant:
         case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeKeywordConstant:
         {
-            //this->font = *(std::vector<HSSFont::p> *) data;
+            this->font = *(std::vector<HSSFont::p> *) data;
             this->setDirty(true);
             break;
         }
@@ -1906,11 +2262,12 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
     switch (type) {
         case HSSEventTypeMouseDown:
         case HSSEventTypeMouseUp:
+        case HSSEventTypeClick:
         {
             HSSPoint thePoint = *(HSSPoint*)data;
             
-            if(     this->globalX <= thePoint.x && this->globalX + this->width >= thePoint.x
-               &&   this->globalY <= thePoint.y && this->globalY + this->height >= thePoint.y){
+            if(     this->globalX < thePoint.x && this->globalX + this->width >= thePoint.x
+               &&   this->globalY < thePoint.y && this->globalY + this->height >= thePoint.y){
                
                 //std_log(this->getElementName());
                 return this->fireEvent(type);
@@ -1928,8 +2285,8 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
         {
             HSSPoint thePoint = *(HSSPoint*)data;
             
-            if(     this->globalX <= thePoint.x && this->globalX + this->width >= thePoint.x
-               &&   this->globalY <= thePoint.y && this->globalY + this->height >= thePoint.y){
+            if(     this->globalX < thePoint.x && this->globalX + this->width >= thePoint.x
+               &&   this->globalY < thePoint.y && this->globalY + this->height >= thePoint.y){
                 
                 if(!this->_isHover)
                 {
@@ -1955,7 +2312,11 @@ void HSSDisplayObject::setHover(bool newValue)
     if(this->_isHover != newValue)
     {
         this->_isHover = newValue;
-        this->notifyObservers(HSSObservablePropertyHover, &this->_isHover);
+        if(newValue == TRUE){
+            this->flagsActivate("hover");
+        } else {
+            this->flagsDeactivate("hover");
+        }
     }
 }
 
@@ -1970,6 +2331,91 @@ void HSSDisplayObject::ruleChanged(HSSObservableProperty source, void*data)
     this->setNeedsRereadRules(true);
     AXRCore::getInstance()->getWrapper()->setNeedsDisplay(true);
 }
+
+void HSSDisplayObject::createFlag(HSSFlag::p flag, HSSRuleState defaultValue)
+{
+    this->_flagsStatus[flag->getName()] = defaultValue;
+    this->_flags[flag->getName()].push_back(flag);
+}
+
+bool HSSDisplayObject::hasFlag(std::string name)
+{
+    if(this->_flagsStatus.find(name) != this->_flagsStatus.end()){
+        return true;
+    }
+    return false;
+}
+
+HSSRuleState HSSDisplayObject::flagState(std::string name)
+{
+    if(this->_flagsStatus.find(name) != this->_flagsStatus.end()){
+        return this->_flagsStatus[name];
+    }
+    return HSSRuleStateOff;
+}
+
+void HSSDisplayObject::flagsActivate(std::string name)
+{
+    if(this->hasFlag(name)){
+        std_log3("activate flag with name "+name+" on element "+this->getElementName());
+        HSSRuleState newValue = HSSRuleStateActivate;
+        std::vector<HSSFlag::p> flags = this->_flags[name];
+        this->_flagsStatus[name] = newValue;
+        std::vector<HSSFlag::p>::iterator it;
+        for(it=flags.begin(); it!=flags.end(); it++){
+            (*it)->flagChanged(newValue);    
+        }   
+        this->_flagsStatus[name] = HSSRuleStateOn;
+    } else {
+        //std_log("No flag with name "+name+" on element "+this->getElementName());
+    }
+}
+
+void HSSDisplayObject::flagsDeactivate(std::string name)
+{
+    if(this->hasFlag(name)){
+        std_log3("deactivate flag with name "+name+" on element "+this->getElementName());
+        HSSRuleState newValue = HSSRuleStatePurge;
+        std::vector<HSSFlag::p> flags = this->_flags[name];
+        this->_flagsStatus[name] = newValue;
+        std::vector<HSSFlag::p>::iterator it;
+        for(it=flags.begin(); it!=flags.end(); it++){
+            (*it)->flagChanged(newValue);    
+        }
+        this->_flagsStatus[name] = HSSRuleStateOff;
+        
+    } else {
+        //std_log("No flag with name "+name+" on element "+this->getElementName());
+    }
+}
+
+void HSSDisplayObject::flagsToggle(std::string name)
+{
+    if(this->hasFlag(name)){
+        std_log3("toggle flag with name "+name+" on element "+this->getElementName());
+        HSSRuleState newValue = (this->_flagsStatus[name] == HSSRuleStateOn ? HSSRuleStatePurge : HSSRuleStateActivate);
+        std::vector<HSSFlag::p> flags = this->_flags[name];
+        this->_flagsStatus[name] = newValue;
+        std::vector<HSSFlag::p>::iterator it;
+        for(it=flags.begin(); it!=flags.end(); it++){
+            (*it)->flagChanged(newValue);    
+        }
+        this->_flagsStatus[name] = (newValue == HSSRuleStateActivate ? HSSRuleStateOn : HSSRuleStateOff);
+    } else {
+        //std_log("No flag with name "+name+" on element "+this->getElementName());
+    }
+}
+
+bool HSSDisplayObject::isRoot()
+{
+    return this->_isRoot;
+}
+
+void HSSDisplayObject::setRoot(bool newValue)
+{
+    this->_isRoot = newValue;
+}
+
 
 HSSDisplayObject::p HSSDisplayObject::shared_from_this()
 {

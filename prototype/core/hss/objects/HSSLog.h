@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/20
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 1
+ *      Core version: 0.46
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -60,7 +60,20 @@ namespace AXR {
     class HSSLog : public HSSAction
     {
     public:
+        /**
+         *  Constructor for HSSLog objects
+         */
         HSSLog();
+        /**
+         *  Copy constructor for HSSLog objects
+         */
+        HSSLog(const HSSLog & orig);
+        /**
+         *  Clones an instance of HSSLog and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSLog
+         */
+        p clone() const;
         virtual ~HSSLog();
         
         virtual std::string toString();
@@ -80,6 +93,8 @@ namespace AXR {
         HSSParserNode::p dValue;
         HSSObservable * observedValue;
         HSSObservableProperty observedValueProperty;
+
+        HSSClonable::p cloneImpl() const;
     };
 }
 

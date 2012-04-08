@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/08
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 1
+ *      Core version: 0.46
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -77,6 +77,29 @@ HSSColorStop::HSSColorStop()
     this->registerProperty(HSSObservablePropertyPosition, (void *) &this->position);
     this->registerProperty(HSSObservablePropertyBalance, (void *) &this->balance);
     this->position = this->balance = 0.5;
+}
+
+HSSColorStop::HSSColorStop(const HSSColorStop & orig)
+: HSSObject(orig)
+{
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("color");
+    shorthandProperties.push_back("position");
+    shorthandProperties.push_back("balance");
+    this->setShorthandProperties(shorthandProperties);
+    
+    this->registerProperty(HSSObservablePropertyColor, (void *) &this->color);
+    this->registerProperty(HSSObservablePropertyPosition, (void *) &this->position);
+    this->registerProperty(HSSObservablePropertyBalance, (void *) &this->balance);
+    this->position = this->balance = 0.5;
+}
+
+HSSColorStop::p HSSColorStop::clone() const{
+    return boost::static_pointer_cast<HSSColorStop, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSColorStop::cloneImpl() const{
+    return HSSClonable::p(new HSSColorStop(*this));
 }
 
 HSSColorStop::~HSSColorStop()

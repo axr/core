@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.46
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -63,12 +63,19 @@ namespace AXR {
     class HSSGradient : public HSSObject
     {
     public:
-        
-        HSSGradient();
-        virtual ~HSSGradient();
-        
         typedef boost::shared_ptr<HSSGradient> p;
         typedef std::vector<HSSGradient::p>::iterator it;
+        
+        /**
+         *  Constructor for HSSGradient objects
+         */
+        HSSGradient();
+        /**
+         *  Copy constructor for HSSGradient objects
+         */
+        HSSGradient(const HSSGradient & orig);
+        
+        virtual ~HSSGradient();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();

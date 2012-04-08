@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/19
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.46
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -63,7 +63,20 @@ namespace AXR {
     public:
         typedef boost::shared_ptr<HSSRoundedRect> p;
         
+        /**
+         *  Constructor for HSSRoundedRect objects
+         */
         HSSRoundedRect();
+        /**
+         *  Copy constructor for HSSRoundedRect objects
+         */
+        HSSRoundedRect(const HSSRoundedRect & orig);
+        /**
+         *  Clones an instance of HSSRoundedRect and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSRoundedRect
+         */
+        p clone() const;
         virtual ~HSSRoundedRect();
         
         virtual std::string toString();
@@ -105,7 +118,8 @@ namespace AXR {
                                    HSSObservable *        &observedStore,
                                    HSSObservableProperty  &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
-        );
+                                   );
+        HSSClonable::p cloneImpl() const;
     };
 }
 

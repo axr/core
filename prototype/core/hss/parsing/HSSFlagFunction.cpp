@@ -43,50 +43,104 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 4
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSRECTANGLE_H
-#define HSSRECTANGLE_H
+#include "HSSFlagFunction.h"
+#include "../../axr/AXRDebugging.h"
+#include "../../axr/errors/errors.h"
+#include "../../axr/AXRController.h"
 
-#include "HSSShape.h"
+using namespace AXR;
 
-namespace AXR {
-    class HSSRectangle : public HSSShape
-    {
-    public:
-        typedef boost::shared_ptr<HSSRectangle> p;
-        
-        /**
-         *  Constructor for HSSRectangle objects
-         */
-        HSSRectangle();
-        /**
-         *  Copy constructor for HSSRectangle objects
-         */
-        HSSRectangle(const HSSRectangle & orig);
-        /**
-         *  Clones an instance of HSSRectangle and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSRectangle
-         */
-        p clone() const;
-        virtual ~HSSRectangle();
-        
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
-        
-        virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
-        
-    private:
-        HSSClonable::p cloneImpl() const;
-    };
+HSSFlagFunctionType HSSFlagFunction::flagFunctionTypeFromString(std::string name)
+{
+    if( name == "flag" ){
+        return HSSFlagFunctionTypeFlag;
+    }
+    if( name == "unflag" ){
+        return HSSFlagFunctionTypeUnflag;
+    }
+    if( name == "toggleFlag" ){
+        return HSSFlagFunctionTypeToggleFlag;
+    }
+    
+    return HSSFlagFunctionTypeNone;
 }
 
-#endif
+HSSFlagFunction::HSSFlagFunction(HSSFlagFunctionType flagFunctionType)
+: HSSFunction()
+{
+    this->functionType = HSSFunctionTypeFlag;
+    this->_flagFunctionType = flagFunctionType;
+}
+
+HSSFlagFunction::HSSFlagFunction(const HSSFlagFunction & orig)
+: HSSFunction(orig)
+{
+    this->_name = orig._name;
+    this->selectorChain = orig.selectorChain->clone();
+    this->_flagFunctionType = orig._flagFunctionType;
+}
+
+HSSFlagFunction::p HSSFlagFunction::clone() const
+{
+    return boost::static_pointer_cast<HSSFlagFunction, HSSClonable>(this->cloneImpl());
+}
+
+HSSFlagFunction::~HSSFlagFunction()
+{
+    
+}
+
+const std::string & HSSFlagFunction::getName()
+{
+    return this->_name;
+}
+
+void HSSFlagFunction::setName(std::string newValue)
+{
+    this->_name = newValue;
+    this->setDirty(true);
+}
+
+const HSSSelectorChain::p & HSSFlagFunction::getSelectorChain() const
+{
+    return this->selectorChain;
+}
+
+void HSSFlagFunction::setSelectorChain(HSSSelectorChain::p newValue)
+{
+    this->selectorChain = newValue;
+    this->setDirty(true);
+}
+
+void * HSSFlagFunction::_evaluate()
+{
+    return NULL;
+}
+
+void * HSSFlagFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+{
+    return this->_evaluate();
+}
+
+void HSSFlagFunction::valueChanged(HSSObservableProperty source, void*data)
+{
+    this->setDirty(true);
+    this->_value = data;
+    this->notifyObservers(HSSObservablePropertyValue, this->_value);
+}
+
+HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType()
+{
+    return this->_flagFunctionType;
+}
+
+HSSClonable::p HSSFlagFunction::cloneImpl() const{
+    return HSSClonable::p(new HSSFlagFunction(*this));
+}

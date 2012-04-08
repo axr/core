@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/11/20
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.42
- *      Revision: 4
+ *      Core version: 0.46
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -61,14 +61,27 @@ namespace AXR {
     class HSSRgb : public HSSObject
     {
     public:
+        typedef boost::shared_ptr<HSSRgb> p;
+        
         //virtual bool isKeyword(std::string value, std::string property);
         
         friend class HSSParser;
         
+        /**
+         *  Constructor for HSSRgb objects
+         */
         HSSRgb();
+        /**
+         *  Copy constructor for HSSRgb objects
+         */
+        HSSRgb(const HSSRgb & orig);
+        /**
+         *  Clones an instance of HSSRgb and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSRgb
+         */
+        p clone() const;
         virtual ~HSSRgb();
-        
-        typedef boost::shared_ptr<HSSRgb> p;
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
@@ -116,6 +129,7 @@ namespace AXR {
                                    HSSObservable *          &observedStore,
                                    HSSObservableProperty    &observedStoreProperty
                                    );
+        HSSClonable::p cloneImpl() const;
     };
 
 }

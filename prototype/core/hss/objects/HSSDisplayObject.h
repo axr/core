@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/04/01
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 33
+ *      Core version: 0.46
+ *      Revision: 36
  *
  ********************************************************************/
 
@@ -60,6 +60,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "../parsing/HSSRule.h"
+#include "../parsing/HSSFlag.h"
 #include <cairo/cairo.h>
 #include "HSSMultipleValue.h"
 #include "HSSRgb.h"
@@ -71,7 +72,7 @@
 namespace AXR {
     
     class HSSContainer;
-
+    
     class HSSDisplayObject : public HSSObject
     {
     public:
@@ -84,8 +85,24 @@ namespace AXR {
         typedef std::vector<HSSDisplayObject::p>::iterator it;
         typedef std::vector<HSSDisplayObject::p>::const_iterator const_it;
         
-        HSSDisplayObject();        
+        /**
+         *  Constructor for HSSDisplayObject objects
+         */
+        HSSDisplayObject();      
+        /**
+         *  Initializes all ivars to default values.
+         */
         void initialize();
+        /**
+         *  Copy constructor for HSSDisplayObject objects
+         */
+        HSSDisplayObject(const HSSDisplayObject & orig);
+        /**
+         *  Clones an instance of HSSDisplayObject and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSDisplayObject
+         */
+        p clone() const;
         
         virtual ~HSSDisplayObject();
         virtual std::string toString();
@@ -104,11 +121,13 @@ namespace AXR {
         virtual void setContentText(std::string text);
         virtual void appendContentText(std::string text);
         
-        void rulesAdd(HSSRule::p newRule);
+        void rulesAdd(HSSRule::p newRule, HSSRuleState defaultState);
+        void rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSSRuleState defaultState);
         HSSRule::p rulesGet(unsigned index);
         void rulesRemove(unsigned index);
         void rulesRemoveLast();
         const int rulesSize();
+        void setRuleStatus(HSSRule::p rule, HSSRuleState newValue);
         virtual void readDefinitionObjects();
         virtual void recursiveReadDefinitionObjects();
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
@@ -169,6 +188,13 @@ namespace AXR {
         bool getFlow();
         HSSParserNode::p getDFlow();
         void setDFlow(HSSParserNode::p value);
+        void flowChanged(HSSObservableProperty source, void*data);
+        
+        //overflow
+        bool getOverflow();
+        HSSParserNode::p getDOverflow();
+        void setDOverflow(HSSParserNode::p value);
+        void overflowChanged(HSSObservableProperty source, void*data);
         
         //height
         long double getHeight();
@@ -216,12 +242,22 @@ namespace AXR {
         
         void ruleChanged(HSSObservableProperty source, void*data);
         
+        void createFlag(HSSFlag::p flag, HSSRuleState defaultValue);
+        bool hasFlag(std::string name);
+        HSSRuleState flagState(std::string name);
+        void flagsActivate(std::string name);
+        void flagsDeactivate(std::string name);
+        void flagsToggle(std::string name);
+        
+        bool isRoot();
+        void setRoot(bool newValue);
+        
     protected:
         pp parent;
         std::map<std::string, std::string>attributes;
         std::string elementName;
         std::string contentText;
-        std::vector<HSSRule::p> rules;
+        std::vector<HSSRuleStatus::p> rules;
         
         //if the rules have changed
         bool _needsRereadRules;
@@ -231,6 +267,10 @@ namespace AXR {
         cairo_surface_t * backgroundSurface;
         cairo_surface_t * foregroundSurface;
         cairo_surface_t * bordersSurface;
+        
+        //flags
+        boost::unordered_map<std::string, HSSRuleState> _flagsStatus;
+        boost::unordered_map<std::string, std::vector<HSSFlag::p> > _flags;
         
         //if it needs to redraw
         bool _isDirty;
@@ -272,6 +312,9 @@ namespace AXR {
         HSSParserNode::p dFlow;
         bool flow;
         bool does_float;
+        //overflow
+        HSSParserNode::p dOverflow;
+        bool overflow;
         //alignX
         HSSParserNode::p dAlignX;
         long double alignX;
@@ -335,7 +378,9 @@ namespace AXR {
                                    HSSObservableProperty    &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
+        HSSClonable::p cloneImpl() const;
         bool _isHover;
+        bool _isRoot;
     };
 }
 

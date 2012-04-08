@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/03/21
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 4
+ *      Core version: 0.46
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -71,7 +71,10 @@ namespace AXR {
         HSSFunctionTypeMax,
         HSSFunctionTypeFloor,
         HSSFunctionTypeCeil,
-        HSSFunctionTypeRound
+        HSSFunctionTypeRound,
+        HSSFunctionTypeFlag,
+        HSSFunctionTypeUnflag,
+        HSSFunctionTypeToggleFlag
     };
     
     class AXRController;
@@ -106,6 +109,7 @@ namespace AXR {
         bool isDirty();
         void * getValue();
         virtual bool isA(HSSFunctionType type);
+        HSSFunctionType getFunctionType();
         
         /**
          *  Setter for the controller. The controller needs to be propagated across all
