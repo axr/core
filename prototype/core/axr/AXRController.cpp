@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/29
+ *      Last changed: 2012/04/08
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 27
+ *      Revision: 28
  *
  ********************************************************************/
 
@@ -206,6 +206,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
             
             //we observe the parent for dom changes
             container->observe(HSSObservablePropertyTreeChange, HSSObservablePropertyValue, rule.get(), new HSSValueChangedCallback<HSSRule>(rule.get(), &HSSRule::treeChanged));
+            rule->setObservedTreeChanger(container.get());
             rule->setThisObj(container);
             
             rule->setOriginalScope(scope);

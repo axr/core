@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/04/08
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 7
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -131,6 +131,9 @@ namespace AXR {
         const std::vector<boost::shared_ptr<HSSDisplayObject> > getOriginalScope() const;
         void setOriginalScope(const std::vector<boost::shared_ptr<HSSDisplayObject> > & scope);
         
+        void setObservedTreeChanger(HSSObservable * newValue);
+        HSSObservable * getObservedTreeChanger();
+        
     protected:
         HSSRule::p shared_from_this();
         
@@ -149,6 +152,7 @@ namespace AXR {
         virtual HSSClonable::p cloneImpl() const;
         
         boost::unordered_map<HSSFilterType, std::vector<boost::shared_ptr<HSSDisplayObject> > > _interactors;
+        HSSObservable * observedTreeChanger;
         
     };
 }

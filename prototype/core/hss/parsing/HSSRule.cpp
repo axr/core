@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/01
+ *      Last changed: 2012/04/08
  *      HSS version: 1.0
  *      Core version: 0.46
- *      Revision: 9
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -65,6 +65,7 @@ HSSRule::HSSRule()
 {
     this->type = HSSStatementTypeRule;
     this->_activeByDefault = true;
+    this->observedTreeChanger = NULL;
 }
 
 HSSRule::HSSRule(const HSSRule & orig)
@@ -72,6 +73,7 @@ HSSRule::HSSRule(const HSSRule & orig)
 {
     this->_interactors = boost::unordered_map<HSSFilterType, std::vector<boost::shared_ptr<HSSDisplayObject> > >(orig._interactors);
     this->_activeByDefault = orig._activeByDefault;
+    this->observedTreeChanger = NULL;
 }
 
 HSSRule::p HSSRule::clone() const
@@ -84,6 +86,9 @@ HSSRule::~HSSRule()
     unsigned i;
     for(i=0; i<this->properties.size(); i++){
         this->propertiesRemoveLast();
+    }
+    if(this->observedTreeChanger != NULL){
+        this->observedTreeChanger->removeObserver(HSSObservablePropertyTreeChange, HSSObservablePropertyValue, this);
     }
 }
 
@@ -291,6 +296,15 @@ void HSSRule::setOriginalScope(const std::vector<boost::shared_ptr<HSSDisplayObj
     this->_originalScope = scope;
 }
 
+void HSSRule::setObservedTreeChanger(HSSObservable * newValue)
+{
+    this->observedTreeChanger = newValue;
+}
+
+HSSObservable * HSSRule::getObservedTreeChanger()
+{
+    return this->observedTreeChanger;
+}
 
 
 
