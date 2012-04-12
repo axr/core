@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "1.0">
+   <FileBreakpoints>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/objects/HSSEvent.cpp"
+         timestampString = "354132148.75581"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "245"
+         endingLineNumber = "245"
+         landmarkName = "HSSEvent::addDAction(HSSParserNode::p value)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/parsing/HSSFlag.cpp"
+         timestampString = "354320916.131125"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "95"
+         endingLineNumber = "95"
+         landmarkName = "HSSFlag::apply(HSSDisplayObject::p displayObject, bool negating)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/axr/AXRController.cpp"
+         timestampString = "355533287.469193"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "518"
+         endingLineNumber = "518"
+         landmarkName = "AXRController::filterSelection( std::vector&lt;HSSDisplayObject::p&gt; &amp;selection, bool negating, bool processing)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/parsing/HSSParser.cpp"
+         timestampString = "354700025.408094"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1675"
+         endingLineNumber = "1675"
+         landmarkName = "HSSParser::readMultiplicativeExpression()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/objects/HSSDisplayObject.cpp"
+         timestampString = "355584754.503969"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "2377"
+         endingLineNumber = "2377"
+         landmarkName = "HSSDisplayObject::flagsDeactivate(std::string name)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/parsing/HSSFlag.cpp"
+         timestampString = "354497253.803813"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "135"
+         endingLineNumber = "135"
+         landmarkName = "HSSFlag::filter(const std::vector&lt;HSSDisplayObject::p&gt; &amp;scope, bool negating)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/parsing/HSSFlag.cpp"
+         timestampString = "354498881.869707"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "119"
+         endingLineNumber = "119"
+         landmarkName = "HSSFlag::flagChanged(HSSRuleState newStatus)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/objects/HSSDisplayObject.cpp"
+         timestampString = "354814441.527873"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "399"
+         endingLineNumber = "399"
+         landmarkName = "HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/objects/HSSDisplayObject.cpp"
+         timestampString = "354814441.527873"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "438"
+         endingLineNumber = "438"
+         landmarkName = "HSSDisplayObject::readDefinitionObjects()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/objects/HSSContainer.cpp"
+         timestampString = "355603262.747289"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "893"
+         endingLineNumber = "893"
+         landmarkName = "HSSContainer::_getGroupsOverlapping(HSSDisplayObject::p &amp;child, std::vector&lt;HSSContainer::displayGroup::p&gt; &amp;groups, HSSDirectionValue direction)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/objects/HSSContainer.cpp"
+         timestampString = "355603262.747289"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "591"
+         endingLineNumber = "591"
+         landmarkName = "HSSContainer::layout()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/hss/objects/HSSDisplayObject.cpp"
+         timestampString = "355584754.503969"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "1896"
+         endingLineNumber = "1896"
+         landmarkName = "HSSDisplayObject::addDOn(HSSParserNode::p value)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/axr/AXRController.cpp"
+         timestampString = "355074336.834804"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "85"
+         endingLineNumber = "85"
+         landmarkName = "AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p &amp; rule, const std::vector&lt;HSSDisplayObject::p&gt; &amp; scope, HSSContainer::p container, bool applyingInstructions)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/miro/AXR/AXR Prototype/prototype/core/axr/AXRController.cpp"
+         timestampString = "355074622.343667"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "174"
+         endingLineNumber = "174"
+         landmarkName = "AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p &amp; rule, const std::vector&lt;HSSDisplayObject::p&gt; &amp; scope, HSSContainer::p container, bool applyingInstructions)"
+         landmarkType = "5">
+      </FileBreakpoint>
+   </FileBreakpoints>
+</Bucket>
