@@ -892,7 +892,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
-					"/usrl/local/include/glib-2.0/",
+					"/usr/local/include/glib-2.0/",
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = YES;
@@ -913,7 +913,7 @@
 				GCC_MODEL_TUNING = G5;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
-					"/usrl/local/include/glib-2.0/",
+					"/usr/local/include/glib-2.0/",
 				);
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = YES;
