@@ -1,8 +1,12 @@
+ARCH=64
+PKG_CONFIG_PATH=/usr/lib/pkgconfig
+#ARCH=32
+#PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 CC=g++
-CFLAGS=-c -Wno-deprecated
-LDFLAGS=-lexpat\
-	`pkg-config --cflags --libs pangocairo`\
-	`pkg-config --cflags --libs sdl`
+CFLAGS=-m$(ARCH) -c -Wno-deprecated
+LDFLAGS=-m$(ARCH) -lexpat\
+	`PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --cflags --libs pangocairo`\
+	`PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --cflags --libs sdl`
 SOURCES=main.cpp\
 	cairosdl/cairosdl.c\
 	../core/AXR.cpp\
@@ -11,7 +15,7 @@ SOURCES=main.cpp\
 	$(shell find ../core/xml -name \*.cpp)\
 	$(shell find ../core/os/linux -name \*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=axr
+EXECUTABLE=axr_$(ARCH)
 
 all: $(EXECUTABLE)
 clean: cleanup all
