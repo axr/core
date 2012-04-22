@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/01
+ *      Last changed: 2012/04/22
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 15
+ *      Core version: 0.47
+ *      Revision: 16
  *
  ********************************************************************/
 
@@ -130,6 +130,10 @@ namespace AXR {
         
         HSSObservablePropertyTreeChange,
         HSSObservablePropertyOverflow,
+        
+        //HSSPolygon
+        HSSObservablePropertySides,
+        HSSObservablePropertyAngle,
     };
 }
 
