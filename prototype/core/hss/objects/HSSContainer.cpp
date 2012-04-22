@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/08
+ *      Last changed: 2012/04/22
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 37
+ *      Core version: 0.47
+ *      Revision: 38
  *
  ********************************************************************/
 
@@ -1550,6 +1550,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
         case HSSParserNodeTypeObjectDefinition:
         {
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setThisObj(this->shared_from_this());
             objdef->apply();
             HSSObject::p objValue = objdef->getObject();
             if(objValue->isA(HSSObjectTypeShape)){
@@ -1563,6 +1564,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                objdef->setThisObj(this->shared_from_this());
                 objdef->apply();
                 HSSObject::p theObject = objdef->getObject();
                 if (theObject->isA(HSSObjectTypeShape)){
@@ -1603,6 +1605,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
             this->dTextAlign = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             objdef->setScope(this->scope);
+            objdef->setThisObj(this->shared_from_this());
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {

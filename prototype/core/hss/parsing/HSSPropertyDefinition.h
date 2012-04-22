@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/04/22
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 5
+ *      Core version: 0.47
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -78,6 +78,7 @@ namespace AXR {
         void setValue(HSSParserNode::p value);
         void addValue(HSSParserNode::p value);
         HSSParserNode::p getValue();
+        virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
         
     protected:
         HSSPropertyDefinition::p shared_from_this();

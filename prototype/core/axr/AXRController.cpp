@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/08
+ *      Last changed: 2012/04/22
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 28
+ *      Core version: 0.47
+ *      Revision: 29
  *
  ********************************************************************/
 
@@ -103,6 +103,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                     newContainer->setName(elementName);
                     newContainer->setElementName(elementName);;
                     this->add(newContainer);
+                    rule->setThisObj(newContainer);
                     newContainer->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff ));
                     std_log1("created "+newContainer->getElementName());
                     newContainer->setNeedsRereadRules(true);
@@ -140,6 +141,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                             if(theDO != container){
                                 theDO->removeFromParent();
                                 this->add(theDO);
+                                rule->setThisObj(theDO);
                                 std_log1("moved "+theDO->getElementName());
                                 theDO->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff ));
                                 theDO->setNeedsRereadRules(true);
