@@ -43,20 +43,20 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/04/22
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 6
+ *      Core version: 0.47
+ *      Revision: 7
  *
  ********************************************************************/
 
-#import "HSSRoundedRect.h"
-#import "../../axr/errors/errors.h"
-#import "../parsing/HSSNumberConstant.h"
-#import "../parsing/HSSPercentageConstant.h"
-#import "../parsing/HSSExpression.h"
-#import "../parsing/HSSFunction.h"
-#import <boost/pointer_cast.hpp>
+#include "HSSRoundedRect.h"
+#include "../../axr/errors/errors.h"
+#include "../parsing/HSSNumberConstant.h"
+#include "../parsing/HSSPercentageConstant.h"
+#include "../parsing/HSSExpression.h"
+#include "../parsing/HSSFunction.h"
+#include <boost/pointer_cast.hpp>
 
 using namespace AXR;
 

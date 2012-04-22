@@ -43,17 +43,17 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/04/22
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 4
+ *      Core version: 0.47
+ *      Revision: 5
  *
  ********************************************************************/
 
 #ifndef HSSCIRCLE_H
 #define HSSCIRCLE_H
 
-#import "HSSShape.h"
+#include "HSSShape.h"
 
 namespace AXR {
     class HSSCircle : public HSSShape
