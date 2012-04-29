@@ -8,7 +8,6 @@ LDFLAGS=-m$(ARCH) -lexpat\
 	`PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --cflags --libs pangocairo`\
 	`PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --cflags --libs sdl`
 SOURCES=main.cpp\
-	cairosdl/cairosdl.c\
 	../core/AXR.cpp\
 	$(shell find ../core/axr/ -name \*.cpp)\
 	$(shell find ../core/hss -name \*.cpp)\
@@ -24,9 +23,12 @@ cleanup:
 	find . -name \*.o -exec rm {} \;
 	find ../core -name \*.o -exec rm {} \;
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+$(EXECUTABLE): $(OBJECTS) cairosdl/cairosdl.o
+	$(CC) $(LDFLAGS) $(OBJECTS) cairosdl/cairosdl.o -o $@
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@
+
+cairosdl/cairosdl.o:
+	gcc $(CFLAGS) $(LDFLAGS) -c cairosdl/cairosdl.c -o $@
 
