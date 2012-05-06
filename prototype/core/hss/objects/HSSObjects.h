@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/13
+ *      Last changed: 2012/04/22
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 7
+ *      Core version: 0.47
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -68,6 +68,7 @@
 #include "HSSRectangle.h"
 #include "HSSRoundedRect.h"
 #include "HSSCircle.h"
+#include "HSSPolygon.h"
 #include "HSSEvent.h"
 #include "HSSRequest.h"
 #include "HSSLog.h"

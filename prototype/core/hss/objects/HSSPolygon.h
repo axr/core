@@ -46,80 +46,79 @@
  *      Last changed: 2012/04/22
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 5
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSROUNDEDRECT_H
-#define HSSROUNDEDRECT_H
+#ifndef HSSPOLYGON_H
+#define HSSPOLYGON_H
 
 #include "HSSShape.h"
-#include "HSSMultipleValue.h"
 #include "HSSDisplayObject.h"
 
 namespace AXR {
-    class HSSRoundedRect : public HSSShape
+    class HSSPolygon : public HSSShape
     {
     public:
-        typedef boost::shared_ptr<HSSRoundedRect> p;
+        typedef boost::shared_ptr<HSSPolygon> p;
         
         /**
-         *  Constructor for HSSRoundedRect objects
+         *  Constructor for HSSPolygon objects
          */
-        HSSRoundedRect();
+        HSSPolygon();
         /**
-         *  Copy constructor for HSSRoundedRect objects
+         *  Copy constructor for HSSPolygon objects
          */
-        HSSRoundedRect(const HSSRoundedRect & orig);
+        HSSPolygon(const HSSPolygon & orig);
         /**
-         *  Clones an instance of HSSRoundedRect and gives a shared pointer of the
+         *  Clones an instance of HSSPolygon and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSRoundedRect
+         *  @return A shared pointer to the new HSSPolygon
          */
         p clone() const;
-        virtual ~HSSRoundedRect();
+        virtual ~HSSPolygon();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
-        
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);        
         virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
         
-        HSSMultipleValue::p getCorners();
-        void setDCorners(HSSParserNode::p);
-        void cornerTLChanged(HSSObservableProperty source, void*data);
-        void cornerTRChanged(HSSObservableProperty source, void*data);
-        void cornerBRChanged(HSSObservableProperty source, void*data);
-        void cornerBLChanged(HSSObservableProperty source, void*data);
-    
+        //sides
+        long double getSides();
+        HSSParserNode::p getDSides();
+        void setDSides(HSSParserNode::p value);
+        void sidesChanged(HSSObservableProperty source, void*data);
+        
+        //angle
+        long double getAngle();
+        HSSParserNode::p getDAngle();
+        void setDAngle(HSSParserNode::p value);
+        void angleChanged(HSSObservableProperty source, void*data);
+        
     protected:
-        HSSMultipleValue::p corners;
-        HSSParserNode::p dCorners;
-        HSSObservable * observedTLCorner;
-        HSSObservableProperty observedTLCornerProperty;
-        HSSObservable * observedTRCorner;
-        HSSObservableProperty observedTRCornerProperty;
-        HSSObservable * observedBRCorner;
-        HSSObservableProperty observedBRCornerProperty;
-        HSSObservable * observedBLCorner;
-        HSSObservableProperty observedBLCornerProperty;
-        double long cornerTL, cornerTR, cornerBR, cornerBL;
+        //sides
+        HSSParserNode::p dSides;
+        long double sides;
+        HSSObservable * observedSides;
+        HSSObservableProperty observedSidesProperty;
+        
+        //angle
+        HSSParserNode::p dAngle;
+        long double angle;
+        HSSObservable * observedAngle;
+        HSSObservableProperty observedAngleProperty;
         
     private:
-        long double _setLDProperty(
-                                   void(HSSRoundedRect::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p       value,
-                                   long double            percentageBase,
-                                   HSSObservableProperty  observedProperty,
-                                   HSSObservable *        observedObject,
-                                   HSSObservableProperty  observedSourceProperty,
-                                   HSSObservable *        &observedStore,
-                                   HSSObservableProperty  &observedStoreProperty,
-                                   const std::vector<HSSDisplayObject::p> * scope
-                                   );
         HSSClonable::p cloneImpl() const;
+        long double _setLDProperty(
+                                   void(HSSPolygon::*callback)(HSSObservableProperty property, void* data),
+                                   HSSParserNode::p         value,
+                                   long double              percentageBase,
+                                   HSSObservableProperty    observedSourceProperty,
+                                   HSSObservable *          &observedStore,
+                                   HSSObservableProperty    &observedStoreProperty
+                                   );
     };
 }
 

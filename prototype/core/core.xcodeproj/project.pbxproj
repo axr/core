@@ -54,6 +54,8 @@
 		4E7AA998145D6EC600BB8555 /* HSSFirstFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E7AA996145D6EC600BB8555 /* HSSFirstFilter.cpp */; };
 		4E7AA999145D6EC600BB8555 /* HSSFirstFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E7AA997145D6EC600BB8555 /* HSSFirstFilter.h */; };
 		4E7AA99B145D6EE000BB8555 /* HSSFilters.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E7AA99A145D6EE000BB8555 /* HSSFilters.h */; };
+		4E87E36815441BC600E3EC21 /* HSSPolygon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E87E36615441BC600E3EC21 /* HSSPolygon.cpp */; };
+		4E87E36915441BC600E3EC21 /* HSSPolygon.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E87E36715441BC600E3EC21 /* HSSPolygon.h */; };
 		4E8C2559144B6C4A00FE626D /* HSSRectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E8C2557144B6C4A00FE626D /* HSSRectangle.cpp */; };
 		4E8C255A144B6C4A00FE626D /* HSSRectangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E8C2558144B6C4A00FE626D /* HSSRectangle.h */; };
 		4E8C255C144B6D8000FE626D /* HSSShapes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E8C255B144B6D8000FE626D /* HSSShapes.h */; };
@@ -300,6 +302,8 @@
 		4E80C87613505DEA00D88409 /* AXRView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AXRView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4E80C87713505DEA00D88409 /* AXRView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AXRView.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4E80C88C1350700E00D88409 /* xml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = xml.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		4E87E36615441BC600E3EC21 /* HSSPolygon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSPolygon.cpp; sourceTree = "<group>"; };
+		4E87E36715441BC600E3EC21 /* HSSPolygon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSPolygon.h; sourceTree = "<group>"; };
 		4E8C2557144B6C4A00FE626D /* HSSRectangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRectangle.cpp; sourceTree = "<group>"; };
 		4E8C2558144B6C4A00FE626D /* HSSRectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRectangle.h; sourceTree = "<group>"; };
 		4E8C255B144B6D8000FE626D /* HSSShapes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSShapes.h; sourceTree = "<group>"; };
@@ -465,6 +469,8 @@
 				4E8C2562144B7EB600FE626D /* HSSRoundedRect.h */,
 				4E8C255D144B773000FE626D /* HSSCircle.cpp */,
 				4E8C255E144B773000FE626D /* HSSCircle.h */,
+				4E87E36615441BC600E3EC21 /* HSSPolygon.cpp */,
+				4E87E36715441BC600E3EC21 /* HSSPolygon.h */,
 				4EDE70791465D60900D645EA /* HSSEvent.cpp */,
 				4EDE707A1465D60900D645EA /* HSSEvent.h */,
 				4EDE708F1465F1D700D645EA /* HSSAction.cpp */,
@@ -743,6 +749,7 @@
 				4E6FC794151A37ED00003DB3 /* HSSFlag.h in Headers */,
 				4E6FC79A151A3C8E00003DB3 /* HSSFlagFunction.h in Headers */,
 				4E6FC79E151A49A000003DB3 /* HSSFlagAction.h in Headers */,
+				4E87E36915441BC600E3EC21 /* HSSPolygon.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -875,6 +882,7 @@
 				4E6FC793151A37ED00003DB3 /* HSSFlag.cpp in Sources */,
 				4E6FC799151A3C8E00003DB3 /* HSSFlagFunction.cpp in Sources */,
 				4E6FC79D151A49A000003DB3 /* HSSFlagAction.cpp in Sources */,
+				4E87E36815441BC600E3EC21 /* HSSPolygon.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
