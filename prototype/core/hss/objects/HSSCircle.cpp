@@ -43,14 +43,14 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/04/22
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 6
+ *      Core version: 0.47
+ *      Revision: 7
  *
  ********************************************************************/
 
-#import "HSSCircle.h"
+#include "HSSCircle.h"
 
 using namespace AXR;
 

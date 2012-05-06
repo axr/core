@@ -31,6 +31,9 @@
 		4E3844111449C3C0001DF47A /* libglib-2.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E38440F1449C1B7001DF47A /* libglib-2.0.0.dylib */; };
 		4E3844131449C7FB001DF47A /* libgmodule-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3844121449C7FB001DF47A /* libgmodule-2.0.0.dylib */; };
 		4E3844141449C7FE001DF47A /* libgmodule-2.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E3844121449C7FB001DF47A /* libgmodule-2.0.0.dylib */; };
+		4E59E24C154479A800AD103B /* libffi.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E59E24B154479A800AD103B /* libffi.5.dylib */; };
+		4E59E24E15447A0000AD103B /* libpangoft2-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E59E24D15447A0000AD103B /* libpangoft2-1.0.0.dylib */; };
+		4E59E25015447A1300AD103B /* libpng15.15.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E59E24F15447A1300AD103B /* libpng15.15.dylib */; };
 		4EA6EAFE14407B3200309E10 /* views in Resources */ = {isa = PBXBuildFile; fileRef = 4EA6EAFD14407B3200309E10 /* views */; };
 		4ECF59C914FEA253007745C7 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4ECF59C714FEA253007745C7 /* MainMenu.nib */; };
 		4EDF1F4C14703E9F00E70BCA /* AXR.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4EDF1F4B14703E9F00E70BCA /* AXR.icns */; };
@@ -78,6 +81,9 @@
 		4E38440C1449C046001DF47A /* libintl.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libintl.8.dylib; path = /usr/local/lib/libintl.8.dylib; sourceTree = "<absolute>"; };
 		4E38440F1449C1B7001DF47A /* libglib-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libglib-2.0.0.dylib"; path = "/usr/local/lib/libglib-2.0.0.dylib"; sourceTree = "<absolute>"; };
 		4E3844121449C7FB001DF47A /* libgmodule-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libgmodule-2.0.0.dylib"; path = "/usr/local/lib/libgmodule-2.0.0.dylib"; sourceTree = "<absolute>"; };
+		4E59E24B154479A800AD103B /* libffi.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libffi.5.dylib; path = ../../../../../../usr/local/lib/libffi.5.dylib; sourceTree = "<group>"; };
+		4E59E24D15447A0000AD103B /* libpangoft2-1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libpangoft2-1.0.0.dylib"; path = "../../../../../../usr/local/lib/libpangoft2-1.0.0.dylib"; sourceTree = "<group>"; };
+		4E59E24F15447A1300AD103B /* libpng15.15.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng15.15.dylib; path = ../../../../../../usr/local/lib/libpng15.15.dylib; sourceTree = "<group>"; };
 		4E95BFCE135076F100117354 /* core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = core.xcodeproj; path = ../core/core.xcodeproj; sourceTree = "<group>"; };
 		4EA6EAFD14407B3200309E10 /* views */ = {isa = PBXFileReference; lastKnownFileType = folder; path = views; sourceTree = "<group>"; };
 		4EAF82581331690C00AFF970 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -105,6 +111,9 @@
 				4E38440D1449C046001DF47A /* libintl.8.dylib in Frameworks */,
 				4E3844101449C1B7001DF47A /* libglib-2.0.0.dylib in Frameworks */,
 				4E3844131449C7FB001DF47A /* libgmodule-2.0.0.dylib in Frameworks */,
+				4E59E24C154479A800AD103B /* libffi.5.dylib in Frameworks */,
+				4E59E24E15447A0000AD103B /* libpangoft2-1.0.0.dylib in Frameworks */,
+				4E59E25015447A1300AD103B /* libpng15.15.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +158,9 @@
 		29B97314FDCFA39411CA2CEA /* mac */ = {
 			isa = PBXGroup;
 			children = (
+				4E59E24F15447A1300AD103B /* libpng15.15.dylib */,
+				4E59E24D15447A0000AD103B /* libpangoft2-1.0.0.dylib */,
+				4E59E24B154479A800AD103B /* libffi.5.dylib */,
 				4E3844121449C7FB001DF47A /* libgmodule-2.0.0.dylib */,
 				4E3844061449B685001DF47A /* libiconv.2.dylib */,
 				4E3843F1144998EB001DF47A /* libcairo.2.dylib */,

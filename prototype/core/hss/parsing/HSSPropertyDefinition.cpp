@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/04/22
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 7
+ *      Core version: 0.47
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -140,6 +140,12 @@ void HSSPropertyDefinition::addValue(HSSParserNode::p value)
 HSSParserNode::p HSSPropertyDefinition::getValue()
 {
     return this->value;
+}
+
+void HSSPropertyDefinition::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
+{
+    this->value->setThisObj(value);
+    HSSStatement::setThisObj(value);
 }
 
 HSSPropertyDefinition::p HSSPropertyDefinition::shared_from_this()

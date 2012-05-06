@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/01
+ *      Last changed: 2012/04/22
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 13
+ *      Core version: 0.47
+ *      Revision: 14
  *
  ********************************************************************/
 
@@ -58,7 +58,7 @@
 using namespace AXR;
 
 std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property){
-    static std::string types[50];
+    static std::string types[60];
     static bool HSSObservableHasInitializedTypes = false;
     if (!HSSObservableHasInitializedTypes) {
         HSSObservableHasInitializedTypes = true;
@@ -136,6 +136,10 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         
         //various
         types[HSSObservablePropertyTreeChange] = "HSSObservablePropertyTreeChange";
+        
+        //HSSPolygon
+        types[HSSObservablePropertySides] = "HSSObservablePropertySides";
+        types[HSSObservablePropertyAngle] = "HSSObservablePropertyAngle";
     }
     
     return types[property];
@@ -208,6 +212,9 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         
         //HSSRoundedRect
         properties["corners"] = HSSObservablePropertyCorners;
+        //HSSPolygon
+        properties["sides"] = HSSObservablePropertySides;
+        properties["angle"] = HSSObservablePropertyAngle;
         
         //HSSEvent
         properties["action"] = HSSObservablePropertyAction;

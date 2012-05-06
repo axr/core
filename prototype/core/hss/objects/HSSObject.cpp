@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/04/22
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 21
+ *      Core version: 0.47
+ *      Revision: 22
  *
  ********************************************************************/
 
@@ -79,6 +79,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
         types["rectangle"] = HSSObjectTypeShape;
         types["roundedRect"] = HSSObjectTypeShape;
         types["circle"] = HSSObjectTypeShape;
+        types["polygon"] = HSSObjectTypeShape;
         types["load"] = HSSObjectTypeEvent;
         types["click"] = HSSObjectTypeEvent;
         types["doubleClick"] = HSSObjectTypeEvent;
@@ -162,8 +163,8 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
                 return HSSRoundedRect::p(new HSSRoundedRect());
             } else if (type == "circle"){
                 return HSSCircle::p(new HSSCircle());
-//            } else if (type == "polygon"){
-//                return HSSRoundedRect::p(new HSSRoundedRect());
+            } else if (type == "polygon"){
+                return HSSPolygon::p(new HSSPolygon());
             }
         }
             
