@@ -59,7 +59,17 @@ int main (int argc, char **argv)
 	wrapper = new LinuxAxrWrapper();
 	AXRCore::p core = wrapper->getCore();
 
-	wrapper->loadFile();
+	if (argc > 1)
+	{
+		std::string filepath;
+		filepath = argv[1];
+
+		wrapper->loadFileByPath(filepath);
+	}
+	else
+	{
+		wrapper->loadFile();
+	}
 
 	SDL_Event event;
 	while (SDL_WaitEvent(&event))
