@@ -6,3 +6,8 @@
 
 # OS X noise
 .DS_Store
+
+# Linux binaries
+/prototype/linux/axr_64
+/prototype/linux/axr_32
+

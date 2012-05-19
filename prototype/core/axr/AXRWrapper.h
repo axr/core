@@ -86,6 +86,7 @@ namespace AXR
         AXRFile::p createDummyXML(std::string stylesheet);
         
         bool loadFile();
+        bool loadFileByPath(std::string filepath);
         bool loadXMLFile(std::string xmlfilepath);
         bool loadHSSFile(std::string hssfilepath);
         bool reload();
