@@ -85,11 +85,11 @@ AXRFile::p LinuxAxrWrapper::getFile(std::string url)
 
 		if (ret->fileHandle == NULL)
 		{
-			AXRError::p(new AXRError("WinAxrWrapper", "the file " + ret->fileName + " doesn't exist " + ret->basePath))->raise();
+			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->fileName + " doesn't exist " + ret->basePath))->raise();
 		}
 		else if (ferror(ret->fileHandle))
 		{
-			AXRError::p(new AXRError("WinAxrWrapper", "the file " + ret->fileName + " couldn't be read"))->raise();
+			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->fileName + " couldn't be read"))->raise();
 		}
 	}
 	else
@@ -150,6 +150,8 @@ bool LinuxAxrWrapper::openFileDialog(std::string &filePath)
 		ss << cwd << "/" << file;
 		filePath = ss.str();
 	}
+
+	std::cout << std::endl;
 
 	return true;
 }
