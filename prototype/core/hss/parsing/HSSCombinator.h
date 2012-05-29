@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 5
+ *      Core version: 0.47
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -58,26 +58,62 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSCombinatorType
+     *  The type of the combinator, specific for each subclass.
+     */
     enum HSSCombinatorType
     {
-        HSSCombinatorTypeSiblings,
-        HSSCombinatorTypePreviousSiblings,
-        HSSCombinatorTypeNextSiblings,
-        HSSCombinatorTypeChildren,
-        HSSCombinatorTypeDescendants,
-        HSSCombinatorTypeAllDescendants,
-        HSSCombinatorTypeTextSelection
+        HSSCombinatorTypeSiblings, /**< Select elements on the same level (=) */
+        HSSCombinatorTypePreviousSiblings, /**< Select elements on the same level that come before the previously selected elements (-) */
+        HSSCombinatorTypeNextSiblings, /**< Select elements on the same level that come after the previously selected elements (+) */
+        HSSCombinatorTypeChildren, /**< Select children of the previously selected elements (whitespace) */
+        HSSCombinatorTypeDescendants, /**< Select descendants of the previously selected elements (..) */
+        HSSCombinatorTypeAllDescendants, /**< Deprecated */
+        HSSCombinatorTypeTextSelection /**< Switches the selection to text space */
     };
+    /** @} */
     
+    /**
+     *  @brief Combinators are used inside of selector chains, to define the relations between the elments that 
+     *  are selected. This is an abstract superclass and shouldn't be used directly.
+     */
     class HSSCombinator : public HSSParserNode {
     public:
         typedef boost::shared_ptr<HSSCombinator> p;
         
+        /**
+         *  Creates a new instance of a combinator node, of the type you give. All types of combinators
+         *  are handled by this class.
+         */
         HSSCombinator(HSSCombinatorType type);
+        
+        /**
+         *  Clones an instance of HSSCombinator and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSCombinator
+         */
         p clone() const;
         
+        /**
+         *  When logging, you often need a string representation of the combinator type.
+         *  @param type     The combinator type to represent as a string.
+         *  @return A string representation of the given type.
+         */
         static std::string combinatorStringRepresentation(HSSCombinatorType type);
+        
+        /**
+         *  Allows you to check if this combinator is of the given type.
+         *  @param  otherType   The combinator type to which to check against.
+         *  @return Wether it is of the given type or not.
+         */
         bool isA(HSSCombinatorType otherType);
+        
+        /**
+         *  @return The action type of this instance.
+         */
         const HSSCombinatorType & getCombinatorType() const;
         
         virtual std::string toString();

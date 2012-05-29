@@ -52,6 +52,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+/**
+ *  @brief (OSX only) This is a NSView subclass, for using inside a window in
+ *  Apple's cocoa framework.
+ */
 @interface AXRView : NSView {
 @private
     //this is actually always AXR::AXRWrapper *, but we hide it
@@ -62,22 +66,52 @@
 }
 
 @property (assign) BOOL needsFile;
-
-//hack to make it work with IB from a dependent target
+/**
+ *  Hack to make it work with IB from a dependent target.
+ */
 +(void)_keepAtLinkTime;
 
-//osx specific methods
+/**
+ *  @return YES. This is for optimizing the drawing.
+ */
 - (BOOL)isOpaque;
+/**
+ *  Method that is called to draw on OSX. From within this, we can get access to the current
+ *  graphics port, which is turned into a cairo surface.
+ */
 - (void)drawRect:(NSRect)dirtyRect;
+/**
+ *  @return YES. This allows the view to recieve events from the system.
+ */
 - (BOOL)acceptsFirstResponder;
 
-//connections
+/**
+ *  Setter for the pointer to the wrapper.
+ *  @param  theWrapper  A regular pointer to the wrapper object (but passed as a void *,
+ *  to avoid including the c++ header).
+ */
 - (void)setAxrWrapper:(void *)theWrapper;
+/**
+ *  Getter for the pointer to the wrapper.
+ *  @return A void * pointer to the wrapper object. Cast this to (AXR::OSXAxrWrapper *).
+ */
 - (void *)axrWrapper;
-
-//loading files
+/**
+ *  Call this method to load a file. A file dialog will appear asking to select a file, and
+ *  this is specific to each OS.
+ *  @return A boolean telling wether the file has been loaded or not
+ */
 - (bool)loadFile;
+/**
+ *  Loads the XML file from the path you give.
+ *  @param  xmlPath A NSString containing the path to the XML file.
+ *  @return A boolean telling wether the file has been loaded or not
+ */
 - (bool)loadFile:(NSString *)xmlPath;
+/**
+ *  Reloads the currently loaded file.
+ *  @return A boolean telling wether the file has been reloaded or not
+ */
 - (bool)reload;
 
 @end

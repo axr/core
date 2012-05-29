@@ -43,9 +43,9 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.46
+ *      Core version: 0.47
  *      Revision: 21
  *
  ********************************************************************/
@@ -111,11 +111,11 @@ namespace AXR {
          */
         typedef boost::shared_ptr<HSSObject> p;
         /**
-         *  Convenience iterator for vectors of shared pointers to HSSObjects
+         *  Convenience iterator for vectors of shared pointers to this kind of object.
          */
         typedef std::vector<p>::iterator it;
         /**
-         *  Convenience iterator for vectors of shared pointers to HSSObjects - const version
+         *  Convenience iterator for vectors of shared pointers to this kind of object - const version
          */
         typedef std::vector<p>::const_iterator const_it;
         /**
@@ -204,7 +204,7 @@ namespace AXR {
         void dropName();
         /**
          *  Each subclass sets its own default object type. This is the object type used when
-         *  nesting object defninitions and use just a @.
+         *  nesting object defninitions and use just a @ in HSS.
          *  @return The default HSS object type for this object.
          */
         virtual std::string defaultObjectType();

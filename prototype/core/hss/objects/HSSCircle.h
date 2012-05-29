@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/22
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -56,6 +56,9 @@
 #include "HSSShape.h"
 
 namespace AXR {
+    /**
+     *  @brief Shape object, representing the HSS object @circle.
+     */
     class HSSCircle : public HSSShape
     {
     public:
@@ -82,6 +85,15 @@ namespace AXR {
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
         
+        /**
+         *  Call this method when you need to draw shape into the cairo context. The coordinates are used
+         *  to define the bounding box into which the shape will be drawn.
+         *  @param cairo    A regular pointer to a cairo handle representing the drawing context.
+         *  @param x        The horizontal position of the shape.
+         *  @param y        The vertical position of the shape.
+         *  @param width    The width of the shape.
+         *  @param height   The height of the shape.
+         */
         virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
         
     private:

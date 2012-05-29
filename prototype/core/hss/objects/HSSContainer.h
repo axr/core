@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/01
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 26
+ *      Core version: 0.47
+ *      Revision: 27
  *
  ********************************************************************/
 
@@ -69,6 +69,14 @@ namespace AXR {
         HSSDirectionBottomToTop
     };
     
+    /**
+     *  @brief The object type representing an element in the XML content.
+     *
+     *  Each element in the XML code is represented as a HSSContainer, which is
+     *  a type of display object that can contain other display object. It is capable of
+     *  laying them out and to propagate events to them. It also implements the needed
+     *  rendering routines for this type of object.
+     */
     class HSSContainer : public HSSDisplayObject
     {
     public:
@@ -76,6 +84,12 @@ namespace AXR {
         
         friend class HSSDisplayObject;
         
+        /**
+         *  @brief Display groups are used by HSSContainer to lay out elements according
+         *  to the layout algorithm. They represent a set of elements that are flowing
+         *  together in a direction. They also contain lines, each of whose is also a
+         *  display group. When there are lines, the objects vector should not be used.
+         */
         class displayGroup
         {
         public:
@@ -90,22 +104,38 @@ namespace AXR {
             std::vector<HSSDisplayObject::p>objects;
         };
         
+        /**
+         *  Utility function for casting a shared pointer to a container to a display object.
+         *  @param theContainer A shared pointer to the container.
+         *  @return A shared pointer to the container as display object type.
+         */
         static HSSDisplayObject::p asDisplayObject(HSSContainer::p theContainer);
-        static HSSContainer::p asContainer(HSSDisplayObject::p theDisplayObject);
-        
         
         /**
-         *  Constructor for HSSContainer objects
+         *  Utility function for casting a shared pointer to a display object to a container.
+         *  @param theDisplayObject A shared pointer to the container as display object type.
+         *  @return A shared pointer to the container
+         *  @warning Be sure to only call this on shared pointers that you know for sure
+         *  to actually be containers.
+         */
+        static HSSContainer::p asContainer(HSSDisplayObject::p theDisplayObject);
+        
+        /**
+         *  Creates a newly allocated and initialized instance of a container.
          */
         HSSContainer();
+        
         /**
          *  Initializes all ivars to default values.
          */
         void initialize();
+        
         /**
-         *  Copy constructor for HSSContainer objects
+         *  Copy constructor for HSSContainer objects. It will initialize the new object. See
+         *  HSSDisplayObject for the copy constructor of the base class.
          */
         HSSContainer(const HSSContainer & orig);
+        
         /**
          *  Clones an instance of HSSContainer and gives a shared pointer of the
          *  newly instanciated object.
@@ -113,72 +143,270 @@ namespace AXR {
          */
         p clone() const;
         
+        /**
+         *  Destructs the container, clearing the children and allChildren.
+         */
         virtual ~HSSContainer();
+        
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
         HSSDisplayObject::p asDisplayObject();
         
+        /**
+         *  Add a child to the content tree.
+         *  @param child    A shared pointer to the child display object.
+         */
         void add(HSSDisplayObject::p child);
+        
+        /**
+         *  Removes a child by index.
+         *  @param index    An unsigned int containing the index of the child to be removed.
+         */
         void remove(unsigned index);
+        
+        /**
+         *  Recalculate the index of each child, to be called after the list of children has
+         *  been altered.
+         */
         void resetChildrenIndexes();
         
+        /**
+         *  If the last child is a text block, it sets the given text to the text content
+         *  of the text block, or creates a new one if needed. It will trim the whitespace
+         *  at the beginning and end of the text.
+         *  @param text     A string containing the new content text.
+         */
         virtual void setContentText(std::string text);
+        
+        /**
+         *  If the last child is a text block, it appends the given text to the text content
+         *  of the text block, or creates a new one if needed. It will trim the whitespace
+         *  at the beginning and end of the text.
+         *  @param text     A string containing the new content text.
+         */
         virtual void appendContentText(std::string text);
+        
+        /**
+         *  @return The content text of the element (potentially made up by various text blocks).
+         *  @warning Currently unimplemented.
+         */
         virtual std::string getContentText();
         
         //void readDefinitionObjects();
+        /**
+         *  Propagates the readDefinitionObjects() call to all the children.
+         */
         void recursiveReadDefinitionObjects();
+        
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         virtual void setProperty(HSSObservableProperty name, void * value);
+        
+        /**
+         *  Propagates the regenerateSurfaces() call to all the children.
+         */
         void recursiveRegenerateSurfaces();
+        
+        /**
+         *  Propagates the draw() call to all the children.
+         *  @param cairo    A regular pointer to the cairo handle used for drawing.
+         */
         void recursiveDraw(cairo_t * cairo);
+        
+        /**
+         *  Sets the shape of the container and then calls the base class method for actually
+         *  drawing.
+         */
         virtual void drawBackground();
+        
+        /**
+         *  Calculates the position for each border and then draws them.
+         */
         virtual void drawBorders();
         
+        /**
+         *  Lays out the children according to the layout algorithm, first in the primary direction
+         *  and then in the secondary one.
+         */
         void layout();
+        
+        /**
+         *  Propagates the layout() call to all the children.
+         */
         void recursiveLayout();
+        
+        /**
+         *  Sets the global horizontal position, which will be used to determine where in the
+         *  window the container will be placed. It will also adjust the position of the children.
+         *  @param newValue     A long double containing the new horizontal position.
+         */
         virtual void setGlobalX(long double newValue);
+        
+        /**
+         *  Sets the global vertical position, which will be used to determine where in the
+         *  window the container will be placed. It will also adjust the position of the children.
+         *  @param newValue     A long double containing the new vertical position.
+         */
         virtual void setGlobalY(long double newValue);
         
+        /**
+         *  Replaces the whole list of children with a new one.
+         *  @param newChildren  A vector of shared pointers to display objects.
+         */
         void setChildren(std::vector<HSSDisplayObject::p> newChildren);
+        
+        /**
+         *  @return The list of children, excluding text blocks.
+         */
         const std::vector<HSSDisplayObject::p>& getChildren() const;
+        
+        /**
+         *  @param includeTextBlocks    Wether to include the text blocks or just actual children.
+         *  @return The list of children.
+         */
         const std::vector<HSSDisplayObject::p>& getChildren(bool includeTextBlocks) const;
         
-        //alignX
+        /**
+         *  Getter for the definition object of contentAlignX.
+         *  @return A shared pointer to the parser node containing the definition object of contentAlignX.
+         */
         HSSParserNode::p getDContentAlignX();
+        
+        /**
+         *  Setter for the definition object of contentAlignX. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of contentAlignX.
+         */
         void setDContentAlignX(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect contentAlignX.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void contentAlignXChanged(HSSObservableProperty source, void*data);
-        //alignY
+        
+        /**
+         *  Getter for the definition object of contentAlignY.
+         *  @return A shared pointer to the parser node containing the definition object of contentAlignY.
+         */
         HSSParserNode::p getDContentAlignY();
+        
+        /**
+         *  Setter for the definition object of contentAlignY. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of contentAlignY.
+         */
         void setDContentAlignY(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect contentAlignX.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void contentAlignYChanged(HSSObservableProperty source, void*data);
         
-        //directionPrimary
+        /**
+         *  Getter for the definition object of directionPrimary.
+         *  @return A shared pointer to the parser node containing the definition object of directionPrimary.
+         */
         HSSParserNode::p getDDirectionPrimary();
+        
+        /**
+         *  Setter for the definition object of directionPrimary. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of directionPrimary.
+         */
         void setDDirectionPrimary(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect directionPrimary.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void directionPrimaryChanged(HSSObservableProperty source, void*data);
-        //directionSecondary
+        
+        /**
+         *  Getter for the definition object of directionSecondary.
+         *  @return A shared pointer to the parser node containing the definition object of directionSecondary.
+         */
         HSSParserNode::p getDDirectionSecondary();
+        
+        /**
+         *  Setter for the definition object of directionSecondary. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of
+         *                  directionSecondary.
+         */
         void setDDirectionSecondary(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect directionSecondary.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void directionSecondaryChanged(HSSObservableProperty source, void*data);
         
-        //shape
+        /**
+         *  Getter for the definition object of shape.
+         *  @return A shared pointer to the parser node containing the definition object of shape.
+         */
         HSSParserNode::p getDShape();
+        
+        /**
+         *  Setter for the definition object of shape. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of shape
+         */
         void setDShape(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect shape.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void shapeChanged(HSSObservableProperty source, void*data);
         
-        //textAlign
+        /**
+         *  Getter for the actual value of tetxAlign
+         *  @return The HSSTextAlignType that is currently being used
+         */
         HSSTextAlignType getTextAlign();
+        
+        /**
+         *  Getter for the definition object of textAlign.
+         *  @return A shared pointer to the parser node containing the definition object of textAlign.
+         */
         HSSParserNode::p getDTextAlign();
+        
+        /**
+         *  Setter for the definition object of textAlign. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of textAlign.
+         */
         void setDTextAlign(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect textAlign.
+         *  @param source   The property which we are observing.
+         *  @param data     A regular pointer to the data that is sent along the notification.
+         */
         void textAlignChanged(HSSObservableProperty source, void*data);
         
+        /**
+         *  Sets default values for this object type. Should be called before applying other property
+         *  definitions.
+         */
         void setDefaults();
         
+        /**
+         *  Propagates the call to handleEvent() to all children and to the base class implementation.
+         *  @param type     The type of the event that is being sent.
+         *  @param data     A regular pointer to the data that is sent along with the event (coordinates,
+         *                  for example).
+         *  @return Wether it has been handled or not.
+         */
         virtual bool handleEvent(HSSEventType type, void* data);
         
+        /**
+         *  Stores the pointer to the controller and propagates it to all children.
+         *  @param controller   A regular pointer to the controller that owns this object.
+         */
         virtual void setController(AXRController * controller);
         
     protected:
