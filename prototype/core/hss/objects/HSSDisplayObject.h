@@ -290,6 +290,12 @@ namespace AXR {
         void addDBackground(HSSParserNode::p value);
         void backgroundChanged(HSSObservableProperty source, void*data);
         
+        //content
+        HSSParserNode::p getDContent();
+        void setDContent(HSSParserNode::p value);
+        void addDContent(HSSParserNode::p value);
+        void contentChanged(HSSObservableProperty source, void*data);
+        
         //font
         const HSSParserNode::p getDFont() const;
         void setDFont(HSSParserNode::p value);
@@ -406,6 +412,11 @@ namespace AXR {
         HSSObservable * observedBackground;
         HSSObservableProperty observedBackgroundProperty;
         std::vector<HSSObject::p> background;
+        //content
+        HSSParserNode::p dContent;
+        HSSObservable * observedContent;
+        HSSObservableProperty observedContentProperty;
+        std::vector<HSSObject::p> content;
         //font
         HSSParserNode::p dFont;
         HSSObservable * observedFont;

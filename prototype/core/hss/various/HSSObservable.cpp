@@ -75,6 +75,7 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyOverflow] = "HSSObservablePropertyOverflow";
         types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
         types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
+        types[HSSObservablePropertyContent] = "HSSObservablePropertyContent";
         types[HSSObservablePropertyOn] = "HSSObservablePropertyOn";
         types[HSSObservablePropertyMargin] = "HSSObservablePropertyMargin";
         types[HSSObservablePropertyPadding] = "HSSObservablePropertyPadding";
@@ -163,6 +164,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["overflow"] = HSSObservablePropertyOverflow;
         properties["alignX"] = HSSObservablePropertyAlignX;
         properties["alignY"] = HSSObservablePropertyAlignY;
+        properties["content"] = HSSObservablePropertyContent;
         properties["on"] = HSSObservablePropertyOn;
         
         //HSSContainer
