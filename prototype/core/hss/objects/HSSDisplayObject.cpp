@@ -958,18 +958,17 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         this->heightByContent = true;
         
     } else {
+        if(this->observedHeight != NULL)
+        {
+            this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
+            this->observedHeight = NULL;
+        }
         this->dHeight = value;
         this->heightByContent = false;
         
         HSSObservableProperty observedProperty;
 
         observedProperty = HSSObservablePropertyHeight;
-        
-        if(this->observedHeight != NULL)
-        {
-            this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
-            this->observedHeight = NULL;
-        }
         HSSContainer::p parentContainer = this->getParent();
         if(parentContainer){
             this->height = this->_setLDProperty(
@@ -1139,12 +1138,14 @@ void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
             throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for anchorY of "+this->getElementName()));
     }
     
-    this->dAnchorY = value;
-    HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
     if(this->observedAnchorY != NULL)
     {
         this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
+        this->observedAnchorY = NULL;
     }
+    this->dAnchorY = value;
+    HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
+    
     HSSContainer::p parentContainer = this->getParent();
     const std::vector<HSSDisplayObject::p> * scope;
     if(parentContainer){
