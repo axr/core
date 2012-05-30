@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/29
+ *      Last changed: 2012/04/27
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 26
+ *      Core version: 0.47
+ *      Revision: 27
  *
  ********************************************************************/
 
@@ -64,6 +64,7 @@
 #include "HSSExpressions.h"
 #include "../objects/HSSRgb.h"
 #include "HSSThisSelector.h"
+#include "HSSRootSelector.h"
 #include "HSSFunctions.h"
 #include "HSSFilter.h"
 #include "HSSNegation.h"
@@ -627,8 +628,14 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                         //FIXME
                         std_log("@parent not implemented yet");
                     } else if (objtype == "root"){
-                        //FIXME
-                        std_log("@root not implemented yet");
+                        ret->add(HSSRootSelector::p(new HSSRootSelector()));
+                        this->readNextToken(true);
+                        //adds only if needed
+                        HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+                        if(childrenCombinator){
+                            ret->add(childrenCombinator);
+                        }
+                        break;
                     } else {
                         throw AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->currentFile->fileName, this->line, this->column));
                     }
@@ -787,6 +794,25 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
                         done = true;
                         *isShorthand = true;
                         break;
+                        
+                    case HSSObjectSign:
+                    {
+                        this->checkForUnexpectedEndOfSource();
+                        peekToken = this->tokenizer->peekNextToken();
+                        std::string objtype = VALUE_TOKEN(peekToken)->getString();
+                        if (    (objtype == "this")
+                            ||  (objtype == "super")
+                            ||  (objtype == "parent")
+                            ||  (objtype == "root") ){
+                            //it is a selector, continue because it may be a selector inside a function
+                        } else {
+                            //this is a regular object definition, so we can conclude it is not a rule
+                            ret = true;
+                            *isShorthand = true;
+                            done = true;
+                        }
+                        break;
+                    }
                         
                     case HSSBlockOpen:
                         //it is a 
