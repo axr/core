@@ -2509,7 +2509,22 @@ void HSSDisplayObject::flagsActivate(std::string name)
 
 void HSSDisplayObject::flagsDeactivate(std::string name)
 {
-    if(this->hasFlag(name)){
+    if(name == "*"){
+        boost::unordered_map<std::string, std::vector<HSSFlag::p> >::const_iterator it;
+        std_log3("deactivating all flags on element "+this->getElementName());
+        for (it=this->_flags.begin(); it!=this->_flags.end(); it++) {
+            HSSRuleState newValue = HSSRuleStatePurge;
+            std::vector<HSSFlag::p> flags = it->second;
+            this->_flagsStatus[it->first] = newValue;
+            std::vector<HSSFlag::p>::iterator it;
+            for(it=flags.begin(); it!=flags.end(); it++){
+                (*it)->flagChanged(newValue);    
+            }
+
+        }
+        
+        
+    } else if(this->hasFlag(name)){
         std_log3("deactivate flag with name "+name+" on element "+this->getElementName());
         HSSRuleState newValue = HSSRuleStatePurge;
         std::vector<HSSFlag::p> flags = this->_flags[name];

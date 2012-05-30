@@ -1911,10 +1911,12 @@ HSSParserNode::p HSSParser::readFunction()
             this->skip(HSSWhitespace, true);
             //read the arguments
             //first, we expect the name
-            if (! this->currentToken->isA(HSSIdentifier)){
-                std_log1("HSSParser: unexpected token while reading ref function "+name);
-            } else {
+            if (this->currentToken->isA(HSSIdentifier)){
                 flagFunction->setName(VALUE_TOKEN(this->currentToken)->getString());
+            } else if (this->currentToken->isA(HSSSymbol) && VALUE_TOKEN(this->currentToken)->getString() == "*"){
+                flagFunction->setName("*");
+            } else {
+                std_log("HSSParser: unexpected token while reading flagging function "+name);
             }
             
             this->checkForUnexpectedEndOfSource();
