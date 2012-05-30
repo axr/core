@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/14
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 7
+ *      Core version: 0.47
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -68,7 +68,7 @@
 namespace AXR
 {
     /**
-     * A resolution independent point.
+     * @brief   A resolution independent point.
      */
     struct HSSPoint {
         long double x; /**< the location of the point in horizontal dimension. */
@@ -76,7 +76,7 @@ namespace AXR
     };
     
     /**
-     * Represents a size measure.
+     * @brief   Represents a size measure.
      */
     struct HSSSize {
         long double width; /**< measure in the horizontal dimension. */
@@ -85,7 +85,7 @@ namespace AXR
     
     
     /**
-     * A basic rectangle.
+     * @brief   A basic rectangle.
      */
     struct HSSRect {
         HSSPoint origin; /**< Where the rectangle starts. This point is on the top left corner of the rectangle. */

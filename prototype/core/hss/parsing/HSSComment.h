@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 4
+ *      Core version: 0.47
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -57,15 +57,39 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    /**
+     *  @brief Comments are statements that have no effect on the rendering of the page
+     *  but are meant to be read along with the source code.
+     */
     class HSSComment : public HSSStatement {
         std::string value;
         
     public:
         typedef boost::shared_ptr<HSSComment> p;
         
+        /**
+         *  Creates a new instance of a comment, containing the given text.
+         *  @param value    A string containing the text of the comment.
+         */
         HSSComment(std::string value);
+        
+        /**
+         *  Clones an instance of HSSComment and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSComment.
+         */
         p clone() const;
+        
+        /**
+         *  Getter for the value.
+         *  @return A string containing the text of the comment.
+         */
         std::string getValue();
+        
+        /**
+         *  Setter for the value.
+         *  @param newValue     A string containing the new text for the comment.
+         */
         void setValue(std::string newValue);
         virtual std::string toString();
     private:

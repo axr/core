@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -60,6 +60,9 @@
 #include <cairo/cairo.h>
 
 namespace AXR {
+    /**
+     *  @brief This class represents HSS objects of type @colorStop.
+     */
     class HSSColorStop : public HSSObject
     {
     public:
@@ -68,7 +71,7 @@ namespace AXR {
         typedef std::vector<HSSColorStop::p>::iterator it;
         
         /**
-         *  Constructor for HSSColorStop objects
+         *  Creates a new instace of a color stop object.
          */
         HSSColorStop();
         /**
@@ -90,22 +93,79 @@ namespace AXR {
         
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
-        //color
+        /**
+         *  Getter for the actual value of color
+         *  @return A shared pointer to a HSSRgb object that is currently used.
+         */
         HSSRgb::p getColor();
+        
+        /**
+         *  Getter for the definition object of color.
+         *  @return A shared pointer to the parser node containing the definition object of color.
+         */
         HSSParserNode::p getDColor();
+        
+        /**
+         *  Setter for the definition object of color. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of color.
+         */
         void setDColor(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect color.
+         *  @param source   The property which we are observing.
+         *  @param data     A regular pointer to the data that is sent along the notification.
+         */
         void colorChanged(HSSObservableProperty source, void*data);
         
-        //position
+        /**
+         *  Getter for the actual value of position
+         *  @return A long double containing the actual used position.
+         */
         long double getPosition();
+        
+        /**
+         *  Getter for the definition object of position.
+         *  @return A shared pointer to the parser node containing the definition object of position.
+         */
         HSSParserNode::p getDPosition();
+        
+        /**
+         *  Setter for the definition object of position. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of position.
+         */
         void setDPosition(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect position.
+         *  @param source   The property which we are observing.
+         *  @param data     A regular pointer to the data that is sent along the notification.
+         */
         void positionChanged(HSSObservableProperty source, void*data);
         
-        //balance
+        /**
+         *  Getter for the actual value of balance
+         *  @return A long double containing the actual used balance.
+         */
         long double getBalance();
+        
+        /**
+         *  Getter for the definition object of balance.
+         *  @return A shared pointer to the parser node containing the definition object of balance.
+         */
         HSSParserNode::p getDBalance();
+        
+        /**
+         *  Setter for the definition object of balance. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of balance.
+         */
         void setDBalance(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect balance.
+         *  @param source   The property which we are observing.
+         *  @param data     A regular pointer to the data that is sent along the notification.
+         */
         void balanceChanged(HSSObservableProperty source, void*data);
         
     protected:

@@ -1,0 +1,72 @@
+#AAE baseColor;
+@rgb {
+    isA: baseColor;
+    
+    &@rgb demoButtonBase { alpha: 20% }
+    &@rgb demoButtonHL { alpha: 10% }
+    &@rgb demoButtonSH { alpha: 30% }
+}
+
+#FFF5 demoButtonHL2;
+
+@linearGradient demoButtonBg
+{
+    startColor: demoButtonBase;
+    colorStops: demoButtonHL, demoButtonSH;
+    endColor: demoButtonBase;
+    endY: 100%;
+}
+
+@linearGradient demoButtonBg2
+{
+    startColor: demoButtonHL;
+    colorStops: @{ demoButtonHL2; 49% }, @{ demoButtonBase; 52% };
+    endColor: demoButtonHL;
+    startX: 50% - 1;
+    endY: 100%;
+    endX: 50% + 1;
+}
+
+@lineBorder demoButtonOuterBorder {
+    size: 1;
+    color: demoButtonBase;
+    
+    &@ demoButtonInnerBorder { color: demoButtonHL2 }
+}
+
+@ demoButton
+{
+    background: demoButtonBg;
+    shape: @roundedRect { corners: 10 };
+    border: demoButtonInnerBorder, demoButtonOuterBorder;
+    
+    @::hover
+    {
+        background: demoButtonBg2;
+    }
+}
+
+*{
+    #new menu
+    {
+        height: 150;
+        background: @{baseColor ; #F; 100% };
+    }
+    
+    #new wrapper
+    {
+        contentAlignY: middle;
+        //flexLines: yes;
+        //alignMode: distribute;
+        width: 70%;
+        alignY: middle;
+        flow: no;
+        
+        #new(5) demo
+        {
+            isA: demoButton;
+            width: 100;
+            height: 50;
+        }
+    }
+}

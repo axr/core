@@ -112,7 +112,7 @@ void HSSDisplayObject::initialize()
     this->observedWidth = this->observedHeight
     = this->observedAnchorX = this->observedAnchorY
     = this->observedAlignX = this->observedAlignY
-    = this->observedBackground = this->observedFont
+    = this->observedBackground = this->observedContent = this->observedFont
     = NULL;
     
     this->borderBleeding = 0.;
@@ -126,6 +126,7 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyHeight, (void *) &this->height);
     this->registerProperty(HSSObservablePropertyWidth, (void *) &this->width);
     this->registerProperty(HSSObservablePropertyBackground, (void *) &this->background);
+    this->registerProperty(HSSObservablePropertyContent, (void *) &this->content);
     this->registerProperty(HSSObservablePropertyFont, (void *) &this->font);
     this->registerProperty(HSSObservablePropertyOn, (void *) &this->on);
     this->registerProperty(HSSObservablePropertyBorder, (void *) &this->border);
@@ -186,6 +187,8 @@ std::string HSSDisplayObject::defaultObjectType(std::string property)
         return "lineBorder";
     } else if (property == "background") {
         return "linearGradient";  
+    } else if (property == "content") {
+        return "image";
     } else if (property == "transform"){
         return "rotate";
     } else if (property == "effects"){
@@ -522,6 +525,9 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
         case HSSObservablePropertyBackground:
             this->setDBackground(value);
             break;
+        case HSSObservablePropertyContent:
+            this->setDContent(value);
+            break;
         case HSSObservablePropertyFont:
             this->setDFont(value);
             break;
@@ -561,6 +567,7 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, void * value)
             this->alignY = *(long double*) value;
             break;
         case HSSObservablePropertyBackground:
+        case HSSObservablePropertyContent:
         case HSSObservablePropertyFont:
         case HSSObservablePropertyBorder:
             return; //FIXME
@@ -951,18 +958,17 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         this->heightByContent = true;
         
     } else {
+        if(this->observedHeight != NULL)
+        {
+            this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
+            this->observedHeight = NULL;
+        }
         this->dHeight = value;
         this->heightByContent = false;
         
         HSSObservableProperty observedProperty;
 
         observedProperty = HSSObservablePropertyHeight;
-        
-        if(this->observedHeight != NULL)
-        {
-            this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
-            this->observedHeight = NULL;
-        }
         HSSContainer::p parentContainer = this->getParent();
         if(parentContainer){
             this->height = this->_setLDProperty(
@@ -1132,12 +1138,14 @@ void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
             throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for anchorY of "+this->getElementName()));
     }
     
-    this->dAnchorY = value;
-    HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
     if(this->observedAnchorY != NULL)
     {
         this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
+        this->observedAnchorY = NULL;
     }
+    this->dAnchorY = value;
+    HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
+    
     HSSContainer::p parentContainer = this->getParent();
     const std::vector<HSSDisplayObject::p> * scope;
     if(parentContainer){
@@ -1745,6 +1753,131 @@ void HSSDisplayObject::backgroundChanged(HSSObservableProperty source, void*data
     
 }
 
+//content
+HSSParserNode::p HSSDisplayObject::getDContent() { return this->dContent; }
+void HSSDisplayObject::setDContent(HSSParserNode::p value)
+{
+    this->content.clear();
+    this->dContent = value;
+    this->addDContent(value);
+}
+
+
+void HSSDisplayObject::addDContent(HSSParserNode::p value)
+{
+    bool valid = true;
+    
+    switch (value->getType()) {
+        case HSSParserNodeTypeMultipleValueDefinition:
+        {
+            HSSParserNode::it iterator;
+            HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(value);
+            std::vector<HSSParserNode::p> values = multiDef->getValues();
+            for (iterator = values.begin(); iterator != values.end(); iterator++) {
+                this->addDContent(*iterator);
+            }
+            break;
+        }
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                this->addDContent(this->axrController->objectTreeGet(objname->getValue()));
+                
+            } catch (AXRError::p e) {
+                e->raise();
+            }
+            break;
+        }
+            
+        case HSSParserNodeTypeObjectDefinition:
+        {
+            this->dContent = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            if (objdef->getObject()->isA(HSSObjectTypeRgb) || objdef->getObject()->isA(HSSObjectTypeGradient)) {
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                objdef->setThisObj(this->shared_from_this());
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyContent, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::contentChanged));
+                this->content.push_back(theObj);
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    fnct->setScope(&(thisCont->getChildren()));
+                }
+                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
+                if(remoteValue){
+                    try {
+                        this->addDContent(remoteValue);
+                    } catch (AXRError::p e) {
+                        e->raise();
+                    }
+                }
+                
+                
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            if(boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue() == "none"){
+                //ignore
+            } else {
+                valid = false;
+            }
+            break;
+        }
+            
+        case HSSParserNodeTypeStringConstant:
+        {
+            this->setContentText(boost::static_pointer_cast<HSSStringConstant>(value)->getValue());
+            break;
+        }
+            
+        default:
+            valid = false;
+            break;
+    }
+    
+    if(!valid){
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for content of "+this->getElementName()));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyContent, &this->content);
+}
+
+
+void HSSDisplayObject::contentChanged(HSSObservableProperty source, void*data)
+{
+    std_log("unimplemented yet");
+}
+
 const HSSParserNode::p HSSDisplayObject::getDFont() const { return this->dFont; }
 void HSSDisplayObject::setDFont(HSSParserNode::p value)
 {
@@ -2161,6 +2294,9 @@ void HSSDisplayObject::setDefaults()
     //background
     HSSKeywordConstant::p newDBackground(new HSSKeywordConstant("none"));
     this->setDBackground(newDBackground);
+    //content
+    HSSKeywordConstant::p newDContent(new HSSKeywordConstant("none"));
+    this->setDContent(newDContent);
     //on
     HSSKeywordConstant::p newDOn(new HSSKeywordConstant("none"));
     this->setDOn(newDOn);
@@ -2345,7 +2481,7 @@ bool HSSDisplayObject::hasFlag(std::string name)
     }
     return false;
 }
-
+        
 HSSRuleState HSSDisplayObject::flagState(std::string name)
 {
     if(this->_flagsStatus.find(name) != this->_flagsStatus.end()){
@@ -2373,7 +2509,22 @@ void HSSDisplayObject::flagsActivate(std::string name)
 
 void HSSDisplayObject::flagsDeactivate(std::string name)
 {
-    if(this->hasFlag(name)){
+    if(name == "*"){
+        boost::unordered_map<std::string, std::vector<HSSFlag::p> >::const_iterator it;
+        std_log3("deactivating all flags on element "+this->getElementName());
+        for (it=this->_flags.begin(); it!=this->_flags.end(); it++) {
+            HSSRuleState newValue = HSSRuleStatePurge;
+            std::vector<HSSFlag::p> flags = it->second;
+            this->_flagsStatus[it->first] = newValue;
+            std::vector<HSSFlag::p>::iterator it;
+            for(it=flags.begin(); it!=flags.end(); it++){
+                (*it)->flagChanged(newValue);    
+            }
+
+        }
+        
+        
+    } else if(this->hasFlag(name)){
         std_log3("deactivate flag with name "+name+" on element "+this->getElementName());
         HSSRuleState newValue = HSSRuleStatePurge;
         std::vector<HSSFlag::p> flags = this->_flags[name];

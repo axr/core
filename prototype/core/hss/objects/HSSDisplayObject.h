@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/01
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 36
+ *      Core version: 0.47
+ *      Revision: 37
  *
  ********************************************************************/
 
@@ -73,6 +73,13 @@ namespace AXR {
     
     class HSSContainer;
     
+    /**
+     *  @brief Abstract superclass for any object that should be rendered on the screen.
+     *
+     *  This is an abstract class, and should not be used directly. Create a specific subclass
+     *  instead. It provides basic functionality for drawing and integration into the layout system,
+     *  as well as basic support for the information stored in an XML element.
+     */
     class HSSDisplayObject : public HSSObject
     {
     public:
@@ -80,47 +87,116 @@ namespace AXR {
         friend class HSSContainer;
         
         typedef boost::shared_ptr<HSSDisplayObject> p;
+        
+        /**
+         *  The "parent pointer", a weak variant of a shared pointer, to break reference cycles.
+         */
         typedef boost::weak_ptr<HSSContainer> pp;
         typedef std::vector<HSSDisplayObject::p> c;
         typedef std::vector<HSSDisplayObject::p>::iterator it;
         typedef std::vector<HSSDisplayObject::p>::const_iterator const_it;
         
         /**
-         *  Constructor for HSSDisplayObject objects
+         *  Constructor for HSSDisplayObject objects.
          */
         HSSDisplayObject();      
+        
         /**
          *  Initializes all ivars to default values.
          */
         void initialize();
+        
         /**
-         *  Copy constructor for HSSDisplayObject objects
+         *  Copy constructor for HSSDisplayObject objects.
          */
         HSSDisplayObject(const HSSDisplayObject & orig);
+        
         /**
          *  Clones an instance of HSSDisplayObject and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSDisplayObject
+         *  @return A shared pointer to the new HSSDisplayObject.
          */
         p clone() const;
         
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSDisplayObject();
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
+        
+        /**
+         *  Each subclass should return wether it can have children or not. Right now the only
+         *  one which does is HSSContainer.
+         *  @return Wether it can have children or not.
+         */
         virtual bool canHaveChildren();
+        
+        /**
+         *  Gives access to the parent element in the content tree.
+         *  @return A shared pointer to the parent element in the content tree.
+         */
         boost::shared_ptr<HSSContainer> getParent();
+        
+        /**
+         *  Sets the given container to be the parent of this display object.
+         *  @param parent   A shared pointer to the container that is the parent of this display object.
+         */
         void setParent(boost::shared_ptr<HSSContainer> parent);
+        
+        /**
+         *  Removes itself from the parent in the content tree.
+         */
         void removeFromParent();
+        
+        /**
+         *  Stores the given index.
+         */
         void setIndex(unsigned newIndex);
+        
+        /**
+         *  @return The stored index.
+         */
         unsigned getIndex();
+        
+        /**
+         *  Add an entry in the list of attributes.
+         *  @param name     The name of the attribute. Will be used as they key to the data.
+         *  @param value    The content of the attribute.
+         */
         void attributesAdd(std::string name, std::string value);
+        
+        /**
+         *  Removes an entry in the list of attributes.
+         *  @param name     The name of the attribute. Will be used as they key to find the data.
+         */
         void attributesRemove(std::string name);
+        
+        /**
+         *  Getter for the content text.
+         *  @return A string containing the content text.
+         */
         virtual std::string getContentText();
+        
+        /**
+         *  Setter for the content text.
+         *  @param text     A string containing the new value for content text.
+         */
         virtual void setContentText(std::string text);
+        
+        /**
+         *  Append a piece of text to the content text.
+         *  @param text     A string containing the value to be appended to the content text.
+         */
         virtual void appendContentText(std::string text);
         
+        /**
+         *  Add a rule to the list of rules associated with this display object.
+         *  @param newRule      A shared pointer to the rule.
+         *  @param defaultState The default state in which the rule will be in (activated or not, etc).
+         */
         void rulesAdd(HSSRule::p newRule, HSSRuleState defaultState);
         void rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSSRuleState defaultState);
         HSSRule::p rulesGet(unsigned index);
@@ -214,6 +290,12 @@ namespace AXR {
         void addDBackground(HSSParserNode::p value);
         void backgroundChanged(HSSObservableProperty source, void*data);
         
+        //content
+        HSSParserNode::p getDContent();
+        void setDContent(HSSParserNode::p value);
+        void addDContent(HSSParserNode::p value);
+        void contentChanged(HSSObservableProperty source, void*data);
+        
         //font
         const HSSParserNode::p getDFont() const;
         void setDFont(HSSParserNode::p value);
@@ -252,9 +334,11 @@ namespace AXR {
         bool isRoot();
         void setRoot(bool newValue);
         
+        //FIXME: make private and add accessors
+        std::map<std::string, std::string>attributes;
+        
     protected:
         pp parent;
-        std::map<std::string, std::string>attributes;
         std::string elementName;
         std::string contentText;
         std::vector<HSSRuleStatus::p> rules;
@@ -330,6 +414,11 @@ namespace AXR {
         HSSObservable * observedBackground;
         HSSObservableProperty observedBackgroundProperty;
         std::vector<HSSObject::p> background;
+        //content
+        HSSParserNode::p dContent;
+        HSSObservable * observedContent;
+        HSSObservableProperty observedContentProperty;
+        std::vector<HSSObject::p> content;
         //font
         HSSParserNode::p dFont;
         HSSObservable * observedFont;

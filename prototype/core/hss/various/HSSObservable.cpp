@@ -75,6 +75,8 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyOverflow] = "HSSObservablePropertyOverflow";
         types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
         types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
+        types[HSSObservablePropertyBackground] = "HSSObservablePropertyBackground";
+        types[HSSObservablePropertyContent] = "HSSObservablePropertyContent";
         types[HSSObservablePropertyOn] = "HSSObservablePropertyOn";
         types[HSSObservablePropertyMargin] = "HSSObservablePropertyMargin";
         types[HSSObservablePropertyPadding] = "HSSObservablePropertyPadding";
@@ -86,7 +88,6 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyContentAlignY] = "HSSObservablePropertyContentAlignY";
         types[HSSObservablePropertyDirectionPrimary] = "HSSObservablePropertyDirectionPrimary";
         types[HSSObservablePropertyDirectionSecondary] = "HSSObservablePropertyDirectionSecondary";
-        types[HSSObservablePropertyBackground] = "HSSObservablePropertyBackground";
         types[HSSObservablePropertyFont] = "HSSObservablePropertyFont";
         types[HSSObservablePropertyShape] = "HSSObservablePropertyShape";
         
@@ -163,6 +164,8 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["overflow"] = HSSObservablePropertyOverflow;
         properties["alignX"] = HSSObservablePropertyAlignX;
         properties["alignY"] = HSSObservablePropertyAlignY;
+        properties["background"] = HSSObservablePropertyBackground;
+        properties["content"] = HSSObservablePropertyContent;
         properties["on"] = HSSObservablePropertyOn;
         
         //HSSContainer
@@ -170,7 +173,6 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["contentAlignY"] = HSSObservablePropertyContentAlignY;
         properties["directionPrimary"] = HSSObservablePropertyDirectionPrimary;
         properties["directionSecondary"] = HSSObservablePropertyDirectionSecondary;
-        properties["background"] = HSSObservablePropertyBackground;
         properties["font"] = HSSObservablePropertyFont;
         properties["shape"] = HSSObservablePropertyShape;
         properties["on"] = HSSObservablePropertyOn;

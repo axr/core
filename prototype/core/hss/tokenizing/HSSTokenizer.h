@@ -84,7 +84,7 @@ namespace AXR {
         AXRFile::p getFile();
         
         //reads a the next character and stores it, also keeps track of the position in the buffer
-        //it will also set the appropriate state if the end of the buffer is reached, but expects
+        //it will also set the corresponding state if the end of the buffer is reached, but expects
         //more source
         HSS_TOKENIZING_STATUS readNextChar();
         

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 19
+ *      Core version: 0.47
+ *      Revision: 20
  *
  ********************************************************************/
 
@@ -67,66 +67,350 @@ namespace AXR {
     class AXRRender;
     class AXRCore;
     
+    
+    /**
+     *  @brief  This class holds trees of objects, sheets, rules and the parser tree. Also,
+     *  it has methods to select object in those trees.
+     */
     class AXRController
     {
     public:
+        /**
+         *  The shared pointer to the controller.
+         */
         typedef boost::shared_ptr<AXRController> p;
         
+        /**
+         *  Creates a new instance of a controller.
+         *
+         *  @param core A regular pointer to the core object to which this controller is associated to.
+         *
+         */
         AXRController(AXRCore * core);
+        
+        /**
+         *  Destructs the controller and clears all the trees.
+         */
         virtual ~AXRController();
+        
+        /**
+         *  @return A textual representation of itself, as a string.
+         */
         virtual std::string toString();
         
-        //use this to clean up and start from fresh
+        /**
+         *  Use this to clean up and start from fresh (e.g. when reloading a file).
+         */
         void reset();
         
-        //bool loadFile(std::string xmlfilepath, std::string xmlfilename);
-        //bool loadFileHSS(std::string hssfilepath, std::string hssfilename);
-        //bool reload();
-        //bool loadXMLFile(std::string filepath, std::string filename);
-        //bool loadHSSFile(std::string filepath, std::string filename);
-        
+        /**
+         *  @return A shared pointer to the root element.
+         */
         HSSContainer::p & getRoot();
+        
+        /**
+         *  Sets the element you pass in as the new root element.
+         *  If the current object context is empty, it sets it automatically to the new root.
+         *
+         *  @param newRoot A shared pointer to the new element
+         */
         void setRoot(HSSContainer::p newRoot);
         
+        /**
+         *  This method is called by the XML parser when it reads an opening tag.
+         *
+         *  @param elementName  A string containing the name of the element we just entered.
+         */
         void enterElement(std::string elementName);
+        
+        /**
+         *  This method is called by the XML parser when it reads an attribute of the current element.
+         *
+         *  @param  name    A string containing the name of the attribute.
+         *  @param  value   A string containing the value of the attribute.
+         */
         void addAttribute(std::string name, std::string value);
+        
+        /**
+         *  This method is called by the XML parser when it reads the content text of the
+         *  current element.
+         *
+         *  @param  text    A string containing the content text for the current element.
+         */
         void setContentText(std::string text);
+        
+        /**
+         *  When content text is read in chunks, this allows to append the text to the
+         *  current element.
+         *
+         *  @param text     A string containing content text for the current element.
+         */
         void appendContentText(std::string text);
+        
+        /**
+         *  This method is called by the XML parser when it reads a closing tag.
+         *
+         */
         void exitElement();
         
+        /**
+         *  Add a display object as a children of the current context, or as root if there is none.
+         *
+         *  @param newContainer A shared pointer to a display object.
+         *  //FIXME: change name to better reflect the type of the object
+         */
         void add(HSSDisplayObject::p newContainer);
         
+        /**
+         *  Append an object definition to the object tree.
+         *
+         *  @param newObject A shared pointer to an object definition.
+         */
         void objectTreeAdd(HSSObjectDefinition::p & newObject);
+        
+        /**
+         *  Remove the object at given index from the object tree.
+         *
+         *  @param index    An unsigned int containing the index of the object to be removed.
+         */
         void objectTreeRemove(unsigned index);
+        
+        /**
+         *  Returns an object from the object tree by index.
+         *
+         *  @param index    An unsigned int containing the index of the object to be returned.
+         *  @return         The object definitionat the index. May be an empty pointer if not found.
+         */
         HSSObjectDefinition::p & objectTreeGet(unsigned index);
+        
+        /**
+         *  Returns an object from the object tree by name.
+         *
+         *  @param name     A string containing the name of the object to be returned.
+         *  @return         The object definitionat with that name. May be an empty pointer if not found.
+         */
         HSSObjectDefinition::p & objectTreeGet(std::string name);
         
+        /**
+         *  Adds an entry in the list of sheets to be loaded.
+         *
+         *  @param sheet    A string containing the file name of the stylesheet
+         */
         void loadSheetsAdd(std::string sheet);
+        
+        /**
+         *  Removes an entry in the list of sheets to be loaded.
+         *
+         *  @param index    An unsigned int containing the index of the sheet to be removed.
+         */
         void loadSheetsRemove(unsigned index);
+        
+        /**
+         *  Returns an entry from the list of sheets to be loaded.
+         *
+         *  @param index    An unsigned int containing the index of the sheet to be removed.
+         *  @return         The sheet at that index.
+         */
         std::string loadSheetsGet(unsigned index);
+        
+        /**
+         *  Returns all entries from the list of sheets to be loaded. 
+         *
+         *  @return         The list of sheets to be loaded.
+         */
         const std::vector<std::string> loadSheetsGet() const;
         
+        /**
+         *  Replaces the whole parser tree with what you give.
+         *
+         *  @param newTree  A vector of shared pointers to parser nodes, representing the new tree.
+         */
         void setParserTree(std::vector<HSSParserNode::p> newTree);
+        
+        /**
+         *  Returns the whole parser tree.
+         *
+         *  @return         A vector of shared pointers to parser nodes, representing the tree.
+         */
         const std::vector<HSSParserNode::p> getParserTree() const;
+        
+        /**
+         *  Appends the parser node to the parser tree.
+         *
+         *  @param node     A shared pointer to node to be added.
+         */
         void parserTreeAdd(HSSParserNode::p node);
+        
+        /**
+         *  Finds the node in the parser tree and removes it.
+         *
+         *  @param node     A shared pointer to node to be removed.
+         */
         void parserTreeRemove(HSSParserNode::p node);
         
+        /**
+         *  Returns the list of rules.
+         *
+         *  @return         A vector of shared pointers to rules.
+         */
         const std::vector<HSSRule::p>& getRules() const;
+        
+        /**
+         *  Adds an entry to the list of rules.
+         *
+         *  @param rule     A shared pointer to the rule.
+         */
         void rulesAdd(HSSRule::p & rule);
+        
+        /**
+         *  Removes an entry from the list of rules.
+         *
+         *  @param index    An unsigned int containing the index of the rule to be removed.
+         */
         void rulesRemove(unsigned index);
+        
+        /**
+         *  Returns the rule at given index.
+         *
+         *  @param index    An unsigned int containing the index of the rule to be returned.
+         *  @return         A shared pointer to the rule. May be an empty pointer if not found.
+         */
         HSSRule::p & rulesGet(unsigned index);
+        
+        /**
+         *  Gives the size of the list of rules.
+         *
+         *  @return         The number of entries in the list of rules.
+         */
         unsigned const rulesSize();
         
+        /**
+         *  Sets the given selector chain to be used for making selections.
+         *  
+         *  When selecting elements in the content tree, the controller automatically keeps track
+         *  of the current position in the selector chain. This method resets the index.
+         *
+         *  @param selectorChain    A shared pointer to the selector chain to be stored.
+         */
         void setSelectorChain(HSSSelectorChain::p selectorChain);
+        
+        /**
+         *  Shorthand for selecting elements. Calls selectHierarchical(scope, thisObj, negating,
+         *  processing) with negating set to false and processing to true.
+         *
+         *  @param scope    A reference to the current scope, a vector containing shared pointers
+         *                  to display objects.
+         *  @param thisObj  A shared pointer to the display object that will be selected when using
+         *                  @this in HSS.
+         *  @return         A vector of selections of the elements that were selected, each of these
+         *                  is a vector containing shared pointers to display objects.
+         */
         std::vector< std::vector<HSSDisplayObject::p> > selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
+        
+        /**
+         *  Selects elements hierarchically from the content tree.
+         *  
+         *  This is the method that should be called when creating a new selection. It will use the other types
+         *  of selections as needed, according to the current selector chain.
+         *
+         *  @param scope        A reference to the current scope, a vector containing shared pointers
+         *                      to display objects.
+         *  @param thisObj      A shared pointer to the display object that will be selected when using
+         *                      @this in HSS.
+         *  @param negating     Wether to select what matches the selector or the reverse.
+         *  @param processing   The first time the rules are matched to the display objects, we want to
+         *                      process stuff like flags, instead of just plain selecting.
+         *  @return             A vector of selections of the elements that were selected, each of these
+         *                      is a vector containing shared pointers to display objects.
+         */
         std::vector< std::vector<HSSDisplayObject::p> > selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating, bool processing);
+        
+        /**
+         *  Selects descendants according to the current selector chain. It will call selectOnLevel()
+         *  automatically.
+         *  
+         *  Do not call directly, use selectHierarchical() instead.
+         *
+         *  @param scope        A reference to the current scope, a vector containing shared pointers
+         *                      to display objects.
+         *  @param thisObj      A shared pointer to the display object that will be selected when using
+         *                      @this in HSS.
+         *  @param negating     Wether to select what matches the selector or the reverse.
+         *  @param processing   The first time the rules are matched to the display objects, we want to
+         *                      process stuff like flags, instead of just plain selecting.
+         *  @return             A vector of selections of the elements that were selected, each of these
+         *                      is a vector containing shared pointers to display objects.
+         */
         std::vector< std::vector<HSSDisplayObject::p> > selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating, bool processing);
+        
+        /**
+         *  Selects siblings according to the current selector chain. It will call selectSimple()
+         *  automatically.
+         *  
+         *  Do not call directly, use selectHierarchical() instead.
+         *
+         *  @param scope        A reference to the current scope, a vector containing shared pointers
+         *                      to display objects.
+         *  @param thisObj      A shared pointer to the display object that will be selected when using
+         *                      @this in HSS.
+         *  @param negating     Wether to select what matches the selector or the reverse.
+         *  @param processing   The first time the rules are matched to the display objects, we want to
+         *                      process stuff like flags, instead of just plain selecting.
+         *  @return             A vector of selections of the elements that were selected, each of these
+         *                      is a vector containing shared pointers to display objects.
+         */
         std::vector< std::vector<HSSDisplayObject::p> > selectOnLevel(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating, bool processing);
+        
+        /**
+         *  Selects elements according to the current selector chain. It will automatically call
+         *  filterSelection() after selecting.
+         *  
+         *  Do not call directly, use selectHierarchical() instead.
+         *
+         *  @param scope        A reference to the current scope, a vector containing shared pointers
+         *                      to display objects.
+         *  @param thisObj      A shared pointer to the display object that will be selected when using
+         *                      @this in HSS.
+         *  @param negating     Wether to select what matches the selector or the reverse.
+         *  @param processing   The first time the rules are matched to the display objects, we want to
+         *                      process stuff like flags, instead of just plain selecting.
+         *  @return             A vector of selections of the elements that were selected, each of these
+         *                      is a vector containing shared pointers to display objects.
+         */
         std::vector< std::vector<HSSDisplayObject::p> > selectSimple(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating, bool processing);
+        
+        /**
+         *  Filters the selection according to the current selector chain. If processing, flags will always
+         *  return the display object, but configures it to make it dependent on the flag.
+         *  
+         *  Do not call directly, use selectHierarchical() instead.
+         *
+         *  @param selection    A vector of shared pointers to display objects containing the selection
+         *                      to be filtered.
+         *  @param negating     Wether to select what matches the filter or the reverse.
+         *  @param processing   The first time the rules are matched to the display objects, we want to
+         *                      process stuff like flags, instead of just plain selecting.
+         *  @return             A vector of selections of the elements that were selected, each of these
+         *                      is a vector containing shared pointers to display objects.
+         */
         std::vector< std::vector<HSSDisplayObject::p> > filterSelection(std::vector< HSSDisplayObject::p> &selection, bool negating, bool processing);
         
+        //FIXME: make private and provide accessors.
         std::string basepath;
         
+        
+        /**
+         *  After reading the XML and HSS documents, this method is used to match the rules to the 
+         *  display objects in the content tree. You give the rule and the scope where to apply it,
+         *  and it will select the elements from the scope according to the selector chain that is
+         *  stored in the rule, assigning them the rule if they are selected.
+         *  
+         *  It will look at child rules and match them to the descendants of the selected elements too.
+         *
+         *  @param rule         A shared pointer to the rule to be matched.
+         *  @param scope        The list of display objects to which the rule should be matched.
+         *  @param applyingInstructions   Wether to apply instruction rules
+         */
         void recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container, bool applyingInstructions);
         
         std::stack<HSSContainer::p>currentContext;

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.47
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -56,11 +56,36 @@
 #include "AXRError.h"
 
 namespace AXR {
+    /**
+     *  @brief This is a subclass of AXRError, that should be used when something happened
+     *  which isn't really an error, but still should be shown to the user somehow.
+     */
     class AXRWarning : public AXRError
     {
     public:
+        /**
+         *  The shared pointer to the warning.
+         */
+        typedef boost::shared_ptr<AXRWarning>p;
+        /**
+         *  Creates a new instance of a warning, simple mode.
+         *  @param origin   The name of the class where the warning originated.
+         *  @param message  The warning message to be shown.
+         */
         AXRWarning(std::string origin, std::string message);
+        /**
+         *  Creates a new instance of a warning, with information about the filename,
+         *  the line and column where it originated.
+         *  @param origin   The name of the class where the warning originated.
+         *  @param message  The warning message to be shown.
+         *  @param filename The path to the filename where the warning originated.
+         *  @param line     The line index (starting at 1) in the file where the warning originated.
+         *  @param column   The column index (starting at 1) in the line where the warning originated.
+         */
         AXRWarning(std::string origin, std::string message, std::string filename, int line, int column);
+        /**
+         *  Destructor for the warning.
+         */
         virtual ~AXRWarning();
         
         virtual std::string toString();

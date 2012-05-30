@@ -1,0 +1,27 @@
+@ bla
+{
+    width: ref(height);
+    height: 20%;
+    background: #C;
+    alignY: middle;
+    shape: @polygon {
+        sides: ref(height) / 10;
+        angle: ref(height) * 10;
+    };
+    border: @{ 1 #F }, @{ 1 #9 };
+    
+    @::hover
+    {
+        shape: @polygon {
+            sides: 3;
+            angle: 270;
+        };
+    }
+}
+
+* {
+    #new test
+    {
+        isA: bla;
+    }
+}

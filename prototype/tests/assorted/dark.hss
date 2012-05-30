@@ -1,0 +1,38 @@
+#30 mainBg;
+
+@ separator
+{
+    flow: no;
+    height: 100%;
+    
+    #new hl
+    {
+        width: 1;
+        height: 100%;
+        background: @{
+            startColor: #0000;
+            colorStops: #0001;
+            endColor: #0000;
+        }
+    }
+}
+
+@ mainSidebar
+{
+    width: 150;
+    alignX: left;
+    
+    background: #5;
+    
+    #new separator;
+}
+
+*{
+    background: mainBg;
+    
+    #new sidebar
+    {
+        isA: mainSidebar;
+        height: 100%;
+    }
+}

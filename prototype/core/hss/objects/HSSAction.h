@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -58,28 +58,43 @@
 
 namespace AXR {
     
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSActionType
+     *  The type of the action object, specific for each subclass.
+     */
     enum HSSActionType
     {
-        HSSActionTypeNone = 0,
-        HSSActionTypeRequest,
-        HSSActionTypeSetProperty,
-        HSSActionTypeJavascript,
-        HSSActionTypeJsFunction,
-        HSSActionTypeAlert,
-        HSSActionTypeLog,
-        HSSActionTypeFlag
+        HSSActionTypeNone = 0, /**< Error state. */
+        HSSActionTypeRequest, /**< Requests load another xml files into the current one. */
+        HSSActionTypeSetProperty, /**< This will probably not be used, it's based on an old idea. */
+        HSSActionTypeJavascript, /**< HSS object representation of a piece of JS code. */
+        HSSActionTypeJsFunction,  /**< This will probably not be used, it's based on an old idea. */
+        HSSActionTypeAlert,  /**< Shows an alert box (not implemented yet). */
+        HSSActionTypeLog, /**< Logs a value (where it appears is specific to the wrapper. */
+        HSSActionTypeFlag /**< All flagging functions have their corresponding HSS object representation. */
     };
+    /** @} */
     
+    /**
+     *  @brief Abstract base class for all action objects.
+     *  Do not use directly, use a specific subclass instead.
+     */
     class HSSAction : public HSSObject
     {
     public:
-        
         typedef boost::shared_ptr<HSSAction> p;
         
+        /**
+         *  When logging, you often need a string representation of the action type.
+         *  @param actionType   The action type to represent as a string.
+         *  @return A string representation of the given type.
+         */
         static std::string actionTypeStringRepresentation(HSSActionType actionType);
         
         /**
-         *  Constructor for HSSAction objects
+         *  This class shouldn't be called directly, but by the subclasses.
          *  @param  type    The HSSActionType that this action corresponds to. Usually set
          *                  from withing a subclass' constructor method.
          */
@@ -94,18 +109,32 @@ namespace AXR {
          *  @return A shared pointer to the new HSSAction
          */
         p clone() const;
-        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSAction();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
-        
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
+        /**
+         *  Allows you to check if this action is of the given type.
+         *  @param  type    The action type to which to check against.
+         *  @return Wether it is of the given type or not.
+         */
         bool isA(HSSActionType type);
+        
+        /**
+         *  @return The action type of this instance.
+         */
         HSSActionType getActionType();
         
+        /**
+         *  This method is called when the action should be executed. The actual implementation
+         *  is defined by each specific subclass.
+         */
         virtual void fire();
         
         
