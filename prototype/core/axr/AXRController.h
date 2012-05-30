@@ -103,12 +103,6 @@ namespace AXR {
          */
         void reset();
         
-        //bool loadFile(std::string xmlfilepath, std::string xmlfilename);
-        //bool loadFileHSS(std::string hssfilepath, std::string hssfilename);
-        //bool reload();
-        //bool loadXMLFile(std::string filepath, std::string filename);
-        //bool loadHSSFile(std::string filepath, std::string filename);
-        
         /**
          *  @return A shared pointer to the root element.
          */
