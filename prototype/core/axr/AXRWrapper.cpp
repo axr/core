@@ -79,7 +79,7 @@ AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
     size_t slashpos = stylesheet.rfind("/");
     if(slashpos != std::string::npos){
         ret->basePath = stylesheet.substr(0, slashpos);
-        ret->fileName = stylesheet.substr(slashpos+1);
+        ret->setFileName(stylesheet.substr(slashpos+1));
     } else {
         AXRError::p(new AXRError("AXRWrapper", "Could not find a slash in the file path"))->raise();
         return ret;
@@ -150,7 +150,7 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 
 bool AXRWrapper::reload()
 {
-    std::string cur_path = this->core->getFile()->basePath+"/"+this->core->getFile()->fileName;
+    std::string cur_path = this->core->getFile()->basePath+"/"+this->core->getFile()->getFileName();
     std::string fileextension = cur_path.substr(cur_path.rfind(".") + 1, cur_path.length());
     this->core->reset();
     if(fileextension == "xml"){

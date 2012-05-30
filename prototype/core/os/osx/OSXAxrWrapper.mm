@@ -103,7 +103,7 @@ size_t OSXAxrWrapper::readFile(AXRFile::p theFile)
         theFile->setAtEndOfFile(true);
     }
     if (ferror(theFile->fileHandle)) {
-        AXRError::p(new AXRError("OSXAxrWrapper", "The file "+theFile->fileName+" couldn't be read"))->raise();
+        AXRError::p(new AXRError("OSXAxrWrapper", "The file "+theFile->getFileName()+" couldn't be read"))->raise();
         return -1;
     }
     return size;

@@ -109,8 +109,6 @@ namespace AXR {
         std::string extension;
         FILE * fileHandle;
         
-        void setFileName(std::string value);
-        std::string getFileName();
         std::string toString();
         
         bool isAtEndOfFile();
