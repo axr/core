@@ -395,6 +395,7 @@ namespace AXR {
          */
         std::vector< std::vector<HSSDisplayObject::p> > filterSelection(std::vector< HSSDisplayObject::p> &selection, bool negating, bool processing);
         
+        //FIXME: make private and provide accessors.
         std::string basepath;
         
         

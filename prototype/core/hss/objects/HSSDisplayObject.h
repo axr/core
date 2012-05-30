@@ -334,9 +334,11 @@ namespace AXR {
         bool isRoot();
         void setRoot(bool newValue);
         
+        //FIXME: make private and add accessors
+        std::map<std::string, std::string>attributes;
+        
     protected:
         pp parent;
-        std::map<std::string, std::string>attributes;
         std::string elementName;
         std::string contentText;
         std::vector<HSSRuleStatus::p> rules;

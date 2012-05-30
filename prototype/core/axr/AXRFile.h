@@ -101,6 +101,7 @@ namespace AXR {
          */
         void setAtEndOfFile(bool newValue);
         
+        //FIXME: make these private and provide accessors
         char * buffer;
         long int bufferSize;
         long int fileSize;
