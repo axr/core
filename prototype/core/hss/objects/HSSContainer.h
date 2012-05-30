@@ -417,10 +417,14 @@ namespace AXR {
         long double contentAlignX;
         HSSObservable * observedContentAlignX;
         HSSObservableProperty observedContentAlignXProperty;
+        bool distributeX;
+        bool distributeXLinear;
         HSSParserNode::p dContentAlignY;
         long double contentAlignY;
         HSSObservable * observedContentAlignY;
         HSSObservableProperty observedContentAlignYProperty;
+        bool distributeY;
+        bool distributeYLinear;
         
         HSSParserNode::p dDirectionPrimary;
         HSSDirectionValue directionPrimary;
@@ -461,6 +465,7 @@ namespace AXR {
         bool _mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p &otherGroup, HSSDirectionValue direction);
         void _arrange(displayGroup::p &groups, HSSDirectionValue direction);
         void _arrangeLines(displayGroup::p &groups, HSSDirectionValue direction);
+        void _distribute(displayGroup::p &groups, HSSDirectionValue direction);
         HSSClonable::p cloneImpl() const;
     };
 }
