@@ -91,6 +91,7 @@ void listXMLElements(NSString * filepath);
 - (IBAction)listXMLElements:(id)sender;
 
 - (IBAction)openDocument:(id)sender;
+- (IBAction)layoutTests:(id)sender;
 - (IBAction)reload:(id)sender;
 
 @end
