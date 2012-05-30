@@ -279,9 +279,24 @@ void HSSContainer::resetChildrenIndexes()
 
 void HSSContainer::setContentText(std::string text)
 {
-    HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
-    txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
-    this->add(txtBlck);
+    boost::algorithm::trim(text);
+    if (text != "") {
+        if (this->allChildren.size() == 0) {
+            HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
+            txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+            this->add(txtBlck);
+        } else {
+            HSSDisplayObject::p lastChild = this->allChildren.back();
+            if (lastChild->isA(HSSObjectTypeTextBlock)){
+                HSSTextBlock::p textBlock = boost::static_pointer_cast<HSSTextBlock>(lastChild);
+                textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+            } else {
+                HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
+                txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+                this->add(txtBlck);
+            }
+        }
+    }
 }
 
 void HSSContainer::appendContentText(std::string text)
