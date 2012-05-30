@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 6
+ *      Core version: 0.47
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -62,41 +62,96 @@ namespace AXR {
     class AXRController;
     class AXRCore;
     
+    /**
+     * @brief   Deprecated struct used for measuring areas. Use HSSSize instead.
+     */
     typedef struct {
         double width;
         double height;
     } AXRSize;
     
+    /**
+     * @brief   Deprecated struct used to represent a point. Use HSSPoint instead.
+     */
     typedef struct {
         double x;
         double y;
     } AXRPoint;
     
+    /**
+     * @brief   Deprecated struct used to represent a rectangle. Use HSSRect instead.
+     */
     typedef struct {
         AXRSize size;
         AXRPoint origin;
     } AXRRect;
     
+    /**
+     *  @brief This is the main control hub for rendering. Calls for drawing and handling
+     *  errors should go through this class.
+     */
     class AXRRender {
     public:
+        /**
+         *  The shared pointer to this class
+         */
         typedef boost::shared_ptr<AXRRender> p;
-        
+        /**
+         *  Creates a new instance of the render object.
+         *  @param  controller  A regular pointer to the controller object that is associated with this renderer.
+         *  @param  core        A regular pointer to the core object that is associated with this renderer.
+         */
         AXRRender(AXRController * controller, AXRCore * core);
+        /**
+         *  Destructs the render object.
+         */
         virtual ~AXRRender();
-        
-        //root surface should be created in platform specific subclass
-        //before calling this as base class' method
+        /**
+         *  The main drawing function. Call this to redraw an area of the window.
+         *  @param  rect    The rectangular section of the screen that should be redrawn
+         *                  //FIXME: change this to HSSRect
+         *  @param  bounds  The rectangle describing the bounds of the window.
+         *                  //FIXME: change this to HSSRect
+         *
+         *  @warning The root surface should be created in platform specific subclass before calling
+         *  this as base class' method
+         */
         virtual void drawInRectWithBounds(AXRRect rect, AXRRect bounds);
-        
+        /**
+         *  Creates a point from the x and y coordinates and sends the mouse down event to the root object,
+         *  which will then further handle it.
+         *  @param  x   A long double containing the horizontal position.
+         *  @param  y   A long double containing the vertical position.
+         */
         void mouseDown(long double x, long double y);
+        /**
+         *  Creates a point from the x and y coordinates and sends the mouse up event to the root object,
+         *  which will then further handle it.
+         *  @param  x   A long double containing the horizontal position.
+         *  @param  y   A long double containing the vertical position.
+         */
         void mouseUp(long double x, long double y);
-        
+        /**
+         *  Reset the renderer to initial values, for example when reloading a file.
+         */
         void reset();
-        
+        /**
+         *  Setter for the pointer to the cairo handle for the window surface.
+         *  @param  cairo   A regular pointer to a cairo handle.
+         */
         void setCairo(cairo_t * cairo);
+        /**
+         *  Getter for the pointer to the cairo handle for the window surface.
+         *  @return A regular pointer to a cairo handle.
+         */
         cairo_t * getCairo();
-        
+        /**
+         *  @return The width of the window.
+         */
         double getWindowWidth();
+        /**
+         *  @return The height of the window.
+         */
         double getWindowHeight();
         
     protected:

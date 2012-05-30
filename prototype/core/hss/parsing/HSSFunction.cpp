@@ -84,7 +84,10 @@ HSSFunction::HSSFunction(const HSSFunction & orig)
 
 HSSFunction::~HSSFunction()
 {
-    
+    if (this->percentageObserved != NULL) {
+        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
+        this->percentageObserved = NULL;
+    }
 }
 
 std::string HSSFunction::toString()
@@ -132,10 +135,11 @@ void HSSFunction::setPercentageBase(long double value)
 
 void HSSFunction::setPercentageObserved(HSSObservableProperty property, HSSObservable *observed)
 {
-    if(this->percentageObserved != NULL)
-    {
-        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
-    }
+//    if(this->percentageObserved != NULL)
+//    {
+//        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
+//        this->percentageObserved = NULL;
+//    }
     this->percentageObservedProperty = property;
     this->percentageObserved = observed;
     //observed->observe(property, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSFunction>(this, &HSSFunction::propertyChanged));

@@ -42,6 +42,9 @@
 #define XML_CHUNK_SIZE 10240
 
 namespace expatmm {
+    /**
+     *  @brief Expatmm C to C++ bridge for Expat.
+     */
   class ExpatXMLParser {
       
     private:

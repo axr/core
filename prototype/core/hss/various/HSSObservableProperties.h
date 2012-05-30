@@ -134,6 +134,9 @@ namespace AXR {
         //HSSPolygon
         HSSObservablePropertySides,
         HSSObservablePropertyAngle,
+        
+        //HSSDisplayObject
+        HSSObservablePropertyContent,
     };
 }
 

@@ -43,62 +43,32 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/04/27
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 6
+ *      Revision: 1
  *
  ********************************************************************/
 
-#ifndef HSSCIRCLE_H
-#define HSSCIRCLE_H
+#include "HSSRootSelector.h"
 
-#include "HSSShape.h"
+using namespace AXR;
 
-namespace AXR {
-    /**
-     *  @brief Shape object, representing the HSS object @circle.
-     */
-    class HSSCircle : public HSSShape
-    {
-    public:
-        typedef boost::shared_ptr<HSSCircle> p;
-        
-        /**
-         *  Constructor for HSSCircle objects
-         */
-        HSSCircle();
-        /**
-         *  Copy constructor for HSSCircle objects
-         */
-        HSSCircle(const HSSCircle & orig);
-        /**
-         *  Clones an instance of HSSCircle and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSCircle
-         */
-        p clone() const;
-        virtual ~HSSCircle();
-        
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
-        
-        /**
-         *  Call this method when you need to draw shape into the cairo context. The coordinates are used
-         *  to define the bounding box into which the shape will be drawn.
-         *  @param cairo    A regular pointer to a cairo handle representing the drawing context.
-         *  @param x        The horizontal position of the shape.
-         *  @param y        The vertical position of the shape.
-         *  @param width    The width of the shape.
-         *  @param height   The height of the shape.
-         */
-        virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
-        
-    private:
-        HSSClonable::p cloneImpl() const;
-    };
+HSSRootSelector::HSSRootSelector()
+: HSSParserNode()
+{
+    this->nodeType = HSSParserNodeTypeRootSelector;
 }
 
-#endif
+HSSRootSelector::p HSSRootSelector::clone() const{
+    return boost::static_pointer_cast<HSSRootSelector, HSSClonable>(this->cloneImpl());
+}
+
+std::string HSSRootSelector::toString(){
+    return "@root selector";
+}
+
+HSSClonable::p HSSRootSelector::cloneImpl() const{
+    return HSSClonable::p(new HSSRootSelector(*this));
+}
+

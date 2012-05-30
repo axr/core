@@ -106,6 +106,10 @@ void HSSContainer::initialize()
     = this->observedShape = this->observedTextAlign
     = NULL;
     
+    this->distributeX = distributeXLinear
+    = this->distributeY = distributeYLinear
+    = false;
+    
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("isA");
     shorthandProperties.push_back("width");
@@ -207,7 +211,9 @@ bool HSSContainer::isKeyword(std::string value, std::string property)
             || value == "top"
             || value == "bottom"
             || value == "left"
-            || value == "right"){
+            || value == "right"
+            || value == "distribute"
+            || value == "linear"){
             return true;
         }
     } else if (property == "directionPrimary" || property == "directionSecondary"){
@@ -273,9 +279,24 @@ void HSSContainer::resetChildrenIndexes()
 
 void HSSContainer::setContentText(std::string text)
 {
-    HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
-    txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
-    this->add(txtBlck);
+    boost::algorithm::trim(text);
+    if (text != "") {
+        if (this->allChildren.size() == 0) {
+            HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
+            txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+            this->add(txtBlck);
+        } else {
+            HSSDisplayObject::p lastChild = this->allChildren.back();
+            if (lastChild->isA(HSSObjectTypeTextBlock)){
+                HSSTextBlock::p textBlock = boost::static_pointer_cast<HSSTextBlock>(lastChild);
+                textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+            } else {
+                HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
+                txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+                this->add(txtBlck);
+            }
+        }
+    }
 }
 
 void HSSContainer::appendContentText(std::string text)
@@ -581,6 +602,24 @@ void HSSContainer::layout()
         }
         
         
+    }
+    
+    //distribute if necessary in the primary direction
+    bool primaryIsHorizontal = (this->directionPrimary== HSSDirectionLeftToRight || this->directionPrimary == HSSDirectionRightToLeft);
+    if ( (this->distributeX && primaryIsHorizontal) || (this->distributeY && !primaryIsHorizontal) ){
+        std::vector<displayGroup::p>::iterator pgIt;
+        for (pgIt=primaryGroups.begin(); pgIt!=primaryGroups.end(); pgIt++) {
+            displayGroup::p & pgGrp = *pgIt;
+            if(pgGrp->lines.size() == 0){
+                this->_distribute(pgGrp, this->directionPrimary);
+            } else {
+                std::vector<displayGroup::p>::iterator pgLineIt;
+                for (pgLineIt=pgGrp->lines.begin(); pgLineIt!=pgGrp->lines.end(); pgLineIt++) {
+                    this->_distribute(*pgLineIt, this->directionPrimary);
+                }
+            }
+            
+        }
     }
     
     security_brake_reset();
@@ -1166,13 +1205,80 @@ void HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
             
         case HSSDirectionBottomToTop:
         {            
-            throw AXRError::p(new AXRError("HSSContainer", "no overlap and not the last one"));
+            AXRError::p(new AXRError("HSSContainer", "no overlap and not the last one"))->raise();
             break;
         }
             
         default:
+        {
+            AXRError::p(new AXRError("HSSContainer", "no overlap and not the last one"))->raise();
+            break;
+        }
+    }
+}
+
+void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue direction)
+{
+    switch (direction) {
+        case HSSDirectionRightToLeft:
+        {
+            break;
+        }
+            
+        case HSSDirectionTopToBottom:
+        {
+            HSSDisplayObject::it it;
+            long double accHeight = 0.;
+            long double totalHeight = 0.;
+            
+            //calculate the total height of the group
+            for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                totalHeight += (*it)->height;
+            }
+            //std_log(totalHeight);
+            //now get the remaining space
+            long double remainingSpace = this->height - totalHeight;
+            //divide it by the number of elements+1
+            long double spaceChunk = remainingSpace / (group->objects.size() + 1);
+            unsigned i = 0;
+            for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                (*it)->y = accHeight + spaceChunk + (spaceChunk*i);
+                accHeight += (*it)->height;
+                i++;
+            }
+            group->x = group->objects.front()->x;
+            group->y = 0.;
+            break;
+        }
+            
+        case HSSDirectionBottomToTop:
         {            
-            throw AXRError::p(new AXRError("HSSContainer", "no overlap and not the last one"));
+            break;
+        }
+            
+        default:
+        {
+            HSSDisplayObject::it it;
+            long double accWidth = 0.;
+            long double totalWidth = 0.;
+            
+            //calculate the total width of the group
+            for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                totalWidth += (*it)->width;
+            }
+            //std_log(totalWidth);
+            //now get the remaining space
+            long double remainingSpace = this->width - totalWidth;
+            //divide it by the number of elements+1
+            long double spaceChunk = remainingSpace / (group->objects.size() + 1);
+            unsigned i = 0;
+            for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                (*it)->x = accWidth + spaceChunk + (spaceChunk*i);
+                accWidth += (*it)->width;
+                i++;
+            }
+            group->x = 0.;
+            group->y = group->objects.front()->y;
             break;
         }
     }
@@ -1248,10 +1354,14 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
             throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of "+this->getElementName()));
     }
     
+    if(this->observedContentAlignX != NULL)
+    {
+        this->observedContentAlignX->removeObserver(this->observedContentAlignXProperty, HSSObservablePropertyAlignX, this);
+        this->observedContentAlignX = NULL;
+    }
     this->dContentAlignX = value;
     
     if(value->isA(HSSParserNodeTypeKeywordConstant)){
-        
         HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
         if (keywordValue->getValue() == "left"){
             this->setDContentAlignX(HSSParserNode::p(new HSSNumberConstant(0)));
@@ -1259,16 +1369,17 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
             this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(50)));
         } else if (keywordValue->getValue() == "right"){
             this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(100)));
+        } else if (keywordValue->getValue() == "distribute"){
+            this->distributeX = true;
+            this->distributeXLinear = false;
+        } else if (keywordValue->getValue() == "linear"){
+            this->distributeX = true;
+            this->distributeXLinear = true;
         } else {
             throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of "+this->getElementName()));
         }
         
     } else {
-        
-        if(this->observedContentAlignX != NULL)
-        {
-            this->observedContentAlignX->removeObserver(this->observedContentAlignXProperty, HSSObservablePropertyAlignX, this);
-        }
         HSSContainer::p parentContainer = this->getParent();
         const std::vector<HSSDisplayObject::p> * scope;
         if(parentContainer){
@@ -1337,7 +1448,11 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
             throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of "+this->getElementName()));
     }
     
-    
+    if(this->observedContentAlignY != NULL)
+    {
+        this->observedContentAlignY->removeObserver(this->observedContentAlignYProperty, HSSObservablePropertyAlignY, this);
+        this->observedContentAlignY = NULL;
+    }
     this->dContentAlignY = value;
     
     
@@ -1350,21 +1465,18 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
             this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(50)));
         } else if (keywordValue->getValue() == "bottom"){
             this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(100)));
+        } else if (keywordValue->getValue() == "distribute"){
+            this->distributeY = true;
+            this->distributeYLinear = false;
+        } else if (keywordValue->getValue() == "linear"){
+            this->distributeY = true;
+            this->distributeYLinear = true;
         } else {
             throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of "+this->getElementName()));
         }
         
     } else {
-    
-    
         HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
-        if(this->observedContentAlignY != NULL)
-        {
-            this->observedContentAlignY->removeObserver(this->observedContentAlignYProperty, HSSObservablePropertyAlignY, this);
-            this->observedContentAlignY = NULL;
-        }
-        
-        
         
         HSSContainer::p parentContainer = this->getParent();
         const std::vector<HSSDisplayObject::p> * scope;

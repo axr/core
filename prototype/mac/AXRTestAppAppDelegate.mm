@@ -54,6 +54,7 @@
 #import <string>
 #import <iostream>
 #import "../core/axr/AXRDebugging.h"
+#import "../core/hss/objects/HSSDisplayObject.h"
 
 #define BUFFSIZE 8192
 char Buff[BUFFSIZE];
@@ -241,6 +242,48 @@ void listXMLElements(NSString *filepath)
     [[self axrWindow] makeKeyAndOrderFront:self];
     //sending loadfile
     [[self axrView] loadFile];
+}
+
+- (IBAction)layoutTests:(id)sender {
+    //load the XML file
+    std::string filePath;
+    AXR::AXRWrapper * wrapper = (AXR::AXRWrapper *)[[self axrView] axrWrapper];
+	bool result = wrapper->openFileDialog(filePath);
+    if(result){
+        AXR::XMLParser::p parser = wrapper->getCore()->getParserXML();
+        AXR::AXRFile::p testsFile = wrapper->getFile("file://"+filePath);
+        bool loadingSuccess = parser->loadFile(testsFile);
+        if (loadingSuccess) {
+            std::vector<std::string> tests;
+            std::vector<std::string> expected;
+            AXR::AXRController::p controller = wrapper->getCore()->getController();
+            AXR::HSSContainer::p root = controller->getRoot();
+            const std::vector<AXR::HSSDisplayObject::p> & children = root->getChildren(true);
+            std::vector<AXR::HSSDisplayObject::p>::const_iterator it;
+            for (it=children.begin(); it!=children.end(); it++) {
+                const AXR::HSSDisplayObject::p & child = *it;
+                if(child->attributes.find("src") != child->attributes.end() && child->attributes.find("expect") != child->attributes.end()){
+                    tests.push_back(child->attributes["src"]);
+                    expected.push_back(child->attributes["expect"]);
+                } else {
+                    std_log("the test element needs to have expect and src attributes");
+                }
+            }
+            
+            std::vector<std::string>::iterator it2;
+            for (it2=tests.begin(); it2!=tests.end(); it2++) {
+                wrapper->getCore()->reset();
+                bool loaded = false;
+                if(wrapper!=NULL){
+                    loaded = wrapper->loadXMLFile(testsFile->basePath+"/"+(*it2));
+                }
+                if(loaded){
+                    AXR::HSSContainer::p root = controller->getRoot();
+                    std_log(root->toString());
+                }
+            }
+        }
+    }
     
 }
 

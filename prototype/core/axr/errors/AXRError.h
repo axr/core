@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/10/08
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.4
- *      Revision: 1
+ *      Core version: 0.47
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -58,18 +58,51 @@
 #include <string>
 
 namespace AXR {
+    /**
+     *  @brief  This class, and it's subclass AXRWarning, are used for error handling in
+     *  the rendering engine. They can be displayed using raise() or thrown.
+     */
     class AXRError : public boost::enable_shared_from_this<AXRError>
     {
     public:
+        /**
+         *  The shared pointer to the error.
+         */
         typedef boost::shared_ptr<AXRError>p;
-        
+        /**
+         *  Creates a new instance of an error, simple mode.
+         *  @param origin   The name of the class where the error happened.
+         *  @param message  The error message to be shown.
+         */
         AXRError(std::string origin, std::string message);
+        /**
+         *  Creates a new instance of an error, with information about the filename,
+         *  the line and column where it happened.
+         *  @param origin   The name of the class where the error happened.
+         *  @param message  The error message to be shown.
+         *  @param filename The path to the filename where the error happened.
+         *  @param line     The line index (starting at 1) in the file where the error happened.
+         *  @param column   The column index (starting at 1) in the line where the error happened.
+         */
         AXRError(std::string origin, std::string message, std::string filename, int line, int column);
+        /**
+         *  Destructor for the error.
+         */
         virtual ~AXRError();
-        
+        /**
+         *  Call this if you want the message to be displayed. The actual implementation is
+         *  handled by the OS-specific wrapper.
+         */
         void raise();
-        
+        /**
+         *  Print itself as a textual representation.
+         *  @return A string containing the textual representation of the error.
+         */
         virtual std::string toString();
+        /**
+         *  Getter for message.
+         *  @return The message in this error.
+         */
         std::string getMessage();
         
     protected:

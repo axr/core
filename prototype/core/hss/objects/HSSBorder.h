@@ -43,9 +43,9 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.46
+ *      Core version: 0.47
  *      Revision: 9
  *
  ********************************************************************/
@@ -59,6 +59,9 @@
 #include <cairo/cairo.h>
 
 namespace AXR {
+    /**
+     *  @brief Abstract base class for all border objects.
+     */
     class HSSBorder : public HSSObject
     {
     public:
@@ -66,13 +69,16 @@ namespace AXR {
         typedef std::vector<HSSBorder::p>::iterator it;
         
         /**
-         *  Constructor for HSSBorder objects
+         *  Creates a new HSSBorder object.
          */
         HSSBorder();
         /**
-         *  Copy constructor for HSSBorder objects
+         *  Copy constructor for HSSBorder objects.
          */
         HSSBorder(const HSSBorder & orig);
+        /**
+         *  Destructor for HSSBorder objects.
+         */
         virtual ~HSSBorder();
         
         virtual std::string toString();
@@ -80,13 +86,34 @@ namespace AXR {
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
         
+        /**
+         *  Each type of border implements its own drawing routines. Call this method
+         *  when you need to draw the border on the surface that is represented by the
+         *  cairo handle.
+         *  @param cairo    A regular pointer to a cairo handle, holding the surface on
+         *                  which to draw on.
+         */
         virtual void draw(cairo_t * cairo) = 0;
         
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
-        //size
+        /**
+         *  Getter for the value of size.
+         *  @return A long double containing the value of size.
+         */
         long double getSize();
+        
+        /**
+         *  Setter for the definition object of size. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of size.
+         */
         void setDSize(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect size.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void sizeChanged(HSSObservableProperty source, void*data);
         
     protected:

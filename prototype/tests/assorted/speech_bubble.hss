@@ -1,0 +1,78 @@
+@ speechBubble
+{
+    width: 120;
+    height: 80;
+    shape: @{ 10 };
+    background: #CCC0;
+    anchorY: 100% + ref(height of @this tip);
+    flow: no;
+    overflow: yes;
+    
+    #new tip
+    {
+        width: 14;
+        height: 15;
+        shape: @polygon{
+            sides: 3;
+            angle: 90;
+        };
+        background: #CCC0;
+        anchorY: ref(height) / 3;
+        alignY: bottom;
+        overflow: yes;
+    }
+}
+
+* {
+    #new dot
+    {
+        width: 10;
+        height: 10;
+        shape: @circle;
+        alignX: 30%;
+        alignY: 30%;
+        background: #0;
+    }
+    
+    #new bb
+    {
+        isA: speechBubble;
+        alignX: ref(alignX of dot);
+        alignY: ref(alignY of dot);
+    }
+    
+    dot::hover + bb
+    {
+        background: #C;
+    }
+    dot::hover + bb tip
+    {
+        background: #C;
+    }
+    
+    #new dot2
+    {
+        width: 10;
+        height: 10;
+        shape: @circle;
+        alignX: middle;
+        alignY: middle;
+        background: #F00;
+    }
+    
+    #new bb2
+    {
+        isA: speechBubble;
+        alignX: ref(alignX of dot2);
+        alignY: ref(alignY of dot2);
+    }
+    
+    dot2::hover + bb2
+    {
+        background: #C;
+    }
+    dot2::hover + bb2 tip
+    {
+        background: #C;
+    }
+}

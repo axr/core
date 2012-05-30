@@ -488,11 +488,25 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(cons
         case HSSParserNodeTypeThisSelector:
         {
             if(negating){
-                throw AXRError::p(new AXRError("AXRController", "Cannot negate the @this object "));
+                throw AXRError::p(new AXRError("AXRController", "Cannot negate the @this object yet "));
             }
-            const HSSDisplayObject::p tobjArr[1] = {thisObj};
-            const std::vector<HSSDisplayObject::p>tobjScope(tobjArr, tobjArr+1);
-            currentSelection = tobjScope;
+            const HSSDisplayObject::p tObjArr[1] = {thisObj};
+            const std::vector<HSSDisplayObject::p>tObjScope(tObjArr, tObjArr+1);
+            currentSelection = tObjScope;
+            this->readNextSelectorNode();
+            //we're done negating for now
+            negating = false;
+            break;
+        }
+            
+        case HSSParserNodeTypeRootSelector:
+        {
+            if(negating){
+                throw AXRError::p(new AXRError("AXRController", "Cannot negate the @root object yet "));
+            }
+            const HSSDisplayObject::p rootObjArr[1] = {this->getRoot()};
+            const std::vector<HSSDisplayObject::p>rObjScope(rootObjArr, rootObjArr+1);
+            currentSelection = rObjScope;
             this->readNextSelectorNode();
             //we're done negating for now
             negating = false;

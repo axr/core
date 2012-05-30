@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/02/22
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.47
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -56,15 +56,52 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    /**
+     *  @brief This class encapsulates a representation of a file (.xml or .hss)
+     *  to be used inside the parsers. While this class holds the buffer to the
+     *  data, the actual loading of the data is up to the OS-specific wrapper.
+     */
     class AXRFile
     {
     public:
+        /**
+         *  The shared pointer to a file.
+         */
         typedef boost::shared_ptr<AXRFile> p;
-        
+        /**
+         *  Creates a new instance of a file.
+         */
         AXRFile();
+        /**
+         *  Destructor.
+         */
         virtual ~AXRFile();
+        /**
+         *  Setter for fileName.
+         *  @param value    A string containing the file name. Should include the extension.
+         */
+        void setFileName(std::string value);
+        /**
+         *  Getter for fileName
+         *  @return A string containing the file name, including extension.
+         */
+        std::string getFileName();
+        /**
+         *  @return A textual representation of the file.
+         */
+        std::string toString();
+        /**
+         *  Call this to check if the file is marked as being at end of file.
+         *  @return true if it is at the end of the file, false otherwise.
+         */
+        bool isAtEndOfFile();
+        /**
+         *  Sets the file to be at end of file or not.
+         *  @param newValue A boolean containing the new status.
+         */
+        void setAtEndOfFile(bool newValue);
         
-        std::string fileName;
+        //FIXME: make these private and provide accessors
         char * buffer;
         long int bufferSize;
         long int fileSize;
@@ -73,12 +110,13 @@ namespace AXR {
         std::string extension;
         FILE * fileHandle;
         
-        void setFileName(std::string value);
-        std::string getFileName();
         std::string toString();
         
         bool isAtEndOfFile();
         void setAtEndOfFile(bool newValue);
+
+    protected:
+        std::string fileName;
         
     private:
         bool _atEndOfFile;

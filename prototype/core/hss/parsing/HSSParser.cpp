@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/29
+ *      Last changed: 2012/04/27
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 26
+ *      Core version: 0.47
+ *      Revision: 27
  *
  ********************************************************************/
 
@@ -64,6 +64,7 @@
 #include "HSSExpressions.h"
 #include "../objects/HSSRgb.h"
 #include "HSSThisSelector.h"
+#include "HSSRootSelector.h"
 #include "HSSFunctions.h"
 #include "HSSFilter.h"
 #include "HSSNegation.h"
@@ -524,7 +525,7 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
     HSSSelectorChain::p ret = HSSSelectorChain::p(new HSSSelectorChain());
     
     //first we need to look at the selector chain
-    //set the appropriate context
+    //set the current context
     this->currentContext.push_back(HSSParserContextSelectorChain);
     //parse the selector chain until we find the token to stop on
     while (this->currentToken && !this->currentToken->isA(stopOn)) {
@@ -627,8 +628,14 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                         //FIXME
                         std_log("@parent not implemented yet");
                     } else if (objtype == "root"){
-                        //FIXME
-                        std_log("@root not implemented yet");
+                        ret->add(HSSRootSelector::p(new HSSRootSelector()));
+                        this->readNextToken(true);
+                        //adds only if needed
+                        HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+                        if(childrenCombinator){
+                            ret->add(childrenCombinator);
+                        }
+                        break;
                     } else {
                         throw AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->currentFile->fileName, this->line, this->column));
                     }
@@ -788,6 +795,25 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
                         *isShorthand = true;
                         break;
                         
+                    case HSSObjectSign:
+                    {
+                        this->checkForUnexpectedEndOfSource();
+                        peekToken = this->tokenizer->peekNextToken();
+                        std::string objtype = VALUE_TOKEN(peekToken)->getString();
+                        if (    (objtype == "this")
+                            ||  (objtype == "super")
+                            ||  (objtype == "parent")
+                            ||  (objtype == "root") ){
+                            //it is a selector, continue because it may be a selector inside a function
+                        } else {
+                            //this is a regular object definition, so we can conclude it is not a rule
+                            ret = true;
+                            *isShorthand = true;
+                            done = true;
+                        }
+                        break;
+                    }
+                        
                     case HSSBlockOpen:
                         //it is a 
                         ret = false;
@@ -885,7 +911,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
     //end of file would be fatal
     this->checkForUnexpectedEndOfSource();
     
-    //set the appropriate context
+    //set the current context
     this->currentContext.push_back(HSSParserContextObjectDefinition);
     
     //first we need to know what type of object it is
@@ -1885,10 +1911,12 @@ HSSParserNode::p HSSParser::readFunction()
             this->skip(HSSWhitespace, true);
             //read the arguments
             //first, we expect the name
-            if (! this->currentToken->isA(HSSIdentifier)){
-                std_log1("HSSParser: unexpected token while reading ref function "+name);
-            } else {
+            if (this->currentToken->isA(HSSIdentifier)){
                 flagFunction->setName(VALUE_TOKEN(this->currentToken)->getString());
+            } else if (this->currentToken->isA(HSSSymbol) && VALUE_TOKEN(this->currentToken)->getString() == "*"){
+                flagFunction->setName("*");
+            } else {
+                std_log("HSSParser: unexpected token while reading flagging function "+name);
             }
             
             this->checkForUnexpectedEndOfSource();
