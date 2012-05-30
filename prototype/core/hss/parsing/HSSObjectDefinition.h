@@ -53,12 +53,12 @@
 #ifndef HSSOBJECTDEFINITION_H
 #define HSSOBJECTDEFINITION_H
 
-#import "HSSStatement.h"
-#import <string>
-#import <vector>
-#import <deque>
-#import "HSSParserNodes.h"
-#import "../objects/HSSObject.h"
+#include "HSSStatement.h"
+#include <string>
+#include <vector>
+#include <deque>
+#include "HSSParserNodes.h"
+#include "../objects/HSSObject.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "../objects/HSSDisplayObject.h"

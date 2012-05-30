@@ -17,3 +17,7 @@ build/*
 *.pbxuser
 *.xcworkspace
 xcuserdata
+
+# Linux binaries
+/prototype/linux/axr_64
+/prototype/linux/axr_32

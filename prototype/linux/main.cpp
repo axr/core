@@ -18,25 +18,30 @@ SDL_Surface* screen;
 
 void render ()
 {
-	SDL_FillRect(screen, NULL, 0x00000000);
+	if (wrapper->needsDisplay)
+	{
+		SDL_FillRect(screen, NULL, 0x00ffffff);
 
-	AXRRect axrRect;
-	axrRect.size.width = screen->w;
-	axrRect.size.height = screen->h;
-	axrRect.origin.x = 0;
-	axrRect.origin.y = 0;
+		AXRRect axrRect;
+		axrRect.size.width = screen->w;
+		axrRect.size.height = screen->h;
+		axrRect.origin.x = 0;
+		axrRect.origin.y = 0;
 
-	AXRRect axrBounds;
-	axrBounds.size.width = screen->w;
-	axrBounds.size.height = screen->h;
-	axrBounds.origin.x = 0;
-	axrBounds.origin.y = 0;
+		AXRRect axrBounds;
+		axrBounds.size.width = screen->w;
+		axrBounds.size.height = screen->h;
+		axrBounds.origin.x = 0;
+		axrBounds.origin.y = 0;
 
-	AXRCore::p core = wrapper->getCore();
+		AXRCore::p core = wrapper->getCore();
 
-	core->setCairo(cr);
-	core->drawInRectWithBounds(axrRect, axrBounds);
-	core->setCairo(NULL);
+		core->setCairo(cr);
+		core->drawInRectWithBounds(axrRect, axrBounds);
+		core->setCairo(NULL);
+
+		wrapper->setNeedsDisplay(false);
+	}
 }
 
 int main (int argc, char **argv)
@@ -45,7 +50,6 @@ int main (int argc, char **argv)
 	screen = SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32,
 		SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
 	cr = cairosdl_create (screen);
-	cairo_translate(cr,0.5,0.5);
 
 	SDL_WM_SetCaption(WINDOW_TITLE, 0);
 
@@ -55,7 +59,17 @@ int main (int argc, char **argv)
 	wrapper = new LinuxAxrWrapper();
 	AXRCore::p core = wrapper->getCore();
 
-	wrapper->loadFile();
+	if (argc > 1)
+	{
+		std::string filepath;
+		filepath = argv[1];
+
+		wrapper->loadFileByPath(filepath);
+	}
+	else
+	{
+		wrapper->loadFile();
+	}
 
 	SDL_Event event;
 	while (SDL_WaitEvent(&event))
@@ -66,18 +80,52 @@ int main (int argc, char **argv)
 		}
 		else if (event.type == SDL_MOUSEBUTTONDOWN)
 		{
+			AXRCore::p core = wrapper->getCore();
+			HSSContainer::p root = core->getController()->getRoot();
+
+			if (root)
+			{
+				HSSPoint thePoint;
+				thePoint.x = event.button.x;
+				thePoint.y = event.button.y;
+				root->handleEvent(HSSEventTypeMouseDown, &thePoint);
+			}
 		}
 		else if (event.type == SDL_MOUSEBUTTONUP)
 		{
+			AXRCore::p core = wrapper->getCore();
+			HSSContainer::p root = core->getController()->getRoot();
+
+			if (root)
+			{
+				HSSPoint thePoint;
+				thePoint.x = event.button.x;
+				thePoint.y = event.button.y;
+				root->handleEvent(HSSEventTypeMouseUp, &thePoint);
+			}
 		}
 		else if (event.type == SDL_MOUSEMOTION)
 		{
+			AXRCore::p core = wrapper->getCore();
+			HSSContainer::p root = core->getController()->getRoot();
+
+			if (root)
+			{
+				HSSPoint thePoint;
+				thePoint.x = event.motion.x;
+				thePoint.y = event.motion.y;
+				root->handleEvent(HSSEventTypeMouseMove, &thePoint);
+			}
 		}
 		else if (event.type == SDL_KEYUP)
 		{
 			if (event.key.keysym.sym == SDLK_F5)
 			{
-				wrapper->reload();
+				if (wrapper->hasLoadedFile())
+				{
+					std::cout << "Reloading file\n";
+					wrapper->reload();
+				}
 			}
 		}
 		else if (event.type == SDL_KEYDOWN)
@@ -90,7 +138,6 @@ int main (int argc, char **argv)
 				SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
 			SDL_SetAlpha(screen,SDL_SRCALPHA, CAIROSDL_AMASK);
 			cr = cairosdl_create (screen);
-			cairo_translate(cr, 0.5, 0.5);
 		}
 		else
 		{

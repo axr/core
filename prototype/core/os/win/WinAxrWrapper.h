@@ -71,6 +71,9 @@ namespace AXR
         virtual void closeFile(AXRFile::p theFile);
         virtual void handleError(AXRError::p theError);
         virtual bool openFileDialog(std::string &filePath);
+        virtual void setNeedsDisplay(bool newValue);
+
+        bool needsDisplay;
 
     };
 }

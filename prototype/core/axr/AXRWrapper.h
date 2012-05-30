@@ -151,6 +151,14 @@ namespace AXR
          *  @return Wether it has been loaded successfully or not.
          */
         bool loadXMLFile(std::string xmlfilepath);
+		/**
+         *  Loads the file you provide, and then handles it according to its file extension.
+         *  @param  filepath	A string containing the path to the file on the local system, can be
+		 *						either an XML or an HSS file.
+		 *
+         *  @return Wether it has been loaded successfully or not.
+         */
+		bool loadFileByPath(std::string filepath);
         /**
          *  Loads the HSS file at the path you provide.
          *  @param  hssfilepath A string containing the path to the file on the local system.

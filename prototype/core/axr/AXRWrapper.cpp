@@ -100,28 +100,33 @@ AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
     return ret;
 }
 
-
 bool AXRWrapper::loadFile()
 {
     std::string filepath = std::string();
+
+    bool success = this->openFileDialog(filepath);
+
+    if(success){
+        return this->loadFileByPath(filepath);
+    } else {
+        return false;
+    }
+}
+
+bool AXRWrapper::loadFileByPath(std::string filepath)
+{
     std::string filename = std::string();
     std::string fileextension = std::string();
-    
-    bool success = this->openFileDialog(filepath);
-    if(success){
-        fileextension = filepath.substr(filepath.rfind(".") + 1, filepath.length());
-        if(fileextension == "xml"){
-            this->_isHSSOnly = false;
-            return this->loadXMLFile(filepath);
-        } else if (fileextension == "hss") {
-            this->_isHSSOnly = true;
-            return this->loadHSSFile(filepath);
-        } else {
-            AXRError::p(new AXRError("AXRController", "Unknown file extension"))->raise();
-            return false;
-        }
-        
+
+    fileextension = filepath.substr(filepath.rfind(".") + 1, filepath.length());
+    if(fileextension == "xml"){
+        this->_isHSSOnly = false;
+        return this->loadXMLFile(filepath);
+    } else if (fileextension == "hss") {
+        this->_isHSSOnly = true;
+        return this->loadHSSFile(filepath);
     } else {
+        AXRError::p(new AXRError("AXRController", "Unknown file extension"))->raise();
         return false;
     }
 }
