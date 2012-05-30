@@ -1,0 +1,16 @@
+* {
+    contentAlignY: middle;
+    
+	#new blajd
+	{
+	    width: 50%;
+	    height: ref(width) / 2;
+	    background: #674;
+		shape: @polygon
+		{
+			sides: 3;
+			angle: 0;
+		};
+		border: @{ 15 #FFF }, @{ 10 #FA3 };
+	}
+}
