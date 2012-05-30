@@ -152,7 +152,6 @@ namespace AXR {
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
-        HSSDisplayObject::p asDisplayObject();
         
         /**
          *  Add a child to the content tree.
