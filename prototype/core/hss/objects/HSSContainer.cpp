@@ -1205,7 +1205,7 @@ void HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
             
         case HSSDirectionBottomToTop:
         {            
-            throw AXRError::p(new AXRError("HSSContainer", "no overlap and not the last one"));
+            AXRError::p(new AXRError("HSSContainer", "no overlap and not the last one"))->raise();
             break;
         }
             
