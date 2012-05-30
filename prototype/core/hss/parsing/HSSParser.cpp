@@ -525,7 +525,7 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
     HSSSelectorChain::p ret = HSSSelectorChain::p(new HSSSelectorChain());
     
     //first we need to look at the selector chain
-    //set the appropriate context
+    //set the current context
     this->currentContext.push_back(HSSParserContextSelectorChain);
     //parse the selector chain until we find the token to stop on
     while (this->currentToken && !this->currentToken->isA(stopOn)) {
@@ -911,7 +911,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
     //end of file would be fatal
     this->checkForUnexpectedEndOfSource();
     
-    //set the appropriate context
+    //set the current context
     this->currentContext.push_back(HSSParserContextObjectDefinition);
     
     //first we need to know what type of object it is
