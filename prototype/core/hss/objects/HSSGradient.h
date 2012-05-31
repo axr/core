@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 3
+ *      Core version: 0.47
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -60,6 +60,13 @@
 #include <cairo/cairo.h>
 
 namespace AXR {
+    
+    /**
+     *  @brief Abstract base class for gradient objects.
+     *
+     *  In HSS you can use various types of gradients to fill shapes, borders, fonts, etc.
+     *  These objects encapsulate the properties and values of the HSS gradients.
+     */
     class HSSGradient : public HSSObject
     {
     public:
@@ -75,6 +82,9 @@ namespace AXR {
          */
         HSSGradient(const HSSGradient & orig);
         
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSGradient();
         
         virtual std::string toString();
@@ -82,32 +92,115 @@ namespace AXR {
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
         
+        /**
+         *  Call this method when you need to draw the gradient. Each specific
+         *  subclass implements its own way of drawing the gradient.
+         */
         virtual void draw(cairo_t * cairo) = 0;
         
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
-        //startColor
+        /**
+         *  Getter for the actual value of startColor.
+         *  @return A shared pointer to the HSSRgb object that holds the start color information.
+         */
         HSSRgb::p getStartColor();
+        
+        /**
+         *  Getter for the definition object of startColor.
+         *  @return A shared pointer to the parser node containing the definition object of startColor.
+         */
         HSSParserNode::p getDStartColor();
+        
+        /**
+         *  Setter for the definition object of startColor. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of startColor.
+         */
         void setDStartColor(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect startColor.
+         *  @param source   The property which we are observing.
+         *  @param data     A regular pointer to the data that is sent along the notification.
+         */
         void startColorChanged(HSSObservableProperty source, void*data);
         
-        //endColor
+        /**
+         *  Getter for the definition object of endColor.
+         *  @return A shared pointer to the parser node containing the definition object of endColor.
+         */
         HSSRgb::p getEndColor();
+        
+        /**
+         *  Getter for the definition object of endColor.
+         *  @return A shared pointer to the parser node containing the definition object of endColor.
+         */
         HSSParserNode::p getDEndColor();
+        
+        /**
+         *  Setter for the definition object of endColor. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of endColor.
+         */
         void setDEndColor(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect endColor.
+         *  @param source   The property which we are observing.
+         *  @param data     A regular pointer to the data that is sent along the notification.
+         */
         void endColorChanged(HSSObservableProperty source, void*data);
         
-        //balance
+        
+        /**
+         *  Getter for the actual value of balance.
+         *  @return A long double containing the calculated value of balance.
+         */
         long double getBalance();
+        
+        /**
+         *  Getter for the definition object of balance.
+         *  @return A shared pointer to the parser node containing the definition object of balance.
+         */
         HSSParserNode::p getDBalance();
+        
+        /**
+         *  Setter for the definition object of balance. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of balance.
+         */
         void setDBalance(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect balance.
+         *  @param source   The property which we are observing.
+         *  @param data     A regular pointer to the data that is sent along the notification.
+         */
         void balanceChanged(HSSObservableProperty source, void*data);
         
-        //colorStops
+        /**
+         *  Getter for the definition object of colorStops.
+         *  @return A shared pointer to the parser node containing the definition object of colorStops.
+         */
         HSSParserNode::p getDColorStops();
+        
+        /**
+         *  Setter for the definition object of colorStops. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of colorStops.
+         */
         void setDColorStops(HSSParserNode::p value);
+        
+        /**
+         *  Since this property accepts multiple values, this allows to append a value instead of
+         *  replacing the whole thing.
+         *  @param value    A shared pointer to the parser node containing the definition object to be added
+         *                  to colorStops.
+         */
         void addDColorStops(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect textAlign.
+         *  @param source   The property which we are observing.
+         *  @param data     A regular pointer to the data that is sent along the notification.
+         */
         void colorStopsChanged(HSSObservableProperty source, void*data);
         
     protected:

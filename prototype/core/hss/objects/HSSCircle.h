@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/05/30
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -57,7 +57,7 @@
 
 namespace AXR {
     /**
-     *  @brief Shape object, representing the HSS object @circle.
+     *  @brief Shape object, representing the HSS object \@circle.
      */
     class HSSCircle : public HSSShape
     {
