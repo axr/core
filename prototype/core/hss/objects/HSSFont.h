@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 4
+ *      Core version: 0.47
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -59,6 +59,9 @@
 #include "../parsing/HSSKeywordConstant.h"
 
 namespace AXR {
+    /**
+     *  @brief This class represents the HSS object type \@font.
+     */
     class HSSFont : public HSSObject
     {
     public:        
@@ -67,46 +70,113 @@ namespace AXR {
         typedef boost::shared_ptr<HSSFont> p;
         
         /**
-         *  Constructor for HSSFont objects
+         *  Creates a new instance of a HSSFont object.
          */
         HSSFont();
+        
         /**
-         *  Copy constructor for HSSFont objects
+         *  Copy constructor for HSSFont objects. Do not call directly, use clone() instead.
          */
         HSSFont(const HSSFont & orig);
+        
         /**
          *  Clones an instance of HSSFont and gives a shared pointer of the
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSFont
          */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSFont();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
-        
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
-        //size
+        /**
+         *  Getter for the actual value of size.
+         *  @return A long double containing the size in points of the font.
+         */
         long double getSize();
+        
+        /**
+         *  Setter for the definition object of size. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of size.
+         */
         void setDSize(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect size.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void sizeChanged(HSSObservableProperty source, void*data);
         
-        //face
+        /**
+         *  Getter for the actual value of face.
+         *  @return A string containing the name of the typeface that will be used.
+         */
         std::string getFace();
+        
+        /**
+         *  Setter for the definition object of face. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of face.
+         */
         void setDFace(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect face.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void faceChanged(HSSObservableProperty source, void*data);
         
-        //color
+        /**
+         *  Getter for the actual value of color.
+         *  //FIXME: what about using gradients on text?
+         *  @return A shared pointer to a HSSRgb object representing the used color.
+         */
         HSSRgb::p getColor();
+        
+        /**
+         *  Getter for the definition object of color.
+         *  @return A shared pointer to the parser node containing the definition object of color.
+         */
         HSSParserNode::p getDColor();
+        
+        /**
+         *  Setter for the definition object of color. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of color.
+         */
         void setDColor(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect color.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void colorChanged(HSSObservableProperty source, void*data);
         
-        //weight
+        /**
+         *  Getter for the actual value of weight.
+         *  @return A shared pointer to a keyword constant representing the used weight.
+         */
         HSSKeywordConstant::p getWeight();
+        
+        /**
+         *  Setter for the definition object of weight. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of weight.
+         */
         void setDWeight(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect weight.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void weightChanged(HSSObservableProperty source, void*data);
         
     private:

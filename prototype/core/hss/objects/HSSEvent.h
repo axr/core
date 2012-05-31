@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/05/30
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 3
+ *      Core version: 0.47
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -59,78 +59,132 @@
 
 namespace AXR {
     
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSEventType
+     *  The type of the event object.
+     */
     enum HSSEventType
     {
-        HSSEventTypeNone = 0,
-        HSSEventTypeLoad,
-        HSSEventTypeClick,
-        HSSEventTypeDoubleClick,
-        HSSEventTypeTripleClick,
-        HSSEventTypeMouseDown,
-        HSSEventTypeMouseUp,
-        HSSEventTypeMouseOver,
-        HSSEventTypeMouseOut,
-        HSSEventTypeMouseHold,
-        HSSEventTypeMouseMove,
-        HSSEventTypeClickSecondary,
-        HSSEventTypeClickTertiary,
-        HSSEventTypeScroll
+        HSSEventTypeNone = 0, /**< Error state. */
+        HSSEventTypeLoad, /**< Fires when everything has loaded. */
+        HSSEventTypeClick, /**< Fires when a mouse down and mouse up happen in fast succession. */
+        HSSEventTypeDoubleClick, /**< Fires when clicked two times in fast succession. */
+        HSSEventTypeTripleClick, /**< Fires when clicked three times in fast succession. */
+        HSSEventTypeMouseDown, /**< Fires when a mouse button has been pressed. */
+        HSSEventTypeMouseUp, /**< Fires when a mouse button has been released. */
+        HSSEventTypeMouseOver, /**< Fires when the mouse pointer enters an area of the document. */
+        HSSEventTypeMouseOut, /**< Fires when the mouse pointer leaves an area of the document. */
+        HSSEventTypeMouseHold, /**< Fires when a mouse button has been pressed and held down for a while. */
+        HSSEventTypeMouseMove, /**< Fires when the mouse pointer is moved over an area of the screen. */
+        HSSEventTypeClickSecondary, /**< Fires when clicking with the secondary mouse button. */
+        HSSEventTypeClickTertiary, /**< Fires when clicking with the third (if there) mouse button. */
+        HSSEventTypeScroll /**< Fires when the sroll mechanism is activated on the mouse (e.g. scroll wheel). */
     };
+    /** @} */
     
+    /**
+     *  @brief Represents all event objects in HSS.
+     *  
+     *  All event objects, such as \@click, \@keyDown, etc, have the same behavior, they
+     *  fire their assigned action, so only one class is needed.
+     */
     class HSSEvent : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSEvent> p;
         
+        /**
+         *  Print the type as a string, useful for logging.
+         *  @param  eventType   The event type that will be printed as a string.
+         */
         static std::string eventTypeStringRepresentation(HSSEventType eventType);
         
         /**
-         *  Constructor for HSSEvent objects
-         *  @param  type    The event type that this event will respond to
+         *  Constructor for HSSEvent objects.
+         *  @param  type    The event type that this event will respond to.
          */
         HSSEvent(HSSEventType type);
         /**
-         *  Copy constructor for HSSEvent objects
+         *  Copy constructor for HSSEvent objects. Do not use directly, use clone() instead.
          */
         HSSEvent(const HSSEvent & orig);
         /**
-         *  Clones an instance of HSSEvent and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSEvent
+         *  Clones an instance of HSSEvent and gives a shared pointer of the newly instanciated
+         *  object.
+         *  @return A shared pointer to the new HSSEvent.
          */
         p clone() const;
         
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSEvent();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
-        
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
+        /**
+         *  Allows you to check if this event is of the given type.
+         *  @param  type    The event type to which to check against.
+         *  @return Wether it is of the given type or not.
+         */
         bool isA(HSSEventType type);
+        
+        /**
+         *  @return The event type of this instance.
+         */
         HSSEventType getEventType();
         
-        //action
+        /**
+         *  Getter for the actual values of action, HSSAction objects.
+         *  @return A vector of shared pointers to the action objects.
+         */
         std::vector<HSSAction::p> getAction();
+        
+        /**
+         *  Getter for the definition object of action.
+         *  @return A shared pointer to the parser node containing the definition object of action.
+         */
         const HSSParserNode::p getDAction() const;
+        
+        /**
+         *  Setter for the definition object of action. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of action.
+         */
         void setDAction(HSSParserNode::p value);
+        
+        /**
+         *  Since this property accepts multiple values, this allows to append a value instead of replacing
+         *  the whole thing.
+         *  @param value    A shared pointer to the parser node containing the definition object to be
+         *                  added to action.
+         */
         void addDAction(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect action.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void actionChanged(HSSObservableProperty source, void*data);
         
+        /**
+         *  Executes the action which is stored in this event object.
+         */
         virtual void fire();
-        
         
     protected:
         HSSEventType eventType;
-        
         
         //action
         HSSParserNode::p dAction;
         HSSObservable * observedAction;
         HSSObservableProperty observedActionProperty;
         std::vector<HSSAction::p> action;
-        
         
     private:
         HSSClonable::p cloneImpl() const;

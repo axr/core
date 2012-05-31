@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/05/30
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 1
+ *      Core version: 0.47
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -58,6 +58,10 @@
 
 namespace AXR {
     
+    /**
+     *  @brief The HSS object counterparts to flagging functions.
+     *  They actually work using flagging functions internally.
+     */
     class HSSFlagAction : public HSSAction
     {
     public:
@@ -67,24 +71,43 @@ namespace AXR {
          *  Constructor for HSSFlagAction objects
          */
         HSSFlagAction();
+        
         /**
-         *  Copy constructor for HSSFlagAction objects
+         *  Copy constructor for HSSFlagAction objects. Do not call directly,
+         *  use clone() instead.
          */
         HSSFlagAction(const HSSFlagAction & orig);
+        
         /**
          *  Clones an instance of HSSFlagAction and gives a shared pointer of the
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSFlagAction
          */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSFlagAction();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         
+        /**
+         *  This method is called when the flagging action should be executed.
+         */
         virtual void fire();
         
+        /**
+         *  Getter for the flagging function.
+         *  @return A shared pointer to the flagging function object.
+         */
         HSSFlagFunction::p getFlagFunction();
+        
+        /**
+         *  Setter for the flagging function.
+         *  @param newValue A shared pointer to the new flagging function to be used.
+         */
         void setFlagFunction(HSSFlagFunction::p newValue);
         
     private:

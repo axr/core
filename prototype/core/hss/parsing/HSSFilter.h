@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/05/30
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.47
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -64,25 +64,87 @@ namespace AXR {
     
     class HSSSelectorChain;
     
+    /**
+     *  @brief Abstract base class for parser node types representing filters.
+     *  Do not use directly, use one of the specific subclasses instead.
+     *
+     *  Filters are used in the selector chain to reduce the size of the selection.
+     */
     class HSSFilter : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSFilter> p;
         
+        /**
+         *  When logging, you often need a string representation of the filter type.
+         *  @param actionType   The action type to represent as a string.
+         *  @return A string representation of the given type.
+         */
         static std::string filterTypeStringRepresentation(HSSFilterType filterType);
+        
+        /**
+         *  Gives a HSSFilterType representation from a string representation.
+         *  //FIXME: what if not found?
+         *  @param name     The name of the filter (e.g. "first").
+         *  @return The filter type that corresponds to that name.
+         */
         static HSSFilterType filterTypeFromString(std::string name);
+        
+        /**
+         *  Instantiates a specific subclass for the given textual representation
+         *  of a string (e.g. "first").
+         *  @param stringType   The textual representation of the filter.
+         *  @return A shared pointer to a new instance of a filter of the given type.
+         */
         static HSSFilter::p newFilterWithStringType(std::string stringType);
+        
+        /**
+         *  Instantiates a specific subclass for the given HSSFilterType.
+         *  @param filterType   The filter type for the new instance.
+         *  @return A shared pointer to a new instance of a filter of the given type.
+         */
         static HSSFilter::p newFilterWithType(HSSFilterType filterType);
         
+        /**
+         *  Creates a new instance of a filter. Do not use directly.
+         */
         HSSFilter();
+        
+        /**
+         *  Clones an instance of HSSFilter and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSFilter.
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSFilter();
         
         virtual std::string toString();
         
+        /**
+         *  Each subclass implements its own way of processing the selection.
+         *  This base implementation is (I think) what gets called when you use
+         *  an unknown filter name in the source code, which currently returns the entire scope.
+         *  //FIXME: should this return an empty selection?
+         *  @param scope        The original selection: A vector of shared pointers to display objects.
+         *  @param negating     Wether we are negating the filter or not.
+         *  @return A vector of shared pointers to the display objects in the resulting selection.
+         */
         virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool negating);
         
+        /**
+         *  Allows you to check if this filter is of the given type.
+         *  @param  type    The filter type to which to check against.
+         *  @return Wether it is of the given type or not.
+         */
         bool isA(HSSFilterType type);
+        
+        /**
+         *  @return The filter type of this instance.
+         */
         HSSFilterType getFilterType();
         
         

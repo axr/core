@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 5
+ *      Core version: 0.47
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -62,53 +62,141 @@
 #include <vector>
 
 namespace AXR {
+    
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSFunctionType
+     *  The type of the function, specific for each subclass.
+     */
     enum HSSFunctionType
     {
-        HSSFunctionTypeNone = 0,
-        HSSFunctionTypeRef,
-        HSSFunctionTypeSel,
-        HSSFunctionTypeMin,
-        HSSFunctionTypeMax,
-        HSSFunctionTypeFloor,
-        HSSFunctionTypeCeil,
-        HSSFunctionTypeRound,
-        HSSFunctionTypeFlag,
-        HSSFunctionTypeUnflag,
-        HSSFunctionTypeToggleFlag
+        HSSFunctionTypeNone = 0, /**< Error state. */
+        HSSFunctionTypeRef, /**< References a value on a selected element. */
+        HSSFunctionTypeSel, /**< Creates a selection of elements. */
+        HSSFunctionTypeMin, /**< Returns the passed value, or the minimum if lower. */
+        HSSFunctionTypeMax, /**< Returns the passed value, or the maxium if higher. */
+        HSSFunctionTypeFloor, /**< Rounds a number down to the next integer. */
+        HSSFunctionTypeCeil, /**< Rounds a number up to the next integer. */
+        HSSFunctionTypeRound, /**< Rounds a number to the nearest integer. */
+        HSSFunctionTypeFlag, /**< Activates the given flag on the selected elements. */
+        HSSFunctionTypeUnflag, /**< Deactivates the given flag on the selected elements. */
+        HSSFunctionTypeToggleFlag /**< Toggles the given flag on the selected elements. */
     };
+    /** @} */
     
     class AXRController;
     
+    /**
+     *  @brief Abstract base class for all function objects.
+     *  Do not use directly, use a specific subclass instead.
+     */
     class HSSFunction : public HSSParserNode
     {
     public:        
         friend class HSSParser;
         
+        /**
+         *  This class shouldn't be called directly, but by the subclasses. Creates a new
+         *  instance of a function.
+         */
         HSSFunction();
+        
+        /**
+         *  Copy constructor for HSSFunction objects. Do not call directly, use clone() on
+         *  on of the subclasses instead.
+         */
         HSSFunction(const HSSFunction & orig);
+        
+        /**
+         *  Clones an instance of HSSFunction and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSFunction
+         */
         virtual ~HSSFunction();
         
         typedef boost::shared_ptr<HSSFunction> p;
-        
         virtual std::string toString();
         
+        /**
+         *  Evaluate the function. The actual implementation is up to each specific subclass.
+         *  @return A void pointer to some data. It's up to the caller to know what type of
+         *  data is expected.
+         */
         void * evaluate();
+        
+        /**
+         *  //FIXME: I think this one is not used
+         */
         void * evaluate(std::deque<HSSParserNode::p> arguments);
         
+        /**
+         *  //FIXME: make protected or private
+         */
         virtual void * _evaluate();
+        
+        /**
+         *  //FIXME: make protected or private
+         */
         virtual void * _evaluate(std::deque<HSSParserNode::p> arguments) =0;
         
+        /**
+         *  Method to be passed as callback when observing changes.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         virtual void propertyChanged(HSSObservableProperty property, void* data);
         
+        /**
+         *  The percentage base is the number that corresponds to 100%.
+         *  @param value    A long double containing the base for percentage calculations.
+         */
         virtual void setPercentageBase(long double value);
+        
+        /**
+         *  When we are using percentages, we keep track of the value and update accordingly.
+         *  @param property The property which we are observing.
+         *  @param observed     A regular pointer to the object we are observing. 
+         */
         virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
         
+        /**
+         *  Setter for the scope which to pass to members like references or selections.
+         *  //FIXME: how is memory handled for the scopes?
+         *  @param newScope     The new scope, a regular pointer to a vector of shared poninters
+         *  to display obects.
+         */
         virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
         
+        /**
+         *  Whenever a function needs to recalculate its value, it should be set to true.
+         *  @param value    A boolean, wether it needs to recalculate or not.
+         */
         void setDirty(bool value);
+        
+        /**
+         *  Tells if the function needs to recalculate its value.
+         *  @return Wether it needs recalculating or not.
+         */
         bool isDirty();
+        
+        /**
+         *  Getter for the value.
+         *  @return A void pointer to the value returned by the function. It's up to the caller to
+         *  know what kind of data is expected.
+         */
         void * getValue();
+        
+        /**
+         *  Allows you to check if this function is of the given type.
+         *  @param  type    The function type to which to check against.
+         *  @return Wether it is of the given type or not.
+         */
         virtual bool isA(HSSFunctionType type);
+        
+        /**
+         *  @return The function type of this instance.
+         */
         HSSFunctionType getFunctionType();
         
         /**

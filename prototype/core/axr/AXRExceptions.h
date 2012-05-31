@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/05/30
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -59,7 +59,7 @@
 
 namespace AXR {
     /**
-     *  @brief This class is deprecated.
+     *  @brief This class is deprecated. Use AXRError instead.
      *  //FIXME: remove this, and fix any dependency
      */
     class AXRException
@@ -71,7 +71,7 @@ namespace AXR {
         virtual std::string toString();
     };
     /**
-     *  @brief This class is deprecated.
+     *  @brief This class is deprecated. Use AXRError instead.
      *  //FIXME: remove this, and fix any dependency
      */
     class AXRNoStylesheetsException : public AXRException

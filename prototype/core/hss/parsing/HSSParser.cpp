@@ -178,6 +178,7 @@ bool HSSParser::loadFile(AXRFile::p file)
                 this->skip(HSSWhitespace);
             }
         }
+        // deprecated ------------------------------
         catch(AXR::HSSUnexpectedTokenException e){
             std::cout << e.toString() << std::endl;
             continue;
@@ -194,6 +195,7 @@ bool HSSParser::loadFile(AXRFile::p file)
         catch(AXR::HSSWrongHexLengthException e){
             std::cout << e.toString() << std::endl;
         }
+        // /deprecated -----------------------------
         
         
         if(!statement){

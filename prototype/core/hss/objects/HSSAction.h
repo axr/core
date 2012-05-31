@@ -99,16 +99,19 @@ namespace AXR {
          *                  from withing a subclass' constructor method.
          */
         HSSAction(HSSActionType type);
+        
         /**
-         *  Copy constructor for HSSAction objects
+         *  Copy constructor for HSSAction objects. Do not call directly, use clone() instead.
          */
         HSSAction(const HSSAction & orig);
+        
         /**
          *  Clones an instance of HSSAction and gives a shared pointer of the
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSAction
          */
         p clone() const;
+        
         /**
          *  Destructor for this class.
          */
