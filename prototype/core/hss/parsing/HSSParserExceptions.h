@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/09
+ *      Last changed: 2012/05/30
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -58,6 +58,10 @@
 #include "../tokenizing/HSSToken.h"
 
 namespace AXR {
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *  //FIXME: remove this, and fix any dependency
+     */
     class HSSParserException
     {
     public:
@@ -69,7 +73,10 @@ namespace AXR {
         virtual std::string toString();
     };
     
-    
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *  //FIXME: remove this, and fix any dependency
+     */
     class HSSUnexpectedEndOfSourceException : public HSSParserException
     {
     public:
@@ -77,6 +84,10 @@ namespace AXR {
         virtual std::string toString();
     };
     
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *  //FIXME: remove this, and fix any dependency
+     */
     class HSSExpectedTokenException : public HSSParserException
     {
     public:
@@ -87,6 +98,10 @@ namespace AXR {
         std::string value;
     };
     
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *  //FIXME: remove this, and fix any dependency
+     */
     class HSSUnexpectedTokenException : public HSSParserException
     {
     public:
@@ -97,6 +112,10 @@ namespace AXR {
         std::string value;
     };
     
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *  //FIXME: remove this, and fix any dependency
+     */
     class HSSUnexpectedObjectTypeException : public HSSParserException
     {
     public:
@@ -105,6 +124,10 @@ namespace AXR {
         std::string type;
     };
     
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *  //FIXME: remove this, and fix any dependency
+     */
     class HSSWrongHexLengthException : public HSSParserException
     {
     public:
