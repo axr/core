@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/06/01
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 5
+ *      Core version: 0.47
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -59,32 +59,62 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief Abstract base class to provide common functionality for margin object types.
+     *
+     *  Margins are spaces around elements, that won't be occupied by other elements that
+     *  are in flow.
+     */
     class HSSMargin : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSMargin> p;
         
         /**
-         *  Constructor for HSSMargin objects
+         *  Creates a new instance of a margin object. Don't use directly, this is only for 
+         *  subclasses.
          */
         HSSMargin();
+        
         /**
-         *  Copy constructor for HSSMargin objects
+         *  Copy constructor for HSSMargin objects. Don't call directly, but use clone() instead.
          */
         HSSMargin(const HSSMargin & orig);
+        
         /**
          *  Clones an instance of HSSMargin and gives a shared pointer of the
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSMargin
          */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSMargin();
         
+        /**
+         *  @todo make private and provide accessors
+         */
         HSSMultipleValue segments;
         
         virtual std::string toString();
         
+        /**
+         *  Setter for size.
+         *  @param  newSize A HSSValue object encapsulating the new size.
+         * 
+         *  @todo this should take a shared pointer
+         */
         void setSize(HSSValue newSize);
+        
+        /**
+         *  Setter for size.
+         *  @return A HSSValue object encapsulating the size.
+         *
+         *  @todo this should give a shared pointer
+         */
         HSSValue getSize();
         
     protected:

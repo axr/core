@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/05/30
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 9
+ *      Core version: 0.47
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -65,57 +65,184 @@
 #include "HSSRule.h"
 
 namespace AXR {
+    
+    /**
+     *  @brief Object definitions in HSS are represented by this class.
+     *
+     *  Object definitions hold property definitions, rules and other object definitions.
+     */
     class HSSObjectDefinition : public HSSStatement
     {
     public:
         typedef boost::shared_ptr<HSSObjectDefinition> p;
         
+        /**
+         *  Creates a new instance of an object definition, storing the given object, to which
+         *   the properties will be applied by calling the apply() method.
+         */
         HSSObjectDefinition(HSSObject::p prototype);
+        
+        /**
+         *  Copy constructor for HSSObjectDefinition. Do not call directly, use clone() instead.
+         */
         HSSObjectDefinition(const HSSObjectDefinition & orig);
+        
+        /**
+         *  Clones an instance of HSSObjectDefinition and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSObjectDefinition
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class
+         */
         ~HSSObjectDefinition();
+        
         virtual std::string toString();
         
+        /**
+         *  Call this to apply the property definitions to the prototype object. You can
+         *  call getObject() afterwards, to access the object itself.
+         */
         void apply();
         
-        //adds a new property definition to the properties list
+        /**
+         *  Adds a new property definition to the end of the properties list.
+         *  @param newProperty      A shared pointer (passed by reference [why?]) to the new
+         *                          property definition to be added.
+         */
         void propertiesAdd(HSSPropertyDefinition::p &newProperty);
+        
+        /**
+         *  Adds a new property definition to the end of the properties list, const version.
+         *  @param newProperty      A shared pointer (passed by reference [why?]) to the new
+         *                          property definition to be added.
+         */
         void propertiesAdd(const HSSPropertyDefinition::p &newProperty);
+        
+        /**
+         *  Adds a new property definition to the beginning of the properties list.
+         *  @param newProperty      A shared pointer (passed by reference [why?]) to the new
+         *                          property definition to be added.
+         */
         void propertiesPrepend(HSSPropertyDefinition::p &newProperty);
+        
+        /**
+         *  Adds a new property definition to the beginning of the properties list, const version.
+         *  @param newProperty      A shared pointer (passed by reference [why?]) to the new
+         *                          property definition to be added.
+         */
         void propertiesPrepend(const HSSPropertyDefinition::p &newProperty);
-        //removes last statement from the list and then deletes it
+        
+        /**
+         *  Removes last statement from the list and then deletes it.
+         */
         void propertiesRemoveLast();
-        //returns a pointer to the last statement in the list
+        
+        /**
+         *  @return A shared pointer to the last statement in the list, passed by reference [why?].
+         */
         HSSPropertyDefinition::p &propertiesLast();
-        //returns how many statements there are in the properties list
+        
+        /**
+         *  @return How many statements there are in the properties list.
+         */
         const int propertiesSize();
-        //returns all the properties
+        
+        /**
+         *  @return All the properties in the list, contained in a double ended queue holding shared
+         *  pointers to property definitions.
+         */
         std::deque<HSSPropertyDefinition::p> getProperties();
         
-        
-        //adds a new object definition to the children
+        /**
+         *  Adds a new object definition to the end of the children list.
+         *  @param child    A shared pointer (passed by reference [why?]) to an object definition.
+         */
         void childrenAdd(HSSObjectDefinition::p &child);
+        
+        /**
+         *  Adds a new object definition to the end of the children list, const version.
+         *  @param child    A shared pointer (passed by reference [why?]) to an object definition.
+         */
         void childrenAdd(const HSSObjectDefinition::p &child);
-        //removes last statement from the list and then deletes it
+        
+        /**
+         *  Removes last statement from the list and then deletes it.
+         */
         void childrenRemoveLast();
-        //returns a pointer to the last statement in the list
+        
+        /**
+         *  @return A shared pointer (passed by reference [why?]) to the last statement in the list.
+         */
         HSSObjectDefinition::p &childrenLast();
-        //returns how many statements there are in the children list
+        
+        /**
+         *  @return How many statements there are in the children list.
+         */
         const int childrenSize();
-        //returns all the children
+        
+        /**
+         *  @return A vector of shared pointers to object defnitions, the children.
+         */
         const std::vector<HSSObjectDefinition::p> getChildren() const;
         
+        /**
+         *  @return A shared pointer to the object that corresponds to the object type of the
+         *  object definition. Call apply() before using.
+         */
         HSSObject::p getObject();
         
+        /**
+         *  Setter for the scope which to pass to members like references or selections.
+         *  //FIXME: how is memory handled for the scopes?
+         *  @param newScope     The new scope, a regular pointer to a vector of shared poninters
+         *  to display obects.
+         */
         void setScope(const std::vector<HSSDisplayObject::p> * newScope);
         
+        /**
+         *  Setter for the "\@this object" which to pass to members like references or selections.
+         *  @param value    A shared pointer to a display object representing the \@this object.
+         */
         void setThisObj(HSSDisplayObject::p value);
+        
+        /**
+         *  Getter for the "\@this object" which to pass to members like references or selections.
+         *  @return A shared pointer to a display object representing the \@this object.
+         */
         HSSDisplayObject::p getThisObj();
         
+        /**
+         *  Setter for the list of rules. Replaces the whole list with the given one.
+         *  @param newRules     A double ended queue holding shared pointers to rules.
+         */
         void setRules(std::deque<HSSRule::p> newRules);
+        
+        /**
+         *  Getter for the list of rules.
+         *  @return A double ended queue holding shared pointers to rules.
+         *  @warning The returned deque is read-only.
+         */
         const std::deque<HSSRule::p> getRules() const;
+        
+        /**
+         *  Add a rule to the end of the list of rules.
+         *  @param rule     A shared pointer to a rule, to be added to the list of rules.
+         */
         void rulesAdd(HSSRule::p rule);
+        
+        /**
+         *  Add a rule to the beginning of the list of rules.
+         *  @param rule     A shared pointer to a rule, to be added to the list of rules.
+         */
         void rulesPrepend(HSSRule::p rule);
+        
+        /**
+         *  Remove a rule from the list of rules.
+         *  @param rule     A shared pointer to a rule, to be removed from the list of rules.
+         */
         void rulesRemove(HSSRule::p rule);
         
     protected:

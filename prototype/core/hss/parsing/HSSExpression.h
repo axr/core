@@ -105,6 +105,13 @@ namespace AXR {
         virtual ~HSSExpression();
         std::string toString();
         long double evaluate();
+        
+        /**
+         *  Each subclass implements the specific operation that needs to be done.
+         *
+         *  @param leftval  A long double that holds the left value.
+         *  @param rightval  A long double that holds the right value.
+         */
         virtual long double calculate(long double leftval, long double rightval) =0;
         
         bool isA(HSSExpressionType otherType);
@@ -184,6 +191,7 @@ namespace AXR {
          *  to display obects.
          */
         virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
+        
         /**
          *  Setter for the "\@this object" which to pass to members like references or selections.
          *  @param value    A shared pointer to a display object representing the \@this object.
