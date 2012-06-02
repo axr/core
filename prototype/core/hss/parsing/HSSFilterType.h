@@ -92,7 +92,9 @@ enum HSSFilterType {
     HSSFilterTypeLength, /**< Selects elements if its content text is as long as the given number. */
     //special
     HSSFilterTypeEach, /**< Splits the selection by element. */
-    //FIXME: HSSFilterTypeType (:type)
+    /**
+     *  @todo HSSFilterTypeType (:type)
+     */
     HSSFilterTypeCustom /**< Selects elements filtering according to a custom filter by the author. */
     
 };

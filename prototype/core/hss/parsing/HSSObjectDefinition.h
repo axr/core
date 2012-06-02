@@ -196,9 +196,10 @@ namespace AXR {
         
         /**
          *  Setter for the scope which to pass to members like references or selections.
-         *  //FIXME: how is memory handled for the scopes?
          *  @param newScope     The new scope, a regular pointer to a vector of shared poninters
          *  to display obects.
+         *
+         *  @todo how is memory handled for the scopes?
          */
         void setScope(const std::vector<HSSDisplayObject::p> * newScope);
         

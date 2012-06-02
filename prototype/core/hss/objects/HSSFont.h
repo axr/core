@@ -136,8 +136,9 @@ namespace AXR {
         
         /**
          *  Getter for the actual value of color.
-         *  //FIXME: what about using gradients on text?
          *  @return A shared pointer to a HSSRgb object representing the used color.
+         *
+         *  @todo what about using gradients on text?
          */
         HSSRgb::p getColor();
         

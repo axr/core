@@ -128,7 +128,8 @@ namespace AXR {
         
         /**
          *  This stores the name of the object.
-         *  //FIXME: this should be protected and with getter/setter
+         *
+         *  @todo this should be protected and with getter/setter
          */
         std::string name;
         
@@ -172,10 +173,12 @@ namespace AXR {
         /**
          *  All objects define their own functions depending on each property, so you need
          *  to call this method if you need to know wether an identifier is a function name
-         *  or not. //FIXME: is this really needed?
+         *  or not.
          *  @param value        The identifier.
          *  @param property     The property to which the identifier is being passed.
          *  @return Wether the identifier is a keyword for the given property.
+         *  
+         *  @todo is this really needed?
          */
         virtual bool isFunction(std::string value, std::string property);
         /**
@@ -238,7 +241,9 @@ namespace AXR {
          */
         bool shorthandNext();
         /**
-         *  Resets the shorthand index. //FIXME: shouldn't this empty the skipShorthand array too?
+         *  Resets the shorthand index.
+         *
+         *  @todo shouldn't this empty the skipShorthand array too?
          */
         void shorthandReset();
         /**
@@ -272,9 +277,10 @@ namespace AXR {
         /**
          *  Convenience method that gets the HSSObservableProperty for a property name in string
          *  form and passes it to setProperty(HSSObservableProperty, HSSParserNode::p).
-         *  //FIXME: this might be not necessary to be virtual
          *  @param name     A string containing the property name
          *  @param value    The parser node defining the value for the property
+         *
+         *  @todo this might be not necessary to be virtual
          */
         virtual void setPropertyWithName(std::string name, HSSParserNode::p value);
         /**
@@ -285,15 +291,16 @@ namespace AXR {
          */
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         /**
-         *  //FIXME: remove this
+         *  @todo remove this
          */
         virtual void setProperty(HSSObservableProperty name, void* value);
         /**
          *  When a subclass registers a observable property name with a pointer, it can be
          *  retrieved with this method.
-         *  //FIXME: change this to return a HSSParserNode::p instead
          *  @param name     The observable property name.
          *  @return The parser node defining the value for the given property.
+         *
+         *  @todo change this to return a HSSParserNode::p instead
          */
         virtual void * getProperty(HSSObservableProperty name);
         /**
@@ -305,14 +312,16 @@ namespace AXR {
         virtual void registerProperty(HSSObservableProperty name, void* property);
         /**
          *  Getter for the current scope this object is operating on.
-         *  //FIXME: this is probably a memory management nightmare.
          *  @return A pointer to the vector of shared pointers to display objects
+         *
+         *  @todo this is probably a memory management nightmare
          */
         const std::vector<boost::shared_ptr<HSSDisplayObject> > * getScope() const;
         /**
          *  Setter for the current scope this object is operating on.
-         *  //FIXME: this is probably a memory management nightmare.
          *  @param newScope     A pointer to a vector of shared pointers to display objects
+         *
+         *  @todo this is probably a memory management nightmare.
          */
         void setScope(const std::vector<boost::shared_ptr<HSSDisplayObject> > * newScope);
         /**
@@ -327,8 +336,9 @@ namespace AXR {
          */
         virtual AXRController * getController();
         /**
-         *  //FIXME: this is a duplicate of getType(), we probably don't need it.
          *  @return The object type.
+         *
+         *  @todo this is a duplicate of getType(), we probably don't need it.
          */
         HSSObjectType getObjectType();
         /**

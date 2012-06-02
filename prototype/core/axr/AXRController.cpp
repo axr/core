@@ -555,7 +555,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::filterSelection( 
                     std::vector<HSSDisplayObject::p> tempSel = theFilter->apply(selection, negating);
                     if(!this->isAtEndOfSelector()){
                         this->readNextSelectorNode();
-                        return this->filterSelection(tempSel, false, processing); //FIXME?
+                        return this->filterSelection(tempSel, false, processing);
                     } else {
                         this->readNextSelectorNode();
                         ret.push_back(tempSel);
@@ -588,9 +588,9 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::filterSelection( 
                 if(!this->isAtEndOfSelector()){
                     this->readNextSelectorNode();
                     //if(!theFlag->getPurging()){
-                    //    return this->filterSelection(selection, false, processing); //FIXME?
+                    //    return this->filterSelection(selection, false, processing);
                     //} else {
-                        return this->filterSelection(tempSel, false, processing); //FIXME?
+                        return this->filterSelection(tempSel, false, processing);
                     //}
                     
                 } else {
@@ -755,7 +755,9 @@ HSSObjectDefinition::p & AXRController::objectTreeGet(unsigned index)
 
 HSSObjectDefinition::p & AXRController::objectTreeGet(std::string name)
 {
-    //FIXME: do this with an unordered_map for better performance
+    /**
+     *  @todo do this with an unordered_map for better performance
+     */
     unsigned i, size;
     for (i=0, size=this->objectTree.size(); i<size; i++) {
         HSSObjectDefinition::p & theObj = this->objectTreeGet(i);

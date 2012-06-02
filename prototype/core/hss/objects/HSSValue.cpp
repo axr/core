@@ -217,7 +217,9 @@ long int HSSValue::getIntValue()
     if(this->valueType == HSSValueNumberInt){
         return this->intValue;
     } else {
-        //FIXME: parse string to int
+        /**
+         *  @todo parse string to int
+         */
         throw AXRError::p(new AXRError("HSSValue", "Unknown value type"));
     }
 }
@@ -227,7 +229,9 @@ long double HSSValue::getFloatValue()
     if(this->valueType == HSSValueNumberFloat){
         return this->floatValue;
     } else {
-        //FIXME: parse string to float
+        /**
+         *  @todo parse string to float
+         */
         throw AXRError::p(new AXRError("HSSValue", "Unknown value type"));
     }
 }

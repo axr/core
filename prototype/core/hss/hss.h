@@ -55,7 +55,7 @@
 
 #ifndef AXR_HSS_BUFFER_SIZE
 /**
- *  This is not used anywhere, I think //FIXME
+ *  @todo This is not used anywhere, I think
  */
 #define AXR_HSS_BUFFER_SIZE 10240 //1kB
 #endif

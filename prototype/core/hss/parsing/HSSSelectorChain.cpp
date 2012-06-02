@@ -145,7 +145,9 @@ const int HSSSelectorChain::size()
 HSSSelector::p HSSSelectorChain::subject()
 {
     HSSSelector::p ret;
-    //FIXME: subject selectors need to be implemented
+    /**
+     *  @todo subject selectors need to be implemented
+     */
     if(this->nodeList.back()->isA(HSSParserNodeTypeSelector)){
         ret = boost::static_pointer_cast<HSSSelector>(this->nodeList.back());
     } else {

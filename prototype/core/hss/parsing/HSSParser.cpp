@@ -125,7 +125,9 @@ void HSSParser::reset()
     
     //initialize the new values
     this->currentContext.push_back(HSSParserContextRoot);
-    //FIXME: will there be a root object? Now defaults to container
+    /**
+     *  @todo will there be a root object? Now defaults to container
+     */
     this->currentObjectContext.push(HSSContainer::p(new HSSContainer()));
     
 }
@@ -152,7 +154,9 @@ bool HSSParser::loadFile(AXRFile::p file)
     this->tokenizer->setBufferLength(len);
     this->tokenizer->readNextChar();
     
-    //FIXME: what if the file is longer than the buffer?
+    /**
+     *  @todo what if the file is longer than the buffer?
+     */
     this->wrapper->closeFile(file);
     
     this->readNextToken();
@@ -554,7 +558,10 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                     case '=':
                     case '-':
                     case '+':
-                    case '>': //FIXME: special handling for text selection combinators?
+                    case '>':
+                        /**
+                         *  @todo special handling for text selection combinators?
+                         */
                         ret->add(this->readSymbolCombinator());
                         break;
                     case '*':
@@ -624,10 +631,14 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                         }
                         break;
                     } else if (objtype == "super"){
-                        //FIXME
+                        /**
+                         *  @todo implement \@super
+                         */
                         std_log("@super not implemented yet");
                     } else if (objtype == "parent"){
-                        //FIXME
+                        /**
+                         *  @todo implement \@parent
+                         */
                         std_log("@parent not implemented yet");
                     } else if (objtype == "root"){
                         ret->add(HSSRootSelector::p(new HSSRootSelector()));
@@ -698,7 +709,6 @@ bool HSSParser::isCombinator(HSSToken::p token)
             case '.':
             case '>':
                 return true;
-                //fixme
                 
             default:
                 return false;
@@ -861,7 +871,9 @@ HSSCombinator::p HSSParser::readChildrenCombinatorOrSkip()
 //this expects the current token to be a symbol
 HSSCombinator::p HSSParser::readSymbolCombinator()
 {
-    //FIXME: check the context
+    /**
+     *  @todo check the context
+     */
     HSSCombinator::p ret;
     const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
     switch (currentTokenChar) {
@@ -1158,7 +1170,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
 {
     std::string propertyName;
     
-    //end of source is no goodf
+    //end of source is no good
     this->checkForUnexpectedEndOfSource();
     
     HSSPropertyDefinition::p ret;
@@ -1238,7 +1250,9 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 
                 //number literal
             } else if (this->currentToken->isA(HSSNumber) || this->currentToken->isA(HSSPercentageNumber) || this->currentToken->isA(HSSParenthesisOpen)){
-                //FIXME: parse the number and see if it is an int or a float
+                /**
+                 *  @todo parse the number and see if it is an int or a float
+                 */
                 HSSParserNode::p exp = this->readExpression();
                 if(exp){
                     ret->addValue(exp);
@@ -1268,7 +1282,6 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                     this->readNextToken();
                     //we assume it is an object name at this point
                 } else {
-                    //FIXME (?)
                     ret->addValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr)));
                     this->readNextToken();
                 }
@@ -1635,7 +1648,9 @@ HSSRule::p HSSParser::readInstructionRule()
             
         case HSSImportInstruction:
         {
-            std_log("hello");
+            /**
+             *  @todo handle this case?
+             */
             break;
         }
             
@@ -2039,7 +2054,9 @@ void HSSParser::skipExpected(HSSTokenType type, std::string value)
 void HSSParser::skipExpected(HSSTokenType type, std::string value, bool checkForUnexpectedEndOfSource)
 {
     this->checkForUnexpectedEndOfSource();
-    //FIXME: I'm not sure if this works as expected
+    /**
+     *  @todo I'm not sure if this works as expected
+     */
     HSSValueToken::p currentToken = HSSValueToken::p(VALUE_TOKEN(this->currentToken));
     if (!currentToken->equals(type, value)) {
         throw AXRError::p(new AXRError("HSSParser", "Expected token of type "+HSSToken::tokenStringRepresentation(type)+" and value "+value, this->currentFile->fileName, this->line, this->column));

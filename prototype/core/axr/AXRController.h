@@ -157,7 +157,8 @@ namespace AXR {
          *  Add a display object as a children of the current context, or as root if there is none.
          *
          *  @param newContainer A shared pointer to a display object.
-         *  //FIXME: change name to better reflect the type of the object
+         *
+         *  @todo change name to better reflect the type of the object
          */
         void add(HSSDisplayObject::p newContainer);
         
@@ -395,7 +396,9 @@ namespace AXR {
          */
         std::vector< std::vector<HSSDisplayObject::p> > filterSelection(std::vector< HSSDisplayObject::p> &selection, bool negating, bool processing);
         
-        //FIXME: make private and provide accessors.
+        /**
+         *  @todo make private and provide accessors.
+         */
         std::string basepath;
         
         
