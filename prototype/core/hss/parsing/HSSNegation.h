@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/05/30
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 1
+ *      Core version: 0.47
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -56,12 +56,33 @@
 #include "HSSParserNode.h"
 
 namespace AXR {
+    
+    /**
+     *  @brief Parser node representing the negator "!".
+     *
+     *  The negator is prepended in front of simple selectors to invert their meaning.
+     */
     class HSSNegation : public HSSParserNode
     {
     public:
+        
+        /**
+         *  Creates a new instance of a negation.
+         */
         HSSNegation();
+        
+        /**
+         *  Clones an instance of HSSNegation and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSNegation
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSNegation();
+        
         virtual std::string toString();
     private:
         virtual HSSClonable::p cloneImpl() const;

@@ -105,6 +105,13 @@ namespace AXR {
         virtual ~HSSExpression();
         std::string toString();
         long double evaluate();
+        
+        /**
+         *  Each subclass implements the specific operation that needs to be done.
+         *
+         *  @param leftval  A long double that holds the left value.
+         *  @param rightval  A long double that holds the right value.
+         */
         virtual long double calculate(long double leftval, long double rightval) =0;
         
         bool isA(HSSExpressionType otherType);
@@ -171,19 +178,22 @@ namespace AXR {
         
         /**
          *  When we are using percentages, we keep track of the value and update accordingly.
-         *  //FIXME: what if both left and right are percentages?
          *  @param property     The property which we are observing.
          *  @param observed     A regular pointer to the object we are observing. 
+         *
+         *  @todo what if both left and right are percentages?
          */
         virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
         
         /**
          *  Setter for the scope which to pass to members like references or selections.
-         *  //FIXME: how is memory handled for the scopes?
          *  @param newScope     The new scope, a regular pointer to a vector of shared poninters
          *  to display obects.
+         *
+         *  @todo how is memory handled for the scopes?
          */
         virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
+        
         /**
          *  Setter for the "\@this object" which to pass to members like references or selections.
          *  @param value    A shared pointer to a display object representing the \@this object.

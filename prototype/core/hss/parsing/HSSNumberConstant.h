@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/05/30
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 7
+ *      Core version: 0.47
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -57,16 +57,46 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief Parser node that represents a number.
+     *
+     *  Numbers, both integers and floating points are represented as a long double inside the 
+     *  value property.
+     */
     class HSSNumberConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSNumberConstant> p;
         
+        /**
+         *  Creates a new instance of a number constant node which holds the given value.
+         *  @param value    A long double containing the value for the constant.
+         */
         HSSNumberConstant(long double value);
+        
+        /**
+         *  Clones an instance of HSSNumberConstant and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSNumberConstant
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSNumberConstant();
         
+        /**
+         *  Setter for the value.
+         *  @param newValue     A long double containing the new calculated value for this constant.
+         */
         void setValue(long double newValue);
+        
+        /**
+         *  Getter for the value.
+         *  @return The calculated value of the constant.
+         */
         long double getValue();
         
         std::string toString();

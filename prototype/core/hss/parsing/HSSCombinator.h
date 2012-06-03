@@ -62,7 +62,7 @@ namespace AXR {
      *  @addtogroup typeEnums
      *  @{
      *  @enum HSSCombinatorType
-     *  The type of the combinator, specific for each subclass.
+     *  The type of the combinator which will determine what the behavior will be when used in AXRController.
      */
     enum HSSCombinatorType
     {
@@ -77,8 +77,11 @@ namespace AXR {
     /** @} */
     
     /**
-     *  @brief Combinators are used inside of selector chains, to define the relations between the elments that 
-     *  are selected. This is an abstract superclass and shouldn't be used directly.
+     *  @brief Combinators are used inside of selector chains, to define the relations between the elements that 
+     *  are selected.
+     *  
+     *  This class encapsulates all types of combinators. The actual behavior of the selection
+     *  is defined in AXRController.
      */
     class HSSCombinator : public HSSParserNode {
     public:
@@ -86,7 +89,7 @@ namespace AXR {
         
         /**
          *  Creates a new instance of a combinator node, of the type you give. All types of combinators
-         *  are handled by this class.
+         *  can be encapsulated with this class.
          */
         HSSCombinator(HSSCombinatorType type);
         

@@ -59,7 +59,7 @@
 namespace AXR {
     enum HSSTokenType
     {
-        HSSNone = 0, //FIXME: is this needed?
+        HSSNone = 0,
         HSSIdentifier,
         HSSNumber,
         HSSPercentageNumber,

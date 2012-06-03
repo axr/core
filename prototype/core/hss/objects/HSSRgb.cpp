@@ -148,7 +148,6 @@ std::string HSSRgb::defaultObjectType(std::string property)
 //}
 
 
-//FIXME: split into individual setters and call them from here
 void HSSRgb::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
     switch (name) {

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/22
+ *      Last changed: 2012/06/03
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -56,6 +56,10 @@
 #include "HSSShape.h"
 
 namespace AXR {
+    
+    /**
+     *  @brief Shape object, representing the HSS object \@rect.
+     */
     class HSSRectangle : public HSSShape
     {
     public:
@@ -65,16 +69,23 @@ namespace AXR {
          *  Constructor for HSSRectangle objects
          */
         HSSRectangle();
+        
         /**
          *  Copy constructor for HSSRectangle objects
          */
         HSSRectangle(const HSSRectangle & orig);
+        
         /**
+         
          *  Clones an instance of HSSRectangle and gives a shared pointer of the
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSRectangle
          */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSRectangle();
         
         virtual std::string toString();

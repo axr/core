@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/01
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.47
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -56,13 +56,36 @@
 #include "HSSFilter.h"
 
 namespace AXR {
+    /**
+     *  @brief Filters the selection down to the last item.
+     */
     class HSSLastFilter : public HSSFilter
     {
     public:
+        
+        /**
+         *  Creates a new instance of a last filter
+         */
         HSSLastFilter();
+        
+        /**
+         *  Clones an instance of HSSLastFilter and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSLastFilter.
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSLastFilter();
+        
+        /**
+         *  Prints itself as a textual representation, useful for loggin or introspection.
+         *  @return A string containing a textual representation of the keyword constant.
+         */
         virtual std::string toString();
+        
         virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool negating);
     private:
         virtual HSSClonable::p cloneImpl() const;

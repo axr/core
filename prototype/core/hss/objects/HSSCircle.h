@@ -65,19 +65,25 @@ namespace AXR {
         typedef boost::shared_ptr<HSSCircle> p;
         
         /**
-         *  Constructor for HSSCircle objects
+         *  Constructor for HSSCircle objects. Do not call directly, use clone() instead.
          */
         HSSCircle();
+        
         /**
          *  Copy constructor for HSSCircle objects
          */
         HSSCircle(const HSSCircle & orig);
+        
         /**
          *  Clones an instance of HSSCircle and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSCircle
+         *  @return A shared pointer to the new HSSCircle.
          */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSCircle();
         
         virtual std::string toString();

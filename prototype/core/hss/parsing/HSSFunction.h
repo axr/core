@@ -126,17 +126,17 @@ namespace AXR {
         void * evaluate();
         
         /**
-         *  //FIXME: I think this one is not used
+         *  @todo I think this one is not used
          */
         void * evaluate(std::deque<HSSParserNode::p> arguments);
         
         /**
-         *  //FIXME: make protected or private
+         *  @todo make protected or private
          */
         virtual void * _evaluate();
         
         /**
-         *  //FIXME: make protected or private
+         *  @todo make protected or private
          */
         virtual void * _evaluate(std::deque<HSSParserNode::p> arguments) =0;
         
@@ -162,9 +162,10 @@ namespace AXR {
         
         /**
          *  Setter for the scope which to pass to members like references or selections.
-         *  //FIXME: how is memory handled for the scopes?
          *  @param newScope     The new scope, a regular pointer to a vector of shared poninters
          *  to display obects.
+         *
+         *  @todo how is memory handled for the scopes?
          */
         virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
         

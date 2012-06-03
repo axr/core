@@ -60,7 +60,8 @@
 namespace AXR {
     /**
      *  @brief This class is deprecated. Use AXRError instead.
-     *  //FIXME: remove this, and fix any dependency
+     *
+     *  @todo remove this, and fix any dependency
      */
     class AXRException
     {
@@ -72,7 +73,8 @@ namespace AXR {
     };
     /**
      *  @brief This class is deprecated. Use AXRError instead.
-     *  //FIXME: remove this, and fix any dependency
+     *
+     *  @todo remove this, and fix any dependency
      */
     class AXRNoStylesheetsException : public AXRException
     {

@@ -65,7 +65,7 @@ namespace AXR {
      *  The type of the value, to be able to determine the correct storage
      *  of the data.
      *
-     *  //FIXME: is this a good design? and if so, aren't object definitions, object
+     *  @todo is this a good design? and if so, aren't object definitions, object
      *  names and functions missing?
      */
     enum HSSValueType {
@@ -158,15 +158,17 @@ namespace AXR {
         /**
          *  Returns the value of the object as an integer, converting it if needed.
          *
-         *  FIXME: right now just works with ints, no conversion is happening yet
          *  @return The value as a long int.
+         *
+         *  @todo right now just works with ints, no conversion is happening yet
          */
         long int getIntValue();
         /**
          *  Returns the value of the object as a floating point number, converting it if needed.
          *
-         *  FIXME: right now just works with floats, no conversion is happening yet
          *  @return The value as a long double.
+         *
+         *  @todo right now just works with floats, no conversion is happening yet
          */
         long double getFloatValue();
         

@@ -84,9 +84,10 @@ namespace AXR {
         
         /**
          *  Gives a HSSFilterType representation from a string representation.
-         *  //FIXME: what if not found?
          *  @param name     The name of the filter (e.g. "first").
          *  @return The filter type that corresponds to that name.
+         *
+         *  @todo what if not found? there should be an error state in the enum
          */
         static HSSFilterType filterTypeFromString(std::string name);
         
@@ -128,10 +129,12 @@ namespace AXR {
          *  Each subclass implements its own way of processing the selection.
          *  This base implementation is (I think) what gets called when you use
          *  an unknown filter name in the source code, which currently returns the entire scope.
-         *  //FIXME: should this return an empty selection?
+         *
          *  @param scope        The original selection: A vector of shared pointers to display objects.
          *  @param negating     Wether we are negating the filter or not.
          *  @return A vector of shared pointers to the display objects in the resulting selection.
+         *
+         *  @todo should this return an empty selection?
          */
         virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool negating);
         

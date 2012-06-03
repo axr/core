@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/06/01
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -57,35 +57,59 @@
 
 namespace AXR {
     
+    /**
+     *  @brief This action object type logs values to the console.
+     *
+     *  It can either log stuff directly 
+     */
     class HSSLog : public HSSAction
     {
     public:
+        
         /**
-         *  Constructor for HSSLog objects
+         *  Creates a new instance of a log action object.
          */
         HSSLog();
+        
         /**
-         *  Copy constructor for HSSLog objects
+         *  Copy constructor for HSSLog objects. Don't call directly, use clone() instead. 
          */
         HSSLog(const HSSLog & orig);
+        
         /**
          *  Clones an instance of HSSLog and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSLog
+         *  @return A shared pointer to the new HSSLog.
          */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSLog();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
-        
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-        
         virtual void fire();
         
-        //value
+        /**
+         *  Getter for the definition object of value.
+         *  @return A shared pointer to the parser node containing the definition object of value.
+         */
         HSSParserNode::p getDValue();
+        
+        /**
+         *  Setter for the definition object of value. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of value.
+         */
         void setDValue(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect value.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void valueChanged(HSSObservableProperty source, void*data);
         
         

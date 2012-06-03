@@ -197,7 +197,9 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
             
             switch (value->getType()) {
                 case HSSParserNodeTypeKeywordConstant:
-                    //FIXME: what here?
+                    /**
+                     *  @todo what here?
+                     */
                     break;
                     
                 case HSSParserNodeTypeStringConstant:
@@ -243,7 +245,9 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
             
             switch (value->getType()) {
                 case HSSParserNodeTypeKeywordConstant:
-                    //FIXME: what here?
+                    /**
+                     *  @todo what here?
+                     */
                     break;
                     
                 case HSSParserNodeTypeFunctionCall:
@@ -259,7 +263,9 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                             this->target.insert(this->target.end(), inner.begin(), inner.end());
                         }
                         
-                        //FIXME: potentially leaking
+                        /**
+                         *  @todo potentially leaking
+                         */
                         fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSRequest>(this, &HSSRequest::targetChanged));
                         this->observedTarget = fnct.get();
                         this->observedTargetProperty = HSSObservablePropertyValue;

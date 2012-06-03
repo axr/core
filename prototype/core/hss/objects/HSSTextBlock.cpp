@@ -271,7 +271,9 @@ void HSSTextBlock::layout()
         HSSFont::p theFont = *this->font.begin();
         pango_font_description_set_family (font_description, theFont->getFace().c_str());
         
-        //FIXME: add support for weights in fonts
+        /**
+         *  @todo add support for weights in fonts
+         */
         pango_font_description_set_weight (font_description, PANGO_WEIGHT_NORMAL);
         pango_font_description_set_absolute_size (font_description, theFont->getSize() * PANGO_SCALE);
         

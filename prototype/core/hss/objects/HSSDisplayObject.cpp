@@ -101,7 +101,9 @@ void HSSDisplayObject::initialize()
     this->tabIndex = this->zoomFactor = 1;
     this->flow = this->visible = true;
     this->overflow = false;
-    //fixme: change to camelCase
+    /**
+     *  @todo change to camelCase
+     */
     this->does_float = false;
     this->heightByContent = false;
     this->_isRoot = false;
@@ -570,7 +572,10 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, void * value)
         case HSSObservablePropertyContent:
         case HSSObservablePropertyFont:
         case HSSObservablePropertyBorder:
-            return; //FIXME
+            /**
+             *  @todo to be implemented
+             */
+            return;
             
         case HSSObservablePropertyOn:
             std_log("lakjdflad");

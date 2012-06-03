@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/02
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 5
+ *      Core version: 0.47
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -57,18 +57,52 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief Parser node that represents an object name constant.
+     *  
+     *  When using object names in HSS, the system will look up the object with the name
+     *  encapsulated in this class from the object tree on AXRController.
+     */
     class HSSObjectNameConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSObjectNameConstant> p;
         
+        /**
+         *  Creates a new instance of a object name constant, with given name.
+         *  @param  value   A string containing the object name.
+         */
         HSSObjectNameConstant(std::string value);
+        
+        /**
+         *  Clones an instance of HSSObjectNameConstant and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSObjectNameConstant.
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSObjectNameConstant();
         
+        /**
+         *  Setter for the value of the object name constant.
+         *  @param newValue     A string containing the new object name.
+         */
         void setValue(std::string newValue);
+        
+        /**
+         *  Getter for the value of the object name constant.
+         *  @return A string containing the object name.
+         */
         std::string getValue();
         
+        /**
+         *  Prints itself as a textual representation, useful for loggin or introspection.
+         *  @return A string containing a textual representation of the keyword constant.
+         */
         std::string toString();
         
     protected:

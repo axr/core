@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/01
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 5
+ *      Core version: 0.47
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -57,18 +57,49 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief Parser node that represents a keyword constant in the HSS source.
+     */
     class HSSKeywordConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSKeywordConstant> p;
         
+        /**
+         *  Creates a new instance of a keyword constant, with given content.
+         *  @param  value   A string containing the name of the keyword.
+         */
         HSSKeywordConstant(std::string value);
+        
+        /**
+         *  Clones an instance of HSSKeywordConstant and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSKeywordConstant.
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSKeywordConstant();
         
+        /**
+         *  Setter for the value of the keyword constant.
+         *  @param newValue     A string containing the new name of the keyword.
+         */
         void setValue(std::string newValue);
+        
+        /**
+         *  Getter for the value of the keyword constant.
+         *  @return A string containing the name of the keyword.
+         */
         std::string getValue();
         
+        /**
+         *  Prints itself as a textual representation, useful for loggin or introspection.
+         *  @return A string containing a textual representation of the keyword constant.
+         */
         std::string toString();
         
     protected:

@@ -58,9 +58,11 @@
 #include "../tokenizing/HSSToken.h"
 
 namespace AXR {
+    
     /**
      *  @brief This class is deprecated. Use AXRError instead.
-     *  //FIXME: remove this, and fix any dependency
+     *
+     *  @todo remove this, and fix any dependency
      */
     class HSSParserException
     {
@@ -75,7 +77,8 @@ namespace AXR {
     
     /**
      *  @brief This class is deprecated. Use AXRError instead.
-     *  //FIXME: remove this, and fix any dependency
+     *
+     *  @todo remove this, and fix any dependency
      */
     class HSSUnexpectedEndOfSourceException : public HSSParserException
     {
@@ -86,7 +89,8 @@ namespace AXR {
     
     /**
      *  @brief This class is deprecated. Use AXRError instead.
-     *  //FIXME: remove this, and fix any dependency
+     *
+     *  @todo remove this, and fix any dependency
      */
     class HSSExpectedTokenException : public HSSParserException
     {
@@ -100,7 +104,8 @@ namespace AXR {
     
     /**
      *  @brief This class is deprecated. Use AXRError instead.
-     *  //FIXME: remove this, and fix any dependency
+     *
+     *  @todo remove this, and fix any dependency
      */
     class HSSUnexpectedTokenException : public HSSParserException
     {
@@ -114,7 +119,8 @@ namespace AXR {
     
     /**
      *  @brief This class is deprecated. Use AXRError instead.
-     *  //FIXME: remove this, and fix any dependency
+     *
+     *  @todo remove this, and fix any dependency
      */
     class HSSUnexpectedObjectTypeException : public HSSParserException
     {
@@ -126,7 +132,8 @@ namespace AXR {
     
     /**
      *  @brief This class is deprecated. Use AXRError instead.
-     *  //FIXME: remove this, and fix any dependency
+     *
+     *  @todo remove this, and fix any dependency
      */
     class HSSWrongHexLengthException : public HSSParserException
     {

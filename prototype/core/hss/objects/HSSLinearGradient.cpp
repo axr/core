@@ -50,7 +50,9 @@
  *
  ********************************************************************/
 
-//FIXME: set defaults
+/**
+ *  @todo set defaults
+ */
 
 #include "HSSLinearGradient.h"
 #include "../parsing/HSSObjectDefinition.h"
