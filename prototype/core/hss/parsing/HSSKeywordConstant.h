@@ -59,7 +59,7 @@
 namespace AXR {
     
     /**
-     *  @brief Parser node that represents a keyword constant.
+     *  @brief Parser node that represents a keyword constant in the HSS source.
      */
     class HSSKeywordConstant : public HSSParserNode
     {
@@ -75,7 +75,7 @@ namespace AXR {
         /**
          *  Clones an instance of HSSKeywordConstant and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSKeywordConstant
+         *  @return A shared pointer to the new HSSKeywordConstant.
          */
         p clone() const;
         

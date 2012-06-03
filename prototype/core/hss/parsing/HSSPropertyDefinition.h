@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/22
+ *      Last changed: 2012/06/03
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -59,25 +59,101 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief A property definition holds a value that is paired with the name of the property.
+     *
+     *  Inside the blocks of rules and object definitions property definitions are defined, to
+     *  apply te values to the corresponding property of each object.
+     */
     class HSSPropertyDefinition : public HSSStatement
     {
     public:
         typedef boost::shared_ptr<HSSPropertyDefinition> p;
+        
+        /**
+         *  Iterator for vectors of shared pointers to property definitions
+         */
         typedef std::vector<p>::iterator it;
+        
+        /**
+         *  Iterator for vectors of shared pointers to property definitions, const version.
+         */
         typedef std::vector<p>::const_iterator const_it;
-
+        
+        /**
+         *  Creates a new instance of a property definition, with an empty name and value.
+         */
         HSSPropertyDefinition();
+        
+        /**
+         *  Creates a new instance of a property definition, with the given name, but empty
+         *  value.
+         *  @param name     A string containing the name of the property.
+         */
         HSSPropertyDefinition(std::string name);
+        
+        /**
+         *  Creates a new instance of a property definition, with the given name and value.
+         *  @param name     A string containing the name of the property.
+         *  @param value    A shared pointer to the parser node that holds the value of this
+         *                  property definition.
+         */
         HSSPropertyDefinition(std::string name, HSSParserNode::p value);
+        
+        /**
+         *  Copy constructor for HSSPropertyDefinition objects. Do not call directly, use clone() instead.
+         */
         HSSPropertyDefinition(const HSSPropertyDefinition &orig);
+        
+        /**
+         *  Clones an instance of HSSPropertyDefinition and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSPropertyDefinition
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         *
+         *  @todo Make this virtual.
+         */
         ~HSSPropertyDefinition();
+        
         std::string toString();
+        
+        /**
+         *  Setter for the name of the property.
+         *  @param name     A string containing the name of the property.
+         */
         void setName(std::string name);
+        
+        /**
+         *  Getter for the name of the property.
+         *  @return A string containing the name of the property.
+         */
         std::string getName();
+        
+        /**
+         *  Setter for the value of the property.
+         *  @param name     A shared pointer to the parser node that represents the value of the property.
+         */
         void setValue(HSSParserNode::p value);
+        
+        /**
+         *  Adds a value to the property definition. If the value is not already a multiple value definition,
+         *  it will create one and add the current value to it too.
+         *  @param name     A shared pointer to the parser node that represents the value to add to the property
+         *                  definition.
+         */
         void addValue(HSSParserNode::p value);
+        
+        /**
+         *  Getter for the value of the property.
+         *  @return A shared pointer to the parser node that represents the value of the property definition.
+         */
         HSSParserNode::p getValue();
+        
         virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
         
     protected:

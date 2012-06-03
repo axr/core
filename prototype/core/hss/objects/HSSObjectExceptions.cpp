@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/09/04
+ *      Last changed: 2012/06/02
  *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -54,6 +54,11 @@
 
 using namespace AXR;
 
+/**
+ *  @brief This class is deprecated. Use AXRError instead.
+ *
+ *  @todo remove this, and fix any dependency
+ */
 HSSUnknownObjectTypeException::HSSUnknownObjectTypeException(std::string type)
 {
     this->type = type;
