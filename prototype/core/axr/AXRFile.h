@@ -101,7 +101,9 @@ namespace AXR {
          */
         void setAtEndOfFile(bool newValue);
         
-        //FIXME: make these private and provide accessors
+        /**
+         *  @todo make these private and provide accessors
+         */
         char * buffer;
         long int bufferSize;
         long int fileSize;
@@ -109,11 +111,6 @@ namespace AXR {
         std::string basePath;
         std::string extension;
         FILE * fileHandle;
-        
-        std::string toString();
-        
-        bool isAtEndOfFile();
-        void setAtEndOfFile(bool newValue);
 
     protected:
         std::string fileName;

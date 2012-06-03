@@ -68,7 +68,9 @@ HSSMargin::HSSMargin()
 HSSMargin::HSSMargin(const HSSMargin & orig)
 : HSSObject(orig)
 {
-    //fixme
+    /**
+     *  @todo does something need to be done here?
+     */
 }
 
 HSSMargin::p HSSMargin::clone() const{

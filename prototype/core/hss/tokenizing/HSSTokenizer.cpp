@@ -50,7 +50,9 @@
  *
  ********************************************************************/
 
-//FIXME: do something meaningful with the error codes
+/**
+ *  @todo do something meaningful with the error codes
+ */
 
 #include "../hss.h"
 #include "../parsing/HSSParserExceptions.h"

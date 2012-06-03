@@ -139,9 +139,14 @@ namespace AXR {
          */
         void setSelectorChain(HSSSelectorChain::p newValue);
         
-        //FIXME: make private
+        /**
+         *  @todo make private
+         */
         virtual void * _evaluate();
-        //FIXME: is this one even used?
+        
+        /**
+         *  @todo is this one even used?
+         */
         virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
         
         /**

@@ -62,10 +62,11 @@
 namespace AXR {
     
     /**
-     *  @brief Abstract base class for gradient objects.
+     *  @brief Abstract base class for gradient objects. Do not use directly, but one of its
+     *  subclasses instead.
      *
-     *  In HSS you can use various types of gradients to fill shapes, borders, fonts, etc.
-     *  These objects encapsulate the properties and values of the HSS gradients.
+     *  Surfaces that can be filled with a color generally also accept a gradient. This class
+     *  provides the base functionality that is common to all gradient objects.
      */
     class HSSGradient : public HSSObject
     {

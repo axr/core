@@ -119,9 +119,10 @@ void HSSRefFunction::setSelectorChain(HSSSelectorChain::p newValue)
 
 void * HSSRefFunction::_evaluate()
 {
-    //FIXME: this works only on numeric values, with other kind of data I don't know what will happen
-    //we need to figure out how to deal with non-numeric values here
-    
+    /**
+     *  @todo this works only on numeric values, with other kind of data I don't know what will happen
+     *  we need to figure out how to deal with non-numeric values here
+     */
     this->axrController->setSelectorChain(this->selectorChain);
     std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->selectHierarchical(*this->scope, this->getThisObj());
     if (selection.size() == 0){

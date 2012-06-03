@@ -62,7 +62,10 @@
 
 namespace AXR
 {
-    typedef unsigned AXRFileHandle; //FIXME: are we going to use this?
+    /**
+     *  @todo are we going to use this?
+     */
+    typedef unsigned AXRFileHandle;
     
     class AXRCore;
     /**

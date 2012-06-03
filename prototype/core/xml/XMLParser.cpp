@@ -154,7 +154,9 @@ void XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)
 
 void XMLParser::CharacterData(const XML_Char *s, int len)
 {
-    //FIXME: make this better
+    /**
+     *  @todo make this better
+     */
     //for now, just ignore pure newlines and tabs
     std::string tempstr = std::string(s, len);
     if(tempstr != "\n" && tempstr != "\r" && tempstr != "\t"){
@@ -167,9 +169,10 @@ void XMLParser::EndElement(const XML_Char *name)
     this->controller->exitElement();
 }
 
-
-//FIXME: this should be fleshed out into specialized tokenizing and parsing classes
-//to better handle unexpected characters and such
+/**
+ *  @todo this should be fleshed out into specialized tokenizing and parsing classes
+ *  to better handle unexpected characters and such
+ */
 void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *data)
 {
     if(this->controller == NULL){
@@ -193,7 +196,9 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
         while (data[datai] != '\0') {
             if (readingAttr && isspace(data[datai])){
                 //ignore the whitespace
-                //FIXME: set behavior according to XML spec
+                /**
+                 *  @todo set behavior according to XML spec
+                 */
             } else if(data[datai] == '=') {
                 if(readingAttr){
                     //finished reading the attribute
@@ -204,7 +209,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
                     //we now expect a double quote
                     datai++;
                     if(data[datai] != '"'){
-                        throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->file->fileName, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4));
+                        throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->file->getFileName(), (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4));
                     }
                     
                     //std_log1(attribute);
@@ -216,7 +221,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
                 
             } else if(data[datai] == '"'){
                 if(readingAttr){
-                    throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->file->fileName, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4));
+                    throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->file->getFileName(), (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4));
                     
                 } else {
                     readingAttr = true;
@@ -245,7 +250,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
             //ignore silently
         } else {
             //warn
-            AXRWarning::p(new AXRWarning("XMLParser", "Ignoring stylesheet of unknown type", this->file->fileName, (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+1))->raise();
+            AXRWarning::p(new AXRWarning("XMLParser", "Ignoring stylesheet of unknown type", this->file->getFileName(), (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+1))->raise();
         }
     }
     
@@ -254,11 +259,11 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
 
 
 std::string XMLParser::getFilePath(){
-    return this->file->basePath + "/" + this->file->fileName;
+    return this->file->basePath + "/" + this->file->getFileName();
 }
 
 std::string XMLParser::getFileName(){
-    return this->file->fileName;
+    return this->file->getFileName();
 }
 
 

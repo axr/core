@@ -109,12 +109,13 @@ namespace AXR {
         /**
          *  The main drawing function. Call this to redraw an area of the window.
          *  @param  rect    The rectangular section of the screen that should be redrawn
-         *                  //FIXME: change this to HSSRect
          *  @param  bounds  The rectangle describing the bounds of the window.
-         *                  //FIXME: change this to HSSRect
          *
          *  @warning The root surface should be created in platform specific subclass before calling
          *  this as base class' method
+         *
+         *  @todo change rect to be a HSSRect
+         *  @todo change bounds to be a HSSRect
          */
         virtual void drawInRectWithBounds(AXRRect rect, AXRRect bounds);
         /**

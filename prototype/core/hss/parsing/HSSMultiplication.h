@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/01
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 4
+ *      Core version: 0.47
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -57,17 +57,44 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief Type of expression that multiplies the left value by the right value.
+     */
     class HSSMultiplication : public HSSExpression {
         
     public:
         typedef boost::shared_ptr<HSSMultiplication> p;
         
+        /**
+         *  Creates a new instance of a multiplication expression with the two
+         *  members you give.
+         *
+         *  @param left     A shared parser node to the left member of the expression.
+         *  @param right    A shared parser node to the right member of the expression.
+         */
         HSSMultiplication(HSSParserNode::p left, HSSParserNode::p right);
+        
+        /**
+         *  Copy constructor for HSSContainer objects. Do not call directly, use clone() instead.
+         *  @param orig     The original multiplication to clone.
+         */
         HSSMultiplication(const HSSMultiplication &orig);
+        
+        /**
+         *  Clones an instance of a multiplication expression and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSMultiplication
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSMultiplication();
         
         long double calculate(long double leftval, long double rightval);
+        
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

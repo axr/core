@@ -334,7 +334,9 @@ namespace AXR {
         bool isRoot();
         void setRoot(bool newValue);
         
-        //FIXME: make private and add accessors
+        /**
+         *  @todo make private and add accessors
+         */
         std::map<std::string, std::string>attributes;
         
     protected:
@@ -380,7 +382,9 @@ namespace AXR {
         HSSObservable * observedHeight;
         HSSObservableProperty observedHeightProperty;
         
-        //FIXME: bounds
+        /**
+         *  @todo add "bounds" property
+         */
         
         //anchorX
         HSSParserNode::p dAnchorX;
@@ -431,7 +435,9 @@ namespace AXR {
         HSSObservableProperty observedOnProperty;
         boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > on;
         
-        //FIXME: margin
+        /**
+         *  @todo add "margin" property
+         */
         
         //border
         HSSParserNode::p dBorder;
@@ -441,14 +447,27 @@ namespace AXR {
         long double borderBleeding;
         
         long double zoomFactor;
-        //FIXME: transform
-        //FIXME: effects
-        //FIXME: animation
+        
+        /**
+         *  @todo add "transform" property
+         */
+        /**
+         *  @todo add "effects" property
+         */
+        /**
+         *  @todo add "animation" property
+         */
+        
         bool visible;
         signed int drawIndex;
         unsigned int tabIndex;
-        //FIXME: focused
-        //FIXME: mask
+        
+        /**
+         *  @todo add "focused" property
+         */
+        /**
+         *  @todo add "mask" property
+         */
         
         unsigned _index;
         

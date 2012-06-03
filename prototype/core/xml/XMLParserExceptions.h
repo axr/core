@@ -43,9 +43,9 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2011/04/15
+ *      Last changed: 2012/06/02
  *      HSS version: 1.0
- *      Core version: 0.3
+ *      Core version: 0.47
  *      Revision: 3
  *
  ********************************************************************/
@@ -58,6 +58,12 @@
 #include <string>
 
 namespace AXR {
+    
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *
+     *  @todo remove this, and fix any dependency
+     */
     class XMLParserException
     {
     public:
@@ -72,6 +78,11 @@ namespace AXR {
         bool _tracks_file_position;
     };
     
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *
+     *  @todo remove this, and fix any dependency
+     */
     class XMLUnexpectedEndOfSourceException : public XMLParserException
     {
     public:
@@ -79,6 +90,11 @@ namespace AXR {
         virtual std::string toString();
     };
     
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *
+     *  @todo remove this, and fix any dependency
+     */
     class XMLNoElementsException : public XMLParserException
     {
     public:
@@ -86,12 +102,23 @@ namespace AXR {
         virtual std::string toString();
     };
     
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *
+     *  @todo remove this, and fix any dependency
+     */
     class XMLUnknownProcessingInstructionException : public XMLParserException
     {
     public:
         XMLUnknownProcessingInstructionException(std::string filename, int line, int column);
         virtual std::string toString();
     };
+    
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *
+     *  @todo remove this, and fix any dependency
+     */
     class XMLMalformedProcessingInstructionException : public XMLParserException
     {
     public:
@@ -99,6 +126,11 @@ namespace AXR {
         virtual std::string toString();
     };
     
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *
+     *  @todo remove this, and fix any dependency
+     */
     class XMLUnknownSheetTypeException : public XMLParserException
     {
     public:
@@ -106,6 +138,11 @@ namespace AXR {
         virtual std::string toString();
     };
     
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *
+     *  @todo remove this, and fix any dependency
+     */
     class XMLUnknownCallbackTypeException
     {
     public:
@@ -113,6 +150,11 @@ namespace AXR {
         virtual std::string toString();
     };
     
+    /**
+     *  @brief This class is deprecated. Use AXRError instead.
+     *
+     *  @todo remove this, and fix any dependency
+     */
     class XMLControllerNotSetException : public XMLParserException
     {
     public:

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/29
+ *      Last changed: 2012/06/01
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 9
+ *      Core version: 0.47
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -57,41 +57,121 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    enum HSSInstructionType {
-        HSSNewInstruction,
-        HSSEnsureInstruction,
-        HSSImportInstruction,
-        HSSMoveInstruction,
-        HSSDeleteInstruction,
-        HSSGrayscale1Instruction,
-        HSSGrayscale2Instruction,
-        HSSRGBInstruction,
-        HSSRGBAInstruction,
-        HSSRRGGBBInstruction,
-        HSSRRGGBBAAInstruction
-    };
     
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSInstructionType
+     *  The type of the instruction node. It will determine what the instruction will be used for.
+     */
+    enum HSSInstructionType {
+        HSSNewInstruction, /**< This will cause a new element to be created when prepended in front of rules. */
+        HSSEnsureInstruction, /**< This will cause a new element to be created if not already there,
+                                when prepended in front of rules. */
+        HSSImportInstruction, /**< Loads code from the given file and adds it to the current document. */
+        HSSMoveInstruction, /**< Moves elements from one part of the tree to another. */
+        HSSDeleteInstruction, /**< Removes elements from the content tree. */
+        HSSGrayscale1Instruction, /**< Creates a color object (e.g. #C). */
+        HSSGrayscale2Instruction, /**< Creates a color object (e.g. #CC). */
+        HSSRGBInstruction, /**< Creates a color object (e.g. #CCC). */
+        HSSRGBAInstruction, /**< Creates a color object (e.g. #CCCF). */
+        HSSRRGGBBInstruction, /**< Creates a color object (e.g. #CCCCCC). */
+        HSSRRGGBBAAInstruction /**< Creates a color object (e.g. #CCCCCCFF). */
+    };
+    /** @} */
+    
+    /**
+     *  @brief This class encapsulates all the different types of instructions in HSS.
+     *  
+     *  Instructions are used to instruct the system to alter its behavior. What actually happens
+     *  when processing an instruction is not implemented in this class, this only holds information
+     *  about what kind of information whas passed by the author in the HSS code.
+     */
     class HSSInstruction : public HSSStatement
     {
     public:
         typedef boost::shared_ptr<HSSInstruction> p;
         
+        /**
+         *  Creates a new instance of an instruction node with the given type. To be used when
+         *  a value is not applicable, such as #delete.
+         *
+         *  @param type     The HSSInstructionType that corresponds to the wanted type of instruction.
+         */
         HSSInstruction(HSSInstructionType type);
+        
+        /**
+         *  Creates a new instance of an instruction node with the given type and value.
+         *
+         *  @param type     The HSSInstructionType that corresponds to the wanted type of instruction.
+         *  @param value    A string containing the value of the instruction.
+         */
         HSSInstruction(HSSInstructionType type, std::string value);
+        
+        /**
+         *  Copy constructor for HSSInstructions objects. Do not call directly, use clone() instead.
+         */
         HSSInstruction(const HSSInstruction &orig);
+        
+        /**
+         *  Clones an instance of HSSAction and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSAction
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         ~HSSInstruction();
         
+        /**
+         *  @return The instruction type of this instance.
+         */
         HSSInstructionType getInstructionType();
+        
+        /**
+         *  Getter for the value of the instruction.
+         *  @return A string containing a value of the instruction.
+         */
         std::string getValue();
         
+        /**
+         *  Allows you to check if this instruction is of the given type.
+         *  @param  type    The instruction type to which to check against.
+         *  @return Wether it is of the given type or not.
+         */
         bool isA(HSSInstructionType type);
         
+        /**
+         *  When logging, you often need a string representation of the instruction type.
+         *  @param type     The instruction type to represent as a string.
+         *  @return A string representation of the given type.
+         */
         static std::string instructionStringRepresentation(HSSInstructionType type);
         
+        /**
+         *  Prints itself as a textual representation, useful for loggin or introspection.
+         *  @return A string containing a textual representation of the keyword constant.
+         */
         virtual std::string toString();
         
+        /**
+         *  Setter for argument.
+         *  Some instructions accept an argument, when written in functional notation (e.g. #new(3) { ... }).
+         *  When using an argument, this will hold the parser node that represents that value.
+         *  
+         *  @param newValue     A shared pointer to the parser node that holds the argument.
+         */
         void setArgument(HSSParserNode::p newValue);
+        
+        /**
+         *  Getter for argument.
+         *  Some instructions accept an argument, when written in functional notation (e.g. #new(3) { ... }).
+         *  When using an argument, this will hold the parser node that represents that value.
+         *  
+         *  @return A shared pointer to the parser node that holds the argument.
+         */
         HSSParserNode::p getArgument();
         
     protected:

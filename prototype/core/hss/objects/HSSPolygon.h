@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/22
+ *      Last changed: 2012/06/03
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -57,43 +57,91 @@
 #include "HSSDisplayObject.h"
 
 namespace AXR {
+    
+    /**
+     *  @brief Shape object, representing the HSS object \@polygon.
+     */
     class HSSPolygon : public HSSShape
     {
     public:
         typedef boost::shared_ptr<HSSPolygon> p;
         
         /**
-         *  Constructor for HSSPolygon objects
+         *  Creates a new instance of a polygon shape.
          */
         HSSPolygon();
+        
         /**
-         *  Copy constructor for HSSPolygon objects
+         *  Copy constructor for HSSPolygon objects. Do not call directly, use clone() instead.
          */
         HSSPolygon(const HSSPolygon & orig);
+        
         /**
          *  Clones an instance of HSSPolygon and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSPolygon
+         *  @return A shared pointer to the new HSSPolygon.
          */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSPolygon();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual bool isKeyword(std::string value, std::string property);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);        
+        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
         
-        //sides
+        /**
+         *  Getter for the actual value of the sides property.
+         *  @return A long double containing the amount of sides.
+         */
         long double getSides();
+        
+        /**
+         *  Getter for the definition object of sides.
+         *  @return A shared pointer to the parser node containing the definition object of sides.
+         */
         HSSParserNode::p getDSides();
+        
+        /**
+         *  Setter for the definition object of sides. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of sides.
+         */
         void setDSides(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect sides.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void sidesChanged(HSSObservableProperty source, void*data);
         
-        //angle
+        /**
+         *  Getter for the actual value of the angle property.
+         *  @return A long double containing the amount of angle.
+         */
         long double getAngle();
+        
+        /**
+         *  Getter for the definition object of angle.
+         *  @return A shared pointer to the parser node containing the definition object of angle.
+         */
         HSSParserNode::p getDAngle();
+        
+        /**
+         *  Setter for the definition object of angle. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of angle.
+         */
         void setDAngle(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect angle.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void angleChanged(HSSObservableProperty source, void*data);
         
     protected:

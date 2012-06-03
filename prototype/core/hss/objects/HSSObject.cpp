@@ -115,13 +115,17 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
             
         case HSSObjectTypeBorder:
         {
-            //FIXME: border tyes?
+            /**
+             *  @todo border tyes?
+             */
             return HSSLineBorder::p(new HSSLineBorder());
         }
             
         case HSSObjectTypeGradient:
         {
-            //FIXME: gradient tyes?
+            /**
+             *  @todo gradient tyes?
+             */
             return HSSLinearGradient::p(new HSSLinearGradient());
         }
             
