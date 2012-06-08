@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/04
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 5
+ *      Core version: 0.47
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -58,15 +58,43 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief Selects elements by tag name.
+     *
+     *  This just holds information about the name of the elements that should
+     *  be selected by AXRController when creating selections.
+     */
     class HSSSelector : public HSSParserNode {
     public:
         typedef boost::shared_ptr<HSSSelector> p;
         
+        /**
+         *  Creates a new instance of a selector.
+         */
         HSSSelector(std::string elementName);
+        
+        /**
+         *  Copy constructor for HSSAction objects. Do not call directly, use clone() instead.
+         */
         HSSSelector(const HSSSelector &orig);
+        
+        /**
+         *  Clones an instance of HSSSelector and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSSelector.
+         */
         p clone() const;
+        
+        /**
+         *  Getter for the name of the element.
+         *  @return A string containing the name of the element.
+         */
         std::string getElementName();
+        
+        //see HSSObject.h for documentation of this method
         virtual std::string toString();
+        
         
     protected:
         std::string elementName;

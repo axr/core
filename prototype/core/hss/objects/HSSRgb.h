@@ -45,8 +45,8 @@
  *      =================
  *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 5
+ *      Core version: 0.47
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -58,6 +58,14 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief The object type representing a \@rgb color in HSS.
+     *
+     *  Many objects accept color objects for their properties, e.g. HSSContainer's background property.
+     *
+     *  This object encapsulates
+     */
     class HSSRgb : public HSSObject
     {
     public:
@@ -71,35 +79,108 @@ namespace AXR {
          *  Constructor for HSSRgb objects
          */
         HSSRgb();
+        
         /**
          *  Copy constructor for HSSRgb objects
          */
         HSSRgb(const HSSRgb & orig);
+        
         /**
          *  Clones an instance of HSSRgb and gives a shared pointer of the
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSRgb
          */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSRgb();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
-        
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
+        
+        /**
+         *  Getter for the actual value of the red channel.
+         *  @return A long double containing the value for the red channel. The range of this
+         *  value is from 0.0 to 255.0.
+         */
         long double getRed();
+        
+        /**
+         *  Setter for the definition object of red. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of red.
+         */
         void setDRed(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect the red channel.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void redChanged(HSSObservableProperty source, void*data);
+        
+        /**
+         *  Getter for the actual value of the green channel.
+         *  @return A long double containing the value for the green channel. The range of this
+         *  value is from 0.0 to 255.0.
+         */
         long double getGreen();
+        
+        /**
+         *  Setter for the definition object of green. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of green.
+         */
         void setDGreen(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect the green channel.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void greenChanged(HSSObservableProperty source, void*data);
+        
+        /**
+         *  Getter for the actual value of the blue channel.
+         *  @return A long double containing the value for the blue channel. The range of this
+         *  value is from 0.0 to 255.0.
+         */
         long double getBlue();
+        
+        /**
+         *  Setter for the definition object of blue. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of blue.
+         */
         void setDBlue(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect the blue channel.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void blueChanged(HSSObservableProperty source, void*data);
+        
+        /**
+         *  Getter for the actual value of the alpha channel.
+         *  @return A long double containing the value for the alpha channel. The range of this
+         *  value is from 0.0 to 255.0.
+         */
         long double getAlpha();
+        
+        /**
+         *  Setter for the definition object of alpha. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of alpha.
+         */
         void setDAlpha(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect the alpha channel.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void alphaChanged(HSSObservableProperty source, void*data);
         
     private:

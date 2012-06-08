@@ -132,7 +132,8 @@ namespace AXR {
         
         /**
          *  Copy constructor for HSSContainer objects. It will initialize the new object. See
-         *  HSSDisplayObject for the copy constructor of the base class.
+         *  HSSDisplayObject for the copy constructor of the base class. Do not call directly,
+         *  use clone() instead.
          */
         HSSContainer(const HSSContainer & orig);
         

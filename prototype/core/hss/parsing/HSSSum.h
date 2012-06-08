@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 4
+ *      Core version: 0.47
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -57,16 +57,51 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief A type of expression that uses the plus operator "+".
+     *
+     *  Both members are summed together, no matter what order they are put in.
+     */
     class HSSSum : public HSSExpression {
         
     public:
         typedef boost::shared_ptr<HSSSum> p;
         
+        /**
+         *  Creates a new instance of a sum expression, with two
+         *  parser nodes as left and right terms.
+         *  
+         *  @param left     The value on the left hand side of the operator.
+         *  @param right    The value on the right hand side of the operator.
+         */
         HSSSum(HSSParserNode::p left, HSSParserNode::p right);
+        
+        /**
+         *  Copy constructor. Do not use directly, but use clone() instead.
+         *  
+         *  @param orig     The other sum expression to clone.
+         */
         HSSSum(const HSSSum &orig);
+        
+        /**
+         *  Creates new clone of the current instance.
+         *  @return A shared pointer to the new sum expression.
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSSum();
         
+        /**
+         *  The actual implementation of the operation.
+         *  
+         *  @param leftval  A long double containing the left member.
+         *  @param rightval A long double containing the right member.
+         *  @return A long double containing the addition of both members.
+         */
         long double calculate(long double leftval, long double rightval);
     private:
         virtual HSSClonable::p cloneImpl() const;

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/06/04
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 8
+ *      Core version: 0.47
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -64,35 +64,100 @@ namespace AXR {
     
     class HSSRule;
     
+    /**
+     *  @brief Encapsulates a group of related nodes as a way of "pointing" to elements
+     *  in the content tree.
+     *
+     *  When rules are matched to display objects in the content tree, the selector chain is used
+     *  to determine which ones are eligible for the rule. These instructions can range from
+     *  simple selections by name, over to very complex interdepencies between elements.
+     */
     class HSSSelectorChain : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSSelectorChain> p;
+        
+        /**
+         *  A "parent pointer", used to hold weak references to the rule that owns the selector
+         *  chain, in order to break reference cycles.
+         */
         typedef boost::weak_ptr<HSSRule> pp;
         
+        /**
+         *  Creates a new instance of a selector chain.
+         */
         HSSSelectorChain();
+        
+        /**
+         *  Copy constructor for HSSSelectorChain objects. Do not call directly,
+         *  use clone() instead.
+         */
         HSSSelectorChain(const HSSSelectorChain &orig);
+        
+        /**
+         *  Clones an instance of HSSSelectorChain and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSSelectorChain
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         ~HSSSelectorChain();
+        
+        //see HSSObject.h for the documentation of this method
         std::string toString();
         
+        /**
+         *  Convenience implementation of the [] operator. Returns a node based on the index.
+         *  @param i    The index of the node in the node list.
+         *  @return A shared pointer to the parser node at the given index in the node list.
+         */
         const HSSParserNode::p & operator[] (const int i) const;
+        
+        /**
+         *  Returns a node based on the index.
+         *  @param i    The index of the node in the node list.
+         *  @return A shared pointer to the parser node at the given index in the node list.
+         */
         const HSSParserNode::p & get(const int i) const;
-        //adds a pointer to newNode to the selector chain
-        //this function acquires ownership of the parser node
+        
+        /**
+         *  Adds a parser node the end of the node list.
+         *  @param newNode      A shared pointer to the new parser node to be added.
+         */
         void add(HSSParserNode::p newNode);
-        //adds a pointer to newNode to the beginning of the selector chain
-        //this function acquires ownership of the parser node
+        
+        /**
+         *  Adds a parser node at the beginning of the node list.
+         *  @param newNode      A shared pointer to the new parser node to be added.
+         */
         void prepend(HSSParserNode::p newNode);
-        //removes last newNode from the chain and then deletes it
+        
+        /**
+         *  Removes the last parser node in the node list.
+         */
         void removeLast();
-        //returns a pointer to the last node in the chain
+        
+        /**
+         *  @return A shared pointer to the last node in the chain.
+         */
         HSSParserNode::p last();
-        //returns how many nodes there are in the selector chain
+        
+        /**
+         *  @return How many nodes there are in the selector chain.
+         */
         const int size();
         
+        /**
+         *  The subject of the selector chain is the last simple selector, but this can
+         *  be changed with the subject selector "$" (currently unimplemented).
+         *  @return A shared pointer to the subject of the selector chain.
+         */
         HSSSelector::p subject();
         
+        //see HSSParserNode.h for documentation of this method
         virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
         
     protected:

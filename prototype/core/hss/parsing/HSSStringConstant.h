@@ -43,9 +43,9 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.45
+ *      Core version: 0.47
  *      Revision: 4
  *
  ********************************************************************/
@@ -57,18 +57,49 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief Parser node that represents either a single or double quoted string.
+     *
+     *  Text literals that are encolsed by single quotes ' or double quotes " in HSS.
+     *  This class provides storage for that text.
+     */
     class HSSStringConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSStringConstant> p;
         
+        /**
+         *  Creates a new instance of a string constant node which holds the given value.
+         *  @param value    A string containing the value for the constant.
+         */
         HSSStringConstant(std::string value);
+        
+        /**
+         *  Clones an instance of HSSStringConstant and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSStringConstant
+         */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSStringConstant();
         
+        /**
+         *  Setter for the value.
+         *  @param newValue     A string containing the new value for this constant.
+         */
         void setValue(std::string newValue);
+        
+        /**
+         *  Getter for the value.
+         *  @param newValue     A string containing the new value for this constant.
+         */
         std::string getValue();
         
+        //see HSSParserNode.h for documentation of this method
         std::string toString();
         
     protected:

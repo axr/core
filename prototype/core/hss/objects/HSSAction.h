@@ -108,7 +108,7 @@ namespace AXR {
         /**
          *  Clones an instance of HSSAction and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSAction
+         *  @return A shared pointer to the new HSSAction.
          */
         p clone() const;
         
@@ -117,6 +117,7 @@ namespace AXR {
          */
         virtual ~HSSAction();
         
+        //see HSSObject.h for documentation of these
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);

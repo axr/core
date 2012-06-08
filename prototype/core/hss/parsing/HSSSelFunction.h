@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/04
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -56,20 +56,55 @@
 #import "HSSFunction.h"
 
 namespace AXR {
+    
+    /**
+     *  @brief Implementation of the sel(<selector chain>) function in HSS.
+     *
+     *  Sel functions allow the author of HSS documents to create selections that can
+     *  be passed as a value to a property.
+     */
     class HSSSelFunction : public HSSFunction
     {
     public:
-        HSSSelFunction();
-        virtual ~HSSSelFunction();
-        
         typedef boost::shared_ptr<HSSSelFunction> p;
         
+        /**
+         *  Creates a new instance of a sel function.
+         */
+        HSSSelFunction();
+        
+        /**
+         *  Destructor for this class.
+         */
+        virtual ~HSSSelFunction();
+        
+        //see HSSObject.h for documentation of this method
         virtual std::string toString();
         
+        /**
+         *  Getter for the selector chain.
+         *  @return A shared pointer to the selector chain.
+         */
         const HSSSelectorChain::p & getSelectorChain() const;
+        
+        /**
+         *  Setter for the selector chain.
+         *  @param newValue     A shared pointer to the new selector chain.
+         */
         void setSelectorChain(HSSSelectorChain::p newValue);
         
+        /**
+         *  This is the actual implementation of what the function does. It selects from the elements
+         *  in the scope and then returns a selection: a pointer to a vector of vectors to shared pointers
+         *  to display objects std::vector< std::vector<HSSDisplayObject::p> >.
+         *  @return A pointer to a selection casted to void*.
+         */
         virtual void * _evaluate();
+        
+        /**
+         *  Calls _evaluate();
+         *  @deprecated Do not use this.
+         */
         virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
         
 //        void valueChanged(HSSObservableProperty source, void*data);

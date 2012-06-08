@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -57,13 +57,33 @@
 #include <string>
 
 namespace AXR {
+    
+    /**
+     *  @brief The special object \@this in HSS.
+     *
+     *  Used in selector chains, they always return the nearest display object (or subclass).
+     *  For example, if a container has a linear gradient applied on the background, and inside it
+     *  \@this is used, it points to the container, not the gradient. For the current object itself
+     *  \@self is used.
+     */
     class HSSThisSelector : public HSSParserNode {
         
     public:
         typedef boost::shared_ptr<HSSThisSelector> p;
         
+        /**
+         *  Creates a new instance of a this selector.
+         */
         HSSThisSelector();
+        
+        /**
+         *  Clones an instance of HSSThisSelector and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSThisSelector
+         */
         p clone() const;
+        
+        //see HSSParserNode.h for the documentation of this method
         virtual std::string toString();
         
     private:
