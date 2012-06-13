@@ -64,6 +64,11 @@ OSXAxrWrapper::OSXAxrWrapper(AXRView * mainView)
     this->mainView = mainView;
 }
 
+AXRWrapper * OSXAxrWrapper::createWrapper()
+{
+    return new OSXAxrWrapper(NULL);
+}
+
 OSXAxrWrapper::~OSXAxrWrapper()
 {
     

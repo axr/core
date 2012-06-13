@@ -61,6 +61,7 @@ namespace AXR
 	{
 		public:
 		LinuxAxrWrapper();
+        AXRWrapper * createWrapper();
 		virtual ~LinuxAxrWrapper();
 
 		virtual AXRFile::p getFile(std::string url);

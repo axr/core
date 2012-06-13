@@ -63,6 +63,11 @@ WinAxrWrapper::WinAxrWrapper()
     this->needsDisplay = true;
 }
 
+AXRWrapper * WinAxrWrapper::createWrapper()
+{
+    return new WinAxrWrapper();
+}
+
 WinAxrWrapper::~WinAxrWrapper()
 {
     

@@ -86,6 +86,10 @@ namespace AXR
          */
         AXRWrapper();
         /**
+         *  
+         */
+        virtual AXRWrapper * createWrapper() = 0;
+        /**
          *  Destructs the wrapper
          */
         virtual ~AXRWrapper();

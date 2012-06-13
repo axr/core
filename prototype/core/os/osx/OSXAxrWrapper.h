@@ -63,6 +63,7 @@ namespace AXR
     {
     public:
         OSXAxrWrapper(AXRView * mainView);
+        AXRWrapper * createWrapper();
         virtual ~OSXAxrWrapper();
         
         virtual AXRFile::p getFile(std::string url);

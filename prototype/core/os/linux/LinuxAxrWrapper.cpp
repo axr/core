@@ -64,6 +64,11 @@ LinuxAxrWrapper::LinuxAxrWrapper() : AXRWrapper()
 	this->needsDisplay = true;
 }
 
+AXRWrapper * LinuxAxrWrapper::createWrapper()
+{
+    return new LinuxAxrWrapper();
+}
+
 LinuxAxrWrapper::~LinuxAxrWrapper()
 {
 }
