@@ -492,6 +492,9 @@ void HSSDisplayObject::readDefinitionObjects()
                         catch (AXRError::p e){
                             e->raise();
                         }
+                        catch (AXRWarning::p e){
+                            e->raise();
+                        }
                     }
                     break;
                 }

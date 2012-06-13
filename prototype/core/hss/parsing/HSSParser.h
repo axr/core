@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/02
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 20
+ *      Revision: 21
  *
  ********************************************************************/
 
@@ -450,6 +450,8 @@ namespace AXR {
          *  @return A string containing the base path.
          */
         std::string getBasePath();
+        
+        HSSParserNode::p readValue(std::string propertyName, bool &valid);
         
     private:
         HSSTokenizer::p tokenizer;

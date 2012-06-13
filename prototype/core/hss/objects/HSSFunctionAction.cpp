@@ -43,108 +43,72 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/11
+ *      Last changed: 2012/06/10
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 3
+ *      Revision: 1
  *
  ********************************************************************/
 
-#import "HSSAction.h"
-#import "../parsing/HSSObjectNameConstant.h"
-#import "../parsing/HSSObjectDefinition.h"
-#import <boost/unordered_map.hpp>
-#import <boost/pointer_cast.hpp>
+#import "HSSFunctionAction.h"
 #import "../../axr/AXRController.h"
 
 using namespace AXR;
 
-std::string HSSAction::actionTypeStringRepresentation(AXR::HSSActionType actionType)
-{
-    boost::unordered_map<HSSActionType, std::string> types;
-    types[HSSActionTypeRequest    ] = "HSSActionTypeRequest";
-    types[HSSActionTypeSetProperty] = "HSSActionTypeSetProperty";
-    types[HSSActionTypeJavascript ] = "HSSActionTypeJavascript";
-    types[HSSActionTypeJsFunction ] = "HSSActionTypeJsFunction";
-    types[HSSActionTypeAlert      ] = "HSSActionTypeAlert";
-    types[HSSActionTypeLog        ] = "HSSActionTypeLog";
-    types[HSSActionTypeFlag       ] = "HSSActionTypeFlag";
-    types[HSSActionTypeFunction   ] = "HSSActionTypeFunction";
-    
-    return types[actionType];
-}
-
-HSSAction::HSSAction(HSSActionType type)
-: HSSObject()
-{
-    this->type = HSSObjectTypeAction;
-    this->actionType = type;
-    
-    std::vector<std::string> shorthandProperties;
-    shorthandProperties.push_back("action");
-    this->setShorthandProperties(shorthandProperties);
-}
-
-HSSAction::HSSAction(const HSSAction & orig)
-: HSSObject(orig)
-{
-    this->actionType = orig.actionType;
-    
-    std::vector<std::string> shorthandProperties;
-    shorthandProperties.push_back("action");
-    this->setShorthandProperties(shorthandProperties);
-}
-
-HSSAction::p HSSAction::clone() const{
-    return boost::static_pointer_cast<HSSAction, HSSClonable>(this->cloneImpl());
-}
-
-HSSClonable::p HSSAction::cloneImpl() const{
-    return HSSClonable::p(new HSSAction(*this));
-}
-
-HSSAction::~HSSAction()
+HSSFunctionAction::HSSFunctionAction()
+: HSSAction(HSSActionTypeFunction)
 {
     
 }
 
-std::string HSSAction::toString()
+HSSFunctionAction::HSSFunctionAction(const HSSFunctionAction & orig)
+: HSSAction(orig.actionType)
 {
-    return "Generic HSSAction of type"+HSSAction::actionTypeStringRepresentation(this->actionType);
+    //this->_function = orig._function->clone();
 }
 
-std::string HSSAction::defaultObjectType()
+HSSFunctionAction::p HSSFunctionAction::clone() const
 {
-    return "action";
+    return boost::static_pointer_cast<HSSFunctionAction, HSSClonable>(this->cloneImpl());
 }
 
-std::string HSSAction::defaultObjectType(std::string property)
+HSSClonable::p HSSFunctionAction::cloneImpl() const
 {
-    return HSSObject::defaultObjectType(property);
+    HSSFunctionAction::p clone = HSSFunctionAction::p(new HSSFunctionAction(*this));
+    return clone;
 }
 
-void HSSAction::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+HSSFunctionAction::~HSSFunctionAction()
 {
-    switch (name) {
-            
-        default:
-            HSSObject::setProperty(name, value);
-            break;
-    }
+    
 }
 
-bool HSSAction::isA(HSSActionType type)
+
+std::string HSSFunctionAction::toString()
 {
-    return type == this->actionType;
+    return "HSSFunctionAction";
 }
 
-HSSActionType HSSAction::getActionType()
+std::string HSSFunctionAction::defaultObjectType()
 {
-    return this->actionType;
+    return "value";
 }
 
-void HSSAction::fire()
+void HSSFunctionAction::fire()
 {
-    //do nothing
+    HSSFunction::p function = this->getFunction();
+    function->_evaluate(function->getArguments());
 }
+
+HSSFunction::p HSSFunctionAction::getFunction()
+{
+    return this->_function;
+}
+
+void HSSFunctionAction::setFunction(HSSFunction::p newValue)
+{
+    this->_function = newValue;
+}
+
+
 

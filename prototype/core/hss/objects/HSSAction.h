@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -73,7 +73,8 @@ namespace AXR {
         HSSActionTypeJsFunction,  /**< This will probably not be used, it's based on an old idea. */
         HSSActionTypeAlert,  /**< Shows an alert box (not implemented yet). */
         HSSActionTypeLog, /**< Logs a value (where it appears is specific to the wrapper. */
-        HSSActionTypeFlag /**< All flagging functions have their corresponding HSS object representation. */
+        HSSActionTypeFlag, /**< All flagging functions have their corresponding HSS object representation. */
+        HSSActionTypeFunction /**< Custom functions registered on the core use this type.. */
     };
     /** @} */
     

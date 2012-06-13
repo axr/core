@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/22
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 22
+ *      Revision: 23
  *
  ********************************************************************/
 
@@ -58,6 +58,7 @@
 #include "../parsing/HSSObjectNameConstant.h"
 #include "../../axr/AXRController.h"
 #include <boost/unordered_map.hpp>
+#include "../../AXR.h"
 
 
 using namespace AXR;
@@ -286,7 +287,7 @@ bool HSSObject::isFunction(std::string value, std::string property)
     ){
         return true;
     } else {
-        return false;
+        return AXRCore::getInstance()->isCustomFunction(value);
     }
 }
 

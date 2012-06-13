@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/27
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 27
+ *      Revision: 28
  *
  ********************************************************************/
 
@@ -1335,6 +1335,91 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
     return ret;
 }
 
+HSSParserNode::p HSSParser::readValue(std::string propertyName, bool &valid)
+{
+    bool isValid = true;
+    HSSParserNode::p ret = HSSParserNode::p(new HSSParserNode());
+    try {
+        //now comes either an object definition, a literal value or an expression
+        //object
+        if (this->currentToken->isA(HSSObjectSign)){
+            HSSObjectDefinition::p objdef = this->readObjectDefinition(propertyName);
+            if(objdef){
+                ret = objdef;
+            } else {
+                isValid = false;
+            }
+            //this->readNextToken();
+            
+        } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
+            ret = HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString()));
+            this->checkForUnexpectedEndOfSource();
+            this->readNextToken();
+            this->skip(HSSWhitespace);
+            
+            //number literal
+        } else if (this->currentToken->isA(HSSNumber) || this->currentToken->isA(HSSPercentageNumber) || this->currentToken->isA(HSSParenthesisOpen)){
+            /**
+             *  @todo parse the number and see if it is an int or a float
+             */
+            HSSParserNode::p exp = this->readExpression();
+            if(exp){
+                ret = exp;
+            } else {
+                isValid = false;
+            }
+            
+            
+        } else if (this->currentToken->isA(HSSIdentifier)){
+            //this is either a function, a keyword or an object name
+            
+            std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
+            //check if it is a function
+            HSSObject::p objectContext = this->currentObjectContext.top();
+            
+            if (objectContext->isFunction(valuestr, propertyName)){
+                HSSParserNode::p exp = this->readExpression();
+                if (exp){
+                    ret = exp;
+                } else {
+                    isValid = false;
+                }
+                
+                //check if it is a keyword
+            } else if (objectContext->isKeyword(valuestr, propertyName)){
+                ret = HSSKeywordConstant::p(new HSSKeywordConstant(valuestr));
+                this->readNextToken();
+                //we assume it is an object name at this point
+            } else {
+                ret = HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr));
+                this->readNextToken();
+            }
+            
+            
+        } else if (this->currentToken->isA(HSSInstructionSign)){
+            HSSInstruction::p theInstruction;
+            
+            theInstruction = this->readInstruction();
+            
+            if (theInstruction){
+                ret = this->getObjectFromInstruction(theInstruction);
+            } else {
+                isValid = false;
+            }
+            
+        } else {
+            isValid = false;
+        }
+    } catch (AXRError::p e) {
+        e->raise();
+        isValid = false;
+    }
+    
+    valid = isValid;
+    
+    return ret;
+}
+
 
 HSSInstruction::p HSSParser::readInstruction()
 {
@@ -1972,6 +2057,26 @@ HSSParserNode::p HSSParser::readFunction()
         } else if (name == "floor") {
             
         } else if (name == "round") {
+            
+        } else if (AXRCore::getInstance()->isCustomFunction(name)) {
+            this->readNextToken(true);
+            this->skip(HSSWhitespace, true);
+            this->skipExpected(HSSParenthesisOpen, true);
+            this->skip(HSSWhitespace, true);
+            std::deque<HSSParserNode::p> arguments;
+            while (!this->currentToken->isA(HSSParenthesisClose) && !this->atEndOfSource()) {
+                bool valid;
+                arguments.push_back(this->readValue("", valid));
+                if(this->currentToken->isA(HSSComma)){
+                    this->readNextToken(true);
+                }
+            }
+            HSSFunction::p theFunction = HSSFunction::p(new HSSFunction(HSSFunctionTypeCustom));
+            theFunction->setArguments(arguments);
+            theFunction->setName(name);
+            ret = theFunction;
+            this->readNextToken(true);
+            this->skip(HSSWhitespace, true);
             
         } else {
             throw AXRError::p(new AXRError("HSSParser", "Unexpected function name: "+name, this->currentFile->getFileName(), this->line, this->column));

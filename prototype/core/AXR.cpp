@@ -195,5 +195,22 @@ void AXRCore::setParserXML(XMLParser::p parser) { this->parserXML = parser; }
 HSSParser::p AXRCore::getParserHSS() { return this->parserHSS; }
 void AXRCore::setParserHSS(HSSParser::p parser) { this->parserHSS = parser; }
 
+bool AXRCore::isCustomFunction(std::string name)
+{
+    bool ret = this->_customFunctions.find(name) != this->_customFunctions.end();
+    return ret;
+}
+
+void AXRCore::registerCustomFunction(std::string name, HSSCallback* fn)
+{
+    this->_customFunctions[name] = fn;
+}
+
+void AXRCore::evaluateCustomFunction(std::string name, void* data)
+{
+    if(this->isCustomFunction(name)){
+        this->_customFunctions[name]->call(HSSObservablePropertyValue, data);
+    }
+}
 
 

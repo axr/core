@@ -179,6 +179,7 @@
 #include "hss/hss.h"
 #include <cairo/cairo.h>
 #include <boost/shared_ptr.hpp>
+#include "hss/various/HSSCallback.h"
 #include <boost/thread/tss.hpp>
 
 namespace AXR
@@ -348,7 +349,23 @@ namespace AXR
          */
         void setParserHSS(HSSParser::p parser);
         
+        /**
+         *  When a function name in HSS is checked for existence, this tells wether
+         *  it corresponds to a custom function that has been registered on the core.
+         *  @param name     A string containing the function name.
+         *  @return Wether the string is registered as a custom function
+         */
+        bool isCustomFunction(std::string name);
         
+        /**
+         *  Allows for registering a custom function name. @todo explain more
+         *  @param name     A string containing the function name.
+         *  @param fn       A pointer to the callback that encapsulates the
+         *                  c++ function that will be called.
+         */
+        void registerCustomFunction(std::string name, HSSCallback* fn);
+        void evaluateCustomFunction(std::string name, void* data);
+
     protected:
         AXRWrapper * wrapper;
         AXRRender::p render;
@@ -359,6 +376,7 @@ namespace AXR
         HSSParser::p parserHSS;
         
         bool _hasLoadedFile;
+        boost::unordered_map<std::string, HSSCallback*> _customFunctions;
     };
 }
 
