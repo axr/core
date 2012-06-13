@@ -183,6 +183,13 @@ bool HSSParser::loadFile(AXRFile::p file)
                 this->skip(HSSWhitespace);
             }
         }
+        catch (AXR::AXRWarning::p e){
+            e->raise();
+            this->readNextToken();
+            if (!this->atEndOfSource()){
+                this->skip(HSSWhitespace);
+            }
+        }
         // deprecated ------------------------------
         catch(AXR::HSSUnexpectedTokenException e){
             std::cout << e.toString() << std::endl;
