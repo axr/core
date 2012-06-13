@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.47
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -144,4 +144,9 @@ bool OSXAxrWrapper::openFileDialog(std::string &filePath)
 void OSXAxrWrapper::setNeedsDisplay(bool newValue)
 {
     [this->mainView setNeedsDisplay:newValue];
+}
+
+std::string OSXAxrWrapper::getPathToHSSFramework()
+{
+    return [[[NSBundle mainBundle] resourcePath] UTF8String];
 }

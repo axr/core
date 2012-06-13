@@ -69,6 +69,7 @@
 #include "HSSFilter.h"
 #include "HSSNegation.h"
 #include "HSSFlag.h"
+#include "../../AXR.h"
 
 using namespace AXR;
 
@@ -252,9 +253,18 @@ bool HSSParser::loadFile(AXRFile::p file)
                             this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
                             this->line = 1;
                             this->column = 1;
+                            AXRFile::p theFile;
                             try {
-                                AXRFile::p theFile = this->wrapper->getFile("file://"+this->basepath+"/"+theInstr->getValue());
-                                this->loadFile(theFile);
+                                if(theInstr->getValue().substr(0, HSSFRAMEWORK_PROTOCOL_LEN) == HSSFRAMEWORK_PROTOCOL){
+                                    std::string filepath = theInstr->getValue().substr(HSSFRAMEWORK_PROTOCOL_LEN);
+                                    theFile = this->wrapper->getFile("file://"+this->wrapper->getPathToHSSFramework()+"/"+filepath);
+                                } else {
+                                    theFile = this->wrapper->getFile("file://"+this->basepath+"/"+theInstr->getValue());
+                                }
+                                
+                                if (theFile) {
+                                    this->loadFile(theFile);
+                                }
                                 
                             } catch (AXRError::p e) {
                                 e->raise();
@@ -1514,7 +1524,14 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
             if (this->currentToken->isA(HSSDoubleQuoteString) || this->currentToken->isA(HSSSingleQuoteString)) {
                 std::string theString = VALUE_TOKEN(this->currentToken)->getString();
                 ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, theString));
-                
+            } else if (this->currentToken->isA(HSSIdentifier)){
+                std::string instructionKw = VALUE_TOKEN(this->currentToken)->getString();
+                if (instructionKw == "UIFramework"){
+                    std::string protocol = HSSFRAMEWORK_PROTOCOL;
+                    ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, protocol.append("UIFramework.hss")));
+                } else {
+                    throw AXRWarning::p(new AXRWarning("HSSParser", "Unknown keyword for import instruction."));
+                }
             } else {
                 throw AXRError::p(new AXRError("HSSParser", "Expected string", this->currentFile->getFileName(), this->line, this->column));
             }

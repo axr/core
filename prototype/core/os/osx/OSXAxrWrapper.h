@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -72,6 +72,7 @@ namespace AXR
         virtual bool openFileDialog(std::string &filePath);
         
         void setNeedsDisplay(bool newValue);
+        std::string getPathToHSSFramework();
         
     private:
         AXRView * mainView;

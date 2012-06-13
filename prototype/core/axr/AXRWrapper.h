@@ -59,6 +59,7 @@
 #include <stdio.h>
 #include "AXRFile.h"
 #include "errors/AXRError.h"
+#include "../hss/various/HSSObservableProperties.h"
 
 namespace AXR
 {
@@ -178,6 +179,12 @@ namespace AXR
          *  @return Wether a file has already been loaded or not.
          */
         bool hasLoadedFile();
+        /**
+         *  Each platform specific wrapper defines how it gets the path to the framework folder.
+         *  @return A string containing the path to where the HSS framework files are 
+         *  stored.
+         */
+        virtual std::string getPathToHSSFramework() = 0;
         
         boost::unordered_map<AXRFileHandle, AXRFile::p> files;
         

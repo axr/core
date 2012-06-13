@@ -65,6 +65,9 @@
 #include <boost/unordered_set.hpp>
 #include "../../axr/AXRFile.h"
 
+#define HSSFRAMEWORK_PROTOCOL "axr://"
+#define HSSFRAMEWORK_PROTOCOL_LEN 6
+
 namespace AXR {
     
     /**
