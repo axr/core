@@ -154,11 +154,19 @@ namespace AXR {
          */
         double getWindowHeight();
         
+        /**
+         *  @todo create getter/setter and make private
+         */
+        double windowWidth;
+        
+        /**
+         *  @todo create getter/setter and make private
+         */
+        double windowHeight;
+        
     protected:
         //weak pointer
         AXRController * controller;
-        double windowWidth;
-        double windowHeight;
         cairo_t * cairo;
         cairo_surface_t * rootSurface;
     };

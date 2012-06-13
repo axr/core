@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/03
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 8
+ *      Core version: 0.47
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -103,11 +103,11 @@
  */
 - (bool)loadFile;
 /**
- *  Loads the XML file from the path you give.
- *  @param  xmlPath A NSString containing the path to the XML file.
+ *  Loads a XML or HSS file from the path you give.
+ *  @param  filePath A NSString containing the path to the XML/HSS file.
  *  @return A boolean telling wether the file has been loaded or not
  */
-- (bool)loadFile:(NSString *)xmlPath;
+- (bool)loadFile:(NSString *)filePath;
 /**
  *  Reloads the currently loaded file.
  *  @return A boolean telling wether the file has been reloaded or not

@@ -85,7 +85,7 @@ AXRFile::p OSXAxrWrapper::getFile(std::string url)
         ret->setFileName(clean_path.substr(slashpos+1, clean_path.size()));
         ret->basePath = clean_path.substr(0, slashpos);
         
-        ret->bufferSize = 10240;
+        ret->bufferSize = 20240;
         ret->buffer = new char[ret->bufferSize];
         ret->fileHandle = fopen(clean_path.c_str(), "r");
         if( ret->fileHandle == NULL ){
@@ -148,7 +148,9 @@ bool OSXAxrWrapper::openFileDialog(std::string &filePath)
 
 void OSXAxrWrapper::setNeedsDisplay(bool newValue)
 {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];                           
     [this->mainView setNeedsDisplay:newValue];
+    [pool release];
 }
 
 std::string OSXAxrWrapper::getPathToHSSFramework()

@@ -60,6 +60,9 @@
 #include "AXRFile.h"
 #include "errors/AXRError.h"
 #include "../hss/various/HSSObservableProperties.h"
+#include <queue>
+#include <boost/thread/thread.hpp>
+#include "../hss/objects/HSSContainer.h"
 
 namespace AXR
 {
@@ -190,6 +193,8 @@ namespace AXR
          */
         virtual std::string getPathToHSSFramework() = 0;
         
+        void executeLayoutTests(HSSObservableProperty passnull, void*data);
+        
         boost::unordered_map<AXRFileHandle, AXRFile::p> files;
         
     protected:
@@ -198,6 +203,38 @@ namespace AXR
         bool _isHSSOnly;
         bool _hasLoadedFile;
     };
+    
+    
+    class AXRTestThread
+	{
+	private:
+        AXRWrapper * wrapper;
+        std::string filePath;
+        unsigned totalTests;
+        unsigned totalPassed;
+        HSSContainer::p status;
+        
+	public:
+        AXRTestThread(AXRWrapper * wrapper, std::string filePath, HSSContainer::p status);
+        void operator () ();
+	};
+    class AXRTestProducer
+	{
+	private:
+        AXRWrapper * wrapper;
+        std::string basePath;
+        std::vector<std::string> test;              // the filename of the test
+        unsigned * totalTests;
+        unsigned * totalPassed;
+        HSSContainer::p status;
+        static boost::mutex totalTestsMutex;
+        static boost::mutex totalPassedMutex;
+        static boost::mutex statusMutex;
+        
+	public:
+        AXRTestProducer(AXRWrapper * wrapper, std::string basePath, std::vector<std::string> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
+        void operator () ();
+	};
 }
 
 #endif

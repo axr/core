@@ -217,12 +217,12 @@
     return loaded;
 }
 
-- (bool)loadFile:(NSString *)xmlPath
+- (bool)loadFile:(NSString *)filePath
 {
     AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
     bool loaded = false;
     if(wrapper!=NULL){
-        loaded = wrapper->loadXMLFile(std::string([xmlPath UTF8String]));
+        loaded = wrapper->loadFileByPath(std::string([filePath UTF8String]));
     }
     if(loaded){
         [self setNeedsDisplay:YES];
