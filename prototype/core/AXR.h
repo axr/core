@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 8
+ *      Revision: 9
  *
  ********************************************************************/
 
@@ -179,6 +179,7 @@
 #include "hss/hss.h"
 #include <cairo/cairo.h>
 #include <boost/shared_ptr.hpp>
+#include <boost/thread/tss.hpp>
 
 namespace AXR
 {
@@ -217,16 +218,16 @@ namespace AXR
     {
     public:
         /**
-         *  The shared pointer to AXRCore objects
+         *  The thread specific pointer to AXRCore objects
          */
-        typedef boost::shared_ptr<AXRCore> p;
+        typedef boost::thread_specific_ptr<AXRCore> tp;
         
         /**
          *  Whenever you need to access the core object use this method,
-         *  as AXRCore is a singleton.
-         *  @return a shared pointer to the singleton instance.
+         *  as AXRCore is a per-thread-singleton, where 1 instance is created for each thread that uses AXRCore.
+         *  @return A thread specific pointer to core for this thread
          */
-        static AXRCore::p &getInstance();
+        static AXRCore::tp &getInstance();
         
         /**
          *  Creates a new AXRCore object.

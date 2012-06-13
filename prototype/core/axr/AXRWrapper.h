@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -182,7 +182,6 @@ namespace AXR
         boost::unordered_map<AXRFileHandle, AXRFile::p> files;
         
     protected:
-        boost::shared_ptr<AXRCore> core;
         
     private:
         bool _isHSSOnly;

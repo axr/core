@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 7
+ *      Core version: 0.47
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -54,14 +54,12 @@
 
 using namespace AXR;
 
-
-
-AXRCore::p & AXRCore::getInstance()
+AXRCore::tp & AXRCore::getInstance()
 {
-    static AXRCore::p theInstance;
-    if(!theInstance)
-        theInstance = AXRCore::p(new AXRCore());
-    
+    static AXRCore::tp theInstance;
+    if(!theInstance.get()) {
+        theInstance.reset(new AXRCore());
+    }
     return theInstance;
 }
 
@@ -72,8 +70,8 @@ AXRCore::AXRCore()
 
 void AXRCore::initialize(AXRWrapper * wrpr)
 {
-    AXRController::p ctrlr = AXRController::p(new AXRController(this));
-    AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.get(), this));
+    AXRController::p ctrlr = AXRController::p(new AXRController());
+    AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.get()));
     this->setWrapper(wrpr);
     this->setController(ctrlr);
     this->setRender(rndr);

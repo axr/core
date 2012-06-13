@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/01/08
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -81,7 +81,7 @@ AXRError::~AXRError()
 
 void AXRError::raise()
 {
-    AXRCore::p core = AXRCore::getInstance();
+    AXRCore::tp & core = AXRCore::getInstance();
     AXRWrapper * wrapper = core->getWrapper();
     wrapper->handleError(this->shared_from_this());
 }

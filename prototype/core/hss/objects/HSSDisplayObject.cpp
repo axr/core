@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/08
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 42
+ *      Core version: 0.47
+ *      Revision: 43
  *
  ********************************************************************/
 
@@ -446,7 +446,7 @@ void HSSDisplayObject::readDefinitionObjects()
         
         //if this is root, we use the window width and height of the render
         if(this->isRoot()){
-            AXRCore::p core = AXRCore::getInstance();
+            AXRCore::tp & core = AXRCore::getInstance();
             //width
             HSSNumberConstant::p newDWidth(new HSSNumberConstant(core->getRender()->getWindowWidth()));
             this->setDWidth(newDWidth);

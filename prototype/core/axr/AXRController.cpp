@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/22
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 29
+ *      Revision: 30
  *
  ********************************************************************/
 
@@ -66,9 +66,8 @@
 using namespace AXR;
 
 
-AXRController::AXRController(AXRCore * core)
+AXRController::AXRController()
 {
-    this->core = core;
     this->currentContext = std::stack<HSSContainer::p>();
 }
 
@@ -676,8 +675,9 @@ HSSContainer::p & AXRController::getRoot()
 
 void AXRController::setRoot(HSSContainer::p newRoot){
     this->root = newRoot;
-    if(this->core->getParserHSS()->currentObjectContextSize() == 0){
-        this->core->getParserHSS()->currentObjectContextAdd(newRoot);
+    HSSParser::p hssparser = AXRCore::getInstance()->getParserHSS();
+    if(hssparser->currentObjectContextSize() == 0){
+        hssparser->currentObjectContextAdd(newRoot);
     }
     newRoot->setRoot(true);
 }

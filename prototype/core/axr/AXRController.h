@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 20
+ *      Revision: 21
  *
  ********************************************************************/
 
@@ -83,10 +83,8 @@ namespace AXR {
         /**
          *  Creates a new instance of a controller.
          *
-         *  @param core A regular pointer to the core object to which this controller is associated to.
-         *
          */
-        AXRController(AXRCore * core);
+        AXRController();
         
         /**
          *  Destructs the controller and clears all the trees.
@@ -419,8 +417,6 @@ namespace AXR {
         std::stack<HSSContainer::p>currentContext;
         
     protected:
-        AXRCore * core;
-        
         HSSContainer::p root;
         
         std::vector<HSSObjectDefinition::p>objectTree;

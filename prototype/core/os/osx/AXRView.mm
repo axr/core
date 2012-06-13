@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 12
+ *      Core version: 0.47
+ *      Revision: 13
  *
  ********************************************************************/
 
@@ -105,38 +105,34 @@
     NSRect bounds = [self bounds];
     
     if(![self needsFile]){
-        AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
-        AXR::AXRCore::p core = wrapper->getCore();
-        if(core){
-            
-            [[NSColor whiteColor] set];
-            NSRectFill(bounds);
-            
-            AXR::AXRRect axrRect;
-            axrRect.size.width = dirtyRect.size.width;
-            axrRect.size.height = dirtyRect.size.height;
-            axrRect.origin.x = dirtyRect.origin.x;
-            axrRect.origin.y = dirtyRect.origin.y;
-            AXR::AXRRect axrBounds;
-            axrBounds.size.width = bounds.size.width;
-            axrBounds.size.height = bounds.size.height;
-            axrBounds.origin.x = bounds.origin.x;
-            axrBounds.origin.y = bounds.origin.y;
-            
-            
-            CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
-            //invert the coordinate system
-            CGContextTranslateCTM (ctxt, 0.0, (int)bounds.size.height);
-            CGContextScaleCTM (ctxt, 1.0, -1.0);
-            
-            cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, axrRect.size.width, axrRect.size.height);
-            cairo_t * tempcairo = cairo_create(targetSurface);
-            cairo_surface_destroy(targetSurface);
-            core->setCairo(tempcairo);
-            core->drawInRectWithBounds(axrRect, axrBounds);
-            cairo_destroy(tempcairo);
-            core->setCairo(NULL);
-        }
+        AXR::AXRCore::tp & core = AXR::AXRCore::getInstance();
+        [[NSColor whiteColor] set];
+        NSRectFill(bounds);
+        
+        AXR::AXRRect axrRect;
+        axrRect.size.width = dirtyRect.size.width;
+        axrRect.size.height = dirtyRect.size.height;
+        axrRect.origin.x = dirtyRect.origin.x;
+        axrRect.origin.y = dirtyRect.origin.y;
+        AXR::AXRRect axrBounds;
+        axrBounds.size.width = bounds.size.width;
+        axrBounds.size.height = bounds.size.height;
+        axrBounds.origin.x = bounds.origin.x;
+        axrBounds.origin.y = bounds.origin.y;
+        
+        
+        CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+        //invert the coordinate system
+        CGContextTranslateCTM (ctxt, 0.0, (int)bounds.size.height);
+        CGContextScaleCTM (ctxt, 1.0, -1.0);
+        
+        cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, axrRect.size.width, axrRect.size.height);
+        cairo_t * tempcairo = cairo_create(targetSurface);
+        cairo_surface_destroy(targetSurface);
+        core->setCairo(tempcairo);
+        core->drawInRectWithBounds(axrRect, axrBounds);
+        cairo_destroy(tempcairo);
+        core->setCairo(NULL);
     } else {
         //fill with light gray
         [[NSColor colorWithCalibratedWhite:0.8 alpha:1.] set];
@@ -158,9 +154,7 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
-    AXR::AXRCore::p core = wrapper->getCore();
-    AXR::HSSContainer::p root = core->getController()->getRoot();
+    AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
     if(root){
         AXR::HSSPoint thePoint;
         NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -173,9 +167,7 @@
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
-    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
-    AXR::AXRCore::p core = wrapper->getCore();
-    AXR::HSSContainer::p root = core->getController()->getRoot();
+    AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
     if(root){
         AXR::HSSPoint thePoint;
         NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -189,9 +181,7 @@
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
-    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
-    AXR::AXRCore::p core = wrapper->getCore();
-    AXR::HSSContainer::p root = core->getController()->getRoot();
+    AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
     if(root){
         AXR::HSSPoint thePoint;
         NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];

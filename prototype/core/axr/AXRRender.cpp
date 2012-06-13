@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 11
+ *      Core version: 0.47
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -60,10 +60,9 @@
 
 using namespace AXR;
 
-AXRRender::AXRRender(AXRController * controller, AXRCore * core)
+AXRRender::AXRRender(AXRController * controller)
 {
     this->controller = controller;
-    this->core = core;
     this->windowWidth = 0;
     this->windowHeight = 0;
     this->cairo = NULL;

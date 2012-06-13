@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 3
+ *      Core version: 0.47
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -131,7 +131,7 @@ void HSSRequest::fire()
     std_log("----------------------------------\nFiring request: loading file "+this->axrController->basepath+this->src+"\n----------------------------------\n");
     //if there is no target
     if (this->target.size() == 0) {
-        AXRCore::p core = AXRCore::getInstance();
+        AXRCore::tp & core = AXRCore::getInstance();
         AXRWrapper * wrapper = core->getWrapper();
         wrapper->loadXMLFile(core->getFile()->basePath+"/"+this->src);
     } else {
@@ -140,7 +140,7 @@ void HSSRequest::fire()
             {
                 std_log("this ain't doing nothin' yet");
                 
-//                AXRCore::p core = AXRCore::getInstance();
+//                AXRCore::tp core = AXRCore::getInstance();
 //                AXRWrapper * wrapper = core->getWrapper();
 //                AXRFile::p baseFile = core->getFile();
 //                

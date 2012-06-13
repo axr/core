@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -55,21 +55,17 @@
 
 using namespace AXR;
 
-AXRWrapper::AXRWrapper()
+AXRWrapper::AXRWrapper(std::string str)
 {
     this->_isHSSOnly = false;
-    AXRCore::p axr = AXRCore::getInstance();
+    AXRCore::tp & axr = AXRCore::getInstance();
     axr->initialize(this);
-    this->setCore(axr);
 }
 
 AXRWrapper::~AXRWrapper()
 {
     
 }
-
-boost::shared_ptr<AXRCore> AXRWrapper::getCore() { return this->core; }
-void AXRWrapper::setCore(boost::shared_ptr<AXRCore> xcr) { this->core = xcr; }
 
 AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
 {
@@ -133,21 +129,22 @@ bool AXRWrapper::loadFileByPath(std::string filepath)
 
 bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 {
-    if (this->core->getFile()) {
-        this->core->reset();
+    AXRCore::tp & core = AXRCore::getInstance();
+    if (core->getFile()) {
+        core->reset();
     }
     
     std::string fullpath = "file://"+xmlfilepath;
     try {
         AXRFile::p theFile = this->getFile(fullpath);
-        this->core->setFile(theFile);
+        core->setFile(theFile);
         
     } catch (AXRError::p e) {
         e->raise();
         return false;
     }
     
-    this->core->run();
+    core->run();
     this->setNeedsDisplay(true);
     
     return true;
@@ -155,9 +152,10 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 
 bool AXRWrapper::reload()
 {
-    std::string cur_path = this->core->getFile()->basePath+"/"+this->core->getFile()->getFileName();
+    AXRCore::tp & core = AXRCore::getInstance();
+    std::string cur_path = core->getFile()->basePath+"/"+core->getFile()->getFileName();
     std::string fileextension = cur_path.substr(cur_path.rfind(".") + 1, cur_path.length());
-    this->core->reset();
+    core->reset();
     if(fileextension == "xml"){
         this->_isHSSOnly = false;
         return this->loadXMLFile(cur_path);
@@ -172,12 +170,13 @@ bool AXRWrapper::reload()
 
 bool AXRWrapper::loadHSSFile(std::string hssfilepath)
 {
-    if (this->core->getFile()) {
-        this->core->reset();
+    AXRCore::tp & core = AXRCore::getInstance();
+    if (core->getFile()) {
+        core->reset();
     }
     
-    this->core->setFile(this->createDummyXML(hssfilepath));
-    this->core->run();
+    core->setFile(this->createDummyXML(hssfilepath));
+    core->run();
     this->setNeedsDisplay(true);
     
     return true;
@@ -186,5 +185,6 @@ bool AXRWrapper::loadHSSFile(std::string hssfilepath)
 //has loaded file
 bool AXRWrapper::hasLoadedFile()
 {
-    return this->core->hasLoadedFile();
+    AXRCore::tp & core = AXRCore::getInstance();
+    return core->hasLoadedFile();
 }
