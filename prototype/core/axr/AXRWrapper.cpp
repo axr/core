@@ -55,7 +55,7 @@
 
 using namespace AXR;
 
-AXRWrapper::AXRWrapper(std::string str)
+AXRWrapper::AXRWrapper()
 {
     this->_isHSSOnly = false;
     AXRCore::tp & axr = AXRCore::getInstance();
