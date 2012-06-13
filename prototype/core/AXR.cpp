@@ -148,7 +148,7 @@ void AXRCore::run()
                     const HSSRule::p& rule = rules[j];
                     const HSSDisplayObject::p rootScopeArr[1] = {root};
                     const std::vector<HSSDisplayObject::p>rootScope(rootScopeArr, rootScopeArr+1);
-                    this->controller->recursiveMatchRulesToDisplayObjects(rule, rootScope, root, true);
+                    this->controller->recursiveMatchRulesToDisplayObjects(rule, rootScope, HSSContainer::p(), true);
                 }
                 root->setNeedsRereadRules(true);
             }

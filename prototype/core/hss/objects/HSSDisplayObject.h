@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 37
+ *      Revision: 38
  *
  ********************************************************************/
 
@@ -204,6 +204,7 @@ namespace AXR {
         void rulesRemoveLast();
         const int rulesSize();
         void setRuleStatus(HSSRule::p rule, HSSRuleState newValue);
+        bool hasRule(HSSRule::p rule);
         virtual void readDefinitionObjects();
         virtual void recursiveReadDefinitionObjects();
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);

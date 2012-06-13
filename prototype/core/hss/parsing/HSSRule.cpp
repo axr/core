@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/08
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 10
+ *      Core version: 0.47
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -237,7 +237,7 @@ void HSSRule::treeChanged(HSSObservableProperty source, void*data)
     AXRController * theController = thisObj->getController();
     if(thisObj->isA(HSSObjectTypeContainer)){
         HSSContainer::p thisContainer = HSSContainer::asContainer(thisObj);
-        //theController->recursiveMatchRulesToDisplayObjects(this->shared_from_this(), thisContainer->getChildren(), thisContainer, false);
+        theController->recursiveMatchRulesToDisplayObjects(this->shared_from_this(), thisContainer->getChildren(), thisContainer, false);
     }
 }
 
