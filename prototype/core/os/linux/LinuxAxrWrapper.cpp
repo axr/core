@@ -76,7 +76,7 @@ AXRFile::p LinuxAxrWrapper::getFile(std::string url)
 	{
 		std::string clean_path = url.substr(7, std::string::npos);
 		int slashpos = clean_path.rfind("/");
-		ret->fileName = clean_path.substr(slashpos + 1, clean_path.size());
+		ret->setFileName(clean_path.substr(slashpos + 1, clean_path.size()));
 		ret->basePath = clean_path.substr(0, slashpos);
 
 		ret->bufferSize = 10240;
@@ -85,11 +85,11 @@ AXRFile::p LinuxAxrWrapper::getFile(std::string url)
 
 		if (ret->fileHandle == NULL)
 		{
-			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->fileName + " doesn't exist " + ret->basePath))->raise();
+			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->getFileName() + " doesn't exist " + ret->basePath))->raise();
 		}
 		else if (ferror(ret->fileHandle))
 		{
-			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->fileName + " couldn't be read"))->raise();
+			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->getFileName() + " couldn't be read"))->raise();
 		}
 	}
 	else
