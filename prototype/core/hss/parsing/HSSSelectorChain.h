@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/04
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 9
+ *      Revision: 11
  *
  ********************************************************************/
 
@@ -76,6 +76,16 @@ namespace AXR {
     {
     public:
         typedef boost::shared_ptr<HSSSelectorChain> p;
+        
+        /**
+         *  Iterator for vectors of shared pointers to selector chains
+         */
+        typedef std::vector<p>::iterator it;
+        
+        /**
+         *  Iterator for vectors of shared pointers to selector chains, const version.
+         */
+        typedef std::vector<p>::const_iterator const_it;
         
         /**
          *  A "parent pointer", used to hold weak references to the rule that owns the selector
