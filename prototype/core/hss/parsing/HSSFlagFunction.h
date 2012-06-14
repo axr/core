@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/30
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 2
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -131,13 +131,47 @@ namespace AXR {
          *  Getter for the selector chain parameter.
          *  @return A shared pointer to the selector chain that should be used in the function.
          */
-        const HSSSelectorChain::p & getSelectorChain() const;
+        const std::vector<HSSSelectorChain::p> & getSelectorChains() const;
         
         /**
          *  Setter for the selector chain parameter.
          *  @param newValue A shared pointer to the selector chain which the function should use.
          */
-        void setSelectorChain(HSSSelectorChain::p newValue);
+        void setSelectorChains(std::vector<HSSSelectorChain::p> newValues);
+        
+        /**
+         *  Add a selector chain to the selector chains vector.
+         *  @param newValue A shared pointer to the selector chain to be added.
+         */
+        void selectorChainsAdd(HSSSelectorChain::p & newSelectorChain);
+        
+        /**
+         *  Get a selector chain by index.
+         *  @param index    An unsigned integer with the index of the selector chain.
+         *  @return A shared pointer to the element at that index.
+         */
+        HSSSelectorChain::p &selectorChainsGet(unsigned index);
+        
+        /**
+         *  Removes a selector chain by index.
+         *  @param index    An unsigned integer with the index of the selector chain to be deleted.
+         */
+        void selectorChainsRemove(unsigned index);
+        
+        /**
+         *  Removes the last element in the selector chains vector.
+         */
+        void selectorChainsRemoveLast();
+        
+        /**
+         *  @return the last element of the selector chains vector.
+         */
+        HSSSelectorChain::p &selectorChainsLast();
+        
+        /**
+         *  @return the size of the selector chains vector
+         */
+        const int selectorChainsSize();
         
         /**
          *  @todo make private
@@ -163,7 +197,7 @@ namespace AXR {
         
     protected:
         std::string _name;
-        HSSSelectorChain::p selectorChain;
+        std::vector<HSSSelectorChain::p> selectorChains;
         HSSFlagFunctionType _flagFunctionType;
         
     private:

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 9
+ *      Revision: 10
  *
  ********************************************************************/
 
@@ -150,13 +150,58 @@ namespace AXR {
         std::string toString();
         
         /**
-         *  Setter fo the selector chain, which is used to select elements from the
+         *  Setter fo the selector chains, which are used to select elements from the
          *  content tree.
-         *  @param newChain     A shared pointer to a selector chain.
+         *  @param newChain     A vector of shared pointers to selector chains.
          */
-        void setSelectorChain(HSSSelectorChain::p newChain);
+        void setSelectorChains(std::vector<HSSSelectorChain::p> newChains);
         
-        HSSSelectorChain::p getSelectorChain();
+        /**
+         *  Getter fo the selector chains, which are used to select elements from the
+         *  content tree.
+         *  @return A vector of shared pointers to selector chains.
+         */
+        const std::vector<HSSSelectorChain::p> & getSelectorChains() const;
+        
+        /**
+         *  Add a selector chain to the selector chains vector.
+         *  @param newValue A shared pointer to the selector chain to be added.
+         */
+        void selectorChainsAdd(HSSSelectorChain::p & newSelectorChain);
+        
+        /**
+         *  Get a selector chain by index.
+         *  @param index    An unsigned integer with the index of the selector chain.
+         *  @return A shared pointer to the element at that index.
+         */
+        HSSSelectorChain::p &selectorChainsGet(unsigned index);
+        
+        /**
+         *  Removes a selector chain by index.
+         *  @param index    An unsigned integer with the index of the selector chain to be deleted.
+         */
+        void selectorChainsRemove(unsigned index);
+        
+        /**
+         *  Removes the last element in the selector chains vector.
+         */
+        void selectorChainsRemoveLast();
+        
+        /**
+         *  @return the last element of the selector chains vector.
+         */
+        HSSSelectorChain::p &selectorChainsLast();
+        
+        /**
+         *  @return the size of the selector chains vector
+         */
+        const int selectorChainsSize();
+        
+        /**
+         *  @todo Add setter for properties vector.
+         *  Setter fo the property definitions that this rules holds.
+         *  //@param newChain     A vector of shared pointers to property definitions.
+         */
         
         const std::vector<HSSPropertyDefinition::p> & getProperties() const;
         
@@ -211,7 +256,6 @@ namespace AXR {
     protected:
         HSSRule::p shared_from_this();
         
-        HSSSelectorChain::p selectorChain;
         std::vector<HSSPropertyDefinition::p> properties;
         std::vector<HSSRule::p>children;
         HSSInstruction::p instruction;
@@ -228,6 +272,7 @@ namespace AXR {
         boost::unordered_map<HSSFilterType, std::vector<boost::shared_ptr<HSSDisplayObject> > > _interactors;
         HSSObservable * observedTreeChanger;
         
+        std::vector<HSSSelectorChain::p> selectorChains;
     };
 }
 

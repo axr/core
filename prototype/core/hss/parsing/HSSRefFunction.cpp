@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 4
+ *      Core version: 0.47
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -69,7 +69,6 @@ HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
 {
     this->modifier = orig.modifier;
     this->propertyName = orig.propertyName;
-    this->selectorChain = orig.selectorChain->clone();
     this->observed = NULL;
 }
 
@@ -77,6 +76,7 @@ HSSRefFunction::p HSSRefFunction::clone() const
 {
     return boost::static_pointer_cast<HSSRefFunction, HSSClonable>(this->cloneImpl());
 }
+
 HSSRefFunction::~HSSRefFunction()
 {
     if(this->observed != NULL){
@@ -106,15 +106,50 @@ void HSSRefFunction::setPropertyName(HSSObservableProperty newValue)
     this->setDirty(true);
 }
 
-const HSSSelectorChain::p & HSSRefFunction::getSelectorChain() const
+const std::vector<HSSSelectorChain::p> & HSSRefFunction::getSelectorChains() const
 {
-    return this->selectorChain;
+    return this->selectorChains;
 }
 
-void HSSRefFunction::setSelectorChain(HSSSelectorChain::p newValue)
+void HSSRefFunction::setSelectorChains(std::vector<HSSSelectorChain::p> newValues)
 {
-    this->selectorChain = newValue;
+    this->selectorChains = newValues;
     this->setDirty(true);
+}
+
+void HSSRefFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
+{
+    if(newSelectorChain)
+    {
+        std_log3("Added selector chain to HSSRefFunction: " << newSelectorChain->toString());
+        newSelectorChain->setParentNode(this->shared_from_this());
+        this->selectorChains.push_back(newSelectorChain);
+    }
+}
+
+void HSSRefFunction::selectorChainsRemove(unsigned int index)
+{
+    this->selectorChains.erase(this->selectorChains.begin()+index);
+}
+
+void HSSRefFunction::selectorChainsRemoveLast()
+{
+    this->selectorChains.pop_back();
+}
+
+HSSSelectorChain::p & HSSRefFunction::selectorChainsGet(unsigned index)
+{
+    return this->selectorChains[index];
+}
+
+HSSSelectorChain::p & HSSRefFunction::selectorChainsLast()
+{
+    return this->selectorChains.back();
+}
+
+const int HSSRefFunction::selectorChainsSize()
+{
+    return this->selectorChains.size();
 }
 
 void * HSSRefFunction::_evaluate()
@@ -123,7 +158,7 @@ void * HSSRefFunction::_evaluate()
      *  @todo this works only on numeric values, with other kind of data I don't know what will happen
      *  we need to figure out how to deal with non-numeric values here
      */
-    this->axrController->setSelectorChain(this->selectorChain);
+    this->axrController->setSelectorChains(this->selectorChains);
     std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->selectHierarchical(*this->scope, this->getThisObj());
     if (selection.size() == 0){
         // ignore
@@ -178,5 +213,13 @@ void HSSRefFunction::valueChanged(HSSObservableProperty source, void*data)
 }
 
 HSSClonable::p HSSRefFunction::cloneImpl() const{
-    return HSSClonable::p(new HSSRefFunction(*this));
+    
+    HSSRefFunction::p clone = HSSRefFunction::p(new HSSRefFunction(*this));
+    
+    HSSSelectorChain::const_it sIt;
+    for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+        HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
+        clone->selectorChainsAdd(clonedSelectorChain);
+    }    
+    return clone;
 }

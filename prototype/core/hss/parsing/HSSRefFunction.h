@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/02
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -125,15 +125,49 @@ namespace AXR {
         
         /**
          *  Getter for the selector chain.
-         *  @return A shared pointer to the selector chain.
+         *  @return A vector of shared pointers to the selector chains.
          */
-        const HSSSelectorChain::p & getSelectorChain() const;
+        const std::vector<HSSSelectorChain::p> & getSelectorChains() const;
         
         /**
-         *  Setter for the selector chain.
-         *  @param newValue     A shared pointer to the new selector chain to be used.
+         *  Setter for the selector chains.
+         *  @param newValue     A vector of shared pointers to the new selector chains to be used.
          */
-        void setSelectorChain(HSSSelectorChain::p newValue);
+        void setSelectorChains(std::vector<HSSSelectorChain::p> newValues);
+        
+        /**
+         *  Add a selector chain to the selector chains vector.
+         *  @param newValue A shared pointer to the selector chain to be added.
+         */
+        void selectorChainsAdd(HSSSelectorChain::p & newSelectorChain);
+        
+        /**
+         *  Get a selector chain by index.
+         *  @param index    An unsigned integer with the index of the selector chain.
+         *  @return A shared pointer to the element at that index.
+         */
+        HSSSelectorChain::p &selectorChainsGet(unsigned index);
+        
+        /**
+         *  Removes a selector chain by index.
+         *  @param index    An unsigned integer with the index of the selector chain to be deleted.
+         */
+        void selectorChainsRemove(unsigned index);
+        
+        /**
+         *  Removes the last element in the selector chains vector.
+         */
+        void selectorChainsRemoveLast();
+        
+        /**
+         *  @return the last element of the selector chains vector.
+         */
+        HSSSelectorChain::p &selectorChainsLast();
+        
+        /**
+         *  @return the size of the selector chains vector
+         */
+        const int selectorChainsSize();
         
         /**
          *  This is the actual implementation of what the function does. It selects from the elements
@@ -157,7 +191,7 @@ namespace AXR {
     private:
         std::string modifier;
         HSSObservableProperty propertyName;
-        HSSSelectorChain::p selectorChain;
+        std::vector<HSSSelectorChain::p> selectorChains;
         
         HSSObservable * observed;
         

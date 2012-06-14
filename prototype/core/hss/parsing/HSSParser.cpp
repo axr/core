@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/11
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 28
+ *      Revision: 29
  *
  ********************************************************************/
 
@@ -424,9 +424,9 @@ HSSRule::p HSSParser::readRule()
     this->checkForUnexpectedEndOfSource();
     
     //initialize the rule
-    HSSSelectorChain::p selectorChain;
+    std::vector<HSSSelectorChain::p> selectorChains;
     try {
-        selectorChain = this->readSelectorChain(HSSBlockOpen);
+        selectorChains = this->readSelectorChains(HSSBlockOpen);
     } catch (AXRError::p e) {
         this->readNextToken();
         this->checkForUnexpectedEndOfSource();
@@ -440,7 +440,7 @@ HSSRule::p HSSParser::readRule()
     }
     
     HSSRule::p ret = HSSRule::p(new HSSRule());
-    ret->setSelectorChain(selectorChain);
+    ret->setSelectorChains(selectorChains);
     
     //now we're inside the block
     this->currentContext.push_back(HSSParserContextBlock);
@@ -508,7 +508,7 @@ HSSRule::p HSSParser::readRule()
         }
         
         if (this->atEndOfSource()) {
-            HSSSelector::p sbjct = selectorChain->subject();
+            HSSSelector::p sbjct = selectorChains.back()->subject();
             std::string lmntnm;
             if(sbjct){
                 lmntnm = sbjct->getElementName();
@@ -541,10 +541,11 @@ HSSRule::p HSSParser::readRule()
     return ret;
 }
 
-HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
+std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stopOn)
 {
     security_brake_init();
     
+    std::vector<HSSSelectorChain::p> retvect;
     HSSSelectorChain::p ret = HSSSelectorChain::p(new HSSSelectorChain());
     
     //first we need to look at the selector chain
@@ -633,6 +634,15 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                 break;
             }
                 
+            case HSSComma:
+            {
+                retvect.push_back(ret);
+                ret = HSSSelectorChain::p(new HSSSelectorChain());
+                this->readNextToken(true);
+                this->skip(HSSWhitespace);
+                break;
+            }
+                
             case HSSObjectSign:
             {
                 this->readNextToken(true);
@@ -689,6 +699,10 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
     }
     security_brake_reset();
     
+    if(ret) {
+        retvect.push_back(ret);
+    }
+    
     //we're not in a selector anymore
     this->currentContext.pop_back();
     
@@ -701,7 +715,7 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
     //if the file ends here, fuuuuuuu[...]
     this->checkForUnexpectedEndOfSource();
     
-    return ret;
+    return retvect;
 }
 
 bool HSSParser::isCombinator()
@@ -1734,9 +1748,9 @@ HSSRule::p HSSParser::readInstructionRule()
         case HSSDeleteInstruction:
         {
             //initialize the rule
-            HSSSelectorChain::p selectorChain;
+            std::vector<HSSSelectorChain::p> selectorChains;
             try {
-                selectorChain = this->readSelectorChain(HSSEndOfStatement);
+                selectorChains = this->readSelectorChains(HSSEndOfStatement);
             } catch (AXRError::p e) {
                 this->readNextToken();
                 this->checkForUnexpectedEndOfSource();
@@ -1750,7 +1764,7 @@ HSSRule::p HSSParser::readInstructionRule()
             }
             
             ret = HSSRule::p(new HSSRule());
-            ret->setSelectorChain(selectorChain);
+            ret->setSelectorChains(selectorChains);
             ret->setInstruction(instruction);
             break;
         }
@@ -1974,10 +1988,12 @@ HSSParserNode::p HSSParser::readFunction()
             this->readNextToken();
             this->skip(HSSWhitespace, true);
             //if shorthand notation -- assumes 'of @this'
-            HSSSelectorChain::p selectorChain;
+            std::vector<HSSSelectorChain::p> selectorChains;
             if(this->currentToken->isA(HSSParenthesisClose)){
+                HSSSelectorChain::p selectorChain;
                 selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
                 selectorChain->add(HSSThisSelector::p(new HSSThisSelector()));
+                selectorChains.push_back(selectorChain);
                 this->readNextToken(true);
                 this->skip(HSSWhitespace, true);
                 
@@ -1991,10 +2007,10 @@ HSSParserNode::p HSSParser::readFunction()
                 
                 
                 //now read the selector chain
-                selectorChain = this->readSelectorChain(HSSParenthesisClose);
+                selectorChains = this->readSelectorChains(HSSParenthesisClose);
             }
             
-            refFunction->setSelectorChain(selectorChain);
+            refFunction->setSelectorChains(selectorChains);
             ret = refFunction;
             
         } else if (name == "sel") {
@@ -2003,9 +2019,9 @@ HSSParserNode::p HSSParser::readFunction()
             this->skipExpected(HSSParenthesisOpen, true);
             this->skip(HSSWhitespace, true);
             //read the selector chain
-            HSSSelectorChain::p selectorChain;
+            std::vector<HSSSelectorChain::p> selectorChains;
             try {
-                selectorChain = this->readSelectorChain(HSSParenthesisClose);
+                selectorChains = this->readSelectorChains(HSSParenthesisClose);
             } catch (AXRError::p e) {
                 this->readNextToken(true);
                 this->skip(HSSWhitespace);
@@ -2018,7 +2034,7 @@ HSSParserNode::p HSSParser::readFunction()
             
             HSSSelFunction::p selFunction = HSSSelFunction::p(new HSSSelFunction());
             selFunction->setController(this->controller);
-            selFunction->setSelectorChain(selectorChain);
+            selFunction->setSelectorChains(selectorChains);
             
             ret = selFunction;
             
@@ -2049,10 +2065,12 @@ HSSParserNode::p HSSParser::readFunction()
             this->readNextToken();
             this->skip(HSSWhitespace, true);
             //if shorthand notation -- assumes 'of @this'
-            HSSSelectorChain::p selectorChain;
+            std::vector<HSSSelectorChain::p> selectorChains;
             if(this->currentToken->isA(HSSParenthesisClose)){
+                HSSSelectorChain::p selectorChain;
                 selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
                 selectorChain->add(HSSThisSelector::p(new HSSThisSelector()));
+                selectorChains.push_back(selectorChain);
                 this->readNextToken(true);
                 this->skip(HSSWhitespace, true);
                 
@@ -2066,10 +2084,10 @@ HSSParserNode::p HSSParser::readFunction()
                 
                 
                 //now read the selector chain
-                selectorChain = this->readSelectorChain(HSSParenthesisClose);
+                selectorChains = this->readSelectorChains(HSSParenthesisClose);
             }
             
-            flagFunction->setSelectorChain(selectorChain);
+            flagFunction->setSelectorChains(selectorChains);
             ret = flagFunction;
             
         } else if (name == "min") {

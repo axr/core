@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 1
+ *      Core version: 0.47
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -83,7 +83,6 @@ HSSFlagFunction::HSSFlagFunction(const HSSFlagFunction & orig)
 : HSSFunction(orig)
 {
     this->_name = orig._name;
-    this->selectorChain = orig.selectorChain->clone();
     this->_flagFunctionType = orig._flagFunctionType;
 }
 
@@ -108,15 +107,50 @@ void HSSFlagFunction::setName(std::string newValue)
     this->setDirty(true);
 }
 
-const HSSSelectorChain::p & HSSFlagFunction::getSelectorChain() const
+const std::vector<HSSSelectorChain::p> & HSSFlagFunction::getSelectorChains() const
 {
-    return this->selectorChain;
+    return this->selectorChains;
 }
 
-void HSSFlagFunction::setSelectorChain(HSSSelectorChain::p newValue)
+void HSSFlagFunction::setSelectorChains(std::vector<HSSSelectorChain::p> newValues)
 {
-    this->selectorChain = newValue;
+    this->selectorChains = newValues;
     this->setDirty(true);
+}
+
+void HSSFlagFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
+{
+    if(newSelectorChain)
+    {
+        std_log3("Added selector chain to HSSFlagFunction: " << newSelectorChain->toString());
+        newSelectorChain->setParentNode(this->shared_from_this());
+        this->selectorChains.push_back(newSelectorChain);
+    }
+}
+
+void HSSFlagFunction::selectorChainsRemove(unsigned int index)
+{
+    this->selectorChains.erase(this->selectorChains.begin()+index);
+}
+
+void HSSFlagFunction::selectorChainsRemoveLast()
+{
+    this->selectorChains.pop_back();
+}
+
+HSSSelectorChain::p & HSSFlagFunction::selectorChainsGet(unsigned index)
+{
+    return this->selectorChains[index];
+}
+
+HSSSelectorChain::p & HSSFlagFunction::selectorChainsLast()
+{
+    return this->selectorChains.back();
+}
+
+const int HSSFlagFunction::selectorChainsSize()
+{
+    return this->selectorChains.size();
 }
 
 void * HSSFlagFunction::_evaluate()
@@ -142,5 +176,13 @@ HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType()
 }
 
 HSSClonable::p HSSFlagFunction::cloneImpl() const{
-    return HSSClonable::p(new HSSFlagFunction(*this));
+    
+    HSSFlagFunction::p clone = HSSFlagFunction::p(new HSSFlagFunction(*this));
+    
+    HSSSelectorChain::const_it sIt;
+    for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+        HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
+        clone->selectorChainsAdd(clonedSelectorChain);
+    }    
+    return clone;
 }

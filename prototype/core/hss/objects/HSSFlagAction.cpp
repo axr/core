@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 1
+ *      Core version: 0.47
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -98,7 +98,7 @@ std::string HSSFlagAction::defaultObjectType()
 void HSSFlagAction::fire()
 {
     HSSFlagFunction::p flagFunction = this->getFlagFunction();
-    this->axrController->setSelectorChain(flagFunction->getSelectorChain());
+    this->axrController->setSelectorChains(flagFunction->getSelectorChains());
     std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->selectHierarchical(*this->scope, this->getThisObj(), false, false);
     if (selection.size() == 0){
         // ignore

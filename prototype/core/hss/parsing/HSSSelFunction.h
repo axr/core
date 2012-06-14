@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/04
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -74,6 +74,18 @@ namespace AXR {
         HSSSelFunction();
         
         /**
+         *  Copy constructor for HSSSelFunction objects. Do not call directly, use clone() instead.
+         */
+        HSSSelFunction(const HSSSelFunction & orig);
+        
+        /**
+         *  Clones an instance of HSSSelFunction and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSSelFunction
+         */
+        p clone() const;
+        
+        /**
          *  Destructor for this class.
          */
         virtual ~HSSSelFunction();
@@ -82,16 +94,50 @@ namespace AXR {
         virtual std::string toString();
         
         /**
-         *  Getter for the selector chain.
-         *  @return A shared pointer to the selector chain.
+         *  Getter for the selector chains.
+         *  @return A vector of shared pointers to the selector chains.
          */
-        const HSSSelectorChain::p & getSelectorChain() const;
+        const std::vector<HSSSelectorChain::p> & getSelectorChains() const;
         
         /**
-         *  Setter for the selector chain.
-         *  @param newValue     A shared pointer to the new selector chain.
+         *  Setter for the selector chains.
+         *  @param newValues     A vector of shared pointers to the new selector chains.
          */
-        void setSelectorChain(HSSSelectorChain::p newValue);
+        void setSelectorChains(std::vector<HSSSelectorChain::p> newValues);
+        
+        /**
+         *  Add a selector chain to the selector chains vector.
+         *  @param newValue A shared pointer to the selector chain to be added.
+         */
+        void selectorChainsAdd(HSSSelectorChain::p & newSelectorChain);
+        
+        /**
+         *  Get a selector chain by index.
+         *  @param index    An unsigned integer with the index of the selector chain.
+         *  @return A shared pointer to the element at that index.
+         */
+        HSSSelectorChain::p &selectorChainsGet(unsigned index);
+        
+        /**
+         *  Removes a selector chain by index.
+         *  @param index    An unsigned integer with the index of the selector chain to be deleted.
+         */
+        void selectorChainsRemove(unsigned index);
+        
+        /**
+         *  Removes the last element in the selector chains vector.
+         */
+        void selectorChainsRemoveLast();
+        
+        /**
+         *  @return the last element of the selector chains vector.
+         */
+        HSSSelectorChain::p &selectorChainsLast();
+        
+        /**
+         *  @return the size of the selector chains vector
+         */
+        const int selectorChainsSize();
         
         /**
          *  This is the actual implementation of what the function does. It selects from the elements
@@ -110,8 +156,11 @@ namespace AXR {
 //        void valueChanged(HSSObservableProperty source, void*data);
         
     protected:
-        HSSSelectorChain::p selectorChain;
+        std::vector<HSSSelectorChain::p> selectorChains;
         std::vector< std::vector<HSSDisplayObject::p> > selection;
+        
+    private:
+        HSSClonable::p cloneImpl() const;
     };
 }
 

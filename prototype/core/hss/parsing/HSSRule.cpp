@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/11
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 11
+ *      Revision: 12
  *
  ********************************************************************/
 
@@ -95,8 +95,12 @@ HSSRule::~HSSRule()
 std::string HSSRule::toString()
 {
     std::string tempstr = std::string("HSSRule with the following selector chain: \n");
-    if (this->selectorChain != NULL){
-        tempstr.append("   ").append(this->selectorChain->toString());
+    if (this->selectorChains.size() > 0){
+        HSSSelectorChain::const_it sIt;
+        for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+            tempstr.append("   ").append((*sIt)->toString());
+        }
+        
     } else {
         tempstr.append("WARNING: this rule has no selector chain!\n");
     }
@@ -122,15 +126,53 @@ std::string HSSRule::toString()
     return tempstr;
 }
 
-void HSSRule::setSelectorChain(HSSSelectorChain::p newChain)
+void HSSRule::setSelectorChains(std::vector<HSSSelectorChain::p> newChains)
 {
-    this->selectorChain = newChain;
-    this->selectorChain->setParentNode(this->shared_from_this());
+    this->selectorChains = newChains;
+    HSSSelectorChain::it it;
+    for(it=this->selectorChains.begin(); it!=this->selectorChains.end(); it++){
+        (*it)->setParentNode(this->shared_from_this());
+    }
 }
 
-HSSSelectorChain::p HSSRule::getSelectorChain()
+const std::vector<HSSSelectorChain::p> & HSSRule::getSelectorChains() const
 {
-    return this->selectorChain;
+    return this->selectorChains;
+}
+
+void HSSRule::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
+{
+    if(newSelectorChain)
+    {
+        std_log3("Added selector chain: " << newSelectorChain->toString());
+        newSelectorChain->setParentNode(this->shared_from_this());
+        this->selectorChains.push_back(newSelectorChain);
+    }
+}
+
+void HSSRule::selectorChainsRemove(unsigned int index)
+{
+    this->selectorChains.erase(this->selectorChains.begin()+index);
+}
+
+void HSSRule::selectorChainsRemoveLast()
+{
+    this->selectorChains.pop_back();
+}
+
+HSSSelectorChain::p & HSSRule::selectorChainsGet(unsigned index)
+{
+    return this->selectorChains[index];
+}
+
+HSSSelectorChain::p & HSSRule::selectorChainsLast()
+{
+    return this->selectorChains.back();
+}
+
+const int HSSRule::selectorChainsSize()
+{
+    return this->selectorChains.size();
 }
 
 const std::vector<HSSPropertyDefinition::p> & HSSRule::getProperties() const
@@ -219,7 +261,10 @@ HSSRule::p HSSRule::shared_from_this()
 
 void HSSRule::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
 {
-    this->selectorChain->setThisObj(value);
+    HSSSelectorChain::const_it sIt;
+    for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+        (*sIt)->setThisObj(value);
+    }
     std::vector<HSSPropertyDefinition::p>::iterator it;
     for (it=this->properties.begin(); it!=this->properties.end(); it++) {
         (*it)->setThisObj(value);
@@ -270,8 +315,11 @@ HSSClonable::p HSSRule::cloneImpl() const
 {
     HSSRule::p clone = HSSRule::p(new HSSRule(*this));
     
-    HSSSelectorChain::p newSelectorChain = this->selectorChain->clone();
-    if(this->selectorChain) clone->setSelectorChain(newSelectorChain);
+    HSSSelectorChain::const_it sIt;
+    for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+        HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
+        clone->selectorChainsAdd(clonedSelectorChain);
+    }
     HSSPropertyDefinition::const_it pIt;
     for (pIt=this->properties.begin(); pIt!=this->properties.end(); pIt++) {
         HSSPropertyDefinition::p clonedPropDef = (*pIt)->clone();
