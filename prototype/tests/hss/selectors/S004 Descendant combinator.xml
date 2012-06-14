@@ -6,16 +6,23 @@
 <?xml-stylesheet type="application/x-hss" src="S004 Descendant combinator.hss"?>
 <test>
 	<parent>
-		<child>Child 1</child>
+		<child>(Child) This should be blue</child>
 	</parent>
 	<parent>
 		<child>
-			<subchild>Subchild</subchild>
+			<subchild>(Subchild) This should be yellow</subchild>
 		</child>
 	</parent>
 	<parent2>
 		<child>
-			<subchild>Subchild of parent2</subchild>
+			<subchild>(Subchild) This should be green</subchild>
 		</child>
 	</parent2>
+	<parent3>
+		<subparent>
+			<child>
+				<subchild>(Sub-subchild) This should be green</subchild>
+			</child>
+		</subparent>
+	</parent3>
 </test>

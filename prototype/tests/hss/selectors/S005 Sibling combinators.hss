@@ -2,27 +2,21 @@ test
 {
 	child2 - child
 	{
-		background: #D;
+		background: #6FF;
 	}
 	
 	child + child
 	{
-		background: #B;
+		background: #66F;
 	}
 	
 	child = child2
 	{
-		background: #8;
+		background: #FF6;
 	}
 	
 	child2 + child2
 	{
-		background: #4;
-	}
-	
-	//FIXME: this is needed because the prototype is not capable of auto calculate the heights yet
-	.. *
-	{
-		height: 50;
+		background: #6F6;
 	}
 }

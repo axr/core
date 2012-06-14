@@ -1,8 +1,8 @@
-#C00 red;
-#0C0 green;
-#00C blue;
-#CC0 yellow;
-#FA0 orange;
+#F66 red;
+#6F6 green;
+#66F blue;
+#FF6 yellow;
+#F94 orange;
 
 *
 {
