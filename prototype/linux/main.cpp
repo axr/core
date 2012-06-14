@@ -133,6 +133,8 @@ int main (int argc, char **argv)
 		}
 		else if (event.type == SDL_VIDEORESIZE)
 		{
+			wrapper->setNeedsDisplay(true);
+
 			cairosdl_destroy (cr);
 			screen = SDL_SetVideoMode (event.resize.w, event.resize.h, 32,
 				SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
