@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/11
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -147,7 +147,14 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
         return false;
     }
     
-    core->run();
+    try {
+        core->run();
+    } catch (AXRError::p e) {
+        e->raise();
+    } catch (AXRWarning::p e) {
+        e->raise();
+    }
+    
     this->setNeedsDisplay(true);
     
     return true;
