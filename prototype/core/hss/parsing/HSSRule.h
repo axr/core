@@ -203,28 +203,73 @@ namespace AXR {
          *  //@param newChain     A vector of shared pointers to property definitions.
          */
         
+        /**
+         *  Getter fo the property definitions vector.
+         *  @return A vector of shared pointers to property definitions.
+         */
         const std::vector<HSSPropertyDefinition::p> & getProperties() const;
         
+        /**
+         *  Add a property definition to the properties vector.
+         *  @param newProperty  A shared pointer to the property definition to be added.
+         */
         void propertiesAdd(HSSPropertyDefinition::p & newProperty);
         
+        /**
+         *  Get a property definition by index.
+         *  @param index    An unsigned integer with the index of the property definition.
+         *  @return A shared pointer to the element at that index.
+         */
         HSSPropertyDefinition::p &propertiesGet(unsigned index);
         
+        /**
+         *  Removes a property definition by index.
+         *  @param index    An unsigned integer with the index of the property definition to be deleted.
+         */
         void propertiesRemove(unsigned index);
         
+        /**
+         *  Removes the last element in the properties vector.
+         */
         void propertiesRemoveLast();
         
+        /**
+         *  @return the last element of the properties vector.
+         */
         HSSPropertyDefinition::p &propertiesLast();
         
+        /**
+         *  @return the size of the properties vector
+         */
         const int propertiesSize();
         
+        /**
+         *  Add a child rule.
+         *  @param newProperty  A shared pointer to the rule to be added.
+         */
         void childrenAdd(HSSRule::p newRule);
         
+        /**
+         *  Get a child rule by index.
+         *  @param index    An unsigned integer with the index of the child rule.
+         *  @return A shared pointer to the element at that index.
+         */
         HSSRule::p childrenGet(unsigned index);
         
+        /**
+         *  Removes a child rule by index.
+         *  @param index    An unsigned integer with the index of the child rule to be deleted.
+         */
         void childrenRemove(unsigned index);
         
+        /**
+         *  Removes the last element in the children vector.
+         */
         void childrenRemoveLast();
         
+        /**
+         *  @return the size of the children vector
+         */
         const int childrenSize();
         
         void setInstruction(HSSInstruction::p newInstruction);
