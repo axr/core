@@ -70,6 +70,7 @@ namespace AXR
 		virtual void handleError(AXRError::p theError);
 		virtual bool openFileDialog(std::string &filePath);
 		virtual void setNeedsDisplay(bool newValue);
+		virtual std::string getPathToHSSFramework();
 
 		bool needsDisplay;
 	};
