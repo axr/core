@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/14
+ *      Last changed: 2012/06/15
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 29
+ *      Revision: 30
  *
  ********************************************************************/
 
@@ -637,9 +637,14 @@ std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stop
             case HSSComma:
             {
                 retvect.push_back(ret);
-                ret = HSSSelectorChain::p(new HSSSelectorChain());
+                
                 this->readNextToken(true);
                 this->skip(HSSWhitespace);
+                if(!this->currentToken->isA(stopOn)){
+                    ret = HSSSelectorChain::p(new HSSSelectorChain());
+                } else {
+                    ret = HSSSelectorChain::p();
+                }
                 break;
             }
                 

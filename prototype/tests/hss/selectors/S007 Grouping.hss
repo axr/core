@@ -9,7 +9,7 @@
     }
     
     child + child2,
-    child3 + child4
+    child3 + child4, //the last , is on purpose
     {
         background: green;
     }
