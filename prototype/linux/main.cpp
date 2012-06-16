@@ -34,7 +34,7 @@ void render ()
 		axrBounds.origin.x = 0;
 		axrBounds.origin.y = 0;
 
-		AXRCore::p core = wrapper->getCore();
+		AXRCore::tp & core = AXRCore::getInstance();
 
 		core->setCairo(cr);
 		core->drawInRectWithBounds(axrRect, axrBounds);
@@ -57,7 +57,7 @@ int main (int argc, char **argv)
 	SDL_EnableUNICODE(1);
 
 	wrapper = new LinuxAxrWrapper();
-	AXRCore::p core = wrapper->getCore();
+	AXRCore::tp & core = AXRCore::getInstance();
 
 	if (argc > 1)
 	{
@@ -80,7 +80,7 @@ int main (int argc, char **argv)
 		}
 		else if (event.type == SDL_MOUSEBUTTONDOWN)
 		{
-			AXRCore::p core = wrapper->getCore();
+			AXRCore::tp & core = AXRCore::getInstance();
 			HSSContainer::p root = core->getController()->getRoot();
 
 			if (root)
@@ -93,7 +93,7 @@ int main (int argc, char **argv)
 		}
 		else if (event.type == SDL_MOUSEBUTTONUP)
 		{
-			AXRCore::p core = wrapper->getCore();
+			AXRCore::tp & core = AXRCore::getInstance();
 			HSSContainer::p root = core->getController()->getRoot();
 
 			if (root)
@@ -106,7 +106,7 @@ int main (int argc, char **argv)
 		}
 		else if (event.type == SDL_MOUSEMOTION)
 		{
-			AXRCore::p core = wrapper->getCore();
+			AXRCore::tp & core = AXRCore::getInstance();
 			HSSContainer::p root = core->getController()->getRoot();
 
 			if (root)
@@ -138,7 +138,7 @@ int main (int argc, char **argv)
 			cairosdl_destroy (cr);
 			screen = SDL_SetVideoMode (event.resize.w, event.resize.h, 32,
 				SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
-			SDL_SetAlpha(screen,SDL_SRCALPHA, CAIROSDL_AMASK);
+			SDL_SetAlpha(screen, SDL_SRCALPHA, CAIROSDL_AMASK);
 			cr = cairosdl_create (screen);
 		}
 		else
