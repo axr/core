@@ -18,6 +18,8 @@ SDL_Surface* screen;
 
 void render ()
 {
+	wrapper->setNeedsDisplay(true);
+
 	if (wrapper->needsDisplay)
 	{
 		SDL_FillRect(screen, NULL, 0x00ffffff);
@@ -71,84 +73,90 @@ int main (int argc, char **argv)
 		wrapper->loadFile();
 	}
 
-	SDL_Event event;
-	while (SDL_WaitEvent(&event))
+	int done = 0;
+
+	while (!done)
 	{
-		if (event.type == SDL_QUIT)
+		SDL_Event event;
+		while (SDL_PollEvent(&event))
 		{
-			break;
-		}
-		else if (event.type == SDL_MOUSEBUTTONDOWN)
-		{
-			AXRCore::tp & core = AXRCore::getInstance();
-			HSSContainer::p root = core->getController()->getRoot();
-
-			if (root)
+			if (event.type == SDL_QUIT)
 			{
-				HSSPoint thePoint;
-				thePoint.x = event.button.x;
-				thePoint.y = event.button.y;
-				root->handleEvent(HSSEventTypeMouseDown, &thePoint);
+				done = 1;
+				break;
 			}
-		}
-		else if (event.type == SDL_MOUSEBUTTONUP)
-		{
-			AXRCore::tp & core = AXRCore::getInstance();
-			HSSContainer::p root = core->getController()->getRoot();
+			else if (event.type == SDL_MOUSEBUTTONDOWN)
+			{
+				AXRCore::tp & core = AXRCore::getInstance();
+				HSSContainer::p root = core->getController()->getRoot();
 
-			if (root)
-			{
-				HSSPoint thePoint;
-				thePoint.x = event.button.x;
-				thePoint.y = event.button.y;
-				root->handleEvent(HSSEventTypeMouseUp, &thePoint);
-			}
-		}
-		else if (event.type == SDL_MOUSEMOTION)
-		{
-			AXRCore::tp & core = AXRCore::getInstance();
-			HSSContainer::p root = core->getController()->getRoot();
-
-			if (root)
-			{
-				HSSPoint thePoint;
-				thePoint.x = event.motion.x;
-				thePoint.y = event.motion.y;
-				root->handleEvent(HSSEventTypeMouseMove, &thePoint);
-			}
-		}
-		else if (event.type == SDL_KEYUP)
-		{
-			if (event.key.keysym.sym == SDLK_F5)
-			{
-				if (wrapper->hasLoadedFile())
+				if (root)
 				{
-					std::cout << "Reloading file\n";
-					wrapper->reload();
+					HSSPoint thePoint;
+					thePoint.x = event.button.x;
+					thePoint.y = event.button.y;
+					root->handleEvent(HSSEventTypeMouseDown, &thePoint);
 				}
 			}
-		}
-		else if (event.type == SDL_KEYDOWN)
-		{
-		}
-		else if (event.type == SDL_VIDEORESIZE)
-		{
-			wrapper->setNeedsDisplay(true);
+			else if (event.type == SDL_MOUSEBUTTONUP)
+			{
+				AXRCore::tp & core = AXRCore::getInstance();
+				HSSContainer::p root = core->getController()->getRoot();
 
-			cairosdl_destroy (cr);
-			screen = SDL_SetVideoMode (event.resize.w, event.resize.h, 32,
-				SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
-			SDL_SetAlpha(screen, SDL_SRCALPHA, CAIROSDL_AMASK);
-			cr = cairosdl_create (screen);
-		}
-		else
-		{
+				if (root)
+				{
+					HSSPoint thePoint;
+					thePoint.x = event.button.x;
+					thePoint.y = event.button.y;
+					root->handleEvent(HSSEventTypeMouseUp, &thePoint);
+				}
+			}
+			else if (event.type == SDL_MOUSEMOTION)
+			{
+				AXRCore::tp & core = AXRCore::getInstance();
+				HSSContainer::p root = core->getController()->getRoot();
+
+				if (root)
+				{
+					HSSPoint thePoint;
+					thePoint.x = event.motion.x;
+					thePoint.y = event.motion.y;
+					root->handleEvent(HSSEventTypeMouseMove, &thePoint);
+				}
+			}
+			else if (event.type == SDL_KEYUP)
+			{
+				if (event.key.keysym.sym == SDLK_F5)
+				{
+					if (wrapper->hasLoadedFile())
+					{
+						std::cout << "Reloading file\n";
+						wrapper->reload();
+					}
+				}
+			}
+			else if (event.type == SDL_KEYDOWN)
+			{
+			}
+			else if (event.type == SDL_VIDEORESIZE)
+			{
+				cairosdl_destroy (cr);
+				screen = SDL_SetVideoMode (event.resize.w, event.resize.h, 32,
+					SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
+				SDL_SetAlpha(screen, SDL_SRCALPHA, CAIROSDL_AMASK);
+				cr = cairosdl_create (screen);
+
+				wrapper->setNeedsDisplay(true);
+			}
+			else
+			{
+			}
 		}
 
 		render();
 
 		SDL_Flip(screen);
-		//SDL_Delay(1000/30);
+		SDL_Delay(1000/30);
 	}
 
 	SDL_Quit();
