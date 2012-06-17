@@ -22,6 +22,8 @@ cleanup:
 	find . -name \*.o -exec rm {} \;
 	find ../core -name \*.o -exec rm {} \;
 
+axr: axr_$(ARCH)
+
 axr_$(ARCH): $(OBJECTS) cairosdl/cairosdl.o
 	$(CC) -m$(ARCH) $(LDFLAGS) $(OBJECTS) cairosdl/cairosdl.o -o $@
 
