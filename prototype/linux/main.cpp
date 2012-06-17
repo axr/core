@@ -18,8 +18,6 @@ SDL_Surface* screen;
 
 void render ()
 {
-	wrapper->setNeedsDisplay(true);
-
 	if (wrapper->needsDisplay)
 	{
 		SDL_FillRect(screen, NULL, 0x00ffffff);
