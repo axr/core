@@ -82,7 +82,7 @@ AXRFile::p WinAxrWrapper::getFile(std::string url)
     if(url.substr(0, 7) == "file://"){
         std::string clean_path = url.substr(7,std::string::npos);
         int slashpos = clean_path.rfind("/");
-        ret->fileName = clean_path.substr(slashpos+1, clean_path.size());
+        ret->getFileName() = clean_path.substr(slashpos+1, clean_path.size());
         ret->basePath = clean_path.substr(0, slashpos);
         
        
@@ -93,9 +93,9 @@ AXRFile::p WinAxrWrapper::getFile(std::string url)
 
 
         if( ret->fileHandle == NULL ){
-            AXRError::p(new AXRError("WinAxrWrapper", "the file "+ret->fileName+" doesn't exist"))->raise();
+            AXRError::p(new AXRError("WinAxrWrapper", "the file "+ret->getFileName()+" doesn't exist"))->raise();
         } else if( ferror(ret->fileHandle) ){
-            AXRError::p(new AXRError("WinAxrWrapper", "the file "+ret->fileName+" couldn't be read"))->raise();
+            AXRError::p(new AXRError("WinAxrWrapper", "the file "+ret->getFileName()+" couldn't be read"))->raise();
         }
         
     } else {
