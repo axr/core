@@ -2,7 +2,7 @@
 {
     width: 150;
     height: 150;
-    background: @{ alpha: 20% };
+    background: @rgb{ alpha: 20% };
     shape: @{10};
 }
 
