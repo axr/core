@@ -12,7 +12,8 @@ package ()
 	cp -r ../tests/ ./package/
 	#cp -r ./tutorial/ ./package/
 
-	tar -czf axr_${VERSION}_linux_$2.tar.gz ./package/*
+	cd ./package/
+	tar -czf axr_${VERSION}_linux_$2.tar.gz ./*
 
 	rm -rf ./package/
 }
