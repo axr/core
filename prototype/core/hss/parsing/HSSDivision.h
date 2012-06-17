@@ -74,23 +74,27 @@ namespace AXR {
          *  @param right    The value on the right hand side of the operator.
          */
         HSSDivision(HSSParserNode::p left, HSSParserNode::p right);
+        
         /**
          *  Copy constructor. Do not use directly, but use clone() instead.
          *  
-         *  @param orig     The other division object to clone.
+         *  @param orig     The other division expression to clone.
          */
         HSSDivision(const HSSDivision &orig);
+        
         /**
          *  Creates new clone of the current instance.
-         *  @return A shared pointer to the new division object.
+         *  @return A shared pointer to the new division expression.
          */
         p clone() const;
+        
         /**
          *  Destructor for this class.
          */
         virtual ~HSSDivision();
+        
         /**
-         *  The actual implementation of the operation
+         *  The actual implementation of the operation.
          *  
          *  @param leftval  A long double containing the dividend.
          *  @param rightval A long double containing the divisor.

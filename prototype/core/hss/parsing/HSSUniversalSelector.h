@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 4
+ *      Core version: 0.47
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -58,13 +58,30 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief This class encapsulates the universal selector "*".
+     *
+     *  The star symbol "*" is used in selector chains to select the whole scope.
+     */
     class HSSUniversalSelector : public HSSParserNode {
         
     public:
         typedef boost::shared_ptr<HSSUniversalSelector> p;
         
+        /**
+         *  Creates a new instance of a universal selector.
+         */
         HSSUniversalSelector();
+        
+        /**
+         *  Clones an instance of HSSRootSelector and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSRootSelector
+         */
         p clone() const;
+        
+        //see HSSParserNode.h for the documentation of this method
         virtual std::string toString();
     private:
         virtual HSSClonable::p cloneImpl() const;

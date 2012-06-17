@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.47
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -66,26 +66,72 @@ HSSSelFunction::~HSSSelFunction()
     
 }
 
+HSSSelFunction::HSSSelFunction(const HSSSelFunction & orig)
+: HSSFunction(orig)
+{
+    
+}
+
+HSSSelFunction::p HSSSelFunction::clone() const
+{
+    return boost::static_pointer_cast<HSSSelFunction, HSSClonable>(this->cloneImpl());
+}
+
 std::string HSSSelFunction::toString()
 {    
     std::string tempstr = std::string("HSSSelFunction\n");
     return tempstr;
 }
 
-const HSSSelectorChain::p & HSSSelFunction::getSelectorChain() const
+const std::vector<HSSSelectorChain::p> & HSSSelFunction::getSelectorChains() const
 {
-    return this->selectorChain;
+    return this->selectorChains;
 }
 
-void HSSSelFunction::setSelectorChain(HSSSelectorChain::p newValue)
+void HSSSelFunction::setSelectorChains(std::vector<HSSSelectorChain::p> newValues)
 {
-    this->selectorChain = newValue;
+    this->selectorChains = newValues;
     this->setDirty(true);
+}
+
+void HSSSelFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
+{
+    if(newSelectorChain)
+    {
+        std_log3("Added selector chain to HSSFlagFunction: " << newSelectorChain->toString());
+        newSelectorChain->setParentNode(this->shared_from_this());
+        this->selectorChains.push_back(newSelectorChain);
+    }
+}
+
+void HSSSelFunction::selectorChainsRemove(unsigned int index)
+{
+    this->selectorChains.erase(this->selectorChains.begin()+index);
+}
+
+void HSSSelFunction::selectorChainsRemoveLast()
+{
+    this->selectorChains.pop_back();
+}
+
+HSSSelectorChain::p & HSSSelFunction::selectorChainsGet(unsigned index)
+{
+    return this->selectorChains[index];
+}
+
+HSSSelectorChain::p & HSSSelFunction::selectorChainsLast()
+{
+    return this->selectorChains.back();
+}
+
+const int HSSSelFunction::selectorChainsSize()
+{
+    return this->selectorChains.size();
 }
 
 void * HSSSelFunction::_evaluate()
 {
-    this->axrController->setSelectorChain(this->selectorChain);
+    this->axrController->setSelectorChains(this->selectorChains);
     this->selection = this->axrController->selectHierarchical(*this->scope, this->getThisObj());
     this->_value = (void*) &this->selection;
     return this->_value;
@@ -105,4 +151,14 @@ void * HSSSelFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
 //}
 
 
-
+HSSClonable::p HSSSelFunction::cloneImpl() const{
+    
+    HSSSelFunction::p clone = HSSSelFunction::p(new HSSSelFunction(*this));
+    
+    HSSSelectorChain::const_it sIt;
+    for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+        HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
+        clone->selectorChainsAdd(clonedSelectorChain);
+    }    
+    return clone;
+}

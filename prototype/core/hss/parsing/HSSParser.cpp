@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/27
+ *      Last changed: 2012/06/15
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 27
+ *      Revision: 30
  *
  ********************************************************************/
 
@@ -69,6 +69,7 @@
 #include "HSSFilter.h"
 #include "HSSNegation.h"
 #include "HSSFlag.h"
+#include "../../AXR.h"
 
 using namespace AXR;
 
@@ -182,6 +183,13 @@ bool HSSParser::loadFile(AXRFile::p file)
                 this->skip(HSSWhitespace);
             }
         }
+        catch (AXR::AXRWarning::p e){
+            e->raise();
+            this->readNextToken();
+            if (!this->atEndOfSource()){
+                this->skip(HSSWhitespace);
+            }
+        }
         // deprecated ------------------------------
         catch(AXR::HSSUnexpectedTokenException e){
             std::cout << e.toString() << std::endl;
@@ -252,9 +260,18 @@ bool HSSParser::loadFile(AXRFile::p file)
                             this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
                             this->line = 1;
                             this->column = 1;
+                            AXRFile::p theFile;
                             try {
-                                AXRFile::p theFile = this->wrapper->getFile("file://"+this->basepath+"/"+theInstr->getValue());
-                                this->loadFile(theFile);
+                                if(theInstr->getValue().substr(0, HSSFRAMEWORK_PROTOCOL_LEN) == HSSFRAMEWORK_PROTOCOL){
+                                    std::string filepath = theInstr->getValue().substr(HSSFRAMEWORK_PROTOCOL_LEN);
+                                    theFile = this->wrapper->getFile("file://"+this->wrapper->getPathToHSSFramework()+"/"+filepath);
+                                } else {
+                                    theFile = this->wrapper->getFile("file://"+this->basepath+"/"+theInstr->getValue());
+                                }
+                                
+                                if (theFile) {
+                                    this->loadFile(theFile);
+                                }
                                 
                             } catch (AXRError::p e) {
                                 e->raise();
@@ -407,9 +424,9 @@ HSSRule::p HSSParser::readRule()
     this->checkForUnexpectedEndOfSource();
     
     //initialize the rule
-    HSSSelectorChain::p selectorChain;
+    std::vector<HSSSelectorChain::p> selectorChains;
     try {
-        selectorChain = this->readSelectorChain(HSSBlockOpen);
+        selectorChains = this->readSelectorChains(HSSBlockOpen);
     } catch (AXRError::p e) {
         this->readNextToken();
         this->checkForUnexpectedEndOfSource();
@@ -423,7 +440,7 @@ HSSRule::p HSSParser::readRule()
     }
     
     HSSRule::p ret = HSSRule::p(new HSSRule());
-    ret->setSelectorChain(selectorChain);
+    ret->setSelectorChains(selectorChains);
     
     //now we're inside the block
     this->currentContext.push_back(HSSParserContextBlock);
@@ -491,7 +508,7 @@ HSSRule::p HSSParser::readRule()
         }
         
         if (this->atEndOfSource()) {
-            HSSSelector::p sbjct = selectorChain->subject();
+            HSSSelector::p sbjct = selectorChains.back()->subject();
             std::string lmntnm;
             if(sbjct){
                 lmntnm = sbjct->getElementName();
@@ -524,10 +541,11 @@ HSSRule::p HSSParser::readRule()
     return ret;
 }
 
-HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
+std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stopOn)
 {
     security_brake_init();
     
+    std::vector<HSSSelectorChain::p> retvect;
     HSSSelectorChain::p ret = HSSSelectorChain::p(new HSSSelectorChain());
     
     //first we need to look at the selector chain
@@ -616,6 +634,20 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
                 break;
             }
                 
+            case HSSComma:
+            {
+                retvect.push_back(ret);
+                
+                this->readNextToken(true);
+                this->skip(HSSWhitespace);
+                if(!this->currentToken->isA(stopOn)){
+                    ret = HSSSelectorChain::p(new HSSSelectorChain());
+                } else {
+                    ret = HSSSelectorChain::p();
+                }
+                break;
+            }
+                
             case HSSObjectSign:
             {
                 this->readNextToken(true);
@@ -672,6 +704,10 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
     }
     security_brake_reset();
     
+    if(ret) {
+        retvect.push_back(ret);
+    }
+    
     //we're not in a selector anymore
     this->currentContext.pop_back();
     
@@ -684,7 +720,7 @@ HSSSelectorChain::p HSSParser::readSelectorChain(HSSTokenType stopOn)
     //if the file ends here, fuuuuuuu[...]
     this->checkForUnexpectedEndOfSource();
     
-    return ret;
+    return retvect;
 }
 
 bool HSSParser::isCombinator()
@@ -1335,6 +1371,91 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
     return ret;
 }
 
+HSSParserNode::p HSSParser::readValue(std::string propertyName, bool &valid)
+{
+    bool isValid = true;
+    HSSParserNode::p ret = HSSParserNode::p(new HSSParserNode());
+    try {
+        //now comes either an object definition, a literal value or an expression
+        //object
+        if (this->currentToken->isA(HSSObjectSign)){
+            HSSObjectDefinition::p objdef = this->readObjectDefinition(propertyName);
+            if(objdef){
+                ret = objdef;
+            } else {
+                isValid = false;
+            }
+            //this->readNextToken();
+            
+        } else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString)){
+            ret = HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString()));
+            this->checkForUnexpectedEndOfSource();
+            this->readNextToken();
+            this->skip(HSSWhitespace);
+            
+            //number literal
+        } else if (this->currentToken->isA(HSSNumber) || this->currentToken->isA(HSSPercentageNumber) || this->currentToken->isA(HSSParenthesisOpen)){
+            /**
+             *  @todo parse the number and see if it is an int or a float
+             */
+            HSSParserNode::p exp = this->readExpression();
+            if(exp){
+                ret = exp;
+            } else {
+                isValid = false;
+            }
+            
+            
+        } else if (this->currentToken->isA(HSSIdentifier)){
+            //this is either a function, a keyword or an object name
+            
+            std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
+            //check if it is a function
+            HSSObject::p objectContext = this->currentObjectContext.top();
+            
+            if (objectContext->isFunction(valuestr, propertyName)){
+                HSSParserNode::p exp = this->readExpression();
+                if (exp){
+                    ret = exp;
+                } else {
+                    isValid = false;
+                }
+                
+                //check if it is a keyword
+            } else if (objectContext->isKeyword(valuestr, propertyName)){
+                ret = HSSKeywordConstant::p(new HSSKeywordConstant(valuestr));
+                this->readNextToken();
+                //we assume it is an object name at this point
+            } else {
+                ret = HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr));
+                this->readNextToken();
+            }
+            
+            
+        } else if (this->currentToken->isA(HSSInstructionSign)){
+            HSSInstruction::p theInstruction;
+            
+            theInstruction = this->readInstruction();
+            
+            if (theInstruction){
+                ret = this->getObjectFromInstruction(theInstruction);
+            } else {
+                isValid = false;
+            }
+            
+        } else {
+            isValid = false;
+        }
+    } catch (AXRError::p e) {
+        e->raise();
+        isValid = false;
+    }
+    
+    valid = isValid;
+    
+    return ret;
+}
+
 
 HSSInstruction::p HSSParser::readInstruction()
 {
@@ -1429,7 +1550,14 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
             if (this->currentToken->isA(HSSDoubleQuoteString) || this->currentToken->isA(HSSSingleQuoteString)) {
                 std::string theString = VALUE_TOKEN(this->currentToken)->getString();
                 ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, theString));
-                
+            } else if (this->currentToken->isA(HSSIdentifier)){
+                std::string instructionKw = VALUE_TOKEN(this->currentToken)->getString();
+                if (instructionKw == "UIFramework"){
+                    std::string protocol = HSSFRAMEWORK_PROTOCOL;
+                    ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, protocol.append("UIFramework.hss")));
+                } else {
+                    throw AXRWarning::p(new AXRWarning("HSSParser", "Unknown keyword for import instruction."));
+                }
             } else {
                 throw AXRError::p(new AXRError("HSSParser", "Expected string", this->currentFile->getFileName(), this->line, this->column));
             }
@@ -1625,9 +1753,9 @@ HSSRule::p HSSParser::readInstructionRule()
         case HSSDeleteInstruction:
         {
             //initialize the rule
-            HSSSelectorChain::p selectorChain;
+            std::vector<HSSSelectorChain::p> selectorChains;
             try {
-                selectorChain = this->readSelectorChain(HSSEndOfStatement);
+                selectorChains = this->readSelectorChains(HSSEndOfStatement);
             } catch (AXRError::p e) {
                 this->readNextToken();
                 this->checkForUnexpectedEndOfSource();
@@ -1641,7 +1769,7 @@ HSSRule::p HSSParser::readInstructionRule()
             }
             
             ret = HSSRule::p(new HSSRule());
-            ret->setSelectorChain(selectorChain);
+            ret->setSelectorChains(selectorChains);
             ret->setInstruction(instruction);
             break;
         }
@@ -1865,10 +1993,12 @@ HSSParserNode::p HSSParser::readFunction()
             this->readNextToken();
             this->skip(HSSWhitespace, true);
             //if shorthand notation -- assumes 'of @this'
-            HSSSelectorChain::p selectorChain;
+            std::vector<HSSSelectorChain::p> selectorChains;
             if(this->currentToken->isA(HSSParenthesisClose)){
+                HSSSelectorChain::p selectorChain;
                 selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
                 selectorChain->add(HSSThisSelector::p(new HSSThisSelector()));
+                selectorChains.push_back(selectorChain);
                 this->readNextToken(true);
                 this->skip(HSSWhitespace, true);
                 
@@ -1882,10 +2012,10 @@ HSSParserNode::p HSSParser::readFunction()
                 
                 
                 //now read the selector chain
-                selectorChain = this->readSelectorChain(HSSParenthesisClose);
+                selectorChains = this->readSelectorChains(HSSParenthesisClose);
             }
             
-            refFunction->setSelectorChain(selectorChain);
+            refFunction->setSelectorChains(selectorChains);
             ret = refFunction;
             
         } else if (name == "sel") {
@@ -1894,9 +2024,9 @@ HSSParserNode::p HSSParser::readFunction()
             this->skipExpected(HSSParenthesisOpen, true);
             this->skip(HSSWhitespace, true);
             //read the selector chain
-            HSSSelectorChain::p selectorChain;
+            std::vector<HSSSelectorChain::p> selectorChains;
             try {
-                selectorChain = this->readSelectorChain(HSSParenthesisClose);
+                selectorChains = this->readSelectorChains(HSSParenthesisClose);
             } catch (AXRError::p e) {
                 this->readNextToken(true);
                 this->skip(HSSWhitespace);
@@ -1909,7 +2039,7 @@ HSSParserNode::p HSSParser::readFunction()
             
             HSSSelFunction::p selFunction = HSSSelFunction::p(new HSSSelFunction());
             selFunction->setController(this->controller);
-            selFunction->setSelectorChain(selectorChain);
+            selFunction->setSelectorChains(selectorChains);
             
             ret = selFunction;
             
@@ -1940,10 +2070,12 @@ HSSParserNode::p HSSParser::readFunction()
             this->readNextToken();
             this->skip(HSSWhitespace, true);
             //if shorthand notation -- assumes 'of @this'
-            HSSSelectorChain::p selectorChain;
+            std::vector<HSSSelectorChain::p> selectorChains;
             if(this->currentToken->isA(HSSParenthesisClose)){
+                HSSSelectorChain::p selectorChain;
                 selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
                 selectorChain->add(HSSThisSelector::p(new HSSThisSelector()));
+                selectorChains.push_back(selectorChain);
                 this->readNextToken(true);
                 this->skip(HSSWhitespace, true);
                 
@@ -1957,10 +2089,10 @@ HSSParserNode::p HSSParser::readFunction()
                 
                 
                 //now read the selector chain
-                selectorChain = this->readSelectorChain(HSSParenthesisClose);
+                selectorChains = this->readSelectorChains(HSSParenthesisClose);
             }
             
-            flagFunction->setSelectorChain(selectorChain);
+            flagFunction->setSelectorChains(selectorChains);
             ret = flagFunction;
             
         } else if (name == "min") {
@@ -1972,6 +2104,26 @@ HSSParserNode::p HSSParser::readFunction()
         } else if (name == "floor") {
             
         } else if (name == "round") {
+            
+        } else if (AXRCore::getInstance()->isCustomFunction(name)) {
+            this->readNextToken(true);
+            this->skip(HSSWhitespace, true);
+            this->skipExpected(HSSParenthesisOpen, true);
+            this->skip(HSSWhitespace, true);
+            std::deque<HSSParserNode::p> arguments;
+            while (!this->currentToken->isA(HSSParenthesisClose) && !this->atEndOfSource()) {
+                bool valid;
+                arguments.push_back(this->readValue("", valid));
+                if(this->currentToken->isA(HSSComma)){
+                    this->readNextToken(true);
+                }
+            }
+            HSSFunction::p theFunction = HSSFunction::p(new HSSFunction(HSSFunctionTypeCustom));
+            theFunction->setArguments(arguments);
+            theFunction->setName(name);
+            ret = theFunction;
+            this->readNextToken(true);
+            this->skip(HSSWhitespace, true);
             
         } else {
             throw AXRError::p(new AXRError("HSSParser", "Unexpected function name: "+name, this->currentFile->getFileName(), this->line, this->column));

@@ -239,7 +239,7 @@
 								</object>
 								<object class="NSMenuItem" id="496255774">
 									<reference key="NSMenu" ref="720053764"/>
-									<string key="NSTitle">Execute tests…</string>
+									<string key="NSTitle">Layout tests</string>
 									<string key="NSKeyEquiv">t</string>
 									<int key="NSKeyEquivModMask">1572864</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -759,7 +759,7 @@
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
 				<object class="NSView" key="NSWindowView" id="439893737">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -959,7 +959,6 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{447, 258.484}</string>
-					<reference key="NSSuperview"/>
 					<reference key="NSNextKeyView" ref="698388545"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
@@ -984,7 +983,6 @@
 					<int key="NSvFlags">256</int>
 					<string key="NSFrameSize">{752.594, 515.102}</string>
 					<reference key="NSSuperview"/>
-					<reference key="NSNextKeyView"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {2560, 1418}}</string>
 				<string key="NSMaxSize">{1e+13, 1e+13}</string>

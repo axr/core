@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 7
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -99,9 +99,8 @@ namespace AXR {
         /**
          *  Creates a new instance of the render object.
          *  @param  controller  A regular pointer to the controller object that is associated with this renderer.
-         *  @param  core        A regular pointer to the core object that is associated with this renderer.
          */
-        AXRRender(AXRController * controller, AXRCore * core);
+        AXRRender(AXRController * controller);
         /**
          *  Destructs the render object.
          */
@@ -155,12 +154,19 @@ namespace AXR {
          */
         double getWindowHeight();
         
+        /**
+         *  @todo create getter/setter and make private
+         */
+        double windowWidth;
+        
+        /**
+         *  @todo create getter/setter and make private
+         */
+        double windowHeight;
+        
     protected:
         //weak pointer
         AXRController * controller;
-        AXRCore * core;
-        double windowWidth;
-        double windowHeight;
         cairo_t * cairo;
         cairo_surface_t * rootSurface;
     };

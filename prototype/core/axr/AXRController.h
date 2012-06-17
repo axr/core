@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 20
+ *      Revision: 22
  *
  ********************************************************************/
 
@@ -83,10 +83,8 @@ namespace AXR {
         /**
          *  Creates a new instance of a controller.
          *
-         *  @param core A regular pointer to the core object to which this controller is associated to.
-         *
          */
-        AXRController(AXRCore * core);
+        AXRController();
         
         /**
          *  Destructs the controller and clears all the trees.
@@ -286,14 +284,21 @@ namespace AXR {
         unsigned const rulesSize();
         
         /**
-         *  Sets the given selector chain to be used for making selections.
+         *  Sets the given selector chains to be used for making selections.
          *  
          *  When selecting elements in the content tree, the controller automatically keeps track
-         *  of the current position in the selector chain. This method resets the index.
+         *  of the current position in each selector chain.
          *
-         *  @param selectorChain    A shared pointer to the selector chain to be stored.
+         *  @param selectorChain    A vector of shared pointers to the selector chains to be stored.
          */
-        void setSelectorChain(HSSSelectorChain::p selectorChain);
+        void setSelectorChains(std::vector<HSSSelectorChain::p> selectorChains);
+        
+        /**
+         *  Set the given selector chain as the current one. It will set the new current chain size,
+         *  reset the current chain count to 0 and make the current selector node the first node in the chain.
+         *  @param selectorChain    A shared pointer to the selector chain to make the current one.
+         */
+        void initializeSelectorChain(HSSSelectorChain::p selectorChain);
         
         /**
          *  Shorthand for selecting elements. Calls selectHierarchical(scope, thisObj, negating,
@@ -419,8 +424,6 @@ namespace AXR {
         std::stack<HSSContainer::p>currentContext;
         
     protected:
-        AXRCore * core;
-        
         HSSContainer::p root;
         
         std::vector<HSSObjectDefinition::p>objectTree;
@@ -434,6 +437,9 @@ namespace AXR {
         unsigned currentChainSize;
         void readNextSelectorNode();
         bool isAtEndOfSelector();
+        
+    private:
+        std::vector<HSSSelectorChain::p> selectorChains;
     };
 }
 

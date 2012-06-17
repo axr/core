@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/02
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 20
+ *      Revision: 22
  *
  ********************************************************************/
 
@@ -64,6 +64,9 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/unordered_set.hpp>
 #include "../../axr/AXRFile.h"
+
+#define HSSFRAMEWORK_PROTOCOL "axr://"
+#define HSSFRAMEWORK_PROTOCOL_LEN 6
 
 namespace AXR {
     
@@ -171,8 +174,10 @@ namespace AXR {
          *  
          *  @param stopOn   The token which marks the end of the selector chain. It will be the current token after
          *                  returning.
+         *
+         *  @return A vector of shared pointers to selector chains.
          */
-        HSSSelectorChain::p readSelectorChain(HSSTokenType stopOn);
+        std::vector<HSSSelectorChain::p> readSelectorChains(HSSTokenType stopOn);
         
         /**
          *  Shorthand for isCombinator(HSSToken::p token), passing the current token.
@@ -450,6 +455,8 @@ namespace AXR {
          *  @return A string containing the base path.
          */
         std::string getBasePath();
+        
+        HSSParserNode::p readValue(std::string propertyName, bool &valid);
         
     private:
         HSSTokenizer::p tokenizer;

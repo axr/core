@@ -1,0 +1,16 @@
+#6F6 green;
+#66F blue;
+
+*
+{
+    child, child3
+    {
+        background: blue;
+    }
+    
+    child + child2,
+    child3 + child4, //the last , is on purpose
+    {
+        background: green;
+    }
+}

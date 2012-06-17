@@ -5,9 +5,9 @@
 -->
 <?xml-stylesheet type="application/x-hss" src="S006 Negations.hss"?>
 <test>
-	<child>Child 1</child>
-	<child>Child 1</child>
-	<child>Child 1</child>
-	<child2>Child 2</child2>
-	<child2>Child 2</child2>
+	<child>(Child) This should be red</child>
+	<child>(Child) This should be yellow</child>
+	<child>(Child) This should be blue</child>
+	<child2>(Child2) This should be orange</child2>
+	<child2>(Child2) this should be green</child2>
 </test>

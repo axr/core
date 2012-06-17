@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/22
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 38
+ *      Revision: 39
  *
  ********************************************************************/
 
@@ -59,6 +59,7 @@
 #include "../parsing/HSSConstants.h"
 #include "../parsing/HSSObjectNameConstant.h"
 #include "../parsing/HSSFunction.h"
+#include "../../AXR.h"
 #include <map>
 #include <string>
 #include <sstream>

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/08
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 42
+ *      Core version: 0.47
+ *      Revision: 43
  *
  ********************************************************************/
 
@@ -320,27 +320,28 @@ void HSSDisplayObject::setElementName(std::string newName)
 //rules
 void HSSDisplayObject::rulesAdd(HSSRule::p newRule, HSSRuleState defaultState)
 {
-    //the target property is set to HSSObservablePropertyValue -- should this be something else?
-    newRule->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::ruleChanged));
-    
-    newRule->appliedToAdd(this->shared_from_this());
-    
-    HSSRuleStatus::p newRS = HSSRuleStatus::p(new HSSRuleStatus());
-    newRS->state = defaultState;
-    newRS->rule = newRule;
-    
-    this->rules.push_back(newRS);
-    
-    //iterate over the property defs and try to find an isA property
-    const std::vector<HSSPropertyDefinition::p> & props = newRule->getProperties();
-    HSSPropertyDefinition::const_it it;
-    for (it = props.begin(); it!=props.end(); it++) {
-        HSSPropertyDefinition::p propdef = *it;
-        if(propdef->getName() == "isA"){
-            this->rulesAddIsAChildren(propdef, defaultState);
+    if (!this->hasRule(newRule)){
+        //the target property is set to HSSObservablePropertyValue -- should this be something else?
+        newRule->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::ruleChanged));
+        
+        newRule->appliedToAdd(this->shared_from_this());
+        
+        HSSRuleStatus::p newRS = HSSRuleStatus::p(new HSSRuleStatus());
+        newRS->state = defaultState;
+        newRS->rule = newRule;
+        
+        this->rules.push_back(newRS);
+        
+        //iterate over the property defs and try to find an isA property
+        const std::vector<HSSPropertyDefinition::p> & props = newRule->getProperties();
+        HSSPropertyDefinition::const_it it;
+        for (it = props.begin(); it!=props.end(); it++) {
+            HSSPropertyDefinition::p propdef = *it;
+            if(propdef->getName() == "isA"){
+                this->rulesAddIsAChildren(propdef, defaultState);
+            }
         }
     }
-    
 }
 
 void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSSRuleState defaultState)
@@ -437,6 +438,19 @@ void HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)
     }
 }
 
+bool HSSDisplayObject::hasRule(HSSRule::p rule)
+{
+    bool found = false;
+    std::vector<HSSRuleStatus::p>::iterator it;
+    for (it=this->rules.begin(); it!=this->rules.end(); it++) {
+        HSSRuleStatus::p status = *it;
+        if (rule == status->rule) {
+            found = true;
+        }
+    }
+    return found;
+}
+
 void HSSDisplayObject::readDefinitionObjects()
 {
     if(this->_needsRereadRules){
@@ -446,7 +460,7 @@ void HSSDisplayObject::readDefinitionObjects()
         
         //if this is root, we use the window width and height of the render
         if(this->isRoot()){
-            AXRCore::p core = AXRCore::getInstance();
+            AXRCore::tp & core = AXRCore::getInstance();
             //width
             HSSNumberConstant::p newDWidth(new HSSNumberConstant(core->getRender()->getWindowWidth()));
             this->setDWidth(newDWidth);
@@ -476,6 +490,9 @@ void HSSDisplayObject::readDefinitionObjects()
                             this->setPropertyWithName(propertyName, propertyDefinition->getValue());
                         }
                         catch (AXRError::p e){
+                            e->raise();
+                        }
+                        catch (AXRWarning::p e){
                             e->raise();
                         }
                     }

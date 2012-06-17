@@ -5,8 +5,8 @@
 -->
 <?xml-stylesheet type="application/x-hss" src="S005 Sibling combinators.hss"?>
 <test>
-	<child>Child 1</child>
-	<child>Child 1</child>
-	<child2>Child 2</child2>
-	<child2>Child 2</child2>
+	<child>(Child) This should be cyan</child>
+	<child>(Child) This should be blue</child>
+	<child2>(Child2) This should be yellow</child2>
+	<child2>(Child2) This should be green</child2>
 </test>

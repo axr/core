@@ -26,6 +26,8 @@
 		4E12B9231365BEA600BBAD6C /* HSSObservable.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E12B9211365BEA600BBAD6C /* HSSObservable.h */; };
 		4E1BE18013A3F5F300D7C6DB /* HSSRgb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BE17E13A3F5F300D7C6DB /* HSSRgb.cpp */; };
 		4E1BE18113A3F5F300D7C6DB /* HSSRgb.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E1BE17F13A3F5F300D7C6DB /* HSSRgb.h */; };
+		4E209D8E1584105A003F5F04 /* HSSFunctionAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E209D8C15841059003F5F04 /* HSSFunctionAction.cpp */; };
+		4E209D8F1584105A003F5F04 /* HSSFunctionAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E209D8D1584105A003F5F04 /* HSSFunctionAction.h */; };
 		4E23091B144098880006A3BC /* errors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E23091A144098880006A3BC /* errors.h */; };
 		4E24B32214533FBB00F40154 /* HSSMultipleValueDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E24B32014533FBB00F40154 /* HSSMultipleValueDefinition.cpp */; };
 		4E24B32314533FBB00F40154 /* HSSMultipleValueDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E24B32114533FBB00F40154 /* HSSMultipleValueDefinition.h */; };
@@ -200,6 +202,8 @@
 		4E12B9211365BEA600BBAD6C /* HSSObservable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservable.h; sourceTree = "<group>"; };
 		4E1BE17E13A3F5F300D7C6DB /* HSSRgb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRgb.cpp; sourceTree = "<group>"; };
 		4E1BE17F13A3F5F300D7C6DB /* HSSRgb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRgb.h; sourceTree = "<group>"; };
+		4E209D8C15841059003F5F04 /* HSSFunctionAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFunctionAction.cpp; sourceTree = "<group>"; };
+		4E209D8D1584105A003F5F04 /* HSSFunctionAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFunctionAction.h; sourceTree = "<group>"; };
 		4E23091A144098880006A3BC /* errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = errors.h; sourceTree = "<group>"; };
 		4E24B32014533FBB00F40154 /* HSSMultipleValueDefinition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMultipleValueDefinition.cpp; sourceTree = "<group>"; };
 		4E24B32114533FBB00F40154 /* HSSMultipleValueDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSMultipleValueDefinition.h; sourceTree = "<group>"; };
@@ -485,6 +489,8 @@
 				4EFDA75B147991290051565B /* HSSLog.h */,
 				4E6FC79B151A499E00003DB3 /* HSSFlagAction.cpp */,
 				4E6FC79C151A499F00003DB3 /* HSSFlagAction.h */,
+				4E209D8C15841059003F5F04 /* HSSFunctionAction.cpp */,
+				4E209D8D1584105A003F5F04 /* HSSFunctionAction.h */,
 				4E80C7FD13505DD200D88409 /* HSSObjectExceptions.cpp */,
 				4E80C7FE13505DD200D88409 /* HSSObjectExceptions.h */,
 				4EC1891414A69DD0009715F1 /* HSSGradient.cpp */,
@@ -757,6 +763,7 @@
 				4E6FC79E151A49A000003DB3 /* HSSFlagAction.h in Headers */,
 				4E87E36915441BC600E3EC21 /* HSSPolygon.h in Headers */,
 				4E2A1A47154B11E000931616 /* HSSRootSelector.h in Headers */,
+				4E209D8F1584105A003F5F04 /* HSSFunctionAction.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -891,6 +898,7 @@
 				4E6FC79D151A49A000003DB3 /* HSSFlagAction.cpp in Sources */,
 				4E87E36815441BC600E3EC21 /* HSSPolygon.cpp in Sources */,
 				4E2A1A46154B11E000931616 /* HSSRootSelector.cpp in Sources */,
+				4E209D8E1584105A003F5F04 /* HSSFunctionAction.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -61,6 +61,7 @@ namespace AXR
 	{
 		public:
 		LinuxAxrWrapper();
+        AXRWrapper * createWrapper();
 		virtual ~LinuxAxrWrapper();
 
 		virtual AXRFile::p getFile(std::string url);
@@ -69,6 +70,7 @@ namespace AXR
 		virtual void handleError(AXRError::p theError);
 		virtual bool openFileDialog(std::string &filePath);
 		virtual void setNeedsDisplay(bool newValue);
+		virtual std::string getPathToHSSFramework();
 
 		bool needsDisplay;
 	};

@@ -43,33 +43,32 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 4
  *
  ********************************************************************/
 
 #include "AXRWrapper.h"
 #include "../AXR.h"
+#include <boost/lexical_cast.hpp>
+#include "../hss/parsing/HSSFunction.h"
+#include "../hss/parsing/HSSSelFunction.h"
 
 using namespace AXR;
 
 AXRWrapper::AXRWrapper()
 {
     this->_isHSSOnly = false;
-    AXRCore::p axr = AXRCore::getInstance();
+    AXRCore::tp & axr = AXRCore::getInstance();
     axr->initialize(this);
-    this->setCore(axr);
 }
 
 AXRWrapper::~AXRWrapper()
 {
     
 }
-
-boost::shared_ptr<AXRCore> AXRWrapper::getCore() { return this->core; }
-void AXRWrapper::setCore(boost::shared_ptr<AXRCore> xcr) { this->core = xcr; }
 
 AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
 {
@@ -133,21 +132,29 @@ bool AXRWrapper::loadFileByPath(std::string filepath)
 
 bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 {
-    if (this->core->getFile()) {
-        this->core->reset();
+    AXRCore::tp & core = AXRCore::getInstance();
+    if (core->getFile()) {
+        core->reset();
     }
     
     std::string fullpath = "file://"+xmlfilepath;
     try {
         AXRFile::p theFile = this->getFile(fullpath);
-        this->core->setFile(theFile);
+        core->setFile(theFile);
         
     } catch (AXRError::p e) {
         e->raise();
         return false;
     }
     
-    this->core->run();
+    try {
+        core->run();
+    } catch (AXRError::p e) {
+        e->raise();
+    } catch (AXRWarning::p e) {
+        e->raise();
+    }
+    
     this->setNeedsDisplay(true);
     
     return true;
@@ -155,9 +162,10 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 
 bool AXRWrapper::reload()
 {
-    std::string cur_path = this->core->getFile()->basePath+"/"+this->core->getFile()->getFileName();
+    AXRCore::tp & core = AXRCore::getInstance();
+    std::string cur_path = core->getFile()->basePath+"/"+core->getFile()->getFileName();
     std::string fileextension = cur_path.substr(cur_path.rfind(".") + 1, cur_path.length());
-    this->core->reset();
+    core->reset();
     if(fileextension == "xml"){
         this->_isHSSOnly = false;
         return this->loadXMLFile(cur_path);
@@ -172,12 +180,13 @@ bool AXRWrapper::reload()
 
 bool AXRWrapper::loadHSSFile(std::string hssfilepath)
 {
-    if (this->core->getFile()) {
-        this->core->reset();
+    AXRCore::tp & core = AXRCore::getInstance();
+    if (core->getFile()) {
+        core->reset();
     }
     
-    this->core->setFile(this->createDummyXML(hssfilepath));
-    this->core->run();
+    core->setFile(this->createDummyXML(hssfilepath));
+    core->run();
     this->setNeedsDisplay(true);
     
     return true;
@@ -186,5 +195,181 @@ bool AXRWrapper::loadHSSFile(std::string hssfilepath)
 //has loaded file
 bool AXRWrapper::hasLoadedFile()
 {
-    return this->core->hasLoadedFile();
+    AXRCore::tp & core = AXRCore::getInstance();
+    return core->hasLoadedFile();
+}
+
+void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
+{
+    HSSContainer::p status;
+    AXRCore::tp & core = AXRCore::getInstance();
+    HSSContainer::p root = core->getController()->getRoot();
+    std::deque<HSSParserNode::p> arguments = *(std::deque<HSSParserNode::p>*)data;
+    std::deque<HSSParserNode::p>::iterator it;
+    for (it=arguments.begin(); it!=arguments.end(); it++) {
+        HSSParserNode::p argument = *it;
+        if(argument->isA(HSSParserNodeTypeFunctionCall)){
+            HSSFunction::p theFunction = boost::static_pointer_cast<HSSFunction>(argument);
+            if(theFunction->isA(HSSFunctionTypeSel)){
+                HSSSelFunction::p selFunction = boost::static_pointer_cast<HSSSelFunction>(theFunction);
+                std::vector< std::vector<HSSDisplayObject::p> > selection = *(std::vector< std::vector<HSSDisplayObject::p> >*)selFunction->evaluate();
+                std::vector<HSSDisplayObject::p> innerSelection = selection[0];
+                status = HSSContainer::asContainer(innerSelection[0]);
+            }
+        }
+    }
+    
+    //ask for a file path
+    std::string filePath;
+	bool result = this->openFileDialog(filePath);
+    if(result){
+        boost::thread thrd(AXRTestThread(this, filePath, status));
+        //        thrd.join();
+        
+    }
+}
+
+AXRTestThread::AXRTestThread(AXRWrapper * wrapper, std::string filePath, HSSContainer::p status)
+{
+    this->wrapper = wrapper;
+    this->filePath = filePath;
+    this->totalPassed = 0;
+    this->totalTests = 0;
+    this->status = status;
+}
+
+void AXRTestThread::operator () ()
+{
+    try {
+        //load the XML file
+        AXRWrapper * wrapper = this->wrapper->createWrapper();
+        AXRCore::tp & core = AXRCore::getInstance();
+        XMLParser::p parser = core->getParserXML();
+        std::string fullPath = "file://"+this->filePath;
+        HSSContainer::p status = this->status;
+        AXRFile::p testsFile = wrapper->getFile(fullPath);
+        bool loadingSuccess = parser->loadFile(testsFile);
+        if (loadingSuccess) {
+            
+            //find all the tests that need to be executed
+            std::vector<std::vector<std::string> > tests;
+            AXRController::p controller = core->getController();
+            HSSContainer::p root = controller->getRoot();
+            const std::vector<HSSDisplayObject::p> & children = root->getChildren(true);
+            std::vector<HSSDisplayObject::p>::const_iterator it;
+            
+            for (it=children.begin(); it!=children.end(); it++) {
+                const HSSDisplayObject::p & child = *it;
+                if(child->attributes.find("src") != child->attributes.end() && child->attributes.find("expect") != child->attributes.end()){
+                    const std::string test[2] = {child->attributes["src"], child->attributes["expect"]};
+                    std::vector<std::string>testVect(test, test+2);
+                    tests.push_back(testVect);
+                    this->totalTests += 1;
+                } else {
+                    std_log("the test element needs to have expect and src attributes");
+                }
+            }
+            //execute all the tests
+            boost::thread_group producers;
+            std::vector<std::vector<std::string> >::iterator it2;
+            for (it2=tests.begin(); it2!=tests.end(); it2++) {
+                AXRTestProducer prdcr(this->wrapper, testsFile->basePath, *it2, &this->totalTests, &this->totalPassed, status );
+                producers.create_thread(prdcr);
+                boost::this_thread::yield();
+            }
+            
+            producers.join_all();
+            
+            std_log("\n\nTEST RESULTS SUMMARY");
+            std_log("===============================");
+            std_log("Passed "+boost::lexical_cast<std::string>(this->totalPassed)+" out of "+boost::lexical_cast<std::string>(this->totalTests));
+            std_log("===============================");
+            
+        } else {
+            std_log("Could not load the tests XML file");
+        }
+        
+    } catch (AXRError::p e) {
+        e->raise();
+    } catch (AXRWarning::p e) {
+        e->raise();
+    }
+}
+
+// Constructor with name and the queue to use
+AXRTestProducer::AXRTestProducer(AXRWrapper * wrapper, std::string basePath, std::vector<std::string> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status)
+{
+    this->wrapper = wrapper;
+    this->basePath = basePath;
+    this->test=test;
+    this->totalPassed = totalPassed;
+    this->totalTests = totalTests;
+    this->status = status;
+}
+
+// The thread function fills the queue with data
+boost::mutex AXRTestProducer::statusMutex;
+void AXRTestProducer::operator () ()
+{
+    
+    bool testLoaded = false;
+    bool expectedLoaded = false;
+    bool result = false;
+    std::string testRep;
+    std::string expectedRep;
+    
+    //load the XML
+    AXRCore core = *AXRCore::getInstance();
+    AXRWrapper * wrapper = this->wrapper->createWrapper();
+    core = *AXRCore::getInstance();
+    
+    testLoaded = wrapper->loadXMLFile(this->basePath+"/"+this->test[0]);
+    
+    if(testLoaded){
+        AXRCore::tp & core = AXRCore::getInstance();
+        AXRController::p controller = core->getController();
+        HSSContainer::p root = controller->getRoot();
+        core->getRender()->windowWidth = 400.;
+        core->getRender()->windowHeight = 400.;
+        root->recursiveReadDefinitionObjects();
+        root->recursiveLayout();
+        testRep = root->toString();
+        //std_log(testRep);
+    } else {
+        std_log("could not load the test file");
+    }
+    
+    //load the "expected" file
+    if(testLoaded){
+        AXRFile::p expectedFile = this->wrapper->getFile("file://"+this->basePath+"/"+test[1]);
+        size_t fileLength = this->wrapper->readFile(expectedFile);
+        if (ferror(expectedFile->fileHandle)) {
+            std_log("could not load file with expected results");
+        } else {
+            expectedLoaded = true;
+            expectedRep = std::string(expectedFile->buffer, fileLength);
+            //std_log(expectedRep);
+        }
+        this->wrapper->closeFile(expectedFile);
+    }
+    
+    //compare the two
+    if(testLoaded && expectedLoaded){
+        result = testRep.compare(expectedRep) == 0;
+    }
+    
+    if (result) {
+        std_log("PASSED test "+test[0]);
+        *this->totalPassed += 1;
+        this->statusMutex.lock();
+        this->status->setContentText("Passed "+boost::lexical_cast<std::string>(*this->totalPassed)+" out of "+boost::lexical_cast<std::string>(*this->totalTests));
+        this->statusMutex.unlock();
+        this->wrapper->setNeedsDisplay(true);
+    } else {
+        std_log("FAILED test "+test[0]);
+        std_log("This is the dump of the test:");
+        std_log("===============================");
+        std_log(testRep);
+        std_log("===============================");
+    }
 }

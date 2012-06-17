@@ -64,6 +64,11 @@ LinuxAxrWrapper::LinuxAxrWrapper() : AXRWrapper()
 	this->needsDisplay = true;
 }
 
+AXRWrapper * LinuxAxrWrapper::createWrapper()
+{
+    return new LinuxAxrWrapper();
+}
+
 LinuxAxrWrapper::~LinuxAxrWrapper()
 {
 }
@@ -79,7 +84,7 @@ AXRFile::p LinuxAxrWrapper::getFile(std::string url)
 		ret->setFileName(clean_path.substr(slashpos + 1, clean_path.size()));
 		ret->basePath = clean_path.substr(0, slashpos);
 
-		ret->bufferSize = 10240;
+		ret->bufferSize = 20240;
 		ret->buffer = new char[ret->bufferSize];
 		ret->fileHandle = fopen(clean_path.c_str(), "r");
 
@@ -159,5 +164,28 @@ bool LinuxAxrWrapper::openFileDialog(std::string &filePath)
 void LinuxAxrWrapper::setNeedsDisplay(bool newValue)
 {
 	this->needsDisplay = newValue;
+}
+
+std::string LinuxAxrWrapper::getPathToHSSFramework()
+{
+	// Code taken from: http://www.gamedev.net/community/forums/topic.asp?topic_id=459511
+	std::string path = "";
+	pid_t pid = getpid();
+	char buf[20] = {0};
+	sprintf(buf,"%d",pid);
+	std::string _link = "/proc/";
+	_link.append( buf );
+	_link.append( "/exe");
+	char proc[512];
+	int ch = readlink(_link.c_str(),proc,512);
+	if (ch != -1)
+	{
+	proc[ch] = 0;
+	path = proc;
+	std::string::size_type t = path.find_last_of("/");
+	path = path.substr(0,t);
+	}
+
+	return path + std::string("/rsrc");
 }
 

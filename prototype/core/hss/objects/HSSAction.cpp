@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -69,6 +69,7 @@ std::string HSSAction::actionTypeStringRepresentation(AXR::HSSActionType actionT
     types[HSSActionTypeAlert      ] = "HSSActionTypeAlert";
     types[HSSActionTypeLog        ] = "HSSActionTypeLog";
     types[HSSActionTypeFlag       ] = "HSSActionTypeFlag";
+    types[HSSActionTypeFunction   ] = "HSSActionTypeFunction";
     
     return types[actionType];
 }

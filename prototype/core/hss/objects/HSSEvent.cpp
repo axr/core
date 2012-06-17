@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 5
+ *      Core version: 0.47
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -59,6 +59,7 @@
 #import "../../axr/AXRController.h"
 #import "HSSAction.h"
 #import "HSSFlagAction.h"
+#import "HSSFunctionAction.h"
 
 using namespace AXR;
 
@@ -251,6 +252,20 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                     flagAction->setScope(this->scope);
                     flagAction->setThisObj(this->getThisObj());
                     this->action.push_back(flagAction);
+                    break;
+                }
+                    
+                case HSSFunctionTypeCustom:
+                {
+                    fnct->setScope(this->scope);
+                    fnct->setThisObj(this->getThisObj());
+                    HSSFunction::p theFnct = boost::static_pointer_cast<HSSFunction>(fnct);
+                    HSSFunctionAction::p fnctAction = HSSFunctionAction::p(new HSSFunctionAction());
+                    fnctAction->setFunction(theFnct);
+                    fnctAction->setController(this->getController());
+                    fnctAction->setScope(this->scope);
+                    fnctAction->setThisObj(this->getThisObj());
+                    this->action.push_back(fnctAction);
                     break;
                 }
                     

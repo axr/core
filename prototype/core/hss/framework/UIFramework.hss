@@ -1,0 +1,51 @@
+@linearGradient glossGradient
+{
+    startColor: #FFF8;
+    colorStops: #FFF2, #FFF0;
+    endColor: #FFF2;
+    endY: 100%;
+}
+
+@linearGradient glossGradientStrong
+{
+    startColor: #FFFA;
+    colorStops: #FFF4, #FFF1;
+    endColor: #FFF2;
+    endY: 100%;
+}
+
+@container UIInset
+{
+    background: @{ #0002; #0002; 100%; colorStops: #0003; };
+    shape: @{ 10 };
+    border: @{ 1; #0002 }, @{ 1; #FFF };
+}
+
+#BE UIButtonBaseColor;
+#7 UIButtonFontColor;
+#AAB UIButtonHoverBaseColor;
+#667 UIButtonHoverFontColor;
+
+@container UIButton
+{
+    background: UIButtonBaseColor, glossGradientStrong;
+    //background: @{ #E; #C; 100%; colorStops: #C, #B; };
+    shape: @{ 4 };
+    border: @{ 1; #FFF6 }, @{ 1; UIButtonBaseColor };
+    font: @{ face: "Helvetica"; color: UIButtonFontColor; size: 16; };
+    textAlign: center;
+    contentAlignY: 50% + 1;
+    on: @mouseDown { flag(pressed) }, @mouseUp { unflag(pressed) };
+    
+    @::hover
+    {
+        background: UIButtonHoverBaseColor, glossGradientStrong;
+        //background: @{ #F; #D; 100%; colorStops: #D, #C; };
+        border: @{ 1; #FFF6 }, @{ 1; UIButtonHoverBaseColor };
+        font: @{ face: "Helvetica"; color: UIButtonHoverFontColor; size: 16; };
+    }
+    @::pressed
+    {
+        background: UIButtonHoverBaseColor;
+    }
+}

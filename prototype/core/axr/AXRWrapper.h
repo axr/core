@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -59,6 +59,10 @@
 #include <stdio.h>
 #include "AXRFile.h"
 #include "errors/AXRError.h"
+#include "../hss/various/HSSObservableProperties.h"
+#include <queue>
+#include <boost/thread/thread.hpp>
+#include "../hss/objects/HSSContainer.h"
 
 namespace AXR
 {
@@ -84,6 +88,10 @@ namespace AXR
          *  the AXRCore and initialize it.
          */
         AXRWrapper();
+        /**
+         *  
+         */
+        virtual AXRWrapper * createWrapper() = 0;
         /**
          *  Destructs the wrapper
          */
@@ -178,16 +186,55 @@ namespace AXR
          *  @return Wether a file has already been loaded or not.
          */
         bool hasLoadedFile();
+        /**
+         *  Each platform specific wrapper defines how it gets the path to the framework folder.
+         *  @return A string containing the path to where the HSS framework files are 
+         *  stored.
+         */
+        virtual std::string getPathToHSSFramework() = 0;
+        
+        void executeLayoutTests(HSSObservableProperty passnull, void*data);
         
         boost::unordered_map<AXRFileHandle, AXRFile::p> files;
         
     protected:
-        boost::shared_ptr<AXRCore> core;
         
     private:
         bool _isHSSOnly;
         bool _hasLoadedFile;
     };
+    
+    
+    class AXRTestThread
+	{
+	private:
+        AXRWrapper * wrapper;
+        std::string filePath;
+        unsigned totalTests;
+        unsigned totalPassed;
+        HSSContainer::p status;
+        
+	public:
+        AXRTestThread(AXRWrapper * wrapper, std::string filePath, HSSContainer::p status);
+        void operator () ();
+	};
+    class AXRTestProducer
+	{
+	private:
+        AXRWrapper * wrapper;
+        std::string basePath;
+        std::vector<std::string> test;              // the filename of the test
+        unsigned * totalTests;
+        unsigned * totalPassed;
+        HSSContainer::p status;
+        static boost::mutex totalTestsMutex;
+        static boost::mutex totalPassedMutex;
+        static boost::mutex statusMutex;
+        
+	public:
+        AXRTestProducer(AXRWrapper * wrapper, std::string basePath, std::vector<std::string> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
+        void operator () ();
+	};
 }
 
 #endif

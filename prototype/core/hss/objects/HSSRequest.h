@@ -45,7 +45,7 @@
  *      =================
  *      Last changed: 2012/03/25
  *      HSS version: 1.0
- *      Core version: 0.46
+ *      Core version: 0.47
  *      Revision: 2
  *
  ********************************************************************/
@@ -58,57 +58,118 @@
 
 namespace AXR {
     
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSRequestModeType
+     *  What to do with the loaded content.
+     */
     enum HSSRequestModeType
     {
-        HSSRequestModeTypeAuto,
-        HSSRequestModeTypeReplace,
-        HSSRequestModeTypeWrap,
-        HSSRequestModeTypePrepend,
-        HSSRequestModeTypeAppend,
-        HSSRequestModeTypeReturn,
+        HSSRequestModeTypeAuto, /**< Automatically determine what to do. */
+        HSSRequestModeTypeReplace, /**< Replaces the target with the loaded content. */
+        HSSRequestModeTypeWrap, /**<    Replaces the root of the document with the loaded one and adds
+                                        the current content into the loaded one. */
+        HSSRequestModeTypePrepend, /**< Inserts the loaded content into the target, before existing children. */
+        HSSRequestModeTypeAppend, /**< Inserts the loaded content into the target, after existing children. */
+        HSSRequestModeTypeReturn, /**< Just returns the content. */ ///@todo This is not clear, needs discussion.
     };
+    /** @} */
     
+    /**
+     *  @brief The object type representing an action that loads content into the page. Sort of like
+     *  ajax.
+     *
+     *  When this action fires, the content at the given URL is loaded and inserted into the document
+     *  according to the request mode type (currently only implements a basic load like links). 
+     */
     class HSSRequest : public HSSAction
     {
     public:
+        
         /**
-         *  Constructor for HSSRequest objects
+         *  Creates a new instance of a request action.
          */
         HSSRequest();
+        
         /**
-         *  Copy constructor for HSSRequest objects
+         *  Copy constructor for HSSRequest objects. Do not call directly,
+         *  use clone() instead.
          */
         HSSRequest(const HSSRequest & orig);
+        
         /**
          *  Clones an instance of HSSRequest and gives a shared pointer of the
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSRequest
          */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSRequest();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
-        
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
+        /**
+         *  Currently only causes the wrapper to load another XML file.
+         *
+         *  @todo Fix the implementation of loading of content into the document.
+         */
         virtual void fire();
         
-        //src
+        /**
+         *  Getter for the definition object of src.
+         *  @return A shared pointer to the parser node containing the definition object of src.
+         */
         HSSParserNode::p getDSrc();
+        
+        /**
+         *  Setter for the definition object of src. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of src.
+         */
         void setDSrc(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect src.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void srcChanged(HSSObservableProperty source, void*data);
         
-        //target
+        /**
+         *  Getter for the definition object of target.
+         *  @return A shared pointer to the parser node containing the definition object of target.
+         */
         HSSParserNode::p getDTarget();
+        
+        /**
+         *  Setter for the definition object of target. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of target.
+         */
         void setDTarget(HSSParserNode::p);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect target.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
         void targetChanged(HSSObservableProperty source, void*data);
         
+        /**
+         *  @todo Implement mode property.
+         */
 //        //mode
 //        HSSParserNode::p getDMode();
 //        void setDMode(HSSParserNode::p);
 //        void modeChanged(HSSObservableProperty source, void*data);
-//        
+
+        /**
+         *  @todo Implement target property.
+         */
 //        //contentTarget
 //        HSSParserNode::p getDContentTarget();
 //        void setDContentTarget(HSSParserNode::p);

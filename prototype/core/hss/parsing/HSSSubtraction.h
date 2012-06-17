@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/05/25
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 4
+ *      Core version: 0.47
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -57,17 +57,50 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
+    
+    /**
+     *  @brief A type of expression that uses the subtraction operator "-".
+     *  
+     *  The right member of this expression is subtracted from the left one.
+     */
     class HSSSubtraction : public HSSExpression {
         
     public:
         typedef boost::shared_ptr<HSSSubtraction> p;
         
+        /**
+         *  Creates a new instance of a subtraction expression, with two
+         *  parser nodes as left and right terms.
+         *  
+         *  @param left     The value on the left hand side of the operator.
+         *  @param right    The value on the right hand side of the operator.
+         */
         HSSSubtraction(HSSParserNode::p left, HSSParserNode::p right);
+        
+        /**
+         *  Copy constructor. Do not use directly, but use clone() instead.
+         *  
+         *  @param orig     The other subtraction expression to clone.
+         */
         HSSSubtraction(const HSSSubtraction &orig);
+        
+        /**
+         *  Creates new clone of the current instance.
+         *  @return A shared pointer to the new subtraction expression.
+         */
         p clone() const;
+        
         virtual ~HSSSubtraction();
         
+        /**
+         *  The actual implementation of the operation.
+         *  
+         *  @param leftval  A long double containing the value from which should be subtracted.
+         *  @param rightval A long double containing the value to be subtracted.
+         *  @return A long double containing result of the subtraction.
+         */
         long double calculate(long double leftval, long double rightval);
+        
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

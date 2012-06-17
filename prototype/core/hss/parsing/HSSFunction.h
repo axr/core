@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/05/25
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 6
+ *      Revision: 7
  *
  ********************************************************************/
 
@@ -81,7 +81,8 @@ namespace AXR {
         HSSFunctionTypeRound, /**< Rounds a number to the nearest integer. */
         HSSFunctionTypeFlag, /**< Activates the given flag on the selected elements. */
         HSSFunctionTypeUnflag, /**< Deactivates the given flag on the selected elements. */
-        HSSFunctionTypeToggleFlag /**< Toggles the given flag on the selected elements. */
+        HSSFunctionTypeToggleFlag, /**< Toggles the given flag on the selected elements. */
+        HSSFunctionTypeCustom /**< A function whose name has been registered on the core with a callback. */
     };
     /** @} */
     
@@ -97,10 +98,17 @@ namespace AXR {
         friend class HSSParser;
         
         /**
-         *  This class shouldn't be called directly, but by the subclasses. Creates a new
+         *  This constructor shouldn't be called directly, but by the subclasses. Creates a new
          *  instance of a function.
          */
         HSSFunction();
+        
+        /**
+         *  Creates a new instance of a function, with given function type. Most of the time this
+         *  will be HSSFunctionTypeCustom.
+         *  @param type The function type for the new instance.
+         */
+        HSSFunction(HSSFunctionType type);
         
         /**
          *  Copy constructor for HSSFunction objects. Do not call directly, use clone() on
@@ -136,9 +144,9 @@ namespace AXR {
         virtual void * _evaluate();
         
         /**
-         *  @todo make protected or private
+         *  
          */
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments) =0;
+        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
         
         /**
          *  Method to be passed as callback when observing changes.
@@ -212,6 +220,11 @@ namespace AXR {
          */
         virtual AXRController * getController();
         
+        std::deque<HSSParserNode::p> getArguments();
+        void setArguments(std::deque<HSSParserNode::p> arguments);
+        std::string getName();
+        void setName(std::string newName);
+        
     protected:
         bool _isDirty;
         void * _value;
@@ -224,6 +237,9 @@ namespace AXR {
         
         AXRController * axrController;
         
+    private:
+        std::deque<HSSParserNode::p> _arguments;
+        std::string _name;
     };
 }
 

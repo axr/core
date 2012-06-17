@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/04/27
+ *      Last changed: 2012/03/25
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 1
+ *      Revision: 2
  *
  ********************************************************************/
 
@@ -57,13 +57,30 @@
 #include <string>
 
 namespace AXR {
+    
+    /**
+     *  @brief The special object \@root in HSS.
+     *
+     *  Used in selector chains, they always return the root element.
+     */
     class HSSRootSelector : public HSSParserNode {
         
     public:
         typedef boost::shared_ptr<HSSRootSelector> p;
         
+        /**
+         *  Creates a new instance of a root selector.
+         */
         HSSRootSelector();
+        
+        /**
+         *  Clones an instance of HSSRootSelector and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSRootSelector
+         */
         p clone() const;
+        
+        //see HSSParserNode.h for the documentation of this method
         virtual std::string toString();
         
     private:

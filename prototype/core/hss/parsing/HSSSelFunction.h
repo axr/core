@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/14
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -56,27 +56,111 @@
 #import "HSSFunction.h"
 
 namespace AXR {
+    
+    /**
+     *  @brief Implementation of the sel(<selector chain>) function in HSS.
+     *
+     *  Sel functions allow the author of HSS documents to create selections that can
+     *  be passed as a value to a property.
+     */
     class HSSSelFunction : public HSSFunction
     {
     public:
-        HSSSelFunction();
-        virtual ~HSSSelFunction();
-        
         typedef boost::shared_ptr<HSSSelFunction> p;
         
+        /**
+         *  Creates a new instance of a sel function.
+         */
+        HSSSelFunction();
+        
+        /**
+         *  Copy constructor for HSSSelFunction objects. Do not call directly, use clone() instead.
+         */
+        HSSSelFunction(const HSSSelFunction & orig);
+        
+        /**
+         *  Clones an instance of HSSSelFunction and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSSelFunction
+         */
+        p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
+        virtual ~HSSSelFunction();
+        
+        //see HSSObject.h for documentation of this method
         virtual std::string toString();
         
-        const HSSSelectorChain::p & getSelectorChain() const;
-        void setSelectorChain(HSSSelectorChain::p newValue);
+        /**
+         *  Getter for the selector chains.
+         *  @return A vector of shared pointers to the selector chains.
+         */
+        const std::vector<HSSSelectorChain::p> & getSelectorChains() const;
         
+        /**
+         *  Setter for the selector chains.
+         *  @param newValues     A vector of shared pointers to the new selector chains.
+         */
+        void setSelectorChains(std::vector<HSSSelectorChain::p> newValues);
+        
+        /**
+         *  Add a selector chain to the selector chains vector.
+         *  @param newValue A shared pointer to the selector chain to be added.
+         */
+        void selectorChainsAdd(HSSSelectorChain::p & newSelectorChain);
+        
+        /**
+         *  Get a selector chain by index.
+         *  @param index    An unsigned integer with the index of the selector chain.
+         *  @return A shared pointer to the element at that index.
+         */
+        HSSSelectorChain::p &selectorChainsGet(unsigned index);
+        
+        /**
+         *  Removes a selector chain by index.
+         *  @param index    An unsigned integer with the index of the selector chain to be deleted.
+         */
+        void selectorChainsRemove(unsigned index);
+        
+        /**
+         *  Removes the last element in the selector chains vector.
+         */
+        void selectorChainsRemoveLast();
+        
+        /**
+         *  @return the last element of the selector chains vector.
+         */
+        HSSSelectorChain::p &selectorChainsLast();
+        
+        /**
+         *  @return the size of the selector chains vector
+         */
+        const int selectorChainsSize();
+        
+        /**
+         *  This is the actual implementation of what the function does. It selects from the elements
+         *  in the scope and then returns a selection: a pointer to a vector of vectors to shared pointers
+         *  to display objects std::vector< std::vector<HSSDisplayObject::p> >.
+         *  @return A pointer to a selection casted to void*.
+         */
         virtual void * _evaluate();
+        
+        /**
+         *  Calls _evaluate();
+         *  @deprecated Do not use this.
+         */
         virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
         
 //        void valueChanged(HSSObservableProperty source, void*data);
         
     protected:
-        HSSSelectorChain::p selectorChain;
+        std::vector<HSSSelectorChain::p> selectorChains;
         std::vector< std::vector<HSSDisplayObject::p> > selection;
+        
+    private:
+        HSSClonable::p cloneImpl() const;
     };
 }
 

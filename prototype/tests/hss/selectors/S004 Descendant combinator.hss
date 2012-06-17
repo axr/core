@@ -2,22 +2,16 @@ test
 {
 	.. child
 	{
-		background: #C;
+		background: #66F;
 	}
 	
 	.. subchild
 	{
-		background: #8;
+		background: #6F6;
 	}
 	
 	parent .. subchild
 	{
-		background: #A;
-	}
-	
-	//FIXME: this is needed because the prototype is not capable of auto calculate the heights yet
-	.. *
-	{
-		height: 50;
+		background: #FF6;
 	}
 }

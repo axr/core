@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 7
+ *      Core version: 0.47
+ *      Revision: 8
  *
  ********************************************************************/
 
@@ -54,14 +54,12 @@
 
 using namespace AXR;
 
-
-
-AXRCore::p & AXRCore::getInstance()
+AXRCore::tp & AXRCore::getInstance()
 {
-    static AXRCore::p theInstance;
-    if(!theInstance)
-        theInstance = AXRCore::p(new AXRCore());
-    
+    static AXRCore::tp theInstance;
+    if(!theInstance.get()) {
+        theInstance.reset(new AXRCore());
+    }
     return theInstance;
 }
 
@@ -72,8 +70,8 @@ AXRCore::AXRCore()
 
 void AXRCore::initialize(AXRWrapper * wrpr)
 {
-    AXRController::p ctrlr = AXRController::p(new AXRController(this));
-    AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.get(), this));
+    AXRController::p ctrlr = AXRController::p(new AXRController());
+    AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.get()));
     this->setWrapper(wrpr);
     this->setController(ctrlr);
     this->setRender(rndr);
@@ -150,7 +148,7 @@ void AXRCore::run()
                     const HSSRule::p& rule = rules[j];
                     const HSSDisplayObject::p rootScopeArr[1] = {root};
                     const std::vector<HSSDisplayObject::p>rootScope(rootScopeArr, rootScopeArr+1);
-                    this->controller->recursiveMatchRulesToDisplayObjects(rule, rootScope, root, true);
+                    this->controller->recursiveMatchRulesToDisplayObjects(rule, rootScope, HSSContainer::p(), true);
                 }
                 root->setNeedsRereadRules(true);
             }
@@ -197,5 +195,22 @@ void AXRCore::setParserXML(XMLParser::p parser) { this->parserXML = parser; }
 HSSParser::p AXRCore::getParserHSS() { return this->parserHSS; }
 void AXRCore::setParserHSS(HSSParser::p parser) { this->parserHSS = parser; }
 
+bool AXRCore::isCustomFunction(std::string name)
+{
+    bool ret = this->_customFunctions.find(name) != this->_customFunctions.end();
+    return ret;
+}
+
+void AXRCore::registerCustomFunction(std::string name, HSSCallback* fn)
+{
+    this->_customFunctions[name] = fn;
+}
+
+void AXRCore::evaluateCustomFunction(std::string name, void* data)
+{
+    if(this->isCustomFunction(name)){
+        this->_customFunctions[name]->call(HSSObservablePropertyValue, data);
+    }
+}
 
 

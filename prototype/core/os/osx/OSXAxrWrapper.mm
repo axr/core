@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/15
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
+ *      Core version: 0.47
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -62,6 +62,11 @@ OSXAxrWrapper::OSXAxrWrapper(AXRView * mainView)
 : AXRWrapper()
 {
     this->mainView = mainView;
+}
+
+AXRWrapper * OSXAxrWrapper::createWrapper()
+{
+    return new OSXAxrWrapper(NULL);
 }
 
 OSXAxrWrapper::~OSXAxrWrapper()
@@ -80,7 +85,7 @@ AXRFile::p OSXAxrWrapper::getFile(std::string url)
         ret->setFileName(clean_path.substr(slashpos+1, clean_path.size()));
         ret->basePath = clean_path.substr(0, slashpos);
         
-        ret->bufferSize = 10240;
+        ret->bufferSize = 20240;
         ret->buffer = new char[ret->bufferSize];
         ret->fileHandle = fopen(clean_path.c_str(), "r");
         if( ret->fileHandle == NULL ){
@@ -143,5 +148,12 @@ bool OSXAxrWrapper::openFileDialog(std::string &filePath)
 
 void OSXAxrWrapper::setNeedsDisplay(bool newValue)
 {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];                           
     [this->mainView setNeedsDisplay:newValue];
+    [pool release];
+}
+
+std::string OSXAxrWrapper::getPathToHSSFramework()
+{
+    return [[[NSBundle mainBundle] resourcePath] UTF8String];
 }

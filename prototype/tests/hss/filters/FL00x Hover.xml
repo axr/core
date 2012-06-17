@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
-	Test FL00x - Hover
-	Created by Miro Keller on 2012-02-23.
--->
-<?xml-stylesheet type="application/x-hss" src="FL00x Hover.hss"?>
-<test>
-	<elemA>A</elemA>
-</test>

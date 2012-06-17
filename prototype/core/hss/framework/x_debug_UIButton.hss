@@ -1,0 +1,14 @@
+#import "UIFramework.hss";
+
+*
+{
+    contentAlignY: middle;
+    
+    #new test
+    {
+        isA: UIButton;
+        width: 200;
+        height: 50;
+        content: "Button Label";
+    }
+}

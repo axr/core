@@ -64,6 +64,7 @@ namespace AXR
     public:
         HWND hwnd;
         WinAxrWrapper();
+        AXRWrapper * createWrapper();
         virtual ~WinAxrWrapper();
         
         virtual AXRFile::p getFile(std::string url);

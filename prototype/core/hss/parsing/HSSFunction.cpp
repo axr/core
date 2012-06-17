@@ -43,15 +43,16 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/21
+ *      Last changed: 2012/06/11
  *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 5
+ *      Core version: 0.47
+ *      Revision: 6
  *
  ********************************************************************/
 
 #include "HSSFunction.h"
 #include "../../axr/AXRDebugging.h"
+#include "../../AXR.h"
 #include <string>
 //#include "../parsing/HSSExpression.h"
 //#include "../parsing/HSSConstants.h"
@@ -65,6 +66,17 @@ HSSFunction::HSSFunction()
 {
     this->nodeType = HSSParserNodeTypeFunctionCall;
     this->functionType = HSSFunctionTypeNone;
+    this->scope = NULL;
+    this->percentageObserved = NULL;
+    this->_isDirty = true;
+    this->_value = NULL;
+}
+
+HSSFunction::HSSFunction(HSSFunctionType type)
+:HSSParserNode()
+{
+    this->nodeType = HSSParserNodeTypeFunctionCall;
+    this->functionType = type;
     this->scope = NULL;
     this->percentageObserved = NULL;
     this->_isDirty = true;
@@ -121,6 +133,13 @@ void * HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
 void * HSSFunction::_evaluate()
 {
     return this->_evaluate(std::deque<HSSParserNode::p>());
+}
+
+void * HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+{
+    AXRCore::tp & core = AXRCore::getInstance();
+    core->evaluateCustomFunction(this->getName(), (void*) &arguments);
+    return NULL;
 }
 
 void HSSFunction::propertyChanged(HSSObservableProperty property, void* data)
@@ -185,4 +204,23 @@ AXRController * HSSFunction::getController()
     return this->axrController;
 }
 
+void HSSFunction::setArguments(std::deque<HSSParserNode::p> arguments)
+{
+    this->_arguments = arguments;
+}
+
+std::deque<HSSParserNode::p> HSSFunction::getArguments()
+{
+    return this->_arguments;
+}
+
+void HSSFunction::setName(std::string newName)
+{
+    this->_name = newName;
+}
+
+std::string HSSFunction::getName()
+{
+    return this->_name;
+}
 
