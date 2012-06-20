@@ -159,6 +159,10 @@ int main (int argc, char **argv)
 
 	SDL_Quit();
 
+	free(wrapper);
+	free(screen);
+	free(cr);
+
 	return 0;
 }
 
