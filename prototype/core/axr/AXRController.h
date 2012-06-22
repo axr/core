@@ -455,9 +455,6 @@ namespace AXR {
         unsigned currentChainSize;
         void readNextSelectorNode();
         bool isAtEndOfSelector();
-        
-    private:
-        std::vector<HSSSelectorChain::p> selectorChains;
     };
 }
 

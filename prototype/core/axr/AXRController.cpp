@@ -46,7 +46,7 @@
  *      Last changed: 2012/06/22
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 32
+ *      Revision: 33
  *
  ********************************************************************/
 
@@ -293,7 +293,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::select(std::vecto
     std::vector< std::vector<HSSDisplayObject::p> > selections;
     HSSSelectorChain::const_it it;
     
-    for (it=this->selectorChains.begin(); it!=this->selectorChains.end(); it++) {
+    for (it=selectorChains.begin(); it!=selectorChains.end(); it++) {
         this->initializeSelectorChain(*it);
         selections = this->selectHierarchical(scope, thisObj, false, processing);
         if(selections.size() > 0){
