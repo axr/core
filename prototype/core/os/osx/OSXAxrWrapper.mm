@@ -117,6 +117,7 @@ size_t OSXAxrWrapper::readFile(AXRFile::p theFile)
 void OSXAxrWrapper::closeFile(AXRFile::p theFile)
 {
     fclose(theFile->fileHandle);
+    theFile->fileHandle = NULL;
 }
 
 void OSXAxrWrapper::handleError(AXRError::p theError)

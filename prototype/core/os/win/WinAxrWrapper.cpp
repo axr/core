@@ -119,6 +119,7 @@ size_t WinAxrWrapper::readFile(AXRFile::p theFile)
 void WinAxrWrapper::closeFile(AXRFile::p theFile)
 {
     fclose(theFile->fileHandle);
+    theFile->fileHandle = NULL;
 }
 
 void WinAxrWrapper::handleError(AXRError::p theError)
