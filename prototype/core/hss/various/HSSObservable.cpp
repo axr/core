@@ -269,6 +269,7 @@ void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservablePr
         boost::hash_combine(hash, object);
         boost::hash_combine(hash, source);
         if(theObserved.count(hash) != 0){
+            delete theObserved[hash];
             theObserved.erase(hash);
             std_log1("removing observer for "+HSSObservable::observablePropertyStringRepresentation(target));
             return;
