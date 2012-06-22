@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/11
+ *      Last changed: 2012/06/22
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -154,8 +154,8 @@ void OSXAxrWrapper::setNeedsDisplay(bool newValue)
     [pool release];
 }
 
-std::string OSXAxrWrapper::getPathToHSSFramework()
+std::string OSXAxrWrapper::getPathToResources()
 {
     std::string resourcesPath = [[[NSBundle mainBundle] resourcePath] UTF8String];
-    return resourcesPath+"/framework";
+    return resourcesPath;
 }

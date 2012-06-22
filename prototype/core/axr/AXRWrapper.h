@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/11
+ *      Last changed: 2012/06/22
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -187,11 +187,11 @@ namespace AXR
          */
         bool hasLoadedFile();
         /**
-         *  Each platform specific wrapper defines how it gets the path to the framework folder.
-         *  @return A string containing the path to where the HSS framework files are 
+         *  Each platform specific wrapper defines how it gets the path to the resources folder.
+         *  @return A string containing the path to where the HSS resources files are 
          *  stored.
          */
-        virtual std::string getPathToHSSFramework() = 0;
+        virtual std::string getPathToResources() = 0;
         
         void executeLayoutTests(HSSObservableProperty passnull, void*data);
         

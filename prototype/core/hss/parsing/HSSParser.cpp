@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/15
+ *      Last changed: 2012/06/22
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 30
+ *      Revision: 31
  *
  ********************************************************************/
 
@@ -264,7 +264,7 @@ bool HSSParser::loadFile(AXRFile::p file)
                             try {
                                 if(theInstr->getValue().substr(0, HSSFRAMEWORK_PROTOCOL_LEN) == HSSFRAMEWORK_PROTOCOL){
                                     std::string filepath = theInstr->getValue().substr(HSSFRAMEWORK_PROTOCOL_LEN);
-                                    theFile = this->wrapper->getFile("file://"+this->wrapper->getPathToHSSFramework()+"/"+filepath);
+                                    theFile = this->wrapper->getFile("file://"+this->wrapper->getPathToResources()+filepath);
                                 } else {
                                     theFile = this->wrapper->getFile("file://"+this->basepath+"/"+theInstr->getValue());
                                 }
@@ -1554,7 +1554,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
                 std::string instructionKw = VALUE_TOKEN(this->currentToken)->getString();
                 if (instructionKw == "UIFramework"){
                     std::string protocol = HSSFRAMEWORK_PROTOCOL;
-                    ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, protocol.append("UIFramework.hss")));
+                    ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, protocol.append("/framework/UIFramework.hss")));
                 } else {
                     throw AXRWarning::p(new AXRWarning("HSSParser", "Unknown keyword for import instruction."));
                 }
