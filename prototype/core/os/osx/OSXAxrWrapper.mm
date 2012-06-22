@@ -155,5 +155,6 @@ void OSXAxrWrapper::setNeedsDisplay(bool newValue)
 
 std::string OSXAxrWrapper::getPathToHSSFramework()
 {
-    return [[[NSBundle mainBundle] resourcePath] UTF8String];
+    std::string resourcesPath = [[[NSBundle mainBundle] resourcePath] UTF8String];
+    return resourcesPath+"/framework";
 }

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		256AC3DA0F4B6AC300CF3369 /* AXRTestAppAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* AXRTestAppAppDelegate.mm */; };
-		4E1989A6157FD23E009649C4 /* UIFramework.hss in Resources */ = {isa = PBXBuildFile; fileRef = 4E1989A5157FD23E009649C4 /* UIFramework.hss */; };
 		4E351B7913507C2F00FEB909 /* libcore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E351B7813507C2F00FEB909 /* libcore.a */; };
 		4E3843F8144998EB001DF47A /* libcairo.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3843F1144998EB001DF47A /* libcairo.2.dylib */; };
 		4E3843F9144998EB001DF47A /* libexpat.1.5.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E3843F2144998EB001DF47A /* libexpat.1.5.2.dylib */; };
@@ -39,6 +38,7 @@
 		4EA6EAFE14407B3200309E10 /* views in Resources */ = {isa = PBXBuildFile; fileRef = 4EA6EAFD14407B3200309E10 /* views */; };
 		4ECF59C914FEA253007745C7 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4ECF59C714FEA253007745C7 /* MainMenu.nib */; };
 		4EDF1F4C14703E9F00E70BCA /* AXR.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4EDF1F4B14703E9F00E70BCA /* AXR.icns */; };
+		4EF2110B1594E0C4002BA5CD /* framework in Resources */ = {isa = PBXBuildFile; fileRef = 4EF2110A1594E0C4002BA5CD /* framework */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -71,7 +71,6 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		4E1989A5157FD23E009649C4 /* UIFramework.hss */ = {isa = PBXFileReference; lastKnownFileType = text; name = UIFramework.hss; path = ../core/hss/framework/UIFramework.hss; sourceTree = "<group>"; };
 		4E351B7813507C2F00FEB909 /* libcore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libcore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E3843F1144998EB001DF47A /* libcairo.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcairo.2.dylib; path = /usr/local/lib/libcairo.2.dylib; sourceTree = "<absolute>"; };
 		4E3843F2144998EB001DF47A /* libexpat.1.5.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libexpat.1.5.2.dylib; path = /usr/local/Cellar/expat/2.0.1/lib/libexpat.1.5.2.dylib; sourceTree = "<absolute>"; };
@@ -89,10 +88,11 @@
 		4E59E24D15447A0000AD103B /* libpangoft2-1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libpangoft2-1.0.0.dylib"; path = "../../../../../../usr/local/lib/libpangoft2-1.0.0.dylib"; sourceTree = "<group>"; };
 		4E59E24F15447A1300AD103B /* libpng15.15.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng15.15.dylib; path = ../../../../../../usr/local/lib/libpng15.15.dylib; sourceTree = "<group>"; };
 		4E95BFCE135076F100117354 /* core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = core.xcodeproj; path = ../core/core.xcodeproj; sourceTree = "<group>"; };
-		4EA6EAFD14407B3200309E10 /* views */ = {isa = PBXFileReference; lastKnownFileType = folder; path = views; sourceTree = "<group>"; };
+		4EA6EAFD14407B3200309E10 /* views */ = {isa = PBXFileReference; lastKnownFileType = folder; name = views; path = ../resources/views; sourceTree = "<group>"; };
 		4EAF82581331690C00AFF970 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4ECF59C814FEA253007745C7 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		4EDF1F4B14703E9F00E70BCA /* AXR.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AXR.icns; sourceTree = "<group>"; };
+		4EF2110A1594E0C4002BA5CD /* framework */ = {isa = PBXFileReference; lastKnownFileType = folder; name = framework; path = ../resources/framework; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* mac-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "mac-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* AXR Prototype.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AXR Prototype.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -163,7 +163,6 @@
 		29B97314FDCFA39411CA2CEA /* mac */ = {
 			isa = PBXGroup;
 			children = (
-				4E1989A5157FD23E009649C4 /* UIFramework.hss */,
 				4E59E24F15447A1300AD103B /* libpng15.15.dylib */,
 				4E59E24D15447A0000AD103B /* libpangoft2-1.0.0.dylib */,
 				4E59E24B154479A800AD103B /* libffi.5.dylib */,
@@ -207,6 +206,7 @@
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				4ECF59C714FEA253007745C7 /* MainMenu.nib */,
 				4EA6EAFD14407B3200309E10 /* views */,
+				4EF2110A1594E0C4002BA5CD /* framework */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -300,7 +300,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4E1989A6157FD23E009649C4 /* UIFramework.hss in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				4EA6EAFE14407B3200309E10 /* views in Resources */,
 				4E3843FF14499994001DF47A /* libcairo.2.dylib in Resources */,
@@ -316,6 +315,7 @@
 				4E3844111449C3C0001DF47A /* libglib-2.0.0.dylib in Resources */,
 				4EDF1F4C14703E9F00E70BCA /* AXR.icns in Resources */,
 				4ECF59C914FEA253007745C7 /* MainMenu.nib in Resources */,
+				4EF2110B1594E0C4002BA5CD /* framework in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
