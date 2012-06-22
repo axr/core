@@ -15,6 +15,10 @@ ifndef ARCH
 ARCH=64
 endif
 
+ifdef DEBUG
+LDFLAGS+= -g
+endif
+
 all: axr
 clean: cleanup all
 
