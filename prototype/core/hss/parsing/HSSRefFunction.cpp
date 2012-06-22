@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/14
+ *      Last changed: 2012/06/22
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 5
+ *      Revision: 6
  *
  ********************************************************************/
 
@@ -158,8 +158,8 @@ void * HSSRefFunction::_evaluate()
      *  @todo this works only on numeric values, with other kind of data I don't know what will happen
      *  we need to figure out how to deal with non-numeric values here
      */
-    this->axrController->setSelectorChains(this->selectorChains);
-    std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->selectHierarchical(*this->scope, this->getThisObj());
+
+    std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj());
     if (selection.size() == 0){
         // ignore
     } else if (selection.size() == 1 && selection[0].size() == 1){

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/14
+ *      Last changed: 2012/06/22
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 3
+ *      Revision: 4
  *
  ********************************************************************/
 
@@ -114,9 +114,8 @@ void HSSFlag::flagChanged(HSSRuleState newStatus){
             HSSRule::p theRule = boost::static_pointer_cast<HSSRule>(ruleStatement);
             std::vector<HSSDisplayObject::p> scope = theRule->getOriginalScope();
             AXRController::p controller = AXRCore::getInstance()->getController();
-            controller->setSelectorChains(theRule->getSelectorChains());
             this->setPurging(newStatus);
-            std::vector<std::vector<HSSDisplayObject::p> > selection = controller->selectHierarchical(scope, this->getThisObj(), false, false);
+            std::vector<std::vector<HSSDisplayObject::p> > selection = controller->select(theRule->getSelectorChains(), scope, this->getThisObj(), false);
             this->setPurging(HSSRuleStateOff);
             std::vector<std::vector<HSSDisplayObject::p> >::const_iterator outer;
             std::vector<HSSDisplayObject::p>::const_iterator inner;

@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/14
+ *      Last changed: 2012/06/22
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 22
+ *      Revision: 23
  *
  ********************************************************************/
 
@@ -284,16 +284,6 @@ namespace AXR {
         unsigned const rulesSize();
         
         /**
-         *  Sets the given selector chains to be used for making selections.
-         *  
-         *  When selecting elements in the content tree, the controller automatically keeps track
-         *  of the current position in each selector chain.
-         *
-         *  @param selectorChain    A vector of shared pointers to the selector chains to be stored.
-         */
-        void setSelectorChains(std::vector<HSSSelectorChain::p> selectorChains);
-        
-        /**
          *  Set the given selector chain as the current one. It will set the new current chain size,
          *  reset the current chain count to 0 and make the current selector node the first node in the chain.
          *  @param selectorChain    A shared pointer to the selector chain to make the current one.
@@ -301,8 +291,36 @@ namespace AXR {
         void initializeSelectorChain(HSSSelectorChain::p selectorChain);
         
         /**
-         *  Shorthand for selecting elements. Calls selectHierarchical(scope, thisObj, negating,
-         *  processing) with negating set to false and processing to true.
+         *  Shorthand for selecting elements. Calls select(selectorChains, scope, thisObj, processing) with
+         *  processing set to to true.
+         *  See select(std::vector<HSSSelectorChain::p>, const std::vector<HSSDisplayObject::p> &, HSSDisplayObject::p, bool)
+         *  for documentation on how to use it.
+         */
+        std::vector< std::vector<HSSDisplayObject::p> > select(std::vector<HSSSelectorChain::p> selectorChains, const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
+        
+        /**
+         *  This is the method that should be called when creating a new selection. It will use the other types
+         *  of selection methods as needed, according to the given selector chains. It will loop over them, initializing and then
+         *  selecting elements for each one. The outer vectors of each selection are then appended one after another.
+         *
+         *  @param  selectorChains  A vector of shared pointers to selector chains, that will determine what will be selected
+         *  @param scope            A reference to the current scope, a vector containing shared pointers
+         *                          to display objects.
+         *  @param thisObj          A shared pointer to the display object that will be selected when using
+         *                          @this in HSS.
+         *  @param processing       The first time the rules are matched to the display objects, we want to
+         *                          process stuff like flags, instead of just plain selecting.
+         *  @return         A vector of selections of the elements that were selected, each of these
+         *                  is a vector containing shared pointers to display objects.
+         */
+        std::vector< std::vector<HSSDisplayObject::p> > select(std::vector<HSSSelectorChain::p> selectorChains, const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
+        
+        /**
+         *  Shortand for selecting elements hierarchically from the content tree. See
+         *  selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj) for
+         *  documentation on how to use it.
+         *  
+         *  Do not call directly, use select() instead.
          *
          *  @param scope    A reference to the current scope, a vector containing shared pointers
          *                  to display objects.
@@ -316,8 +334,7 @@ namespace AXR {
         /**
          *  Selects elements hierarchically from the content tree.
          *  
-         *  This is the method that should be called when creating a new selection. It will use the other types
-         *  of selections as needed, according to the current selector chain.
+         *  Do not call directly, use select() instead.
          *
          *  @param scope        A reference to the current scope, a vector containing shared pointers
          *                      to display objects.
@@ -326,6 +343,7 @@ namespace AXR {
          *  @param negating     Wether to select what matches the selector or the reverse.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
+         *  @param initializing Wether to initialize 
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
@@ -335,7 +353,7 @@ namespace AXR {
          *  Selects descendants according to the current selector chain. It will call selectOnLevel()
          *  automatically.
          *  
-         *  Do not call directly, use selectHierarchical() instead.
+         *  Do not call directly, use select() instead.
          *
          *  @param scope        A reference to the current scope, a vector containing shared pointers
          *                      to display objects.
@@ -353,7 +371,7 @@ namespace AXR {
          *  Selects siblings according to the current selector chain. It will call selectSimple()
          *  automatically.
          *  
-         *  Do not call directly, use selectHierarchical() instead.
+         *  Do not call directly, use select() instead.
          *
          *  @param scope        A reference to the current scope, a vector containing shared pointers
          *                      to display objects.
@@ -371,7 +389,7 @@ namespace AXR {
          *  Selects elements according to the current selector chain. It will automatically call
          *  filterSelection() after selecting.
          *  
-         *  Do not call directly, use selectHierarchical() instead.
+         *  Do not call directly, use select() instead.
          *
          *  @param scope        A reference to the current scope, a vector containing shared pointers
          *                      to display objects.
@@ -389,7 +407,7 @@ namespace AXR {
          *  Filters the selection according to the current selector chain. If processing, flags will always
          *  return the display object, but configures it to make it dependent on the flag.
          *  
-         *  Do not call directly, use selectHierarchical() instead.
+         *  Do not call directly, use select() instead.
          *
          *  @param selection    A vector of shared pointers to display objects containing the selection
          *                      to be filtered.

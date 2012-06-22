@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/06/14
+ *      Last changed: 2012/06/22
  *      HSS version: 1.0
  *      Core version: 0.47
- *      Revision: 4
+ *      Revision: 5
  *
  ********************************************************************/
 
@@ -131,8 +131,7 @@ const int HSSSelFunction::selectorChainsSize()
 
 void * HSSSelFunction::_evaluate()
 {
-    this->axrController->setSelectorChains(this->selectorChains);
-    this->selection = this->axrController->selectHierarchical(*this->scope, this->getThisObj());
+    this->selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj());
     this->_value = (void*) &this->selection;
     return this->_value;
 }
