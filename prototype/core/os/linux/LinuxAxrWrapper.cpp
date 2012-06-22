@@ -123,6 +123,7 @@ size_t LinuxAxrWrapper::readFile(AXRFile::p theFile)
 void LinuxAxrWrapper::closeFile(AXRFile::p theFile)
 {
 	fclose(theFile->fileHandle);
+	theFile->fileHandle = NULL;
 }
 
 void LinuxAxrWrapper::handleError(AXRError::p theError)
