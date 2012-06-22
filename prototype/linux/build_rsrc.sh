@@ -1,9 +1,12 @@
 #!/bin/bash
 
 echo "Building resources directory..."
-mkdir ./rsrc/
 
-cp ../core/hss/framework/UIFramework.hss ./rsrc/
+#if [ -d ./rsrc/ ]; then
+#	rm -rf ./rsrc/
+#fi
+
+ln -sf ../resources/ ./rsrc
 
 echo "Done"
 
