@@ -2160,8 +2160,8 @@ HSSParserNode::p HSSParser::readFunction()
                 this->skip(HSSWhitespace, true);
                 
             } else {
-                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of"){
-                    std_log1("HSSParser: unexpected token while reading ref function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "on"){
+                    std_log1("HSSParser: unexpected token while reading flagging function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()));
                 }
                 this->checkForUnexpectedEndOfSource();
                 this->readNextToken(true);
