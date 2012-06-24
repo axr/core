@@ -768,7 +768,7 @@ void AXRController::add(HSSDisplayObject::p newElement)
         if (cont){
             this->setRoot(cont);
         } else {
-            std_log1("############## HSSController: cannot add non-controller as root");
+            std_log("############## HSSController: cannot add non-controller as root");
         }
         
     } else {
@@ -777,7 +777,7 @@ void AXRController::add(HSSDisplayObject::p newElement)
             theCurrent->add(newElement);
             
         } else {
-            std_log1("############## HSSController: tried to add a container to nonexistent current");
+            std_log("############## HSSController: tried to add a container to nonexistent current");
         }
     }
 }
