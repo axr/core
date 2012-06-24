@@ -62,6 +62,7 @@ using namespace AXR;
 HSSRgb::HSSRgb()
 :HSSObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: creating rgb object");
     this->type = HSSObjectTypeRgb;
     
     this->red = this->green = this->blue = 0.;
@@ -96,6 +97,7 @@ HSSRgb::HSSRgb(const HSSRgb & orig)
 }
 
 HSSRgb::p HSSRgb::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: cloning rgb object");
     return boost::static_pointer_cast<HSSRgb, HSSClonable>(this->cloneImpl());
 }
 
@@ -105,7 +107,7 @@ HSSClonable::p HSSRgb::cloneImpl() const{
 
 HSSRgb::~HSSRgb()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: destructing rgb object");
 }
 
 std::string HSSRgb::toString()

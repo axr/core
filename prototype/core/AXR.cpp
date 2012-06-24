@@ -51,6 +51,8 @@
  ********************************************************************/
 
 #include "AXR.h"
+#include <pthread.h>
+#include <boost/lexical_cast.hpp>
 
 using namespace AXR;
 
@@ -70,6 +72,12 @@ AXRCore::AXRCore()
 
 void AXRCore::initialize(AXRWrapper * wrpr)
 {
+#if AXR_DEBUG_LEVEL > 0
+    pthread_t tid;
+    tid = pthread_self();
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: initializing core for thread "+boost::lexical_cast<std::string>(tid));
+#endif
+    
     AXRController::p ctrlr = AXRController::p(new AXRController());
     AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.get()));
     this->setWrapper(wrpr);
@@ -82,7 +90,7 @@ void AXRCore::initialize(AXRWrapper * wrpr)
 
 AXRCore::~AXRCore()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: destructing core");
 }
 
 void AXRCore::setCairo(cairo_t * cr) {
@@ -100,12 +108,17 @@ void AXRCore::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
 
 void AXRCore::run()
 {
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: running");
     //check for wrapper
     if(this->getWrapper() == NULL){
         AXRError::p(new AXRError("AXRCore", "The wrapper was not defined"))->raise();
         return;
     }
     bool loadingSuccess = this->parserXML->loadFile(this->file);
+    
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished parsing "+this->file->getFileName());
+    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath()+"/"+this->file->getFileName());
+    
     if(!loadingSuccess){
         AXRError::p(new AXRError("AXRCore", "Could not load the XML file"))->raise();
     } else {
@@ -125,9 +138,9 @@ void AXRCore::run()
             } else if(hssfilename.substr(0,7) == "http://"){
                 AXRError::p(new AXRError("AXRCore", "HTTP has not been implemented yet"))->raise();
             } else if(hssfilename.substr(0,1) == "/"){
-                hssfilepath = this->file->basePath + hssfilename;
+                hssfilepath = this->file->getBasePath() + hssfilename;
             } else {
-                hssfilepath = "file://"+this->file->basePath +"/"+ hssfilename;
+                hssfilepath = "file://"+this->file->getBasePath() +"/"+ hssfilename;
             }
             AXRFile::p hssfile;
             try {
@@ -137,12 +150,13 @@ void AXRCore::run()
                 continue;
             }
             
-            this->parserHSS->setBasePath(this->file->basePath);
+            this->parserHSS->setBasePath(this->file->getBasePath());
             if(! this->parserHSS->loadFile(hssfile)){
                 AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
             } else {
-                //assign the rules to the objects
+                axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: matching rules to the content tree");
                 
+                //assign the rules to the objects
                 const std::vector<HSSRule::p> rules = this->controller->getRules();
                 for (j=0, size2=rules.size(); j<size2; j++) {
                     const HSSRule::p& rule = rules[j];
@@ -153,11 +167,16 @@ void AXRCore::run()
                 root->setNeedsRereadRules(true);
             }
         }
+        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished loading stylesheets for "+this->file->getFileName());
+        axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath()+"/"+this->file->getFileName());
+        
         if (root) {
             root->recursiveReadDefinitionObjects();
             root->handleEvent(HSSEventTypeLoad, NULL);
         }
     }
+    
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: run complete, entering event loop\n\n\n");
 }
 
 void AXRCore::reset()

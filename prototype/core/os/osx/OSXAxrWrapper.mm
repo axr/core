@@ -128,6 +128,8 @@ void OSXAxrWrapper::handleError(AXRError::p theError)
 
 bool OSXAxrWrapper::openFileDialog(std::string &filePath)
 {
+    axr_log(AXR_DEBUG_CH_GENERAL, "OSXAxrWrapper: Opening File Dialog");
+    
     //load a file
 	NSArray *fileTypes = [NSArray arrayWithObjects: @"xml", @"hss", nil];
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
@@ -138,11 +140,14 @@ bool OSXAxrWrapper::openFileDialog(std::string &filePath)
 	if(result == NSOKButton){
 		if([[openPanel filenames] count] > 0){
 			NSString *filepath_s = [[openPanel filenames] objectAtIndex:0];
-            std_log1(std::string("******************************************************************\n* opening document:\n* ").append([filepath_s UTF8String]).append("\n******************************************************************"));
             filePath = std::string([filepath_s UTF8String]);
+            axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "OSXAxrWrapper: User selected file "+filePath);
+            
             return true;
         }
     }
+    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "OSXAxrWrapper: No file selected from open dialog, returning false");
     
     return false;
 }

@@ -60,6 +60,7 @@ using namespace AXR;
 
 AXRWrapper::AXRWrapper()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRWrapper: creating AXRWrapper");
     this->_isHSSOnly = false;
     AXRCore::tp & axr = AXRCore::getInstance();
     axr->initialize(this);
@@ -95,12 +96,14 @@ AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
     
     fwrite(ret->buffer, sizeof(ret->buffer[0]), ret->bufferSize, ret->fileHandle);
     rewind(ret->fileHandle);
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: creating dummy XML file");
     
     return ret;
 }
 
 bool AXRWrapper::loadFile()
 {
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: load file by showing open file dialog");
     std::string filepath = std::string();
 
     bool success = this->openFileDialog(filepath);
@@ -114,6 +117,9 @@ bool AXRWrapper::loadFile()
 
 bool AXRWrapper::loadFileByPath(std::string filepath)
 {
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: loading file "+filepath.substr(filepath.rfind("/") + 1, filepath.length())+" by path");
+    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, filepath);
+    
     std::string filename = std::string();
     std::string fileextension = std::string();
 
@@ -132,6 +138,8 @@ bool AXRWrapper::loadFileByPath(std::string filepath)
 
 bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 {
+    axr_log(AXR_DEBUG_CH_OVERVIEW, std::string("AXRWrapper: opening XML document: ").append(xmlfilepath));
+    
     AXRCore::tp & core = AXRCore::getInstance();
     if (core->getFile()) {
         core->reset();
@@ -180,6 +188,8 @@ bool AXRWrapper::reload()
 
 bool AXRWrapper::loadHSSFile(std::string hssfilepath)
 {
+    axr_log(AXR_DEBUG_CH_OVERVIEW, std::string("AXRWrapper: opening HSS document: ").append(hssfilepath));
+    
     AXRCore::tp & core = AXRCore::getInstance();
     if (core->getFile()) {
         core->reset();

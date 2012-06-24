@@ -61,6 +61,7 @@ using namespace AXR;
 HSSLog::HSSLog()
 : HSSAction(HSSActionTypeLog)
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: creating log object");
     this->observedValue = NULL;
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("value");
@@ -77,6 +78,7 @@ HSSLog::HSSLog(const HSSLog & orig)
 }
 
 HSSLog::p HSSLog::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: cloning log object");
     return boost::static_pointer_cast<HSSLog, HSSClonable>(this->cloneImpl());
 }
 
@@ -86,7 +88,7 @@ HSSClonable::p HSSLog::cloneImpl() const{
 
 HSSLog::~HSSLog()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: destructing log object");
 }
 
 std::string HSSLog::toString()

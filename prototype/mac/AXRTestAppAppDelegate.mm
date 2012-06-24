@@ -73,6 +73,16 @@ char Buff[BUFFSIZE];
 - (id)init
 {
     [self setNeedsFile:YES];
+//    axr_debug_activate_channel(AXR_DEBUG_CH_ON);
+//    axr_debug_activate_channel(AXR_DEBUG_CH_OVERVIEW);
+//    axr_debug_activate_channel(AXR_DEBUG_CH_GENERAL);
+//    axr_debug_activate_channel(AXR_DEBUG_CH_GENERAL_SPECIFIC);
+//    axr_debug_activate_channel(AXR_DEBUG_CH_XML);
+//    axr_debug_activate_channel(AXR_DEBUG_CH_HSS);
+//    axr_debug_activate_channel(AXR_DEBUG_CH_FULL_FILENAMES);
+//    axr_debug_activate_channel(AXR_DEBUG_CH_EVENTS);
+//    axr_debug_activate_channel(AXR_DEBUG_CH_EVENTS_SPECIFIC);
+    
     return self;
 }
 

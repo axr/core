@@ -90,6 +90,7 @@ HSSContainer::p HSSContainer::asContainer(HSSDisplayObject::p theDisplayObject)
 HSSContainer::HSSContainer()
 : HSSDisplayObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: creating container");
     this->initialize();
 }
 
@@ -139,6 +140,7 @@ HSSContainer::HSSContainer(const HSSContainer & orig)
 }
 
 HSSContainer::p HSSContainer::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: cloning container");
     return boost::static_pointer_cast<HSSContainer, HSSClonable>(this->cloneImpl());
 }
 
@@ -148,6 +150,7 @@ HSSClonable::p HSSContainer::cloneImpl() const{
 
 HSSContainer::~HSSContainer()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: destructing container");
     this->children.clear();
     this->allChildren.clear();
 }
@@ -241,7 +244,7 @@ void HSSContainer::add(HSSDisplayObject::p child)
 {
     HSSContainer::p sharedThis = this->shared_from_this();
     child->setParent(sharedThis);
-    std_log1("HSSContainer: added child "+child->getElementName()+" to "+this->getElementName());
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: added child "+child->getElementName()+" to "+this->getElementName());
     child->setIndex(this->allChildren.size());
     child->setController(this->getController());
     if(!child->isA(HSSObjectTypeTextBlock)){

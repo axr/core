@@ -58,7 +58,7 @@ using namespace AXR;
 HSSFunctionAction::HSSFunctionAction()
 : HSSAction(HSSActionTypeFunction)
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFunctionAction: creating function action object");
 }
 
 HSSFunctionAction::HSSFunctionAction(const HSSFunctionAction & orig)
@@ -69,6 +69,7 @@ HSSFunctionAction::HSSFunctionAction(const HSSFunctionAction & orig)
 
 HSSFunctionAction::p HSSFunctionAction::clone() const
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFunctionAction: cloning function action object");
     return boost::static_pointer_cast<HSSFunctionAction, HSSClonable>(this->cloneImpl());
 }
 
@@ -80,7 +81,7 @@ HSSClonable::p HSSFunctionAction::cloneImpl() const
 
 HSSFunctionAction::~HSSFunctionAction()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFunctionAction: destructing function action object");
 }
 
 

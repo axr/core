@@ -67,6 +67,7 @@ using namespace AXR;
 HSSPolygon::HSSPolygon()
 :HSSShape()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: creating polygon object");
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("sides");
     shorthandProperties.push_back("angle");
@@ -99,6 +100,7 @@ HSSPolygon::HSSPolygon(const HSSPolygon & orig)
 }
 
 HSSPolygon::p HSSPolygon::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: cloning polygon object");
     return boost::static_pointer_cast<HSSPolygon, HSSClonable>(this->cloneImpl());
 }
 
@@ -108,7 +110,7 @@ HSSClonable::p HSSPolygon::cloneImpl() const{
 
 HSSPolygon::~HSSPolygon()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: destructing polygon object");
 }
 
 std::string HSSPolygon::toString()

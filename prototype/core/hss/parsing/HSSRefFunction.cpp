@@ -206,7 +206,6 @@ void * HSSRefFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
 
 void HSSRefFunction::valueChanged(HSSObservableProperty source, void*data)
 {
-    std_log1("######################### valueChanged");
     this->setDirty(true);
     this->_value = data;
     this->notifyObservers(HSSObservablePropertyValue, this->_value);

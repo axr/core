@@ -62,6 +62,7 @@ using namespace AXR;
 XMLParser::XMLParser(AXRController * theController)
 : expatmm::ExpatXMLParser()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "XMLParser: creating XML parser");
     this->controller = theController;
 }
 
@@ -80,11 +81,14 @@ XMLParser::XMLParser(AXRController * theController)
 
 XMLParser::~XMLParser()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "XMLParser: destructing XML parser");
 }
 
 bool XMLParser::loadFile(AXRFile::p file)
 {
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: loading file "+file->getFileName());
+    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->getBasePath()+"/"+file->getFileName());
+    
     this->file = file;
 	if(file->fileHandle != NULL){
         expatmm::ExpatXMLParser::setReadiness(true);
@@ -145,6 +149,7 @@ ssize_t XMLParser::read_block(void) {
 
 void XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)
 {
+    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found opening tag with name "+std::string(name));
     this->controller->enterElement(std::string(name));
     unsigned i;
     for (i = 0; attrs[i]; i += 2) {
@@ -154,6 +159,7 @@ void XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)
 
 void XMLParser::CharacterData(const XML_Char *s, int len)
 {
+    axr_log(AXR_DEBUG_CH_XML, "XMLParser: reading character data: \""+std::string(s, len)+"\"");
     /**
      *  @todo make this better
      */
@@ -166,6 +172,7 @@ void XMLParser::CharacterData(const XML_Char *s, int len)
 
 void XMLParser::EndElement(const XML_Char *name)
 {
+    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found closing tag with name "+std::string(name));
     this->controller->exitElement();
 }
 
@@ -175,6 +182,7 @@ void XMLParser::EndElement(const XML_Char *name)
  */
 void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *data)
 {
+    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found xml instruction with name "+std::string(target));
     if(this->controller == NULL){
         throw AXRError::p(new AXRError("XMLParser", "The controller was not set on the XML parser"));
     }

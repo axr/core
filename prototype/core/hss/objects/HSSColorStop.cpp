@@ -65,6 +65,7 @@ using namespace AXR;
 HSSColorStop::HSSColorStop()
 :HSSObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: creating color stop object");
     this->type = HSSObjectTypeColorStop;
     
     std::vector<std::string> shorthandProperties;
@@ -95,6 +96,7 @@ HSSColorStop::HSSColorStop(const HSSColorStop & orig)
 }
 
 HSSColorStop::p HSSColorStop::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: cloning color stop object");
     return boost::static_pointer_cast<HSSColorStop, HSSClonable>(this->cloneImpl());
 }
 
@@ -104,7 +106,7 @@ HSSClonable::p HSSColorStop::cloneImpl() const{
 
 HSSColorStop::~HSSColorStop()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: destructing color stop object");
 }
 
 std::string HSSColorStop::toString()

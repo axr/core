@@ -57,6 +57,7 @@ using namespace AXR;
 HSSCircle::HSSCircle()
 : HSSShape()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSCircle: creating circle object");
     this->shapeType = HSSShapeTypeCircle;
 }
 
@@ -67,6 +68,7 @@ HSSCircle::HSSCircle(const HSSCircle & orig)
 }
 
 HSSCircle::p HSSCircle::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSCircle: cloning circle object");
     return boost::static_pointer_cast<HSSCircle, HSSClonable>(this->cloneImpl());
 }
 
@@ -76,7 +78,7 @@ HSSClonable::p HSSCircle::cloneImpl() const{
 
 HSSCircle::~HSSCircle()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSCircle: destructing circle object");
 }
 
 std::string HSSCircle::toString()

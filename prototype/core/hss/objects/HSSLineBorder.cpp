@@ -62,6 +62,7 @@ using namespace AXR;
 HSSLineBorder::HSSLineBorder()
 :HSSBorder()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLineBorder: creating line border object");
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("color");
@@ -83,6 +84,7 @@ HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
 }
 
 HSSLineBorder::p HSSLineBorder::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLineBorder: cloning line border object");
     return boost::static_pointer_cast<HSSLineBorder, HSSClonable>(this->cloneImpl());
 }
 
@@ -92,7 +94,7 @@ HSSClonable::p HSSLineBorder::cloneImpl() const{
 
 HSSLineBorder::~HSSLineBorder()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLineBorder: destructing line border object");
 }
 
 std::string HSSLineBorder::toString()

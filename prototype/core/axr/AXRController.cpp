@@ -68,11 +68,14 @@ using namespace AXR;
 
 AXRController::AXRController()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRController: creating controller");
     this->currentContext = std::stack<HSSContainer::p>();
 }
 
 AXRController::~AXRController()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRController: destructing controller");
+    
     this->objectTree.clear();
     this->loadSheets.clear();
     this->rules.clear();
@@ -81,6 +84,7 @@ AXRController::~AXRController()
 
 void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container, bool applyingInstructions)
 {
+    axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: recursive matching rules to display objects");
     HSSInstruction::p instruction = rule->getInstruction();
     if (instruction && applyingInstructions) {
         switch (instruction->getInstructionType()) {
@@ -105,7 +109,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                         rule->setThisObj(newContainer);
                         newContainer->setController(this);
                         newContainer->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff ));
-                        std_log1("created "+newContainer->getElementName());
+                        axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: created "+newContainer->getElementName());
                         this->add(newContainer);
                         newContainer->setNeedsRereadRules(true);
                         newContainer->setNeedsSurface(true);
@@ -147,7 +151,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                                     rule->setThisObj(theDO);
                                     theDO->setController(this);
                                     theDO->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff ));
-                                    std_log1("moved "+theDO->getElementName());
+                                    axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: moved "+theDO->getElementName());
                                     this->add(theDO);
                                     theDO->setNeedsRereadRules(true);
                                     theDO->setNeedsSurface(true);
@@ -236,7 +240,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                 std::vector<HSSDisplayObject::p> inner = selection[i];
                 for (j=0, size2=inner.size(); j<size2; j++) {
                     const HSSDisplayObject::p & displayObject = inner[j];
-                    std_log1("match "+displayObject->getElementName());
+                    axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: match "+displayObject->getElementName());
                     displayObject->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff ));
                     
                     displayObject->setNeedsRereadRules(true);

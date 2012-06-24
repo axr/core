@@ -65,6 +65,7 @@ using namespace AXR;
 HSSFont::HSSFont()
 :HSSObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFont: creating font object");
     this->type = HSSObjectTypeFont;
     
     this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;

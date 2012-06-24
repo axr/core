@@ -87,6 +87,7 @@ std::string HSSEvent::eventTypeStringRepresentation(AXR::HSSEventType eventType)
 HSSEvent::HSSEvent(HSSEventType type)
 : HSSObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: creating event object");
     this->type = HSSObjectTypeEvent;
     this->eventType = type;
     
@@ -110,6 +111,7 @@ HSSEvent::HSSEvent(const HSSEvent & orig)
 }
 
 HSSEvent::p HSSEvent::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: cloning event object");
     return boost::static_pointer_cast<HSSEvent, HSSClonable>(this->cloneImpl());
 }
 
@@ -119,7 +121,7 @@ HSSClonable::p HSSEvent::cloneImpl() const{
 
 HSSEvent::~HSSEvent()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: destructing event object");
 }
 
 std::string HSSEvent::toString()

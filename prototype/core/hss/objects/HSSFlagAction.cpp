@@ -58,7 +58,7 @@ using namespace AXR;
 HSSFlagAction::HSSFlagAction()
 : HSSAction(HSSActionTypeFlag)
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFlagAction: creating flag action object");
 }
 
 HSSFlagAction::HSSFlagAction(const HSSFlagAction & orig)
@@ -69,6 +69,7 @@ HSSFlagAction::HSSFlagAction(const HSSFlagAction & orig)
 
 HSSFlagAction::p HSSFlagAction::clone() const
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFlagAction: cloning flag action object");
     return boost::static_pointer_cast<HSSFlagAction, HSSClonable>(this->cloneImpl());
 }
 
@@ -80,7 +81,7 @@ HSSClonable::p HSSFlagAction::cloneImpl() const
 
 HSSFlagAction::~HSSFlagAction()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFlagAction: destructing flag action object");
 }
 
 

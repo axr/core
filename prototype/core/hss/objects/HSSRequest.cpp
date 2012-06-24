@@ -60,6 +60,7 @@ using namespace AXR;
 HSSRequest::HSSRequest()
 : HSSAction(HSSActionTypeRequest)
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRequest: creating request object");
     this->observedSrc
     = this->observedTarget
     = NULL;
@@ -78,6 +79,7 @@ HSSRequest::HSSRequest(const HSSRequest & orig)
 }
 
 HSSRequest::p HSSRequest::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRequest: cloning request object");
     return boost::static_pointer_cast<HSSRequest, HSSClonable>(this->cloneImpl());
 }
 
@@ -87,7 +89,7 @@ HSSClonable::p HSSRequest::cloneImpl() const{
 
 HSSRequest::~HSSRequest()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRequest: destructing request object");
 }
 
 std::string HSSRequest::toString()

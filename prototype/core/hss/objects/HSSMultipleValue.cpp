@@ -59,6 +59,7 @@ using namespace AXR;
 HSSMultipleValue::HSSMultipleValue()
 : HSSObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSMultipleValue: creating multiple value object");
     this->type = HSSObjectTypeMultipleValue;
 }
 
@@ -81,6 +82,7 @@ HSSClonable::p HSSMultipleValue::cloneImpl() const{
 
 HSSMultipleValue::~HSSMultipleValue()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSMultipleValue: destructing multiple value object");
     this->valueList.clear();
 }
 

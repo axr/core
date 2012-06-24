@@ -252,12 +252,12 @@ void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty 
     if(this->_propertyObservers.count(target) != 0){
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
         theObserved[hash] = callback;
-        std_log1("added observer for "+HSSObservable::observablePropertyStringRepresentation(target));
+        axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for "+HSSObservable::observablePropertyStringRepresentation(target));
     } else {
         HSSObservable::observed theObserved;
         theObserved[hash] = callback;
         this->_propertyObservers[target] = theObserved;
-        std_log1("added observer for new "+HSSObservable::observablePropertyStringRepresentation(target));
+        axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for new "+HSSObservable::observablePropertyStringRepresentation(target));
     }
 }
 
@@ -271,7 +271,7 @@ void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservablePr
         if(theObserved.count(hash) != 0){
             delete theObserved[hash];
             theObserved.erase(hash);
-            std_log1("removing observer for "+HSSObservable::observablePropertyStringRepresentation(target));
+            axr_log(AXR_DEBUG_CH_OBSERVING, "removing observer for "+HSSObservable::observablePropertyStringRepresentation(target));
             return;
         }
     }
@@ -280,7 +280,7 @@ void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservablePr
 
 void HSSObservable::propertyChanged(HSSObservableProperty property, void *data)
 {
-    std_log1("property changed");
+    axr_log(AXR_DEBUG_CH_OBSERVING, "property changed");
 }
 
 void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
@@ -291,7 +291,7 @@ void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
         for (it=theObserved.begin(); it != theObserved.end() ; it++) {
             HSSCallback * callback = (*it).second;
             if(data == NULL){
-                std_log1("data is null");
+                axr_log(AXR_DEBUG_CH_OBSERVING, "data is null");
             }
             callback->call(property, data);
         }

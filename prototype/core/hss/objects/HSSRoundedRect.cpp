@@ -63,6 +63,7 @@ using namespace AXR;
 HSSRoundedRect::HSSRoundedRect()
 : HSSShape()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: creating rounded rectangle object");
     this->shapeType = HSSShapeTypeRoundedRect;
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
     this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
@@ -84,6 +85,7 @@ HSSRoundedRect::HSSRoundedRect(const HSSRoundedRect & orig)
 }
 
 HSSRoundedRect::p HSSRoundedRect::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: cloning rounded rectangle object");
     return boost::static_pointer_cast<HSSRoundedRect, HSSClonable>(this->cloneImpl());
 }
 
@@ -93,7 +95,7 @@ HSSClonable::p HSSRoundedRect::cloneImpl() const{
 
 HSSRoundedRect::~HSSRoundedRect()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: destructing rounded rectangle object");
 }
 
 std::string HSSRoundedRect::toString()

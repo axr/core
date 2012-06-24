@@ -63,6 +63,7 @@ using namespace AXR;
 HSSLinearGradient::HSSLinearGradient()
 :HSSGradient()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: creating linear gradient object");
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("startColor");
     shorthandProperties.push_back("endColor");
@@ -104,6 +105,7 @@ HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
 }
 
 HSSLinearGradient::p HSSLinearGradient::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: cloning linear gradient object");
     return boost::static_pointer_cast<HSSLinearGradient, HSSClonable>(this->cloneImpl());
 }
 
@@ -113,6 +115,7 @@ HSSClonable::p HSSLinearGradient::cloneImpl() const{
 
 HSSLinearGradient::~HSSLinearGradient()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: destructing linear gradient object");
     if(this->observedStartX != NULL){
         this->observedStartX->removeObserver(this->observedStartXProperty, HSSObservablePropertyStartX, this);
     }

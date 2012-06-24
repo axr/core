@@ -59,6 +59,7 @@ using namespace AXR;
 HSSValue::HSSValue()
 : HSSObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
     this->valueType = HSSValueNumberInt;
     this->type = HSSObjectTypeValue;
     this->intValue = 0;
@@ -67,6 +68,7 @@ HSSValue::HSSValue()
 HSSValue::HSSValue(long int value)
 : HSSObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
     this->valueType = HSSValueNumberInt;
     this->type = HSSObjectTypeValue;
     this->intValue = value;
@@ -75,6 +77,7 @@ HSSValue::HSSValue(long int value)
 HSSValue::HSSValue(long double value)
 : HSSObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
     this->valueType = HSSValueNumberFloat;
     this->type = HSSObjectTypeValue;
     this->floatValue = value;
@@ -83,6 +86,7 @@ HSSValue::HSSValue(long double value)
 HSSValue::HSSValue(std::string value)
 : HSSObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
     this->valueType = HSSValueString;
     this->type = HSSObjectTypeValue;
     this->stringValue = value;
@@ -91,6 +95,7 @@ HSSValue::HSSValue(std::string value)
 HSSValue::HSSValue(HSSValueType type, std::string value)
 : HSSObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
     if (type == HSSValueString) {
         this->valueType = type;
         this->setValue(value);
@@ -115,6 +120,7 @@ HSSValue::HSSValue(const HSSValue & orig)
 }
 
 HSSValue::p HSSValue::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: cloning value object");
     return boost::static_pointer_cast<HSSValue, HSSClonable>(this->cloneImpl());
 }
 

@@ -99,6 +99,8 @@ HSSTextAlignType HSSTextBlock::textAlignTypeFromString(std::string value)
 HSSTextBlock::HSSTextBlock()
 : HSSDisplayObject()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: creating text block object");
+    
     this->type = HSSObjectTypeTextBlock;
     this->observedTextAlign = this->observedTransform = this->observedText
     = NULL;
@@ -146,6 +148,7 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
 }
 
 HSSTextBlock::p HSSTextBlock::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: cloning text block object");
     return boost::static_pointer_cast<HSSTextBlock, HSSClonable>(this->cloneImpl());
 }
 
@@ -155,6 +158,7 @@ HSSClonable::p HSSTextBlock::cloneImpl() const{
 
 HSSTextBlock::~HSSTextBlock()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: destructing text block object");
     g_object_unref(this->_layout);
 }
 

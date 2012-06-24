@@ -308,6 +308,7 @@ bool HSSObject::isNamed()
 
 void HSSObject::setName(std::string newName)
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSObject: setting name to "+newName);
     this->name = newName;
     this->_isNamed = true;
 }

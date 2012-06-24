@@ -81,6 +81,7 @@
 
 - (void)awakeFromNib
 {
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRView: awaking from NIB");
     [self setNeedsFile:YES];
     AXR::OSXAxrWrapper * wrapper = new AXR::OSXAxrWrapper(self);
     
@@ -101,6 +102,7 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRView: drawing");
     
     NSRect bounds = [self bounds];
     
@@ -154,6 +156,7 @@
 
 - (void)mouseDown:(NSEvent *)theEvent
 {
+    axr_log(AXR_DEBUG_CH_EVENTS | AXR_DEBUG_CH_EVENTS_SPECIFIC, "AXRView: mouse down");
     AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
     if(root){
         AXR::HSSPoint thePoint;
@@ -167,6 +170,7 @@
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
+    axr_log(AXR_DEBUG_CH_EVENTS | AXR_DEBUG_CH_EVENTS_SPECIFIC, "AXRView: mouse up");
     AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
     if(root){
         AXR::HSSPoint thePoint;
@@ -181,6 +185,7 @@
 
 - (void)mouseMoved:(NSEvent *)theEvent
 {
+    axr_log_inline(AXR_DEBUG_CH_EVENTS_SPECIFIC, ".");
     AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
     if(root){
         AXR::HSSPoint thePoint;
@@ -237,7 +242,7 @@
 {
     AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[self axrWrapper];
     if(wrapper->hasLoadedFile()){
-        std_log1("reloading file");
+        axr_log(AXR_DEBUG_CH_OVERVIEW, "\n\n\nAXRView: reloading file");
         bool loaded = wrapper->reload();
         [self setNeedsDisplay:YES];
         return loaded;

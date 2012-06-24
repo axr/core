@@ -161,7 +161,7 @@ HSSClonable::p HSSDisplayObject::cloneImpl() const{
 
 HSSDisplayObject::~HSSDisplayObject()
 {
-    std_log1(std::string("destroying display object with name ").append(this->name));
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, std::string("destroying display object with name ").append(this->name));
     cairo_surface_destroy(this->backgroundSurface);
     cairo_surface_destroy(this->foregroundSurface);
     cairo_surface_destroy(this->bordersSurface);
@@ -647,7 +647,7 @@ void HSSDisplayObject::regenerateSurfaces()
         wstr << this->width;
         std::ostringstream hstr;
         hstr << this->height;
-        std_log1("created a new surface width:"+wstr.str()+" height:"+hstr.str());
+        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: created a new surface width:"+wstr.str()+" height:"+hstr.str());
 #endif
     }
 }
@@ -682,7 +682,7 @@ bool HSSDisplayObject::isDirty()
 
 void HSSDisplayObject::draw(cairo_t * cairo)
 {
-    std_log1("drawing "+this->elementName);
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: drawing "+this->elementName);
     if(this->_isDirty){
 #if AXR_DEBUG_LEVEL > 0
         std::ostringstream xStream;
@@ -690,7 +690,7 @@ void HSSDisplayObject::draw(cairo_t * cairo)
         std::ostringstream yStream;
         yStream << this->y;
         
-        std_log1("redrawing contents of "+this->elementName+" with x: "+xStream.str()+" and y: "+yStream.str());
+        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: redrawing contents of "+this->elementName+" with x: "+xStream.str()+" and y: "+yStream.str());
 #endif
         this->_isDirty = false;
         this->drawBackground();
@@ -2172,11 +2172,19 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
         HSSObject::it it;
         for (it=events.begin(); it!=events.end(); it++) {
             if((*it)->isA(HSSObjectTypeEvent)){
-                boost::static_pointer_cast<HSSEvent>(*it)->fire();
+                HSSEvent::p theEvent = boost::static_pointer_cast<HSSEvent>(*it);
+                axr_log(AXR_DEBUG_CH_EVENTS_SPECIFIC, "HSSDisplayObject: firing event: "+theEvent->toString());
+                theEvent->fire();
                 fired = true;
             }
         }
     }
+    
+#if AXR_DEBUG_LEVEL > 0
+    if(fired){
+        axr_log(AXR_DEBUG_CH_EVENTS | AXR_DEBUG_CH_EVENTS_SPECIFIC, "HSSDisplayObject: fired event");
+    }
+#endif
     return fired;
 }
 

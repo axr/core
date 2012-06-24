@@ -57,6 +57,7 @@ using namespace AXR;
 HSSRectangle::HSSRectangle()
 : HSSShape()
 {
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: creating rectangle object");
     this->shapeType = HSSShapeTypeRectangle;
 }
 
@@ -67,6 +68,7 @@ HSSRectangle::HSSRectangle(const HSSRectangle & orig)
 }
 
 HSSRectangle::p HSSRectangle::clone() const{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: cloning rectangle object");
     return boost::static_pointer_cast<HSSRectangle, HSSClonable>(this->cloneImpl());
 }
 
@@ -76,7 +78,7 @@ HSSClonable::p HSSRectangle::cloneImpl() const{
 
 HSSRectangle::~HSSRectangle()
 {
-    
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: destructing rectangle object");
 }
 
 std::string HSSRectangle::toString()
