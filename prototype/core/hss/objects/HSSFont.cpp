@@ -128,6 +128,30 @@ std::string HSSFont::defaultObjectType(std::string property)
     }
 }
 
+bool HSSFont::isKeyword(std::string value, std::string property)
+{
+    if (property == "weight") {
+        if (
+               value == "normal"
+            || value == "bold"
+            || value == "medium"
+            || value == "thin"
+            || value == "light"
+            || value == "book"
+            || value == "heavy"
+            || value == "ultralight"
+            || value == "semibold"
+            || value == "ultrabold"
+            || value == "ultraheavy"
+        ){
+            return true;
+        }
+    }
+    
+    //if we reached this far, let the superclass handle it
+    return HSSObject::isKeyword(value, property);
+}
+
 void HSSFont::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
     switch (name) {
@@ -270,7 +294,44 @@ void HSSFont::colorChanged(AXR::HSSObservableProperty source, void *data)
 
 HSSKeywordConstant::p HSSFont::getWeight() { return this->weight; }
 void HSSFont::setDWeight(HSSParserNode::p value){
-    this->dWeight = value;
+    
+    bool valid = true;
+    
+    switch (value->getType()) {  
+   
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->dWeight = value;
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                fnct->setScope(this->scope);
+                this->weight = *(HSSKeywordConstant::p *)fnct->evaluate();
+                
+                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyWeight, this, new HSSValueChangedCallback<HSSFont>(this, &HSSFont::weightChanged));
+                
+            } else {
+                valid = false;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+            this->weight = keywordValue;
+            break;
+        }
+            
+        default:
+            valid = false;
+    }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSFont", "Invalid value for weight of "+this->name));
+    
+    this->notifyObservers(HSSObservablePropertyWeight, &this->weight);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
 void HSSFont::weightChanged(AXR::HSSObservableProperty source, void *data)

@@ -152,6 +152,7 @@ namespace AXR {
         
     private:
         HSSClonable::p cloneImpl() const;
+        PangoWeight _pangoWeightFromKeyword(std::string keyword);
     };
 }
 

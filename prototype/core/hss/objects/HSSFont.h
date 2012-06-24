@@ -95,6 +95,7 @@ namespace AXR {
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        bool isKeyword(std::string value, std::string property);
         
         /**
          *  Getter for the actual value of size.
