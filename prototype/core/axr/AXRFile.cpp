@@ -86,6 +86,76 @@ std::string AXRFile::getFileName()
     return this->fileName;
 }
 
+void AXRFile::setBuffer(char * buffer)
+{
+    this->buffer = buffer;
+}
+
+char * AXRFile::getBuffer()
+{
+    return this->buffer;
+}
+
+void AXRFile::setFileSize(long int size)
+{
+    this->fileSize = size;
+}
+
+long int AXRFile::getFileSize()
+{
+    return this->fileSize;
+}
+
+void AXRFile::setBufferSize(long int size)
+{
+    this->bufferSize = size;
+}
+
+long int AXRFile::getBufferSize()
+{
+    return this->bufferSize;
+}
+
+void AXRFile::setBasePath(std::string path)
+{
+    this->basePath = path;
+}
+
+std::string AXRFile::getBasePath()
+{
+    return this->basePath;
+}
+
+void AXRFile::setMimeType(std::string mime)
+{
+    this->mimeType = mime;
+}
+
+std::string AXRFile::getMimeType()
+{
+    return this->mimeType;
+}
+
+void AXRFile::setExtension(std::string value)
+{
+    this->extension = value;
+}
+
+std::string AXRFile::getExtension()
+{
+    return this->extension;
+}
+
+void AXRFile::setFileHandle(FILE * path)
+{
+    this->fileHandle = path;
+}
+
+FILE * AXRFile::getFileHandle()
+{
+    return this->fileHandle;
+}
+
 std::string AXRFile::toString()
 {
     return "AXRFile:\nFilename: "+this->fileName+"\nBasepath: "+this->basePath+"\n-------------------------\n";

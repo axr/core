@@ -90,7 +90,7 @@ bool XMLParser::loadFile(AXRFile::p file)
     axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->getBasePath()+"/"+file->getFileName());
     
     this->file = file;
-	if(file->fileHandle != NULL){
+	if(file->getFileHandle() != NULL){
         expatmm::ExpatXMLParser::setReadiness(true);
     } else {
         this->setReadiness(false);
@@ -111,17 +111,17 @@ bool XMLParser::loadFile(AXRFile::p file)
 
 XML_Char * XMLParser::getBuffer(void)
 {
-    return this->file->buffer;
+    return this->file->getBuffer();
 }
 
 size_t XMLParser::getBlockSize(void)
 {
-    return this->file->bufferSize;
+    return this->file->getBufferSize();
 }
 
 ssize_t XMLParser::read_block(void) {
     AXRFile::p file = this->file;
-	if(file->fileHandle == NULL){
+	if(file->getFileHandle() == NULL){
         return -1;
     }
     
@@ -129,11 +129,11 @@ ssize_t XMLParser::read_block(void) {
 	ssize_t code = (ssize_t)bytesRead;
     
 	if(bytesRead <= this->getBlockSize()) {
-        if(feof(file->fileHandle)) {
+        if(feof(file->getFileHandle())) {
             this->setLastError(XML_ERROR_FINISHED);
             return bytesRead;
         }
-        if(ferror(file->fileHandle)) {
+        if(ferror(file->getFileHandle())) {
             this->setStatus(XML_STATUS_ERROR);
             
         }
@@ -267,7 +267,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
 
 
 std::string XMLParser::getFilePath(){
-    return this->file->basePath + "/" + this->file->getFileName();
+    return this->file->getBasePath() + "/" + this->file->getFileName();
 }
 
 std::string XMLParser::getFileName(){

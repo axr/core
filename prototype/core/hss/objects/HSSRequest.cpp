@@ -135,7 +135,7 @@ void HSSRequest::fire()
     if (this->target.size() == 0) {
         AXRCore::tp & core = AXRCore::getInstance();
         AXRWrapper * wrapper = core->getWrapper();
-        wrapper->loadXMLFile(core->getFile()->basePath+"/"+this->src);
+        wrapper->loadXMLFile(core->getFile()->getBasePath()+"/"+this->src);
     } else {
         switch (this->mode) {
             default:

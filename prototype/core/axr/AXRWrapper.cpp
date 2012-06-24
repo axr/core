@@ -74,28 +74,31 @@ AXRWrapper::~AXRWrapper()
 AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
 {
     AXRFile::p ret = AXRFile::p(new AXRFile());
-    ret->bufferSize = 10240;
-    ret->mimeType = "text/xml";
+    ret->setBufferSize(10240);
+    ret->setMimeType("text/xml");
     size_t slashpos = stylesheet.rfind("/");
     if(slashpos != std::string::npos){
-        ret->basePath = stylesheet.substr(0, slashpos);
-        ret->setFileName(stylesheet.substr(slashpos+1));
+        ret->setBasePath(stylesheet.substr(0, slashpos));
+        ret->setFileName("dummy-xml-for-"+stylesheet.substr(slashpos+1)+".xml");
     } else {
         AXRError::p(new AXRError("AXRWrapper", "Could not find a slash in the file path"))->raise();
         return ret;
     }
-    ret->extension = "xml";
+    ret->setExtension("xml");
     std::string dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" src=\"file://"+stylesheet+"\" version=\"1.0\"?><root></root>";
     
-    ret->fileHandle = tmpfile();
-    ret->buffer = new char[ret->bufferSize];
-    dummyXML.copy(ret->buffer, ret->bufferSize, 0);
+    ret->setFileHandle(tmpfile());
+    char * buffer = new char[ret->getBufferSize()];
+    ret->setBuffer(buffer);
+    dummyXML.copy(ret->getBuffer(), ret->getBufferSize(), 0);
     
     size_t bfsz = dummyXML.size();
-    ret->fileSize = ret->bufferSize = bfsz;
+    ret->setFileSize(bfsz);
+    ret->setBufferSize(bfsz);
     
-    fwrite(ret->buffer, sizeof(ret->buffer[0]), ret->bufferSize, ret->fileHandle);
-    rewind(ret->fileHandle);
+    fwrite(buffer, sizeof(buffer[0]), ret->getBufferSize(), ret->getFileHandle());
+    rewind(ret->getFileHandle());
+    
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: creating dummy XML file");
     
     return ret;
@@ -105,9 +108,7 @@ bool AXRWrapper::loadFile()
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: load file by showing open file dialog");
     std::string filepath = std::string();
-
     bool success = this->openFileDialog(filepath);
-
     if(success){
         return this->loadFileByPath(filepath);
     } else {
@@ -171,7 +172,7 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 bool AXRWrapper::reload()
 {
     AXRCore::tp & core = AXRCore::getInstance();
-    std::string cur_path = core->getFile()->basePath+"/"+core->getFile()->getFileName();
+    std::string cur_path = core->getFile()->getBasePath()+"/"+core->getFile()->getFileName();
     std::string fileextension = cur_path.substr(cur_path.rfind(".") + 1, cur_path.length());
     core->reset();
     if(fileextension == "xml"){
@@ -283,7 +284,7 @@ void AXRTestThread::operator () ()
             boost::thread_group producers;
             std::vector<std::vector<std::string> >::iterator it2;
             for (it2=tests.begin(); it2!=tests.end(); it2++) {
-                AXRTestProducer prdcr(this->wrapper, testsFile->basePath, *it2, &this->totalTests, &this->totalPassed, status );
+                AXRTestProducer prdcr(this->wrapper, testsFile->getBasePath(), *it2, &this->totalTests, &this->totalPassed, status );
                 producers.create_thread(prdcr);
                 boost::this_thread::yield();
             }
@@ -353,11 +354,11 @@ void AXRTestProducer::operator () ()
     if(testLoaded){
         AXRFile::p expectedFile = this->wrapper->getFile("file://"+this->basePath+"/"+test[1]);
         size_t fileLength = this->wrapper->readFile(expectedFile);
-        if (ferror(expectedFile->fileHandle)) {
+        if (ferror(expectedFile->getFileHandle())) {
             std_log("could not load file with expected results");
         } else {
             expectedLoaded = true;
-            expectedRep = std::string(expectedFile->buffer, fileLength);
+            expectedRep = std::string(expectedFile->getBuffer(), fileLength);
             //std_log(expectedRep);
         }
         this->wrapper->closeFile(expectedFile);

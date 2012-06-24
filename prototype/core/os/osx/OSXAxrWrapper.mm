@@ -83,14 +83,14 @@ AXRFile::p OSXAxrWrapper::getFile(std::string url)
         std::string clean_path = url.substr(7, url.size());
         int slashpos = clean_path.rfind("/");
         ret->setFileName(clean_path.substr(slashpos+1, clean_path.size()));
-        ret->basePath = clean_path.substr(0, slashpos);
+        ret->setBasePath(clean_path.substr(0, slashpos));
         
-        ret->bufferSize = 20240;
-        ret->buffer = new char[ret->bufferSize];
-        ret->fileHandle = fopen(clean_path.c_str(), "r");
-        if( ret->fileHandle == NULL ){
+        ret->setBufferSize(20240);
+        ret->setBuffer(new char[ret->getBufferSize()]);
+        ret->setFileHandle(fopen(clean_path.c_str(), "r"));
+        if( ret->getFileHandle() == NULL ){
             throw AXRError::p(new AXRError("OSXAxrWrapper", "the file "+url+" doesn't exist"));
-        } else if( ferror(ret->fileHandle) ){
+        } else if( ferror(ret->getFileHandle()) ){
             throw AXRError::p(new AXRError("OSXAxrWrapper", "the file "+url+" couldn't be read"));
         }
         
@@ -103,11 +103,12 @@ AXRFile::p OSXAxrWrapper::getFile(std::string url)
 
 size_t OSXAxrWrapper::readFile(AXRFile::p theFile)
 {
-    size_t size = fread(theFile->buffer, sizeof(theFile->buffer[0]), theFile->bufferSize, theFile->fileHandle);
-    if(feof(theFile->fileHandle)){
+    char * buffer = theFile->getBuffer();
+    size_t size = fread(buffer, sizeof(buffer[0]), theFile->getBufferSize(), theFile->getFileHandle());
+    if(feof(theFile->getFileHandle())){
         theFile->setAtEndOfFile(true);
     }
-    if (ferror(theFile->fileHandle)) {
+    if (ferror(theFile->getFileHandle())) {
         AXRError::p(new AXRError("OSXAxrWrapper", "The file "+theFile->getFileName()+" couldn't be read"))->raise();
         return -1;
     }
@@ -116,8 +117,8 @@ size_t OSXAxrWrapper::readFile(AXRFile::p theFile)
 
 void OSXAxrWrapper::closeFile(AXRFile::p theFile)
 {
-    fclose(theFile->fileHandle);
-    theFile->fileHandle = NULL;
+    fclose(theFile->getFileHandle());
+    theFile->setFileHandle(NULL);
 }
 
 void OSXAxrWrapper::handleError(AXRError::p theError)

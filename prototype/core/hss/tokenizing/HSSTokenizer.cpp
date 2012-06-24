@@ -116,7 +116,8 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
 	if(this->buflen == this->bufpos){
 		this->currentChar = '\0';
 	} else {
-		this->currentChar = this->file->buffer[this->bufpos];
+        char * buffer = this->file->getBuffer();
+		this->currentChar = buffer[this->bufpos];
 	}
 #if AXR_DEBUG_LEVEL > 3
     std::ostringstream tempstream;
