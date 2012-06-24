@@ -86,7 +86,7 @@ void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
     HSSContainer::p root = this->controller->getRoot();
     
     if(root){
-        //find out what objects lie in that rect
+        ///@todo find out what objects lie in that rect
         
         //if the window size has changed, make new size
         if(bounds.size.width != this->windowWidth || bounds.size.height != this->windowHeight){
