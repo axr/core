@@ -43,10 +43,10 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/07
+ *      Last changed: 2012/06/23
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 2
+ *      Core version: 0.47
+ *      Revision: 3
  *
  ********************************************************************/
 
@@ -167,7 +167,7 @@ void LinuxAxrWrapper::setNeedsDisplay(bool newValue)
 	this->needsDisplay = newValue;
 }
 
-std::string LinuxAxrWrapper::getPathToHSSFramework()
+std::string LinuxAxrWrapper::getPathToResources()
 {
 	// Code taken from: http://www.gamedev.net/community/forums/topic.asp?topic_id=459511
 	std::string path = "";
@@ -181,10 +181,10 @@ std::string LinuxAxrWrapper::getPathToHSSFramework()
 	int ch = readlink(_link.c_str(),proc,512);
 	if (ch != -1)
 	{
-	proc[ch] = 0;
-	path = proc;
-	std::string::size_type t = path.find_last_of("/");
-	path = path.substr(0,t);
+		proc[ch] = 0;
+		path = proc;
+		std::string::size_type t = path.find_last_of("/");
+		path = path.substr(0,t);
 	}
 
 	return path + std::string("/rsrc");

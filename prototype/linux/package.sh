@@ -17,10 +17,8 @@ get_tutorial ()
 package ()
 {
 	mkdir ./package/
-	mkdir ./package/rsrc/
 
 	cp ./axr_$1 ./package/
-	cp ../core/hss/framework/UIFramework.hss ./package/rsrc/
 	cp -r ../tests/ ./package/
 	cp -r "$tutorial" ./package/tutorial
 
