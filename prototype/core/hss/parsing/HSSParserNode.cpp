@@ -56,26 +56,32 @@
 using namespace AXR;
 
 std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type){
-    std::string types[20];
-	types[HSSParserNodeTypeGeneric] = "HSSParserNode";
-	types[HSSParserNodeTypeSelector] = "HSSRule";
-	types[HSSParserNodeTypeUniversalSelector] = "HSSRule";
-	types[HSSParserNodeTypeCombinator] = "HSSPropertyDefinition";
-	types[HSSParserNodeTypeFilter] = "HSSFilter";
-	types[HSSParserNodeTypeStatement] = "HSSStatement";
-	types[HSSParserNodeTypeExpression] = "HSSExpression";
-	types[HSSParserNodeTypeNumberConstant] = "HSSNumberConstant";
-	types[HSSParserNodeTypePercentageConstant] = "HSSPercentageConstant";
-	types[HSSParserNodeTypeStringConstant] = "HSSStringConstant";
-	types[HSSParserNodeTypeKeywordConstant] = "HSSKeywordConstant";
-	types[HSSParserNodeTypeObjectDefinition] = "HSSObjectDefinition";
-	types[HSSParserNodeTypeObjectNameConstant] = "HSSObjectNameConstant";
-	types[HSSParserNodeTypeFunctionCall] = "HSSFunctionCall";
-	types[HSSParserNodeTypeMultipleValueDefinition] = "HSSParserNodeTypeMultipleValueDefinition";
-	types[HSSParserNodeTypeNegation] = "HSSParserNodeTypeNegation";
-	types[HSSParserNodeTypeFlag] = "HSSParserNodeTypeFlag";
+    static boost::unordered_map<HSSParserNodeType, std::string> types;
+    if (types.size() == 0) {
+        types[HSSParserNodeTypeGeneric] = "HSSParserNode";
+        types[HSSParserNodeTypeSelector] = "HSSRule";
+        types[HSSParserNodeTypeUniversalSelector] = "HSSRule";
+        types[HSSParserNodeTypeCombinator] = "HSSCombinator";
+        types[HSSParserNodeTypeFilter] = "HSSFilter";
+        types[HSSParserNodeTypeStatement] = "HSSStatement";
+        types[HSSParserNodeTypeExpression] = "HSSExpression";
+        types[HSSParserNodeTypeNumberConstant] = "HSSNumberConstant";
+        types[HSSParserNodeTypePercentageConstant] = "HSSPercentageConstant";
+        types[HSSParserNodeTypeStringConstant] = "HSSStringConstant";
+        types[HSSParserNodeTypeKeywordConstant] = "HSSKeywordConstant";
+        types[HSSParserNodeTypeObjectDefinition] = "HSSObjectDefinition";
+        types[HSSParserNodeTypeObjectNameConstant] = "HSSObjectNameConstant";
+        types[HSSParserNodeTypeFunctionCall] = "HSSFunctionCall";
+        types[HSSParserNodeTypeMultipleValueDefinition] = "HSSParserNodeTypeMultipleValueDefinition";
+        types[HSSParserNodeTypeNegation] = "HSSParserNodeTypeNegation";
+        types[HSSParserNodeTypeFlag] = "HSSParserNodeTypeFlag";
+    }
+    std::string ret = "";
+    if(types.find(type) != types.end()){
+        ret = types[type];
+    }
     
-    return types[type];
+    return ret;
 }
 
 HSSParserNode::HSSParserNode()
