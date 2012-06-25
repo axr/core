@@ -224,9 +224,22 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                     rule->setOriginalScope(scope);
                 }
                 
-                selection = this->select(selectorChains, (useAdjustedScope ? adjustedScope : scope), container);
+                try {
+                    selection = this->select(selectorChains, scope, container);
+                } catch (AXRError::p e) {
+                    e->raise();
+                } catch (AXRWarning::p e) {
+                    e->raise();
+                }
+                
             } else {
-                selection = this->select(selectorChains, scope, this->getRoot());
+                try {
+                    selection = this->select(selectorChains, scope, this->getRoot());
+                } catch (AXRError::p e) {
+                    e->raise();
+                } catch (AXRWarning::p e) {
+                    e->raise();
+                }
             }
             
             unsigned i, j, k, size, size2, size3;
@@ -559,7 +572,8 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(cons
         }
         
         default:
-            throw AXRError::p(new AXRError("AXRController", "Unknown node type "+HSSParserNode::parserNodeStringRepresentation(selectorType)+" in selector"));
+            std::string nodestr = HSSParserNode::parserNodeStringRepresentation(selectorType);
+            throw AXRError::p(new AXRError("AXRController", "Unknown node type "+nodestr+" in selector"));
     }
     
     ret = this->filterSelection(currentSelection, negating, processing);
