@@ -216,17 +216,6 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
             std::vector< std::vector<HSSDisplayObject::p> > selection;
             
             if (container){
-                //if it starts with a combinator, adjust the scope and selector chain
-                bool useAdjustedScope = false;
-                std::vector<HSSDisplayObject::p> adjustedScope;
-                if(this->currentSelectorNode->isA(HSSParserNodeTypeCombinator)){
-                    useAdjustedScope = true;
-                    adjustedScope.push_back(container);
-                    this->currentChain->prepend(HSSSelector::p(new HSSSelector(container->getElementName())));
-                    this->currentChainSize ++;
-                    this->currentSelectorNode = this->currentChain->get(0);
-                }
-                
                 if (applyingInstructions) {
                     //we observe the parent for dom changes
                     container->observe(HSSObservablePropertyTreeChange, HSSObservablePropertyValue, rule.get(), new HSSValueChangedCallback<HSSRule>(rule.get(), &HSSRule::treeChanged));
