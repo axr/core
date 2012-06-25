@@ -62,6 +62,7 @@ AXRWrapper::AXRWrapper()
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRWrapper: creating AXRWrapper");
     this->_isHSSOnly = false;
+    this->_hasLoadedFile = false;
     AXRCore::tp & axr = AXRCore::getInstance();
     axr->initialize(this);
 }
@@ -129,7 +130,6 @@ bool AXRWrapper::loadFileByPath(std::string filepath)
         this->_isHSSOnly = false;
         return this->loadXMLFile(filepath);
     } else if (fileextension == "hss") {
-        this->_isHSSOnly = true;
         return this->loadHSSFile(filepath);
     } else {
         AXRError::p(new AXRError("AXRController", "Unknown file extension"))->raise();
@@ -140,6 +140,8 @@ bool AXRWrapper::loadFileByPath(std::string filepath)
 bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, std::string("AXRWrapper: opening XML document: ").append(xmlfilepath));
+    
+    this->_isHSSOnly = false;
     
     AXRCore::tp & core = AXRCore::getInstance();
     if (core->getFile()) {
@@ -172,18 +174,13 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 bool AXRWrapper::reload()
 {
     AXRCore::tp & core = AXRCore::getInstance();
-    std::string cur_path = core->getFile()->getBasePath()+"/"+core->getFile()->getFileName();
-    std::string fileextension = cur_path.substr(cur_path.rfind(".") + 1, cur_path.length());
-    core->reset();
-    if(fileextension == "xml"){
-        this->_isHSSOnly = false;
+    if(!this->_isHSSOnly){
+        std::string cur_path = core->getFile()->getBasePath()+"/"+core->getFile()->getFileName();
         return this->loadXMLFile(cur_path);
-    } else if (fileextension == "hss") {
-        this->_isHSSOnly = true;
-        return this->loadHSSFile(cur_path);
     } else {
-        AXRError::p(new AXRError("AXRController", "Unknown file extension"))->raise();
-        return false;
+        std::string cur_path = core->getController()->loadSheetsGet(0);
+        cur_path = cur_path.substr(7);
+        return this->loadHSSFile(cur_path);
     }
 }
 
@@ -191,6 +188,7 @@ bool AXRWrapper::loadHSSFile(std::string hssfilepath)
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, std::string("AXRWrapper: opening HSS document: ").append(hssfilepath));
     
+    this->_isHSSOnly = true;
     AXRCore::tp & core = AXRCore::getInstance();
     if (core->getFile()) {
         core->reset();
