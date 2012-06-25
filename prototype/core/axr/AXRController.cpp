@@ -91,7 +91,12 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
             case HSSNewInstruction:
             {
                 if(container){
-                    std::string elementName = rule->selectorChainsLast()->subject()->getElementName();
+                    HSSSelector::p subject = rule->selectorChainsLast()->subject();
+                    std::string elementName = "";
+                    if(subject){
+                        elementName = subject->getElementName();
+                    }
+                    
                     unsigned i;
                     unsigned argssize = 1;
                     HSSParserNode::p argument = instruction->getArgument();

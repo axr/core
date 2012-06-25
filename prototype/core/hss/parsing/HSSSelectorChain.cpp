@@ -148,10 +148,12 @@ HSSSelector::p HSSSelectorChain::subject()
     /**
      *  @todo subject selectors need to be implemented
      */
-    if(this->nodeList.back()->isA(HSSParserNodeTypeSelector)){
-        ret = boost::static_pointer_cast<HSSSelector>(this->nodeList.back());
-    } else {
-        std_log1("########### subject in selector chain could not be determined");
+    if(this->nodeList.size() > 0){
+        if(this->nodeList.back()->isA(HSSParserNodeTypeSelector)){
+            ret = boost::static_pointer_cast<HSSSelector>(this->nodeList.back());
+        } else {
+            std_log1("########### subject in selector chain could not be determined");
+        }
     }
     return ret;
 }
