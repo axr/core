@@ -84,7 +84,7 @@ AXRController::~AXRController()
 
 void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container, bool applyingInstructions)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: recursive matching rules to display objects");
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRController: recursive matching rules to display objects");
     HSSInstruction::p instruction = rule->getInstruction();
     if (instruction && applyingInstructions) {
         switch (instruction->getInstructionType()) {
