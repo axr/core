@@ -10,7 +10,7 @@ LDFLAGS=-Wl,-rpath,./ -lexpat -lboost_thread\
 SOURCES=main.cpp\
 	$(shell find ../core/os/linux -name \*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)\
-	axrlib/axrlib_$(ARCH).so
+	libaxr/libaxr.so
 
 ifdef DEBUG
 LDFLAGS+= -g

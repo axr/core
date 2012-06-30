@@ -25,9 +25,9 @@ cleanup:
 	find . -name \*.o -exec rm {} \;
 	find ../../core -name \*.o -exec rm {} \;
 
-axr: axrlib_$(ARCH).so
+axr: libaxr.so
 
-axrlib_$(ARCH).so: $(OBJECTS)
+libaxr.so: $(OBJECTS)
 	$(CXX) $(LDFLAGS) -shared -Wl,-soname,$@ -o $@ $(OBJECTS)
 
 %.o: %.cpp
