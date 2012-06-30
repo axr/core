@@ -29,7 +29,6 @@ axr: axrlib_$(ARCH).so
 
 axrlib_$(ARCH).so: $(OBJECTS)
 	$(CXX) $(LDFLAGS) -shared -Wl,-soname,$@ -o $@ $(OBJECTS)
-	sudo cp $@ /usr/lib
 
 %.o: %.cpp
 	$(CC) -m$(ARCH) $(CFLAGS) $(LDFLAGS) -c $< -o $@
