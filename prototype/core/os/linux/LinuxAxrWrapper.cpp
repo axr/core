@@ -82,17 +82,17 @@ AXRFile::p LinuxAxrWrapper::getFile(std::string url)
 		std::string clean_path = url.substr(7, std::string::npos);
 		int slashpos = clean_path.rfind("/");
 		ret->setFileName(clean_path.substr(slashpos + 1, clean_path.size()));
-		ret->basePath = clean_path.substr(0, slashpos);
+		ret->setBasePath(clean_path.substr(0, slashpos));
 
-		ret->bufferSize = 20240;
-		ret->buffer = new char[ret->bufferSize];
-		ret->fileHandle = fopen(clean_path.c_str(), "r");
+		ret->setBufferSize(20240);
+		ret->setBuffer(new char[ret->getBufferSize()]);
+		ret->setFileHandle(fopen(clean_path.c_str(), "r"));
 
-		if (ret->fileHandle == NULL)
+		if (ret->getFileHandle() == NULL)
 		{
-			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->getFileName() + " doesn't exist " + ret->basePath))->raise();
+			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->getFileName() + " doesn't exist " + ret->getBasePath()))->raise();
 		}
-		else if (ferror(ret->fileHandle))
+		else if (ferror(ret->getFileHandle()))
 		{
 			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->getFileName() + " couldn't be read"))->raise();
 		}
@@ -107,12 +107,12 @@ AXRFile::p LinuxAxrWrapper::getFile(std::string url)
 
 size_t LinuxAxrWrapper::readFile(AXRFile::p theFile)
 {
-	size_t size = fread(theFile->buffer, sizeof(theFile->buffer[0]),
-		theFile->bufferSize, theFile->fileHandle);
+	size_t size = fread(theFile->getBuffer(), sizeof(theFile->getBuffer()[0]),
+		theFile->getBufferSize(), theFile->getFileHandle());
 
-	if (ferror(theFile->fileHandle))
+	if (ferror(theFile->getFileHandle()))
 	{
-		fclose(theFile->fileHandle);
+		fclose(theFile->getFileHandle());
 
 		return -1;
 	}
@@ -122,8 +122,8 @@ size_t LinuxAxrWrapper::readFile(AXRFile::p theFile)
 
 void LinuxAxrWrapper::closeFile(AXRFile::p theFile)
 {
-	fclose(theFile->fileHandle);
-	theFile->fileHandle = NULL;
+	fclose(theFile->getFileHandle());
+	theFile->setFileHandle(NULL);
 }
 
 void LinuxAxrWrapper::handleError(AXRError::p theError)
