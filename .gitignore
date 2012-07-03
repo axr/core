@@ -21,3 +21,5 @@ xcuserdata
 # Linux binaries
 /prototype/linux/axr_64
 /prototype/linux/axr_32
+/AXR/nbproject/private/
+/prototype/.kdev4/

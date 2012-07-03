@@ -25,7 +25,7 @@
  *            MM,
  *
  * 
- *      AUTHORS: Valerij Primachenko, Ragnis Armus
+ *      AUTHORS: Miro Keller, Anando Gopal Chetterjee
  *      
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
@@ -43,122 +43,60 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/07
+ *      Last changed: 2012/06/28
  *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 2
+ *      Core version: 0.45
+ *      Revision: 3
  *
  ********************************************************************/
 
-#define AXR_PLATFORM_LINUX
-#include <iostream>
-#include <sstream>
-#include "LinuxAxrWrapper.h"
-#include "../../AXR.h"
-#include "../../axr/errors/AXRError.h"
-#include "../../axr/AXRDebugging.h"
+#include "HSSParentFilter.h"
+#include "../objects/HSSContainer.h"
 
 using namespace AXR;
 
-LinuxAxrWrapper::LinuxAxrWrapper() : AXRWrapper()
+HSSParentFilter::HSSParentFilter()
+: HSSFilter()
 {
-	this->needsDisplay = true;
+    this->filterType = HSSFilterTypeParent;
 }
 
-LinuxAxrWrapper::~LinuxAxrWrapper()
-{
+HSSParentFilter::p HSSParentFilter::clone() const{
+    return boost::static_pointer_cast<HSSParentFilter, HSSClonable>(this->cloneImpl());
 }
 
-AXRFile::p LinuxAxrWrapper::getFile(std::string url)
+HSSParentFilter::~HSSParentFilter()
 {
-	AXRFile::p ret = AXRFile::p(new AXRFile());
-
-	if (url.substr(0, 7) == "file://")
-	{
-		std::string clean_path = url.substr(7, std::string::npos);
-		int slashpos = clean_path.rfind("/");
-		ret->setFileName(clean_path.substr(slashpos + 1, clean_path.size()));
-		ret->basePath = clean_path.substr(0, slashpos);
-
-		ret->bufferSize = 10240;
-		ret->buffer = new char[ret->bufferSize];
-		ret->fileHandle = fopen(clean_path.c_str(), "r");
-
-		if (ret->fileHandle == NULL)
-		{
-			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->getFileName() + " doesn't exist " + ret->basePath))->raise();
-		}
-		else if (ferror(ret->fileHandle))
-		{
-			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->getFileName() + " couldn't be read"))->raise();
-		}
-	}
-	else
-	{
-		std_log("http is not implemented yet");
-	}
-
-	return ret;
+    
 }
 
-size_t LinuxAxrWrapper::readFile(AXRFile::p theFile)
+std::string HSSParentFilter::toString()
 {
-	size_t size = fread(theFile->buffer, sizeof(theFile->buffer[0]),
-		theFile->bufferSize, theFile->fileHandle);
-
-	if (ferror(theFile->fileHandle))
-	{
-		fclose(theFile->fileHandle);
-
-		return -1;
-	}
-
-	return size;
+    return "Parent Filter";
 }
 
-void LinuxAxrWrapper::closeFile(AXRFile::p theFile)
+
+const std::vector<HSSDisplayObject::p> HSSParentFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
 {
-	fclose(theFile->fileHandle);
+    if(scope.size() > 0){
+        std::vector<HSSDisplayObject::p> ret;
+        int size=scope.size();
+        
+        if (!negating)
+            for (int i=0; i<size; i++)
+                if (HSSContainer::asContainer(scope[i])->getChildren(false).size()>0)
+                    ret.push_back(scope[i]);
+
+        else
+            for (int i=0; i<size; i++)
+                if (HSSContainer::asContainer(scope[i])->getChildren (false).size()==0)
+                    ret.push_back(scope[i]);
+        return ret;
+    } else {
+        return scope;
+    }
 }
 
-void LinuxAxrWrapper::handleError(AXRError::p theError)
-{
-	std::cout << theError->toString() << "\n";
+HSSClonable::p HSSParentFilter::cloneImpl() const{
+    return HSSClonable::p(new HSSParentFilter(*this));
 }
-
-bool LinuxAxrWrapper::openFileDialog(std::string &filePath)
-{
-	char file[FILENAME_MAX];
-
-	std::cout << "Open file: ";
-	fgets(file, FILENAME_MAX, stdin);
-
-	if (file[strlen(file) - 1] == '\n')
-	{
-		file[strlen(file) - 1] = '\0';
-	}
-
-	if (file[0] == '/')
-	{
-		filePath = file;
-	}
-	else
-	{
-		char cwd[FILENAME_MAX];
-		getcwd(cwd, FILENAME_MAX);
-
-		std::stringstream ss;
-		ss << cwd << "/" << file;
-		filePath = ss.str();
-	}
-
-	std::cout << std::endl;
-
-	return true;
-}
-
-void LinuxAxrWrapper::setNeedsDisplay(bool newValue)
-{
-	this->needsDisplay = newValue;
-}
-

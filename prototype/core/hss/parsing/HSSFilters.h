@@ -53,6 +53,9 @@
 #ifndef HSSFILTERS_H
 #define HSSFILTERS_H
 
+
+#include "HSSParentFilter.h"
+
 #include "HSSFirstFilter.h"
 #include "HSSLastFilter.h"
 

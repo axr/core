@@ -16,6 +16,8 @@ First, we are going to compile the core library:
 2 - Go to http://cairographics.org/ and download Cairo, install it according to their 
 	instructions. I've had no luck installing the MacPorts version, but compiling everything
 	from source code should work just fine.
+
+pango-dev/
 	
 2.a If you don't have Freetype on your system, download it from http://www.freetype.org/ and
 	compile it as well. AXR doesn't use it, but somehow I didn't manage to build with static
