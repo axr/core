@@ -1,2 +1,0 @@
-/media/www/AXR/git/Prototype/prototype/core/CMakeFiles/AXR_core.dir
-/media/www/AXR/git/Prototype/prototype/CMakeFiles/axr.dir

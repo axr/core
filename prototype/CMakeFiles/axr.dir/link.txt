@@ -1,1 +1,0 @@
-/usr/bin/g++   -g    CMakeFiles/axr.dir/linux/cairosdl/cairosdl.c.o CMakeFiles/axr.dir/linux/main.cpp.o  -o axr -rdynamic core/libAXR_core.a -lexpat -lglib-2.0 -lSDL -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lcairo -lpangocairo-1.0 -lpango-1.0 -lcairo -lgobject-2.0 -lglib-2.0 -lSDL -lpangocairo-1.0 
