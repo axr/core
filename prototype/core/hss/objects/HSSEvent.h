@@ -51,31 +51,6 @@
 namespace AXR {
     
     /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSEventType
-     *  The type of the event object.
-     */
-    enum HSSEventType
-    {
-        HSSEventTypeNone = 0, /**< Error state. */
-        HSSEventTypeLoad, /**< Fires when everything has loaded. */
-        HSSEventTypeClick, /**< Fires when a mouse down and mouse up happen in fast succession. */
-        HSSEventTypeDoubleClick, /**< Fires when clicked two times in fast succession. */
-        HSSEventTypeTripleClick, /**< Fires when clicked three times in fast succession. */
-        HSSEventTypeMouseDown, /**< Fires when a mouse button has been pressed. */
-        HSSEventTypeMouseUp, /**< Fires when a mouse button has been released. */
-        HSSEventTypeMouseOver, /**< Fires when the mouse pointer enters an area of the document. */
-        HSSEventTypeMouseOut, /**< Fires when the mouse pointer leaves an area of the document. */
-        HSSEventTypeMouseHold, /**< Fires when a mouse button has been pressed and held down for a while. */
-        HSSEventTypeMouseMove, /**< Fires when the mouse pointer is moved over an area of the screen. */
-        HSSEventTypeClickSecondary, /**< Fires when clicking with the secondary mouse button. */
-        HSSEventTypeClickTertiary, /**< Fires when clicking with the third (if there) mouse button. */
-        HSSEventTypeScroll /**< Fires when the sroll mechanism is activated on the mouse (e.g. scroll wheel). */
-    };
-    /** @} */
-    
-    /**
      *  @brief Represents all event objects in HSS.
      *  
      *  All event objects, such as \@click, \@keyDown, etc, have the same behavior, they

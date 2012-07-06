@@ -52,38 +52,9 @@
 #include "../../axr/AXRDebugging.h"
 #include "../../axr/errors/errors.h"
 #include <vector>
+#include "../HSSTypeEnums.h"
 
 namespace AXR {
-    
-    /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSObjectType
-     *  The type of the object. Some types have specific sub-types that are
-     *  specific to their kind, such as gradients or shapes. In those cases
-     *  they all share a generic object type.
-     */
-    enum HSSObjectType
-    {
-        HSSObjectTypeNone = 0, /**< Error state. */
-        HSSObjectTypeGeneric, /**< Abstract type for generic objects, probably error state. */
-        HSSObjectTypeValue, /**< Values store values. */
-        HSSObjectTypeMultipleValue, /**< Multiple values separated by commas passed to a property are wrapped in these. */
-        HSSObjectTypeDisplayObject, /**< Abstract type for display objects, probably error state. */
-        HSSObjectTypeContainer, /**< Containers can contain other display objects. */
-        HSSObjectTypeTextBlock, /**< Each container has at least one text block. It's task is to render the content text. */
-        HSSObjectTypeBorder, /**< All borders share this type */
-        HSSObjectTypeMargin, /**< All margins share this type */
-        HSSObjectTypeRgb, /**< Colors in RGB */
-        HSSObjectTypeGradient, /**< All gradients share this type */
-        HSSObjectTypeFont, /**< Not font files, but HSS @font objects */
-        HSSObjectTypeFunction, /**< All functions share this type */
-        HSSObjectTypeShape, /**< All shapes share this type */
-        HSSObjectTypeEvent, /**< All events share this type */
-        HSSObjectTypeAction, /**< All actions share this type */
-        HSSObjectTypeColorStop, /**< Color stops are used inside gradients */
-    };
-    /** @} */
     
     class AXRController;
     class HSSMultipleValueDefinition;

@@ -49,23 +49,6 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSValueType
-     *  The type of the value, to be able to determine the correct storage
-     *  of the data.
-     *
-     *  @todo is this a good design? and if so, aren't object definitions, object
-     *  names and functions missing?
-     */
-    enum HSSValueType {
-        HSSValueNumberInt, /**< Long Integer */
-        HSSValueNumberFloat, /**< Long double */
-        HSSValueString, /**< std::string */
-        HSSValueKeyword/**< std::string */
-    };
-    /** @}*/
     
     /**
      *  @brief Value objects wrap other values, to be reused with an object name. Numbers, strings

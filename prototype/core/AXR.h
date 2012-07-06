@@ -371,8 +371,5 @@ namespace AXR
     };
 }
 
-//doxygen support:
-/** @defgroup typeEnums Type enumerations */
-
 #endif //AXR_H
 

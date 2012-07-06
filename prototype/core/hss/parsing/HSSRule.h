@@ -60,20 +60,6 @@ namespace AXR {
     class HSSDisplayObject;
     class HSSFilter;
     
-    /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSRuleState
-     *  The status of the rule, to determine if the properties should be applied or not.
-     */
-    enum HSSRuleState
-    {
-        HSSRuleStateOff = 0, /**< Don't apply the contents of the rule. */
-        HSSRuleStateOn = 1, /**< Do apply the contents of the rule. */
-        HSSRuleStateActivate, /**< Set to ruleStateOn the next cycle. */
-        HSSRuleStatePurge /**< Set to ruleStateOff on the next cycle. */
-    };
-    /** @} */
     
     /**
      *  @brief This class encapsulates a relation between a rule a its state.

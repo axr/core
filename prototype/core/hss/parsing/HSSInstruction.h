@@ -50,28 +50,6 @@
 namespace AXR {
     
     /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSInstructionType
-     *  The type of the instruction node. It will determine what the instruction will be used for.
-     */
-    enum HSSInstructionType {
-        HSSNewInstruction, /**< This will cause a new element to be created when prepended in front of rules. */
-        HSSEnsureInstruction, /**< This will cause a new element to be created if not already there,
-                                when prepended in front of rules. */
-        HSSImportInstruction, /**< Loads code from the given file and adds it to the current document. */
-        HSSMoveInstruction, /**< Moves elements from one part of the tree to another. */
-        HSSDeleteInstruction, /**< Removes elements from the content tree. */
-        HSSGrayscale1Instruction, /**< Creates a color object (e.g. #C). */
-        HSSGrayscale2Instruction, /**< Creates a color object (e.g. #CC). */
-        HSSRGBInstruction, /**< Creates a color object (e.g. #CCC). */
-        HSSRGBAInstruction, /**< Creates a color object (e.g. #CCCF). */
-        HSSRRGGBBInstruction, /**< Creates a color object (e.g. #CCCCCC). */
-        HSSRRGGBBAAInstruction /**< Creates a color object (e.g. #CCCCCCFF). */
-    };
-    /** @} */
-    
-    /**
      *  @brief This class encapsulates all the different types of instructions in HSS.
      *  
      *  Instructions are used to instruct the system to alter its behavior. What actually happens

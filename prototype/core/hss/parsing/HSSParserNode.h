@@ -43,6 +43,7 @@
 
 #ifndef HSSPARSERNODE_H
 #define HSSPARSERNODE_H
+#include "../HSSTypeEnums.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
@@ -52,41 +53,6 @@
 #include "../various/HSSClonable.h"
 
 namespace AXR {
-    
-    /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSParserNodeType
-     *  The AST is generated using various types of parser nodes, each having a different meaning or use. This
-     *  enum provides a way to identifying each node type, when they are processed.
-     */
-    enum HSSParserNodeType
-    {
-        HSSParserNodeTypeGeneric = 0, /**< Error state. */
-        HSSParserNodeTypeSelector, /**< Selects elements by name. */
-        HSSParserNodeTypeUniversalSelector, /**< Selects all elements in a scope. */
-        HSSParserNodeTypeThisSelector, /**< Selects the nearest display object. */
-        HSSParserNodeTypeParentSelector, /**< Selects the parent element of the nearest display object. */
-        HSSParserNodeTypeSuperSelector, /**< Selects the element that owns the current one. */
-        HSSParserNodeTypeSubjectSelector, /**< Changes what will be selected by a selector chain ($). */
-        HSSParserNodeTypeCombinator, /**< Defines relations between parts of the selector chain. */
-        HSSParserNodeTypeFilter, /**< Reduces or alters the selection. */
-        HSSParserNodeTypeStatement, /**< Basic execution block. */
-        HSSParserNodeTypeExpression, /**< Mathematic operation between two values (or other expressions). */
-        HSSParserNodeTypeNumberConstant, /**< A basic number in the HSS source. */
-        HSSParserNodeTypePercentageConstant, /**< A percentage number in the HSS source. */
-        HSSParserNodeTypeStringConstant, /**< A literal string (single or double quotes) in the HSS source. */
-        HSSParserNodeTypeKeywordConstant, /**< A keyword literal in the HSS source. */
-        HSSParserNodeTypeObjectDefinition, /**< Encapsulates reusable groups of property definitions. */
-        HSSParserNodeTypeObjectNameConstant, /**< Used to get the object definition by name. */
-        HSSParserNodeTypeFunctionCall, /**< Which function to call, and with what arguments. */
-        HSSParserNodeTypeMultipleValueDefinition, /**< Encapsulates various values separated by commas. */
-        HSSParserNodeTypeSelectorChain, /**< A group of selector nodes that define what elements will be selected. */
-        HSSParserNodeTypeNegation, /**< Inverts the meaning of one or more selectors. */
-        HSSParserNodeTypeFlag, /**< Conditionally applies properties to elements. */
-        HSSParserNodeTypeRootSelector, /**< Returns the root element. */
-    };
-    /** @} */
     
     class HSSDisplayObject;
     

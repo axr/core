@@ -50,24 +50,6 @@
 namespace AXR {
     
     /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSRequestModeType
-     *  What to do with the loaded content.
-     */
-    enum HSSRequestModeType
-    {
-        HSSRequestModeTypeAuto, /**< Automatically determine what to do. */
-        HSSRequestModeTypeReplace, /**< Replaces the target with the loaded content. */
-        HSSRequestModeTypeWrap, /**<    Replaces the root of the document with the loaded one and adds
-                                        the current content into the loaded one. */
-        HSSRequestModeTypePrepend, /**< Inserts the loaded content into the target, before existing children. */
-        HSSRequestModeTypeAppend, /**< Inserts the loaded content into the target, after existing children. */
-        HSSRequestModeTypeReturn, /**< Just returns the content. */ ///@todo This is not clear, needs discussion.
-    };
-    /** @} */
-    
-    /**
      *  @brief The object type representing an action that loads content into the page. Sort of like
      *  ajax.
      *

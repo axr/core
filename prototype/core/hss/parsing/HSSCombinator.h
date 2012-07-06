@@ -49,23 +49,6 @@
 #include <boost/shared_ptr.hpp>
 
 namespace AXR {
-    /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSCombinatorType
-     *  The type of the combinator which will determine what the behavior will be when used in AXRController.
-     */
-    enum HSSCombinatorType
-    {
-        HSSCombinatorTypeSiblings, /**< Select elements on the same level (=) */
-        HSSCombinatorTypePreviousSiblings, /**< Select elements on the same level that come before the previously selected elements (-) */
-        HSSCombinatorTypeNextSiblings, /**< Select elements on the same level that come after the previously selected elements (+) */
-        HSSCombinatorTypeChildren, /**< Select children of the previously selected elements (whitespace) */
-        HSSCombinatorTypeDescendants, /**< Select descendants of the previously selected elements (..) */
-        HSSCombinatorTypeAllDescendants, /**< Deprecated */
-        HSSCombinatorTypeTextSelection /**< Switches the selection to text space */
-    };
-    /** @} */
     
     /**
      *  @brief Combinators are used inside of selector chains, to define the relations between the elements that 

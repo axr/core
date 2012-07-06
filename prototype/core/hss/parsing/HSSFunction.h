@@ -54,29 +54,6 @@
 
 namespace AXR {
     
-    /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSFunctionType
-     *  The type of the function, specific for each subclass.
-     */
-    enum HSSFunctionType
-    {
-        HSSFunctionTypeNone = 0, /**< Error state. */
-        HSSFunctionTypeRef, /**< References a value on a selected element. */
-        HSSFunctionTypeSel, /**< Creates a selection of elements. */
-        HSSFunctionTypeMin, /**< Returns the passed value, or the minimum if lower. */
-        HSSFunctionTypeMax, /**< Returns the passed value, or the maxium if higher. */
-        HSSFunctionTypeFloor, /**< Rounds a number down to the next integer. */
-        HSSFunctionTypeCeil, /**< Rounds a number up to the next integer. */
-        HSSFunctionTypeRound, /**< Rounds a number to the nearest integer. */
-        HSSFunctionTypeFlag, /**< Activates the given flag on the selected elements. */
-        HSSFunctionTypeUnflag, /**< Deactivates the given flag on the selected elements. */
-        HSSFunctionTypeToggleFlag, /**< Toggles the given flag on the selected elements. */
-        HSSFunctionTypeCustom /**< A function whose name has been registered on the core with a callback. */
-    };
-    /** @} */
-    
     class AXRController;
     
     /**

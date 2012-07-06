@@ -50,22 +50,6 @@
 namespace AXR {
     
     /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSFlagFunctionType
-     *  The type of the flagging function. It will determine what the function
-     *  actually does.
-     */
-    enum HSSFlagFunctionType
-    {
-        HSSFlagFunctionTypeNone = 0, /**< Error state. */
-        HSSFlagFunctionTypeFlag, /**< Always set the flag to active. */
-        HSSFlagFunctionTypeUnflag, /**< Always set the flag to inactive. */
-        HSSFlagFunctionTypeToggleFlag /**< When a flag is active, deactivate it, and viceversa. */
-    };
-    /** @} */
-    
-    /**
      *  @brief Function type to manipulate the activation status of a flag.
      *  All of the flagging functions [flag(), unflag() and toggleFlag()] are handled by this class.
      */

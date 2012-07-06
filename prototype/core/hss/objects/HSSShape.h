@@ -52,21 +52,6 @@
 namespace AXR {
     
     /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSShapeType
-     *  The type of the shape object, specific for each subclass.
-     */
-    enum HSSShapeType {
-        HSSShapeTypeRectangle, /**< The default shape for all containers, a rectangle. */
-        HSSShapeTypeRoundedRect, /**< A rectangle with rounded corners. */
-        HSSShapeTypeCircle, /**< A circle (or ellipse if width !== height). */
-        HSSShapeTypePolygon, /**< A regular polygon with all its sides of the same length. */
-        HSSShapeTypeStar /**< A star, with parameterized number and angles of spikes. */
-    };
-    /** @} */
-    
-    /**
      *  @brief Abstract base class for all shape objects.
      *  Do not use directly, use a specific subclass instead.
      */

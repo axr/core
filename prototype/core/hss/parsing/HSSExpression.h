@@ -53,22 +53,6 @@
 namespace AXR {
     
     /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSExpressionType
-     *  The type of the expression, specific for each subclass.
-     */
-    enum HSSExpressionType
-    {
-        HSSExpressionTypeGeneric = 0, /**< Error state. */
-        HSSExpressionTypeSum, /**< A+B. */
-        HSSExpressionTypeSubtraction, /**< A-B. */
-        HSSExpressionTypeMultiplication, /**< A*B. */
-        HSSExpressionTypeDivision, /**< A/B. */
-    };
-    /** @} */
-    
-    /**
      *  @brief Abstract base class for all expressions.
      *  Do not use directly, use a specific subclass instead.
      */

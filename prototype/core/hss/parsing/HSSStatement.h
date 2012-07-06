@@ -51,23 +51,6 @@
 namespace AXR {
     
     /**
-     *  @addtogroup typeEnums
-     *  @{
-     *  @enum HSSStatementType
-     *  The type of the statement, specific for each subclass. 
-     */
-    enum HSSStatementType
-    {
-        HSSStatementTypeGeneric = 0, /**< Error state. */
-        HSSStatementTypeRule, /**< Rules are used to apply property definitions to elements. */
-        HSSStatementTypePropertyDefinition, /**< Define a value for a property name. */
-        HSSStatementTypeObjectDefinition, /**< Define a reusable group of property definitions under a name. */
-        HSSStatementTypeComment, /**< . */
-        HSSStatementTypeInstruction /**< . */
-    };
-    /** @} */
-    
-    /**
      *  @brief Abstract base class that provides the basic functionality for statements. Do not use directly,
      *  but one of its subclasses instead.
      *

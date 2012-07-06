@@ -50,7 +50,7 @@
 #include "../../axr/AXRController.h"
 #include <boost/unordered_map.hpp>
 #include "../../AXR.h"
-
+#include "../HSSTypeEnums.h"
 
 using namespace AXR;
 

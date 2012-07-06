@@ -16,6 +16,7 @@
 		4E07FF2F1466B31000626BDC /* HSSSelFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E07FF2D1466B31000626BDC /* HSSSelFunction.h */; };
 		4E0AD7DA144B63EC00E69413 /* HSSShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E0AD7D8144B63EC00E69413 /* HSSShape.cpp */; };
 		4E0AD7DB144B63EC00E69413 /* HSSShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E0AD7D9144B63EC00E69413 /* HSSShape.h */; };
+		4E10982C159E07570056B8E5 /* HSSTypeEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E10982B159E07570056B8E5 /* HSSTypeEnums.h */; };
 		4E12B9161365B8D700BBAD6C /* HSSSubtraction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E12B9141365B8D700BBAD6C /* HSSSubtraction.cpp */; };
 		4E12B9171365B8D700BBAD6C /* HSSSubtraction.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E12B9151365B8D700BBAD6C /* HSSSubtraction.h */; };
 		4E12B91A1365B95200BBAD6C /* HSSMultiplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E12B9181365B95200BBAD6C /* HSSMultiplication.cpp */; };
@@ -192,6 +193,7 @@
 		4E07FF2D1466B31000626BDC /* HSSSelFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSelFunction.h; sourceTree = "<group>"; };
 		4E0AD7D8144B63EC00E69413 /* HSSShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSShape.cpp; sourceTree = "<group>"; };
 		4E0AD7D9144B63EC00E69413 /* HSSShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSShape.h; sourceTree = "<group>"; };
+		4E10982B159E07570056B8E5 /* HSSTypeEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSTypeEnums.h; sourceTree = "<group>"; };
 		4E12B9141365B8D700BBAD6C /* HSSSubtraction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSubtraction.cpp; sourceTree = "<group>"; };
 		4E12B9151365B8D700BBAD6C /* HSSSubtraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSubtraction.h; sourceTree = "<group>"; };
 		4E12B9181365B95200BBAD6C /* HSSMultiplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMultiplication.cpp; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 			isa = PBXGroup;
 			children = (
 				4E80C7ED13505DD200D88409 /* hss.h */,
+				4E10982B159E07570056B8E5 /* HSSTypeEnums.h */,
 				4E80C7EE13505DD200D88409 /* objects */,
 				4E80C80213505DD200D88409 /* parsing */,
 				4E80C82B13505DD300D88409 /* tokenizing */,
@@ -764,6 +767,10 @@
 				4E87E36915441BC600E3EC21 /* HSSPolygon.h in Headers */,
 				4E2A1A47154B11E000931616 /* HSSRootSelector.h in Headers */,
 				4E209D8F1584105A003F5F04 /* HSSFunctionAction.h in Headers */,
+				4E0959D415991D7E007A17F4 /* HSSSimpleSelector.h in Headers */,
+				4EFDAE33159BAFF0000868E1 /* HSSSelector.h in Headers */,
+				4EB59D41159CC4D9007445F1 /* HSSSelectorNodes.h in Headers */,
+				4E10982C159E07570056B8E5 /* HSSTypeEnums.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

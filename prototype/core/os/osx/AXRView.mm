@@ -50,6 +50,7 @@
 #include <cairo/cairo-quartz.h>
 #include "../../hss/objects/HSSEvent.h"
 #include "../../hss/objects/HSSContainer.h"
+#include "../../hss/HSSTypeEnums.h"
 
 @implementation AXRView
 @synthesize needsFile;
