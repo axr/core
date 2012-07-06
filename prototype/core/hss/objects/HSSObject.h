@@ -220,6 +220,8 @@ namespace AXR {
          *  @param value        A shared pointer to the parser node that defines the isA property.
          */
         void setDIsA(HSSParserNode::p value);
+        void addDIsA(HSSParserNode::p value);
+        
         /**
          *  Callback to receive notifications of when the isA property has changed.
          *  @warning Currently unimplemented
@@ -331,7 +333,7 @@ namespace AXR {
         boost::unordered_map<std::string, bool> skipShorthand;
         unsigned shorthandIndex;
         
-        boost::shared_ptr<HSSMultipleValueDefinition> dIsA;
+        HSSParserNode::p dIsA;
         
         const std::vector<boost::shared_ptr<HSSDisplayObject> > * scope;
         boost::shared_ptr<HSSDisplayObject> thisObj;

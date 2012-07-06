@@ -373,26 +373,24 @@ void HSSObject::setShorthandIndex(unsigned newValue)
 HSSParserNode::p HSSObject::getDIsA() { return this->dIsA; }
 void HSSObject::setDIsA(HSSParserNode::p value)
 {
+    this->dIsA = value;
+    this->addDIsA(value);
+}
+
+void HSSObject::addDIsA(HSSParserNode::p value)
+{
+    bool valid = false;
+    
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        case HSSParserNodeTypeObjectNameConstant:
-        case HSSParserNodeTypeKeywordConstant:
-        case HSSParserNodeTypeFunctionCall:
         case HSSParserNodeTypeMultipleValueDefinition:
-            break;
-        default:
-            throw AXRWarning::p(new AXRWarning("HSSObject", "Invalid value for font of "+this->name));
-    }
-    
-    if(!this->dIsA){
-        this->dIsA = boost::shared_ptr<HSSMultipleValueDefinition>(new HSSMultipleValueDefinition());
-    }
-    this->dIsA->add(value);
-    
-    switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
         {
-            AXRError::p(new AXRError("HSSObject", "HSSParserNodeTypeObjectDefinition Unimplemented in isA"))->raise();
+            HSSParserNode::it iterator;
+            HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(value);
+            std::vector<HSSParserNode::p> values = multiDef->getValues();
+            for (iterator = values.begin(); iterator != values.end(); iterator++) {
+                this->addDIsA(*iterator);
+            }
+            valid = true;
             break;
         }
             
@@ -407,11 +405,18 @@ void HSSObject::setDIsA(HSSParserNode::p value)
                 for (i = 0, size = properties.size(); i<size; i++){
                     HSSObservableProperty propertyName = HSSObservable::observablePropertyFromString(properties[i]->getName());
                     if(propertyName != HSSObservablePropertyNone){
-                        this->setProperty(propertyName, properties[i]->getValue()->clone());
+                        try {
+                            this->setProperty(propertyName, properties[i]->getValue()->clone());
+                        } catch (AXRError::p e) {
+                            e->raise();
+                        } catch (AXRWarning::p e) {
+                            e->raise();
+                        }
                     }
                     
                     //else store as value
                 }
+                valid = true;
                 
             } catch (HSSObjectNotFoundException * e) {
                 std_log(e->toString());
@@ -427,11 +432,22 @@ void HSSObject::setDIsA(HSSParserNode::p value)
         }
             
         default:
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
         {
-            std_log1("unkown parser node type in font property of display object "+this->name+": "+HSSParserNode::parserNodeStringRepresentation(value->getType()));
+            AXRError::p(new AXRError("HSSObject", "HSSStatementTypeObjectDefinition Unimplemented in isA"))->raise();
             break;
         }
+            
+        default:
+            break;
     }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSObject", "Invalid value for isA of "+this->name));
     
     this->notifyObservers(HSSObservablePropertyIsA, &this->dIsA);
 }
