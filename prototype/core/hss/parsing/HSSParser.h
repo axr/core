@@ -472,6 +472,8 @@ namespace AXR {
         
         boost::unordered_set<AXRFile::p> loadedFiles;
         
+        HSSContainer::p _genericContextContainer;
+        
     };
 }
 

@@ -73,6 +73,8 @@ HSSParser::HSSParser(AXRController * theController, AXRWrapper * wrapper)
     this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
     
     this->currentContext.push_back(HSSParserContextRoot);
+    this->_genericContextContainer = HSSContainer::p(new HSSContainer());
+    this->currentObjectContextAdd(this->_genericContextContainer);
     
     this->line = 1;
     this->column = 1;
@@ -112,6 +114,7 @@ void HSSParser::reset()
     }
     //clear the current context
     this->currentContext.clear();
+    this->_genericContextContainer = HSSContainer::p(new HSSContainer());
     this->basepath = "";
     this->loadedFiles.clear();
     this->currentToken.reset();
@@ -122,7 +125,7 @@ void HSSParser::reset()
     /**
      *  @todo will there be a root object? Now defaults to container
      */
-    this->currentObjectContext.push(HSSContainer::p(new HSSContainer()));
+    this->currentObjectContext.push(this->_genericContextContainer);
     
 }
 
@@ -464,7 +467,7 @@ HSSRule::p HSSParser::readRule()
                             ret->propertiesAdd(propertyDefinition);
                         }
                     } else {
-                        this->currentObjectContextAdd(HSSObject::p(new HSSContainer()));
+                        this->currentObjectContextAdd(this->_genericContextContainer);
                         HSSRule::p theRule = this->readRule();
                         if(theRule)
                             ret->childrenAdd(theRule);
@@ -485,7 +488,7 @@ HSSRule::p HSSParser::readRule()
                     
                 case HSSInstructionSign:
                 {
-                    this->currentObjectContextAdd(HSSObject::p(new HSSContainer()));
+                    this->currentObjectContextAdd(this->_genericContextContainer);
                     HSSRule::p childRule = this->readInstructionRule();
                     if(childRule)
                         ret->childrenAdd(childRule);
@@ -1478,7 +1481,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
                             ret->propertiesAdd(propertyDefinition);
                         }
                     } else {
-                        this->currentObjectContextAdd(HSSObject::p(new HSSContainer()));
+                        this->currentObjectContextAdd(this->_genericContextContainer);
                         HSSRule::p theRule = this->readRule();
                         if(theRule)
                             ret->rulesAdd(theRule);
