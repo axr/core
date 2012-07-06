@@ -1340,6 +1340,7 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
                 valid = true;
                 
             } catch (HSSObjectNotFoundException * e) {
+                /// @todo change error to AXRError
                 std_log(e->toString());
             }
             
