@@ -1787,7 +1787,7 @@ HSSParserNode::p HSSParser::readValue(std::string propertyName, bool &valid)
     inc_output_indent();
     
     bool isValid = true;
-    HSSParserNode::p ret = HSSParserNode::p(new HSSParserNode());
+    HSSParserNode::p ret;
     try {
         //now comes either an object definition, a literal value or an expression
         //object
