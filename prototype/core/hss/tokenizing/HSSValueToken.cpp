@@ -39,15 +39,6 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2012/03/29
- *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 5
- *
  ********************************************************************/
 
 #include "HSSValueToken.h"

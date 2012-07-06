@@ -39,15 +39,6 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2012/06/22
- *      HSS version: 1.0
- *      Core version: 0.47
- *      Revision: 5
- *
  ********************************************************************/
 
 #ifndef AXRWRAPPER_H

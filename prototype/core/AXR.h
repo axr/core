@@ -39,15 +39,6 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2012/06/11
- *      HSS version: 1.0
- *      Core version: 0.47
- *      Revision: 9
- *
  ********************************************************************/
 
 //This line is deditacted to the memory of Steven P. Jobs, may he rest in peace.

@@ -39,15 +39,6 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2012/04/22
- *      HSS version: 1.0
- *      Core version: 0.47
- *      Revision: 7
- *
  ********************************************************************/
 
 #include "HSSRoundedRect.h"

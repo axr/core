@@ -39,20 +39,13 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2012/03/25
- *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 5
- *
+ ********************************************************************/
+
+/*
  *      WARNING!
  *      =================
  *      This class has not been implemented yet. Don't expecti it to work
- *
- ********************************************************************/
+ */
 
 #include "HSSMargin.h"
 

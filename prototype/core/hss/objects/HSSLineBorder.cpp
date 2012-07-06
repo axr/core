@@ -39,15 +39,6 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2012/03/25
- *      HSS version: 1.0
- *      Core version: 0.46
- *      Revision: 10
- *
  ********************************************************************/
 
 #include "HSSLineBorder.h"
