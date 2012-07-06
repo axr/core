@@ -46,7 +46,6 @@
  */
 
 #include "../hss.h"
-#include "../parsing/HSSParserExceptions.h"
 #include <iostream>
 #include <sstream>
 #include "../../axr/AXRDebugging.h"

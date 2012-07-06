@@ -43,7 +43,6 @@
 
 #include "HSSObject.h"
 #include "HSSObjects.h"
-#include "HSSObjectExceptions.h"
 #include "HSSMultipleValue.h"
 #include "../parsing/HSSMultipleValueDefinition.h"
 #include "../parsing/HSSObjectNameConstant.h"

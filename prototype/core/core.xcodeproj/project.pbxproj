@@ -92,7 +92,6 @@
 		4E95BF56135072FB00117354 /* HSSObjectDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80C81113505DD300D88409 /* HSSObjectDefinition.h */; };
 		4E95BF57135072FE00117354 /* HSSObjectNameConstant.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80C81313505DD300D88409 /* HSSObjectNameConstant.h */; };
 		4E95BF581350730400117354 /* HSSParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80C81513505DD300D88409 /* HSSParser.h */; };
-		4E95BF591350730700117354 /* HSSParserExceptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80C81713505DD300D88409 /* HSSParserExceptions.h */; };
 		4E95BF5A1350730A00117354 /* HSSParserNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80C81913505DD300D88409 /* HSSParserNode.h */; };
 		4E95BF5B1350731100117354 /* HSSParserNodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80C81A13505DD300D88409 /* HSSParserNodes.h */; };
 		4E95BF5C1350731600117354 /* HSSPercentageConstant.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E80C81C13505DD300D88409 /* HSSPercentageConstant.h */; };
@@ -131,7 +130,6 @@
 		4E95BF7E135073B600117354 /* HSSObjectDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C81013505DD300D88409 /* HSSObjectDefinition.cpp */; };
 		4E95BF7F135073B600117354 /* HSSObjectNameConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C81213505DD300D88409 /* HSSObjectNameConstant.cpp */; };
 		4E95BF80135073B600117354 /* HSSParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C81413505DD300D88409 /* HSSParser.cpp */; };
-		4E95BF81135073B600117354 /* HSSParserExceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C81613505DD300D88409 /* HSSParserExceptions.cpp */; };
 		4E95BF82135073B600117354 /* HSSParserNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C81813505DD300D88409 /* HSSParserNode.cpp */; };
 		4E95BF83135073B600117354 /* HSSPercentageConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C81B13505DD300D88409 /* HSSPercentageConstant.cpp */; };
 		4E95BF84135073B600117354 /* HSSPropertyDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E80C81D13505DD300D88409 /* HSSPropertyDefinition.cpp */; };
@@ -289,8 +287,6 @@
 		4E80C81313505DD300D88409 /* HSSObjectNameConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = HSSObjectNameConstant.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4E80C81413505DD300D88409 /* HSSParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = HSSParser.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		4E80C81513505DD300D88409 /* HSSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = HSSParser.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		4E80C81613505DD300D88409 /* HSSParserExceptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = HSSParserExceptions.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		4E80C81713505DD300D88409 /* HSSParserExceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = HSSParserExceptions.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4E80C81813505DD300D88409 /* HSSParserNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = HSSParserNode.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		4E80C81913505DD300D88409 /* HSSParserNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = HSSParserNode.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		4E80C81A13505DD300D88409 /* HSSParserNodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = HSSParserNodes.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -569,8 +565,6 @@
 				4E07FF2D1466B31000626BDC /* HSSSelFunction.h */,
 				4E6FC797151A3C8C00003DB3 /* HSSFlagFunction.cpp */,
 				4E6FC798151A3C8D00003DB3 /* HSSFlagFunction.h */,
-				4E80C81613505DD300D88409 /* HSSParserExceptions.cpp */,
-				4E80C81713505DD300D88409 /* HSSParserExceptions.h */,
 				4E80C82313505DD300D88409 /* HSSSelectorChain.cpp */,
 				4E80C82413505DD300D88409 /* HSSSelectorChain.h */,
 				4EB59D40159CC4D8007445F1 /* HSSSelectorNodes.h */,
@@ -711,7 +705,6 @@
 				4E95BF56135072FB00117354 /* HSSObjectDefinition.h in Headers */,
 				4E95BF57135072FE00117354 /* HSSObjectNameConstant.h in Headers */,
 				4E95BF581350730400117354 /* HSSParser.h in Headers */,
-				4E95BF591350730700117354 /* HSSParserExceptions.h in Headers */,
 				4E95BF5A1350730A00117354 /* HSSParserNode.h in Headers */,
 				4E95BF5B1350731100117354 /* HSSParserNodes.h in Headers */,
 				4E95BF5C1350731600117354 /* HSSPercentageConstant.h in Headers */,
@@ -857,7 +850,6 @@
 				4E95BF7E135073B600117354 /* HSSObjectDefinition.cpp in Sources */,
 				4E95BF7F135073B600117354 /* HSSObjectNameConstant.cpp in Sources */,
 				4E95BF80135073B600117354 /* HSSParser.cpp in Sources */,
-				4E95BF81135073B600117354 /* HSSParserExceptions.cpp in Sources */,
 				4E95BF82135073B600117354 /* HSSParserNode.cpp in Sources */,
 				4E95BF83135073B600117354 /* HSSPercentageConstant.cpp in Sources */,
 				4E95BF84135073B600117354 /* HSSPropertyDefinition.cpp in Sources */,

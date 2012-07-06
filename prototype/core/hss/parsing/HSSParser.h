@@ -45,9 +45,7 @@
 #define HSSPARSER_H
 
 #include "../tokenizing/HSSTokenizer.h"
-#include "../parsing/HSSParserExceptions.h"
 #include "../parsing/HSSParserNodes.h"
-#include "../objects/HSSObjectExceptions.h"
 #include "../objects/HSSObjects.h"
 #include <string>
 #include <vector>

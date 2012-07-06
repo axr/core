@@ -190,24 +190,6 @@ bool HSSParser::loadFile(AXRFile::p file)
                 this->skip(HSSWhitespace);
             }
         }
-        // deprecated ------------------------------
-        catch(AXR::HSSUnexpectedTokenException e){
-            std::cout << e.toString() << std::endl;
-            continue;
-        }
-        catch(AXR::HSSUnexpectedEndOfSourceException e){
-            std::cout << e.toString() << std::endl;
-        }
-        catch(AXR::HSSUnexpectedObjectTypeException e){
-            std::cout << e.toString() << std::endl;
-        }
-        catch(AXR::HSSExpectedTokenException e){
-            std::cout << e.toString() << std::endl;
-        }
-        catch(AXR::HSSWrongHexLengthException e){
-            std::cout << e.toString() << std::endl;
-        }
-        // /deprecated -----------------------------
         
         
         if(!statement){
