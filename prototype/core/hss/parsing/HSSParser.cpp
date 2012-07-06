@@ -1154,105 +1154,118 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
 //    }
     
     std_log4("----- peeking ------ ");
-    HSSToken::p peekToken = this->tokenizer->peekNextToken();
-    std_log4(peekToken->toString());
-    //skip all whitespace and comments
-    while (peekToken && (peekToken->isA(HSSWhitespace) || peekToken->isA(HSSBlockComment) || peekToken->isA(HSSLineComment)))
-    {
+    HSSToken::p peekToken;
+    if(this->currentToken->isA(HSSInstructionSign)){
+        bool currentPref = this->tokenizer->preferHex;
+        this->tokenizer->preferHex = true;
+        
         peekToken = this->tokenizer->peekNextToken();
-    }
-    //if the next token is a colon, it is either a property definition or a filter
-    if(peekToken->isA(HSSColon)){
-        //we'll peek until we find a end of statement, a closing block or an opening one
-        peekToken = this->tokenizer->peekNextToken();
-        //if we find a whitespace or an object sign here, we can be sure it's a property definition
-        if( peekToken->isA(HSSWhitespace) || peekToken->isA(HSSObjectSign) ){
-            ret = true;
-        } else {
-            while(! peekToken->isA(HSSEndOfStatement) && !peekToken->isA(HSSBlockClose) && !peekToken->isA(HSSBlockOpen))
-            {
-                std_log4(peekToken->toString());
-                peekToken = this->tokenizer->peekNextToken();
-                this->checkForUnexpectedEndOfSource();
-            }
-            //if we find an opening block, we're dealing with a selector
-            if(peekToken->isA(HSSBlockOpen)){
-                ret = false;
-            }
-        }
+        ret = peekToken->isA(HSSHexNumber);
+        this->tokenizer->preferHex = currentPref;
+        
     } else {
-        if(this->currentToken->isA(HSSObjectSign)){
-            if(peekToken->isA(HSSIdentifier)){
-                std::string objtype = VALUE_TOKEN(peekToken)->getString();
-                if (    (objtype == "this")
-                    ||  (objtype == "super")
-                    ||  (objtype == "parent")
-                    ||  (objtype == "root") ){
-                    //it is a selector
+        peekToken = this->tokenizer->peekNextToken();
+        
+        std_log4(peekToken->toString());
+        //skip all whitespace and comments
+        while (peekToken && (peekToken->isA(HSSWhitespace) || peekToken->isA(HSSBlockComment) || peekToken->isA(HSSLineComment)))
+        {
+            peekToken = this->tokenizer->peekNextToken();
+        }
+        //if the next token is a colon, it is either a property definition or a filter
+        if(peekToken->isA(HSSColon)){
+            //we'll peek until we find a end of statement, a closing block or an opening one
+            peekToken = this->tokenizer->peekNextToken();
+            //if we find a whitespace or an object sign here, we can be sure it's a property definition
+            if( peekToken->isA(HSSWhitespace) || peekToken->isA(HSSObjectSign) ){
+                ret = true;
+            } else {
+                while(! peekToken->isA(HSSEndOfStatement) && !peekToken->isA(HSSBlockClose) && !peekToken->isA(HSSBlockOpen))
+                {
+                    std_log4(peekToken->toString());
+                    peekToken = this->tokenizer->peekNextToken();
+                    this->checkForUnexpectedEndOfSource();
+                }
+                //if we find an opening block, we're dealing with a selector
+                if(peekToken->isA(HSSBlockOpen)){
                     ret = false;
-                    *isShorthand = false;
+                }
+            }
+        } else {
+            if(this->currentToken->isA(HSSObjectSign)){
+                if(peekToken->isA(HSSIdentifier)){
+                    std::string objtype = VALUE_TOKEN(peekToken)->getString();
+                    if (    (objtype == "this")
+                        ||  (objtype == "super")
+                        ||  (objtype == "parent")
+                        ||  (objtype == "root") ){
+                        //it is a selector
+                        ret = false;
+                        *isShorthand = false;
+                    } else {
+                        //it is a shorthand with an object definition
+                        ret = true;
+                        *isShorthand = true;
+                    }
                 } else {
                     //it is a shorthand with an object definition
                     ret = true;
                     *isShorthand = true;
                 }
-            } else {
-                //it is a shorthand with an object definition
-                ret = true;
-                *isShorthand = true;
-            }
-            
-        } else {
-            //no colon, it may be a rule -- we peek until we find the end of the statement
-            //or we can conclude it actually is a rule
-            bool done = false;
-            while(!done)
-            {
-                switch (peekToken->getType()) {
-                    case HSSBlockClose:
-                    case HSSEndOfStatement:
-                        //it is a shorthand
-                        ret = true;
-                        done = true;
-                        *isShorthand = true;
-                        break;
-                        
-                    case HSSObjectSign:
-                    {
-                        this->checkForUnexpectedEndOfSource();
-                        peekToken = this->tokenizer->peekNextToken();
-                        std::string objtype = VALUE_TOKEN(peekToken)->getString();
-                        if (    (objtype == "this")
-                            ||  (objtype == "super")
-                            ||  (objtype == "parent")
-                            ||  (objtype == "root") ){
-                            //it is a selector, continue because it may be a selector inside a function
-                        } else {
-                            //this is a regular object definition, so we can conclude it is not a rule
-                            ret = true;
-                            *isShorthand = true;
-                            done = true;
-                        }
-                        break;
-                    }
-                        
-                    case HSSBlockOpen:
-                        //it is a 
-                        ret = false;
-                        done = true;
-                        break;
-                        
-                    default:
-                        break;
-                }
                 
-                if(!done){
-                    peekToken = this->tokenizer->peekNextToken();
-                    this->checkForUnexpectedEndOfSource();
+            } else {
+                //no colon, it may be a rule -- we peek until we find the end of the statement
+                //or we can conclude it actually is a rule
+                bool done = false;
+                while(!done)
+                {
+                    switch (peekToken->getType()) {
+                        case HSSBlockClose:
+                        case HSSEndOfStatement:
+                            //it is a shorthand
+                            ret = true;
+                            done = true;
+                            *isShorthand = true;
+                            break;
+                            
+                        case HSSObjectSign:
+                        {
+                            this->checkForUnexpectedEndOfSource();
+                            peekToken = this->tokenizer->peekNextToken();
+                            std::string objtype = VALUE_TOKEN(peekToken)->getString();
+                            if (    (objtype == "this")
+                                ||  (objtype == "super")
+                                ||  (objtype == "parent")
+                                ||  (objtype == "root") ){
+                                //it is a selector, continue because it may be a selector inside a function
+                            } else {
+                                //this is a regular object definition, so we can conclude it is not a rule
+                                ret = true;
+                                *isShorthand = true;
+                                done = true;
+                            }
+                            break;
+                        }
+                            
+                        case HSSBlockOpen:
+                            //it is a 
+                            ret = false;
+                            done = true;
+                            break;
+                            
+                        default:
+                            break;
+                    }
+                    
+                    if(!done){
+                        peekToken = this->tokenizer->peekNextToken();
+                        this->checkForUnexpectedEndOfSource();
+                    }
                 }
             }
         }
     }
+    
     std_log4("----- finished peeking ------ ");
     this->tokenizer->resetPeek();
     return ret;
