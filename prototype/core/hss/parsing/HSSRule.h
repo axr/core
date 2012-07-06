@@ -60,6 +60,7 @@ namespace AXR {
     class HSSDisplayObject;
     class HSSFilter;
     
+    class HSSRule;
     
     /**
      *  @brief This class encapsulates a relation between a rule a its state.
@@ -291,7 +292,6 @@ namespace AXR {
     private:
         virtual HSSClonable::p cloneImpl() const;
         
-        boost::unordered_map<HSSFilterType, std::vector<boost::shared_ptr<HSSDisplayObject> > > _interactors;
         HSSObservable * observedTreeChanger;
         
         std::vector<HSSSelectorChain::p> selectorChains;

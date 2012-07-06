@@ -64,6 +64,7 @@ HSSInstruction::HSSInstruction(const HSSInstruction &orig)
 {
     this->instructionType = orig.instructionType;
     this->value = orig.value;
+    this->argument = orig.argument;
 }
 
 HSSInstruction::p HSSInstruction::clone() const

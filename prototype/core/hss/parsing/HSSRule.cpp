@@ -61,14 +61,16 @@ HSSRule::HSSRule()
 HSSRule::HSSRule(const HSSRule & orig)
 : HSSStatement(orig)
 {
-    this->_interactors = boost::unordered_map<HSSFilterType, std::vector<boost::shared_ptr<HSSDisplayObject> > >(orig._interactors);
     this->_activeByDefault = orig._activeByDefault;
     this->observedTreeChanger = NULL;
 }
 
 HSSRule::p HSSRule::clone() const
 {
-    return boost::static_pointer_cast<HSSRule, HSSClonable>(this->cloneImpl());
+    HSSRule::p clone = boost::static_pointer_cast<HSSRule, HSSClonable>(this->cloneImpl());
+    if(this->instruction)
+        clone->instruction = this->instruction->clone();
+    return clone;
 }
 
 HSSRule::~HSSRule()
