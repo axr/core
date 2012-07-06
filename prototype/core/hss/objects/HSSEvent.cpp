@@ -54,7 +54,7 @@
 
 using namespace AXR;
 
-std::string HSSEvent::eventTypeStringRepresentation(AXR::HSSEventType eventType)
+std::string HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
 {
     boost::unordered_map<HSSEventType, std::string> types;
     types[HSSEventTypeNone          ] = "HSSEventTypeNone";

@@ -50,7 +50,7 @@
 
 using namespace AXR;
 
-std::string HSSAction::actionTypeStringRepresentation(AXR::HSSActionType actionType)
+std::string HSSAction::actionTypeStringRepresentation(HSSActionType actionType)
 {
     boost::unordered_map<HSSActionType, std::string> types;
     types[HSSActionTypeRequest    ] = "HSSActionTypeRequest";
