@@ -79,7 +79,7 @@ HSSContainer::p HSSContainer::asContainer(HSSDisplayObject::p theDisplayObject)
 }
 
 HSSContainer::HSSContainer()
-: HSSDisplayObject()
+: HSSDisplayObject(HSSObjectTypeContainer)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: creating container");
     this->initialize();
@@ -88,7 +88,6 @@ HSSContainer::HSSContainer()
 void HSSContainer::initialize()
 {
     this->contentText = std::string();
-    this->type = HSSObjectTypeContainer;
     
     this->contentAlignX = this->contentAlignY = 0;
     this->directionPrimary = HSSDirectionLeftToRight;
@@ -1628,15 +1627,7 @@ void HSSContainer::directionSecondaryChanged(HSSObservableProperty source, void 
 HSSParserNode::p HSSContainer::getDShape() { return this->dShape; }
 void HSSContainer::setDShape(HSSParserNode::p value)
 {
-    switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        case HSSParserNodeTypeObjectNameConstant:
-        case HSSParserNodeTypeKeywordConstant:
-        case HSSParserNodeTypeFunctionCall:
-            break;
-        default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for font of "+this->getElementName()));
-    }
+    bool valid = false;
     
     this->dShape = value;
     if(this->observedShape != NULL)
@@ -1650,18 +1641,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
             std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
             if(stringValue == "default"){
                 this->shape = HSSRectangle::p(new HSSRectangle());
-            }
-            break;
-        }
-        
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setThisObj(this->shared_from_this());
-            objdef->apply();
-            HSSObject::p objValue = objdef->getObject();
-            if(objValue->isA(HSSObjectTypeShape)){
-                this->shape = boost::static_pointer_cast<HSSShape>(objValue);
+                valid = true;
             }
             break;
         }
@@ -1676,6 +1656,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
                 HSSObject::p theObject = objdef->getObject();
                 if (theObject->isA(HSSObjectTypeShape)){
                     this->shape = boost::static_pointer_cast<HSSShape>(theObject);
+                    valid = true;
                 }
                 
             } catch (HSSObjectNotFoundException * e) {
@@ -1686,9 +1667,29 @@ void HSSContainer::setDShape(HSSParserNode::p value)
         }
             
         default:
-            
             break;
     }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setThisObj(this->shared_from_this());
+            objdef->apply();
+            HSSObject::p objValue = objdef->getObject();
+            if(objValue->isA(HSSObjectTypeShape)){
+                this->shape = boost::static_pointer_cast<HSSShape>(objValue);
+                valid = true;
+            }
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for shape of "+this->getElementName()));
     
     this->notifyObservers(HSSObservablePropertyShape, &this->shape);
 }
@@ -1704,26 +1705,9 @@ HSSTextAlignType HSSContainer::getTextAlign() { return this->textAlign; }
 HSSParserNode::p HSSContainer::getDTextAlign() { return this->dTextAlign; }
 void HSSContainer::setDTextAlign(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dTextAlign = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->setThisObj(this->shared_from_this());
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
             
         case HSSParserNodeTypeObjectNameConstant:
         {
@@ -1732,7 +1716,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDTextAlign(objdef);
-                
+                valid = true;
             } catch (AXRError::p e) {
                 e->raise();
             }
@@ -1750,9 +1734,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
                 this->textAlign = *(HSSTextAlignType *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSContainer>(this, &HSSContainer::textAlignChanged));
-                
-            } else {
-                valid = false;
+                valid = true;
             }
             
             break;
@@ -1762,11 +1744,33 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
         {
             this->dTextAlign = value;
             this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue());
+            valid = true;
             break;
         }
             
         default:
-            valid = false;
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dTextAlign = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->setThisObj(this->shared_from_this());
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+                valid = true;
+            }
+            
+            break;
+        }
+            
+        default:
+            break;
     }
     
     if(!valid)
@@ -1779,8 +1783,16 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
 void HSSContainer::textAlignChanged(HSSObservableProperty source, void *data)
 {
     switch (this->dTextAlign->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
         case HSSParserNodeTypeFunctionCall:
+            this->textAlign = *(HSSTextAlignType *)data;
+            break;
+            
+        default:
+            break;
+    }
+    
+    switch (this->dTextAlign->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
             this->textAlign = *(HSSTextAlignType *)data;
             break;
             

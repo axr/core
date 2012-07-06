@@ -66,8 +66,9 @@ namespace AXR {
          *  This class shouldn't be called directly, but by the subclasses.
          *  @param left     The value on the left hand side of the operator.
          *  @param right    The value on the right hand side of the operator.
+         *  @param type     The type of this expression subclass for identification purposes.
          */
-        HSSExpression(HSSParserNode::p _left, HSSParserNode::p _right);
+        HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right);
         
         /**
          *  Copy constructor for HSSExpression objects. Do not call directly, use clone() instead.
@@ -200,7 +201,6 @@ namespace AXR {
         long double getValue();
 
     protected:
-        HSSExpressionType expressionType;
         HSSParserNode::p left;
         long double leftval;
         long double rightval;
@@ -209,7 +209,6 @@ namespace AXR {
         long double percentageBase;
         HSSObservableProperty percentageObservedProperty;
         HSSObservable * percentageObserved;
-        
         
         HSSObservableProperty leftObservedProperty;
         HSSObservable * leftObserved;
@@ -220,6 +219,9 @@ namespace AXR {
         
         bool _isDirty;
         long double _value;
+        
+    private:
+        HSSExpressionType expressionType;
     };
 }
 

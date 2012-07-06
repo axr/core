@@ -64,9 +64,8 @@ HSSFlagFunctionType HSSFlagFunction::flagFunctionTypeFromString(std::string name
 }
 
 HSSFlagFunction::HSSFlagFunction(HSSFlagFunctionType flagFunctionType)
-: HSSFunction()
+: HSSFunction(HSSFunctionTypeFlag)
 {
-    this->functionType = HSSFunctionTypeFlag;
     this->_flagFunctionType = flagFunctionType;
 }
 

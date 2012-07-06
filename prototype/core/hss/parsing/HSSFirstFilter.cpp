@@ -46,9 +46,9 @@
 using namespace AXR;
 
 HSSFirstFilter::HSSFirstFilter()
-: HSSFilter()
+: HSSFilter(HSSFilterTypeFirst)
 {
-    this->filterType = HSSFilterTypeFirst;
+    
 }
 
 HSSFirstFilter::p HSSFirstFilter::clone() const{

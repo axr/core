@@ -113,11 +113,8 @@ namespace AXR {
          */
         virtual void fire();
         
-        
-    protected:
-        HSSActionType actionType;
-        
     private:
+        HSSActionType actionType;
         HSSClonable::p cloneImpl() const;
     };
 }

@@ -50,8 +50,7 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
     static boost::unordered_map<HSSParserNodeType, std::string> types;
     if (types.size() == 0) {
         types[HSSParserNodeTypeGeneric] = "HSSParserNode";
-        types[HSSParserNodeTypeSelector] = "HSSRule";
-        types[HSSParserNodeTypeUniversalSelector] = "HSSRule";
+        types[HSSParserNodeTypeSelector] = "HSSSelector";
         types[HSSParserNodeTypeCombinator] = "HSSCombinator";
         types[HSSParserNodeTypeFilter] = "HSSFilter";
         types[HSSParserNodeTypeStatement] = "HSSStatement";
@@ -60,7 +59,6 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
         types[HSSParserNodeTypePercentageConstant] = "HSSPercentageConstant";
         types[HSSParserNodeTypeStringConstant] = "HSSStringConstant";
         types[HSSParserNodeTypeKeywordConstant] = "HSSKeywordConstant";
-        types[HSSParserNodeTypeObjectDefinition] = "HSSObjectDefinition";
         types[HSSParserNodeTypeObjectNameConstant] = "HSSObjectNameConstant";
         types[HSSParserNodeTypeFunctionCall] = "HSSFunctionCall";
         types[HSSParserNodeTypeMultipleValueDefinition] = "HSSParserNodeTypeMultipleValueDefinition";
@@ -75,9 +73,9 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
     return ret;
 }
 
-HSSParserNode::HSSParserNode()
+HSSParserNode::HSSParserNode(HSSParserNodeType type)
 {
-    this->nodeType = HSSParserNodeTypeGeneric;
+    this->nodeType = type;
 }
 
 //doesn't clone any part of the node tree, nor the observers array
@@ -161,6 +159,28 @@ HSSDisplayObject::p HSSParserNode::getThisObj()
     return thisObj;
 }
 
+bool HSSParserNode::isA(HSSExpressionType otherType) { return false; }
+HSSExpressionType HSSParserNode::getExpressionType() { return HSSExpressionTypeNone; }
 
+bool HSSParserNode::isA(HSSStatementType otherType) { return false; }
+HSSStatementType HSSParserNode::getStatementType() { return HSSStatementTypeNone; }
+
+bool HSSParserNode::isA(HSSInstructionType otherType) { return false; }
+HSSInstructionType HSSParserNode::getInstructionType() { return HSSInstructionTypeNone; }
+
+bool HSSParserNode::isA(HSSSelectorType otherType) { return false; }
+HSSSelectorType HSSParserNode::getSelectorType() { return HSSSelectorTypeNone; }
+
+bool HSSParserNode::isA(HSSCombinatorType otherType) { return false; }
+HSSCombinatorType HSSParserNode::getCombinatorType() { return HSSCombinatorTypeNone; }
+
+bool HSSParserNode::isA(HSSFilterType otherType) { return false; }
+HSSFilterType HSSParserNode::getFilterType() { return HSSFilterTypeNone; }
+
+bool HSSParserNode::isA(HSSFunctionType otherType) { return false; }
+HSSFunctionType HSSParserNode::getFunctionType() { return HSSFunctionTypeNone; }
+
+bool HSSParserNode::isA(HSSFlagFunctionType otherType) { return false; }
+HSSFlagFunctionType HSSParserNode::getFlagFunctionType() { return HSSFlagFunctionTypeNone; }
 
 

@@ -48,11 +48,9 @@
 using namespace AXR;
 
 HSSObjectDefinition::HSSObjectDefinition(HSSObject::p prototype)
-: HSSStatement()
+: HSSStatement(HSSStatementTypeObjectDefinition)
 {
     this->prototype = prototype;
-    this->type = HSSStatementTypeObjectDefinition;
-    this->nodeType = HSSParserNodeTypeObjectDefinition;
     this->scope = NULL;
 }
 

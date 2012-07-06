@@ -45,11 +45,11 @@
 
 using namespace AXR;
 
-HSSSelector::HSSSelector(std::string elementName)
-: HSSParserNode()
+HSSSelector::HSSSelector(HSSSelectorType type)
+: HSSParserNode(HSSParserNodeTypeSelector)
 {
     this->elementName = elementName;
-    this->nodeType = HSSParserNodeTypeSelector;
+    this->_selectorType = type;
 }
 
 HSSSelector::HSSSelector(const HSSSelector &orig)
@@ -72,8 +72,10 @@ std::string HSSSelector::toString(){
 }
 
 HSSClonable::p HSSSelector::cloneImpl() const
+HSSSelectorType HSSSelector::getSelectorType()
 {
     return HSSClonable::p(new HSSSelector(*this));
+    return this->_selectorType;
 }
 
 

@@ -142,26 +142,9 @@ void HSSLineBorder::setProperty(HSSObservableProperty name, HSSParserNode::p val
 HSSObject::p HSSLineBorder::getColor() { return this->color; }
 void HSSLineBorder::setDColor(HSSParserNode::p value){
     
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dColor = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeRgb)) {
-                this->color = boost::static_pointer_cast<HSSRgb>(theobj);
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
-            
         case HSSParserNodeTypeObjectNameConstant:
         {
             this->dColor = value;
@@ -169,6 +152,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value){
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDColor(objdef);
+                valid = true;
                 
             } catch (HSSObjectNotFoundException * e) {
                 std_log(e->toString());
@@ -187,16 +171,35 @@ void HSSLineBorder::setDColor(HSSParserNode::p value){
                 this->color = *(HSSRgb::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSLineBorder>(this, &HSSLineBorder::colorChanged));
+                valid = true;
                 
-            } else {
-                valid = false;
             }
             
             break;
         }
             
         default:
-            valid = false;
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dColor = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeRgb)) {
+                this->color = boost::static_pointer_cast<HSSRgb>(theobj);
+                valid = true;
+            }
+            
+            break;
+        }
+            
+        default:
+            break;
     }
     
     if(!valid)

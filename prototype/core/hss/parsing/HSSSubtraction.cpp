@@ -46,9 +46,9 @@
 using namespace AXR;
 
 HSSSubtraction::HSSSubtraction(HSSParserNode::p _left, HSSParserNode::p _right)
-: HSSExpression(_left, _right)
+: HSSExpression(HSSExpressionTypeSubtraction, _left, _right)
 {
-    this->expressionType = HSSExpressionTypeSubtraction;
+    
 }
 
 HSSSubtraction::HSSSubtraction(const HSSSubtraction &orig)

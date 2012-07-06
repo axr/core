@@ -89,9 +89,9 @@ namespace AXR {
         bool isA(HSSCombinatorType otherType);
         
         /**
-         *  @return The action type of this instance.
+         *  @return The combinator type of this instance.
          */
-        const HSSCombinatorType & getCombinatorType() const;
+        HSSCombinatorType getCombinatorType();
         
         virtual std::string toString();
     protected:

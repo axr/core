@@ -99,15 +99,9 @@ namespace AXR {
         
         /**
          *  Creates a new instance of a filter. Do not use directly.
+         *  @param type     The type of the filter, to uniquely identify each subclass.
          */
-        HSSFilter();
-        
-        /**
-         *  Clones an instance of HSSFilter and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSFilter.
-         */
-        p clone() const;
+        HSSFilter(HSSFilterType type);
         
         /**
          *  Destructor for this class.
@@ -142,10 +136,10 @@ namespace AXR {
         HSSFilterType getFilterType();
         
         
-    protected:
-        HSSFilterType filterType;
     private:
         virtual HSSClonable::p cloneImpl() const;
+        HSSFilterType filterType;    
+        bool _negating;
     };
 }
 

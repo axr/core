@@ -48,43 +48,39 @@
 using namespace AXR;
 
 HSSValue::HSSValue()
-: HSSObject()
+: HSSObject(HSSObjectTypeValue)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
     this->valueType = HSSValueNumberInt;
-    this->type = HSSObjectTypeValue;
     this->intValue = 0;
 }
 
 HSSValue::HSSValue(long int value)
-: HSSObject()
+: HSSObject(HSSObjectTypeValue)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
     this->valueType = HSSValueNumberInt;
-    this->type = HSSObjectTypeValue;
     this->intValue = value;
 }
 
 HSSValue::HSSValue(long double value)
-: HSSObject()
+: HSSObject(HSSObjectTypeValue)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
     this->valueType = HSSValueNumberFloat;
-    this->type = HSSObjectTypeValue;
     this->floatValue = value;
 }
 
 HSSValue::HSSValue(std::string value)
-: HSSObject()
+: HSSObject(HSSObjectTypeValue)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
     this->valueType = HSSValueString;
-    this->type = HSSObjectTypeValue;
     this->stringValue = value;
 }
 
 HSSValue::HSSValue(HSSValueType type, std::string value)
-: HSSObject()
+: HSSObject(HSSObjectTypeValue)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
     if (type == HSSValueString) {
@@ -97,7 +93,6 @@ HSSValue::HSSValue(HSSValueType type, std::string value)
         this->valueType = HSSValueNumberInt;
         this->setValue((long int)0);
     }
-    this->type = HSSObjectTypeValue;
 }
 
 HSSValue::HSSValue(const HSSValue & orig)

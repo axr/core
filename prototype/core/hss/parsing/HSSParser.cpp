@@ -217,7 +217,7 @@ bool HSSParser::loadFile(AXRFile::p file)
             }
             
         } else {
-            switch (statement->getType()) {
+            switch (statement->getStatementType()) {
                 case HSSStatementTypeRule:
                 {
                     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");

@@ -54,10 +54,9 @@
 using namespace AXR;
 
 HSSColorStop::HSSColorStop()
-:HSSObject()
+:HSSObject(HSSObjectTypeColorStop)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: creating color stop object");
-    this->type = HSSObjectTypeColorStop;
     
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("color");
@@ -157,26 +156,9 @@ HSSRgb::p HSSColorStop::getColor() { return this->color; }
 HSSParserNode::p HSSColorStop::getDColor() { return this->dColor; }
 void HSSColorStop::setDColor(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dColor = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeRgb)) {
-                this->color = boost::static_pointer_cast<HSSRgb>(theobj);
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
-            
         case HSSParserNodeTypeObjectNameConstant:
         {
             this->dColor = value;
@@ -184,6 +166,7 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDColor(objdef);
+                valid = true;
                 
             } catch (HSSObjectNotFoundException * e) {
                 std_log(e->toString());
@@ -202,20 +185,37 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
                 this->color = *(HSSRgb::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSColorStop>(this, &HSSColorStop::colorChanged));
-                
-            } else {
-                valid = false;
+                valid = true;
             }
-            
             break;
         }
             
         default:
-            valid = false;
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dColor = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeRgb)) {
+                this->color = boost::static_pointer_cast<HSSRgb>(theobj);
+                valid = true;
+            }
+            
+            break;
+        }
+        
+        default:
+            break;
     }
     
     if(!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for color of "+this->name));
+        throw AXRWarning::p(new AXRWarning("HSSColorStop", "Invalid value for color of "+this->name));
     
     this->notifyObservers(HSSObservablePropertyColor, &this->color);
     this->notifyObservers(HSSObservablePropertyValue, NULL);

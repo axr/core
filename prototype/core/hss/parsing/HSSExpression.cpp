@@ -51,11 +51,10 @@
 
 using namespace AXR;
 
-HSSExpression::HSSExpression(HSSParserNode::p _left, HSSParserNode::p _right)
-: HSSParserNode()
+HSSExpression::HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right)
+: HSSParserNode(HSSParserNodeTypeExpression)
 {
-    this->nodeType = HSSParserNodeTypeExpression;
-    this->expressionType = HSSExpressionTypeGeneric;
+    this->expressionType = type;
     this->setLeft(_left);
     this->setRight(_right);
     
@@ -106,7 +105,7 @@ HSSExpressionType HSSExpression::getExpressionType()
 
 std::string HSSExpression::expressionTypeStringRepresentation(HSSExpressionType type){
     std::string types[20];
-	types[HSSExpressionTypeGeneric] = "HSSExpression";
+	types[HSSExpressionTypeNone] = "HSSExpression";
 	types[HSSExpressionTypeSum] = "HSSSum";
 	types[HSSExpressionTypeSubtraction] = "HSSSubtraction";
 	types[HSSExpressionTypeMultiplication] = "HSSMultiplication";

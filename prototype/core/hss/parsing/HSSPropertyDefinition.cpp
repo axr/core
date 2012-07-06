@@ -47,24 +47,21 @@
 using namespace AXR;
 
 HSSPropertyDefinition::HSSPropertyDefinition()
-: HSSStatement()
+: HSSStatement(HSSStatementTypePropertyDefinition)
 {
     this->name = "";
-    this->type = HSSStatementTypePropertyDefinition;
 }
 
 HSSPropertyDefinition::HSSPropertyDefinition(std::string name)
-: HSSStatement()
+: HSSStatement(HSSStatementTypePropertyDefinition)
 {
     this->name = name;
-    this->type = HSSStatementTypePropertyDefinition;
 }
 
 HSSPropertyDefinition::HSSPropertyDefinition(std::string name, HSSParserNode::p value)
-: HSSStatement()
+: HSSStatement(HSSStatementTypePropertyDefinition)
 {
     this->name = name;
-    this->type = HSSStatementTypePropertyDefinition;
     this->setValue(value);
 }
 

@@ -47,9 +47,9 @@
 using namespace AXR;
 
 HSSSelFunction::HSSSelFunction()
-: HSSFunction()
+: HSSFunction(HSSFunctionTypeSel)
 {
-    this->functionType = HSSFunctionTypeSel;
+    
 }
 
 HSSSelFunction::~HSSSelFunction()

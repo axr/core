@@ -126,11 +126,6 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
             return HSSColorStop::p(new HSSColorStop());
         }
             
-        case HSSObjectTypeGeneric:
-        {
-            return HSSObject::p(new HSSObject());
-        }
-            
         case HSSObjectTypeValue:
         {
             return HSSValue::p(new HSSValue());
@@ -207,11 +202,11 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
 }
 
 
-HSSObject::HSSObject()
+HSSObject::HSSObject(HSSObjectType type)
 {
     this->_isNamed = false;
     this->name = "";
-    this->type = HSSObjectTypeGeneric;
+    this->type = type;
     this->shorthandIndex = 0;
 }
 
@@ -239,16 +234,6 @@ HSSClonable::p HSSObject::cloneImpl() const{
 HSSObject::~HSSObject()
 {
     
-}
-
-bool HSSObject::isA(HSSObjectType otherType)
-{
-	return otherType == this->type;
-}
-
-HSSObjectType HSSObject::getType()
-{
-    return this->type;
 }
 
 bool HSSObject::isKeyword(std::string value, std::string property)
@@ -515,11 +500,6 @@ AXRController * HSSObject::getController()
     return this->axrController;
 }
 
-HSSObjectType HSSObject::getObjectType()
-{
-    return this->type;
-}
-
 void HSSObject::setThisObj(HSSDisplayObject::p value)
 {
     this->thisObj = value;
@@ -529,4 +509,20 @@ HSSDisplayObject::p HSSObject::getThisObj()
 {
     return thisObj;
 }
+
+bool HSSObject::isA(HSSObjectType otherType) { return otherType == this->type; }
+HSSObjectType HSSObject::getObjectType() { return this->type; }
+
+bool HSSObject::isA(HSSShapeType otherType) { return false; }
+HSSShapeType HSSObject::getShapeType() { return HSSShapeTypeNone; }
+
+bool HSSObject::isA(HSSRequestModeType otherType) { return false; }
+HSSRequestModeType HSSObject::getRequestModeType() { return HSSRequestModeTypeNone; }
+
+bool HSSObject::isA(HSSEventType otherType) { return false; }
+HSSEventType HSSObject::getEventType() { return HSSEventTypeNone; }
+
+bool HSSObject::isA(HSSActionType otherType) { return false; }
+HSSActionType HSSObject::getActionType() { return HSSActionTypeNone; }
+
 

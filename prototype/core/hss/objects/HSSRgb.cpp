@@ -51,10 +51,9 @@
 using namespace AXR;
 
 HSSRgb::HSSRgb()
-:HSSObject()
+:HSSObject(HSSObjectTypeRgb)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: creating rgb object");
-    this->type = HSSObjectTypeRgb;
     
     this->red = this->green = this->blue = 0.;
     this->alpha = 255.;

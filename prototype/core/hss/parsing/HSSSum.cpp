@@ -46,9 +46,9 @@
 using namespace AXR;
 
 HSSSum::HSSSum(HSSParserNode::p _left, HSSParserNode::p _right)
-:HSSExpression(_left, _right)
+:HSSExpression(HSSExpressionTypeSum, _left, _right)
 {
-    this->expressionType = HSSExpressionTypeSum;
+    
 }
 
 HSSSum::HSSSum(const HSSSum &orig)

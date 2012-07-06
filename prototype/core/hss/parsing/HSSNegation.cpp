@@ -46,9 +46,9 @@
 using namespace AXR;
 
 HSSNegation::HSSNegation()
-: HSSParserNode()
+: HSSParserNode(HSSParserNodeTypeNegation)
 {
-    this->nodeType = HSSParserNodeTypeNegation;
+    
 }
 
 HSSNegation::p HSSNegation::clone() const{

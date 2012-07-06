@@ -46,10 +46,9 @@
 using namespace AXR;
 
 HSSStringConstant::HSSStringConstant(std::string value)
-: HSSParserNode()
+: HSSParserNode(HSSParserNodeTypeStringConstant)
 {
     this->value = value;
-    this->nodeType = HSSParserNodeTypeStringConstant;
 }
 
 HSSStringConstant::p HSSStringConstant::clone() const{

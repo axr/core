@@ -53,9 +53,8 @@
 using namespace AXR;
 
 HSSGradient::HSSGradient()
-:HSSObject()
+:HSSObject(HSSObjectTypeGradient)
 {
-    this->type = HSSObjectTypeGradient;
     this->registerProperty(HSSObservablePropertyStartColor, (void *) &this->startColor);
     this->registerProperty(HSSObservablePropertyEndColor, (void *) &this->endColor);
     this->registerProperty(HSSObservablePropertyBalance, (void *) &this->balance);
@@ -139,26 +138,9 @@ HSSRgb::p HSSGradient::getStartColor() { return this->startColor; }
 HSSParserNode::p HSSGradient::getDStartColor() { return this->dStartColor; }
 void HSSGradient::setDStartColor(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dStartColor = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeRgb)) {
-                this->startColor = boost::static_pointer_cast<HSSRgb>(theobj);
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
-            
         case HSSParserNodeTypeObjectNameConstant:
         {
             this->dStartColor = value;
@@ -166,11 +148,11 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDStartColor(objdef);
+                valid = true;
                 
             } catch (HSSObjectNotFoundException * e) {
                 std_log(e->toString());
             }
-            
             break;
         }
             
@@ -184,16 +166,35 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
                 this->startColor = *(HSSRgb::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyStartColor, this, new HSSValueChangedCallback<HSSGradient>(this, &HSSGradient::startColorChanged));
+                valid = true;
                 
-            } else {
-                valid = false;
             }
             
             break;
         }
             
         default:
-            valid = false;
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dStartColor = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeRgb)) {
+                this->startColor = boost::static_pointer_cast<HSSRgb>(theobj);
+                valid = true;
+            }
+            
+            break;
+        }
+        
+        default:
+            break;
     }
     
     if(!valid)
@@ -212,26 +213,9 @@ HSSRgb::p HSSGradient::getEndColor() { return this->endColor; }
 HSSParserNode::p HSSGradient::getDEndColor() { return this->dEndColor; }
 void HSSGradient::setDEndColor(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dEndColor = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeRgb)) {
-                this->endColor = boost::static_pointer_cast<HSSRgb>(theobj);
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
-            
         case HSSParserNodeTypeObjectNameConstant:
         {
             this->dEndColor = value;
@@ -239,6 +223,7 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDEndColor(objdef);
+                valid = true;
                 
             } catch (HSSObjectNotFoundException * e) {
                 std_log(e->toString());
@@ -256,16 +241,33 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
                 this->endColor = *(HSSRgb::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyEndColor, this, new HSSValueChangedCallback<HSSGradient>(this, &HSSGradient::endColorChanged));
-                
-            } else {
-                valid = false;
+                valid = true;
+            }
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dEndColor = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeRgb)) {
+                this->endColor = boost::static_pointer_cast<HSSRgb>(theobj);
+                valid = true;
             }
             
             break;
         }
             
         default:
-            valid = false;
+            break;
     }
     
     if(!valid)
@@ -360,7 +362,7 @@ void HSSGradient::setDColorStops(HSSParserNode::p value)
 
 void HSSGradient::addDColorStops(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
         case HSSParserNodeTypeMultipleValueDefinition:
@@ -371,6 +373,7 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
             for (iterator = values.begin(); iterator != values.end(); iterator++) {
                 this->addDColorStops(*iterator);
             }
+            valid = true;
             break;
         }
             
@@ -379,28 +382,11 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 this->addDColorStops(this->axrController->objectTreeGet(objname->getValue()));
+                valid = true;
                 
             } catch (AXRError::p e) {
                 e->raise();
             }
-            break;
-        }
-            
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dColorStops = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            if (objdef->getObject()->isA(HSSObjectTypeColorStop) || objdef->getObject()->isA(HSSObjectTypeRgb)) {
-                objdef->setScope(this->getScope());
-                objdef->setThisObj(this->getThisObj());
-                objdef->apply();
-                HSSObject::p theObj = objdef->getObject();
-                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyColorStops, this, new HSSValueChangedCallback<HSSGradient>(this, &HSSGradient::colorStopsChanged));
-                this->colorStops.push_back(theObj);
-            } else {
-                valid = false;
-            }
-            
             break;
         }
             
@@ -414,15 +400,13 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
                 if(remoteValue){
                     try {
                         this->addDColorStops(remoteValue);
+                        valid = true;
                     } catch (AXRError::p e) {
                         e->raise();
                     }
                 }
                 
-            } else {
-                valid = false;
             }
-            
             break;
         }
             
@@ -441,9 +425,30 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
             break;
     }
     
-    if(!valid){
-        throw AXRWarning::p(new AXRWarning("HSSGradient", "Invalid value for colorStops of "+this->getName()));
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dColorStops = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            if (objdef->getObject()->isA(HSSObjectTypeColorStop) || objdef->getObject()->isA(HSSObjectTypeRgb)) {
+                objdef->setScope(this->getScope());
+                objdef->setThisObj(this->getThisObj());
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyColorStops, this, new HSSValueChangedCallback<HSSGradient>(this, &HSSGradient::colorStopsChanged));
+                this->colorStops.push_back(theObj);
+                valid = true;
+            }
+            
+            break;
+        }    
+            
+        default:
+            break;
     }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSGradient", "Invalid value for colorStops of "+this->getName()));
     
     this->notifyObservers(HSSObservablePropertyColorStops, &this->colorStops);
 }

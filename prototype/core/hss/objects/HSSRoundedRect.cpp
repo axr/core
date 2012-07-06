@@ -52,10 +52,9 @@
 using namespace AXR;
 
 HSSRoundedRect::HSSRoundedRect()
-: HSSShape()
+: HSSShape(HSSShapeTypeRoundedRect)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: creating rounded rectangle object");
-    this->shapeType = HSSShapeTypeRoundedRect;
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
     this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
     

@@ -48,7 +48,7 @@ using namespace AXR;
 HSSUniversalSelector::HSSUniversalSelector()
 : HSSParserNode()
 {
-    this->nodeType = HSSParserNodeTypeUniversalSelector;
+    
 }
 
 HSSUniversalSelector::p HSSUniversalSelector::clone() const

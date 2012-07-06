@@ -50,9 +50,8 @@
 using namespace AXR;
 
 HSSFlag::HSSFlag()
-: HSSParserNode()
+: HSSFilter(HSSFilterTypeFlag)
 {
-    this->nodeType = HSSParserNodeTypeFlag;
     this->_purging = HSSRuleStateOff;
 }
 

@@ -48,7 +48,7 @@ using namespace AXR;
 HSSThisSelector::HSSThisSelector()
 : HSSParserNode()
 {
-    this->nodeType = HSSParserNodeTypeThisSelector;
+    
 }
 
 HSSThisSelector::p HSSThisSelector::clone() const{

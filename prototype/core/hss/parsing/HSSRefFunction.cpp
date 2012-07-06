@@ -49,10 +49,9 @@
 using namespace AXR;
 
 HSSRefFunction::HSSRefFunction()
-: HSSFunction()
+: HSSFunction(HSSFunctionTypeRef)
 {
     this->observed = NULL;
-    this->functionType = HSSFunctionTypeRef;
 }
 
 HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)

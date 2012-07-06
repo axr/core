@@ -46,10 +46,9 @@
 using namespace AXR;
 
 HSSKeywordConstant::HSSKeywordConstant(std::string value)
-: HSSParserNode()
+: HSSParserNode(HSSParserNodeTypeKeywordConstant)
 {
     this->value = value;
-    this->nodeType = HSSParserNodeTypeKeywordConstant;
 }
 
 HSSKeywordConstant::p HSSKeywordConstant::clone() const{

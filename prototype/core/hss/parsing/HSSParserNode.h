@@ -103,7 +103,7 @@ namespace AXR {
          *
          *  @todo There is no destructor on this class.
          */
-        HSSParserNode();
+        HSSParserNode(HSSParserNodeType type);
         
         /**
          *  Copy constructor for HSSParserNode objects. Do not call directly, use clone() instead.
@@ -186,10 +186,35 @@ namespace AXR {
          */
         virtual boost::shared_ptr<HSSDisplayObject> getThisObj();
         
+        //add all type isAs here
+        virtual bool isA(HSSExpressionType otherType);
+        virtual HSSExpressionType getExpressionType();
+        
+        virtual bool isA(HSSStatementType otherType);
+        virtual HSSStatementType getStatementType();
+        
+        virtual bool isA(HSSInstructionType otherType);
+        virtual HSSInstructionType getInstructionType();
+        
+        virtual bool isA(HSSSelectorType otherType);
+        virtual HSSSelectorType getSelectorType();
+        
+        virtual bool isA(HSSCombinatorType otherType);
+        virtual HSSCombinatorType getCombinatorType();
+        
+        virtual bool isA(HSSFilterType otherType);
+        virtual HSSFilterType getFilterType();
+        
+        virtual bool isA(HSSFunctionType otherType);
+        virtual HSSFunctionType getFunctionType();
+        
+        virtual bool isA(HSSFlagFunctionType otherType);
+        virtual HSSFlagFunctionType getFlagFunctionType();
+        
     protected:
-        HSSParserNodeType nodeType;
         boost::shared_ptr<HSSDisplayObject> thisObj;
     private:
+        HSSParserNodeType nodeType;
         pp _parentNode;
         std::vector<p> _childNodes;
         virtual HSSClonable::p cloneImpl() const;

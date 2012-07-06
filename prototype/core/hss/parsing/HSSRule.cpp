@@ -52,9 +52,8 @@
 using namespace AXR;
 
 HSSRule::HSSRule()
-: HSSStatement()
+: HSSStatement(HSSStatementTypeRule)
 {
-    this->type = HSSStatementTypeRule;
     this->_activeByDefault = true;
     this->observedTreeChanger = NULL;
 }

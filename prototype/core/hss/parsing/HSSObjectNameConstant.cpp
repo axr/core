@@ -46,10 +46,9 @@
 using namespace AXR;
 
 HSSObjectNameConstant::HSSObjectNameConstant(std::string value)
-: HSSParserNode()
+: HSSParserNode(HSSParserNodeTypeObjectNameConstant)
 {
     this->value = value;
-    this->nodeType = HSSParserNodeTypeObjectNameConstant;
 }
 
 HSSObjectNameConstant::p HSSObjectNameConstant::clone() const{

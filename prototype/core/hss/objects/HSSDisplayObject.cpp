@@ -64,15 +64,20 @@
 using namespace AXR;
 
 HSSDisplayObject::HSSDisplayObject()
-: HSSObject()
+: HSSObject(HSSObjectTypeDisplayObject)
 {
     this->initialize();
 }
 
+HSSDisplayObject::HSSDisplayObject(HSSObjectType type)
+: HSSObject(type)
+{
+    this->initialize();
+}
+
+
 void HSSDisplayObject::initialize()
 {
-    this->type = HSSObjectTypeDisplayObject;
-    
     this->_isDirty = true;
     this->_needsRereadRules = true;
     this->_needsSurface = true;
@@ -714,7 +719,7 @@ void HSSDisplayObject::_drawBackground(cairo_t * cairo)
     std::vector<HSSObject::p>::iterator it;
     for (it=this->background.begin(); it!= this->background.end(); it++) {
         HSSObject::p theobj = *it;
-        switch (theobj->getType()) {
+        switch (theobj->getObjectType()) {
             case HSSObjectTypeRgb:
             {
                 HSSRgb::p color = boost::static_pointer_cast<HSSRgb>(theobj);
@@ -1222,26 +1227,9 @@ bool HSSDisplayObject::getFlow() { return this->flow; }
 HSSParserNode::p HSSDisplayObject::getDFlow() { return this->dFlow; }
 void HSSDisplayObject::setDFlow(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dFlow = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->flow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
-            
         case HSSParserNodeTypeObjectNameConstant:
         {
             this->dFlow = value;
@@ -1249,6 +1237,7 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDFlow(objdef);
+                valid = true;
                 
             } catch (HSSObjectNotFoundException * e) {
                 std_log(e->toString());
@@ -1267,9 +1256,7 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
                 this->flow = *(bool *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyFlow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::flowChanged));
-                
-            } else {
-                valid = false;
+                valid = true;
             }
             
             break;
@@ -1280,17 +1267,37 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
             HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
             if(keywordValue->getValue() == "yes"){
                 this->flow = true;
+                valid = true;
                 break;
             } else if (keywordValue->getValue() == "no"){
                 this->flow = false;
+                valid = true;
                 break;
-            } else {
-                //fall through
             }
         }
             
         default:
-            valid = false;
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dFlow = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                this->flow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
+                valid = true;
+            }
+            
+            break;
+        }
+            
+        default:
+            break;
     }
     
     if(!valid)
@@ -1320,26 +1327,9 @@ bool HSSDisplayObject::getOverflow() { return this->overflow; }
 HSSParserNode::p HSSDisplayObject::getDOverflow() { return this->dOverflow; }
 void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dOverflow = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->overflow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
-            
         case HSSParserNodeTypeObjectNameConstant:
         {
             this->dOverflow = value;
@@ -1347,6 +1337,7 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDOverflow(objdef);
+                valid = true;
                 
             } catch (HSSObjectNotFoundException * e) {
                 std_log(e->toString());
@@ -1365,9 +1356,7 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
                 this->overflow = *(bool *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyOverflow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::overflowChanged));
-                
-            } else {
-                valid = false;
+                valid = true;
             }
             
             break;
@@ -1378,17 +1367,37 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
             HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
             if(keywordValue->getValue() == "yes"){
                 this->overflow = true;
+                valid = true;
                 break;
             } else if (keywordValue->getValue() == "no"){
                 this->overflow = false;
+                valid = false;
                 break;
-            } else {
-                //fall through
             }
         }
             
         default:
-            valid = false;
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dOverflow = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                this->overflow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
+                valid = true;
+            }
+            
+            break;
+        }
+            
+        default:
+            break;
     }
     
     if(!valid)
@@ -1659,7 +1668,7 @@ void HSSDisplayObject::setDBackground(HSSParserNode::p value)
 
 void HSSDisplayObject::addDBackground(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
         case HSSParserNodeTypeMultipleValueDefinition:
@@ -1670,6 +1679,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
             for (iterator = values.begin(); iterator != values.end(); iterator++) {
                 this->addDBackground(*iterator);
             }
+            valid = true;
             break;
         }
             
@@ -1678,34 +1688,10 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 this->addDBackground(this->axrController->objectTreeGet(objname->getValue()));
-                
+                valid = true;
             } catch (AXRError::p e) {
                 e->raise();
             }
-            break;
-        }
-            
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dBackground = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            if (objdef->getObject()->isA(HSSObjectTypeRgb) || objdef->getObject()->isA(HSSObjectTypeGradient)) {
-                HSSContainer::p parent = this->getParent();
-                if(parent){
-                    objdef->setScope(&(parent->getChildren()));
-                } else if(this->isA(HSSObjectTypeContainer)){
-                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
-                    objdef->setScope(&(thisCont->getChildren()));
-                }
-                objdef->setThisObj(this->shared_from_this());
-                objdef->apply();
-                HSSObject::p theObj = objdef->getObject();
-                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyBackground, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::backgroundChanged));
-                this->background.push_back(theObj);
-            } else {
-                valid = false;
-            }
-            
             break;
         }
             
@@ -1725,11 +1711,11 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
                 if(remoteValue){
                     try {
                         this->addDBackground(remoteValue);
+                        valid = true;
                     } catch (AXRError::p e) {
                         e->raise();
                     }
                 }
-                
                 
             } else {
                 valid = false;
@@ -1741,15 +1727,40 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
         case HSSParserNodeTypeKeywordConstant:
         {
             if(boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue() == "none"){
-                //ignore
-            } else {
-                valid = false;
+                valid = true;
             }
             break;
         }
             
         default:
-            valid = false;
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dBackground = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            if (objdef->getObject()->isA(HSSObjectTypeRgb) || objdef->getObject()->isA(HSSObjectTypeGradient)) {
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                objdef->setThisObj(this->shared_from_this());
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyBackground, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::backgroundChanged));
+                this->background.push_back(theObj);
+                valid = true;
+            }
+            
+            break;
+        }
+        
+        default:
             break;
     }
     
@@ -1778,7 +1789,7 @@ void HSSDisplayObject::setDContent(HSSParserNode::p value)
 
 void HSSDisplayObject::addDContent(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
         case HSSParserNodeTypeMultipleValueDefinition:
@@ -1789,6 +1800,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
             for (iterator = values.begin(); iterator != values.end(); iterator++) {
                 this->addDContent(*iterator);
             }
+            valid = true;
             break;
         }
             
@@ -1797,6 +1809,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 this->addDContent(this->axrController->objectTreeGet(objname->getValue()));
+                valid = true;
                 
             } catch (AXRError::p e) {
                 e->raise();
@@ -1804,7 +1817,52 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
             break;
         }
             
-        case HSSParserNodeTypeObjectDefinition:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    fnct->setScope(&(thisCont->getChildren()));
+                }
+                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
+                if(remoteValue){
+                    try {
+                        this->addDContent(remoteValue);
+                        valid = true;
+                    } catch (AXRError::p e) {
+                        e->raise();
+                    }
+                }
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            if(boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue() == "none"){
+                valid = true;
+            }
+            break;
+        }
+            
+        case HSSParserNodeTypeStringConstant:
+        {
+            this->setContentText(boost::static_pointer_cast<HSSStringConstant>(value)->getValue());
+            valid = true;
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
         {
             this->dContent = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
@@ -1821,60 +1879,13 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                 HSSObject::p theObj = objdef->getObject();
                 theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyContent, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::contentChanged));
                 this->content.push_back(theObj);
-            } else {
-                valid = false;
+                valid = true;
             }
             
-            break;
-        }
-            
-        case HSSParserNodeTypeFunctionCall:
-        {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
-            if(fnct && fnct->isA(HSSFunctionTypeRef)){
-                
-                HSSContainer::p parent = this->getParent();
-                if(parent){
-                    fnct->setScope(&(parent->getChildren()));
-                } else if(this->isA(HSSObjectTypeContainer)){
-                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
-                    fnct->setScope(&(thisCont->getChildren()));
-                }
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                if(remoteValue){
-                    try {
-                        this->addDContent(remoteValue);
-                    } catch (AXRError::p e) {
-                        e->raise();
-                    }
-                }
-                
-                
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
-        case HSSParserNodeTypeKeywordConstant:
-        {
-            if(boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue() == "none"){
-                //ignore
-            } else {
-                valid = false;
-            }
-            break;
-        }
-            
-        case HSSParserNodeTypeStringConstant:
-        {
-            this->setContentText(boost::static_pointer_cast<HSSStringConstant>(value)->getValue());
             break;
         }
             
         default:
-            valid = false;
             break;
     }
     
@@ -1901,6 +1912,7 @@ void HSSDisplayObject::setDFont(HSSParserNode::p value)
 
 void HSSDisplayObject::addDFont(HSSParserNode::p value)
 {
+    bool valid = false;
     switch (value->getType()) {
         case HSSParserNodeTypeMultipleValueDefinition:
         {
@@ -1910,28 +1922,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
             for (iterator = values.begin(); iterator != values.end(); iterator++) {
                 this->addDFont(*iterator);
             }
-            break;
-        }
-            
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dFont = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            if (objdef->getObject()->isA(HSSObjectTypeFont)) {
-                HSSContainer::p parent = this->getParent();
-                if(parent){
-                    objdef->setScope(&(parent->getChildren()));
-                } else if(this->isA(HSSObjectTypeContainer)){
-                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
-                    objdef->setScope(&(thisCont->getChildren()));
-                }
-                
-                objdef->apply();
-                HSSObject::p theObj = objdef->getObject();
-                theObj->observe(HSSObservablePropertyFont, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
-                this->font.push_back(boost::static_pointer_cast<HSSFont>(theObj));
-            }
-            
+            valid = true;
             break;
         }
             
@@ -1946,10 +1937,10 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                 switch (obj->getObjectType()) {
                     case HSSObjectTypeFont:
                         this->font.push_back(boost::static_pointer_cast<HSSFont>(obj));
+                        valid = true;
                         break;
                         
                     default:
-                        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for font of "+this->getElementName()));
                         break;
                 }
                 
@@ -1973,9 +1964,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                 }
                 HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
                 this->addDFont(remoteValue);
-                
-            } else {
-                throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid function type for font of "+this->getElementName()));
+                valid = true;
             }
             
             break;
@@ -1991,16 +1980,46 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                 HSSContainer::p parent = this->getParent();
                 this->font = *(std::vector<HSSFont::p> *) parent->getProperty(HSSObservablePropertyFont);
                 parent->observe(HSSObservablePropertyFont, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
-                
-            } else {
-                AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown keyword value for font of "+this->getElementName()))->raise();
+                valid = true;
             }
+            break;
+        }
+        
+        default:
+            break;
+            
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dFont = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            if (objdef->getObject()->isA(HSSObjectTypeFont)) {
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyFont, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
+                this->font.push_back(boost::static_pointer_cast<HSSFont>(theObj));
+                valid = true;
+            }
+            
             break;
         }
             
         default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for font of "+this->getElementName()));
+            break;
     }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for font of "+this->getElementName()));
     
     this->notifyObservers(HSSObservablePropertyFont, &this->font);
 }
@@ -2009,7 +2028,6 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
 {
     HSSParserNodeType nodeType = this->dFont->getType();
     switch (nodeType) {
-        case HSSParserNodeTypeObjectDefinition:
         case HSSParserNodeTypeObjectNameConstant:
         case HSSParserNodeTypeFunctionCall:
         case HSSParserNodeTypeKeywordConstant:
@@ -2018,6 +2036,16 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
             this->setDirty(true);
             break;
         }
+            
+        default:
+            break;
+    }
+    
+    switch (this->dFont->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+            this->font = *(std::vector<HSSFont::p> *) data;
+            this->setDirty(true);
+            break;
             
         default:
             break;
@@ -2039,7 +2067,7 @@ void HSSDisplayObject::setDOn(HSSParserNode::p value)
 
 void HSSDisplayObject::addDOn(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
         case HSSParserNodeTypeMultipleValueDefinition:
@@ -2050,6 +2078,7 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
             for (iterator = values.begin(); iterator != values.end(); iterator++) {
                 this->addDOn(*iterator);
             }
+            valid = true;
             break;
         }
             
@@ -2058,47 +2087,14 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 this->addDOn(this->axrController->objectTreeGet(objname->getValue()));
+                valid = true;
                 
             } catch (AXRError::p e) {
                 e->raise();
             }
             break;
         }
-            
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dOn = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            if (objdef->getObject()->isA(HSSObjectTypeEvent)) {
-                HSSContainer::p parent = this->getParent();
-                if(parent){
-                    objdef->setScope(&(parent->getChildren()));
-                } else if(this->isA(HSSObjectTypeContainer)){
-                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
-                    objdef->setScope(&(thisCont->getChildren()));
-                }
-
-                objdef->setThisObj(this->shared_from_this());
-                objdef->apply();
-                HSSObject::p theObj = objdef->getObject();
-                
-                HSSEvent::p theEvent = boost::static_pointer_cast<HSSEvent>(objdef->getObject());
-                HSSEventType eventType = theEvent->getEventType();
-                if(this->on.find(eventType) == this->on.end()){
-                    std::vector<HSSObject::p>newVector;
-                    this->on[eventType] = newVector;
-                }
-                this->on[eventType].push_back(theEvent);
-                
-                theEvent->observe(HSSObservablePropertyValue, HSSObservablePropertyOn, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::onChanged));
-                
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
+        
         case HSSParserNodeTypeFunctionCall:
         {
             HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
@@ -2115,13 +2111,11 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
                 if(remoteValue){
                     try {
                         this->addDOn(remoteValue);
+                        valid = true;
                     } catch (AXRError::p e) {
                         e->raise();
                     }
                 }
-                
-            } else {
-                valid = false;
             }
             
             break;
@@ -2130,20 +2124,55 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
         case HSSParserNodeTypeKeywordConstant:
         {
             if(boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue() == "none"){
-                //ignore
-            } else {
-                valid = false;
+                valid = true;
             }
             break;
         }
             
         default:
-            valid = false;
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dOn = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            if (objdef->getObject()->isA(HSSObjectTypeEvent)) {
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                
+                objdef->setThisObj(this->shared_from_this());
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                
+                HSSEvent::p theEvent = boost::static_pointer_cast<HSSEvent>(objdef->getObject());
+                HSSEventType eventType = theEvent->getEventType();
+                if(this->on.find(eventType) == this->on.end()){
+                    std::vector<HSSObject::p>newVector;
+                    this->on[eventType] = newVector;
+                }
+                this->on[eventType].push_back(theEvent);
+                
+                theEvent->observe(HSSObservablePropertyValue, HSSObservablePropertyOn, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::onChanged));
+                valid = true;
+            }
+            
+            break;
+        }
+            
+            
+        default:
             break;
     }
     
     if(!valid){
-        throw AXRWarning::p(new AXRWarning("HSSGradient", "Invalid value for colorStops of "+this->getName()));
+        throw AXRWarning::p(new AXRWarning("HSSGradient", "Invalid value for on of "+this->getName()));
     }
     
     this->notifyObservers(HSSObservablePropertyOn, &this->on);
@@ -2189,6 +2218,7 @@ void HSSDisplayObject::setDBorder(HSSParserNode::p value)
 
 void HSSDisplayObject::addDBorder(HSSParserNode::p value)
 {
+    bool valid = false;
     switch (value->getType()) {
         case HSSParserNodeTypeMultipleValueDefinition:
         {
@@ -2198,28 +2228,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
             for (iterator = values.begin(); iterator != values.end(); iterator++) {
                 this->addDBorder(*iterator);
             }
-            break;
-        }
-            
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dBorder = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            if (objdef->getObject()->isA(HSSObjectTypeBorder)) {
-                HSSContainer::p parent = this->getParent();
-                if(parent){
-                    objdef->setScope(&(parent->getChildren()));
-                } else if(this->isA(HSSObjectTypeContainer)){
-                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
-                    objdef->setScope(&(thisCont->getChildren()));
-                }
-                
-                objdef->apply();
-                HSSObject::p theObj = objdef->getObject();
-                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::borderChanged));
-                this->border.push_back(boost::static_pointer_cast<HSSBorder>(theObj));
-            }
-            
+            valid = true;
             break;
         }
             
@@ -2234,10 +2243,10 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
                 switch (obj->getObjectType()) {
                     case HSSObjectTypeBorder:
                         this->border.push_back(boost::static_pointer_cast<HSSBorder>(obj));
+                        valid = true;
                         break;
                         
                     default:
-                        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for border of "+this->getElementName()));
                         break;
                 }
                 
@@ -2261,9 +2270,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
                 }
                 HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
                 this->addDBorder(remoteValue);
-                
-            } else {
-                throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid function type for border of "+this->getElementName()));
+                valid = true;
             }
 
             break;
@@ -2273,13 +2280,45 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
         {
             HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
             if (keywordValue->getValue() == "none"){
+                valid = true;
                 break;
             }
         }
         
         default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for border of "+this->getElementName()));
+            break;
     }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dBorder = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            if (objdef->getObject()->isA(HSSObjectTypeBorder)) {
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::borderChanged));
+                this->border.push_back(boost::static_pointer_cast<HSSBorder>(theObj));
+                valid = true;
+            }
+            
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for border of "+this->getElementName()));
 }
 
 void HSSDisplayObject::borderChanged(HSSObservableProperty source, void*data)

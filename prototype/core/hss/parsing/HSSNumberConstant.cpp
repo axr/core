@@ -47,10 +47,9 @@
 using namespace AXR;
 
 HSSNumberConstant::HSSNumberConstant(long double value)
-: HSSParserNode()
+: HSSParserNode(HSSParserNodeTypeNumberConstant)
 {
     this->value = value;
-    this->nodeType = HSSParserNodeTypeNumberConstant;
 }
 
 HSSNumberConstant::p HSSNumberConstant::clone() const{

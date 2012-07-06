@@ -46,9 +46,9 @@
 using namespace AXR;
 
 HSSMultipleValueDefinition::HSSMultipleValueDefinition()
-: HSSParserNode()
+: HSSParserNode(HSSParserNodeTypeMultipleValueDefinition)
 {
-    this->nodeType = HSSParserNodeTypeMultipleValueDefinition;
+    
 }
 
 HSSMultipleValueDefinition::p HSSMultipleValueDefinition::clone() const{

@@ -52,10 +52,9 @@
 using namespace AXR;
 
 HSSMargin::HSSMargin()
-: HSSObject()
+: HSSObject(HSSObjectTypeMargin)
 {
     this->segments = HSSMultipleValue();
-    this->type = HSSObjectTypeMargin;
 }
 
 HSSMargin::HSSMargin(const HSSMargin & orig)

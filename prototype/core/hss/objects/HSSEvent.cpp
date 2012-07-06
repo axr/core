@@ -76,10 +76,9 @@ std::string HSSEvent::eventTypeStringRepresentation(AXR::HSSEventType eventType)
 }
 
 HSSEvent::HSSEvent(HSSEventType type)
-: HSSObject()
+: HSSObject(HSSObjectTypeEvent)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: creating event object");
-    this->type = HSSObjectTypeEvent;
     this->eventType = type;
     
     std::vector<std::string> shorthandProperties;
@@ -168,6 +167,8 @@ void HSSEvent::setDAction(HSSParserNode::p value)
 
 void HSSEvent::addDAction(HSSParserNode::p value)
 {
+    bool valid = false;
+    
     switch (value->getType()) {
         case HSSParserNodeTypeMultipleValueDefinition:
         {
@@ -177,21 +178,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             for (iterator = values.begin(); iterator != values.end(); iterator++) {
                 this->addDAction(*iterator);
             }
-            break;
-        }
-            
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            if (objdef->getObject()->isA(HSSObjectTypeAction)) {
-                objdef->setScope(this->scope);
-                objdef->setThisObj(this->getThisObj());
-                objdef->apply();
-                HSSObject::p theObj = objdef->getObject();
-                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyAction, this, new HSSValueChangedCallback<HSSEvent>(this, &HSSEvent::actionChanged));
-                this->action.push_back(boost::static_pointer_cast<HSSAction>(theObj));
-            }
-            
+            valid = true;
             break;
         }
             
@@ -208,10 +195,10 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                 switch (obj->getObjectType()) {
                     case HSSObjectTypeAction:
                         this->action.push_back(boost::static_pointer_cast<HSSAction>(obj));
+                        valid = true;
                         break;
                         
                     default:
-                        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for action of @event "+this->name));
                         break;
                 }
                 
@@ -231,6 +218,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                     fnct->setThisObj(this->getThisObj());
                     HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
                     this->addDAction(remoteValue);
+                    valid = true;
                     break;
                 }
                     
@@ -245,6 +233,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                     flagAction->setScope(this->scope);
                     flagAction->setThisObj(this->getThisObj());
                     this->action.push_back(flagAction);
+                    valid = true;
                     break;
                 }
                     
@@ -259,19 +248,45 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                     fnctAction->setScope(this->scope);
                     fnctAction->setThisObj(this->getThisObj());
                     this->action.push_back(fnctAction);
+                    valid = true;
                     break;
                 }
                     
                 default:
-                    throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid function type for action of @event "+this->name));
+                    break;
             }
             
             break;
         }
             
         default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for action of @event "+this->name));
+            break;
     }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            if (objdef->getObject()->isA(HSSObjectTypeAction)) {
+                objdef->setScope(this->scope);
+                objdef->setThisObj(this->getThisObj());
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyAction, this, new HSSValueChangedCallback<HSSEvent>(this, &HSSEvent::actionChanged));
+                this->action.push_back(boost::static_pointer_cast<HSSAction>(theObj));
+                valid = true;
+            }
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    if (!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for action of @event "+this->name));
+    
+    this->notifyObservers(HSSObservablePropertyAction, &this->action);
 }
 
 void HSSEvent::actionChanged(HSSObservableProperty source, void*data)

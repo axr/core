@@ -66,9 +66,8 @@ std::string HSSAction::actionTypeStringRepresentation(AXR::HSSActionType actionT
 }
 
 HSSAction::HSSAction(HSSActionType type)
-: HSSObject()
+: HSSObject(HSSObjectTypeAction)
 {
-    this->type = HSSObjectTypeAction;
     this->actionType = type;
     
     std::vector<std::string> shorthandProperties;

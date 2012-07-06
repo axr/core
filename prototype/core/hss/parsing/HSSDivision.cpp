@@ -46,9 +46,9 @@
 using namespace AXR;
 
 HSSDivision::HSSDivision(HSSParserNode::p _left, HSSParserNode::p _right)
-: HSSExpression(_left, _right)
+: HSSExpression(HSSExpressionTypeDivision, _left, _right)
 {
-    this->expressionType = HSSExpressionTypeDivision;
+    
 }
 
 HSSDivision::HSSDivision(const HSSDivision &orig)

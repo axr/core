@@ -49,9 +49,8 @@
 using namespace AXR;
 
 HSSPercentageConstant::HSSPercentageConstant(long double value)
-: HSSParserNode()
+: HSSParserNode(HSSParserNodeTypePercentageConstant)
 {
-    this->nodeType = HSSParserNodeTypePercentageConstant;
     this->value = value / 100.;
 }
 

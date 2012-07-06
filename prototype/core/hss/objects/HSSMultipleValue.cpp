@@ -48,10 +48,9 @@
 using namespace AXR;
 
 HSSMultipleValue::HSSMultipleValue()
-: HSSObject()
+: HSSObject(HSSObjectTypeMultipleValue)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSMultipleValue: creating multiple value object");
-    this->type = HSSObjectTypeMultipleValue;
 }
 
 HSSMultipleValue::HSSMultipleValue(const HSSMultipleValue & orig)

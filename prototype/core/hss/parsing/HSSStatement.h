@@ -70,8 +70,9 @@ namespace AXR {
         /**
          *  Creates a new instance of a statement node. This class shouldn't be called directly,
          *  but by the subclasses.
+         *  @param type The type of this statement subclass for identification purposes.
          */
-        HSSStatement();
+        HSSStatement(HSSStatementType type);
         
         /**
          *  Copy constructor for HSSStatement nodes. Do not call directly, use clone() on one of the
@@ -91,7 +92,7 @@ namespace AXR {
         /**
          *  @return The statement type of the current instance.
          */
-        HSSStatementType getType();
+        virtual HSSStatementType getStatementType();
         
         /**
          *  When logging, you often need a string representation of the statement type.
@@ -102,7 +103,7 @@ namespace AXR {
         
     protected:
         HSSStatement::p shared_from_this();
-        
+    private:
         HSSStatementType type;
     };
 }

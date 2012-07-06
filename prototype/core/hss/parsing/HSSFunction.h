@@ -66,15 +66,9 @@ namespace AXR {
         friend class HSSParser;
         
         /**
-         *  This constructor shouldn't be called directly, but by the subclasses. Creates a new
-         *  instance of a function.
-         */
-        HSSFunction();
-        
-        /**
          *  Creates a new instance of a function, with given function type. Most of the time this
          *  will be HSSFunctionTypeCustom.
-         *  @param type The function type for the new instance.
+         *  @param type The type of the function subclass for identification purposes.
          */
         HSSFunction(HSSFunctionType type);
         
@@ -196,7 +190,6 @@ namespace AXR {
     protected:
         bool _isDirty;
         void * _value;
-        HSSFunctionType functionType;
         
         long double percentageBase;
         HSSObservableProperty percentageObservedProperty;
@@ -206,6 +199,7 @@ namespace AXR {
         AXRController * axrController;
         
     private:
+        HSSFunctionType functionType;
         std::deque<HSSParserNode::p> _arguments;
         std::string _name;
     };

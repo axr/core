@@ -46,10 +46,9 @@
 using namespace AXR;
 
 HSSRectangle::HSSRectangle()
-: HSSShape()
+: HSSShape(HSSShapeTypeRectangle)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: creating rectangle object");
-    this->shapeType = HSSShapeTypeRectangle;
 }
 
 HSSRectangle::HSSRectangle(const HSSRectangle & orig)

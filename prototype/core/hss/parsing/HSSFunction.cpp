@@ -52,21 +52,9 @@
 
 using namespace AXR;
 
-HSSFunction::HSSFunction()
-:HSSParserNode()
-{
-    this->nodeType = HSSParserNodeTypeFunctionCall;
-    this->functionType = HSSFunctionTypeNone;
-    this->scope = NULL;
-    this->percentageObserved = NULL;
-    this->_isDirty = true;
-    this->_value = NULL;
-}
-
 HSSFunction::HSSFunction(HSSFunctionType type)
-:HSSParserNode()
+:HSSParserNode(HSSParserNodeTypeFunctionCall)
 {
-    this->nodeType = HSSParserNodeTypeFunctionCall;
     this->functionType = type;
     this->scope = NULL;
     this->percentageObserved = NULL;

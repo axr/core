@@ -45,11 +45,10 @@
 
 using namespace AXR;
 
-HSSStatement::HSSStatement()
-: HSSParserNode()
+HSSStatement::HSSStatement(HSSStatementType type)
+: HSSParserNode(HSSParserNodeTypeStatement)
 {
-    this->nodeType = HSSParserNodeTypeStatement;
-    this->type = HSSStatementTypeGeneric;
+    this->type = type;
 }
 
 HSSStatement::HSSStatement(const HSSStatement &orig)
@@ -63,14 +62,14 @@ bool HSSStatement::isA(HSSStatementType otherType)
 	return otherType == this->type;
 }
 
-HSSStatementType HSSStatement::getType()
+HSSStatementType HSSStatement::getStatementType()
 {
     return this->type;
 }
 
 std::string HSSStatement::statementStringRepresentation(HSSStatementType type){
     std::string types[20];
-	types[HSSStatementTypeGeneric] = "HSSGenericStatement";
+	types[HSSStatementTypeNone] = "HSSGenericStatement";
 	types[HSSStatementTypeRule] = "HSSRule";
 	types[HSSStatementTypePropertyDefinition] = "HSSPropertyDefinition";
 	types[HSSStatementTypeObjectDefinition] = "HSSObjectDefinition";

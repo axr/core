@@ -54,10 +54,9 @@
 using namespace AXR;
 
 HSSFont::HSSFont()
-:HSSObject()
+:HSSObject(HSSObjectTypeFont)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFont: creating font object");
-    this->type = HSSObjectTypeFont;
     
     this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;
     
@@ -214,26 +213,9 @@ HSSRgb::p HSSFont::getColor() { return this->color; }
 HSSParserNode::p HSSFont::getDColor() { return this->dColor; }
 void HSSFont::setDColor(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dColor = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeRgb)) {
-                this->color = boost::static_pointer_cast<HSSRgb>(theobj);
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
-            
         case HSSParserNodeTypeObjectNameConstant:
         {
             this->dColor = value;
@@ -241,6 +223,7 @@ void HSSFont::setDColor(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDColor(objdef);
+                valid = true;
                 
             } catch (HSSObjectNotFoundException * e) {
                 std_log(e->toString());
@@ -259,9 +242,7 @@ void HSSFont::setDColor(HSSParserNode::p value)
                 this->color = *(HSSRgb::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSFont>(this, &HSSFont::colorChanged));
-                
-            } else {
-                valid = false;
+                valid = true;
             }
             
             break;
@@ -269,6 +250,26 @@ void HSSFont::setDColor(HSSParserNode::p value)
             
         default:
             valid = false;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dColor = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeRgb)) {
+                this->color = boost::static_pointer_cast<HSSRgb>(theobj);
+                valid = true;
+            }
+            
+            break;
+        }
+            
+        default:
+            break;
     }
     
     if(!valid)
@@ -286,7 +287,7 @@ void HSSFont::colorChanged(AXR::HSSObservableProperty source, void *data)
 HSSKeywordConstant::p HSSFont::getWeight() { return this->weight; }
 void HSSFont::setDWeight(HSSParserNode::p value){
     
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {  
    
@@ -299,9 +300,7 @@ void HSSFont::setDWeight(HSSParserNode::p value){
                 this->weight = *(HSSKeywordConstant::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyWeight, this, new HSSValueChangedCallback<HSSFont>(this, &HSSFont::weightChanged));
-                
-            } else {
-                valid = false;
+                valid = true;
             }
             
             break;
@@ -311,11 +310,12 @@ void HSSFont::setDWeight(HSSParserNode::p value){
         {
             HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
             this->weight = keywordValue;
+            valid = true;
             break;
         }
             
         default:
-            valid = false;
+            break;
     }
     
     if(!valid)

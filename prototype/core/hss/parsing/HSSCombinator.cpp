@@ -46,10 +46,9 @@
 using namespace AXR;
 
 HSSCombinator::HSSCombinator(HSSCombinatorType type)
-:HSSParserNode()
+:HSSSelector(HSSSelectorTypeCombinator)
 {
     this->combinatorType = type;
-    this->nodeType = HSSParserNodeTypeCombinator;
 }
 
 HSSCombinator::p HSSCombinator::clone() const{
@@ -61,7 +60,7 @@ bool HSSCombinator::isA(HSSCombinatorType otherType)
     return this->combinatorType == otherType;
 }
 
-const HSSCombinatorType & HSSCombinator::getCombinatorType() const
+HSSCombinatorType HSSCombinator::getCombinatorType()
 {
     return this->combinatorType;
 }

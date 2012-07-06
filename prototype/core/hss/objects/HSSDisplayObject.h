@@ -93,6 +93,12 @@ namespace AXR {
         HSSDisplayObject();      
         
         /**
+         *  Constructor for HSSDisplayObject objects.
+         *  @param type     Subclasses pass their own type here.
+         */
+        HSSDisplayObject(HSSObjectType type);
+        
+        /**
          *  Initializes all ivars to default values.
          */
         void initialize();

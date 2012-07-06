@@ -50,9 +50,9 @@
 using namespace AXR;
 
 HSSSelectorChain::HSSSelectorChain()
-: HSSParserNode()
+: HSSParserNode(HSSParserNodeTypeSelectorChain)
 {
-    this->nodeType = HSSParserNodeTypeSelectorChain;
+    
 }
 
 HSSSelectorChain::HSSSelectorChain(const HSSSelectorChain &orig)

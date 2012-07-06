@@ -46,10 +46,9 @@
 using namespace AXR;
 
 HSSComment::HSSComment(std::string value)
-: HSSStatement()
+: HSSStatement(HSSStatementTypeComment)
 {
     this->value = value;
-    this->type = HSSStatementTypeComment;
 }
 
 HSSComment::p HSSComment::clone() const{

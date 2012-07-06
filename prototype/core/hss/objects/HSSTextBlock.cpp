@@ -88,11 +88,10 @@ HSSTextAlignType HSSTextBlock::textAlignTypeFromString(std::string value)
 }
 
 HSSTextBlock::HSSTextBlock()
-: HSSDisplayObject()
+: HSSDisplayObject(HSSObjectTypeTextBlock)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: creating text block object");
     
-    this->type = HSSObjectTypeTextBlock;
     this->observedTextAlign = this->observedTransform = this->observedText
     = NULL;
     
@@ -314,26 +313,9 @@ HSSTextTransformType HSSTextBlock::getTransform() { return this->transform; }
 HSSParserNode::p HSSTextBlock::getDTransform() { return this->dTransform; }
 void HSSTextBlock::setDTransform(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dTransform = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->transform = HSSTextBlock::textTransformTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
-            
         case HSSParserNodeTypeObjectNameConstant:
         {
             this->dTransform = value;
@@ -341,6 +323,7 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDTransform(objdef);
+                valid = true;
                 
             } catch (AXRError::p e) {
                 e->raise();
@@ -359,9 +342,7 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
                 this->transform = *(HSSTextTransformType *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTransform, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::transformChanged));
-                
-            } else {
-                valid = false;
+                valid = true;
             }
             
             break;
@@ -371,11 +352,31 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
         {
             this->dTransform = value;
             this->transform = HSSTextBlock::textTransformTypeFromString(boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue());
+            valid = true;
             break;
         }
             
         default:
-            valid = false;
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dTransform = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                this->transform = HSSTextBlock::textTransformTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+                valid = true;
+            }
+            
+            break;
+        }
+        default:
+            break;
     }
     
     if(!valid)
@@ -388,11 +389,17 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
 void HSSTextBlock::transformChanged(HSSObservableProperty source, void *data)
 {
     switch (this->dTransform->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
         case HSSParserNodeTypeFunctionCall:
             this->transform = *(HSSTextTransformType *)data;
+            break; 
+        default:
             break;
-            
+    }
+    
+    switch (this->dTransform->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+            this->transform = *(HSSTextTransformType *)data;
+            break;
         default:
             break;
     }
@@ -405,26 +412,9 @@ HSSTextAlignType HSSTextBlock::getTextAlign() { return this->textAlign; }
 HSSParserNode::p HSSTextBlock::getDTextAlign() { return this->dTextAlign; }
 void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dTextAlign = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
-            
         case HSSParserNodeTypeObjectNameConstant:
         {
             this->dTextAlign = value;
@@ -432,7 +422,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDTextAlign(objdef);
-                
+                valid = true;
             } catch (AXRError::p e) {
                 e->raise();
             }
@@ -450,9 +440,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
                 this->textAlign = *(HSSTextAlignType *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::textAlignChanged));
-                
-            } else {
-                valid = false;
+                valid = true;
             }
             
             break;
@@ -469,16 +457,36 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
                 HSSContainer::p parent = this->getParent();
                 this->textAlign = *(HSSTextAlignType *) parent->getProperty(HSSObservablePropertyTextAlign);
                 parent->observe(HSSObservablePropertyTextAlign, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::textAlignChanged));
-                
+                valid = true;
             } else {
                 this->textAlign = HSSTextBlock::textAlignTypeFromString(kwValue);
+                valid = true;
             }
-            
             break;
         }
             
         default:
             valid = false;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dTextAlign = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+                valid = true;
+            }
+            
+            break;
+        }
+        
+        default:
+            break;
     }
     
     if(!valid)
@@ -491,11 +499,19 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
 void HSSTextBlock::textAlignChanged(HSSObservableProperty source, void *data)
 {
     switch (this->dTextAlign->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
         case HSSParserNodeTypeFunctionCall:
         case HSSParserNodeTypeKeywordConstant: //assuming 'inherit'
             this->textAlign = *(HSSTextAlignType *)data;
             break;
+        default:
+            break;
+    }
+    
+    switch (this->dTextAlign->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+            this->textAlign = *(HSSTextAlignType *)data;
+            break;
+            
         default:
             break;
     }
@@ -508,32 +524,16 @@ std::string HSSTextBlock::getText() { return this->text; }
 HSSParserNode::p HSSTextBlock::getDText() { return this->dText; }
 void HSSTextBlock::setDText(HSSParserNode::p value)
 {
-    bool valid = true;
+    bool valid = false;
     
     switch (value->getType()) {
         case HSSParserNodeTypeStringConstant:
         {
             this->dText = value;
             this->text = boost::static_pointer_cast<HSSStringConstant>(value)->getValue();
+            valid = true;
             break;
         }
-            
-        case HSSParserNodeTypeObjectDefinition:
-        {
-            this->dText = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->text = boost::static_pointer_cast<HSSValue>(theobj)->getStringValue();
-            } else {
-                valid = false;
-            }
-            
-            break;
-        }
-            
             
         case HSSParserNodeTypeObjectNameConstant:
         {
@@ -541,6 +541,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDText(objdef);
+                valid = true;
                 
             } catch (AXRError::p e) {
                 e->raise();
@@ -559,9 +560,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
                 this->text = *(std::string *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyText, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::textChanged));
-                
-            } else {
-                valid = false;
+                valid = true;
             }
             
             break;
@@ -573,12 +572,33 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
             HSSKeywordConstant::p kwd = boost::static_pointer_cast<HSSKeywordConstant>(value);
             if(kwd->getValue() == "none"){
                 this->text = "";
+                valid = true;
             }
             break;
         }
             
         default:
-            valid = false;
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dText = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            objdef->setScope(this->scope);
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                this->text = boost::static_pointer_cast<HSSValue>(theobj)->getStringValue();
+                valid = true;
+            }
+            
+            break;
+        }
+            
+        default:
+            break;
     }
     
     if(!valid)
@@ -590,8 +610,16 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
 void HSSTextBlock::textChanged(HSSObservableProperty source, void *data)
 {
     switch (this->dText->getType()) {
-        case HSSParserNodeTypeObjectDefinition:
         case HSSParserNodeTypeFunctionCall:
+            this->text = *(std::string *)data;
+            break;
+            
+        default:
+            break;
+    }
+    
+    switch (this->dText->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
             this->text = *(std::string *)data;
             break;
             

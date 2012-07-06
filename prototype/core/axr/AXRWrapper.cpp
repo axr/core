@@ -208,14 +208,11 @@ void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
     std::deque<HSSParserNode::p>::iterator it;
     for (it=arguments.begin(); it!=arguments.end(); it++) {
         HSSParserNode::p argument = *it;
-        if(argument->isA(HSSParserNodeTypeFunctionCall)){
-            HSSFunction::p theFunction = boost::static_pointer_cast<HSSFunction>(argument);
-            if(theFunction->isA(HSSFunctionTypeSel)){
-                HSSSelFunction::p selFunction = boost::static_pointer_cast<HSSSelFunction>(theFunction);
-                std::vector< std::vector<HSSDisplayObject::p> > selection = *(std::vector< std::vector<HSSDisplayObject::p> >*)selFunction->evaluate();
-                std::vector<HSSDisplayObject::p> innerSelection = selection[0];
-                status = HSSContainer::asContainer(innerSelection[0]);
-            }
+        if(argument->isA(HSSFunctionTypeSel)){
+            HSSSelFunction::p selFunction = boost::static_pointer_cast<HSSSelFunction>(argument);
+            std::vector< std::vector<HSSDisplayObject::p> > selection = *(std::vector< std::vector<HSSDisplayObject::p> >*)selFunction->evaluate();
+            std::vector<HSSDisplayObject::p> innerSelection = selection[0];
+            status = HSSContainer::asContainer(innerSelection[0]);
         }
     }
     

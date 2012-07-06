@@ -46,19 +46,17 @@
 using namespace AXR;
 
 HSSInstruction::HSSInstruction(HSSInstructionType type)
-: HSSStatement()
+: HSSStatement(HSSStatementTypeInstruction)
 {
     this->instructionType = type;
-    this->type = HSSStatementTypeInstruction;
 }
 
 
 HSSInstruction::HSSInstruction(HSSInstructionType type, std::string value)
-: HSSStatement()
+: HSSStatement(HSSStatementTypeInstruction)
 {
     this->instructionType = type;
     this->value = value;
-    this->type = HSSStatementTypeInstruction;
 }
 
 HSSInstruction::HSSInstruction(const HSSInstruction &orig)

@@ -46,9 +46,9 @@
 using namespace AXR;
 
 HSSLastFilter::HSSLastFilter()
-: HSSFilter()
+: HSSFilter(HSSFilterTypeLast)
 {
-    this->filterType = HSSFilterTypeLast;
+    
 }
 
 HSSLastFilter::p HSSLastFilter::clone() const{

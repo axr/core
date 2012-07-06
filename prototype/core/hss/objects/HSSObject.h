@@ -97,8 +97,9 @@ namespace AXR {
         
         /**
          *  Constructor for HSSObject.
+         *  @param type     The type of this object subclass for identification purposes.
          */
-        HSSObject();
+        HSSObject(HSSObjectType type);
         /**
          *  Copy constructor for HSSObject. Doesn't copy registered properties or shorhand positions. If your
          *  subclass needs that, you have to copy them yourself after the construction.
@@ -114,16 +115,6 @@ namespace AXR {
          *  Destructor for HSSObject.
          */
         ~HSSObject();
-        /**
-         *  Call this to know if a HSSObject subclass is of type otherType.
-         *  @param otherType    The HSSObjectType to compare against.
-         *  @return Wether the object is an object of given type.
-         */
-        bool isA(HSSObjectType otherType);
-        /**
-         *  @return The object type.
-         */
-        HSSObjectType getType();
         /**
          *  All objects define their own keywords depending on each property, so you need
          *  to call this method if you need to know wether an identifier is a keyword or not.
@@ -298,12 +289,6 @@ namespace AXR {
          */
         virtual AXRController * getController();
         /**
-         *  @return The object type.
-         *
-         *  @todo this is a duplicate of getType(), we probably don't need it.
-         */
-        HSSObjectType getObjectType();
-        /**
          *  Setter for the "this object", which is a shared pointer to the nearest display object
          *  (including itself).
          *  @param value        A shared pointer to the nearest display object.
@@ -316,8 +301,31 @@ namespace AXR {
          */
         boost::shared_ptr<HSSDisplayObject> getThisObj();
         
+        
+        /**
+         *  Call this to know if a HSSObject subclass is of type otherType.
+         *  @param otherType    The HSSObjectType to compare against.
+         *  @return Wether the object is an object of given type.
+         */
+        bool isA(HSSObjectType otherType);
+        /**
+         *  @return The object type.
+         */
+        HSSObjectType getObjectType();
+        
+        virtual bool isA(HSSShapeType otherType);
+        virtual HSSShapeType getShapeType();
+
+        virtual bool isA(HSSRequestModeType otherType);
+        virtual HSSRequestModeType getRequestModeType();
+
+        virtual bool isA(HSSEventType otherType);
+        virtual HSSEventType getEventType();
+        
+        virtual bool isA(HSSActionType otherType);
+        virtual HSSActionType getActionType();
+
     protected:
-        HSSObjectType type;
         boost::unordered_map<HSSObservableProperty, void*> properties;
         std::vector<std::string> shorthandProperties;
         boost::unordered_map<std::string, bool> skipShorthand;
@@ -330,6 +338,7 @@ namespace AXR {
         AXRController * axrController;
         
     private:
+        HSSObjectType type;
         bool _isNamed;
         
         virtual HSSClonable::p cloneImpl() const;

@@ -45,10 +45,10 @@
 
 using namespace AXR;
 
-HSSShape::HSSShape()
-: HSSObject()
+HSSShape::HSSShape(HSSShapeType type)
+: HSSObject(HSSObjectTypeShape)
 {
-    this->type = HSSObjectTypeShape;
+    this->shapeType = type;
 }
 
 HSSShape::HSSShape(const HSSShape & orig)
