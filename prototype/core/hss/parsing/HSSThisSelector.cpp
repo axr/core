@@ -46,7 +46,7 @@
 using namespace AXR;
 
 HSSThisSelector::HSSThisSelector()
-: HSSParserNode()
+: HSSNameSelector("@this")
 {
     
 }
@@ -63,3 +63,9 @@ HSSClonable::p HSSThisSelector::cloneImpl() const{
     return HSSClonable::p(new HSSThisSelector(*this));
 }
 
+std::vector<HSSDisplayObject::p> HSSThisSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing)
+{
+    std::vector<HSSDisplayObject::p> ret;
+    ret.push_back(this->getThisObj());
+    return ret;
+}

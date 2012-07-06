@@ -55,6 +55,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/unordered_set.hpp>
 #include "../../axr/AXRFile.h"
+#include "HSSSelectorNodes.h"
 
 #define HSSFRAMEWORK_PROTOCOL "axr://"
 #define HSSFRAMEWORK_PROTOCOL_LEN 6
@@ -169,6 +170,11 @@ namespace AXR {
          *  @return A vector of shared pointers to selector chains.
          */
         std::vector<HSSSelectorChain::p> readSelectorChains(HSSTokenType stopOn);
+        HSSSimpleSelector::p readSimpleSelector();
+        HSSNameSelector::p readObjectSelector();
+        bool isNegator();
+        HSSFilter::p readFilter();
+        HSSCombinator::p readCombinator();
         
         /**
          *  Shorthand for isCombinator(HSSToken::p token), passing the current token.
@@ -213,11 +219,12 @@ namespace AXR {
         HSSCombinator::p readSymbolCombinator();
         
         /**
-         *  Returns the selector with the value of the current token.
-         *  @return A shared pointer to the selector.
+         *  Returns the name selector with the value of the current token.
+         *  @param isNegating       Wether the name selector should be negated or not
+         *  @return A shared pointer to the name selector.
          *  @warning This function assumes the current token to be an identifier.
          */
-        HSSSelector::p readSelector();
+        HSSNameSelector::p readNameSelector(bool isNegating);
         
         /**
          *  Reads an object definition, getting its type or getting its name from the current object context
@@ -322,7 +329,7 @@ namespace AXR {
          *  @return A shared pointer to the filter that was read.
          *  @warning This method assumes the current token to be an identifier
          */
-        HSSParserNode::p readFilter();
+        //HSSParserNode::p readFilter();
         
         /**
          *  Creates a flag and sets its name with the value of the current token.

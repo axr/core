@@ -51,7 +51,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "../parsing/HSSRule.h"
-#include "../parsing/HSSFlag.h"
 #include <cairo/cairo.h>
 #include "HSSMultipleValue.h"
 #include "HSSRgb.h"
@@ -63,6 +62,7 @@
 namespace AXR {
     
     class HSSContainer;
+    class HSSFlag;
     
     /**
      *  @brief Abstract superclass for any object that should be rendered on the screen.
@@ -322,7 +322,7 @@ namespace AXR {
         
         void ruleChanged(HSSObservableProperty source, void*data);
         
-        void createFlag(HSSFlag::p flag, HSSRuleState defaultValue);
+        void createFlag(boost::shared_ptr<HSSFlag> flag, HSSRuleState defaultValue);
         bool hasFlag(std::string name);
         HSSRuleState flagState(std::string name);
         void flagsActivate(std::string name);
@@ -354,7 +354,7 @@ namespace AXR {
         
         //flags
         boost::unordered_map<std::string, HSSRuleState> _flagsStatus;
-        boost::unordered_map<std::string, std::vector<HSSFlag::p> > _flags;
+        boost::unordered_map<std::string, std::vector< boost::shared_ptr<HSSFlag> > > _flags;
         
         //if it needs to redraw
         bool _isDirty;

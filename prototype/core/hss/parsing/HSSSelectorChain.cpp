@@ -46,6 +46,7 @@
 #include "../../axr/AXRDebugging.h"
 #include <boost/pointer_cast.hpp>
 #include "HSSRule.h"
+#include "HSSSimpleSelector.h"
 
 using namespace AXR;
 
@@ -81,16 +82,9 @@ std::string HSSSelectorChain::toString()
             tempstr.append("      ").append(this->nodeList[i]->toString()).append("\n");
         }
     }
-
     
     return tempstr;
     return "";
-}
-
-
-const HSSParserNode::p & HSSSelectorChain::operator[] (const int i) const
-{
-    return this->nodeList[i];
 }
 
 const HSSParserNode::p & HSSSelectorChain::get(const int i) const
@@ -133,15 +127,21 @@ const int HSSSelectorChain::size()
     return this->nodeList.size();
 }
 
-HSSSelector::p HSSSelectorChain::subject()
+HSSSimpleSelector::p HSSSelectorChain::subject()
 {
-    HSSSelector::p ret;
+    HSSSimpleSelector::p ret;
     /**
      *  @todo subject selectors need to be implemented
      */
     if(this->nodeList.size() > 0){
         if(this->nodeList.back()->isA(HSSParserNodeTypeSelector)){
-            ret = boost::static_pointer_cast<HSSSelector>(this->nodeList.back());
+            HSSSelector::p selector = boost::static_pointer_cast<HSSSelector>(this->nodeList.back());
+            if(selector->isA(HSSSelectorTypeSimpleSelector)){
+                ret = boost::static_pointer_cast<HSSSimpleSelector>(selector);
+            } else {
+                std_log1("########### subject in selector chain could not be determined");
+            }
+            
         } else {
             std_log1("########### subject in selector chain could not be determined");
         }

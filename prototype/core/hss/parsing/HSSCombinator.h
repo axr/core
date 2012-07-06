@@ -44,7 +44,7 @@
 #ifndef HSSCOMBINATOR_H
 #define HSSCOMBINATOR_H
 
-#include "HSSParserNode.h"
+#include "HSSSelector.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
 
@@ -57,7 +57,7 @@ namespace AXR {
      *  This class encapsulates all types of combinators. The actual behavior of the selection
      *  is defined in AXRController.
      */
-    class HSSCombinator : public HSSParserNode {
+    class HSSCombinator : public HSSSelector {
     public:
         typedef boost::shared_ptr<HSSCombinator> p;
         
@@ -94,6 +94,9 @@ namespace AXR {
         HSSCombinatorType getCombinatorType();
         
         virtual std::string toString();
+        
+        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing);
+        
     protected:
         HSSCombinatorType combinatorType;
     private:

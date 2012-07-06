@@ -41,40 +41,70 @@
  *
  ********************************************************************/
 
-#ifndef HSSFIRSTFILTER_H
-#define HSSFIRSTFILTER_H
+#ifndef HSSSIMPLESELECTOR_H
+#define HSSSIMPLESELECTOR_H
 
+#include "HSSSelector.h"
+#include <string>
+#include <boost/shared_ptr.hpp>
+#include "HSSNameSelector.h"
+#include "../objects/HSSDisplayObject.h"
 #include "HSSFilter.h"
+#include <list>
 
 namespace AXR {
+    
     /**
-     *  @brief Selects the first element of the selection.
+     *  @brief Simple selectors are basic units of a selector chain.
      */
-    class HSSFirstFilter : public HSSFilter
-    {
-    public:        
-        /**
-         *  @brief Creates a new instance of a \@first filter.
-         */
-        HSSFirstFilter();
+    class HSSSimpleSelector : public HSSSelector {
+    public:
+        typedef boost::shared_ptr<HSSSimpleSelector> p;
         
         /**
-         *  Clones an instance of HSSFirstFilter and gives a shared pointer of the
+         *  Creates a new instance of a simple selector.
+         */
+        HSSSimpleSelector();
+        
+        /**
+         *  Copy constructor for HSSSimpleSelector objects. Do not call directly, use clone() instead.
+         */
+        HSSSimpleSelector(const HSSSimpleSelector &orig);
+        
+        /**
+         *  Clones an instance of HSSSimpleSelector and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSFirstFilter
+         *  @return A shared pointer to the new HSSSimpleSelector.
          */
-        HSSFilter::p clone() const;
+        p clone() const;
         
-        /**
-         *  Destructor for this class.
-         */
-        virtual ~HSSFirstFilter();
+        //see HSSObject.h for documentation of this method
         virtual std::string toString();
         
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
+        void setName(HSSNameSelector::p name);
+        const HSSNameSelector::p getName() const;
+        
+        const std::list<HSSFilter::p> getFilters() const;
+        void filtersAdd(HSSFilter::p filter);
+        
+        /**
+         * Reduces the selection according to the selector nodes it has stored.
+         */
+        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing);
+        
+        //see HSSParserNode.h for documentation of this method
+        virtual void setThisObj(HSSDisplayObject::p value);
+        
     private:
+        HSSNameSelector::p name;
+        std::list<HSSFilter::p> filters;
+        
         virtual HSSClonable::p cloneImpl() const;
+        
+        std::vector<HSSDisplayObject::p> _recursiveFilterSelection(const std::vector<HSSDisplayObject::p> & selection, std::list<HSSFilter::p>::const_iterator it, std::list<HSSFilter::p>::const_iterator end_it, bool processing);
     };
 }
+
+
 
 #endif

@@ -333,14 +333,13 @@ namespace AXR {
          *                      to display objects.
          *  @param thisObj      A shared pointer to the display object that will be selected when using
          *                      @this in HSS.
-         *  @param negating     Wether to select what matches the selector or the reverse.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
          *  @param initializing Wether to initialize 
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        std::vector< std::vector<HSSDisplayObject::p> > selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating, bool processing);
+        std::vector< std::vector<HSSDisplayObject::p> > selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
         
         /**
          *  Selects descendants according to the current selector chain. It will call selectOnLevel()
@@ -352,13 +351,12 @@ namespace AXR {
          *                      to display objects.
          *  @param thisObj      A shared pointer to the display object that will be selected when using
          *                      @this in HSS.
-         *  @param negating     Wether to select what matches the selector or the reverse.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        std::vector< std::vector<HSSDisplayObject::p> > selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating, bool processing);
+        std::vector< std::vector<HSSDisplayObject::p> > selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
         
         /**
          *  Selects siblings according to the current selector chain. It will call selectSimple()
@@ -370,13 +368,12 @@ namespace AXR {
          *                      to display objects.
          *  @param thisObj      A shared pointer to the display object that will be selected when using
          *                      @this in HSS.
-         *  @param negating     Wether to select what matches the selector or the reverse.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        std::vector< std::vector<HSSDisplayObject::p> > selectOnLevel(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating, bool processing);
+        std::vector< std::vector<HSSDisplayObject::p> > selectOnLevel(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
         
         /**
          *  Selects elements according to the current selector chain. It will automatically call
@@ -388,29 +385,12 @@ namespace AXR {
          *                      to display objects.
          *  @param thisObj      A shared pointer to the display object that will be selected when using
          *                      @this in HSS.
-         *  @param negating     Wether to select what matches the selector or the reverse.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        std::vector< std::vector<HSSDisplayObject::p> > selectSimple(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool negating, bool processing);
-        
-        /**
-         *  Filters the selection according to the current selector chain. If processing, flags will always
-         *  return the display object, but configures it to make it dependent on the flag.
-         *  
-         *  Do not call directly, use select() instead.
-         *
-         *  @param selection    A vector of shared pointers to display objects containing the selection
-         *                      to be filtered.
-         *  @param negating     Wether to select what matches the filter or the reverse.
-         *  @param processing   The first time the rules are matched to the display objects, we want to
-         *                      process stuff like flags, instead of just plain selecting.
-         *  @return             A vector of selections of the elements that were selected, each of these
-         *                      is a vector containing shared pointers to display objects.
-         */
-        std::vector< std::vector<HSSDisplayObject::p> > filterSelection(std::vector< HSSDisplayObject::p> &selection, bool negating, bool processing);
+        std::vector< std::vector<HSSDisplayObject::p> > selectSimple(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
         
         /**
          *  @todo make private and provide accessors.

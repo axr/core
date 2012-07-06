@@ -46,7 +46,7 @@
 using namespace AXR;
 
 HSSUniversalSelector::HSSUniversalSelector()
-: HSSParserNode()
+: HSSNameSelector("*")
 {
     
 }
@@ -62,4 +62,9 @@ std::string HSSUniversalSelector::toString(){
 
 HSSClonable::p HSSUniversalSelector::cloneImpl() const{
     return HSSClonable::p(new HSSUniversalSelector(*this));
+}
+
+std::vector<HSSDisplayObject::p> HSSUniversalSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing)
+{
+    return scope;
 }

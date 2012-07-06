@@ -48,34 +48,31 @@ using namespace AXR;
 HSSSelector::HSSSelector(HSSSelectorType type)
 : HSSParserNode(HSSParserNodeTypeSelector)
 {
-    this->elementName = elementName;
     this->_selectorType = type;
+    this->_negating = false;
 }
 
-HSSSelector::HSSSelector(const HSSSelector &orig)
-: HSSParserNode(orig)
+HSSSelector::~HSSSelector()
 {
-    this->elementName = orig.elementName;
+    
 }
 
-HSSSelector::p HSSSelector::clone() const{
-    return boost::static_pointer_cast<HSSSelector, HSSClonable>(this->cloneImpl());
-}
-
-std::string HSSSelector::getElementName()
+const bool HSSSelector::getNegating() const
 {
-    return this->elementName;
+    return this->_negating;
 }
 
-std::string HSSSelector::toString(){
-    return "Simple selector targeting an element with name "+this->elementName;
+void HSSSelector::setNegating(bool value)
+{
+    this->_negating = value;
 }
 
-HSSClonable::p HSSSelector::cloneImpl() const
+bool HSSSelector::isA(HSSSelectorType otherType)
+{
+    return this->_selectorType == otherType;
+}
+
 HSSSelectorType HSSSelector::getSelectorType()
 {
-    return HSSClonable::p(new HSSSelector(*this));
     return this->_selectorType;
 }
-
-

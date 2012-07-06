@@ -64,7 +64,7 @@ namespace AXR {
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSLastFilter.
          */
-        p clone() const;
+        HSSFilter::p clone() const;
         
         /**
          *  Destructor for this class.
@@ -77,7 +77,7 @@ namespace AXR {
          */
         virtual std::string toString();
         
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool negating);
+        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

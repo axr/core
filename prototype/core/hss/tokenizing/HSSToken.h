@@ -69,7 +69,8 @@ namespace AXR {
         HSSParenthesisOpen,
         HSSParenthesisClose,
         HSSLineComment,
-        HSSBlockComment
+        HSSBlockComment,
+        HSSNegator
     };
 
     class HSSToken

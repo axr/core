@@ -49,11 +49,11 @@
 #include <deque>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include "HSSSelector.h"
 
 namespace AXR {
     
     class HSSRule;
+    class HSSSimpleSelector;
     
     /**
      *  @brief Encapsulates a group of related nodes as a way of "pointing" to elements
@@ -111,13 +111,6 @@ namespace AXR {
         std::string toString();
         
         /**
-         *  Convenience implementation of the [] operator. Returns a node based on the index.
-         *  @param i    The index of the node in the node list.
-         *  @return A shared pointer to the parser node at the given index in the node list.
-         */
-        const HSSParserNode::p & operator[] (const int i) const;
-        
-        /**
          *  Returns a node based on the index.
          *  @param i    The index of the node in the node list.
          *  @return A shared pointer to the parser node at the given index in the node list.
@@ -156,7 +149,7 @@ namespace AXR {
          *  be changed with the subject selector "$" (currently unimplemented).
          *  @return A shared pointer to the subject of the selector chain.
          */
-        HSSSelector::p subject();
+        boost::shared_ptr<HSSSimpleSelector> subject();
         
         //see HSSParserNode.h for documentation of this method
         virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);

@@ -44,7 +44,7 @@
 #ifndef HSSFLAG_H
 #define HSSFLAG_H
 
-#include "HSSParserNode.h"
+#include "HSSFilter.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
@@ -60,7 +60,7 @@ namespace AXR {
      *  Flags (e.g. ::hover) are a way to conditionally target elements in HSS, inside
      *  a selector chain.
      */
-    class HSSFlag : public HSSParserNode
+    class HSSFlag : public HSSFilter
     {
     public:
         typedef boost::shared_ptr<HSSFlag> p;
@@ -75,7 +75,7 @@ namespace AXR {
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSFlag
          */
-        p clone() const;
+        HSSFilter::p clone() const;
         
         /**
          *  Destructor for this class.
@@ -98,14 +98,6 @@ namespace AXR {
         void setName(std::string newValue);
         
         /**
-         *  Connects the flag to the display object, so that when it changes state
-         *  style resolution happens.
-         *  @param displayObject    A shared pointer to the display object to bind to.
-         *  @param negating         Wether the flag is being negated or not.
-         */
-        void apply(boost::shared_ptr<HSSDisplayObject> displayObject, bool negating);
-        
-        /**
          *  When the status of a flag changes, this method should be called. It will create a
          *  new selection from the original scope of the rule, and then set the new purging 
          *  status on the selected elements.
@@ -123,10 +115,9 @@ namespace AXR {
          *  When selecting (not connecting, which is different) elements based on the flag,
          *  the flag acts like a filter, reducing the size of the selection.
          *  @param scope        The original selection: A vector of shared pointers to display objects.
-         *  @param negating     Wether we are negating the flag or not.
          *  @return A vector of shared pointers to the display objects in the resulting selection.
          */
-        const std::vector<boost::shared_ptr<HSSDisplayObject> > filter(const std::vector<boost::shared_ptr<HSSDisplayObject> > &scope, bool negating);
+        const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
         
         /**
          *  Getter for the purging state.

@@ -44,9 +44,10 @@
 #ifndef HSSUNIVERSALSELECTOR_H
 #define HSSUNIVERSALSELECTOR_H
 
-#include "HSSParserNode.h"
+#include "HSSNameSelector.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include "../objects/HSSDisplayObject.h"
 
 namespace AXR {
     
@@ -55,7 +56,7 @@ namespace AXR {
      *
      *  The star symbol "*" is used in selector chains to select the whole scope.
      */
-    class HSSUniversalSelector : public HSSParserNode {
+    class HSSUniversalSelector : public HSSNameSelector {
         
     public:
         typedef boost::shared_ptr<HSSUniversalSelector> p;
@@ -74,6 +75,9 @@ namespace AXR {
         
         //see HSSParserNode.h for the documentation of this method
         virtual std::string toString();
+        
+        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing);
+        
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

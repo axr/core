@@ -44,6 +44,7 @@
 #include "HSSFilter.h"
 #include <boost/unordered_map.hpp>
 #include "HSSFilters.h"
+#include "../objects/HSSDisplayObject.h"
 
 using namespace AXR;
 
@@ -85,6 +86,8 @@ std::string HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType){
         //special
         types[HSSFilterTypeEach] = "HSSFilterTypeEach";
         types[HSSFilterTypeCustom] = "HSSFilterTypeCustom";
+        //flags
+        types[HSSFilterTypeFlag] = "HSSFilterTypeFlag";
     }
     
     return types[filterType];
@@ -154,12 +157,12 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
         }
             
             
-        case HSSFilterTypeEach:
-        {
-            ret = HSSFilter::p(new HSSFilter());
-            ret->filterType = filterType;
-            break;
-        }
+//        case HSSFilterTypeEach:
+//        {
+//            ret = HSSFilter::p(new HSSEachFilter());
+//            ret->filterType = filterType;
+//            break;
+//        }
             
         default:
             throw AXRError::p(new AXRError("HSSFilter", "Unknown filter type."));
@@ -169,14 +172,11 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
 }
 
 
-HSSFilter::HSSFilter()
-: HSSParserNode()
+HSSFilter::HSSFilter(HSSFilterType type)
+: HSSParserNode(HSSParserNodeTypeFilter)
 {
-    this->nodeType = HSSParserNodeTypeFilter;
-}
-
-HSSFilter::p HSSFilter::clone() const{
-    return boost::static_pointer_cast<HSSFilter, HSSClonable>(this->cloneImpl());
+    this->filterType = type;
+    this->_negating = false;
 }
 
 HSSFilter::~HSSFilter()
@@ -199,11 +199,12 @@ HSSFilterType HSSFilter::getFilterType()
     return this->filterType;
 }
 
-const std::vector<HSSDisplayObject::p> HSSFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
+const bool HSSFilter::getNegating() const
 {
-    return scope;
+    return this->_negating;
 }
 
-HSSClonable::p HSSFilter::cloneImpl() const{
-    return HSSClonable::p(new HSSFilter(*this));
+void HSSFilter::setNegating(bool value)
+{
+    this->_negating = value;
 }

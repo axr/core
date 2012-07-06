@@ -45,56 +45,39 @@
 #define HSSSELECTOR_H
 
 #include "HSSParserNode.h"
-#include <string>
-#include <boost/shared_ptr.hpp>
+#include "../objects/HSSDisplayObject.h"
 
 namespace AXR {
     
     /**
-     *  @brief Selects elements by tag name.
-     *
-     *  This just holds information about the name of the elements that should
-     *  be selected by AXRController when creating selections.
+     *  @brief Abstract base class for a common interface for all selector nodes
      */
     class HSSSelector : public HSSParserNode {
     public:
         typedef boost::shared_ptr<HSSSelector> p;
         
         /**
-         *  Creates a new instance of a selector.
+         *  Creates a new instance of a simple selector, for use of the subclasses.
+         *  @param type     The type of the selector node.
          */
-        HSSSelector(std::string elementName);
+        HSSSelector(HSSSelectorType type);
+        ~HSSSelector();
         
         /**
-         *  Copy constructor for HSSAction objects. Do not call directly, use clone() instead.
+         * Reduces the selection according its selector type
          */
-        HSSSelector(const HSSSelector &orig);
+        virtual std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing) = 0;
         
-        /**
-         *  Clones an instance of HSSSelector and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSSelector.
-         */
-        p clone() const;
+        const bool getNegating() const;
+        void setNegating(bool value);
         
-        /**
-         *  Getter for the name of the element.
-         *  @return A string containing the name of the element.
-         */
-        std::string getElementName();
-        
-        //see HSSObject.h for documentation of this method
-        virtual std::string toString();
-        
-        
-    protected:
-        std::string elementName;
+        bool isA(HSSSelectorType otherType);
+        HSSSelectorType getSelectorType();
         
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        HSSSelectorType _selectorType;        
+        bool _negating;
     };
 }
-
-
 
 #endif

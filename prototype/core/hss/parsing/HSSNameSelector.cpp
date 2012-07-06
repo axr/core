@@ -41,40 +41,52 @@
  *
  ********************************************************************/
 
-#ifndef HSSFIRSTFILTER_H
-#define HSSFIRSTFILTER_H
+#include "HSSNameSelector.h"
 
-#include "HSSFilter.h"
+using namespace AXR;
 
-namespace AXR {
-    /**
-     *  @brief Selects the first element of the selection.
-     */
-    class HSSFirstFilter : public HSSFilter
-    {
-    public:        
-        /**
-         *  @brief Creates a new instance of a \@first filter.
-         */
-        HSSFirstFilter();
-        
-        /**
-         *  Clones an instance of HSSFirstFilter and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSFirstFilter
-         */
-        HSSFilter::p clone() const;
-        
-        /**
-         *  Destructor for this class.
-         */
-        virtual ~HSSFirstFilter();
-        virtual std::string toString();
-        
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
-    private:
-        virtual HSSClonable::p cloneImpl() const;
-    };
+HSSNameSelector::HSSNameSelector(std::string elementName)
+: HSSSelector(HSSSelectorTypeNameSelector)
+{
+    this->elementName = elementName;
 }
 
-#endif
+HSSNameSelector::HSSNameSelector(const HSSNameSelector &orig)
+: HSSSelector(orig)
+{
+    this->elementName = orig.elementName;
+}
+
+HSSNameSelector::p HSSNameSelector::clone() const{
+    return boost::static_pointer_cast<HSSNameSelector, HSSClonable>(this->cloneImpl());
+}
+
+std::string HSSNameSelector::getElementName()
+{
+    return this->elementName;
+}
+
+std::string HSSNameSelector::toString(){
+    return "Name selector targeting an element with name "+this->elementName;
+}
+
+HSSClonable::p HSSNameSelector::cloneImpl() const
+{
+    return HSSClonable::p(new HSSNameSelector(*this));
+}
+
+std::vector<HSSDisplayObject::p> HSSNameSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing)
+{
+    std::vector< HSSDisplayObject::p> ret;
+    unsigned i, size;
+    //select only elements with matching element name
+    for (i=0, size=scope.size(); i<size; i++) {
+        bool match = scope[i]->getElementName() == this->getElementName();
+        if((match && !this->getNegating()) || (!match && this->getNegating()) ){
+            ret.push_back(scope[i]);
+        }
+    }
+    return ret;
+}
+
+

@@ -434,6 +434,16 @@ HSSRule::p HSSParser::readRule()
     std::vector<HSSSelectorChain::p> selectorChains;
     try {
         selectorChains = this->readSelectorChains(HSSBlockOpen);
+        //if we have a end of statement here, we're done
+        if(this->currentToken->isA(HSSEndOfStatement)){
+            this->readNextToken(true);
+            //skip any whitespace
+            this->skip(HSSWhitespace, true);
+            HSSRule::p ret = HSSRule::p(new HSSRule());
+            ret->setSelectorChains(selectorChains);
+            return ret;
+        }
+        
     } catch (AXRError::p e) {
         this->readNextToken();
         this->checkForUnexpectedEndOfSource();
@@ -449,6 +459,11 @@ HSSRule::p HSSParser::readRule()
     HSSRule::p ret = HSSRule::p(new HSSRule());
     ret->setSelectorChains(selectorChains);
     
+    //we expect a block to open
+    this->skipExpected(HSSBlockOpen, true);
+    //skip any whitespace
+    this->skip(HSSWhitespace, true);
+    
     //now we're inside the block
     this->currentContext.push_back(HSSParserContextBlock);
     
@@ -458,7 +473,6 @@ HSSRule::p HSSParser::readRule()
         try {
             switch (this->currentToken->getType()) {
                 case HSSIdentifier:
-                case HSSColon:
                 case HSSObjectSign:
                 {
                     bool isShorthand;
@@ -478,6 +492,8 @@ HSSRule::p HSSParser::readRule()
                 }
                     
                 case HSSSymbol:
+                case HSSNegator:
+                case HSSColon:
                 {
                     HSSRule::p theRule = this->readRule();
                     if(theRule)
@@ -515,7 +531,7 @@ HSSRule::p HSSParser::readRule()
         }
         
         if (this->atEndOfSource()) {
-            HSSSelector::p sbjct = selectorChains.back()->subject();
+            HSSNameSelector::p sbjct = selectorChains.back()->subject()->getName();
             std::string lmntnm;
             if(sbjct){
                 lmntnm = sbjct->getElementName();
@@ -552,163 +568,51 @@ HSSRule::p HSSParser::readRule()
 
 std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stopOn)
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading selector chain");
+    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading selector chains");
     inc_output_indent();
     security_brake_init();
     
     std::vector<HSSSelectorChain::p> retvect;
     HSSSelectorChain::p ret = HSSSelectorChain::p(new HSSSelectorChain());
+    bool done = false;
     
-    //first we need to look at the selector chain
     //set the current context
     this->currentContext.push_back(HSSParserContextSelectorChain);
-    //parse the selector chain until we find the token to stop on
-    while (this->currentToken && !this->currentToken->isA(stopOn)) {
+    HSSCombinator::p beginning_combinator = this->readCombinator();
+    if(beginning_combinator){
+        HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector());
+        newSs->setName(HSSThisSelector::p(new HSSThisSelector()));
+        ret->add(newSs);
+        ret->add(beginning_combinator);
+    }
+    while (!done) {
+        HSSSimpleSelector::p ss = this->readSimpleSelector();
+        if(ss){
+            ret->add(ss);
+        }
         
-        
-        switch (this->currentToken->getType()) {
-            case HSSIdentifier:
-            {
-                //if it's an identifier, it's a simple selector
-                ret->add(this->readSelector());
-                //adds only if needed
-                HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
-                if(childrenCombinator){
-                    ret->add(childrenCombinator);
-                }
-                break;
-            }
+        HSSCombinator::p cc = this->readChildrenCombinatorOrSkip();
+        if(cc){
+            ret->add(cc);
+        }
+        HSSCombinator::p combinator = this->readCombinator();
+        if(combinator){
+            ret->add(combinator);
+        }
+        this->skip(HSSWhitespace);
+        if(this->currentToken->isA(HSSComma)) {
+            retvect.push_back(ret);
             
-            case HSSSymbol:
-            {
-                //a symbol, probably a combinator
-                const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
-                switch (currentTokenValue) {
-                    case '=':
-                    case '-':
-                    case '+':
-                    case '>':
-                        /**
-                         *  @todo special handling for text selection combinators?
-                         */
-                        ret->add(this->readSymbolCombinator());
-                        break;
-                    case '*':
-                        ret->add(HSSUniversalSelector::p(new HSSUniversalSelector()));
-                        this->readNextToken();
-                        //adds only if needed
-                        ret->add(this->readChildrenCombinatorOrSkip());
-                        
-                        break;
-                    case '.':
-                        //we need to check if it is really a combinator or just a syntax error
-                        if (VALUE_TOKEN(this->currentToken)->getString() == ".."){
-                            ret->add(this->readSymbolCombinator());
-                            break;
-                        }
-                        
-                    case '!':
-                    {
-                        //it's a negation
-                        ret->add(HSSNegation::p(new HSSNegation()));
-                        this->readNextToken();
-                        break;
-                    }
-                        
-                        //huh? we didn't expect any other symbol
-                    default:
-                        throw AXRError::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
-                }
-                break;
+            this->readNextToken(true);
+            this->skip(HSSWhitespace);
+            if(!this->currentToken->isA(stopOn)){
+                ret = HSSSelectorChain::p(new HSSSelectorChain());
+            } else {
+                ret = HSSSelectorChain::p();
             }
-                
-            case HSSColon:
-            {
-                //if there is another colon, it is a flag
-                this->readNextToken(true);
-                if(this->currentToken->isA(HSSColon)){
-                    this->readNextToken(true);
-                    HSSParserNode::p theFlag = this->readFlag();
-                    if(theFlag){
-                        ret->add(theFlag);
-                    }
-                    
-                } else {
-                    //it is a filter
-                    HSSParserNode::p theFilter = this->readFilter();
-                    if(theFilter){
-                        ret->add(theFilter);
-                    }
-                }
-                //adds only if needed
-                ret->add(this->readChildrenCombinatorOrSkip());
-                break;
-            }
-                
-            case HSSComma:
-            {
-                retvect.push_back(ret);
-                
-                this->readNextToken(true);
-                this->skip(HSSWhitespace);
-                if(!this->currentToken->isA(stopOn)){
-                    ret = HSSSelectorChain::p(new HSSSelectorChain());
-                } else {
-                    ret = HSSSelectorChain::p();
-                }
-                break;
-            }
-                
-            case HSSObjectSign:
-            {
-                this->readNextToken(true);
-                if(this->currentToken->isA(HSSIdentifier)){
-                    std::string objtype = VALUE_TOKEN(this->currentToken)->getString();
-                    if (objtype == "this") {
-                        ret->add(HSSThisSelector::p(new HSSThisSelector()));
-                        this->readNextToken(true);
-                        //adds only if needed
-                        HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
-                        if(childrenCombinator){
-                            ret->add(childrenCombinator);
-                        }
-                        break;
-                    } else if (objtype == "super"){
-                        /**
-                         *  @todo implement \@super
-                         */
-                        std_log("@super not implemented yet");
-                    } else if (objtype == "parent"){
-                        /**
-                         *  @todo implement \@parent
-                         */
-                        std_log("@parent not implemented yet");
-                    } else if (objtype == "root"){
-                        ret->add(HSSRootSelector::p(new HSSRootSelector()));
-                        this->readNextToken(true);
-                        //adds only if needed
-                        HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
-                        if(childrenCombinator){
-                            ret->add(childrenCombinator);
-                        }
-                        break;
-                    } else {
-                        throw AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->currentFile->getFileName(), this->line, this->column));
-                    }
-                } else if(this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) || this->currentToken->isA(HSSColon)){
-                    ret->add(HSSThisSelector::p(new HSSThisSelector()));
-                    this->skip(HSSWhitespace, true);
-                    break;
-                }
-                
-                //fall through
-            }
-                
-            default:
-            {
-                //we didn't expect any other type of token
-                throw AXRError::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
-            }
+        }
+        if(this->currentToken->isA(stopOn) || this->currentToken->isA(HSSEndOfStatement)){
+            done = true;
         }
         
         security_brake();
@@ -722,18 +626,490 @@ std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stop
     //we're not in a selector anymore
     this->currentContext.pop_back();
     
-    //we expect a block to open
-    this->skipExpected(stopOn);
-    //if the file ends here, fuuuuuuu[...]
-    this->checkForUnexpectedEndOfSource();
-    //skip any whitespace
-    this->skip(HSSWhitespace);
-    //if the file ends here, fuuuuuuu[...]
-    this->checkForUnexpectedEndOfSource();
-    
     dec_output_indent();
     return retvect;
 }
+
+HSSSimpleSelector::p HSSParser::readSimpleSelector()
+{
+    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading simple selector");
+    security_brake_init();
+    
+    HSSSimpleSelector::p ret;
+    bool isNegating = false;
+    isNegating = this->isNegator();
+    switch (this->currentToken->getType()) {
+        case HSSIdentifier:
+        {
+            ret = HSSSimpleSelector::p(new HSSSimpleSelector());
+            ret->setName(this->readNameSelector(isNegating));
+            
+            //we're done negating for now
+            isNegating = false;
+            break;
+        }
+        
+        case HSSSymbol:
+        {
+            const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
+            switch (currentTokenValue) {
+                case '*':
+                {
+                    ret = HSSSimpleSelector::p(new HSSSimpleSelector());
+                    ret->setName(HSSUniversalSelector::p(new HSSUniversalSelector()));
+                    this->readNextToken();
+                    break;
+                }
+            }
+            
+            break;
+        }
+            
+        case HSSColon:
+        {
+            ret = HSSSimpleSelector::p(new HSSSimpleSelector());
+            ret->setName(HSSUniversalSelector::p(new HSSUniversalSelector()));
+            break;
+        }
+            
+        case HSSObjectSign:
+        {
+            ret = HSSSimpleSelector::p(new HSSSimpleSelector());
+            ret->setName(this->readObjectSelector());
+        }
+            
+        default:
+            break;
+    }
+    
+    bool done = false;
+    while(!done){
+        if(!isNegating){
+            isNegating = this->isNegator();
+        }
+        
+        HSSFilter::p filter = this->readFilter();
+        if(filter){
+            filter->setNegating(isNegating);
+            //we're done negating for now
+            isNegating = false;
+            ret->filtersAdd(filter);
+        } else {
+            done = true;
+        }
+        security_brake();
+    }
+    security_brake_reset();
+    return ret;
+                        
+//    switch (this->currentToken->getType()) {
+//        case HSSIdentifier:
+//        {
+//            //if it's an identifier, it's a simple selector
+//            
+//            break;
+//        }
+//        
+//        case '*':
+//        {
+//            ret->add(HSSUniversalSelector::p(new HSSUniversalSelector()));
+//            this->readNextToken();
+//            break;
+//        }
+//            
+//        case '!':
+//        {
+//            //it's a negation
+//            ret->add(HSSNegation::p(new HSSNegation()));
+//            this->readNextToken();
+//            break;
+//        }
+//            
+//        case HSSColon:
+//        {
+//            //if there is another colon, it is a flag
+//            this->readNextToken(true);
+//            if(this->currentToken->isA(HSSColon)){
+//                this->readNextToken(true);
+//                HSSParserNode::p theFlag = this->readFlag();
+//                if(theFlag){
+//                    ret->add(theFlag);
+//                }
+//                
+//            } else {
+//                //it is a filter
+//                HSSParserNode::p theFilter = this->readFilter();
+//                if(theFilter){
+//                    ret->add(theFilter);
+//                }
+//            }
+//            //adds only if needed
+//            ret->add(this->readChildrenCombinatorOrSkip());
+//            break;
+//        }
+//            
+//        case HSSObjectSign:
+//        {
+//            this->readNextToken(true);
+//            if(this->currentToken->isA(HSSIdentifier)){
+//                std::string objtype = VALUE_TOKEN(this->currentToken)->getString();
+//                if (objtype == "this") {
+//                    ret->add(HSSThisSelector::p(new HSSThisSelector()));
+//                    this->readNextToken(true);
+//                    //adds only if needed
+//                    HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+//                    if(childrenCombinator){
+//                        ret->add(childrenCombinator);
+//                    }
+//                    break;
+//                } else if (objtype == "super"){
+//                    /**
+//                     *  @todo implement \@super
+//                     */
+//                    std_log("@super not implemented yet");
+//                } else if (objtype == "parent"){
+//                    /**
+//                     *  @todo implement \@parent
+//                     */
+//                    std_log("@parent not implemented yet");
+//                } else if (objtype == "root"){
+//                    ret->add(HSSRootSelector::p(new HSSRootSelector()));
+//                    this->readNextToken(true);
+//                    //adds only if needed
+//                    HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+//                    if(childrenCombinator){
+//                        ret->add(childrenCombinator);
+//                    }
+//                    break;
+//                } else {
+//                    throw AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->currentFile->getFileName(), this->line, this->column));
+//                }
+//            } else if(this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) || this->currentToken->isA(HSSColon)){
+//                ret->add(HSSThisSelector::p(new HSSThisSelector()));
+//                this->skip(HSSWhitespace, true);
+//                break;
+//            }
+//            
+//            //fall through
+//        }
+//            
+//        default:
+//        {
+//            //we didn't expect any other type of token
+//            throw AXRError::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
+//        }
+//    }
+//    
+//    return ret;
+}
+
+HSSNameSelector::p HSSParser::readObjectSelector()
+{
+    HSSNameSelector::p ret;
+    switch (this->currentToken->getType()) {
+        case HSSObjectSign:
+        {
+            this->readNextToken(true);
+            if(this->currentToken->isA(HSSIdentifier)){
+                std::string objtype = VALUE_TOKEN(this->currentToken)->getString();
+                if (objtype == "this") {
+                    ret = HSSThisSelector::p(new HSSThisSelector());
+                    this->readNextToken(true);
+                    break;
+                } else if (objtype == "super"){
+                    /**
+                     *  @todo implement \@super
+                     */
+                    std_log("@super not implemented yet");
+                } else if (objtype == "parent"){
+                    /**
+                     *  @todo implement \@parent
+                     */
+                    std_log("@parent not implemented yet");
+                } else if (objtype == "root"){
+                    ret = HSSRootSelector::p(new HSSRootSelector());
+                    this->readNextToken(true);
+                    break;
+                } else {
+                    AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->currentFile->getFileName(), this->line, this->column))->raise();
+                    return HSSNameSelector::p();
+                }
+            } else if(this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) || this->currentToken->isA(HSSColon)){
+                ret = HSSThisSelector::p(new HSSThisSelector());
+                this->skip(HSSWhitespace, true);
+                break;
+            }
+        }
+            
+        default:
+            break;
+    }
+    return ret;
+}
+
+bool HSSParser::isNegator()
+{
+    if(this->currentToken->isA(HSSNegator)){
+        this->readNextToken();
+        return true;
+    }
+    
+    return false;
+}
+
+HSSFilter::p HSSParser::readFilter()
+{
+    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading filter");
+    inc_output_indent();
+    
+    HSSFilter::p ret;
+    if(this->currentToken->isA(HSSColon)){
+        this->readNextToken();
+        
+        if(this->currentToken->isA(HSSColon)){
+            this->readNextToken();
+            std::string flagName = VALUE_TOKEN(this->currentToken)->getString();
+            HSSFlag::p theFlag = HSSFlag::p(new HSSFlag());
+            theFlag->setName(flagName);
+            ret = theFlag;
+            this->readNextToken();
+            this->checkForUnexpectedEndOfSource();
+            
+        } else {
+            this->expect(HSSIdentifier);
+            
+            std::string filterName = VALUE_TOKEN(this->currentToken)->getString();
+            ret = HSSFilter::newFilterWithStringType(filterName);
+            
+            this->readNextToken();
+            this->checkForUnexpectedEndOfSource();
+        }
+    }
+    
+    dec_output_indent();
+    
+    return ret;
+}
+
+HSSCombinator::p HSSParser::readCombinator()
+{
+    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading combinator");
+    HSSCombinator::p ret;
+    
+    if(this->currentToken->isA(HSSSymbol)){
+        const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
+        switch (currentTokenValue) {
+            case '=':
+            case '-':
+            case '+':
+            case '>':
+                /**
+                 *  @todo special handling for text selection combinators?
+                 */
+                ret = this->readSymbolCombinator();
+                break;
+                
+            case '.':
+                //we need to check if it is really a combinator or just a syntax error
+                if (VALUE_TOKEN(this->currentToken)->getString() == ".."){
+                    ret = this->readSymbolCombinator();
+                    break;
+                }
+                
+                //huh? we didn't expect any other symbol
+            default:
+                break;
+        }
+    }
+    
+    return ret;
+    
+}
+
+//std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stopOn)
+//{
+//    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading selector chain");
+//    inc_output_indent();
+//    security_brake_init();
+//    
+//    std::vector<HSSSelectorChain::p> retvect;
+//    HSSSelectorChain::p ret = HSSSelectorChain::p(new HSSSelectorChain());
+//    
+//    //first we need to look at the selector chain
+//    //set the current context
+//    this->currentContext.push_back(HSSParserContextSelectorChain);
+//    //parse the selector chain until we find the token to stop on
+//    while (this->currentToken && !this->currentToken->isA(stopOn)) {
+//        
+//        
+//        switch (this->currentToken->getType()) {
+//            case HSSIdentifier:
+//            {
+//                //if it's an identifier, it's a simple selector
+//                ret->add(this->readSelector());
+//                //adds only if needed
+//                HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+//                if(childrenCombinator){
+//                    ret->add(childrenCombinator);
+//                }
+//                break;
+//            }
+//            
+//            case HSSSymbol:
+//            {
+//                //a symbol, probably a combinator
+//                const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
+//                switch (currentTokenValue) {
+//                    case '=':
+//                    case '-':
+//                    case '+':
+//                    case '>':
+//                        /**
+//                         *  @todo special handling for text selection combinators?
+//                         */
+//                        ret->add(this->readSymbolCombinator());
+//                        break;
+//                    case '*':
+//                        ret->add(HSSUniversalSelector::p(new HSSUniversalSelector()));
+//                        this->readNextToken();
+//                        //adds only if needed
+//                        ret->add(this->readChildrenCombinatorOrSkip());
+//                        
+//                        break;
+//                    case '.':
+//                        //we need to check if it is really a combinator or just a syntax error
+//                        if (VALUE_TOKEN(this->currentToken)->getString() == ".."){
+//                            ret->add(this->readSymbolCombinator());
+//                            break;
+//                        }
+//                        
+//                    case '!':
+//                    {
+//                        //it's a negation
+//                        ret->add(HSSNegation::p(new HSSNegation()));
+//                        this->readNextToken();
+//                        break;
+//                    }
+//                        
+//                        //huh? we didn't expect any other symbol
+//                    default:
+//                        throw AXRError::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
+//                }
+//                break;
+//            }
+//                
+//            case HSSColon:
+//            {
+//                //if there is another colon, it is a flag
+//                this->readNextToken(true);
+//                if(this->currentToken->isA(HSSColon)){
+//                    this->readNextToken(true);
+//                    HSSParserNode::p theFlag = this->readFlag();
+//                    if(theFlag){
+//                        ret->add(theFlag);
+//                    }
+//                    
+//                } else {
+//                    //it is a filter
+//                    HSSParserNode::p theFilter = this->readFilter();
+//                    if(theFilter){
+//                        ret->add(theFilter);
+//                    }
+//                }
+//                //adds only if needed
+//                ret->add(this->readChildrenCombinatorOrSkip());
+//                break;
+//            }
+//                
+//            case HSSComma:
+//            {
+//                retvect.push_back(ret);
+//                
+//                this->readNextToken(true);
+//                this->skip(HSSWhitespace);
+//                if(!this->currentToken->isA(stopOn)){
+//                    ret = HSSSelectorChain::p(new HSSSelectorChain());
+//                } else {
+//                    ret = HSSSelectorChain::p();
+//                }
+//                break;
+//            }
+//                
+//            case HSSObjectSign:
+//            {
+//                this->readNextToken(true);
+//                if(this->currentToken->isA(HSSIdentifier)){
+//                    std::string objtype = VALUE_TOKEN(this->currentToken)->getString();
+//                    if (objtype == "this") {
+//                        ret->add(HSSThisSelector::p(new HSSThisSelector()));
+//                        this->readNextToken(true);
+//                        //adds only if needed
+//                        HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+//                        if(childrenCombinator){
+//                            ret->add(childrenCombinator);
+//                        }
+//                        break;
+//                    } else if (objtype == "super"){
+//                        /**
+//                         *  @todo implement \@super
+//                         */
+//                        std_log("@super not implemented yet");
+//                    } else if (objtype == "parent"){
+//                        /**
+//                         *  @todo implement \@parent
+//                         */
+//                        std_log("@parent not implemented yet");
+//                    } else if (objtype == "root"){
+//                        ret->add(HSSRootSelector::p(new HSSRootSelector()));
+//                        this->readNextToken(true);
+//                        //adds only if needed
+//                        HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+//                        if(childrenCombinator){
+//                            ret->add(childrenCombinator);
+//                        }
+//                        break;
+//                    } else {
+//                        throw AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->currentFile->getFileName(), this->line, this->column));
+//                    }
+//                } else if(this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) || this->currentToken->isA(HSSColon)){
+//                    ret->add(HSSThisSelector::p(new HSSThisSelector()));
+//                    this->skip(HSSWhitespace, true);
+//                    break;
+//                }
+//                
+//                //fall through
+//            }
+//                
+//            default:
+//            {
+//                //we didn't expect any other type of token
+//                throw AXRError::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
+//            }
+//        }
+//        
+//        security_brake();
+//    }
+//    security_brake_reset();
+//    
+//    if(ret) {
+//        retvect.push_back(ret);
+//    }
+//    
+//    //we're not in a selector anymore
+//    this->currentContext.pop_back();
+//    
+//    //we expect a block to open
+//    this->skipExpected(stopOn);
+//    //if the file ends here, fuuuuuuu[...]
+//    this->checkForUnexpectedEndOfSource();
+//    //skip any whitespace
+//    this->skip(HSSWhitespace);
+//    //if the file ends here, fuuuuuuu[...]
+//    this->checkForUnexpectedEndOfSource();
+//    
+//    dec_output_indent();
+//    return retvect;
+//}
 
 bool HSSParser::isCombinator()
 {
@@ -958,13 +1334,14 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
 }
 
 //this assumes that the currentToken is an identifier
-HSSSelector::p HSSParser::readSelector()
+HSSNameSelector::p HSSParser::readNameSelector(bool isNegating)
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading selector");
+    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading name selector");
     inc_output_indent();
     
     std::string theValue = VALUE_TOKEN(this->currentToken)->getString();
-    HSSSelector::p ret = HSSSelector::p(new HSSSelector(theValue));
+    HSSNameSelector::p ret = HSSNameSelector::p(new HSSNameSelector(theValue));
+    ret->setNegating(isNegating);
     this->readNextToken();
     
     dec_output_indent();
@@ -1805,6 +2182,10 @@ HSSRule::p HSSParser::readInstructionRule()
             std::vector<HSSSelectorChain::p> selectorChains;
             try {
                 selectorChains = this->readSelectorChains(HSSEndOfStatement);
+                //we expect the end of the statement here
+                this->skipExpected(HSSEndOfStatement, true);
+                //skip any whitespace
+                this->skip(HSSWhitespace, true);
             } catch (AXRError::p e) {
                 this->readNextToken();
                 this->checkForUnexpectedEndOfSource();
@@ -1971,25 +2352,25 @@ HSSParserNode::p HSSParser::readBaseExpression()
     return left;
 }
 
-//this method expects the currentToken to be an identifier
-HSSParserNode::p HSSParser::readFilter()
-{
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading filter");
-    inc_output_indent();
-    
-    HSSFilter::p ret;
-    this->expect(HSSIdentifier);
-    
-    std::string filterName = VALUE_TOKEN(this->currentToken)->getString();
-    ret = HSSFilter::newFilterWithStringType(filterName);
-    
-    this->readNextToken();
-    this->checkForUnexpectedEndOfSource();
-    
-    dec_output_indent();
-    
-    return ret;
-}
+////this method expects the currentToken to be an identifier
+//HSSParserNode::p HSSParser::readFilter()
+//{
+//    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading filter");
+//    inc_output_indent();
+//    
+//    HSSFilter::p ret;
+//    this->expect(HSSIdentifier);
+//    
+//    std::string filterName = VALUE_TOKEN(this->currentToken)->getString();
+//    ret = HSSFilter::newFilterWithStringType(filterName);
+//    
+//    this->readNextToken();
+//    this->checkForUnexpectedEndOfSource();
+//    
+//    dec_output_indent();
+//    
+//    return ret;
+//}
 
 //this method expects the currentToken to be an identifier
 HSSParserNode::p HSSParser::readFlag()
@@ -2068,7 +2449,9 @@ HSSParserNode::p HSSParser::readFunction()
             if(this->currentToken->isA(HSSParenthesisClose)){
                 HSSSelectorChain::p selectorChain;
                 selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
-                selectorChain->add(HSSThisSelector::p(new HSSThisSelector()));
+                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector());
+                newSs->setName(HSSThisSelector::p(new HSSThisSelector()));
+                selectorChain->add(newSs);
                 selectorChains.push_back(selectorChain);
                 this->readNextToken(true);
                 this->skip(HSSWhitespace, true);
@@ -2084,6 +2467,10 @@ HSSParserNode::p HSSParser::readFunction()
                 
                 //now read the selector chain
                 selectorChains = this->readSelectorChains(HSSParenthesisClose);
+                //we expect the closing parenthesis here
+                this->skipExpected(HSSParenthesisClose, true);
+                //skip any whitespace
+                this->skip(HSSWhitespace, true);
             }
             
             refFunction->setSelectorChains(selectorChains);
@@ -2098,6 +2485,10 @@ HSSParserNode::p HSSParser::readFunction()
             std::vector<HSSSelectorChain::p> selectorChains;
             try {
                 selectorChains = this->readSelectorChains(HSSParenthesisClose);
+                //we expect the closing parenthesis here
+                this->skipExpected(HSSParenthesisClose, true);
+                //skip any whitespace
+                this->skip(HSSWhitespace, true);
             } catch (AXRError::p e) {
                 this->readNextToken(true);
                 this->skip(HSSWhitespace);
@@ -2145,7 +2536,9 @@ HSSParserNode::p HSSParser::readFunction()
             if(this->currentToken->isA(HSSParenthesisClose)){
                 HSSSelectorChain::p selectorChain;
                 selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
-                selectorChain->add(HSSThisSelector::p(new HSSThisSelector()));
+                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector());
+                newSs->setName(HSSThisSelector::p(new HSSThisSelector()));
+                selectorChain->add(newSs);
                 selectorChains.push_back(selectorChain);
                 this->readNextToken(true);
                 this->skip(HSSWhitespace, true);
@@ -2161,6 +2554,10 @@ HSSParserNode::p HSSParser::readFunction()
                 
                 //now read the selector chain
                 selectorChains = this->readSelectorChains(HSSParenthesisClose);
+                //we expect the closing parenthesis here
+                this->skipExpected(HSSParenthesisClose, true);
+                //skip any whitespace
+                this->skip(HSSWhitespace, true);
             }
             
             flagFunction->setSelectorChains(selectorChains);

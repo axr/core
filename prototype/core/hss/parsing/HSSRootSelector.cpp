@@ -42,13 +42,14 @@
  ********************************************************************/
 
 #include "HSSRootSelector.h"
+#include "../../AXR.h"
 
 using namespace AXR;
 
 HSSRootSelector::HSSRootSelector()
-: HSSParserNode()
+: HSSNameSelector("@root")
 {
-    this->nodeType = HSSParserNodeTypeRootSelector;
+    
 }
 
 HSSRootSelector::p HSSRootSelector::clone() const{
@@ -63,3 +64,16 @@ HSSClonable::p HSSRootSelector::cloneImpl() const{
     return HSSClonable::p(new HSSRootSelector(*this));
 }
 
+std::string HSSRootSelector::getElementName()
+{
+    AXRCore::tp & core = AXRCore::getInstance();
+    return core->getController()->getRoot()->getElementName();
+}
+
+std::vector<HSSDisplayObject::p> HSSRootSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing)
+{
+    std::vector<HSSDisplayObject::p> ret;
+    AXRCore::tp & core = AXRCore::getInstance();
+    ret.push_back(core->getController()->getRoot());
+    return ret;
+}

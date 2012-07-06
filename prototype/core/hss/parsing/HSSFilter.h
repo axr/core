@@ -121,7 +121,9 @@ namespace AXR {
          *
          *  @todo should this return an empty selection?
          */
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool negating);
+        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing) =0;
+        
+        virtual HSSFilter::p clone() const =0;
         
         /**
          *  Allows you to check if this filter is of the given type.
@@ -135,9 +137,10 @@ namespace AXR {
          */
         HSSFilterType getFilterType();
         
+        const bool getNegating() const;
+        void setNegating(bool value);
         
     private:
-        virtual HSSClonable::p cloneImpl() const;
         HSSFilterType filterType;    
         bool _negating;
     };

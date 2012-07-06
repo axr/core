@@ -44,8 +44,9 @@
 #ifndef HSSTHISSELECTOR_H
 #define HSSTHISSELECTOR_H
 
-#include "HSSParserNode.h"
+#include "HSSNameSelector.h"
 #include <string>
+#include "../objects/HSSDisplayObject.h"
 
 namespace AXR {
     
@@ -57,7 +58,7 @@ namespace AXR {
      *  \@this is used, it points to the container, not the gradient. For the current object itself
      *  \@self is used.
      */
-    class HSSThisSelector : public HSSParserNode {
+    class HSSThisSelector : public HSSNameSelector {
         
     public:
         typedef boost::shared_ptr<HSSThisSelector> p;
@@ -76,6 +77,8 @@ namespace AXR {
         
         //see HSSParserNode.h for the documentation of this method
         virtual std::string toString();
+        
+        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing);
         
     private:
         virtual HSSClonable::p cloneImpl() const;

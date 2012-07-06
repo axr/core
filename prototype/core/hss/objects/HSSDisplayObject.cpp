@@ -59,7 +59,7 @@
 #include "../../axr/AXRController.h"
 #include "HSSRgb.h"
 #include <cmath>
-
+#include "../parsing/HSSFlag.h"
 
 using namespace AXR;
 

@@ -84,3 +84,11 @@ std::string HSSCombinator::combinatorStringRepresentation(HSSCombinatorType type
 HSSClonable::p HSSCombinator::cloneImpl() const{
     return HSSClonable::p(new HSSCombinator(*this));
 }
+
+//does nothing yet
+std::vector<HSSDisplayObject::p> HSSCombinator::filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing)
+{
+    return scope;
+}
+
+

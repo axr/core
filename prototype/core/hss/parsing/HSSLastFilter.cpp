@@ -66,10 +66,10 @@ std::string HSSLastFilter::toString()
 }
 
 
-const std::vector<HSSDisplayObject::p> HSSLastFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
+const std::vector<HSSDisplayObject::p> HSSLastFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
 {
     if(scope.size() > 0){
-        if(negating){
+        if(this->getNegating()){
             std::vector<HSSDisplayObject::p> ret;
             ret.insert(ret.begin(), scope.begin(), scope.end() - 1);
             return ret;

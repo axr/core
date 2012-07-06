@@ -41,40 +41,14 @@
  *
  ********************************************************************/
 
-#ifndef HSSFIRSTFILTER_H
-#define HSSFIRSTFILTER_H
+#ifndef HSSSELECTORNODES_H
+#define HSSSELECTORNODES_H
 
-#include "HSSFilter.h"
-
-namespace AXR {
-    /**
-     *  @brief Selects the first element of the selection.
-     */
-    class HSSFirstFilter : public HSSFilter
-    {
-    public:        
-        /**
-         *  @brief Creates a new instance of a \@first filter.
-         */
-        HSSFirstFilter();
-        
-        /**
-         *  Clones an instance of HSSFirstFilter and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSFirstFilter
-         */
-        HSSFilter::p clone() const;
-        
-        /**
-         *  Destructor for this class.
-         */
-        virtual ~HSSFirstFilter();
-        virtual std::string toString();
-        
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
-    private:
-        virtual HSSClonable::p cloneImpl() const;
-    };
-}
+#include "HSSSimpleSelector.h"
+#include "HSSUniversalSelector.h"
+#include "HSSNameSelector.h"
+#include "HSSThisSelector.h"
+#include "HSSRootSelector.h"
+#include "HSSNegation.h"
 
 #endif

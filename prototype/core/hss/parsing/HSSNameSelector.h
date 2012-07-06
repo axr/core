@@ -41,40 +41,60 @@
  *
  ********************************************************************/
 
-#ifndef HSSFIRSTFILTER_H
-#define HSSFIRSTFILTER_H
+#ifndef HSSNAMESELECTOR_H
+#define HSSNAMESELECTOR_H
 
-#include "HSSFilter.h"
+#include "HSSSelector.h"
+#include <string>
 
 namespace AXR {
+    
     /**
-     *  @brief Selects the first element of the selection.
+     *  @brief Selects elements by tag name.
+     *
+     *  This just holds information about the name of the elements that should
+     *  be selected by AXRController when creating selections.
      */
-    class HSSFirstFilter : public HSSFilter
-    {
-    public:        
-        /**
-         *  @brief Creates a new instance of a \@first filter.
-         */
-        HSSFirstFilter();
+    class HSSNameSelector : public HSSSelector {
+    public:
+        typedef boost::shared_ptr<HSSNameSelector> p;
         
         /**
-         *  Clones an instance of HSSFirstFilter and gives a shared pointer of the
+         *  Creates a new instance of a selector.
+         */
+        HSSNameSelector(std::string elementName);
+        
+        /**
+         *  Copy constructor for HSSNameSelector objects. Do not call directly, use clone() instead.
+         */
+        HSSNameSelector(const HSSNameSelector &orig);
+        
+        /**
+         *  Clones an instance of HSSNameSelector and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSFirstFilter
+         *  @return A shared pointer to the new HSSNameSelector.
          */
-        HSSFilter::p clone() const;
+        p clone() const;
         
         /**
-         *  Destructor for this class.
+         *  Getter for the name of the element.
+         *  @return A string containing the name of the element.
          */
-        virtual ~HSSFirstFilter();
+        virtual std::string getElementName();
+        
+        //see HSSObject.h for documentation of this method
         virtual std::string toString();
         
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
+        virtual std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing);
+        
+    protected:
+        std::string elementName;
+        
     private:
         virtual HSSClonable::p cloneImpl() const;
     };
 }
+
+
 
 #endif

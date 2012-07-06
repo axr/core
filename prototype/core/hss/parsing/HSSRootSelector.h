@@ -44,8 +44,9 @@
 #ifndef HSSROOTSELECTOR_H
 #define HSSROOTSELECTOR_H
 
-#include "HSSParserNode.h"
+#include "HSSNameSelector.h"
 #include <string>
+#include "../objects/HSSDisplayObject.h"
 
 namespace AXR {
     
@@ -54,7 +55,7 @@ namespace AXR {
      *
      *  Used in selector chains, they always return the root element.
      */
-    class HSSRootSelector : public HSSParserNode {
+    class HSSRootSelector : public HSSNameSelector {
         
     public:
         typedef boost::shared_ptr<HSSRootSelector> p;
@@ -71,8 +72,13 @@ namespace AXR {
          */
         p clone() const;
         
+        //see HSSNameSelector.h for the documentation of this method
+        std::string getElementName();
+        
         //see HSSParserNode.h for the documentation of this method
         virtual std::string toString();
+        
+        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing);
         
     private:
         virtual HSSClonable::p cloneImpl() const;

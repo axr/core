@@ -66,10 +66,10 @@ std::string HSSFirstFilter::toString()
 }
 
 
-const std::vector<HSSDisplayObject::p> HSSFirstFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
+const std::vector<HSSDisplayObject::p> HSSFirstFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
 {
     if(scope.size() > 0){
-        if(negating){
+        if(this->getNegating()){
             std::vector<HSSDisplayObject::p> ret;
             HSSDisplayObject::const_it it;
             ret.insert(ret.begin(), scope.begin() + 1, scope.end());

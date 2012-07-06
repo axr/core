@@ -204,6 +204,10 @@ HSSToken::p HSSTokenizer::readNextToken()
 			return ret;
         case '/':
             return this->readCommentOrSymbol();
+        case '!':
+            ret = HSSToken::p(new HSSToken(HSSNegator, this->currentLine, this->currentColumn -1));
+            this->readNextChar();
+            return ret;
 		default:
 			return this->readSymbol();
 	}

@@ -55,7 +55,7 @@ HSSFlag::HSSFlag()
     this->_purging = HSSRuleStateOff;
 }
 
-HSSFlag::p HSSFlag::clone() const{
+HSSFilter::p HSSFlag::clone() const{
     return boost::static_pointer_cast<HSSFlag, HSSClonable>(this->cloneImpl());
 }
 
@@ -79,24 +79,9 @@ void HSSFlag::setName(std::string newValue)
     this->_name = newValue;
 }
 
-void HSSFlag::apply(HSSDisplayObject::p displayObject, bool negating)
-{
-    //parent is selector chain, grandparent is the rule
-    HSSParserNode::p ruleNode = this->getParentNode()->getParentNode();
-    if(ruleNode->isA(HSSParserNodeTypeStatement)){
-        HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement>(ruleNode);
-        if(ruleStatement->isA(HSSStatementTypeRule)){
-            HSSRule::p theRule = boost::static_pointer_cast<HSSRule>(ruleStatement);
-            
-            theRule->setActiveByDefault(negating);
-            displayObject->createFlag(this->shared_from_this(), (negating ? HSSRuleStateOn : HSSRuleStateOff));
-        }
-    }
-}
-
 void HSSFlag::flagChanged(HSSRuleState newStatus){
-    //parent is selector chain, grandparent is the rule
-    HSSParserNode::p selectorChainNode = this->getParentNode();
+    //parent is simple selector, grandparent is selector chain, grandgrandparent is the rule
+    HSSParserNode::p selectorChainNode = this->getParentNode()->getParentNode();
     HSSParserNode::p ruleNode = selectorChainNode->getParentNode();
     if(ruleNode->isA(HSSParserNodeTypeStatement)){
         HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement>(ruleNode);
@@ -119,31 +104,51 @@ void HSSFlag::flagChanged(HSSRuleState newStatus){
     }
 }
 
-const std::vector<HSSDisplayObject::p> HSSFlag::filter(const std::vector<HSSDisplayObject::p> &scope, bool negating)
+const std::vector<HSSDisplayObject::p> HSSFlag::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
 {
-    if(scope.size() > 0){
-        std::vector<HSSDisplayObject::p> ret;
+    if(processing){
         HSSDisplayObject::const_it it;
         for (it=scope.begin(); it!=scope.end(); it++) {
             const HSSDisplayObject::p & theDO = *it;
-            HSSRuleState purgingState = this->getPurging();
-            if(purgingState){
-                HSSRuleState state = theDO->flagState(this->getName());
-                if(state == purgingState){
-                    ret.push_back(theDO);
-                }
-                
-            } else {
-                bool firstMatch = (theDO->flagState(this->getName()) == HSSRuleStateOn) && !negating;
-                bool secondMatch = (theDO->flagState(this->getName()) == HSSRuleStateOff) && negating;
-                if(firstMatch || secondMatch){
-                    ret.push_back(theDO);
+            //parent is simple selector, grandparent is selector chain, grandgrandparent is the rule
+            HSSParserNode::p ruleNode = this->getParentNode()->getParentNode()->getParentNode();
+            if(ruleNode->isA(HSSParserNodeTypeStatement)){
+                HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement>(ruleNode);
+                if(ruleStatement->isA(HSSStatementTypeRule)){
+                    HSSRule::p theRule = boost::static_pointer_cast<HSSRule>(ruleStatement);
+                    
+                    theRule->setActiveByDefault(this->getNegating());
+                    theDO->createFlag(this->shared_from_this(), (this->getNegating() ? HSSRuleStateOn : HSSRuleStateOff));
                 }
             }
         }
-        return ret;
-    } else {
+        
         return scope;
+    } else {
+        if(scope.size() > 0){
+            std::vector<HSSDisplayObject::p> ret;
+            HSSDisplayObject::const_it it;
+            for (it=scope.begin(); it!=scope.end(); it++) {
+                const HSSDisplayObject::p & theDO = *it;
+                HSSRuleState purgingState = this->getPurging();
+                if(purgingState){
+                    HSSRuleState state = theDO->flagState(this->getName());
+                    if(state == purgingState){
+                        ret.push_back(theDO);
+                    }
+                    
+                } else {
+                    bool firstMatch = (theDO->flagState(this->getName()) == HSSRuleStateOn) && !this->getNegating();
+                    bool secondMatch = (theDO->flagState(this->getName()) == HSSRuleStateOff) && this->getNegating();
+                    if(firstMatch || secondMatch){
+                        ret.push_back(theDO);
+                    }
+                }
+            }
+            return ret;
+        } else {
+            return scope;
+        }
     }
 }
 
