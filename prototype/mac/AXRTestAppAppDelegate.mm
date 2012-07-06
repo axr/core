@@ -73,6 +73,7 @@ char Buff[BUFFSIZE];
 //    axr_debug_activate_channel(AXR_DEBUG_CH_FULL_FILENAMES);
 //    axr_debug_activate_channel(AXR_DEBUG_CH_EVENTS);
 //    axr_debug_activate_channel(AXR_DEBUG_CH_EVENTS_SPECIFIC);
+//    axr_debug_activate_channel(AXR_DEBUG_CH_TOKENIZING);
     
     return self;
 }

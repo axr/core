@@ -154,7 +154,7 @@ unsigned extern axr_output_debug_indent_count;
  *  P:	AXR_DEBUG_CH_           
  *  Q:	AXR_DEBUG_CH_           
  *  R:	AXR_DEBUG_CH_           
- *  S:	AXR_DEBUG_CH_           
+ *  S:	AXR_DEBUG_CH_TOKENIZING         Prints the chars that are read by the tokenizer
  *  T:	AXR_DEBUG_CH_           
  *  U:	AXR_DEBUG_CH_           
  *  V:	AXR_DEBUG_CH_           
@@ -189,7 +189,15 @@ enum axr_debug_ch {
     AXR_DEBUG_CH_EVENTS = 1 << 13, //N
     AXR_DEBUG_CH_EVENTS_SPECIFIC = 1 << 14, //O
     
-    AXR_DEBUG_CH_FULL_FILENAMES = 1 << 16, //c
+    //
+    
+    AXR_DEBUG_CH_TOKENIZING = 1 << 18, //S
+    
+    //
+    
+    AXR_DEBUG_CH_FULL_FILENAMES = 1 << 28, //c
+    
+    
 };
 
 #define axr_log(AXR_DEBUG_CH, message) if((axr_debug_active_channels & AXR_DEBUG_CH_ON) && (axr_debug_active_channels & (AXR_DEBUG_CH))) std_log(output_indent(message))
