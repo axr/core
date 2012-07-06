@@ -53,7 +53,7 @@ HSSFunctionAction::HSSFunctionAction()
 }
 
 HSSFunctionAction::HSSFunctionAction(const HSSFunctionAction & orig)
-: HSSAction(orig.actionType)
+: HSSAction(orig)
 {
     //this->_function = orig._function->clone();
 }

@@ -53,7 +53,7 @@ HSSFlagAction::HSSFlagAction()
 }
 
 HSSFlagAction::HSSFlagAction(const HSSFlagAction & orig)
-: HSSAction(orig.actionType)
+: HSSAction(orig)
 {
     this->_flagFunction = orig._flagFunction->clone();
 }
