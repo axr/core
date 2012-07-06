@@ -73,6 +73,56 @@ AXRController::~AXRController()
     this->parserTree.clear();
 }
 
+void AXRController::matchRulesToContentTree()
+{
+    const std::vector<HSSRule::p> rules = this->getRules();
+    const HSSDisplayObject::p rootScopeArr[1] = {this->getRoot()};
+    const std::vector<HSSDisplayObject::p>scope(rootScopeArr, rootScopeArr+1);
+    unsigned i, size;
+    
+    for (i=0, size=rules.size(); i<size; i++) {
+        const HSSRule::p& rule = rules[i];
+        std::vector<HSSSelectorChain::p> selectorChains = rule->getSelectorChains();
+        if(selectorChains.size() > 0){
+            std::vector< std::vector<HSSDisplayObject::p> > selection;
+            try {
+                selection = this->select(selectorChains, scope, this->getRoot());
+            } catch (AXRError::p e) {
+                e->raise();
+            } catch (AXRWarning::p e) {
+                e->raise();
+            }
+            
+            unsigned i, j, k, size, size2, size3;
+            for (i=0, size=selection.size(); i<size; i++) {
+                std::vector<HSSDisplayObject::p> inner = selection[i];
+                for (j=0, size2=inner.size(); j<size2; j++) {
+                    const HSSDisplayObject::p & displayObject = inner[j];
+                    axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: match "+displayObject->getElementName());
+                    displayObject->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff ));
+                    
+                    displayObject->setNeedsRereadRules(true);
+                    displayObject->setNeedsSurface(true);
+                    displayObject->setDirty(true);
+                    
+                    //if it is a container it may have children
+                    if(displayObject->isA(HSSObjectTypeContainer)){
+                        HSSContainer::p selectedContainer = boost::static_pointer_cast<HSSContainer>(displayObject);
+                        this->currentContext.push(selectedContainer);
+                        for (k=0, size3=rule->childrenSize(); k<size3; k++) {
+                            const HSSRule::p childRule = rule->childrenGet(k);
+                            this->recursiveMatchRulesToDisplayObjects(childRule, selectedContainer->getChildren(), selectedContainer, true);
+                        }
+                        this->currentContext.pop();
+                    }
+                    
+                    displayObject->setNeedsRereadRules(true);
+                }
+            }
+        }
+    }
+}
+
 void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container, bool applyingInstructions)
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRController: recursive matching rules to display objects");

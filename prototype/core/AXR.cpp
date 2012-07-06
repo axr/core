@@ -117,7 +117,7 @@ void AXRCore::run()
         this->_hasLoadedFile = true;
         
         HSSContainer::p root = boost::static_pointer_cast<HSSContainer>(this->controller->getRoot());
-        unsigned i, size, j, size2;
+        unsigned i, size;
         std::string hssfilename, hssfilepath;
         
         std::vector<std::string> loadSheets = this->controller->loadSheetsGet();
@@ -144,22 +144,15 @@ void AXRCore::run()
             this->parserHSS->setBasePath(this->file->getBasePath());
             if(! this->parserHSS->loadFile(hssfile)){
                 AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
-            } else {
-                axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: matching rules to the content tree");
-                
-                //assign the rules to the objects
-                const std::vector<HSSRule::p> rules = this->controller->getRules();
-                for (j=0, size2=rules.size(); j<size2; j++) {
-                    const HSSRule::p& rule = rules[j];
-                    const HSSDisplayObject::p rootScopeArr[1] = {root};
-                    const std::vector<HSSDisplayObject::p>rootScope(rootScopeArr, rootScopeArr+1);
-                    this->controller->recursiveMatchRulesToDisplayObjects(rule, rootScope, HSSContainer::p(), true);
-                }
-                root->setNeedsRereadRules(true);
             }
         }
         axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished loading stylesheets for "+this->file->getFileName());
         axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath()+"/"+this->file->getFileName());
+        
+        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: matching rules to the content tree");
+        //assign the rules to the objects
+        this->controller->matchRulesToContentTree();
+        root->setNeedsRereadRules(true);
         
         if (root) {
             root->recursiveReadDefinitionObjects();

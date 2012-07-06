@@ -82,6 +82,8 @@ namespace AXR {
          */
         virtual ~AXRController();
         
+        void matchRulesToContentTree();
+        
         /**
          *  @return A textual representation of itself, as a string.
          */
