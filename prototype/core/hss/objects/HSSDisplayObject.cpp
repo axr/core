@@ -2554,7 +2554,7 @@ HSSRuleState HSSDisplayObject::flagState(std::string name)
 void HSSDisplayObject::flagsActivate(std::string name)
 {
     if(this->hasFlag(name)){
-        std_log3("activate flag with name "+name+" on element "+this->getElementName());
+        //std_log("activate flag with name "+name+" on element "+this->getElementName());
         HSSRuleState newValue = HSSRuleStateActivate;
         std::vector<HSSFlag::p> flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
@@ -2572,7 +2572,7 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
 {
     if(name == "*"){
         boost::unordered_map<std::string, std::vector<HSSFlag::p> >::const_iterator it;
-        std_log3("deactivating all flags on element "+this->getElementName());
+        //std_log("deactivating all flags on element "+this->getElementName());
         for (it=this->_flags.begin(); it!=this->_flags.end(); it++) {
             HSSRuleState newValue = HSSRuleStatePurge;
             std::vector<HSSFlag::p> flags = it->second;
@@ -2586,7 +2586,7 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
         
         
     } else if(this->hasFlag(name)){
-        std_log3("deactivate flag with name "+name+" on element "+this->getElementName());
+        //std_log("deactivate flag with name "+name+" on element "+this->getElementName());
         HSSRuleState newValue = HSSRuleStatePurge;
         std::vector<HSSFlag::p> flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
@@ -2604,7 +2604,7 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
 void HSSDisplayObject::flagsToggle(std::string name)
 {
     if(this->hasFlag(name)){
-        std_log3("toggle flag with name "+name+" on element "+this->getElementName());
+        //std_log("toggle flag with name "+name+" on element "+this->getElementName());
         HSSRuleState newValue = (this->_flagsStatus[name] == HSSRuleStateOn ? HSSRuleStatePurge : HSSRuleStateActivate);
         std::vector<HSSFlag::p> flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
