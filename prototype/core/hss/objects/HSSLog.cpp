@@ -46,6 +46,9 @@
 #include "../parsing/HSSFunction.h"
 #include "../parsing/HSSRefFunction.h"
 #include "../parsing/HSSStringConstant.h"
+#include "../parsing/HSSObjectNameConstant.h"
+#include "../parsing/HSSObjectDefinition.h"
+#include "../../axr/AXRController.h"
 
 using namespace AXR;
 
@@ -108,6 +111,7 @@ void HSSLog::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 
 void HSSLog::fire()
 {
+    bool done = false;
     switch (this->dValue->getType()) {
         case HSSParserNodeTypeFunctionCall:
         {
@@ -138,6 +142,7 @@ void HSSLog::fire()
                     case HSSObservablePropertyCorners:
                     {
                         std_log(*(long double*)data);
+                        done = true;
                         break;
                     }
                         
@@ -153,6 +158,7 @@ void HSSLog::fire()
                     case HSSObservablePropertyAction:
                     {
                         std_log((*(HSSObject::p *)data)->toString());
+                        done = true;
                         break;
                     }
                         
@@ -169,6 +175,7 @@ void HSSLog::fire()
                                 std_log((*it)->toString());
                             }
                         }
+                        done = true;
                         break;
                     }
                         
@@ -187,6 +194,7 @@ void HSSLog::fire()
                                 }
                             }
                         }
+                        done = true;
                         break;
                     }
                         
@@ -200,6 +208,7 @@ void HSSLog::fire()
                     case HSSObservablePropertyContentTarget:
                     {
                         std_log(*(std::string*)data);
+                        done = true;
                         break;
                     }
                         
@@ -209,6 +218,7 @@ void HSSLog::fire()
                     default:
                     {
                         std_log("logging this property is not supported");
+                        done = true;
                         break;
                     }
                 }
@@ -220,14 +230,35 @@ void HSSLog::fire()
         {
             HSSStringConstant::p str = boost::static_pointer_cast<HSSStringConstant>(this->dValue);
             std_log(str->getValue());
+            done = true;
             break;
         }
             
-        default:
+        case HSSParserNodeTypeObjectNameConstant:
         {
-            std_log(this->dValue->toString());
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(this->dValue);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                objdef->setThisObj(this->getThisObj());
+                objdef->apply();
+                HSSObject::p theObject = objdef->getObject();
+                std_log(theObject->toString());
+                done = true;
+            } catch (AXRError::p e) {
+                e->raise();
+                
+            } catch (AXRWarning::p e) {
+                e->raise();
+            }
+            
             break;
         }
+    }
+    
+    
+    
+    if(!done){
+        std_log(this->dValue->toString());
     }
 }
 
