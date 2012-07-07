@@ -60,6 +60,19 @@ HSSMultipleValueDefinition::~HSSMultipleValueDefinition()
     
 }
 
+std::string HSSMultipleValueDefinition::toString()
+{    
+    std::string tempstr = std::string("HSSMultipleValueDefinition with the following values:\n");
+    inc_output_indent();
+    std::vector<HSSParserNode::p>::iterator it;
+    for (it=this->values.begin(); it!=this->values.end(); it++) {
+        HSSParserNode::p value = *it;
+        tempstr.append(output_indent(value->toString().append("\n")));
+    }
+    dec_output_indent();
+    return tempstr;
+}
+
 std::vector<HSSParserNode::p> HSSMultipleValueDefinition::getValues()
 {
     return this->values;

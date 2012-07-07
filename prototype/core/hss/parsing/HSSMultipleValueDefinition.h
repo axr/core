@@ -80,6 +80,8 @@ namespace AXR {
          */
         virtual ~HSSMultipleValueDefinition();
         
+        virtual std::string toString();
+        
         /**
          *  Getter for values.
          *  @return A vector of shared pointers to parser nodes that are stored inside this
