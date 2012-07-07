@@ -317,42 +317,6 @@ HSSToken::p HSSTokenizer::readIdentifier()
 	return HSSValueToken::p(new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText(), line, column));
 }
 
-//reads and returns a hexadecimal number
-//HSSToken::p HSSTokenizer::readHex()
-//{
-//    security_brake_init();
-//	while (1) {
-//        switch (this->currentChar) {
-//            case 'a':
-//            case 'A':
-//            case 'b':
-//            case 'B':
-//            case 'c':
-//            case 'C':
-//            case 'd':
-//            case 'D':
-//            case 'e':
-//            case 'E':
-//            case 'f':
-//            case 'F':
-//                this->storeCurrentCharAndReadNext();
-//                continue;
-//                
-//            default:
-//                if (isdigit(this->currentChar)){
-//                    this->storeCurrentCharAndReadNext();
-//                    continue;
-//                    
-//                } else {
-//                    break;
-//                }
-//        }
-//        security_brake();
-//	}
-//    
-//    return HSSValueToken::p(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText()));
-//}
-
 //reads and returns a hexadecimal number or an identifier
 HSSToken::p HSSTokenizer::readHexOrIdentifier()
 {
