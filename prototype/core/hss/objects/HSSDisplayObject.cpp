@@ -1239,8 +1239,11 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
                 this->setDFlow(objdef);
                 valid = true;
                 
-            } catch (HSSObjectNotFoundException * e) {
-                std_log(e->toString());
+            } catch (AXRError::p e) {
+                e->raise();
+                
+            } catch (AXRWarning::p e) {
+                e->raise();
             }
             
             break;
@@ -1339,9 +1342,11 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
                 this->setDOverflow(objdef);
                 valid = true;
                 
-            } catch (HSSObjectNotFoundException * e) {
-                /// @todo change error to AXRError
-                std_log(e->toString());
+            } catch (AXRError::p e) {
+                e->raise();
+                
+            } catch (AXRWarning::p e) {
+                e->raise();
             }
             
             break;

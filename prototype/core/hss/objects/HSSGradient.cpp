@@ -150,9 +150,12 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
                 this->setDStartColor(objdef);
                 valid = true;
                 
-            } catch (HSSObjectNotFoundException * e) {
-                std_log(e->toString());
+            } catch (AXRError::p e){
+                e->raise();
+            } catch (AXRWarning::p e){
+                e->raise();
             }
+
             break;
         }
             
@@ -225,9 +228,12 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
                 this->setDEndColor(objdef);
                 valid = true;
                 
-            } catch (HSSObjectNotFoundException * e) {
-                std_log(e->toString());
+            } catch (AXRError::p e){
+                e->raise();
+            } catch (AXRWarning::p e){
+                e->raise();
             }
+
             
             break;
         }

@@ -1659,8 +1659,11 @@ void HSSContainer::setDShape(HSSParserNode::p value)
                     valid = true;
                 }
                 
-            } catch (HSSObjectNotFoundException * e) {
-                std_log(e->toString());
+            } catch (AXRError::p e) {
+                e->raise();
+                
+            } catch (AXRWarning::p e) {
+                e->raise();
             }
             
             break;

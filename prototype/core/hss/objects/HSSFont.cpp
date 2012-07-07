@@ -225,9 +225,12 @@ void HSSFont::setDColor(HSSParserNode::p value)
                 this->setDColor(objdef);
                 valid = true;
                 
-            } catch (HSSObjectNotFoundException * e) {
-                std_log(e->toString());
+            } catch (AXRError::p e){
+                e->raise();
+            } catch (AXRWarning::p e){
+                e->raise();
             }
+
             
             break;
         }
