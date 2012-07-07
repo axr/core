@@ -95,7 +95,7 @@ namespace AXR {
         
         virtual std::string toString();
         
-        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing);
+        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
         
     protected:
         HSSCombinatorType combinatorType;

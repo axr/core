@@ -85,7 +85,7 @@ namespace AXR {
         //see HSSObject.h for documentation of this method
         virtual std::string toString();
         
-        virtual std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing);
+        virtual std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
         
     protected:
         std::string elementName;

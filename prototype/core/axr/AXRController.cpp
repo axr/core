@@ -539,8 +539,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(cons
         {
             std::vector<HSSDisplayObject::p> selection;
             HSSSimpleSelector::p ss = boost::static_pointer_cast<HSSSimpleSelector>(this->currentSelectorNode);
-            ss->setThisObj(thisObj);
-            selection = ss->filterSelection(scope, processing);
+            selection = ss->filterSelection(scope, thisObj, processing);
             ret.push_back(selection);
             break;
         }

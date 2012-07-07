@@ -75,7 +75,7 @@ HSSClonable::p HSSNameSelector::cloneImpl() const
     return HSSClonable::p(new HSSNameSelector(*this));
 }
 
-std::vector<HSSDisplayObject::p> HSSNameSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing)
+std::vector<HSSDisplayObject::p> HSSNameSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     std::vector< HSSDisplayObject::p> ret;
     unsigned i, size;

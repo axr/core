@@ -2560,8 +2560,10 @@ void HSSDisplayObject::flagsActivate(std::string name)
         this->_flagsStatus[name] = newValue;
         std::vector<HSSFlag::p>::iterator it;
         for(it=flags.begin(); it!=flags.end(); it++){
-            (*it)->flagChanged(newValue);    
-        }   
+            HSSFlag::p theFlag = *it;
+            theFlag->setThisObj(this->shared_from_this());
+            theFlag->flagChanged(newValue);
+        }
         this->_flagsStatus[name] = HSSRuleStateOn;
     } else {
         //std_log("No flag with name "+name+" on element "+this->getElementName());
@@ -2579,7 +2581,9 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
             this->_flagsStatus[it->first] = newValue;
             std::vector<HSSFlag::p>::iterator it;
             for(it=flags.begin(); it!=flags.end(); it++){
-                (*it)->flagChanged(newValue);    
+                HSSFlag::p theFlag = *it;
+                theFlag->setThisObj(this->shared_from_this());
+                theFlag->flagChanged(newValue);
             }
 
         }
@@ -2592,7 +2596,9 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
         this->_flagsStatus[name] = newValue;
         std::vector<HSSFlag::p>::iterator it;
         for(it=flags.begin(); it!=flags.end(); it++){
-            (*it)->flagChanged(newValue);    
+            HSSFlag::p theFlag = *it;
+            theFlag->setThisObj(this->shared_from_this());
+            theFlag->flagChanged(newValue);
         }
         this->_flagsStatus[name] = HSSRuleStateOff;
         
@@ -2610,7 +2616,9 @@ void HSSDisplayObject::flagsToggle(std::string name)
         this->_flagsStatus[name] = newValue;
         std::vector<HSSFlag::p>::iterator it;
         for(it=flags.begin(); it!=flags.end(); it++){
-            (*it)->flagChanged(newValue);    
+            HSSFlag::p theFlag = *it;
+            theFlag->setThisObj(this->shared_from_this());
+            theFlag->flagChanged(newValue);
         }
         this->_flagsStatus[name] = (newValue == HSSRuleStateActivate ? HSSRuleStateOn : HSSRuleStateOff);
     } else {

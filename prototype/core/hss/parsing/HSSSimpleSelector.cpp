@@ -88,11 +88,11 @@ void HSSSimpleSelector::filtersAdd(HSSFilter::p filter)
     filter->setParentNode(this->shared_from_this());
 }
 
-std::vector<HSSDisplayObject::p> HSSSimpleSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing)
+std::vector<HSSDisplayObject::p> HSSSimpleSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     std::vector<HSSDisplayObject::p> selection;
     if(this->name){
-        selection = this->name->filterSelection(scope, processing);
+        selection = this->name->filterSelection(scope, thisObj, processing);
     }
     
     std::list<HSSFilter::p>::const_iterator it = this->filters.begin();

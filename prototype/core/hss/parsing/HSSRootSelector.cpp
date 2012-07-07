@@ -70,7 +70,7 @@ std::string HSSRootSelector::getElementName()
     return core->getController()->getRoot()->getElementName();
 }
 
-std::vector<HSSDisplayObject::p> HSSRootSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing)
+std::vector<HSSDisplayObject::p> HSSRootSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     std::vector<HSSDisplayObject::p> ret;
     AXRCore::tp & core = AXRCore::getInstance();

@@ -90,7 +90,7 @@ namespace AXR {
         /**
          * Reduces the selection according to the selector nodes it has stored.
          */
-        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing);
+        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
         
         //see HSSParserNode.h for documentation of this method
         virtual void setThisObj(HSSDisplayObject::p value);

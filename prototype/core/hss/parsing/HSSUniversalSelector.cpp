@@ -64,7 +64,7 @@ HSSClonable::p HSSUniversalSelector::cloneImpl() const{
     return HSSClonable::p(new HSSUniversalSelector(*this));
 }
 
-std::vector<HSSDisplayObject::p> HSSUniversalSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing)
+std::vector<HSSDisplayObject::p> HSSUniversalSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     return scope;
 }

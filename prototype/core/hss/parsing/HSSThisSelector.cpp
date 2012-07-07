@@ -63,9 +63,9 @@ HSSClonable::p HSSThisSelector::cloneImpl() const{
     return HSSClonable::p(new HSSThisSelector(*this));
 }
 
-std::vector<HSSDisplayObject::p> HSSThisSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, bool processing)
+std::vector<HSSDisplayObject::p> HSSThisSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     std::vector<HSSDisplayObject::p> ret;
-    ret.push_back(this->getThisObj());
+    ret.push_back(thisObj);
     return ret;
 }
