@@ -43,19 +43,48 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/06/28
  *      HSS version: 1.0
- *      Core version: 0.46
+ *      Core version: 0.45
  *      Revision: 3
  *
  ********************************************************************/
 
-#ifndef HSSFILTERS_H
-#define HSSFILTERS_H
+#ifndef HSSPARENTFILTER_H
+#define HSSPARENTFILTER_H
 
+#include "HSSFilter.h"
 
-#include "HSSParentFilter.h"
-#include "HSSFirstFilter.h"
-#include "HSSLastFilter.h"
+namespace AXR {
+    /**
+     *  @brief Selects the first element of the selection.
+     */
+    class HSSParentFilter : public HSSFilter
+    {
+    public:
+        
+        /**
+         *  @brief Creates a new instance of a \@parent filter.
+         */
+        HSSParentFilter();
+        
+        /**
+         *  Clones an instance of HSSPatrentFilter and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSParentFilter
+         */
+        p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
+        virtual ~HSSParentFilter();
+        virtual std::string toString();
+        
+        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool negating);
+    private:
+        virtual HSSClonable::p cloneImpl() const;
+    };
+}
 
 #endif
