@@ -106,6 +106,14 @@ namespace AXR {
         
         //HSSRoundedRect
         HSSObservablePropertyCorners,
+        HSSObservablePropertyLeft,
+        HSSObservablePropertyLeftTop,
+        HSSObservablePropertyTop,
+        HSSObservablePropertyRightTop,
+        HSSObservablePropertyRight,
+        HSSObservablePropertyRightBottom,
+        HSSObservablePropertyBottom,
+        HSSObservablePropertyLeftBottom,
         
         //HSSEvent
         HSSObservablePropertyAction,

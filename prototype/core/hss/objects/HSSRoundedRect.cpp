@@ -115,6 +115,30 @@ void HSSRoundedRect::setProperty(HSSObservableProperty name, HSSParserNode::p va
         case HSSObservablePropertyCorners:
             this->setDCorners(value);
             break;
+        case HSSObservablePropertyLeft:
+            this->setDLeft(value);
+            break;
+        case HSSObservablePropertyLeftTop:
+            this->setDLeftTop(value);
+            break;
+        case HSSObservablePropertyTop:
+            this->setDTop(value);
+            break;
+        case HSSObservablePropertyRightTop:
+            this->setDRightTop(value);
+            break;
+        case HSSObservablePropertyRight:
+            this->setDRight(value);
+            break;
+        case HSSObservablePropertyRightBottom:
+            this->setDRightBottom(value);
+            break;
+        case HSSObservablePropertyBottom:
+            this->setDBottom(value);
+            break;
+        case HSSObservablePropertyLeftBottom:
+            this->setDLeftBottom(value);
+            break;
             
         default:
             HSSShape::setProperty(name, value);
@@ -199,6 +223,314 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value){
     this->corners = newCorners;
     
     this->notifyObservers(HSSObservablePropertyCorners, &this->corners);
+}
+
+void HSSRoundedRect::setDLeft(HSSParserNode::p value){
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            if(this->observedTLCorner != NULL)
+            {
+                this->observedTLCorner->removeObserver(this->observedTLCornerProperty, HSSObservablePropertyLeft, this);
+            }
+            this->cornerTL = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerTLChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedTLCorner,
+                                                  this->observedTLCornerProperty,
+                                                  NULL );
+            if(this->observedBLCorner != NULL)
+            {
+                this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyLeft, this);
+            }
+            this->cornerBL = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerBLChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedBLCorner,
+                                                  this->observedBLCornerProperty,
+                                                  NULL );
+            break;
+        }
+            
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTL);
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBL);
+}
+
+void HSSRoundedRect::setDLeftTop(HSSParserNode::p value){
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            if(this->observedTLCorner != NULL)
+            {
+                this->observedTLCorner->removeObserver(this->observedTLCornerProperty, HSSObservablePropertyLeftTop, this);
+            }
+            this->cornerTL = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerTLChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedTLCorner,
+                                                  this->observedTLCornerProperty,
+                                                  NULL );
+            break;
+        }
+            
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTL);
+}
+
+void HSSRoundedRect::setDTop(HSSParserNode::p value){
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            if(this->observedTLCorner != NULL)
+            {
+                this->observedTLCorner->removeObserver(this->observedTLCornerProperty, HSSObservablePropertyTop, this);
+            }
+            this->cornerTL = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerTLChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedTLCorner,
+                                                  this->observedTLCornerProperty,
+                                                  NULL );
+            if(this->observedTRCorner != NULL)
+            {
+                this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyTop, this);
+            }
+            this->cornerTR = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerTRChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedTRCorner,
+                                                  this->observedTRCornerProperty,
+                                                  NULL );
+            break;
+        }
+            
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTL);
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTR);
+}
+
+void HSSRoundedRect::setDRightTop(HSSParserNode::p value){
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            if(this->observedTRCorner != NULL)
+            {
+                this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyRightTop, this);
+            }
+            this->cornerTR = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerTRChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedTRCorner,
+                                                  this->observedTRCornerProperty,
+                                                  NULL );
+            break;
+        }
+            
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTR);
+}
+
+void HSSRoundedRect::setDRight(HSSParserNode::p value){
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            if(this->observedTRCorner != NULL)
+            {
+                this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyRight, this);
+            }
+            this->cornerTR = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerTRChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedTRCorner,
+                                                  this->observedTRCornerProperty,
+                                                  NULL );
+            if(this->observedBRCorner != NULL)
+            {
+                this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyRight, this);
+            }
+            this->cornerBR = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerBRChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedBRCorner,
+                                                  this->observedBRCornerProperty,
+                                                  NULL );
+            break;
+        }
+            
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTR);
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBR);
+}
+
+void HSSRoundedRect::setDRightBottom(HSSParserNode::p value){
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            if(this->observedBRCorner != NULL)
+            {
+                this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyRightBottom, this);
+            }
+            this->cornerBR = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerBRChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedBRCorner,
+                                                  this->observedBRCornerProperty,
+                                                  NULL );
+            break;
+        }
+            
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBR);
+}
+
+void HSSRoundedRect::setDBottom(HSSParserNode::p value){
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            if(this->observedBRCorner != NULL)
+            {
+                this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyBottom, this);
+            }
+            this->cornerBR = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerBRChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedBRCorner,
+                                                  this->observedBRCornerProperty,
+                                                  NULL );
+            if(this->observedBLCorner != NULL)
+            {
+                this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyBottom, this);
+            }
+            this->cornerBL = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerBLChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedBLCorner,
+                                                  this->observedBLCornerProperty,
+                                                  NULL );
+            break;
+        }
+            
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBL);
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBR);
+}
+
+void HSSRoundedRect::setDLeftBottom(HSSParserNode::p value){
+    switch (value->getType()) {
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            if(this->observedBLCorner != NULL)
+            {
+                this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyLeftBottom, this);
+            }
+            this->cornerBL = this->_setLDProperty(
+                                                  &HSSRoundedRect::cornerBLChanged,
+                                                  value,
+                                                  100.,
+                                                  HSSObservablePropertyCorners,
+                                                  this,
+                                                  HSSObservablePropertyValue,
+                                                  this->observedBLCorner,
+                                                  this->observedBLCornerProperty,
+                                                  NULL );
+            break;
+        }
+            
+        default:
+            throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBL);
 }
 
 void HSSRoundedRect::cornerTLChanged(AXR::HSSObservableProperty source, void *data)

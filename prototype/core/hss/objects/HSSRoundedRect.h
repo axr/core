@@ -106,6 +106,15 @@ namespace AXR {
          */
         void setDCorners(HSSParserNode::p);
         
+        void setDLeft(HSSParserNode::p);
+        void setDLeftTop(HSSParserNode::p);
+        void setDTop(HSSParserNode::p);
+        void setDRightTop(HSSParserNode::p);
+        void setDRight(HSSParserNode::p);
+        void setDRightBottom(HSSParserNode::p);
+        void setDBottom(HSSParserNode::p);
+        void setDLeftBottom(HSSParserNode::p);
+        
         /**
          *  Method to be passed as callback when observing changes that will affect the top left corner.
          *  @param source   The property which we are observing.

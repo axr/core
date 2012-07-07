@@ -1,0 +1,59 @@
+@container face
+{
+    width: 100;
+    height: 100;
+    border: @{ 1; #C };
+    alignY: middle;
+    shape: @circle;
+    directionPrimary: topToBottom;
+    
+    #new(2) eyes
+    {
+        width: 20%;
+        height: ref(width);
+        background: #D;
+        alignY: 30%;
+        shape: @circle;
+        alignX: 25%;
+    }
+
+    eyes:last
+    {
+        alignX: 75%;
+    }
+
+    #new mouth
+    {
+        width: 80%;
+        height: 15%;
+        background: #D;
+        alignY: 65%;
+        
+        shape: @roundedRect {
+            corners: 5;
+        };
+    }
+    
+    @::hover mouth
+    {
+        height: 40%;
+        shape: @roundedRect {
+            corners: 5;
+            bottom: 30;
+        }; 
+    }
+}
+
+* {
+    contentAlignX: distribute;
+    
+    #new(3) face
+    {
+        isA: face;
+    }
+    
+    @::hover face eyes
+    {
+        height: 25%;
+    }
+}

@@ -116,6 +116,14 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         
         //HSSRoundedRect
         types[HSSObservablePropertyCorners] = "HSSObservablePropertyCorners";
+        types[HSSObservablePropertyLeft] = "HSSObservablePropertyLeft";
+        types[HSSObservablePropertyLeftTop] = "HSSObservablePropertyLeftTop";
+        types[HSSObservablePropertyTop] = "HSSObservablePropertyTop";
+        types[HSSObservablePropertyRightTop] = "HSSObservablePropertyRightTop";
+        types[HSSObservablePropertyRight] = "HSSObservablePropertyRight";
+        types[HSSObservablePropertyRightBottom] = "HSSObservablePropertyRightBottom";
+        types[HSSObservablePropertyBottom] = "HSSObservablePropertyBottom";
+        types[HSSObservablePropertyLeftBottom] = "HSSObservablePropertyLeftBottom";
         
         //HSSEvent
         types[HSSObservablePropertyAction] = "HSSObservablePropertyAction";
@@ -205,6 +213,15 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         
         //HSSRoundedRect
         properties["corners"] = HSSObservablePropertyCorners;
+        properties["left"] = HSSObservablePropertyLeft;
+        properties["leftTop"] = HSSObservablePropertyLeftTop;
+        properties["top"] = HSSObservablePropertyTop;
+        properties["rightTop"] = HSSObservablePropertyRightTop;
+        properties["right"] = HSSObservablePropertyRight;
+        properties["rightBottom"] = HSSObservablePropertyRightBottom;
+        properties["bottom"] = HSSObservablePropertyBottom;
+        properties["leftBottom"] = HSSObservablePropertyLeftBottom;
+        
         //HSSPolygon
         properties["sides"] = HSSObservablePropertySides;
         properties["angle"] = HSSObservablePropertyAngle;
