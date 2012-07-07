@@ -87,10 +87,12 @@ std::string HSSObjectDefinition::toString()
     const int pccount = this->propertiesSize();
     if(pccount > 0){
         tempstr.append(" and the following properties: \n");
+        inc_output_indent();
         unsigned j;
         for (j=0; j<pccount; j++) {
-            tempstr.append("   ").append(this->properties[j]->toString()).append("\n");
+            tempstr.append(output_indent(this->properties[j]->toString().append("\n")));
         }
+        dec_output_indent();
     }
     
     return tempstr;
