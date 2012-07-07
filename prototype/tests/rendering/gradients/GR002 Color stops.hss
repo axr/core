@@ -52,7 +52,7 @@ master
         background: glossGradient;
         alignX: 50% + 120;
         
-        @:hover
+        @::hover
         {
             background: #0004, glossGradient;
         }

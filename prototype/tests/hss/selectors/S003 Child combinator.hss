@@ -1,12 +1,12 @@
 test
 {
-	parent child
-	{
-		background: #C;
-	}
+    parent child
+    {
+     background: #66F;
+    }
 	
 	parent child subchild
 	{
-		background: #A;
+		background: #FF6;
 	}
 }

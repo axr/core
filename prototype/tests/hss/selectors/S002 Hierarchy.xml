@@ -5,7 +5,7 @@
 -->
 <?xml-stylesheet type="application/x-hss" src="S002 Hierarchy.hss"?>
 <test>
-	<element1>Element 1</element1>
-	<element2>Element 2</element2>
-	<element3>Element 3</element3>
+	<element1>(Element 1) This should be blue</element1>
+	<element2>(Element 2) This should be yellow</element2>
+	<element3>(Element 3) This should be green</element3>
 </test>

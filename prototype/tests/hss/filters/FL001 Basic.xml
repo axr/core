@@ -5,9 +5,9 @@
 -->
 <?xml-stylesheet type="application/x-hss" src="FL001 Basic.hss"?>
 <test>
-	<elemA>A</elemA>
+	<elemA>(Elem A) This should be red</elemA>
 	<elemB>B</elemB>
 	<elemC>C</elemC>
 	<elemD>D</elemD>
-	<elemE>E</elemE>
+	<elemE>(Elem E) this should be green</elemE>
 </test>

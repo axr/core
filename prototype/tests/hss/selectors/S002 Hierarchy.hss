@@ -2,16 +2,16 @@ test
 {
 	element1
 	{
-		background: #E;
+		background: #66F;
 	}
 
 	element2
 	{
-		background: #C;
+		background: #FF6;
 	}
 
 	element3
 	{
-		background: #A;
+		background: #6F6;
 	}
 }

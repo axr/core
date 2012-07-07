@@ -6,11 +6,11 @@
 <?xml-stylesheet type="application/x-hss" src="S003 Child Combinator.hss"?>
 <test>
 	<parent>
-		<child>Child 1</child>
+		<child>(Child) This should be blue</child>
 	</parent>
 	<parent>
 		<child>
-			<subchild>Subchild</subchild>
+			<subchild>(Subchild) This should be yellow</subchild>
 		</child>
 	</parent>
 </test>

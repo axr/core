@@ -23,7 +23,7 @@
     shape: @{4};
     border: @ hl{1 #FFF8}, @ sh{1 #EA08 };
     
-    // @:hover
+    // @::hover
     // {
     //     background.endColor: #FF6;
     //     background.startColor: #FD0;
@@ -77,17 +77,16 @@ root
     #new line1
     {
         height: 150;
+        contentAlignX: distribute;
         contentAlignY: middle;
         
         #new button1
         {
             isA: button1;
-            alignX: 30;
-            anchorX: 0;
             content: "sample text";
         }
         
-        button1:hover
+        button1::hover
         {
             isA: button1hover;
         }
@@ -95,14 +94,12 @@ root
         #new button2
         {
             isA: button2;
-            alignX: 280;
             content: "round";
         }
 
         #new button3
         {
             isA: button3;
-            alignX: 480;
             content: "round";
         }
         

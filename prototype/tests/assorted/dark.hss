@@ -1,20 +1,27 @@
 #30 mainBg;
 
-@ separator
+// @ separator
+// {
+//     flow: no;
+//     height: 100%;
+//     
+//     #new hl
+//     {
+//         width: 1;
+//         height: 100%;
+//         background: @{
+//             startColor: #0000;
+//             colorStops: #0001;
+//             endColor: #0000;
+//         }
+//     }
+// }
+
+@ box
 {
-    flow: no;
-    height: 100%;
-    
-    #new hl
-    {
-        width: 1;
-        height: 100%;
-        background: @{
-            startColor: #0000;
-            colorStops: #0001;
-            endColor: #0000;
-        }
-    }
+    width: 100;
+    height: 100;
+    background: #FFF4;
 }
 
 @ mainSidebar
@@ -24,7 +31,14 @@
     
     background: #5;
     
-    #new separator;
+    #new(2) separator;
+    separator
+    {
+        width: 100;
+        height: 50;
+        background: #F;
+        border: @{1; #F00};
+    }
 }
 
 *{

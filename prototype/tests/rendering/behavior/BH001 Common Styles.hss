@@ -29,7 +29,7 @@
     textAlign: center;
     font: buttonFont;
     
-    @:hover
+    @::hover
     {
         background: @linearGradient{
             startColor: #181;
