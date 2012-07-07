@@ -4,6 +4,7 @@ build/*
 # Exclude temp nibs and swap files
 *~.nib
 *.swp
+*~
  
 # Exclude OS X folder attributes
 .DS_Store
