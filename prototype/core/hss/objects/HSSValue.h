@@ -45,116 +45,80 @@
 #define HSSVALUE_H
 
 #include "HSSObject.h"
-#include "HSSObjectExceptions.h"
-#include <boost/shared_ptr.hpp>
+#include "../parsing/HSSMultipleValueDefinition.h"
 
 namespace AXR {
     
     /**
-     *  @brief Value objects wrap other values, to be reused with an object name. Numbers, strings
-     *  and keywords are prime candidates for this, since they are written literally, without any
-     *  object related syntax.
-     *  @see HSSValueType
+     *  @brief Represents value objects in HSS (@value).
      */
     class HSSValue : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSValue> p;
+        
         /**
-         *  Constructor for value objects. Defaults to integer type and 0 as the value.
+         *  Constructor for HSSValue objects.
          */
         HSSValue();
         /**
-         *  Constructor for value objects, initialized to an integer of given value.
-         *  @param value        A long int containing the new value.
-         */
-        HSSValue(long int value);
-        /**
-         *  Constructor for value objects, initialized to a floating point number of given value.
-         *  @param value        A long double containing the new value.
-         */
-        HSSValue(long double value);
-        /**
-         *  Constructor for value objects, initialized to a string of given content.
-         *  @param value        A std::string containing the new value.
-         */
-        HSSValue(std::string value);
-        /**
-         *  Constructor for value objects, initialized to the given type with given content.
-         *  @param type         The type of value. The only two valid types are HSSValueString
-         *                      and HSSValueKeyword.
-         *  @param value        A std::string containing the new value.
-         */
-        HSSValue(HSSValueType type, std::string value);
-        /**
-         *  Copy constructor for value objects
+         *  Copy constructor for HSSValue objects. Do not use directly, use clone() instead.
          */
         HSSValue(const HSSValue & orig);
         /**
-         *  Clones an instance of HSSValue and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSValue
+         *  Clones an instance of HSSValue and gives a shared pointer of the newly instanciated
+         *  object.
+         *  @return A shared pointer to the new HSSValue.
          */
         p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
+        virtual ~HSSValue();
         
         virtual std::string toString();
         virtual std::string defaultObjectType();
         virtual std::string defaultObjectType(std::string property);
+        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        
         /**
-         *  @return The value type of this object.
+         *  Getter for the definition object of value.
+         *  @return A shared pointer to the parser node containing the definition object of value.
          */
-        HSSValueType getValueType();
+        const HSSParserNode::p getDValue() const;
+        
         /**
-         *  Sets the value object to be of type HSSValueNumberInt and of given value.
-         *  @param value        A long int containing the new value.
+         *  Setter for the definition object of value. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of value.
          */
-        void setValue(long int value);
+        void setDValue(HSSParserNode::p value);
+        
         /**
-         *  Sets the value object to be of type HSSValueNumberFloat and of given value.
-         *  @param value        A long double containing the new value.
+         *  Since this property accepts multiple values, this allows to append a value instead of replacing
+         *  the whole thing.
+         *  @param value    A shared pointer to the parser node containing the definition object to be
+         *                  added to value.
          */
-        void setValue(long double value);
+        void addDValue(HSSParserNode::p value);
+        
         /**
-         *  Sets the value object to be of type HSSValueString and of given value.
-         *  @param value        A std::string containing the new value.
+         *  Method to be passed as callback when observing changes that will affect value.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
          */
-        void setValue(std::string value);
-        /**
-         *  Sets the value object to be of type HSSValueKeyword and of given value.
-         *  @param value        A std::string containing the new value.
-         */
-        void setKWValue(std::string keyword);
-        /**
-         *  Returns the value of the object as a string, converting it if needed.
-         *  @return The value as a std::string.
-         */
-        std::string getStringValue();
-        /**
-         *  Returns the value of the object as an integer, converting it if needed.
-         *
-         *  @return The value as a long int.
-         *
-         *  @todo right now just works with ints, no conversion is happening yet
-         */
-        long int getIntValue();
-        /**
-         *  Returns the value of the object as a floating point number, converting it if needed.
-         *
-         *  @return The value as a long double.
-         *
-         *  @todo right now just works with floats, no conversion is happening yet
-         */
-        long double getFloatValue();
+        void valueChanged(HSSObservableProperty source, void*data);
         
     protected:
-        HSSValueType valueType;
-        std::string stringValue;
-        long int intValue;
-        long double floatValue;
+        //value
+        HSSParserNode::p dValue;
+        HSSObservable * observedValue;
+        HSSObservableProperty observedValueProperty;
         
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        HSSClonable::p cloneImpl() const;
     };
 }
+
 
 #endif
