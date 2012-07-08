@@ -263,4 +263,10 @@ void listXMLElements(NSString *filepath)
     [[self axrView] reload];
 }
 
+- (IBAction)showLayoutSteps:(id)sender {
+    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[[self axrView] axrWrapper];
+    wrapper->setShowLayoutSteps(true);
+    wrapper->nextLayoutStep();
+}
+
 @end

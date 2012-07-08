@@ -184,6 +184,17 @@ namespace AXR
          */
         virtual std::string getPathToResources() = 0;
         
+        bool showLayoutSteps();
+        void setShowLayoutSteps(bool value);
+        void nextLayoutStep();
+        void nextLayoutTick();
+        void resetLayoutTicks();
+        bool layoutStepDone();
+        void nextLayoutChild();
+        void resetLayoutChild();
+        bool layoutChildDone();
+        void breakIfNeeded();
+        
         void executeLayoutTests(HSSObservableProperty passnull, void*data);
         
         boost::unordered_map<AXRFileHandle, AXRFile::p> files;
@@ -193,6 +204,10 @@ namespace AXR
     private:
         bool _isHSSOnly;
         bool _hasLoadedFile;
+        bool _showLayoutSteps;
+        unsigned int _currentLayoutStep;
+        unsigned int _currentLayoutTick;
+        unsigned int _currentLayoutChild;
     };
     
     

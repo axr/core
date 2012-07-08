@@ -678,6 +678,12 @@ bool HSSDisplayObject::isDirty()
 
 void HSSDisplayObject::draw(cairo_t * cairo)
 {
+    AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
+    if(wrapper->showLayoutSteps()){
+        wrapper->nextLayoutTick();
+        if(wrapper->layoutChildDone()) return;
+    }
+    
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: drawing "+this->elementName);
     if(this->_isDirty){
 #if AXR_DEBUG_LEVEL > 0

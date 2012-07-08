@@ -54,6 +54,10 @@ AXRWrapper::AXRWrapper()
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRWrapper: creating AXRWrapper");
     this->_isHSSOnly = false;
     this->_hasLoadedFile = false;
+    this->_showLayoutSteps = false;
+    this->_currentLayoutStep = 0;
+    this->_currentLayoutTick = 0;
+    this->_currentLayoutChild = 0;
     AXRCore::tp & axr = AXRCore::getInstance();
     axr->initialize(this);
 }
@@ -164,6 +168,11 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 
 bool AXRWrapper::reload()
 {
+    this->_showLayoutSteps = false;
+    this->_currentLayoutStep = 0;
+    this->_currentLayoutTick = 0;
+    this->_currentLayoutChild = 0;
+    
     AXRCore::tp & core = AXRCore::getInstance();
     if(!this->_isHSSOnly){
         std::string cur_path = core->getFile()->getBasePath()+"/"+core->getFile()->getFileName();
@@ -197,6 +206,61 @@ bool AXRWrapper::hasLoadedFile()
 {
     AXRCore::tp & core = AXRCore::getInstance();
     return core->hasLoadedFile();
+}
+
+void AXRWrapper::setShowLayoutSteps(bool value)
+{
+    this->_showLayoutSteps = value;
+}
+
+bool AXRWrapper::showLayoutSteps()
+{
+    return this->_showLayoutSteps;
+}
+
+void AXRWrapper::nextLayoutStep()
+{
+    this->_currentLayoutStep += 1;
+    this->_currentLayoutTick = 0;
+    this->_currentLayoutChild = 0;
+    this->setNeedsDisplay(true);
+}
+
+void AXRWrapper::nextLayoutTick()
+{
+    this->_currentLayoutTick += 1;
+}
+
+void AXRWrapper::resetLayoutTicks()
+{
+    this->_currentLayoutTick = 0;
+}
+
+bool AXRWrapper::layoutStepDone()
+{
+    return this->_currentLayoutTick >= this->_currentLayoutStep;
+}
+
+void AXRWrapper::breakIfNeeded()
+{
+    if(this->_currentLayoutTick >= this->_currentLayoutStep-1){
+        std_log("breaking");
+    }
+}
+
+void AXRWrapper::nextLayoutChild()
+{
+    this->_currentLayoutChild += 1;
+}
+
+void AXRWrapper::resetLayoutChild()
+{
+    this->_currentLayoutChild = 0;
+}
+
+bool AXRWrapper::layoutChildDone()
+{
+    return this->_currentLayoutTick >= this->_currentLayoutChild+1;
 }
 
 void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)

@@ -75,6 +75,7 @@ void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
     
     //prepare values
     HSSContainer::p root = this->controller->getRoot();
+    AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
     
     if(root){
         ///@todo find out what objects lie in that rect
@@ -84,27 +85,26 @@ void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
             axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: window size changed, setting to width: "+boost::lexical_cast<std::string>(bounds.size.width)+" and height: "+boost::lexical_cast<std::string>(bounds.size.height));
             this->windowWidth = bounds.size.width;
             this->windowHeight = bounds.size.height;
-        //    root->setDWidth(HSSNumberConstant::p(new HSSNumberConstant(this->windowWidth)));
-        //    root->setDHeight(HSSNumberConstant::p(new HSSNumberConstant(this->windowHeight)));
             root->setNeedsRereadRules(true);
         }
         //draw the elements
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: reading object definitions");
         root->recursiveReadDefinitionObjects();
-        //    if(this->_needsRereadRules){
-        //        std_log1("rereading rules of "+this->elementName);
-        //        this->readDefinitionObjects();
-        //    }
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: laying out elements on page");
         root->recursiveLayout();
+        if(wrapper->showLayoutSteps()){
+            wrapper->resetLayoutTicks();
+        }
+        
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: regenerating surfaces");
         root->recursiveRegenerateSurfaces();
-        //    if(this->_needsSurface){
-        //        std_log1("regenerating surfaces of "+this->elementName);
-        //        this->regenerateSurfaces();
-        //    }
         axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: drawing tree");
+        wrapper->nextLayoutChild();
         root->recursiveDraw(this->cairo);
+        if(wrapper->showLayoutSteps()){
+            wrapper->resetLayoutTicks();
+            wrapper->resetLayoutChild();
+        }
     } else {
         AXRError::p(new AXRError("AXRRender", "Fatal error: No root"))->raise();
     }

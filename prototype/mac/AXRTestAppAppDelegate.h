@@ -84,5 +84,7 @@ void listXMLElements(NSString * filepath);
 - (IBAction)openDocument:(id)sender;
 - (IBAction)layoutTests:(id)sender;
 - (IBAction)reload:(id)sender;
+    
+- (IBAction)showLayoutSteps:(id)sender;
 
 @end
