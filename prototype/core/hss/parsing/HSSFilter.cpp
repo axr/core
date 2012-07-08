@@ -144,6 +144,12 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
 {
     HSSFilter::p ret;
     switch (filterType) {
+		case HSSFilterTypeParent:
+        {
+            ret = HSSParentFilter::p(new HSSParentFilter());
+            break;
+        }
+        
         case HSSFilterTypeFirst:
         {
             ret = HSSFirstFilter::p(new HSSFirstFilter());
