@@ -25,7 +25,7 @@
  *            MM,
  *
  * 
- *      AUTHORS: Miro Keller
+ *      AUTHORS: Miro Keller, Anando Gopal Chetterjee
  *      
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
@@ -38,15 +38,6 @@
  *      OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
- *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2012/06/28
- *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
  *
  ********************************************************************/
 
@@ -81,7 +72,7 @@ namespace AXR {
         virtual ~HSSParentFilter();
         virtual std::string toString();
         
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool negating);
+        const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

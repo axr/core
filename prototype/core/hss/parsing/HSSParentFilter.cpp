@@ -39,15 +39,6 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2012/06/28
- *      HSS version: 1.0
- *      Core version: 0.45
- *      Revision: 3
- *
  ********************************************************************/
 
 #include "HSSParentFilter.h"
@@ -56,9 +47,9 @@
 using namespace AXR;
 
 HSSParentFilter::HSSParentFilter()
-: HSSFilter()
+: HSSFilter(HSSFilterTypeParent)
 {
-    this->filterType = HSSFilterTypeParent;
+    
 }
 
 HSSParentFilter::p HSSParentFilter::clone() const{
@@ -76,13 +67,13 @@ std::string HSSParentFilter::toString()
 }
 
 
-const std::vector<HSSDisplayObject::p> HSSParentFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
+const std::vector<HSSDisplayObject::p> HSSParentFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
 {
     if(scope.size() > 0){
         std::vector<HSSDisplayObject::p> ret;
         int size=scope.size();
         HSSContainer::p container;
-        if (!negating)
+        if (!this->getNegating())
             for (int i=0; i<size; i++){
 				container = HSSContainer::asContainer(scope[i]);
                 if (container && container->getChildren(false).size()>0)
