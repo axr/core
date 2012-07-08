@@ -1841,7 +1841,8 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+                //this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+                std_log("######## FIXME ################");
                 valid = true;
             }
             

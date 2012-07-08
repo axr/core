@@ -92,24 +92,24 @@ namespace AXR {
         
         virtual std::string toString();
         
-        /**
-         *  Setter for size.
-         *  @param  newSize A HSSValue object encapsulating the new size.
-         * 
-         *  @todo this should take a shared pointer
-         */
-        void setSize(HSSValue newSize);
-        
-        /**
-         *  Setter for size.
-         *  @return A HSSValue object encapsulating the size.
-         *
-         *  @todo this should give a shared pointer
-         */
-        HSSValue getSize();
+//        /**
+//         *  Setter for size.
+//         *  @param  newSize A HSSValue object encapsulating the new size.
+//         * 
+//         *  @todo this should take a shared pointer
+//         */
+//        void setSize(HSSValue newSize);
+//        
+//        /**
+//         *  Setter for size.
+//         *  @return A HSSValue object encapsulating the size.
+//         *
+//         *  @todo this should give a shared pointer
+//         */
+//        HSSValue getSize();
         
     protected:
-        HSSValue size;
+//        HSSValue size;
     private:
         HSSClonable::p cloneImpl() const;
     };

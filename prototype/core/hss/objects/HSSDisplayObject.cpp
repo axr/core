@@ -1298,7 +1298,8 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->flow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
+                //this->flow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
+                std_log("########### FIXME #################");
                 valid = true;
             }
             
@@ -1401,7 +1402,8 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->overflow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
+                //this->overflow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
+                std_log("########### FIXME #################");
                 valid = true;
             }
             

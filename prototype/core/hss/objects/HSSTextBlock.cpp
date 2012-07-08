@@ -369,7 +369,8 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->transform = HSSTextBlock::textTransformTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+                //this->transform = HSSTextBlock::textTransformTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+                std_log("######## FIXME ################");
                 valid = true;
             }
             
@@ -478,7 +479,8 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+                //this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+                std_log("######## FIXME ################");
                 valid = true;
             }
             
@@ -590,7 +592,8 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                this->text = boost::static_pointer_cast<HSSValue>(theobj)->getStringValue();
+                //this->text = boost::static_pointer_cast<HSSValue>(theobj)->getStringValue();
+                std_log("######## FIXME ################");
                 valid = true;
             }
             
