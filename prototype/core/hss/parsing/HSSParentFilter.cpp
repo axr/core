@@ -25,7 +25,7 @@
  *            MM,
  *
  * 
- *      AUTHORS: Miro Keller
+ *      AUTHORS: Miro Keller, Anando Gopal Chetterjee
  *      
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
@@ -43,18 +43,64 @@
  *
  *      FILE INFORMATION:
  *      =================
- *      Last changed: 2012/03/25
+ *      Last changed: 2012/06/28
  *      HSS version: 1.0
- *      Core version: 0.46
+ *      Core version: 0.45
  *      Revision: 3
  *
  ********************************************************************/
 
-#ifndef HSSFILTERS_H
-#define HSSFILTERS_H
-
 #include "HSSParentFilter.h"
-#include "HSSFirstFilter.h"
-#include "HSSLastFilter.h"
+#include "../objects/HSSContainer.h"
 
-#endif
+using namespace AXR;
+
+HSSParentFilter::HSSParentFilter()
+: HSSFilter()
+{
+    this->filterType = HSSFilterTypeParent;
+}
+
+HSSParentFilter::p HSSParentFilter::clone() const{
+    return boost::static_pointer_cast<HSSParentFilter, HSSClonable>(this->cloneImpl());
+}
+
+HSSParentFilter::~HSSParentFilter()
+{
+    
+}
+
+std::string HSSParentFilter::toString()
+{
+    return "Parent Filter";
+}
+
+
+const std::vector<HSSDisplayObject::p> HSSParentFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool negating)
+{
+    if(scope.size() > 0){
+        std::vector<HSSDisplayObject::p> ret;
+        int size=scope.size();
+        HSSContainer::p container;
+        if (!negating)
+            for (int i=0; i<size; i++){
+				container = HSSContainer::asContainer(scope[i]);
+                if (container && container->getChildren(false).size()>0)
+                    ret.push_back(scope[i]);
+			}
+
+        else
+            for (int i=0; i<size; i++){
+			    container = HSSContainer::asContainer(scope[i]);
+                if (container && container->getChildren(false).size()==0)
+                    ret.push_back(scope[i]);
+            }
+        return ret;
+    } else {
+        return scope;
+    }
+}
+
+HSSClonable::p HSSParentFilter::cloneImpl() const{
+    return HSSClonable::p(new HSSParentFilter(*this));
+}
