@@ -1379,7 +1379,7 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
         if(parentContainer){
             scope = &(parentContainer->getChildren());
         } else {
-            scope = NULL;
+            scope = &(this->getChildren());
         }
         this->contentAlignX = this->_setLDProperty(
                                             &HSSContainer::contentAlignXChanged,
