@@ -80,17 +80,17 @@ HSSMargin::~HSSMargin()
 
 std::string HSSMargin::toString()
 {
-    return "HSSMargin with size: "+this->size.getStringValue();
+    return "HSSMargin";
 }
 
-void HSSMargin::setSize(HSSValue newSize){
-    this->size = newSize;
-}
-
-HSSValue HSSMargin::getSize()
-{
-    return this->size;
-}
+//void HSSMargin::setSize(HSSValue newSize){
+//    this->size = newSize;
+//}
+//
+//HSSValue HSSMargin::getSize()
+//{
+//    return this->size;
+//}
 
 
 

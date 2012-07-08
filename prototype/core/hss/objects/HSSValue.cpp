@@ -41,9 +41,11 @@
  *
  ********************************************************************/
 
-#include "HSSValue.h"
-#include <sstream>
-#include "../../axr/errors/errors.h"
+#import "HSSValue.h"
+#import "../parsing/HSSObjectNameConstant.h"
+#import "../parsing/HSSObjectDefinition.h"
+#import "../parsing/HSSFunction.h"
+#import "../../axr/AXRController.h"
 
 using namespace AXR;
 
@@ -51,58 +53,22 @@ HSSValue::HSSValue()
 : HSSObject(HSSObjectTypeValue)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
-    this->valueType = HSSValueNumberInt;
-    this->intValue = 0;
-}
-
-HSSValue::HSSValue(long int value)
-: HSSObject(HSSObjectTypeValue)
-{
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
-    this->valueType = HSSValueNumberInt;
-    this->intValue = value;
-}
-
-HSSValue::HSSValue(long double value)
-: HSSObject(HSSObjectTypeValue)
-{
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
-    this->valueType = HSSValueNumberFloat;
-    this->floatValue = value;
-}
-
-HSSValue::HSSValue(std::string value)
-: HSSObject(HSSObjectTypeValue)
-{
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
-    this->valueType = HSSValueString;
-    this->stringValue = value;
-}
-
-HSSValue::HSSValue(HSSValueType type, std::string value)
-: HSSObject(HSSObjectTypeValue)
-{
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
-    if (type == HSSValueString) {
-        this->valueType = type;
-        this->setValue(value);
-    } else if (type == HSSValueKeyword){
-        this->valueType = type;
-        this->setKWValue(value);
-    } else {
-        this->valueType = HSSValueNumberInt;
-        this->setValue((long int)0);
-    }
+    
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("value");
+    this->setShorthandProperties(shorthandProperties);
+    
+    this->registerProperty(HSSObservablePropertyValue, &this->dValue);
 }
 
 HSSValue::HSSValue(const HSSValue & orig)
 : HSSObject(orig)
-{
-    this->valueType = orig.valueType;
-    this->stringValue = orig.stringValue;
-    this->intValue = orig.intValue;
-    this->floatValue = orig.floatValue;
+{    
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("value");
+    this->setShorthandProperties(shorthandProperties);
     
+    this->registerProperty(HSSObservablePropertyValue, &this->dValue);
 }
 
 HSSValue::p HSSValue::clone() const{
@@ -114,38 +80,14 @@ HSSClonable::p HSSValue::cloneImpl() const{
     return HSSClonable::p(new HSSValue(*this));
 }
 
+HSSValue::~HSSValue()
+{
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: destructing value object");
+}
+
 std::string HSSValue::toString()
 {
-    std::string ret;
-    std::ostringstream tempstream;
-    
-    if (this->isNamed()) {
-        ret = "HSSValue: " + this->name + " with value: ";
-    } else {
-        ret = "Annonymous HSSValue with value: ";
-    }
-    
-    switch (this->valueType) {
-        case HSSValueNumberInt:
-            //create a temp stream to convert the int to a string
-            tempstream << this->intValue;
-            ret.append(tempstream.str());
-            break;
-        case HSSValueNumberFloat:
-            //create a temp stream to convert the float to a string
-            tempstream << this->floatValue;
-            ret.append(tempstream.str());
-            break;
-        case HSSValueString:
-        case HSSValueKeyword:
-            ret.append(this->stringValue);
-            break;
-        default:
-            ret.append("### Unknown value type ###");
-            break;
-    }
-    
-    return ret;
+    return "HSSValue: "+this->dValue->toString();
 }
 
 std::string HSSValue::defaultObjectType()
@@ -156,77 +98,42 @@ std::string HSSValue::defaultObjectType()
 std::string HSSValue::defaultObjectType(std::string property)
 {
     if (property == "value"){
-        return "value";
+        return "request";
     } else {
         return HSSObject::defaultObjectType(property);
     }
 }
 
-HSSValueType HSSValue::getValueType()
+void HSSValue::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    return this->valueType;
-}
-
-void HSSValue::setValue(long int value)
-{
-    this->valueType = HSSValueNumberInt;
-    this->intValue = value;
-}
-
-void HSSValue::setValue(long double value)
-{
-    this->valueType = HSSValueNumberFloat;
-    this->floatValue = value;
-}
-
-void HSSValue::setValue(std::string value)
-{
-    this->valueType = HSSValueString;
-    this->stringValue = value;
-}
-
-void HSSValue::setKWValue(std::string keyword)
-{
-    this->valueType = HSSValueKeyword;
-    this->stringValue = keyword;
-}
-
-std::string HSSValue::getStringValue()
-{
-    if (this->valueType == HSSValueString || this->valueType == HSSValueKeyword) {
-        return this->stringValue;
-    } else if (this->valueType == HSSValueNumberInt || this->valueType == HSSValueNumberFloat){
-        std::ostringstream tempstream;
-        tempstream << (this->valueType == HSSValueNumberInt ? this->intValue : this->floatValue);
-        return tempstream.str();
-    } else {
-        throw AXRError::p(new AXRError("HSSValue", "Unknown value type"));
+    switch (name) {
+        case HSSObservablePropertyValue:
+            this->setDValue(value);
+            break;
+            
+        default:
+            HSSObject::setProperty(name, value);
+            break;
     }
 }
 
-long int HSSValue::getIntValue()
+const HSSParserNode::p HSSValue::getDValue() const { return this->dValue; }
+void HSSValue::setDValue(HSSParserNode::p value)
 {
-    if(this->valueType == HSSValueNumberInt){
-        return this->intValue;
-    } else {
-        /**
-         *  @todo parse string to int
-         */
-        throw AXRError::p(new AXRError("HSSValue", "Unknown value type"));
-    }
+    this->dValue = value;
+    this->addDValue(value);
 }
 
-long double HSSValue::getFloatValue()
+void HSSValue::addDValue(HSSParserNode::p value)
 {
-    if(this->valueType == HSSValueNumberFloat){
-        return this->floatValue;
-    } else {
-        /**
-         *  @todo parse string to float
-         */
-        throw AXRError::p(new AXRError("HSSValue", "Unknown value type"));
-    }
+    bool valid = true;
+    if (!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for value of @value "+this->name));
+    
+    this->notifyObservers(HSSObservablePropertyValue, &this->dValue);
 }
 
-
-
+void HSSValue::valueChanged(HSSObservableProperty source, void*data)
+{
+    std_log("HSSValue::valueChanged unimplemented");
+}
