@@ -89,9 +89,15 @@ void HSSDisplayObject::initialize()
     this->x = this->y
     = this->globalX = this->globalY
     = this->width = this->height
+    = this->innerWidth = this->outerWidth
+    = this->innerHeight = this->outerHeight
+    = this->topPadding = this->rightPadding = this->bottomPadding = this->leftPadding
+    = this->topMargin = this->rightMargin = this->bottomMargin = this->leftMargin
     = this->anchorX = this->anchorY
     = this->alignX = this->alignY
     = 0.;
+    
+    this->_anchorXdefault = this->_anchorYdefault = true;
     
     this->drawIndex = this->_index = 0;
     this->tabIndex = this->zoomFactor = 1;
@@ -130,6 +136,13 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyBorder, (void *) &this->border);
     
     this->_isHover = false;
+    this->_layoutFlagIsInSecondaryGroup = false;
+    this->_layoutFlagIsInSecondaryLine = false;
+    this->_layoutFlagVerticallyAligned = false;
+    this->_layoutFlagLockTop = false;
+    this->_layoutLockTopPosition = 0.;
+    this->_layoutFlagLockBottom = false;
+    this->_layoutLockBottomPosition = 0.;
 }
 
 HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
@@ -887,7 +900,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
         
     } else {
         
-        HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
+        HSSObservableProperty observedProperty = HSSObservablePropertyInnerWidth;
         if(this->observedWidth != NULL)
         {
             this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
@@ -898,7 +911,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
             this->width = floor(this->_setLDProperty(
                                                &HSSDisplayObject::widthChanged,
                                                value,
-                                               parentContainer->width,
+                                               parentContainer->innerWidth,
                                                observedProperty,
                                                parentContainer.get(),
                                                HSSObservablePropertyWidth,
@@ -920,6 +933,8 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
                                                ));
         }
         
+        this->_setInnerDimensions();
+        this->_setOuterDimensions();        
         
         this->notifyObservers(HSSObservablePropertyWidth, &this->width);
         this->setNeedsSurface(true);
@@ -955,6 +970,9 @@ void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
             break;
     }
     
+    this->_setInnerDimensions();
+    this->_setOuterDimensions();
+    
     this->notifyObservers(HSSObservablePropertyWidth, &this->width);
     this->setNeedsSurface(true);
     this->setNeedsLayout(true);
@@ -982,6 +1000,8 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         this->heightByContent = true;
         
     } else {
+        HSSObservableProperty observedProperty = HSSObservablePropertyInnerHeight;
+        
         if(this->observedHeight != NULL)
         {
             this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
@@ -990,18 +1010,15 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         this->dHeight = value;
         this->heightByContent = false;
         
-        HSSObservableProperty observedProperty;
-
-        observedProperty = HSSObservablePropertyHeight;
         HSSContainer::p parentContainer = this->getParent();
         if(parentContainer){
             this->height = this->_setLDProperty(
                                                 &HSSDisplayObject::heightChanged,
                                                 value,
-                                                parentContainer->height,
+                                                parentContainer->innerHeight,
                                                 observedProperty,
                                                 parentContainer.get(),
-                                                HSSObservablePropertyHeight,
+                                                HSSObservablePropertyInnerHeight,
                                                 this->observedHeight,
                                                 this->observedHeightProperty,
                                                 &(parentContainer->getChildren())
@@ -1019,6 +1036,9 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
                                                 NULL
                                                 );
         }
+        
+        this->_setInnerDimensions();
+        this->_setOuterDimensions();
         
         this->notifyObservers(HSSObservablePropertyHeight, &this->height);
         this->setNeedsSurface(true);
@@ -1060,6 +1080,9 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
             break;
     }
     
+    this->_setInnerDimensions();
+    this->_setOuterDimensions();
+    
     this->notifyObservers(HSSObservablePropertyHeight, &this->height);
     this->setNeedsSurface(true);
     this->setNeedsLayout(true);
@@ -1071,41 +1094,64 @@ long double HSSDisplayObject::getAnchorX() { return this->anchorX; }
 HSSParserNode::p HSSDisplayObject::getDAnchorX() { return this->dAnchorX; }
 void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
 {
+    bool valid = false;
+    this->dAnchorX = value;
     switch (value->getType()) {
         case HSSParserNodeTypeNumberConstant:
         case HSSParserNodeTypePercentageConstant:
         case HSSParserNodeTypeExpression:
-        case HSSParserNodeTypeKeywordConstant:
         case HSSParserNodeTypeFunctionCall:
+        {
+            HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
+            if(this->observedAnchorX != NULL)
+            {
+                this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
+            }
+            HSSContainer::p parentContainer = this->getParent();
+            const std::vector<HSSDisplayObject::p> * scope;
+            if(parentContainer){
+                scope = &(parentContainer->getChildren());
+            } else {
+                scope = NULL;
+            }
+            this->anchorX = this->_setLDProperty(
+                                                 &HSSDisplayObject::anchorXChanged,
+                                                 value,
+                                                 this->width,
+                                                 observedProperty,
+                                                 this,
+                                                 HSSObservablePropertyAnchorX,
+                                                 this->observedAnchorX,
+                                                 this->observedAnchorXProperty,
+                                                 scope
+                                                 );
+            this->_anchorXdefault = false;
+            valid = true;
             break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            if(this->observedAnchorX != NULL)
+            {
+                this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
+            }
+            //we don't need to observe anything here, since it will be handled by the layout algorithm
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+            if (keywordValue->getValue() == "none" || keywordValue->getValue() == "default"){
+                this->_anchorXdefault = true;
+                valid = true;
+            }
+            break;
+        }
+            
         default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for anchorX of "+this->getElementName()));
+            break;
     }
     
-    this->dAnchorX = value;
-    HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
-    if(this->observedAnchorX != NULL)
-    {
-        this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
-    }
-    HSSContainer::p parentContainer = this->getParent();
-    const std::vector<HSSDisplayObject::p> * scope;
-    if(parentContainer){
-        scope = &(parentContainer->getChildren());
-    } else {
-        scope = NULL;
-    }
-    this->anchorX = this->_setLDProperty(
-                                         &HSSDisplayObject::anchorXChanged,
-                                         value,
-                                         this->width,
-                                         observedProperty,
-                                         this,
-                                         HSSObservablePropertyAnchorX,
-                                         this->observedAnchorX,
-                                         this->observedAnchorXProperty,
-                                         scope
-                                         );
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for anchorX of "+this->getElementName()));
+    
     this->notifyObservers(HSSObservablePropertyAnchorX, &this->anchorX);
 #if AXR_DEBUG_LEVEL > 0
     this->setDirty(true);
@@ -1120,6 +1166,7 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dAnchorX);
             this->anchorX = percentageValue->getValue(*(long double*)data);
+            this->_anchorXdefault = false;
             break;
         }
             
@@ -1127,12 +1174,25 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(this->dAnchorX);
             this->anchorX = expressionValue->evaluate();
+            this->_anchorXdefault = false;
             break;
         }
             
         case HSSParserNodeTypeFunctionCall:
         {
             this->anchorX = *(long double*)data;
+            this->_anchorXdefault = false;
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(this->dAnchorX);
+            if (keywordValue->getValue() == "none" || keywordValue->getValue() == "default"){
+                this->_anchorXdefault = true;
+                this->anchorX = 0.;
+            }
+            break;
         }
             
         default:
@@ -1151,43 +1211,64 @@ long double HSSDisplayObject::getAnchorY() { return this->anchorY; }
 HSSParserNode::p HSSDisplayObject::getDAnchorY() { return this->dAnchorY; }
 void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
 {
+    bool valid = false;
+    this->dAnchorY = value;
     switch (value->getType()) {
         case HSSParserNodeTypeNumberConstant:
         case HSSParserNodeTypePercentageConstant:
         case HSSParserNodeTypeExpression:
-        case HSSParserNodeTypeKeywordConstant:
         case HSSParserNodeTypeFunctionCall:
+        {
+            HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
+            if(this->observedAnchorY != NULL)
+            {
+                this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
+            }
+            HSSContainer::p parentContainer = this->getParent();
+            const std::vector<HSSDisplayObject::p> * scope;
+            if(parentContainer){
+                scope = &(parentContainer->getChildren());
+            } else {
+                scope = NULL;
+            }
+            this->anchorY = this->_setLDProperty(
+                                                 &HSSDisplayObject::anchorYChanged,
+                                                 value,
+                                                 this->width,
+                                                 observedProperty,
+                                                 this,
+                                                 HSSObservablePropertyAnchorY,
+                                                 this->observedAnchorY,
+                                                 this->observedAnchorYProperty,
+                                                 scope
+                                                 );
+            this->_anchorYdefault = false;
+            valid = true;
             break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            if(this->observedAnchorY != NULL)
+            {
+                this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
+            }
+            //we don't need to observe anything here, since it will be handled by the layout algorithm
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+            if (keywordValue->getValue() == "none" || keywordValue->getValue() == "default"){
+                this->_anchorYdefault = true;
+                valid = true;
+            }
+            break;
+        }
+            
         default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for anchorY of "+this->getElementName()));
+            break;
     }
     
-    if(this->observedAnchorY != NULL)
-    {
-        this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
-        this->observedAnchorY = NULL;
-    }
-    this->dAnchorY = value;
-    HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for anchorY of "+this->getElementName()));
     
-    HSSContainer::p parentContainer = this->getParent();
-    const std::vector<HSSDisplayObject::p> * scope;
-    if(parentContainer){
-        scope = &(parentContainer->getChildren());
-    } else {
-        scope = NULL;
-    }
-    this->anchorY = this->_setLDProperty(
-                                         &HSSDisplayObject::anchorYChanged,
-                                         value,
-                                         this->height,
-                                         observedProperty,
-                                         this,
-                                         HSSObservablePropertyAnchorY,
-                                         this->observedAnchorY,
-                                         this->observedAnchorYProperty,
-                                         scope
-                                         );
     this->notifyObservers(HSSObservablePropertyAnchorY, &this->anchorY);
 #if AXR_DEBUG_LEVEL > 0
     this->setDirty(true);
@@ -1215,6 +1296,17 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypeFunctionCall:
         {
             this->anchorY = *(long double*)data;
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(this->dAnchorY);
+            if (keywordValue->getValue() == "none" || keywordValue->getValue() == "default"){
+                this->_anchorYdefault = true;
+                this->anchorY = 0.;
+            }
+            break;
         }
             
         default:
@@ -2351,10 +2443,10 @@ void HSSDisplayObject::setDefaults()
     HSSKeywordConstant::p newDHeight(new HSSKeywordConstant("content"));
     this->setDHeight(newDHeight);
     //anchorX
-    HSSPercentageConstant::p newDAnchorX(new HSSPercentageConstant(50));
+    HSSKeywordConstant::p newDAnchorX(new HSSKeywordConstant("none"));
     this->setDAnchorX(newDAnchorX);
     //anchorY
-    HSSPercentageConstant::p newDAnchorY(new HSSPercentageConstant(50));
+    HSSKeywordConstant::p newDAnchorY(new HSSKeywordConstant("none"));
     this->setDAnchorY(newDAnchorY);
     //flow
     HSSKeywordConstant::p newDFlow(new HSSKeywordConstant("yes"));
@@ -2464,6 +2556,48 @@ long double HSSDisplayObject::_setLDProperty(
     }
     
     return ret;
+}
+
+
+void HSSDisplayObject::_setInnerDimensions()
+{
+    std::vector<HSSMargin::p>::const_iterator it;
+    long double innerWidth = this->width;
+    long double innerHeight = this->height;
+    this->topPadding = this->rightPadding = this->bottomPadding = this->leftPadding = 0;
+    for (it=this->padding.begin(); it!=this->padding.end(); it++) {
+        HSSMargin::p theMargin = *it;
+        innerWidth -= theMargin->getLeft() + theMargin->getRight();
+        innerHeight -= theMargin->getTop() + theMargin->getBottom();
+        this->topPadding += theMargin->getTop();
+        this->rightPadding += theMargin->getRight();
+        this->bottomPadding += theMargin->getBottom();
+        this->leftPadding += theMargin->getLeft();
+    }
+    this->innerWidth = innerWidth;
+    this->notifyObservers(HSSObservablePropertyInnerWidth, &this->innerWidth);
+    this->innerHeight = innerHeight;
+    this->notifyObservers(HSSObservablePropertyInnerHeight, &this->innerHeight);
+    
+}
+
+void HSSDisplayObject::_setOuterDimensions()
+{
+    std::vector<HSSMargin::p>::const_iterator it;
+    long double outerWidth = this->width;
+    long double outerHeight = this->height;
+    this->topMargin = this->rightMargin = this->bottomMargin = this->leftMargin = 0;
+    for (it=this->margin.begin(); it!=this->margin.end(); it++) {
+        HSSMargin::p theMargin = *it;
+        outerWidth += theMargin->getLeft() + theMargin->getRight();
+        outerHeight += theMargin->getTop() + theMargin->getBottom();
+        this->topMargin += theMargin->getTop();
+        this->rightMargin += theMargin->getRight();
+        this->bottomMargin += theMargin->getBottom();
+        this->leftMargin += theMargin->getLeft();
+    }
+    this->outerWidth = outerWidth;
+    this->outerHeight = outerHeight;
 }
 
 

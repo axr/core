@@ -364,18 +364,18 @@ namespace AXR {
         std::vector<std::vector<HSSDisplayObject::p> >layoutLines;
         
         //here go the final computed values
-        long double x;
-        long double y;
-        long double globalX;
-        long double globalY;
+        long double x, y, globalX, globalY,
+                    width, innerWidth, outerWidth,
+                    height, innerHeight, outerHeight,
+                    topPadding, rightPadding, bottomPadding, leftPadding,
+                    topMargin, rightMargin, bottomMargin, leftMargin
+        ;
         //width
         HSSParserNode::p dWidth;
-        long double width;
         HSSObservable * observedWidth;
         HSSObservableProperty observedWidthProperty;
         //height
         HSSParserNode::p dHeight;
-        long double height;
         bool heightByContent;
         HSSObservable * observedHeight;
         HSSObservableProperty observedHeightProperty;
@@ -387,11 +387,13 @@ namespace AXR {
         //anchorX
         HSSParserNode::p dAnchorX;
         long double anchorX;
+        bool _anchorXdefault;
         HSSObservable * observedAnchorX;
         HSSObservableProperty observedAnchorXProperty;
         //anchorY
         HSSParserNode::p dAnchorY;
         long double anchorY;
+        bool _anchorYdefault;
         HSSObservable * observedAnchorY;
         HSSObservableProperty observedAnchorYProperty;
         //flow
@@ -471,6 +473,9 @@ namespace AXR {
         
         HSSDisplayObject::p shared_from_this();
         
+    protected:
+        void _setInnerDimensions();
+        void _setOuterDimensions();
         
     private:
         long double _setLDProperty(
@@ -487,6 +492,14 @@ namespace AXR {
         HSSClonable::p cloneImpl() const;
         bool _isHover;
         bool _isRoot;
+        
+        bool _layoutFlagIsInSecondaryGroup;
+        bool _layoutFlagIsInSecondaryLine;
+        bool _layoutFlagVerticallyAligned;
+        bool _layoutFlagLockTop;
+        long double _layoutLockTopPosition;
+        bool _layoutFlagLockBottom;
+        long double _layoutLockBottomPosition;
     };
 }
 

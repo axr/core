@@ -49,16 +49,21 @@
 using namespace AXR;
 
 std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property){
-    static std::string types[60];
+    static std::string types[63];
     static bool HSSObservableHasInitializedTypes = false;
     if (!HSSObservableHasInitializedTypes) {
         HSSObservableHasInitializedTypes = true;
+        
+        types[HSSObservablePropertyNone] = "unknown";
+        
         //HSSObject
         types[HSSObservablePropertyIsA] = "HSSObservablePropertyIsA";
         
         //HSSDisplayObject
         types[HSSObservablePropertyValue] = "HSSObservablePropertyValue";
         types[HSSObservablePropertyWidth] = "HSSObservablePropertyWidth";
+        types[HSSObservablePropertyInnerWidth] = "HSSObservablePropertyInnerWidth";
+        types[HSSObservablePropertyInnerHeight] = "HSSObservablePropertyInnerHeight";
         types[HSSObservablePropertyHeight] = "HSSObservablePropertyHeight";
         types[HSSObservablePropertyAnchorX] = "HSSObservablePropertyAnchorX";
         types[HSSObservablePropertyAnchorY] = "HSSObservablePropertyAnchorY";

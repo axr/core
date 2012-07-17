@@ -54,6 +54,8 @@ namespace AXR {
         //HSSDisplayObject
         HSSObservablePropertyValue,
         HSSObservablePropertyWidth,
+        HSSObservablePropertyInnerWidth,
+        HSSObservablePropertyInnerHeight,
         HSSObservablePropertyHeight,
         HSSObservablePropertyAnchorX,
         HSSObservablePropertyAnchorY,

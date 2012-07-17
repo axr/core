@@ -451,13 +451,39 @@ namespace AXR {
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
         
+        void _recursiveCreateSecondaryGroups(
+            std::vector<HSSDisplayObject::p>::iterator  lineAIt,
+            std::vector<HSSDisplayObject::p>::iterator  lineAStopIt,
+            std::vector<HSSDisplayObject::p>::iterator  lineBIt,
+            std::vector<HSSDisplayObject::p>::iterator  lineBStopIt,
+            displayGroup::p &targetA, displayGroup::p   &targetB,
+            displayGroup::p                             &newGroup,
+            std::vector<displayGroup::p>::iterator      pglIt,
+            std::vector<displayGroup::p>::iterator      pglStopIt,
+            bool                                        addToSecondaryGroups,
+            std::vector<displayGroup::p>                &secondaryGroups,
+            bool                                        needsShoveling,
+            bool                                        onlyAddToBIfNotInGroupYet
+        );
+        
+        void _qs_swap(std::vector<displayGroup::p> &arr, int a, int b);
+        int _qs_partition(std::vector<displayGroup::p> &arr, int left, int right, int pivotIndex);
+        void _qs_sort(std::vector<displayGroup::p> &arr, int left , int right);
+        
+        bool _overlaps(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
+        bool _overlaps_horizontal(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
+        bool _overlaps_vertical(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
         bool _addChildToGroupIfNeeded(HSSDisplayObject::p &child, displayGroup::p &group, HSSDirectionValue direction, bool overflow);
-        std::vector<HSSContainer::displayGroup::p> _getGroupsOverlapping(HSSDisplayObject::p &child, std::vector<HSSContainer::displayGroup::p> &group, HSSDirectionValue direction);
+        //std::vector<HSSContainer::displayGroup::p> _getGroupsOverlapping(HSSDisplayObject::p &child, std::vector<HSSContainer::displayGroup::p> &group, HSSDirectionValue direction);
         bool _mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p &otherGroup, HSSDirectionValue direction);
         void _arrange(displayGroup::p &groups, HSSDirectionValue direction);
-        void _arrangeLines(displayGroup::p &groups, HSSDirectionValue direction);
+        bool _arrangeLines(displayGroup::p &groups, HSSDirectionValue direction, bool isFirstGroup);
+        void _recursiveGetPushGroup(HSSDisplayObject::p objA, HSSDisplayObject::p objB, std::vector<displayGroup::p>::iterator linesIt, std::vector<displayGroup::p>::iterator stopIt, displayGroup::p &ret);
         void _distribute(displayGroup::p &groups, HSSDirectionValue direction);
+        bool _recursiveFindTopConstraint(long double & constraint, displayGroup::p group, int i, HSSDisplayObject::p child);
+        bool _recursiveFindBottomConstraint(long double & constraint, displayGroup::p group, int i, HSSDisplayObject::p child);
         HSSClonable::p cloneImpl() const;
+        
     };
 }
 
