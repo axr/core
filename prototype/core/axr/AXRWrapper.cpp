@@ -244,7 +244,7 @@ bool AXRWrapper::layoutStepDone()
 void AXRWrapper::breakIfNeeded()
 {
     if(this->_currentLayoutTick >= this->_currentLayoutStep-1){
-        std_log("breaking");
+        int breakvar; breakvar = 1; //we need something to break on, two steps to avoid warnings
     }
 }
 
