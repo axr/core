@@ -57,6 +57,7 @@
 #include "HSSFont.h"
 #include "HSSEvent.h"
 #include "HSSBorder.h"
+#include "HSSMargin.h"
 #include <boost/enable_shared_from_this.hpp>
 
 namespace AXR {
@@ -307,6 +308,18 @@ namespace AXR {
         void onChanged(HSSObservableProperty source, void*data);
         bool fireEvent(HSSEventType type);
         
+        //margin
+        const HSSParserNode::p getDMargin() const;
+        void setDMargin(HSSParserNode::p value);
+        void addDMargin(HSSParserNode::p value);
+        void marginChanged(HSSObservableProperty source, void*data);
+        
+        //padding
+        const HSSParserNode::p getDPadding() const;
+        void setDPadding(HSSParserNode::p value);
+        void addDPadding(HSSParserNode::p value);
+        void paddingChanged(HSSObservableProperty source, void*data);
+        
         //border
         const HSSParserNode::p getDBorder() const;
         void setDBorder(HSSParserNode::p value);
@@ -435,9 +448,17 @@ namespace AXR {
         HSSObservableProperty observedOnProperty;
         boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > on;
         
-        /**
-         *  @todo add "margin" property
-         */
+        //margin
+        HSSParserNode::p dMargin;
+        HSSObservable * observedMargin;
+        HSSObservableProperty observedMarginProperty;
+        std::vector<HSSMargin::p> margin;
+        
+        //padding
+        HSSParserNode::p dPadding;
+        HSSObservable * observedPadding;
+        HSSObservableProperty observedPaddingProperty;
+        std::vector<HSSMargin::p> padding;
         
         //border
         HSSParserNode::p dBorder;

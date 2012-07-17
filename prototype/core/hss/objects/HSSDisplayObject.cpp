@@ -562,6 +562,12 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
         case HSSObservablePropertyOn:
             this->setDOn(value);
             break;
+        case HSSObservablePropertyMargin:
+            this->setDMargin(value);
+            break;
+        case HSSObservablePropertyPadding:
+            this->setDPadding(value);
+            break;
         case HSSObservablePropertyBorder:
             this->setDBorder(value);
             break;
@@ -2313,6 +2319,273 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
 #endif
     return fired;
 }
+
+const HSSParserNode::p HSSDisplayObject::getDMargin() const { return this->dMargin; }
+void HSSDisplayObject::setDMargin(HSSParserNode::p value)
+{
+    this->margin.clear();
+    this->dMargin = value;
+    this->addDMargin(value);
+}
+
+void HSSDisplayObject::addDMargin(HSSParserNode::p value)
+{
+    bool valid = false;
+    switch (value->getType()) {
+        case HSSParserNodeTypeMultipleValueDefinition:
+        {
+            HSSParserNode::it iterator;
+            HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(value);
+            std::vector<HSSParserNode::p> values = multiDef->getValues();
+            for (iterator = values.begin(); iterator != values.end(); iterator++) {
+                this->addDMargin(*iterator);
+            }
+            this->_setOuterDimensions();
+            valid = true;
+            break;
+        }
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                objdef->apply();
+                
+                HSSObject::p obj = boost::static_pointer_cast<HSSObject>(objdef->getObject());
+                switch (obj->getObjectType()) {
+                    case HSSObjectTypeMargin:
+                        this->margin.push_back(boost::static_pointer_cast<HSSMargin>(obj));
+                        valid = true;
+                        this->_setOuterDimensions();
+                        break;
+                        
+                    default:
+                        break;
+                }
+                
+            } catch (AXRError::p e) {
+                e->raise();
+            }
+            break;
+        }
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    fnct->setScope(&(thisCont->getChildren()));
+                }
+                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
+                this->addDMargin(remoteValue);
+                this->_setOuterDimensions();
+                valid = true;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+            if (keywordValue->getValue() == "none"){
+                valid = true;
+                this->_setOuterDimensions();
+                break;
+            }
+        }
+            
+        case HSSParserNodeTypeNumberConstant:
+        {
+            HSSMargin::p theMargin = HSSMargin::p(new HSSMargin());
+            theMargin->setDSize(value);
+            this->margin.push_back(theMargin);
+            this->_setOuterDimensions();
+            valid = true;
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dMargin = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            if (objdef->getObject()->isA(HSSObjectTypeMargin)) {
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::marginChanged));
+                this->margin.push_back(boost::static_pointer_cast<HSSMargin>(theObj));
+                this->_setOuterDimensions();
+                valid = true;
+            }
+            
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for margin of "+this->getElementName()));
+}
+
+void HSSDisplayObject::marginChanged(HSSObservableProperty source, void*data)
+{
+    
+}
+
+const HSSParserNode::p HSSDisplayObject::getDPadding() const { return this->dPadding; }
+void HSSDisplayObject::setDPadding(HSSParserNode::p value)
+{
+    this->padding.clear();
+    this->dPadding = value;
+    this->addDPadding(value);
+}
+
+void HSSDisplayObject::addDPadding(HSSParserNode::p value)
+{
+    bool valid = false;
+    switch (value->getType()) {
+        case HSSParserNodeTypeMultipleValueDefinition:
+        {
+            HSSParserNode::it iterator;
+            HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(value);
+            std::vector<HSSParserNode::p> values = multiDef->getValues();
+            for (iterator = values.begin(); iterator != values.end(); iterator++) {
+                this->addDPadding(*iterator);
+            }
+            this->_setInnerDimensions();
+            valid = true;
+            break;
+        }
+            
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                objdef->apply();
+                
+                HSSObject::p obj = boost::static_pointer_cast<HSSObject>(objdef->getObject());
+                switch (obj->getObjectType()) {
+                    case HSSObjectTypeMargin:
+                        this->padding.push_back(boost::static_pointer_cast<HSSMargin>(obj));
+                        valid = true;
+                        this->_setInnerDimensions();
+                        break;
+                        
+                    default:
+                        break;
+                }
+                
+            } catch (AXRError::p e) {
+                e->raise();
+            }
+            break;
+        }
+            
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    fnct->setScope(&(thisCont->getChildren()));
+                }
+                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
+                this->addDPadding(remoteValue);
+                this->_setInnerDimensions();
+                valid = true;
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
+            if (keywordValue->getValue() == "none"){
+                valid = true;
+                this->_setInnerDimensions();
+                break;
+            }
+        }
+            
+        case HSSParserNodeTypeNumberConstant:
+        {
+            HSSMargin::p thePadding = HSSMargin::p(new HSSMargin());
+            thePadding->setDSize(value);
+            this->padding.push_back(thePadding);
+            this->_setInnerDimensions();
+            valid = true;
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            this->dPadding = value;
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            if (objdef->getObject()->isA(HSSObjectTypeMargin)) {
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                
+                objdef->apply();
+                HSSObject::p theObj = objdef->getObject();
+                theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::paddingChanged));
+                this->padding.push_back(boost::static_pointer_cast<HSSMargin>(theObj));
+                this->_setInnerDimensions();
+                valid = true;
+            }
+            
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for padding of "+this->getElementName()));
+}
+
+void HSSDisplayObject::paddingChanged(HSSObservableProperty source, void*data)
+{
+    
+}
+
 
 const HSSParserNode::p HSSDisplayObject::getDBorder() const { return this->dBorder; }
 void HSSDisplayObject::setDBorder(HSSParserNode::p value)

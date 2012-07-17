@@ -51,6 +51,8 @@
 
 namespace AXR {
     
+    class HSSDisplayObject;
+    
     /**
      *  @brief Abstract base class to provide common functionality for margin object types.
      *
@@ -85,33 +87,164 @@ namespace AXR {
          */
         virtual ~HSSMargin();
         
+        //see HSSObject.h for documentation of these
+        virtual std::string toString();
+        virtual std::string defaultObjectType();
+        virtual std::string defaultObjectType(std::string property);
+        virtual bool isKeyword(std::string value, std::string property);
+        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        
         /**
          *  @todo make private and provide accessors
          */
         HSSMultipleValue segments;
         
-        virtual std::string toString();
+        /**
+         *  Getter for the definition object of size.
+         *  @return A shared pointer to the parser node containing the definition object of value.
+         */
+        const HSSParserNode::p getDSize() const;
         
-//        /**
-//         *  Setter for size.
-//         *  @param  newSize A HSSValue object encapsulating the new size.
-//         * 
-//         *  @todo this should take a shared pointer
-//         */
-//        void setSize(HSSValue newSize);
-//        
-//        /**
-//         *  Setter for size.
-//         *  @return A HSSValue object encapsulating the size.
-//         *
-//         *  @todo this should give a shared pointer
-//         */
-//        HSSValue getSize();
+        /**
+         *  Setter for the definition object of size. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of value.
+         */
+        void setDSize(HSSParserNode::p value);
         
-    protected:
-//        HSSValue size;
+        /**
+         *  Method to be passed as callback when observing changes that will affect size.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
+        void sizeChanged(HSSObservableProperty source, void*data);
+        
+        /**
+         *  Getter for the actual value of top.
+         *  @return A long double containing the value of size.
+         */
+        const long double getTop() const;
+        
+        /**
+         *  Getter for the definition object of top.
+         *  @return A shared pointer to the parser node containing the definition object of value.
+         */
+        const HSSParserNode::p getDTop() const;
+        
+        /**
+         *  Setter for the definition object of top. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of value.
+         */
+        void setDTop(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect top.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
+        void topChanged(HSSObservableProperty source, void*data);
+        
+        /**
+         *  Getter for the actual value of right.
+         *  @return A long double containing the value of size.
+         */
+        const long double getRight() const;
+        
+        /**
+         *  Getter for the definition object of right.
+         *  @return A shared pointer to the parser node containing the definition object of value.
+         */
+        const HSSParserNode::p getDRight() const;
+        
+        /**
+         *  Setter for the definition object of right. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of value.
+         */
+        void setDRight(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect right.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
+        void rightChanged(HSSObservableProperty source, void*data);
+        
+        /**
+         *  Getter for the actual value of bottom.
+         *  @return A long double containing the value of size.
+         */
+        const long double getBottom() const;
+        
+        /**
+         *  Getter for the definition object of bottom.
+         *  @return A shared pointer to the parser node containing the definition object of value.
+         */
+        const HSSParserNode::p getDBottom() const;
+        
+        /**
+         *  Setter for the definition object of bottom. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of value.
+         */
+        void setDBottom(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect bottom.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
+        void bottomChanged(HSSObservableProperty source, void*data);
+        
+        /**
+         *  Getter for the actual value of left.
+         *  @return A long double containing the value of size.
+         */
+        const long double getLeft() const;
+        
+        /**
+         *  Getter for the definition object of left.
+         *  @return A shared pointer to the parser node containing the definition object of value.
+         */
+        const HSSParserNode::p getDLeft() const;
+        
+        /**
+         *  Setter for the definition object of left. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of value.
+         */
+        void setDLeft(HSSParserNode::p value);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect left.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
+        void leftChanged(HSSObservableProperty source, void*data);
+        
     private:
         HSSClonable::p cloneImpl() const;
+        //size
+        HSSParserNode::p dSize;
+        
+        HSSObservable * observedTop;
+        HSSObservableProperty observedTopProperty;
+        HSSObservable * observedRight;
+        HSSObservableProperty observedRightProperty;
+        HSSObservable * observedBottom;
+        HSSObservableProperty observedBottomProperty;
+        HSSObservable * observedLeft;
+        HSSObservableProperty observedLeftProperty;
+        double long top, right, bottom, left;
+        
+        long double _setLDProperty(
+                                   void(HSSMargin::*callback)(HSSObservableProperty property, void* data),
+                                   HSSParserNode::p       value,
+                                   long double            percentageBase,
+                                   HSSObservableProperty  observedProperty,
+                                   HSSObservable *        observedObject,
+                                   HSSObservableProperty  observedSourceProperty,
+                                   HSSObservable *        &observedStore,
+                                   HSSObservableProperty  &observedStoreProperty,
+                                   const std::vector< boost::shared_ptr<HSSDisplayObject> > * scope
+                                   );
+        
     };
 }
 
