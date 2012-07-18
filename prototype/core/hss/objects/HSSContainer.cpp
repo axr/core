@@ -469,198 +469,198 @@ void HSSContainer::layout()
     if(this->allChildren.size() == 0) done = true;
         
     //reset flag
-    this->_needsLayout = false;
+    this->_needsLayout = true;
     
-    if(!done)
-    {
-        std::vector<displayGroup::p>primaryGroups;
-        std::vector<displayGroup::p>secondaryGroups;
-        unsigned i, size, j, k;
-        //long double acc2 = 0;
-        security_brake_init();
-        AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
+    while (this->_needsLayout) {
+        //we assume we don't need to re-layout
+        this->_needsLayout = false;
         
-        //bool secondaryIsHorizontal = (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft);
-        
-        //create groups and lines
-        for (i=0, size = this->allChildren.size(); i<size; i++) {
-            if(!done){
-                HSSDisplayObject::p child = this->allChildren[i];
-                //place it on the alignment point
-                //horizontal
-                if(child->_anchorXdefault){
-                    child->x = child->alignX - (child->outerWidth/2) + child->leftMargin;
-                } else {
-                    child->x = child->alignX - child->anchorX;
-                }
-                
-                //vertical
-                if(child->_anchorXdefault){
-                    child->y = child->alignY - (child->outerHeight/2) + child->topMargin;
-                } else {
-                    child->y = child->alignY - child->anchorY;
-                }
-                
-                if(!child->getOverflow()){
-                    if ((child->x + child->width + child->rightMargin) > (this->width - this->rightPadding)) child->x = (this->width - this->rightPadding) - (child->width + child->rightMargin);
-                    if (child->x < child->leftMargin + this->leftPadding) child->x = child->leftMargin + this->leftPadding;
-                    
-                    if ((child->y + child->height + child->bottomMargin) > (this->height - this->bottomPadding)) child->y = (this->height - this->bottomPadding) - (child->height + child->bottomMargin);
-                    if (child->y < child->topMargin + this->topPadding) child->y = child->topMargin + this->topPadding;
-                }
-                
-                if(wrapper->showLayoutSteps()){
-                    wrapper->nextLayoutTick();
-                    wrapper->nextLayoutChild();
-                    wrapper->breakIfNeeded();
-                    if(wrapper->layoutStepDone()){
-                        done = true;
-                        break;
-                    }
-                }
-                
+        if(!done)
+        {
+            std::vector<displayGroup::p>primaryGroups;
+            std::vector<displayGroup::p>secondaryGroups;
+            unsigned i, size, j, k;
+            //long double acc2 = 0;
+            security_brake_init();
+            AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
+            
+            //bool secondaryIsHorizontal = (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft);
+            
+            //create groups and lines
+            for (i=0, size = this->allChildren.size(); i<size; i++) {
                 if(!done){
-                    bool addedToGroup = false;
-                    if(child->getFlow() == true){
-                        if( i!=0 ) {
-                            j = 0;
-                            while (j<primaryGroups.size() && done == false) {
-                                if(primaryGroups[j]->lines.size() == 0){
-                                    displayGroup::p & currentPGroup = primaryGroups[j];
-                                    addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
-                                    if (!addedToGroup && currentPGroup->complete){
-                                        //transform the current group into a line
-                                        displayGroup::p newGroup = displayGroup::p(new displayGroup());
-                                        newGroup->x = currentPGroup->x;
-                                        newGroup->y = currentPGroup->y;
-                                        newGroup->width = currentPGroup->width;
-                                        newGroup->height = currentPGroup->height;
-                                        newGroup->complete = false;
-                                        newGroup->lines.push_back(currentPGroup);
+                    HSSDisplayObject::p child = this->allChildren[i];
+                    //place it on the alignment point
+                    //horizontal
+                    if(child->_anchorXdefault){
+                        child->x = child->alignX - (child->outerWidth/2) + child->leftMargin;
+                    } else {
+                        child->x = child->alignX - child->anchorX;
+                    }
+                    
+                    //vertical
+                    if(child->_anchorXdefault){
+                        child->y = child->alignY - (child->outerHeight/2) + child->topMargin;
+                    } else {
+                        child->y = child->alignY - child->anchorY;
+                    }
+                    
+                    if(!child->getOverflow()){
+                        if ((child->x + child->width + child->rightMargin) > (this->width - this->rightPadding)) child->x = (this->width - this->rightPadding) - (child->width + child->rightMargin);
+                        if (child->x < child->leftMargin + this->leftPadding) child->x = child->leftMargin + this->leftPadding;
+                        
+                        if ((child->y + child->height + child->bottomMargin) > (this->height - this->bottomPadding)) child->y = (this->height - this->bottomPadding) - (child->height + child->bottomMargin);
+                        if (child->y < child->topMargin + this->topPadding) child->y = child->topMargin + this->topPadding;
+                    }
+                    
+                    if(wrapper->showLayoutSteps()){
+                        wrapper->nextLayoutTick();
+                        wrapper->nextLayoutChild();
+                        wrapper->breakIfNeeded();
+                        if(wrapper->layoutStepDone()){
+                            done = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!done){
+                        bool addedToGroup = false;
+                        if(child->getFlow() == true){
+                            if( i!=0 ) {
+                                j = 0;
+                                while (j<primaryGroups.size() && done == false) {
+                                    if(primaryGroups[j]->lines.size() == 0){
+                                        displayGroup::p & currentPGroup = primaryGroups[j];
+                                        addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
+                                        if (!addedToGroup && currentPGroup->complete){
+                                            //transform the current group into a line
+                                            displayGroup::p newGroup = displayGroup::p(new displayGroup());
+                                            newGroup->x = currentPGroup->x;
+                                            newGroup->y = currentPGroup->y;
+                                            newGroup->width = currentPGroup->width;
+                                            newGroup->height = currentPGroup->height;
+                                            newGroup->complete = false;
+                                            newGroup->lines.push_back(currentPGroup);
+                                            
+                                            displayGroup::p newLine = displayGroup::p(new displayGroup());
+                                            newLine->x = child->x - child->leftMargin;
+                                            newLine->y = child->y - child->topMargin;
+                                            newLine->width = child->outerWidth;
+                                            newLine->height = child->outerHeight;
+                                            newLine->complete = false;
+                                            newLine->objects.push_back(child);
+                                            newGroup->lines.push_back(newLine);
+                                            
+                                            primaryGroups[j] = newGroup;
+                                            
+                                            addedToGroup = true;
+                                        }
                                         
-                                        displayGroup::p newLine = displayGroup::p(new displayGroup());
-                                        newLine->x = child->x - child->leftMargin;
-                                        newLine->y = child->y - child->topMargin;
-                                        newLine->width = child->outerWidth;
-                                        newLine->height = child->outerHeight;
-                                        newLine->complete = false;
-                                        newLine->objects.push_back(child);
-                                        newGroup->lines.push_back(newLine);
-                                        
-                                        primaryGroups[j] = newGroup;
-                                        
-                                        addedToGroup = true;
-                                    }
-                                    
-                                    if(addedToGroup){
-                                        k=0;
-                                        while (k<primaryGroups.size()){
-                                            if(k != j){
-                                                displayGroup::p & otherPGroup = primaryGroups[k];
-                                                bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
-                                                if(merged){
-                                                    primaryGroups.erase(primaryGroups.begin()+j);
-                                                    j = k;
+                                        if(addedToGroup){
+                                            k=0;
+                                            while (k<primaryGroups.size()){
+                                                if(k != j){
+                                                    displayGroup::p & otherPGroup = primaryGroups[k];
+                                                    bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
+                                                    if(merged){
+                                                        primaryGroups.erase(primaryGroups.begin()+j);
+                                                        j = k;
+                                                    } else {
+                                                        k++;
+                                                    }
                                                 } else {
                                                     k++;
                                                 }
-                                            } else {
-                                                k++;
+                                            }
+                                        }
+                                        
+                                        if(wrapper->showLayoutSteps()){
+                                            wrapper->nextLayoutTick();
+                                            wrapper->breakIfNeeded();
+                                            if(wrapper->layoutStepDone()){
+                                                done = true;
+                                                break;
+                                            }
+                                        }
+                                        
+                                    } else {
+                                        displayGroup::p & currentPGroup = primaryGroups[j]->lines.back();
+                                        addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
+                                        if (!addedToGroup && currentPGroup->complete){
+                                            //create new line
+                                            displayGroup::p newLine = displayGroup::p(new displayGroup());
+                                            newLine->x = child->x - child->leftMargin;
+                                            newLine->y = child->y - child->topMargin;
+                                            newLine->width = child->outerWidth;
+                                            newLine->height = child->outerHeight;
+                                            newLine->complete = false;
+                                            newLine->objects.push_back(child);
+                                            primaryGroups[j]->lines.push_back(newLine);
+                                            
+                                            addedToGroup = true;
+                                        }
+                                        
+                                        if(addedToGroup){
+                                            k=0;
+                                            while (k<primaryGroups.size()){
+                                                if(k != j){
+                                                    displayGroup::p & otherPGroup = primaryGroups[k];
+                                                    bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
+                                                    if(merged){
+                                                        primaryGroups.erase(primaryGroups.begin()+j);
+                                                        j = k;
+                                                    } else {
+                                                        k++;
+                                                    }
+                                                } else {
+                                                    k++;
+                                                }
+                                            }
+                                        }
+                                        
+                                        if(wrapper->showLayoutSteps()){
+                                            wrapper->nextLayoutTick();
+                                            wrapper->breakIfNeeded();
+                                            if(wrapper->layoutStepDone()){
+                                                done = true;
+                                                break;
                                             }
                                         }
                                     }
                                     
-                                    if(wrapper->showLayoutSteps()){
-                                        wrapper->nextLayoutTick();
-                                        wrapper->breakIfNeeded();
-                                        if(wrapper->layoutStepDone()){
-                                            done = true;
-                                            break;
-                                        }
-                                    }
-                                    
-                                } else {
-                                    displayGroup::p & currentPGroup = primaryGroups[j]->lines.back();
-                                    addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
-                                    if (!addedToGroup && currentPGroup->complete){
-                                        //create new line
-                                        displayGroup::p newLine = displayGroup::p(new displayGroup());
-                                        newLine->x = child->x - child->leftMargin;
-                                        newLine->y = child->y - child->topMargin;
-                                        newLine->width = child->outerWidth;
-                                        newLine->height = child->outerHeight;
-                                        newLine->complete = false;
-                                        newLine->objects.push_back(child);
-                                        primaryGroups[j]->lines.push_back(newLine);
-                                        
-                                        addedToGroup = true;
-                                    }
-                                    
-                                    if(addedToGroup){
-                                        k=0;
-                                        while (k<primaryGroups.size()){
-                                            if(k != j){
-                                                displayGroup::p & otherPGroup = primaryGroups[k];
-                                                bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
-                                                if(merged){
-                                                    primaryGroups.erase(primaryGroups.begin()+j);
-                                                    j = k;
-                                                } else {
-                                                    k++;
-                                                }
-                                            } else {
-                                                k++;
-                                            }
-                                        }
-                                    }
-                                    
-                                    if(wrapper->showLayoutSteps()){
-                                        wrapper->nextLayoutTick();
-                                        wrapper->breakIfNeeded();
-                                        if(wrapper->layoutStepDone()){
-                                            done = true;
-                                            break;
-                                        }
-                                    }
+                                    j++;
+                                    security_brake();
                                 }
-                                
-                                j++;
-                                security_brake();
+                            }
+                            
+                            if(!addedToGroup){
+                                displayGroup::p newGroup = displayGroup::p(new displayGroup());
+                                newGroup->x = child->x - child->leftMargin;
+                                newGroup->y = child->y - child->topMargin;
+                                newGroup->width = child->outerWidth;
+                                newGroup->height = child->outerHeight;
+                                newGroup->complete = false;
+                                newGroup->objects.push_back(child);
+                                primaryGroups.push_back(newGroup);
                             }
                         }
                         
-                        if(!addedToGroup){
-                            displayGroup::p newGroup = displayGroup::p(new displayGroup());
-                            newGroup->x = child->x - child->leftMargin;
-                            newGroup->y = child->y - child->topMargin;
-                            newGroup->width = child->outerWidth;
-                            newGroup->height = child->outerHeight;
-                            newGroup->complete = false;
-                            newGroup->objects.push_back(child);
-                            primaryGroups.push_back(newGroup);
-                        }
+                        
                     }
-                    
-                    
+                } else {
+                    break;
                 }
-            } else {
-                break;
             }
-        }
-        
-        if(!done){
-            //distribute if necessary in the primary direction
-            bool primaryIsHorizontal = (this->directionPrimary== HSSDirectionLeftToRight || this->directionPrimary == HSSDirectionRightToLeft);
-            if ( (this->distributeX && primaryIsHorizontal) || (this->distributeY && !primaryIsHorizontal) ){
-                std::vector<displayGroup::p>::iterator pgIt;
-                for (pgIt=primaryGroups.begin(); pgIt!=primaryGroups.end(); pgIt++) {
-                    displayGroup::p & pgGrp = *pgIt;
-                    if(pgGrp->lines.size() == 0){
-                        this->_distribute(pgGrp, this->directionPrimary);
-                    } else {
-                        std::vector<displayGroup::p>::iterator pgLineIt;
-                        for (pgLineIt=pgGrp->lines.begin(); pgLineIt!=pgGrp->lines.end(); pgLineIt++) {
-                            this->_distribute(*pgLineIt, this->directionPrimary);
+            
+            if(!done){
+                //distribute if necessary in the primary direction
+                bool primaryIsHorizontal = (this->directionPrimary== HSSDirectionLeftToRight || this->directionPrimary == HSSDirectionRightToLeft);
+                if ( (this->distributeX && primaryIsHorizontal) || (this->distributeY && !primaryIsHorizontal) ){
+                    std::vector<displayGroup::p>::iterator pgIt;
+                    for (pgIt=primaryGroups.begin(); pgIt!=primaryGroups.end(); pgIt++) {
+                        displayGroup::p & pgGrp = *pgIt;
+                        if(pgGrp->lines.size() == 0){
+                            this->_distribute(pgGrp, this->directionPrimary);
                             if(wrapper->showLayoutSteps()){
                                 wrapper->nextLayoutTick();
                                 wrapper->breakIfNeeded();
@@ -669,91 +669,111 @@ void HSSContainer::layout()
                                     break;
                                 }
                             }
+                        } else {
+                            std::vector<displayGroup::p>::iterator pgLineIt;
+                            for (pgLineIt=pgGrp->lines.begin(); pgLineIt!=pgGrp->lines.end(); pgLineIt++) {
+                                this->_distribute(*pgLineIt, this->directionPrimary);
+                                if(wrapper->showLayoutSteps()){
+                                    wrapper->nextLayoutTick();
+                                    wrapper->breakIfNeeded();
+                                    if(wrapper->layoutStepDone()){
+                                        done = true;
+                                        break;
+                                    }
+                                }
+                            }
                         }
+                        
                     }
-                    
-                }
-            }
-            
-            security_brake_reset();
-            
-            std::vector<displayGroup::p>::iterator pgIt;
-            for (pgIt=primaryGroups.begin(); pgIt!=primaryGroups.end(); pgIt++) {
-                displayGroup::p theDG = *pgIt;
-                if(theDG->lines.size() > 0){
-                    displayGroup::p lineA, lineB, targetA, targetB;
-                    std::vector<HSSDisplayObject::p>::iterator lineAIt, lineBIt;
-                    
-                    std::vector<displayGroup::p>::iterator pglIt = theDG->lines.begin();
-                    lineA = *pglIt;
-                    lineAIt = lineA->objects.begin();
-                    
-                    pglIt++;
-                    lineB = *pglIt;
-                    lineBIt = lineB->objects.begin();
-                    displayGroup::p newGroup;
-                    
-                    this->_recursiveCreateSecondaryGroups(lineAIt, lineA->objects.end(), lineBIt, lineB->objects.end(), targetA, targetB, newGroup, pglIt, theDG->lines.end(), true, secondaryGroups, true, false);
-                } else {
-                    displayGroup::p newGroup = displayGroup::p(new displayGroup());
-                    newGroup->lines.push_back(theDG);
-                    newGroup->height = 0.;
-                    std::vector<HSSDisplayObject::p>::iterator it;
-                    for (it=theDG->objects.begin(); it!=theDG->objects.end(); it++) {
-                        HSSDisplayObject::p & theDO = *it;
-                        if(theDO->outerHeight > newGroup->height) newGroup->height = theDO->outerHeight;
-                    }
-                    secondaryGroups.push_back(newGroup);
                 }
                 
-            } //for each primary group
+                security_brake_reset();
+                
+                if(!done){
+                    std::vector<displayGroup::p>::iterator pgIt;
+                    for (pgIt=primaryGroups.begin(); pgIt!=primaryGroups.end(); pgIt++) {
+                        displayGroup::p theDG = *pgIt;
+                        if(theDG->lines.size() > 0){
+                            displayGroup::p lineA, lineB, targetA, targetB;
+                            std::vector<HSSDisplayObject::p>::iterator lineAIt, lineBIt;
+                            
+                            std::vector<displayGroup::p>::iterator pglIt = theDG->lines.begin();
+                            lineA = *pglIt;
+                            lineAIt = lineA->objects.begin();
+                            
+                            pglIt++;
+                            lineB = *pglIt;
+                            lineBIt = lineB->objects.begin();
+                            displayGroup::p newGroup;
+                            
+                            this->_recursiveCreateSecondaryGroups(lineAIt, lineA->objects.end(), lineBIt, lineB->objects.end(), targetA, targetB, newGroup, pglIt, theDG->lines.end(), true, secondaryGroups, true, false);
+                        } else {
+                            displayGroup::p newGroup = displayGroup::p(new displayGroup());
+                            newGroup->lines.push_back(theDG);
+                            newGroup->height = 0.;
+                            std::vector<HSSDisplayObject::p>::iterator it;
+                            for (it=theDG->objects.begin(); it!=theDG->objects.end(); it++) {
+                                HSSDisplayObject::p & theDO = *it;
+                                if(theDO->outerHeight > newGroup->height) newGroup->height = theDO->outerHeight;
+                            }
+                            secondaryGroups.push_back(newGroup);
+                        }
+                        
+                    } //for each primary group
+                } //if !done
+                
+            } //if !done
             
-        } //if !done
-        
-//        std::vector<displayGroup::p>::iterator linesIt;
-//        for (linesIt=newGroup->lines.begin(); linesIt!=newGroup->lines.end(); linesIt++) {
-//            newGroup->height += (*linesIt)->height;
-//        }
-        
-        //sort biggest group first, smallest last
-        this->_qs_sort(secondaryGroups, 0, secondaryGroups.size() - 1);
-        
-        std::vector<displayGroup::p>::iterator sgIt;
-        bool first = true;
-        for (sgIt=secondaryGroups.begin(); sgIt!=secondaryGroups.end(); sgIt++) {
-            if(!this->_arrangeLines(*sgIt, this->directionSecondary, first)){
-                break;
-            }
-            first = false;
-        }
-        
-        
-        //assign the globalX and globalY and clean up flags
-        for(i=0, size = this->allChildren.size(); i<size; i++){
-            HSSDisplayObject::p &child = this->allChildren[i];
-            child->setGlobalX(round(this->globalX + child->x));
-            child->setGlobalY(round(this->globalY + child->y));
-            child->_layoutFlagIsInSecondaryGroup = false;
-            child->_layoutFlagIsInSecondaryLine = false;
-            child->_layoutFlagLockTop = false;
-            child->_layoutFlagLockBottom = false;
-        }
-        
-        if(this->heightByContent){
-            long double maxHeight = 0.;
+    //        std::vector<displayGroup::p>::iterator linesIt;
+    //        for (linesIt=newGroup->lines.begin(); linesIt!=newGroup->lines.end(); linesIt++) {
+    //            newGroup->height += (*linesIt)->height;
+    //        }
             
-            for (i=0, size = secondaryGroups.size(); i<size; i++) {
-                if(secondaryGroups[i]->height > maxHeight){
-                    maxHeight = secondaryGroups[i]->height;
+            //sort biggest group first, smallest last
+            this->_qs_sort(secondaryGroups, 0, secondaryGroups.size() - 1);
+            
+            std::vector<displayGroup::p>::iterator sgIt;
+            bool first = true;
+            for (sgIt=secondaryGroups.begin(); sgIt!=secondaryGroups.end(); sgIt++) {
+                if(!this->_arrangeLines(*sgIt, this->directionSecondary, first)){
+                    break;
                 }
+                first = false;
             }
-            if(size > 0){
-                this->height = maxHeight + this->topPadding + this->bottomPadding;
-                this->_setInnerDimensions();
-                this->_setOuterDimensions();
-                this->setNeedsSurface(true);
-                this->setDirty(true);
-                this->notifyObservers(HSSObservablePropertyHeight, &this->height);
+            
+            
+            //assign the globalX and globalY and clean up flags
+            for(i=0, size = this->allChildren.size(); i<size; i++){
+                HSSDisplayObject::p &child = this->allChildren[i];
+                child->setGlobalX(round(this->globalX + child->x));
+                child->setGlobalY(round(this->globalY + child->y));
+                child->_layoutFlagIsInSecondaryGroup = false;
+                child->_layoutFlagIsInSecondaryLine = false;
+                child->_layoutFlagLockTop = false;
+                child->_layoutFlagLockBottom = false;
+            }
+            
+            if(this->heightByContent){
+                long double maxHeight = 0.;
+                
+                for (i=0, size = secondaryGroups.size(); i<size; i++) {
+                    if(secondaryGroups[i]->height > maxHeight){
+                        maxHeight = secondaryGroups[i]->height;
+                    }
+                }
+                if(size > 0){
+                    long double newValue = maxHeight + this->topPadding + this->bottomPadding;
+                    if(this->height != newValue){
+                        this->height = newValue;
+                        this->_setInnerDimensions();
+                        this->_setOuterDimensions();
+                        this->setNeedsSurface(true);
+                        this->setDirty(true);
+                        this->notifyObservers(HSSObservablePropertyHeight, &this->height);
+                        //we'll need a re-layout
+                        this->_needsLayout = true;
+                    }
+                }
             }
         }
     }
