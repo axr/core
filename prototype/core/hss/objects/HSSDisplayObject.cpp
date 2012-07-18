@@ -1024,7 +1024,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
                                                 parentContainer->innerHeight,
                                                 observedProperty,
                                                 parentContainer.get(),
-                                                HSSObservablePropertyInnerHeight,
+                                                HSSObservablePropertyHeight,
                                                 this->observedHeight,
                                                 this->observedHeightProperty,
                                                 &(parentContainer->getChildren())
