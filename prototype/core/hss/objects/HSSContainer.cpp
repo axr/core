@@ -207,8 +207,8 @@ bool HSSContainer::isKeyword(std::string value, std::string property)
             || value == "bottom"
             || value == "left"
             || value == "right"
-            || value == "distribute"
-            || value == "linear"){
+            || value == "even"
+            || value == "justify"){
             return true;
         }
     } else if (property == "directionPrimary" || property == "directionSecondary"){
@@ -1788,27 +1788,53 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
             
         default:
         {
-            HSSDisplayObject::it it;
-            long double accWidth = this->leftPadding;
-            long double totalWidth = 0.;
+            if(group->objects.size() == 1){
+                HSSDisplayObject::p &theDO = group->objects.front();
+                long double newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
+                theDO->x = this->leftPadding + newValue;
+                group->x = 0.;
+                group->y = theDO->y;
+                
+                
+            } else {
+                HSSDisplayObject::it it;
+                long double accWidth = this->leftPadding;
+                long double totalWidth = 0.;
+                
+                //calculate the total width of the group
+                for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                    totalWidth += (*it)->outerWidth;
+                }
+                
+                if(this->distributeXLinear){
+                    //now get the remaining space
+                    long double remainingSpace = this->innerWidth - totalWidth;
+                    //divide it by the number of elements-1
+                    long double spaceChunk = remainingSpace / (group->objects.size() - 1);
+                    unsigned i = 0;
+                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                        (*it)->x = accWidth + (spaceChunk*i) + (*it)->leftMargin;
+                        accWidth += (*it)->outerWidth;
+                        i++;
+                    }
+                    group->x = 0.;
+                    group->y = group->objects.front()->y;
+                } else {
+                    //now get the remaining space
+                    long double remainingSpace = this->innerWidth - totalWidth;
+                    //divide it by the number of elements+1
+                    long double spaceChunk = remainingSpace / (group->objects.size() + 1);
+                    unsigned i = 0;
+                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                        (*it)->x = accWidth + spaceChunk + (spaceChunk*i) + (*it)->leftMargin;
+                        accWidth += (*it)->outerWidth;
+                        i++;
+                    }
+                    group->x = 0.;
+                    group->y = group->objects.front()->y;
+                }
+            }
             
-            //calculate the total width of the group
-            for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                totalWidth += (*it)->outerWidth;
-            }
-            //std_log(totalWidth);
-            //now get the remaining space
-            long double remainingSpace = this->innerWidth - totalWidth;
-            //divide it by the number of elements+1
-            long double spaceChunk = remainingSpace / (group->objects.size() + 1);
-            unsigned i = 0;
-            for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                (*it)->x = accWidth + spaceChunk + (spaceChunk*i) + (*it)->leftMargin;
-                accWidth += (*it)->outerWidth;
-                i++;
-            }
-            group->x = 0.;
-            group->y = group->objects.front()->y;
             break;
         }
     }
@@ -1899,10 +1925,10 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
             this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(50)));
         } else if (keywordValue->getValue() == "right"){
             this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(100)));
-        } else if (keywordValue->getValue() == "distribute"){
+        } else if (keywordValue->getValue() == "even"){
             this->distributeX = true;
             this->distributeXLinear = false;
-        } else if (keywordValue->getValue() == "linear"){
+        } else if (keywordValue->getValue() == "justify"){
             this->distributeX = true;
             this->distributeXLinear = true;
         } else {
@@ -1995,10 +2021,10 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
             this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(50)));
         } else if (keywordValue->getValue() == "bottom"){
             this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(100)));
-        } else if (keywordValue->getValue() == "distribute"){
+        } else if (keywordValue->getValue() == "even"){
             this->distributeY = true;
             this->distributeYLinear = false;
-        } else if (keywordValue->getValue() == "linear"){
+        } else if (keywordValue->getValue() == "justify"){
             this->distributeY = true;
             this->distributeYLinear = true;
         } else {
