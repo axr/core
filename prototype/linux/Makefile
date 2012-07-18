@@ -4,7 +4,7 @@ endif
 
 CC=g++
 CFLAGS=-c -Wno-deprecated -shared
-LDFLAGS=-Wl,-rpath,./ -lexpat -lboost_thread\
+LDFLAGS=-Wl,-rpath,./ -lboost_system -lboost_thread\
 	`pkg-config --cflags --libs pangocairo`\
 	`pkg-config --cflags --libs sdl`
 SOURCES=main.cpp\
@@ -32,5 +32,8 @@ axr_$(ARCH): $(OBJECTS) cairosdl/cairosdl.o
 	$(CC) -m$(ARCH) $(CFLAGS) $(LDFLAGS) -c $< -o $@
 
 cairosdl/cairosdl.o:
-	gcc -m$(ARCH) $(CFLAGS) $(LDFLAGS) -c cairosdl/cairosdl.c -o $@
+	gcc -m$(ARCH) -lexpat\
+	`pkg-config --cflags --libs pangocairo`\
+	`pkg-config --cflags --libs sdl`\
+	-c cairosdl/cairosdl.c -o $@
 

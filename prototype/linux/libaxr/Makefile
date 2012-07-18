@@ -29,6 +29,7 @@ axr: libaxr.so
 
 libaxr.so: $(OBJECTS)
 	$(CXX) $(LDFLAGS) -shared -Wl,-soname,$@ -o $@ $(OBJECTS)
+	ln -sf libaxr.so ../libaxr.so
 
 %.o: %.cpp
 	$(CC) -m$(ARCH) $(CFLAGS) $(LDFLAGS) -c $< -o $@
