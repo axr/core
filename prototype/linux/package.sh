@@ -3,7 +3,7 @@
 version="$1"
 
 if [ -z $version ]; then
-	version=$(git rev-parse --verify HEAD)
+	version=$(git rev-parse --verify HEAD)-$(git branch | grep "*" | sed "s/* //")
 fi
 
 get_tutorial ()
