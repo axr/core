@@ -218,6 +218,17 @@ bool AXRWrapper::showLayoutSteps()
     return this->_showLayoutSteps;
 }
 
+void AXRWrapper::previousLayoutStep()
+{
+    if(this->_currentLayoutStep > 0){
+        this->_currentLayoutStep -= 1;
+    }
+    
+    this->_currentLayoutTick = 0;
+    this->_currentLayoutChild = 0;
+    this->setNeedsDisplay(true);
+}
+
 void AXRWrapper::nextLayoutStep()
 {
     this->_currentLayoutStep += 1;

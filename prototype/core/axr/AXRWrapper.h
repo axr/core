@@ -186,6 +186,7 @@ namespace AXR
         
         bool showLayoutSteps();
         void setShowLayoutSteps(bool value);
+        void previousLayoutStep();
         void nextLayoutStep();
         void nextLayoutTick();
         void resetLayoutTicks();
