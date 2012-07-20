@@ -211,11 +211,11 @@ bool HSSContainer::isKeyword(std::string value, std::string property)
             || value == "justify"){
             return true;
         }
-    } else if (property == "directionPrimary" || property == "directionSecondary"){
-        if (   value == "leftToRight"
-            || value == "rightToLeft"
-            || value == "topToBottom"
-            || value == "bottomToTop"){
+    } else if (property == "direction" || property == "wrapDirection"){
+        if (   value == "ltr"
+            || value == "rtl"
+            || value == "ttb"
+            || value == "btt"){
             return true;
         }
     } else if (property == "textAlign"){
@@ -2120,23 +2120,23 @@ void HSSContainer::setDDirectionPrimary(HSSParserNode::p value)
     
     if (value->isA(HSSParserNodeTypeKeywordConstant)){
         std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
-        if(stringValue == "leftToRight" || stringValue == "rightToLeft"){
+        if(stringValue == "ltf" || stringValue == "rtl"){
             if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft){
                 this->directionSecondary = HSSDirectionTopToBottom;
                 this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
             }
-            if(stringValue == "leftToRight"){
+            if(stringValue == "ltr"){
                 this->directionPrimary = HSSDirectionLeftToRight;
             } else {
                 this->directionPrimary = HSSDirectionRightToLeft;
             }
             
-        } else if (stringValue == "topToBottom" || stringValue == "bottomToTop") {
+        } else if (stringValue == "ttb" || stringValue == "btt") {
             if (this->directionSecondary == HSSDirectionTopToBottom || this->directionSecondary == HSSDirectionBottomToTop){
                 this->directionSecondary = HSSDirectionLeftToRight;
                 this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
             }
-            if(stringValue == "topToBottom"){
+            if(stringValue == "ttb"){
                 this->directionPrimary = HSSDirectionTopToBottom;
             } else {
                 this->directionPrimary = HSSDirectionBottomToTop;
@@ -2401,10 +2401,10 @@ void HSSContainer::setDefaults()
     HSSNumberConstant::p newDContentAlignY(new HSSNumberConstant(0));
     this->setDContentAlignY(newDContentAlignY);
     //directionPrimary
-    HSSKeywordConstant::p newDDirectionPrimary(new HSSKeywordConstant("leftToRight"));
+    HSSKeywordConstant::p newDDirectionPrimary(new HSSKeywordConstant("ltr"));
     this->setDDirectionPrimary(newDDirectionPrimary);
     //directionSecondary
-    HSSKeywordConstant::p newDDirectionSecondary(new HSSKeywordConstant("topToBottom"));
+    HSSKeywordConstant::p newDDirectionSecondary(new HSSKeywordConstant("ttb"));
     this->setDDirectionSecondary(newDDirectionSecondary);
     //shape
     HSSKeywordConstant::p newDShape(new HSSKeywordConstant("default"));

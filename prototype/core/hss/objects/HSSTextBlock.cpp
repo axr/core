@@ -105,8 +105,8 @@ HSSTextBlock::HSSTextBlock()
     shorthandProperties.push_back("text");
     shorthandProperties.push_back("textAlign");
     shorthandProperties.push_back("transform");
-    shorthandProperties.push_back("directionPrimary");
-    shorthandProperties.push_back("directionSecondary");
+    shorthandProperties.push_back("direction");
+    shorthandProperties.push_back("wrapDirection");
     this->setShorthandProperties(shorthandProperties);
     
     PangoFontMap * fontMap = pango_cairo_font_map_new();
@@ -129,8 +129,8 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
     shorthandProperties.push_back("text");
     shorthandProperties.push_back("textAlign");
     shorthandProperties.push_back("transform");
-    shorthandProperties.push_back("directionPrimary");
-    shorthandProperties.push_back("directionSecondary");
+    shorthandProperties.push_back("direction");
+    shorthandProperties.push_back("wrapDirection");
     this->setShorthandProperties(shorthandProperties);
     
     PangoFontMap * fontMap = pango_cairo_font_map_new();
@@ -173,8 +173,8 @@ bool HSSTextBlock::isKeyword(std::string value, std::string property)
             || value == "justify") {
             return true;
         }
-    } else if ( property == "directionPrimary" || property == "directionSecondary"){
-        if (value == "leftToRight" || value == "rightToLeft" || value == "topToBottom" || value == "bottomToTop"){
+    } else if ( property == "direction" || property == "wrapDirection"){
+        if (value == "ltr" || value == "rtl" || value == "ttb" || value == "btt"){
             return true;
         }
     }

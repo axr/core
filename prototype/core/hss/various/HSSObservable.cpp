@@ -82,8 +82,8 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         //HSSContainer
         types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
         types[HSSObservablePropertyContentAlignY] = "HSSObservablePropertyContentAlignY";
-        types[HSSObservablePropertyDirectionPrimary] = "HSSObservablePropertyDirectionPrimary";
-        types[HSSObservablePropertyDirectionSecondary] = "HSSObservablePropertyDirectionSecondary";
+        types[HSSObservablePropertyDirectionPrimary] = "HSSObservablePropertyDirection";
+        types[HSSObservablePropertyDirectionSecondary] = "HSSObservablePropertyWrapDirection";
         types[HSSObservablePropertyFont] = "HSSObservablePropertyFont";
         types[HSSObservablePropertyShape] = "HSSObservablePropertyShape";
         
@@ -175,8 +175,8 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         //HSSContainer
         properties["contentAlignX"] = HSSObservablePropertyContentAlignX;
         properties["contentAlignY"] = HSSObservablePropertyContentAlignY;
-        properties["directionPrimary"] = HSSObservablePropertyDirectionPrimary;
-        properties["directionSecondary"] = HSSObservablePropertyDirectionSecondary;
+        properties["direction"] = HSSObservablePropertyDirectionPrimary;
+        properties["wrapDirection"] = HSSObservablePropertyDirectionSecondary;
         properties["font"] = HSSObservablePropertyFont;
         properties["shape"] = HSSObservablePropertyShape;
         properties["on"] = HSSObservablePropertyOn;

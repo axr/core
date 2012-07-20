@@ -4,7 +4,7 @@
 * {
     background: mainBg;
     contentAlignY: middle;
-    directionPrimary: topToBottom;
+    direction: ttb;
     
 	#new label {
 	    width: 50%;
