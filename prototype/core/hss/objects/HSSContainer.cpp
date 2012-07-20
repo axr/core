@@ -1770,37 +1770,162 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
     switch (direction) {
         case HSSDirectionRightToLeft:
         {
+            if(group->objects.size() == 1){
+                HSSDisplayObject::p &theDO = group->objects.front();
+                long double newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
+                theDO->x = this->leftPadding + newValue;
+                group->x = 0.;
+                group->y = theDO->y;
+                
+                
+            } else {
+                HSSDisplayObject::it it;
+                long double accWidth = this->rightPadding;
+                long double totalWidth = 0.;
+                
+                //calculate the total width of the group
+                for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                    totalWidth += (*it)->outerWidth;
+                }
+                
+                if(this->distributeXLinear){
+                    //now get the remaining space
+                    long double remainingSpace = this->innerWidth - totalWidth;
+                    //divide it by the number of elements-1
+                    long double spaceChunk = remainingSpace / (group->objects.size() - 1);
+                    unsigned i = 0;
+                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                        HSSDisplayObject::p &theDO = *it;
+                        theDO->x = this->width - accWidth - (spaceChunk*i) - theDO->width - theDO->rightMargin;
+                        accWidth += theDO->outerWidth;
+                        i++;
+                    }
+                    group->x = 0.;
+                    group->y = group->objects.back()->y;
+                } else {
+                    //now get the remaining space
+                    long double remainingSpace = this->innerWidth - totalWidth;
+                    //divide it by the number of elements+1
+                    long double spaceChunk = remainingSpace / (group->objects.size() + 1);
+                    unsigned i = 0;
+                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                        HSSDisplayObject::p &theDO = *it;
+                        theDO->x = this->width - accWidth - spaceChunk - (spaceChunk*i) - theDO->width - theDO->leftMargin;
+                        accWidth += theDO->outerWidth;
+                        i++;
+                    }
+                    group->x = 0.;
+                    group->y = group->objects.front()->y;
+                }
+            }
+            
             break;
         }
             
         case HSSDirectionTopToBottom:
         {
-            HSSDisplayObject::it it;
-            long double accHeight = this->topPadding;
-            long double totalHeight = 0.;
             
-            //calculate the total height of the group
-            for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                totalHeight += (*it)->outerHeight;
+            if(group->objects.size() == 1){
+                HSSDisplayObject::p &theDO = group->objects.front();
+                long double newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
+                theDO->y = this->topPadding + newValue;
+                group->y = 0.;
+                group->x = theDO->x;
+                
+                
+            } else {
+                HSSDisplayObject::it it;
+                long double accHeight = this->topPadding;
+                long double totalHeight = 0.;
+                
+                //calculate the total height of the group
+                for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                    totalHeight += (*it)->outerHeight;
+                }
+                
+                if(this->distributeXLinear){
+                    //now get the remaining space
+                    long double remainingSpace = this->innerHeight - totalHeight;
+                    //divide it by the number of elements-1
+                    long double spaceChunk = remainingSpace / (group->objects.size() - 1);
+                    unsigned i = 0;
+                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                        HSSDisplayObject::p &theDO = *it;
+                        theDO->y = accHeight + (spaceChunk*i) + theDO->topMargin;
+                        accHeight += theDO->outerHeight;
+                        i++;
+                    }
+                    group->x = 0.;
+                    group->y = group->objects.front()->y;
+                } else {
+                    //now get the remaining space
+                    long double remainingSpace = this->innerHeight - totalHeight;
+                    //divide it by the number of elements+1
+                    long double spaceChunk = remainingSpace / (group->objects.size() + 1);
+                    unsigned i = 0;
+                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                        HSSDisplayObject::p &theDO = *it;
+                        theDO->y = accHeight + spaceChunk + (spaceChunk*i) + theDO->topMargin;
+                        accHeight += theDO->outerHeight;
+                        i++;
+                    }
+                    group->y = 0.;
+                    group->x = group->objects.front()->x;
+                }
             }
-            //std_log(totalHeight);
-            //now get the remaining space
-            long double remainingSpace = this->innerHeight - totalHeight;
-            //divide it by the number of elements+1
-            long double spaceChunk = remainingSpace / (group->objects.size() + 1);
-            unsigned i = 0;
-            for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                (*it)->y = accHeight + spaceChunk + (spaceChunk*i) + (*it)->topMargin;
-                accHeight += (*it)->outerHeight;
-                i++;
-            }
-            group->x = group->objects.front()->x;
-            group->y = 0.;
             break;
         }
             
         case HSSDirectionBottomToTop:
-        {            
+        {
+            if(group->objects.size() == 1){
+                HSSDisplayObject::p &theDO = group->objects.front();
+                long double newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
+                theDO->y = this->topPadding + newValue;
+                group->y = 0.;
+                group->x = theDO->x;
+                
+                
+            } else {
+                HSSDisplayObject::it it;
+                long double accHeight = this->bottomPadding;
+                long double totalHeight = 0.;
+                
+                //calculate the total height of the group
+                for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                    totalHeight += (*it)->outerHeight;
+                }
+                
+                if(this->distributeXLinear){
+                    //now get the remaining space
+                    long double remainingSpace = this->innerHeight - totalHeight;
+                    //divide it by the number of elements-1
+                    long double spaceChunk = remainingSpace / (group->objects.size() - 1);
+                    unsigned i = 0;
+                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                        HSSDisplayObject::p &theDO = *it;
+                        theDO->y = this->height - accHeight - (spaceChunk*i) - theDO->height - theDO->bottomMargin;
+                        accHeight += theDO->outerHeight;
+                        i++;
+                    }
+                    group->y = 0.;
+                    group->x = group->objects.back()->x;
+                } else {
+                    //now get the remaining space
+                    long double remainingSpace = this->innerHeight - totalHeight;
+                    //divide it by the number of elements+1
+                    long double spaceChunk = remainingSpace / (group->objects.size() + 1);
+                    unsigned i = 0;
+                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
+                        HSSDisplayObject::p &theDO = *it;
+                        theDO->y = this->height - accHeight - spaceChunk - (spaceChunk*i) - theDO->height - theDO->topMargin;
+                        accHeight += theDO->outerHeight;
+                        i++;
+                    }
+                    group->y = 0.;
+                    group->x = group->objects.front()->x;
+                }
+            }
             break;
         }
             
