@@ -194,6 +194,8 @@ std::string HSSDisplayObject::defaultObjectType(std::string property)
 {
     if (property == "margin"){
         return "margin";
+    } else if (property == "padding"){
+        return "margin";
     } else if (property == "border"){
         return "lineBorder";
     } else if (property == "background") {

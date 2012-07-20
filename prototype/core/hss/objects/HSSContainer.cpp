@@ -191,8 +191,6 @@ std::string HSSContainer::defaultObjectType(std::string property)
 {
     if (property == "shape"){
         return "roundedRect";
-    } else if (property == "innerMargin"){
-        return "margin";
     } else {
         return HSSDisplayObject::defaultObjectType(property);
     }
