@@ -1821,10 +1821,15 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                if(remoteValue){
+                std::vector<HSSObject::p> * remoteValue = (std::vector<HSSObject::p> *)fnct->evaluate();
+                if(remoteValue != NULL){
                     try {
-                        this->addDBackground(remoteValue);
+                        std::vector<HSSObject::p> values = *remoteValue;
+                        std::vector<HSSObject::p>::const_iterator it;
+                        for (it=values.begin(); it!=values.end(); ++it) {
+                            this->background.push_back(*it);
+                        }
+                        
                         valid = true;
                     } catch (AXRError::p e) {
                         e->raise();
