@@ -534,31 +534,41 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(con
 std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     std::vector< std::vector<HSSDisplayObject::p> > ret;
-    switch (this->currentSelectorNode->getSelectorType()) {
-        case HSSSelectorTypeSimpleSelector:
-        {
-            std::vector<HSSDisplayObject::p> selection;
-            HSSSimpleSelector::p ss = boost::static_pointer_cast<HSSSimpleSelector>(this->currentSelectorNode);
-            selection = ss->filterSelection(scope, thisObj, processing);
-            ret.push_back(selection);
-            break;
+    bool done = false;
+    bool needsReadNext = true;
+    std::vector<HSSDisplayObject::p> selection = scope;
+    
+    while (!done){
+        switch (this->currentSelectorNode->getSelectorType()) {
+            case HSSSelectorTypeSimpleSelector:
+            {
+                HSSSimpleSelector::p ss = boost::static_pointer_cast<HSSSimpleSelector>(this->currentSelectorNode);
+                selection = ss->filterSelection(selection, thisObj, processing);
+                break;
+            }
+            case HSSSelectorTypeThisSelector:
+            {
+                selection.clear();
+                selection.push_back(thisObj);
+                break;
+            }
+                
+            default:
+            {
+                done = true;
+                needsReadNext = false;
+                break;
+            }
         }
-        case HSSSelectorTypeThisSelector:
-        {
-            std::vector<HSSDisplayObject::p> selection;
-            selection.push_back(thisObj);
-            ret.push_back(selection);
-            break;
-        }
-            
-        default:
-        {
-            AXRError::p(new AXRError("AXRController", "Unknown node type in selector"))->raise();
-            break;
+        
+        if(this->isAtEndOfSelector()){
+            done = true;
+        } else if(needsReadNext) {
+            this->readNextSelectorNode();
         }
     }
     
-    this->readNextSelectorNode();
+    ret.push_back(selection);
     
     return ret;
 }

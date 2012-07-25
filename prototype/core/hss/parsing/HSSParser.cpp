@@ -55,6 +55,7 @@
 #include "HSSExpressions.h"
 #include "../objects/HSSRgb.h"
 #include "HSSThisSelector.h"
+#include "HSSParentSelector.h"
 #include "HSSRootSelector.h"
 #include "HSSFunctions.h"
 #include "HSSFilter.h"
@@ -800,7 +801,6 @@ HSSNameSelector::p HSSParser::readObjectSelector()
                 if (objtype == "this") {
                     ret = HSSThisSelector::p(new HSSThisSelector());
                     this->readNextToken(true);
-                    break;
                 } else if (objtype == "super"){
                     /**
                      *  @todo implement \@super
@@ -810,7 +810,9 @@ HSSNameSelector::p HSSParser::readObjectSelector()
                     /**
                      *  @todo implement \@parent
                      */
-                    std_log("@parent not implemented yet");
+                    ret = HSSParentSelector::p(new HSSParentSelector());
+                    this->readNextToken(true);
+
                 } else if (objtype == "root"){
                     ret = HSSRootSelector::p(new HSSRootSelector());
                     this->readNextToken(true);
@@ -1132,10 +1134,10 @@ bool HSSParser::isCombinator(HSSToken::p token)
 bool HSSParser::isChildrenCombinator()
 {
     std_log4("----- peeking ------ ");
-    //if the next token is anything other than a combinator or an open block the whitespace means children combinator
+    //if the next token is anything other than a combinator, an open block or an object sign the whitespace means children combinator
     HSSToken::p peekToken = this->tokenizer->peekNextToken();
     std_log4(peekToken->toString());
-    bool ret = !this->isCombinator(peekToken) && !peekToken->isA(HSSBlockOpen);
+    bool ret = !this->isCombinator(peekToken) && !peekToken->isA(HSSBlockOpen) && !peekToken->isA(HSSObjectSign);
     this->tokenizer->resetPeek();
     std_log4("----- finished peeking ------ ");
     return ret;
