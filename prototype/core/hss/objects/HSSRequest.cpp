@@ -126,8 +126,6 @@ void HSSRequest::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 
 void HSSRequest::fire()
 {
-    
-    std_log("----------------------------------\nFiring request: loading file "+this->axrController->basepath+this->src+"\n----------------------------------\n");
     //if there is no target
     if (this->target.size() == 0) {
         AXRCore::tp & core = AXRCore::getInstance();
@@ -137,7 +135,77 @@ void HSSRequest::fire()
         switch (this->mode) {
             default:
             {
-                std_log("this ain't doing nothin' yet");
+                AXRCore::tp & core = AXRCore::getInstance();
+                AXRWrapper * wrapper = core->getWrapper();
+                AXRController::p controller = AXRController::p(new AXRController());
+                XMLParser::p xmlParser(new XMLParser(controller.get()));
+                HSSParser::p hssParser(new HSSParser(controller.get(), wrapper));
+                AXRFile::p baseFile = core->getFile();
+                AXRFile::p newFile;
+                try {
+                    newFile = wrapper->getFile("file://"+baseFile->getBasePath()+"/"+this->src);
+                } catch (AXRError::p e) {
+                    e->raise();
+                }
+                
+                if(newFile){
+                    bool loadingSuccess = xmlParser->loadFile(newFile);
+                    if(!loadingSuccess){
+                        AXRError::p(new AXRError("AXRCore", "Could not load the XML file"))->raise();
+                    } else {
+                        HSSContainer::p root = boost::static_pointer_cast<HSSContainer>(controller->getRoot());
+                        
+                        if (root) {
+                            std::vector<std::string> loadSheets = controller->loadSheetsGet();
+                            std::vector<std::string>::iterator sheetsIt;
+                            for (sheetsIt=loadSheets.begin(); sheetsIt!=loadSheets.end(); ++sheetsIt) {
+                                std::string hssfilepath;
+                                std::string hssfilename = *sheetsIt;
+                                if(hssfilename.substr(0,7) == "file://"){
+                                    hssfilepath = hssfilename;
+                                } else if(hssfilename.substr(0,7) == "http://"){
+                                    AXRError::p(new AXRError("AXRCore", "HTTP has not been implemented yet"))->raise();
+                                } else if(hssfilename.substr(0,1) == "/"){
+                                    hssfilepath = newFile->getBasePath() + hssfilename;
+                                } else {
+                                    hssfilepath = "file://"+newFile->getBasePath() +"/"+ hssfilename;
+                                }
+                                AXRFile::p hssfile;
+                                try {
+                                    hssfile = wrapper->getFile(hssfilepath);
+                                } catch (AXRError::p e) {
+                                    e->raise();
+                                    continue;
+                                }
+                                
+                                hssParser->setBasePath(newFile->getBasePath());
+                                if(! hssParser->loadFile(hssfile)){
+                                    AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
+                                }
+                            }
+                            
+                            controller->matchRulesToContentTree();
+                            
+                            std::vector<HSSDisplayObject::p>::const_iterator targetIt, childIt;
+                            for (targetIt=this->target.begin(); targetIt!=this->target.end(); ++targetIt) {
+                                const HSSDisplayObject::p & theDO = *targetIt;
+                                HSSContainer::p theContainer = HSSContainer::asContainer(theDO);
+                                if (theContainer) {
+                                    theContainer->clear();
+                                    for (childIt=root->getChildren().begin(); childIt!=root->getChildren().end(); ++childIt) {
+                                        const HSSDisplayObject::p & theChild = *childIt;
+                                        theContainer->add(theChild);
+                                    }
+                                }
+                            }
+                            
+                            root->setNeedsRereadRules(true);
+                            root->recursiveReadDefinitionObjects();
+                            root->handleEvent(HSSEventTypeLoad, NULL);
+                            wrapper->setNeedsDisplay(true);
+                        }
+                    }
+                }
                 
 //                AXRCore::tp core = AXRCore::getInstance();
 //                AXRWrapper * wrapper = core->getWrapper();
@@ -257,6 +325,7 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                         fnct->setThisObj(this->getThisObj());
                         std::vector< std::vector<HSSDisplayObject::p> > selection = *(std::vector< std::vector<HSSDisplayObject::p> >*) fnct->evaluate();
                         unsigned i, size;
+                        this->target.clear();
                         for (i=0, size=selection.size(); i<size; i++) {
                             std::vector<HSSDisplayObject::p> inner = selection[i];
                             this->target.insert(this->target.end(), inner.begin(), inner.end());
