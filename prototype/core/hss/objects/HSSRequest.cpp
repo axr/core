@@ -56,6 +56,12 @@ HSSRequest::HSSRequest()
     = this->observedTarget
     = NULL;
     
+    std::vector<std::string> shorthandProperties;
+    shorthandProperties.push_back("src");
+    shorthandProperties.push_back("target");
+    //shorthandProperties.push_back("mode");
+    this->setShorthandProperties(shorthandProperties);
+    
     this->mode = HSSRequestModeTypeAuto;
 }
 
