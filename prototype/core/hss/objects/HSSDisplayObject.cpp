@@ -117,6 +117,8 @@ void HSSDisplayObject::initialize()
     = this->observedAnchorX = this->observedAnchorY
     = this->observedAlignX = this->observedAlignY
     = this->observedBackground = this->observedContent = this->observedFont
+    = this->observedBorder = this->observedOn
+    = this->observedMargin = this->observedPadding
     = NULL;
     
     this->borderBleeding = 0.;
@@ -171,6 +173,45 @@ HSSClonable::p HSSDisplayObject::cloneImpl() const{
 HSSDisplayObject::~HSSDisplayObject()
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, std::string("destroying display object with name ").append(this->name));
+    if (this->observedWidth != NULL) {
+        this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
+    }
+    if (this->observedHeight != NULL) {
+        this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
+    }
+    if (this->observedAnchorX != NULL) {
+        this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
+    }
+    if (this->observedAnchorY != NULL) {
+        this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
+    }
+    if (this->observedAlignX != NULL) {
+        this->observedAlignX->removeObserver(this->observedAlignXProperty, HSSObservablePropertyAlignX, this);
+    }
+    if (this->observedAlignY != NULL) {
+        this->observedAlignY->removeObserver(this->observedAlignYProperty, HSSObservablePropertyAlignY, this);
+    }
+    if (this->observedBackground != NULL) {
+        this->observedBackground->removeObserver(this->observedBackgroundProperty, HSSObservablePropertyBackground, this);
+    }
+    if (this->observedContent != NULL) {
+        this->observedContent->removeObserver(this->observedContentProperty, HSSObservablePropertyContent, this);
+    }
+    if (this->observedFont != NULL) {
+        this->observedFont->removeObserver(this->observedFontProperty, HSSObservablePropertyFont, this);
+    }
+    if (this->observedOn != NULL) {
+        this->observedOn->removeObserver(this->observedOnProperty, HSSObservablePropertyOn, this);
+    }
+    if (this->observedMargin != NULL) {
+        this->observedMargin->removeObserver(this->observedMarginProperty, HSSObservablePropertyMargin, this);
+    }
+    if (this->observedPadding != NULL) {
+        this->observedPadding->removeObserver(this->observedPaddingProperty, HSSObservablePropertyPadding, this);
+    }
+    if (this->observedBorder != NULL) {
+        this->observedBorder->removeObserver(this->observedBorderProperty, HSSObservablePropertyBorder, this);
+    }
     cairo_surface_destroy(this->backgroundSurface);
     cairo_surface_destroy(this->foregroundSurface);
     cairo_surface_destroy(this->bordersSurface);
