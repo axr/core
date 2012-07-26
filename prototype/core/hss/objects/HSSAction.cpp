@@ -69,20 +69,12 @@ HSSAction::HSSAction(HSSActionType type)
 : HSSObject(HSSObjectTypeAction)
 {
     this->actionType = type;
-    
-    std::vector<std::string> shorthandProperties;
-    shorthandProperties.push_back("action");
-    this->setShorthandProperties(shorthandProperties);
 }
 
 HSSAction::HSSAction(const HSSAction & orig)
 : HSSObject(orig)
 {
     this->actionType = orig.actionType;
-    
-    std::vector<std::string> shorthandProperties;
-    shorthandProperties.push_back("action");
-    this->setShorthandProperties(shorthandProperties);
 }
 
 HSSAction::p HSSAction::clone() const{
