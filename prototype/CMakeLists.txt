@@ -60,7 +60,7 @@ if (UNIX)                                           #Both Linux and Mac are UNIX
     find_package(PkgConfig REQUIRED)
     find_package (EXPAT REQUIRED expat>=2.0)        #required minimum version can be specified like this
 
-    find_package(Boost COMPONENTS thread REQUIRED)
+    find_package(Boost COMPONENTS thread system REQUIRED)
 #    find_package(Threads REQUIRED)
 
 
