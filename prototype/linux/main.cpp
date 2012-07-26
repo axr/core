@@ -1,9 +1,12 @@
 #include "SDL/SDL.h"
 #include "cairosdl/cairosdl.h"
+#include "boost/program_options.hpp"
 #include "../core/AXR.h"
 #include "../core/os/linux/LinuxAxrWrapper.h"
 
 #define cairo_argb(cr,argb) cairo_set_source_rgba(cr,(((argb)>>16)&0x000000ff)/256.f,(((argb)>>8)&0x000000ff)/256.f,((argb)&0x000000ff)/256.f,(((argb)>>24)&0x000000ff)/256.f)
+
+namespace po = boost::program_options;
 
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
@@ -46,6 +49,36 @@ void render ()
 
 int main (int argc, char **argv)
 {
+	// Declare the supported options.
+	po::options_description desc("Allowed options");
+	desc.add_options()
+		("help", "show this message")
+		("file", po::value<std::string>(), "path to file to open")
+		("layout-tests", po::value<std::string>(), "run layout tests")
+		;
+
+	/*po::variables_map varmap;
+	po::store(po::parse_command_line(argc, argv, desc), varmap);
+	po::notify(varmap);*/
+
+	po::variables_map varmap;
+	std::vector<std::string> additionalArgs;
+
+	// Parse arguments
+	po::parsed_options parsed = po::command_line_parser(argc, argv)
+		.options(desc).allow_unregistered().run();
+	po::store(parsed, varmap);
+	additionalArgs = po::collect_unrecognized(parsed.options,
+		po::include_positional);
+	po::notify(varmap);
+
+	// Display help message
+	if (varmap.count("help"))
+	{
+		std::cout << desc << "\n";
+		return 0;
+	}
+
 	SDL_Init(SDL_INIT_VIDEO);
 	screen = SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32,
 		SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
@@ -59,10 +92,28 @@ int main (int argc, char **argv)
 	wrapper = new LinuxAxrWrapper();
 	AXRCore::tp & core = AXRCore::getInstance();
 
-	if (argc > 1)
+	if (varmap.count("layout-tests"))
+	{
+		wrapper->_layoutTestsFilePath = varmap["layout-tests"].as<std::string>();
+
+		core->registerCustomFunction("AXRLayoutTestsExecute",
+			new AXR::HSSValueChangedCallback<AXR::LinuxAxrWrapper>(wrapper, &AXR::AXRWrapper::executeLayoutTests));
+
+		wrapper->loadFileByPath(wrapper->getPathToResources() +
+			"/views/layoutTests.hss");
+	}
+	else if (varmap.count("file") || additionalArgs.empty() == 0)
 	{
 		std::string filepath;
-		filepath = argv[1];
+
+		if (additionalArgs.empty())
+		{
+			filepath = varmap["file"].as<std::string>();
+		}
+		else
+		{
+			filepath = additionalArgs[0];
+		}
 
 		wrapper->loadFileByPath(filepath);
 	}
@@ -107,6 +158,7 @@ int main (int argc, char **argv)
 					thePoint.x = event.button.x;
 					thePoint.y = event.button.y;
 					root->handleEvent(HSSEventTypeMouseUp, &thePoint);
+					root->handleEvent(HSSEventTypeClick, &thePoint);
 				}
 			}
 			else if (event.type == SDL_MOUSEMOTION)

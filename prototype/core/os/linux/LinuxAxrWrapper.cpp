@@ -190,3 +190,8 @@ std::string LinuxAxrWrapper::getPathToResources()
 	return path + std::string("/resources");
 }
 
+std::string LinuxAxrWrapper::getPathToTestsFile()
+{
+	return this->_layoutTestsFilePath;
+}
+

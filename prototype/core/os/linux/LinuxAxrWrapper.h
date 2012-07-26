@@ -71,8 +71,10 @@ namespace AXR
 		virtual bool openFileDialog(std::string &filePath);
 		virtual void setNeedsDisplay(bool newValue);
 		virtual std::string getPathToResources();
+		virtual std::string getPathToTestsFile();
 
 		bool needsDisplay;
+		std::string _layoutTestsFilePath;
 	};
 }
 
