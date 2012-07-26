@@ -19,7 +19,7 @@ master
             isA: button;
             width: 250;
             height: 100;
-            behavior: @mouseUp {
+            on: @click {
                 action: @request{ src: "BH001 Load slave.xml" }
             };
         }
@@ -66,6 +66,12 @@ master
             isA: button;
             width: 300;
             height: 80;
+            on: @click {
+                action: @request{
+                    src: "BH001 Load slave.xml";
+                    target: sel(@parent);
+                };
+            };
         }
     }
 }

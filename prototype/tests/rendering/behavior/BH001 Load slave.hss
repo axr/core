@@ -34,7 +34,7 @@ slave
           width: 120;
           height: 40;
           shape: @{5}
-          behavior: @mouseUp{
+          on: @click{
               @request { src: "BH001 Load.xml" }
           }
       }
