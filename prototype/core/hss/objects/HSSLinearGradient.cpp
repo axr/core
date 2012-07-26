@@ -467,6 +467,7 @@ long double HSSLinearGradient::_setLDProperty(
             expressionValue->setPercentageBase(percentageBase);
             expressionValue->setPercentageObserved(observedProperty, observedObject);
             expressionValue->setScope(this->scope);
+            expressionValue->setThisObj(this->getThisObj());
             ret = expressionValue->evaluate();
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSLinearGradient>(this, callback));

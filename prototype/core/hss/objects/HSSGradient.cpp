@@ -163,9 +163,10 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dStartColor = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->startColor = *(HSSRgb::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyStartColor, this, new HSSValueChangedCallback<HSSGradient>(this, &HSSGradient::startColorChanged));
@@ -186,6 +187,7 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
             this->dStartColor = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             objdef->setScope(this->scope);
+            objdef->setThisObj(this->getThisObj());
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeRgb)) {
@@ -241,9 +243,10 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dEndColor = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->endColor = *(HSSRgb::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyEndColor, this, new HSSValueChangedCallback<HSSGradient>(this, &HSSGradient::endColorChanged));
@@ -262,6 +265,7 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
             this->dEndColor = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             objdef->setScope(this->scope);
+            objdef->setThisObj(this->getThisObj());
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeRgb)) {
@@ -311,9 +315,10 @@ void HSSGradient::setDBalance(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dBalance = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->balance = *(long double *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyBalance, this, new HSSValueChangedCallback<HSSGradient>(this, &HSSGradient::balanceChanged));
@@ -398,7 +403,7 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->getScope());
                 fnct->setThisObj(this->getThisObj());
@@ -497,6 +502,7 @@ long double HSSGradient::_setLDProperty(
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
             expressionValue->setPercentageBase(percentageBase);
             expressionValue->setScope(this->scope);
+            expressionValue->setThisObj(this->getThisObj());
             ret = expressionValue->evaluate();
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSGradient>(this, callback));

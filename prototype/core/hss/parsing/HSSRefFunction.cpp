@@ -62,9 +62,9 @@ HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
     this->observed = NULL;
 }
 
-HSSRefFunction::p HSSRefFunction::clone() const
+HSSFunction::p HSSRefFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSRefFunction, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSFunction, HSSClonable>(this->cloneImpl());
 }
 
 HSSRefFunction::~HSSRefFunction()

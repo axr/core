@@ -205,7 +205,7 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dSides = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->thisObj);
@@ -274,7 +274,7 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dAngle = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->thisObj);

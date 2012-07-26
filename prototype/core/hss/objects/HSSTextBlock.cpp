@@ -338,9 +338,10 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dTransform = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->transform = *(HSSTextTransformType *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTransform, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::transformChanged));
@@ -368,6 +369,7 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
             this->dTransform = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             objdef->setScope(this->scope);
+            objdef->setThisObj(this->getParent());
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {
@@ -437,9 +439,10 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dTextAlign = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->textAlign = *(HSSTextAlignType *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::textAlignChanged));
@@ -478,6 +481,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
             this->dTextAlign = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             objdef->setScope(this->scope);
+            objdef->setThisObj(this->getParent());
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {
@@ -558,9 +562,10 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dText = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->text = *(std::string *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyText, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::textChanged));
@@ -591,6 +596,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
             this->dText = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             objdef->setScope(this->scope);
+            objdef->setThisObj(this->getParent());
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {

@@ -71,6 +71,23 @@ HSSFunction::HSSFunction(const HSSFunction & orig)
     this->_isDirty = orig._isDirty;
     this->_value = orig._value;
     this->axrController = orig.axrController;
+    this->_name = orig._name;
+}
+
+HSSFunction::p HSSFunction::clone() const
+{
+    return boost::static_pointer_cast<HSSFunction, HSSClonable>(this->cloneImpl());
+}
+
+HSSClonable::p HSSFunction::cloneImpl() const{
+    
+    HSSFunction::p clone = HSSFunction::p(new HSSFunction(*this));
+    std::deque<HSSParserNode::p>::const_iterator it;
+    for (it=this->_arguments.begin(); it!=this->_arguments.end(); it++) {
+        HSSParserNode::p clonedArgument = (*it)->clone();
+        clone->_arguments.push_back(clonedArgument);
+    }   
+    return clone;
 }
 
 HSSFunction::~HSSFunction()

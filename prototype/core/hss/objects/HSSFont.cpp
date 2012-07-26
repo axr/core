@@ -239,9 +239,10 @@ void HSSFont::setDColor(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dColor = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->color = *(HSSRgb::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSFont>(this, &HSSFont::colorChanged));
@@ -261,6 +262,7 @@ void HSSFont::setDColor(HSSParserNode::p value)
             this->dColor = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             objdef->setScope(this->scope);
+            objdef->setThisObj(this->getThisObj());
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeRgb)) {
@@ -297,9 +299,10 @@ void HSSFont::setDWeight(HSSParserNode::p value){
         case HSSParserNodeTypeFunctionCall:
         {
             this->dWeight = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->weight = *(HSSKeywordConstant::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyWeight, this, new HSSValueChangedCallback<HSSFont>(this, &HSSFont::weightChanged));

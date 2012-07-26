@@ -262,7 +262,8 @@ long double HSSRgb::_setLDProperty(
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
             expressionValue->setPercentageBase(percentageBase);
-            //expressionValue->setScope(scope);
+            expressionValue->setScope(this->getScope());
+            expressionValue->setThisObj(this->getThisObj());
             ret = expressionValue->evaluate();
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRgb>(this, callback));

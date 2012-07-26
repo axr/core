@@ -167,7 +167,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedTLCorner,
                                                   this->observedTLCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             if(this->observedTRCorner != NULL)
             {
                 this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyCorners, this);
@@ -181,7 +181,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedTRCorner,
                                                   this->observedTRCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             if(this->observedBRCorner != NULL)
             {
                 this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyCorners, this);
@@ -195,7 +195,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedBRCorner,
                                                   this->observedBRCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             if(this->observedBLCorner != NULL)
             {
                 this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyCorners, this);
@@ -209,7 +209,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedBLCorner,
                                                   this->observedBLCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             break;
         }
             
@@ -245,7 +245,7 @@ void HSSRoundedRect::setDLeft(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedTLCorner,
                                                   this->observedTLCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             if(this->observedBLCorner != NULL)
             {
                 this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyLeft, this);
@@ -259,7 +259,7 @@ void HSSRoundedRect::setDLeft(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedBLCorner,
                                                   this->observedBLCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             break;
         }
             
@@ -291,7 +291,7 @@ void HSSRoundedRect::setDLeftTop(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedTLCorner,
                                                   this->observedTLCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             break;
         }
             
@@ -322,7 +322,7 @@ void HSSRoundedRect::setDTop(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedTLCorner,
                                                   this->observedTLCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             if(this->observedTRCorner != NULL)
             {
                 this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyTop, this);
@@ -336,7 +336,7 @@ void HSSRoundedRect::setDTop(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedTRCorner,
                                                   this->observedTRCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             break;
         }
             
@@ -368,7 +368,7 @@ void HSSRoundedRect::setDRightTop(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedTRCorner,
                                                   this->observedTRCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             break;
         }
             
@@ -399,7 +399,7 @@ void HSSRoundedRect::setDRight(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedTRCorner,
                                                   this->observedTRCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             if(this->observedBRCorner != NULL)
             {
                 this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyRight, this);
@@ -413,7 +413,7 @@ void HSSRoundedRect::setDRight(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedBRCorner,
                                                   this->observedBRCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             break;
         }
             
@@ -445,7 +445,7 @@ void HSSRoundedRect::setDRightBottom(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedBRCorner,
                                                   this->observedBRCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             break;
         }
             
@@ -476,7 +476,7 @@ void HSSRoundedRect::setDBottom(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedBRCorner,
                                                   this->observedBRCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             if(this->observedBLCorner != NULL)
             {
                 this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyBottom, this);
@@ -490,7 +490,7 @@ void HSSRoundedRect::setDBottom(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedBLCorner,
                                                   this->observedBLCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             break;
         }
             
@@ -522,7 +522,7 @@ void HSSRoundedRect::setDLeftBottom(HSSParserNode::p value){
                                                   HSSObservablePropertyValue,
                                                   this->observedBLCorner,
                                                   this->observedBLCornerProperty,
-                                                  NULL );
+                                                  this->scope );
             break;
         }
             
@@ -612,6 +612,7 @@ long double HSSRoundedRect::_setLDProperty(
             expressionValue->setPercentageBase(percentageBase);
             expressionValue->setPercentageObserved(observedProperty, observedObject);
             expressionValue->setScope(scope);
+            expressionValue->setThisObj(this->getThisObj());
             ret = expressionValue->evaluate();
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect>(this, callback));
@@ -628,10 +629,11 @@ long double HSSRoundedRect::_setLDProperty(
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             fnct->setPercentageBase(percentageBase);
             fnct->setPercentageObserved(observedProperty, observedObject);
             fnct->setScope(scope);
+            fnct->setThisObj(this->getThisObj());
             
             ret = *(long double*)fnct->evaluate();
             if(callback != NULL){

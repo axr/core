@@ -166,9 +166,10 @@ void HSSLineBorder::setDColor(HSSParserNode::p value){
         case HSSParserNodeTypeFunctionCall:
         {
             this->dColor = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->color = *(HSSRgb::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSLineBorder>(this, &HSSLineBorder::colorChanged));
@@ -189,6 +190,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value){
             this->dColor = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             objdef->setScope(this->scope);
+            objdef->setThisObj(this->getThisObj());
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeRgb)) {

@@ -2363,6 +2363,12 @@ void HSSContainer::setDShape(HSSParserNode::p value)
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 objdef->setThisObj(this->shared_from_this());
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else {
+                    objdef->setScope(&(this->getChildren()));
+                }
                 objdef->apply();
                 HSSObject::p theObject = objdef->getObject();
                 if (theObject->isA(HSSObjectTypeShape)){
@@ -2389,6 +2395,12 @@ void HSSContainer::setDShape(HSSParserNode::p value)
         {
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             objdef->setThisObj(this->shared_from_this());
+            HSSContainer::p parent = this->getParent();
+            if(parent){
+                objdef->setScope(&(parent->getChildren()));
+            } else {
+                objdef->setScope(&(this->getChildren()));
+            }
             objdef->apply();
             HSSObject::p objValue = objdef->getObject();
             if(objValue->isA(HSSObjectTypeShape)){
@@ -2442,9 +2454,14 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dTextAlign = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
-                fnct->setScope(this->scope);
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else {
+                    fnct->setScope(&(this->getChildren()));
+                }
                 this->textAlign = *(HSSTextAlignType *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSContainer>(this, &HSSContainer::textAlignChanged));
@@ -2471,8 +2488,14 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
         {
             this->dTextAlign = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
             objdef->setThisObj(this->shared_from_this());
+            HSSContainer::p parent = this->getParent();
+            if(parent){
+                objdef->setScope(&(parent->getChildren()));
+            } else {
+                objdef->setScope(&(this->getChildren()));
+            }
+            
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {
@@ -2601,7 +2624,7 @@ long double HSSContainer::_setLDProperty(
         
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             fnct->setPercentageBase(percentageBase);
             fnct->setPercentageObserved(observedProperty, observedObject);
             fnct->setScope(scope);

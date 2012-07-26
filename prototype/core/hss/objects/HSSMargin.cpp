@@ -397,6 +397,7 @@ long double HSSMargin::_setLDProperty(
             expressionValue->setPercentageBase(percentageBase);
             expressionValue->setPercentageObserved(observedProperty, observedObject);
             expressionValue->setScope(scope);
+            expressionValue->setThisObj(this->getThisObj());
             ret = expressionValue->evaluate();
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSMargin>(this, callback));
@@ -413,10 +414,11 @@ long double HSSMargin::_setLDProperty(
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             fnct->setPercentageBase(percentageBase);
             fnct->setPercentageObserved(observedProperty, observedObject);
             fnct->setScope(scope);
+            fnct->setThisObj(this->getThisObj());
             
             ret = *(long double*)fnct->evaluate();
             if(callback != NULL){

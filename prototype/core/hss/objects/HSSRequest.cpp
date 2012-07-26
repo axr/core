@@ -251,7 +251,7 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                     
                 case HSSParserNodeTypeFunctionCall:
                 {
-                    HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+                    HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
                     if(fnct){
                         fnct->setScope(this->scope);
                         fnct->setThisObj(this->getThisObj());

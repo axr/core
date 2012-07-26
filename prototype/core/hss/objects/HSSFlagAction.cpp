@@ -55,7 +55,7 @@ HSSFlagAction::HSSFlagAction()
 HSSFlagAction::HSSFlagAction(const HSSFlagAction & orig)
 : HSSAction(orig)
 {
-    this->_flagFunction = orig._flagFunction->clone();
+    this->_flagFunction = boost::static_pointer_cast<HSSFlagFunction>(orig._flagFunction->clone());
 }
 
 HSSFlagAction::p HSSFlagAction::clone() const

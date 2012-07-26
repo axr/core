@@ -79,7 +79,7 @@ namespace AXR {
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSRefFunction
          */
-        p clone() const;
+        HSSFunction::p clone() const;
         
         /**
          *  Destructor for this class. Removes itself from the observed object.

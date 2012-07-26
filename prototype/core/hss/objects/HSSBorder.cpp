@@ -137,9 +137,10 @@ void HSSBorder::setDSize(HSSParserNode::p value){
         case HSSParserNodeTypeFunctionCall:
         {
             this->dSize = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->size = *(long double *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertySize, this, new HSSValueChangedCallback<HSSBorder>(this, &HSSBorder::sizeChanged));
@@ -207,6 +208,7 @@ long double HSSBorder::_setLDProperty(
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
             expressionValue->setPercentageBase(percentageBase);
             expressionValue->setScope(this->scope);
+            expressionValue->setThisObj(this->getThisObj());
             ret = expressionValue->evaluate();
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSBorder>(this, callback));

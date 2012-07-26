@@ -181,9 +181,10 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dColor = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->color = *(HSSRgb::p *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSColorStop>(this, &HSSColorStop::colorChanged));
@@ -202,6 +203,7 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
             this->dColor = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
             objdef->setScope(this->scope);
+            objdef->setThisObj(this->getThisObj());
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeRgb)) {
@@ -261,9 +263,10 @@ void HSSColorStop::setDPosition(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dPosition = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->position = *(long double *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyPosition, this, new HSSValueChangedCallback<HSSColorStop>(this, &HSSColorStop::positionChanged));
@@ -329,9 +332,10 @@ void HSSColorStop::setDBalance(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dBalance = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
+                fnct->setThisObj(this->getThisObj());
                 this->balance = *(long double *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyBalance, this, new HSSValueChangedCallback<HSSColorStop>(this, &HSSColorStop::balanceChanged));
@@ -406,6 +410,7 @@ long double HSSColorStop::_setLDProperty(
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
             expressionValue->setPercentageBase(percentageBase);
             expressionValue->setScope(this->scope);
+            expressionValue->setThisObj(this->getThisObj());
             ret = expressionValue->evaluate();
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSColorStop>(this, callback));

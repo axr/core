@@ -63,9 +63,9 @@ HSSSelFunction::HSSSelFunction(const HSSSelFunction & orig)
     
 }
 
-HSSSelFunction::p HSSSelFunction::clone() const
+HSSFunction::p HSSSelFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSSelFunction, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSFunction, HSSClonable>(this->cloneImpl());
 }
 
 std::string HSSSelFunction::toString()

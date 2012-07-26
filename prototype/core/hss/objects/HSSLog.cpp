@@ -115,10 +115,11 @@ void HSSLog::fire()
     switch (this->dValue->getType()) {
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(this->dValue);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(this->dValue)->clone();
             if(fnct->isA(HSSFunctionTypeRef)){
                 HSSRefFunction::p refFnct = boost::static_pointer_cast<HSSRefFunction>(fnct);
                 refFnct->setScope(this->scope);
+                refFnct->setThisObj(this->getThisObj());
                 void * data = refFnct->evaluate();
                 switch (refFnct->getPropertyName()) {
                     case HSSObservablePropertyWidth:
@@ -240,6 +241,7 @@ void HSSLog::fire()
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(this->dValue);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 objdef->setThisObj(this->getThisObj());
+                objdef->setScope(this->scope);
                 objdef->apply();
                 HSSObject::p theObject = objdef->getObject();
                 std_log(theObject->toString());

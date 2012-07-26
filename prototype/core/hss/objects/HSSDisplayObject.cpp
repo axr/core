@@ -1400,9 +1400,16 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dFlow = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
-                fnct->setScope(this->scope);
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    fnct->setScope(&(thisCont->getChildren()));
+                }
+                
                 this->flow = *(bool *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyFlow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::flowChanged));
@@ -1435,7 +1442,14 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
         {
             this->dFlow = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
+            HSSContainer::p parent = this->getParent();
+            if(parent){
+                objdef->setScope(&(parent->getChildren()));
+            } else if(this->isA(HSSObjectTypeContainer)){
+                HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                objdef->setScope(&(thisCont->getChildren()));
+            }
+            objdef->setThisObj(this->shared_from_this());
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {
@@ -1504,9 +1518,15 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             this->dOverflow = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
-                fnct->setScope(this->scope);
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    fnct->setScope(&(thisCont->getChildren()));
+                }
                 this->overflow = *(bool *)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyOverflow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::overflowChanged));
@@ -1539,7 +1559,14 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
         {
             this->dOverflow = value;
             HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setScope(this->scope);
+            HSSContainer::p parent = this->getParent();
+            if(parent){
+                objdef->setScope(&(parent->getChildren()));
+            } else if(this->isA(HSSObjectTypeContainer)){
+                HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                objdef->setScope(&(thisCont->getChildren()));
+            }
+            objdef->setThisObj(this->shared_from_this());
             objdef->apply();
             HSSObject::p theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue)) {
@@ -1852,7 +1879,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 
                 HSSContainer::p parent = this->getParent();
@@ -1979,7 +2006,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 HSSContainer::p parent = this->getParent();
                 if(parent){
@@ -2091,6 +2118,14 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                objdef->setThisObj(this->shared_from_this());
                 objdef->apply();
                 
                 HSSObject::p obj = boost::static_pointer_cast<HSSObject>(objdef->getObject());
@@ -2112,7 +2147,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 
                 HSSContainer::p parent = this->getParent();
@@ -2164,6 +2199,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                     objdef->setScope(&(thisCont->getChildren()));
                 }
                 
+                objdef->setThisObj(this->shared_from_this());
                 objdef->apply();
                 HSSObject::p theObj = objdef->getObject();
                 theObj->observe(HSSObservablePropertyFont, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::fontChanged));
@@ -2257,7 +2293,7 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
         
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 HSSContainer::p parent = this->getParent();
                 if(parent){
@@ -2297,7 +2333,7 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
         case HSSStatementTypeObjectDefinition:
         {
             this->dOn = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value)->clone();
             if (objdef->getObject()->isA(HSSObjectTypeEvent)) {
                 HSSContainer::p parent = this->getParent();
                 if(parent){
@@ -2398,6 +2434,14 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                objdef->setThisObj(this->shared_from_this());
                 objdef->apply();
                 
                 HSSObject::p obj = boost::static_pointer_cast<HSSObject>(objdef->getObject());
@@ -2420,7 +2464,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 
                 HSSContainer::p parent = this->getParent();
@@ -2477,6 +2521,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
                     objdef->setScope(&(thisCont->getChildren()));
                 }
                 
+                objdef->setThisObj(this->shared_from_this());
                 objdef->apply();
                 HSSObject::p theObj = objdef->getObject();
                 theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::marginChanged));
@@ -2531,6 +2576,14 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                objdef->setThisObj(this->shared_from_this());
                 objdef->apply();
                 
                 HSSObject::p obj = boost::static_pointer_cast<HSSObject>(objdef->getObject());
@@ -2553,7 +2606,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 
                 HSSContainer::p parent = this->getParent();
@@ -2610,6 +2663,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
                     objdef->setScope(&(thisCont->getChildren()));
                 }
                 
+                objdef->setThisObj(this->shared_from_this());
                 objdef->apply();
                 HSSObject::p theObj = objdef->getObject();
                 theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::paddingChanged));
@@ -2664,6 +2718,14 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    objdef->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    objdef->setScope(&(thisCont->getChildren()));
+                }
+                objdef->setThisObj(this->shared_from_this());
                 objdef->apply();
                 
                 HSSObject::p obj = boost::static_pointer_cast<HSSObject>(objdef->getObject());
@@ -2685,7 +2747,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
         
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 
                 HSSContainer::p parent = this->getParent();
@@ -2730,6 +2792,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
                     objdef->setScope(&(thisCont->getChildren()));
                 }
                 
+                objdef->setThisObj(this->shared_from_this());
                 objdef->apply();
                 HSSObject::p theObj = objdef->getObject();
                 theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::borderChanged));
@@ -2855,7 +2918,7 @@ long double HSSDisplayObject::_setLDProperty(
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             fnct->setPercentageBase(percentageBase);
             fnct->setPercentageObserved(observedProperty, observedObject);
             fnct->setScope(scope);
@@ -2920,7 +2983,6 @@ void HSSDisplayObject::_setOuterDimensions()
     this->outerWidth = outerWidth;
     this->outerHeight = outerHeight;
 }
-
 
 bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
 {

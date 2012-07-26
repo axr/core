@@ -76,9 +76,9 @@ HSSFlagFunction::HSSFlagFunction(const HSSFlagFunction & orig)
     this->_flagFunctionType = orig._flagFunctionType;
 }
 
-HSSFlagFunction::p HSSFlagFunction::clone() const
+HSSFunction::p HSSFlagFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFlagFunction, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSFunction, HSSClonable>(this->cloneImpl());
 }
 
 HSSFlagFunction::~HSSFlagFunction()

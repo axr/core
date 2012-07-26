@@ -65,6 +65,8 @@ namespace AXR {
     public:        
         friend class HSSParser;
         
+        typedef boost::shared_ptr<HSSFunction> p;
+        
         /**
          *  Creates a new instance of a function, with given function type. Most of the time this
          *  will be HSSFunctionTypeCustom.
@@ -83,9 +85,13 @@ namespace AXR {
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSFunction
          */
+        virtual p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
         virtual ~HSSFunction();
         
-        typedef boost::shared_ptr<HSSFunction> p;
         virtual std::string toString();
         
         /**
@@ -202,6 +208,8 @@ namespace AXR {
         HSSFunctionType functionType;
         std::deque<HSSParserNode::p> _arguments;
         std::string _name;
+        
+        HSSClonable::p cloneImpl() const;
     };
 }
 

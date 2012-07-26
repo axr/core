@@ -186,7 +186,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
         {
             try {
                 HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
-                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue())->clone();
                 objdef->setScope(this->scope);
                 objdef->setThisObj(this->getThisObj());
                 objdef->apply();
@@ -210,7 +210,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value);
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             switch (fnct->getFunctionType()) {
                 case HSSFunctionTypeRef:
                 {
@@ -266,7 +266,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
     switch (value->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
         {
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value)->clone();
             if (objdef->getObject()->isA(HSSObjectTypeAction)) {
                 objdef->setScope(this->scope);
                 objdef->setThisObj(this->getThisObj());
