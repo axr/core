@@ -275,6 +275,17 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
                     this->src = theString->getValue();
                     break;
                 }
+                    
+                case HSSParserNodeTypeFunctionCall:
+                {
+                    HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
+                    fnct->setScope(this->scope);
+                    fnct->setThisObj(this->getThisObj());
+                    std::string remoteValue = *(std::string *)fnct->evaluate();
+                    this->src = remoteValue;
+                    
+                    break;
+                }
                 
                 default:
                     break;
