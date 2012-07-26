@@ -53,7 +53,6 @@ using namespace AXR;
 HSSMargin::HSSMargin()
 : HSSObject(HSSObjectTypeMargin)
 {
-    this->segments = HSSMultipleValue();
     this->top = this->right = this->bottom = this->left = 0.0;
     this->observedTop = this->observedRight = this->observedBottom = this->observedLeft = NULL;
 }

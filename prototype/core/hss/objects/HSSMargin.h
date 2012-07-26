@@ -95,11 +95,6 @@ namespace AXR {
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
         /**
-         *  @todo make private and provide accessors
-         */
-        HSSMultipleValue segments;
-        
-        /**
          *  Getter for the definition object of size.
          *  @return A shared pointer to the parser node containing the definition object of value.
          */
