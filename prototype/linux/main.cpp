@@ -57,10 +57,6 @@ int main (int argc, char **argv)
 		("layout-tests", po::value<std::string>(), "run layout tests")
 		;
 
-	/*po::variables_map varmap;
-	po::store(po::parse_command_line(argc, argv, desc), varmap);
-	po::notify(varmap);*/
-
 	po::variables_map varmap;
 	std::vector<std::string> additionalArgs;
 
