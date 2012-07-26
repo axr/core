@@ -92,10 +92,10 @@ HSSClonable::p HSSFunction::cloneImpl() const{
 
 HSSFunction::~HSSFunction()
 {
-    if (this->percentageObserved != NULL) {
-        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
-        this->percentageObserved = NULL;
-    }
+//    if (this->percentageObserved != NULL) {
+//        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
+//        this->percentageObserved = NULL;
+//    }
 }
 
 std::string HSSFunction::toString()
