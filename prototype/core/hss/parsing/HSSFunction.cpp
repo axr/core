@@ -163,6 +163,40 @@ void HSSFunction::setPercentageObserved(HSSObservableProperty property, HSSObser
 void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
 {
     this->scope = newScope;
+    std::deque<HSSParserNode::p>::const_iterator it;
+    for (it=this->_arguments.begin(); it!=this->_arguments.end(); it++) {
+        const HSSParserNode::p node = (*it);
+        switch (node->getType()) {
+            case HSSParserNodeTypeFunctionCall:
+            {
+                HSSFunction::p func = boost::static_pointer_cast<HSSFunction>(node);
+                func->setScope(newScope);
+                break;
+            }
+                
+            case HSSParserNodeTypeExpression:
+            {
+                HSSExpression::p exp = boost::static_pointer_cast<HSSExpression>(node);
+                exp->setScope(newScope);
+                break;
+            }
+                
+            default:
+                break;
+        }
+        
+        switch (node->getStatementType()) {
+            case HSSStatementTypeObjectDefinition:
+            {
+                HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(node);
+                objdef->setScope(newScope);
+                break;
+            }
+                
+            default:
+                break;
+        }
+    } 
 }
 
 void HSSFunction::setDirty(bool value)
