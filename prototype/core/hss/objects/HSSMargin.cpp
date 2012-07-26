@@ -60,9 +60,14 @@ HSSMargin::HSSMargin()
 HSSMargin::HSSMargin(const HSSMargin & orig)
 : HSSObject(orig)
 {
-    /**
-     *  @todo does something need to be done here?
-     */
+    this->top = orig.top;
+    this->right = orig.right;
+    this->bottom = orig.bottom;
+    this->left = orig.left;
+    this->observedTop = NULL;
+    this->observedRight = NULL;
+    this->observedBottom = NULL;
+    this->observedLeft = NULL;
 }
 
 HSSMargin::p HSSMargin::clone() const{
