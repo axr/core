@@ -35,6 +35,10 @@
 		4E59E24C154479A800AD103B /* libffi.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E59E24B154479A800AD103B /* libffi.5.dylib */; };
 		4E59E24E15447A0000AD103B /* libpangoft2-1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E59E24D15447A0000AD103B /* libpangoft2-1.0.0.dylib */; };
 		4E59E25015447A1300AD103B /* libpng15.15.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E59E24F15447A1300AD103B /* libpng15.15.dylib */; };
+		4E6FC29515B8F413007910D0 /* libpangoft2-1.0.0.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E59E24D15447A0000AD103B /* libpangoft2-1.0.0.dylib */; };
+		4E6FC29615B8F421007910D0 /* libpng15.15.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E59E24F15447A1300AD103B /* libpng15.15.dylib */; };
+		4E6FC29715B8F426007910D0 /* libffi.5.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E59E24B154479A800AD103B /* libffi.5.dylib */; };
+		4E6FC29815B8F45B007910D0 /* libboost_thread-mt.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 4E4182F61585094F002537E0 /* libboost_thread-mt.dylib */; };
 		4EA6EAFE14407B3200309E10 /* views in Resources */ = {isa = PBXBuildFile; fileRef = 4EA6EAFD14407B3200309E10 /* views */; };
 		4ECF59C914FEA253007745C7 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4ECF59C714FEA253007745C7 /* MainMenu.nib */; };
 		4EDF1F4C14703E9F00E70BCA /* AXR.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4EDF1F4B14703E9F00E70BCA /* AXR.icns */; };
@@ -305,10 +309,14 @@
 				4E3843FF14499994001DF47A /* libcairo.2.dylib in Resources */,
 				4E3844001449999E001DF47A /* libexpat.1.5.2.dylib in Resources */,
 				4E3844021449999E001DF47A /* libgobject-2.0.0.dylib in Resources */,
+				4E6FC29515B8F413007910D0 /* libpangoft2-1.0.0.dylib in Resources */,
 				4E38440B1449BACD001DF47A /* libgthread-2.0.0.dylib in Resources */,
 				4E3844031449999E001DF47A /* libpango-1.0.0.dylib in Resources */,
 				4E3844141449C7FE001DF47A /* libgmodule-2.0.0.dylib in Resources */,
 				4E3844041449999E001DF47A /* libpangocairo-1.0.0.dylib in Resources */,
+				4E6FC29615B8F421007910D0 /* libpng15.15.dylib in Resources */,
+				4E6FC29715B8F426007910D0 /* libffi.5.dylib in Resources */,
+				4E6FC29815B8F45B007910D0 /* libboost_thread-mt.dylib in Resources */,
 				4E3844051449999E001DF47A /* libpixman-1.0.dylib in Resources */,
 				4E3844081449B68D001DF47A /* libiconv.2.dylib in Resources */,
 				4E38440E1449C04E001DF47A /* libintl.8.dylib in Resources */,
