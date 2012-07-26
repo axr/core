@@ -52,5 +52,6 @@
 //#include "HSSFloorFunction.h"
 //#include "HSSCeilFunction.h"
 //#include "HSSRoundFunction.h"
+#include "HSSAttrFunction.h"
 
 #endif

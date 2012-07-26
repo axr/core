@@ -2562,6 +2562,56 @@ HSSParserNode::p HSSParser::readFunction()
             
             flagFunction->setSelectorChains(selectorChains);
             ret = flagFunction;
+        } else if (name == "attr") {
+            HSSAttrFunction::p attrFunction = HSSAttrFunction::p(new HSSAttrFunction());
+            attrFunction->setController(this->controller);
+            
+            this->readNextToken(true);
+            this->skip(HSSWhitespace, true);
+            this->skipExpected(HSSParenthesisOpen, true);
+            this->skip(HSSWhitespace, true);
+            //read the arguments
+            //first, we expect an identifier
+            if (! this->currentToken->isA(HSSIdentifier)){
+                AXRError::p(new AXRError("HSSParser", "Unexpected token while reading attr function "+name))->raise();
+            } else {
+                attrFunction->setAttributeName(VALUE_TOKEN(this->currentToken)->getString());
+            }
+            
+            this->checkForUnexpectedEndOfSource();
+            this->readNextToken();
+            this->skip(HSSWhitespace, true);
+            //if shorthand notation -- assumes 'of @this'
+            std::vector<HSSSelectorChain::p> selectorChains;
+            if(this->currentToken->isA(HSSParenthesisClose)){
+                HSSSelectorChain::p selectorChain;
+                selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
+                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector());
+                newSs->setName(HSSThisSelector::p(new HSSThisSelector()));
+                selectorChain->add(newSs);
+                selectorChains.push_back(selectorChain);
+                this->readNextToken(true);
+                this->skip(HSSWhitespace, true);
+                
+            } else {
+                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of"){
+                    AXRError::p(new AXRError("HSSParser", "Unexpected token while reading attr function "+name))->raise();
+                }
+                this->checkForUnexpectedEndOfSource();
+                this->readNextToken(true);
+                this->skipExpected(HSSWhitespace, true);
+                
+                
+                //now read the selector chain
+                selectorChains = this->readSelectorChains(HSSParenthesisClose);
+                //we expect the closing parenthesis here
+                this->skipExpected(HSSParenthesisClose, true);
+                //skip any whitespace
+                this->skip(HSSWhitespace, true);
+            }
+            
+            attrFunction->setSelectorChains(selectorChains);
+            ret = attrFunction;
             
         } else if (name == "min") {
             

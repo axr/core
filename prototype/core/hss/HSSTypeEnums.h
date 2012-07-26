@@ -242,7 +242,8 @@ namespace AXR
         HSSFunctionTypeFlag, /**< Activates the given flag on the selected elements. */
         HSSFunctionTypeUnflag, /**< Deactivates the given flag on the selected elements. */
         HSSFunctionTypeToggleFlag, /**< Toggles the given flag on the selected elements. */
-        HSSFunctionTypeCustom /**< A function whose name has been registered on the core with a callback. */
+        HSSFunctionTypeCustom, /**< A function whose name has been registered on the core with a callback. */
+        HSSFunctionTypeAttr, /**< Returns a value from an attribute of an XML element. */
     };
     /** @} */
 
