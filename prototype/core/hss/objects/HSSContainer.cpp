@@ -262,6 +262,12 @@ void HSSContainer::remove(unsigned index)
     this->notifyObservers(HSSObservablePropertyTreeChange, this);
 }
 
+void HSSContainer::clear()
+{
+    this->children.clear();
+    this->allChildren.clear();
+}
+
 void HSSContainer::resetChildrenIndexes()
 {
     unsigned i,size;

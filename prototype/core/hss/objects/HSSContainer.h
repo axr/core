@@ -158,6 +158,11 @@ namespace AXR {
         void remove(unsigned index);
         
         /**
+         *  Removes all children from this container.
+         */
+        void clear();
+        
+        /**
          *  Recalculate the index of each child, to be called after the list of children has
          *  been altered.
          */
