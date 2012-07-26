@@ -183,7 +183,11 @@ namespace AXR
          *  stored.
          */
         virtual std::string getPathToResources() = 0;
-        
+
+		/**
+		 */
+        virtual std::string getPathToTestsFile();
+
         bool showLayoutSteps();
         void setShowLayoutSteps(bool value);
         void previousLayoutStep();

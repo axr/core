@@ -274,6 +274,14 @@ bool AXRWrapper::layoutChildDone()
     return this->_currentLayoutTick >= this->_currentLayoutChild+1;
 }
 
+std::string AXRWrapper::getPathToTestsFile()
+{
+	std::string filePath;
+	this->openFileDialog(filePath);
+
+	return filePath;
+}
+
 void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
 {
     HSSContainer::p status;
@@ -290,15 +298,10 @@ void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
             status = HSSContainer::asContainer(innerSelection[0]);
         }
     }
-    
-    //ask for a file path
-    std::string filePath;
-	bool result = this->openFileDialog(filePath);
-    if(result){
-        boost::thread thrd(AXRTestThread(this, filePath, status));
-        //        thrd.join();
-        
-    }
+
+    std::string filePath = this->getPathToTestsFile();
+    boost::thread thrd(AXRTestThread(this, filePath, status));
+    //        thrd.join();
 }
 
 AXRTestThread::AXRTestThread(AXRWrapper * wrapper, std::string filePath, HSSContainer::p status)
