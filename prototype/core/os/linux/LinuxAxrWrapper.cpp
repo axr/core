@@ -187,6 +187,6 @@ std::string LinuxAxrWrapper::getPathToResources()
 		path = path.substr(0,t);
 	}
 
-	return path + std::string("/rsrc");
+	return path + std::string("/resources");
 }
 

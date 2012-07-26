@@ -1,6 +1,7 @@
 #!/bin/bash
 
 version="$1"
+base=$(pwd)
 
 if [ -z $version ]; then
 	version=$(git rev-parse --verify HEAD)-$(git branch | grep "*" | sed "s/* //")
@@ -14,36 +15,36 @@ get_tutorial ()
 	tutorial="$temp/Tutorials/000_tutorial_html/"
 }
 
+get_arch ()
+{
+	if [[ $(file $base/../axr) =~ 64-bit ]]; then
+		echo "x86-64"
+	else
+		echo "x86"
+	fi
+}
+
 package ()
 {
 	mkdir ./package/
 
-	cp ./axr_$1 ./package/
+	cp ../axr ./package/
 	cp -r ../tests/ ./package/
 	cp -r "$tutorial" ./package/tutorial
+	cp -r ../resources/ ./package/resources
 
 	cd ./package/
-	tar -czf ../axr_${version}_linux_$2.tar.gz ./*
+	tar -czf ../axr_${version}_linux_$(get_arch).tar.gz ./*
 
 	cd ..
 	rm -rf ./package
 }
 
-echo "Packaging AXR protptype version $version"
+echo "Packaging AXR prototype version $version for $(get_arch)"
 
 echo "Cloning the tutorial from Extras repo..."
 get_tutorial
 
-# Build resources directory
-./build_rsrc.sh
-
-if [ -f ./axr_64 ]; then
-	echo "x86-64 build found. Packaging..."
-	package "64" "x86-64"
-fi
-
-if [ -f ./axr_32 ]; then
-	echo "x86 build found. Packaging..."
-	package "32" "x86"
-fi
+echo "Packaging..."
+package
 

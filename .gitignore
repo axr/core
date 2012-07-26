@@ -1,13 +1,13 @@
 # Exclude the build directory
 build/*
- 
+
 # Exclude temp nibs and swap files
 *~.nib
 *.swp
- 
+
 # Exclude OS X folder attributes
 .DS_Store
- 
+
 # Exclude user-specific XCode 3 and 4 files
 *.mode1
 *.mode1v3
@@ -18,6 +18,15 @@ build/*
 *.xcworkspace
 xcuserdata
 
-# Linux binaries
-/prototype/linux/axr_64
-/prototype/linux/axr_32
+# Binaries and object files
+/prototype/axr
+*.a
+*.o
+
+# Cmake
+CMakeCache.txt
+cmake_install.cmake
+CMakeFiles/
+/prototype/Makefile
+/prototype/core/Makefile
+
