@@ -259,6 +259,7 @@ bool HSSObject::isFunction(std::string value, std::string property)
        || value == "flag"
        || value == "unflag"
        || value == "toggleFlag"
+       || value == "attr"
     ){
         return true;
     } else {
