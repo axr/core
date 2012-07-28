@@ -144,6 +144,22 @@ HSSContainer::~HSSContainer()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: destructing container");
     this->children.clear();
     this->allChildren.clear();
+    
+    if (this->observedContentAlignX != NULL) {
+        this->observedContentAlignX->removeObserver(this->observedContentAlignXProperty, HSSObservablePropertyAlignX, this);
+    }
+    if (this->observedContentAlignY != NULL) {
+        this->observedContentAlignY->removeObserver(this->observedContentAlignYProperty, HSSObservablePropertyAlignY, this);
+    }
+    if (this->observedDirectionPrimary != NULL) {
+        this->observedDirectionPrimary->removeObserver(this->observedDirectionPrimaryProperty, HSSObservablePropertyDirectionPrimary, this);
+    }
+    if (this->observedDirectionSecondary != NULL) {
+        this->observedDirectionSecondary->removeObserver(this->observedDirectionSecondaryProperty, HSSObservablePropertyDirectionSecondary, this);
+    }
+    if (this->observedShape != NULL) {
+        this->observedShape->removeObserver(this->observedShapeProperty, HSSObservablePropertyShape, this);
+    }
 }
 
 std::string HSSContainer::toString()
