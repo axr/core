@@ -1202,9 +1202,6 @@ void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
         throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for anchorX of "+this->getElementName()));
     
     this->notifyObservers(HSSObservablePropertyAnchorX, &this->anchorX);
-#if AXR_DEBUG_LEVEL > 0
-    this->setDirty(true);
-#endif
 }
 
 void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
@@ -1249,9 +1246,6 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
     }
     
     this->notifyObservers(HSSObservablePropertyAnchorX, &this->anchorX);
-#if AXR_DEBUG_LEVEL > 0
-    this->setDirty(true);
-#endif
 }
 
 
@@ -1319,9 +1313,6 @@ void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
         throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for anchorY of "+this->getElementName()));
     
     this->notifyObservers(HSSObservablePropertyAnchorY, &this->anchorY);
-#if AXR_DEBUG_LEVEL > 0
-    this->setDirty(true);
-#endif
 }
 
 void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
@@ -1363,9 +1354,6 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
     }
     
     this->notifyObservers(HSSObservablePropertyAnchorY, &this->anchorY);
-#if AXR_DEBUG_LEVEL > 0
-    this->setDirty(true);
-#endif
 }
 
 

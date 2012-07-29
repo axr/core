@@ -2120,9 +2120,6 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
                                             scope
                                             );
         this->notifyObservers(HSSObservablePropertyContentAlignX, &this->contentAlignX);
-        #if AXR_DEBUG_LEVEL > 0
-        this->setDirty(true);
-        #endif
     }
 }
 
@@ -2149,9 +2146,6 @@ void HSSContainer::contentAlignXChanged(HSSObservableProperty source, void *data
     }
     
     this->notifyObservers(HSSObservablePropertyContentAlignX, &this->contentAlignX);
-#if AXR_DEBUG_LEVEL > 0
-    this->setDirty(true);
-#endif
 }
 
 //contentAlignY
@@ -2218,9 +2212,6 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
                                             scope
                                             );
         this->notifyObservers(HSSObservablePropertyContentAlignY, &this->contentAlignY);
-        #if AXR_DEBUG_LEVEL > 0
-        this->setDirty(true);
-        #endif
     }
 }
 
@@ -2247,9 +2238,6 @@ void HSSContainer::contentAlignYChanged(HSSObservableProperty source, void *data
     }
     
     this->notifyObservers(HSSObservablePropertyContentAlignY, &this->contentAlignY);
-#if AXR_DEBUG_LEVEL > 0
-    this->setDirty(true);
-#endif
 }
 
 
