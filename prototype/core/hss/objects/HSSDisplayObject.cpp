@@ -2555,6 +2555,8 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
     
     if(!valid)
         throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for margin of "+this->getElementName()));
+    
+    this->notifyObservers(HSSObservablePropertyMargin, &this->margin);
 }
 
 void HSSDisplayObject::marginChanged(HSSObservableProperty source, void*data)
@@ -2697,6 +2699,8 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
     
     if(!valid)
         throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for padding of "+this->getElementName()));
+    
+    this->notifyObservers(HSSObservablePropertyPadding, &this->padding);
 }
 
 void HSSDisplayObject::paddingChanged(HSSObservableProperty source, void*data)
@@ -2825,6 +2829,8 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
     
     if(!valid)
         throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for border of "+this->getElementName()));
+    
+    this->notifyObservers(HSSObservablePropertyBorder, &this->border);
 }
 
 void HSSDisplayObject::borderChanged(HSSObservableProperty source, void*data)
