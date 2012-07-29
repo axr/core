@@ -1996,22 +1996,49 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
-            if(fnct && fnct->isA(HSSFunctionTypeRef)){
-                HSSContainer::p parent = this->getParent();
-                if(parent){
-                    fnct->setScope(&(parent->getChildren()));
-                } else if(this->isA(HSSObjectTypeContainer)){
-                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
-                    fnct->setScope(&(thisCont->getChildren()));
-                }
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                if(remoteValue){
-                    try {
-                        this->addDContent(remoteValue);
-                        valid = true;
-                    } catch (AXRError::p e) {
-                        e->raise();
+            if(fnct){
+                switch (fnct->getFunctionType()) {
+                    case HSSFunctionTypeRef:
+                    {
+                        HSSContainer::p parent = this->getParent();
+                        if(parent){
+                            fnct->setScope(&(parent->getChildren()));
+                        } else if(this->isA(HSSObjectTypeContainer)){
+                            HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                            fnct->setScope(&(thisCont->getChildren()));
+                        }
+                        HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
+                        if(remoteValue){
+                            try {
+                                this->addDContent(remoteValue);
+                                valid = true;
+                            } catch (AXRError::p e) {
+                                e->raise();
+                            }
+                        }
+                        break;
                     }
+                        
+                    case HSSFunctionTypeAttr:
+                    {
+                        HSSContainer::p parent = this->getParent();
+                        if(parent){
+                            fnct->setScope(&(parent->getChildren()));
+                        } else if(this->isA(HSSObjectTypeContainer)){
+                            HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                            fnct->setScope(&(thisCont->getChildren()));
+                        }
+                        void * remoteValue = fnct->evaluate();
+                        if(remoteValue != NULL){
+                            this->setContentText(*(std::string *)remoteValue);
+                            valid = true;
+                        }
+                        
+                        break;
+                    }
+                        
+                    default:
+                        break;
                 }
             }
             
