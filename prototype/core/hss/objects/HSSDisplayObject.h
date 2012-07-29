@@ -326,6 +326,12 @@ namespace AXR {
         void addDBorder(HSSParserNode::p value);
         void borderChanged(HSSObservableProperty source, void*data);
         
+        //visible
+        const bool getVisible() const;
+        const HSSParserNode::p getDVisible() const;
+        void setDVisible(HSSParserNode::p value);
+        void visibleChanged(HSSObservableProperty source, void*data);
+        
         virtual void setDefaults();
         
         virtual bool handleEvent(HSSEventType, void* data);
@@ -467,6 +473,12 @@ namespace AXR {
         std::vector<HSSBorder::p> border;
         long double borderBleeding;
         
+        //visible
+        HSSParserNode::p dVisible;
+        HSSObservable::p observedVisible;
+        HSSObservableProperty observedVisibleProperty;
+        bool visible;
+        
         long double zoomFactor;
         
         /**
@@ -479,7 +491,6 @@ namespace AXR {
          *  @todo add "animation" property
          */
         
-        bool visible;
         signed int drawIndex;
         unsigned int tabIndex;
         

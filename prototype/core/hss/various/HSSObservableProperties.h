@@ -138,6 +138,7 @@ namespace AXR {
         
         //HSSDisplayObject
         HSSObservablePropertyContent,
+        HSSObservablePropertyVisible,
     };
 }
 

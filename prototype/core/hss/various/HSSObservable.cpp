@@ -49,7 +49,7 @@
 using namespace AXR;
 
 std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property){
-    static std::string types[63];
+    static std::string types[64];
     static bool HSSObservableHasInitializedTypes = false;
     if (!HSSObservableHasInitializedTypes) {
         HSSObservableHasInitializedTypes = true;
@@ -78,6 +78,7 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyPadding] = "HSSObservablePropertyPadding";
         types[HSSObservablePropertyBorder] = "HSSObservablePropertyBorder";
         types[HSSObservablePropertyFlagChanged] = "HSSObservablePropertyFlagChanged";
+        types[HSSObservablePropertyVisible] = "HSSObservablePropertyVisible";
         
         //HSSContainer
         types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
@@ -171,6 +172,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["background"] = HSSObservablePropertyBackground;
         properties["content"] = HSSObservablePropertyContent;
         properties["on"] = HSSObservablePropertyOn;
+        properties["visible"] = HSSObservablePropertyVisible;
         
         //HSSContainer
         properties["contentAlignX"] = HSSObservablePropertyContentAlignX;

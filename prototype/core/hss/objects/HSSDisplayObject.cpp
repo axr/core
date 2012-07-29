@@ -136,6 +136,7 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyFont, (void *) &this->font);
     this->registerProperty(HSSObservablePropertyOn, (void *) &this->on);
     this->registerProperty(HSSObservablePropertyBorder, (void *) &this->border);
+    this->registerProperty(HSSObservablePropertyVisible, (void *) &this->visible);
     
     this->_isHover = false;
     this->_layoutFlagIsInSecondaryGroup = false;
@@ -212,6 +213,9 @@ HSSDisplayObject::~HSSDisplayObject()
     if (this->observedBorder != NULL) {
         this->observedBorder->removeObserver(this->observedBorderProperty, HSSObservablePropertyBorder, this);
     }
+    if (this->observedVisible) {
+        this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
+    }
     cairo_surface_destroy(this->backgroundSurface);
     cairo_surface_destroy(this->foregroundSurface);
     cairo_surface_destroy(this->bordersSurface);
@@ -278,7 +282,7 @@ bool HSSDisplayObject::isKeyword(std::string value, std::string property)
             ){
             return true;
         }
-    } else if (property == "flow" || property == "overflow") {
+    } else if (property == "flow" || property == "overflow" || property == "visible") {
         if (value == "yes" || value == "no"){
             return true;
         }
@@ -614,6 +618,9 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
         case HSSObservablePropertyBorder:
             this->setDBorder(value);
             break;
+        case HSSObservablePropertyVisible:
+            this->setDVisible(value);
+            break;
             
         default:
             HSSObject::setProperty(name, value);
@@ -764,13 +771,15 @@ void HSSDisplayObject::draw(cairo_t * cairo)
         }
     }
     
-    cairo_set_source_surface(cairo, this->backgroundSurface, this->globalX, this->globalY);
-    cairo_paint(cairo);
-    cairo_set_source_surface(cairo, this->foregroundSurface, this->globalX, this->globalY);
-    cairo_paint(cairo);
-    if(this->border.size() > 0){
-        cairo_set_source_surface(cairo, this->bordersSurface, this->globalX - this->borderBleeding, this->globalY - this->borderBleeding);
+    if(this->visible){
+        cairo_set_source_surface(cairo, this->backgroundSurface, this->globalX, this->globalY);
         cairo_paint(cairo);
+        cairo_set_source_surface(cairo, this->foregroundSurface, this->globalX, this->globalY);
+        cairo_paint(cairo);
+        if(this->border.size() > 0){
+            cairo_set_source_surface(cairo, this->bordersSurface, this->globalX - this->borderBleeding, this->globalY - this->borderBleeding);
+            cairo_paint(cairo);
+        }
     }
 }
 
@@ -2804,6 +2813,105 @@ void HSSDisplayObject::borderChanged(HSSObservableProperty source, void*data)
     
 }
 
+const bool HSSDisplayObject::getVisible() const { return this->visible; }
+const HSSParserNode::p HSSDisplayObject::getDVisible() const { return this->dVisible; }
+void HSSDisplayObject::setDVisible(HSSParserNode::p value)
+{
+    this->dVisible = value;
+    bool valid = false;
+    switch (value->getType()) {
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
+            if(fnct && fnct->isA(HSSFunctionTypeRef)){
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    fnct->setScope(&(parent->getChildren()));
+                } else if(this->isA(HSSObjectTypeContainer)){
+                    HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                    fnct->setScope(&(thisCont->getChildren()));
+                }
+                void * remoteValue = fnct->evaluate();
+                if(remoteValue != NULL){
+                    this->visible = *(bool *) remoteValue;
+                    valid = true;
+                    if(this->observedVisible){
+                        this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
+                    }
+                    fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyVisible, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::visibleChanged));
+                    this->observedVisible = fnct;
+                    this->observedVisibleProperty = HSSObservablePropertyValue;
+                }
+            }
+            
+            break;
+        }
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
+            if(kwValue == "inherit"){
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    void * remoteValue = parent->getProperty(HSSObservablePropertyVisible);
+                    if(remoteValue != NULL){
+                        this->visible = *(bool *) remoteValue;
+                    }
+                    if(this->observedVisible){
+                        this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
+                    }
+                    parent->observe(HSSObservablePropertyVisible, HSSObservablePropertyVisible, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::visibleChanged));
+                    this->observedVisible = parent;
+                    this->observedVisibleProperty = HSSObservablePropertyVisible;
+                    
+                } else {
+                    if(this->observedVisible){
+                        this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
+                        this->observedVisible.reset();
+                    }
+                    this->visible = true;
+                }
+                
+                valid = true;
+            } else if (kwValue == "yes" || kwValue == "no"){
+                if(this->observedVisible){
+                    this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
+                    this->observedVisible.reset();
+                }
+                this->visible = (kwValue == "yes");
+                valid = true;
+            }
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    if(!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for visible of "+this->getElementName()));
+    
+    this->notifyObservers(HSSObservablePropertyVisible, &this->visible);
+}
+
+void HSSDisplayObject::visibleChanged(HSSObservableProperty source, void*data)
+{
+    HSSParserNodeType nodeType = this->dVisible->getType();
+    switch (nodeType) {
+        case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            this->visible = *(bool *) data;
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    this->notifyObservers(HSSObservablePropertyVisible, &this->visible);
+}
+
 
 //defaults
 void HSSDisplayObject::setDefaults()
@@ -2841,6 +2949,9 @@ void HSSDisplayObject::setDefaults()
     //border
     HSSKeywordConstant::p newDBorder(new HSSKeywordConstant("none"));
     this->setDBorder(newDBorder);
+    //visible
+    HSSKeywordConstant::p newDVisible(new HSSKeywordConstant("inherit"));
+    this->setDVisible(newDVisible);
 }
 
 
