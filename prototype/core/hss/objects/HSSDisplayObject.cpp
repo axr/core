@@ -728,7 +728,7 @@ bool HSSDisplayObject::needsSurface()
 
 void HSSDisplayObject::setDirty(bool value)
 {
-    //std_log1("setting "+this->name+" dirty");
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: setting dirty on "+this->elementName);
     this->_isDirty = value;
 }
 
