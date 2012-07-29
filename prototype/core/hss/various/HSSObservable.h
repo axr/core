@@ -64,6 +64,8 @@ namespace AXR {
     {
     public:
         
+        typedef boost::shared_ptr<HSSObservable> p;
+        
         /**
          *  When logging, for example, it is useful to be able to show a string representation of a
          *  HSSObservableProperty representation.

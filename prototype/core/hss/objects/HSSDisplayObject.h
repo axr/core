@@ -391,12 +391,12 @@ namespace AXR {
         ;
         //width
         HSSParserNode::p dWidth;
-        HSSObservable * observedWidth;
+        HSSObservable::p observedWidth;
         HSSObservableProperty observedWidthProperty;
         //height
         HSSParserNode::p dHeight;
         bool heightByContent;
-        HSSObservable * observedHeight;
+        HSSObservable::p observedHeight;
         HSSObservableProperty observedHeightProperty;
         
         /**
@@ -407,13 +407,13 @@ namespace AXR {
         HSSParserNode::p dAnchorX;
         long double anchorX;
         bool _anchorXdefault;
-        HSSObservable * observedAnchorX;
+        HSSObservable::p observedAnchorX;
         HSSObservableProperty observedAnchorXProperty;
         //anchorY
         HSSParserNode::p dAnchorY;
         long double anchorY;
         bool _anchorYdefault;
-        HSSObservable * observedAnchorY;
+        HSSObservable::p observedAnchorY;
         HSSObservableProperty observedAnchorYProperty;
         //flow
         HSSParserNode::p dFlow;
@@ -425,50 +425,50 @@ namespace AXR {
         //alignX
         HSSParserNode::p dAlignX;
         long double alignX;
-        HSSObservable * observedAlignX;
+        HSSObservable::p observedAlignX;
         HSSObservableProperty observedAlignXProperty;
         //alignY
         HSSParserNode::p dAlignY;
         long double alignY;
-        HSSObservable * observedAlignY;
+        HSSObservable::p observedAlignY;
         HSSObservableProperty observedAlignYProperty;
         //background
         HSSParserNode::p dBackground;
-        HSSObservable * observedBackground;
+        HSSObservable::p observedBackground;
         HSSObservableProperty observedBackgroundProperty;
         std::vector<HSSObject::p> background;
         //content
         HSSParserNode::p dContent;
-        HSSObservable * observedContent;
+        HSSObservable::p observedContent;
         HSSObservableProperty observedContentProperty;
         std::vector<HSSObject::p> content;
         //font
         HSSParserNode::p dFont;
-        HSSObservable * observedFont;
+        HSSObservable::p observedFont;
         HSSObservableProperty observedFontProperty;
         std::vector<HSSFont::p> font;
         
         //on
         HSSParserNode::p dOn;
-        HSSObservable * observedOn;
+        HSSObservable::p observedOn;
         HSSObservableProperty observedOnProperty;
         boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > on;
         
         //margin
         HSSParserNode::p dMargin;
-        HSSObservable * observedMargin;
+        HSSObservable::p observedMargin;
         HSSObservableProperty observedMarginProperty;
         std::vector<HSSMargin::p> margin;
         
         //padding
         HSSParserNode::p dPadding;
-        HSSObservable * observedPadding;
+        HSSObservable::p observedPadding;
         HSSObservableProperty observedPaddingProperty;
         std::vector<HSSMargin::p> padding;
         
         //border
         HSSParserNode::p dBorder;
-        HSSObservable * observedBorder;
+        HSSObservable::p observedBorder;
         HSSObservableProperty observedBorderProperty;
         std::vector<HSSBorder::p> border;
         long double borderBleeding;
@@ -515,9 +515,9 @@ namespace AXR {
                                    HSSParserNode::p         value,
                                    long double              percentageBase,
                                    HSSObservableProperty    observedProperty,
-                                   HSSObservable *          observedObject,
+                                   HSSObservable::p          observedObject,
                                    HSSObservableProperty    observedSourceProperty,
-                                   HSSObservable *          &observedStore,
+                                   HSSObservable::p          &observedStore,
                                    HSSObservableProperty    &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );

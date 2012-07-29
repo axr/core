@@ -113,14 +113,6 @@ void HSSDisplayObject::initialize()
     this->elementName = std::string();
     this->contentText = std::string();
     
-    this->observedWidth = this->observedHeight
-    = this->observedAnchorX = this->observedAnchorY
-    = this->observedAlignX = this->observedAlignY
-    = this->observedBackground = this->observedContent = this->observedFont
-    = this->observedBorder = this->observedOn
-    = this->observedMargin = this->observedPadding
-    = NULL;
-    
     this->borderBleeding = 0.;
     
     this->registerProperty(HSSObservablePropertyAlignX, (void *) &this->alignX);
@@ -174,43 +166,43 @@ HSSClonable::p HSSDisplayObject::cloneImpl() const{
 HSSDisplayObject::~HSSDisplayObject()
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, std::string("destroying display object with name ").append(this->name));
-    if (this->observedWidth != NULL) {
+    if (this->observedWidth) {
         this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
     }
-    if (this->observedHeight != NULL) {
+    if (this->observedHeight) {
         this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
     }
-    if (this->observedAnchorX != NULL) {
+    if (this->observedAnchorX) {
         this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
     }
-    if (this->observedAnchorY != NULL) {
+    if (this->observedAnchorY) {
         this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
     }
-    if (this->observedAlignX != NULL) {
+    if (this->observedAlignX) {
         this->observedAlignX->removeObserver(this->observedAlignXProperty, HSSObservablePropertyAlignX, this);
     }
-    if (this->observedAlignY != NULL) {
+    if (this->observedAlignY) {
         this->observedAlignY->removeObserver(this->observedAlignYProperty, HSSObservablePropertyAlignY, this);
     }
-    if (this->observedBackground != NULL) {
+    if (this->observedBackground) {
         this->observedBackground->removeObserver(this->observedBackgroundProperty, HSSObservablePropertyBackground, this);
     }
-    if (this->observedContent != NULL) {
+    if (this->observedContent) {
         this->observedContent->removeObserver(this->observedContentProperty, HSSObservablePropertyContent, this);
     }
-    if (this->observedFont != NULL) {
+    if (this->observedFont) {
         this->observedFont->removeObserver(this->observedFontProperty, HSSObservablePropertyFont, this);
     }
-    if (this->observedOn != NULL) {
+    if (this->observedOn) {
         this->observedOn->removeObserver(this->observedOnProperty, HSSObservablePropertyOn, this);
     }
-    if (this->observedMargin != NULL) {
+    if (this->observedMargin) {
         this->observedMargin->removeObserver(this->observedMarginProperty, HSSObservablePropertyMargin, this);
     }
-    if (this->observedPadding != NULL) {
+    if (this->observedPadding) {
         this->observedPadding->removeObserver(this->observedPaddingProperty, HSSObservablePropertyPadding, this);
     }
-    if (this->observedBorder != NULL) {
+    if (this->observedBorder) {
         this->observedBorder->removeObserver(this->observedBorderProperty, HSSObservablePropertyBorder, this);
     }
     if (this->observedVisible) {
@@ -959,7 +951,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
     } else {
         
         HSSObservableProperty observedProperty = HSSObservablePropertyInnerWidth;
-        if(this->observedWidth != NULL)
+        if(this->observedWidth)
         {
             this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
         }
@@ -971,7 +963,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
                                                value,
                                                parentContainer->innerWidth,
                                                observedProperty,
-                                               parentContainer.get(),
+                                               parentContainer,
                                                HSSObservablePropertyWidth,
                                                this->observedWidth,
                                                this->observedWidthProperty,
@@ -983,7 +975,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
                                                value,
                                                0,
                                                observedProperty,
-                                               this,
+                                               this->shared_from_this(),
                                                HSSObservablePropertyWidth,
                                                this->observedWidth,
                                                this->observedWidthProperty,
@@ -1060,10 +1052,10 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
     } else {
         HSSObservableProperty observedProperty = HSSObservablePropertyInnerHeight;
         
-        if(this->observedHeight != NULL)
+        if(this->observedHeight)
         {
             this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
-            this->observedHeight = NULL;
+            this->observedHeight.reset();
         }
         this->dHeight = value;
         this->heightByContent = false;
@@ -1075,7 +1067,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
                                                 value,
                                                 parentContainer->innerHeight,
                                                 observedProperty,
-                                                parentContainer.get(),
+                                                parentContainer,
                                                 HSSObservablePropertyHeight,
                                                 this->observedHeight,
                                                 this->observedHeightProperty,
@@ -1087,7 +1079,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
                                                 value,
                                                 150,
                                                 observedProperty,
-                                                this,
+                                                this->shared_from_this(),
                                                 HSSObservablePropertyHeight,
                                                 this->observedHeight,
                                                 this->observedHeightProperty,
@@ -1161,7 +1153,7 @@ void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
-            if(this->observedAnchorX != NULL)
+            if(this->observedAnchorX)
             {
                 this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
             }
@@ -1177,7 +1169,7 @@ void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
                                                  value,
                                                  this->width,
                                                  observedProperty,
-                                                 this,
+                                                 this->shared_from_this(),
                                                  HSSObservablePropertyAnchorX,
                                                  this->observedAnchorX,
                                                  this->observedAnchorXProperty,
@@ -1190,7 +1182,7 @@ void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
             
         case HSSParserNodeTypeKeywordConstant:
         {
-            if(this->observedAnchorX != NULL)
+            if(this->observedAnchorX)
             {
                 this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
             }
@@ -1272,7 +1264,7 @@ void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
         case HSSParserNodeTypeFunctionCall:
         {
             HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
-            if(this->observedAnchorY != NULL)
+            if(this->observedAnchorY)
             {
                 this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
             }
@@ -1288,7 +1280,7 @@ void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
                                                  value,
                                                  this->width,
                                                  observedProperty,
-                                                 this,
+                                                 this->shared_from_this(),
                                                  HSSObservablePropertyAnchorY,
                                                  this->observedAnchorY,
                                                  this->observedAnchorYProperty,
@@ -1301,7 +1293,7 @@ void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
             
         case HSSParserNodeTypeKeywordConstant:
         {
-            if(this->observedAnchorY != NULL)
+            if(this->observedAnchorY)
             {
                 this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
             }
@@ -1617,10 +1609,10 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
             throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for alignX of "+this->getElementName()));
     }
     
-    if(this->observedAlignX != NULL)
+    if(this->observedAlignX)
     {
         this->observedAlignX->removeObserver(this->observedAlignXProperty, HSSObservablePropertyAlignX, this);
-        this->observedAlignX = NULL;
+        this->observedAlignX.reset();
     }
     this->dAlignX = value;
     
@@ -1632,7 +1624,7 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
             if(parentContainer){
                 this->alignX = parentContainer->contentAlignX;
                 parentContainer->observe(HSSObservablePropertyContentAlignX, HSSObservablePropertyAlignX, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignXChanged));
-                this->observedAlignX = parentContainer.get();
+                this->observedAlignX = parentContainer;
                 this->observedAlignXProperty = HSSObservablePropertyContentAlignX;
             } else {
                 this->alignX = 0;
@@ -1658,7 +1650,7 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
                                                value,
                                                parentContainer->width,
                                                observedProperty,
-                                               parentContainer.get(),
+                                               parentContainer,
                                                HSSObservablePropertyAlignX,
                                                this->observedAlignX,
                                                this->observedAlignXProperty,
@@ -1671,7 +1663,7 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
                                                value,
                                                0,
                                                observedProperty,
-                                               this,
+                                               this->shared_from_this(),
                                                HSSObservablePropertyAlignX,
                                                this->observedAlignX,
                                                this->observedAlignXProperty,
@@ -1734,10 +1726,10 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
             throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for alignY of "+this->getElementName()));
     }
     
-    if(this->observedAlignY != NULL)
+    if(this->observedAlignY)
     {
         this->observedAlignY->removeObserver(this->observedAlignYProperty, HSSObservablePropertyAlignY, this);
-        this->observedAlignY = NULL;
+        this->observedAlignY.reset();
     }
     this->dAlignY = value;
     
@@ -1749,7 +1741,7 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
             if(parentContainer){
                 this->alignY = parentContainer->contentAlignY;
                 parentContainer->observe(HSSObservablePropertyContentAlignY, HSSObservablePropertyAlignY, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignYChanged));
-                this->observedAlignY = parentContainer.get();
+                this->observedAlignY = parentContainer;
                 this->observedAlignYProperty = HSSObservablePropertyContentAlignY;
             } else {
                 this->alignY = 0;
@@ -1774,7 +1766,7 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
                                                 value,
                                                 parentContainer->height,
                                                 observedProperty,
-                                                parentContainer.get(),
+                                                parentContainer,
                                                 HSSObservablePropertyAlignY,
                                                 this->observedAlignY,
                                                 this->observedAlignYProperty,
@@ -1787,7 +1779,7 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
                                                value,
                                                0,
                                                observedProperty,
-                                               this,
+                                               this->shared_from_this(),
                                                HSSObservablePropertyAlignY,
                                                this->observedAlignY,
                                                this->observedAlignYProperty,
@@ -2166,7 +2158,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
         {
             std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
             if(kwValue == "inherit"){
-                if(this->observedFont != NULL){
+                if(this->observedFont){
                     this->observedFont->removeObserver(this->observedFontProperty, HSSObservablePropertyFont, this);
                 }
                 HSSContainer::p parent = this->getParent();
@@ -2960,9 +2952,9 @@ long double HSSDisplayObject::_setLDProperty(
                                              HSSParserNode::p       value,
                                              long double            percentageBase,
                                              HSSObservableProperty  observedProperty,
-                                             HSSObservable *        observedObject,
+                                             HSSObservable::p        observedObject,
                                              HSSObservableProperty  observedSourceProperty,
-                                             HSSObservable *        &observedStore,
+                                             HSSObservable::p        &observedStore,
                                              HSSObservableProperty  &observedStoreProperty,
                                              const std::vector<HSSDisplayObject::p> * scope
                                              )
@@ -2975,7 +2967,7 @@ long double HSSDisplayObject::_setLDProperty(
         {
             HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant>(value);
             ret = numberValue->getValue();
-            observedStore = NULL;
+            observedStore.reset();
             break;
         }
             
@@ -2996,16 +2988,16 @@ long double HSSDisplayObject::_setLDProperty(
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
             expressionValue->setPercentageBase(percentageBase);
-            expressionValue->setPercentageObserved(observedProperty, observedObject);
+            expressionValue->setPercentageObserved(observedProperty, observedObject.get());
             expressionValue->setScope(scope);
             expressionValue->setThisObj(this->shared_from_this());
             ret = expressionValue->evaluate();
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject>(this, callback));
-                observedStore = expressionValue.get();
+                observedStore = expressionValue;
                 observedStoreProperty = HSSObservablePropertyValue;
             } else {
-                observedStore = NULL;
+                observedStore.reset();
             }
             
             break;
@@ -3019,17 +3011,17 @@ long double HSSDisplayObject::_setLDProperty(
         {
             HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
             fnct->setPercentageBase(percentageBase);
-            fnct->setPercentageObserved(observedProperty, observedObject);
+            fnct->setPercentageObserved(observedProperty, observedObject.get());
             fnct->setScope(scope);
             fnct->setThisObj(this->shared_from_this());
             
             ret = *(long double*)fnct->evaluate();
             if(callback != NULL){
                 fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject>(this, callback));
-                observedStore = fnct.get();
+                observedStore = fnct;
                 observedStoreProperty = HSSObservablePropertyValue;
             } else {
-                observedStore = NULL;
+                observedStore.reset();
             }
             break;
         }
