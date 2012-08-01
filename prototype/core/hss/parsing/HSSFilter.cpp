@@ -129,6 +129,8 @@ HSSFilterType HSSFilter::filterTypeFromString(std::string name)
         //special
         filterTypes["each"] = HSSFilterTypeEach;
         filterTypes["custom"] = HSSFilterTypeCustom;
+        //index
+        filterTypes["firstChild"] = HSSFilterTypeFirstChild;
     }
     
     
@@ -153,6 +155,12 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
         case HSSFilterTypeFirst:
         {
             ret = HSSFirstFilter::p(new HSSFirstFilter());
+            break;
+        }
+            
+        case HSSFilterTypeFirstChild:
+        {
+            ret = HSSFirstChildFilter::p(new HSSFirstChildFilter());
             break;
         }
             

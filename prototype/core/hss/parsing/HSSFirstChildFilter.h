@@ -41,12 +41,40 @@
  *
  ********************************************************************/
 
-#ifndef HSSFILTERS_H
-#define HSSFILTERS_H
+#ifndef HSSFIRSTCHILDFILTER_H
+#define HSSFIRSTCHILDFILTER_H
 
-#include "HSSParentFilter.h"
-#include "HSSFirstFilter.h"
-#include "HSSLastFilter.h"
-#include "HSSFirstChildFilter.h"
+#include "HSSFilter.h"
+
+namespace AXR {
+    /**
+     *  @brief Selects the first element of the selection.
+     */
+    class HSSFirstChildFilter : public HSSFilter
+    {
+    public:        
+        /**
+         *  @brief Creates a new instance of a \@first filter.
+         */
+        HSSFirstChildFilter();
+        
+        /**
+         *  Clones an instance of HSSFirstChildFilter and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSFirstChildFilter
+         */
+        HSSFilter::p clone() const;
+        
+        /**
+         *  Destructor for this class.
+         */
+        virtual ~HSSFirstChildFilter();
+        virtual std::string toString();
+        
+        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
+    private:
+        virtual HSSClonable::p cloneImpl() const;
+    };
+}
 
 #endif

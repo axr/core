@@ -219,7 +219,7 @@ namespace AXR
          */
         HSSFilterTypeCustom, /**< Selects elements filtering according to a custom filter by the author. */
         HSSFilterTypeFlag, /**< Flags are named bits that can be turned on and off, either by the system or by the user. */
-        
+        HSSFilterTypeFirstChild, /**< Selects the elements from the selection that are first child in each parent. */
     };
     /** @} */
 

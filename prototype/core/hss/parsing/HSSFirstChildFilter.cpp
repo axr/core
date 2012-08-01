@@ -41,12 +41,50 @@
  *
  ********************************************************************/
 
-#ifndef HSSFILTERS_H
-#define HSSFILTERS_H
-
-#include "HSSParentFilter.h"
-#include "HSSFirstFilter.h"
-#include "HSSLastFilter.h"
 #include "HSSFirstChildFilter.h"
 
-#endif
+using namespace AXR;
+
+HSSFirstChildFilter::HSSFirstChildFilter()
+: HSSFilter(HSSFilterTypeFirst)
+{
+    
+}
+
+HSSFirstChildFilter::p HSSFirstChildFilter::clone() const{
+    return boost::static_pointer_cast<HSSFirstChildFilter, HSSClonable>(this->cloneImpl());
+}
+
+HSSFirstChildFilter::~HSSFirstChildFilter()
+{
+    
+}
+
+std::string HSSFirstChildFilter::toString()
+{
+    return "First Child Filter";
+}
+
+
+const std::vector<HSSDisplayObject::p> HSSFirstChildFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
+{
+    std::vector<HSSDisplayObject::p> ret;
+    HSSDisplayObject::const_it it;
+    for (it=scope.begin(); it!=scope.end(); it++) {
+        const HSSDisplayObject::p & theDO = *it;
+        if (this->getNegating()) {
+            if(theDO->getIndex() != 0){
+                ret.push_back(theDO);
+            }
+        } else {
+            if(theDO->getIndex() == 0){
+                ret.push_back(theDO);
+            }
+        }
+    }
+    return ret;
+}
+
+HSSClonable::p HSSFirstChildFilter::cloneImpl() const{
+    return HSSClonable::p(new HSSFirstChildFilter(*this));
+}
