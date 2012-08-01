@@ -176,6 +176,14 @@
 		4EC1891B14A6A55A009715F1 /* HSSLinearGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EC1891914A6A55A009715F1 /* HSSLinearGradient.h */; };
 		4EC2B99815C9AA7E0096CEAD /* HSSFirstChildFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EC2B99615C9AA7E0096CEAD /* HSSFirstChildFilter.cpp */; };
 		4EC2B99915C9AA7E0096CEAD /* HSSFirstChildFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EC2B99715C9AA7E0096CEAD /* HSSFirstChildFilter.h */; };
+		4EC2B99C15C9B3D00096CEAD /* HSSEvenFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EC2B99A15C9B3D00096CEAD /* HSSEvenFilter.cpp */; };
+		4EC2B99D15C9B3D00096CEAD /* HSSEvenFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EC2B99B15C9B3D00096CEAD /* HSSEvenFilter.h */; };
+		4EC2B9A015C9B5F70096CEAD /* HSSOddFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EC2B99E15C9B5F70096CEAD /* HSSOddFilter.cpp */; };
+		4EC2B9A115C9B5F70096CEAD /* HSSOddFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EC2B99F15C9B5F70096CEAD /* HSSOddFilter.h */; };
+		4EC2B9A515C9B9B40096CEAD /* HSSEvenChildFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EC2B9A315C9B9B30096CEAD /* HSSEvenChildFilter.cpp */; };
+		4EC2B9A615C9B9B40096CEAD /* HSSEvenChildFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EC2B9A415C9B9B30096CEAD /* HSSEvenChildFilter.h */; };
+		4EC2B9A915C9BD660096CEAD /* HSSOddChildFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EC2B9A715C9BD650096CEAD /* HSSOddChildFilter.cpp */; };
+		4EC2B9AA15C9BD660096CEAD /* HSSOddChildFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EC2B9A815C9BD660096CEAD /* HSSOddChildFilter.h */; };
 		4EC5927C14F817C300726AE6 /* HSSFilterType.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EC5927B14F817C200726AE6 /* HSSFilterType.h */; };
 		4ECB84EC1431195B00F112E0 /* HSSFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4ECB84EA1431195B00F112E0 /* HSSFont.cpp */; };
 		4ECB84ED1431195B00F112E0 /* HSSFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 4ECB84EB1431195B00F112E0 /* HSSFont.h */; };
@@ -362,6 +370,14 @@
 		4EC1891914A6A55A009715F1 /* HSSLinearGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSLinearGradient.h; sourceTree = "<group>"; };
 		4EC2B99615C9AA7E0096CEAD /* HSSFirstChildFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFirstChildFilter.cpp; sourceTree = "<group>"; };
 		4EC2B99715C9AA7E0096CEAD /* HSSFirstChildFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFirstChildFilter.h; sourceTree = "<group>"; };
+		4EC2B99A15C9B3D00096CEAD /* HSSEvenFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSEvenFilter.cpp; sourceTree = "<group>"; };
+		4EC2B99B15C9B3D00096CEAD /* HSSEvenFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSEvenFilter.h; sourceTree = "<group>"; };
+		4EC2B99E15C9B5F70096CEAD /* HSSOddFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSOddFilter.cpp; sourceTree = "<group>"; };
+		4EC2B99F15C9B5F70096CEAD /* HSSOddFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSOddFilter.h; sourceTree = "<group>"; };
+		4EC2B9A315C9B9B30096CEAD /* HSSEvenChildFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSEvenChildFilter.cpp; sourceTree = "<group>"; };
+		4EC2B9A415C9B9B30096CEAD /* HSSEvenChildFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSEvenChildFilter.h; sourceTree = "<group>"; };
+		4EC2B9A715C9BD650096CEAD /* HSSOddChildFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSOddChildFilter.cpp; sourceTree = "<group>"; };
+		4EC2B9A815C9BD660096CEAD /* HSSOddChildFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSOddChildFilter.h; sourceTree = "<group>"; };
 		4EC5927B14F817C200726AE6 /* HSSFilterType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFilterType.h; sourceTree = "<group>"; };
 		4ECB84EA1431195B00F112E0 /* HSSFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFont.cpp; sourceTree = "<group>"; };
 		4ECB84EB1431195B00F112E0 /* HSSFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFont.h; sourceTree = "<group>"; };
@@ -613,6 +629,14 @@
 				4EC2B99715C9AA7E0096CEAD /* HSSFirstChildFilter.h */,
 				4EAF9D0C145DC8CB00E92B33 /* HSSLastFilter.cpp */,
 				4EAF9D0D145DC8CB00E92B33 /* HSSLastFilter.h */,
+				4EC2B99A15C9B3D00096CEAD /* HSSEvenFilter.cpp */,
+				4EC2B99B15C9B3D00096CEAD /* HSSEvenFilter.h */,
+				4EC2B9A315C9B9B30096CEAD /* HSSEvenChildFilter.cpp */,
+				4EC2B9A415C9B9B30096CEAD /* HSSEvenChildFilter.h */,
+				4EC2B99E15C9B5F70096CEAD /* HSSOddFilter.cpp */,
+				4EC2B9A715C9BD650096CEAD /* HSSOddChildFilter.cpp */,
+				4EC2B9A815C9BD660096CEAD /* HSSOddChildFilter.h */,
+				4EC2B99F15C9B5F70096CEAD /* HSSOddFilter.h */,
 				4E45B6E015AA12810014EF22 /* HSSParentFilter.cpp */,
 				4E45B6E115AA12810014EF22 /* HSSParentFilter.h */,
 				4E6FC791151A37EC00003DB3 /* HSSFlag.cpp */,
@@ -805,6 +829,10 @@
 				4E0AA51915BEF12B00DBD241 /* HSSParentSelector.h in Headers */,
 				4E7B8CDA15C19543001D2580 /* HSSAttrFunction.h in Headers */,
 				4EC2B99915C9AA7E0096CEAD /* HSSFirstChildFilter.h in Headers */,
+				4EC2B99D15C9B3D00096CEAD /* HSSEvenFilter.h in Headers */,
+				4EC2B9A115C9B5F70096CEAD /* HSSOddFilter.h in Headers */,
+				4EC2B9A615C9B9B40096CEAD /* HSSEvenChildFilter.h in Headers */,
+				4EC2B9AA15C9BD660096CEAD /* HSSOddChildFilter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -945,6 +973,10 @@
 				4E0AA51815BEF12B00DBD241 /* HSSParentSelector.cpp in Sources */,
 				4E7B8CD915C19543001D2580 /* HSSAttrFunction.cpp in Sources */,
 				4EC2B99815C9AA7E0096CEAD /* HSSFirstChildFilter.cpp in Sources */,
+				4EC2B99C15C9B3D00096CEAD /* HSSEvenFilter.cpp in Sources */,
+				4EC2B9A015C9B5F70096CEAD /* HSSOddFilter.cpp in Sources */,
+				4EC2B9A515C9B9B40096CEAD /* HSSEvenChildFilter.cpp in Sources */,
+				4EC2B9A915C9BD660096CEAD /* HSSOddChildFilter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

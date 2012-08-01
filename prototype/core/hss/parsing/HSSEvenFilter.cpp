@@ -41,16 +41,49 @@
  *
  ********************************************************************/
 
-#ifndef HSSFILTERS_H
-#define HSSFILTERS_H
-
-#include "HSSParentFilter.h"
-#include "HSSFirstFilter.h"
-#include "HSSLastFilter.h"
-#include "HSSFirstChildFilter.h"
 #include "HSSEvenFilter.h"
-#include "HSSEvenChildFilter.h"
-#include "HSSOddFilter.h"
-#include "HSSOddChildFilter.h"
 
-#endif
+using namespace AXR;
+
+HSSEvenFilter::HSSEvenFilter()
+: HSSFilter(HSSFilterTypeFirst)
+{
+    
+}
+
+HSSEvenFilter::p HSSEvenFilter::clone() const{
+    return boost::static_pointer_cast<HSSEvenFilter, HSSClonable>(this->cloneImpl());
+}
+
+HSSEvenFilter::~HSSEvenFilter()
+{
+    
+}
+
+std::string HSSEvenFilter::toString()
+{
+    return "Even Filter";
+}
+
+
+const std::vector<HSSDisplayObject::p> HSSEvenFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
+{
+    std::vector<HSSDisplayObject::p> ret;
+    unsigned i, size;
+    for (i=0, size=scope.size(); i<size; i++) {
+        if(this->getNegating()){
+            if(i%2 == 0){
+                ret.push_back(scope[i]);
+            } 
+        } else {
+            if(i%2 != 0){
+                ret.push_back(scope[i]);
+            }
+        }
+    }
+    return ret;
+}
+
+HSSClonable::p HSSEvenFilter::cloneImpl() const{
+    return HSSClonable::p(new HSSEvenFilter(*this));
+}

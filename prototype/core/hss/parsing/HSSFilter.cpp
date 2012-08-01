@@ -131,6 +131,8 @@ HSSFilterType HSSFilter::filterTypeFromString(std::string name)
         filterTypes["custom"] = HSSFilterTypeCustom;
         //index
         filterTypes["firstChild"] = HSSFilterTypeFirstChild;
+        filterTypes["evenChild"] = HSSFilterTypeEvenChild;
+        filterTypes["oddChild"] = HSSFilterTypeOddChild;
     }
     
     
@@ -170,6 +172,29 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
             break;
         }
             
+        case HSSFilterTypeEven:
+        {
+            ret = HSSEvenFilter::p(new HSSEvenFilter());
+            break;
+        }
+            
+        case HSSFilterTypeEvenChild:
+        {
+            ret = HSSEvenChildFilter::p(new HSSEvenChildFilter());
+            break;
+        }
+            
+        case HSSFilterTypeOdd:
+        {
+            ret = HSSOddFilter::p(new HSSOddFilter());
+            break;
+        }
+            
+        case HSSFilterTypeOddChild:
+        {
+            ret = HSSOddChildFilter::p(new HSSOddChildFilter());
+            break;
+        }   
             
 //        case HSSFilterTypeEach:
 //        {
