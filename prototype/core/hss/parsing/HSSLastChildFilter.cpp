@@ -25,7 +25,7 @@
  *            MM,
  *
  * 
- *      AUTHORS: Miro Keller
+ *      AUTHORS: Ragnis Armus
  *      
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
@@ -41,17 +41,51 @@
  *
  ********************************************************************/
 
-#ifndef HSSFILTERS_H
-#define HSSFILTERS_H
-
-#include "HSSParentFilter.h"
-#include "HSSFirstFilter.h"
-#include "HSSLastFilter.h"
-#include "HSSFirstChildFilter.h"
+#include "../objects/HSSContainer.h"
 #include "HSSLastChildFilter.h"
-#include "HSSEvenFilter.h"
-#include "HSSEvenChildFilter.h"
-#include "HSSOddFilter.h"
-#include "HSSOddChildFilter.h"
 
-#endif
+using namespace AXR;
+
+HSSLastChildFilter::HSSLastChildFilter()
+: HSSFilter(HSSFilterTypeLast)
+{
+    
+}
+
+HSSLastChildFilter::p HSSLastChildFilter::clone() const{
+    return boost::static_pointer_cast<HSSLastChildFilter, HSSClonable>(this->cloneImpl());
+}
+
+HSSLastChildFilter::~HSSLastChildFilter()
+{
+    
+}
+
+std::string HSSLastChildFilter::toString()
+{
+    return "Last Child Filter";
+}
+
+const std::vector<HSSDisplayObject::p> HSSLastChildFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
+{
+    std::vector<HSSDisplayObject::p> ret;
+    HSSDisplayObject::const_it it;
+    for (it=scope.begin(); it!=scope.end(); it++) {
+        const HSSDisplayObject::p & theDO = *it;
+        int lastIndex = theDO->getParent()->getChildren().size() - 1;
+        if (this->getNegating()) {
+            if(theDO->getIndex() != lastIndex){
+                ret.push_back(theDO);
+            }
+        } else {
+            if(theDO->getIndex() == lastIndex){
+                ret.push_back(theDO);
+            }
+        }
+    }
+    return ret;
+}
+
+HSSClonable::p HSSLastChildFilter::cloneImpl() const{
+    return HSSClonable::p(new HSSLastChildFilter(*this));
+}
