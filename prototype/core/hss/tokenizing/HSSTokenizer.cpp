@@ -173,6 +173,10 @@ HSSToken::p HSSTokenizer::readNextToken()
 			ret = HSSToken::p(new HSSToken(HSSObjectSign, this->currentLine, this->currentColumn -1));
 			this->readNextChar();
 			return ret;
+        case '&':
+			ret = HSSToken::p(new HSSToken(HSSAmpersand, this->currentLine, this->currentColumn -1));
+			this->readNextChar();
+			return ret;
 		case '{':
 			ret = HSSToken::p(new HSSToken(HSSBlockOpen, this->currentLine, this->currentColumn -1));
 			this->readNextChar();

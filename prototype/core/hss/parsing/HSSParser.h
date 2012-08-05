@@ -126,11 +126,7 @@ namespace AXR {
         /**
          *  If a file is not already loaded, this will set the file on the tokenizer, initialize it
          *  to the beginning of the file and then, until done, loop over all statements found
-         *  in the document and adds it to the parser tree. Also, for a rule, it adds it to the rules list
-         *  on the controller; for an object defnition it recursively adds it  to the object tree on the
-         *  controller as well as copying all the property definitions from the parent to the child rule;
-         *  comments are added to the parser node tree, but skipped otherwise; and for instructions, the only allowed
-         *  statement instruction is #import which will be executed immediately.
+         *  in the document.
          *
          *  @param  file    A shared pointer to the AXRFile representing the HSS file.
          */
@@ -142,10 +138,16 @@ namespace AXR {
          *  based on that. For color instructions, it creates a new object definition on the fly; for
          *  object signs, it reads the object definition; for identifiers, * and combinator symbols,
          *  it reads a rule; and comments are encapsulated and returned.
+         *         
+         *  For a rule, it adds it to the rules list on the controller; for an object defnition it
+         *  recursively adds it  to the object tree on the controller as well as copying all the property
+         *  definitions from the parent to the child rule; comments are added to the parser node tree, but
+         *  skipped otherwise; and for instructions, the only allowed statement instruction is #import which
+         *  will be executed immediately.
          *
-         *  @return A shared pointer to the statement that was read
+         *  @return Wether we arrived at the end of file or not
          */
-        HSSStatement::p readNextStatement();
+        bool readNextStatement();
         
         /**
          *  Reads the selector chain and then the block, looping until the block is closed.
@@ -473,6 +475,7 @@ namespace AXR {
         boost::unordered_set<AXRFile::p> loadedFiles;
         
         HSSContainer::p _genericContextContainer;
+        std::string _lastObjectType;
         
     };
 }

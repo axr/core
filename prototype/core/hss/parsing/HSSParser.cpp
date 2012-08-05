@@ -176,7 +176,7 @@ bool HSSParser::loadFile(AXRFile::p file)
             axr_log(AXR_DEBUG_CH_HSS, "\nHSSParser: reading next statement");
             inc_output_indent();
             
-            statement = this->readNextStatement();
+            done = !this->readNextStatement();
             
             dec_output_indent();
         }
@@ -195,117 +195,6 @@ bool HSSParser::loadFile(AXRFile::p file)
             }
         }
         
-        
-        if(!statement){
-            if (this->atEndOfSource()){
-                axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reached end of source\n\n\n");
-                done = true;
-            }
-            
-        } else {
-            switch (statement->getStatementType()) {
-                case HSSStatementTypeRule:
-                {
-                    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
-                    HSSRule::p theRule = boost::static_pointer_cast<HSSRule>(statement);
-                    this->controller->rulesAdd(theRule);
-                    this->controller->parserTreeAdd(statement);
-                    break; 
-                }
-                    
-                case HSSStatementTypeObjectDefinition:
-                {
-                    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding object definition to object tree");
-                    HSSObjectDefinition::p theObj = boost::static_pointer_cast<HSSObjectDefinition>(statement);
-                    this->recursiveAddObjectDefinition(theObj);
-                    this->controller->parserTreeAdd(statement);
-                    break;
-                }
-                    
-                case HSSStatementTypeComment:
-                {
-                    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding comment to parser tree");
-                    this->controller->parserTreeAdd(statement);
-                    break;
-                }
-                    
-                case HSSStatementTypeInstruction:
-                {
-                    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding comment to parser tree");
-                    HSSInstruction::p theInstr = boost::static_pointer_cast<HSSInstruction>(statement);
-                    switch (theInstr->getInstructionType()) {
-                        case HSSImportInstruction:
-                        {
-                            //save
-                            HSSTokenizer::p currentTokenizer = this->tokenizer;
-                            std::string currentBasepath = this->basepath;
-                            AXRFile::p currentFile = this->currentFile;
-                            unsigned currentLine = this->line;
-                            unsigned currentColumn = this->column;
-                            HSSToken::p currentCurrentToken = this->currentToken;
-                            std::vector<HSSParserContext> currentCurrentContext = this->currentContext;
-                            std::stack<HSSObject::p> currentCurrentObjectContext = this->currentObjectContext;
-                            
-                            //load
-                            this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
-                            this->line = 1;
-                            this->column = 1;
-                            AXRFile::p theFile;
-                            try {
-                                if(theInstr->getValue().substr(0, HSSFRAMEWORK_PROTOCOL_LEN) == HSSFRAMEWORK_PROTOCOL){
-                                    std::string filepath = theInstr->getValue().substr(HSSFRAMEWORK_PROTOCOL_LEN);
-                                    theFile = this->wrapper->getFile("file://"+this->wrapper->getPathToResources()+filepath);
-                                } else {
-                                    theFile = this->wrapper->getFile("file://"+this->basepath+"/"+theInstr->getValue());
-                                }
-                                
-                                if (theFile) {
-                                    this->loadFile(theFile);
-                                }
-                                
-                            } catch (AXRError::p e) {
-                                e->raise();
-                                //restore
-                                this->tokenizer = currentTokenizer;
-                                this->basepath = currentBasepath;
-                                this->currentFile = currentFile;
-                                this->line = currentLine;
-                                this->column = currentColumn;
-                                this->currentToken = currentCurrentToken;
-                                this->currentContext = currentCurrentContext;
-                                this->currentObjectContext = currentCurrentObjectContext;
-                                
-                                break;
-                            }
-                            
-                            
-                            //restore
-                            this->tokenizer = currentTokenizer;
-                            this->basepath = currentBasepath;
-                            this->currentFile = currentFile;
-                            this->line = currentLine;
-                            this->column = currentColumn;
-                            this->currentToken = currentCurrentToken;
-                            this->currentContext = currentCurrentContext;
-                            this->currentObjectContext = currentCurrentObjectContext;
-                            
-                            this->controller->parserTreeAdd(statement);
-                            
-                            break;
-                        }
-                        default:
-                            std_log("Error: Unknown instruction type");
-                            break;
-                    }
-                    break;
-                }
-                
-                default:
-                    std_log("Error: Unknown statement type");
-                    break;
-            }
-        }
-        
         security_brake();
     }
     
@@ -315,9 +204,9 @@ bool HSSParser::loadFile(AXRFile::p file)
     return true;
 }
 
-HSSStatement::p HSSParser::readNextStatement()
+bool HSSParser::readNextStatement()
 {
-    HSSStatement::p ret;
+    bool ret = false;
     //if(this->currentContext.back() == HSSParserContextRoot)
     //{
         //the file was empty
@@ -328,9 +217,9 @@ HSSStatement::p HSSParser::readNextStatement()
         switch (this->currentToken->getType()) {
             case HSSInstructionSign:
             {
-                HSSInstruction::p theinstr = this->readInstruction();
+                HSSInstruction::p theInstr = this->readInstruction();
                 
-                switch (theinstr->getInstructionType()) {
+                switch (theInstr->getInstructionType()) {
                     case HSSGrayscale1Instruction:
                     case HSSGrayscale2Instruction:
                     case HSSRGBInstruction:
@@ -338,13 +227,17 @@ HSSStatement::p HSSParser::readNextStatement()
                     case HSSRGBAInstruction:
                     case HSSRRGGBBAAInstruction:
                     {
-                        HSSObjectDefinition::p objdef = this->getObjectFromInstruction(theinstr);
+                        HSSObjectDefinition::p theObj = this->getObjectFromInstruction(theInstr);
                         this->skip(HSSWhitespace);
                         if(this->currentToken->isA(HSSIdentifier)){
-                            objdef->getObject()->setName(VALUE_TOKEN(this->currentToken)->getString());
+                            theObj->getObject()->setName(VALUE_TOKEN(this->currentToken)->getString());
                             this->readNextToken(true);
                         }
-                        ret = objdef;
+                        
+                        axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding object definition to object tree");
+                        this->recursiveAddObjectDefinition(theObj);
+                        this->controller->parserTreeAdd(theObj);
+                        
                         this->skipExpected(HSSEndOfStatement);
                         if(!this->atEndOfSource()){
                             this->skip(HSSWhitespace);
@@ -353,44 +246,128 @@ HSSStatement::p HSSParser::readNextStatement()
                         break;
                     }
                         
+                    case HSSImportInstruction:
+                    {
+                        //save
+                        HSSTokenizer::p currentTokenizer = this->tokenizer;
+                        std::string currentBasepath = this->basepath;
+                        AXRFile::p currentFile = this->currentFile;
+                        unsigned currentLine = this->line;
+                        unsigned currentColumn = this->column;
+                        HSSToken::p currentCurrentToken = this->currentToken;
+                        std::vector<HSSParserContext> currentCurrentContext = this->currentContext;
+                        std::stack<HSSObject::p> currentCurrentObjectContext = this->currentObjectContext;
+                        
+                        //load
+                        this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
+                        this->line = 1;
+                        this->column = 1;
+                        AXRFile::p theFile;
+                        try {
+                            if(theInstr->getValue().substr(0, HSSFRAMEWORK_PROTOCOL_LEN) == HSSFRAMEWORK_PROTOCOL){
+                                std::string filepath = theInstr->getValue().substr(HSSFRAMEWORK_PROTOCOL_LEN);
+                                theFile = this->wrapper->getFile("file://"+this->wrapper->getPathToResources()+filepath);
+                            } else {
+                                theFile = this->wrapper->getFile("file://"+this->basepath+"/"+theInstr->getValue());
+                            }
+                            
+                            if (theFile) {
+                                this->loadFile(theFile);
+                            }
+                            
+                        } catch (AXRError::p e) {
+                            e->raise();
+                            //restore
+                            this->tokenizer = currentTokenizer;
+                            this->basepath = currentBasepath;
+                            this->currentFile = currentFile;
+                            this->line = currentLine;
+                            this->column = currentColumn;
+                            this->currentToken = currentCurrentToken;
+                            this->currentContext = currentCurrentContext;
+                            this->currentObjectContext = currentCurrentObjectContext;
+                            
+                            break;
+                        }
+                        
+                        
+                        //restore
+                        this->tokenizer = currentTokenizer;
+                        this->basepath = currentBasepath;
+                        this->currentFile = currentFile;
+                        this->line = currentLine;
+                        this->column = currentColumn;
+                        this->currentToken = currentCurrentToken;
+                        this->currentContext = currentCurrentContext;
+                        this->currentObjectContext = currentCurrentObjectContext;
+                        
+                        this->controller->parserTreeAdd(theInstr);
+                        
+                        break;
+                    }
+                        
                     default:
-                        ret = theinstr;
                         break;
                 }
                 
                 break;
             }
+                
             
             //if the statement starts with an object sign, it is an object definition
             case HSSObjectSign:
             {
                 //create an object definition
-                ret = this->readObjectDefinition("");
+                bool done = false;
+                while (!done) {
+                    done = true;
+                    HSSObjectDefinition::p theObj = this->readObjectDefinition("");
+                    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding object definition to object tree");
+                    this->recursiveAddObjectDefinition(theObj);
+                    this->controller->parserTreeAdd(theObj);
+                    
+                    if(this->currentToken->isA(HSSAmpersand)){
+                        done = false;
+                    }
+                }
+                
+                ret = true;
                 break;
             }
             
             //if the statement starts with an identifier, universal selector or combinator it is a rule
             case HSSIdentifier:
             {
-                ret = this->readRule();
+                HSSRule::p theRule = this->readRule();
+                axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
+                this->controller->rulesAdd(theRule);
+                this->controller->parserTreeAdd(theRule);
+                ret = true;
                 break;
             }
             case HSSSymbol:
             {
                 if(VALUE_TOKEN(this->currentToken)->equals(HSSSymbol, "*") 	|| this->isCombinator()){
-                    ret = this->readRule();
+                    HSSRule::p theRule = this->readRule();
+                    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
+                    this->controller->rulesAdd(theRule);
+                    this->controller->parserTreeAdd(theRule);
+                    ret = true;
                     break;
+                } else {
+                    throw AXRError::p(new AXRError("HSSParser", "Unexpected symbol "+VALUE_TOKEN(this->currentToken)->getString(), this->currentFile->getFileName(), this->line, this->column));
                 }
             }
             //if it is a comment
             case HSSBlockComment:
             case HSSLineComment:
             {
-                ret = HSSComment::p(new HSSComment(VALUE_TOKEN(this->currentToken)->getString()));
+                HSSComment::p theComment = HSSComment::p(new HSSComment(VALUE_TOKEN(this->currentToken)->getString()));
                 this->readNextToken();
-                if(this->atEndOfSource())
-                    return ret;
-                this->skip(HSSWhitespace);
+                if(!this->atEndOfSource())
+                    this->skip(HSSWhitespace);
+                axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding comment to parser tree");
+                this->controller->parserTreeAdd(theComment);
                 break;
             }
                 
@@ -1350,7 +1327,7 @@ HSSNameSelector::p HSSParser::readNameSelector(bool isNegating)
 }
 
 
-//this assumes currentToken is an object sign
+//this assumes currentToken is an object sign or an ampersand
 HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading object definition");
@@ -1360,59 +1337,68 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
     std::string objtype;
     HSSObject::p obj;
     
-    //yeah, yeah, we know the @ already
-    this->skipExpected(HSSObjectSign);
-    //end of file would be fatal
-    this->checkForUnexpectedEndOfSource();
-    
     //set the current context
     this->currentContext.push_back(HSSParserContextObjectDefinition);
     
-    //first we need to know what type of object it is
-    if (this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) ) {
-        //damn, we'll have to derive that from the context
-        if (this->currentObjectContext.size() > 0){
-            if (propertyName == ""){
-                objtype = this->currentObjectContext.top()->defaultObjectType();
+    //we either deal with a @ or an & symbol
+    if(this->currentToken->isA(HSSObjectSign)){
+        this->skipExpected(HSSObjectSign, true);
+        
+        //first we need to know what type of object it is
+        if (this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) ) {
+            //damn, we'll have to derive that from the context
+            if (this->currentObjectContext.size() > 0){
+                if (propertyName == ""){
+                    objtype = this->currentObjectContext.top()->defaultObjectType();
+                } else {
+                    objtype = this->currentObjectContext.top()->defaultObjectType(propertyName);
+                }
+                
             } else {
-                objtype = this->currentObjectContext.top()->defaultObjectType(propertyName);
+                objtype = "container";
             }
-            
+        } else if(this->currentToken->isA(HSSIdentifier)){
+            //alright, we've got a type, look it up
+            objtype = VALUE_TOKEN(this->currentToken)->getString();
+            this->readNextToken();
+            this->checkForUnexpectedEndOfSource();
         } else {
-            objtype = "container";
-        }
-    } else if(this->currentToken->isA(HSSIdentifier)){
-        //alright, we've got a type, look it up
-        objtype = VALUE_TOKEN(this->currentToken)->getString();
-        this->readNextToken();
-        this->checkForUnexpectedEndOfSource();
-    } else {
-        throw AXRError::p(new AXRError("HSSParser", "Unexpected token while reading object definition: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
-    }
-    
-    //try to create an object of that type
-    try {
-        obj = HSSObject::newObjectWithType(objtype);
-    } catch (AXRError::p e) {
-        AXRWarning::p(new AXRWarning("HSSParser", "Invalid object name "+e->getMessage(), this->currentFile->getFileName(), this->line, this->column))->raise();
-        if (this->currentObjectContext.size() > 0){
-            if (propertyName == ""){
-                objtype = this->currentObjectContext.top()->defaultObjectType();
-            } else {
-                objtype = this->currentObjectContext.top()->defaultObjectType(propertyName);
-            }
-        } else {
-            objtype = "value";
+            throw AXRError::p(new AXRError("HSSParser", "Unexpected token while reading object definition: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
         }
         
+        //try to create an object of that type
         try {
             obj = HSSObject::newObjectWithType(objtype);
         } catch (AXRError::p e) {
-            obj = HSSObject::newObjectWithType("value");
+            AXRWarning::p(new AXRWarning("HSSParser", "Invalid object name "+e->getMessage(), this->currentFile->getFileName(), this->line, this->column))->raise();
+            if (this->currentObjectContext.size() > 0){
+                if (propertyName == ""){
+                    objtype = this->currentObjectContext.top()->defaultObjectType();
+                } else {
+                    objtype = this->currentObjectContext.top()->defaultObjectType(propertyName);
+                }
+            } else {
+                objtype = "value";
+            }
+            
+            try {
+                obj = HSSObject::newObjectWithType(objtype);
+            } catch (AXRError::p e) {
+                objtype = "value";
+                obj = HSSObject::newObjectWithType(objtype);
+            }
+        }
+        obj->setController(this->controller);
+        this->_lastObjectType = objtype;
+        
+    } else {
+        this->skipExpected(HSSAmpersand, true);
+        obj = HSSObject::newObjectWithType(this->_lastObjectType);
+        if(this->currentToken->isA(HSSObjectSign)){
+            AXRWarning::p(new AXRWarning("HSSParser", "Using &@ is obsolete, you shouldn't do that anymore", this->currentFile->getFileName(), this->line, this->column))->raise();
+            this->readNextToken(true);
         }
     }
-    obj->setController(this->controller);
-    
     
     //get the name of the object
     if (this->currentToken->isA(HSSWhitespace)) {
@@ -1464,25 +1450,18 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
             switch (this->currentToken->getType()) {
                 case HSSSymbol:
                 {
-                    if(VALUE_TOKEN(this->currentToken)->getString() == "&"){
-                        HSSToken::p peekToken = this->tokenizer->peekNextToken();
-                        if(peekToken->isA(HSSObjectSign)){
-                            this->tokenizer->resetPeek();
-                            this->readNextToken(true);
-                            HSSObjectDefinition::p childDef = this->readObjectDefinition(propertyName);
-                            childDef->setParentNode(ret);
-                            ret->childrenAdd(childDef);
-                            break;
-                        } else {
-                            this->tokenizer->resetPeek();
-                            //fall through (to default, or else FIXME)
-                        }
-                    } else {
-                        HSSRule::p theRule = this->readRule();
-                        if(theRule)
-                            ret->rulesAdd(theRule);
-                        break;
-                    }
+                    HSSRule::p theRule = this->readRule();
+                    if(theRule)
+                        ret->rulesAdd(theRule);
+                    break;
+                }
+                
+                case HSSAmpersand:
+                {
+                    HSSObjectDefinition::p childDef = this->readObjectDefinition(propertyName);
+                    childDef->setParentNode(ret);
+                    ret->childrenAdd(childDef);
+                    break;
                 }
                     
                 case HSSIdentifier:
