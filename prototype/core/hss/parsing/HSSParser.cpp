@@ -74,8 +74,9 @@ HSSParser::HSSParser(AXRController * theController, AXRWrapper * wrapper)
     this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
     
     this->currentContext.push_back(HSSParserContextRoot);
-    this->_genericContextContainer = HSSContainer::p(new HSSContainer());
-    this->currentObjectContextAdd(this->_genericContextContainer);
+    this->_genericContext = HSSValue::p(new HSSValue());
+    this->currentObjectContextAdd(this->_genericContext);
+    this->_lastObjectType = "value";
     
     this->line = 1;
     this->column = 1;
@@ -115,7 +116,6 @@ void HSSParser::reset()
     }
     //clear the current context
     this->currentContext.clear();
-    this->_genericContextContainer = HSSContainer::p(new HSSContainer());
     this->basepath = "";
     this->loadedFiles.clear();
     this->currentToken.reset();
@@ -123,10 +123,8 @@ void HSSParser::reset()
     
     //initialize the new values
     this->currentContext.push_back(HSSParserContextRoot);
-    /**
-     *  @todo will there be a root object? Now defaults to container
-     */
-    this->currentObjectContext.push(this->_genericContextContainer);
+    //set the new default object context
+    this->currentObjectContextAdd(this->_genericContext);
     
 }
 
@@ -428,6 +426,7 @@ HSSRule::p HSSParser::readRule()
     this->skip(HSSWhitespace, true);
     
     //now we're inside the block
+    this->currentObjectContextAdd(HSSContainer::p(new HSSContainer()));
     this->currentContext.push_back(HSSParserContextBlock);
     
     //read the inner part of the block
@@ -445,11 +444,9 @@ HSSRule::p HSSParser::readRule()
                             ret->propertiesAdd(propertyDefinition);
                         }
                     } else {
-                        this->currentObjectContextAdd(this->_genericContextContainer);
                         HSSRule::p theRule = this->readRule();
                         if(theRule)
                             ret->childrenAdd(theRule);
-                        this->currentObjectContextRemoveLast();
                     }
                     break;
                 }
@@ -466,11 +463,9 @@ HSSRule::p HSSParser::readRule()
                     
                 case HSSInstructionSign:
                 {
-                    this->currentObjectContextAdd(this->_genericContextContainer);
                     HSSRule::p childRule = this->readInstructionRule();
                     if(childRule)
                         ret->childrenAdd(childRule);
-                    this->currentObjectContextRemoveLast();
                     break;
                 }
                     
@@ -519,6 +514,7 @@ HSSRule::p HSSParser::readRule()
     this->readNextToken();
     //leave the block context
     this->currentContext.pop_back();
+    this->currentObjectContextRemoveLast();
     if(!this->atEndOfSource()){
         //ignore all the whitespace after the block
         this->skip(HSSWhitespace);
@@ -1394,6 +1390,8 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
     } else {
         this->skipExpected(HSSAmpersand, true);
         obj = HSSObject::newObjectWithType(this->_lastObjectType);
+        objtype = this->_lastObjectType;
+        
         if(this->currentToken->isA(HSSObjectSign)){
             AXRWarning::p(new AXRWarning("HSSParser", "Using &@ is obsolete, you shouldn't do that anymore", this->currentFile->getFileName(), this->line, this->column))->raise();
             this->readNextToken(true);
@@ -1475,11 +1473,9 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
                             ret->propertiesAdd(propertyDefinition);
                         }
                     } else {
-                        this->currentObjectContextAdd(this->_genericContextContainer);
                         HSSRule::p theRule = this->readRule();
                         if(theRule)
                             ret->rulesAdd(theRule);
-                        this->currentObjectContextRemoveLast();
                     }
                     break;
                 }
@@ -1549,6 +1545,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
     this->currentContext.pop_back();
     //leave the object definition context
     this->currentContext.pop_back();
+    this->_lastObjectType = objtype;
     if(!this->atEndOfSource()){
         //ignore all the whitespace after the block
         this->skip(HSSWhitespace);
