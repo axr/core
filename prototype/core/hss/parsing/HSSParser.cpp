@@ -1392,6 +1392,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
     } else {
         this->skipExpected(HSSAmpersand, true);
         obj = HSSObject::newObjectWithType(this->_lastObjectType);
+        obj->setController(this->controller);
         objtype = this->_lastObjectType;
         
         if(this->currentToken->isA(HSSObjectSign)){
