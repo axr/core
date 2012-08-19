@@ -204,12 +204,12 @@ bool HSSParser::loadFile(AXRFile::p file)
 
 bool HSSParser::readNextStatement()
 {
-    bool ret = false;
+    bool ret = true;
     //if(this->currentContext.back() == HSSParserContextRoot)
     //{
         //the file was empty
         if(this->atEndOfSource())
-            return ret;
+            return false;
         
         
         switch (this->currentToken->getType()) {
@@ -240,7 +240,6 @@ bool HSSParser::readNextStatement()
                         if(!this->atEndOfSource()){
                             this->skip(HSSWhitespace);
                         }
-                        
                         break;
                     }
                         
@@ -320,16 +319,17 @@ bool HSSParser::readNextStatement()
                 while (!done) {
                     done = true;
                     HSSObjectDefinition::p theObj = this->readObjectDefinition("");
-                    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding object definition to object tree");
-                    this->recursiveAddObjectDefinition(theObj);
-                    this->controller->parserTreeAdd(theObj);
+                    if(theObj){
+                        axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding object definition to object tree");
+                        this->recursiveAddObjectDefinition(theObj);
+                        this->controller->parserTreeAdd(theObj);
+                    }
                     
-                    if(this->currentToken->isA(HSSAmpersand)){
+                    if(!this->atEndOfSource() && this->currentToken->isA(HSSAmpersand)){
                         done = false;
                     }
                 }
                 
-                ret = true;
                 break;
             }
             
@@ -337,20 +337,22 @@ bool HSSParser::readNextStatement()
             case HSSIdentifier:
             {
                 HSSRule::p theRule = this->readRule();
-                axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
-                this->controller->rulesAdd(theRule);
-                this->controller->parserTreeAdd(theRule);
-                ret = true;
+                if(theRule){
+                    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
+                    this->controller->rulesAdd(theRule);
+                    this->controller->parserTreeAdd(theRule);
+                }
                 break;
             }
             case HSSSymbol:
             {
                 if(VALUE_TOKEN(this->currentToken)->equals(HSSSymbol, "*") 	|| this->isCombinator()){
                     HSSRule::p theRule = this->readRule();
-                    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
-                    this->controller->rulesAdd(theRule);
-                    this->controller->parserTreeAdd(theRule);
-                    ret = true;
+                    if(theRule){
+                        axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
+                        this->controller->rulesAdd(theRule);
+                        this->controller->parserTreeAdd(theRule);
+                    }
                     break;
                 } else {
                     throw AXRError::p(new AXRError("HSSParser", "Unexpected symbol "+VALUE_TOKEN(this->currentToken)->getString(), this->currentFile->getFileName(), this->line, this->column));
@@ -1421,7 +1423,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
             ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
             return ret;
         }
-            
+        
         default:
             throw AXRError::p(new AXRError("HSSParser", "Unexpected token while reading object definition: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
             break;
@@ -1655,11 +1657,24 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             //now comes either an object definition, a literal value or an expression
             //object
             if (this->currentToken->isA(HSSObjectSign)){
-                HSSObjectDefinition::p objdef = this->readObjectDefinition(propertyName);
-                if(objdef){
-                    ret->addValue(objdef);
-                } else {
-                    valid = false;
+                bool objdefDone = false;
+                while (!objdefDone) {
+                    objdefDone = true;
+                    try {
+                        HSSObjectDefinition::p objdef = this->readObjectDefinition(propertyName);
+                        if(objdef){
+                            ret->addValue(objdef);
+                        }
+                    } catch (AXRError::p e) {
+                        e->raise();
+                    } catch (AXRWarning::p e) {
+                        e->raise();
+                    }
+                    
+                    if(this->currentToken->isA(HSSAmpersand)){
+                        objdefDone = false;
+                    }
+                    
                 }
                 //this->readNextToken();
                 
@@ -1706,7 +1721,16 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                     ret->addValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr)));
                     this->readNextToken();
                 }
-                
+                /*
+                //this is either a function, a keyword or an object name, all of which can be
+                //part of an expression
+                HSSParserNode::p exp = this->readExpression();
+                if (exp){
+                    ret->addValue(exp);
+                } else {
+                    valid = false;
+                }
+                 */
                 
             } else if (this->currentToken->isA(HSSInstructionSign)){
                 HSSInstruction::p theInstruction;
@@ -1718,6 +1742,8 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 } else {
                     valid = false;
                 }
+            } else if (this->currentToken->isA(HSSEndOfStatement)){
+                done = true;
                 
             } else {
                 valid = false;
@@ -2317,7 +2343,25 @@ HSSParserNode::p HSSParser::readBaseExpression()
         
         case HSSIdentifier:
         {
-            left = this->readFunction();
+            /*
+            std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
+            //check if it is a function
+            HSSObject::p objectContext = this->currentObjectContext.top();
+            if (objectContext->isFunction(valuestr, propertyName)){*/
+                left = this->readFunction();
+             /*   
+            //check if it is a keyword
+            } else if (objectContext->isKeyword(valuestr, propertyName)){
+                left = HSSKeywordConstant::p(new HSSKeywordConstant(valuestr));
+                this->readNextToken();
+                this->skip(HSSWhitespace);
+                //we assume it is an object name at this point
+            } else {
+                left = HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr));
+                this->readNextToken();
+                this->skip(HSSWhitespace);
+            }*/
+            
             break;
         }
         
