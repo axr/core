@@ -281,8 +281,12 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
                     HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
                     fnct->setScope(this->scope);
                     fnct->setThisObj(this->getThisObj());
-                    std::string remoteValue = *(std::string *)fnct->evaluate();
-                    this->src = remoteValue;
+                    boost::any remoteValue = fnct->evaluate();
+                    try {
+                        this->src = boost::any_cast<std::string>(remoteValue);
+                    } catch (...) {
+                        
+                    }
                     
                     break;
                 }
@@ -334,13 +338,19 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                     if(fnct){
                         fnct->setScope(this->scope);
                         fnct->setThisObj(this->getThisObj());
-                        std::vector< std::vector<HSSDisplayObject::p> > selection = *(std::vector< std::vector<HSSDisplayObject::p> >*) fnct->evaluate();
-                        unsigned i, size;
-                        this->target.clear();
-                        for (i=0, size=selection.size(); i<size; i++) {
-                            std::vector<HSSDisplayObject::p> inner = selection[i];
-                            this->target.insert(this->target.end(), inner.begin(), inner.end());
+                        boost::any remoteValue = fnct->evaluate();
+                        try {
+                            std::vector< std::vector<HSSDisplayObject::p> > selection = boost::any_cast< std::vector< std::vector<HSSDisplayObject::p> > >(remoteValue);
+                            unsigned i, size;
+                            this->target.clear();
+                            for (i=0, size=selection.size(); i<size; i++) {
+                                std::vector<HSSDisplayObject::p> inner = selection[i];
+                                this->target.insert(this->target.end(), inner.begin(), inner.end());
+                            }
+                        } catch (...) {
+                            
                         }
+                        
                         
                         /**
                          *  @todo potentially leaking

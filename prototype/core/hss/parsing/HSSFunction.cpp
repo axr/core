@@ -104,7 +104,7 @@ std::string HSSFunction::toString()
     return tempstr;
 }
 
-void * HSSFunction::evaluate()
+boost::any HSSFunction::evaluate()
 {
     if(this->_isDirty){
         this->_isDirty = false;
@@ -115,7 +115,7 @@ void * HSSFunction::evaluate()
     return this->_value;
 }
 
-void * HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
+boost::any HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
 {
     if(this->_isDirty){
         this->_isDirty = false;
@@ -126,12 +126,12 @@ void * HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
     return this->_value;
 }
 
-void * HSSFunction::_evaluate()
+boost::any HSSFunction::_evaluate()
 {
     return this->_evaluate(std::deque<HSSParserNode::p>());
 }
 
-void * HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+boost::any HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
 {
     AXRCore::tp & core = AXRCore::getInstance();
     core->evaluateCustomFunction(this->getName(), (void*) &arguments);
@@ -209,7 +209,7 @@ bool HSSFunction::isDirty()
     return this->_isDirty;
 }
 
-void * HSSFunction::getValue()
+boost::any HSSFunction::getValue()
 {
     return this->_value;
 }

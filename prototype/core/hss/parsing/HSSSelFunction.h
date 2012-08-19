@@ -136,13 +136,13 @@ namespace AXR {
          *  to display objects std::vector< std::vector<HSSDisplayObject::p> >.
          *  @return A pointer to a selection casted to void*.
          */
-        virtual void * _evaluate();
+        virtual boost::any _evaluate();
         
         /**
          *  Calls _evaluate();
          *  @deprecated Do not use this.
          */
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
+        virtual boost::any _evaluate(std::deque<HSSParserNode::p> arguments);
         
 //        void valueChanged(HSSObservableProperty source, void*data);
         

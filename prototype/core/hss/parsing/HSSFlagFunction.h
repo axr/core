@@ -151,12 +151,12 @@ namespace AXR {
         /**
          *  @todo make private
          */
-        virtual void * _evaluate();
+        virtual boost::any _evaluate();
         
         /**
          *  @todo is this one even used?
          */
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
+        virtual boost::any _evaluate(std::deque<HSSParserNode::p> arguments);
         
         /**
          *  Method to be passed as callback when observing changes.

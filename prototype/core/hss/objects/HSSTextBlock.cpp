@@ -342,10 +342,15 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->transform = *(HSSTextTransformType *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->transform = boost::any_cast<HSSTextTransformType>(remoteValue);
+                    valid = true;
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTransform, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::transformChanged));
-                valid = true;
             }
             
             break;
@@ -443,10 +448,15 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->textAlign = *(HSSTextAlignType *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->textAlign = boost::any_cast<HSSTextAlignType>(remoteValue);
+                    valid = true;
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::textAlignChanged));
-                valid = true;
             }
             
             break;
@@ -566,10 +576,15 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->text = *(std::string *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->text = boost::any_cast<std::string>(remoteValue);
+                    valid = true;
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyText, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::textChanged));
-                valid = true;
             }
             
             break;

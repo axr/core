@@ -170,7 +170,12 @@ void HSSLineBorder::setDColor(HSSParserNode::p value){
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->color = *(HSSRgb::p *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->color = boost::any_cast<HSSRgb::p>(remoteValue);
+                } catch (...) {
+                    this->color = HSSRgb::p(new HSSRgb());
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSLineBorder>(this, &HSSLineBorder::colorChanged));
                 valid = true;

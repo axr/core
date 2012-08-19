@@ -51,6 +51,7 @@
 #include <boost/shared_ptr.hpp>
 #include <deque>
 #include <vector>
+#include <boost/any.hpp>
 
 namespace AXR {
     
@@ -99,22 +100,22 @@ namespace AXR {
          *  @return A void pointer to some data. It's up to the caller to know what type of
          *  data is expected.
          */
-        void * evaluate();
+        boost::any evaluate();
         
         /**
          *  @todo I think this one is not used
          */
-        void * evaluate(std::deque<HSSParserNode::p> arguments);
+        boost::any evaluate(std::deque<HSSParserNode::p> arguments);
         
         /**
          *  @todo make protected or private
          */
-        virtual void * _evaluate();
+        virtual boost::any _evaluate();
         
         /**
          *  
          */
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
+        virtual boost::any _evaluate(std::deque<HSSParserNode::p> arguments);
         
         /**
          *  Method to be passed as callback when observing changes.
@@ -162,7 +163,7 @@ namespace AXR {
          *  @return A void pointer to the value returned by the function. It's up to the caller to
          *  know what kind of data is expected.
          */
-        void * getValue();
+        boost::any getValue();
         
         /**
          *  Allows you to check if this function is of the given type.
@@ -195,7 +196,7 @@ namespace AXR {
         
     protected:
         bool _isDirty;
-        void * _value;
+        boost::any _value;
         
         long double percentageBase;
         HSSObservableProperty percentageObservedProperty;

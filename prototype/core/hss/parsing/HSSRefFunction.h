@@ -164,13 +164,13 @@ namespace AXR {
          *  This is the actual implementation of what the function does. It selects from the elements
          *  in the scope and then observes the property, storing  its value.
          */
-        virtual void * _evaluate();
+        virtual boost::any _evaluate();
         
         /**
          *  Calls _evaluate();
          *  @deprecated Do not use this.
          */
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
+        virtual boost::any _evaluate(std::deque<HSSParserNode::p> arguments);
         
         /**
          *  Callback that will update the value when the observed property changes.

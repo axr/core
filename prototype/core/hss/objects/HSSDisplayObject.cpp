@@ -47,6 +47,8 @@
 #include "../../axr/errors/errors.h"
 #include <math.h>
 #include <boost/pointer_cast.hpp>
+#include <boost/any.hpp>
+#include <boost/lexical_cast.hpp>
 #include <cairo/cairo.h>
 #include "../parsing/HSSParserNode.h"
 #include "../parsing/HSSExpression.h"
@@ -1579,7 +1581,12 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
                     fnct->setScope(&(thisCont->getChildren()));
                 }
                 
-                this->flow = *(bool *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->flow = boost::any_cast<bool>(remoteValue);
+                } catch (...) {
+                    this->flow = true;
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyFlow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::flowChanged));
                 valid = true;
@@ -1696,7 +1703,12 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                this->overflow = *(bool *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->overflow = boost::any_cast<bool>(remoteValue);
+                } catch (...) {
+                    this->overflow = false;
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyOverflow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::overflowChanged));
                 valid = true;
@@ -2058,19 +2070,18 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                std::vector<HSSObject::p> * remoteValue = (std::vector<HSSObject::p> *)fnct->evaluate();
-                if(remoteValue != NULL){
-                    try {
-                        std::vector<HSSObject::p> values = *remoteValue;
-                        std::vector<HSSObject::p>::const_iterator it;
-                        for (it=values.begin(); it!=values.end(); ++it) {
-                            this->background.push_back(*it);
-                        }
-                        
-                        valid = true;
-                    } catch (AXRError::p e) {
-                        e->raise();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    std::vector<HSSObject::p> values = boost::any_cast< std::vector<HSSObject::p> >(remoteValue);
+                    std::vector<HSSObject::p>::const_iterator it;
+                    for (it=values.begin(); it!=values.end(); ++it) {
+                        this->background.push_back(*it);
                     }
+                    
+                    valid = true;
+                    
+                } catch (...) {
+                    
                 }
                 
             } else {
@@ -2187,15 +2198,17 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                             HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                             fnct->setScope(&(thisCont->getChildren()));
                         }
-                        HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                        if(remoteValue){
-                            try {
-                                this->addDContent(remoteValue);
-                                valid = true;
-                            } catch (AXRError::p e) {
-                                e->raise();
-                            }
+                        boost::any remoteValue = fnct->evaluate();
+                        try {
+                            HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                            this->addDContent(theVal);
+                            valid = true;
+                        } catch (AXRError::p e) {
+                            e->raise();
+                        } catch (...) {
+                            
                         }
+                        
                         break;
                     }
                         
@@ -2208,10 +2221,14 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                             HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                             fnct->setScope(&(thisCont->getChildren()));
                         }
-                        void * remoteValue = fnct->evaluate();
-                        if(remoteValue != NULL){
-                            this->setContentText(*(std::string *)remoteValue);
+                        boost::any remoteValue = fnct->evaluate();
+                        try {
+                            std::string theVal = boost::any_cast<std::string>(theVal);
+                            this->setContentText(theVal);
                             valid = true;
+
+                        } catch (...) {
+                            this->setContentText("");
                         }
                         
                         break;
@@ -2353,9 +2370,14 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                this->addDFont(remoteValue);
-                valid = true;
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                    this->addDFont(theVal);
+                    valid = true;
+                } catch (...) {
+                    
+                }
             }
             
             break;
@@ -2499,14 +2521,15 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
                     fnct->setScope(&(thisCont->getChildren()));
                 }
                 fnct->setThisObj(this->shared_from_this());
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                if(remoteValue){
-                    try {
-                        this->addDOn(remoteValue);
-                        valid = true;
-                    } catch (AXRError::p e) {
-                        e->raise();
-                    }
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                    this->addDOn(theVal);
+                    valid = true;
+                }  catch (AXRError::p e) {
+                    e->raise();
+                } catch (...) {
+                    
                 }
             }
             
@@ -2670,10 +2693,17 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                this->addDMargin(remoteValue);
-                this->_setOuterDimensions();
-                valid = true;
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                    this->addDMargin(theVal);
+                    this->_setOuterDimensions();
+                    valid = true;
+                }  catch (AXRError::p e) {
+                    e->raise();
+                } catch (...) {
+                    
+                }
             }
             
             break;
@@ -2814,10 +2844,17 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                this->addDPadding(remoteValue);
-                this->_setInnerDimensions();
-                valid = true;
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                    this->addDPadding(theVal);
+                    this->_setInnerDimensions();
+                    valid = true;
+                }  catch (AXRError::p e) {
+                    e->raise();
+                } catch (...) {
+                    
+                }
             }
             
             break;
@@ -2957,9 +2994,16 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                this->addDBorder(remoteValue);
-                valid = true;
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                    this->addDBorder(theVal);
+                    valid = true;
+                }  catch (AXRError::p e) {
+                    e->raise();
+                } catch (...) {
+                    
+                }
             }
 
             break;
@@ -3036,17 +3080,20 @@ void HSSDisplayObject::setDVisible(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                void * remoteValue = fnct->evaluate();
-                if(remoteValue != NULL){
-                    this->visible = *(bool *) remoteValue;
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->visible = boost::any_cast<bool>(remoteValue);
                     valid = true;
-                    if(this->observedVisible){
-                        this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
-                    }
-                    fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyVisible, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::visibleChanged));
-                    this->observedVisible = fnct;
-                    this->observedVisibleProperty = HSSObservablePropertyValue;
+                } catch (...) {
+                    this->visible = true;
                 }
+                
+                if(this->observedVisible){
+                    this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
+                }
+                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyVisible, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::visibleChanged));
+                this->observedVisible = fnct;
+                this->observedVisibleProperty = HSSObservablePropertyValue;
             }
             
             break;
@@ -3172,7 +3219,7 @@ long double HSSDisplayObject::_setLDProperty(
                                              const std::vector<HSSDisplayObject::p> * scope
                                              )
 {
-    long double ret;
+    long double ret = 0.;
     
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType) {
@@ -3228,7 +3275,17 @@ long double HSSDisplayObject::_setLDProperty(
             fnct->setScope(scope);
             fnct->setThisObj(this->shared_from_this());
             
-            ret = *(long double*)fnct->evaluate();
+            boost::any remoteValue = fnct->evaluate();
+            if(typeid(long double) == remoteValue.type()){
+                ret = boost::any_cast<long double>(remoteValue);
+            } else if (typeid(std::string) == remoteValue.type()){
+                try {
+                    ret = boost::lexical_cast<long double>(boost::any_cast<std::string>(remoteValue));
+                } catch (...) {
+                    
+                }
+            }
+            
             if(callback != NULL){
                 fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject>(this, callback));
                 observedStore = fnct;
@@ -3236,6 +3293,7 @@ long double HSSDisplayObject::_setLDProperty(
             } else {
                 observedStore.reset();
             }
+            
             break;
         }
         

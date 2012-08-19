@@ -2466,10 +2466,15 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
                 } else {
                     fnct->setScope(&(this->getChildren()));
                 }
-                this->textAlign = *(HSSTextAlignType *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->textAlign = boost::any_cast<HSSTextAlignType>(remoteValue);
+                    valid = true;
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSContainer>(this, &HSSContainer::textAlignChanged));
-                valid = true;
             }
             
             break;
@@ -2633,7 +2638,12 @@ long double HSSContainer::_setLDProperty(
             fnct->setPercentageObserved(observedProperty, observedObject);
             fnct->setScope(scope);
             
-            ret = *(long double*)fnct->evaluate();
+            boost::any remoteValue = fnct->evaluate();
+            try {
+                ret = boost::any_cast<long double>(remoteValue);
+            } catch (...) {
+                ret = 0.;
+            }
             if(callback != NULL){
                 fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer>(this, callback));
                 observedStore = fnct.get();

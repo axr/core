@@ -216,9 +216,17 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                 {
                     fnct->setScope(this->scope);
                     fnct->setThisObj(this->getThisObj());
-                    HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                    this->addDAction(remoteValue);
-                    valid = true;
+                    boost::any remoteValue = fnct->evaluate();
+                    try {
+                        HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                        this->addDAction(theVal);
+                        valid = true;
+                    } catch (AXRError::p e) {
+                        e->raise();
+                    } catch (...) {
+                        
+                    }
+                    
                     break;
                 }
                     

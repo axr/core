@@ -120,108 +120,59 @@ void HSSLog::fire()
                 HSSRefFunction::p refFnct = boost::static_pointer_cast<HSSRefFunction>(fnct);
                 refFnct->setScope(this->scope);
                 refFnct->setThisObj(this->getThisObj());
-                void * data = refFnct->evaluate();
-                switch (refFnct->getPropertyName()) {
-                    case HSSObservablePropertyWidth:
-                    case HSSObservablePropertyHeight:
-                    case HSSObservablePropertyAnchorX:
-                    case HSSObservablePropertyAnchorY:
-                    case HSSObservablePropertyAlignX:
-                    case HSSObservablePropertyAlignY:
-                    case HSSObservablePropertyContentAlignX:
-                    case HSSObservablePropertyContentAlignY:
-                    case HSSObservablePropertyStartX:
-                    case HSSObservablePropertyStartY:
-                    case HSSObservablePropertyEndX:
-                    case HSSObservablePropertyEndY:
-                    case HSSObservablePropertyPosition:
-                    case HSSObservablePropertyRed:
-                    case HSSObservablePropertyGreen:
-                    case HSSObservablePropertyBlue:
-                    case HSSObservablePropertyAlpha:
-                    case HSSObservablePropertySize:
-                    case HSSObservablePropertyCorners:
-                    {
-                        std_log(*(long double*)data);
-                        done = true;
-                        break;
+                boost::any remoteValue = refFnct->evaluate();
+                try {
+                    std::string theVal = boost::any_cast<std::string>(remoteValue);
+                    std_log(theVal);
+                    done = true;
+                } catch (...) {
+                    
+                }
+                try {
+                    long double theVal = boost::any_cast<long double>(remoteValue);
+                    std_log(theVal);
+                    done = true;
+                } catch (...) {
+                    
+                }
+                try {
+                    HSSObject::p theVal = boost::any_cast<HSSObject::p>(remoteValue);
+                    std_log(theVal->toString());
+                    done = true;
+                } catch (...) {
+                    
+                }
+                try {
+                    std::vector<HSSObject::p> v_data = boost::any_cast< std::vector<HSSObject::p> >(remoteValue);
+                    std::vector<HSSObject::p>::iterator it;
+                    if (v_data.size() == 0) {
+                        std_log("empty");
+                    } else {
+                        for (it=v_data.begin(); it!=v_data.end(); it++) {
+                            std_log((*it)->toString());
+                        }
                     }
-                        
-                    case HSSObservablePropertyMargin:
-                    case HSSObservablePropertyPadding:
-                    case HSSObservablePropertyShape:
-                    case HSSObservablePropertyStartColor:
-                    case HSSObservablePropertyEndColor:
-                    case HSSObservablePropertyColorStops:
-                    case HSSObservablePropertyBalance:
-                    case HSSObservablePropertyFace:
-                    case HSSObservablePropertyColor:
-                    case HSSObservablePropertyAction:
-                    {
-                        std_log((*(HSSObject::p *)data)->toString());
-                        done = true;
-                        break;
-                    }
-                        
-                    case HSSObservablePropertyBackground:
-                    case HSSObservablePropertyBorder:
-                    case HSSObservablePropertyFont:
-                    {
-                        std::vector<HSSObject::p> v_data = *(std::vector<HSSObject::p>*)data;
-                        std::vector<HSSObject::p>::iterator it;
-                        if (v_data.size() == 0) {
-                            std_log("empty");
-                        } else {
-                            for (it=v_data.begin(); it!=v_data.end(); it++) {
-                                std_log((*it)->toString());
+                    done = true;
+                } catch (...) {
+                    
+                }
+                try {
+                    boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > m_data = boost::any_cast< boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > >(remoteValue);
+                    boost::unordered_map<HSSEventType, std::vector<HSSObject::p> >::iterator it;
+                    if (m_data.size() == 0) {
+                        std_log("empty");
+                    } else {
+                        for (it=m_data.begin(); it!=m_data.end(); it++) {
+                            std::vector<HSSObject::p> v_data = (*it).second;
+                            std::vector<HSSObject::p>::iterator it2;
+                            for (it2=v_data.begin(); it2!=v_data.end(); it2++) {
+                                std_log((*it2)->toString());
                             }
                         }
-                        done = true;
-                        break;
                     }
-                        
-                    case HSSObservablePropertyOn:
-                    {
-                        boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > m_data = *(boost::unordered_map<HSSEventType, std::vector<HSSObject::p> >*)data;
-                        boost::unordered_map<HSSEventType, std::vector<HSSObject::p> >::iterator it;
-                        if (m_data.size() == 0) {
-                            std_log("empty");
-                        } else {
-                            for (it=m_data.begin(); it!=m_data.end(); it++) {
-                                std::vector<HSSObject::p> v_data = (*it).second;
-                                std::vector<HSSObject::p>::iterator it2;
-                                for (it2=v_data.begin(); it2!=v_data.end(); it2++) {
-                                    std_log((*it2)->toString());
-                                }
-                            }
-                        }
-                        done = true;
-                        break;
-                    }
-                        
-                    case HSSObservablePropertyDirectionPrimary:
-                    case HSSObservablePropertyDirectionSecondary:
-                    case HSSObservablePropertyTransform:
-                    case HSSObservablePropertyTextAlign:
-                    case HSSObservablePropertyWeight:
-                    case HSSObservablePropertySrc:
-                    case HSSObservablePropertyMode:
-                    case HSSObservablePropertyContentTarget:
-                    {
-                        std_log(*(std::string*)data);
-                        done = true;
-                        break;
-                    }
-                        
-                    case HSSObservablePropertyFlagChanged:
-                    case HSSObservablePropertyText:
-                    case HSSObservablePropertyTarget:
-                    default:
-                    {
-                        std_log("logging this property is not supported");
-                        done = true;
-                        break;
-                    }
+                    done = true;
+                } catch (...) {
+                    
                 }
             }
             break;

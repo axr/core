@@ -209,7 +209,12 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->thisObj);
-                this->sides = *(long double *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->sides = boost::any_cast<long double>(remoteValue);
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertySides, this, new HSSValueChangedCallback<HSSPolygon>(this, &HSSPolygon::sidesChanged));
                 
@@ -278,7 +283,12 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->thisObj);
-                this->angle = *(long double *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->angle = boost::any_cast<long double>(remoteValue);
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyAngle, this, new HSSValueChangedCallback<HSSPolygon>(this, &HSSPolygon::angleChanged));
                 
