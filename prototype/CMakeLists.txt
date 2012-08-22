@@ -48,69 +48,53 @@
  #
  ####################################################################
 
-PROJECT(AXR)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-cmake_policy(SET CMP0015 NEW)                       #This policy of cmake has changed recently. If explicitly not set gives a warning about it.
+project(AXR)
+cmake_minimum_required(VERSION 2.8)
 
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
 
-if (UNIX)                                           #Both Linux and Mac are UNIX
-    set(Boost_USE_STATIC_LIBS   ON)
-    set(Boost_USE_MULTITHREADED ON)
+find_package(Boost COMPONENTS thread system program_options REQUIRED)
+find_package(SDL REQUIRED)
+find_package(EXPAT REQUIRED expat>=2.0)
 
-    find_package(PkgConfig REQUIRED)
-    find_package (EXPAT REQUIRED expat>=2.0)        #required minimum version can be specified like this
-
-    find_package(Boost COMPONENTS thread system program_options REQUIRED)
-#    find_package(Threads REQUIRED)
-
-
-    pkg_check_modules(GLIB REQUIRED glib-2.0)
-    pkg_check_modules(SDL REQUIRED sdl)
-    pkg_check_modules(PANGO REQUIRED pango)
-    pkg_check_modules(CAIRO REQUIRED cairo)
-    pkg_check_modules(PANGOCAIRO REQUIRED pangocairo)
-endif(UNIX)
+# TODO: Avoid using pkg-config
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB REQUIRED glib-2.0)
+pkg_check_modules(PANGO REQUIRED pango)
+pkg_check_modules(CAIRO REQUIRED cairo)
+pkg_check_modules(PANGOCAIRO REQUIRED pangocairo)
 
 include_directories(
-    ${EXPAT_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
+    ${SDL_INCLUDE_DIR}
+    ${EXPAT_INCLUDE_DIRS}
     ${GLIB_INCLUDE_DIRS}
-    ${SDL_INCLUDE_DIRS}
     ${PANGO_INCLUDE_DIRS}
     ${CAIRO_INCLUDE_DIRS}
     ${PANGOCAIRO_INCLUDE_DIRS}
 )
 
-
-ADD_SUBDIRECTORY(core)
-
-ADD_EXECUTABLE(axr
-    linux/cairosdl/cairosdl
-    linux/main
-)
-
-LINK_DIRECTORIES(
-    ${CMAKE_SOURCE_DIR}/core
-    ${EXPAT_LIBRARY_DIRS}
-    ${Boost_LIBRARY_DIRS}
+# TODO: Only necessary due to pkg-config usage
+link_directories(
     ${GLIB_LIBRARY_DIRS}
-    ${SDL_LIBRARY_DIRS}
     ${PANGO_LIBRARY_DIRS}
     ${CAIRO_LIBRARY_DIRS}
     ${PANGOCAIRO_LIBRARY_DIRS}
 )
 
-TARGET_LINK_LIBRARIES(axr AXR_core ${EXPAT_LIBRARIES} ${Boost_LIBRARIES} ${GLIB_LIBRARIES} ${SDL_LIBRARIES} ${PANGO_LIBRARIES} ${CAIRO_LIBRARIES} ${PANGOCAIRO_LIBRARIES}) 
+add_subdirectory(core)
+add_subdirectory(app)
 
-#Set distribution type
-IF (NOT CMAKE_BUILD_TYPE)
-    SET(CMAKE_BUILD_TYPE distribution)
-ENDIF (NOT CMAKE_BUILD_TYPE)
+# Set distribution type
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE distribution)
+endif()
 
-MESSAGE(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-SET(CMAKE_CXX_FLAGS_DISTRIBUTION "-O3")
-SET(CMAKE_C_FLAGS_DISTRIBUTION "-O3")
+set(CMAKE_CXX_FLAGS_DISTRIBUTION "-O3")
+set(CMAKE_C_FLAGS_DISTRIBUTION "-O3")
 
-SET(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
-SET( CMAKE_C_FLAGS_DEBUG "-O0 -g")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+set(CMAKE_C_FLAGS_DEBUG "-O0 -g")
