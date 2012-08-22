@@ -78,10 +78,10 @@ link_directories(
     ${PANGOCAIRO_LIBRARY_DIRS}
 )
 
-add_subdirectory(core)
+add_subdirectory(prototype/core)
 
 if(NOT APPLE)
-    add_subdirectory(app)
+    add_subdirectory(prototype/app)
 endif()
 
 # Set distribution type
