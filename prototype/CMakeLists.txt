@@ -48,21 +48,18 @@
  #
  ####################################################################
 
-PROJECT(AXR)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-cmake_policy(SET CMP0015 NEW)                       #This policy of cmake has changed recently. If explicitly not set gives a warning about it.
+project(AXR)
+cmake_minimum_required(VERSION 2.8)
 
-
-if (UNIX)                                           #Both Linux and Mac are UNIX
+if(UNIX)
     set(Boost_USE_STATIC_LIBS   ON)
     set(Boost_USE_MULTITHREADED ON)
 
     find_package(PkgConfig REQUIRED)
-    find_package (EXPAT REQUIRED expat>=2.0)        #required minimum version can be specified like this
+    find_package(EXPAT REQUIRED expat>=2.0)
 
     find_package(Boost COMPONENTS thread system program_options REQUIRED)
 #    find_package(Threads REQUIRED)
-
 
     pkg_check_modules(GLIB REQUIRED glib-2.0)
     pkg_check_modules(SDL REQUIRED sdl)
@@ -81,36 +78,26 @@ include_directories(
     ${PANGOCAIRO_INCLUDE_DIRS}
 )
 
+add_subdirectory(core)
 
-ADD_SUBDIRECTORY(core)
+if(UNIX AND NOT APPLE)
+    add_executable(axr
+        linux/cairosdl/cairosdl
+        linux/main
+    )
 
-ADD_EXECUTABLE(axr
-    linux/cairosdl/cairosdl
-    linux/main
-)
+    target_link_libraries(axr AXR_core ${EXPAT_LIBRARIES} ${Boost_LIBRARIES} ${GLIB_LIBRARIES} ${SDL_LIBRARIES} ${PANGO_LIBRARIES} ${CAIRO_LIBRARIES} ${PANGOCAIRO_LIBRARIES})
+endif()
 
-LINK_DIRECTORIES(
-    ${CMAKE_SOURCE_DIR}/core
-    ${EXPAT_LIBRARY_DIRS}
-    ${Boost_LIBRARY_DIRS}
-    ${GLIB_LIBRARY_DIRS}
-    ${SDL_LIBRARY_DIRS}
-    ${PANGO_LIBRARY_DIRS}
-    ${CAIRO_LIBRARY_DIRS}
-    ${PANGOCAIRO_LIBRARY_DIRS}
-)
+# Set distribution type
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE distribution)
+endif()
 
-TARGET_LINK_LIBRARIES(axr AXR_core ${EXPAT_LIBRARIES} ${Boost_LIBRARIES} ${GLIB_LIBRARIES} ${SDL_LIBRARIES} ${PANGO_LIBRARIES} ${CAIRO_LIBRARIES} ${PANGOCAIRO_LIBRARIES}) 
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-#Set distribution type
-IF (NOT CMAKE_BUILD_TYPE)
-    SET(CMAKE_BUILD_TYPE distribution)
-ENDIF (NOT CMAKE_BUILD_TYPE)
+set(CMAKE_CXX_FLAGS_DISTRIBUTION "-O3")
+set(CMAKE_C_FLAGS_DISTRIBUTION "-O3")
 
-MESSAGE(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
-SET(CMAKE_CXX_FLAGS_DISTRIBUTION "-O3")
-SET(CMAKE_C_FLAGS_DISTRIBUTION "-O3")
-
-SET(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
-SET( CMAKE_C_FLAGS_DEBUG "-O0 -g")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+set(CMAKE_C_FLAGS_DEBUG "-O0 -g")
