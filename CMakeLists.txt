@@ -55,7 +55,6 @@ find_package(EXPAT REQUIRED expat>=2.0)
 
 # TODO: Avoid using pkg-config
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLIB REQUIRED glib-2.0)
 pkg_check_modules(PANGO REQUIRED pango)
 pkg_check_modules(CAIRO REQUIRED cairo)
 pkg_check_modules(PANGOCAIRO REQUIRED pangocairo)
@@ -64,7 +63,6 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
     ${SDL_INCLUDE_DIR}
     ${EXPAT_INCLUDE_DIRS}
-    ${GLIB_INCLUDE_DIRS}
     ${PANGO_INCLUDE_DIRS}
     ${CAIRO_INCLUDE_DIRS}
     ${PANGOCAIRO_INCLUDE_DIRS}
@@ -72,17 +70,20 @@ include_directories(
 
 # TODO: Only necessary due to pkg-config usage
 link_directories(
-    ${GLIB_LIBRARY_DIRS}
     ${PANGO_LIBRARY_DIRS}
     ${CAIRO_LIBRARY_DIRS}
     ${PANGOCAIRO_LIBRARY_DIRS}
 )
 
-add_subdirectory(prototype/core)
+set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
 
-if(NOT APPLE)
-    add_subdirectory(prototype/app)
-endif()
+# Set output directories for binaries and static and shared libraries
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+add_subdirectory(prototype/core)
+add_subdirectory(prototype/app)
 
 # Set distribution type
 if(NOT CMAKE_BUILD_TYPE)
