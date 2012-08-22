@@ -84,7 +84,10 @@ link_directories(
 )
 
 add_subdirectory(core)
-add_subdirectory(app)
+
+if(NOT APPLE)
+    add_subdirectory(app)
+endif()
 
 # Set distribution type
 if(NOT CMAKE_BUILD_TYPE)
