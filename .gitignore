@@ -1,6 +1,3 @@
-# Exclude the build directory
-build/*
-
 # Exclude temp nibs and swap files
 *~.nib
 *.swp
@@ -17,16 +14,4 @@ build/*
 *.pbxuser
 *.xcworkspace
 xcuserdata
-
-# Binaries and object files
-/prototype/axr
-*.a
-*.o
-
-# Cmake
-CMakeCache.txt
-cmake_install.cmake
-CMakeFiles/
-/prototype/Makefile
-/prototype/core/Makefile
 
