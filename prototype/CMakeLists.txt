@@ -38,15 +38,10 @@
  #      FITNESS FOR A PARTICULAR PURPOSE.
  #
  ####################################################################
- #
- #      FILE INFORMATION:
- #      =================
- #      Last changed: 2012/05/25
- #      HSS version: 1.0
- #      Core version: 0.47
- #      Revision: 20
- #
- ####################################################################
+
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
+    message(FATAL_ERROR "You should not build in-source. Use a directory outside the source tree or a subdirectory such as: ${CMAKE_SOURCE_DIR}/build")
+endif()
 
 project(AXR)
 cmake_minimum_required(VERSION 2.8)
