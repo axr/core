@@ -1,9 +1,6 @@
-[submodule "prototype/win/cairosdl"]
-	path = prototype/win/cairosdl
-	url = git://people.freedesktop.org/~joonas/cairosdl
-[submodule "prototype/linux/cairosdl"]
-	path = prototype/linux/cairosdl
+[submodule "prototype/app/cairosdl"]
+	path = prototype/app/cairosdl
 	url = git://people.freedesktop.org/~joonas/cairosdl
 [submodule "prototype/resources/framework"]
 	path = prototype/resources/framework
-	url = git@github.com:AXR/Framework.git
+	url = https://github.com/AXR/Framework.git

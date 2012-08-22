@@ -49,22 +49,23 @@
  ####################################################################
 
 
-FILE(GLOB AXR_CORE_SRCS *.cpp)
-FILE(GLOB_RECURSE AXR_SRCS axr/*.cpp)
-FILE(GLOB_RECURSE XML_SRCS xml/*.cpp)
-FILE(GLOB_RECURSE HSS_SRCS hss/*.cpp)
+file(GLOB AXR_CORE_SRCS *.cpp *.h)
+file(GLOB_RECURSE AXR_SRCS axr/*.cpp axr/*.h)
+file(GLOB_RECURSE XML_SRCS xml/*.cpp xml/*.h)
+file(GLOB_RECURSE HSS_SRCS hss/*.cpp hss/*.h)
 
-IF (WIN32)
-    FILE(GLOB_RECURSE WRAPPER_SRCS os/win/*.cpp)
-ELSEIF(APPLE)
-    FILE(GLOB_RECURSE WRAPPER_SRCS os/osx/*.cpp)
-ELSE()
-    FILE(GLOB_RECURSE WRAPPER_SRCS os/linux/*.cpp)
-ENDIF()
+if(WIN32)
+    file(GLOB_RECURSE WRAPPER_SRCS os/win/*.cpp os/win/*.h)
+elseif(APPLE)
+    file(GLOB_RECURSE WRAPPER_SRCS os/osx/*.mm os/osx/*.h)
+else()
+    file(GLOB_RECURSE WRAPPER_SRCS os/linux/*.cpp os/linux/*.h)
+endif()
 
-ADD_LIBRARY(AXR_core            #make a static library AXR_core and add these files to it
-            ${AXR_CORE_SRCS}
-            ${AXR_SRCS}
-            ${XML_SRCS}
-            ${HSS_SRCS}
-            ${WRAPPER_SRCS})
+source_group("AXR" FILES ${AXR_SRCS})
+source_group("XML" FILES ${XML_SRCS})
+source_group("HSS" FILES ${HSS_SRCS})
+source_group("OS" FILES ${WRAPPER_SRCS})
+source_group("" FILES ${AXR_CORE_SRCS})
+
+add_library(AXR_core ${AXR_CORE_SRCS} ${AXR_SRCS} ${XML_SRCS} ${HSS_SRCS} ${WRAPPER_SRCS})
