@@ -51,43 +51,40 @@
 project(AXR)
 cmake_minimum_required(VERSION 2.8)
 
-if(UNIX)
-    set(Boost_USE_STATIC_LIBS   ON)
-    set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
 
-    find_package(PkgConfig REQUIRED)
-    find_package(EXPAT REQUIRED expat>=2.0)
+find_package(Boost COMPONENTS thread system program_options REQUIRED)
+find_package(SDL REQUIRED)
+find_package(EXPAT REQUIRED expat>=2.0)
 
-    find_package(Boost COMPONENTS thread system program_options REQUIRED)
-#    find_package(Threads REQUIRED)
-
-    pkg_check_modules(GLIB REQUIRED glib-2.0)
-    pkg_check_modules(SDL REQUIRED sdl)
-    pkg_check_modules(PANGO REQUIRED pango)
-    pkg_check_modules(CAIRO REQUIRED cairo)
-    pkg_check_modules(PANGOCAIRO REQUIRED pangocairo)
-endif(UNIX)
+# TODO: Avoid using pkg-config
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB REQUIRED glib-2.0)
+pkg_check_modules(PANGO REQUIRED pango)
+pkg_check_modules(CAIRO REQUIRED cairo)
+pkg_check_modules(PANGOCAIRO REQUIRED pangocairo)
 
 include_directories(
-    ${EXPAT_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIRS}
+    ${SDL_INCLUDE_DIR}
+    ${EXPAT_INCLUDE_DIRS}
     ${GLIB_INCLUDE_DIRS}
-    ${SDL_INCLUDE_DIRS}
     ${PANGO_INCLUDE_DIRS}
     ${CAIRO_INCLUDE_DIRS}
     ${PANGOCAIRO_INCLUDE_DIRS}
 )
 
+# TODO: Only necessary due to pkg-config usage
+link_directories(
+    ${GLIB_LIBRARY_DIRS}
+    ${PANGO_LIBRARY_DIRS}
+    ${CAIRO_LIBRARY_DIRS}
+    ${PANGOCAIRO_LIBRARY_DIRS}
+)
+
 add_subdirectory(core)
-
-if(UNIX AND NOT APPLE)
-    add_executable(axr
-        linux/cairosdl/cairosdl
-        linux/main
-    )
-
-    target_link_libraries(axr AXR_core ${EXPAT_LIBRARIES} ${Boost_LIBRARIES} ${GLIB_LIBRARIES} ${SDL_LIBRARIES} ${PANGO_LIBRARIES} ${CAIRO_LIBRARIES} ${PANGOCAIRO_LIBRARIES})
-endif()
+add_subdirectory(app)
 
 # Set distribution type
 if(NOT CMAKE_BUILD_TYPE)
