@@ -45,6 +45,7 @@
 #define HSSRECTANGLE_H
 
 #include "HSSShape.h"
+#include "HSSUnits.h"
 
 namespace AXR {
     
@@ -84,7 +85,7 @@ namespace AXR {
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
         
-        virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
+        virtual void draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
         
     private:
         HSSClonable::p cloneImpl() const;

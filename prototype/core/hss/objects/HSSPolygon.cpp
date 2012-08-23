@@ -143,13 +143,13 @@ void HSSPolygon::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
 }
 
-void HSSPolygon::draw(cairo_t * cairo, double long x, double long y, double long width, double long height)
+void HSSPolygon::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
     cairo_save(cairo);
     cairo_translate(cairo, x + width / 2., y + height / 2.);
     cairo_scale(cairo, 1. * (width / 2.), 1. * (height / 2.));
     
-    long double radius = 1;
+    HSSUnit radius = 1;
     int sides = this->sides < 3 ? 3 : (int)this->sides;
     long double step = 360.0f / sides;
     long double i;
@@ -157,8 +157,8 @@ void HSSPolygon::draw(cairo_t * cairo, double long x, double long y, double long
     for (i = this->angle; i < this->angle + 360.0; i += step) //go in a full circle
     {
         double radians = l_angle * M_PI / 180.0;
-        long double p_x = cosl(radians) * radius;
-        long double p_y = sinl(radians) * radius;
+        HSSUnit p_x = cosl(radians) * radius;
+        HSSUnit p_y = sinl(radians) * radius;
         if(i == this->angle){
             cairo_move_to(cairo, p_x, p_y);
         } else {

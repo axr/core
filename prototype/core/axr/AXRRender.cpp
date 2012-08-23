@@ -65,7 +65,7 @@ AXRRender::~AXRRender()
     
 }
 
-void AXRRender::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
+void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
     if(this->cairo == NULL){
         AXRError::p(new AXRError("AXRRender", "Fatal error: Cairo was not defined"))->raise();
@@ -117,22 +117,22 @@ void AXRRender::reset()
 }
 
 
-void AXRRender::mouseDown(long double x, long double y)
+void AXRRender::mouseDown(HSSUnit x, HSSUnit y)
 {
     //prepare values
     HSSContainer::p root = this->controller->getRoot();
-    struct point { long double x; long double y; } thePoint;
+    struct point { HSSUnit x; HSSUnit y; } thePoint;
     thePoint.x = x;
     thePoint.y = y;
     if(root)
         root->handleEvent(HSSEventTypeMouseDown, (void*)&thePoint);
 }
 
-void AXRRender::mouseUp(long double x, long double y)
+void AXRRender::mouseUp(HSSUnit x, HSSUnit y)
 {
     //prepare values
     HSSContainer::p root = this->controller->getRoot();
-    struct point { long double x; long double y; } thePoint;
+    struct point { HSSUnit x; HSSUnit y; } thePoint;
     thePoint.x = x;
     thePoint.y = y;
     if(root){

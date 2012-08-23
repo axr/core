@@ -91,7 +91,7 @@ bool HSSCircle::isKeyword(std::string value, std::string property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSCircle::draw(cairo_t * cairo, double long x, double long y, double long width, double long height)
+void HSSCircle::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
     cairo_save(cairo);
     cairo_translate(cairo, x + width / 2., y + height / 2.);

@@ -47,6 +47,7 @@
 #include "HSSDisplayObject.h"
 #include "HSSMultipleValue.h"
 #include "HSSShape.h"
+#include "HSSUnits.h"
 
 namespace AXR {
     
@@ -93,7 +94,7 @@ namespace AXR {
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         
         //see HSSShape.h for documentation of these
-        virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
+        virtual void draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
         
         /**
          *  Getter for the actual value of corners. Always stored inside a multiple value.
@@ -155,7 +156,7 @@ namespace AXR {
         HSSObservableProperty observedBRCornerProperty;
         HSSObservable * observedBLCorner;
         HSSObservableProperty observedBLCornerProperty;
-        double long cornerTL, cornerTR, cornerBR, cornerBL;
+        HSSUnit cornerTL, cornerTR, cornerBR, cornerBL;
         
     private:
         long double _setLDProperty(

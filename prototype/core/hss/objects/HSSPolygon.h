@@ -83,12 +83,13 @@ namespace AXR {
         virtual std::string defaultObjectType();
         virtual bool isKeyword(std::string value, std::string property);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-        virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
+        virtual void draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
         
         /**
          *  Getter for the actual value of the sides property.
          *  @return A long double containing the amount of sides.
          */
+#warning This should probably be an integer... a shape can't have a decimal number of sides
         long double getSides();
         
         /**

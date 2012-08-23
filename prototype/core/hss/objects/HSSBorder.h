@@ -48,6 +48,7 @@
 #include <boost/shared_ptr.hpp>
 #include <cairo/cairo.h>
 #include "HSSObject.h"
+#include "HSSUnits.h"
 
 namespace AXR {
     /**
@@ -90,9 +91,9 @@ namespace AXR {
         
         /**
          *  Getter for the value of size.
-         *  @return A long double containing the value of size.
+         *  @return An HSSUnit containing the value of size.
          */
-        long double getSize();
+        HSSUnit getSize();
         
         /**
          *  Setter for the definition object of size. It will use the value as needed.
@@ -108,8 +109,7 @@ namespace AXR {
         void sizeChanged(HSSObservableProperty source, void*data);
         
     protected:
-        //size
-        long double size;
+        HSSUnit size;
         HSSParserNode::p dSize;
         HSSObservable * observedSize;
         HSSObservableProperty observedSizeProperty;

@@ -92,7 +92,7 @@ bool HSSRectangle::isKeyword(std::string value, std::string property)
 }
 
 
-void HSSRectangle::draw(cairo_t * cairo, double long x, double long y, double long width, double long height)
+void HSSRectangle::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
     cairo_rectangle(cairo, x, y, width, height);
 }

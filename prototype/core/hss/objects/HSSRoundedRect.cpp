@@ -535,29 +535,29 @@ void HSSRoundedRect::setDLeftBottom(HSSParserNode::p value){
 
 void HSSRoundedRect::cornerTLChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->cornerTL = *(long double*)data;
+    this->cornerTL = *(HSSUnit*)data;
     this->notifyObservers(HSSObservablePropertyCorners, &this->corners);
 }
 
 void HSSRoundedRect::cornerTRChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->cornerTR = *(long double*)data;
+    this->cornerTR = *(HSSUnit*)data;
     this->notifyObservers(HSSObservablePropertyCorners, &this->corners);
 }
 
 void HSSRoundedRect::cornerBRChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->cornerBR = *(long double*)data;
+    this->cornerBR = *(HSSUnit*)data;
     this->notifyObservers(HSSObservablePropertyCorners, &this->corners);
 }
 
 void HSSRoundedRect::cornerBLChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->cornerBL = *(long double*)data;
+    this->cornerBL = *(HSSUnit*)data;
     this->notifyObservers(HSSObservablePropertyCorners, &this->corners);
 }
 
-void HSSRoundedRect::draw(cairo_t * cairo, double long x, double long y, double long width, double long height)
+void HSSRoundedRect::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
     double long degrees = M_PI / 180.0;
     

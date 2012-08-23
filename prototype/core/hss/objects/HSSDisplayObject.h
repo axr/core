@@ -230,32 +230,28 @@ namespace AXR {
         const bool needsLayout() const;
         virtual void layout();
         virtual void recursiveLayout();
-        virtual void setGlobalX(long double newValue);
-        virtual void setGlobalY(long double newValue);
+        virtual void setGlobalX(HSSUnit newValue);
+        virtual void setGlobalY(HSSUnit newValue);
         
         std::string getElementName();
         void setElementName(std::string name);
         
-        //alignX
-        long double getAlignX();
+        HSSUnit getAlignX();
         HSSParserNode::p getDAlignX();
         void setDAlignX(HSSParserNode::p value);
         void alignXChanged(HSSObservableProperty source, void*data);
         
-        //alignY
-        long double getAlignY();
+        HSSUnit getAlignY();
         HSSParserNode::p getDAlignY();
         void setDAlignY(HSSParserNode::p value);
         void alignYChanged(HSSObservableProperty source, void*data);
         
-        //anchorX
-        long double getAnchorX();
+        HSSUnit getAnchorX();
         HSSParserNode::p getDAnchorX();
         void setDAnchorX(HSSParserNode::p value);
         void anchorXChanged(HSSObservableProperty source, void*data);
         
-        //anchorY
-        long double getAnchorY();
+        HSSUnit getAnchorY();
         HSSParserNode::p getDAnchorY();
         void setDAnchorY(HSSParserNode::p value);
         void anchorYChanged(HSSObservableProperty source, void*data);
@@ -273,13 +269,13 @@ namespace AXR {
         void overflowChanged(HSSObservableProperty source, void*data);
         
         //height
-        long double getHeight();
+        HSSUnit getHeight();
         HSSParserNode::p getDHeight();
         void setDHeight(HSSParserNode::p value);
         void heightChanged(HSSObservableProperty source, void*data);
         
         //width
-        long double getWidth();
+        HSSUnit getWidth();
         HSSParserNode::p getDWidth();
         void setDWidth(HSSParserNode::p value);
         void widthChanged(HSSObservableProperty source, void*data);
@@ -384,7 +380,7 @@ namespace AXR {
         std::vector<std::vector<HSSDisplayObject::p> >layoutLines;
         
         //here go the final computed values
-        long double x, y, globalX, globalY,
+        HSSUnit x, y, globalX, globalY,
                     width, innerWidth, outerWidth,
                     height, innerHeight, outerHeight,
                     topPadding, rightPadding, bottomPadding, leftPadding,
@@ -406,13 +402,13 @@ namespace AXR {
         
         //anchorX
         HSSParserNode::p dAnchorX;
-        long double anchorX;
+        HSSUnit anchorX;
         bool _anchorXdefault;
         HSSObservable::p observedAnchorX;
         HSSObservableProperty observedAnchorXProperty;
         //anchorY
         HSSParserNode::p dAnchorY;
-        long double anchorY;
+        HSSUnit anchorY;
         bool _anchorYdefault;
         HSSObservable::p observedAnchorY;
         HSSObservableProperty observedAnchorYProperty;
@@ -425,12 +421,12 @@ namespace AXR {
         bool overflow;
         //alignX
         HSSParserNode::p dAlignX;
-        long double alignX;
+        HSSUnit alignX;
         HSSObservable::p observedAlignX;
         HSSObservableProperty observedAlignXProperty;
         //alignY
         HSSParserNode::p dAlignY;
-        long double alignY;
+        HSSUnit alignY;
         HSSObservable::p observedAlignY;
         HSSObservableProperty observedAlignYProperty;
         //background

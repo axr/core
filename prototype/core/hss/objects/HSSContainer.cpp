@@ -375,10 +375,10 @@ void HSSContainer::setProperty(HSSObservableProperty name, void * value)
 {
     switch (name) {
         case HSSObservablePropertyContentAlignX:
-            this->contentAlignX = *(long double*) value;
+            this->contentAlignX = *(HSSUnit*) value;
             break;
         case HSSObservablePropertyContentAlignY:
-            this->contentAlignY = *(long double*) value;
+            this->contentAlignY = *(HSSUnit*) value;
             break;
         case HSSObservablePropertyDirectionPrimary:
             this->directionPrimary = *(HSSDirectionValue*) value;
@@ -440,7 +440,7 @@ void HSSContainer::drawBorders()
 {
     HSSBorder::it it;
     cairo_t * cairo = cairo_create(this->bordersSurface);
-    long double total = 0., i = 0., offset = 0., correction = 0.;
+    HSSUnit total = 0., i = 0., offset = 0., correction = 0.;
     
     for (it=this->border.begin(); it!=this->border.end(); it++) {
         total += (*it)->getSize();
@@ -452,7 +452,7 @@ void HSSContainer::drawBorders()
     
     for (it=this->border.begin(); it!=this->border.end(); it++) {
         HSSBorder::p theBorder = *it;
-        long double theSize = theBorder->getSize();
+        HSSUnit theSize = theBorder->getSize();
         
         offset = (total/2) - i - (theSize / 2) + correction;
         
@@ -472,7 +472,7 @@ void HSSContainer::drawBorders()
 //            break;
 //        case HSSShapeTypeCircle:
 //        {
-//            double long halfWidth = this->width * 0.5;
+//            HSSUnit halfWidth = this->width * 0.5;
 //            cairo_arc(cairo, halfWidth, this->height * 0.5, halfWidth, 0., 2*M_PI);
 //            break;
 //        }
@@ -500,7 +500,7 @@ void HSSContainer::layout()
             std::vector<displayGroup::p>primaryGroups;
             std::vector<displayGroup::p>secondaryGroups;
             unsigned i, size, j, k;
-            //long double acc2 = 0;
+            //HSSUnit acc2 = 0;
             security_brake_init();
             AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
             
@@ -774,7 +774,7 @@ void HSSContainer::layout()
             }
             
             if(this->heightByContent){
-                long double maxHeight = 0.;
+                HSSUnit maxHeight = 0.;
                 
                 for (i=0, size = secondaryGroups.size(); i<size; i++) {
                     if(secondaryGroups[i]->height > maxHeight){
@@ -782,7 +782,7 @@ void HSSContainer::layout()
                     }
                 }
                 if(size > 0){
-                    long double newValue = maxHeight + this->topPadding + this->bottomPadding;
+                    HSSUnit newValue = maxHeight + this->topPadding + this->bottomPadding;
                     if(this->height != newValue){
                         this->height = newValue;
                         this->_setInnerDimensions();
@@ -838,7 +838,7 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
                 if(!objA->_layoutFlagIsInSecondaryLine){
                     targetA->objects.push_back(objA);
                     objA->_layoutFlagIsInSecondaryLine = true;
-                    long double currentHeight = targetA->height;
+                    HSSUnit currentHeight = targetA->height;
                     if(objA->outerHeight > currentHeight){
                         targetA->height = objA->outerHeight;
                         newGroup->height += currentHeight - targetA->height;
@@ -854,7 +854,7 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
                 } else {
                     targetB->objects.push_back(objB);
                     objB->_layoutFlagIsInSecondaryLine = true;
-                    long double currentHeight = targetB->height;
+                    HSSUnit currentHeight = targetB->height;
                     if(objB->outerHeight > currentHeight){
                         targetB->height = objB->outerHeight;
                         newGroup->height += currentHeight - targetB->height;
@@ -890,7 +890,7 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
                             objA->_layoutFlagIsInSecondaryLine = true;
                             firstObj = objA;
                             firstObjIt = lineAIt;
-                            long double currentHeight = targetA->height;
+                            HSSUnit currentHeight = targetA->height;
                             if(objA->outerHeight > currentHeight){
                                 targetA->height = objA->outerHeight;
                                 newGroup->height += currentHeight - targetA->height;
@@ -1028,10 +1028,10 @@ bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSS
     unsigned i, size;
     bool isHorizontal = (direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft);
     bool addedToGroup = false;
-    long double lineTotalPrimary = 0;
+    HSSUnit lineTotalPrimary = 0;
     
-    long double originalX = child->x;
-    long double originalY = child->y;
+    HSSUnit originalX = child->x;
+    HSSUnit originalY = child->y;
     
     for (i=0, size = group->objects.size(); i<size; i++) {
         HSSDisplayObject::p & otherChild = group->objects[i];
@@ -1217,9 +1217,9 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if(byAnchors){
                 //calculate the new alignment and anchor point for the group
                 HSSDisplayObject::p & groupFirst = group->objects.front();
-                long double alignmentTotal = 0.;
-                long double accWidth = groupFirst->anchorX;
-                long double anchorsTotal = 0.;
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accWidth = groupFirst->anchorX;
+                HSSUnit anchorsTotal = 0.;
                 for (i=0, size = group->objects.size(); i<size; i++) {
                     HSSDisplayObject::p & currentChild = group->objects[i];
                     alignmentTotal += currentChild->alignX;
@@ -1228,11 +1228,11 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
                         accWidth += currentChild->outerWidth;
                     }
                 }
-                double long groupAlignX = alignmentTotal / size;
-                double long groupAnchorX = anchorsTotal / size;
+                HSSUnit groupAlignX = alignmentTotal / size;
+                HSSUnit groupAnchorX = anchorsTotal / size;
                 
                 //reposition the elements in the group
-                double long startX = groupAlignX +  groupAnchorX + (groupFirst->width - groupFirst->anchorX);
+                HSSUnit startX = groupAlignX +  groupAnchorX + (groupFirst->width - groupFirst->anchorX);
                 if(startX - group->width < 0) startX = group->width;
                 if(startX > this->width) startX = this->width;
                 accWidth = 0.;
@@ -1246,16 +1246,16 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             } else {
                 
                 //calculate the alignment point for the group
-                long double alignmentTotal = 0.;
-                long double accWidth = 0.;
-                long double widthsTotal = 0.;
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accWidth = 0.;
+                HSSUnit widthsTotal = 0.;
                 for (i=0, size = group->objects.size(); i<size; i++) {
                     HSSDisplayObject::p & currentChild = group->objects[i];
                     alignmentTotal += currentChild->alignX;
                     widthsTotal += currentChild->outerWidth;
                 }
-                double long groupAlignX = alignmentTotal / size;
-                double long startX = groupAlignX + widthsTotal / 2;
+                HSSUnit groupAlignX = alignmentTotal / size;
+                HSSUnit startX = groupAlignX + widthsTotal / 2;
                 if(startX > (this->width - this->rightPadding)) startX = (this->width - this->rightPadding);
                 if(startX - group->width < this->leftPadding) startX = this->leftPadding + group->width;
                 for (i=0, size = group->objects.size(); i<size; i++) {
@@ -1280,9 +1280,9 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if(byAnchors){
                 //calculate the new alignment and anchor point for the group
                 HSSDisplayObject::p & groupFirst = group->objects.front();
-                long double alignmentTotal = 0.;
-                long double accHeight = groupFirst->height - groupFirst->anchorY;
-                long double anchorsTotal = 0.;
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accHeight = groupFirst->height - groupFirst->anchorY;
+                HSSUnit anchorsTotal = 0.;
                 for (i=0, size = group->objects.size(); i<size; i++) {
                     HSSDisplayObject::p & currentChild = group->objects[i];
                     alignmentTotal += currentChild->alignY;
@@ -1291,11 +1291,11 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
                         accHeight += currentChild->outerHeight;
                     }
                 }
-                double long groupAlignY = alignmentTotal / size;
-                double long groupAnchorY = anchorsTotal / size;
+                HSSUnit groupAlignY = alignmentTotal / size;
+                HSSUnit groupAnchorY = anchorsTotal / size;
                 
                 //reposition the elements in the group
-                double long startY = groupAlignY - groupAnchorY - groupFirst->anchorY;
+                HSSUnit startY = groupAlignY - groupAnchorY - groupFirst->anchorY;
                 if(startY > this->height - group->height) startY = this->height - group->height;
                 if(startY < 0) startY = 0.;
                 accHeight = 0.;
@@ -1308,16 +1308,16 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
                 group->y = group->objects.front()->y - group->objects.front()->topMargin;
             } else {
                 //calculate the alignment point for the group
-                long double alignmentTotal = 0.;
-                long double accHeight = 0.;
-                long double heightsTotal = 0.;
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accHeight = 0.;
+                HSSUnit heightsTotal = 0.;
                 for (i=0, size = group->objects.size(); i<size; i++) {
                     HSSDisplayObject::p & currentChild = group->objects[i];
                     alignmentTotal += currentChild->alignY;
                     heightsTotal += currentChild->outerHeight;
                 }
-                double long groupAlignY = alignmentTotal / size;
-                double long startY = groupAlignY - heightsTotal / 2;
+                HSSUnit groupAlignY = alignmentTotal / size;
+                HSSUnit startY = groupAlignY - heightsTotal / 2;
                 if(startY > (this->width - this->bottomPadding) - group->height) startY = (this->height - this->bottomPadding) - group->height;
                 if(startY < this->topPadding) startY = this->topPadding;
                 group->y = startY;
@@ -1342,9 +1342,9 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if(byAnchors){
                 //calculate the new alignment and anchor point for the group
                 HSSDisplayObject::p & groupFirst = group->objects.front();
-                long double alignmentTotal = 0;
-                long double accHeight = groupFirst->anchorY;
-                long double anchorsTotal = 0;
+                HSSUnit alignmentTotal = 0;
+                HSSUnit accHeight = groupFirst->anchorY;
+                HSSUnit anchorsTotal = 0;
                 for (i=0, size = group->objects.size(); i<size; i++) {
                     HSSDisplayObject::p & currentChild = group->objects[i];
                     alignmentTotal += currentChild->alignY;
@@ -1353,11 +1353,11 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
                         accHeight += currentChild->outerHeight;
                     }
                 }
-                double long groupAlignY = alignmentTotal / size;
-                double long groupAnchorY = anchorsTotal / size;
+                HSSUnit groupAlignY = alignmentTotal / size;
+                HSSUnit groupAnchorY = anchorsTotal / size;
                 
                 //reposition the elements in the group
-                double long startY = groupAlignY +  groupAnchorY + (groupFirst->height - groupFirst->anchorY);
+                HSSUnit startY = groupAlignY +  groupAnchorY + (groupFirst->height - groupFirst->anchorY);
                 if(startY - group->height < 0) startY = group->height;
                 if(startY > this->height) startY = this->height;
                 accHeight = 0;
@@ -1370,16 +1370,16 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
                 group->y = group->objects.front()->y;
             } else {
                 //calculate the alignment point for the group
-                long double alignmentTotal = 0.;
-                long double accHeight = 0.;
-                long double heightsTotal = 0.;
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accHeight = 0.;
+                HSSUnit heightsTotal = 0.;
                 for (i=0, size = group->objects.size(); i<size; i++) {
                     HSSDisplayObject::p & currentChild = group->objects[i];
                     alignmentTotal += currentChild->alignY;
                     heightsTotal += currentChild->outerHeight;
                 }
-                double long groupAlignY = alignmentTotal / size;
-                double long startY = groupAlignY + heightsTotal / 2;
+                HSSUnit groupAlignY = alignmentTotal / size;
+                HSSUnit startY = groupAlignY + heightsTotal / 2;
                 if(startY > (this->height - this->bottomPadding)) startY = (this->height - this->bottomPadding);
                 if(startY - group->height < this->topPadding) startY = this->topPadding + group->height;
                 for (i=0, size = group->objects.size(); i<size; i++) {
@@ -1405,9 +1405,9 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if(byAnchors){
                 //calculate the new alignment and anchor point for the group
                 HSSDisplayObject::p & groupFirst = group->objects.front();
-                long double alignmentTotal = 0.;
-                long double accWidth = groupFirst->outerWidth - groupFirst->anchorX;
-                long double anchorsTotal = 0.;
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accWidth = groupFirst->outerWidth - groupFirst->anchorX;
+                HSSUnit anchorsTotal = 0.;
                 for (i=0, size = group->objects.size(); i<size; i++) {
                     HSSDisplayObject::p & currentChild = group->objects[i];
                     alignmentTotal += currentChild->alignX;
@@ -1416,11 +1416,11 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
                         accWidth += currentChild->outerWidth;
                     }
                 }
-                double long groupAlignX = alignmentTotal / size;
-                double long groupAnchorX = anchorsTotal / size;
+                HSSUnit groupAlignX = alignmentTotal / size;
+                HSSUnit groupAnchorX = anchorsTotal / size;
                 
                 //reposition the elements in the group
-                double long startX = groupAlignX - groupAnchorX - groupFirst->anchorX;
+                HSSUnit startX = groupAlignX - groupAnchorX - groupFirst->anchorX;
                 if(startX > (this->width - this->rightPadding) - group->width) startX = (this->width - this->rightPadding) - group->width;
                 if(startX < 0.) startX = 0.;
                 accWidth = 0.;
@@ -1434,16 +1434,16 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
                 
             } else {
                 //calculate the alignment point for the group
-                long double alignmentTotal = 0.;
-                long double accWidth = 0.;
-                long double widthsTotal = 0.;
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accWidth = 0.;
+                HSSUnit widthsTotal = 0.;
                 for (i=0, size = group->objects.size(); i<size; i++) {
                     HSSDisplayObject::p & currentChild = group->objects[i];
                     alignmentTotal += currentChild->alignX;
                     widthsTotal += currentChild->outerWidth;
                 }
-                double long groupAlignX = alignmentTotal / size;
-                double long startX = groupAlignX - widthsTotal / 2;
+                HSSUnit groupAlignX = alignmentTotal / size;
+                HSSUnit startX = groupAlignX - widthsTotal / 2;
                 if(startX > (this->width - this->rightPadding) - group->width) startX = (this->width - this->rightPadding) - group->width;
                 if(startX < this->leftPadding) startX = this->leftPadding;
                 group->x = startX;
@@ -1489,10 +1489,10 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
             if(byAnchors){
                 
             } else {
-                long double alignmentTotal = 0.;
-                long double accHeight = 0.;
-                long double totalSize = 0.;
-                long double biggest = 0.;
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accHeight = 0.;
+                HSSUnit totalSize = 0.;
+                HSSUnit biggest = 0.;
                 
                 //create "push groups" to find out which one is the strongest
                 displayGroup::p biggestGroup;
@@ -1544,27 +1544,27 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
                 }
                 
                 //calculate the alignment point for the biggest elements
-                long double groupAlignY = alignmentTotal / size;
+                HSSUnit groupAlignY = alignmentTotal / size;
                 
                 //reposition the elements in the group
-                long double startY = groupAlignY - totalSize / 2;
+                HSSUnit startY = groupAlignY - totalSize / 2;
                 if(startY > (this->height - this->bottomPadding) - group->height) startY = (this->height - this->bottomPadding) - group->height;
                 if(startY < this->topPadding) startY = this->topPadding;
                 HSSDisplayObject::it bobjIt, bobjIt2;
                 int i = 0, size = biggestGroup->objects.size();
                 for (bobjIt=biggestGroup->objects.begin(); bobjIt!=biggestGroup->objects.end(); bobjIt++) {
                     HSSDisplayObject::p otherChild2 = *bobjIt;
-                    long double newValue = startY + accHeight + otherChild2->topMargin;
+                    HSSUnit newValue = startY + accHeight + otherChild2->topMargin;
                     if(!isFirstGroup){
                         //find the bottom constraint of the previous line
-                        long double prevConstraintBottom = this->topPadding;
+                        HSSUnit prevConstraintBottom = this->topPadding;
                         bool hasPrevConstraintBottom = false;
                         if(i!=0){
                             displayGroup::p previousLine = group->lines[i-1];
                             hasPrevConstraintBottom = this->_recursiveFindBottomConstraint(prevConstraintBottom, group, i, otherChild2);
                         }
                         //find the top constraint of the next line
-                        long double nextConstraintTop = this->height - this->bottomPadding;
+                        HSSUnit nextConstraintTop = this->height - this->bottomPadding;
                         bool hasNextConstraintTop = false;
                         if(group->lines.size() > i+1){
                             displayGroup::p nextLine = group->lines[i+1];
@@ -1618,7 +1618,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
                         
                         if(!currentChild->_layoutFlagLockBottom){
                             //find the constraint towards the bottom
-                            long double constraintBottom = this->height - this->bottomPadding;
+                            HSSUnit constraintBottom = this->height - this->bottomPadding;
                             bool needsConstraintBottom = false;
                             if(group->lines.size() > i+1){
                                 displayGroup::p nextLine = group->lines[i+1];
@@ -1648,7 +1648,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
                         
                         if(!currentChild->_layoutFlagLockTop){
                             //find the constraint towards the top
-                            long double constraintTop = this->topPadding;
+                            HSSUnit constraintTop = this->topPadding;
                             bool needsConstraintTop = false;
                             if(i!=0){
                                 displayGroup::p previousLine = group->lines[i-1];
@@ -1719,9 +1719,9 @@ void HSSContainer::_recursiveGetPushGroup(HSSDisplayObject::p objA, HSSDisplayOb
     }
 }
 
-bool HSSContainer::_recursiveFindTopConstraint(long double &constraint, displayGroup::p group, int i, HSSDisplayObject::p child){
+bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup::p group, int i, HSSDisplayObject::p child){
     bool ret = false;
-    long double constraintStore = constraint;
+    HSSUnit constraintStore = constraint;
     displayGroup::p nextLine;
     if (i >= group->lines.size()-1) {
         return false;
@@ -1738,10 +1738,10 @@ bool HSSContainer::_recursiveFindTopConstraint(long double &constraint, displayG
             }
         } else {
             if(i+1 < group->lines.size()){
-                long double newConstraint = constraintStore;
+                HSSUnit newConstraint = constraintStore;
                 bool needsNewConstraint = this->_recursiveFindTopConstraint(newConstraint, group, i+1, nlObj);
                 if(needsNewConstraint){
-                    long double newValue = newConstraint - nlObj->outerHeight;
+                    HSSUnit newValue = newConstraint - nlObj->outerHeight;
                     if(newValue < constraint){
                         constraint = newValue;
                         ret = true;
@@ -1753,9 +1753,9 @@ bool HSSContainer::_recursiveFindTopConstraint(long double &constraint, displayG
     return ret;
 }
 
-bool HSSContainer::_recursiveFindBottomConstraint(long double &constraint, displayGroup::p group, int i, HSSDisplayObject::p child){
+bool HSSContainer::_recursiveFindBottomConstraint(HSSUnit &constraint, displayGroup::p group, int i, HSSDisplayObject::p child){
     bool ret = false;
-    long double constraintStore = constraint;
+    HSSUnit constraintStore = constraint;
     displayGroup::p nextLine;
     if (i < 1) {
         return false;
@@ -1772,10 +1772,10 @@ bool HSSContainer::_recursiveFindBottomConstraint(long double &constraint, displ
             }
         } else {
             if(i<2){
-                long double newConstraint = constraintStore;
+                HSSUnit newConstraint = constraintStore;
                 bool needsNewConstraint = this->_recursiveFindBottomConstraint(newConstraint, group, i-1, nlObj);
                 if(needsNewConstraint){
-                    long double newValue = newConstraint + nlObj->outerHeight;
+                    HSSUnit newValue = newConstraint + nlObj->outerHeight;
                     if(newValue > constraint){
                         constraint = newValue;
                         ret = true;
@@ -1794,7 +1794,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
         {
             if(group->objects.size() == 1){
                 HSSDisplayObject::p &theDO = group->objects.front();
-                long double newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
+                HSSUnit newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
                 theDO->x = this->leftPadding + newValue;
                 group->x = 0.;
                 group->y = theDO->y;
@@ -1802,8 +1802,8 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 
             } else {
                 HSSDisplayObject::it it;
-                long double accWidth = this->rightPadding;
-                long double totalWidth = 0.;
+                HSSUnit accWidth = this->rightPadding;
+                HSSUnit totalWidth = 0.;
                 
                 //calculate the total width of the group
                 for (it=group->objects.begin(); it!=group->objects.end(); it++) {
@@ -1812,9 +1812,9 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 
                 if(this->distributeXLinear){
                     //now get the remaining space
-                    long double remainingSpace = this->innerWidth - totalWidth;
+                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
                     //divide it by the number of elements-1
-                    long double spaceChunk = remainingSpace / (group->objects.size() - 1);
+                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
                     unsigned i = 0;
                     for (it=group->objects.begin(); it!=group->objects.end(); it++) {
                         HSSDisplayObject::p &theDO = *it;
@@ -1826,9 +1826,9 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                     group->y = group->objects.back()->y;
                 } else {
                     //now get the remaining space
-                    long double remainingSpace = this->innerWidth - totalWidth;
+                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
                     //divide it by the number of elements+1
-                    long double spaceChunk = remainingSpace / (group->objects.size() + 1);
+                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
                     unsigned i = 0;
                     for (it=group->objects.begin(); it!=group->objects.end(); it++) {
                         HSSDisplayObject::p &theDO = *it;
@@ -1849,7 +1849,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
             
             if(group->objects.size() == 1){
                 HSSDisplayObject::p &theDO = group->objects.front();
-                long double newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
+                HSSUnit newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
                 theDO->y = this->topPadding + newValue;
                 group->y = 0.;
                 group->x = theDO->x;
@@ -1857,8 +1857,8 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 
             } else {
                 HSSDisplayObject::it it;
-                long double accHeight = this->topPadding;
-                long double totalHeight = 0.;
+                HSSUnit accHeight = this->topPadding;
+                HSSUnit totalHeight = 0.;
                 
                 //calculate the total height of the group
                 for (it=group->objects.begin(); it!=group->objects.end(); it++) {
@@ -1867,9 +1867,9 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 
                 if(this->distributeXLinear){
                     //now get the remaining space
-                    long double remainingSpace = this->innerHeight - totalHeight;
+                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
                     //divide it by the number of elements-1
-                    long double spaceChunk = remainingSpace / (group->objects.size() - 1);
+                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
                     unsigned i = 0;
                     for (it=group->objects.begin(); it!=group->objects.end(); it++) {
                         HSSDisplayObject::p &theDO = *it;
@@ -1881,9 +1881,9 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                     group->y = group->objects.front()->y;
                 } else {
                     //now get the remaining space
-                    long double remainingSpace = this->innerHeight - totalHeight;
+                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
                     //divide it by the number of elements+1
-                    long double spaceChunk = remainingSpace / (group->objects.size() + 1);
+                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
                     unsigned i = 0;
                     for (it=group->objects.begin(); it!=group->objects.end(); it++) {
                         HSSDisplayObject::p &theDO = *it;
@@ -1902,7 +1902,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
         {
             if(group->objects.size() == 1){
                 HSSDisplayObject::p &theDO = group->objects.front();
-                long double newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
+                HSSUnit newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
                 theDO->y = this->topPadding + newValue;
                 group->y = 0.;
                 group->x = theDO->x;
@@ -1910,8 +1910,8 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 
             } else {
                 HSSDisplayObject::it it;
-                long double accHeight = this->bottomPadding;
-                long double totalHeight = 0.;
+                HSSUnit accHeight = this->bottomPadding;
+                HSSUnit totalHeight = 0.;
                 
                 //calculate the total height of the group
                 for (it=group->objects.begin(); it!=group->objects.end(); it++) {
@@ -1920,9 +1920,9 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 
                 if(this->distributeXLinear){
                     //now get the remaining space
-                    long double remainingSpace = this->innerHeight - totalHeight;
+                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
                     //divide it by the number of elements-1
-                    long double spaceChunk = remainingSpace / (group->objects.size() - 1);
+                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
                     unsigned i = 0;
                     for (it=group->objects.begin(); it!=group->objects.end(); it++) {
                         HSSDisplayObject::p &theDO = *it;
@@ -1934,9 +1934,9 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                     group->x = group->objects.back()->x;
                 } else {
                     //now get the remaining space
-                    long double remainingSpace = this->innerHeight - totalHeight;
+                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
                     //divide it by the number of elements+1
-                    long double spaceChunk = remainingSpace / (group->objects.size() + 1);
+                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
                     unsigned i = 0;
                     for (it=group->objects.begin(); it!=group->objects.end(); it++) {
                         HSSDisplayObject::p &theDO = *it;
@@ -1955,7 +1955,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
         {
             if(group->objects.size() == 1){
                 HSSDisplayObject::p &theDO = group->objects.front();
-                long double newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
+                HSSUnit newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
                 theDO->x = this->leftPadding + newValue;
                 group->x = 0.;
                 group->y = theDO->y;
@@ -1963,8 +1963,8 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 
             } else {
                 HSSDisplayObject::it it;
-                long double accWidth = this->leftPadding;
-                long double totalWidth = 0.;
+                HSSUnit accWidth = this->leftPadding;
+                HSSUnit totalWidth = 0.;
                 
                 //calculate the total width of the group
                 for (it=group->objects.begin(); it!=group->objects.end(); it++) {
@@ -1973,9 +1973,9 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 
                 if(this->distributeXLinear){
                     //now get the remaining space
-                    long double remainingSpace = this->innerWidth - totalWidth;
+                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
                     //divide it by the number of elements-1
-                    long double spaceChunk = remainingSpace / (group->objects.size() - 1);
+                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
                     unsigned i = 0;
                     for (it=group->objects.begin(); it!=group->objects.end(); it++) {
                         (*it)->x = accWidth + (spaceChunk*i) + (*it)->leftMargin;
@@ -1986,9 +1986,9 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                     group->y = group->objects.front()->y;
                 } else {
                     //now get the remaining space
-                    long double remainingSpace = this->innerWidth - totalWidth;
+                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
                     //divide it by the number of elements+1
-                    long double spaceChunk = remainingSpace / (group->objects.size() + 1);
+                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
                     unsigned i = 0;
                     for (it=group->objects.begin(); it!=group->objects.end(); it++) {
                         (*it)->x = accWidth + spaceChunk + (spaceChunk*i) + (*it)->leftMargin;
@@ -2014,9 +2014,9 @@ void HSSContainer::recursiveLayout()
     this->layout();
 }
 
-void HSSContainer::setGlobalX(long double newValue)
+void HSSContainer::setGlobalX(HSSUnit newValue)
 {
-    long double delta = newValue - this->globalX;
+    HSSUnit delta = newValue - this->globalX;
     HSSDisplayObject::setGlobalX(newValue);
     unsigned i, size;
     for (i=0, size=this->allChildren.size(); i<size; i++){
@@ -2025,9 +2025,9 @@ void HSSContainer::setGlobalX(long double newValue)
     }
 }
 
-void HSSContainer::setGlobalY(long double newValue)
+void HSSContainer::setGlobalY(HSSUnit newValue)
 {
-    long double delta = newValue - this->globalY;
+    HSSUnit delta = newValue - this->globalY;
     HSSDisplayObject::setGlobalY(newValue);
     unsigned i, size;
     for (i=0, size=this->allChildren.size(); i<size; i++){
@@ -2130,7 +2130,7 @@ void HSSContainer::contentAlignXChanged(HSSObservableProperty source, void *data
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dContentAlignX);
-            this->contentAlignX = percentageValue->getValue(*(long double*)data);
+            this->contentAlignX = percentageValue->getValue(*(HSSUnit*)data);
             break;
         }
             
@@ -2222,7 +2222,7 @@ void HSSContainer::contentAlignYChanged(HSSObservableProperty source, void *data
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dContentAlignY);
-            this->contentAlignY = percentageValue->getValue(*(long double*)data);
+            this->contentAlignY = percentageValue->getValue(*(HSSUnit*)data);
             break;
         }
             

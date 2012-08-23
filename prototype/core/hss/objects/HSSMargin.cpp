@@ -203,7 +203,7 @@ void HSSMargin::setDSize(HSSParserNode::p value){
     this->dSize = value;
 }
 
-const long double HSSMargin::getTop() const { return this->top; }
+const HSSUnit HSSMargin::getTop() const { return this->top; }
 void HSSMargin::setDTop(HSSParserNode::p value){
     switch (value->getType()) {
         case HSSParserNodeTypeNumberConstant:
@@ -237,11 +237,11 @@ void HSSMargin::setDTop(HSSParserNode::p value){
 
 void HSSMargin::topChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->top = *(long double*)data;
+    this->top = *(HSSUnit*)data;
     this->notifyObservers(HSSObservablePropertyTop, &this->top);
 }
 
-const long double HSSMargin::getRight() const { return this->right; }
+const HSSUnit HSSMargin::getRight() const { return this->right; }
 void HSSMargin::setDRight(HSSParserNode::p value){
     switch (value->getType()) {
         case HSSParserNodeTypeNumberConstant:
@@ -275,11 +275,11 @@ void HSSMargin::setDRight(HSSParserNode::p value){
 
 void HSSMargin::rightChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->right = *(long double*)data;
+    this->right = *(HSSUnit*)data;
     this->notifyObservers(HSSObservablePropertyRight, &this->right);
 }
 
-const long double HSSMargin::getBottom() const { return this->bottom; }
+const HSSUnit HSSMargin::getBottom() const { return this->bottom; }
 void HSSMargin::setDBottom(HSSParserNode::p value){
     switch (value->getType()) {
         case HSSParserNodeTypeNumberConstant:
@@ -313,11 +313,11 @@ void HSSMargin::setDBottom(HSSParserNode::p value){
 
 void HSSMargin::bottomChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->bottom = *(long double*)data;
+    this->bottom = *(HSSUnit*)data;
     this->notifyObservers(HSSObservablePropertyBottom, &this->bottom);
 }
 
-const long double HSSMargin::getLeft() const { return this->left; }
+const HSSUnit HSSMargin::getLeft() const { return this->left; }
 void HSSMargin::setDLeft(HSSParserNode::p value){
     switch (value->getType()) {
         case HSSParserNodeTypeNumberConstant:
@@ -351,7 +351,7 @@ void HSSMargin::setDLeft(HSSParserNode::p value){
 
 void HSSMargin::leftChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->left = *(long double*)data;
+    this->left = *(HSSUnit*)data;
     this->notifyObservers(HSSObservablePropertyLeft, &this->left);
 }
 

@@ -90,7 +90,7 @@ void AXRCore::setCairo(cairo_t * cr) {
 
 cairo_t * AXRCore::getCairo() { return this->render->getCairo(); }
 
-void AXRCore::drawInRectWithBounds(AXRRect rect, AXRRect bounds)
+void AXRCore::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
     if(this->render){
         this->render->drawInRectWithBounds(rect, bounds);

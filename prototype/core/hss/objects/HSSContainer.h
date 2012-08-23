@@ -85,10 +85,10 @@ namespace AXR {
         {
         public:
             typedef boost::shared_ptr<HSSContainer::displayGroup> p;
-            long double x;
-            long double y;
-            long double width;
-            long double height;
+            HSSUnit x;
+            HSSUnit y;
+            HSSUnit width;
+            HSSUnit height;
             std::string name;
             bool complete;
             std::vector<HSSContainer::displayGroup::p>lines;
@@ -235,16 +235,16 @@ namespace AXR {
         /**
          *  Sets the global horizontal position, which will be used to determine where in the
          *  window the container will be placed. It will also adjust the position of the children.
-         *  @param newValue     A long double containing the new horizontal position.
+         *  @param newValue     An HSSUnit containing the new horizontal position.
          */
-        virtual void setGlobalX(long double newValue);
+        virtual void setGlobalX(HSSUnit newValue);
         
         /**
          *  Sets the global vertical position, which will be used to determine where in the
          *  window the container will be placed. It will also adjust the position of the children.
-         *  @param newValue     A long double containing the new vertical position.
+         *  @param newValue     An HSSUnit containing the new vertical position.
          */
-        virtual void setGlobalY(long double newValue);
+        virtual void setGlobalY(HSSUnit newValue);
         
         /**
          *  Replaces the whole list of children with a new one.
@@ -410,13 +410,13 @@ namespace AXR {
         std::vector<HSSDisplayObject::p>allChildren;
         
         HSSParserNode::p dContentAlignX;
-        long double contentAlignX;
+        HSSUnit contentAlignX;
         HSSObservable * observedContentAlignX;
         HSSObservableProperty observedContentAlignXProperty;
         bool distributeX;
         bool distributeXLinear;
         HSSParserNode::p dContentAlignY;
-        long double contentAlignY;
+        HSSUnit contentAlignY;
         HSSObservable * observedContentAlignY;
         HSSObservableProperty observedContentAlignYProperty;
         bool distributeY;

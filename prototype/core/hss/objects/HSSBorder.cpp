@@ -116,7 +116,11 @@ void HSSBorder::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
 }
 
-long double HSSBorder::getSize() { return this->size; }
+HSSUnit HSSBorder::getSize()
+{
+    return this->size;
+}
+
 void HSSBorder::setDSize(HSSParserNode::p value){
     switch (value->getType()) {
         case HSSParserNodeTypeNumberConstant:
@@ -141,7 +145,7 @@ void HSSBorder::setDSize(HSSParserNode::p value){
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->size = *(long double *)fnct->evaluate();
+                this->size = *(HSSUnit*)fnct->evaluate();
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertySize, this, new HSSValueChangedCallback<HSSBorder>(this, &HSSBorder::sizeChanged));
                 
@@ -165,7 +169,7 @@ void HSSBorder::sizeChanged(AXR::HSSObservableProperty source, void *data)
         case HSSParserNodeTypePercentageConstant:
         case HSSParserNodeTypeExpression:
         case HSSParserNodeTypeFunctionCall:
-            this->size = *(long double*)data;
+            this->size = *(HSSUnit*)data;
             break;
             
         default:

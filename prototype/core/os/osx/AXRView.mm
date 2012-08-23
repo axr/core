@@ -104,28 +104,16 @@
         [[NSColor whiteColor] set];
         NSRectFill(bounds);
         
-        AXR::AXRRect axrDirtyRect;
-        axrDirtyRect.size.width = dirtyRect.size.width;
-        axrDirtyRect.size.height = dirtyRect.size.height;
-        axrDirtyRect.origin.x = dirtyRect.origin.x;
-        axrDirtyRect.origin.y = dirtyRect.origin.y;
-        
-        AXR::AXRRect axrBounds;
-        axrBounds.size.width = bounds.size.width;
-        axrBounds.size.height = bounds.size.height;
-        axrBounds.origin.x = bounds.origin.x;
-        axrBounds.origin.y = bounds.origin.y;
-        
         CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
         //invert the coordinate system
         CGContextTranslateCTM (ctxt, 0.0, (int)bounds.size.height);
         CGContextScaleCTM (ctxt, 1.0, -1.0);
         
-        cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, axrDirtyRect.size.width, axrDirtyRect.size.height);
+        cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, dirtyRect.size.width, dirtyRect.size.height);
         cairo_t * tempcairo = cairo_create(targetSurface);
         cairo_surface_destroy(targetSurface);
         core->setCairo(tempcairo);
-        core->drawInRectWithBounds(axrDirtyRect, axrBounds);
+        core->drawInRectWithBounds(dirtyRect, bounds);
         cairo_destroy(tempcairo);
         core->setCairo(NULL);
     }

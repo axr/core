@@ -91,7 +91,7 @@ namespace AXR {
          *  @param width    The width of the shape.
          *  @param height   The height of the shape.
          */
-        virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height);
+        virtual void draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
         
     private:
         HSSClonable::p cloneImpl() const;

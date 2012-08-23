@@ -168,35 +168,10 @@
 #include "AXRRender.h"
 #include "AXRWrapper.h"
 #include "HSSCallback.h"
+#include "HSSUnits.h"
 
 namespace AXR
 {
-    /**
-     * @brief   A resolution independent point.
-     */
-    struct HSSPoint {
-        long double x; /**< the location of the point in horizontal dimension. */
-        long double y; /**< the location of the point in vertical dimension. */
-    };
-    
-    /**
-     * @brief   Represents a size measure.
-     */
-    struct HSSSize {
-        long double width; /**< measure in the horizontal dimension. */
-        long double height; /**< measure in the vertical dimension. */
-    };
-    
-    
-    /**
-     * @brief   A basic rectangle.
-     */
-    struct HSSRect {
-        HSSPoint origin; /**< Where the rectangle starts. This point is on the top left corner of the rectangle. */
-        HSSSize size; /**< The dimensions of the rectangle. */
-    };
-    
-    
     /**
      *  @brief This is the object that encapsulates the core library.
      *  
@@ -255,7 +230,7 @@ namespace AXR
          *  @warning The current implementation (0.441) always draws the entire bounds,
          *  the rect parameter is actually ignored. This will be fixed in the near future.
          */
-        virtual void drawInRectWithBounds(AXRRect rect, AXRRect bounds);
+        virtual void drawInRectWithBounds(HSSRect rect, HSSRect bounds);
         /**
          *  After everything is set up, this puts everything in motion:
          *  loads xml, loads hss, applies rules, etc

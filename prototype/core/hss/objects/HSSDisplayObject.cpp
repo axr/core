@@ -623,22 +623,22 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, void * value)
 {
     switch (name) {
         case HSSObservablePropertyWidth:
-            this->width = *(long double*) value;
+            this->width = *(HSSUnit*) value;
             break;
         case HSSObservablePropertyHeight:
-            this->height = *(long double*) value;
+            this->height = *(HSSUnit*) value;
             break;
         case HSSObservablePropertyAnchorX:
-            this->anchorX = *(long double*) value;
+            this->anchorX = *(HSSUnit*) value;
             break;
         case HSSObservablePropertyAnchorY:
-            this->anchorY = *(long double*) value;
+            this->anchorY = *(HSSUnit*) value;
             break;
         case HSSObservablePropertyAlignX:
-            this->alignX = *(long double*) value;
+            this->alignX = *(HSSUnit*) value;
             break;
         case HSSObservablePropertyAlignY:
-            this->alignY = *(long double*) value;
+            this->alignY = *(HSSUnit*) value;
             break;
         case HSSObservablePropertyBackground:
         case HSSObservablePropertyContent:
@@ -916,19 +916,18 @@ void HSSDisplayObject::recursiveLayout()
 }
 
 
-void HSSDisplayObject::setGlobalX(long double newValue)
+void HSSDisplayObject::setGlobalX(HSSUnit newValue)
 {
     this->globalX = newValue;
 }
 
 
-void HSSDisplayObject::setGlobalY(long double newValue)
+void HSSDisplayObject::setGlobalY(HSSUnit newValue)
 {
     this->globalY = newValue;
 }
 
-//width
-long double HSSDisplayObject::getWidth() { return this->width; }
+HSSUnit HSSDisplayObject::getWidth() { return this->width; }
 HSSParserNode::p HSSDisplayObject::getDWidth()  {   return this->dWidth; }
 void HSSDisplayObject::setDWidth(HSSParserNode::p value)
 {
@@ -998,7 +997,7 @@ void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p widthValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dWidth);
-            this->width = floor(widthValue->getValue(*(long double*)data));
+            this->width = floor(widthValue->getValue(*(HSSUnit*)data));
             break;
         }
         
@@ -1011,7 +1010,7 @@ void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
         
         case HSSParserNodeTypeFunctionCall:
         {
-            this->width = floor(*(long double*)data);
+            this->width = floor(*(HSSUnit*)data);
         }
         
         default:
@@ -1027,8 +1026,7 @@ void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
     this->setDirty(true);
 }
 
-//height
-long double HSSDisplayObject::getHeight() { return this->height; }
+HSSUnit HSSDisplayObject::getHeight() { return this->height; }
 HSSParserNode::p HSSDisplayObject::getDHeight() { return this->dHeight; }
 void HSSDisplayObject::setDHeight(HSSParserNode::p value)
 {
@@ -1102,7 +1100,7 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p heightValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dHeight);
-            this->height = heightValue->getValue(*(long double*)data);
+            this->height = heightValue->getValue(*(HSSUnit*)data);
             break;
         }
         
@@ -1115,13 +1113,13 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
             
         case HSSParserNodeTypeKeywordConstant:
         {
-            this->height = *(long double*)data;
+            this->height = *(HSSUnit*)data;
             break;
         }
             
         case HSSParserNodeTypeFunctionCall:
         {
-            this->height = *(long double*)data;
+            this->height = *(HSSUnit*)data;
         }
             
         default:
@@ -1137,8 +1135,7 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
     this->setDirty(true);
 }
 
-//anchorX
-long double HSSDisplayObject::getAnchorX() { return this->anchorX; }
+HSSUnit HSSDisplayObject::getAnchorX() { return this->anchorX; }
 HSSParserNode::p HSSDisplayObject::getDAnchorX() { return this->dAnchorX; }
 void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
 {
@@ -1210,7 +1207,7 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dAnchorX);
-            this->anchorX = percentageValue->getValue(*(long double*)data);
+            this->anchorX = percentageValue->getValue(*(HSSUnit*)data);
             this->_anchorXdefault = false;
             break;
         }
@@ -1225,7 +1222,7 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
             
         case HSSParserNodeTypeFunctionCall:
         {
-            this->anchorX = *(long double*)data;
+            this->anchorX = *(HSSUnit*)data;
             this->_anchorXdefault = false;
             break;
         }
@@ -1247,9 +1244,7 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyAnchorX, &this->anchorX);
 }
 
-
-//anchorY
-long double HSSDisplayObject::getAnchorY() { return this->anchorY; }
+HSSUnit HSSDisplayObject::getAnchorY() { return this->anchorY; }
 HSSParserNode::p HSSDisplayObject::getDAnchorY() { return this->dAnchorY; }
 void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
 {
@@ -1321,7 +1316,7 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dAnchorY);
-            this->anchorY = percentageValue->getValue(*(long double*)data);
+            this->anchorY = percentageValue->getValue(*(HSSUnit*)data);
             break;
         }
             
@@ -1334,7 +1329,7 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
         
         case HSSParserNodeTypeFunctionCall:
         {
-            this->anchorY = *(long double*)data;
+            this->anchorY = *(HSSUnit*)data;
             break;
         }
             
@@ -1591,8 +1586,7 @@ void HSSDisplayObject::overflowChanged(HSSObservableProperty source, void*data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-//alignX
-long double HSSDisplayObject::getAlignX() { return this->alignX; }
+HSSUnit HSSDisplayObject::getAlignX() { return this->alignX; }
 HSSParserNode::p HSSDisplayObject::getDAlignX() { return this->dAlignX; }
 void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
 {
@@ -1680,7 +1674,7 @@ void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dAlignX);
-            this->alignX = percentageValue->getValue(*(long double*)data);
+            this->alignX = percentageValue->getValue(*(HSSUnit*)data);
             break;
         }
             
@@ -1693,12 +1687,12 @@ void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
             
         case HSSParserNodeTypeKeywordConstant:
         {
-            this->alignX = *(long double*)data;
+            this->alignX = *(HSSUnit*)data;
         }
             
         case HSSParserNodeTypeFunctionCall:
         {
-            this->alignX = *(long double*)data;
+            this->alignX = *(HSSUnit*)data;
         }
             
         default:
@@ -1708,8 +1702,7 @@ void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyAlignX, &this->alignX);
 }
 
-//alignY
-long double HSSDisplayObject::getAlignY() { return this->alignY; }
+HSSUnit HSSDisplayObject::getAlignY() { return this->alignY; }
 HSSParserNode::p HSSDisplayObject::getDAlignY() { return this->dAlignX; }
 void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
 {
@@ -1796,7 +1789,7 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dAlignY);
-            this->alignY = percentageValue->getValue(*(long double*)data);
+            this->alignY = percentageValue->getValue(*(HSSUnit*)data);
             break;
         }
             
@@ -1809,12 +1802,12 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
             
         case HSSParserNodeTypeKeywordConstant:
         {
-            this->alignY = *(long double*)data;
+            this->alignY = *(HSSUnit*)data;
         }
             
         case HSSParserNodeTypeFunctionCall:
         {
-            this->alignY = *(long double*)data;
+            this->alignY = *(HSSUnit*)data;
         }
             
         default:
@@ -3068,8 +3061,8 @@ long double HSSDisplayObject::_setLDProperty(
 void HSSDisplayObject::_setInnerDimensions()
 {
     std::vector<HSSMargin::p>::const_iterator it;
-    long double innerWidth = this->width;
-    long double innerHeight = this->height;
+    HSSUnit innerWidth = this->width;
+    HSSUnit innerHeight = this->height;
     this->topPadding = this->rightPadding = this->bottomPadding = this->leftPadding = 0;
     for (it=this->padding.begin(); it!=this->padding.end(); it++) {
         HSSMargin::p theMargin = *it;
@@ -3090,8 +3083,8 @@ void HSSDisplayObject::_setInnerDimensions()
 void HSSDisplayObject::_setOuterDimensions()
 {
     std::vector<HSSMargin::p>::const_iterator it;
-    long double outerWidth = this->width;
-    long double outerHeight = this->height;
+    HSSUnit outerWidth = this->width;
+    HSSUnit outerHeight = this->height;
     this->topMargin = this->rightMargin = this->bottomMargin = this->leftMargin = 0;
     for (it=this->margin.begin(); it!=this->margin.end(); it++) {
         HSSMargin::p theMargin = *it;

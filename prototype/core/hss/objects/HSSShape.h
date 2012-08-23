@@ -48,6 +48,7 @@
 #include <boost/shared_ptr.hpp>
 #include <cairo/cairo.h>
 #include "HSSObject.h"
+#include "HSSUnits.h"
 
 namespace AXR {
     
@@ -105,7 +106,7 @@ namespace AXR {
          *  @param width    The width of the bounding box of the shape.
          *  @param height   The height of the bounding box of the shape.
          */
-        virtual void draw(cairo_t * cairo, double long x, double long y, double long width, double long height) = 0;
+        virtual void draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height) = 0;
         
     private:
         HSSShapeType shapeType;

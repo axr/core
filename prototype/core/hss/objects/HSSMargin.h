@@ -115,9 +115,9 @@ namespace AXR {
         
         /**
          *  Getter for the actual value of top.
-         *  @return A long double containing the value of size.
+         *  @return An HSSUnit containing the value of size.
          */
-        const long double getTop() const;
+        const HSSUnit getTop() const;
         
         /**
          *  Getter for the definition object of top.
@@ -140,9 +140,9 @@ namespace AXR {
         
         /**
          *  Getter for the actual value of right.
-         *  @return A long double containing the value of size.
+         *  @return An HSSUnit containing the value of size.
          */
-        const long double getRight() const;
+        const HSSUnit getRight() const;
         
         /**
          *  Getter for the definition object of right.
@@ -165,9 +165,9 @@ namespace AXR {
         
         /**
          *  Getter for the actual value of bottom.
-         *  @return A long double containing the value of size.
+         *  @return An HSSUnit containing the value of size.
          */
-        const long double getBottom() const;
+        const HSSUnit getBottom() const;
         
         /**
          *  Getter for the definition object of bottom.
@@ -190,9 +190,9 @@ namespace AXR {
         
         /**
          *  Getter for the actual value of left.
-         *  @return A long double containing the value of size.
+         *  @return An HSSUnit containing the value of size.
          */
-        const long double getLeft() const;
+        const HSSUnit getLeft() const;
         
         /**
          *  Getter for the definition object of left.
@@ -226,7 +226,7 @@ namespace AXR {
         HSSObservableProperty observedBottomProperty;
         HSSObservable * observedLeft;
         HSSObservableProperty observedLeftProperty;
-        double long top, right, bottom, left;
+        HSSUnit top, right, bottom, left;
         
         long double _setLDProperty(
                                    void(HSSMargin::*callback)(HSSObservableProperty property, void* data),

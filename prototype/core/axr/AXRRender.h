@@ -48,41 +48,19 @@
 #include <cairo/cairo.h>
 #include "AXRGlobal.h"
 #include "HSSNumberConstant.h"
+#include "HSSUnits.h"
 
-namespace AXR {
-    
+namespace AXR
+{    
     class AXRController;
     class AXRCore;
-    
-    /**
-     * @brief   Deprecated struct used for measuring areas. Use HSSSize instead.
-     */
-    AXR_DEPRECATED typedef struct {
-        double width;
-        double height;
-    } AXRSize;
-    
-    /**
-     * @brief   Deprecated struct used to represent a point. Use HSSPoint instead.
-     */
-    AXR_DEPRECATED typedef struct {
-        double x;
-        double y;
-    } AXRPoint;
-    
-    /**
-     * @brief   Deprecated struct used to represent a rectangle. Use HSSRect instead.
-     */
-    AXR_DEPRECATED typedef struct {
-        AXRSize size;
-        AXRPoint origin;
-    } AXRRect;
     
     /**
      *  @brief This is the main control hub for rendering. Calls for drawing and handling
      *  errors should go through this class.
      */
-    class AXRRender {
+    class AXRRender
+    {
     public:
         /**
          *  The shared pointer to this class
@@ -104,25 +82,22 @@ namespace AXR {
          *
          *  @warning The root surface should be created in platform specific subclass before calling
          *  this as base class' method
-         *
-         *  @todo change rect to be a HSSRect
-         *  @todo change bounds to be a HSSRect
          */
-        virtual void drawInRectWithBounds(AXRRect rect, AXRRect bounds);
+        virtual void drawInRectWithBounds(HSSRect rect, HSSRect bounds);
         /**
          *  Creates a point from the x and y coordinates and sends the mouse down event to the root object,
          *  which will then further handle it.
-         *  @param  x   A long double containing the horizontal position.
-         *  @param  y   A long double containing the vertical position.
+         *  @param  x   An HSSUnit containing the horizontal position.
+         *  @param  y   An HSSUnit containing the vertical position.
          */
-        void mouseDown(long double x, long double y);
+        void mouseDown(HSSUnit x, HSSUnit y);
         /**
          *  Creates a point from the x and y coordinates and sends the mouse up event to the root object,
          *  which will then further handle it.
-         *  @param  x   A long double containing the horizontal position.
-         *  @param  y   A long double containing the vertical position.
+         *  @param  x   An HSSUnit containing the horizontal position.
+         *  @param  y   An HSSUnit containing the vertical position.
          */
-        void mouseUp(long double x, long double y);
+        void mouseUp(HSSUnit x, HSSUnit y);
         /**
          *  Reset the renderer to initial values, for example when reloading a file.
          */
