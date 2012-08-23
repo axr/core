@@ -58,6 +58,7 @@ namespace AXR {
         HSSValueToken(HSSTokenType type, std::string value, unsigned line, unsigned column);
         HSSValueToken(HSSTokenType type, char value, unsigned line, unsigned column);
         HSSValueToken(HSSTokenType type, double long value, unsigned line, unsigned column);
+        virtual ~HSSValueToken();
         std::string getString();
         double long getLong();
         bool equals(HSSTokenType otherType, std::string otherValue);

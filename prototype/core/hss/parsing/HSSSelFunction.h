@@ -139,12 +139,6 @@ namespace AXR {
          */
         virtual void * _evaluate();
         
-        /**
-         *  Calls _evaluate();
-         *  @deprecated Do not use this.
-         */
-        AXR_DEPRECATED virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
-        
 //        void valueChanged(HSSObservableProperty source, void*data);
         
     protected:

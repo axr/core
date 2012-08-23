@@ -53,6 +53,10 @@ HSSToken::HSSToken(HSSTokenType type, unsigned line, unsigned column)
     this->column = column;
 }
 
+HSSToken::~HSSToken()
+{
+}
+
 bool HSSToken::isA(HSSTokenType otherType)
 {
 	return otherType == this->type;

@@ -53,7 +53,6 @@
 #include "AXRWrapper.h"
 #include "ExpatXMLParser.h"
 #include "HSSContainer.h"
-#include "XMLParserExceptions.h"
 
 namespace AXR {
     

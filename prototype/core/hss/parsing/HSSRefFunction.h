@@ -168,12 +168,6 @@ namespace AXR {
         virtual void * _evaluate();
         
         /**
-         *  Calls _evaluate();
-         *  @deprecated Do not use this.
-         */
-        AXR_DEPRECATED virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
-        
-        /**
          *  Callback that will update the value when the observed property changes.
          *  @param source   The property which we are observing (ignored).
          *  @param data     A pointer to the data that is sent along the notification.

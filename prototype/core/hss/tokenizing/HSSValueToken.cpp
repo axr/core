@@ -73,6 +73,10 @@ HSSValueToken::HSSValueToken(HSSTokenType type, double long value, unsigned line
     this->longValue = value;
 }
 
+HSSValueToken::~HSSValueToken()
+{
+}
+
 std::string HSSValueToken::getString()
 {
     return this->stringValue;

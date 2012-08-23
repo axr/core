@@ -619,46 +619,6 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
     }
 }
 
-void HSSDisplayObject::setProperty(HSSObservableProperty name, void * value)
-{
-    switch (name) {
-        case HSSObservablePropertyWidth:
-            this->width = *(HSSUnit*) value;
-            break;
-        case HSSObservablePropertyHeight:
-            this->height = *(HSSUnit*) value;
-            break;
-        case HSSObservablePropertyAnchorX:
-            this->anchorX = *(HSSUnit*) value;
-            break;
-        case HSSObservablePropertyAnchorY:
-            this->anchorY = *(HSSUnit*) value;
-            break;
-        case HSSObservablePropertyAlignX:
-            this->alignX = *(HSSUnit*) value;
-            break;
-        case HSSObservablePropertyAlignY:
-            this->alignY = *(HSSUnit*) value;
-            break;
-        case HSSObservablePropertyBackground:
-        case HSSObservablePropertyContent:
-        case HSSObservablePropertyFont:
-        case HSSObservablePropertyBorder:
-            /**
-             *  @todo to be implemented
-             */
-            return;
-            
-        case HSSObservablePropertyOn:
-            std_log("lakjdflad");
-            
-        default:
-            return HSSObject::setProperty(name, value);
-    }
-    
-    this->notifyObservers(name, value);
-}
-
 void HSSDisplayObject::setNeedsRereadRules(bool value)
 {
     this->_needsRereadRules = value;

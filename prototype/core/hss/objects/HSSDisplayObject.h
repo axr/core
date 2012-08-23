@@ -207,7 +207,6 @@ namespace AXR {
         virtual void readDefinitionObjects();
         virtual void recursiveReadDefinitionObjects();
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-        AXR_DEPRECATED virtual void setProperty(HSSObservableProperty name, void * value);
         void setNeedsRereadRules(bool value);
         bool needsRereadRules();
         

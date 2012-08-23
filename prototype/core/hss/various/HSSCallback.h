@@ -53,12 +53,14 @@ namespace AXR {
      */
     class HSSCallback {
     public:
+        virtual ~HSSCallback();
+        
         /**
          *  Execute the callback, calling the stored method on the stored object.
          *  @param property The property where the callback originated.
          *  @param data     The new value or the data that goes along with the callback.
          */
-        virtual void call(HSSObservableProperty property, void* data) =0;
+        virtual void call(HSSObservableProperty property, void* data) = 0;
     };
     
     class HSSObservable;

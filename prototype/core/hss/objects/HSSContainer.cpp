@@ -371,35 +371,6 @@ void HSSContainer::setProperty(HSSObservableProperty name, HSSParserNode::p valu
     }
 }
 
-void HSSContainer::setProperty(HSSObservableProperty name, void * value)
-{
-    switch (name) {
-        case HSSObservablePropertyContentAlignX:
-            this->contentAlignX = *(HSSUnit*) value;
-            break;
-        case HSSObservablePropertyContentAlignY:
-            this->contentAlignY = *(HSSUnit*) value;
-            break;
-        case HSSObservablePropertyDirectionPrimary:
-            this->directionPrimary = *(HSSDirectionValue*) value;
-            break;
-        case HSSObservablePropertyDirectionSecondary:
-            this->directionSecondary = *(HSSDirectionValue*) value;
-            break;
-        case HSSObservablePropertyShape:
-            this->shape = *(HSSShape::p*) value;
-            break;
-        case HSSObservablePropertyTextAlign:
-            this->textAlign = *(HSSTextAlignType *) value;
-            break;
-            
-        default:
-            return HSSDisplayObject::setProperty(name, value);
-    }
-    
-    this->notifyObservers(name, value);
-}
-
 void HSSContainer::recursiveReadDefinitionObjects()
 {
     this->readDefinitionObjects();

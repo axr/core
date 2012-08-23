@@ -197,7 +197,6 @@ namespace AXR {
         void recursiveReadDefinitionObjects();
         
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-        virtual void setProperty(HSSObservableProperty name, void * value);
         
         /**
          *  Propagates the regenerateSurfaces() call to all the children.

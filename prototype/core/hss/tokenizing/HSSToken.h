@@ -47,7 +47,8 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 
-namespace AXR {
+namespace AXR
+{
     enum HSSTokenType
     {
         HSSNone = 0,
@@ -76,12 +77,13 @@ namespace AXR {
 
     class HSSToken
     {
-    public:
+    public:        
         typedef boost::shared_ptr<HSSToken> p;
         
         static std::string tokenStringRepresentation(HSSTokenType type);
         
         HSSToken(HSSTokenType type, unsigned line, unsigned column);
+        virtual ~HSSToken();
         bool isA(HSSTokenType otherType);
         HSSTokenType getType();
         virtual std::string toString();

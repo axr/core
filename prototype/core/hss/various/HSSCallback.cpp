@@ -41,15 +41,10 @@
  *
  ********************************************************************/
 
-/*
 #include "HSSCallback.h"
-#include "HSSObject.h"
 
 using namespace AXR;
 
-template <class T>
-void HSSValueChangedCallback<T>::call(HSSObservableProperty property, void* data)
+HSSCallback::~HSSCallback()
 {
-    
 }
-*/

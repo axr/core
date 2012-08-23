@@ -46,7 +46,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace AXR {
+namespace AXR
+{
     /**
      *  @brief Helper class that enables greater control over cloning of objects
      */
@@ -58,6 +59,8 @@ namespace AXR {
          */
         typedef boost::shared_ptr<HSSClonable> p;
         
+        virtual ~HSSClonable() { }
+        
         /**
          *  Call this method to clone an instance of a subclass of HSSClonable.
          */
@@ -65,6 +68,7 @@ namespace AXR {
         {
             return this->cloneImpl();
         }
+        
     private:
         virtual p cloneImpl() const
         {
