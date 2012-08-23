@@ -44,10 +44,10 @@
 #ifndef HSSPROPERTYDEFINITION_H
 #define HSSPROPERTYDEFINITION_H
 
-#include "HSSStatement.h"
-#include "../objects/HSSObject.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include "HSSObject.h"
+#include "HSSStatement.h"
 
 namespace AXR {
     

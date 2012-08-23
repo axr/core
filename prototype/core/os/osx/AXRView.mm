@@ -41,16 +41,16 @@
  *
  ********************************************************************/
 
+#import <iostream>
+#import <cairo/cairo-quartz.h>
+#import "AXR.h"
+#import "AXRController.h"
+#import "AXRDebugging.h"
 #import "AXRView.h"
-#include "OSXAxrWrapper.h"
-#include <iostream>
-#include "../../AXR.h"
-#include "../../axr/AXRDebugging.h"
-#include "../../axr/AXRController.h"
-#include <cairo/cairo-quartz.h>
-#include "../../hss/objects/HSSEvent.h"
-#include "../../hss/objects/HSSContainer.h"
-#include "../../hss/HSSTypeEnums.h"
+#import "HSSContainer.h"
+#import "HSSEvent.h"
+#import "HSSTypeEnums.h"
+#import "OSXAxrWrapper.h"
 
 @implementation AXRView
 @synthesize needsFile;

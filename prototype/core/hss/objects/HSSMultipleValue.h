@@ -44,10 +44,10 @@
 #ifndef HSSMULTIPLEVALUE_H
 #define HSSMULTIPLEVALUE_H
 
-#include "HSSObject.h"
-#include "../parsing/HSSParserNode.h"
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include "HSSObject.h"
+#include "HSSParserNode.h"
 
 namespace AXR {
     /**

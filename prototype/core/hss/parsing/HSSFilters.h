@@ -44,14 +44,14 @@
 #ifndef HSSFILTERS_H
 #define HSSFILTERS_H
 
-#include "HSSParentFilter.h"
-#include "HSSFirstFilter.h"
-#include "HSSLastFilter.h"
-#include "HSSFirstChildFilter.h"
-#include "HSSLastChildFilter.h"
-#include "HSSEvenFilter.h"
 #include "HSSEvenChildFilter.h"
-#include "HSSOddFilter.h"
+#include "HSSEvenFilter.h"
+#include "HSSFirstChildFilter.h"
+#include "HSSFirstFilter.h"
+#include "HSSLastChildFilter.h"
+#include "HSSLastFilter.h"
 #include "HSSOddChildFilter.h"
+#include "HSSOddFilter.h"
+#include "HSSParentFilter.h"
 
 #endif

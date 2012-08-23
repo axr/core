@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "HSSSum.h"
-#include "HSSSubtraction.h"
-#include "HSSMultiplication.h"
 #include "HSSDivision.h"
+#include "HSSMultiplication.h"
+#include "HSSSubtraction.h"
+#include "HSSSum.h"

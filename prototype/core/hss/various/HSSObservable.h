@@ -45,11 +45,11 @@
 #ifndef HSSOBSERVABLE_H
 #define HSSOBSERVABLE_H
 
-#include "HSSObservableProperties.h"
-#include "HSSCallback.h"
 #include <map>
 #include <string>
 #include <boost/unordered_map.hpp>
+#include "HSSCallback.h"
+#include "HSSObservableProperties.h"
 
 namespace AXR {
     

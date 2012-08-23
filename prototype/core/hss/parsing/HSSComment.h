@@ -44,8 +44,8 @@
 #ifndef HSSCOMMENT_H
 #define HSSCOMMENT_H
 
-#include "HSSStatement.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSStatement.h"
 
 namespace AXR {
     /**

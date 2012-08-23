@@ -39,24 +39,15 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2012/05/30
- *      HSS version: 1.0
- *      Core version: 0.47
- *      Revision: 3
- *
  ********************************************************************/
 
 #ifndef HSSPARSEREXCEPTIONS_H
 #define HSSPARSEREXCEPTIONS_H
 
-//#include <exception>
 #include <string>
-#include "../tokenizing/HSSToken.h"
-
+#include "AXRGlobal.h"
+#include "HSSToken.h"
+ 
 namespace AXR {
     
     /**
@@ -64,7 +55,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class HSSParserException
+    class AXR_DEPRECATED HSSParserException
     {
     public:
         HSSParserException(std::string filename, int line, int column);
@@ -80,7 +71,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class HSSUnexpectedEndOfSourceException : public HSSParserException
+    class AXR_DEPRECATED HSSUnexpectedEndOfSourceException : public HSSParserException
     {
     public:
         HSSUnexpectedEndOfSourceException(std::string filename, int line, int column);
@@ -92,7 +83,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class HSSExpectedTokenException : public HSSParserException
+    class AXR_DEPRECATED HSSExpectedTokenException : public HSSParserException
     {
     public:
         HSSExpectedTokenException(HSSTokenType type, std::string filename, int line, int column);
@@ -107,7 +98,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class HSSUnexpectedTokenException : public HSSParserException
+    class AXR_DEPRECATED HSSUnexpectedTokenException : public HSSParserException
     {
     public:
         HSSUnexpectedTokenException(HSSTokenType type, std::string filename, int line, int column);
@@ -135,7 +126,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class HSSWrongHexLengthException : public HSSParserException
+    class AXR_DEPRECATED HSSWrongHexLengthException : public HSSParserException
     {
     public:
         HSSWrongHexLengthException(int length, std::string filename, int line, int column);

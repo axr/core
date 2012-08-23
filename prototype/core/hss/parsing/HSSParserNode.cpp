@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSParserNode.h"
-#include "../objects/HSSDisplayObject.h"
 
 using namespace AXR;
 

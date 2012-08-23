@@ -44,8 +44,8 @@
 #ifndef HSSSUM_H
 #define HSSSUM_H
 
-#include "HSSExpression.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSExpression.h"
 
 namespace AXR {
     

@@ -1,0 +1,18 @@
+include_directories(
+    "${CMAKE_CURRENT_SOURCE_DIR}/core"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/axr"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/axr/errors"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/hss"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/hss/objects"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/hss/parsing"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/hss/tokenizing"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/hss/various"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/os"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/os/linux"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/os/osx"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/os/win"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/xml"
+)
+
+add_subdirectory(core)
+add_subdirectory(app)

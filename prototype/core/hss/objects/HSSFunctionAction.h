@@ -45,7 +45,7 @@
 #define HSSFUNCTIONACTION_H
 
 #include "HSSAction.h"
-#include "../parsing/HSSFunction.h"
+#include "HSSFunction.h"
 
 namespace AXR {
     

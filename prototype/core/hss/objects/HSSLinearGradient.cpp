@@ -45,9 +45,9 @@
  *  @todo set defaults
  */
 
-#include "HSSLinearGradient.h"
-#include "../parsing/HSSObjectDefinition.h"
 #include "HSSColorStop.h"
+#include "HSSLinearGradient.h"
+#include "HSSObjectDefinition.h"
 
 using namespace AXR;
 

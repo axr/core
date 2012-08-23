@@ -45,11 +45,11 @@
  *  @todo do something meaningful with the error codes
  */
 
-#include "../hss.h"
 #include <iostream>
 #include <sstream>
-#include "../../axr/AXRDebugging.h"
-#include "../../axr/errors/errors.h"
+#include "errors.h"
+#include "hss.h"
+#include "AXRDebugging.h"
 
 using namespace AXR;
 

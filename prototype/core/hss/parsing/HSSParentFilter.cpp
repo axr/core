@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
+#include "HSSContainer.h"
 #include "HSSParentFilter.h"
-#include "../objects/HSSContainer.h"
 
 using namespace AXR;
 

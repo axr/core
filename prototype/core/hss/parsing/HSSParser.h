@@ -44,16 +44,16 @@
 #ifndef HSSPARSER_H
 #define HSSPARSER_H
 
-#include "../tokenizing/HSSTokenizer.h"
-#include "../parsing/HSSParserNodes.h"
-#include "../objects/HSSObjects.h"
+#include <stack>
 #include <string>
 #include <vector>
-#include <stack>
 #include <boost/shared_ptr.hpp>
 #include <boost/unordered_set.hpp>
-#include "../../axr/AXRFile.h"
+#include "AXRFile.h"
+#include "HSSParserNodes.h"
+#include "HSSObjects.h"
 #include "HSSSelectorNodes.h"
+#include "HSSTokenizer.h"
 
 #define HSSFRAMEWORK_PROTOCOL "axr://"
 #define HSSFRAMEWORK_PROTOCOL_LEN 6

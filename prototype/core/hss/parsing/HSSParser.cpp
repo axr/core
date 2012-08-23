@@ -41,27 +41,27 @@
  *
  ********************************************************************/
 
-#include "../hss.h"
-#include "../tokenizing/HSSValueToken.h"
-#include "HSSConstants.h"
-#include <iostream>
+#include <cstdio>
 #include <cstdlib>
-#include <stdio.h>
-#include "../../axr/AXRDebugging.h"
-#include "../../axr/errors/errors.h"
-#include "../../axr/AXRController.h"
-#include "../../axr/AXRWrapper.h"
+#include <iostream>
 #include <boost/pointer_cast.hpp>
+#include "errors.h"
+#include "hss.h"
+#include "AXR.h"
+#include "AXRController.h"
+#include "AXRDebugging.h"
+#include "AXRWrapper.h"
+#include "HSSConstants.h"
 #include "HSSExpressions.h"
-#include "../objects/HSSRgb.h"
-#include "HSSThisSelector.h"
-#include "HSSParentSelector.h"
-#include "HSSRootSelector.h"
-#include "HSSFunctions.h"
 #include "HSSFilter.h"
-#include "HSSNegation.h"
 #include "HSSFlag.h"
-#include "../../AXR.h"
+#include "HSSFunctions.h"
+#include "HSSNegation.h"
+#include "HSSParentSelector.h"
+#include "HSSRgb.h"
+#include "HSSRootSelector.h"
+#include "HSSThisSelector.h"
+#include "HSSValueToken.h"
 
 using namespace AXR;
 

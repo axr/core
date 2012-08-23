@@ -45,8 +45,8 @@
 #define HSSLINEARGRADIENT_H
 
 #include <string>
-#include "HSSGradient.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSGradient.h"
 #include "HSSRgb.h"
 
 namespace AXR {

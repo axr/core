@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
-#include "HSSValueToken.h"
 #include <sstream>
+#include "HSSValueToken.h"
 
 using namespace AXR;
 

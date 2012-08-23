@@ -44,13 +44,13 @@
 #ifndef HSSFUNCTION_H
 #define HSSFUNCTION_H
 
-#include <string>
-#include "../objects/HSSObject.h"
-#include "../objects/HSSDisplayObject.h"
-#include "HSSKeywordConstant.h"
-#include <boost/shared_ptr.hpp>
 #include <deque>
+#include <string>
 #include <vector>
+#include <boost/shared_ptr.hpp>
+#include "HSSDisplayObject.h"
+#include "HSSKeywordConstant.h"
+#include "HSSObject.h"
 
 namespace AXR {
     

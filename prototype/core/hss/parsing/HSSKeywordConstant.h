@@ -44,8 +44,8 @@
 #ifndef HSSKEYWORDCONSTANT_H
 #define HSSKEYWORDCONSTANT_H
 
-#include "HSSParserNode.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSParserNode.h"
 
 namespace AXR {
     

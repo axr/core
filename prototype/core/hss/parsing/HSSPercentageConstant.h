@@ -44,9 +44,9 @@
 #ifndef HSSPERCENTAGECONSTANT_H
 #define HSSPERCENTAGECONSTANT_H
 
-#include "HSSParserNode.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include "HSSParserNode.h"
 
 namespace AXR {
     

@@ -44,8 +44,8 @@
 #ifndef HSSFLAGFUNCTION_H
 #define HSSFLAGFUNCTION_H
 
-#import "HSSFunction.h"
-#import "../objects/HSSAction.h"
+#include "HSSAction.h"
+#include "HSSFunction.h"
 
 namespace AXR {
     

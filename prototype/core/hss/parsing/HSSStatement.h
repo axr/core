@@ -44,9 +44,9 @@
 #ifndef HSSSTATEMENT_H
 #define HSSSTATEMENT_H
 
-#include "HSSParserNode.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include "HSSParserNode.h"
 
 namespace AXR {
     

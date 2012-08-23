@@ -43,7 +43,6 @@
 
 #include "HSSMultiplication.h"
 
-
 using namespace AXR;
 
 HSSMultiplication::HSSMultiplication(HSSParserNode::p _left, HSSParserNode::p _right)

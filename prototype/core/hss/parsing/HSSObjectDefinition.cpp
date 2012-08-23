@@ -41,9 +41,9 @@
  *
  ********************************************************************/
 
-#include "HSSObjectDefinition.h"
 #include <iostream>
-#include "../../axr/AXRDebugging.h"
+#include "AXRDebugging.h"
+#include "HSSObjectDefinition.h"
 
 using namespace AXR;
 

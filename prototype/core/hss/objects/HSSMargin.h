@@ -44,10 +44,10 @@
 #ifndef HSSMARGIN_H
 #define HSSMARGIN_H
 
+#include <boost/shared_ptr.hpp>
+#include "HSSMultipleValue.h"
 #include "HSSObject.h"
 #include "HSSValue.h"
-#include "HSSMultipleValue.h"
-#include <boost/shared_ptr.hpp>
 
 namespace AXR {
     

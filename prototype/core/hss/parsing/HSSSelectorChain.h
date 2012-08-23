@@ -44,11 +44,11 @@
 #ifndef HSSSELECTORCHAIN_H
 #define HSSSELECTORCHAIN_H
 
-#include "HSSParserNode.h"
-#include <string>
 #include <deque>
+#include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
+#include "HSSParserNode.h"
 
 namespace AXR {
     

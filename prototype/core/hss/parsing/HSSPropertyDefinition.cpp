@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
-#include "HSSPropertyDefinition.h"
 #include "HSSMultipleValueDefinition.h"
+#include "HSSPropertyDefinition.h"
 
 using namespace AXR;
 

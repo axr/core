@@ -41,12 +41,12 @@
  *
  ********************************************************************/
 
+#include "errors.h"
+#include "AXRDebugging.h"
 #include "HSSBorder.h"
-#include "../../axr/AXRDebugging.h"
-#include "../../axr/errors/errors.h"
-#include "../parsing/HSSExpression.h"
-#include "../parsing/HSSConstants.h"
-#include "../parsing/HSSFunction.h"
+#include "HSSConstants.h"
+#include "HSSExpression.h"
+#include "HSSFunction.h"
 
 using namespace AXR;
 

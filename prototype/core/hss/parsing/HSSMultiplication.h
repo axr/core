@@ -44,8 +44,8 @@
 #ifndef HSSMULTIPLICATION_H
 #define HSSMULTIPLICATION_H
 
-#include "HSSExpression.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSExpression.h"
 
 namespace AXR {
     

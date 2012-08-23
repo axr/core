@@ -44,21 +44,22 @@
 #ifndef HSSDISPLAYOBJECT_H
 #define HSSDISPLAYOBJECT_H
 
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
-#include "HSSObject.h"
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include "../parsing/HSSRule.h"
 #include <cairo/cairo.h>
-#include "HSSMultipleValue.h"
-#include "HSSRgb.h"
-#include "HSSFont.h"
-#include "HSSEvent.h"
+#include "AXRGlobal.h"
 #include "HSSBorder.h"
+#include "HSSEvent.h"
+#include "HSSFont.h"
 #include "HSSMargin.h"
-#include <boost/enable_shared_from_this.hpp>
+#include "HSSMultipleValue.h"
+#include "HSSObject.h"
+#include "HSSRgb.h"
+#include "HSSRule.h"
 
 namespace AXR {
     
@@ -206,7 +207,7 @@ namespace AXR {
         virtual void readDefinitionObjects();
         virtual void recursiveReadDefinitionObjects();
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-        virtual void setProperty(HSSObservableProperty name, void * value);
+        AXR_DEPRECATED virtual void setProperty(HSSObservableProperty name, void * value);
         void setNeedsRereadRules(bool value);
         bool needsRereadRules();
         

@@ -41,15 +41,15 @@
  *
  ********************************************************************/
 
-#include "HSSTextBlock.h"
-#include "HSSValue.h"
-#include "../parsing/HSSObjectDefinition.h"
-#include "../parsing/HSSFunctions.h"
-#include "../../axr/AXRController.h"
-#include "../../axr/AXRDebugging.h"
-#include "../parsing/HSSSelectorChain.h"
-#include "../parsing/HSSThisSelector.h"
 #include <boost/algorithm/string.hpp>
+#include "AXRController.h"
+#include "AXRDebugging.h"
+#include "HSSFunctions.h"
+#include "HSSObjectDefinition.h"
+#include "HSSSelectorChain.h"
+#include "HSSTextBlock.h"
+#include "HSSThisSelector.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 

@@ -44,9 +44,9 @@
 #ifndef HSSMULTIPLEVALUEDEFINITION_H
 #define HSSMULTIPLEVALUEDEFINITION_H
 
-#include "HSSParserNode.h"
-#include "../objects/HSSMultipleValue.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSMultipleValue.h"
+#include "HSSParserNode.h"
 
 namespace AXR {
     

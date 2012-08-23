@@ -44,16 +44,16 @@
 #ifndef HSSOBJECTDEFINITION_H
 #define HSSOBJECTDEFINITION_H
 
-#include "HSSStatement.h"
+#include <deque>
 #include <string>
 #include <vector>
-#include <deque>
-#include "HSSParserNodes.h"
-#include "../objects/HSSObject.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include "../objects/HSSDisplayObject.h"
+#include "HSSDisplayObject.h"
+#include "HSSObject.h"
+#include "HSSParserNodes.h"
 #include "HSSRule.h"
+#include "HSSStatement.h"
 
 namespace AXR {
     

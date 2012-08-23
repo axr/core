@@ -44,10 +44,10 @@
 #ifndef HSSFLAG_H
 #define HSSFLAG_H
 
-#include "HSSFilter.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
+#include "HSSFilter.h"
 #include "HSSRule.h"
 
 namespace AXR {

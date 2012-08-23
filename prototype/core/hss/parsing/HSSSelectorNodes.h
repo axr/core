@@ -44,11 +44,11 @@
 #ifndef HSSSELECTORNODES_H
 #define HSSSELECTORNODES_H
 
-#include "HSSSimpleSelector.h"
-#include "HSSUniversalSelector.h"
 #include "HSSNameSelector.h"
-#include "HSSThisSelector.h"
-#include "HSSRootSelector.h"
 #include "HSSNegation.h"
+#include "HSSRootSelector.h"
+#include "HSSSimpleSelector.h"
+#include "HSSThisSelector.h"
+#include "HSSUniversalSelector.h"
 
 #endif

@@ -41,11 +41,11 @@
  *
  ********************************************************************/
 
-#include "AXRWrapper.h"
-#include "../AXR.h"
 #include <boost/lexical_cast.hpp>
-#include "../hss/parsing/HSSFunction.h"
-#include "../hss/parsing/HSSSelFunction.h"
+#include "AXR.h"
+#include "AXRWrapper.h"
+#include "HSSFunction.h"
+#include "HSSSelFunction.h"
 
 using namespace AXR;
 

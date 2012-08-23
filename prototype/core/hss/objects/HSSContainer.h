@@ -44,11 +44,11 @@
 #ifndef HSSCONTAINER_H
 #define HSSCONTAINER_H
 
-#include "HSSDisplayObject.h"
-#include <cairo/cairo.h>
 #include <list>
-#include "HSSShape.h"
+#include <cairo/cairo.h>
+#include "HSSDisplayObject.h"
 #include "HSSEvent.h"
+#include "HSSShape.h"
 #include "HSSTextBlock.h"
 
 namespace AXR {

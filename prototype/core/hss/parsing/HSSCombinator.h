@@ -44,9 +44,9 @@
 #ifndef HSSCOMBINATOR_H
 #define HSSCOMBINATOR_H
 
-#include "HSSSelector.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include "HSSSelector.h"
 
 namespace AXR {
     

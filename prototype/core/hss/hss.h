@@ -51,7 +51,7 @@
 #define AXR_HSS_BUFFER_SIZE 10240 //1kB
 #endif
 
-#include "parsing/HSSParser.h"
-#include "tokenizing/HSSTokenizer.h"
+#include "HSSParser.h"
+#include "HSSTokenizer.h"
 
 #endif

@@ -44,16 +44,16 @@
 #ifndef AXRWRAPPER_H
 #define AXRWRAPPER_H
 
+#include <cstdio>
+#include <queue>
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include <boost/unordered_map.hpp>
-#include <stdio.h>
-#include "AXRFile.h"
-#include "errors/AXRError.h"
-#include "../hss/various/HSSObservableProperties.h"
-#include <queue>
 #include <boost/thread/thread.hpp>
-#include "../hss/objects/HSSContainer.h"
+#include <boost/unordered_map.hpp>
+#include "AXRError.h"
+#include "AXRFile.h"
+#include "HSSContainer.h"
+#include "HSSObservableProperties.h"
 
 namespace AXR
 {

@@ -44,10 +44,10 @@
 #ifndef HSSSHAPE_H
 #define HSSSHAPE_H
 
-#include "HSSObject.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <cairo/cairo.h>
+#include "HSSObject.h"
 
 namespace AXR {
     

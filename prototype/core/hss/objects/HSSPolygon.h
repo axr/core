@@ -44,8 +44,8 @@
 #ifndef HSSPOLYGON_H
 #define HSSPOLYGON_H
 
-#include "HSSShape.h"
 #include "HSSDisplayObject.h"
+#include "HSSShape.h"
 
 namespace AXR {
     

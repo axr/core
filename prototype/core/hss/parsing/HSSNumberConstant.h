@@ -44,8 +44,8 @@
 #ifndef HSSNUMBERCONSTANT_H
 #define HSSNUMBERCONSTANT_H
 
-#include "HSSParserNode.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSParserNode.h"
 
 namespace AXR {
     

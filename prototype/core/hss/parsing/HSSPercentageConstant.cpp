@@ -41,10 +41,9 @@
  *
  ********************************************************************/
 
-#include "HSSPercentageConstant.h"
 #include <sstream>
-#include "../objects/HSSContainer.h"
-#include "../objects/HSSContainer.h"
+#include "HSSContainer.h"
+#include "HSSPercentageConstant.h"
 
 using namespace AXR;
 

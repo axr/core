@@ -46,5 +46,4 @@
 #if AXR_DEBUG_LEVEL > 0
 unsigned axr_output_debug_indent_count = 0;
 unsigned axr_debug_active_channels = 0;
-
 #endif

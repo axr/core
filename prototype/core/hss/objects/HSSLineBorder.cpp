@@ -41,12 +41,12 @@
  *
  ********************************************************************/
 
+#include "AXRController.h"
+#include "HSSConstants.h"
+#include "HSSExpression.h"
+#include "HSSFunction.h"
 #include "HSSLineBorder.h"
-#include "../parsing/HSSExpression.h"
-#include "../parsing/HSSConstants.h"
-#include "../parsing/HSSFunction.h"
-#include "../parsing/HSSObjectDefinition.h"
-#include "../../axr/AXRController.h"
+#include "HSSObjectDefinition.h"
 
 using namespace AXR;
 

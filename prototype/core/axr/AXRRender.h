@@ -44,9 +44,10 @@
 #ifndef AXRRENDER_H
 #define AXRRENDER_H
 
-#include "../hss/parsing/HSSNumberConstant.h"
-#include <cairo/cairo.h>
 #include <boost/shared_ptr.hpp>
+#include <cairo/cairo.h>
+#include "AXRGlobal.h"
+#include "HSSNumberConstant.h"
 
 namespace AXR {
     
@@ -56,7 +57,7 @@ namespace AXR {
     /**
      * @brief   Deprecated struct used for measuring areas. Use HSSSize instead.
      */
-    typedef struct {
+    AXR_DEPRECATED typedef struct {
         double width;
         double height;
     } AXRSize;
@@ -64,7 +65,7 @@ namespace AXR {
     /**
      * @brief   Deprecated struct used to represent a point. Use HSSPoint instead.
      */
-    typedef struct {
+    AXR_DEPRECATED typedef struct {
         double x;
         double y;
     } AXRPoint;
@@ -72,7 +73,7 @@ namespace AXR {
     /**
      * @brief   Deprecated struct used to represent a rectangle. Use HSSRect instead.
      */
-    typedef struct {
+    AXR_DEPRECATED typedef struct {
         AXRSize size;
         AXRPoint origin;
     } AXRRect;

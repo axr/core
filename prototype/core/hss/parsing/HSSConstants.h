@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
-#include "HSSNumberConstant.h"
-#include "HSSStringConstant.h"
 #include "HSSKeywordConstant.h"
+#include "HSSNumberConstant.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSPercentageConstant.h"
+#include "HSSStringConstant.h"

@@ -41,25 +41,24 @@
  *
  ********************************************************************/
 
-#include "HSSDisplayObject.h"
-#include "../../AXR.h"
-#include "../../axr/AXRDebugging.h"
-#include "../../axr/errors/errors.h"
-#include <math.h>
-#include <boost/pointer_cast.hpp>
-#include <cairo/cairo.h>
-#include "../parsing/HSSParserNode.h"
-#include "../parsing/HSSExpression.h"
-#include "../parsing/HSSConstants.h"
-#include "../parsing/HSSObjectDefinition.h"
-#include "../parsing/HSSFunctions.h"
-#include "HSSContainer.h"
+#include <cmath>
 #include <sstream>
 #include <string>
-#include "../../axr/AXRController.h"
+#include <boost/pointer_cast.hpp>
+#include <cairo/cairo.h>
+#include "errors.h"
+#include "AXR.h"
+#include "AXRController.h"
+#include "AXRDebugging.h"
+#include "HSSConstants.h"
+#include "HSSContainer.h"
+#include "HSSDisplayObject.h"
+#include "HSSExpression.h"
+#include "HSSFlag.h"
+#include "HSSFunctions.h"
+#include "HSSObjectDefinition.h"
+#include "HSSParserNode.h"
 #include "HSSRgb.h"
-#include <cmath>
-#include "../parsing/HSSFlag.h"
 
 using namespace AXR;
 
@@ -620,7 +619,6 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
     }
 }
 
-//deprecated I think, use the previous one
 void HSSDisplayObject::setProperty(HSSObservableProperty name, void * value)
 {
     switch (name) {

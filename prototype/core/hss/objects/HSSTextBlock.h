@@ -44,8 +44,8 @@
 #ifndef HSSTEXTBLOCK_H
 #define HSSTEXTBLOCK_H
 
-#include "HSSDisplayObject.h"
 #include <pango/pangocairo.h>
+#include "HSSDisplayObject.h"
 
 namespace AXR {
     enum HSSTextTransformType

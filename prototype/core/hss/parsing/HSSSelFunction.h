@@ -44,7 +44,8 @@
 #ifndef HSSSELFUNCTION_H
 #define HSSSELFUNCTION_H
 
-#import "HSSFunction.h"
+#include "AXRGlobal.h"
+#include "HSSFunction.h"
 
 namespace AXR {
     
@@ -142,7 +143,7 @@ namespace AXR {
          *  Calls _evaluate();
          *  @deprecated Do not use this.
          */
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
+        AXR_DEPRECATED virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
         
 //        void valueChanged(HSSObservableProperty source, void*data);
         

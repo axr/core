@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
-#import "HSSSelFunction.h"
-#import "../../axr/AXRController.h"
+#include "AXRController.h"
+#include "HSSSelFunction.h"
 
 using namespace AXR;
 

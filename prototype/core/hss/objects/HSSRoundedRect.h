@@ -44,9 +44,9 @@
 #ifndef HSSROUNDEDRECT_H
 #define HSSROUNDEDRECT_H
 
-#include "HSSShape.h"
-#include "HSSMultipleValue.h"
 #include "HSSDisplayObject.h"
+#include "HSSMultipleValue.h"
+#include "HSSShape.h"
 
 namespace AXR {
     

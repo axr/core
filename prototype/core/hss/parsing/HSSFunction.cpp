@@ -41,14 +41,10 @@
  *
  ********************************************************************/
 
-#include "HSSFunction.h"
-#include "../../axr/AXRDebugging.h"
-#include "../../AXR.h"
 #include <string>
-//#include "../parsing/HSSExpression.h"
-//#include "../parsing/HSSConstants.h"
-//#include <sstream>
-//#include "../parsing/HSSObjectDefinition.h"
+#include "AXR.h"
+#include "AXRDebugging.h"
+#include "HSSFunction.h"
 
 using namespace AXR;
 

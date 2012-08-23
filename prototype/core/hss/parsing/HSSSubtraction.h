@@ -44,8 +44,8 @@
 #ifndef HSSSUBTRACTION_H
 #define HSSSUBTRACTION_H
 
-#include "HSSExpression.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSExpression.h"
 
 namespace AXR {
     

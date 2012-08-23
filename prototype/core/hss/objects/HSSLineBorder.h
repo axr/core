@@ -45,8 +45,8 @@
 #define HSSLINEBORDER_H
 
 #include <string>
-#include "HSSBorder.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSBorder.h"
 #include "HSSRgb.h"
 
 namespace AXR {

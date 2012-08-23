@@ -45,7 +45,7 @@
 #define HSSFLAGACTION_H
 
 #include "HSSAction.h"
-#include "../parsing/HSSFlagFunction.h"
+#include "HSSFlagFunction.h"
 
 namespace AXR {
     

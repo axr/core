@@ -44,8 +44,8 @@
 #ifndef HSSVALUE_H
 #define HSSVALUE_H
 
+#include "HSSMultipleValueDefinition.h"
 #include "HSSObject.h"
-#include "../parsing/HSSMultipleValueDefinition.h"
 
 namespace AXR {
     

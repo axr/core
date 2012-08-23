@@ -155,21 +155,19 @@
  *  @image html library_structure.jpg
  */
 
-
-
 #ifndef AXR_H
 #define AXR_H
 
-#include "axr/AXRDebugging.h"
-#include "axr/AXRRender.h"
-#include "axr/AXRController.h"
-#include "axr/AXRWrapper.h"
-#include "xml/xml.h"
-#include "hss/hss.h"
-#include <cairo/cairo.h>
 #include <boost/shared_ptr.hpp>
-#include "hss/various/HSSCallback.h"
 #include <boost/thread/tss.hpp>
+#include <cairo/cairo.h>
+#include "hss.h"
+#include "xml.h"
+#include "AXRController.h"
+#include "AXRDebugging.h"
+#include "AXRRender.h"
+#include "AXRWrapper.h"
+#include "HSSCallback.h"
 
 namespace AXR
 {

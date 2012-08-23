@@ -39,17 +39,18 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
+
  ********************************************************************/
 
+#include <boost/unordered_map.hpp>
+#include "AXR.h"
+#include "AXRController.h"
+#include "HSSMultipleValue.h"
+#include "HSSMultipleValueDefinition.h"
 #include "HSSObject.h"
 #include "HSSObjects.h"
-#include "HSSMultipleValue.h"
-#include "../parsing/HSSMultipleValueDefinition.h"
-#include "../parsing/HSSObjectNameConstant.h"
-#include "../../axr/AXRController.h"
-#include <boost/unordered_map.hpp>
-#include "../../AXR.h"
-#include "../HSSTypeEnums.h"
+#include "HSSObjectNameConstant.h"
+#include "HSSTypeEnums.h"
 
 using namespace AXR;
 

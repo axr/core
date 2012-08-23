@@ -44,8 +44,8 @@
 #ifndef HSSOBJECTS_H
 #define HSSOBJECTS_H
 
-#include "HSSRectangle.h"
 #include "HSSCircle.h"
 #include "HSSPolygon.h"
+#include "HSSRectangle.h"
 
 #endif

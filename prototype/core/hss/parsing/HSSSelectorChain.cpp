@@ -41,11 +41,11 @@
  *
  ********************************************************************/
 
-#include "HSSSelectorChain.h"
 #include <iostream>
-#include "../../axr/AXRDebugging.h"
 #include <boost/pointer_cast.hpp>
+#include "AXRDebugging.h"
 #include "HSSRule.h"
+#include "HSSSelectorChain.h"
 #include "HSSSimpleSelector.h"
 
 using namespace AXR;

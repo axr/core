@@ -44,16 +44,15 @@
 #ifndef HSSPARSERNODES_H
 #define HSSPARSERNODES_H
 
-#include "HSSRule.h"
-#include "HSSObjectDefinition.h"
-#include "HSSSelector.h"
 #include "HSSCombinator.h"
-#include "HSSSelectorChain.h"
-#include "HSSUniversalSelector.h"
-#include "HSSPropertyDefinition.h"
-#include "HSSInstruction.h"
 #include "HSSComment.h"
 #include "HSSConstants.h"
-
+#include "HSSInstruction.h"
+#include "HSSObjectDefinition.h"
+#include "HSSPropertyDefinition.h"
+#include "HSSRule.h"
+#include "HSSSelector.h"
+#include "HSSSelectorChain.h"
+#include "HSSUniversalSelector.h"
 
 #endif

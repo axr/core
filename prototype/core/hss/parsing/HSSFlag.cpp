@@ -41,11 +41,11 @@
  *
  ********************************************************************/
 
-#include "HSSFlag.h"
-#include "../../AXR.h"
 #include <boost/unordered_map.hpp>
-#include "../objects/HSSDisplayObject.h"
-#include "../../axr/AXRController.h"
+#include "AXR.h"
+#include "AXRController.h"
+#include "HSSDisplayObject.h"
+#include "HSSFlag.h"
 
 using namespace AXR;
 

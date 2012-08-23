@@ -44,17 +44,16 @@
 #ifndef AXR_XMLPARSER_H
 #define AXR_XMLPARSER_H
 
-
-#include <sys/types.h>
 #include <string>
-#include <expat.h>
-#include "ExpatXMLParser.h"
-#include "XMLParserExceptions.h"
+#include <sys/types.h>
+#include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include <boost/function.hpp>
-#include "../hss/objects/HSSContainer.h"
-#include "../axr/AXRWrapper.h"
+#include <expat.h>
+#include "AXRWrapper.h"
+#include "ExpatXMLParser.h"
+#include "HSSContainer.h"
+#include "XMLParserExceptions.h"
 
 namespace AXR {
     

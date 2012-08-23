@@ -41,12 +41,8 @@
  *
  ********************************************************************/
 
-
-#ifndef OSXAXRWRAPPER_H
-#define OSXAXRWRAPPER_H
-
-#include "../../axr/AXRWrapper.h"
-#include "AXRView.h"
+#import "AXRView.h"
+#import "AXRWrapper.h"
 
 namespace AXR
 {
@@ -70,6 +66,3 @@ namespace AXR
         AXRView * mainView;
     };
 }
-
-
-#endif

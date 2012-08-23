@@ -42,8 +42,8 @@
  ********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-#import "../core/AXR.h"
-#import "../core/os/osx/AXRView.h"
+#import "AXR.h"
+#import "AXRView.h"
 
 #if (MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_5)
 @interface AXRTestAppAppDelegate : NSObject {

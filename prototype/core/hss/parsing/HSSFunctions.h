@@ -44,14 +44,14 @@
 #ifndef HSSFUNCTIONS_H
 #define HSSFUNCTIONS_H
 
-#include "HSSRefFunction.h"
-#include "HSSSelFunction.h"
-#include "HSSFlagFunction.h"
-//#include "HSSMinFunction.h"
-//#include "HSSMaxFunction.h"
-//#include "HSSFloorFunction.h"
-//#include "HSSCeilFunction.h"
-//#include "HSSRoundFunction.h"
 #include "HSSAttrFunction.h"
+//#include "HSSCeilFunction.h"
+#include "HSSFlagFunction.h"
+//#include "HSSFloorFunction.h"
+//#include "HSSMaxFunction.h"
+//#include "HSSMinFunction.h"
+#include "HSSRefFunction.h"
+//#include "HSSRoundFunction.h"
+#include "HSSSelFunction.h"
 
 #endif

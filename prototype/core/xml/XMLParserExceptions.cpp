@@ -41,9 +41,8 @@
  *
  ********************************************************************/
 
-#include "XMLParserExceptions.h"
-
 #include <sstream>
+#include "XMLParserExceptions.h"
 
 using namespace AXR;
 

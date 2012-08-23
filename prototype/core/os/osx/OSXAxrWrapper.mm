@@ -41,11 +41,11 @@
  *
  ********************************************************************/
 
-#include "OSXAxrWrapper.h"
-#include "../../AXR.h"
-#include "../../axr/errors/AXRError.h"
-#include "../../axr/AXRDebugging.h"
-#include <Cocoa/Cocoa.h>
+#import <Cocoa/Cocoa.h>
+#import "AXR.h"
+#import "AXRDebugging.h"
+#import "AXRError.h"
+#import "OSXAxrWrapper.h"
 
 using namespace AXR;
 

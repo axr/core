@@ -44,11 +44,11 @@
 #ifndef HSSEXPRESSION_H
 #define HSSEXPRESSION_H
 
-#include "HSSParserNode.h"
-#include <boost/shared_ptr.hpp>
 #include <vector>
-#include "../various/HSSObservable.h"
-#include "../objects/HSSDisplayObject.h"
+#include <boost/shared_ptr.hpp>
+#include "HSSDisplayObject.h"
+#include "HSSObservable.h"
+#include "HSSParserNode.h"
 
 namespace AXR {
     

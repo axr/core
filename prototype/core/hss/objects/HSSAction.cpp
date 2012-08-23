@@ -41,12 +41,12 @@
  *
  ********************************************************************/
 
-#import "HSSAction.h"
-#import "../parsing/HSSObjectNameConstant.h"
-#import "../parsing/HSSObjectDefinition.h"
-#import <boost/unordered_map.hpp>
-#import <boost/pointer_cast.hpp>
-#import "../../axr/AXRController.h"
+#include <boost/pointer_cast.hpp>
+#include <boost/unordered_map.hpp>
+#include "AXRController.h"
+#include "HSSAction.h"
+#include "HSSObjectDefinition.h"
+#include "HSSObjectNameConstant.h"
 
 using namespace AXR;
 

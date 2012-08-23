@@ -45,10 +45,10 @@
 #define HSSGRADIENT_H
 
 #include <string>
-#include "HSSObject.h"
-#include "HSSRgb.h"
 #include <boost/shared_ptr.hpp>
 #include <cairo/cairo.h>
+#include "HSSObject.h"
+#include "HSSRgb.h"
 
 namespace AXR {
     

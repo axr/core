@@ -45,9 +45,9 @@
 #define HSSBORDER_H
 
 #include <string>
-#include "HSSObject.h"
 #include <boost/shared_ptr.hpp>
 #include <cairo/cairo.h>
+#include "HSSObject.h"
 
 namespace AXR {
     /**

@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
+#include "AXR.h"
 #include "HSSRootSelector.h"
-#include "../../AXR.h"
 
 using namespace AXR;
 

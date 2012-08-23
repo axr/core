@@ -41,15 +41,14 @@
  *
  ********************************************************************/
 
-#include "AXRRender.h"
 #include <iostream>
-#include "AXRDebugging.h"
-#include "errors/errors.h"
-#include "../hss/objects/HSSDisplayObject.h"
-#include "AXRController.h"
-#include "../AXR.h"
-#include "../axr/AXRDebugging.h"
 #include <boost/lexical_cast.hpp>
+#include "errors.h"
+#include "AXR.h"
+#include "AXRController.h"
+#include "AXRDebugging.h"
+#include "AXRRender.h"
+#include "HSSDisplayObject.h"
 
 using namespace AXR;
 

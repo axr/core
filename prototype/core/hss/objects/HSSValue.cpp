@@ -41,11 +41,11 @@
  *
  ********************************************************************/
 
-#import "HSSValue.h"
-#import "../parsing/HSSObjectNameConstant.h"
-#import "../parsing/HSSObjectDefinition.h"
-#import "../parsing/HSSFunction.h"
-#import "../../axr/AXRController.h"
+#include "AXRController.h"
+#include "HSSFunction.h"
+#include "HSSObjectDefinition.h"
+#include "HSSObjectNameConstant.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 

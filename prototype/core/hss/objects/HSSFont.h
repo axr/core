@@ -45,9 +45,9 @@
 #define HSSFONT_H
 
 #include <string>
+#include "HSSKeywordConstant.h"
 #include "HSSObject.h"
 #include "HSSRgb.h"
-#include "../parsing/HSSKeywordConstant.h"
 
 namespace AXR {
     /**

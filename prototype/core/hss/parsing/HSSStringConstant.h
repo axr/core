@@ -44,8 +44,8 @@
 #ifndef HSSSTRINGCONSTANT_H
 #define HSSSTRINGCONSTANT_H
 
-#include "HSSExpression.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSExpression.h"
 
 namespace AXR {
     

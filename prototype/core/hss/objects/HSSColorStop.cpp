@@ -41,15 +41,14 @@
  *
  ********************************************************************/
 
+#include "errors.h"
+#include "AXRController.h"
+#include "AXRDebugging.h"
 #include "HSSColorStop.h"
-
-#include "../../axr/AXRDebugging.h"
-#include "../../axr/errors/errors.h"
-#include "../../axr/AXRController.h"
-#include "../parsing/HSSExpression.h"
-#include "../parsing/HSSConstants.h"
-#include "../parsing/HSSFunction.h"
-#include "../parsing/HSSObjectDefinition.h"
+#include "HSSConstants.h"
+#include "HSSExpression.h"
+#include "HSSFunction.h"
+#include "HSSObjectDefinition.h"
 
 using namespace AXR;
 

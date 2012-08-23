@@ -41,10 +41,10 @@
  *
  ********************************************************************/
 
-#include "AXRError.h"
-#include "../AXRDebugging.h"
 #include <sstream>
-#include "../../AXR.h"
+#include "AXR.h"
+#include "AXRDebugging.h"
+#include "AXRError.h"
 
 using namespace AXR;
 

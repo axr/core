@@ -41,14 +41,14 @@
  *
  ********************************************************************/
 
-#include "HSSLog.h"
 #include <boost/pointer_cast.hpp>
-#include "../parsing/HSSFunction.h"
-#include "../parsing/HSSRefFunction.h"
-#include "../parsing/HSSStringConstant.h"
-#include "../parsing/HSSObjectNameConstant.h"
-#include "../parsing/HSSObjectDefinition.h"
-#include "../../axr/AXRController.h"
+#include "AXRController.h"
+#include "HSSFunction.h"
+#include "HSSLog.h"
+#include "HSSObjectDefinition.h"
+#include "HSSObjectNameConstant.h"
+#include "HSSRefFunction.h"
+#include "HSSStringConstant.h"
 
 using namespace AXR;
 

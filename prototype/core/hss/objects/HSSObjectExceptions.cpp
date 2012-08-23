@@ -45,11 +45,6 @@
 
 using namespace AXR;
 
-/**
- *  @brief This class is deprecated. Use AXRError instead.
- *
- *  @todo remove this, and fix any dependency
- */
 HSSUnknownObjectTypeException::HSSUnknownObjectTypeException(std::string type)
 {
     this->type = type;

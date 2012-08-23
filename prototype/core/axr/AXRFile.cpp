@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include <cstdio>
-#import "AXRFile.h"
+#include "AXRFile.h"
 
 using namespace AXR;
 

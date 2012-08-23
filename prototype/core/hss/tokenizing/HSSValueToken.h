@@ -44,8 +44,8 @@
 #ifndef HSSVALUETOKEN_H
 #define HSSVALUETOKEN_H
 
-#include "HSSToken.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSToken.h"
 
 #define VALUE_TOKEN(thetoken) (boost::static_pointer_cast<HSSValueToken>(thetoken))
 

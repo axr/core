@@ -45,8 +45,8 @@
 #define HSSRGB_H
 
 #include <string>
-#include "HSSObject.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSObject.h"
 
 namespace AXR {
     

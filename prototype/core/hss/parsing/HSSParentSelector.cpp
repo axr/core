@@ -41,9 +41,9 @@
  *
  ********************************************************************/
 
-#include "HSSParentSelector.h"
-#include "../../AXR.h"
 #include <set>
+#include "AXR.h"
+#include "HSSParentSelector.h"
 
 using namespace AXR;
 

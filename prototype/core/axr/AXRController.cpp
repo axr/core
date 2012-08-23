@@ -41,21 +41,20 @@
  *
  ********************************************************************/
 
-#include "AXRController.h"
-#include "../AXR.h"
-#include "AXRExceptions.h"
 #include <sstream>
-#include "../axr/AXRDebugging.h"
-#include "../axr/errors/errors.h"
-#include "../hss/objects/HSSDisplayObject.h"
 #include <boost/pointer_cast.hpp>
-#include "../hss/parsing/HSSSelectorChain.h"
-#include "../hss/parsing/HSSFilters.h"
-#include "../hss/parsing/HSSNegation.h"
-#include "../hss/parsing/HSSFlag.h"
+#include "errors.h"
+#include "AXR.h"
+#include "AXRController.h"
+#include "AXRDebugging.h"
+#include "AXRExceptions.h"
+#include "HSSDisplayObject.h"
+#include "HSSFilters.h"
+#include "HSSFlag.h"
+#include "HSSNegation.h"
+#include "HSSSelectorChain.h"
 
 using namespace AXR;
-
 
 AXRController::AXRController()
 {

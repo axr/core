@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
-#import "HSSFlagAction.h"
-#import "../../axr/AXRController.h"
+#include "AXRController.h"
+#include "HSSFlagAction.h"
 
 using namespace AXR;
 

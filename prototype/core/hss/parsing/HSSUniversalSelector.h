@@ -44,10 +44,10 @@
 #ifndef HSSUNIVERSALSELECTOR_H
 #define HSSUNIVERSALSELECTOR_H
 
-#include "HSSNameSelector.h"
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include "../objects/HSSDisplayObject.h"
+#include "HSSDisplayObject.h"
+#include "HSSNameSelector.h"
 
 namespace AXR {
     

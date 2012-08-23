@@ -44,9 +44,9 @@
 #ifndef HSSOBJECTEXCEPTIONS_H
 #define HSSOBJECTEXCEPTIONS_H
 
-
-//#include <exception>
 #include <string>
+#include "AXRGlobal.h"
+#include "AXRError.h"
 
 namespace AXR {
     
@@ -55,7 +55,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class HSSUnknownObjectTypeException
+    class AXR_DEPRECATED HSSUnknownObjectTypeException
     {
     public:
         HSSUnknownObjectTypeException(std::string type);
@@ -68,7 +68,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class HSSUnknownValueTypeException
+    class AXR_DEPRECATED HSSUnknownValueTypeException
     {
     public:
         virtual std::string toString();
@@ -79,7 +79,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class HSSObjectNotFoundException
+    class AXR_DEPRECATED HSSObjectNotFoundException
     {
     public:
         HSSObjectNotFoundException(std::string name);

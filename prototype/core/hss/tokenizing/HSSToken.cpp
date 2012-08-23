@@ -41,9 +41,8 @@
  *
  ********************************************************************/
 
-
-#include "HSSToken.h"
 #include <iostream>
+#include "HSSToken.h"
 
 using namespace AXR;
 

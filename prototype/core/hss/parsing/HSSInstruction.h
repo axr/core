@@ -44,8 +44,8 @@
 #ifndef HSSINSTRUCTION_H
 #define HSSINSTRUCTION_H
 
-#include "HSSStatement.h"
 #include <boost/shared_ptr.hpp>
+#include "HSSStatement.h"
 
 namespace AXR {
     

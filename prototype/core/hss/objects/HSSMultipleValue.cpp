@@ -41,9 +41,9 @@
  *
  ********************************************************************/
 
-#include "HSSMultipleValue.h"
 #include <iostream>
-#include "../../axr/AXRDebugging.h"
+#include "AXRDebugging.h"
+#include "HSSMultipleValue.h"
 
 using namespace AXR;
 

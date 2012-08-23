@@ -75,9 +75,14 @@ link_directories(
     ${PANGOCAIRO_LIBRARY_DIRS}
 )
 
+option(AXR_NO_DEPRECATED_ENUMS "Disallow use of deprecated enum members" OFF)
 option(BUILD_UNIVERSAL_BINARIES "Build OS X universal binaries (i386 + x86_64)" OFF)
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
+
+if(AXR_NO_DEPRECATED_ENUMS)
+    add_definitions(-DAXR_NO_DEPRECATED_ENUMS)
+endif()
 
 if(BUILD_UNIVERSAL_BINARIES OR "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     set(CMAKE_OSX_ARCHITECTURES i386 x86_64)
@@ -88,18 +93,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-add_subdirectory(prototype/core)
-add_subdirectory(prototype/app)
-
-# Set distribution type
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE distribution)
-endif()
-
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
-set(CMAKE_CXX_FLAGS_DISTRIBUTION "-O3")
-set(CMAKE_C_FLAGS_DISTRIBUTION "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_C_FLAGS_RELEASE "-O3")
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g")
+
+add_subdirectory(prototype)

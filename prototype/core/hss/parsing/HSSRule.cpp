@@ -41,13 +41,13 @@
  *
  ********************************************************************/
 
-#include "HSSRule.h"
 #include <iostream>
-#include "../../axr/AXRDebugging.h"
-#include "../../axr/AXRController.h"
-#include "../objects/HSSDisplayObject.h"
-#include "../objects/HSSContainer.h"
+#include "AXRController.h"
+#include "AXRDebugging.h"
+#include "HSSContainer.h"
+#include "HSSDisplayObject.h"
 #include "HSSFilter.h"
+#include "HSSRule.h"
 
 using namespace AXR;
 

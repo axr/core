@@ -41,10 +41,10 @@
  *
  ********************************************************************/
 
-#import "../../AXR.h"
-#import "HSSRequest.h"
-#import "../../axr/AXRController.h"
-#import "../parsing/HSSSelFunction.h"
+#include "AXR.h"
+#include "AXRController.h"
+#include "HSSRequest.h"
+#include "HSSSelFunction.h"
 
 using namespace AXR;
 

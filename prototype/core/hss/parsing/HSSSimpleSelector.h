@@ -44,13 +44,13 @@
 #ifndef HSSSIMPLESELECTOR_H
 #define HSSSIMPLESELECTOR_H
 
-#include "HSSSelector.h"
+#include <list>
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include "HSSNameSelector.h"
-#include "../objects/HSSDisplayObject.h"
+#include "HSSDisplayObject.h"
 #include "HSSFilter.h"
-#include <list>
+#include "HSSNameSelector.h"
+#include "HSSSelector.h"
 
 namespace AXR {
     

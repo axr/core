@@ -45,14 +45,14 @@
 #define HSSOBJECT_H
 
 #include <string>
-#include <boost/shared_ptr.hpp>
-#include "../various/HSSObservable.h"
-#include "../parsing/HSSParserNode.h"
-#include <boost/unordered_map.hpp>
-#include "../../axr/AXRDebugging.h"
-#include "../../axr/errors/errors.h"
 #include <vector>
-#include "../HSSTypeEnums.h"
+#include <boost/shared_ptr.hpp>
+#include <boost/unordered_map.hpp>
+#include "errors.h"
+#include "AXRDebugging.h"
+#include "HSSObservable.h"
+#include "HSSParserNode.h"
+#include "HSSTypeEnums.h"
 
 namespace AXR {
     

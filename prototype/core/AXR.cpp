@@ -41,9 +41,9 @@
  *
  ********************************************************************/
 
-#include "AXR.h"
-#include <pthread.h>
 #include <boost/lexical_cast.hpp>
+#include <pthread.h>
+#include "AXR.h"
 
 using namespace AXR;
 

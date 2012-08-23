@@ -44,9 +44,9 @@
 #ifndef HSSEVENT_H
 #define HSSEVENT_H
 
-#include "HSSObject.h"
-#include "../parsing/HSSMultipleValueDefinition.h"
 #include "HSSAction.h"
+#include "HSSMultipleValueDefinition.h"
+#include "HSSObject.h"
 
 namespace AXR {
     

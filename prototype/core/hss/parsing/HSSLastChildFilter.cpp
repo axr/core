@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "../objects/HSSContainer.h"
+#include "HSSContainer.h"
 #include "HSSLastChildFilter.h"
 
 using namespace AXR;

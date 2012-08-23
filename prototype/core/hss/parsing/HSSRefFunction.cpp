@@ -41,10 +41,10 @@
  *
  ********************************************************************/
 
+#include "errors.h"
+#include "AXRController.h"
+#include "AXRDebugging.h"
 #include "HSSRefFunction.h"
-#include "../../axr/AXRDebugging.h"
-#include "../../axr/errors/errors.h"
-#include "../../axr/AXRController.h"
 
 using namespace AXR;
 

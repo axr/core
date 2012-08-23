@@ -44,8 +44,8 @@
 #ifndef HSSSELECTOR_H
 #define HSSSELECTOR_H
 
+#include "HSSDisplayObject.h"
 #include "HSSParserNode.h"
-#include "../objects/HSSDisplayObject.h"
 
 namespace AXR {
     

@@ -39,19 +39,10 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2011/04/09
- *      HSS version: 1.0
- *      Core version: 0.3
- *      Revision: 2
- *
  ********************************************************************/
 
-#include "HSSParserExceptions.h"
 #include <sstream>
+#include "HSSParserExceptions.h"
 
 using namespace AXR;
 

@@ -44,9 +44,8 @@
 #ifndef AXR_AXREXCEPTIONS_H
 #define AXR_AXREXCEPTIONS_H
 
-
-//#include <exception>
 #include <string>
+#include "AXRGlobal.h"
 
 namespace AXR {
     /**
@@ -54,7 +53,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class AXRException
+    class AXR_DEPRECATED AXRException
     {
     public:
         AXRException(std::string filename);
@@ -67,7 +66,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class AXRNoStylesheetsException : public AXRException
+    class AXR_DEPRECATED AXRNoStylesheetsException : public AXRException
     {
     public:
         AXRNoStylesheetsException(std::string filename);

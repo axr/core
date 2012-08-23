@@ -44,8 +44,8 @@
 #ifndef HSSNAMESELECTOR_H
 #define HSSNAMESELECTOR_H
 
-#include "HSSSelector.h"
 #include <string>
+#include "HSSSelector.h"
 
 namespace AXR {
     

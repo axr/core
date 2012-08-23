@@ -44,12 +44,12 @@
 #ifndef HSSTOKENIZER_H
 #define HSSTOKENIZER_H
 
-#include "HSSToken.h"
-#include "HSSValueToken.h"
-#include <boost/shared_array.hpp>
 #include <string>
 #include <vector>
-#include "../../axr/AXRFile.h"
+#include <boost/shared_array.hpp>
+#include "AXRFile.h"
+#include "HSSToken.h"
+#include "HSSValueToken.h"
 
 namespace AXR {
     //the return states any part of the tokenizer will report

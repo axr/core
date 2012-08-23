@@ -44,9 +44,9 @@
 #ifndef HSSROOTSELECTOR_H
 #define HSSROOTSELECTOR_H
 
-#include "HSSNameSelector.h"
 #include <string>
-#include "../objects/HSSDisplayObject.h"
+#include "HSSDisplayObject.h"
+#include "HSSNameSelector.h"
 
 namespace AXR {
     

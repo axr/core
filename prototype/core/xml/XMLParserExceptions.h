@@ -44,9 +44,8 @@
 #ifndef AXR_XMLPARSEREXCEPTIONS_H
 #define AXR_XMLPARSEREXCEPTIONS_H
 
-
-//#include <exception>
 #include <string>
+#include "AXRGlobal.h"
 
 namespace AXR {
     
@@ -55,7 +54,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class XMLParserException
+    class AXR_DEPRECATED XMLParserException
     {
     public:
         XMLParserException(std::string filename);
@@ -74,7 +73,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class XMLUnexpectedEndOfSourceException : public XMLParserException
+    class AXR_DEPRECATED XMLUnexpectedEndOfSourceException : public XMLParserException
     {
     public:
         XMLUnexpectedEndOfSourceException(std::string filename, int line, int column);
@@ -86,7 +85,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class XMLNoElementsException : public XMLParserException
+    class AXR_DEPRECATED XMLNoElementsException : public XMLParserException
     {
     public:
         XMLNoElementsException(std::string filename, int line, int column);
@@ -98,7 +97,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class XMLUnknownProcessingInstructionException : public XMLParserException
+    class AXR_DEPRECATED XMLUnknownProcessingInstructionException : public XMLParserException
     {
     public:
         XMLUnknownProcessingInstructionException(std::string filename, int line, int column);
@@ -110,7 +109,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class XMLMalformedProcessingInstructionException : public XMLParserException
+    class AXR_DEPRECATED XMLMalformedProcessingInstructionException : public XMLParserException
     {
     public:
         XMLMalformedProcessingInstructionException(std::string filename, int line, int column);
@@ -122,7 +121,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class XMLUnknownSheetTypeException : public XMLParserException
+    class AXR_DEPRECATED XMLUnknownSheetTypeException : public XMLParserException
     {
     public:
         XMLUnknownSheetTypeException(std::string filename, int line, int column);
@@ -134,7 +133,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class XMLUnknownCallbackTypeException
+    class AXR_DEPRECATED XMLUnknownCallbackTypeException
     {
     public:
         XMLUnknownCallbackTypeException();
@@ -146,7 +145,7 @@ namespace AXR {
      *
      *  @todo remove this, and fix any dependency
      */
-    class XMLControllerNotSetException : public XMLParserException
+    class AXR_DEPRECATED XMLControllerNotSetException : public XMLParserException
     {
     public:
         XMLControllerNotSetException(std::string filename);

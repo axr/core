@@ -41,12 +41,12 @@
  *
  ********************************************************************/
 
-#include "HSSMargin.h"
-#include "../parsing/HSSNumberConstant.h"
-#include "../parsing/HSSPercentageConstant.h"
-#include "../parsing/HSSExpression.h"
-#include "../parsing/HSSFunction.h"
 #include "HSSDisplayObject.h"
+#include "HSSExpression.h"
+#include "HSSFunction.h"
+#include "HSSMargin.h"
+#include "HSSNumberConstant.h"
+#include "HSSPercentageConstant.h"
 
 using namespace AXR;
 

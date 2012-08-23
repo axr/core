@@ -44,14 +44,14 @@
 #ifndef AXRCONTROLLER_H
 #define AXRCONTROLLER_H
 
-#include <vector>
-#include <string>
 #include <stack>
-#include <boost/shared_ptr.hpp>
+#include <string>
+#include <vector>
 #include <boost/enable_shared_from_this.hpp>
-#include "../hss/objects/HSSObject.h"
-#include "../hss/objects/HSSContainer.h"
-#include "../hss/parsing/HSSParser.h"
+#include <boost/shared_ptr.hpp>
+#include "HSSContainer.h"
+#include "HSSObject.h"
+#include "HSSParser.h"
 
 namespace AXR {
     

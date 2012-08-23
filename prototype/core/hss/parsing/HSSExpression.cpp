@@ -41,13 +41,13 @@
  *
  ********************************************************************/
 
-#include "HSSExpression.h"
 #include <iostream>
-#include "../../axr/AXRDebugging.h"
+#include "AXRDebugging.h"
+#include "HSSDisplayObject.h"
+#include "HSSExpression.h"
+#include "HSSFunction.h"
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
-#include "HSSFunction.h"
-#include "../objects/HSSDisplayObject.h"
 
 using namespace AXR;
 

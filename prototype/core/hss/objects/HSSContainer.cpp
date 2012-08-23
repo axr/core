@@ -41,25 +41,25 @@
  *
  ********************************************************************/
 
-#include "HSSContainer.h"
-#include "../../axr/AXRDebugging.h"
-#include "../../axr/errors/errors.h"
-#include "../../axr/AXRController.h"
-#include "../parsing/HSSObjectDefinition.h"
-#include "../parsing/HSSExpression.h"
-#include "../parsing/HSSConstants.h"
-#include "../parsing/HSSObjectNameConstant.h"
-#include "../parsing/HSSFunction.h"
-#include "../../AXR.h"
-#include <map>
-#include <string>
-#include <sstream>
-#include <boost/pointer_cast.hpp>
+#include <algorithm>
 #include <cmath>
-#include "HSSShapes.h"
+#include <map>
+#include <sstream>
+#include <string>
 #include <vector>
 #include <boost/algorithm/string.hpp>
-#include <algorithm>
+#include <boost/pointer_cast.hpp>
+#include "errors.h"
+#include "AXR.h"
+#include "AXRController.h"
+#include "AXRDebugging.h"
+#include "HSSConstants.h"
+#include "HSSContainer.h"
+#include "HSSExpression.h"
+#include "HSSFunction.h"
+#include "HSSObjectDefinition.h"
+#include "HSSObjectNameConstant.h"
+#include "HSSShapes.h"
 
 using namespace AXR;
 

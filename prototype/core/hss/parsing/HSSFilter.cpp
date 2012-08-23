@@ -41,10 +41,10 @@
  *
  ********************************************************************/
 
-#include "HSSFilter.h"
 #include <boost/unordered_map.hpp>
+#include "HSSDisplayObject.h"
+#include "HSSFilter.h"
 #include "HSSFilters.h"
-#include "../objects/HSSDisplayObject.h"
 
 using namespace AXR;
 

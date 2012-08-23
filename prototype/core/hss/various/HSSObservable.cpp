@@ -41,10 +41,10 @@
  *
  ********************************************************************/
 
-#include "HSSObservable.h"
 #include <iostream>
-#include "../../axr/AXRDebugging.h"
 #include <boost/unordered_map.hpp>
+#include "AXRDebugging.h"
+#include "HSSObservable.h"
 
 using namespace AXR;
 

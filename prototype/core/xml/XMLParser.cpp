@@ -41,12 +41,12 @@
  *
  ********************************************************************/
 
-#include "XMLParser.h"
-#include "../AXR.h"
 #include <iostream>
-#include "../axr/AXRDebugging.h"
-#include "../axr/errors/errors.h"
-#include "../axr/AXRController.h"
+#include "errors.h"
+#include "AXR.h"
+#include "AXRController.h"
+#include "AXRDebugging.h"
+#include "XMLParser.h"
 
 using namespace AXR;
 

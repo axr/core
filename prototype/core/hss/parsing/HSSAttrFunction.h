@@ -44,8 +44,9 @@
 #ifndef HSSATTRFUNCTION_H
 #define HSSATTRFUNCTION_H
 
+#include "AXRGlobal.h"
 #include "HSSFunction.h"
-#include "../parsing/HSSSelectorChain.h"
+#include "HSSSelectorChain.h"
 
 namespace AXR {
     
@@ -154,7 +155,7 @@ namespace AXR {
          *  Calls _evaluate();
          *  @deprecated Do not use this.
          */
-        virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
+        AXR_DEPRECATED virtual void * _evaluate(std::deque<HSSParserNode::p> arguments);
         
         /**
          *  Callback that will update the value when the observed property changes.

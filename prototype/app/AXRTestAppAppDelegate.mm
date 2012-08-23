@@ -41,13 +41,13 @@
  *
  ********************************************************************/
 
-#import "AXRTestAppAppDelegate.h"
-#import <string>
 #import <iostream>
-#import "../core/axr/AXRDebugging.h"
-#import "../core/hss/objects/HSSDisplayObject.h"
-#import "../core/os/osx/OSXAxrWrapper.h"
-#import "../core/hss/various/HSSCallback.h"
+#import <string>
+#import "AXRDebugging.h"
+#import "AXRTestAppAppDelegate.h"
+#import "HSSCallback.h"
+#import "HSSDisplayObject.h"
+#import "OSXAxrWrapper.h"
 
 #define BUFFSIZE 8192
 char Buff[BUFFSIZE];

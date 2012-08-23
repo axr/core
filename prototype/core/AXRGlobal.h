@@ -25,7 +25,7 @@
  *            MM,
  *
  *
- *      AUTHORS: Miro Keller
+ *      AUTHORS: Jake Petroules
  *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
@@ -41,13 +41,45 @@
  *
  ********************************************************************/
 
-#import <Cocoa/Cocoa.h>
-#import "AXRView.h"
+#ifndef AXRGLOBAL_H
+#define AXRGLOBAL_H
 
-int main(int argc, char *argv[])
-{
-    //hack to make it work with IB from a dependent target
-    //if anyone knows how to avoid this, please tell me
-    [AXRView _keepAtLinkTime];
-    return NSApplicationMain(argc,  (const char **) argv);
-}
+#if defined(_MSC_VER)
+#  define AXR_DECL_DEPRECATED __declspec(deprecated)
+#  if defined(__INTEL_COMPILER) // Intel compiler disguised as MSVC doesn't allow variable deprecation
+#    define AXR_DECL_VARIABLE_DEPRECATED
+#  endif
+#elif defined(__GNUC__) || defined(__ARMCC__) || defined(__CC_ARM)
+#  define AXR_DECL_DEPRECATED __attribute__ ((__deprecated__))
+#endif
+
+#ifndef AXR_DECL_DEPRECATED
+#  define AXR_DECL_DEPRECATED
+#endif
+
+#ifndef AXR_DECL_VARIABLE_DEPRECATED
+#  define AXR_DECL_VARIABLE_DEPRECATED AXR_DECL_DEPRECATED
+#endif
+
+#ifdef AXR_DEPRECATED
+#undef AXR_DEPRECATED
+#endif
+
+#ifdef AXR_DEPRECATED_VARIABLE
+#undef AXR_DEPRECATED_VARIABLE
+#endif
+
+#if defined(AXR_NO_DEPRECATED)
+#  define AXR_DEPRECATED
+#  define AXR_DEPRECATED_VARIABLE
+#else
+#  define AXR_DEPRECATED AXR_DECL_DEPRECATED
+#  define AXR_DEPRECATED_VARIABLE AXR_DECL_VARIABLE_DEPRECATED
+#endif
+
+// define AXR_NO_DEPRECATED_ENUMS to restrict usage of deprecated enum members,
+// and surround them with #ifndef AXR_NO_DEPRECATED_ENUMS, because the compiler
+// doesn't let us deprecate enum members in the same manner as classes and
+// class members
+
+#endif

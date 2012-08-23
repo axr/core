@@ -41,13 +41,13 @@
  *
  ********************************************************************/
 
-#include "HSSRoundedRect.h"
-#include "../../axr/errors/errors.h"
-#include "../parsing/HSSNumberConstant.h"
-#include "../parsing/HSSPercentageConstant.h"
-#include "../parsing/HSSExpression.h"
-#include "../parsing/HSSFunction.h"
 #include <boost/pointer_cast.hpp>
+#include "errors.h"
+#include "HSSExpression.h"
+#include "HSSFunction.h"
+#include "HSSNumberConstant.h"
+#include "HSSPercentageConstant.h"
+#include "HSSRoundedRect.h"
 
 using namespace AXR;
 

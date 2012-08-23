@@ -43,14 +43,15 @@
 
 #ifndef HSSPARSERNODE_H
 #define HSSPARSERNODE_H
-#include "../HSSTypeEnums.h"
+
 #include <string>
+#include <vector>
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <vector>
-#include "../various/HSSObservable.h"
-#include "../various/HSSClonable.h"
+#include "HSSClonable.h"
+#include "HSSObservable.h"
+#include "HSSTypeEnums.h"
 
 namespace AXR {
     
