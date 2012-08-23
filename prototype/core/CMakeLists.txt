@@ -38,16 +38,6 @@
  #      FITNESS FOR A PARTICULAR PURPOSE.
  #
  ####################################################################
- #
- #      FILE INFORMATION:
- #      =================
- #      Last changed: 2012/06/19
- #      HSS version: 1.0
- #      Core version: 0.47
- #      Revision: 20
- #
- ####################################################################
-
 
 file(GLOB AXR_CORE_SRCS *.cpp *.h)
 file(GLOB_RECURSE AXR_SRCS axr/*.cpp axr/*.h)

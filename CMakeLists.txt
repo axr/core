@@ -75,7 +75,13 @@ link_directories(
     ${PANGOCAIRO_LIBRARY_DIRS}
 )
 
+option(BUILD_UNIVERSAL_BINARIES "Build OS X universal binaries (i386 + x86_64)" OFF)
+
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
+
+if(BUILD_UNIVERSAL_BINARIES OR "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    set(CMAKE_OSX_ARCHITECTURES i386 x86_64)
+endif()
 
 # Set output directories for binaries and static and shared libraries
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
