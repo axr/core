@@ -74,9 +74,7 @@
  *  Let's have a look at what's inside the prototype folder:
  *  
  *  - core: this is the core library of the rendering engine
- *  - linux: prototype app (SDL based) that runs on Linux
- *  - mac: prototype app (Cocoa) that runs on OS X.
- *  - win: prototype app (SDL based) that runs on Windows
+ *  - app: prototype app (currently a Cocoa app on OS X and SDL based on other platforms)
  *  - tests: this is a bunch of XML and HSS files that were used when developing the library
  *  
  *  The library follows a core/wrapper pattern that allows to embed it wherever needed, it's
