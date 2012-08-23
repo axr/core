@@ -41,6 +41,8 @@
  *
  ********************************************************************/
 
+#warning __FILE__ " is using deprecated enum members. Remove this message once the project compiles cleanly with AXR_NO_DEPRECATED_ENUMS defined."
+
 #include "HSSContainer.h"
 #include "HSSParentFilter.h"
 
