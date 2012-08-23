@@ -98,39 +98,59 @@
     
     NSRect bounds = [self bounds];
     
-    if(![self needsFile]){
+    if (![self needsFile])
+    {
         AXR::AXRCore::tp & core = AXR::AXRCore::getInstance();
         [[NSColor whiteColor] set];
         NSRectFill(bounds);
         
-        AXR::AXRRect axrRect;
-        axrRect.size.width = dirtyRect.size.width;
-        axrRect.size.height = dirtyRect.size.height;
-        axrRect.origin.x = dirtyRect.origin.x;
-        axrRect.origin.y = dirtyRect.origin.y;
+        AXR::AXRRect axrDirtyRect;
+        axrDirtyRect.size.width = dirtyRect.size.width;
+        axrDirtyRect.size.height = dirtyRect.size.height;
+        axrDirtyRect.origin.x = dirtyRect.origin.x;
+        axrDirtyRect.origin.y = dirtyRect.origin.y;
+        
         AXR::AXRRect axrBounds;
         axrBounds.size.width = bounds.size.width;
         axrBounds.size.height = bounds.size.height;
         axrBounds.origin.x = bounds.origin.x;
         axrBounds.origin.y = bounds.origin.y;
         
-        
         CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
         //invert the coordinate system
         CGContextTranslateCTM (ctxt, 0.0, (int)bounds.size.height);
         CGContextScaleCTM (ctxt, 1.0, -1.0);
         
-        cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, axrRect.size.width, axrRect.size.height);
+        cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, axrDirtyRect.size.width, axrDirtyRect.size.height);
         cairo_t * tempcairo = cairo_create(targetSurface);
         cairo_surface_destroy(targetSurface);
         core->setCairo(tempcairo);
-        core->drawInRectWithBounds(axrRect, axrBounds);
+        core->drawInRectWithBounds(axrDirtyRect, axrBounds);
         cairo_destroy(tempcairo);
         core->setCairo(NULL);
-    } else {
-        //fill with light gray
-        [[NSColor colorWithCalibratedWhite:0.8 alpha:1.] set];
+    }
+    else
+    {
+        // Fill with light gray
+        NSColor *lightGrayColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1];
+        [lightGrayColor set];
         NSRectFill(bounds);
+        
+        // Display an indicator that no file is currently loaded
+        NSFont *errorFont = [NSFont fontWithName:@"Helvetica" size:200];
+        NSShadow *shadow = [[NSShadow alloc] init];
+        [shadow setShadowColor:[NSColor darkGrayColor]];
+        [shadow setShadowBlurRadius:5];
+        NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    errorFont, NSFontAttributeName,
+                                    lightGrayColor, NSForegroundColorAttributeName,
+                                    shadow, NSShadowAttributeName,
+                                    nil];
+        NSString *message = @"?";
+        NSSize size = [message sizeWithAttributes:attributes];
+        NSRect stringBounds = NSMakeRect((bounds.size.width - size.width) / 2, (bounds.size.height - size.height) / 2, size.width, size.height);
+        
+        [message drawInRect:stringBounds withAttributes:attributes];
     }
 }
 
