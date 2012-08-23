@@ -51,7 +51,7 @@ if(APPLE)
     set_source_files_properties(${hss_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/framework)
     set_source_files_properties(${views_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/views)
     
-    set_target_properties("${TARGET_NAME}" PROPERTIES MACOSX_BUNDLE_INFO_PLIST Info.plist)
+    set_target_properties("${TARGET_NAME}" PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist")
 
     find_library(COCOA_LIBRARY Cocoa)
     mark_as_advanced(COCOA_LIBRARY)
