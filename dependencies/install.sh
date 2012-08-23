@@ -1,15 +1,19 @@
 #!/bin/sh
+set -e
 
 if [ $EUID -ne 0 ] ; then
     echo "This script must be run as root" 1>&2
     exit 1
 fi
 
+echo "Started: `date`" >> install.log
+
 # Installs dependencies for building AXR
 
 if [ "`uname`" == "Darwin" ] ; then
+    # NOTE: Qt's debug option compiles BOTH debug and release versions
     port install qt4-mac +debug +framework +quartz +universal
-    port install boost +universal
+    port install boost -no-static +universal
     port install libsdl-devel +universal
     port install expat +universal
     port install cairo-devel +quartz +universal
@@ -31,3 +35,5 @@ else
     echo "- Cairo"
     echo "- Pango"
 fi
+
+echo "Finished: `date`" >> install.log
