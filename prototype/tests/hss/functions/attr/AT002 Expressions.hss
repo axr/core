@@ -1,0 +1,11 @@
+test
+{
+    contentAlignX: even;
+    
+	value
+	{
+	    height: attr(val) * 100;
+	    width: 20%;
+	    background: #0003;
+	}
+}

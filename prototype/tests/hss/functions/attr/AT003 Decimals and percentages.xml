@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	Test AT003 Decimals and percentages
+	Created by Miro Keller on 2012-08-23.
+-->
+<?xml-stylesheet type="application/x-hss" src="AT003 Decimals and percentages.hss"?>
+<test>
+	<decimal val="2.45" />
+	<percentage val="30%" />
+	<both decimal="1.25" percentage="10%" />
+</test>

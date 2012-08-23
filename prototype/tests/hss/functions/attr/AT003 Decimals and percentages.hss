@@ -1,0 +1,25 @@
+test
+{
+    contentAlignX: even;
+    
+	*
+	{
+	    width: 20%;
+	    background: #0003;
+	}
+	
+	decimal
+	{
+	    height: attr(val) * 1%;
+	}
+	
+	percentage
+	{
+	    height: attr(val);
+	}
+	
+	both
+	{
+	    height: attr(decimal) * attr(percentage);
+	}
+}
