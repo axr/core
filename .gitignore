@@ -3,9 +3,5 @@
 CMakeCache.txt
 CMakeFiles
 
-# Dependency installer script logs its starting and ending times
-dependencies/install.log
-
 # Exclude OS X folder attributes
 .DS_Store
-

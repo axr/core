@@ -6,34 +6,84 @@ if [ $EUID -ne 0 ] ; then
     exit 1
 fi
 
-echo "Started: `date`" >> install.log
-
 # Installs dependencies for building AXR
+UNAME=$(uname)
 
-if [ "`uname`" == "Darwin" ] ; then
-    # NOTE: Qt's debug option compiles BOTH debug and release versions
-    port install qt4-mac +debug +framework +quartz +universal
-    port install boost -no-static +universal
-    port install libsdl-devel +universal
-    port install expat +universal
-    port install cairo-devel +quartz +universal
-    port install pango-devel +quartz +universal
-elif [ "`uname`" == "Linux" ] ; then
-    # For Arch Linux
-    which pacman > /dev/null 2>&1
-    if [ $? -eq 0 ] ; then
-        pacman -S qt boost sdl expat cairo pango
-    else
-        echo "TODO: Install necessary Debian/RPM packages"
-    fi
-else
-    echo "Unknown platform - you will have to find which packages to install manually, or build from source"
-    echo "- Qt 4 (once the new prototype app is developed)"
+deps()
+{
+    echo "- Qt 4"
     echo "- Boost"
     echo "- SDL"
     echo "- Expat"
     echo "- Cairo"
     echo "- Pango"
-fi
+}
 
-echo "Finished: `date`" >> install.log
+doc()
+{
+    echo "Please install the following dependencies manually, either through"
+    echo "your platform's native package manager or by building from source:"
+    deps
+}
+
+if [ "$UNAME" == "Darwin" ] ; then
+    # TODO: Allow the user to prefer a particular package manager if they have multiple
+    if [ $(which port 2>/dev/null) ] ; then # MacPorts
+        port install qt4-mac +debug +framework +quartz +universal # NOTE: +debug is BOTH debug and release
+        port install boost -no-static +universal
+        port install libsdl-devel +universal
+        port install expat +universal
+        port install cairo-devel +quartz +universal
+        port install pango-devel +quartz +universal
+    elif [ $(which brew 2>/dev/null) ] ; then # Brew
+        # brew install ...
+        echo "ERROR: brew support is not yet implemented"
+        exit 1
+    elif [ $(which fink 2>/dev/null) ] ; then # Fink
+        # fink install ...
+        echo "ERROR: fink support is not yet implemented"
+        exit 1
+    else
+        echo "ERROR: Could not find any OS X package managers installed"
+        echo "Please install one (we support MacPorts, Homebrew and Fink) and install"
+        echo "the following dependencies, or build from source instead:"
+        deps
+        exit 1
+    fi
+elif [ "$UNAME" == "Linux" ] ; then
+    if [ $(which apt-get 2>/dev/null) ] ; then
+        # Debian, Ubuntu
+        apt-get install qt-sdk libboost-all-dev libsdl1.2-dev libexpat1-dev libcairo2-dev libpango1.0-dev
+    elif [ $(which yum 2>/dev/null) ] ; then
+        # Fedora, RHEL, Yellow Dog Linux
+        echo "ERROR: yum support is not yet implemented"
+        exit 1
+    elif [ $(which zypper 2>/dev/null) ] ; then
+        # openSUSE
+        echo "ERROR: zypper support is not yet implemented"
+        exit 1
+    elif [ $(which slackpkg 2>/dev/null) ] ; then
+        # Slackware
+        echo "ERROR: slackpkg support is not yet implemented"
+        exit 1
+    elif [ $(which pacman 2>/dev/null) ] ; then
+        # Arch Linux
+        pacman -S qt boost sdl expat cairo pango
+    elif [ $(which emerge 2>/dev/null) ] ; then
+        # Gentoo
+        echo "ERROR: portage support is not yet implemented"
+        exit 1
+    else
+        echo "ERROR: Unknown package manager!"
+        doc
+        exit 1
+    fi
+elif [ "$UNAME" == "FreeBSD" ] ; then
+    # pkg_add -r ...
+    echo "ERROR: FreeBSD support is not yet implemented"
+    exit 1
+else
+    echo "ERROR: Unknown platform!"
+    doc
+    exit 1
+fi
