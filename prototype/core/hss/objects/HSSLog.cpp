@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include <boost/lexical_cast.hpp>
 #include <boost/pointer_cast.hpp>
 #include "AXRController.h"
 #include "HSSFunction.h"
@@ -130,7 +131,7 @@ void HSSLog::fire()
                 }
                 try {
                     HSSUnit theVal = boost::any_cast<HSSUnit>(remoteValue);
-                    std_log(theVal);
+                    std_log(boost::lexical_cast<std::string>(theVal));
                     done = true;
                 } catch (...) {
                     
