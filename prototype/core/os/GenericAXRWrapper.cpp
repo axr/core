@@ -39,41 +39,31 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2012/06/23
- *      HSS version: 1.0
- *      Core version: 0.47
- *      Revision: 3
- *
  ********************************************************************/
 
-#define AXR_PLATFORM_LINUX
 #include <iostream>
-#include "LinuxAxrWrapper.h"
-#include "../../AXR.h"
-#include "../../axr/errors/AXRError.h"
-#include "../../axr/AXRDebugging.h"
+#include "AXR.h"
+#include "AXRDebugging.h"
+#include "AXRError.h"
+#include "GenericAxrWrapper.h"
 
 using namespace AXR;
 
-LinuxAxrWrapper::LinuxAxrWrapper() : AXRWrapper()
+GenericAxrWrapper::GenericAxrWrapper() : AXRWrapper()
 {
 	this->needsDisplay = true;
 }
 
-AXRWrapper * LinuxAxrWrapper::createWrapper()
+AXRWrapper * GenericAxrWrapper::createWrapper()
 {
-    return new LinuxAxrWrapper();
+    return new GenericAxrWrapper();
 }
 
-LinuxAxrWrapper::~LinuxAxrWrapper()
+GenericAxrWrapper::~GenericAxrWrapper()
 {
 }
 
-AXRFile::p LinuxAxrWrapper::getFile(std::string url)
+AXRFile::p GenericAxrWrapper::getFile(std::string url)
 {
 	AXRFile::p ret = AXRFile::p(new AXRFile());
 
@@ -90,11 +80,11 @@ AXRFile::p LinuxAxrWrapper::getFile(std::string url)
 
 		if (ret->getFileHandle() == NULL)
 		{
-			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->getFileName() + " doesn't exist " + ret->getBasePath()))->raise();
+			AXRError::p(new AXRError("GenericAxrWrapper", "the file " + ret->getFileName() + " doesn't exist " + ret->getBasePath()))->raise();
 		}
 		else if (ferror(ret->getFileHandle()))
 		{
-			AXRError::p(new AXRError("LinuxAxrWrapper", "the file " + ret->getFileName() + " couldn't be read"))->raise();
+			AXRError::p(new AXRError("GenericAxrWrapper", "the file " + ret->getFileName() + " couldn't be read"))->raise();
 		}
 	}
 	else
@@ -105,7 +95,7 @@ AXRFile::p LinuxAxrWrapper::getFile(std::string url)
 	return ret;
 }
 
-size_t LinuxAxrWrapper::readFile(AXRFile::p theFile)
+size_t GenericAxrWrapper::readFile(AXRFile::p theFile)
 {
 	size_t size = fread(theFile->getBuffer(), sizeof(theFile->getBuffer()[0]),
 		theFile->getBufferSize(), theFile->getFileHandle());
@@ -120,18 +110,18 @@ size_t LinuxAxrWrapper::readFile(AXRFile::p theFile)
 	return size;
 }
 
-void LinuxAxrWrapper::closeFile(AXRFile::p theFile)
+void GenericAxrWrapper::closeFile(AXRFile::p theFile)
 {
 	fclose(theFile->getFileHandle());
 	theFile->setFileHandle(NULL);
 }
 
-void LinuxAxrWrapper::handleError(AXRError::p theError)
+void GenericAxrWrapper::handleError(AXRError::p theError)
 {
 	std::cout << theError->toString() << "\n";
 }
 
-bool LinuxAxrWrapper::openFileDialog(std::string &filePath)
+bool GenericAxrWrapper::openFileDialog(std::string &filePath)
 {
 	char file[FILENAME_MAX];
 
@@ -162,12 +152,12 @@ bool LinuxAxrWrapper::openFileDialog(std::string &filePath)
 	return true;
 }
 
-void LinuxAxrWrapper::setNeedsDisplay(bool newValue)
+void GenericAxrWrapper::setNeedsDisplay(bool newValue)
 {
 	this->needsDisplay = newValue;
 }
 
-std::string LinuxAxrWrapper::getPathToResources()
+std::string GenericAxrWrapper::getPathToResources()
 {
 	// Code taken from: http://www.gamedev.net/community/forums/topic.asp?topic_id=459511
 	std::string path = "";
@@ -190,7 +180,7 @@ std::string LinuxAxrWrapper::getPathToResources()
 	return path + std::string("/resources");
 }
 
-std::string LinuxAxrWrapper::getPathToTestsFile()
+std::string GenericAxrWrapper::getPathToTestsFile()
 {
 	return this->_layoutTestsFilePath;
 }

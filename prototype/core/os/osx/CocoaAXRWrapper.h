@@ -25,7 +25,7 @@
  *            MM,
  *
  * 
- *      AUTHORS: Valerij Primachenko, Ragnis Armus
+ *      AUTHORS: Miro Keller
  *      
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
@@ -39,44 +39,30 @@
  *      IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
- ********************************************************************
- *
- *      FILE INFORMATION:
- *      =================
- *      Last changed: 2012/03/07
- *      HSS version: 1.0
- *      Core version: 0.44
- *      Revision: 1
- *
  ********************************************************************/
 
-#ifndef LinuxAxrWrapper_H
-#define LinuxAxrWrapper_H
-
-#include "../../axr/AXRWrapper.h"
+#import "AXRView.h"
+#import "AXRWrapper.h"
 
 namespace AXR
 {
-	class LinuxAxrWrapper : public AXRWrapper
-	{
-		public:
-		LinuxAxrWrapper();
+    class CocoaAxrWrapper : public AXRWrapper
+    {
+    public:
+        CocoaAxrWrapper(AXRView * mainView);
         AXRWrapper * createWrapper();
-		virtual ~LinuxAxrWrapper();
-
-		virtual AXRFile::p getFile(std::string url);
-		virtual size_t readFile(AXRFile::p theFile);
-		virtual void closeFile(AXRFile::p theFile);
-		virtual void handleError(AXRError::p theError);
-		virtual bool openFileDialog(std::string &filePath);
-		virtual void setNeedsDisplay(bool newValue);
-		virtual std::string getPathToResources();
-		virtual std::string getPathToTestsFile();
-
-		bool needsDisplay;
-		std::string _layoutTestsFilePath;
-	};
+        virtual ~CocoaAxrWrapper();
+        
+        virtual AXRFile::p getFile(std::string url);
+        virtual size_t readFile(AXRFile::p theFile);
+        virtual void closeFile(AXRFile::p theFile);
+        virtual void handleError(AXRError::p theError);
+        virtual bool openFileDialog(std::string &filePath);
+        
+        void setNeedsDisplay(bool newValue);
+        std::string getPathToResources();
+        
+    private:
+        AXRView * mainView;
+    };
 }
-
-#endif
-

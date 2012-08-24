@@ -47,7 +47,7 @@
 #import "AXRTestAppAppDelegate.h"
 #import "HSSCallback.h"
 #import "HSSDisplayObject.h"
-#import "OSXAxrWrapper.h"
+#import "CocoaAxrWrapper.h"
 
 #define BUFFSIZE 8192
 char Buff[BUFFSIZE];
@@ -252,9 +252,9 @@ void listXMLElements(NSString *filepath)
     
     [[self axrWindow] makeKeyAndOrderFront:self];
     NSString * filepath = [[NSBundle mainBundle] pathForResource:@"layoutTests" ofType:@"hss" inDirectory:@"views"];
-    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[[self axrView] axrWrapper];
+    AXR::CocoaAxrWrapper * wrapper = (AXR::CocoaAxrWrapper *)[[self axrView] axrWrapper];
     AXR::AXRCore::tp & core = AXR::AXRCore::getInstance();
-    core->registerCustomFunction("AXRLayoutTestsExecute", new AXR::HSSValueChangedCallback<AXR::OSXAxrWrapper>(wrapper, &AXR::AXRWrapper::executeLayoutTests));
+    core->registerCustomFunction("AXRLayoutTestsExecute", new AXR::HSSValueChangedCallback<AXR::CocoaAxrWrapper>(wrapper, &AXR::AXRWrapper::executeLayoutTests));
     [[self axrView] loadFile:filepath];
     return;
 }
@@ -264,13 +264,13 @@ void listXMLElements(NSString *filepath)
 }
 
 - (IBAction)previousLayoutStep:(id)sender {
-    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[[self axrView] axrWrapper];
+    AXR::CocoaAxrWrapper * wrapper = (AXR::CocoaAxrWrapper *)[[self axrView] axrWrapper];
     wrapper->setShowLayoutSteps(true);
     wrapper->previousLayoutStep();
 }
 
 - (IBAction)nextLayoutStep:(id)sender {
-    AXR::OSXAxrWrapper * wrapper = (AXR::OSXAxrWrapper *)[[self axrView] axrWrapper];
+    AXR::CocoaAxrWrapper * wrapper = (AXR::CocoaAxrWrapper *)[[self axrView] axrWrapper];
     wrapper->setShowLayoutSteps(true);
     wrapper->nextLayoutStep();
 }

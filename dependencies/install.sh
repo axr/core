@@ -31,7 +31,7 @@ if [ "$UNAME" == "Darwin" ] ; then
     if [ $(which port 2>/dev/null) ] ; then # MacPorts
         port install qt4-mac +debug +framework +quartz +universal # NOTE: +debug is BOTH debug and release
         port install boost -no-static +universal
-        port install libsdl-devel +universal
+        port install libsdl +universal # NOT libsdl-devel; that's missing necessary headers
         port install expat +universal
         port install cairo-devel +quartz +universal
         port install pango-devel +quartz +universal
