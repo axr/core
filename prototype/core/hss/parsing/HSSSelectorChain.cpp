@@ -96,7 +96,7 @@ void HSSSelectorChain::add(HSSParserNode::p newNode)
 {
     if(newNode)
     {
-        std_log3("HSSSelectorChain: Added node of type " << newNode->toString());
+        std_log3("HSSSelectorChain: Added node of type " + newNode->toString());
         newNode->setParentNode(this->shared_from_this());
         this->nodeList.push_back(newNode);
     }
@@ -106,7 +106,7 @@ void HSSSelectorChain::prepend(HSSParserNode::p newNode)
 {
     if(newNode)
     {
-        std_log3("HSSSelectorChain: Added node of type " << newNode->toString() + " to the front of the selector");
+        std_log3("HSSSelectorChain: Added node of type " + newNode->toString() + " to the front of the selector");
         newNode->setParentNode(this->shared_from_this());
         this->nodeList.push_front(newNode);
     }

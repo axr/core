@@ -657,13 +657,10 @@ void HSSDisplayObject::regenerateSurfaces()
         
         this->setDirty(true);
         this->_needsSurface = false;
-#if AXR_DEBUG_LEVEL > 0
-        std::ostringstream wstr;
-        wstr << this->width;
-        std::ostringstream hstr;
-        hstr << this->height;
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: created a new surface width:"+wstr.str()+" height:"+hstr.str());
-#endif
+
+        std::stringstream msg;
+        msg << "HSSDisplayObject: created a new surface width:" << this->width << " height:" << this->height;
+        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, msg.str());
     }
 }
 
@@ -704,15 +701,12 @@ void HSSDisplayObject::draw(cairo_t * cairo)
     }
     
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: drawing "+this->elementName);
-    if(this->_isDirty){
-#if AXR_DEBUG_LEVEL > 0
-        std::ostringstream xStream;
-        xStream << this->x;
-        std::ostringstream yStream;
-        yStream << this->y;
-        
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: redrawing contents of "+this->elementName+" with x: "+xStream.str()+" and y: "+yStream.str());
-#endif
+    if(this->_isDirty)
+    {
+        std::stringstream msg;
+        msg << "HSSDisplayObject: redrawing contents of " << this->elementName << " with x: " << this->x << " and y: " << this->y;
+        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, msg.str());
+
         this->_isDirty = false;
         this->drawBackground();
         this->drawForeground();
@@ -2363,11 +2357,10 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
         }
     }
     
-#if AXR_DEBUG_LEVEL > 0
     if(fired){
         axr_log(AXR_DEBUG_CH_EVENTS | AXR_DEBUG_CH_EVENTS_SPECIFIC, "HSSDisplayObject: fired event");
     }
-#endif
+
     return fired;
 }
 

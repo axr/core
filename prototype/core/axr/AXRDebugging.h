@@ -44,91 +44,42 @@
 #ifndef AXRDEBUGGING_H
 #define AXRDEBUGGING_H
 
-//Debug levels:
+#include <iostream>
+#include <sstream>
+#include <string>
+
+// Debug levels:
 // - 0 No debug
 // - 1 
 // - 2 
 // - 3 
 // - 4 All messages
 
-//you can set this as a preprocessor macros in your IDE to override
-#ifndef AXR_DEBUG_LEVEL
-//default level
-#define AXR_DEBUG_LEVEL 1
-#endif
+extern unsigned int axr_debug_level;
 
-//logging
-#define std_log(what) std::cout << what << std::endl
+void std_log_level(std::string message, int debugLevel = 0);
+void std_log(std::string message);
+void std_log1(std::string message);
+void std_log2(std::string message);
+void std_log3(std::string message);
+void std_log4(std::string message);
 
-#if AXR_DEBUG_LEVEL > 0
-#define std_log1(what) std::cout << what << std::endl
-
-#if AXR_DEBUG_LEVEL > 1
-#define std_log2(what) std::cout << what << std::endl
-
-#if AXR_DEBUG_LEVEL > 2
-#define std_log3(what) std::cout << what << std::endl
-
-#if AXR_DEBUG_LEVEL > 3
-#define std_log4(what) std::cout << what << std::endl
-#else
-#define std_log4(what)
-#endif //AXR_DEBUG_LEVEL > 3
-
-#else
-#define std_log3(what)
-#define std_log4(what)
-#endif //AXR_DEBUG_LEVEL > 2
-
-#else //AXR_DEBUG_LEVEL < 0
-
-#define std_log2(what)
-#define std_log3(what)
-#define std_log4(what)
-#endif //AXR_DEBUG_LEVEL > 1
-
-#else
-#define std_log1(what)
-#define std_log2(what)
-#define std_log3(what)
-#define std_log4(what)
-#endif //AXR_DEBUG_LEVEL > 0
-
-
-//security brakes for while loops
-#if AXR_DEBUG_LEVEL > 0
-
+// Security brakes for while loops
 #define AXR_DEBUG_BRAKE 9999
 #define security_brake_init() int __axr_security_count = 0;
 #define security_brake_reset() __axr_security_count = 0;
-#define security_brake() if(__axr_security_count > AXR_DEBUG_BRAKE ){ std_log1("################ error: security brake activated ####################"); break; } else { __axr_security_count++; }
-#else // AXR_DEBUG_LEVEL == 0
+#define security_brake() \
+    if (__axr_security_count > AXR_DEBUG_BRAKE) \
+    { \
+        std::stringstream msg; \
+        msg << "WARNING: Loop iterated over " << AXR_DEBUG_BRAKE << " times. Broke out of possible infinite loop."; \
+        std_log1(msg.str()); \
+        break; \
+    } \
+    else \
+        __axr_security_count++;
 
-#define security_brake_init()
-#define security_brake_reset()
-#define security_brake()
-
-#endif //AXR_DEBUG_LEVEL == 0
-
-//indentation for output
-#if AXR_DEBUG_LEVEL > 0
-
-unsigned extern axr_output_debug_indent_count;
-#define inc_output_indent() axr_output_debug_indent_count++;
-#define dec_output_indent() axr_output_debug_indent_count--;
-#define output_indent(what) std::string(axr_output_debug_indent_count*4, ' ').append(what)
-
-#else //AXR_DEBUG_LEVEL == 0
-
-#define inc_output_indent()
-#define dec_output_indent()
-#define output_indent(what) std::string(what)
-
-#endif //AXR_DEBUG_LEVEL == 0
-
-//debug channels
-#if AXR_DEBUG_LEVEL > 0
-
+// Debug channels
 /**
  *  These are the available channels:
  *
@@ -171,8 +122,9 @@ unsigned extern axr_output_debug_indent_count;
  *  
  */
 
-unsigned extern axr_debug_active_channels;
-enum axr_debug_ch {
+unsigned int extern axr_debug_active_channels;
+enum axr_debug_ch
+{
     AXR_DEBUG_CH_ON  = 1, //A
     AXR_DEBUG_CH_OVERVIEW = 1 << 1, //B
     AXR_DEBUG_CH_GENERAL = 1 << 2, //C
@@ -196,16 +148,10 @@ enum axr_debug_ch {
     //
     
     AXR_DEBUG_CH_FULL_FILENAMES = 1 << 28, //c
-    
-    
 };
 
-#define axr_log(AXR_DEBUG_CH, message) if((axr_debug_active_channels & AXR_DEBUG_CH_ON) && (axr_debug_active_channels & (AXR_DEBUG_CH))) std_log(output_indent(message))
-#define axr_log_inline(AXR_DEBUG_CH, message) if((axr_debug_active_channels & AXR_DEBUG_CH_ON) && (axr_debug_active_channels & (AXR_DEBUG_CH))) std::cout << message
-#define axr_debug_activate_channel(AXR_DEBUG_CH) axr_debug_active_channels = (axr_debug_active_channels | (AXR_DEBUG_CH))
-#else
-#define axr_log(what)
-#define axr_debug_activate_channel(AXR_DEBUG_CH)
-#endif //AXR_DEBUG_LEVEL > 0
+void axr_log(uint32_t channels, std::string message);
+void axr_log_inline(uint32_t channels, std::string message);
+void axr_debug_activate_channel(uint32_t channels);
 
 #endif //AXRDEBUGGING_H

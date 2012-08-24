@@ -63,11 +63,7 @@ AXRCore::AXRCore()
 
 void AXRCore::initialize(AXRWrapper * wrpr)
 {
-#if AXR_DEBUG_LEVEL > 0
-    pthread_t tid;
-    tid = pthread_self();
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: initializing core for thread "+boost::lexical_cast<std::string>(tid));
-#endif
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: initializing core for thread " + boost::lexical_cast<std::string>(pthread_self()));
     
     AXRController::p ctrlr = AXRController::p(new AXRController());
     AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.get()));

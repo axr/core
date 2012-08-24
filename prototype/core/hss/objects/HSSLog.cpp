@@ -142,7 +142,9 @@ void HSSLog::fire()
                     case HSSObservablePropertySize:
                     case HSSObservablePropertyCorners:
                     {
-                        std_log(*(long double*)data);
+                        std::stringstream msg;
+                        msg << *(long double*)data;
+                        std_log(msg.str());
                         done = true;
                         break;
                     }

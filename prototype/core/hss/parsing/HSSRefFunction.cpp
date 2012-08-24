@@ -111,7 +111,7 @@ void HSSRefFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
 {
     if(newSelectorChain)
     {
-        std_log3("Added selector chain to HSSRefFunction: " << newSelectorChain->toString());
+        std_log3("Added selector chain to HSSRefFunction: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
         this->selectorChains.push_back(newSelectorChain);
     }

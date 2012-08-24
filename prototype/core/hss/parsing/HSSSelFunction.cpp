@@ -89,7 +89,7 @@ void HSSSelFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
 {
     if(newSelectorChain)
     {
-        std_log3("Added selector chain to HSSFlagFunction: " << newSelectorChain->toString());
+        std_log3("Added selector chain to HSSFlagFunction: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
         this->selectorChains.push_back(newSelectorChain);
     }

@@ -176,11 +176,8 @@ bool HSSParser::loadFile(AXRFile::p file)
         }
         try {
             axr_log(AXR_DEBUG_CH_HSS, "\nHSSParser: reading next statement");
-            inc_output_indent();
             
             done = !this->readNextStatement();
-            
-            dec_output_indent();
         }
         catch (AXR::AXRError::p e){
             e->raise();
@@ -389,7 +386,6 @@ bool HSSParser::readNextStatement()
 HSSRule::p HSSParser::readRule()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading rule");
-    inc_output_indent();
     security_brake_init()
     
     //throw error if at end of source
@@ -526,15 +522,12 @@ HSSRule::p HSSParser::readRule()
         this->skip(HSSWhitespace);
     }
     
-    dec_output_indent();
-    
     return ret;
 }
 
 std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stopOn)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading selector chains");
-    inc_output_indent();
     security_brake_init();
     
     std::vector<HSSSelectorChain::p> retvect;
@@ -591,7 +584,6 @@ std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stop
     //we're not in a selector anymore
     this->currentContext.pop_back();
     
-    dec_output_indent();
     return retvect;
 }
 
@@ -826,7 +818,6 @@ bool HSSParser::isNegator()
 HSSFilter::p HSSParser::readFilter()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading filter");
-    inc_output_indent();
     
     HSSFilter::p ret;
     if(this->currentToken->isA(HSSColon)){
@@ -851,8 +842,6 @@ HSSFilter::p HSSParser::readFilter()
             this->checkForUnexpectedEndOfSource();
         }
     }
-    
-    dec_output_indent();
     
     return ret;
 }
@@ -1276,7 +1265,6 @@ HSSCombinator::p HSSParser::readChildrenCombinatorOrSkip()
 HSSCombinator::p HSSParser::readSymbolCombinator()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading symbol combinator");
-    inc_output_indent();
     
     /**
      *  @todo check the context
@@ -1308,7 +1296,6 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
     this->readNextToken();
     this->skip(HSSWhitespace);
     
-    dec_output_indent();
     return ret;
 }
 
@@ -1316,14 +1303,11 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
 HSSNameSelector::p HSSParser::readNameSelector(bool isNegating)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading name selector");
-    inc_output_indent();
     
     std::string theValue = VALUE_TOKEN(this->currentToken)->getString();
     HSSNameSelector::p ret = HSSNameSelector::p(new HSSNameSelector(theValue));
     ret->setNegating(isNegating);
     this->readNextToken();
-    
-    dec_output_indent();
 
     return ret;
 }
@@ -1333,7 +1317,6 @@ HSSNameSelector::p HSSParser::readNameSelector(bool isNegating)
 HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading object definition");
-    inc_output_indent();
     
     HSSObjectDefinition::p ret;
     std::string objtype;
@@ -1556,8 +1539,6 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
         this->skip(HSSWhitespace);
     }
     
-    dec_output_indent();
-    
     return ret;
 }
 
@@ -1592,7 +1573,6 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
 HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked, bool isShorthand)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading property definition");
-    inc_output_indent();
     
     std::string propertyName;
     
@@ -1759,15 +1739,12 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
         throw AXRError::p(new AXRError("HSSParser", "Errors found while reading "+propertyName, this->currentFile->getFileName(), this->line, this->column));
     }
     
-    dec_output_indent();
-    
     return ret;
 }
 
 HSSParserNode::p HSSParser::readValue(std::string propertyName, bool &valid)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading value");
-    inc_output_indent();
     
     bool isValid = true;
     HSSParserNode::p ret;
@@ -1849,8 +1826,6 @@ HSSParserNode::p HSSParser::readValue(std::string propertyName, bool &valid)
     
     valid = isValid;
     
-    dec_output_indent();
-    
     return ret;
 }
 
@@ -1863,7 +1838,6 @@ HSSInstruction::p HSSParser::readInstruction()
 HSSInstruction::p HSSParser::readInstruction(bool preferHex)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading instruction");
-    inc_output_indent();
     
     HSSInstruction::p ret;
     std::string currentval;
@@ -1994,8 +1968,6 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
     if(!this->atEndOfSource()){
         this->skip(HSSWhitespace);
     }
-    
-    dec_output_indent();
     
     return ret;
 }
@@ -2140,7 +2112,6 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
 HSSRule::p HSSParser::readInstructionRule()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading instruction rule");
-    inc_output_indent();
     
     HSSInstruction::p instruction = this->readInstruction(false);
     HSSRule::p ret;
@@ -2198,7 +2169,6 @@ HSSRule::p HSSParser::readInstructionRule()
             break;
     }
     
-    dec_output_indent();
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading instruction rule");
     
     return ret;
@@ -2207,11 +2177,9 @@ HSSRule::p HSSParser::readInstructionRule()
 HSSParserNode::p HSSParser::readExpression()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading expression");
-    inc_output_indent();
     
     HSSParserNode::p ret = this->readAdditiveExpression();
     
-    dec_output_indent();
     return ret;
 }
 
@@ -2357,7 +2325,6 @@ HSSParserNode::p HSSParser::readBaseExpression()
 HSSParserNode::p HSSParser::readFlag()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading flag");
-    inc_output_indent();
     
     HSSFlag::p ret;
     this->expect(HSSIdentifier);
@@ -2369,15 +2336,12 @@ HSSParserNode::p HSSParser::readFlag()
     this->readNextToken();
     this->checkForUnexpectedEndOfSource();
     
-    dec_output_indent();
-    
     return ret;
 }
 
 HSSParserNode::p HSSParser::readFunction()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading function");
-    inc_output_indent();
     
     HSSParserNode::p ret;
     
@@ -2631,8 +2595,6 @@ HSSParserNode::p HSSParser::readFunction()
     } else {
         throw AXRError::p(new AXRError("HSSParser", "Unexpected token while reading function: "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
     }
-    
-    dec_output_indent();
     
     return ret;
 }

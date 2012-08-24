@@ -109,15 +109,11 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
         char * buffer = this->file->getBuffer();
 		this->currentChar = buffer[this->bufpos];
 	}
-#if AXR_DEBUG_LEVEL > 0
-    std::ostringstream linestream;
-    std::ostringstream columnstream;
-    std::ostringstream charstream;
-    linestream << this->currentLine;
-    columnstream << this->currentColumn;
-    charstream << this->currentChar;
-    axr_log(AXR_DEBUG_CH_TOKENIZING, "read charachter L"+linestream.str()+"C"+columnstream.str()+"|"+charstream.str()+"|");
-#endif
+
+    std::stringstream msg;
+    msg << "read charachter L" << this->currentLine << "C" << this->currentColumn << "|" << this->currentChar << "|";
+    axr_log(AXR_DEBUG_CH_TOKENIZING, msg.str());
+
 	this->bufpos++;
     this->currentColumn++;
     
@@ -218,7 +214,7 @@ HSSToken::p HSSTokenizer::readNextToken()
 
 HSSToken::p HSSTokenizer::peekNextToken()
 {
-    std_log4("bufpos: " << this->bufpos);
+    std_log4("bufpos: " + this->bufpos);
     //store the current position in the buffer
     int curpos = this->bufpos;
     unsigned curline = this->currentLine;
@@ -229,7 +225,9 @@ HSSToken::p HSSTokenizer::peekNextToken()
     this->peekLine += (this->currentLine - curline);
     this->peekColumn += (this->currentColumn - curcol);
     
-    std_log4("new peekpos: " << this->peekpos << " because bufpos: " << this->bufpos << " and curpos: " << curpos);
+    std::stringstream msg;
+    msg << "new peekpos: " << this->peekpos << " because bufpos: " << this->bufpos << " and curpos: " << curpos;
+    std_log(msg.str());
     
     return ret;
 }
@@ -241,7 +239,7 @@ void HSSTokenizer::resetPeek()
     this->bufpos -= this->peekpos + 1;
     this->currentLine -= this->peekLine;
     this->currentColumn -= this->peekColumn+1;
-    std_log4("end bufpos: " << this->bufpos);
+    std_log4("end bufpos: " + this->bufpos);
     this->readNextChar();
     
     //reset the offset to 0

@@ -96,7 +96,7 @@ void HSSMultipleValue::add(HSSParserNode::p newValue)
 {
     if(newValue != NULL)
     {
-        std_log3("Added value to HSSMultipleValue: " << newValue->toString());
+        std_log3("Added value to HSSMultipleValue: " + newValue->toString());
         this->valueList.push_back(newValue);
     }
 }

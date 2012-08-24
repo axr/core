@@ -175,23 +175,19 @@ std::string HSSContainer::toString()
     }
     
     if (this->attributes.size() > 0) {
-        inc_output_indent();
-        tempstr.append("\n").append(output_indent("with the following attributes:"));
+        tempstr.append("\n").append("with the following attributes:");
         for(it=this->attributes.begin(); it!=this->attributes.end(); it++)
         {
-            tempstr.append("\n").append(output_indent("- ").append((*it).first).append(": ").append((*it).second));
+            tempstr.append("\n").append("- ").append((*it).first).append(": ").append((*it).second);
         }
-        dec_output_indent();
         tempstr.append("\n");
     }
     
     if(this->children.size() > 0){
-        inc_output_indent();
-        tempstr.append("\n").append(output_indent("with the following children objects:"));
+        tempstr.append("\n").append("with the following children objects:");
         for (i=0; i<this->children.size(); i++) {
-            tempstr.append("\n").append(output_indent(this->children[i]->toString()));
+            tempstr.append("\n").append(this->children[i]->toString());
         }
-        dec_output_indent();
         tempstr.append("\n");
     }
     
