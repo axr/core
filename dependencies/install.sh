@@ -30,7 +30,7 @@ doc()
     deps
 }
 
-if [ "$UNAME" == "Darwin" ] ; then
+if [ "$UNAME" = "Darwin" ] ; then
     # TODO: Allow the user to prefer a particular package manager if they have multiple
     if [ $(which port 2>/dev/null) ] ; then # MacPorts
         port install qt4-mac +debug +framework +quartz +universal # NOTE: +debug is BOTH debug and release
@@ -54,7 +54,7 @@ if [ "$UNAME" == "Darwin" ] ; then
         deps
         exit 1
     fi
-elif [ "$UNAME" == "Linux" ] ; then
+elif [ "$UNAME" = "Linux" ] ; then
     if [ $(which apt-get 2>/dev/null) ] ; then
         # Debian, Ubuntu
         apt-get install qt-sdk libboost-all-dev libsdl1.2-dev libexpat1-dev libcairo2-dev libpango1.0-dev
@@ -82,7 +82,7 @@ elif [ "$UNAME" == "Linux" ] ; then
         doc
         exit 1
     fi
-elif [ "$UNAME" == "FreeBSD" ] ; then
+elif [ "$UNAME" = "FreeBSD" ] ; then
     # pkg_add -r ...
     echo "ERROR: FreeBSD support is not yet implemented"
     exit 1
