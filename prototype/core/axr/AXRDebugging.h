@@ -47,6 +47,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <boost/cstdint.hpp>
 
 // Debug levels:
 // - 0 No debug
