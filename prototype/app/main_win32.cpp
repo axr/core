@@ -25,10 +25,12 @@ cairo_t *cr;
 using namespace AXR;
 
 #ifdef _WIN32
-WinAxrWrapper *wrapper;
+#define AXR_WRAPPER_CLASS WinAxrWrapper
 #else
-LinuxAxrWrapper *wrapper;
+#define AXR_WRAPPER_CLASS LinuxAxrWrapper
 #endif
+
+AXR_WRAPPER_CLASS *wrapper;
 
 SDL_Surface* screen;
 
@@ -54,7 +56,7 @@ void render()
         axrBounds.origin.x = 0;
         axrBounds.origin.y = 0;
 
-        AXRCore::p core = wrapper->getCore();
+        AXRCore::tp & core = AXRCore::getInstance();
 
         core->setCairo(cr);
         core->drawInRectWithBounds(axrRect, axrBounds);
@@ -66,13 +68,39 @@ void render()
 
 int main(int argc, char **argv)
 {
+    // Declare the supported options.
+    po::options_description desc("Allowed options");
+    desc.add_options()
+        ("help", "show this message")
+        ("file", po::value<std::string>(), "path to file to open")
+        ("layout-tests", po::value<std::string>(), "run layout tests")
+        ;
+
+    po::variables_map varmap;
+    std::vector<std::string> additionalArgs;
+
+    // Parse arguments
+    po::parsed_options parsed = po::command_line_parser(argc, argv)
+        .options(desc).allow_unregistered().run();
+    po::store(parsed, varmap);
+    additionalArgs = po::collect_unrecognized(parsed.options,
+        po::include_positional);
+    po::notify(varmap);
+
+    // Display help message
+    if (varmap.count("help"))
+    {
+        std::cout << desc << "\n";
+        return 0;
+    }
+
     SDL_Init(SDL_INIT_VIDEO);
     screen = SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
     cr = cairosdl_create(screen);
 
     SDL_WM_SetCaption(WINDOW_TITLE, 0);
 
-    #ifdef __WIN32__
+    #ifdef _WIN32
         HINSTANCE handle = ::GetModuleHandle(NULL);
         mainicon = ::LoadIcon(handle, "main");
         SDL_SysWMinfo wminfo;
@@ -83,11 +111,41 @@ int main(int argc, char **argv)
     SDL_EnableKeyRepeat(300, 50);
     SDL_EnableUNICODE(1);
 
-    wrapper = new WinAxrWrapper();
-    AXRCore::p core = wrapper->getCore();
+    wrapper = new AXR_WRAPPER_CLASS();
+    AXRCore::tp & core = AXRCore::getInstance();
+    #ifdef _WIN32
     wrapper->hwnd = wminfo.window;
+    #endif
 
-    wrapper->loadFile();
+    if (varmap.count("layout-tests"))
+    {
+        wrapper->_layoutTestsFilePath = varmap["layout-tests"].as<std::string>();
+
+        core->registerCustomFunction("AXRLayoutTestsExecute",
+            new AXR::HSSValueChangedCallback<AXR::LinuxAxrWrapper>(wrapper, &AXR::AXRWrapper::executeLayoutTests));
+
+        wrapper->loadFileByPath(wrapper->getPathToResources() +
+            "/views/layoutTests.hss");
+    }
+    else if (varmap.count("file") || additionalArgs.empty() == 0)
+    {
+        std::string filepath;
+
+        if (additionalArgs.empty())
+        {
+            filepath = varmap["file"].as<std::string>();
+        }
+        else
+        {
+            filepath = additionalArgs[0];
+        }
+
+        wrapper->loadFileByPath(filepath);
+    }
+    else
+    {
+        wrapper->loadFile();
+    }
 
     SDL_Event event;
     while (SDL_WaitEvent(&event))
@@ -98,8 +156,9 @@ int main(int argc, char **argv)
         }
         else if (event.type == SDL_MOUSEBUTTONDOWN)
         {
-            AXRCore::p core = wrapper->getCore();
+            AXRCore::tp & core = AXRCore::getInstance();
             HSSContainer::p root = core->getController()->getRoot();
+
             if (root)
             {
                 HSSPoint thePoint;
@@ -110,20 +169,23 @@ int main(int argc, char **argv)
         }
         else if (event.type == SDL_MOUSEBUTTONUP)
         {
-            AXRCore::p core = wrapper->getCore();
+            AXRCore::tp & core = AXRCore::getInstance();
             HSSContainer::p root = core->getController()->getRoot();
+
             if (root)
             {
                 HSSPoint thePoint;
                 thePoint.x = event.button.x;
                 thePoint.y = event.button.y;
                 root->handleEvent(HSSEventTypeMouseUp, &thePoint);
+                root->handleEvent(HSSEventTypeClick, &thePoint);
             }
         }
         else if (event.type == SDL_MOUSEMOTION)
         {
-            AXRCore::p core = wrapper->getCore();
+            AXRCore::tp & core = AXRCore::getInstance();
             HSSContainer::p root = core->getController()->getRoot();
+
             if (root)
             {
                 HSSPoint thePoint;
@@ -169,8 +231,14 @@ int main(int argc, char **argv)
     }
 
     SDL_Quit();
-    #ifdef __WIN32__
+
+    #ifdef _WIN32
         ::DestroyIcon(mainicon);
     #endif
+
+    free(wrapper);
+    free(screen);
+    free(cr);
+
     return 0;
 }

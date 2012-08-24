@@ -25,10 +25,12 @@ cairo_t *cr;
 using namespace AXR;
 
 #ifdef _WIN32
-WinAxrWrapper *wrapper;
+#define AXR_WRAPPER_CLASS WinAxrWrapper
 #else
-LinuxAxrWrapper *wrapper;
+#define AXR_WRAPPER_CLASS LinuxAxrWrapper
 #endif
+
+AXR_WRAPPER_CLASS *wrapper;
 
 SDL_Surface* screen;
 
@@ -98,11 +100,22 @@ int main(int argc, char **argv)
 
     SDL_WM_SetCaption(WINDOW_TITLE, 0);
 
+    #ifdef _WIN32
+        HINSTANCE handle = ::GetModuleHandle(NULL);
+        mainicon = ::LoadIcon(handle, "main");
+        SDL_SysWMinfo wminfo;
+        SDL_VERSION(&wminfo.version);
+        if (SDL_GetWMInfo(&wminfo) == 1) ::SetClassLong(wminfo.window, GCL_HICON, (LONG) mainicon);
+    #endif
+
     SDL_EnableKeyRepeat(300, 50);
     SDL_EnableUNICODE(1);
 
-    wrapper = new LinuxAxrWrapper();
+    wrapper = new AXR_WRAPPER_CLASS();
     AXRCore::tp & core = AXRCore::getInstance();
+    #ifdef _WIN32
+    wrapper->hwnd = wminfo.window;
+    #endif
 
     if (varmap.count("layout-tests"))
     {
@@ -199,6 +212,10 @@ int main(int argc, char **argv)
                     wrapper->reload();
                 }
             }
+            else if (event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))
+            {
+                wrapper->loadFile();
+            }
         }
         else if (event.type == SDL_VIDEORESIZE)
         {
@@ -220,6 +237,10 @@ int main(int argc, char **argv)
     }
 
     SDL_Quit();
+
+    #ifdef _WIN32
+        ::DestroyIcon(mainicon);
+    #endif
 
     free(wrapper);
     free(screen);
