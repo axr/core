@@ -46,8 +46,11 @@ endif()
 project(AXR)
 cmake_minimum_required(VERSION 2.8)
 
-set(Boost_USE_STATIC_LIBS ON)
+# Don't use static Boost because this will result in relocation errors due to
+# Boost not being compiled with -fPIC (at least on 64-bit Linux)
+set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
 
 find_package(Boost COMPONENTS thread system program_options REQUIRED)
 find_package(SDL REQUIRED)
