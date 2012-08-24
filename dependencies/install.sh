@@ -1,13 +1,9 @@
 #!/bin/sh
 set -e
 
-# CI system should already have permissions
-# to install packages; we don't need to root check
-if [ "$1" != "--ci" ] ; then
-    if [ "$(id -u)" != "0" ] ; then
-        echo "This script must be run as root" 1>&2
-        exit 1
-    fi
+if [ "$(id -u)" != "0" ] ; then
+    echo "This script must be run as root" 1>&2
+    exit 1
 fi
 
 # Installs dependencies for building AXR
