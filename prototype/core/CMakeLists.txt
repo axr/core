@@ -59,3 +59,11 @@ source_group("OS" FILES ${WRAPPER_SRCS})
 source_group("" FILES ${AXR_CORE_SRCS})
 
 add_library(AXR_core ${AXR_CORE_SRCS} ${AXR_SRCS} ${XML_SRCS} ${HSS_SRCS} ${WRAPPER_SRCS})
+
+if(APPLE)
+    find_library(COCOA_LIBRARY Cocoa)
+    mark_as_advanced(COCOA_LIBRARY)
+    target_link_libraries(AXR_core ${COCOA_LIBRARY})
+endif()
+
+target_link_libraries(AXR_core ${Boost_LIBRARIES} ${EXPAT_LIBRARIES} ${CAIRO_LIBRARIES} ${PANGO_LIBRARIES} ${PANGOCAIRO_LIBRARIES})

@@ -41,7 +41,7 @@ file(GLOB_RECURSE views_SOURCES ../resources/views/*.hss ../resources/views/*.xm
 
 add_executable("${TARGET_NAME}" WIN32 MACOSX_BUNDLE ${axr_SOURCES} ${hss_SOURCES} ${views_SOURCES})
 
-target_link_libraries("${TARGET_NAME}" AXR_core ${EXPAT_LIBRARIES} ${Boost_LIBRARIES} ${PANGO_LIBRARIES} ${CAIRO_LIBRARIES} ${PANGOCAIRO_LIBRARIES})
+target_link_libraries("${TARGET_NAME}" AXR_core)
 
 if(APPLE)
     set(MACOSX_BUNDLE_ICON_FILE axr.icns)
@@ -52,10 +52,6 @@ if(APPLE)
     set_source_files_properties(${views_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/views)
     
     set_target_properties("${TARGET_NAME}" PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist")
-
-    find_library(COCOA_LIBRARY Cocoa)
-    mark_as_advanced(COCOA_LIBRARY)
-    target_link_libraries("${TARGET_NAME}" ${COCOA_LIBRARY})
 else()
     target_link_libraries("${TARGET_NAME}" ${SDLMAIN_LIBRARY} ${SDL_LIBRARY})
 endif()

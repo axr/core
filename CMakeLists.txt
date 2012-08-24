@@ -77,6 +77,7 @@ link_directories(
 
 option(AXR_NO_DEPRECATED_ENUMS "Disallow use of deprecated enum members" OFF)
 option(BUILD_UNIVERSAL_BINARIES "Build OS X universal binaries (i386 + x86_64)" OFF)
+option(BUILD_SHARED_LIBS "Builds shared instead of static libraries" ON)
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
 
