@@ -143,12 +143,12 @@ const int HSSFlagFunction::selectorChainsSize()
     return this->selectorChains.size();
 }
 
-void * HSSFlagFunction::_evaluate()
+boost::any HSSFlagFunction::_evaluate()
 {
     return NULL;
 }
 
-void * HSSFlagFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+boost::any HSSFlagFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
 {
     return this->_evaluate();
 }
@@ -157,7 +157,7 @@ void HSSFlagFunction::valueChanged(HSSObservableProperty source, void*data)
 {
     this->setDirty(true);
     this->_value = data;
-    this->notifyObservers(HSSObservablePropertyValue, this->_value);
+    this->notifyObservers(HSSObservablePropertyValue, (void *) &this->_value);
 }
 
 HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType()

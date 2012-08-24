@@ -184,10 +184,15 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->color = *(HSSRgb::p *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->color = boost::any_cast<HSSRgb::p>(remoteValue);
+                    valid = true;
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSColorStop>(this, &HSSColorStop::colorChanged));
-                valid = true;
             }
             break;
         }
@@ -266,7 +271,12 @@ void HSSColorStop::setDPosition(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->position = *(long double *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->position = boost::any_cast<long double>(remoteValue);
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyPosition, this, new HSSValueChangedCallback<HSSColorStop>(this, &HSSColorStop::positionChanged));
                 
@@ -335,7 +345,12 @@ void HSSColorStop::setDBalance(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->balance = *(long double *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->balance = boost::any_cast<long double>(remoteValue);
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyBalance, this, new HSSValueChangedCallback<HSSColorStop>(this, &HSSColorStop::balanceChanged));
                 

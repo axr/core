@@ -167,10 +167,15 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->startColor = *(HSSRgb::p *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->startColor = boost::any_cast<HSSRgb::p>(remoteValue);
+                    valid = true;
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyStartColor, this, new HSSValueChangedCallback<HSSGradient>(this, &HSSGradient::startColorChanged));
-                valid = true;
                 
             }
             
@@ -247,10 +252,15 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->endColor = *(HSSRgb::p *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->endColor = boost::any_cast<HSSRgb::p>(remoteValue);
+                    valid = true;
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyEndColor, this, new HSSValueChangedCallback<HSSGradient>(this, &HSSGradient::endColorChanged));
-                valid = true;
             }
             break;
         }
@@ -319,7 +329,12 @@ void HSSGradient::setDBalance(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->balance = *(long double *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->balance = boost::any_cast<long double>(remoteValue);
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyBalance, this, new HSSValueChangedCallback<HSSGradient>(this, &HSSGradient::balanceChanged));
                 
@@ -407,16 +422,16 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->getScope());
                 fnct->setThisObj(this->getThisObj());
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                if(remoteValue){
-                    try {
-                        this->addDColorStops(remoteValue);
-                        valid = true;
-                    } catch (AXRError::p e) {
-                        e->raise();
-                    }
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                    this->addDColorStops(theVal);
+                    valid = true;
+                } catch (AXRError::p e) {
+                    e->raise();
+                } catch (...) {
+                    
                 }
-                
             }
             break;
         }

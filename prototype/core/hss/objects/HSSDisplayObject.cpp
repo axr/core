@@ -45,6 +45,8 @@
 #include <sstream>
 #include <string>
 #include <boost/pointer_cast.hpp>
+#include <boost/any.hpp>
+#include <boost/lexical_cast.hpp>
 #include <cairo/cairo.h>
 #include "errors.h"
 #include "AXR.h"
@@ -106,7 +108,7 @@ void HSSDisplayObject::initialize()
      *  @todo change to camelCase
      */
     this->does_float = false;
-    this->heightByContent = false;
+    this->heightByContent = this->widthByContent = false;
     this->_isRoot = false;
     
     this->elementName = std::string();
@@ -152,6 +154,8 @@ HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
     this->drawIndex = orig.drawIndex;
     this->_index = orig._index;
     this->tabIndex = orig.tabIndex;
+    this->heightByContent = orig.heightByContent;
+    this->widthByContent = orig.widthByContent;
 }
 
 HSSDisplayObject::p HSSDisplayObject::clone() const{
@@ -885,63 +889,154 @@ HSSUnit HSSDisplayObject::getWidth() { return this->width; }
 HSSParserNode::p HSSDisplayObject::getDWidth()  {   return this->dWidth; }
 void HSSDisplayObject::setDWidth(HSSParserNode::p value)
 {
+    bool valid = false;
+    bool needsPostProcess = true;
     switch (value->getType()) {
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                this->setDWidth(objdef);
+                valid = true;
+                needsPostProcess = false;
+                
+            } catch (AXRError::p e) {
+                e->raise();
+                
+            } catch (AXRWarning::p e) {
+                e->raise();
+            }
+            
+            break;
+        }
+        
         case HSSParserNodeTypeNumberConstant:
         case HSSParserNodeTypePercentageConstant:
         case HSSParserNodeTypeExpression:
-        case HSSParserNodeTypeKeywordConstant:
         case HSSParserNodeTypeFunctionCall:
-            break;
-        default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for width of "+this->getElementName()));
-    }
-    
-    
-    if(value->isA(HSSParserNodeTypeKeywordConstant)){
-        
-    } else {
-        
-        HSSObservableProperty observedProperty = HSSObservablePropertyInnerWidth;
-        if(this->observedWidth)
         {
-            this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
+            HSSObservableProperty observedProperty = HSSObservablePropertyInnerWidth;
+            if(this->observedWidth)
+            {
+                this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
+            }
+            HSSContainer::p parentContainer = this->getParent();
+            if(parentContainer){
+                this->width = floor(this->_setLDProperty(
+                                                         &HSSDisplayObject::widthChanged,
+                                                         value,
+                                                         parentContainer->innerWidth,
+                                                         observedProperty,
+                                                         parentContainer,
+                                                         HSSObservablePropertyWidth,
+                                                         this->observedWidth,
+                                                         this->observedWidthProperty,
+                                                         &(parentContainer->getChildren())
+                                                         ));
+                this->widthByContent = false;
+            } else {
+                this->width = floor(this->_setLDProperty(
+                                                         NULL,
+                                                         value,
+                                                         0,
+                                                         observedProperty,
+                                                         this->shared_from_this(),
+                                                         HSSObservablePropertyWidth,
+                                                         this->observedWidth,
+                                                         this->observedWidthProperty,
+                                                         NULL
+                                                         ));
+                this->widthByContent = false;
+            }
+            valid = true;
+            break;
         }
-        this->dWidth = value;
-        HSSContainer::p parentContainer = this->getParent();
-        if(parentContainer){
-            this->width = floor(this->_setLDProperty(
-                                               &HSSDisplayObject::widthChanged,
-                                               value,
-                                               parentContainer->innerWidth,
-                                               observedProperty,
-                                               parentContainer,
-                                               HSSObservablePropertyWidth,
-                                               this->observedWidth,
-                                               this->observedWidthProperty,
-                                               &(parentContainer->getChildren())
-                                               ));
-        } else {
-            this->width = floor(this->_setLDProperty(
-                                               NULL,
-                                               value,
-                                               0,
-                                               observedProperty,
-                                               this->shared_from_this(),
-                                               HSSObservablePropertyWidth,
-                                               this->observedWidth,
-                                               this->observedWidthProperty,
-                                               NULL
-                                               ));
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
+            if(kwValue == "inherit"){
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    void * remoteValue = parent->getProperty(HSSObservablePropertyWidth);
+                    if(remoteValue != NULL){
+                        this->width = *(long double *) remoteValue;
+                        this->widthByContent = false;
+                        if(this->observedWidth){
+                            this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
+                        }
+                        parent->observe(HSSObservablePropertyWidth, HSSObservablePropertyWidth, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::widthChanged));
+                        this->observedWidth = parent;
+                        this->observedWidthProperty = HSSObservablePropertyWidth;
+                        valid = true;
+                    }
+                }
+                
+            } else if (kwValue == "content"){
+                if(this->observedWidth){
+                    this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
+                    this->observedWidth.reset();
+                }
+                this->width = 0;
+                this->widthByContent = true;
+                valid = true;
+            }
+            break;
         }
-        
-        this->_setInnerDimensions();
-        this->_setOuterDimensions();        
-        
-        this->notifyObservers(HSSObservablePropertyWidth, &this->width);
-        this->setNeedsSurface(true);
-        this->setNeedsLayout(true);
-        this->setDirty(true);
+            
+        default:
+            break;
     }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value)->clone();
+            HSSContainer::p parent = this->getParent();
+            if(parent){
+                objdef->setScope(&(parent->getChildren()));
+            } else if(this->isA(HSSObjectTypeContainer)){
+                HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                objdef->setScope(&(thisCont->getChildren()));
+            }
+            objdef->setThisObj(this->shared_from_this());
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                HSSParserNode::p remoteValue = boost::static_pointer_cast<HSSValue>(theobj)->getDValue();
+                try {
+                    this->setDWidth(remoteValue);
+                    valid = true;
+                    needsPostProcess = false;
+                } catch (AXRError::p e) {
+                    e->raise();
+                } catch (AXRWarning::p e) {
+                    e->raise();
+                }
+            }
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    if(valid){
+        if(needsPostProcess){
+            this->dWidth = value;
+            this->_setInnerDimensions();
+            this->_setOuterDimensions();        
+            this->notifyObservers(HSSObservablePropertyWidth, &this->width);
+            this->setNeedsSurface(true);
+            this->setNeedsLayout(true);
+            this->setDirty(true);
+        }
+    } else {
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for width of "+this->getElementName()));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyVisible, &this->visible);
 }
 
 void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
@@ -984,67 +1079,154 @@ HSSUnit HSSDisplayObject::getHeight() { return this->height; }
 HSSParserNode::p HSSDisplayObject::getDHeight() { return this->dHeight; }
 void HSSDisplayObject::setDHeight(HSSParserNode::p value)
 {
+    bool valid = false;
+    bool needsPostProcess = true;
     switch (value->getType()) {
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                this->setDHeight(objdef);
+                valid = true;
+                needsPostProcess = false;
+                
+            } catch (AXRError::p e) {
+                e->raise();
+                
+            } catch (AXRWarning::p e) {
+                e->raise();
+            }
+            
+            break;
+        }
+            
         case HSSParserNodeTypeNumberConstant:
         case HSSParserNodeTypePercentageConstant:
         case HSSParserNodeTypeExpression:
-        case HSSParserNodeTypeKeywordConstant:
         case HSSParserNodeTypeFunctionCall:
-            break;
-        default:
-            throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for height of "+this->getElementName()));
-    }
-    
-    
-    if(value->isA(HSSParserNodeTypeKeywordConstant)){
-        this->heightByContent = true;
-        
-    } else {
-        HSSObservableProperty observedProperty = HSSObservablePropertyInnerHeight;
-        
-        if(this->observedHeight)
         {
-            this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
-            this->observedHeight.reset();
+            HSSObservableProperty observedProperty = HSSObservablePropertyInnerHeight;
+            if(this->observedHeight)
+            {
+                this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
+            }
+            HSSContainer::p parentContainer = this->getParent();
+            if(parentContainer){
+                this->height = floor(this->_setLDProperty(
+                                                         &HSSDisplayObject::heightChanged,
+                                                         value,
+                                                         parentContainer->innerHeight,
+                                                         observedProperty,
+                                                         parentContainer,
+                                                         HSSObservablePropertyHeight,
+                                                         this->observedHeight,
+                                                         this->observedHeightProperty,
+                                                         &(parentContainer->getChildren())
+                                                         ));
+                this->heightByContent = false;
+            } else {
+                this->height = floor(this->_setLDProperty(
+                                                         NULL,
+                                                         value,
+                                                         0,
+                                                         observedProperty,
+                                                         this->shared_from_this(),
+                                                         HSSObservablePropertyHeight,
+                                                         this->observedHeight,
+                                                         this->observedHeightProperty,
+                                                         NULL
+                                                         ));
+                this->heightByContent = false;
+            }
+            valid = true;
+            break;
         }
-        this->dHeight = value;
-        this->heightByContent = false;
-        
-        HSSContainer::p parentContainer = this->getParent();
-        if(parentContainer){
-            this->height = this->_setLDProperty(
-                                                &HSSDisplayObject::heightChanged,
-                                                value,
-                                                parentContainer->innerHeight,
-                                                observedProperty,
-                                                parentContainer,
-                                                HSSObservablePropertyHeight,
-                                                this->observedHeight,
-                                                this->observedHeightProperty,
-                                                &(parentContainer->getChildren())
-                                                );
-        } else {
-            this->height = this->_setLDProperty(
-                                                NULL,
-                                                value,
-                                                150,
-                                                observedProperty,
-                                                this->shared_from_this(),
-                                                HSSObservablePropertyHeight,
-                                                this->observedHeight,
-                                                this->observedHeightProperty,
-                                                NULL
-                                                );
+            
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
+            if(kwValue == "inherit"){
+                HSSContainer::p parent = this->getParent();
+                if(parent){
+                    void * remoteValue = parent->getProperty(HSSObservablePropertyHeight);
+                    if(remoteValue != NULL){
+                        this->height = *(long double *) remoteValue;
+                        this->heightByContent = false;
+                        if(this->observedHeight){
+                            this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
+                        }
+                        parent->observe(HSSObservablePropertyHeight, HSSObservablePropertyHeight, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::heightChanged));
+                        this->observedHeight = parent;
+                        this->observedHeightProperty = HSSObservablePropertyHeight;
+                        valid = true;
+                    }
+                }
+                
+            } else if (kwValue == "content"){
+                if(this->observedHeight){
+                    this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
+                    this->observedHeight.reset();
+                }
+                this->height = 0;
+                this->heightByContent = true;
+                valid = true;
+            }
+            break;
         }
-        
-        this->_setInnerDimensions();
-        this->_setOuterDimensions();
-        
-        this->notifyObservers(HSSObservablePropertyHeight, &this->height);
-        this->setNeedsSurface(true);
-        this->setNeedsLayout(true);
-        this->setDirty(true);
+            
+        default:
+            break;
     }
+    
+    switch (value->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value)->clone();
+            HSSContainer::p parent = this->getParent();
+            if(parent){
+                objdef->setScope(&(parent->getChildren()));
+            } else if(this->isA(HSSObjectTypeContainer)){
+                HSSContainer * thisCont = static_cast<HSSContainer *>(this);
+                objdef->setScope(&(thisCont->getChildren()));
+            }
+            objdef->setThisObj(this->shared_from_this());
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue)) {
+                HSSParserNode::p remoteValue = boost::static_pointer_cast<HSSValue>(theobj)->getDValue();
+                try {
+                    this->setDHeight(remoteValue);
+                    valid = true;
+                    needsPostProcess = false;
+                } catch (AXRError::p e) {
+                    e->raise();
+                } catch (AXRWarning::p e) {
+                    e->raise();
+                }
+            }
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    if(valid){
+        if(needsPostProcess){
+            this->dHeight = value;
+            this->_setInnerDimensions();
+            this->_setOuterDimensions();        
+            this->notifyObservers(HSSObservablePropertyHeight, &this->height);
+            this->setNeedsSurface(true);
+            this->setNeedsLayout(true);
+            this->setDirty(true);
+        }
+    } else {
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for height of "+this->getElementName()));
+    }
+    
+    this->notifyObservers(HSSObservablePropertyVisible, &this->visible);
 }
 
 void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
@@ -1346,7 +1528,12 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
                     fnct->setScope(&(thisCont->getChildren()));
                 }
                 
-                this->flow = *(bool *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->flow = boost::any_cast<bool>(remoteValue);
+                } catch (...) {
+                    this->flow = true;
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyFlow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::flowChanged));
                 valid = true;
@@ -1463,7 +1650,12 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                this->overflow = *(bool *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->overflow = boost::any_cast<bool>(remoteValue);
+                } catch (...) {
+                    this->overflow = false;
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyOverflow, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::overflowChanged));
                 valid = true;
@@ -1823,19 +2015,18 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                std::vector<HSSObject::p> * remoteValue = (std::vector<HSSObject::p> *)fnct->evaluate();
-                if(remoteValue != NULL){
-                    try {
-                        std::vector<HSSObject::p> values = *remoteValue;
-                        std::vector<HSSObject::p>::const_iterator it;
-                        for (it=values.begin(); it!=values.end(); ++it) {
-                            this->background.push_back(*it);
-                        }
-                        
-                        valid = true;
-                    } catch (AXRError::p e) {
-                        e->raise();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    std::vector<HSSObject::p> values = boost::any_cast< std::vector<HSSObject::p> >(remoteValue);
+                    std::vector<HSSObject::p>::const_iterator it;
+                    for (it=values.begin(); it!=values.end(); ++it) {
+                        this->background.push_back(*it);
                     }
+                    
+                    valid = true;
+                    
+                } catch (...) {
+                    
                 }
                 
             } else {
@@ -1952,15 +2143,17 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                             HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                             fnct->setScope(&(thisCont->getChildren()));
                         }
-                        HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                        if(remoteValue){
-                            try {
-                                this->addDContent(remoteValue);
-                                valid = true;
-                            } catch (AXRError::p e) {
-                                e->raise();
-                            }
+                        boost::any remoteValue = fnct->evaluate();
+                        try {
+                            HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                            this->addDContent(theVal);
+                            valid = true;
+                        } catch (AXRError::p e) {
+                            e->raise();
+                        } catch (...) {
+                            
                         }
+                        
                         break;
                     }
                         
@@ -1973,10 +2166,14 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                             HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                             fnct->setScope(&(thisCont->getChildren()));
                         }
-                        void * remoteValue = fnct->evaluate();
-                        if(remoteValue != NULL){
-                            this->setContentText(*(std::string *)remoteValue);
+                        boost::any remoteValue = fnct->evaluate();
+                        try {
+                            std::string theVal = boost::any_cast<std::string>(theVal);
+                            this->setContentText(theVal);
                             valid = true;
+
+                        } catch (...) {
+                            this->setContentText("");
                         }
                         
                         break;
@@ -2118,9 +2315,14 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                this->addDFont(remoteValue);
-                valid = true;
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                    this->addDFont(theVal);
+                    valid = true;
+                } catch (...) {
+                    
+                }
             }
             
             break;
@@ -2264,14 +2466,15 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
                     fnct->setScope(&(thisCont->getChildren()));
                 }
                 fnct->setThisObj(this->shared_from_this());
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                if(remoteValue){
-                    try {
-                        this->addDOn(remoteValue);
-                        valid = true;
-                    } catch (AXRError::p e) {
-                        e->raise();
-                    }
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                    this->addDOn(theVal);
+                    valid = true;
+                }  catch (AXRError::p e) {
+                    e->raise();
+                } catch (...) {
+                    
                 }
             }
             
@@ -2434,10 +2637,17 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                this->addDMargin(remoteValue);
-                this->_setOuterDimensions();
-                valid = true;
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                    this->addDMargin(theVal);
+                    this->_setOuterDimensions();
+                    valid = true;
+                }  catch (AXRError::p e) {
+                    e->raise();
+                } catch (...) {
+                    
+                }
             }
             
             break;
@@ -2578,10 +2788,17 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                this->addDPadding(remoteValue);
-                this->_setInnerDimensions();
-                valid = true;
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                    this->addDPadding(theVal);
+                    this->_setInnerDimensions();
+                    valid = true;
+                }  catch (AXRError::p e) {
+                    e->raise();
+                } catch (...) {
+                    
+                }
             }
             
             break;
@@ -2721,9 +2938,16 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                HSSParserNode::p remoteValue = *(HSSParserNode::p *)fnct->evaluate();
-                this->addDBorder(remoteValue);
-                valid = true;
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p>(remoteValue);
+                    this->addDBorder(theVal);
+                    valid = true;
+                }  catch (AXRError::p e) {
+                    e->raise();
+                } catch (...) {
+                    
+                }
             }
 
             break;
@@ -2800,17 +3024,20 @@ void HSSDisplayObject::setDVisible(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *>(this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
-                void * remoteValue = fnct->evaluate();
-                if(remoteValue != NULL){
-                    this->visible = *(bool *) remoteValue;
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->visible = boost::any_cast<bool>(remoteValue);
                     valid = true;
-                    if(this->observedVisible){
-                        this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
-                    }
-                    fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyVisible, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::visibleChanged));
-                    this->observedVisible = fnct;
-                    this->observedVisibleProperty = HSSObservablePropertyValue;
+                } catch (...) {
+                    this->visible = true;
                 }
+                
+                if(this->observedVisible){
+                    this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
+                }
+                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyVisible, this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::visibleChanged));
+                this->observedVisible = fnct;
+                this->observedVisibleProperty = HSSObservablePropertyValue;
             }
             
             break;
@@ -2936,7 +3163,7 @@ long double HSSDisplayObject::_setLDProperty(
                                              const std::vector<HSSDisplayObject::p> * scope
                                              )
 {
-    long double ret;
+    long double ret = 0.;
     
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType) {
@@ -2992,7 +3219,17 @@ long double HSSDisplayObject::_setLDProperty(
             fnct->setScope(scope);
             fnct->setThisObj(this->shared_from_this());
             
-            ret = *(long double*)fnct->evaluate();
+            boost::any remoteValue = fnct->evaluate();
+            if(typeid(long double) == remoteValue.type()){
+                ret = boost::any_cast<long double>(remoteValue);
+            } else if (typeid(std::string) == remoteValue.type()){
+                try {
+                    ret = boost::lexical_cast<long double>(boost::any_cast<std::string>(remoteValue));
+                } catch (...) {
+                    
+                }
+            }
+            
             if(callback != NULL){
                 fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject>(this, callback));
                 observedStore = fnct;
@@ -3000,6 +3237,7 @@ long double HSSDisplayObject::_setLDProperty(
             } else {
                 observedStore.reset();
             }
+            
             break;
         }
         

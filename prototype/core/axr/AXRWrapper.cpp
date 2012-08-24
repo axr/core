@@ -293,9 +293,14 @@ void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
         HSSParserNode::p argument = *it;
         if(argument->isA(HSSFunctionTypeSel)){
             HSSSelFunction::p selFunction = boost::static_pointer_cast<HSSSelFunction>(argument);
-            std::vector< std::vector<HSSDisplayObject::p> > selection = *(std::vector< std::vector<HSSDisplayObject::p> >*)selFunction->evaluate();
-            std::vector<HSSDisplayObject::p> innerSelection = selection[0];
-            status = HSSContainer::asContainer(innerSelection[0]);
+            boost::any remoteValue = selFunction->evaluate();
+            try {
+                std::vector< std::vector<HSSDisplayObject::p> > selection = boost::any_cast< std::vector< std::vector<HSSDisplayObject::p> > >(remoteValue);
+                std::vector<HSSDisplayObject::p> innerSelection = selection[0];
+                status = HSSContainer::asContainer(innerSelection[0]);
+            } catch (...) {
+                
+            }
         }
     }
 

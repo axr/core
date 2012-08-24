@@ -387,6 +387,7 @@ namespace AXR {
         ;
         //width
         HSSParserNode::p dWidth;
+        bool widthByContent;
         HSSObservable::p observedWidth;
         HSSObservableProperty observedWidthProperty;
         //height

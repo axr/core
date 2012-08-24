@@ -145,9 +145,14 @@ void HSSBorder::setDSize(HSSParserNode::p value){
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->size = *(HSSUnit*)fnct->evaluate();
-                
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->size = boost::any_cast<HSSUnit>(remoteValue);
+                } catch (...) {
+                    this->size = 1.;
+                }
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertySize, this, new HSSValueChangedCallback<HSSBorder>(this, &HSSBorder::sizeChanged));
+                
                 
             } else {
                 throw AXRWarning::p(new AXRWarning("HSSDBorder", "Invalid function type size of "+this->name));

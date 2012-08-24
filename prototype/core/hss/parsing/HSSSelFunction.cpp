@@ -120,11 +120,16 @@ const int HSSSelFunction::selectorChainsSize()
     return this->selectorChains.size();
 }
 
-void * HSSSelFunction::_evaluate()
+boost::any HSSSelFunction::_evaluate()
 {
     this->selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj());
-    this->_value = (void*) &this->selection;
+    this->_value = this->selection;
     return this->_value;
+}
+
+boost::any HSSSelFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+{
+    return this->_evaluate();
 }
 
 //void HSSSelFunction::valueChanged(HSSObservableProperty source, void*data)

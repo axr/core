@@ -142,15 +142,15 @@ const int HSSRefFunction::selectorChainsSize()
     return this->selectorChains.size();
 }
 
-void * HSSRefFunction::_evaluate()
+boost::any HSSRefFunction::_evaluate()
 {
     /**
      *  @todo this works only on numeric values, with other kind of data I don't know what will happen
      *  we need to figure out how to deal with non-numeric values here
      */
 
-    std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj());
-    if (selection.size() == 0){
+    std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj(), false);
+    if (selection.size() == 0 || (selection.size() == 1 && selection[0].size() == 0)){
         // ignore
     } else if (selection.size() == 1 && selection[0].size() == 1){
         HSSDisplayObject::p container = selection[0][0];
@@ -189,11 +189,16 @@ void * HSSRefFunction::_evaluate()
     return this->_value;
 }
 
+boost::any HSSRefFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+{
+    return this->_evaluate();
+}
+
 void HSSRefFunction::valueChanged(HSSObservableProperty source, void*data)
 {
     this->setDirty(true);
     this->_value = data;
-    this->notifyObservers(HSSObservablePropertyValue, this->_value);
+    this->notifyObservers(HSSObservablePropertyValue, (void*) &this->_value);
 }
 
 HSSClonable::p HSSRefFunction::cloneImpl() const{

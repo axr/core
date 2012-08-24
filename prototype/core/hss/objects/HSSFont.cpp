@@ -242,7 +242,14 @@ void HSSFont::setDColor(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->color = *(HSSRgb::p *)fnct->evaluate();
+                
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->color = boost::any_cast<HSSRgb::p>(remoteValue);
+                    
+                } catch (...) {
+                    this->color = HSSRgb::p(new HSSRgb());
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSFont>(this, &HSSFont::colorChanged));
                 valid = true;
@@ -302,10 +309,15 @@ void HSSFont::setDWeight(HSSParserNode::p value){
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                this->weight = *(HSSKeywordConstant::p *)fnct->evaluate();
+                boost::any remoteValue = fnct->evaluate();
+                try {
+                    this->weight = boost::any_cast<HSSKeywordConstant::p>(remoteValue);
+                    valid = true;
+                } catch (...) {
+                    
+                }
                 
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyWeight, this, new HSSValueChangedCallback<HSSFont>(this, &HSSFont::weightChanged));
-                valid = true;
             }
             
             break;

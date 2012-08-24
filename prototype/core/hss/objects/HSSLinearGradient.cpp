@@ -491,7 +491,12 @@ long double HSSLinearGradient::_setLDProperty(
 void HSSLinearGradient::draw(cairo_t * cairo)
 {
     cairo_pattern_t * pat = cairo_pattern_create_linear (this->startX, this->startY, this->endX, this->endY);
-    cairo_pattern_add_color_stop_rgba (pat, 0., this->startColor->getRed()/255., this->startColor->getGreen()/255., this->startColor->getBlue()/255., this->startColor->getAlpha()/255.);
+    if(this->startColor){
+        cairo_pattern_add_color_stop_rgba (pat, 0., this->startColor->getRed()/255., this->startColor->getGreen()/255., this->startColor->getBlue()/255., this->startColor->getAlpha()/255.);
+    } else {
+        cairo_pattern_add_color_stop_rgba (pat, 0., 0., 0., 0., 0.);
+    }
+    
     //add color stops
     std::vector<HSSObject::p>::iterator it;
     for(it=this->colorStops.begin(); it!=this->colorStops.end(); it++){
@@ -522,7 +527,12 @@ void HSSLinearGradient::draw(cairo_t * cairo)
         
     }
     
-    cairo_pattern_add_color_stop_rgba (pat, 1., this->endColor->getRed()/255., this->endColor->getGreen()/255., this->endColor->getBlue()/255., this->endColor->getAlpha()/255.);
+    if(this->endColor){
+        cairo_pattern_add_color_stop_rgba (pat, 1., this->endColor->getRed()/255., this->endColor->getGreen()/255., this->endColor->getBlue()/255., this->endColor->getAlpha()/255.);
+    } else {
+        cairo_pattern_add_color_stop_rgba (pat, 0., 0., 0., 0., 0.);
+    }
+    
     cairo_set_source (cairo, pat);
     cairo_fill_preserve (cairo);
     cairo_pattern_destroy (pat);

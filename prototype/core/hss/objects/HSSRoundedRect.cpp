@@ -635,7 +635,13 @@ long double HSSRoundedRect::_setLDProperty(
             fnct->setScope(scope);
             fnct->setThisObj(this->getThisObj());
             
-            ret = *(long double*)fnct->evaluate();
+            boost::any remoteValue = fnct->evaluate();
+            try {
+                ret = boost::any_cast<long double>(remoteValue);
+                
+            } catch (...) {
+                
+            }
             if(callback != NULL){
                 fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect>(this, callback));
                 observedStore = fnct.get();

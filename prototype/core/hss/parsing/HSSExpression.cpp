@@ -159,15 +159,21 @@ long double HSSExpression::evaluate()
             case HSSParserNodeTypeFunctionCall:
             {
                 HSSFunction::p leftFunction = boost::static_pointer_cast<HSSFunction>(this->getLeft());
-                this->leftval = *(long double*)leftFunction->evaluate();
-                
-                if(this->leftObserved != NULL)
-                {
-                    this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
+                boost::any remoteValue = leftFunction->evaluate();
+                try {
+                    this->leftval = boost::any_cast<long double>(remoteValue);
+                    if(this->leftObserved != NULL)
+                    {
+                        this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
+                    }
+                    leftFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
+                    this->leftObserved = leftFunction.get();
+                    this->leftObservedProperty = HSSObservablePropertyValue;
+                    
+                } catch (...) {
+                    this->rightval = 0.;
                 }
-                leftFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
-                this->leftObserved = leftFunction.get();
-                this->leftObservedProperty = HSSObservablePropertyValue;
+                
                 break;
             }
                 
@@ -217,15 +223,21 @@ long double HSSExpression::evaluate()
             case HSSParserNodeTypeFunctionCall:
             {
                 HSSFunction::p rightFunction = boost::static_pointer_cast<HSSFunction>(this->getRight());
-                this->rightval = *(long double*)rightFunction->evaluate();
-                
-                if(this->rightObserved != NULL)
-                {
-                    this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
+                boost::any remoteValue = rightFunction->evaluate();
+                try {
+                    this->rightval = boost::any_cast<long double>(remoteValue);
+                    if(this->rightObserved != NULL)
+                    {
+                        this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
+                    }
+                    rightFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
+                    this->rightObserved = rightFunction.get();
+                    this->rightObservedProperty = HSSObservablePropertyValue;
+                    
+                } catch (...) {
+                    this->rightval = 0.;
                 }
-                rightFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
-                this->rightObserved = rightFunction.get();
-                this->rightObservedProperty = HSSObservablePropertyValue;
+                
                 break;
             }
                 
