@@ -227,7 +227,7 @@ HSSToken::p HSSTokenizer::peekNextToken()
     
     std::stringstream msg;
     msg << "new peekpos: " << this->peekpos << " because bufpos: " << this->bufpos << " and curpos: " << curpos;
-    std_log(msg.str());
+    axr_log(AXR_DEBUG_CH_TOKENIZING, msg.str());
     
     return ret;
 }
