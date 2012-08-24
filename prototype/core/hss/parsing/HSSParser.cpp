@@ -236,6 +236,7 @@ bool HSSParser::readNextStatement()
                         axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding object definition to object tree");
                         this->recursiveAddObjectDefinition(theObj);
                         this->controller->parserTreeAdd(theObj);
+                        ret = true;
                         
                         this->skipExpected(HSSEndOfStatement);
                         if(!this->atEndOfSource()){
@@ -301,6 +302,7 @@ bool HSSParser::readNextStatement()
                         this->currentObjectContext = currentCurrentObjectContext;
                         
                         this->controller->parserTreeAdd(theInstr);
+                        ret = true;
                         
                         break;
                     }
@@ -325,7 +327,7 @@ bool HSSParser::readNextStatement()
                     this->recursiveAddObjectDefinition(theObj);
                     this->controller->parserTreeAdd(theObj);
                     
-                    if(this->currentToken->isA(HSSAmpersand)){
+                    if(!this->atEndOfSource() && this->currentToken->isA(HSSAmpersand)){
                         done = false;
                     }
                 }
@@ -367,6 +369,7 @@ bool HSSParser::readNextStatement()
                     this->skip(HSSWhitespace);
                 axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding comment to parser tree");
                 this->controller->parserTreeAdd(theComment);
+                ret = true;
                 break;
             }
                 
