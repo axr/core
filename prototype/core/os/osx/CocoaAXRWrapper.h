@@ -46,12 +46,12 @@
 
 namespace AXR
 {
-    class CocoaAxrWrapper : public AXRWrapper
+    class CocoaAXRWrapper : public AXRWrapper
     {
     public:
-        CocoaAxrWrapper(AXRView * mainView);
+        CocoaAXRWrapper(AXRView * mainView);
         AXRWrapper * createWrapper();
-        virtual ~CocoaAxrWrapper();
+        virtual ~CocoaAXRWrapper();
         
         virtual AXRFile::p getFile(std::string url);
         virtual size_t readFile(AXRFile::p theFile);

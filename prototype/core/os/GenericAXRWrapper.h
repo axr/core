@@ -50,19 +50,19 @@
  *
  ********************************************************************/
 
-#ifndef GenericAxrWrapper_H
-#define GenericAxrWrapper_H
+#ifndef GenericAXRWrapper_H
+#define GenericAXRWrapper_H
 
 #include "AXRWrapper.h"
 
 namespace AXR
 {
-	class GenericAxrWrapper : public AXRWrapper
+	class GenericAXRWrapper : public AXRWrapper
 	{
 		public:
-		GenericAxrWrapper();
+		GenericAXRWrapper();
         AXRWrapper * createWrapper();
-		virtual ~GenericAxrWrapper();
+		virtual ~GenericAXRWrapper();
 
 		virtual AXRFile::p getFile(std::string url);
 		virtual size_t readFile(AXRFile::p theFile);

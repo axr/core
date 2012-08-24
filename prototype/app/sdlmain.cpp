@@ -11,9 +11,9 @@
 #endif
 #else
 #include <SDL/SDL.h>
-#include "GenericAxrWrapper.h"
+#include "GenericAXRWrapper.h"
 #ifndef AXR_WRAPPER_CLASS
-#define AXR_WRAPPER_CLASS GenericAxrWrapper
+#define AXR_WRAPPER_CLASS GenericAXRWrapper
 #endif
 #endif
 

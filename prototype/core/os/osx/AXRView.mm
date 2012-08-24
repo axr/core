@@ -50,7 +50,7 @@
 #import "HSSContainer.h"
 #import "HSSEvent.h"
 #import "HSSTypeEnums.h"
-#import "CocoaAxrWrapper.h"
+#import "CocoaAXRWrapper.h"
 
 @implementation AXRView
 @synthesize needsFile;
@@ -75,14 +75,14 @@
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRView: awaking from NIB");
     [self setNeedsFile:YES];
-    AXR::CocoaAxrWrapper * wrapper = new AXR::CocoaAxrWrapper(self);
+    AXR::CocoaAXRWrapper * wrapper = new AXR::CocoaAXRWrapper(self);
     
     [self setAxrWrapper:wrapper];
 }
 
 - (void)dealloc
 {
-    AXR::CocoaAxrWrapper * wrapper = (AXR::CocoaAxrWrapper *)[self axrWrapper];
+    AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
     delete wrapper;
     [super dealloc];
 }
@@ -209,7 +209,7 @@
 
 - (bool)loadFile
 {
-    AXR::CocoaAxrWrapper * wrapper = (AXR::CocoaAxrWrapper *)[self axrWrapper];
+    AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
     bool loaded = false;
     if(wrapper!=NULL){
         loaded = wrapper->loadFile();
@@ -224,7 +224,7 @@
 
 - (bool)loadFile:(NSString *)filePath
 {
-    AXR::CocoaAxrWrapper * wrapper = (AXR::CocoaAxrWrapper *)[self axrWrapper];
+    AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
     bool loaded = false;
     if(wrapper!=NULL){
         loaded = wrapper->loadFileByPath(std::string([filePath UTF8String]));
@@ -240,7 +240,7 @@
 
 - (bool)reload
 {
-    AXR::CocoaAxrWrapper * wrapper = (AXR::CocoaAxrWrapper *)[self axrWrapper];
+    AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
     if(wrapper->hasLoadedFile()){
         axr_log(AXR_DEBUG_CH_OVERVIEW, "\n\n\nAXRView: reloading file");
         bool loaded = wrapper->reload();

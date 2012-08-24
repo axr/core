@@ -45,25 +45,25 @@
 #include "AXR.h"
 #include "AXRDebugging.h"
 #include "AXRError.h"
-#include "GenericAxrWrapper.h"
+#include "GenericAXRWrapper.h"
 
 using namespace AXR;
 
-GenericAxrWrapper::GenericAxrWrapper() : AXRWrapper()
+GenericAXRWrapper::GenericAXRWrapper() : AXRWrapper()
 {
 	this->needsDisplay = true;
 }
 
-AXRWrapper * GenericAxrWrapper::createWrapper()
+AXRWrapper * GenericAXRWrapper::createWrapper()
 {
-    return new GenericAxrWrapper();
+    return new GenericAXRWrapper();
 }
 
-GenericAxrWrapper::~GenericAxrWrapper()
+GenericAXRWrapper::~GenericAXRWrapper()
 {
 }
 
-AXRFile::p GenericAxrWrapper::getFile(std::string url)
+AXRFile::p GenericAXRWrapper::getFile(std::string url)
 {
 	AXRFile::p ret = AXRFile::p(new AXRFile());
 
@@ -80,11 +80,11 @@ AXRFile::p GenericAxrWrapper::getFile(std::string url)
 
 		if (ret->getFileHandle() == NULL)
 		{
-			AXRError::p(new AXRError("GenericAxrWrapper", "the file " + ret->getFileName() + " doesn't exist " + ret->getBasePath()))->raise();
+			AXRError::p(new AXRError("GenericAXRWrapper", "the file " + ret->getFileName() + " doesn't exist " + ret->getBasePath()))->raise();
 		}
 		else if (ferror(ret->getFileHandle()))
 		{
-			AXRError::p(new AXRError("GenericAxrWrapper", "the file " + ret->getFileName() + " couldn't be read"))->raise();
+			AXRError::p(new AXRError("GenericAXRWrapper", "the file " + ret->getFileName() + " couldn't be read"))->raise();
 		}
 	}
 	else
@@ -95,7 +95,7 @@ AXRFile::p GenericAxrWrapper::getFile(std::string url)
 	return ret;
 }
 
-size_t GenericAxrWrapper::readFile(AXRFile::p theFile)
+size_t GenericAXRWrapper::readFile(AXRFile::p theFile)
 {
 	size_t size = fread(theFile->getBuffer(), sizeof(theFile->getBuffer()[0]),
 		theFile->getBufferSize(), theFile->getFileHandle());
@@ -110,18 +110,18 @@ size_t GenericAxrWrapper::readFile(AXRFile::p theFile)
 	return size;
 }
 
-void GenericAxrWrapper::closeFile(AXRFile::p theFile)
+void GenericAXRWrapper::closeFile(AXRFile::p theFile)
 {
 	fclose(theFile->getFileHandle());
 	theFile->setFileHandle(NULL);
 }
 
-void GenericAxrWrapper::handleError(AXRError::p theError)
+void GenericAXRWrapper::handleError(AXRError::p theError)
 {
 	std::cout << theError->toString() << "\n";
 }
 
-bool GenericAxrWrapper::openFileDialog(std::string &filePath)
+bool GenericAXRWrapper::openFileDialog(std::string &filePath)
 {
 	char file[FILENAME_MAX];
 
@@ -152,12 +152,12 @@ bool GenericAxrWrapper::openFileDialog(std::string &filePath)
 	return true;
 }
 
-void GenericAxrWrapper::setNeedsDisplay(bool newValue)
+void GenericAXRWrapper::setNeedsDisplay(bool newValue)
 {
 	this->needsDisplay = newValue;
 }
 
-std::string GenericAxrWrapper::getPathToResources()
+std::string GenericAXRWrapper::getPathToResources()
 {
 	// Code taken from: http://www.gamedev.net/community/forums/topic.asp?topic_id=459511
 	std::string path = "";
@@ -180,7 +180,7 @@ std::string GenericAxrWrapper::getPathToResources()
 	return path + std::string("/resources");
 }
 
-std::string GenericAxrWrapper::getPathToTestsFile()
+std::string GenericAXRWrapper::getPathToTestsFile()
 {
 	return this->_layoutTestsFilePath;
 }

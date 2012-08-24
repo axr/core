@@ -84,7 +84,7 @@
 - (void)setAxrWrapper:(void *)theWrapper;
 /**
  *  Getter for the pointer to the wrapper.
- *  @return A void * pointer to the wrapper object. Cast this to (AXR::CocoaAxrWrapper *).
+ *  @return A void * pointer to the wrapper object. Cast this to (AXR::CocoaAXRWrapper *).
  */
 - (void *)axrWrapper;
 /**
