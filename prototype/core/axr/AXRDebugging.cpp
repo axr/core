@@ -43,51 +43,55 @@
 
 unsigned int axr_debug_level = 1;
 
-void std_log_level(std::string message, int debugLevel)
+void std_log_level(const std::string &message, int debugLevel, bool newline)
 {
     if (debugLevel <= axr_debug_level)
     {
-        std::cout << message << std::endl;
+        std::cout << message.c_str();
+        if (newline)
+            std::cout << std::endl;
+        
+        std::cout.flush();
     }
 }
 
-void std_log(std::string message)
+void std_log(const std::string &message, bool newline)
 {
-    std_log_level(message, 0);
+    std_log_level(message, 0, newline);
 }
 
-void std_log1(std::string message)
+void std_log1(const std::string &message, bool newline)
 {
-    std_log_level(message, 1);
+    std_log_level(message, 1, newline);
 }
 
-void std_log2(std::string message)
+void std_log2(const std::string &message, bool newline)
 {
-    std_log_level(message, 2);
+    std_log_level(message, 2, newline);
 }
 
-void std_log3(std::string message)
+void std_log3(const std::string &message, bool newline)
 {
-    std_log_level(message, 3);
+    std_log_level(message, 3, newline);
 }
 
-void std_log4(std::string message)
+void std_log4(const std::string &message, bool newline)
 {
-    std_log_level(message, 4);
+    std_log_level(message, 4, newline);
 }
 
 unsigned axr_debug_active_channels = 0;
 
-void axr_log(uint32_t channels, std::string message)
+void axr_log(uint32_t channels, const std::string &message)
 {
     if ((axr_debug_active_channels & AXR_DEBUG_CH_ON) && (axr_debug_active_channels & channels))
         std_log(message);
 }
 
-void axr_log_inline(uint32_t channels, std::string message)
+void axr_log_inline(uint32_t channels, const std::string &message)
 {
     if ((axr_debug_active_channels & AXR_DEBUG_CH_ON) && (axr_debug_active_channels & channels))
-        std::cout << message;
+        std_log(message, false);
 }
 
 void axr_debug_activate_channel(uint32_t channels)

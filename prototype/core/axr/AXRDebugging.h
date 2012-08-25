@@ -56,12 +56,12 @@
 
 extern unsigned int axr_debug_level;
 
-void std_log_level(std::string message, int debugLevel = 0);
-void std_log(std::string message);
-void std_log1(std::string message);
-void std_log2(std::string message);
-void std_log3(std::string message);
-void std_log4(std::string message);
+void std_log_level(const std::string &message, int debugLevel = 0, bool newline = true);
+void std_log(const std::string &message, bool newline = true);
+void std_log1(const std::string &message, bool newline = true);
+void std_log2(const std::string &message, bool newline = true);
+void std_log3(const std::string &message, bool newline = true);
+void std_log4(const std::string &message, bool newline = true);
 
 // Security brakes for while loops
 #define AXR_DEBUG_BRAKE 9999
@@ -150,8 +150,8 @@ enum axr_debug_ch
     AXR_DEBUG_CH_FULL_FILENAMES = 1 << 28, //c
 };
 
-void axr_log(uint32_t channels, std::string message);
-void axr_log_inline(uint32_t channels, std::string message);
+void axr_log(uint32_t channels, const std::string &message);
+void axr_log_inline(uint32_t channels, const std::string &message);
 void axr_debug_activate_channel(uint32_t channels);
 
 #endif //AXRDEBUGGING_H

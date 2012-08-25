@@ -785,7 +785,7 @@ void HSSDisplayObject::draw(cairo_t * cairo)
     if (this->_isDirty)
     {
         std::stringstream msg;
-        msg << "HSSDisplayObject: redrawing contents of " << this->elementName << " with x: " << this->x << " and y: " << this->y;
+        msg << "HSSDisplayObject: redrawing contents of " << this->elementName.c_str() << " with x: " << this->x << " and y: " << this->y;
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, msg.str());
 
         this->_isDirty = false;

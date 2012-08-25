@@ -116,7 +116,7 @@ void GenericAXRWrapper::closeFile(AXRFile::p theFile)
 
 void GenericAXRWrapper::handleError(AXRError::p theError)
 {
-    std::cout << theError->toString() << "\n";
+    std::cout << theError->toString().c_str() << "\n";
 }
 
 bool GenericAXRWrapper::openFileDialog(std::string &filePath)
