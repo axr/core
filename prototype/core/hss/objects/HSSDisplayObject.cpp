@@ -2168,7 +2168,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                         }
                         boost::any remoteValue = fnct->evaluate();
                         try {
-                            std::string theVal = boost::any_cast<std::string>(theVal);
+                            std::string theVal = boost::any_cast<std::string>(remoteValue);
                             this->setContentText(theVal);
                             valid = true;
 
