@@ -29,12 +29,14 @@ doc()
 if [ "$UNAME" = "Darwin" ] ; then
     # TODO: Allow the user to prefer a particular package manager if they have multiple
     if [ $(which port 2>/dev/null) ] ; then # MacPorts
-        port install qt4-mac +debug +framework +quartz +universal # NOTE: +debug is BOTH debug and release
-        port install boost -no-static +universal
-        port install libsdl +universal # NOT libsdl-devel; that's missing necessary headers
-        port install expat +universal
-        port install cairo-devel +quartz +universal
-        port install pango-devel +quartz +universal
+        # NOTE: Qt +debug is BOTH debug and release
+        port install \
+            qt4-mac +debug +framework +quartz +universal \
+            boost +no-static +universal \
+            libsdl +universal \
+            expat +universal \
+            cairo +quartz +universal \
+            pango +quartz +universal
     elif [ $(which brew 2>/dev/null) ] ; then # Brew
         # brew install ...
         echo "ERROR: brew support is not yet implemented"
