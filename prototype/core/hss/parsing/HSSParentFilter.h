@@ -25,9 +25,7 @@
  *            MM,
  *
  *
- *      AUTHORS: Miro Keller, Anando Gopal Chetterjee
- *
- *      COPYRIGHT: ©2011 - All Rights Reserved
+ *      COPYRIGHT: ©2012 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
  *
