@@ -53,8 +53,9 @@ HSSFlag::HSSFlag()
     this->_purging = HSSRuleStateOff;
 }
 
-HSSFilter::p HSSFlag::clone() const{
-    return boost::static_pointer_cast<HSSFlag, HSSClonable>(this->cloneImpl());
+HSSFilter::p HSSFlag::clone() const
+{
+    return boost::static_pointer_cast<HSSFlag, HSSClonable > (this->cloneImpl());
 }
 
 HSSFlag::~HSSFlag()
@@ -64,7 +65,7 @@ HSSFlag::~HSSFlag()
 
 std::string HSSFlag::toString()
 {
-    return "Flag with name "+this->_name;
+    return "Flag with name " + this->_name;
 }
 
 std::string HSSFlag::getName()
@@ -77,14 +78,17 @@ void HSSFlag::setName(std::string newValue)
     this->_name = newValue;
 }
 
-void HSSFlag::flagChanged(HSSRuleState newStatus){
+void HSSFlag::flagChanged(HSSRuleState newStatus)
+{
     //parent is simple selector, grandparent is selector chain, grandgrandparent is the rule
     HSSParserNode::p selectorChainNode = this->getParentNode()->getParentNode();
     HSSParserNode::p ruleNode = selectorChainNode->getParentNode();
-    if(ruleNode->isA(HSSParserNodeTypeStatement)){
-        HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement>(ruleNode);
-        if(ruleStatement->isA(HSSStatementTypeRule)){
-            HSSRule::p theRule = boost::static_pointer_cast<HSSRule>(ruleStatement);
+    if (ruleNode->isA(HSSParserNodeTypeStatement))
+    {
+        HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement > (ruleNode);
+        if (ruleStatement->isA(HSSStatementTypeRule))
+        {
+            HSSRule::p theRule = boost::static_pointer_cast<HSSRule > (ruleStatement);
             std::vector<HSSDisplayObject::p> scope = theRule->getOriginalScope();
             AXRController::p controller = AXRCore::getInstance()->getController();
             this->setPurging(newStatus);
@@ -92,9 +96,11 @@ void HSSFlag::flagChanged(HSSRuleState newStatus){
             this->setPurging(HSSRuleStateOff);
             std::vector<std::vector<HSSDisplayObject::p> >::const_iterator outer;
             std::vector<HSSDisplayObject::p>::const_iterator inner;
-            for (outer=selection.begin(); outer!=selection.end(); outer++) {
+            for (outer = selection.begin(); outer != selection.end(); outer++)
+            {
                 const std::vector<HSSDisplayObject::p> & innerv = *outer;
-                for (inner=innerv.begin(); inner!=innerv.end(); inner++) {
+                for (inner = innerv.begin(); inner != innerv.end(); inner++)
+                {
                     (*inner)->setRuleStatus(theRule, newStatus);
                 }
             }
@@ -104,16 +110,20 @@ void HSSFlag::flagChanged(HSSRuleState newStatus){
 
 const std::vector<HSSDisplayObject::p> HSSFlag::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
 {
-    if(processing){
+    if (processing)
+    {
         HSSDisplayObject::const_it it;
-        for (it=scope.begin(); it!=scope.end(); it++) {
+        for (it = scope.begin(); it != scope.end(); it++)
+        {
             const HSSDisplayObject::p & theDO = *it;
             //parent is simple selector, grandparent is selector chain, grandgrandparent is the rule
             HSSParserNode::p ruleNode = this->getParentNode()->getParentNode()->getParentNode();
-            if(ruleNode->isA(HSSParserNodeTypeStatement)){
-                HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement>(ruleNode);
-                if(ruleStatement->isA(HSSStatementTypeRule)){
-                    HSSRule::p theRule = boost::static_pointer_cast<HSSRule>(ruleStatement);
+            if (ruleNode->isA(HSSParserNodeTypeStatement))
+            {
+                HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement > (ruleNode);
+                if (ruleStatement->isA(HSSStatementTypeRule))
+                {
+                    HSSRule::p theRule = boost::static_pointer_cast<HSSRule > (ruleStatement);
 
                     theRule->setActiveByDefault(this->getNegating());
                     theDO->createFlag(this->shared_from_this(), (this->getNegating() ? HSSRuleStateOn : HSSRuleStateOff));
@@ -122,29 +132,40 @@ const std::vector<HSSDisplayObject::p> HSSFlag::apply(const std::vector<HSSDispl
         }
 
         return scope;
-    } else {
-        if(scope.size() > 0){
+    }
+    else
+    {
+        if (scope.size() > 0)
+        {
             std::vector<HSSDisplayObject::p> ret;
             HSSDisplayObject::const_it it;
-            for (it=scope.begin(); it!=scope.end(); it++) {
+            for (it = scope.begin(); it != scope.end(); it++)
+            {
                 const HSSDisplayObject::p & theDO = *it;
                 HSSRuleState purgingState = this->getPurging();
-                if(purgingState){
+                if (purgingState)
+                {
                     HSSRuleState state = theDO->flagState(this->getName());
-                    if(state == purgingState){
+                    if (state == purgingState)
+                    {
                         ret.push_back(theDO);
                     }
 
-                } else {
+                }
+                else
+                {
                     bool firstMatch = (theDO->flagState(this->getName()) == HSSRuleStateOn) && !this->getNegating();
                     bool secondMatch = (theDO->flagState(this->getName()) == HSSRuleStateOff) && this->getNegating();
-                    if(firstMatch || secondMatch){
+                    if (firstMatch || secondMatch)
+                    {
                         ret.push_back(theDO);
                     }
                 }
             }
             return ret;
-        } else {
+        }
+        else
+        {
             return scope;
         }
     }
@@ -160,11 +181,12 @@ void HSSFlag::setPurging(HSSRuleState newValue)
     this->_purging = newValue;
 }
 
-HSSClonable::p HSSFlag::cloneImpl() const{
+HSSClonable::p HSSFlag::cloneImpl() const
+{
     return HSSClonable::p(new HSSFlag(*this));
 }
 
 HSSFlag::p HSSFlag::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSFlag>(HSSParserNode::shared_from_this());
+    return boost::static_pointer_cast<HSSFlag > (HSSParserNode::shared_from_this());
 }

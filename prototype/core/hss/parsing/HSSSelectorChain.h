@@ -48,7 +48,8 @@
 #include <boost/weak_ptr.hpp>
 #include "HSSParserNode.h"
 
-namespace AXR {
+namespace AXR
+{
 
     class HSSRule;
     class HSSSimpleSelector;

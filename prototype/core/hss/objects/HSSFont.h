@@ -47,7 +47,9 @@
 #include "HSSObject.h"
 #include "HSSRgb.h"
 
-namespace AXR {
+namespace AXR
+{
+
     /**
      *  @brief This class represents the HSS object type \@font.
      */
@@ -195,11 +197,11 @@ namespace AXR {
 
         long double _setLDProperty(
                                    void(HSSFont::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p         value,
-                                   long double              percentageBase,
-                                   HSSObservableProperty    observedSourceProperty,
-                                   HSSObservable *          &observedStore,
-                                   HSSObservableProperty    &observedStoreProperty
+                                   HSSParserNode::p value,
+                                   long double percentageBase,
+                                   HSSObservableProperty observedSourceProperty,
+                                   HSSObservable * &observedStore,
+                                   HSSObservableProperty &observedStoreProperty
                                    );
         HSSClonable::p cloneImpl() const;
     };

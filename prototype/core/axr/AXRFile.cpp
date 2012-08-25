@@ -59,7 +59,8 @@ AXRFile::AXRFile()
 
 AXRFile::~AXRFile()
 {
-    if(this->fileHandle != NULL){
+    if (this->fileHandle != NULL)
+    {
         fclose(this->fileHandle);
     }
     delete [] this->buffer;
@@ -147,7 +148,7 @@ FILE * AXRFile::getFileHandle()
 
 std::string AXRFile::toString()
 {
-    return "AXRFile:\nFilename: "+this->fileName+"\nBasepath: "+this->basePath+"\n-------------------------\n";
+    return "AXRFile:\nFilename: " + this->fileName + "\nBasepath: " + this->basePath + "\n-------------------------\n";
 }
 
 bool AXRFile::isAtEndOfFile()

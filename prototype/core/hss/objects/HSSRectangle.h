@@ -45,7 +45,8 @@
 #include "HSSShape.h"
 #include "HSSUnits.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Shape object, representing the HSS object \@rect.

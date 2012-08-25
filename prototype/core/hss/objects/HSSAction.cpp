@@ -51,14 +51,14 @@ using namespace AXR;
 std::string HSSAction::actionTypeStringRepresentation(HSSActionType actionType)
 {
     boost::unordered_map<HSSActionType, std::string> types;
-    types[HSSActionTypeRequest    ] = "HSSActionTypeRequest";
+    types[HSSActionTypeRequest ] = "HSSActionTypeRequest";
     types[HSSActionTypeSetProperty] = "HSSActionTypeSetProperty";
     types[HSSActionTypeJavascript ] = "HSSActionTypeJavascript";
     types[HSSActionTypeJsFunction ] = "HSSActionTypeJsFunction";
-    types[HSSActionTypeAlert      ] = "HSSActionTypeAlert";
-    types[HSSActionTypeLog        ] = "HSSActionTypeLog";
-    types[HSSActionTypeFlag       ] = "HSSActionTypeFlag";
-    types[HSSActionTypeFunction   ] = "HSSActionTypeFunction";
+    types[HSSActionTypeAlert ] = "HSSActionTypeAlert";
+    types[HSSActionTypeLog ] = "HSSActionTypeLog";
+    types[HSSActionTypeFlag ] = "HSSActionTypeFlag";
+    types[HSSActionTypeFunction ] = "HSSActionTypeFunction";
 
     return types[actionType];
 }
@@ -75,11 +75,13 @@ HSSAction::HSSAction(const HSSAction & orig)
     this->actionType = orig.actionType;
 }
 
-HSSAction::p HSSAction::clone() const{
-    return boost::static_pointer_cast<HSSAction, HSSClonable>(this->cloneImpl());
+HSSAction::p HSSAction::clone() const
+{
+    return boost::static_pointer_cast<HSSAction, HSSClonable > (this->cloneImpl());
 }
 
-HSSClonable::p HSSAction::cloneImpl() const{
+HSSClonable::p HSSAction::cloneImpl() const
+{
     return HSSClonable::p(new HSSAction(*this));
 }
 
@@ -90,7 +92,7 @@ HSSAction::~HSSAction()
 
 std::string HSSAction::toString()
 {
-    return "Generic HSSAction of type"+HSSAction::actionTypeStringRepresentation(this->actionType);
+    return "Generic HSSAction of type" + HSSAction::actionTypeStringRepresentation(this->actionType);
 }
 
 std::string HSSAction::defaultObjectType()
@@ -105,11 +107,12 @@ std::string HSSAction::defaultObjectType(std::string property)
 
 void HSSAction::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    switch (name) {
+    switch (name)
+    {
 
-        default:
-            HSSObject::setProperty(name, value);
-            break;
+    default:
+        HSSObject::setProperty(name, value);
+        break;
     }
 }
 

@@ -45,15 +45,16 @@
 #include <boost/shared_ptr.hpp>
 #include "HSSExpression.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief A type of expression that uses the plus operator "+".
      *
      *  Both members are summed together, no matter what order they are put in.
      */
-    class HSSSum : public HSSExpression {
-
+    class HSSSum : public HSSExpression
+    {
     public:
         typedef boost::shared_ptr<HSSSum> p;
 

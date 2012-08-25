@@ -52,17 +52,19 @@
 #include "ExpatXMLParser.h"
 #include "HSSContainer.h"
 
-namespace AXR {
+namespace AXR
+{
 
 
     class AXRController;
 
-    class XMLParser : public expatmm::ExpatXMLParser {
+    class XMLParser : public expatmm::ExpatXMLParser
+    {
     public:
 
         typedef boost::shared_ptr<XMLParser> p;
-        typedef boost::function<void (std::string)> addSheetCallback;
-        typedef boost::function<void (HSSContainer::p)> addContainerCallback;
+        typedef boost::function<void (std::string) > addSheetCallback;
+        typedef boost::function<void (HSSContainer::p) > addContainerCallback;
 
         XMLParser(AXRController * theController);
         //the caller is responsible for maintaining the existence of the controller

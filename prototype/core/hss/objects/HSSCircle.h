@@ -44,7 +44,9 @@
 
 #include "HSSShape.h"
 
-namespace AXR {
+namespace AXR
+{
+
     /**
      *  @brief Shape object, representing the HSS object \@circle.
      */

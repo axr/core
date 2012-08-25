@@ -54,43 +54,45 @@
 @synthesize needsFile;
 
 //hack to make it work with IB from a dependent target
-+(void)_keepAtLinkTime
+
++(void) _keepAtLinkTime
 {
     //do nothing
 }
 
-- (id)initWithFrame:(NSRect)frame
+-(id) initWithFrame : (NSRect) frame
 {
-    self = [super initWithFrame:frame];
-    if (self) {
+    self = [super initWithFrame : frame];
+    if (self)
+    {
         //nothing here
     }
 
     return self;
 }
 
-- (void)awakeFromNib
+-(void) awakeFromNib
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRView: awaking from NIB");
-    [self setNeedsFile:YES];
+    [self setNeedsFile : YES];
     AXR::CocoaAXRWrapper * wrapper = new AXR::CocoaAXRWrapper(self);
 
-    [self setAxrWrapper:wrapper];
+    [self setAxrWrapper : wrapper];
 }
 
-- (void)dealloc
+-(void) dealloc
 {
     AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
     delete wrapper;
     [super dealloc];
 }
 
-- (BOOL)isOpaque
+-(BOOL) isOpaque
 {
     return YES;
 }
 
-- (void)drawRect:(NSRect)dirtyRect
+-(void) drawRect : (NSRect) dirtyRect
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRView: drawing");
 
@@ -104,8 +106,8 @@
 
         CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
         //invert the coordinate system
-        CGContextTranslateCTM (ctxt, 0.0, (int)bounds.size.height);
-        CGContextScaleCTM (ctxt, 1.0, -1.0);
+        CGContextTranslateCTM(ctxt, 0.0, (int) bounds.size.height);
+        CGContextScaleCTM(ctxt, 1.0, -1.0);
 
         cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, dirtyRect.size.width, dirtyRect.size.height);
         cairo_t * tempcairo = cairo_create(targetSurface);
@@ -118,47 +120,49 @@
     else
     {
         // Fill with light gray
-        NSColor *lightGrayColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1];
+        NSColor *lightGrayColor = [NSColor colorWithCalibratedWhite : 0.8 alpha : 1];
         [lightGrayColor set];
         NSRectFill(bounds);
 
         // Display an indicator that no file is currently loaded
-        NSFont *errorFont = [NSFont fontWithName:@"Helvetica" size:200];
+        NSFont *errorFont = [NSFont fontWithName : @"Helvetica" size : 200];
         NSShadow *shadow = [[NSShadow alloc] init];
-        [shadow setShadowColor:[NSColor darkGrayColor]];
-        [shadow setShadowBlurRadius:5];
-        NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    errorFont, NSFontAttributeName,
-                                    lightGrayColor, NSForegroundColorAttributeName,
-                                    shadow, NSShadowAttributeName,
-                                    nil];
+        [shadow setShadowColor : [NSColor darkGrayColor]];
+        [shadow setShadowBlurRadius : 5];
+        NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys :
+                errorFont, NSFontAttributeName,
+                lightGrayColor, NSForegroundColorAttributeName,
+                shadow, NSShadowAttributeName,
+                nil];
         NSString *message = @"?";
-        NSSize size = [message sizeWithAttributes:attributes];
+        NSSize size = [message sizeWithAttributes : attributes];
         NSRect stringBounds = NSMakeRect((bounds.size.width - size.width) / 2, (bounds.size.height - size.height) / 2, size.width, size.height);
 
-        [message drawInRect:stringBounds withAttributes:attributes];
+        [message drawInRect : stringBounds withAttributes : attributes];
     }
 }
 
-- (BOOL)acceptsFirstResponder
+-(BOOL) acceptsFirstResponder
 {
     return YES;
 }
 
-- (void)viewDidMoveToWindow
+-(void) viewDidMoveToWindow
 {
-    if([self window] != nil){
-        [[self window] setAcceptsMouseMovedEvents: TRUE];
+    if ([self window] != nil)
+    {
+        [[self window] setAcceptsMouseMovedEvents : TRUE];
     }
 }
 
-- (void)mouseDown:(NSEvent *)theEvent
+-(void) mouseDown : (NSEvent *) theEvent
 {
     axr_log(AXR_DEBUG_CH_EVENTS | AXR_DEBUG_CH_EVENTS_SPECIFIC, "AXRView: mouse down");
     AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
-    if(root){
+    if (root)
+    {
         AXR::HSSPoint thePoint;
-        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint sysPoint = [self convertPoint : [theEvent locationInWindow] fromView : nil];
         NSRect bounds = [self bounds];
         thePoint.x = sysPoint.x;
         thePoint.y = bounds.size.height - sysPoint.y;
@@ -166,13 +170,14 @@
     }
 }
 
-- (void)mouseUp:(NSEvent *)theEvent
+-(void) mouseUp : (NSEvent *) theEvent
 {
     axr_log(AXR_DEBUG_CH_EVENTS | AXR_DEBUG_CH_EVENTS_SPECIFIC, "AXRView: mouse up");
     AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
-    if(root){
+    if (root)
+    {
         AXR::HSSPoint thePoint;
-        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint sysPoint = [self convertPoint : [theEvent locationInWindow] fromView : nil];
         NSRect bounds = [self bounds];
         thePoint.x = sysPoint.x;
         thePoint.y = bounds.size.height - sysPoint.y;
@@ -181,13 +186,14 @@
     }
 }
 
-- (void)mouseMoved:(NSEvent *)theEvent
+-(void) mouseMoved : (NSEvent *) theEvent
 {
     axr_log_inline(AXR_DEBUG_CH_EVENTS_SPECIFIC, ".");
     AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
-    if(root){
+    if (root)
+    {
         AXR::HSSPoint thePoint;
-        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint sysPoint = [self convertPoint : [theEvent locationInWindow] fromView : nil];
         NSRect bounds = [self bounds];
         thePoint.x = sysPoint.x;
         thePoint.y = bounds.size.height - sysPoint.y;
@@ -195,54 +201,59 @@
     }
 }
 
-- (void)setAxrWrapper:(void *)theWrapper
+-(void) setAxrWrapper : (void *) theWrapper
 {
     axrWrapper = theWrapper;
 }
 
-- (void *)axrWrapper
+-(void *) axrWrapper
 {
     return axrWrapper;
 }
 
-- (bool)loadFile
+-(bool)loadFile
 {
     AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
     bool loaded = false;
-    if(wrapper!=NULL){
+    if (wrapper != NULL)
+    {
         loaded = wrapper->loadFile();
     }
-    if(loaded){
-        [self setNeedsDisplay:YES];
-        [self setNeedsFile:NO];
+    if (loaded)
+    {
+        [self setNeedsDisplay : YES];
+        [self setNeedsFile : NO];
     }
 
     return loaded;
 }
 
-- (bool)loadFile:(NSString *)filePath
+-(bool)loadFile : (NSString *) filePath
 {
     AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
     bool loaded = false;
-    if(wrapper!=NULL){
+    if (wrapper != NULL)
+    {
         loaded = wrapper->loadFileByPath(std::string([filePath UTF8String]));
     }
-    if(loaded){
-        [self setNeedsDisplay:YES];
-        [self setNeedsFile:NO];
-        [self setAxrWrapper:wrapper];
+    if (loaded)
+    {
+        [self setNeedsDisplay : YES];
+        [self setNeedsFile : NO];
+        [self setAxrWrapper : wrapper];
     }
 
     return loaded;
 }
 
-- (bool)reload
+-(bool)reload
 {
     AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
-    if(wrapper->hasLoadedFile()){
+    if (wrapper->hasLoadedFile())
+    {
         axr_log(AXR_DEBUG_CH_OVERVIEW, "\n\n\nAXRView: reloading file");
         bool loaded = wrapper->reload();
-        [self setNeedsDisplay:YES];
+        [self setNeedsDisplay : YES];
         return loaded;
     }
 

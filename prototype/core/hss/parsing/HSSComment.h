@@ -45,12 +45,15 @@
 #include <boost/shared_ptr.hpp>
 #include "HSSStatement.h"
 
-namespace AXR {
+namespace AXR
+{
+
     /**
      *  @brief Comments are statements that have no effect on the rendering of the page
      *  but are meant to be read along with the source code.
      */
-    class HSSComment : public HSSStatement {
+    class HSSComment : public HSSStatement
+    {
         std::string value;
 
     public:

@@ -49,8 +49,9 @@ HSSKeywordConstant::HSSKeywordConstant(std::string value)
     this->value = value;
 }
 
-HSSKeywordConstant::p HSSKeywordConstant::clone() const{
-    return boost::static_pointer_cast<HSSKeywordConstant, HSSClonable>(this->cloneImpl());
+HSSKeywordConstant::p HSSKeywordConstant::clone() const
+{
+    return boost::static_pointer_cast<HSSKeywordConstant, HSSClonable > (this->cloneImpl());
 }
 
 HSSKeywordConstant::~HSSKeywordConstant()
@@ -70,9 +71,10 @@ std::string HSSKeywordConstant::getValue()
 
 std::string HSSKeywordConstant::toString()
 {
-    return "HSSKeywordConstant with value "+this->value;
+    return "HSSKeywordConstant with value " + this->value;
 }
 
-HSSClonable::p HSSKeywordConstant::cloneImpl() const{
+HSSClonable::p HSSKeywordConstant::cloneImpl() const
+{
     return HSSClonable::p(new HSSKeywordConstant(*this));
 }

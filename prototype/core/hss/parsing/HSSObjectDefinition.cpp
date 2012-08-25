@@ -57,19 +57,22 @@ HSSObjectDefinition::HSSObjectDefinition(const HSSObjectDefinition & orig)
 {
     this->prototype = orig.prototype->clone();
     std::deque<HSSPropertyDefinition::p>::const_iterator p_it;
-    for (p_it=orig.properties.begin(); p_it!=orig.properties.end(); p_it++) {
+    for (p_it = orig.properties.begin(); p_it != orig.properties.end(); p_it++)
+    {
         this->properties.push_back((*p_it)->clone());
     }
     std::vector<HSSObjectDefinition::p>::const_iterator c_it;
-    for (c_it=orig.children.begin(); c_it!=orig.children.end(); c_it++) {
+    for (c_it = orig.children.begin(); c_it != orig.children.end(); c_it++)
+    {
         this->children.push_back((*c_it)->clone());
     }
     //shallow copy
     this->scope = NULL;
 }
 
-HSSObjectDefinition::p HSSObjectDefinition::clone() const{
-    return boost::static_pointer_cast<HSSObjectDefinition, HSSClonable>(this->cloneImpl());
+HSSObjectDefinition::p HSSObjectDefinition::clone() const
+{
+    return boost::static_pointer_cast<HSSObjectDefinition, HSSClonable > (this->cloneImpl());
 }
 
 HSSObjectDefinition::~HSSObjectDefinition()
@@ -83,11 +86,13 @@ std::string HSSObjectDefinition::toString()
     tempstr.append(this->prototype->toString());
 
     const int pccount = this->propertiesSize();
-    if(pccount > 0){
+    if (pccount > 0)
+    {
         tempstr.append(" and the following properties: \n");
 
         unsigned j;
-        for (j=0; j<pccount; j++) {
+        for (j = 0; j < pccount; j++)
+        {
             tempstr.append(this->properties[j]->toString().append("\n"));
         }
     }
@@ -97,8 +102,9 @@ std::string HSSObjectDefinition::toString()
 
 void HSSObjectDefinition::apply()
 {
-    unsigned i,size;
-    for (i=0, size=this->propertiesSize(); i<size; i++) {
+    unsigned i, size;
+    for (i = 0, size = this->propertiesSize(); i < size; i++)
+    {
         HSSPropertyDefinition::p theProperty = this->properties[i];
         this->prototype->setPropertyWithName(theProperty->getName(), theProperty->getValue());
     }
@@ -106,7 +112,7 @@ void HSSObjectDefinition::apply()
 
 void HSSObjectDefinition::propertiesAdd(HSSPropertyDefinition::p &newProperty)
 {
-    if(newProperty)
+    if (newProperty)
     {
         std_log3("HSSObjectDefinition: Added node of type " + newProperty->toString());
         newProperty->setParentNode(this->shared_from_this());
@@ -116,7 +122,7 @@ void HSSObjectDefinition::propertiesAdd(HSSPropertyDefinition::p &newProperty)
 
 void HSSObjectDefinition::propertiesAdd(const HSSPropertyDefinition::p &newProperty)
 {
-    if(newProperty)
+    if (newProperty)
     {
         std_log3("HSSObjectDefinition: Added node of type " + newProperty->toString());
         newProperty->setParentNode(this->shared_from_this());
@@ -127,7 +133,7 @@ void HSSObjectDefinition::propertiesAdd(const HSSPropertyDefinition::p &newPrope
 
 void HSSObjectDefinition::propertiesPrepend(HSSPropertyDefinition::p &newProperty)
 {
-    if(newProperty)
+    if (newProperty)
     {
         std_log3("HSSObjectDefinition: Prepended node of type " + newProperty->toString());
         newProperty->setParentNode(this->shared_from_this());
@@ -137,7 +143,7 @@ void HSSObjectDefinition::propertiesPrepend(HSSPropertyDefinition::p &newPropert
 
 void HSSObjectDefinition::propertiesPrepend(const HSSPropertyDefinition::p &newProperty)
 {
-    if(newProperty)
+    if (newProperty)
     {
         std_log3("HSSObjectDefinition: Prepended node of type " + newProperty->toString());
         newProperty->setParentNode(this->shared_from_this());
@@ -167,7 +173,7 @@ std::deque<HSSPropertyDefinition::p> HSSObjectDefinition::getProperties()
 
 void HSSObjectDefinition::childrenAdd(HSSObjectDefinition::p &child)
 {
-    if(child)
+    if (child)
     {
         this->children.push_back(child);
         child->setParentNode(this->shared_from_this());
@@ -176,7 +182,7 @@ void HSSObjectDefinition::childrenAdd(HSSObjectDefinition::p &child)
 
 void HSSObjectDefinition::childrenAdd(const HSSObjectDefinition::p &child)
 {
-    if(child)
+    if (child)
     {
         this->children.push_back(child);
         child->setParentNode(this->shared_from_this());
@@ -229,9 +235,8 @@ HSSDisplayObject::p HSSObjectDefinition::getThisObj()
 
 HSSObjectDefinition::p HSSObjectDefinition::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSObjectDefinition>(HSSStatement::shared_from_this());
+    return boost::static_pointer_cast<HSSObjectDefinition > (HSSStatement::shared_from_this());
 }
-
 
 void HSSObjectDefinition::setRules(std::deque<HSSRule::p> newRules)
 {
@@ -256,11 +261,13 @@ void HSSObjectDefinition::rulesPrepend(HSSRule::p rule)
 void HSSObjectDefinition::rulesRemove(HSSRule::p rule)
 {
     std::deque<HSSRule::p>::iterator it = find(this->_rules.begin(), this->_rules.end(), rule);
-    if(it != this->_rules.end()){
+    if (it != this->_rules.end())
+    {
         this->_rules.erase(it);
     }
 }
 
-HSSClonable::p HSSObjectDefinition::cloneImpl() const{
+HSSClonable::p HSSObjectDefinition::cloneImpl() const
+{
     return HSSClonable::p(new HSSObjectDefinition(*this));
 }

@@ -71,7 +71,7 @@ HSSPropertyDefinition::HSSPropertyDefinition(const HSSPropertyDefinition &orig)
 
 HSSPropertyDefinition::p HSSPropertyDefinition::clone() const
 {
-    return boost::static_pointer_cast<HSSPropertyDefinition, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSPropertyDefinition, HSSClonable > (this->cloneImpl());
 }
 
 HSSPropertyDefinition::~HSSPropertyDefinition()
@@ -82,8 +82,9 @@ HSSPropertyDefinition::~HSSPropertyDefinition()
 std::string HSSPropertyDefinition::toString()
 {
     std::string ret = "HSSPropertyDefinition: " + this->name;
-    if(this->value != NULL){
-        ret.append(" with value: "+this->value->toString());
+    if (this->value != NULL)
+    {
+        ret.append(" with value: " + this->value->toString());
     }
     return ret;
 }
@@ -98,19 +99,24 @@ std::string HSSPropertyDefinition::getName()
     return this->name;
 }
 
-void HSSPropertyDefinition::setValue(HSSParserNode::p value){
+void HSSPropertyDefinition::setValue(HSSParserNode::p value)
+{
     this->value = value;
     this->value->setParentNode(this->shared_from_this());
 }
 
 void HSSPropertyDefinition::addValue(HSSParserNode::p value)
 {
-    if (this->value){
-        if(this->value->isA(HSSParserNodeTypeMultipleValueDefinition)) {
-            HSSMultipleValueDefinition::p mvDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(this->value);
+    if (this->value)
+    {
+        if (this->value->isA(HSSParserNodeTypeMultipleValueDefinition))
+        {
+            HSSMultipleValueDefinition::p mvDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (this->value);
             value->setParentNode(this->shared_from_this());
             mvDef->add(value);
-        } else {
+        }
+        else
+        {
             HSSMultipleValueDefinition::p mvDef = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition());
             mvDef->setParentNode(this->shared_from_this());
             mvDef->add(this->value);
@@ -118,7 +124,9 @@ void HSSPropertyDefinition::addValue(HSSParserNode::p value)
             mvDef->add(value);
             this->value = mvDef;
         }
-    } else {
+    }
+    else
+    {
         this->value = value;
     }
 }
@@ -136,7 +144,7 @@ void HSSPropertyDefinition::setThisObj(boost::shared_ptr<HSSDisplayObject> value
 
 HSSPropertyDefinition::p HSSPropertyDefinition::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSPropertyDefinition>(HSSStatement::shared_from_this());
+    return boost::static_pointer_cast<HSSPropertyDefinition > (HSSStatement::shared_from_this());
 }
 
 HSSClonable::p HSSPropertyDefinition::cloneImpl() const

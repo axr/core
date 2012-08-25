@@ -49,17 +49,17 @@
 using namespace AXR;
 
 HSSBorder::HSSBorder()
-:HSSObject(HSSObjectTypeBorder)
+: HSSObject(HSSObjectTypeBorder)
 {
     this->observedSize = NULL;
-    this->registerProperty(HSSObservablePropertySize, (void *) &this->size);
+    this->registerProperty(HSSObservablePropertySize, (void *) & this->size);
 }
 
 HSSBorder::HSSBorder(const HSSBorder & orig)
 : HSSObject(orig)
 {
     this->observedSize = NULL;
-    this->registerProperty(HSSObservablePropertySize, (void *) &this->size);
+    this->registerProperty(HSSObservablePropertySize, (void *) & this->size);
 }
 
 HSSBorder::~HSSBorder()
@@ -69,9 +69,12 @@ HSSBorder::~HSSBorder()
 
 std::string HSSBorder::toString()
 {
-    if (this->isNamed()) {
+    if (this->isNamed())
+    {
         return std::string("HSSBorder: ").append(this->name);
-    } else {
+    }
+    else
+    {
         return "Annonymous HSSBorder";
     }
 }
@@ -83,17 +86,22 @@ std::string HSSBorder::defaultObjectType()
 
 std::string HSSBorder::defaultObjectType(std::string property)
 {
-    if (property == "effects"){
+    if (property == "effects")
+    {
         return "shadow";
-    } else {
+    }
+    else
+    {
         return HSSObject::defaultObjectType(property);
     }
 }
 
 bool HSSBorder::isKeyword(std::string value, std::string property)
 {
-    if (value == "inside" || value == "centered" || value == "outside"){
-        if (property == "position") {
+    if (value == "inside" || value == "centered" || value == "outside")
+    {
+        if (property == "position")
+        {
             return true;
         }
     }
@@ -104,13 +112,14 @@ bool HSSBorder::isKeyword(std::string value, std::string property)
 
 void HSSBorder::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    switch (name) {
-        case HSSObservablePropertySize:
-            this->setDSize(value);
-            break;
-        default:
-            HSSObject::setProperty(name, value);
-            break;
+    switch (name)
+    {
+    case HSSObservablePropertySize:
+        this->setDSize(value);
+        break;
+    default:
+        HSSObject::setProperty(name, value);
+        break;
     }
 }
 
@@ -119,64 +128,73 @@ HSSUnit HSSBorder::getSize()
     return this->size;
 }
 
-void HSSBorder::setDSize(HSSParserNode::p value){
-    switch (value->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypePercentageConstant:
-        case HSSParserNodeTypeExpression:
-            this->dSize = value;
-            this->size = this->_setLDProperty(
-                                              &HSSBorder::sizeChanged,
-                                              value,
-                                              18.,
-                                              HSSObservablePropertySize,
-                                              this->observedSize,
-                                              this->observedSizeProperty
-                                              );
+void HSSBorder::setDSize(HSSParserNode::p value)
+{
+    switch (value->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypePercentageConstant:
+    case HSSParserNodeTypeExpression:
+        this->dSize = value;
+        this->size = this->_setLDProperty(
+                                          &HSSBorder::sizeChanged,
+                                          value,
+                                          18.,
+                                          HSSObservablePropertySize,
+                                          this->observedSize,
+                                          this->observedSizeProperty
+                                          );
 
-            break;
+        break;
 
-        case HSSParserNodeTypeFunctionCall:
+    case HSSParserNodeTypeFunctionCall:
+    {
+        this->dSize = value;
+        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
-            this->dSize = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
-            if(fnct && fnct->isA(HSSFunctionTypeRef)){
-                fnct->setScope(this->scope);
-                fnct->setThisObj(this->getThisObj());
-                boost::any remoteValue = fnct->evaluate();
-                try {
-                    this->size = boost::any_cast<HSSUnit>(remoteValue);
-                } catch (...) {
-                    this->size = 1.;
-                }
-                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertySize, this, new HSSValueChangedCallback<HSSBorder>(this, &HSSBorder::sizeChanged));
-
-
-            } else {
-                throw AXRWarning::p(new AXRWarning("HSSDBorder", "Invalid function type size of "+this->name));
+            fnct->setScope(this->scope);
+            fnct->setThisObj(this->getThisObj());
+            boost::any remoteValue = fnct->evaluate();
+            try
+            {
+                this->size = boost::any_cast<HSSUnit > (remoteValue);
             }
+            catch (...)
+            {
+                this->size = 1.;
+            }
+            fnct->observe(HSSObservablePropertyValue, HSSObservablePropertySize, this, new HSSValueChangedCallback<HSSBorder > (this, &HSSBorder::sizeChanged));
 
-            break;
+
+        }
+        else
+        {
+            throw AXRWarning::p(new AXRWarning("HSSDBorder", "Invalid function type size of " + this->name));
         }
 
-        default:
-            throw AXRWarning::p(new AXRWarning("HSSBorder", "Invalid value for size of "+this->name));
+        break;
+    }
+
+    default:
+        throw AXRWarning::p(new AXRWarning("HSSBorder", "Invalid value for size of " + this->name));
     }
     this->notifyObservers(HSSObservablePropertySize, &this->size);
 }
 
 void HSSBorder::sizeChanged(AXR::HSSObservableProperty source, void *data)
 {
-    switch (this->dSize->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypePercentageConstant:
-        case HSSParserNodeTypeExpression:
-        case HSSParserNodeTypeFunctionCall:
-            this->size = *(HSSUnit*)data;
-            break;
+    switch (this->dSize->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypePercentageConstant:
+    case HSSParserNodeTypeExpression:
+    case HSSParserNodeTypeFunctionCall:
+        this->size = *(HSSUnit*) data;
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 
     this->notifyObservers(HSSObservablePropertySize, data);
@@ -184,53 +202,55 @@ void HSSBorder::sizeChanged(AXR::HSSObservableProperty source, void *data)
 }
 
 long double HSSBorder::_setLDProperty(
-                                          void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
-                                          HSSParserNode::p         value,
-                                          long double              percentageBase,
-                                          HSSObservableProperty    observedSourceProperty,
-                                          HSSObservable *          &observedStore,
-                                          HSSObservableProperty    &observedStoreProperty
-                                          )
+                                      void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
+                                      HSSParserNode::p value,
+                                      long double percentageBase,
+                                      HSSObservableProperty observedSourceProperty,
+                                      HSSObservable * &observedStore,
+                                      HSSObservableProperty &observedStoreProperty
+                                      )
 {
     long double ret;
 
     HSSParserNodeType nodeType = value->getType();
-    switch (nodeType) {
-        case HSSParserNodeTypeNumberConstant:
+    switch (nodeType)
+    {
+    case HSSParserNodeTypeNumberConstant:
+    {
+        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        ret = numberValue->getValue();
+        break;
+    }
+
+    case HSSParserNodeTypePercentageConstant:
+    {
+        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        ret = percentageValue->getValue(percentageBase);
+        break;
+    }
+
+    case HSSParserNodeTypeExpression:
+    {
+        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        expressionValue->setPercentageBase(percentageBase);
+        expressionValue->setScope(this->scope);
+        expressionValue->setThisObj(this->getThisObj());
+        ret = expressionValue->evaluate();
+        if (callback != NULL)
         {
-            HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant>(value);
-            ret = numberValue->getValue();
-            break;
+            expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSBorder > (this, callback));
         }
 
-        case HSSParserNodeTypePercentageConstant:
-        {
-            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
-            ret = percentageValue->getValue(percentageBase);
-            break;
-        }
+        break;
+    }
 
-        case HSSParserNodeTypeExpression:
-        {
-            HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
-            expressionValue->setPercentageBase(percentageBase);
-            expressionValue->setScope(this->scope);
-            expressionValue->setThisObj(this->getThisObj());
-            ret = expressionValue->evaluate();
-            if(callback != NULL){
-                expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSBorder>(this, callback));
-            }
+    case HSSParserNodeTypeKeywordConstant:
 
-            break;
-        }
+        break;
 
-        case HSSParserNodeTypeKeywordConstant:
-
-            break;
-
-        default:
-            AXRWarning::p(new AXRWarning("HSSLineBorder", "Unknown parser node type while setting value for HSSLineBorder property"))->raise();
-            break;
+    default:
+        AXRWarning::p(new AXRWarning("HSSLineBorder", "Unknown parser node type while setting value for HSSLineBorder property"))->raise();
+        break;
     }
 
     return ret;

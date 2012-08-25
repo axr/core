@@ -51,7 +51,8 @@
 #include "HSSObservable.h"
 #include "HSSTypeEnums.h"
 
-namespace AXR {
+namespace AXR
+{
 
     class HSSDisplayObject;
 

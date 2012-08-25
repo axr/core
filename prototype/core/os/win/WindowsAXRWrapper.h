@@ -47,6 +47,7 @@
 
 namespace AXR
 {
+
     class WindowsAXRWrapper : public AXRWrapper
     {
     public:

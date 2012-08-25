@@ -42,7 +42,9 @@
 #ifndef HSSOBSERVABLEPROPERTIES_H
 #define HSSOBSERVABLEPROPERTIES_H
 
-namespace AXR {
+namespace AXR
+{
+
     enum HSSObservableProperty
     {
         //HSSObject

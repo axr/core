@@ -49,7 +49,9 @@
 #include "HSSShape.h"
 #include "HSSTextBlock.h"
 
-namespace AXR {
+namespace AXR
+{
+
     enum HSSDirectionValue
     {
         HSSDirectionLeftToRight,
@@ -443,34 +445,34 @@ namespace AXR {
     private:
         long double _setLDProperty(
                                    void(HSSContainer::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p         value,
-                                   long double              percentageBase,
-                                   HSSObservableProperty    observedProperty,
-                                   HSSObservable *          observedObject,
-                                   HSSObservableProperty    observedSourceProperty,
-                                   HSSObservable *          &observedStore,
-                                   HSSObservableProperty    &observedStoreProperty,
+                                   HSSParserNode::p value,
+                                   long double percentageBase,
+                                   HSSObservableProperty observedProperty,
+                                   HSSObservable * observedObject,
+                                   HSSObservableProperty observedSourceProperty,
+                                   HSSObservable * &observedStore,
+                                   HSSObservableProperty &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
 
         void _recursiveCreateSecondaryGroups(
-            std::vector<HSSDisplayObject::p>::iterator  lineAIt,
-            std::vector<HSSDisplayObject::p>::iterator  lineAStopIt,
-            std::vector<HSSDisplayObject::p>::iterator  lineBIt,
-            std::vector<HSSDisplayObject::p>::iterator  lineBStopIt,
-            displayGroup::p &targetA, displayGroup::p   &targetB,
-            displayGroup::p                             &newGroup,
-            std::vector<displayGroup::p>::iterator      pglIt,
-            std::vector<displayGroup::p>::iterator      pglStopIt,
-            bool                                        addToSecondaryGroups,
-            std::vector<displayGroup::p>                &secondaryGroups,
-            bool                                        needsShoveling,
-            bool                                        onlyAddToBIfNotInGroupYet
-        );
+                                             std::vector<HSSDisplayObject::p>::iterator lineAIt,
+                                             std::vector<HSSDisplayObject::p>::iterator lineAStopIt,
+                                             std::vector<HSSDisplayObject::p>::iterator lineBIt,
+                                             std::vector<HSSDisplayObject::p>::iterator lineBStopIt,
+                                             displayGroup::p &targetA, displayGroup::p &targetB,
+                                             displayGroup::p &newGroup,
+                                             std::vector<displayGroup::p>::iterator pglIt,
+                                             std::vector<displayGroup::p>::iterator pglStopIt,
+                                             bool addToSecondaryGroups,
+                                             std::vector<displayGroup::p> &secondaryGroups,
+                                             bool needsShoveling,
+                                             bool onlyAddToBIfNotInGroupYet
+                                             );
 
         void _qs_swap(std::vector<displayGroup::p> &arr, int a, int b);
         int _qs_partition(std::vector<displayGroup::p> &arr, int left, int right, int pivotIndex);
-        void _qs_sort(std::vector<displayGroup::p> &arr, int left , int right);
+        void _qs_sort(std::vector<displayGroup::p> &arr, int left, int right);
 
         bool _overlaps(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
         bool _overlaps_horizontal(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);

@@ -44,7 +44,7 @@
 using namespace AXR;
 
 HSSSum::HSSSum(HSSParserNode::p _left, HSSParserNode::p _right)
-:HSSExpression(HSSExpressionTypeSum, _left, _right)
+: HSSExpression(HSSExpressionTypeSum, _left, _right)
 {
 
 }
@@ -55,8 +55,9 @@ HSSSum::HSSSum(const HSSSum &orig)
 
 }
 
-HSSSum::p HSSSum::clone() const{
-    return boost::static_pointer_cast<HSSSum, HSSClonable>(this->cloneImpl());
+HSSSum::p HSSSum::clone() const
+{
+    return boost::static_pointer_cast<HSSSum, HSSClonable > (this->cloneImpl());
 }
 
 HSSSum::~HSSSum()
@@ -69,6 +70,7 @@ long double HSSSum::calculate(long double leftval, long double rightval)
     return leftval + rightval;
 }
 
-HSSClonable::p HSSSum::cloneImpl() const{
+HSSClonable::p HSSSum::cloneImpl() const
+{
     return HSSClonable::p(new HSSSum(*this));
 }

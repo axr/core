@@ -122,19 +122,20 @@ void std_log4(std::string message);
  */
 
 unsigned int extern axr_debug_active_channels;
+
 enum axr_debug_ch
 {
-    AXR_DEBUG_CH_ON  = 1, //A
+    AXR_DEBUG_CH_ON = 1, //A
     AXR_DEBUG_CH_OVERVIEW = 1 << 1, //B
     AXR_DEBUG_CH_GENERAL = 1 << 2, //C
     AXR_DEBUG_CH_GENERAL_SPECIFIC = 1 << 3, //D
-     //E
-     //F
-    AXR_DEBUG_CH_XML  = 1 << 6, //G
-     //H
-     //I
-     //J
-    AXR_DEBUG_CH_HSS  = 1 << 10, //K
+    //E
+    //F
+    AXR_DEBUG_CH_XML = 1 << 6, //G
+    //H
+    //I
+    //J
+    AXR_DEBUG_CH_HSS = 1 << 10, //K
 
     AXR_DEBUG_CH_OBSERVING = 1 << 12, //M
     AXR_DEBUG_CH_EVENTS = 1 << 13, //N

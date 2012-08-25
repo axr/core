@@ -44,7 +44,8 @@
 
 #include "HSSParserNode.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Parser node representing the negator "!".

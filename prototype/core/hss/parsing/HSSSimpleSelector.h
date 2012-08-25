@@ -50,12 +50,14 @@
 #include "HSSNameSelector.h"
 #include "HSSSelector.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Simple selectors are basic units of a selector chain.
      */
-    class HSSSimpleSelector : public HSSSelector {
+    class HSSSimpleSelector : public HSSSelector
+    {
     public:
         typedef boost::shared_ptr<HSSSimpleSelector> p;
 

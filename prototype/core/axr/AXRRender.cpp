@@ -65,7 +65,8 @@ AXRRender::~AXRRender()
 
 void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
-    if(this->cairo == NULL){
+    if (this->cairo == NULL)
+    {
         AXRError::p(new AXRError("AXRRender", "Fatal error: Cairo was not defined"))->raise();
         exit(0);
     }
@@ -74,12 +75,14 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
     HSSContainer::p root = this->controller->getRoot();
     AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
 
-    if(root){
+    if (root)
+    {
         ///@todo find out what objects lie in that rect
 
         //if the window size has changed, make new size
-        if(bounds.size.width != this->windowWidth || bounds.size.height != this->windowHeight){
-            axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: window size changed, setting to width: "+boost::lexical_cast<std::string>(bounds.size.width)+" and height: "+boost::lexical_cast<std::string>(bounds.size.height));
+        if (bounds.size.width != this->windowWidth || bounds.size.height != this->windowHeight)
+        {
+            axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: window size changed, setting to width: " + boost::lexical_cast<std::string > (bounds.size.width) + " and height: " + boost::lexical_cast<std::string > (bounds.size.height));
             this->windowWidth = bounds.size.width;
             this->windowHeight = bounds.size.height;
             root->setNeedsRereadRules(true);
@@ -89,7 +92,8 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
         root->recursiveReadDefinitionObjects();
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: laying out elements on page");
         root->recursiveLayout();
-        if(wrapper->showLayoutSteps()){
+        if (wrapper->showLayoutSteps())
+        {
             wrapper->resetLayoutTicks();
         }
 
@@ -98,55 +102,76 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
         axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: drawing tree");
         wrapper->nextLayoutChild();
         root->recursiveDraw(this->cairo);
-        if(wrapper->showLayoutSteps()){
+        if (wrapper->showLayoutSteps())
+        {
             wrapper->resetLayoutTicks();
             wrapper->resetLayoutChild();
         }
-    } else {
+    }
+    else
+    {
         AXRError::p(new AXRError("AXRRender", "Fatal error: No root"))->raise();
     }
 }
 
 //this will maintain the reference to controller
+
 void AXRRender::reset()
 {
     this->windowWidth = 0;
     this->windowHeight = 0;
 }
 
-
 void AXRRender::mouseDown(HSSUnit x, HSSUnit y)
 {
     //prepare values
     HSSContainer::p root = this->controller->getRoot();
-    struct point { HSSUnit x; HSSUnit y; } thePoint;
+
+    struct point
+    {
+        HSSUnit x;
+        HSSUnit y;
+    } thePoint;
     thePoint.x = x;
     thePoint.y = y;
-    if(root)
-        root->handleEvent(HSSEventTypeMouseDown, (void*)&thePoint);
+    if (root)
+        root->handleEvent(HSSEventTypeMouseDown, (void*) &thePoint);
 }
 
 void AXRRender::mouseUp(HSSUnit x, HSSUnit y)
 {
     //prepare values
     HSSContainer::p root = this->controller->getRoot();
-    struct point { HSSUnit x; HSSUnit y; } thePoint;
+
+    struct point
+    {
+        HSSUnit x;
+        HSSUnit y;
+    } thePoint;
     thePoint.x = x;
     thePoint.y = y;
-    if(root){
-        try {
-            root->handleEvent(HSSEventTypeMouseUp, (void*)&thePoint);
-        } catch (AXRError::p e) {
+    if (root)
+    {
+        try
+        {
+            root->handleEvent(HSSEventTypeMouseUp, (void*) &thePoint);
+        }
+        catch (AXRError::p e)
+        {
             e->raise();
         }
     }
 }
 
-void AXRRender::setCairo(cairo_t * cairo) {
+void AXRRender::setCairo(cairo_t * cairo)
+{
     this->cairo = cairo;
 }
 
-cairo_t * AXRRender::getCairo() { return this->cairo; }
+cairo_t * AXRRender::getCairo()
+{
+    return this->cairo;
+}
 
 double AXRRender::getWindowWidth()
 {

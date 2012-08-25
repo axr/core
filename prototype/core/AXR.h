@@ -170,6 +170,7 @@
 
 namespace AXR
 {
+
     /**
      *  @brief This is the object that encapsulates the core library.
      *

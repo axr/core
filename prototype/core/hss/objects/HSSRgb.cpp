@@ -49,7 +49,7 @@
 using namespace AXR;
 
 HSSRgb::HSSRgb()
-:HSSObject(HSSObjectTypeRgb)
+: HSSObject(HSSObjectTypeRgb)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: creating rgb object");
 
@@ -84,12 +84,14 @@ HSSRgb::HSSRgb(const HSSRgb & orig)
     this->setShorthandProperties(shorthandProperties);
 }
 
-HSSRgb::p HSSRgb::clone() const{
+HSSRgb::p HSSRgb::clone() const
+{
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: cloning rgb object");
-    return boost::static_pointer_cast<HSSRgb, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSRgb, HSSClonable > (this->cloneImpl());
 }
 
-HSSClonable::p HSSRgb::cloneImpl() const{
+HSSClonable::p HSSRgb::cloneImpl() const
+{
     return HSSClonable::p(new HSSRgb(*this));
 }
 
@@ -100,16 +102,19 @@ HSSRgb::~HSSRgb()
 
 std::string HSSRgb::toString()
 {
-    if (this->isNamed()) {
+    if (this->isNamed())
+    {
         return std::string("HSSRgb: ").append(this->name);
-    } else {
+    }
+    else
+    {
         std::ostringstream rs, gs, bs, as;
         rs << this->red;
         gs << this->green;
         bs << this->blue;
         as << this->alpha;
 
-        return "Annonymous HSSRgb with red: "+rs.str()+" green: "+gs.str()+" blue: "+bs.str()+" alpha: "+as.str();
+        return "Annonymous HSSRgb with red: " + rs.str() + " green: " + gs.str() + " blue: " + bs.str() + " alpha: " + as.str();
     }
 }
 
@@ -120,9 +125,12 @@ std::string HSSRgb::defaultObjectType()
 
 std::string HSSRgb::defaultObjectType(std::string property)
 {
-    if (property == "red" || property == "green" || property == "blue" || property == "alpha" ){
+    if (property == "red" || property == "green" || property == "blue" || property == "alpha")
+    {
         return "value";
-    } else {
+    }
+    else
+    {
         return HSSObject::defaultObjectType(property);
     }
 }
@@ -137,31 +145,36 @@ std::string HSSRgb::defaultObjectType(std::string property)
 //    return HSSObject::isKeyword(value, property);
 //}
 
-
 void HSSRgb::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    switch (name) {
-        case HSSObservablePropertyRed:
-            this->setDRed(value);
-            break;
-        case HSSObservablePropertyGreen:
-            this->setDGreen(value);
-            break;
-        case HSSObservablePropertyBlue:
-            this->setDBlue(value);
-            break;
-        case HSSObservablePropertyAlpha:
-            this->setDAlpha(value);
-            break;
+    switch (name)
+    {
+    case HSSObservablePropertyRed:
+        this->setDRed(value);
+        break;
+    case HSSObservablePropertyGreen:
+        this->setDGreen(value);
+        break;
+    case HSSObservablePropertyBlue:
+        this->setDBlue(value);
+        break;
+    case HSSObservablePropertyAlpha:
+        this->setDAlpha(value);
+        break;
 
-        default:
-            HSSObject::setProperty(name, value);
-            break;
+    default:
+        HSSObject::setProperty(name, value);
+        break;
     }
 }
 
-long double HSSRgb::getRed() { return this->red; }
-void HSSRgb::setDRed(HSSParserNode::p value){
+long double HSSRgb::getRed()
+{
+    return this->red;
+}
+
+void HSSRgb::setDRed(HSSParserNode::p value)
+{
     this->dRed = value;
     this->red = this->_setLDProperty(
                                      &HSSRgb::redChanged,
@@ -178,42 +191,59 @@ void HSSRgb::redChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** redChanged unimplemented ****************************");
 }
 
-long double HSSRgb::getGreen() { return this->green; }
-void HSSRgb::setDGreen(HSSParserNode::p value){
+long double HSSRgb::getGreen()
+{
+    return this->green;
+}
+
+void HSSRgb::setDGreen(HSSParserNode::p value)
+{
     this->dGreen = value;
     this->green = this->_setLDProperty(
-                                     &HSSRgb::greenChanged,
-                                     value,
-                                     255.,
-                                     HSSObservablePropertyGreen,
-                                     this->observedGreen,
-                                     this->observedGreenProperty
-                                     );
+                                       &HSSRgb::greenChanged,
+                                       value,
+                                       255.,
+                                       HSSObservablePropertyGreen,
+                                       this->observedGreen,
+                                       this->observedGreenProperty
+                                       );
 }
+
 void HSSRgb::greenChanged(AXR::HSSObservableProperty source, void *data)
 {
     std_log1("********************** greenChanged unimplemented ****************************");
 }
 
-long double HSSRgb::getBlue() { return this->blue; }
-void HSSRgb::setDBlue(HSSParserNode::p value){
+long double HSSRgb::getBlue()
+{
+    return this->blue;
+}
+
+void HSSRgb::setDBlue(HSSParserNode::p value)
+{
     this->dBlue = value;
     this->blue = this->_setLDProperty(
-                                       &HSSRgb::blueChanged,
-                                       value,
-                                       255.,
-                                       HSSObservablePropertyBlue,
-                                       this->observedBlue,
-                                       this->observedBlueProperty
-                                       );
+                                      &HSSRgb::blueChanged,
+                                      value,
+                                      255.,
+                                      HSSObservablePropertyBlue,
+                                      this->observedBlue,
+                                      this->observedBlueProperty
+                                      );
 }
+
 void HSSRgb::blueChanged(AXR::HSSObservableProperty source, void *data)
 {
     std_log1("********************** blueChanged unimplemented ****************************");
 }
 
-long double HSSRgb::getAlpha() { return this->alpha; }
-void HSSRgb::setDAlpha(HSSParserNode::p value){
+long double HSSRgb::getAlpha()
+{
+    return this->alpha;
+}
+
+void HSSRgb::setDAlpha(HSSParserNode::p value)
+{
     this->dAlpha = value;
     this->alpha = this->_setLDProperty(
                                        &HSSRgb::alphaChanged,
@@ -224,61 +254,64 @@ void HSSRgb::setDAlpha(HSSParserNode::p value){
                                        this->observedAlphaProperty
                                        );
 }
+
 void HSSRgb::alphaChanged(AXR::HSSObservableProperty source, void *data)
 {
     std_log1("********************** alphaChanged unimplemented ****************************");
 }
 
 long double HSSRgb::_setLDProperty(
-                                             void(HSSRgb::*callback)(HSSObservableProperty property, void* data),
-                                             HSSParserNode::p         value,
-                                             long double              percentageBase,
-                                             HSSObservableProperty    observedSourceProperty,
-                                             HSSObservable *          &observedStore,
-                                             HSSObservableProperty    &observedStoreProperty
-                                             )
+                                   void(HSSRgb::*callback)(HSSObservableProperty property, void* data),
+                                   HSSParserNode::p value,
+                                   long double percentageBase,
+                                   HSSObservableProperty observedSourceProperty,
+                                   HSSObservable * &observedStore,
+                                   HSSObservableProperty &observedStoreProperty
+                                   )
 {
     long double ret;
 
     HSSParserNodeType nodeType = value->getType();
-    switch (nodeType) {
-        case HSSParserNodeTypeNumberConstant:
+    switch (nodeType)
+    {
+    case HSSParserNodeTypeNumberConstant:
+    {
+        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        ret = numberValue->getValue();
+        break;
+    }
+
+    case HSSParserNodeTypePercentageConstant:
+    {
+        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        ret = percentageValue->getValue(percentageBase);
+        break;
+    }
+
+    case HSSParserNodeTypeExpression:
+    {
+        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        expressionValue->setPercentageBase(percentageBase);
+        expressionValue->setScope(this->getScope());
+        expressionValue->setThisObj(this->getThisObj());
+        ret = expressionValue->evaluate();
+        if (callback != NULL)
         {
-            HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant>(value);
-            ret = numberValue->getValue();
-            break;
+            expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRgb > (this, callback));
+            observedStore = expressionValue.get();
+            observedStoreProperty = HSSObservablePropertyValue;
         }
 
-        case HSSParserNodeTypePercentageConstant:
-        {
-            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
-            ret = percentageValue->getValue(percentageBase);
-            break;
-        }
+        break;
+    }
 
-        case HSSParserNodeTypeExpression:
-        {
-            HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
-            expressionValue->setPercentageBase(percentageBase);
-            expressionValue->setScope(this->getScope());
-            expressionValue->setThisObj(this->getThisObj());
-            ret = expressionValue->evaluate();
-            if(callback != NULL){
-                expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRgb>(this, callback));
-                observedStore = expressionValue.get();
-                observedStoreProperty = HSSObservablePropertyValue;
-            }
+    case HSSParserNodeTypeKeywordConstant:
 
-            break;
-        }
+        break;
 
-        case HSSParserNodeTypeKeywordConstant:
-
-            break;
-
-        default:
-            throw AXRError::p(new AXRError("HSSRgb", "Unknown parser node type "+HSSParserNode::parserNodeStringRepresentation(nodeType)+" while setting value for HSSRgb property"));
-            break;
+    default:
+        throw AXRError::p(new AXRError("HSSRgb", "Unknown parser node type " + HSSParserNode::parserNodeStringRepresentation(nodeType) + " while setting value for HSSRgb property"));
+        break;
     }
 
     return ret;

@@ -49,8 +49,9 @@ HSSObjectNameConstant::HSSObjectNameConstant(std::string value)
     this->value = value;
 }
 
-HSSObjectNameConstant::p HSSObjectNameConstant::clone() const{
-    return boost::static_pointer_cast<HSSObjectNameConstant, HSSClonable>(this->cloneImpl());
+HSSObjectNameConstant::p HSSObjectNameConstant::clone() const
+{
+    return boost::static_pointer_cast<HSSObjectNameConstant, HSSClonable > (this->cloneImpl());
 }
 
 HSSObjectNameConstant::~HSSObjectNameConstant()
@@ -70,9 +71,10 @@ std::string HSSObjectNameConstant::getValue()
 
 std::string HSSObjectNameConstant::toString()
 {
-    return "HSSObjectNameConstant with value "+this->value;
+    return "HSSObjectNameConstant with value " + this->value;
 }
 
-HSSClonable::p HSSObjectNameConstant::cloneImpl() const{
+HSSClonable::p HSSObjectNameConstant::cloneImpl() const
+{
     return HSSClonable::p(new HSSObjectNameConstant(*this));
 }

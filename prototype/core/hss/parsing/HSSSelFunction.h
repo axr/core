@@ -45,7 +45,8 @@
 #include "AXRGlobal.h"
 #include "HSSFunction.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Implementation of the sel(<selector chain>) function in HSS.
@@ -137,7 +138,7 @@ namespace AXR {
          */
         virtual boost::any _evaluate();
 
-//        void valueChanged(HSSObservableProperty source, void*data);
+        //        void valueChanged(HSSObservableProperty source, void*data);
 
     protected:
         std::vector<HSSSelectorChain::p> selectorChains;

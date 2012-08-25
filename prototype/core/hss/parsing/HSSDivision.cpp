@@ -55,8 +55,9 @@ HSSDivision::HSSDivision(const HSSDivision &orig)
 
 }
 
-HSSDivision::p HSSDivision::clone() const{
-    return boost::static_pointer_cast<HSSDivision, HSSClonable>(this->cloneImpl());
+HSSDivision::p HSSDivision::clone() const
+{
+    return boost::static_pointer_cast<HSSDivision, HSSClonable > (this->cloneImpl());
 }
 
 HSSDivision::~HSSDivision()
@@ -69,6 +70,7 @@ long double HSSDivision::calculate(long double leftval, long double rightval)
     return leftval / rightval;
 }
 
-HSSClonable::p HSSDivision::cloneImpl() const{
+HSSClonable::p HSSDivision::cloneImpl() const
+{
     return HSSClonable::p(new HSSDivision(*this));
 }

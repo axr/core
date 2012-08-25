@@ -55,11 +55,13 @@ HSSSimpleSelector::HSSSimpleSelector(const HSSSimpleSelector &orig)
 
 }
 
-HSSSimpleSelector::p HSSSimpleSelector::clone() const{
-    return boost::static_pointer_cast<HSSSimpleSelector, HSSClonable>(this->cloneImpl());
+HSSSimpleSelector::p HSSSimpleSelector::clone() const
+{
+    return boost::static_pointer_cast<HSSSimpleSelector, HSSClonable > (this->cloneImpl());
 }
 
-std::string HSSSimpleSelector::toString(){
+std::string HSSSimpleSelector::toString()
+{
     return "Simple SimpleSelector";
 }
 
@@ -68,7 +70,8 @@ HSSClonable::p HSSSimpleSelector::cloneImpl() const
     HSSSimpleSelector::p clone = HSSSimpleSelector::p(new HSSSimpleSelector(*this));
     clone->setName(this->name->clone());
     std::list<HSSFilter::p>::const_iterator it;
-    for (it=this->filters.begin(); it!=this->filters.end(); it++) {
+    for (it = this->filters.begin(); it != this->filters.end(); it++)
+    {
         const HSSFilter::p & flt = (*it);
         clone->filtersAdd(flt->clone());
     }
@@ -89,7 +92,8 @@ void HSSSimpleSelector::filtersAdd(HSSFilter::p filter)
 std::vector<HSSDisplayObject::p> HSSSimpleSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     std::vector<HSSDisplayObject::p> selection;
-    if(this->name){
+    if (this->name)
+    {
         selection = this->name->filterSelection(scope, thisObj, processing);
     }
 
@@ -99,9 +103,12 @@ std::vector<HSSDisplayObject::p> HSSSimpleSelector::filterSelection(const std::v
 
 std::vector<HSSDisplayObject::p> HSSSimpleSelector::_recursiveFilterSelection(const std::vector<HSSDisplayObject::p> & selection, std::list<HSSFilter::p>::const_iterator it, std::list<HSSFilter::p>::const_iterator end_it, bool processing)
 {
-    if(it==end_it){
+    if (it == end_it)
+    {
         return selection;
-    } else {
+    }
+    else
+    {
         std::vector<HSSDisplayObject::p> tempSel = (*it)->apply(selection, processing);
         it++;
         return this->_recursiveFilterSelection(tempSel, it, end_it, processing);
@@ -123,7 +130,8 @@ void HSSSimpleSelector::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
 {
     this->name->setThisObj(value);
     std::list<HSSFilter::p>::iterator it;
-    for (it=this->filters.begin(); it!=this->filters.end(); it++) {
+    for (it = this->filters.begin(); it != this->filters.end(); it++)
+    {
         (*it)->setThisObj(value);
     }
     HSSSelector::setThisObj(value);

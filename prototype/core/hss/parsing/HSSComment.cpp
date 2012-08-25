@@ -49,8 +49,9 @@ HSSComment::HSSComment(std::string value)
     this->value = value;
 }
 
-HSSComment::p HSSComment::clone() const{
-    return boost::static_pointer_cast<HSSComment, HSSClonable>(this->cloneImpl());
+HSSComment::p HSSComment::clone() const
+{
+    return boost::static_pointer_cast<HSSComment, HSSClonable > (this->cloneImpl());
 }
 
 std::string HSSComment::getValue()
@@ -65,9 +66,10 @@ void HSSComment::setValue(std::string newValue)
 
 std::string HSSComment::toString()
 {
-    return "HSSComment with value:\n"+this->value;
+    return "HSSComment with value:\n" + this->value;
 }
 
-HSSClonable::p HSSComment::cloneImpl() const{
+HSSClonable::p HSSComment::cloneImpl() const
+{
     return HSSClonable::p(new HSSComment(*this));
 }

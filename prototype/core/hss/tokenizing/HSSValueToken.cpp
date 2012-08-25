@@ -45,19 +45,22 @@
 using namespace AXR;
 
 HSSValueToken::HSSValueToken(HSSTokenType type, std::string value, unsigned line, unsigned column)
-:HSSToken(type, line, column)
+: HSSToken(type, line, column)
 {
 
     this->type = type;
-    if(this->isNumeric()){
+    if (this->isNumeric())
+    {
         this->longValue = strtold(value.c_str(), NULL);
-    } else {
+    }
+    else
+    {
         this->stringValue = value;
     }
 }
 
 HSSValueToken::HSSValueToken(HSSTokenType type, char value, unsigned line, unsigned column)
-:HSSToken(type, line, column)
+: HSSToken(type, line, column)
 {
     //std::string tempstr (1, value);
     this->type = type;
@@ -65,7 +68,7 @@ HSSValueToken::HSSValueToken(HSSTokenType type, char value, unsigned line, unsig
 }
 
 HSSValueToken::HSSValueToken(HSSTokenType type, double long value, unsigned line, unsigned column)
-:HSSToken(type, line, column)
+: HSSToken(type, line, column)
 {
     this->type = type;
     this->longValue = value;
@@ -98,11 +101,14 @@ bool HSSValueToken::equals(HSSTokenType otherType, double long otherValue)
 std::string HSSValueToken::toString()
 {
     std::string tokenstr = this->tokenStringRepresentation(this->type);
-    if(this->isNumeric()){
+    if (this->isNumeric())
+    {
         std::ostringstream tempstream;
         tempstream << this->longValue;
         return "HSSValueToken of type: " + tokenstr + " and value: " + tempstream.str();
-    } else {
+    }
+    else
+    {
         return "HSSValueToken of type: " + tokenstr + " and value: " + this->stringValue;
     }
 

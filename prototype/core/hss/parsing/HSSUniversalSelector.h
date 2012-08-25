@@ -47,15 +47,16 @@
 #include "HSSDisplayObject.h"
 #include "HSSNameSelector.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief This class encapsulates the universal selector "*".
      *
      *  The star symbol "*" is used in selector chains to select the whole scope.
      */
-    class HSSUniversalSelector : public HSSNameSelector {
-
+    class HSSUniversalSelector : public HSSNameSelector
+    {
     public:
         typedef boost::shared_ptr<HSSUniversalSelector> p;
 

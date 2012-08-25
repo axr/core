@@ -50,7 +50,7 @@
 using namespace AXR;
 
 HSSLinearGradient::HSSLinearGradient()
-:HSSGradient()
+: HSSGradient()
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: creating linear gradient object");
     std::vector<std::string> shorthandProperties;
@@ -59,16 +59,16 @@ HSSLinearGradient::HSSLinearGradient()
     shorthandProperties.push_back("endY");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyStartX, (void *) &this->startX);
-    this->registerProperty(HSSObservablePropertyStartY, (void *) &this->startY);
-    this->registerProperty(HSSObservablePropertyEndX, (void *) &this->startY);
-    this->registerProperty(HSSObservablePropertyEndY, (void *) &this->startY);
+    this->registerProperty(HSSObservablePropertyStartX, (void *) & this->startX);
+    this->registerProperty(HSSObservablePropertyStartY, (void *) & this->startY);
+    this->registerProperty(HSSObservablePropertyEndX, (void *) & this->startY);
+    this->registerProperty(HSSObservablePropertyEndY, (void *) & this->startY);
 
     this->startX = this->startY = this->endX = endY = 0.;
 
     this->observedStartX = this->observedStartY
-    = this->observedEndX = this->observedEndY
-    = NULL;
+            = this->observedEndX = this->observedEndY
+            = NULL;
 }
 
 HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
@@ -80,50 +80,59 @@ HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
     shorthandProperties.push_back("endY");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyStartX, (void *) &this->startX);
-    this->registerProperty(HSSObservablePropertyStartY, (void *) &this->startY);
-    this->registerProperty(HSSObservablePropertyEndX, (void *) &this->startY);
-    this->registerProperty(HSSObservablePropertyEndY, (void *) &this->startY);
+    this->registerProperty(HSSObservablePropertyStartX, (void *) & this->startX);
+    this->registerProperty(HSSObservablePropertyStartY, (void *) & this->startY);
+    this->registerProperty(HSSObservablePropertyEndX, (void *) & this->startY);
+    this->registerProperty(HSSObservablePropertyEndY, (void *) & this->startY);
 
     this->startX = this->startY = this->endX = endY = 0.;
 
     this->observedStartX = this->observedStartY
-    = this->observedEndX = this->observedEndY
-    = NULL;
+            = this->observedEndX = this->observedEndY
+            = NULL;
 
 }
 
-HSSLinearGradient::p HSSLinearGradient::clone() const{
+HSSLinearGradient::p HSSLinearGradient::clone() const
+{
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: cloning linear gradient object");
-    return boost::static_pointer_cast<HSSLinearGradient, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSLinearGradient, HSSClonable > (this->cloneImpl());
 }
 
-HSSClonable::p HSSLinearGradient::cloneImpl() const{
+HSSClonable::p HSSLinearGradient::cloneImpl() const
+{
     return HSSClonable::p(new HSSLinearGradient(*this));
 }
 
 HSSLinearGradient::~HSSLinearGradient()
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: destructing linear gradient object");
-    if(this->observedStartX != NULL){
+    if (this->observedStartX != NULL)
+    {
         this->observedStartX->removeObserver(this->observedStartXProperty, HSSObservablePropertyStartX, this);
     }
-    if(this->observedStartY != NULL){
+    if (this->observedStartY != NULL)
+    {
         this->observedStartY->removeObserver(this->observedStartYProperty, HSSObservablePropertyStartY, this);
     }
-    if(this->observedEndX != NULL){
+    if (this->observedEndX != NULL)
+    {
         this->observedEndX->removeObserver(this->observedEndXProperty, HSSObservablePropertyEndX, this);
     }
-    if(this->observedEndY != NULL){
+    if (this->observedEndY != NULL)
+    {
         this->observedEndY->removeObserver(this->observedEndYProperty, HSSObservablePropertyEndY, this);
     }
 }
 
 std::string HSSLinearGradient::toString()
 {
-    if (this->isNamed()) {
+    if (this->isNamed())
+    {
         return std::string("HSSLinearGradient: ").append(this->name);
-    } else {
+    }
+    else
+    {
         return "Annonymous HSSLinearGradient";
     }
 }
@@ -135,21 +144,26 @@ std::string HSSLinearGradient::defaultObjectType()
 
 std::string HSSLinearGradient::defaultObjectType(std::string property)
 {
-//    if (property == "bla"){
-//
-//    } else {
-        return HSSGradient::defaultObjectType(property);
-//    }
+    //    if (property == "bla"){
+    //
+    //    } else {
+    return HSSGradient::defaultObjectType(property);
+    //    }
 }
 
 bool HSSLinearGradient::isKeyword(std::string value, std::string property)
 {
-    if (value == "top" || value == "bottom"){
-        if (property == "startX") {
+    if (value == "top" || value == "bottom")
+    {
+        if (property == "startX")
+        {
             return true;
         }
-    } else if(value == "left" || value == "right"){
-        if (property == "startY") {
+    }
+    else if (value == "left" || value == "right")
+    {
+        if (property == "startY")
+        {
             return true;
         }
     }
@@ -160,264 +174,300 @@ bool HSSLinearGradient::isKeyword(std::string value, std::string property)
 
 void HSSLinearGradient::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    switch (name) {
-        case HSSObservablePropertyStartX:
-            this->setDStartX(value);
-            break;
-        case HSSObservablePropertyStartY:
-            this->setDStartY(value);
-            break;
-        case HSSObservablePropertyEndX:
-            this->setDEndX(value);
-            break;
-        case HSSObservablePropertyEndY:
-            this->setDEndY(value);
-            break;
-        default:
-            HSSGradient::setProperty(name, value);
-            break;
+    switch (name)
+    {
+    case HSSObservablePropertyStartX:
+        this->setDStartX(value);
+        break;
+    case HSSObservablePropertyStartY:
+        this->setDStartY(value);
+        break;
+    case HSSObservablePropertyEndX:
+        this->setDEndX(value);
+        break;
+    case HSSObservablePropertyEndY:
+        this->setDEndY(value);
+        break;
+    default:
+        HSSGradient::setProperty(name, value);
+        break;
     }
 }
 
+long double HSSLinearGradient::getStartX()
+{
+    return this->startX;
+}
 
-long double HSSLinearGradient::getStartX() { return this->startX; }
-HSSParserNode::p HSSLinearGradient::getDStartX() { return this->dStartX; }
+HSSParserNode::p HSSLinearGradient::getDStartX()
+{
+    return this->dStartX;
+}
+
 void HSSLinearGradient::setDStartX(HSSParserNode::p value)
 {
-    switch (value->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypePercentageConstant:
-        case HSSParserNodeTypeExpression:
+    switch (value->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypePercentageConstant:
+    case HSSParserNodeTypeExpression:
+    {
+        this->dStartX = value;
+
+        HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
+        if (this->observedStartX != NULL)
         {
-            this->dStartX = value;
-
-            HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
-            if(this->observedStartX != NULL)
-            {
-                this->observedStartX->removeObserver(this->observedStartXProperty, HSSObservablePropertyStartX, this);
-            }
-
-            this->startX = this->_setLDProperty(
-                                                &HSSLinearGradient::startXChanged,
-                                                value,
-                                                this->getThisObj()->getWidth(),
-                                                observedProperty,
-                                                this->getThisObj().get(),
-                                                HSSObservablePropertyStartX,
-                                                this->observedStartX,
-                                                this->observedStartXProperty
-                                                );
-
-            break;
+            this->observedStartX->removeObserver(this->observedStartXProperty, HSSObservablePropertyStartX, this);
         }
 
-        default:
-            break;
+        this->startX = this->_setLDProperty(
+                                            &HSSLinearGradient::startXChanged,
+                                            value,
+                                            this->getThisObj()->getWidth(),
+                                            observedProperty,
+                                            this->getThisObj().get(),
+                                            HSSObservablePropertyStartX,
+                                            this->observedStartX,
+                                            this->observedStartXProperty
+                                            );
+
+        break;
+    }
+
+    default:
+        break;
     }
 }
 
 void HSSLinearGradient::startXChanged(HSSObservableProperty source, void *data)
 {
-    switch (this->dStartX->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypeExpression:
-        case HSSParserNodeTypeFunctionCall:
-            this->startX = *(long double*)data;
-            break;
+    switch (this->dStartX->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypeExpression:
+    case HSSParserNodeTypeFunctionCall:
+        this->startX = *(long double*) data;
+        break;
 
-        case HSSParserNodeTypePercentageConstant:
-        {
-            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dStartX);
-            this->startX = percentageValue->getValue(*(long double*)data);
-            break;
-        }
+    case HSSParserNodeTypePercentageConstant:
+    {
+        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dStartX);
+        this->startX = percentageValue->getValue(*(long double*) data);
+        break;
+    }
 
-        default:
-            break;
+    default:
+        break;
     }
 
     this->notifyObservers(HSSObservablePropertyStartX, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
+long double HSSLinearGradient::getStartY()
+{
+    return this->startY;
+}
 
-long double HSSLinearGradient::getStartY() { return this->startY; }
-HSSParserNode::p HSSLinearGradient::getDStartY() { return this->dStartY; }
+HSSParserNode::p HSSLinearGradient::getDStartY()
+{
+    return this->dStartY;
+}
+
 void HSSLinearGradient::setDStartY(HSSParserNode::p value)
 {
-    switch (value->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypePercentageConstant:
-        case HSSParserNodeTypeExpression:
+    switch (value->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypePercentageConstant:
+    case HSSParserNodeTypeExpression:
+    {
+        this->dStartY = value;
+
+        HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
+        if (this->observedStartY != NULL)
         {
-            this->dStartY = value;
-
-            HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
-            if(this->observedStartY != NULL)
-            {
-                this->observedStartY->removeObserver(this->observedStartYProperty, HSSObservablePropertyStartY, this);
-            }
-
-            this->startY = this->_setLDProperty(
-                                                &HSSLinearGradient::startYChanged,
-                                                value,
-                                                this->getThisObj()->getHeight(),
-                                                observedProperty,
-                                                this->getThisObj().get(),
-                                                HSSObservablePropertyStartY,
-                                                this->observedStartY,
-                                                this->observedStartYProperty
-                                                );
-
-            break;
+            this->observedStartY->removeObserver(this->observedStartYProperty, HSSObservablePropertyStartY, this);
         }
 
-        default:
-            break;
+        this->startY = this->_setLDProperty(
+                                            &HSSLinearGradient::startYChanged,
+                                            value,
+                                            this->getThisObj()->getHeight(),
+                                            observedProperty,
+                                            this->getThisObj().get(),
+                                            HSSObservablePropertyStartY,
+                                            this->observedStartY,
+                                            this->observedStartYProperty
+                                            );
+
+        break;
+    }
+
+    default:
+        break;
     }
 }
 
-
 void HSSLinearGradient::startYChanged(HSSObservableProperty source, void *data)
 {
-    switch (this->dStartY->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypeExpression:
-        case HSSParserNodeTypeFunctionCall:
-            this->startY = *(long double*)data;
-            break;
+    switch (this->dStartY->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypeExpression:
+    case HSSParserNodeTypeFunctionCall:
+        this->startY = *(long double*) data;
+        break;
 
-        case HSSParserNodeTypePercentageConstant:
-        {
-            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dStartY);
-            this->startY = percentageValue->getValue(*(long double*)data);
-            break;
-        }
+    case HSSParserNodeTypePercentageConstant:
+    {
+        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dStartY);
+        this->startY = percentageValue->getValue(*(long double*) data);
+        break;
+    }
 
-        default:
-            break;
+    default:
+        break;
     }
 
     this->notifyObservers(HSSObservablePropertyStartY, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-long double HSSLinearGradient::getEndX() { return this->endX; }
-HSSParserNode::p HSSLinearGradient::getDEndX() { return this->dEndX; }
+long double HSSLinearGradient::getEndX()
+{
+    return this->endX;
+}
+
+HSSParserNode::p HSSLinearGradient::getDEndX()
+{
+    return this->dEndX;
+}
+
 void HSSLinearGradient::setDEndX(HSSParserNode::p value)
 {
-    switch (value->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypePercentageConstant:
-        case HSSParserNodeTypeExpression:
+    switch (value->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypePercentageConstant:
+    case HSSParserNodeTypeExpression:
+    {
+        this->dEndX = value;
+
+        HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
+        if (this->observedEndX != NULL)
         {
-            this->dEndX = value;
-
-            HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
-            if(this->observedEndX != NULL)
-            {
-                this->observedEndX->removeObserver(this->observedEndXProperty, HSSObservablePropertyEndX, this);
-            }
-
-            this->endX = this->_setLDProperty(
-                                              &HSSLinearGradient::endXChanged,
-                                              value,
-                                              this->getThisObj()->getWidth(),
-                                              observedProperty,
-                                              this->getThisObj().get(),
-                                              HSSObservablePropertyEndX,
-                                              this->observedEndX,
-                                              this->observedEndXProperty
-                                              );
-
-            break;
+            this->observedEndX->removeObserver(this->observedEndXProperty, HSSObservablePropertyEndX, this);
         }
 
-        default:
-            break;
+        this->endX = this->_setLDProperty(
+                                          &HSSLinearGradient::endXChanged,
+                                          value,
+                                          this->getThisObj()->getWidth(),
+                                          observedProperty,
+                                          this->getThisObj().get(),
+                                          HSSObservablePropertyEndX,
+                                          this->observedEndX,
+                                          this->observedEndXProperty
+                                          );
+
+        break;
+    }
+
+    default:
+        break;
     }
 }
 
 void HSSLinearGradient::endXChanged(HSSObservableProperty source, void *data)
 {
-    switch (this->dEndX->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypeExpression:
-        case HSSParserNodeTypeFunctionCall:
-            this->endX = *(long double*)data;
-            break;
+    switch (this->dEndX->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypeExpression:
+    case HSSParserNodeTypeFunctionCall:
+        this->endX = *(long double*) data;
+        break;
 
-        case HSSParserNodeTypePercentageConstant:
-        {
-            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dEndX);
-            this->endX = percentageValue->getValue(*(long double*)data);
-            break;
-        }
+    case HSSParserNodeTypePercentageConstant:
+    {
+        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dEndX);
+        this->endX = percentageValue->getValue(*(long double*) data);
+        break;
+    }
 
-        default:
-            break;
+    default:
+        break;
     }
 
     this->notifyObservers(HSSObservablePropertyEndX, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
+long double HSSLinearGradient::getEndY()
+{
+    return this->endY;
+}
 
-long double HSSLinearGradient::getEndY() { return this->endY; }
-HSSParserNode::p HSSLinearGradient::getDEndY() { return this->dEndY; }
+HSSParserNode::p HSSLinearGradient::getDEndY()
+{
+    return this->dEndY;
+}
+
 void HSSLinearGradient::setDEndY(HSSParserNode::p value)
 {
-    switch (value->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypePercentageConstant:
-        case HSSParserNodeTypeExpression:
+    switch (value->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypePercentageConstant:
+    case HSSParserNodeTypeExpression:
+    {
+        this->dEndY = value;
+
+        HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
+        if (this->observedEndY != NULL)
         {
-            this->dEndY = value;
-
-            HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
-            if(this->observedEndY != NULL)
-            {
-                this->observedEndY->removeObserver(this->observedEndYProperty, HSSObservablePropertyEndY, this);
-            }
-
-            this->endY = this->_setLDProperty(
-                                              &HSSLinearGradient::endYChanged,
-                                              value,
-                                              this->getThisObj()->getHeight(),
-                                              observedProperty,
-                                              this->getThisObj().get(),
-                                              HSSObservablePropertyEndY,
-                                              this->observedEndY,
-                                              this->observedEndYProperty
-                                              );
-
-            break;
+            this->observedEndY->removeObserver(this->observedEndYProperty, HSSObservablePropertyEndY, this);
         }
 
-        default:
-            break;
+        this->endY = this->_setLDProperty(
+                                          &HSSLinearGradient::endYChanged,
+                                          value,
+                                          this->getThisObj()->getHeight(),
+                                          observedProperty,
+                                          this->getThisObj().get(),
+                                          HSSObservablePropertyEndY,
+                                          this->observedEndY,
+                                          this->observedEndYProperty
+                                          );
+
+        break;
+    }
+
+    default:
+        break;
     }
 }
 
-
 void HSSLinearGradient::endYChanged(HSSObservableProperty source, void *data)
 {
-    switch (this->dEndY->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypeExpression:
-        case HSSParserNodeTypeFunctionCall:
-            this->endY = *(long double*)data;
-            break;
+    switch (this->dEndY->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypeExpression:
+    case HSSParserNodeTypeFunctionCall:
+        this->endY = *(long double*) data;
+        break;
 
-        case HSSParserNodeTypePercentageConstant:
-        {
-            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dEndY);
-            this->endY = percentageValue->getValue(*(long double*)data);
-            break;
-        }
+    case HSSParserNodeTypePercentageConstant:
+    {
+        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dEndY);
+        this->endY = percentageValue->getValue(*(long double*) data);
+        break;
+    }
 
-        default:
-            break;
+    default:
+        break;
     }
 
     this->notifyObservers(HSSObservablePropertyEndY, data);
@@ -425,62 +475,64 @@ void HSSLinearGradient::endYChanged(HSSObservableProperty source, void *data)
 }
 
 long double HSSLinearGradient::_setLDProperty(
-                                        void(HSSLinearGradient::*callback)(HSSObservableProperty property, void* data),
-                                        HSSParserNode::p       value,
-                                        long double            percentageBase,
-                                        HSSObservableProperty  observedProperty,
-                                        HSSObservable *        observedObject,
-                                        HSSObservableProperty  observedSourceProperty,
-                                        HSSObservable *        &observedStore,
-                                        HSSObservableProperty  &observedStoreProperty
-                                        )
+                                              void(HSSLinearGradient::*callback)(HSSObservableProperty property, void* data),
+                                              HSSParserNode::p value,
+                                              long double percentageBase,
+                                              HSSObservableProperty observedProperty,
+                                              HSSObservable * observedObject,
+                                              HSSObservableProperty observedSourceProperty,
+                                              HSSObservable * &observedStore,
+                                              HSSObservableProperty &observedStoreProperty
+                                              )
 {
     long double ret;
 
     HSSParserNodeType nodeType = value->getType();
-    switch (nodeType) {
-        case HSSParserNodeTypeNumberConstant:
+    switch (nodeType)
+    {
+    case HSSParserNodeTypeNumberConstant:
+    {
+        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        ret = numberValue->getValue();
+        break;
+    }
+
+    case HSSParserNodeTypePercentageConstant:
+    {
+        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        ret = percentageValue->getValue(percentageBase);
+        if (callback != NULL)
         {
-            HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant>(value);
-            ret = numberValue->getValue();
-            break;
+            observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSLinearGradient > (this, callback));
+            observedStore = observedObject;
+            observedStoreProperty = observedProperty;
+        }
+        break;
+    }
+
+    case HSSParserNodeTypeExpression:
+    {
+        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        expressionValue->setPercentageBase(percentageBase);
+        expressionValue->setPercentageObserved(observedProperty, observedObject);
+        expressionValue->setScope(this->scope);
+        expressionValue->setThisObj(this->getThisObj());
+        ret = expressionValue->evaluate();
+        if (callback != NULL)
+        {
+            expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSLinearGradient > (this, callback));
         }
 
-        case HSSParserNodeTypePercentageConstant:
-        {
-            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
-            ret = percentageValue->getValue(percentageBase);
-            if(callback != NULL)
-            {
-                observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSLinearGradient>(this, callback));
-                observedStore = observedObject;
-                observedStoreProperty = observedProperty;
-            }
-            break;
-        }
+        break;
+    }
 
-        case HSSParserNodeTypeExpression:
-        {
-            HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
-            expressionValue->setPercentageBase(percentageBase);
-            expressionValue->setPercentageObserved(observedProperty, observedObject);
-            expressionValue->setScope(this->scope);
-            expressionValue->setThisObj(this->getThisObj());
-            ret = expressionValue->evaluate();
-            if(callback != NULL){
-                expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSLinearGradient>(this, callback));
-            }
+    case HSSParserNodeTypeKeywordConstant:
 
-            break;
-        }
+        break;
 
-        case HSSParserNodeTypeKeywordConstant:
-
-            break;
-
-        default:
-            AXRWarning::p(new AXRWarning("HSSLinearGradient", "Unknown parser node type while setting value for HSSLinearGradient property"))->raise();
-            break;
+    default:
+        AXRWarning::p(new AXRWarning("HSSLinearGradient", "Unknown parser node type while setting value for HSSLinearGradient property"))->raise();
+        break;
     }
 
     return ret;
@@ -488,50 +540,68 @@ long double HSSLinearGradient::_setLDProperty(
 
 void HSSLinearGradient::draw(cairo_t * cairo)
 {
-    cairo_pattern_t * pat = cairo_pattern_create_linear (this->startX, this->startY, this->endX, this->endY);
-    if(this->startColor){
-        cairo_pattern_add_color_stop_rgba (pat, 0., this->startColor->getRed()/255., this->startColor->getGreen()/255., this->startColor->getBlue()/255., this->startColor->getAlpha()/255.);
-    } else {
-        cairo_pattern_add_color_stop_rgba (pat, 0., 0., 0., 0., 0.);
+    cairo_pattern_t * pat = cairo_pattern_create_linear(this->startX, this->startY, this->endX, this->endY);
+    if (this->startColor)
+    {
+        cairo_pattern_add_color_stop_rgba(pat, 0., this->startColor->getRed() / 255., this->startColor->getGreen() / 255., this->startColor->getBlue() / 255., this->startColor->getAlpha() / 255.);
+    }
+    else
+    {
+        cairo_pattern_add_color_stop_rgba(pat, 0., 0., 0., 0., 0.);
     }
 
     //add color stops
     std::vector<HSSObject::p>::iterator it;
-    for(it=this->colorStops.begin(); it!=this->colorStops.end(); it++){
+    for (it = this->colorStops.begin(); it != this->colorStops.end(); it++)
+    {
         HSSObject::p theStopObj = *it;
-        if(theStopObj->isA(HSSObjectTypeColorStop)){
-            HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop>(theStopObj);
+        if (theStopObj->isA(HSSObjectTypeColorStop))
+        {
+            HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop > (theStopObj);
             HSSRgb::p theColor = theStop->getColor();
-            if(theColor){
+            if (theColor)
+            {
                 long double position;
-                if(theStop->getDPosition()->isA(HSSParserNodeTypePercentageConstant)){
+                if (theStop->getDPosition()->isA(HSSParserNodeTypePercentageConstant))
+                {
                     position = theStop->getPosition();
-                } else {
+                }
+                else
+                {
                     long double width = (this->endX - this->startX);
                     long double height = (this->endY - this->startY);
                     long double hypotenuse = hypot(width, height);
                     position = theStop->getPosition() / hypotenuse;
                 }
-                cairo_pattern_add_color_stop_rgba (pat, position, theColor->getRed()/255., theColor->getGreen()/255., theColor->getBlue()/255., theColor->getAlpha()/255.);
-            } else {
+                cairo_pattern_add_color_stop_rgba(pat, position, theColor->getRed() / 255., theColor->getGreen() / 255., theColor->getBlue() / 255., theColor->getAlpha() / 255.);
+            }
+            else
+            {
                 AXRWarning::p(new AXRWarning("HSSLinearGradient", "The color stop had no color defined"))->raise();
             }
-        } else if (theStopObj->isA(HSSObjectTypeRgb)){
-            HSSRgb::p theColor = boost::static_pointer_cast<HSSRgb>(theStopObj);
-            cairo_pattern_add_color_stop_rgba (pat, 0.5, theColor->getRed()/255., theColor->getGreen()/255., theColor->getBlue()/255., theColor->getAlpha()/255.);
-        } else {
+        }
+        else if (theStopObj->isA(HSSObjectTypeRgb))
+        {
+            HSSRgb::p theColor = boost::static_pointer_cast<HSSRgb > (theStopObj);
+            cairo_pattern_add_color_stop_rgba(pat, 0.5, theColor->getRed() / 255., theColor->getGreen() / 255., theColor->getBlue() / 255., theColor->getAlpha() / 255.);
+        }
+        else
+        {
             AXRWarning::p(new AXRWarning("HSSLinearGradient", "The color stop had no color defined"))->raise();
         }
 
     }
 
-    if(this->endColor){
-        cairo_pattern_add_color_stop_rgba (pat, 1., this->endColor->getRed()/255., this->endColor->getGreen()/255., this->endColor->getBlue()/255., this->endColor->getAlpha()/255.);
-    } else {
-        cairo_pattern_add_color_stop_rgba (pat, 0., 0., 0., 0., 0.);
+    if (this->endColor)
+    {
+        cairo_pattern_add_color_stop_rgba(pat, 1., this->endColor->getRed() / 255., this->endColor->getGreen() / 255., this->endColor->getBlue() / 255., this->endColor->getAlpha() / 255.);
+    }
+    else
+    {
+        cairo_pattern_add_color_stop_rgba(pat, 0., 0., 0., 0., 0.);
     }
 
-    cairo_set_source (cairo, pat);
-    cairo_fill_preserve (cairo);
-    cairo_pattern_destroy (pat);
+    cairo_set_source(cairo, pat);
+    cairo_fill_preserve(cairo);
+    cairo_pattern_destroy(pat);
 }

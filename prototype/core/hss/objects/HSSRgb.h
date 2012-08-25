@@ -46,7 +46,8 @@
 #include <boost/shared_ptr.hpp>
 #include "HSSObject.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief The object type representing a \@rgb color in HSS.
@@ -193,11 +194,11 @@ namespace AXR {
 
         long double _setLDProperty(
                                    void(HSSRgb::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p         value,
-                                   long double              percentageBase,
-                                   HSSObservableProperty    observedSourceProperty,
-                                   HSSObservable *          &observedStore,
-                                   HSSObservableProperty    &observedStoreProperty
+                                   HSSParserNode::p value,
+                                   long double percentageBase,
+                                   HSSObservableProperty observedSourceProperty,
+                                   HSSObservable * &observedStore,
+                                   HSSObservableProperty &observedStoreProperty
                                    );
         HSSClonable::p cloneImpl() const;
     };

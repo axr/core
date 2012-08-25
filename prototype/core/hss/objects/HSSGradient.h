@@ -48,7 +48,8 @@
 #include "HSSObject.h"
 #include "HSSRgb.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Abstract base class for gradient objects. Do not use directly, but one of its
@@ -220,11 +221,11 @@ namespace AXR {
 
         long double _setLDProperty(
                                    void(HSSGradient::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p         value,
-                                   long double              percentageBase,
-                                   HSSObservableProperty    observedSourceProperty,
-                                   HSSObservable *          &observedStore,
-                                   HSSObservableProperty    &observedStoreProperty
+                                   HSSParserNode::p value,
+                                   long double percentageBase,
+                                   HSSObservableProperty observedSourceProperty,
+                                   HSSObservable * &observedStore,
+                                   HSSObservableProperty &observedStoreProperty
                                    );
     };
 }

@@ -49,9 +49,12 @@
 #include "HSSToken.h"
 #include "HSSValueToken.h"
 
-namespace AXR {
+namespace AXR
+{
     //the return states any part of the tokenizer will report
-    enum HSS_TOKENIZING_STATUS {
+
+    enum HSS_TOKENIZING_STATUS
+    {
         HSSTokenizerUnknownError = -1,
         HSSTokenizerDone = 0,
         HSSTokenizerOK = 1,

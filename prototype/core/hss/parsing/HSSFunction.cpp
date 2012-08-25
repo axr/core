@@ -47,7 +47,7 @@
 using namespace AXR;
 
 HSSFunction::HSSFunction(HSSFunctionType type)
-:HSSParserNode(HSSParserNodeTypeFunctionCall)
+: HSSParserNode(HSSParserNodeTypeFunctionCall)
 {
     this->functionType = type;
     this->scope = NULL;
@@ -70,14 +70,16 @@ HSSFunction::HSSFunction(const HSSFunction & orig)
 
 HSSFunction::p HSSFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
-HSSClonable::p HSSFunction::cloneImpl() const{
+HSSClonable::p HSSFunction::cloneImpl() const
+{
 
     HSSFunction::p clone = HSSFunction::p(new HSSFunction(*this));
     std::deque<HSSParserNode::p>::const_iterator it;
-    for (it=this->_arguments.begin(); it!=this->_arguments.end(); it++) {
+    for (it = this->_arguments.begin(); it != this->_arguments.end(); it++)
+    {
         HSSParserNode::p clonedArgument = (*it)->clone();
         clone->_arguments.push_back(clonedArgument);
     }
@@ -86,10 +88,10 @@ HSSClonable::p HSSFunction::cloneImpl() const{
 
 HSSFunction::~HSSFunction()
 {
-//    if (this->percentageObserved != NULL) {
-//        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
-//        this->percentageObserved = NULL;
-//    }
+    //    if (this->percentageObserved != NULL) {
+    //        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
+    //        this->percentageObserved = NULL;
+    //    }
 }
 
 std::string HSSFunction::toString()
@@ -100,7 +102,8 @@ std::string HSSFunction::toString()
 
 boost::any HSSFunction::evaluate()
 {
-    if(this->_isDirty){
+    if (this->_isDirty)
+    {
         this->_isDirty = false;
 
         this->_value = this->_evaluate();
@@ -111,7 +114,8 @@ boost::any HSSFunction::evaluate()
 
 boost::any HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
 {
-    if(this->_isDirty){
+    if (this->_isDirty)
+    {
         this->_isDirty = false;
 
         this->_value = this->_evaluate(arguments);
@@ -122,7 +126,7 @@ boost::any HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
 
 boost::any HSSFunction::_evaluate()
 {
-    return this->_evaluate(std::deque<HSSParserNode::p>());
+    return this->_evaluate(std::deque<HSSParserNode::p > ());
 }
 
 boost::any HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
@@ -144,11 +148,11 @@ void HSSFunction::setPercentageBase(long double value)
 
 void HSSFunction::setPercentageObserved(HSSObservableProperty property, HSSObservable *observed)
 {
-//    if(this->percentageObserved != NULL)
-//    {
-//        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
-//        this->percentageObserved = NULL;
-//    }
+    //    if(this->percentageObserved != NULL)
+    //    {
+    //        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
+    //        this->percentageObserved = NULL;
+    //    }
     this->percentageObservedProperty = property;
     this->percentageObserved = observed;
     //observed->observe(property, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSFunction>(this, &HSSFunction::propertyChanged));
@@ -158,37 +162,40 @@ void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
 {
     this->scope = newScope;
     std::deque<HSSParserNode::p>::const_iterator it;
-    for (it=this->_arguments.begin(); it!=this->_arguments.end(); it++) {
+    for (it = this->_arguments.begin(); it != this->_arguments.end(); it++)
+    {
         const HSSParserNode::p node = (*it);
-        switch (node->getType()) {
-            case HSSParserNodeTypeFunctionCall:
-            {
-                HSSFunction::p func = boost::static_pointer_cast<HSSFunction>(node);
-                func->setScope(newScope);
-                break;
-            }
-
-            case HSSParserNodeTypeExpression:
-            {
-                HSSExpression::p exp = boost::static_pointer_cast<HSSExpression>(node);
-                exp->setScope(newScope);
-                break;
-            }
-
-            default:
-                break;
+        switch (node->getType())
+        {
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSFunction::p func = boost::static_pointer_cast<HSSFunction > (node);
+            func->setScope(newScope);
+            break;
         }
 
-        switch (node->getStatementType()) {
-            case HSSStatementTypeObjectDefinition:
-            {
-                HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(node);
-                objdef->setScope(newScope);
-                break;
-            }
+        case HSSParserNodeTypeExpression:
+        {
+            HSSExpression::p exp = boost::static_pointer_cast<HSSExpression > (node);
+            exp->setScope(newScope);
+            break;
+        }
 
-            default:
-                break;
+        default:
+            break;
+        }
+
+        switch (node->getStatementType())
+        {
+        case HSSStatementTypeObjectDefinition:
+        {
+            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (node);
+            objdef->setScope(newScope);
+            break;
+        }
+
+        default:
+            break;
         }
     }
 }

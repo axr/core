@@ -45,13 +45,14 @@
 #include <boost/shared_ptr.hpp>
 #include "HSSExpression.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief A type of expression that uses the division operator "/".
      */
-    class HSSDivision : public HSSExpression {
-
+    class HSSDivision : public HSSExpression
+    {
     public:
         typedef boost::shared_ptr<HSSDivision> p;
 

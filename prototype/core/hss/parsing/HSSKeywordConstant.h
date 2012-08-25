@@ -45,7 +45,8 @@
 #include <boost/shared_ptr.hpp>
 #include "HSSParserNode.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Parser node that represents a keyword constant in the HSS source.

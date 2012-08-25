@@ -63,7 +63,7 @@ HSSSelFunction::HSSSelFunction(const HSSSelFunction & orig)
 
 HSSFunction::p HSSSelFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 std::string HSSSelFunction::toString()
@@ -85,7 +85,7 @@ void HSSSelFunction::setSelectorChains(std::vector<HSSSelectorChain::p> newValue
 
 void HSSSelFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
 {
-    if(newSelectorChain)
+    if (newSelectorChain)
     {
         std_log3("Added selector chain to HSSFlagFunction: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
@@ -95,7 +95,7 @@ void HSSSelFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
 
 void HSSSelFunction::selectorChainsRemove(unsigned int index)
 {
-    this->selectorChains.erase(this->selectorChains.begin()+index);
+    this->selectorChains.erase(this->selectorChains.begin() + index);
 }
 
 void HSSSelFunction::selectorChainsRemoveLast()
@@ -133,13 +133,14 @@ boost::any HSSSelFunction::_evaluate()
 //    this->notifyObservers(HSSObservablePropertyValue, this->_value);
 //}
 
-
-HSSClonable::p HSSSelFunction::cloneImpl() const{
+HSSClonable::p HSSSelFunction::cloneImpl() const
+{
 
     HSSSelFunction::p clone = HSSSelFunction::p(new HSSSelFunction(*this));
 
     HSSSelectorChain::const_it sIt;
-    for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+    for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+    {
         HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }

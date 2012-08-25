@@ -46,13 +46,13 @@
 using namespace AXR;
 
 AXRWarning::AXRWarning(std::string origin, std::string message)
-:AXRError(origin, message)
+: AXRError(origin, message)
 {
 
 }
 
 AXRWarning::AXRWarning(std::string origin, std::string message, std::string filename, int line, int column)
-:AXRError(origin, message, filename, line, column)
+: AXRError(origin, message, filename, line, column)
 {
 
 }
@@ -70,10 +70,10 @@ std::string AXRWarning::toString()
         linnum << this->line;
         std::ostringstream colnum;
         colnum << this->column;
-        return "Warning: "+this->message+" in "+this->filename+" on line "+linnum.str()+" on column "+colnum.str();
+        return "Warning: " + this->message + " in " + this->filename + " on line " + linnum.str() + " on column " + colnum.str();
     }
     else
     {
-        return "Warning: "+this->message;
+        return "Warning: " + this->message;
     }
 }

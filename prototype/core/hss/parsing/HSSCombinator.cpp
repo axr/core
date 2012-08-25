@@ -46,13 +46,14 @@
 using namespace AXR;
 
 HSSCombinator::HSSCombinator(HSSCombinatorType type)
-:HSSSelector(HSSSelectorTypeCombinator)
+: HSSSelector(HSSSelectorTypeCombinator)
 {
     this->combinatorType = type;
 }
 
-HSSCombinator::p HSSCombinator::clone() const{
-    return boost::static_pointer_cast<HSSCombinator, HSSClonable>(this->cloneImpl());
+HSSCombinator::p HSSCombinator::clone() const
+{
+    return boost::static_pointer_cast<HSSCombinator, HSSClonable > (this->cloneImpl());
 }
 
 bool HSSCombinator::isA(HSSCombinatorType otherType)
@@ -65,27 +66,31 @@ HSSCombinatorType HSSCombinator::getCombinatorType()
     return this->combinatorType;
 }
 
-std::string HSSCombinator::toString(){
-    return "HSSCombinator of type  "+this->combinatorStringRepresentation(this->combinatorType);
+std::string HSSCombinator::toString()
+{
+    return "HSSCombinator of type  " + this->combinatorStringRepresentation(this->combinatorType);
 }
 
-std::string HSSCombinator::combinatorStringRepresentation(HSSCombinatorType type){
+std::string HSSCombinator::combinatorStringRepresentation(HSSCombinatorType type)
+{
     std::string types[20];
-    types[ HSSCombinatorTypeSiblings ] =          "HSSCombinatorTypeSiblings";
-    types[ HSSCombinatorTypePreviousSiblings ] =  "HSSCombinatorTypePreviousSiblings";
-    types[ HSSCombinatorTypeNextSiblings ] =      "HSSCombinatorTypeNextSiblings";
-    types[ HSSCombinatorTypeChildren ] =          "HSSCombinatorTypeChildren";
-    types[ HSSCombinatorTypeDescendants ] =       "HSSCombinatorTypeDescendants";
-    types[ HSSCombinatorTypeAllDescendants ] =    "HSSCombinatorTypeAllDescendants";
-    types[ HSSCombinatorTypeTextSelection ] =     "HSSCombinatorTypeTextSelection";
+    types[ HSSCombinatorTypeSiblings ] = "HSSCombinatorTypeSiblings";
+    types[ HSSCombinatorTypePreviousSiblings ] = "HSSCombinatorTypePreviousSiblings";
+    types[ HSSCombinatorTypeNextSiblings ] = "HSSCombinatorTypeNextSiblings";
+    types[ HSSCombinatorTypeChildren ] = "HSSCombinatorTypeChildren";
+    types[ HSSCombinatorTypeDescendants ] = "HSSCombinatorTypeDescendants";
+    types[ HSSCombinatorTypeAllDescendants ] = "HSSCombinatorTypeAllDescendants";
+    types[ HSSCombinatorTypeTextSelection ] = "HSSCombinatorTypeTextSelection";
     return types[type];
 }
 
-HSSClonable::p HSSCombinator::cloneImpl() const{
+HSSClonable::p HSSCombinator::cloneImpl() const
+{
     return HSSClonable::p(new HSSCombinator(*this));
 }
 
 //does nothing yet
+
 std::vector<HSSDisplayObject::p> HSSCombinator::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     return scope;

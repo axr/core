@@ -48,7 +48,8 @@
 #include "HSSObservable.h"
 #include "HSSParserNode.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Abstract base class for all expressions.
@@ -86,7 +87,7 @@ namespace AXR {
          *  @param leftval  A long double that holds the left value.
          *  @param rightval  A long double that holds the right value.
          */
-        virtual long double calculate(long double leftval, long double rightval) =0;
+        virtual long double calculate(long double leftval, long double rightval) = 0;
 
         bool isA(HSSExpressionType otherType);
         HSSExpressionType getExpressionType();

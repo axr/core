@@ -49,8 +49,9 @@ HSSEvenChildFilter::HSSEvenChildFilter()
 
 }
 
-HSSEvenChildFilter::p HSSEvenChildFilter::clone() const{
-    return boost::static_pointer_cast<HSSEvenChildFilter, HSSClonable>(this->cloneImpl());
+HSSEvenChildFilter::p HSSEvenChildFilter::clone() const
+{
+    return boost::static_pointer_cast<HSSEvenChildFilter, HSSClonable > (this->cloneImpl());
 }
 
 HSSEvenChildFilter::~HSSEvenChildFilter()
@@ -63,19 +64,24 @@ std::string HSSEvenChildFilter::toString()
     return "Even Child Filter";
 }
 
-
 const std::vector<HSSDisplayObject::p> HSSEvenChildFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
 {
     std::vector<HSSDisplayObject::p> ret;
     HSSDisplayObject::const_it it;
-    for (it=scope.begin(); it!=scope.end(); it++) {
+    for (it = scope.begin(); it != scope.end(); it++)
+    {
         const HSSDisplayObject::p & theDO = *it;
-        if (this->getNegating()) {
-            if(theDO->getIndex()%2 == 0){
+        if (this->getNegating())
+        {
+            if (theDO->getIndex() % 2 == 0)
+            {
                 ret.push_back(theDO);
             }
-        } else {
-            if(theDO->getIndex()%2 != 0){
+        }
+        else
+        {
+            if (theDO->getIndex() % 2 != 0)
+            {
                 ret.push_back(theDO);
             }
         }
@@ -83,6 +89,7 @@ const std::vector<HSSDisplayObject::p> HSSEvenChildFilter::apply(const std::vect
     return ret;
 }
 
-HSSClonable::p HSSEvenChildFilter::cloneImpl() const{
+HSSClonable::p HSSEvenChildFilter::cloneImpl() const
+{
     return HSSClonable::p(new HSSEvenChildFilter(*this));
 }

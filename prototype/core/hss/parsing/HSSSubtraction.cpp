@@ -57,7 +57,7 @@ HSSSubtraction::HSSSubtraction(const HSSSubtraction &orig)
 
 HSSSubtraction::p HSSSubtraction::clone() const
 {
-    return boost::static_pointer_cast<HSSSubtraction, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSSubtraction, HSSClonable > (this->cloneImpl());
 }
 
 HSSSubtraction::~HSSSubtraction()
@@ -70,6 +70,7 @@ long double HSSSubtraction::calculate(long double leftval, long double rightval)
     return leftval - rightval;
 }
 
-HSSClonable::p HSSSubtraction::cloneImpl() const{
+HSSClonable::p HSSSubtraction::cloneImpl() const
+{
     return HSSClonable::p(new HSSSubtraction(*this));
 }

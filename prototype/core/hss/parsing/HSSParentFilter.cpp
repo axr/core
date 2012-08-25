@@ -52,8 +52,9 @@ HSSParentFilter::HSSParentFilter()
 
 }
 
-HSSParentFilter::p HSSParentFilter::clone() const{
-    return boost::static_pointer_cast<HSSParentFilter, HSSClonable>(this->cloneImpl());
+HSSParentFilter::p HSSParentFilter::clone() const
+{
+    return boost::static_pointer_cast<HSSParentFilter, HSSClonable > (this->cloneImpl());
 }
 
 HSSParentFilter::~HSSParentFilter()
@@ -68,25 +69,30 @@ std::string HSSParentFilter::toString()
 
 const std::vector<HSSDisplayObject::p> HSSParentFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
 {
-    if(scope.size() > 0){
+    if (scope.size() > 0)
+    {
         std::vector<HSSDisplayObject::p> ret;
-        int size=scope.size();
+        int size = scope.size();
         HSSContainer::p container;
         if (!this->getNegating())
-            for (int i=0; i<size; i++){
+            for (int i = 0; i < size; i++)
+            {
                 container = HSSContainer::asContainer(scope[i]);
-                if (container && container->getChildren(false).size()>0)
+                if (container && container->getChildren(false).size() > 0)
                     ret.push_back(scope[i]);
             }
 
         else
-            for (int i=0; i<size; i++){
+            for (int i = 0; i < size; i++)
+            {
                 container = HSSContainer::asContainer(scope[i]);
-                if (container && container->getChildren(false).size()==0)
+                if (container && container->getChildren(false).size() == 0)
                     ret.push_back(scope[i]);
             }
         return ret;
-    } else {
+    }
+    else
+    {
         return scope;
     }
 }

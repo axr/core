@@ -45,12 +45,14 @@
 #include "HSSDisplayObject.h"
 #include "HSSParserNode.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Abstract base class for a common interface for all selector nodes
      */
-    class HSSSelector : public HSSParserNode {
+    class HSSSelector : public HSSParserNode
+    {
     public:
         typedef boost::shared_ptr<HSSSelector> p;
 

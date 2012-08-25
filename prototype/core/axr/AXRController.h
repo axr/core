@@ -51,11 +51,11 @@
 #include "HSSObject.h"
 #include "HSSParser.h"
 
-namespace AXR {
+namespace AXR
+{
 
     class AXRRender;
     class AXRCore;
-
 
     /**
      *  @brief  This class holds trees of objects, sheets, rules and the parser tree. Also,

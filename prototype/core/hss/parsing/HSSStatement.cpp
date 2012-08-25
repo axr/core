@@ -65,7 +65,8 @@ HSSStatementType HSSStatement::getStatementType()
     return this->type;
 }
 
-std::string HSSStatement::statementStringRepresentation(HSSStatementType type){
+std::string HSSStatement::statementStringRepresentation(HSSStatementType type)
+{
     std::string types[20];
     types[HSSStatementTypeNone] = "HSSGenericStatement";
     types[HSSStatementTypeRule] = "HSSRule";
@@ -79,5 +80,5 @@ std::string HSSStatement::statementStringRepresentation(HSSStatementType type){
 
 HSSStatement::p HSSStatement::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSStatement>(HSSParserNode::shared_from_this());
+    return boost::static_pointer_cast<HSSStatement > (HSSParserNode::shared_from_this());
 }

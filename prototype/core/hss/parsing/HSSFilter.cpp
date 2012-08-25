@@ -48,10 +48,12 @@
 
 using namespace AXR;
 
-std::string HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType){
+std::string HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType)
+{
     static std::string types[30];
     static bool HSSFilterHasInitializedTypes = false;
-    if (!HSSFilterHasInitializedTypes) {
+    if (!HSSFilterHasInitializedTypes)
+    {
         HSSFilterHasInitializedTypes = true;
 
         //position
@@ -97,7 +99,8 @@ HSSFilterType HSSFilter::filterTypeFromString(std::string name)
 {
     static boost::unordered_map<std::string, HSSFilterType> filterTypes;
 
-    if (filterTypes.size() == 0) {
+    if (filterTypes.size() == 0)
+    {
         //position
         filterTypes["first"] = HSSFilterTypeFirst;
         filterTypes["last"] = HSSFilterTypeLast;
@@ -148,75 +151,75 @@ HSSFilter::p HSSFilter::newFilterWithStringType(std::string stringType)
 HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
 {
     HSSFilter::p ret;
-    switch (filterType) {
-        case HSSFilterTypeParent:
-        {
-            ret = HSSParentFilter::p(new HSSParentFilter());
-            break;
-        }
+    switch (filterType)
+    {
+    case HSSFilterTypeParent:
+    {
+        ret = HSSParentFilter::p(new HSSParentFilter());
+        break;
+    }
 
-        case HSSFilterTypeFirst:
-        {
-            ret = HSSFirstFilter::p(new HSSFirstFilter());
-            break;
-        }
+    case HSSFilterTypeFirst:
+    {
+        ret = HSSFirstFilter::p(new HSSFirstFilter());
+        break;
+    }
 
-        case HSSFilterTypeFirstChild:
-        {
-            ret = HSSFirstChildFilter::p(new HSSFirstChildFilter());
-            break;
-        }
+    case HSSFilterTypeFirstChild:
+    {
+        ret = HSSFirstChildFilter::p(new HSSFirstChildFilter());
+        break;
+    }
 
-        case HSSFilterTypeLastChild:
-        {
-            ret = HSSLastChildFilter::p(new HSSLastChildFilter());
-            break;
-        }
+    case HSSFilterTypeLastChild:
+    {
+        ret = HSSLastChildFilter::p(new HSSLastChildFilter());
+        break;
+    }
 
-        case HSSFilterTypeLast:
-        {
-            ret = HSSLastFilter::p(new HSSLastFilter());
-            break;
-        }
+    case HSSFilterTypeLast:
+    {
+        ret = HSSLastFilter::p(new HSSLastFilter());
+        break;
+    }
 
-        case HSSFilterTypeEven:
-        {
-            ret = HSSEvenFilter::p(new HSSEvenFilter());
-            break;
-        }
+    case HSSFilterTypeEven:
+    {
+        ret = HSSEvenFilter::p(new HSSEvenFilter());
+        break;
+    }
 
-        case HSSFilterTypeEvenChild:
-        {
-            ret = HSSEvenChildFilter::p(new HSSEvenChildFilter());
-            break;
-        }
+    case HSSFilterTypeEvenChild:
+    {
+        ret = HSSEvenChildFilter::p(new HSSEvenChildFilter());
+        break;
+    }
 
-        case HSSFilterTypeOdd:
-        {
-            ret = HSSOddFilter::p(new HSSOddFilter());
-            break;
-        }
+    case HSSFilterTypeOdd:
+    {
+        ret = HSSOddFilter::p(new HSSOddFilter());
+        break;
+    }
 
-        case HSSFilterTypeOddChild:
-        {
-            ret = HSSOddChildFilter::p(new HSSOddChildFilter());
-            break;
-        }
+    case HSSFilterTypeOddChild:
+    {
+        ret = HSSOddChildFilter::p(new HSSOddChildFilter());
+        break;
+    }
 
-//        case HSSFilterTypeEach:
-//        {
-//            ret = HSSFilter::p(new HSSEachFilter());
-//            ret->filterType = filterType;
-//            break;
-//        }
+        //        case HSSFilterTypeEach:
+        //        {
+        //            ret = HSSFilter::p(new HSSEachFilter());
+        //            ret->filterType = filterType;
+        //            break;
+        //        }
 
-        default:
-            throw AXRError::p(new AXRError("HSSFilter", "Unknown filter type."));
+    default:
+        throw AXRError::p(new AXRError("HSSFilter", "Unknown filter type."));
     }
 
     return ret;
 }
-
 
 HSSFilter::HSSFilter(HSSFilterType type)
 : HSSParserNode(HSSParserNodeTypeFilter)

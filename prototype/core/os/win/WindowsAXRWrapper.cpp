@@ -68,10 +68,11 @@ AXRFile::p WindowsAXRWrapper::getFile(std::string url)
 
 
 
-    if(url.substr(0, 7) == "file://"){
-        std::string clean_path = url.substr(7,std::string::npos);
+    if (url.substr(0, 7) == "file://")
+    {
+        std::string clean_path = url.substr(7, std::string::npos);
         int slashpos = clean_path.rfind("/");
-        ret->getFileName() = clean_path.substr(slashpos+1, clean_path.size());
+        ret->getFileName() = clean_path.substr(slashpos + 1, clean_path.size());
         ret->basePath = clean_path.substr(0, slashpos);
 
 
@@ -81,13 +82,18 @@ AXRFile::p WindowsAXRWrapper::getFile(std::string url)
 
 
 
-        if( ret->fileHandle == NULL ){
-            AXRError::p(new AXRError("WindowsAXRWrapper", "the file "+ret->getFileName()+" doesn't exist"))->raise();
-        } else if( ferror(ret->fileHandle) ){
-            AXRError::p(new AXRError("WindowsAXRWrapper", "the file "+ret->getFileName()+" couldn't be read"))->raise();
+        if (ret->fileHandle == NULL)
+        {
+            AXRError::p(new AXRError("WindowsAXRWrapper", "the file " + ret->getFileName() + " doesn't exist"))->raise();
+        }
+        else if (ferror(ret->fileHandle))
+        {
+            AXRError::p(new AXRError("WindowsAXRWrapper", "the file " + ret->getFileName() + " couldn't be read"))->raise();
         }
 
-    } else {
+    }
+    else
+    {
         std_log("http is not implemented yet");
     }
 
@@ -96,8 +102,9 @@ AXRFile::p WindowsAXRWrapper::getFile(std::string url)
 
 size_t WindowsAXRWrapper::readFile(AXRFile::p theFile)
 {
-   size_t size = fread(theFile->buffer, sizeof(theFile->buffer[0]), theFile->bufferSize, theFile->fileHandle);
-    if (ferror(theFile->fileHandle)) {
+    size_t size = fread(theFile->buffer, sizeof (theFile->buffer[0]), theFile->bufferSize, theFile->fileHandle);
+    if (ferror(theFile->fileHandle))
+    {
         fclose(theFile->fileHandle);
         return -1;
     }
@@ -116,18 +123,17 @@ void WindowsAXRWrapper::handleError(AXRError::p theError)
     std::cout << theError->toString() << "\n";
 }
 
-
 bool WindowsAXRWrapper::openFileDialog(std::string &filePath)
 {
     OPENFILENAME ofn;
     HANDLE hf;
-      char szFile[260]   = {0};
+    char szFile[260] = {0};
 
-    ZeroMemory(&ofn, sizeof(OPENFILENAME));
-    ofn.lStructSize = sizeof(OPENFILENAME);
+    ZeroMemory(&ofn, sizeof (OPENFILENAME));
+    ofn.lStructSize = sizeof (OPENFILENAME);
     ofn.hwndOwner = this->hwnd;
     ofn.lpstrFile = szFile;
-    ofn.nMaxFile = sizeof(szFile);
+    ofn.nMaxFile = sizeof (szFile);
     ofn.lpstrFilter = "xml\0*.xml\0hss\0*.hss\0";
     ofn.nFilterIndex = 1;
     ofn.lpstrFileTitle = NULL;
@@ -135,10 +141,10 @@ bool WindowsAXRWrapper::openFileDialog(std::string &filePath)
     ofn.lpstrInitialDir = NULL;
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
-    if (GetOpenFileName(&ofn)!=TRUE)  return false;
+    if (GetOpenFileName(&ofn) != TRUE) return false;
 
     filePath = szFile;
-    std::replace(filePath.begin(),filePath.end(),'\\','/');
+    std::replace(filePath.begin(), filePath.end(), '\\', '/');
 
     return true;
 }

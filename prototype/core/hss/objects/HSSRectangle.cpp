@@ -55,12 +55,14 @@ HSSRectangle::HSSRectangle(const HSSRectangle & orig)
 
 }
 
-HSSRectangle::p HSSRectangle::clone() const{
+HSSRectangle::p HSSRectangle::clone() const
+{
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: cloning rectangle object");
-    return boost::static_pointer_cast<HSSRectangle, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSRectangle, HSSClonable > (this->cloneImpl());
 }
 
-HSSClonable::p HSSRectangle::cloneImpl() const{
+HSSClonable::p HSSRectangle::cloneImpl() const
+{
     return HSSClonable::p(new HSSRectangle(*this));
 }
 
@@ -88,7 +90,6 @@ bool HSSRectangle::isKeyword(std::string value, std::string property)
 {
     return HSSShape::isKeyword(value, property);
 }
-
 
 void HSSRectangle::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {

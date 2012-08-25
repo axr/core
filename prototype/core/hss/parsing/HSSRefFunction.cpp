@@ -62,12 +62,13 @@ HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
 
 HSSFunction::p HSSRefFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 HSSRefFunction::~HSSRefFunction()
 {
-    if(this->observed != NULL){
+    if (this->observed != NULL)
+    {
         this->observed->removeObserver(this->propertyName, HSSObservablePropertyValue, this);
     }
 }
@@ -107,7 +108,7 @@ void HSSRefFunction::setSelectorChains(std::vector<HSSSelectorChain::p> newValue
 
 void HSSRefFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
 {
-    if(newSelectorChain)
+    if (newSelectorChain)
     {
         std_log3("Added selector chain to HSSRefFunction: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
@@ -117,7 +118,7 @@ void HSSRefFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
 
 void HSSRefFunction::selectorChainsRemove(unsigned int index)
 {
-    this->selectorChains.erase(this->selectorChains.begin()+index);
+    this->selectorChains.erase(this->selectorChains.begin() + index);
 }
 
 void HSSRefFunction::selectorChainsRemoveLast()
@@ -148,16 +149,21 @@ boost::any HSSRefFunction::_evaluate()
      */
 
     std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj(), false);
-    if (selection.size() == 0 || (selection.size() == 1 && selection[0].size() == 0)){
+    if (selection.size() == 0 || (selection.size() == 1 && selection[0].size() == 0))
+    {
         // ignore
-    } else if (selection.size() == 1 && selection[0].size() == 1){
+    }
+    else if (selection.size() == 1 && selection[0].size() == 1)
+    {
         HSSDisplayObject::p container = selection[0][0];
         this->_value = container->getProperty(this->propertyName);
 
-        container->observe(this->propertyName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRefFunction>(this, &HSSRefFunction::valueChanged));
+        container->observe(this->propertyName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
 
         this->observed = container.get();
-    } else {
+    }
+    else
+    {
         /*
         if (this->modifier == "min"){
             unsigned i, size;
@@ -191,15 +197,17 @@ void HSSRefFunction::valueChanged(HSSObservableProperty source, void*data)
 {
     this->setDirty(true);
     this->_value = data;
-    this->notifyObservers(HSSObservablePropertyValue, (void*) &this->_value);
+    this->notifyObservers(HSSObservablePropertyValue, (void*) & this->_value);
 }
 
-HSSClonable::p HSSRefFunction::cloneImpl() const{
+HSSClonable::p HSSRefFunction::cloneImpl() const
+{
 
     HSSRefFunction::p clone = HSSRefFunction::p(new HSSRefFunction(*this));
 
     HSSSelectorChain::const_it sIt;
-    for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+    for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+    {
         HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }

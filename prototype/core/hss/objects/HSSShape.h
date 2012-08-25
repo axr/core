@@ -48,7 +48,8 @@
 #include "HSSObject.h"
 #include "HSSUnits.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Abstract base class for all shape objects.

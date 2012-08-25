@@ -48,7 +48,8 @@
 #include "HSSCallback.h"
 #include "HSSObservableProperties.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief This class provides base functionality for property observing.

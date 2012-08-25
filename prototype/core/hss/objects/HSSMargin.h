@@ -47,7 +47,8 @@
 #include "HSSObject.h"
 #include "HSSValue.h"
 
-namespace AXR {
+namespace AXR
+{
 
     class HSSDisplayObject;
 
@@ -228,13 +229,13 @@ namespace AXR {
 
         long double _setLDProperty(
                                    void(HSSMargin::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p       value,
-                                   long double            percentageBase,
-                                   HSSObservableProperty  observedProperty,
-                                   HSSObservable *        observedObject,
-                                   HSSObservableProperty  observedSourceProperty,
-                                   HSSObservable *        &observedStore,
-                                   HSSObservableProperty  &observedStoreProperty,
+                                   HSSParserNode::p value,
+                                   long double percentageBase,
+                                   HSSObservableProperty observedProperty,
+                                   HSSObservable * observedObject,
+                                   HSSObservableProperty observedSourceProperty,
+                                   HSSObservable * &observedStore,
+                                   HSSObservableProperty &observedStoreProperty,
                                    const std::vector< boost::shared_ptr<HSSDisplayObject> > * scope
                                    );
 

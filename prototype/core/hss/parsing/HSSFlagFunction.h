@@ -45,7 +45,8 @@
 #include "HSSAction.h"
 #include "HSSFunction.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Function type to manipulate the activation status of a flag.

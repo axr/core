@@ -45,7 +45,8 @@
 #include "HSSAction.h"
 #include "HSSFlagFunction.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief The HSS object counterparts to flagging functions.

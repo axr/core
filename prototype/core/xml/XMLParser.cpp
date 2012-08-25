@@ -75,22 +75,28 @@ XMLParser::~XMLParser()
 
 bool XMLParser::loadFile(AXRFile::p file)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: loading file "+file->getFileName());
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->getBasePath()+"/"+file->getFileName());
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: loading file " + file->getFileName());
+    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->getBasePath() + "/" + file->getFileName());
 
     this->file = file;
-    if(file->getFileHandle() != NULL){
+    if (file->getFileHandle() != NULL)
+    {
         expatmm::ExpatXMLParser::setReadiness(true);
-    } else {
+    }
+    else
+    {
         this->setReadiness(false);
         return false;
     }
 
     bool ret;
 
-    try {
+    try
+    {
         ret = this->Parse();
-    } catch (AXRError::p e) {
+    }
+    catch (AXRError::p e)
+    {
         e->raise();
         ret = false;
     }
@@ -108,27 +114,33 @@ size_t XMLParser::getBlockSize(void)
     return this->file->getBufferSize();
 }
 
-ssize_t XMLParser::read_block(void) {
+ssize_t XMLParser::read_block(void)
+{
     AXRFile::p file = this->file;
-    if(file->getFileHandle() == NULL){
+    if (file->getFileHandle() == NULL)
+    {
         return -1;
     }
 
     size_t bytesRead = AXRCore::getInstance()->getWrapper()->readFile(this->file);
-    ssize_t code = (ssize_t)bytesRead;
+    ssize_t code = (ssize_t) bytesRead;
 
-    if(bytesRead <= this->getBlockSize()) {
-        if(feof(file->getFileHandle())) {
+    if (bytesRead <= this->getBlockSize())
+    {
+        if (feof(file->getFileHandle()))
+        {
             this->setLastError(XML_ERROR_FINISHED);
             return bytesRead;
         }
-        if(ferror(file->getFileHandle())) {
+        if (ferror(file->getFileHandle()))
+        {
             this->setStatus(XML_STATUS_ERROR);
 
         }
     }
 
-    if(bytesRead == 0) {
+    if (bytesRead == 0)
+    {
         this->setStatus(XML_STATUS_OK);
         this->setLastError(XML_ERROR_FINISHED);
         code = -1;
@@ -138,30 +150,32 @@ ssize_t XMLParser::read_block(void) {
 
 void XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)
 {
-    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found opening tag with name "+std::string(name));
+    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found opening tag with name " + std::string(name));
     this->controller->enterElement(std::string(name));
     unsigned i;
-    for (i = 0; attrs[i]; i += 2) {
+    for (i = 0; attrs[i]; i += 2)
+    {
         this->controller->addAttribute(std::string(attrs[i]), std::string(attrs[i + 1]));
     }
 }
 
 void XMLParser::CharacterData(const XML_Char *s, int len)
 {
-    axr_log(AXR_DEBUG_CH_XML, "XMLParser: reading character data: \""+std::string(s, len)+"\"");
+    axr_log(AXR_DEBUG_CH_XML, "XMLParser: reading character data: \"" + std::string(s, len) + "\"");
     /**
      *  @todo make this better
      */
     //for now, just ignore pure newlines and tabs
     std::string tempstr = std::string(s, len);
-    if(tempstr != "\n" && tempstr != "\r" && tempstr != "\t"){
+    if (tempstr != "\n" && tempstr != "\r" && tempstr != "\t")
+    {
         this->controller->appendContentText(tempstr);
     }
 }
 
 void XMLParser::EndElement(const XML_Char *name)
 {
-    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found closing tag with name "+std::string(name));
+    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found closing tag with name " + std::string(name));
     this->controller->exitElement();
 }
 
@@ -171,14 +185,15 @@ void XMLParser::EndElement(const XML_Char *name)
  */
 void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *data)
 {
-    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found xml instruction with name "+std::string(target));
-    if(this->controller == NULL){
+    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found xml instruction with name " + std::string(target));
+    if (this->controller == NULL)
+    {
         throw AXRError::p(new AXRError("XMLParser", "The controller was not set on the XML parser"));
     }
 
     std::string instructionName = std::string(target);
     //maximum size of temp is the same as data (+1 for the \0)
-    XML_Char * temp = new XML_Char[strlen(data)+1];
+    XML_Char * temp = new XML_Char[strlen(data) + 1];
     std::string attribute;
     std::string content;
     std::string sheetType;
@@ -189,63 +204,87 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
     unsigned datai = 0;
     unsigned tempi = 0;
     security_brake_init();
-    if(instructionName == "xml-stylesheet"){
-        while (data[datai] != '\0') {
-            if (readingAttr && isspace(data[datai])){
+    if (instructionName == "xml-stylesheet")
+    {
+        while (data[datai] != '\0')
+        {
+            if (readingAttr && isspace(data[datai]))
+            {
                 //ignore the whitespace
                 /**
                  *  @todo set behavior according to XML spec
                  */
-            } else if(data[datai] == '=') {
-                if(readingAttr){
+            }
+            else if (data[datai] == '=')
+            {
+                if (readingAttr)
+                {
                     //finished reading the attribute
                     readingAttr = false;
                     temp[tempi] = '\0';
                     attribute = std::string(temp);
-                    tempi=0;
+                    tempi = 0;
                     //we now expect a double quote
                     datai++;
-                    if(data[datai] != '"'){
-                        throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->file->getFileName(), (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4));
+                    if (data[datai] != '"')
+                    {
+                        throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->file->getFileName(), (int) XML_GetCurrentLineNumber(this->expat_parser), (int) XML_GetCurrentColumnNumber(this->expat_parser) + datai + strlen(target) + 4));
                     }
 
                     //std_log1(attribute);
-                } else {
+                }
+                else
+                {
                     //this must be part of the value
                     temp[tempi] = data[datai];
-                    tempi ++;
+                    tempi++;
                 }
 
-            } else if(data[datai] == '"'){
-                if(readingAttr){
-                    throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->file->getFileName(), (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+datai+strlen(target)+4));
+            }
+            else if (data[datai] == '"')
+            {
+                if (readingAttr)
+                {
+                    throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->file->getFileName(), (int) XML_GetCurrentLineNumber(this->expat_parser), (int) XML_GetCurrentColumnNumber(this->expat_parser) + datai + strlen(target) + 4));
 
-                } else {
+                }
+                else
+                {
                     readingAttr = true;
                     temp[tempi] = '\0';
                     content = std::string(temp);
                     //std_log1(attribute);
-                    if(attribute == "type"){
+                    if (attribute == "type")
+                    {
                         sheetType = content;
-                    } else if(attribute == "src"){
+                    }
+                    else if (attribute == "src")
+                    {
                         sheetName = content;
                     }
-                    tempi=0;
+                    tempi = 0;
                 }
-            } else {
+            }
+            else
+            {
                 temp[tempi] = data[datai];
-                tempi ++;
+                tempi++;
             }
             datai++;
             security_brake();
         }
 
-        if(sheetType == "application/x-hss" || sheetType == "text/hss"){
+        if (sheetType == "application/x-hss" || sheetType == "text/hss")
+        {
             //add to load later
             this->controller->loadSheetsAdd(sheetName);
-        } else if (sheetType == "application/xsl"){
+        }
+        else if (sheetType == "application/xsl")
+        {
             //ignore silently
-        } else {
+        }
+        else
+        {
             //warn
             //AXRWarning::p(new AXRWarning("XMLParser", "Ignoring stylesheet of unknown type", this->file->getFileName(), (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+1))->raise();
         }
@@ -254,11 +293,12 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
     delete [] temp;
 }
 
-
-std::string XMLParser::getFilePath(){
+std::string XMLParser::getFilePath()
+{
     return this->file->getBasePath() + "/" + this->file->getFileName();
 }
 
-std::string XMLParser::getFileName(){
+std::string XMLParser::getFileName()
+{
     return this->file->getFileName();
 }

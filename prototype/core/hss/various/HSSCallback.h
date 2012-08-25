@@ -45,11 +45,14 @@
 #include <string>
 #include "HSSObservableProperties.h"
 
-namespace AXR {
+namespace AXR
+{
+
     /**
      *  @brief Helper class that allows you to create callbacks.
      */
-    class HSSCallback {
+    class HSSCallback
+    {
     public:
         virtual ~HSSCallback();
 
@@ -66,23 +69,27 @@ namespace AXR {
     /**
      *  @brief Specific helper class to call value changed callbacks.
      */
-    template <class T> class HSSValueChangedCallback : public HSSCallback {
+    template <class T> class HSSValueChangedCallback : public HSSCallback
+    {
         void (T::*fptr)(HSSObservableProperty property, void* data);
         T* ptr;
 
     public:
         friend class HSSObject;
+
         /**
          *  Creates a new instance of a callback, that wraps a function to be called at a later time.
          *  @param _ptr     A regular pointer to the object that will receive the callback.
          *  @param _fptr    The function pointer to the method that will be called.
          */
-        HSSValueChangedCallback(T* _ptr, void(T::*_fptr)(HSSObservableProperty property, void* data)){
+        HSSValueChangedCallback(T* _ptr, void(T::*_fptr)(HSSObservableProperty property, void* data))
+        {
             ptr = _ptr;
             fptr = _fptr;
         }
 
-        void call(HSSObservableProperty property, void* data){
+        void call(HSSObservableProperty property, void* data)
+        {
             (*ptr.*fptr)(property, data);
         }
     };

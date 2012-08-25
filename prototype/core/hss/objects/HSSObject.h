@@ -52,7 +52,8 @@
 #include "HSSParserNode.h"
 #include "HSSTypeEnums.h"
 
-namespace AXR {
+namespace AXR
+{
 
     class AXRController;
     class HSSMultipleValueDefinition;

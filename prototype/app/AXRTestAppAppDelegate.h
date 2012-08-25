@@ -44,9 +44,11 @@
 #import "AXRView.h"
 
 #if (MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_5)
-@interface AXRTestAppAppDelegate : NSObject {
+@interface AXRTestAppAppDelegate : NSObject
+{
 #else
-@interface AXRTestAppAppDelegate : NSObject <NSApplicationDelegate> {
+@interface AXRTestAppAppDelegate : NSObject <NSApplicationDelegate>
+{
 #endif
     NSWindow *window;
     NSWindow * testsWindow;
@@ -57,33 +59,33 @@
     BOOL needsFile;
 }
 
-@property (assign) IBOutlet NSWindow *testsWindow;
-@property (assign) IBOutlet NSWindow *errorsWindow;
-@property (assign) IBOutlet NSTextView *errorLog;
-@property (assign) IBOutlet NSWindow *axrWindow;
-@property (assign) IBOutlet AXRView *axrView;
-@property (assign) BOOL needsFile;
+@property(assign) IBOutlet NSWindow *testsWindow;
+@property(assign) IBOutlet NSWindow *errorsWindow;
+@property(assign) IBOutlet NSTextView *errorLog;
+@property(assign) IBOutlet NSWindow *axrWindow;
+@property(assign) IBOutlet AXRView *axrView;
+@property(assign) BOOL needsFile;
 
-- (id)init;
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification;
-- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
+-(id) init;
+-(void) applicationDidFinishLaunching : (NSNotification *) aNotification;
+-(BOOL) application : (NSApplication *) theApplication openFile : (NSString *) filename;
 
 void listHSSStatements(NSString * filepath);
 void listHSSTokens(NSString * filepath);
 void listXMLElements(NSString * filepath);
 
-- (IBAction)listStatements:(id)sender;
-- (IBAction)listTokens:(id)sender;
+-(IBAction) listStatements : (id) sender;
+-(IBAction) listTokens : (id) sender;
 
-- (void)listXMLElements;
+-(void) listXMLElements;
 
-- (IBAction)listXMLElements:(id)sender;
+-(IBAction) listXMLElements : (id) sender;
 
-- (IBAction)openDocument:(id)sender;
-- (IBAction)layoutTests:(id)sender;
-- (IBAction)reload:(id)sender;
+-(IBAction) openDocument : (id) sender;
+-(IBAction) layoutTests : (id) sender;
+-(IBAction) reload : (id) sender;
 
-- (IBAction)previousLayoutStep:(id)sender;
-- (IBAction)nextLayoutStep:(id)sender;
+-(IBAction) previousLayoutStep : (id) sender;
+-(IBAction) nextLayoutStep : (id) sender;
 
 @end

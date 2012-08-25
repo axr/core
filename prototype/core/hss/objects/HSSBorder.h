@@ -48,7 +48,9 @@
 #include "HSSObject.h"
 #include "HSSUnits.h"
 
-namespace AXR {
+namespace AXR
+{
+
     /**
      *  @brief Abstract base class for all border objects.
      */
@@ -114,11 +116,11 @@ namespace AXR {
 
         long double _setLDProperty(
                                    void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p         value,
-                                   long double              percentageBase,
-                                   HSSObservableProperty    observedSourceProperty,
-                                   HSSObservable *          &observedStore,
-                                   HSSObservableProperty    &observedStoreProperty
+                                   HSSParserNode::p value,
+                                   long double percentageBase,
+                                   HSSObservableProperty observedSourceProperty,
+                                   HSSObservable * &observedStore,
+                                   HSSObservableProperty &observedStoreProperty
                                    );
     };
 }

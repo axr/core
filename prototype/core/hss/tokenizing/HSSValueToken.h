@@ -47,8 +47,10 @@
 
 #define VALUE_TOKEN(thetoken) (boost::static_pointer_cast<HSSValueToken>(thetoken))
 
-namespace AXR {
-    class HSSValueToken: public HSSToken
+namespace AXR
+{
+
+    class HSSValueToken : public HSSToken
     {
     public:
         typedef boost::shared_ptr<HSSValueToken> p;

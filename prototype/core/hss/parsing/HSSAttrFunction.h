@@ -46,7 +46,8 @@
 #include "HSSFunction.h"
 #include "HSSSelectorChain.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Implementation of the ref([<modfier>] <name> [of <selector chain>]) function in HSS.

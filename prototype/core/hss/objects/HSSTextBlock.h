@@ -45,7 +45,9 @@
 #include <pango/pangocairo.h>
 #include "HSSDisplayObject.h"
 
-namespace AXR {
+namespace AXR
+{
+
     enum HSSTextTransformType
     {
         HSSTextTransformTypeNone = 0,

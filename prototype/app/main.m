@@ -47,5 +47,5 @@ int main(int argc, char *argv[])
     //hack to make it work with IB from a dependent target
     //if anyone knows how to avoid this, please tell me
     [AXRView _keepAtLinkTime];
-    return NSApplicationMain(argc,  (const char **) argv);
+    return NSApplicationMain(argc, (const char **) argv);
 }

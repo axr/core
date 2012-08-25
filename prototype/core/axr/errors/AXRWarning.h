@@ -44,7 +44,9 @@
 
 #include "AXRError.h"
 
-namespace AXR {
+namespace AXR
+{
+
     /**
      *  @brief This is a subclass of AXRError, that should be used when something happened
      *  which isn't really an error, but still should be shown to the user somehow.

@@ -45,7 +45,8 @@
 #include <boost/shared_ptr.hpp>
 #include "HSSStatement.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief This class encapsulates all the different types of instructions in HSS.

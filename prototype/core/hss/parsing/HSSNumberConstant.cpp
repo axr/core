@@ -50,8 +50,9 @@ HSSNumberConstant::HSSNumberConstant(long double value)
     this->value = value;
 }
 
-HSSNumberConstant::p HSSNumberConstant::clone() const{
-    return boost::static_pointer_cast<HSSNumberConstant, HSSClonable>(this->cloneImpl());
+HSSNumberConstant::p HSSNumberConstant::clone() const
+{
+    return boost::static_pointer_cast<HSSNumberConstant, HSSClonable > (this->cloneImpl());
 }
 
 HSSNumberConstant::~HSSNumberConstant()
@@ -79,6 +80,7 @@ std::string HSSNumberConstant::toString()
     return ret;
 }
 
-HSSClonable::p HSSNumberConstant::cloneImpl() const{
+HSSClonable::p HSSNumberConstant::cloneImpl() const
+{
     return HSSClonable::p(new HSSNumberConstant(*this));
 }

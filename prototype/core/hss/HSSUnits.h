@@ -66,14 +66,29 @@ namespace AXR
     {
     public:
 #if defined(HSS_UNITS_NATIVE_CONSTRUCTORS_WIN32)
-        HSSPoint(const POINT &point) : x(point.x), y(point.y) { }
+
+        HSSPoint(const POINT &point) : x(point.x), y(point.y)
+        {
+        }
 #endif
 #if defined(HSS_UNITS_NATIVE_CONSTRUCTORS_APPLE)
-        HSSPoint(const NSPoint &point) : x(point.x), y(point.y) { }
+
+        HSSPoint(const NSPoint &point) : x(point.x), y(point.y)
+        {
+        }
 #endif
-        HSSPoint() : x(0), y(0) { }
-        HSSPoint(HSSUnit xAndY) : x(xAndY), y(xAndY) { }
-        HSSPoint(HSSUnit x, HSSUnit y) : x(x), y(y) { }
+
+        HSSPoint() : x(0), y(0)
+        {
+        }
+
+        HSSPoint(HSSUnit xAndY) : x(xAndY), y(xAndY)
+        {
+        }
+
+        HSSPoint(HSSUnit x, HSSUnit y) : x(x), y(y)
+        {
+        }
 
         HSSUnit x; /**< the location of the point in horizontal dimension. */
         HSSUnit y; /**< the location of the point in vertical dimension. */
@@ -86,16 +101,27 @@ namespace AXR
     {
     public:
 #ifdef HSS_UNITS_NATIVE_CONSTRUCTORS_APPLE
-        HSSSize(const NSSize &size) : width(size.width), height(size.height) { }
+
+        HSSSize(const NSSize &size) : width(size.width), height(size.height)
+        {
+        }
 #endif
-        HSSSize() : width(0), height(0) { }
-        HSSSize(HSSUnit widthAndHeight) : width(widthAndHeight), height(widthAndHeight) { }
-        HSSSize(HSSUnit width, HSSUnit height) : width(width), height(height) { }
+
+        HSSSize() : width(0), height(0)
+        {
+        }
+
+        HSSSize(HSSUnit widthAndHeight) : width(widthAndHeight), height(widthAndHeight)
+        {
+        }
+
+        HSSSize(HSSUnit width, HSSUnit height) : width(width), height(height)
+        {
+        }
 
         HSSUnit width; /**< measure in the horizontal dimension. */
         HSSUnit height; /**< measure in the vertical dimension. */
     };
-
 
     /**
      * @brief   A basic rectangle.
@@ -104,15 +130,33 @@ namespace AXR
     {
     public:
 #ifdef HSS_UNITS_NATIVE_CONSTRUCTORS_WIN32
-        HSSRect(const RECT &rect) : origin(HSSPoint(rect.left, rect.top)), size(HSSSize(rect.right - rect.left - 1, rect.bottom - rect.top - 1)) { }
+
+        HSSRect(const RECT &rect) : origin(HSSPoint(rect.left, rect.top)), size(HSSSize(rect.right - rect.left - 1, rect.bottom - rect.top - 1))
+        {
+        }
 #endif
 #ifdef HSS_UNITS_NATIVE_CONSTRUCTORS_APPLE
-        HSSRect(const NSRect &rect) : origin(HSSPoint(rect.origin.x, rect.origin.y)), size(HSSSize(rect.size.width, rect.size.height)) { }
+
+        HSSRect(const NSRect &rect) : origin(HSSPoint(rect.origin.x, rect.origin.y)), size(HSSSize(rect.size.width, rect.size.height))
+        {
+        }
 #endif
-        HSSRect() { }
-        HSSRect(const HSSSize &size) : origin(HSSPoint()), size(size) { }
-        HSSRect(const HSSPoint &origin, const HSSSize &size) : origin(origin), size(size) { }
-        HSSRect(HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height) : origin(HSSPoint(x, y)), size(HSSSize(width, height)) { }
+
+        HSSRect()
+        {
+        }
+
+        HSSRect(const HSSSize &size) : origin(HSSPoint()), size(size)
+        {
+        }
+
+        HSSRect(const HSSPoint &origin, const HSSSize &size) : origin(origin), size(size)
+        {
+        }
+
+        HSSRect(HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height) : origin(HSSPoint(x, y)), size(HSSSize(width, height))
+        {
+        }
 
         HSSPoint origin; /**< Where the rectangle starts. This point is on the top left corner of the rectangle. */
         HSSSize size; /**< The dimensions of the rectangle. */

@@ -47,7 +47,8 @@
 #include "HSSShape.h"
 #include "HSSUnits.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief A shape object type that allows to create rectangles with rounded corners.
@@ -159,13 +160,13 @@ namespace AXR {
     private:
         long double _setLDProperty(
                                    void(HSSRoundedRect::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p       value,
-                                   long double            percentageBase,
-                                   HSSObservableProperty  observedProperty,
-                                   HSSObservable *        observedObject,
-                                   HSSObservableProperty  observedSourceProperty,
-                                   HSSObservable *        &observedStore,
-                                   HSSObservableProperty  &observedStoreProperty,
+                                   HSSParserNode::p value,
+                                   long double percentageBase,
+                                   HSSObservableProperty observedProperty,
+                                   HSSObservable * observedObject,
+                                   HSSObservableProperty observedSourceProperty,
+                                   HSSObservable * &observedStore,
+                                   HSSObservableProperty &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
         HSSClonable::p cloneImpl() const;

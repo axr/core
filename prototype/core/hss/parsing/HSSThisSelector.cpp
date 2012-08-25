@@ -49,15 +49,18 @@ HSSThisSelector::HSSThisSelector()
 
 }
 
-HSSThisSelector::p HSSThisSelector::clone() const{
-    return boost::static_pointer_cast<HSSThisSelector, HSSClonable>(this->cloneImpl());
+HSSThisSelector::p HSSThisSelector::clone() const
+{
+    return boost::static_pointer_cast<HSSThisSelector, HSSClonable > (this->cloneImpl());
 }
 
-std::string HSSThisSelector::toString(){
+std::string HSSThisSelector::toString()
+{
     return "@this selector";
 }
 
-HSSClonable::p HSSThisSelector::cloneImpl() const{
+HSSClonable::p HSSThisSelector::cloneImpl() const
+{
     return HSSClonable::p(new HSSThisSelector(*this));
 }
 

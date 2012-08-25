@@ -51,11 +51,30 @@ void std_log_level(std::string message, int debugLevel)
     }
 }
 
-void std_log(std::string message) { std_log_level(message, 0); }
-void std_log1(std::string message) { std_log_level(message, 1); }
-void std_log2(std::string message) { std_log_level(message, 2); }
-void std_log3(std::string message) { std_log_level(message, 3); }
-void std_log4(std::string message) { std_log_level(message, 4); }
+void std_log(std::string message)
+{
+    std_log_level(message, 0);
+}
+
+void std_log1(std::string message)
+{
+    std_log_level(message, 1);
+}
+
+void std_log2(std::string message)
+{
+    std_log_level(message, 2);
+}
+
+void std_log3(std::string message)
+{
+    std_log_level(message, 3);
+}
+
+void std_log4(std::string message)
+{
+    std_log_level(message, 4);
+}
 
 unsigned axr_debug_active_channels = 0;
 

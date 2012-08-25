@@ -43,20 +43,20 @@
 #define AXRGLOBAL_H
 
 #if defined(_MSC_VER)
-#  define AXR_DECL_DEPRECATED __declspec(deprecated)
-#  if defined(__INTEL_COMPILER) // Intel compiler disguised as MSVC doesn't allow variable deprecation
-#    define AXR_DECL_VARIABLE_DEPRECATED
-#  endif
+#define AXR_DECL_DEPRECATED __declspec(deprecated)
+#if defined(__INTEL_COMPILER) // Intel compiler disguised as MSVC doesn't allow variable deprecation
+#define AXR_DECL_VARIABLE_DEPRECATED
+#endif
 #elif defined(__GNUC__) || defined(__ARMCC__) || defined(__CC_ARM)
-#  define AXR_DECL_DEPRECATED __attribute__ ((__deprecated__))
+#define AXR_DECL_DEPRECATED __attribute__ ((__deprecated__))
 #endif
 
 #ifndef AXR_DECL_DEPRECATED
-#  define AXR_DECL_DEPRECATED
+#define AXR_DECL_DEPRECATED
 #endif
 
 #ifndef AXR_DECL_VARIABLE_DEPRECATED
-#  define AXR_DECL_VARIABLE_DEPRECATED AXR_DECL_DEPRECATED
+#define AXR_DECL_VARIABLE_DEPRECATED AXR_DECL_DEPRECATED
 #endif
 
 #ifdef AXR_DEPRECATED
@@ -68,11 +68,11 @@
 #endif
 
 #if defined(AXR_NO_DEPRECATED)
-#  define AXR_DEPRECATED
-#  define AXR_DEPRECATED_VARIABLE
+#define AXR_DEPRECATED
+#define AXR_DEPRECATED_VARIABLE
 #else
-#  define AXR_DEPRECATED AXR_DECL_DEPRECATED
-#  define AXR_DEPRECATED_VARIABLE AXR_DECL_VARIABLE_DEPRECATED
+#define AXR_DEPRECATED AXR_DECL_DEPRECATED
+#define AXR_DEPRECATED_VARIABLE AXR_DECL_VARIABLE_DEPRECATED
 #endif
 
 // define AXR_NO_DEPRECATED_ENUMS to restrict usage of deprecated enum members,

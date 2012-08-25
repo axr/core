@@ -59,7 +59,8 @@
 #include "HSSRgb.h"
 #include "HSSRule.h"
 
-namespace AXR {
+namespace AXR
+{
 
     class HSSContainer;
     class HSSFlag;
@@ -378,10 +379,10 @@ namespace AXR {
 
         //here go the final computed values
         HSSUnit x, y, globalX, globalY,
-                    width, innerWidth, outerWidth,
-                    height, innerHeight, outerHeight,
-                    topPadding, rightPadding, bottomPadding, leftPadding,
-                    topMargin, rightMargin, bottomMargin, leftMargin
+        width, innerWidth, outerWidth,
+        height, innerHeight, outerHeight,
+        topPadding, rightPadding, bottomPadding, leftPadding,
+        topMargin, rightMargin, bottomMargin, leftMargin
         ;
         //width
         HSSParserNode::p dWidth;
@@ -507,13 +508,13 @@ namespace AXR {
     private:
         long double _setLDProperty(
                                    void(HSSDisplayObject::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p         value,
-                                   long double              percentageBase,
-                                   HSSObservableProperty    observedProperty,
-                                   HSSObservable::p          observedObject,
-                                   HSSObservableProperty    observedSourceProperty,
-                                   HSSObservable::p          &observedStore,
-                                   HSSObservableProperty    &observedStoreProperty,
+                                   HSSParserNode::p value,
+                                   long double percentageBase,
+                                   HSSObservableProperty observedProperty,
+                                   HSSObservable::p observedObject,
+                                   HSSObservableProperty observedSourceProperty,
+                                   HSSObservable::p &observedStore,
+                                   HSSObservableProperty &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
         HSSClonable::p cloneImpl() const;

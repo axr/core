@@ -45,13 +45,14 @@
 #include <boost/shared_ptr.hpp>
 #include "HSSExpression.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Type of expression that multiplies the left value by the right value.
      */
-    class HSSMultiplication : public HSSExpression {
-
+    class HSSMultiplication : public HSSExpression
+    {
     public:
         typedef boost::shared_ptr<HSSMultiplication> p;
 

@@ -45,7 +45,8 @@
 #include "HSSAction.h"
 #include "HSSFunction.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief The action objects that represent custom functions functions.

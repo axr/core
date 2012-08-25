@@ -61,18 +61,19 @@
 
 using namespace AXR;
 
-
 HSSDisplayObject::p HSSContainer::asDisplayObject(HSSContainer::p theContainer)
 {
-    return boost::static_pointer_cast<HSSDisplayObject>(theContainer);
+    return boost::static_pointer_cast<HSSDisplayObject > (theContainer);
 }
 
 //always test the return of this function. E.g. "HSSContainer::p cont = HSSContainer::asContainer(myDO); if(cont) { /* ... */ }
+
 HSSContainer::p HSSContainer::asContainer(HSSDisplayObject::p theDisplayObject)
 {
     HSSContainer::p ret;
-    if (theDisplayObject->isA(HSSObjectTypeContainer)) {
-        ret = boost::static_pointer_cast<HSSContainer>(theDisplayObject);
+    if (theDisplayObject->isA(HSSObjectTypeContainer))
+    {
+        ret = boost::static_pointer_cast<HSSContainer > (theDisplayObject);
     }
     return ret;
 }
@@ -93,13 +94,13 @@ void HSSContainer::initialize()
     this->directionSecondary = HSSDirectionTopToBottom;
 
     this->observedContentAlignX = this->observedContentAlignY
-    = this->observedDirectionPrimary = this->observedDirectionSecondary
-    = this->observedShape = this->observedTextAlign
-    = NULL;
+            = this->observedDirectionPrimary = this->observedDirectionSecondary
+            = this->observedShape = this->observedTextAlign
+            = NULL;
 
     this->distributeX = distributeXLinear
-    = this->distributeY = distributeYLinear
-    = false;
+            = this->distributeY = distributeYLinear
+            = false;
 
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("isA");
@@ -114,12 +115,12 @@ void HSSContainer::initialize()
 
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyContentAlignX, (void *) &this->contentAlignX);
-    this->registerProperty(HSSObservablePropertyContentAlignY, (void *) &this->contentAlignY);
-    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) &this->directionPrimary);
-    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) &this->directionSecondary);
-    this->registerProperty(HSSObservablePropertyShape, (void *) &this->shape);
-    this->registerProperty(HSSObservablePropertyTextAlign, (void *) &this->textAlign);
+    this->registerProperty(HSSObservablePropertyContentAlignX, (void *) & this->contentAlignX);
+    this->registerProperty(HSSObservablePropertyContentAlignY, (void *) & this->contentAlignY);
+    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) & this->directionPrimary);
+    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) & this->directionSecondary);
+    this->registerProperty(HSSObservablePropertyShape, (void *) & this->shape);
+    this->registerProperty(HSSObservablePropertyTextAlign, (void *) & this->textAlign);
 }
 
 HSSContainer::HSSContainer(const HSSContainer & orig)
@@ -128,12 +129,14 @@ HSSContainer::HSSContainer(const HSSContainer & orig)
     this->initialize();
 }
 
-HSSContainer::p HSSContainer::clone() const{
+HSSContainer::p HSSContainer::clone() const
+{
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: cloning container");
-    return boost::static_pointer_cast<HSSContainer, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSContainer, HSSClonable > (this->cloneImpl());
 }
 
-HSSClonable::p HSSContainer::cloneImpl() const{
+HSSClonable::p HSSContainer::cloneImpl() const
+{
     return HSSClonable::p(new HSSContainer(*this));
 }
 
@@ -143,19 +146,24 @@ HSSContainer::~HSSContainer()
     this->children.clear();
     this->allChildren.clear();
 
-    if (this->observedContentAlignX != NULL) {
+    if (this->observedContentAlignX != NULL)
+    {
         this->observedContentAlignX->removeObserver(this->observedContentAlignXProperty, HSSObservablePropertyAlignX, this);
     }
-    if (this->observedContentAlignY != NULL) {
+    if (this->observedContentAlignY != NULL)
+    {
         this->observedContentAlignY->removeObserver(this->observedContentAlignYProperty, HSSObservablePropertyAlignY, this);
     }
-    if (this->observedDirectionPrimary != NULL) {
+    if (this->observedDirectionPrimary != NULL)
+    {
         this->observedDirectionPrimary->removeObserver(this->observedDirectionPrimaryProperty, HSSObservablePropertyDirectionPrimary, this);
     }
-    if (this->observedDirectionSecondary != NULL) {
+    if (this->observedDirectionSecondary != NULL)
+    {
         this->observedDirectionSecondary->removeObserver(this->observedDirectionSecondaryProperty, HSSObservablePropertyDirectionSecondary, this);
     }
-    if (this->observedShape != NULL) {
+    if (this->observedShape != NULL)
+    {
         this->observedShape->removeObserver(this->observedShapeProperty, HSSObservablePropertyShape, this);
     }
 }
@@ -166,24 +174,30 @@ std::string HSSContainer::toString()
     unsigned i;
     std::map<std::string, std::string>::iterator it;
 
-    if (this->isNamed()) {
+    if (this->isNamed())
+    {
         tempstr = std::string("HSSContainer: ").append(this->name);
-    } else {
+    }
+    else
+    {
         tempstr = "Annonymous HSSContainer";
     }
 
-    if (this->attributes.size() > 0) {
+    if (this->attributes.size() > 0)
+    {
         tempstr.append("\n").append("with the following attributes:");
-        for(it=this->attributes.begin(); it!=this->attributes.end(); it++)
+        for (it = this->attributes.begin(); it != this->attributes.end(); it++)
         {
             tempstr.append("\n").append("- ").append((*it).first).append(": ").append((*it).second);
         }
         tempstr.append("\n");
     }
 
-    if(this->children.size() > 0){
+    if (this->children.size() > 0)
+    {
         tempstr.append("\n").append("with the following children objects:");
-        for (i=0; i<this->children.size(); i++) {
+        for (i = 0; i<this->children.size(); i++)
+        {
             tempstr.append("\n").append(this->children[i]->toString());
         }
         tempstr.append("\n");
@@ -199,38 +213,49 @@ std::string HSSContainer::defaultObjectType()
 
 std::string HSSContainer::defaultObjectType(std::string property)
 {
-    if (property == "shape"){
+    if (property == "shape")
+    {
         return "roundedRect";
-    } else {
+    }
+    else
+    {
         return HSSDisplayObject::defaultObjectType(property);
     }
 }
 
 bool HSSContainer::isKeyword(std::string value, std::string property)
 {
-    if (property == "contentAlignX" || property == "contentAlignY") {
-        if (   value == "center"
-            || value == "middle"
-            || value == "top"
-            || value == "bottom"
-            || value == "left"
-            || value == "right"
-            || value == "even"
-            || value == "justify"){
+    if (property == "contentAlignX" || property == "contentAlignY")
+    {
+        if (value == "center"
+                || value == "middle"
+                || value == "top"
+                || value == "bottom"
+                || value == "left"
+                || value == "right"
+                || value == "even"
+                || value == "justify")
+        {
             return true;
         }
-    } else if (property == "direction" || property == "wrapDirection"){
-        if (   value == "ltr"
-            || value == "rtl"
-            || value == "ttb"
-            || value == "btt"){
+    }
+    else if (property == "direction" || property == "wrapDirection")
+    {
+        if (value == "ltr"
+                || value == "rtl"
+                || value == "ttb"
+                || value == "btt")
+        {
             return true;
         }
-    } else if (property == "textAlign"){
-        if (   value == "left"
-            || value == "right"
-            || value == "center"
-            || value == "justify"){
+    }
+    else if (property == "textAlign")
+    {
+        if (value == "left"
+                || value == "right"
+                || value == "center"
+                || value == "justify")
+        {
             return true;
         }
     }
@@ -243,10 +268,11 @@ void HSSContainer::add(HSSDisplayObject::p child)
 {
     HSSContainer::p sharedThis = this->shared_from_this();
     child->setParent(sharedThis);
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: added child "+child->getElementName()+" to "+this->getElementName());
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: added child " + child->getElementName() + " to " + this->getElementName());
     child->setIndex(this->allChildren.size());
     child->setController(this->getController());
-    if(!child->isA(HSSObjectTypeTextBlock)){
+    if (!child->isA(HSSObjectTypeTextBlock))
+    {
         this->children.push_back(child);
     }
     this->allChildren.push_back(child);
@@ -256,15 +282,19 @@ void HSSContainer::add(HSSDisplayObject::p child)
 void HSSContainer::remove(unsigned index)
 {
     HSSDisplayObject::it it;
-    for (it=this->children.begin(); it!=this->children.end(); it++) {
+    for (it = this->children.begin(); it != this->children.end(); it++)
+    {
         HSSDisplayObject::p child = *it;
-        if(child->getIndex() == index){
+        if (child->getIndex() == index)
+        {
             this->children.erase(it);
         }
     }
-    for (it=this->allChildren.begin(); it!=this->allChildren.end(); it++) {
+    for (it = this->allChildren.begin(); it != this->allChildren.end(); it++)
+    {
         HSSDisplayObject::p child = *it;
-        if(child->getIndex() == index){
+        if (child->getIndex() == index)
+        {
             this->allChildren.erase(it);
         }
     }
@@ -280,8 +310,9 @@ void HSSContainer::clear()
 
 void HSSContainer::resetChildrenIndexes()
 {
-    unsigned i,size;
-    for (i=0, size=this->allChildren.size(); i<size; i++) {
+    unsigned i, size;
+    for (i = 0, size = this->allChildren.size(); i < size; i++)
+    {
         this->allChildren[i]->setIndex(i);
     }
 }
@@ -289,17 +320,24 @@ void HSSContainer::resetChildrenIndexes()
 void HSSContainer::setContentText(std::string text)
 {
     boost::algorithm::trim(text);
-    if (text != "") {
-        if (this->allChildren.size() == 0) {
+    if (text != "")
+    {
+        if (this->allChildren.size() == 0)
+        {
             HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
             txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
             this->add(txtBlck);
-        } else {
+        }
+        else
+        {
             HSSDisplayObject::p lastChild = this->allChildren.back();
-            if (lastChild->isA(HSSObjectTypeTextBlock)){
-                HSSTextBlock::p textBlock = boost::static_pointer_cast<HSSTextBlock>(lastChild);
+            if (lastChild->isA(HSSObjectTypeTextBlock))
+            {
+                HSSTextBlock::p textBlock = boost::static_pointer_cast<HSSTextBlock > (lastChild);
                 textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
-            } else {
+            }
+            else
+            {
                 HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
                 txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
                 this->add(txtBlck);
@@ -311,17 +349,24 @@ void HSSContainer::setContentText(std::string text)
 void HSSContainer::appendContentText(std::string text)
 {
     boost::algorithm::trim(text);
-    if (text != "") {
-        if (this->allChildren.size() == 0) {
+    if (text != "")
+    {
+        if (this->allChildren.size() == 0)
+        {
             HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
             txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
             this->add(txtBlck);
-        } else {
+        }
+        else
+        {
             HSSDisplayObject::p lastChild = this->allChildren.back();
-            if (lastChild->isA(HSSObjectTypeTextBlock)){
-                HSSTextBlock::p textBlock = boost::static_pointer_cast<HSSTextBlock>(lastChild);
+            if (lastChild->isA(HSSObjectTypeTextBlock))
+            {
+                HSSTextBlock::p textBlock = boost::static_pointer_cast<HSSTextBlock > (lastChild);
                 textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(textBlock->getText() + " " + text)));
-            } else {
+            }
+            else
+            {
                 HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
                 txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
                 this->add(txtBlck);
@@ -338,30 +383,31 @@ std::string HSSContainer::getContentText()
 
 void HSSContainer::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    switch (name) {
-        case HSSObservablePropertyContentAlignX:
-            this->setDContentAlignX(value);
-            break;
-        case HSSObservablePropertyContentAlignY:
-            this->setDContentAlignY(value);
-            break;
-        case HSSObservablePropertyDirectionPrimary:
-            this->setDDirectionPrimary(value);
-            break;
-        case HSSObservablePropertyDirectionSecondary:
-            this->setDDirectionSecondary(value);
-            break;
-        case HSSObservablePropertyShape:
-            this->setDShape(value);
-            break;
+    switch (name)
+    {
+    case HSSObservablePropertyContentAlignX:
+        this->setDContentAlignX(value);
+        break;
+    case HSSObservablePropertyContentAlignY:
+        this->setDContentAlignY(value);
+        break;
+    case HSSObservablePropertyDirectionPrimary:
+        this->setDDirectionPrimary(value);
+        break;
+    case HSSObservablePropertyDirectionSecondary:
+        this->setDDirectionSecondary(value);
+        break;
+    case HSSObservablePropertyShape:
+        this->setDShape(value);
+        break;
 
-        case HSSObservablePropertyTextAlign:
-            this->setDTextAlign(value);
-            break;
+    case HSSObservablePropertyTextAlign:
+        this->setDTextAlign(value);
+        break;
 
-        default:
-            HSSDisplayObject::setProperty(name, value);
-            break;
+    default:
+        HSSDisplayObject::setProperty(name, value);
+        break;
     }
 }
 
@@ -369,7 +415,8 @@ void HSSContainer::recursiveReadDefinitionObjects()
 {
     this->readDefinitionObjects();
     unsigned i;
-    for (i=0; i<this->allChildren.size(); i++) {
+    for (i = 0; i<this->allChildren.size(); i++)
+    {
         this->allChildren[i]->recursiveReadDefinitionObjects();
     }
 }
@@ -379,7 +426,8 @@ void HSSContainer::recursiveRegenerateSurfaces()
     this->regenerateSurfaces();
 
     unsigned i, size;
-    for (i=0, size = this->allChildren.size(); i<size; i++) {
+    for (i = 0, size = this->allChildren.size(); i < size; i++)
+    {
         this->allChildren[i]->recursiveRegenerateSurfaces();
     }
 }
@@ -388,7 +436,8 @@ void HSSContainer::recursiveDraw(cairo_t * cairo)
 {
     this->draw(cairo);
     unsigned i, size;
-    for (i=0, size = this->allChildren.size(); i<size; i++) {
+    for (i = 0, size = this->allChildren.size(); i < size; i++)
+    {
         this->allChildren[i]->recursiveDraw(cairo);
     }
 }
@@ -407,21 +456,24 @@ void HSSContainer::drawBorders()
     cairo_t * cairo = cairo_create(this->bordersSurface);
     HSSUnit total = 0., i = 0., offset = 0., correction = 0.;
 
-    for (it=this->border.begin(); it!=this->border.end(); it++) {
+    for (it = this->border.begin(); it != this->border.end(); it++)
+    {
         total += (*it)->getSize();
     }
 
-    if ((int)total % 2){
+    if ((int) total % 2)
+    {
         correction = 0.5;
     }
 
-    for (it=this->border.begin(); it!=this->border.end(); it++) {
+    for (it = this->border.begin(); it != this->border.end(); it++)
+    {
         HSSBorder::p theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
-        offset = (total/2) - i - (theSize / 2) + correction;
+        offset = (total / 2) - i - (theSize / 2) + correction;
 
-        this->shape->draw(cairo, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset*2, this->height - offset*2);
+        this->shape->draw(cairo, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2);
         theBorder->draw(cairo);
 
         i += theSize;
@@ -451,16 +503,17 @@ void HSSContainer::drawBorders()
 void HSSContainer::layout()
 {
     bool done = false;
-    if(this->allChildren.size() == 0) done = true;
+    if (this->allChildren.size() == 0) done = true;
 
     //reset flag
     this->_needsLayout = true;
 
-    while (this->_needsLayout) {
+    while (this->_needsLayout)
+    {
         //we assume we don't need to re-layout
         this->_needsLayout = false;
 
-        if(!done)
+        if (!done)
         {
             std::vector<displayGroup::p>primaryGroups;
             std::vector<displayGroup::p>secondaryGroups;
@@ -472,25 +525,34 @@ void HSSContainer::layout()
             //bool secondaryIsHorizontal = (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft);
 
             //create groups and lines
-            for (i=0, size = this->allChildren.size(); i<size; i++) {
-                if(!done){
+            for (i = 0, size = this->allChildren.size(); i < size; i++)
+            {
+                if (!done)
+                {
                     HSSDisplayObject::p child = this->allChildren[i];
                     //place it on the alignment point
                     //horizontal
-                    if(child->_anchorXdefault){
-                        child->x = child->alignX - (child->outerWidth/2) + child->leftMargin;
-                    } else {
+                    if (child->_anchorXdefault)
+                    {
+                        child->x = child->alignX - (child->outerWidth / 2) + child->leftMargin;
+                    }
+                    else
+                    {
                         child->x = child->alignX - child->anchorX;
                     }
 
                     //vertical
-                    if(child->_anchorXdefault){
-                        child->y = child->alignY - (child->outerHeight/2) + child->topMargin;
-                    } else {
+                    if (child->_anchorXdefault)
+                    {
+                        child->y = child->alignY - (child->outerHeight / 2) + child->topMargin;
+                    }
+                    else
+                    {
                         child->y = child->alignY - child->anchorY;
                     }
 
-                    if(!child->getOverflow()){
+                    if (!child->getOverflow())
+                    {
                         if ((child->x + child->width + child->rightMargin) > (this->width - this->rightPadding)) child->x = (this->width - this->rightPadding) - (child->width + child->rightMargin);
                         if (child->x < child->leftMargin + this->leftPadding) child->x = child->leftMargin + this->leftPadding;
 
@@ -498,26 +560,34 @@ void HSSContainer::layout()
                         if (child->y < child->topMargin + this->topPadding) child->y = child->topMargin + this->topPadding;
                     }
 
-                    if(wrapper->showLayoutSteps()){
+                    if (wrapper->showLayoutSteps())
+                    {
                         wrapper->nextLayoutTick();
                         wrapper->nextLayoutChild();
                         wrapper->breakIfNeeded();
-                        if(wrapper->layoutStepDone()){
+                        if (wrapper->layoutStepDone())
+                        {
                             done = true;
                             break;
                         }
                     }
 
-                    if(!done){
+                    if (!done)
+                    {
                         bool addedToGroup = false;
-                        if(child->getFlow() == true){
-                            if( i!=0 ) {
+                        if (child->getFlow() == true)
+                        {
+                            if (i != 0)
+                            {
                                 j = 0;
-                                while (j<primaryGroups.size() && done == false) {
-                                    if(primaryGroups[j]->lines.size() == 0){
+                                while (j < primaryGroups.size() && done == false)
+                                {
+                                    if (primaryGroups[j]->lines.size() == 0)
+                                    {
                                         displayGroup::p & currentPGroup = primaryGroups[j];
                                         addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
-                                        if (!addedToGroup && currentPGroup->complete){
+                                        if (!addedToGroup && currentPGroup->complete)
+                                        {
                                             //transform the current group into a line
                                             displayGroup::p newGroup = displayGroup::p(new displayGroup());
                                             newGroup->x = currentPGroup->x;
@@ -541,37 +611,50 @@ void HSSContainer::layout()
                                             addedToGroup = true;
                                         }
 
-                                        if(addedToGroup){
-                                            k=0;
-                                            while (k<primaryGroups.size()){
-                                                if(k != j){
+                                        if (addedToGroup)
+                                        {
+                                            k = 0;
+                                            while (k < primaryGroups.size())
+                                            {
+                                                if (k != j)
+                                                {
                                                     displayGroup::p & otherPGroup = primaryGroups[k];
-                                                    bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
-                                                    if(merged){
-                                                        primaryGroups.erase(primaryGroups.begin()+j);
+                                                    bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup, this->directionPrimary);
+                                                    if (merged)
+                                                    {
+                                                        primaryGroups.erase(primaryGroups.begin() + j);
                                                         j = k;
-                                                    } else {
+                                                    }
+                                                    else
+                                                    {
                                                         k++;
                                                     }
-                                                } else {
+                                                }
+                                                else
+                                                {
                                                     k++;
                                                 }
                                             }
                                         }
 
-                                        if(wrapper->showLayoutSteps()){
+                                        if (wrapper->showLayoutSteps())
+                                        {
                                             wrapper->nextLayoutTick();
                                             wrapper->breakIfNeeded();
-                                            if(wrapper->layoutStepDone()){
+                                            if (wrapper->layoutStepDone())
+                                            {
                                                 done = true;
                                                 break;
                                             }
                                         }
 
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         displayGroup::p & currentPGroup = primaryGroups[j]->lines.back();
                                         addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
-                                        if (!addedToGroup && currentPGroup->complete){
+                                        if (!addedToGroup && currentPGroup->complete)
+                                        {
                                             //create new line
                                             displayGroup::p newLine = displayGroup::p(new displayGroup());
                                             newLine->x = child->x - child->leftMargin;
@@ -585,28 +668,38 @@ void HSSContainer::layout()
                                             addedToGroup = true;
                                         }
 
-                                        if(addedToGroup){
-                                            k=0;
-                                            while (k<primaryGroups.size()){
-                                                if(k != j){
+                                        if (addedToGroup)
+                                        {
+                                            k = 0;
+                                            while (k < primaryGroups.size())
+                                            {
+                                                if (k != j)
+                                                {
                                                     displayGroup::p & otherPGroup = primaryGroups[k];
-                                                    bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup,  this->directionPrimary);
-                                                    if(merged){
-                                                        primaryGroups.erase(primaryGroups.begin()+j);
+                                                    bool merged = this->_mergeGroupsIfNeeded(otherPGroup, currentPGroup, this->directionPrimary);
+                                                    if (merged)
+                                                    {
+                                                        primaryGroups.erase(primaryGroups.begin() + j);
                                                         j = k;
-                                                    } else {
+                                                    }
+                                                    else
+                                                    {
                                                         k++;
                                                     }
-                                                } else {
+                                                }
+                                                else
+                                                {
                                                     k++;
                                                 }
                                             }
                                         }
 
-                                        if(wrapper->showLayoutSteps()){
+                                        if (wrapper->showLayoutSteps())
+                                        {
                                             wrapper->nextLayoutTick();
                                             wrapper->breakIfNeeded();
-                                            if(wrapper->layoutStepDone()){
+                                            if (wrapper->layoutStepDone())
+                                            {
                                                 done = true;
                                                 break;
                                             }
@@ -618,7 +711,8 @@ void HSSContainer::layout()
                                 }
                             }
 
-                            if(!addedToGroup){
+                            if (!addedToGroup)
+                            {
                                 displayGroup::p newGroup = displayGroup::p(new displayGroup());
                                 newGroup->x = child->x - child->leftMargin;
                                 newGroup->y = child->y - child->topMargin;
@@ -632,36 +726,49 @@ void HSSContainer::layout()
 
 
                     }
-                } else {
+                }
+                else
+                {
                     break;
                 }
             }
 
-            if(!done){
+            if (!done)
+            {
                 //distribute if necessary in the primary direction
-                bool primaryIsHorizontal = (this->directionPrimary== HSSDirectionLeftToRight || this->directionPrimary == HSSDirectionRightToLeft);
-                if ( (this->distributeX && primaryIsHorizontal) || (this->distributeY && !primaryIsHorizontal) ){
+                bool primaryIsHorizontal = (this->directionPrimary == HSSDirectionLeftToRight || this->directionPrimary == HSSDirectionRightToLeft);
+                if ((this->distributeX && primaryIsHorizontal) || (this->distributeY && !primaryIsHorizontal))
+                {
                     std::vector<displayGroup::p>::iterator pgIt;
-                    for (pgIt=primaryGroups.begin(); pgIt!=primaryGroups.end(); pgIt++) {
+                    for (pgIt = primaryGroups.begin(); pgIt != primaryGroups.end(); pgIt++)
+                    {
                         displayGroup::p & pgGrp = *pgIt;
-                        if(pgGrp->lines.size() == 0){
+                        if (pgGrp->lines.size() == 0)
+                        {
                             this->_distribute(pgGrp, this->directionPrimary);
-                            if(wrapper->showLayoutSteps()){
+                            if (wrapper->showLayoutSteps())
+                            {
                                 wrapper->nextLayoutTick();
                                 wrapper->breakIfNeeded();
-                                if(wrapper->layoutStepDone()){
+                                if (wrapper->layoutStepDone())
+                                {
                                     done = true;
                                     break;
                                 }
                             }
-                        } else {
+                        }
+                        else
+                        {
                             std::vector<displayGroup::p>::iterator pgLineIt;
-                            for (pgLineIt=pgGrp->lines.begin(); pgLineIt!=pgGrp->lines.end(); pgLineIt++) {
+                            for (pgLineIt = pgGrp->lines.begin(); pgLineIt != pgGrp->lines.end(); pgLineIt++)
+                            {
                                 this->_distribute(*pgLineIt, this->directionPrimary);
-                                if(wrapper->showLayoutSteps()){
+                                if (wrapper->showLayoutSteps())
+                                {
                                     wrapper->nextLayoutTick();
                                     wrapper->breakIfNeeded();
-                                    if(wrapper->layoutStepDone()){
+                                    if (wrapper->layoutStepDone())
+                                    {
                                         done = true;
                                         break;
                                     }
@@ -674,11 +781,14 @@ void HSSContainer::layout()
 
                 security_brake_reset();
 
-                if(!done){
+                if (!done)
+                {
                     std::vector<displayGroup::p>::iterator pgIt;
-                    for (pgIt=primaryGroups.begin(); pgIt!=primaryGroups.end(); pgIt++) {
+                    for (pgIt = primaryGroups.begin(); pgIt != primaryGroups.end(); pgIt++)
+                    {
                         displayGroup::p theDG = *pgIt;
-                        if(theDG->lines.size() > 0){
+                        if (theDG->lines.size() > 0)
+                        {
                             displayGroup::p lineA, lineB, targetA, targetB;
                             std::vector<HSSDisplayObject::p>::iterator lineAIt, lineBIt;
 
@@ -692,14 +802,17 @@ void HSSContainer::layout()
                             displayGroup::p newGroup;
 
                             this->_recursiveCreateSecondaryGroups(lineAIt, lineA->objects.end(), lineBIt, lineB->objects.end(), targetA, targetB, newGroup, pglIt, theDG->lines.end(), true, secondaryGroups, true, false);
-                        } else {
+                        }
+                        else
+                        {
                             displayGroup::p newGroup = displayGroup::p(new displayGroup());
                             newGroup->lines.push_back(theDG);
                             newGroup->height = 0.;
                             std::vector<HSSDisplayObject::p>::iterator it;
-                            for (it=theDG->objects.begin(); it!=theDG->objects.end(); it++) {
+                            for (it = theDG->objects.begin(); it != theDG->objects.end(); it++)
+                            {
                                 HSSDisplayObject::p & theDO = *it;
-                                if(theDO->outerHeight > newGroup->height) newGroup->height = theDO->outerHeight;
+                                if (theDO->outerHeight > newGroup->height) newGroup->height = theDO->outerHeight;
                             }
                             secondaryGroups.push_back(newGroup);
                         }
@@ -709,18 +822,20 @@ void HSSContainer::layout()
 
             } //if !done
 
-    //        std::vector<displayGroup::p>::iterator linesIt;
-    //        for (linesIt=newGroup->lines.begin(); linesIt!=newGroup->lines.end(); linesIt++) {
-    //            newGroup->height += (*linesIt)->height;
-    //        }
+            //        std::vector<displayGroup::p>::iterator linesIt;
+            //        for (linesIt=newGroup->lines.begin(); linesIt!=newGroup->lines.end(); linesIt++) {
+            //            newGroup->height += (*linesIt)->height;
+            //        }
 
             //sort biggest group first, smallest last
             this->_qs_sort(secondaryGroups, 0, secondaryGroups.size() - 1);
 
             std::vector<displayGroup::p>::iterator sgIt;
             bool first = true;
-            for (sgIt=secondaryGroups.begin(); sgIt!=secondaryGroups.end(); sgIt++) {
-                if(!this->_arrangeLines(*sgIt, this->directionSecondary, first)){
+            for (sgIt = secondaryGroups.begin(); sgIt != secondaryGroups.end(); sgIt++)
+            {
+                if (!this->_arrangeLines(*sgIt, this->directionSecondary, first))
+                {
                     break;
                 }
                 first = false;
@@ -728,7 +843,8 @@ void HSSContainer::layout()
 
 
             //assign the globalX and globalY and clean up flags
-            for(i=0, size = this->allChildren.size(); i<size; i++){
+            for (i = 0, size = this->allChildren.size(); i < size; i++)
+            {
                 HSSDisplayObject::p &child = this->allChildren[i];
                 child->setGlobalX(round(this->globalX + child->x));
                 child->setGlobalY(round(this->globalY + child->y));
@@ -738,17 +854,22 @@ void HSSContainer::layout()
                 child->_layoutFlagLockBottom = false;
             }
 
-            if(this->heightByContent){
+            if (this->heightByContent)
+            {
                 HSSUnit maxHeight = 0.;
 
-                for (i=0, size = secondaryGroups.size(); i<size; i++) {
-                    if(secondaryGroups[i]->height > maxHeight){
+                for (i = 0, size = secondaryGroups.size(); i < size; i++)
+                {
+                    if (secondaryGroups[i]->height > maxHeight)
+                    {
                         maxHeight = secondaryGroups[i]->height;
                     }
                 }
-                if(size > 0){
+                if (size > 0)
+                {
                     HSSUnit newValue = maxHeight + this->topPadding + this->bottomPadding;
-                    if(this->height != newValue){
+                    if (this->height != newValue)
+                    {
                         this->height = newValue;
                         this->_setInnerDimensions();
                         this->_setOuterDimensions();
@@ -765,20 +886,21 @@ void HSSContainer::layout()
 }
 
 void HSSContainer::_recursiveCreateSecondaryGroups(
-    std::vector<HSSDisplayObject::p>::iterator  lineAIt,
-    std::vector<HSSDisplayObject::p>::iterator  lineAStopIt,
-    std::vector<HSSDisplayObject::p>::iterator  lineBIt,
-    std::vector<HSSDisplayObject::p>::iterator  lineBStopIt,
-    displayGroup::p                             &targetA,
-    displayGroup::p                             &targetB,
-    displayGroup::p                             &newGroup,
-    std::vector<displayGroup::p>::iterator      pglIt,
-    std::vector<displayGroup::p>::iterator      pglStopIt,
-    bool                                        addToSecondaryGroups,
-    std::vector<displayGroup::p>                &secondaryGroups,
-    bool                                        needsShoveling,
-    bool                                        onlyAddToBIfNotInGroupYet
-){
+                                                   std::vector<HSSDisplayObject::p>::iterator lineAIt,
+                                                   std::vector<HSSDisplayObject::p>::iterator lineAStopIt,
+                                                   std::vector<HSSDisplayObject::p>::iterator lineBIt,
+                                                   std::vector<HSSDisplayObject::p>::iterator lineBStopIt,
+                                                   displayGroup::p &targetA,
+                                                   displayGroup::p &targetB,
+                                                   displayGroup::p &newGroup,
+                                                   std::vector<displayGroup::p>::iterator pglIt,
+                                                   std::vector<displayGroup::p>::iterator pglStopIt,
+                                                   bool addToSecondaryGroups,
+                                                   std::vector<displayGroup::p> &secondaryGroups,
+                                                   bool needsShoveling,
+                                                   bool onlyAddToBIfNotInGroupYet
+                                                   )
+{
     bool lineADone = false;
     bool lineBDone = false;
     //bool needsShoveling = true;
@@ -789,46 +911,60 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
     objA = *lineAIt;
     objB = *lineBIt;
 
-    while(!lineADone || !lineBDone){
-        if(this->_overlaps(objA, objB)){
+    while (!lineADone || !lineBDone)
+    {
+        if (this->_overlaps(objA, objB))
+        {
             //add objA to first line in new group and objB into second line
 
-            if(!targetA){
+            if (!targetA)
+            {
                 targetA = displayGroup::p(new displayGroup());
                 targetA->objects.push_back(objA);
                 targetA->height = objA->outerHeight;
                 objA->_layoutFlagIsInSecondaryLine = true;
 
-            } else {
-                if(!objA->_layoutFlagIsInSecondaryLine){
+            }
+            else
+            {
+                if (!objA->_layoutFlagIsInSecondaryLine)
+                {
                     targetA->objects.push_back(objA);
                     objA->_layoutFlagIsInSecondaryLine = true;
                     HSSUnit currentHeight = targetA->height;
-                    if(objA->outerHeight > currentHeight){
+                    if (objA->outerHeight > currentHeight)
+                    {
                         targetA->height = objA->outerHeight;
                         newGroup->height += currentHeight - targetA->height;
                     }
                 }
             }
-            if(!onlyAddToBIfNotInGroupYet || (onlyAddToBIfNotInGroupYet && !objB->_layoutFlagIsInSecondaryLine)){
-                if(!targetB){
+            if (!onlyAddToBIfNotInGroupYet || (onlyAddToBIfNotInGroupYet && !objB->_layoutFlagIsInSecondaryLine))
+            {
+                if (!targetB)
+                {
                     targetB = displayGroup::p(new displayGroup());
                     targetB->objects.push_back(objB);
                     targetB->height = objB->outerHeight;
                     objB->_layoutFlagIsInSecondaryLine = true;
-                } else {
+                }
+                else
+                {
                     targetB->objects.push_back(objB);
                     objB->_layoutFlagIsInSecondaryLine = true;
                     HSSUnit currentHeight = targetB->height;
-                    if(objB->outerHeight > currentHeight){
+                    if (objB->outerHeight > currentHeight)
+                    {
                         targetB->height = objB->outerHeight;
                         newGroup->height += currentHeight - targetB->height;
                     }
                 }
             }
 
-            if(addToSecondaryGroups){
-                if(!newGroup){
+            if (addToSecondaryGroups)
+            {
+                if (!newGroup)
+                {
                     newGroup = displayGroup::p(new displayGroup());
                     newGroup->height = 0.;
                     newGroup->lines.push_back(targetA);
@@ -839,32 +975,41 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
             }
 
             //try to shovel in more objects of the first line
-            if(needsShoveling){
+            if (needsShoveling)
+            {
                 HSSDisplayObject::p firstObj = objA;
                 std::vector<HSSDisplayObject::p>::iterator firstObjIt = lineAIt;
                 bool shovelDone = false;
-                while(!shovelDone){
+                while (!shovelDone)
+                {
                     lineAIt++;
-                    if(lineAIt != lineAStopIt){
+                    if (lineAIt != lineAStopIt)
+                    {
                         objA = *lineAIt;
 
-                        if( this->_overlaps(objA, objB)
-                           && (objA->x + objA->outerWidth < objB->x + objB->outerWidth)
-                           ){
+                        if (this->_overlaps(objA, objB)
+                                && (objA->x + objA->outerWidth < objB->x + objB->outerWidth)
+                                )
+                        {
                             targetA->objects.push_back(objA);
                             objA->_layoutFlagIsInSecondaryLine = true;
                             firstObj = objA;
                             firstObjIt = lineAIt;
                             HSSUnit currentHeight = targetA->height;
-                            if(objA->outerHeight > currentHeight){
+                            if (objA->outerHeight > currentHeight)
+                            {
                                 targetA->height = objA->outerHeight;
                                 newGroup->height += currentHeight - targetA->height;
                             }
 
-                        } else {
+                        }
+                        else
+                        {
                             shovelDone = true;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         shovelDone = true;
                     }
                 }
@@ -876,32 +1021,44 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
 
             //get next objB
             lineBIt++;
-            if(lineBIt != lineBStopIt){
+            if (lineBIt != lineBStopIt)
+            {
                 objB = *lineBIt;
-            } else {
+            }
+            else
+            {
                 lineBDone = true;
             }
-        //if no overlap
-        } else {
+            //if no overlap
+        }
+        else
+        {
             //get next objB
             lineBIt++;
-            if(lineBIt != lineBStopIt){
+            if (lineBIt != lineBStopIt)
+            {
                 objB = *lineBIt;
-            } else {
+            }
+            else
+            {
                 lineBDone = true;
             }
         }
 
-        if(lineBDone){
+        if (lineBDone)
+        {
             std::vector<displayGroup::p>::iterator pglItStore = pglIt;
             pglIt++;
-            if(pglIt!=pglStopIt){
+            if (pglIt != pglStopIt)
+            {
                 displayGroup::p nextLine = *pglIt;
-                if(targetB){
+                if (targetB)
+                {
                     displayGroup::p dummyTargetA;
                     displayGroup::p newTargetB;
                     this->_recursiveCreateSecondaryGroups(targetB->objects.begin(), targetB->objects.end(), nextLine->objects.begin(), nextLine->objects.end(), dummyTargetA, newTargetB, newGroup, pglIt, pglStopIt, false, secondaryGroups, false, onlyAddToBIfNotInGroupYet);
-                    if(newTargetB){
+                    if (newTargetB)
+                    {
                         newGroup->lines.push_back(newTargetB);
                     }
                 }
@@ -910,38 +1067,46 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
             }
             pglIt = pglItStore;
             lineAIt++;
-            if(lineAIt != lineAStopIt){
+            if (lineAIt != lineAStopIt)
+            {
                 objA = *lineAIt;
                 lineBIt = firstBIt;
                 objB = *lineBIt;
                 lineBDone = false;
-                if(addToSecondaryGroups){
+                if (addToSecondaryGroups)
+                {
                     targetA.reset();
                     targetB.reset();
                     newGroup.reset();
                     needsShoveling = true;
                 }
-            } else {
+            }
+            else
+            {
                 lineADone = true;
             }
 
         } // lineBDone
 
-     } //while !lineADone || !lineBDone
+    } //while !lineADone || !lineBDone
 }
 
 /* quicksort algorithm taken from http://developer-resource.blogspot.com.es/2008/09/quicksort-c.html */
 
-void HSSContainer::_qs_swap(std::vector<displayGroup::p> &arr, int a, int b) {
+void HSSContainer::_qs_swap(std::vector<displayGroup::p> &arr, int a, int b)
+{
     std::swap(arr[a], arr[b]);
 }
 
-int HSSContainer::_qs_partition(std::vector<displayGroup::p> &arr, int left, int right, int pivotIndex) {
+int HSSContainer::_qs_partition(std::vector<displayGroup::p> &arr, int left, int right, int pivotIndex)
+{
     displayGroup::p pivotValue = arr[pivotIndex];
     this->_qs_swap(arr, right, pivotIndex);
     int storeIndex = left;
-    for (int i=left;i<=right -1; ++i) {
-        if (arr[i]->height > pivotValue->height) {
+    for (int i = left; i <= right - 1; ++i)
+    {
+        if (arr[i]->height > pivotValue->height)
+        {
             this->_qs_swap(arr, i, storeIndex);
             storeIndex++;
         }
@@ -950,12 +1115,14 @@ int HSSContainer::_qs_partition(std::vector<displayGroup::p> &arr, int left, int
     return storeIndex;
 }
 
-void HSSContainer::_qs_sort(std::vector<displayGroup::p> &arr, int left , int right) {
-    if  (right > left) {
+void HSSContainer::_qs_sort(std::vector<displayGroup::p> &arr, int left, int right)
+{
+    if (right > left)
+    {
         int pivotIndex = left;
-        int pivotNewIndex = this->_qs_partition(arr,left,right,pivotIndex);
-        this->_qs_sort(arr,left,pivotNewIndex-1);
-        this->_qs_sort(arr,pivotNewIndex+1,right);
+        int pivotNewIndex = this->_qs_partition(arr, left, right, pivotIndex);
+        this->_qs_sort(arr, left, pivotNewIndex - 1);
+        this->_qs_sort(arr, pivotNewIndex + 1, right);
     }
 }
 
@@ -967,11 +1134,14 @@ bool HSSContainer::_overlaps(HSSDisplayObject::p & childA, HSSDisplayObject::p &
 bool HSSContainer::_overlaps_horizontal(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB)
 {
     if (
-        (childA->x + childA->width + childA->rightMargin) > (childB->x - childB->leftMargin)
-        && (childA->x - childA->leftMargin) < (childB->x + childB->width + childB->rightMargin)
-    ){
+            (childA->x + childA->width + childA->rightMargin) > (childB->x - childB->leftMargin)
+            && (childA->x - childA->leftMargin) < (childB->x + childB->width + childB->rightMargin)
+            )
+    {
         return true;
-    } else {
+    }
+    else
+    {
         return false;
     }
 }
@@ -979,11 +1149,14 @@ bool HSSContainer::_overlaps_horizontal(HSSDisplayObject::p & childA, HSSDisplay
 bool HSSContainer::_overlaps_vertical(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB)
 {
     if (
-        (childA->y + childA->height + childA->bottomMargin) > (childB->y - childB->topMargin)
-        && (childA->y - childA->topMargin) < (childB->y + childB->height + childB->bottomMargin)
-    ){
+            (childA->y + childA->height + childA->bottomMargin) > (childB->y - childB->topMargin)
+            && (childA->y - childA->topMargin) < (childB->y + childB->height + childB->bottomMargin)
+            )
+    {
         return true;
-    } else {
+    }
+    else
+    {
         return false;
     }
 }
@@ -998,85 +1171,104 @@ bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSS
     HSSUnit originalX = child->x;
     HSSUnit originalY = child->y;
 
-    for (i=0, size = group->objects.size(); i<size; i++) {
+    for (i = 0, size = group->objects.size(); i < size; i++)
+    {
         HSSDisplayObject::p & otherChild = group->objects[i];
-        if( isHorizontal ){
+        if (isHorizontal)
+        {
             lineTotalPrimary += otherChild->outerWidth;
-        } else {
+        }
+        else
+        {
             lineTotalPrimary += otherChild->outerHeight;
         }
         if (
-            ((child->x + child->outerWidth)  > (otherChild->x - otherChild->leftMargin)) && ((child->x - child->leftMargin) < (otherChild->x + otherChild->outerWidth))
-            && ((child->y + child->outerHeight) > (otherChild->y - otherChild->topMargin)) && ((child->y - child->topMargin) < (otherChild->y + otherChild->outerHeight))
-            ){
+                ((child->x + child->outerWidth) > (otherChild->x - otherChild->leftMargin)) && ((child->x - child->leftMargin) < (otherChild->x + otherChild->outerWidth))
+                && ((child->y + child->outerHeight) > (otherChild->y - otherChild->topMargin)) && ((child->y - child->topMargin) < (otherChild->y + otherChild->outerHeight))
+                )
+        {
             //it will go into a group
 
             //if it is the last one
-            if(i>=size-1){
+            if (i >= size - 1)
+            {
                 //check if we have enough space to add it to the end of the line
-                if(!overflow){
-                    if( isHorizontal ){
-                        if( lineTotalPrimary + child->outerWidth > this->innerWidth){
+                if (!overflow)
+                {
+                    if (isHorizontal)
+                    {
+                        if (lineTotalPrimary + child->outerWidth > this->innerWidth)
+                        {
                             group->complete = true;
                         }
-                    } else {
-                        if( lineTotalPrimary + child->outerHeight > this->innerHeight){
+                    }
+                    else
+                    {
+                        if (lineTotalPrimary + child->outerHeight > this->innerHeight)
+                        {
                             group->complete = true;
                         }
                     }
                 }
 
-                if (!group->complete){
+                if (!group->complete)
+                {
                     //put it into the group
                     group->objects.push_back(child);
                     addedToGroup = true;
 
-                    switch (direction) {
-                        case HSSDirectionTopToBottom:
-                        case HSSDirectionBottomToTop:
-                            group->height += child->outerHeight;
-                            break;
+                    switch (direction)
+                    {
+                    case HSSDirectionTopToBottom:
+                    case HSSDirectionBottomToTop:
+                        group->height += child->outerHeight;
+                        break;
 
-                        case HSSDirectionRightToLeft:
-                        default:
-                            group->width += child->outerWidth;
-                            break;
+                    case HSSDirectionRightToLeft:
+                    default:
+                        group->width += child->outerWidth;
+                        break;
                     }
 
                     this->_arrange(group, direction);
-                } else {
+                }
+                else
+                {
                     //restore the original position
                     child->x = originalX;
                     child->y = originalY;
                 }
 
-            } else {
+            }
+            else
+            {
 
                 //push it further in the primary direction, and check again
-                switch (direction) {
-                    case HSSDirectionRightToLeft:
-                    {
-                        child->x = otherChild->x - child->outerWidth;
-                        break;
-                    }
+                switch (direction)
+                {
+                case HSSDirectionRightToLeft:
+                {
+                    child->x = otherChild->x - child->outerWidth;
+                    break;
+                }
 
-                    case HSSDirectionTopToBottom:
-                    {
-                        child->y = otherChild->y + otherChild->outerHeight;
-                        break;
-                    }
+                case HSSDirectionTopToBottom:
+                {
+                    child->y = otherChild->y + otherChild->outerHeight;
+                    break;
+                }
 
-                    case HSSDirectionBottomToTop:
-                    {
-                        child->y = otherChild->y - child->outerHeight;
-                        break;
-                    }
+                case HSSDirectionBottomToTop:
+                {
+                    child->y = otherChild->y - child->outerHeight;
+                    break;
+                }
 
-                    default:
-                    {
-                        child->x = otherChild->x + otherChild->outerWidth;
-                        break;
-                    }
+                default:
+                {
+                    child->x = otherChild->x + otherChild->outerWidth;
+                    break;
+                }
                 }
 
             }
@@ -1131,24 +1323,31 @@ bool HSSContainer::_mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p 
 {
     unsigned i, size, j, size2;
     if (
-        ((group->x + group->width) > otherGroup->x) && (group->x < (otherGroup->x + otherGroup->width))
-        && ((group->y + group->height) > otherGroup->y) && (group->y < (otherGroup->y + otherGroup->height))
-        ){
+            ((group->x + group->width) > otherGroup->x) && (group->x < (otherGroup->x + otherGroup->width))
+            && ((group->y + group->height) > otherGroup->y) && (group->y < (otherGroup->y + otherGroup->height))
+            )
+    {
         //if the group bounds overlap, check each individual element against each other
-        for (i=0, size = group->objects.size(); i<size; i++) {
+        for (i = 0, size = group->objects.size(); i < size; i++)
+        {
             HSSDisplayObject::p & child = group->objects[i];
-            for (j=0, size2 = otherGroup->objects.size(); j<size2; j++) {
+            for (j = 0, size2 = otherGroup->objects.size(); j < size2; j++)
+            {
                 HSSDisplayObject::p &otherChild = otherGroup->objects[j];
                 if (
-                    ((child->x + child->outerWidth)  > (otherChild->x - otherChild->leftMargin)) && ((child->x - child->leftMargin) < (otherChild->x + otherChild->outerWidth))
-                    && ((child->y + child->outerHeight) > (otherChild->y - otherChild->topMargin)) && ((child->y - child->topMargin) < (otherChild->y + otherChild->outerHeight))
-                    ){
+                        ((child->x + child->outerWidth) > (otherChild->x - otherChild->leftMargin)) && ((child->x - child->leftMargin) < (otherChild->x + otherChild->outerWidth))
+                        && ((child->y + child->outerHeight) > (otherChild->y - otherChild->topMargin)) && ((child->y - child->topMargin) < (otherChild->y + otherChild->outerHeight))
+                        )
+                {
                     //there is an overlap, merge the groups
                     //add all the elements of this group to the overlapping one
                     group->objects.insert(group->objects.end(), otherGroup->objects.begin(), otherGroup->objects.end());
-                    if(direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft){
+                    if (direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft)
+                    {
                         group->width += otherGroup->width;
-                    } else {
+                    }
+                    else
+                    {
                         group->height += otherGroup->height;
                     }
 
@@ -1169,495 +1368,591 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
 {
     unsigned i, size;
 
-    switch (direction) {
-        case HSSDirectionRightToLeft:
+    switch (direction)
+    {
+    case HSSDirectionRightToLeft:
+    {
+        bool byAnchors = false;
+        for (i = 0, size = group->objects.size(); i < size; i++)
         {
-            bool byAnchors = false;
-            for (i=0, size=group->objects.size(); i<size; i++) {
-                if(!group->objects[i]->_anchorXdefault){
-                    byAnchors = true;
-                    break;
-                }
+            if (!group->objects[i]->_anchorXdefault)
+            {
+                byAnchors = true;
+                break;
             }
-            if(byAnchors){
-                //calculate the new alignment and anchor point for the group
-                HSSDisplayObject::p & groupFirst = group->objects.front();
-                HSSUnit alignmentTotal = 0.;
-                HSSUnit accWidth = groupFirst->anchorX;
-                HSSUnit anchorsTotal = 0.;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    alignmentTotal += currentChild->alignX;
-                    if(i>0){
-                        anchorsTotal += accWidth + currentChild->anchorX;
-                        accWidth += currentChild->outerWidth;
-                    }
-                }
-                HSSUnit groupAlignX = alignmentTotal / size;
-                HSSUnit groupAnchorX = anchorsTotal / size;
-
-                //reposition the elements in the group
-                HSSUnit startX = groupAlignX +  groupAnchorX + (groupFirst->width - groupFirst->anchorX);
-                if(startX - group->width < 0) startX = group->width;
-                if(startX > this->width) startX = this->width;
-                accWidth = 0.;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & otherChild2 = group->objects[i];
-                    otherChild2->x = startX - otherChild2->width - accWidth;
-                    accWidth += otherChild2->width;
-                }
-                group->x = group->objects.front()->x - group->objects.front()->leftMargin;
-                group->y = group->objects.front()->y - group->objects.front()->topMargin;
-            } else {
-
-                //calculate the alignment point for the group
-                HSSUnit alignmentTotal = 0.;
-                HSSUnit accWidth = 0.;
-                HSSUnit widthsTotal = 0.;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    alignmentTotal += currentChild->alignX;
-                    widthsTotal += currentChild->outerWidth;
-                }
-                HSSUnit groupAlignX = alignmentTotal / size;
-                HSSUnit startX = groupAlignX + widthsTotal / 2;
-                if(startX > (this->width - this->rightPadding)) startX = (this->width - this->rightPadding);
-                if(startX - group->width < this->leftPadding) startX = this->leftPadding + group->width;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    accWidth += currentChild->outerWidth;
-                    currentChild->x = (startX - accWidth) - currentChild->rightMargin;
-                }
-                group->x = startX - group->width;
-            }
-            break;
         }
-
-        case HSSDirectionTopToBottom:
+        if (byAnchors)
         {
-            bool byAnchors = false;
-            for (i=0, size=group->objects.size(); i<size; i++) {
-                if(!group->objects[i]->_anchorYdefault){
-                    byAnchors = true;
-                    break;
-                }
-            }
-            if(byAnchors){
-                //calculate the new alignment and anchor point for the group
-                HSSDisplayObject::p & groupFirst = group->objects.front();
-                HSSUnit alignmentTotal = 0.;
-                HSSUnit accHeight = groupFirst->height - groupFirst->anchorY;
-                HSSUnit anchorsTotal = 0.;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    alignmentTotal += currentChild->alignY;
-                    if(i>0){
-                        anchorsTotal += accHeight + currentChild->anchorY;
-                        accHeight += currentChild->outerHeight;
-                    }
-                }
-                HSSUnit groupAlignY = alignmentTotal / size;
-                HSSUnit groupAnchorY = anchorsTotal / size;
-
-                //reposition the elements in the group
-                HSSUnit startY = groupAlignY - groupAnchorY - groupFirst->anchorY;
-                if(startY > this->height - group->height) startY = this->height - group->height;
-                if(startY < 0) startY = 0.;
-                accHeight = 0.;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & otherChild2 = group->objects[i];
-                    otherChild2->y = startY + accHeight;
-                    accHeight += otherChild2->height;
-                }
-                group->x = group->objects.front()->x - group->objects.front()->leftMargin;
-                group->y = group->objects.front()->y - group->objects.front()->topMargin;
-            } else {
-                //calculate the alignment point for the group
-                HSSUnit alignmentTotal = 0.;
-                HSSUnit accHeight = 0.;
-                HSSUnit heightsTotal = 0.;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    alignmentTotal += currentChild->alignY;
-                    heightsTotal += currentChild->outerHeight;
-                }
-                HSSUnit groupAlignY = alignmentTotal / size;
-                HSSUnit startY = groupAlignY - heightsTotal / 2;
-                if(startY > (this->width - this->bottomPadding) - group->height) startY = (this->height - this->bottomPadding) - group->height;
-                if(startY < this->topPadding) startY = this->topPadding;
-                group->y = startY;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    currentChild->y = startY + accHeight + currentChild->topMargin;
-                    accHeight += currentChild->outerHeight;
-                }
-            }
-            break;
-        }
-
-        case HSSDirectionBottomToTop:
-        {
-            bool byAnchors = false;
-            for (i=0, size=group->objects.size(); i<size; i++) {
-                if(!group->objects[i]->_anchorYdefault){
-                    byAnchors = true;
-                    break;
-                }
-            }
-            if(byAnchors){
-                //calculate the new alignment and anchor point for the group
-                HSSDisplayObject::p & groupFirst = group->objects.front();
-                HSSUnit alignmentTotal = 0;
-                HSSUnit accHeight = groupFirst->anchorY;
-                HSSUnit anchorsTotal = 0;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    alignmentTotal += currentChild->alignY;
-                    if(i>0){
-                        anchorsTotal += accHeight + currentChild->anchorY;
-                        accHeight += currentChild->outerHeight;
-                    }
-                }
-                HSSUnit groupAlignY = alignmentTotal / size;
-                HSSUnit groupAnchorY = anchorsTotal / size;
-
-                //reposition the elements in the group
-                HSSUnit startY = groupAlignY +  groupAnchorY + (groupFirst->height - groupFirst->anchorY);
-                if(startY - group->height < 0) startY = group->height;
-                if(startY > this->height) startY = this->height;
-                accHeight = 0;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & otherChild2 = group->objects[i];
-                    otherChild2->y = startY - otherChild2->height - accHeight;
-                    accHeight += otherChild2->height;
-                }
-                group->x = group->objects.front()->x;
-                group->y = group->objects.front()->y;
-            } else {
-                //calculate the alignment point for the group
-                HSSUnit alignmentTotal = 0.;
-                HSSUnit accHeight = 0.;
-                HSSUnit heightsTotal = 0.;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    alignmentTotal += currentChild->alignY;
-                    heightsTotal += currentChild->outerHeight;
-                }
-                HSSUnit groupAlignY = alignmentTotal / size;
-                HSSUnit startY = groupAlignY + heightsTotal / 2;
-                if(startY > (this->height - this->bottomPadding)) startY = (this->height - this->bottomPadding);
-                if(startY - group->height < this->topPadding) startY = this->topPadding + group->height;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    accHeight += currentChild->outerHeight;
-                    currentChild->y = (startY - accHeight) - currentChild->bottomMargin;
-                }
-                group->y = startY - group->height;
-            }
-
-            break;
-        }
-
-        default:
-        {
-            bool byAnchors = false;
-            for (i=0, size=group->objects.size(); i<size; i++) {
-                if(!group->objects[i]->_anchorXdefault){
-                    byAnchors = true;
-                    break;
-                }
-            }
-            if(byAnchors){
-                //calculate the new alignment and anchor point for the group
-                HSSDisplayObject::p & groupFirst = group->objects.front();
-                HSSUnit alignmentTotal = 0.;
-                HSSUnit accWidth = groupFirst->outerWidth - groupFirst->anchorX;
-                HSSUnit anchorsTotal = 0.;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    alignmentTotal += currentChild->alignX;
-                    if(i>0){
-                        anchorsTotal += accWidth + currentChild->anchorX;
-                        accWidth += currentChild->outerWidth;
-                    }
-                }
-                HSSUnit groupAlignX = alignmentTotal / size;
-                HSSUnit groupAnchorX = anchorsTotal / size;
-
-                //reposition the elements in the group
-                HSSUnit startX = groupAlignX - groupAnchorX - groupFirst->anchorX;
-                if(startX > (this->width - this->rightPadding) - group->width) startX = (this->width - this->rightPadding) - group->width;
-                if(startX < 0.) startX = 0.;
-                accWidth = 0.;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & otherChild2 = group->objects[i];
-                    otherChild2->x = startX + accWidth + otherChild2->leftMargin;
-                    accWidth += otherChild2->outerWidth;
-                }
-                group->x = group->objects.front()->x - group->objects.front()->leftMargin;
-                group->y = group->objects.front()->y - group->objects.front()->topMargin;
-
-            } else {
-                //calculate the alignment point for the group
-                HSSUnit alignmentTotal = 0.;
-                HSSUnit accWidth = 0.;
-                HSSUnit widthsTotal = 0.;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    alignmentTotal += currentChild->alignX;
-                    widthsTotal += currentChild->outerWidth;
-                }
-                HSSUnit groupAlignX = alignmentTotal / size;
-                HSSUnit startX = groupAlignX - widthsTotal / 2;
-                if(startX > (this->width - this->rightPadding) - group->width) startX = (this->width - this->rightPadding) - group->width;
-                if(startX < this->leftPadding) startX = this->leftPadding;
-                group->x = startX;
-                for (i=0, size = group->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = group->objects[i];
-                    currentChild->x = startX + accWidth + currentChild->leftMargin;
+            //calculate the new alignment and anchor point for the group
+            HSSDisplayObject::p & groupFirst = group->objects.front();
+            HSSUnit alignmentTotal = 0.;
+            HSSUnit accWidth = groupFirst->anchorX;
+            HSSUnit anchorsTotal = 0.;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                alignmentTotal += currentChild->alignX;
+                if (i > 0)
+                {
+                    anchorsTotal += accWidth + currentChild->anchorX;
                     accWidth += currentChild->outerWidth;
                 }
             }
-            break;
+            HSSUnit groupAlignX = alignmentTotal / size;
+            HSSUnit groupAnchorX = anchorsTotal / size;
+
+            //reposition the elements in the group
+            HSSUnit startX = groupAlignX + groupAnchorX + (groupFirst->width - groupFirst->anchorX);
+            if (startX - group->width < 0) startX = group->width;
+            if (startX > this->width) startX = this->width;
+            accWidth = 0.;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & otherChild2 = group->objects[i];
+                otherChild2->x = startX - otherChild2->width - accWidth;
+                accWidth += otherChild2->width;
+            }
+            group->x = group->objects.front()->x - group->objects.front()->leftMargin;
+            group->y = group->objects.front()->y - group->objects.front()->topMargin;
         }
+        else
+        {
+
+            //calculate the alignment point for the group
+            HSSUnit alignmentTotal = 0.;
+            HSSUnit accWidth = 0.;
+            HSSUnit widthsTotal = 0.;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                alignmentTotal += currentChild->alignX;
+                widthsTotal += currentChild->outerWidth;
+            }
+            HSSUnit groupAlignX = alignmentTotal / size;
+            HSSUnit startX = groupAlignX + widthsTotal / 2;
+            if (startX > (this->width - this->rightPadding)) startX = (this->width - this->rightPadding);
+            if (startX - group->width < this->leftPadding) startX = this->leftPadding + group->width;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                accWidth += currentChild->outerWidth;
+                currentChild->x = (startX - accWidth) - currentChild->rightMargin;
+            }
+            group->x = startX - group->width;
+        }
+        break;
+    }
+
+    case HSSDirectionTopToBottom:
+    {
+        bool byAnchors = false;
+        for (i = 0, size = group->objects.size(); i < size; i++)
+        {
+            if (!group->objects[i]->_anchorYdefault)
+            {
+                byAnchors = true;
+                break;
+            }
+        }
+        if (byAnchors)
+        {
+            //calculate the new alignment and anchor point for the group
+            HSSDisplayObject::p & groupFirst = group->objects.front();
+            HSSUnit alignmentTotal = 0.;
+            HSSUnit accHeight = groupFirst->height - groupFirst->anchorY;
+            HSSUnit anchorsTotal = 0.;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                alignmentTotal += currentChild->alignY;
+                if (i > 0)
+                {
+                    anchorsTotal += accHeight + currentChild->anchorY;
+                    accHeight += currentChild->outerHeight;
+                }
+            }
+            HSSUnit groupAlignY = alignmentTotal / size;
+            HSSUnit groupAnchorY = anchorsTotal / size;
+
+            //reposition the elements in the group
+            HSSUnit startY = groupAlignY - groupAnchorY - groupFirst->anchorY;
+            if (startY > this->height - group->height) startY = this->height - group->height;
+            if (startY < 0) startY = 0.;
+            accHeight = 0.;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & otherChild2 = group->objects[i];
+                otherChild2->y = startY + accHeight;
+                accHeight += otherChild2->height;
+            }
+            group->x = group->objects.front()->x - group->objects.front()->leftMargin;
+            group->y = group->objects.front()->y - group->objects.front()->topMargin;
+        }
+        else
+        {
+            //calculate the alignment point for the group
+            HSSUnit alignmentTotal = 0.;
+            HSSUnit accHeight = 0.;
+            HSSUnit heightsTotal = 0.;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                alignmentTotal += currentChild->alignY;
+                heightsTotal += currentChild->outerHeight;
+            }
+            HSSUnit groupAlignY = alignmentTotal / size;
+            HSSUnit startY = groupAlignY - heightsTotal / 2;
+            if (startY > (this->width - this->bottomPadding) - group->height) startY = (this->height - this->bottomPadding) - group->height;
+            if (startY < this->topPadding) startY = this->topPadding;
+            group->y = startY;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                currentChild->y = startY + accHeight + currentChild->topMargin;
+                accHeight += currentChild->outerHeight;
+            }
+        }
+        break;
+    }
+
+    case HSSDirectionBottomToTop:
+    {
+        bool byAnchors = false;
+        for (i = 0, size = group->objects.size(); i < size; i++)
+        {
+            if (!group->objects[i]->_anchorYdefault)
+            {
+                byAnchors = true;
+                break;
+            }
+        }
+        if (byAnchors)
+        {
+            //calculate the new alignment and anchor point for the group
+            HSSDisplayObject::p & groupFirst = group->objects.front();
+            HSSUnit alignmentTotal = 0;
+            HSSUnit accHeight = groupFirst->anchorY;
+            HSSUnit anchorsTotal = 0;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                alignmentTotal += currentChild->alignY;
+                if (i > 0)
+                {
+                    anchorsTotal += accHeight + currentChild->anchorY;
+                    accHeight += currentChild->outerHeight;
+                }
+            }
+            HSSUnit groupAlignY = alignmentTotal / size;
+            HSSUnit groupAnchorY = anchorsTotal / size;
+
+            //reposition the elements in the group
+            HSSUnit startY = groupAlignY + groupAnchorY + (groupFirst->height - groupFirst->anchorY);
+            if (startY - group->height < 0) startY = group->height;
+            if (startY > this->height) startY = this->height;
+            accHeight = 0;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & otherChild2 = group->objects[i];
+                otherChild2->y = startY - otherChild2->height - accHeight;
+                accHeight += otherChild2->height;
+            }
+            group->x = group->objects.front()->x;
+            group->y = group->objects.front()->y;
+        }
+        else
+        {
+            //calculate the alignment point for the group
+            HSSUnit alignmentTotal = 0.;
+            HSSUnit accHeight = 0.;
+            HSSUnit heightsTotal = 0.;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                alignmentTotal += currentChild->alignY;
+                heightsTotal += currentChild->outerHeight;
+            }
+            HSSUnit groupAlignY = alignmentTotal / size;
+            HSSUnit startY = groupAlignY + heightsTotal / 2;
+            if (startY > (this->height - this->bottomPadding)) startY = (this->height - this->bottomPadding);
+            if (startY - group->height < this->topPadding) startY = this->topPadding + group->height;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                accHeight += currentChild->outerHeight;
+                currentChild->y = (startY - accHeight) - currentChild->bottomMargin;
+            }
+            group->y = startY - group->height;
+        }
+
+        break;
+    }
+
+    default:
+    {
+        bool byAnchors = false;
+        for (i = 0, size = group->objects.size(); i < size; i++)
+        {
+            if (!group->objects[i]->_anchorXdefault)
+            {
+                byAnchors = true;
+                break;
+            }
+        }
+        if (byAnchors)
+        {
+            //calculate the new alignment and anchor point for the group
+            HSSDisplayObject::p & groupFirst = group->objects.front();
+            HSSUnit alignmentTotal = 0.;
+            HSSUnit accWidth = groupFirst->outerWidth - groupFirst->anchorX;
+            HSSUnit anchorsTotal = 0.;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                alignmentTotal += currentChild->alignX;
+                if (i > 0)
+                {
+                    anchorsTotal += accWidth + currentChild->anchorX;
+                    accWidth += currentChild->outerWidth;
+                }
+            }
+            HSSUnit groupAlignX = alignmentTotal / size;
+            HSSUnit groupAnchorX = anchorsTotal / size;
+
+            //reposition the elements in the group
+            HSSUnit startX = groupAlignX - groupAnchorX - groupFirst->anchorX;
+            if (startX > (this->width - this->rightPadding) - group->width) startX = (this->width - this->rightPadding) - group->width;
+            if (startX < 0.) startX = 0.;
+            accWidth = 0.;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & otherChild2 = group->objects[i];
+                otherChild2->x = startX + accWidth + otherChild2->leftMargin;
+                accWidth += otherChild2->outerWidth;
+            }
+            group->x = group->objects.front()->x - group->objects.front()->leftMargin;
+            group->y = group->objects.front()->y - group->objects.front()->topMargin;
+
+        }
+        else
+        {
+            //calculate the alignment point for the group
+            HSSUnit alignmentTotal = 0.;
+            HSSUnit accWidth = 0.;
+            HSSUnit widthsTotal = 0.;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                alignmentTotal += currentChild->alignX;
+                widthsTotal += currentChild->outerWidth;
+            }
+            HSSUnit groupAlignX = alignmentTotal / size;
+            HSSUnit startX = groupAlignX - widthsTotal / 2;
+            if (startX > (this->width - this->rightPadding) - group->width) startX = (this->width - this->rightPadding) - group->width;
+            if (startX < this->leftPadding) startX = this->leftPadding;
+            group->x = startX;
+            for (i = 0, size = group->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = group->objects[i];
+                currentChild->x = startX + accWidth + currentChild->leftMargin;
+                accWidth += currentChild->outerWidth;
+            }
+        }
+        break;
+    }
     }
 }
 
 bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direction, bool isFirstGroup)
 {
-    if(group->lines.size() < 2){
+    if (group->lines.size() < 2)
+    {
         return true;
     }
 
     AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
     unsigned i, j, size, size2;
 
-    switch (direction) {
-        case HSSDirectionRightToLeft:
-        {
+    switch (direction)
+    {
+    case HSSDirectionRightToLeft:
+    {
 
-            break;
+        break;
+    }
+
+    case HSSDirectionTopToBottom:
+    {
+        bool byAnchors = false;
+        for (i = 0, size = group->lines.size(); i < size; i++)
+        {
+            displayGroup::p line = group->lines[i];
+            for (j = 0, size2 = line->objects.size(); j < size2; j++)
+            {
+                if (!line->objects[j]->_anchorYdefault)
+                {
+                    byAnchors = true;
+                    break;
+                }
+            }
         }
-
-        case HSSDirectionTopToBottom:
+        if (byAnchors)
         {
-            bool byAnchors = false;
-            for (i=0, size=group->lines.size(); i<size; i++) {
-                displayGroup::p line = group->lines[i];
-                for (j=0, size2=line->objects.size(); j<size2; j++) {
-                    if(!line->objects[j]->_anchorYdefault){
-                        byAnchors = true;
-                        break;
+
+        }
+        else
+        {
+            HSSUnit alignmentTotal = 0.;
+            HSSUnit accHeight = 0.;
+            HSSUnit totalSize = 0.;
+            HSSUnit biggest = 0.;
+
+            //create "push groups" to find out which one is the strongest
+            displayGroup::p biggestGroup;
+            bool pushGroupsDone = false;
+            std::vector<displayGroup::p>::iterator pglIt = group->lines.begin();
+            displayGroup::p lineA, lineB;
+            std::vector<HSSDisplayObject::p>::iterator lineAIt, lineBIt;
+            HSSDisplayObject::p objA, objB;
+            lineA = *pglIt;
+            lineAIt = lineA->objects.begin();
+            objA = *lineAIt;
+            pglIt++;
+            lineB = *pglIt;
+            lineBIt = lineB->objects.begin();
+            objB = *lineBIt;
+
+            while (!pushGroupsDone)
+            {
+                displayGroup::p newGroup;
+                this->_recursiveGetPushGroup(objA, objB, pglIt, group->lines.end(), newGroup);
+                if (newGroup && newGroup->height >= biggest)
+                {
+                    biggestGroup = newGroup;
+                    biggest = newGroup->height;
+                }
+                lineBIt++;
+                if (lineBIt != lineB->objects.end())
+                {
+                    objB = *lineBIt;
+                }
+                else
+                {
+                    lineBIt = lineB->objects.begin();
+                    objB = *lineBIt;
+
+                    lineAIt++;
+                    if (lineAIt != lineA->objects.end())
+                    {
+                        objA = *lineAIt;
+                    }
+                    else
+                    {
+                        pushGroupsDone = true;
                     }
                 }
             }
-            if(byAnchors){
+            if (!biggestGroup)
+            {
+                biggestGroup = group->lines.back();
+            }
 
-            } else {
-                HSSUnit alignmentTotal = 0.;
-                HSSUnit accHeight = 0.;
-                HSSUnit totalSize = 0.;
-                HSSUnit biggest = 0.;
+            group->height = biggestGroup->height;
 
-                //create "push groups" to find out which one is the strongest
-                displayGroup::p biggestGroup;
-                bool pushGroupsDone = false;
-                std::vector<displayGroup::p>::iterator pglIt = group->lines.begin();
-                displayGroup::p lineA, lineB;
-                std::vector<HSSDisplayObject::p>::iterator lineAIt, lineBIt;
-                HSSDisplayObject::p objA, objB;
-                lineA = *pglIt;
-                lineAIt = lineA->objects.begin();
-                objA = *lineAIt;
-                pglIt++;
-                lineB = *pglIt;
-                lineBIt = lineB->objects.begin();
-                objB = *lineBIt;
+            for (i = 0, size = biggestGroup->objects.size(); i < size; i++)
+            {
+                HSSDisplayObject::p & currentChild = biggestGroup->objects[i];
+                alignmentTotal += currentChild->alignY;
+                totalSize += currentChild->outerHeight;
+            }
 
-                while (!pushGroupsDone){
-                    displayGroup::p newGroup;
-                    this->_recursiveGetPushGroup(objA, objB, pglIt, group->lines.end(), newGroup);
-                    if(newGroup && newGroup->height >= biggest){
-                        biggestGroup = newGroup;
-                        biggest = newGroup->height;
+            //calculate the alignment point for the biggest elements
+            HSSUnit groupAlignY = alignmentTotal / size;
+
+            //reposition the elements in the group
+            HSSUnit startY = groupAlignY - totalSize / 2;
+            if (startY > (this->height - this->bottomPadding) - group->height) startY = (this->height - this->bottomPadding) - group->height;
+            if (startY < this->topPadding) startY = this->topPadding;
+            HSSDisplayObject::it bobjIt, bobjIt2;
+            int i = 0, size = biggestGroup->objects.size();
+            for (bobjIt = biggestGroup->objects.begin(); bobjIt != biggestGroup->objects.end(); bobjIt++)
+            {
+                HSSDisplayObject::p otherChild2 = *bobjIt;
+                HSSUnit newValue = startY + accHeight + otherChild2->topMargin;
+                if (!isFirstGroup)
+                {
+                    //find the bottom constraint of the previous line
+                    HSSUnit prevConstraintBottom = this->topPadding;
+                    bool hasPrevConstraintBottom = false;
+                    if (i != 0)
+                    {
+                        displayGroup::p previousLine = group->lines[i - 1];
+                        hasPrevConstraintBottom = this->_recursiveFindBottomConstraint(prevConstraintBottom, group, i, otherChild2);
                     }
-                    lineBIt++;
-                    if(lineBIt != lineB->objects.end()){
-                        objB = *lineBIt;
-                    } else {
-                        lineBIt = lineB->objects.begin();
-                        objB = *lineBIt;
+                    //find the top constraint of the next line
+                    HSSUnit nextConstraintTop = this->height - this->bottomPadding;
+                    bool hasNextConstraintTop = false;
+                    if (group->lines.size() > i + 1)
+                    {
+                        displayGroup::p nextLine = group->lines[i + 1];
+                        hasNextConstraintTop = this->_recursiveFindTopConstraint(nextConstraintTop, group, i, otherChild2);
+                    }
 
-                        lineAIt++;
-                        if(lineAIt != lineA->objects.end()){
-                            objA = *lineAIt;
-                        } else {
-                            pushGroupsDone = true;
+                    if ((!otherChild2->_layoutFlagLockTop || newValue > otherChild2->y)
+                            && (!otherChild2->_layoutFlagLockBottom || newValue + otherChild2->height + otherChild2->bottomMargin < otherChild2->y + otherChild2->height + otherChild2->bottomMargin)
+                            )
+                    {
+                        if (hasNextConstraintTop && newValue + otherChild2->outerHeight < nextConstraintTop)
+                        {
+                            otherChild2->y = nextConstraintTop - (otherChild2->height + otherChild2->topMargin);
+                        }
+                        else if (hasPrevConstraintBottom && newValue + otherChild2->outerHeight > prevConstraintBottom)
+                        {
+                            otherChild2->y = prevConstraintBottom + otherChild2->bottomMargin;
+                        }
+                        else
+                        {
+                            otherChild2->y = newValue;
                         }
                     }
                 }
-                if(!biggestGroup){
-                    biggestGroup = group->lines.back();
+                else
+                {
+                    otherChild2->y = newValue;
                 }
 
-                group->height = biggestGroup->height;
+                accHeight += otherChild2->outerHeight;
 
-                for (i=0, size=biggestGroup->objects.size(); i<size; i++) {
-                    HSSDisplayObject::p & currentChild = biggestGroup->objects[i];
-                    alignmentTotal += currentChild->alignY;
-                    totalSize += currentChild->outerHeight;
+                if (wrapper->showLayoutSteps())
+                {
+                    wrapper->nextLayoutTick();
+                    wrapper->breakIfNeeded();
+                    if (wrapper->layoutStepDone())
+                    {
+                        return false;
+                    }
                 }
 
-                //calculate the alignment point for the biggest elements
-                HSSUnit groupAlignY = alignmentTotal / size;
-
-                //reposition the elements in the group
-                HSSUnit startY = groupAlignY - totalSize / 2;
-                if(startY > (this->height - this->bottomPadding) - group->height) startY = (this->height - this->bottomPadding) - group->height;
-                if(startY < this->topPadding) startY = this->topPadding;
-                HSSDisplayObject::it bobjIt, bobjIt2;
-                int i = 0, size = biggestGroup->objects.size();
-                for (bobjIt=biggestGroup->objects.begin(); bobjIt!=biggestGroup->objects.end(); bobjIt++) {
-                    HSSDisplayObject::p otherChild2 = *bobjIt;
-                    HSSUnit newValue = startY + accHeight + otherChild2->topMargin;
-                    if(!isFirstGroup){
-                        //find the bottom constraint of the previous line
-                        HSSUnit prevConstraintBottom = this->topPadding;
-                        bool hasPrevConstraintBottom = false;
-                        if(i!=0){
-                            displayGroup::p previousLine = group->lines[i-1];
-                            hasPrevConstraintBottom = this->_recursiveFindBottomConstraint(prevConstraintBottom, group, i, otherChild2);
-                        }
-                        //find the top constraint of the next line
-                        HSSUnit nextConstraintTop = this->height - this->bottomPadding;
-                        bool hasNextConstraintTop = false;
-                        if(group->lines.size() > i+1){
-                            displayGroup::p nextLine = group->lines[i+1];
-                            hasNextConstraintTop = this->_recursiveFindTopConstraint(nextConstraintTop, group, i, otherChild2);
-                        }
-
-                        if((!otherChild2->_layoutFlagLockTop || newValue > otherChild2->y)
-                           && (!otherChild2->_layoutFlagLockBottom || newValue + otherChild2->height + otherChild2->bottomMargin < otherChild2->y + otherChild2->height + otherChild2->bottomMargin)
-                           ){
-                            if(hasNextConstraintTop && newValue + otherChild2->outerHeight < nextConstraintTop){
-                                otherChild2->y = nextConstraintTop - (otherChild2->height + otherChild2->topMargin);
-                            } else if (hasPrevConstraintBottom && newValue + otherChild2->outerHeight > prevConstraintBottom) {
-                                otherChild2->y = prevConstraintBottom + otherChild2->bottomMargin;
-                            } else {
-                                otherChild2->y = newValue;
-                            }
-                        }
-                    } else {
-                        otherChild2->y = newValue;
-                    }
-
-                    accHeight += otherChild2->outerHeight;
-
-                    if(wrapper->showLayoutSteps()){
-                        wrapper->nextLayoutTick();
-                        wrapper->breakIfNeeded();
-                        if(wrapper->layoutStepDone()){
-                            return false;
-                        }
-                    }
-
-                    if(i==0){
-                        otherChild2->_layoutFlagLockBottom = true;
-                        //otherChild2->_layoutLockBottomPosition = otherChild2->y + otherChild2->height + otherChild2->bottomMargin;
-                    } else if(i == size -1){
-                        //otherChild2->_layoutLockTopPosition = otherChild2->y + otherChild2->topMargin;
-                        otherChild2->_layoutFlagLockTop = true;
-                    } else {
-                        otherChild2->_layoutFlagLockTop = true;
-                        //otherChild2->_layoutLockTopPosition = otherChild2->y + otherChild2->topMargin;
-                        otherChild2->_layoutFlagLockBottom = true;
-                        //otherChild2->_layoutLockBottomPosition = otherChild2->y + otherChild2->height + otherChild2->bottomMargin;
-                    }
-                    i++;
+                if (i == 0)
+                {
+                    otherChild2->_layoutFlagLockBottom = true;
+                    //otherChild2->_layoutLockBottomPosition = otherChild2->y + otherChild2->height + otherChild2->bottomMargin;
                 }
+                else if (i == size - 1)
+                {
+                    //otherChild2->_layoutLockTopPosition = otherChild2->y + otherChild2->topMargin;
+                    otherChild2->_layoutFlagLockTop = true;
+                }
+                else
+                {
+                    otherChild2->_layoutFlagLockTop = true;
+                    //otherChild2->_layoutLockTopPosition = otherChild2->y + otherChild2->topMargin;
+                    otherChild2->_layoutFlagLockBottom = true;
+                    //otherChild2->_layoutLockBottomPosition = otherChild2->y + otherChild2->height + otherChild2->bottomMargin;
+                }
+                i++;
+            }
 
-                for (i=0, size=group->lines.size(); i<size; i++) {
-                    displayGroup::p & line = group->lines[i];
-                    for (j=0, size2 = line->objects.size(); j<size2; j++) {
-                        HSSDisplayObject::p & currentChild = line->objects[j];
+            for (i = 0, size = group->lines.size(); i < size; i++)
+            {
+                displayGroup::p & line = group->lines[i];
+                for (j = 0, size2 = line->objects.size(); j < size2; j++)
+                {
+                    HSSDisplayObject::p & currentChild = line->objects[j];
 
-                        if(!currentChild->_layoutFlagLockBottom){
-                            //find the constraint towards the bottom
-                            HSSUnit constraintBottom = this->height - this->bottomPadding;
-                            bool needsConstraintBottom = false;
-                            if(group->lines.size() > i+1){
-                                displayGroup::p nextLine = group->lines[i+1];
-                                std::vector<HSSDisplayObject::p>::iterator nlIt;
-                                for (nlIt=nextLine->objects.begin(); nlIt!=nextLine->objects.end(); nlIt++) {
-                                    HSSDisplayObject::p nlObj = *nlIt;
-                                    if(nlObj->_layoutFlagLockTop && this->_overlaps_horizontal(nlObj, currentChild)){
-                                        if(nlObj->y-nlObj->topMargin < constraintBottom){
-                                            constraintBottom = nlObj->y-nlObj->topMargin;
-                                            needsConstraintBottom = true;
-                                        }
-                                    }
-                                }
-                            }
-                            if(needsConstraintBottom && currentChild->alignY + (currentChild->outerHeight/2) > constraintBottom){
-                                currentChild->y = constraintBottom - currentChild->bottomMargin - currentChild->height;
-                                currentChild->_layoutFlagLockBottom = true;
-                                if(wrapper->showLayoutSteps()){
-                                    wrapper->nextLayoutTick();
-                                    wrapper->breakIfNeeded();
-                                    if(wrapper->layoutStepDone()){
-                                        return false;
+                    if (!currentChild->_layoutFlagLockBottom)
+                    {
+                        //find the constraint towards the bottom
+                        HSSUnit constraintBottom = this->height - this->bottomPadding;
+                        bool needsConstraintBottom = false;
+                        if (group->lines.size() > i + 1)
+                        {
+                            displayGroup::p nextLine = group->lines[i + 1];
+                            std::vector<HSSDisplayObject::p>::iterator nlIt;
+                            for (nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); nlIt++)
+                            {
+                                HSSDisplayObject::p nlObj = *nlIt;
+                                if (nlObj->_layoutFlagLockTop && this->_overlaps_horizontal(nlObj, currentChild))
+                                {
+                                    if (nlObj->y - nlObj->topMargin < constraintBottom)
+                                    {
+                                        constraintBottom = nlObj->y - nlObj->topMargin;
+                                        needsConstraintBottom = true;
                                     }
                                 }
                             }
                         }
+                        if (needsConstraintBottom && currentChild->alignY + (currentChild->outerHeight / 2) > constraintBottom)
+                        {
+                            currentChild->y = constraintBottom - currentChild->bottomMargin - currentChild->height;
+                            currentChild->_layoutFlagLockBottom = true;
+                            if (wrapper->showLayoutSteps())
+                            {
+                                wrapper->nextLayoutTick();
+                                wrapper->breakIfNeeded();
+                                if (wrapper->layoutStepDone())
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
 
-                        if(!currentChild->_layoutFlagLockTop){
-                            //find the constraint towards the top
-                            HSSUnit constraintTop = this->topPadding;
-                            bool needsConstraintTop = false;
-                            if(i!=0){
-                                displayGroup::p previousLine = group->lines[i-1];
-                                std::vector<HSSDisplayObject::p>::iterator plIt;
-                                for (plIt=previousLine->objects.begin(); plIt!=previousLine->objects.end(); plIt++) {
-                                    HSSDisplayObject::p plObj = *plIt;
-                                    if(plObj->_layoutFlagLockBottom && this->_overlaps_horizontal(plObj, currentChild)){
-                                        if(plObj->y+plObj->outerHeight > constraintTop){
-                                            constraintTop = plObj->y+plObj->height+plObj->bottomMargin;
-                                            needsConstraintTop = true;
-                                        }
+                    if (!currentChild->_layoutFlagLockTop)
+                    {
+                        //find the constraint towards the top
+                        HSSUnit constraintTop = this->topPadding;
+                        bool needsConstraintTop = false;
+                        if (i != 0)
+                        {
+                            displayGroup::p previousLine = group->lines[i - 1];
+                            std::vector<HSSDisplayObject::p>::iterator plIt;
+                            for (plIt = previousLine->objects.begin(); plIt != previousLine->objects.end(); plIt++)
+                            {
+                                HSSDisplayObject::p plObj = *plIt;
+                                if (plObj->_layoutFlagLockBottom && this->_overlaps_horizontal(plObj, currentChild))
+                                {
+                                    if (plObj->y + plObj->outerHeight > constraintTop)
+                                    {
+                                        constraintTop = plObj->y + plObj->height + plObj->bottomMargin;
+                                        needsConstraintTop = true;
                                     }
                                 }
                             }
-                            if(needsConstraintTop && currentChild->alignY - (currentChild->outerHeight/2) < constraintTop){
-                                currentChild->y = constraintTop + currentChild->topMargin;
-                                currentChild->_layoutFlagLockTop = true;
-                                if(wrapper->showLayoutSteps()){
-                                    wrapper->nextLayoutTick();
-                                    wrapper->breakIfNeeded();
-                                    if(wrapper->layoutStepDone()){
-                                        return false;
-                                    }
+                        }
+                        if (needsConstraintTop && currentChild->alignY - (currentChild->outerHeight / 2) < constraintTop)
+                        {
+                            currentChild->y = constraintTop + currentChild->topMargin;
+                            currentChild->_layoutFlagLockTop = true;
+                            if (wrapper->showLayoutSteps())
+                            {
+                                wrapper->nextLayoutTick();
+                                wrapper->breakIfNeeded();
+                                if (wrapper->layoutStepDone())
+                                {
+                                    return false;
                                 }
                             }
                         }
                     }
                 }
             }
-
-            break;
         }
 
-        case HSSDirectionBottomToTop:
-        {
+        break;
+    }
 
-            break;
-        }
+    case HSSDirectionBottomToTop:
+    {
 
-        default:
-        {
+        break;
+    }
 
-            break;
-        }
+    default:
+    {
+
+        break;
+    }
     }
 
     return true;
@@ -1665,49 +1960,64 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
 
 void HSSContainer::_recursiveGetPushGroup(HSSDisplayObject::p objA, HSSDisplayObject::p objB, std::vector<displayGroup::p>::iterator linesIt, std::vector<displayGroup::p>::iterator stopIt, displayGroup::p &ret)
 {
-    if(this->_overlaps_horizontal(objA, objB)){
-        if(!ret){
+    if (this->_overlaps_horizontal(objA, objB))
+    {
+        if (!ret)
+        {
             ret = displayGroup::p(new displayGroup());
             ret->objects.push_back(objA);
             ret->objects.push_back(objB);
             ret->height = objA->outerHeight + objB->outerHeight;
-        } else {
+        }
+        else
+        {
             ret->objects.push_back(objB);
             ret->height += objB->outerHeight;
         }
     }
     linesIt++;
-    if(linesIt != stopIt){
+    if (linesIt != stopIt)
+    {
         displayGroup::p nextLine = *linesIt;
         HSSDisplayObject::p objC = *nextLine->objects.begin();
         this->_recursiveGetPushGroup(objB, objC, linesIt, stopIt, ret);
     }
 }
 
-bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup::p group, int i, HSSDisplayObject::p child){
+bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup::p group, int i, HSSDisplayObject::p child)
+{
     bool ret = false;
     HSSUnit constraintStore = constraint;
     displayGroup::p nextLine;
-    if (i >= group->lines.size()-1) {
+    if (i >= group->lines.size() - 1)
+    {
         return false;
     }
-    nextLine = group->lines[i+1];
+    nextLine = group->lines[i + 1];
 
     std::vector<HSSDisplayObject::p>::iterator nlIt;
-    for (nlIt=nextLine->objects.begin(); nlIt!=nextLine->objects.end(); nlIt++) {
+    for (nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); nlIt++)
+    {
         HSSDisplayObject::p nlObj = *nlIt;
-        if(nlObj->_layoutFlagLockTop && this->_overlaps_horizontal(nlObj, child)){
-            if(nlObj->y-nlObj->topMargin < constraint){
-                constraint = nlObj->y-nlObj->topMargin;
+        if (nlObj->_layoutFlagLockTop && this->_overlaps_horizontal(nlObj, child))
+        {
+            if (nlObj->y - nlObj->topMargin < constraint)
+            {
+                constraint = nlObj->y - nlObj->topMargin;
                 ret = true;
             }
-        } else {
-            if(i+1 < group->lines.size()){
+        }
+        else
+        {
+            if (i + 1 < group->lines.size())
+            {
                 HSSUnit newConstraint = constraintStore;
-                bool needsNewConstraint = this->_recursiveFindTopConstraint(newConstraint, group, i+1, nlObj);
-                if(needsNewConstraint){
+                bool needsNewConstraint = this->_recursiveFindTopConstraint(newConstraint, group, i + 1, nlObj);
+                if (needsNewConstraint)
+                {
                     HSSUnit newValue = newConstraint - nlObj->outerHeight;
-                    if(newValue < constraint){
+                    if (newValue < constraint)
+                    {
                         constraint = newValue;
                         ret = true;
                     }
@@ -1718,30 +2028,40 @@ bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup
     return ret;
 }
 
-bool HSSContainer::_recursiveFindBottomConstraint(HSSUnit &constraint, displayGroup::p group, int i, HSSDisplayObject::p child){
+bool HSSContainer::_recursiveFindBottomConstraint(HSSUnit &constraint, displayGroup::p group, int i, HSSDisplayObject::p child)
+{
     bool ret = false;
     HSSUnit constraintStore = constraint;
     displayGroup::p nextLine;
-    if (i < 1) {
+    if (i < 1)
+    {
         return false;
     }
-    nextLine = group->lines[i-1];
+    nextLine = group->lines[i - 1];
 
     std::vector<HSSDisplayObject::p>::iterator nlIt;
-    for (nlIt=nextLine->objects.begin(); nlIt!=nextLine->objects.end(); nlIt++) {
+    for (nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); nlIt++)
+    {
         HSSDisplayObject::p nlObj = *nlIt;
-        if(nlObj->_layoutFlagLockBottom && this->_overlaps_horizontal(nlObj, child)){
-            if(nlObj->y+nlObj->outerHeight > constraint){
-                constraint = nlObj->y+nlObj->height+nlObj->bottomMargin;
+        if (nlObj->_layoutFlagLockBottom && this->_overlaps_horizontal(nlObj, child))
+        {
+            if (nlObj->y + nlObj->outerHeight > constraint)
+            {
+                constraint = nlObj->y + nlObj->height + nlObj->bottomMargin;
                 ret = true;
             }
-        } else {
-            if(i<2){
+        }
+        else
+        {
+            if (i < 2)
+            {
                 HSSUnit newConstraint = constraintStore;
-                bool needsNewConstraint = this->_recursiveFindBottomConstraint(newConstraint, group, i-1, nlObj);
-                if(needsNewConstraint){
+                bool needsNewConstraint = this->_recursiveFindBottomConstraint(newConstraint, group, i - 1, nlObj);
+                if (needsNewConstraint)
+                {
                     HSSUnit newValue = newConstraint + nlObj->outerHeight;
-                    if(newValue > constraint){
+                    if (newValue > constraint)
+                    {
                         constraint = newValue;
                         ret = true;
                     }
@@ -1754,226 +2074,264 @@ bool HSSContainer::_recursiveFindBottomConstraint(HSSUnit &constraint, displayGr
 
 void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue direction)
 {
-    switch (direction) {
-        case HSSDirectionRightToLeft:
+    switch (direction)
+    {
+    case HSSDirectionRightToLeft:
+    {
+        if (group->objects.size() == 1)
         {
-            if(group->objects.size() == 1){
-                HSSDisplayObject::p &theDO = group->objects.front();
-                HSSUnit newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
-                theDO->x = this->leftPadding + newValue;
+            HSSDisplayObject::p &theDO = group->objects.front();
+            HSSUnit newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
+            theDO->x = this->leftPadding + newValue;
+            group->x = 0.;
+            group->y = theDO->y;
+
+
+        }
+        else
+        {
+            HSSDisplayObject::it it;
+            HSSUnit accWidth = this->rightPadding;
+            HSSUnit totalWidth = 0.;
+
+            //calculate the total width of the group
+            for (it = group->objects.begin(); it != group->objects.end(); it++)
+            {
+                totalWidth += (*it)->outerWidth;
+            }
+
+            if (this->distributeXLinear)
+            {
+                //now get the remaining space
+                HSSUnit remainingSpace = this->innerWidth - totalWidth;
+                //divide it by the number of elements-1
+                HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
+                unsigned i = 0;
+                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                {
+                    HSSDisplayObject::p &theDO = *it;
+                    theDO->x = this->width - accWidth - (spaceChunk * i) - theDO->width - theDO->rightMargin;
+                    accWidth += theDO->outerWidth;
+                    i++;
+                }
                 group->x = 0.;
-                group->y = theDO->y;
-
-
-            } else {
-                HSSDisplayObject::it it;
-                HSSUnit accWidth = this->rightPadding;
-                HSSUnit totalWidth = 0.;
-
-                //calculate the total width of the group
-                for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                    totalWidth += (*it)->outerWidth;
-                }
-
-                if(this->distributeXLinear){
-                    //now get the remaining space
-                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
-                    //divide it by the number of elements-1
-                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
-                    unsigned i = 0;
-                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                        HSSDisplayObject::p &theDO = *it;
-                        theDO->x = this->width - accWidth - (spaceChunk*i) - theDO->width - theDO->rightMargin;
-                        accWidth += theDO->outerWidth;
-                        i++;
-                    }
-                    group->x = 0.;
-                    group->y = group->objects.back()->y;
-                } else {
-                    //now get the remaining space
-                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
-                    //divide it by the number of elements+1
-                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
-                    unsigned i = 0;
-                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                        HSSDisplayObject::p &theDO = *it;
-                        theDO->x = this->width - accWidth - spaceChunk - (spaceChunk*i) - theDO->width - theDO->leftMargin;
-                        accWidth += theDO->outerWidth;
-                        i++;
-                    }
-                    group->x = 0.;
-                    group->y = group->objects.front()->y;
-                }
+                group->y = group->objects.back()->y;
             }
-
-            break;
-        }
-
-        case HSSDirectionTopToBottom:
-        {
-
-            if(group->objects.size() == 1){
-                HSSDisplayObject::p &theDO = group->objects.front();
-                HSSUnit newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
-                theDO->y = this->topPadding + newValue;
-                group->y = 0.;
-                group->x = theDO->x;
-
-
-            } else {
-                HSSDisplayObject::it it;
-                HSSUnit accHeight = this->topPadding;
-                HSSUnit totalHeight = 0.;
-
-                //calculate the total height of the group
-                for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                    totalHeight += (*it)->outerHeight;
+            else
+            {
+                //now get the remaining space
+                HSSUnit remainingSpace = this->innerWidth - totalWidth;
+                //divide it by the number of elements+1
+                HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
+                unsigned i = 0;
+                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                {
+                    HSSDisplayObject::p &theDO = *it;
+                    theDO->x = this->width - accWidth - spaceChunk - (spaceChunk * i) - theDO->width - theDO->leftMargin;
+                    accWidth += theDO->outerWidth;
+                    i++;
                 }
-
-                if(this->distributeXLinear){
-                    //now get the remaining space
-                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
-                    //divide it by the number of elements-1
-                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
-                    unsigned i = 0;
-                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                        HSSDisplayObject::p &theDO = *it;
-                        theDO->y = accHeight + (spaceChunk*i) + theDO->topMargin;
-                        accHeight += theDO->outerHeight;
-                        i++;
-                    }
-                    group->x = 0.;
-                    group->y = group->objects.front()->y;
-                } else {
-                    //now get the remaining space
-                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
-                    //divide it by the number of elements+1
-                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
-                    unsigned i = 0;
-                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                        HSSDisplayObject::p &theDO = *it;
-                        theDO->y = accHeight + spaceChunk + (spaceChunk*i) + theDO->topMargin;
-                        accHeight += theDO->outerHeight;
-                        i++;
-                    }
-                    group->y = 0.;
-                    group->x = group->objects.front()->x;
-                }
-            }
-            break;
-        }
-
-        case HSSDirectionBottomToTop:
-        {
-            if(group->objects.size() == 1){
-                HSSDisplayObject::p &theDO = group->objects.front();
-                HSSUnit newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
-                theDO->y = this->topPadding + newValue;
-                group->y = 0.;
-                group->x = theDO->x;
-
-
-            } else {
-                HSSDisplayObject::it it;
-                HSSUnit accHeight = this->bottomPadding;
-                HSSUnit totalHeight = 0.;
-
-                //calculate the total height of the group
-                for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                    totalHeight += (*it)->outerHeight;
-                }
-
-                if(this->distributeXLinear){
-                    //now get the remaining space
-                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
-                    //divide it by the number of elements-1
-                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
-                    unsigned i = 0;
-                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                        HSSDisplayObject::p &theDO = *it;
-                        theDO->y = this->height - accHeight - (spaceChunk*i) - theDO->height - theDO->bottomMargin;
-                        accHeight += theDO->outerHeight;
-                        i++;
-                    }
-                    group->y = 0.;
-                    group->x = group->objects.back()->x;
-                } else {
-                    //now get the remaining space
-                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
-                    //divide it by the number of elements+1
-                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
-                    unsigned i = 0;
-                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                        HSSDisplayObject::p &theDO = *it;
-                        theDO->y = this->height - accHeight - spaceChunk - (spaceChunk*i) - theDO->height - theDO->topMargin;
-                        accHeight += theDO->outerHeight;
-                        i++;
-                    }
-                    group->y = 0.;
-                    group->x = group->objects.front()->x;
-                }
-            }
-            break;
-        }
-
-        default:
-        {
-            if(group->objects.size() == 1){
-                HSSDisplayObject::p &theDO = group->objects.front();
-                HSSUnit newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
-                theDO->x = this->leftPadding + newValue;
                 group->x = 0.;
-                group->y = theDO->y;
+                group->y = group->objects.front()->y;
+            }
+        }
+
+        break;
+    }
+
+    case HSSDirectionTopToBottom:
+    {
+
+        if (group->objects.size() == 1)
+        {
+            HSSDisplayObject::p &theDO = group->objects.front();
+            HSSUnit newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
+            theDO->y = this->topPadding + newValue;
+            group->y = 0.;
+            group->x = theDO->x;
 
 
-            } else {
-                HSSDisplayObject::it it;
-                HSSUnit accWidth = this->leftPadding;
-                HSSUnit totalWidth = 0.;
+        }
+        else
+        {
+            HSSDisplayObject::it it;
+            HSSUnit accHeight = this->topPadding;
+            HSSUnit totalHeight = 0.;
 
-                //calculate the total width of the group
-                for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                    totalWidth += (*it)->outerWidth;
-                }
-
-                if(this->distributeXLinear){
-                    //now get the remaining space
-                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
-                    //divide it by the number of elements-1
-                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
-                    unsigned i = 0;
-                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                        (*it)->x = accWidth + (spaceChunk*i) + (*it)->leftMargin;
-                        accWidth += (*it)->outerWidth;
-                        i++;
-                    }
-                    group->x = 0.;
-                    group->y = group->objects.front()->y;
-                } else {
-                    //now get the remaining space
-                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
-                    //divide it by the number of elements+1
-                    HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
-                    unsigned i = 0;
-                    for (it=group->objects.begin(); it!=group->objects.end(); it++) {
-                        (*it)->x = accWidth + spaceChunk + (spaceChunk*i) + (*it)->leftMargin;
-                        accWidth += (*it)->outerWidth;
-                        i++;
-                    }
-                    group->x = 0.;
-                    group->y = group->objects.front()->y;
-                }
+            //calculate the total height of the group
+            for (it = group->objects.begin(); it != group->objects.end(); it++)
+            {
+                totalHeight += (*it)->outerHeight;
             }
 
-            break;
+            if (this->distributeXLinear)
+            {
+                //now get the remaining space
+                HSSUnit remainingSpace = this->innerHeight - totalHeight;
+                //divide it by the number of elements-1
+                HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
+                unsigned i = 0;
+                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                {
+                    HSSDisplayObject::p &theDO = *it;
+                    theDO->y = accHeight + (spaceChunk * i) + theDO->topMargin;
+                    accHeight += theDO->outerHeight;
+                    i++;
+                }
+                group->x = 0.;
+                group->y = group->objects.front()->y;
+            }
+            else
+            {
+                //now get the remaining space
+                HSSUnit remainingSpace = this->innerHeight - totalHeight;
+                //divide it by the number of elements+1
+                HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
+                unsigned i = 0;
+                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                {
+                    HSSDisplayObject::p &theDO = *it;
+                    theDO->y = accHeight + spaceChunk + (spaceChunk * i) + theDO->topMargin;
+                    accHeight += theDO->outerHeight;
+                    i++;
+                }
+                group->y = 0.;
+                group->x = group->objects.front()->x;
+            }
         }
+        break;
+    }
+
+    case HSSDirectionBottomToTop:
+    {
+        if (group->objects.size() == 1)
+        {
+            HSSDisplayObject::p &theDO = group->objects.front();
+            HSSUnit newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
+            theDO->y = this->topPadding + newValue;
+            group->y = 0.;
+            group->x = theDO->x;
+
+
+        }
+        else
+        {
+            HSSDisplayObject::it it;
+            HSSUnit accHeight = this->bottomPadding;
+            HSSUnit totalHeight = 0.;
+
+            //calculate the total height of the group
+            for (it = group->objects.begin(); it != group->objects.end(); it++)
+            {
+                totalHeight += (*it)->outerHeight;
+            }
+
+            if (this->distributeXLinear)
+            {
+                //now get the remaining space
+                HSSUnit remainingSpace = this->innerHeight - totalHeight;
+                //divide it by the number of elements-1
+                HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
+                unsigned i = 0;
+                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                {
+                    HSSDisplayObject::p &theDO = *it;
+                    theDO->y = this->height - accHeight - (spaceChunk * i) - theDO->height - theDO->bottomMargin;
+                    accHeight += theDO->outerHeight;
+                    i++;
+                }
+                group->y = 0.;
+                group->x = group->objects.back()->x;
+            }
+            else
+            {
+                //now get the remaining space
+                HSSUnit remainingSpace = this->innerHeight - totalHeight;
+                //divide it by the number of elements+1
+                HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
+                unsigned i = 0;
+                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                {
+                    HSSDisplayObject::p &theDO = *it;
+                    theDO->y = this->height - accHeight - spaceChunk - (spaceChunk * i) - theDO->height - theDO->topMargin;
+                    accHeight += theDO->outerHeight;
+                    i++;
+                }
+                group->y = 0.;
+                group->x = group->objects.front()->x;
+            }
+        }
+        break;
+    }
+
+    default:
+    {
+        if (group->objects.size() == 1)
+        {
+            HSSDisplayObject::p &theDO = group->objects.front();
+            HSSUnit newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
+            theDO->x = this->leftPadding + newValue;
+            group->x = 0.;
+            group->y = theDO->y;
+
+
+        }
+        else
+        {
+            HSSDisplayObject::it it;
+            HSSUnit accWidth = this->leftPadding;
+            HSSUnit totalWidth = 0.;
+
+            //calculate the total width of the group
+            for (it = group->objects.begin(); it != group->objects.end(); it++)
+            {
+                totalWidth += (*it)->outerWidth;
+            }
+
+            if (this->distributeXLinear)
+            {
+                //now get the remaining space
+                HSSUnit remainingSpace = this->innerWidth - totalWidth;
+                //divide it by the number of elements-1
+                HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
+                unsigned i = 0;
+                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                {
+                    (*it)->x = accWidth + (spaceChunk * i) + (*it)->leftMargin;
+                    accWidth += (*it)->outerWidth;
+                    i++;
+                }
+                group->x = 0.;
+                group->y = group->objects.front()->y;
+            }
+            else
+            {
+                //now get the remaining space
+                HSSUnit remainingSpace = this->innerWidth - totalWidth;
+                //divide it by the number of elements+1
+                HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
+                unsigned i = 0;
+                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                {
+                    (*it)->x = accWidth + spaceChunk + (spaceChunk * i) + (*it)->leftMargin;
+                    accWidth += (*it)->outerWidth;
+                    i++;
+                }
+                group->x = 0.;
+                group->y = group->objects.front()->y;
+            }
+        }
+
+        break;
+    }
     }
 }
 
 void HSSContainer::recursiveLayout()
 {
     unsigned i, size;
-    for (i=0, size = this->allChildren.size(); i<size; i++) {
+    for (i = 0, size = this->allChildren.size(); i < size; i++)
+    {
         this->allChildren[i]->recursiveLayout();
     }
     this->layout();
@@ -1984,7 +2342,8 @@ void HSSContainer::setGlobalX(HSSUnit newValue)
     HSSUnit delta = newValue - this->globalX;
     HSSDisplayObject::setGlobalX(newValue);
     unsigned i, size;
-    for (i=0, size=this->allChildren.size(); i<size; i++){
+    for (i = 0, size = this->allChildren.size(); i < size; i++)
+    {
         HSSDisplayObject::p theChild = this->allChildren[i];
         theChild->setGlobalX(theChild->globalX + delta);
     }
@@ -1995,7 +2354,8 @@ void HSSContainer::setGlobalY(HSSUnit newValue)
     HSSUnit delta = newValue - this->globalY;
     HSSDisplayObject::setGlobalY(newValue);
     unsigned i, size;
-    for (i=0, size=this->allChildren.size(); i<size; i++){
+    for (i = 0, size = this->allChildren.size(); i < size; i++)
+    {
         HSSDisplayObject::p theChild = this->allChildren[i];
         theChild->setGlobalY(theChild->globalY + delta);
     }
@@ -2006,7 +2366,8 @@ void HSSContainer::setChildren(std::vector<HSSDisplayObject::p> newChildren)
     this->children = newChildren;
     this->allChildren = newChildren;
     unsigned i, size;
-    for (i=0, size = this->children.size(); i<size; i++) {
+    for (i = 0, size = this->children.size(); i < size; i++)
+    {
         this->children[i]->setParent(this->shared_from_this());
     }
 }
@@ -2018,72 +2379,98 @@ const std::vector<HSSDisplayObject::p>& HSSContainer::getChildren() const
 
 const std::vector<HSSDisplayObject::p>& HSSContainer::getChildren(bool includeTextBlocks) const
 {
-    if (includeTextBlocks) {
+    if (includeTextBlocks)
+    {
         return this->allChildren;
-    } else {
+    }
+    else
+    {
         return this->children;
     }
 }
 
 //contentAlignX
-HSSParserNode::p HSSContainer::getDContentAlignX() { return this->dContentAlignX; }
+
+HSSParserNode::p HSSContainer::getDContentAlignX()
+{
+    return this->dContentAlignX;
+}
+
 void HSSContainer::setDContentAlignX(HSSParserNode::p value)
 {
-    switch (value->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypePercentageConstant:
-        case HSSParserNodeTypeExpression:
-        case HSSParserNodeTypeKeywordConstant:
-        case HSSParserNodeTypeFunctionCall:
-            break;
-        default:
-            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of "+this->getElementName()));
+    switch (value->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypePercentageConstant:
+    case HSSParserNodeTypeExpression:
+    case HSSParserNodeTypeKeywordConstant:
+    case HSSParserNodeTypeFunctionCall:
+        break;
+    default:
+        throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of " + this->getElementName()));
     }
 
-    if(this->observedContentAlignX != NULL)
+    if (this->observedContentAlignX != NULL)
     {
         this->observedContentAlignX->removeObserver(this->observedContentAlignXProperty, HSSObservablePropertyAlignX, this);
         this->observedContentAlignX = NULL;
     }
     this->dContentAlignX = value;
 
-    if(value->isA(HSSParserNodeTypeKeywordConstant)){
-        HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
-        if (keywordValue->getValue() == "left"){
+    if (value->isA(HSSParserNodeTypeKeywordConstant))
+    {
+        HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
+        if (keywordValue->getValue() == "left")
+        {
             this->setDContentAlignX(HSSParserNode::p(new HSSNumberConstant(0)));
-        } else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center"){
+        }
+        else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center")
+        {
             this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(50)));
-        } else if (keywordValue->getValue() == "right"){
+        }
+        else if (keywordValue->getValue() == "right")
+        {
             this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(100)));
-        } else if (keywordValue->getValue() == "even"){
+        }
+        else if (keywordValue->getValue() == "even")
+        {
             this->distributeX = true;
             this->distributeXLinear = false;
-        } else if (keywordValue->getValue() == "justify"){
+        }
+        else if (keywordValue->getValue() == "justify")
+        {
             this->distributeX = true;
             this->distributeXLinear = true;
-        } else {
-            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of "+this->getElementName()));
+        }
+        else
+        {
+            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of " + this->getElementName()));
         }
 
-    } else {
+    }
+    else
+    {
         HSSContainer::p parentContainer = this->getParent();
         const std::vector<HSSDisplayObject::p> * scope;
-        if(parentContainer){
+        if (parentContainer)
+        {
             scope = &(parentContainer->getChildren());
-        } else {
+        }
+        else
+        {
             scope = &(this->getChildren());
         }
         this->contentAlignX = this->_setLDProperty(
-                                            &HSSContainer::contentAlignXChanged,
-                                            value,
-                                            this->width,
-                                            HSSObservablePropertyWidth,
-                                            this,
-                                            HSSObservablePropertyAlignX,
-                                            this->observedContentAlignX,
-                                            this->observedContentAlignXProperty,
-                                            scope
-                                            );
+                                                   &HSSContainer::contentAlignXChanged,
+                                                   value,
+                                                   this->width,
+                                                   HSSObservablePropertyWidth,
+                                                   this,
+                                                   HSSObservablePropertyAlignX,
+                                                   this->observedContentAlignX,
+                                                   this->observedContentAlignXProperty,
+                                                   scope
+                                                   );
         this->notifyObservers(HSSObservablePropertyContentAlignX, &this->contentAlignX);
     }
 }
@@ -2091,44 +2478,51 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
 void HSSContainer::contentAlignXChanged(HSSObservableProperty source, void *data)
 {
     HSSParserNodeType nodeType = this->dContentAlignX->getType();
-    switch (nodeType) {
-        case HSSParserNodeTypePercentageConstant:
-        {
-            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dContentAlignX);
-            this->contentAlignX = percentageValue->getValue(*(HSSUnit*)data);
-            break;
-        }
+    switch (nodeType)
+    {
+    case HSSParserNodeTypePercentageConstant:
+    {
+        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dContentAlignX);
+        this->contentAlignX = percentageValue->getValue(*(HSSUnit*) data);
+        break;
+    }
 
-        case HSSParserNodeTypeExpression:
-        {
-            HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(this->dContentAlignX);
-            this->contentAlignX = expressionValue->evaluate();
-            break;
-        }
+    case HSSParserNodeTypeExpression:
+    {
+        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (this->dContentAlignX);
+        this->contentAlignX = expressionValue->evaluate();
+        break;
+    }
 
-        default:
-            break;
+    default:
+        break;
     }
 
     this->notifyObservers(HSSObservablePropertyContentAlignX, &this->contentAlignX);
 }
 
 //contentAlignY
-HSSParserNode::p HSSContainer::getDContentAlignY() { return this->dContentAlignX; }
+
+HSSParserNode::p HSSContainer::getDContentAlignY()
+{
+    return this->dContentAlignX;
+}
+
 void HSSContainer::setDContentAlignY(HSSParserNode::p value)
 {
-    switch (value->getType()) {
-        case HSSParserNodeTypeNumberConstant:
-        case HSSParserNodeTypePercentageConstant:
-        case HSSParserNodeTypeExpression:
-        case HSSParserNodeTypeKeywordConstant:
-        case HSSParserNodeTypeFunctionCall:
-            break;
-        default:
-            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of "+this->getElementName()));
+    switch (value->getType())
+    {
+    case HSSParserNodeTypeNumberConstant:
+    case HSSParserNodeTypePercentageConstant:
+    case HSSParserNodeTypeExpression:
+    case HSSParserNodeTypeKeywordConstant:
+    case HSSParserNodeTypeFunctionCall:
+        break;
+    default:
+        throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of " + this->getElementName()));
     }
 
-    if(this->observedContentAlignY != NULL)
+    if (this->observedContentAlignY != NULL)
     {
         this->observedContentAlignY->removeObserver(this->observedContentAlignYProperty, HSSObservablePropertyAlignY, this);
         this->observedContentAlignY = NULL;
@@ -2136,46 +2530,63 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
     this->dContentAlignY = value;
 
 
-    if(value->isA(HSSParserNodeTypeKeywordConstant)){
+    if (value->isA(HSSParserNodeTypeKeywordConstant))
+    {
 
-        HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
-        if (keywordValue->getValue() == "top"){
+        HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
+        if (keywordValue->getValue() == "top")
+        {
             this->setDContentAlignY(HSSParserNode::p(new HSSNumberConstant(0)));
-        } else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center"){
+        }
+        else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center")
+        {
             this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(50)));
-        } else if (keywordValue->getValue() == "bottom"){
+        }
+        else if (keywordValue->getValue() == "bottom")
+        {
             this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(100)));
-        } else if (keywordValue->getValue() == "even"){
+        }
+        else if (keywordValue->getValue() == "even")
+        {
             this->distributeY = true;
             this->distributeYLinear = false;
-        } else if (keywordValue->getValue() == "justify"){
+        }
+        else if (keywordValue->getValue() == "justify")
+        {
             this->distributeY = true;
             this->distributeYLinear = true;
-        } else {
-            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of "+this->getElementName()));
+        }
+        else
+        {
+            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of " + this->getElementName()));
         }
 
-    } else {
+    }
+    else
+    {
         HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
 
         HSSContainer::p parentContainer = this->getParent();
         const std::vector<HSSDisplayObject::p> * scope;
-        if(parentContainer){
+        if (parentContainer)
+        {
             scope = &(parentContainer->getChildren());
-        } else {
+        }
+        else
+        {
             scope = NULL;
         }
         this->contentAlignY = this->_setLDProperty(
-                                            &HSSContainer::contentAlignYChanged,
-                                            value,
-                                            this->height,
-                                            observedProperty,
-                                            this,
-                                            HSSObservablePropertyAlignY,
-                                            this->observedContentAlignY,
-                                            this->observedContentAlignYProperty,
-                                            scope
-                                            );
+                                                   &HSSContainer::contentAlignYChanged,
+                                                   value,
+                                                   this->height,
+                                                   observedProperty,
+                                                   this,
+                                                   HSSObservablePropertyAlignY,
+                                                   this->observedContentAlignY,
+                                                   this->observedContentAlignYProperty,
+                                                   scope
+                                                   );
         this->notifyObservers(HSSObservablePropertyContentAlignY, &this->contentAlignY);
     }
 }
@@ -2183,23 +2594,24 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
 void HSSContainer::contentAlignYChanged(HSSObservableProperty source, void *data)
 {
     HSSParserNodeType nodeType = this->dContentAlignY->getType();
-    switch (nodeType) {
-        case HSSParserNodeTypePercentageConstant:
-        {
-            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dContentAlignY);
-            this->contentAlignY = percentageValue->getValue(*(HSSUnit*)data);
-            break;
-        }
+    switch (nodeType)
+    {
+    case HSSParserNodeTypePercentageConstant:
+    {
+        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dContentAlignY);
+        this->contentAlignY = percentageValue->getValue(*(HSSUnit*) data);
+        break;
+    }
 
-        case HSSParserNodeTypeExpression:
-        {
-            HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(this->dContentAlignY);
-            this->contentAlignY = expressionValue->evaluate();
-            break;
-        }
+    case HSSParserNodeTypeExpression:
+    {
+        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (this->dContentAlignY);
+        this->contentAlignY = expressionValue->evaluate();
+        break;
+    }
 
-        default:
-            break;
+    default:
+        break;
     }
 
     this->notifyObservers(HSSObservablePropertyContentAlignY, &this->contentAlignY);
@@ -2207,36 +2619,53 @@ void HSSContainer::contentAlignYChanged(HSSObservableProperty source, void *data
 
 
 //directionPrimary
-HSSParserNode::p HSSContainer::getDDirectionPrimary() { return this->dDirectionPrimary; }
+
+HSSParserNode::p HSSContainer::getDDirectionPrimary()
+{
+    return this->dDirectionPrimary;
+}
+
 void HSSContainer::setDDirectionPrimary(HSSParserNode::p value)
 {
     this->dDirectionPrimary = value;
-    if(this->observedDirectionPrimary != NULL)
+    if (this->observedDirectionPrimary != NULL)
     {
         this->observedDirectionPrimary->removeObserver(this->observedDirectionPrimaryProperty, HSSObservablePropertyDirectionPrimary, this);
     }
 
-    if (value->isA(HSSParserNodeTypeKeywordConstant)){
-        std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
-        if(stringValue == "ltf" || stringValue == "rtl"){
-            if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft){
+    if (value->isA(HSSParserNodeTypeKeywordConstant))
+    {
+        std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        if (stringValue == "ltf" || stringValue == "rtl")
+        {
+            if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft)
+            {
                 this->directionSecondary = HSSDirectionTopToBottom;
                 this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
             }
-            if(stringValue == "ltr"){
+            if (stringValue == "ltr")
+            {
                 this->directionPrimary = HSSDirectionLeftToRight;
-            } else {
+            }
+            else
+            {
                 this->directionPrimary = HSSDirectionRightToLeft;
             }
 
-        } else if (stringValue == "ttb" || stringValue == "btt") {
-            if (this->directionSecondary == HSSDirectionTopToBottom || this->directionSecondary == HSSDirectionBottomToTop){
+        }
+        else if (stringValue == "ttb" || stringValue == "btt")
+        {
+            if (this->directionSecondary == HSSDirectionTopToBottom || this->directionSecondary == HSSDirectionBottomToTop)
+            {
                 this->directionSecondary = HSSDirectionLeftToRight;
                 this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
             }
-            if(stringValue == "ttb"){
+            if (stringValue == "ttb")
+            {
                 this->directionPrimary = HSSDirectionTopToBottom;
-            } else {
+            }
+            else
+            {
                 this->directionPrimary = HSSDirectionBottomToTop;
             }
         }
@@ -2247,7 +2676,8 @@ void HSSContainer::setDDirectionPrimary(HSSParserNode::p value)
 
 void HSSContainer::directionPrimaryChanged(HSSObservableProperty source, void *data)
 {
-    if(this->dDirectionPrimary->isA(HSSParserNodeTypeKeywordConstant)){
+    if (this->dDirectionPrimary->isA(HSSParserNodeTypeKeywordConstant))
+    {
 
     }
 
@@ -2255,36 +2685,53 @@ void HSSContainer::directionPrimaryChanged(HSSObservableProperty source, void *d
 }
 
 //directionSecondary
-HSSParserNode::p HSSContainer::getDDirectionSecondary() { return this->dDirectionSecondary; }
+
+HSSParserNode::p HSSContainer::getDDirectionSecondary()
+{
+    return this->dDirectionSecondary;
+}
+
 void HSSContainer::setDDirectionSecondary(HSSParserNode::p value)
 {
     this->dDirectionSecondary = value;
-    if(this->observedDirectionSecondary != NULL)
+    if (this->observedDirectionSecondary != NULL)
     {
         this->observedDirectionSecondary->removeObserver(this->observedDirectionSecondaryProperty, HSSObservablePropertyDirectionSecondary, this);
     }
 
-    if (value->isA(HSSParserNodeTypeKeywordConstant)){
-        std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
-        if(stringValue == "leftToRight" || stringValue == "rightToLeft"){
-            if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft){
+    if (value->isA(HSSParserNodeTypeKeywordConstant))
+    {
+        std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        if (stringValue == "leftToRight" || stringValue == "rightToLeft")
+        {
+            if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft)
+            {
                 this->directionSecondary = HSSDirectionTopToBottom;
                 this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
             }
-            if(stringValue == "leftToRight"){
+            if (stringValue == "leftToRight")
+            {
                 this->directionSecondary = HSSDirectionLeftToRight;
-            } else {
+            }
+            else
+            {
                 this->directionSecondary = HSSDirectionRightToLeft;
             }
 
-        } else if (stringValue == "topToBottom" || stringValue == "bottomToTop") {
-            if (this->directionSecondary == HSSDirectionTopToBottom || this->directionSecondary == HSSDirectionBottomToTop){
+        }
+        else if (stringValue == "topToBottom" || stringValue == "bottomToTop")
+        {
+            if (this->directionSecondary == HSSDirectionTopToBottom || this->directionSecondary == HSSDirectionBottomToTop)
+            {
                 this->directionSecondary = HSSDirectionLeftToRight;
                 this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
             }
-            if(stringValue == "topToBottom"){
+            if (stringValue == "topToBottom")
+            {
                 this->directionSecondary = HSSDirectionTopToBottom;
-            } else {
+            }
+            else
+            {
                 this->directionSecondary = HSSDirectionBottomToTop;
             }
         }
@@ -2295,7 +2742,8 @@ void HSSContainer::setDDirectionSecondary(HSSParserNode::p value)
 
 void HSSContainer::directionSecondaryChanged(HSSObservableProperty source, void *data)
 {
-    if(this->dDirectionSecondary->isA(HSSParserNodeTypeKeywordConstant)){
+    if (this->dDirectionSecondary->isA(HSSParserNodeTypeKeywordConstant))
+    {
 
     }
 
@@ -2304,87 +2752,108 @@ void HSSContainer::directionSecondaryChanged(HSSObservableProperty source, void 
 
 
 //directionSecondary
-HSSParserNode::p HSSContainer::getDShape() { return this->dShape; }
+
+HSSParserNode::p HSSContainer::getDShape()
+{
+    return this->dShape;
+}
+
 void HSSContainer::setDShape(HSSParserNode::p value)
 {
     bool valid = false;
 
     this->dShape = value;
-    if(this->observedShape != NULL)
+    if (this->observedShape != NULL)
     {
         this->observedShape->removeObserver(this->observedShapeProperty, HSSObservablePropertyShape, this);
     }
 
-    switch (value->getType()) {
-        case HSSParserNodeTypeKeywordConstant:
+    switch (value->getType())
+    {
+    case HSSParserNodeTypeKeywordConstant:
+    {
+        std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        if (stringValue == "default")
         {
-            std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue();
-            if(stringValue == "default"){
-                this->shape = HSSRectangle::p(new HSSRectangle());
-                valid = true;
-            }
-            break;
+            this->shape = HSSRectangle::p(new HSSRectangle());
+            valid = true;
         }
-
-        case HSSParserNodeTypeObjectNameConstant:
-        {
-            try {
-                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
-                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
-                objdef->setThisObj(this->shared_from_this());
-                HSSContainer::p parent = this->getParent();
-                if(parent){
-                    objdef->setScope(&(parent->getChildren()));
-                } else {
-                    objdef->setScope(&(this->getChildren()));
-                }
-                objdef->apply();
-                HSSObject::p theObject = objdef->getObject();
-                if (theObject->isA(HSSObjectTypeShape)){
-                    this->shape = boost::static_pointer_cast<HSSShape>(theObject);
-                    valid = true;
-                }
-
-            } catch (AXRError::p e) {
-                e->raise();
-
-            } catch (AXRWarning::p e) {
-                e->raise();
-            }
-
-            break;
-        }
-
-        default:
-            break;
+        break;
     }
 
-    switch (value->getStatementType()) {
-        case HSSStatementTypeObjectDefinition:
+    case HSSParserNodeTypeObjectNameConstant:
+    {
+        try
         {
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
+            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
             objdef->setThisObj(this->shared_from_this());
             HSSContainer::p parent = this->getParent();
-            if(parent){
+            if (parent)
+            {
                 objdef->setScope(&(parent->getChildren()));
-            } else {
+            }
+            else
+            {
                 objdef->setScope(&(this->getChildren()));
             }
             objdef->apply();
-            HSSObject::p objValue = objdef->getObject();
-            if(objValue->isA(HSSObjectTypeShape)){
-                this->shape = boost::static_pointer_cast<HSSShape>(objValue);
+            HSSObject::p theObject = objdef->getObject();
+            if (theObject->isA(HSSObjectTypeShape))
+            {
+                this->shape = boost::static_pointer_cast<HSSShape > (theObject);
                 valid = true;
             }
-            break;
+
+        }
+        catch (AXRError::p e)
+        {
+            e->raise();
+
+        }
+        catch (AXRWarning::p e)
+        {
+            e->raise();
         }
 
-        default:
-            break;
+        break;
     }
 
-    if(!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for shape of "+this->getElementName()));
+    default:
+        break;
+    }
+
+    switch (value->getStatementType())
+    {
+    case HSSStatementTypeObjectDefinition:
+    {
+        HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (value);
+        objdef->setThisObj(this->shared_from_this());
+        HSSContainer::p parent = this->getParent();
+        if (parent)
+        {
+            objdef->setScope(&(parent->getChildren()));
+        }
+        else
+        {
+            objdef->setScope(&(this->getChildren()));
+        }
+        objdef->apply();
+        HSSObject::p objValue = objdef->getObject();
+        if (objValue->isA(HSSObjectTypeShape))
+        {
+            this->shape = boost::static_pointer_cast<HSSShape > (objValue);
+            valid = true;
+        }
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    if (!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for shape of " + this->getElementName()));
 
     this->notifyObservers(HSSObservablePropertyShape, &this->shape);
 }
@@ -2396,97 +2865,121 @@ void HSSContainer::shapeChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyShape, &this->shape);
 }
 
-HSSTextAlignType HSSContainer::getTextAlign() { return this->textAlign; }
-HSSParserNode::p HSSContainer::getDTextAlign() { return this->dTextAlign; }
+HSSTextAlignType HSSContainer::getTextAlign()
+{
+    return this->textAlign;
+}
+
+HSSParserNode::p HSSContainer::getDTextAlign()
+{
+    return this->dTextAlign;
+}
+
 void HSSContainer::setDTextAlign(HSSParserNode::p value)
 {
     bool valid = false;
 
-    switch (value->getType()) {
+    switch (value->getType())
+    {
 
-        case HSSParserNodeTypeObjectNameConstant:
+    case HSSParserNodeTypeObjectNameConstant:
+    {
+        this->dTextAlign = value;
+        try
         {
-            this->dTextAlign = value;
-            try {
-                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
-                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
-                this->setDTextAlign(objdef);
-                valid = true;
-            } catch (AXRError::p e) {
-                e->raise();
-            }
-
-            break;
-        }
-
-
-        case HSSParserNodeTypeFunctionCall:
-        {
-            this->dTextAlign = value;
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
-            if(fnct && fnct->isA(HSSFunctionTypeRef)){
-                HSSContainer::p parent = this->getParent();
-                if(parent){
-                    fnct->setScope(&(parent->getChildren()));
-                } else {
-                    fnct->setScope(&(this->getChildren()));
-                }
-                boost::any remoteValue = fnct->evaluate();
-                try {
-                    this->textAlign = boost::any_cast<HSSTextAlignType>(remoteValue);
-                    valid = true;
-                } catch (...) {
-
-                }
-
-                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSContainer>(this, &HSSContainer::textAlignChanged));
-            }
-
-            break;
-        }
-
-        case HSSParserNodeTypeKeywordConstant:
-        {
-            this->dTextAlign = value;
-            this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSKeywordConstant>(value)->getValue());
+            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            this->setDTextAlign(objdef);
             valid = true;
-            break;
+        }
+        catch (AXRError::p e)
+        {
+            e->raise();
         }
 
-        default:
-            break;
+        break;
     }
 
-    switch (value->getStatementType()) {
-        case HSSStatementTypeObjectDefinition:
-        {
-            this->dTextAlign = value;
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition>(value);
-            objdef->setThisObj(this->shared_from_this());
-            HSSContainer::p parent = this->getParent();
-            if(parent){
-                objdef->setScope(&(parent->getChildren()));
-            } else {
-                objdef->setScope(&(this->getChildren()));
-            }
 
-            objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
-            if (theobj && theobj->isA(HSSObjectTypeValue)) {
-                //this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
-                std_log("######## FIXME ################");
+    case HSSParserNodeTypeFunctionCall:
+    {
+        this->dTextAlign = value;
+        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        if (fnct && fnct->isA(HSSFunctionTypeRef))
+        {
+            HSSContainer::p parent = this->getParent();
+            if (parent)
+            {
+                fnct->setScope(&(parent->getChildren()));
+            }
+            else
+            {
+                fnct->setScope(&(this->getChildren()));
+            }
+            boost::any remoteValue = fnct->evaluate();
+            try
+            {
+                this->textAlign = boost::any_cast<HSSTextAlignType > (remoteValue);
                 valid = true;
             }
+            catch (...)
+            {
 
-            break;
+            }
+
+            fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSContainer > (this, &HSSContainer::textAlignChanged));
         }
 
-        default:
-            break;
+        break;
     }
 
-    if(!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for textAlign of "+this->name));
+    case HSSParserNodeTypeKeywordConstant:
+    {
+        this->dTextAlign = value;
+        this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue());
+        valid = true;
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    switch (value->getStatementType())
+    {
+    case HSSStatementTypeObjectDefinition:
+    {
+        this->dTextAlign = value;
+        HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (value);
+        objdef->setThisObj(this->shared_from_this());
+        HSSContainer::p parent = this->getParent();
+        if (parent)
+        {
+            objdef->setScope(&(parent->getChildren()));
+        }
+        else
+        {
+            objdef->setScope(&(this->getChildren()));
+        }
+
+        objdef->apply();
+        HSSObject::p theobj = objdef->getObject();
+        if (theobj && theobj->isA(HSSObjectTypeValue))
+        {
+            //this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+            std_log("######## FIXME ################");
+            valid = true;
+        }
+
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    if (!valid)
+        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for textAlign of " + this->name));
 
     this->notifyObservers(HSSObservablePropertyTextAlign, &this->textAlign);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
@@ -2494,22 +2987,24 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
 
 void HSSContainer::textAlignChanged(HSSObservableProperty source, void *data)
 {
-    switch (this->dTextAlign->getType()) {
-        case HSSParserNodeTypeFunctionCall:
-            this->textAlign = *(HSSTextAlignType *)data;
-            break;
+    switch (this->dTextAlign->getType())
+    {
+    case HSSParserNodeTypeFunctionCall:
+        this->textAlign = *(HSSTextAlignType *) data;
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 
-    switch (this->dTextAlign->getStatementType()) {
-        case HSSStatementTypeObjectDefinition:
-            this->textAlign = *(HSSTextAlignType *)data;
-            break;
+    switch (this->dTextAlign->getStatementType())
+    {
+    case HSSStatementTypeObjectDefinition:
+        this->textAlign = *(HSSTextAlignType *) data;
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 
     this->notifyObservers(HSSObservablePropertyTextAlign, data);
@@ -2539,119 +3034,125 @@ void HSSContainer::setDefaults()
     this->setDTextAlign(HSSKeywordConstant::p(new HSSKeywordConstant("left")));
 }
 
-
-
 long double HSSContainer::_setLDProperty(
-                                             void(HSSContainer::*callback)(HSSObservableProperty property, void* data),
-                                             HSSParserNode::p       value,
-                                             long double            percentageBase,
-                                             HSSObservableProperty  observedProperty,
-                                             HSSObservable *        observedObject,
-                                             HSSObservableProperty  observedSourceProperty,
-                                             HSSObservable *        &observedStore,
-                                             HSSObservableProperty  &observedStoreProperty,
-                                             const std::vector<HSSDisplayObject::p> * scope
-                                             )
+                                         void(HSSContainer::*callback)(HSSObservableProperty property, void* data),
+                                         HSSParserNode::p value,
+                                         long double percentageBase,
+                                         HSSObservableProperty observedProperty,
+                                         HSSObservable * observedObject,
+                                         HSSObservableProperty observedSourceProperty,
+                                         HSSObservable * &observedStore,
+                                         HSSObservableProperty &observedStoreProperty,
+                                         const std::vector<HSSDisplayObject::p> * scope
+                                         )
 {
     long double ret;
 
     HSSParserNodeType nodeType = value->getType();
-    switch (nodeType) {
-        case HSSParserNodeTypeNumberConstant:
+    switch (nodeType)
+    {
+    case HSSParserNodeTypeNumberConstant:
+    {
+        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        ret = numberValue->getValue();
+        break;
+    }
+
+    case HSSParserNodeTypePercentageConstant:
+    {
+        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        ret = percentageValue->getValue(percentageBase);
+        if (callback != NULL)
         {
-            HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant>(value);
-            ret = numberValue->getValue();
-            break;
+            observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer > (this, callback));
+            observedStore = observedObject;
+            observedStoreProperty = observedProperty;
+        }
+        break;
+    }
+
+    case HSSParserNodeTypeExpression:
+    {
+        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        expressionValue->setPercentageBase(percentageBase);
+        expressionValue->setPercentageObserved(observedProperty, observedObject);
+        expressionValue->setScope(scope);
+        ret = expressionValue->evaluate();
+        if (callback != NULL)
+        {
+            expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer > (this, callback));
+            observedStore = expressionValue.get();
+            observedStoreProperty = HSSObservablePropertyValue;
         }
 
-        case HSSParserNodeTypePercentageConstant:
+        break;
+    }
+
+    case HSSParserNodeTypeKeywordConstant:
+        break;
+
+    case HSSParserNodeTypeFunctionCall:
+    {
+        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        fnct->setPercentageBase(percentageBase);
+        fnct->setPercentageObserved(observedProperty, observedObject);
+        fnct->setScope(scope);
+
+        boost::any remoteValue = fnct->evaluate();
+        try
         {
-            HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
-            ret = percentageValue->getValue(percentageBase);
-            if(callback != NULL)
-            {
-                observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer>(this, callback));
-                observedStore = observedObject;
-                observedStoreProperty = observedProperty;
-            }
-            break;
+            ret = boost::any_cast<long double>(remoteValue);
         }
-
-        case HSSParserNodeTypeExpression:
+        catch (...)
         {
-            HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
-            expressionValue->setPercentageBase(percentageBase);
-            expressionValue->setPercentageObserved(observedProperty, observedObject);
-            expressionValue->setScope(scope);
-            ret = expressionValue->evaluate();
-            if(callback != NULL){
-                expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer>(this, callback));
-                observedStore = expressionValue.get();
-                observedStoreProperty = HSSObservablePropertyValue;
-            }
-
-            break;
+            ret = 0.;
         }
-
-        case HSSParserNodeTypeKeywordConstant:
-            break;
-
-        case HSSParserNodeTypeFunctionCall:
+        if (callback != NULL)
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
-            fnct->setPercentageBase(percentageBase);
-            fnct->setPercentageObserved(observedProperty, observedObject);
-            fnct->setScope(scope);
-
-            boost::any remoteValue = fnct->evaluate();
-            try {
-                ret = boost::any_cast<long double>(remoteValue);
-            } catch (...) {
-                ret = 0.;
-            }
-            if(callback != NULL){
-                fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer>(this, callback));
-                observedStore = fnct.get();
-                observedStoreProperty = HSSObservablePropertyValue;
-            }
-            break;
+            fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer > (this, callback));
+            observedStore = fnct.get();
+            observedStoreProperty = HSSObservablePropertyValue;
         }
+        break;
+    }
 
-        default:
-            throw AXRError::p(new AXRError("HSSContainer", "Unknown parser node type while setting LDProperty"));
+    default:
+        throw AXRError::p(new AXRError("HSSContainer", "Unknown parser node type while setting LDProperty"));
     }
 
     return ret;
 }
 
-
 bool HSSContainer::handleEvent(HSSEventType type, void* data)
 {
     HSSDisplayObject::it it;
     bool handled = false;
-    for (it=this->allChildren.begin(); it < this->allChildren.end(); it++) {
+    for (it = this->allChildren.begin(); it < this->allChildren.end(); it++)
+    {
         HSSDisplayObject::p child = *it;
         bool childHandled = false;
         childHandled = child->handleEvent(type, data);
-        if (childHandled) {
+        if (childHandled)
+        {
             handled = true;
         }
     }
 
     bool superHandled = HSSDisplayObject::handleEvent(type, data);
-    if(superHandled){
+    if (superHandled)
+    {
         handled = true;
     }
 
     return handled;
 }
 
-
 void HSSContainer::setController(AXRController * controller)
 {
     //propagate
     HSSDisplayObject::it it;
-    for (it=this->allChildren.begin(); it < this->allChildren.end(); it++) {
+    for (it = this->allChildren.begin(); it < this->allChildren.end(); it++)
+    {
         HSSDisplayObject::p child = *it;
         child->setController(controller);
     }
@@ -2661,5 +3162,5 @@ void HSSContainer::setController(AXRController * controller)
 
 HSSContainer::p HSSContainer::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSContainer>(HSSDisplayObject::shared_from_this());
+    return boost::static_pointer_cast<HSSContainer > (HSSDisplayObject::shared_from_this());
 }

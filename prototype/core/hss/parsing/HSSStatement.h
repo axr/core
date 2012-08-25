@@ -46,7 +46,8 @@
 #include <boost/shared_ptr.hpp>
 #include "HSSParserNode.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Abstract base class that provides the basic functionality for statements. Do not use directly,
@@ -78,7 +79,7 @@ namespace AXR {
          */
         HSSStatement(const HSSStatement & orig);
 
-        virtual std::string toString() =0;
+        virtual std::string toString() = 0;
 
         /**
          *  Call this to know if a statement is of the given type.

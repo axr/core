@@ -95,8 +95,8 @@ AXRFile::p GenericAXRWrapper::getFile(std::string url)
 
 size_t GenericAXRWrapper::readFile(AXRFile::p theFile)
 {
-    size_t size = fread(theFile->getBuffer(), sizeof(theFile->getBuffer()[0]),
-        theFile->getBufferSize(), theFile->getFileHandle());
+    size_t size = fread(theFile->getBuffer(), sizeof (theFile->getBuffer()[0]),
+                        theFile->getBufferSize(), theFile->getFileHandle());
 
     if (ferror(theFile->getFileHandle()))
     {
@@ -161,18 +161,18 @@ std::string GenericAXRWrapper::getPathToResources()
     std::string path = "";
     pid_t pid = getpid();
     char buf[20] = {0};
-    sprintf(buf,"%d",pid);
+    sprintf(buf, "%d", pid);
     std::string _link = "/proc/";
-    _link.append( buf );
-    _link.append( "/exe");
+    _link.append(buf);
+    _link.append("/exe");
     char proc[512];
-    int ch = readlink(_link.c_str(),proc,512);
+    int ch = readlink(_link.c_str(), proc, 512);
     if (ch != -1)
     {
         proc[ch] = 0;
         path = proc;
         std::string::size_type t = path.find_last_of("/");
-        path = path.substr(0,t);
+        path = path.substr(0, t);
     }
 
     return path + std::string("/resources");

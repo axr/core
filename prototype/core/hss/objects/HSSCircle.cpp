@@ -55,12 +55,14 @@ HSSCircle::HSSCircle(const HSSCircle & orig)
 
 }
 
-HSSCircle::p HSSCircle::clone() const{
+HSSCircle::p HSSCircle::clone() const
+{
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSCircle: cloning circle object");
-    return boost::static_pointer_cast<HSSCircle, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSCircle, HSSClonable > (this->cloneImpl());
 }
 
-HSSClonable::p HSSCircle::cloneImpl() const{
+HSSClonable::p HSSCircle::cloneImpl() const
+{
     return HSSClonable::p(new HSSCircle(*this));
 }
 

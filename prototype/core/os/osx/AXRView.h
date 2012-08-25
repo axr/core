@@ -45,8 +45,9 @@
  *  @brief (OSX only) This is a NSView subclass, for using inside a window in
  *  Apple's cocoa framework.
  */
-@interface AXRView : NSView {
-@private
+@interface AXRView : NSView
+{
+    @private
     //this is actually always AXR::AXRWrapper *, but we hide it
     //so that we don't need to include the c++ header, which would
     //create the requirement to rename main.m to main.mm
@@ -54,53 +55,53 @@
     BOOL needsFile;
 }
 
-@property (assign) BOOL needsFile;
+@property(assign) BOOL needsFile;
 /**
  *  Hack to make it work with IB from a dependent target.
  */
-+(void)_keepAtLinkTime;
++(void) _keepAtLinkTime;
 
 /**
  *  @return YES. This is for optimizing the drawing.
  */
-- (BOOL)isOpaque;
+-(BOOL) isOpaque;
 /**
  *  Method that is called to draw on OSX. From within this, we can get access to the current
  *  graphics port, which is turned into a cairo surface.
  */
-- (void)drawRect:(NSRect)dirtyRect;
+-(void) drawRect : (NSRect) dirtyRect;
 /**
  *  @return YES. This allows the view to recieve events from the system.
  */
-- (BOOL)acceptsFirstResponder;
+-(BOOL) acceptsFirstResponder;
 
 /**
  *  Setter for the pointer to the wrapper.
  *  @param  theWrapper  A regular pointer to the wrapper object (but passed as a void *,
  *  to avoid including the c++ header).
  */
-- (void)setAxrWrapper:(void *)theWrapper;
+-(void) setAxrWrapper : (void *) theWrapper;
 /**
  *  Getter for the pointer to the wrapper.
  *  @return A void * pointer to the wrapper object. Cast this to (AXR::CocoaAXRWrapper *).
  */
-- (void *)axrWrapper;
+-(void *) axrWrapper;
 /**
  *  Call this method to load a file. A file dialog will appear asking to select a file, and
  *  this is specific to each OS.
  *  @return A boolean telling wether the file has been loaded or not
  */
-- (bool)loadFile;
+-(bool)loadFile;
 /**
  *  Loads a XML or HSS file from the path you give.
  *  @param  filePath A NSString containing the path to the XML/HSS file.
  *  @return A boolean telling wether the file has been loaded or not
  */
-- (bool)loadFile:(NSString *)filePath;
+-(bool)loadFile : (NSString *) filePath;
 /**
  *  Reloads the currently loaded file.
  *  @return A boolean telling wether the file has been reloaded or not
  */
-- (bool)reload;
+-(bool)reload;
 
 @end

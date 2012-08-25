@@ -45,7 +45,8 @@
 #include <string>
 #include "HSSSelector.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Selects elements by tag name.
@@ -53,7 +54,8 @@ namespace AXR {
      *  This just holds information about the name of the elements that should
      *  be selected by AXRController when creating selections.
      */
-    class HSSNameSelector : public HSSSelector {
+    class HSSNameSelector : public HSSSelector
+    {
     public:
         typedef boost::shared_ptr<HSSNameSelector> p;
 

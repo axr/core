@@ -44,7 +44,9 @@
 
 #include "HSSFilter.h"
 
-namespace AXR {
+namespace AXR
+{
+
     /**
      *  @brief Selects the first element of the selection.
      */

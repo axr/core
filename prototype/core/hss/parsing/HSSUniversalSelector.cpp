@@ -51,7 +51,7 @@ HSSUniversalSelector::HSSUniversalSelector()
 
 HSSUniversalSelector::p HSSUniversalSelector::clone() const
 {
-    return boost::static_pointer_cast<HSSUniversalSelector, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSUniversalSelector, HSSClonable > (this->cloneImpl());
 }
 
 std::string HSSUniversalSelector::toString()

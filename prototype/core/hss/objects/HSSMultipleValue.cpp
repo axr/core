@@ -55,16 +55,19 @@ HSSMultipleValue::HSSMultipleValue(const HSSMultipleValue & orig)
 : HSSObject(orig)
 {
     HSSParserNode::const_it it;
-    for (it=orig.valueList.begin(); it!=orig.valueList.end(); it++) {
+    for (it = orig.valueList.begin(); it != orig.valueList.end(); it++)
+    {
         this->valueList.push_back((*it)->clone());
     }
 }
 
-HSSMultipleValue::p HSSMultipleValue::clone() const{
-    return boost::static_pointer_cast<HSSMultipleValue, HSSClonable>(this->cloneImpl());
+HSSMultipleValue::p HSSMultipleValue::clone() const
+{
+    return boost::static_pointer_cast<HSSMultipleValue, HSSClonable > (this->cloneImpl());
 }
 
-HSSClonable::p HSSMultipleValue::cloneImpl() const{
+HSSClonable::p HSSMultipleValue::cloneImpl() const
+{
     return HSSClonable::p(new HSSMultipleValue(*this));
 }
 
@@ -79,10 +82,12 @@ std::string HSSMultipleValue::toString()
     std::string tempstr = std::string("HSSMultipleValue");
 
     const int vcount = this->size();
-    if(vcount > 0){
+    if (vcount > 0)
+    {
         tempstr.append(" with the following values: \n");
         unsigned j;
-        for (j=0; j<vcount; j++) {
+        for (j = 0; j < vcount; j++)
+        {
             tempstr.append("   ").append(this->valueList[j]->toString()).append("\n");
         }
     }
@@ -92,7 +97,7 @@ std::string HSSMultipleValue::toString()
 
 void HSSMultipleValue::add(HSSParserNode::p newValue)
 {
-    if(newValue != NULL)
+    if (newValue != NULL)
     {
         std_log3("Added value to HSSMultipleValue: " + newValue->toString());
         this->valueList.push_back(newValue);
@@ -119,6 +124,7 @@ const int HSSMultipleValue::size()
     return this->valueList.size();
 }
 
-const std::vector<HSSParserNode::p> HSSMultipleValue::getValueList() const {
+const std::vector<HSSParserNode::p> HSSMultipleValue::getValueList() const
+{
     return this->valueList;
 }

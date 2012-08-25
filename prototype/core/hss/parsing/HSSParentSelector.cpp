@@ -51,15 +51,18 @@ HSSParentSelector::HSSParentSelector()
 
 }
 
-HSSParentSelector::p HSSParentSelector::clone() const{
-    return boost::static_pointer_cast<HSSParentSelector, HSSClonable>(this->cloneImpl());
+HSSParentSelector::p HSSParentSelector::clone() const
+{
+    return boost::static_pointer_cast<HSSParentSelector, HSSClonable > (this->cloneImpl());
 }
 
-std::string HSSParentSelector::toString(){
+std::string HSSParentSelector::toString()
+{
     return "@parent selector";
 }
 
-HSSClonable::p HSSParentSelector::cloneImpl() const{
+HSSClonable::p HSSParentSelector::cloneImpl() const
+{
     return HSSClonable::p(new HSSParentSelector(*this));
 }
 
@@ -75,15 +78,18 @@ std::vector<HSSDisplayObject::p> HSSParentSelector::filterSelection(const std::v
     std::vector<HSSDisplayObject::p>::iterator readIt, writeIt;
     std::set<HSSDisplayObject::p> tmpset;
 
-    for (scopeIt = scope.begin(); scopeIt != scope.end(); ++scopeIt) {
+    for (scopeIt = scope.begin(); scopeIt != scope.end(); ++scopeIt)
+    {
         const HSSDisplayObject::p & theDO = *scopeIt;
         const HSSDisplayObject::p & parent = theDO->getParent();
-        if(parent)
+        if (parent)
             ret.push_back(parent);
     }
 
-    for (readIt=ret.begin(), writeIt=ret.begin(); readIt!=ret.end(); ++readIt) {
-        if(tmpset.insert(*readIt).second){
+    for (readIt = ret.begin(), writeIt = ret.begin(); readIt != ret.end(); ++readIt)
+    {
+        if (tmpset.insert(*readIt).second)
+        {
             *writeIt++ = *readIt;
         }
     }

@@ -83,11 +83,11 @@ std::string AXRError::toString()
         linnum << this->line;
         std::ostringstream colnum;
         colnum << this->column;
-        return "Error: "+this->message+" in "+this->filename+" on line "+linnum.str()+" on column "+colnum.str();
+        return "Error: " + this->message + " in " + this->filename + " on line " + linnum.str() + " on column " + colnum.str();
     }
     else
     {
-        return "Error: "+this->message;
+        return "Error: " + this->message;
     }
 }
 

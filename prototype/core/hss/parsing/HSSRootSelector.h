@@ -46,15 +46,16 @@
 #include "HSSDisplayObject.h"
 #include "HSSNameSelector.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief The special object \@root in HSS.
      *
      *  Used in selector chains, they always return the root element.
      */
-    class HSSRootSelector : public HSSNameSelector {
-
+    class HSSRootSelector : public HSSNameSelector
+    {
     public:
         typedef boost::shared_ptr<HSSRootSelector> p;
 

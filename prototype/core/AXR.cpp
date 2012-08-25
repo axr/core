@@ -48,7 +48,8 @@ using namespace AXR;
 AXRCore::tp & AXRCore::getInstance()
 {
     static AXRCore::tp theInstance;
-    if(!theInstance.get()) {
+    if (!theInstance.get())
+    {
         theInstance.reset(new AXRCore());
     }
     return theInstance;
@@ -61,7 +62,7 @@ AXRCore::AXRCore()
 
 void AXRCore::initialize(AXRWrapper * wrpr)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: initializing core for thread " + boost::lexical_cast<std::string>(pthread_self()));
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: initializing core for thread " + boost::lexical_cast<std::string > (pthread_self()));
 
     AXRController::p ctrlr = AXRController::p(new AXRController());
     AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.get()));
@@ -78,15 +79,20 @@ AXRCore::~AXRCore()
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: destructing core");
 }
 
-void AXRCore::setCairo(cairo_t * cr) {
+void AXRCore::setCairo(cairo_t * cr)
+{
     this->render->setCairo(cr);
 }
 
-cairo_t * AXRCore::getCairo() { return this->render->getCairo(); }
+cairo_t * AXRCore::getCairo()
+{
+    return this->render->getCairo();
+}
 
 void AXRCore::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
-    if(this->render){
+    if (this->render)
+    {
         this->render->drawInRectWithBounds(rect, bounds);
     }
 }
@@ -95,60 +101,77 @@ void AXRCore::run()
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: running");
     //check for wrapper
-    if(this->getWrapper() == NULL){
+    if (this->getWrapper() == NULL)
+    {
         AXRError::p(new AXRError("AXRCore", "The wrapper was not defined"))->raise();
         return;
     }
     bool loadingSuccess = this->parserXML->loadFile(this->file);
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished parsing "+this->file->getFileName());
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath()+"/"+this->file->getFileName());
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished parsing " + this->file->getFileName());
+    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath() + "/" + this->file->getFileName());
 
-    if(!loadingSuccess){
+    if (!loadingSuccess)
+    {
         AXRError::p(new AXRError("AXRCore", "Could not load the XML file"))->raise();
-    } else {
+    }
+    else
+    {
         //needs reset on next load
         this->_hasLoadedFile = true;
 
-        HSSContainer::p root = boost::static_pointer_cast<HSSContainer>(this->controller->getRoot());
+        HSSContainer::p root = boost::static_pointer_cast<HSSContainer > (this->controller->getRoot());
         unsigned i, size;
         std::string hssfilename, hssfilepath;
 
         std::vector<std::string> loadSheets = this->controller->loadSheetsGet();
-        for (i=0, size = loadSheets.size(); i<size; i++) {
+        for (i = 0, size = loadSheets.size(); i < size; i++)
+        {
 
             hssfilename = loadSheets[i];
-            if(hssfilename.substr(0,7) == "file://"){
+            if (hssfilename.substr(0, 7) == "file://")
+            {
                 hssfilepath = hssfilename;
-            } else if(hssfilename.substr(0,7) == "http://"){
+            }
+            else if (hssfilename.substr(0, 7) == "http://")
+            {
                 AXRError::p(new AXRError("AXRCore", "HTTP has not been implemented yet"))->raise();
-            } else if(hssfilename.substr(0,1) == "/"){
+            }
+            else if (hssfilename.substr(0, 1) == "/")
+            {
                 hssfilepath = this->file->getBasePath() + hssfilename;
-            } else {
-                hssfilepath = "file://"+this->file->getBasePath() +"/"+ hssfilename;
+            }
+            else
+            {
+                hssfilepath = "file://" + this->file->getBasePath() + "/" + hssfilename;
             }
             AXRFile::p hssfile;
-            try {
+            try
+            {
                 hssfile = this->wrapper->getFile(hssfilepath);
-            } catch (AXRError::p e) {
+            }
+            catch (AXRError::p e)
+            {
                 e->raise();
                 continue;
             }
 
             this->parserHSS->setBasePath(this->file->getBasePath());
-            if(! this->parserHSS->loadFile(hssfile)){
+            if (!this->parserHSS->loadFile(hssfile))
+            {
                 AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
             }
         }
-        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished loading stylesheets for "+this->file->getFileName());
-        axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath()+"/"+this->file->getFileName());
+        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished loading stylesheets for " + this->file->getFileName());
+        axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath() + "/" + this->file->getFileName());
 
         axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: matching rules to the content tree");
         //assign the rules to the objects
         this->controller->matchRulesToContentTree();
         root->setNeedsRereadRules(true);
 
-        if (root) {
+        if (root)
+        {
             root->recursiveReadDefinitionObjects();
             root->handleEvent(HSSEventTypeLoad, NULL);
         }
@@ -169,28 +192,71 @@ void AXRCore::reset()
 }
 
 //has loaded file
+
 bool AXRCore::hasLoadedFile()
 {
     return _hasLoadedFile;
 }
 
-AXRWrapper * AXRCore::getWrapper() { return this->wrapper; }
-void AXRCore::setWrapper(AXRWrapper * wrapper) { this->wrapper = wrapper; }
+AXRWrapper * AXRCore::getWrapper()
+{
+    return this->wrapper;
+}
 
-AXRController::p AXRCore::getController() { return this->controller; }
-void AXRCore::setController(AXRController::p controller) { this->controller = controller; }
+void AXRCore::setWrapper(AXRWrapper * wrapper)
+{
+    this->wrapper = wrapper;
+}
 
-AXRRender::p AXRCore::getRender() { return this->render; }
-void AXRCore::setRender(AXRRender::p render) { this->render = render; }
+AXRController::p AXRCore::getController()
+{
+    return this->controller;
+}
 
-AXRFile::p AXRCore::getFile() { return this->file; }
-void AXRCore::setFile(AXRFile::p file) { this->file = file; }
+void AXRCore::setController(AXRController::p controller)
+{
+    this->controller = controller;
+}
 
-XMLParser::p AXRCore::getParserXML() { return this->parserXML; }
-void AXRCore::setParserXML(XMLParser::p parser) { this->parserXML = parser; }
+AXRRender::p AXRCore::getRender()
+{
+    return this->render;
+}
 
-HSSParser::p AXRCore::getParserHSS() { return this->parserHSS; }
-void AXRCore::setParserHSS(HSSParser::p parser) { this->parserHSS = parser; }
+void AXRCore::setRender(AXRRender::p render)
+{
+    this->render = render;
+}
+
+AXRFile::p AXRCore::getFile()
+{
+    return this->file;
+}
+
+void AXRCore::setFile(AXRFile::p file)
+{
+    this->file = file;
+}
+
+XMLParser::p AXRCore::getParserXML()
+{
+    return this->parserXML;
+}
+
+void AXRCore::setParserXML(XMLParser::p parser)
+{
+    this->parserXML = parser;
+}
+
+HSSParser::p AXRCore::getParserHSS()
+{
+    return this->parserHSS;
+}
+
+void AXRCore::setParserHSS(HSSParser::p parser)
+{
+    this->parserHSS = parser;
+}
 
 bool AXRCore::isCustomFunction(std::string name)
 {
@@ -205,7 +271,8 @@ void AXRCore::registerCustomFunction(std::string name, HSSCallback* fn)
 
 void AXRCore::evaluateCustomFunction(std::string name, void* data)
 {
-    if(this->isCustomFunction(name)){
+    if (this->isCustomFunction(name))
+    {
         this->_customFunctions[name]->call(HSSObservablePropertyValue, data);
     }
 }

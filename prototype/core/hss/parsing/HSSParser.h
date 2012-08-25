@@ -56,7 +56,8 @@
 #define HSSFRAMEWORK_PROTOCOL "axr://"
 #define HSSFRAMEWORK_PROTOCOL_LEN 6
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @addtogroup typeEnums
@@ -66,10 +67,11 @@ namespace AXR {
      *  fully used yet, only in one or to places in the parser. This will probably useful
      *  in the future for better error handling and stuff like that.
      */
-    enum HSSParserContext {
+    enum HSSParserContext
+    {
         HSSParserContextRoot, /**< When we are at the base level of the document. */
-        HSSParserContextBlock,  /**< When we are inside of a rule. */
-        HSSParserContextObjectDefinition,  /**< When we are inside an object definition. */
+        HSSParserContextBlock, /**< When we are inside of a rule. */
+        HSSParserContextObjectDefinition, /**< When we are inside an object definition. */
         HSSParserContextExpression, /**< When we are reading an expression. */
         HSSParserContextSelectorChain /**< When we are reading a selector chain. */
     };
@@ -89,7 +91,6 @@ namespace AXR {
      */
     class HSSParser
     {
-
     public:
 
         /**

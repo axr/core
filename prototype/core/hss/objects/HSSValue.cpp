@@ -69,12 +69,14 @@ HSSValue::HSSValue(const HSSValue & orig)
     this->registerProperty(HSSObservablePropertyValue, &this->dValue);
 }
 
-HSSValue::p HSSValue::clone() const{
+HSSValue::p HSSValue::clone() const
+{
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: cloning value object");
-    return boost::static_pointer_cast<HSSValue, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSValue, HSSClonable > (this->cloneImpl());
 }
 
-HSSClonable::p HSSValue::cloneImpl() const{
+HSSClonable::p HSSValue::cloneImpl() const
+{
     return HSSClonable::p(new HSSValue(*this));
 }
 
@@ -85,7 +87,7 @@ HSSValue::~HSSValue()
 
 std::string HSSValue::toString()
 {
-    return "HSSValue: "+this->dValue->toString();
+    return "HSSValue: " + this->dValue->toString();
 }
 
 std::string HSSValue::defaultObjectType()
@@ -95,27 +97,35 @@ std::string HSSValue::defaultObjectType()
 
 std::string HSSValue::defaultObjectType(std::string property)
 {
-    if (property == "value"){
+    if (property == "value")
+    {
         return "request";
-    } else {
+    }
+    else
+    {
         return HSSObject::defaultObjectType(property);
     }
 }
 
 void HSSValue::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    switch (name) {
-        case HSSObservablePropertyValue:
-            this->setDValue(value);
-            break;
+    switch (name)
+    {
+    case HSSObservablePropertyValue:
+        this->setDValue(value);
+        break;
 
-        default:
-            HSSObject::setProperty(name, value);
-            break;
+    default:
+        HSSObject::setProperty(name, value);
+        break;
     }
 }
 
-const HSSParserNode::p HSSValue::getDValue() const { return this->dValue; }
+const HSSParserNode::p HSSValue::getDValue() const
+{
+    return this->dValue;
+}
+
 void HSSValue::setDValue(HSSParserNode::p value)
 {
     this->dValue = value;
@@ -126,7 +136,7 @@ void HSSValue::addDValue(HSSParserNode::p value)
 {
     bool valid = true;
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for value of @value "+this->name));
+        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for value of @value " + this->name));
 
     this->notifyObservers(HSSObservablePropertyValue, &this->dValue);
 }

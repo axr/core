@@ -53,7 +53,8 @@
 #include "HSSRule.h"
 #include "HSSStatement.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Object definitions in HSS are represented by this class.

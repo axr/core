@@ -50,8 +50,9 @@ HSSLastChildFilter::HSSLastChildFilter()
 
 }
 
-HSSLastChildFilter::p HSSLastChildFilter::clone() const{
-    return boost::static_pointer_cast<HSSLastChildFilter, HSSClonable>(this->cloneImpl());
+HSSLastChildFilter::p HSSLastChildFilter::clone() const
+{
+    return boost::static_pointer_cast<HSSLastChildFilter, HSSClonable > (this->cloneImpl());
 }
 
 HSSLastChildFilter::~HSSLastChildFilter()
@@ -68,15 +69,21 @@ const std::vector<HSSDisplayObject::p> HSSLastChildFilter::apply(const std::vect
 {
     std::vector<HSSDisplayObject::p> ret;
     HSSDisplayObject::const_it it;
-    for (it=scope.begin(); it!=scope.end(); it++) {
+    for (it = scope.begin(); it != scope.end(); it++)
+    {
         const HSSDisplayObject::p & theDO = *it;
         int lastIndex = theDO->getParent()->getChildren().size() - 1;
-        if (this->getNegating()) {
-            if(theDO->getIndex() != lastIndex){
+        if (this->getNegating())
+        {
+            if (theDO->getIndex() != lastIndex)
+            {
                 ret.push_back(theDO);
             }
-        } else {
-            if(theDO->getIndex() == lastIndex){
+        }
+        else
+        {
+            if (theDO->getIndex() == lastIndex)
+            {
                 ret.push_back(theDO);
             }
         }
@@ -84,6 +91,7 @@ const std::vector<HSSDisplayObject::p> HSSLastChildFilter::apply(const std::vect
     return ret;
 }
 
-HSSClonable::p HSSLastChildFilter::cloneImpl() const{
+HSSClonable::p HSSLastChildFilter::cloneImpl() const
+{
     return HSSClonable::p(new HSSLastChildFilter(*this));
 }

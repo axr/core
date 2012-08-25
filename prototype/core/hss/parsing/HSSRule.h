@@ -52,7 +52,8 @@
 #include "HSSSelectorChain.h"
 #include "HSSStatement.h"
 
-namespace AXR {
+namespace AXR
+{
 
     class HSSDisplayObject;
     class HSSFilter;

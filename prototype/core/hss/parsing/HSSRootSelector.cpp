@@ -50,15 +50,18 @@ HSSRootSelector::HSSRootSelector()
 
 }
 
-HSSRootSelector::p HSSRootSelector::clone() const{
-    return boost::static_pointer_cast<HSSRootSelector, HSSClonable>(this->cloneImpl());
+HSSRootSelector::p HSSRootSelector::clone() const
+{
+    return boost::static_pointer_cast<HSSRootSelector, HSSClonable > (this->cloneImpl());
 }
 
-std::string HSSRootSelector::toString(){
+std::string HSSRootSelector::toString()
+{
     return "@root selector";
 }
 
-HSSClonable::p HSSRootSelector::cloneImpl() const{
+HSSClonable::p HSSRootSelector::cloneImpl() const
+{
     return HSSClonable::p(new HSSRootSelector(*this));
 }
 

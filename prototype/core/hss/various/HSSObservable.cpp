@@ -46,10 +46,12 @@
 
 using namespace AXR;
 
-std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property){
+std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property)
+{
     static std::string types[64];
     static bool HSSObservableHasInitializedTypes = false;
-    if (!HSSObservableHasInitializedTypes) {
+    if (!HSSObservableHasInitializedTypes)
+    {
         HSSObservableHasInitializedTypes = true;
 
         types[HSSObservablePropertyNone] = "unknown";
@@ -153,7 +155,8 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
 {
     static boost::unordered_map<std::string, HSSObservableProperty> properties;
 
-    if (properties.size() == 0) {
+    if (properties.size() == 0)
+    {
         //HSSObject
         properties["isA"] = HSSObservablePropertyIsA;
 
@@ -262,33 +265,38 @@ void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty 
     boost::hash_combine(hash, object);
     boost::hash_combine(hash, source);
 
-    if(this->_propertyObservers.count(target) != 0){
+    if (this->_propertyObservers.count(target) != 0)
+    {
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
         theObserved[hash] = callback;
-        axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for "+HSSObservable::observablePropertyStringRepresentation(target));
-    } else {
+        axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for " + HSSObservable::observablePropertyStringRepresentation(target));
+    }
+    else
+    {
         HSSObservable::observed theObserved;
         theObserved[hash] = callback;
         this->_propertyObservers[target] = theObserved;
-        axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for new "+HSSObservable::observablePropertyStringRepresentation(target));
+        axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for new " + HSSObservable::observablePropertyStringRepresentation(target));
     }
 }
 
 void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object)
 {
-    if(this->_propertyObservers.find(target) != this->_propertyObservers.end()){
+    if (this->_propertyObservers.find(target) != this->_propertyObservers.end())
+    {
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
         std::size_t hash = 0;
         boost::hash_combine(hash, object);
         boost::hash_combine(hash, source);
-        if(theObserved.count(hash) != 0){
+        if (theObserved.count(hash) != 0)
+        {
             delete theObserved[hash];
             theObserved.erase(hash);
-            axr_log(AXR_DEBUG_CH_OBSERVING, "removing observer for "+HSSObservable::observablePropertyStringRepresentation(target));
+            axr_log(AXR_DEBUG_CH_OBSERVING, "removing observer for " + HSSObservable::observablePropertyStringRepresentation(target));
             return;
         }
     }
-    std_log("####### tried to remove non existent observer for "+HSSObservable::observablePropertyStringRepresentation(target));
+    std_log("####### tried to remove non existent observer for " + HSSObservable::observablePropertyStringRepresentation(target));
 }
 
 void HSSObservable::propertyChanged(HSSObservableProperty property, void *data)
@@ -299,11 +307,14 @@ void HSSObservable::propertyChanged(HSSObservableProperty property, void *data)
 void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
 {
     HSSObservable::observed::iterator it;
-    if(this->_propertyObservers.count(property) != 0){
+    if (this->_propertyObservers.count(property) != 0)
+    {
         HSSObservable::observed &theObserved = this->_propertyObservers[property];
-        for (it=theObserved.begin(); it != theObserved.end() ; it++) {
+        for (it = theObserved.begin(); it != theObserved.end(); it++)
+        {
             HSSCallback * callback = (*it).second;
-            if(data == NULL){
+            if (data == NULL)
+            {
                 axr_log(AXR_DEBUG_CH_OBSERVING, "data is null");
             }
             callback->call(property, data);

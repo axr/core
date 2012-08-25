@@ -51,8 +51,9 @@ HSSPercentageConstant::HSSPercentageConstant(long double value)
     this->value = value / 100.;
 }
 
-HSSPercentageConstant::p HSSPercentageConstant::clone() const{
-    return boost::static_pointer_cast<HSSPercentageConstant, HSSClonable>(this->cloneImpl());
+HSSPercentageConstant::p HSSPercentageConstant::clone() const
+{
+    return boost::static_pointer_cast<HSSPercentageConstant, HSSClonable > (this->cloneImpl());
 }
 
 HSSPercentageConstant::~HSSPercentageConstant()
@@ -81,6 +82,7 @@ long double HSSPercentageConstant::getValue(long double baseValue)
     return this->value * baseValue;
 }
 
-HSSClonable::p HSSPercentageConstant::cloneImpl() const{
+HSSClonable::p HSSPercentageConstant::cloneImpl() const
+{
     return HSSClonable::p(new HSSPercentageConstant(*this));
 }

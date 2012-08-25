@@ -46,7 +46,8 @@
 #include "HSSMultipleValueDefinition.h"
 #include "HSSObject.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Represents all event objects in HSS.

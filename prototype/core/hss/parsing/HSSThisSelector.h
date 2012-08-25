@@ -46,7 +46,8 @@
 #include "HSSDisplayObject.h"
 #include "HSSNameSelector.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief The special object \@this in HSS.
@@ -56,8 +57,8 @@ namespace AXR {
      *  \@this is used, it points to the container, not the gradient. For the current object itself
      *  \@self is used.
      */
-    class HSSThisSelector : public HSSNameSelector {
-
+    class HSSThisSelector : public HSSNameSelector
+    {
     public:
         typedef boost::shared_ptr<HSSThisSelector> p;
 

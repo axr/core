@@ -44,7 +44,9 @@
 
 #include "HSSFilter.h"
 
-namespace AXR {
+namespace AXR
+{
+
     /**
      *  @brief Filters the selection down to the last item.
      */

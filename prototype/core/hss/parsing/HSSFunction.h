@@ -51,7 +51,8 @@
 #include "HSSKeywordConstant.h"
 #include "HSSObject.h"
 
-namespace AXR {
+namespace AXR
+{
 
     class AXRController;
 

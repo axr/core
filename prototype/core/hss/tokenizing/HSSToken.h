@@ -47,6 +47,7 @@
 
 namespace AXR
 {
+
     enum HSSTokenType
     {
         HSSNone = 0,

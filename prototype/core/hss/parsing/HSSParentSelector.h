@@ -46,15 +46,16 @@
 #include "HSSDisplayObject.h"
 #include "HSSNameSelector.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief The special object \@parent in HSS.
      *
      *  Used in selector chains, they always return the unique parent elements of the elements in scope.
      */
-    class HSSParentSelector : public HSSNameSelector {
-
+    class HSSParentSelector : public HSSNameSelector
+    {
     public:
         typedef boost::shared_ptr<HSSParentSelector> p;
 

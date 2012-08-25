@@ -49,8 +49,9 @@ HSSOddFilter::HSSOddFilter()
 
 }
 
-HSSOddFilter::p HSSOddFilter::clone() const{
-    return boost::static_pointer_cast<HSSOddFilter, HSSClonable>(this->cloneImpl());
+HSSOddFilter::p HSSOddFilter::clone() const
+{
+    return boost::static_pointer_cast<HSSOddFilter, HSSClonable > (this->cloneImpl());
 }
 
 HSSOddFilter::~HSSOddFilter()
@@ -63,18 +64,23 @@ std::string HSSOddFilter::toString()
     return "Odd Filter";
 }
 
-
 const std::vector<HSSDisplayObject::p> HSSOddFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
 {
     std::vector<HSSDisplayObject::p> ret;
     unsigned i, size;
-    for (i=0, size=scope.size(); i<size; i++) {
-        if(this->getNegating()){
-            if(i%2 != 0){
+    for (i = 0, size = scope.size(); i < size; i++)
+    {
+        if (this->getNegating())
+        {
+            if (i % 2 != 0)
+            {
                 ret.push_back(scope[i]);
             }
-        } else {
-            if(i%2 == 0){
+        }
+        else
+        {
+            if (i % 2 == 0)
+            {
                 ret.push_back(scope[i]);
             }
         }
@@ -82,6 +88,7 @@ const std::vector<HSSDisplayObject::p> HSSOddFilter::apply(const std::vector<HSS
     return ret;
 }
 
-HSSClonable::p HSSOddFilter::cloneImpl() const{
+HSSClonable::p HSSOddFilter::cloneImpl() const
+{
     return HSSClonable::p(new HSSOddFilter(*this));
 }

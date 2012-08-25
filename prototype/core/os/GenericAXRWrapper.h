@@ -46,9 +46,10 @@
 
 namespace AXR
 {
+
     class GenericAXRWrapper : public AXRWrapper
     {
-        public:
+    public:
         GenericAXRWrapper();
         AXRWrapper * createWrapper();
         virtual ~GenericAXRWrapper();

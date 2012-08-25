@@ -47,7 +47,8 @@
 #include "HSSBorder.h"
 #include "HSSRgb.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief The object type representing line borders in HSS.

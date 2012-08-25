@@ -47,7 +47,9 @@
 #include "HSSObject.h"
 #include "HSSParserNode.h"
 
-namespace AXR {
+namespace AXR
+{
+
     /**
      *  @brief MultipleValue objects contain other values, and stores them
      *  together under the same object name.

@@ -117,7 +117,8 @@ namespace AXR
      *  @enum HSSInstructionType
      *  The type of the instruction node. It will determine what the instruction will be used for.
      */
-    enum HSSInstructionType {
+    enum HSSInstructionType
+    {
         HSSInstructionTypeNone = 0, /**< Error state. */
         HSSNewInstruction, /**< This will cause a new element to be created when prepended in front of rules. */
         HSSEnsureInstruction, /**< This will cause a new element to be created if not already there,
@@ -181,7 +182,8 @@ namespace AXR
      *  @enum HSSFilterType
      *  The type of the filter, specific for each subclass.
      */
-    enum HSSFilterType {
+    enum HSSFilterType
+    {
         HSSFilterTypeNone = 0, /**< Error state. */
 
         //position
@@ -299,7 +301,8 @@ namespace AXR
      *  @todo is this a good design? and if so, aren't object definitions, object
      *  names and functions missing?
      */
-    enum HSSValueType {
+    enum HSSValueType
+    {
         HSSValueNumberInt, /**< Long Integer */
         HSSValueNumberFloat, /**< Long double */
         HSSValueString, /**< std::string */
@@ -343,7 +346,8 @@ namespace AXR
      *  @enum HSSShapeType
      *  The type of the shape object, specific for each subclass.
      */
-    enum HSSShapeType {
+    enum HSSShapeType
+    {
         HSSShapeTypeNone = 0, /**< Error state. */
         HSSShapeTypeRectangle, /**< The default shape for all containers, a rectangle. */
         HSSShapeTypeRoundedRect, /**< A rectangle with rounded corners. */
@@ -409,8 +413,8 @@ namespace AXR
         HSSActionTypeRequest, /**< Requests load another xml files into the current one. */
         HSSActionTypeSetProperty, /**< This will probably not be used, it's based on an old idea. */
         HSSActionTypeJavascript, /**< HSS object representation of a piece of JS code. */
-        HSSActionTypeJsFunction,  /**< This will probably not be used, it's based on an old idea. */
-        HSSActionTypeAlert,  /**< Shows an alert box (not implemented yet). */
+        HSSActionTypeJsFunction, /**< This will probably not be used, it's based on an old idea. */
+        HSSActionTypeAlert, /**< Shows an alert box (not implemented yet). */
         HSSActionTypeLog, /**< Logs a value (where it appears is specific to the wrapper. */
         HSSActionTypeFlag, /**< All flagging functions have their corresponding HSS object representation. */
         HSSActionTypeFunction /**< Custom functions registered on the core use this type.. */

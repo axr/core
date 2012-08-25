@@ -45,7 +45,8 @@
 #include "HSSDisplayObject.h"
 #include "HSSShape.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Shape object, representing the HSS object \@polygon.
@@ -151,11 +152,11 @@ namespace AXR {
         HSSClonable::p cloneImpl() const;
         long double _setLDProperty(
                                    void(HSSPolygon::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p         value,
-                                   long double              percentageBase,
-                                   HSSObservableProperty    observedSourceProperty,
-                                   HSSObservable *          &observedStore,
-                                   HSSObservableProperty    &observedStoreProperty
+                                   HSSParserNode::p value,
+                                   long double percentageBase,
+                                   HSSObservableProperty observedSourceProperty,
+                                   HSSObservable * &observedStore,
+                                   HSSObservableProperty &observedStoreProperty
                                    );
     };
 }

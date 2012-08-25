@@ -49,8 +49,9 @@ HSSStringConstant::HSSStringConstant(std::string value)
     this->value = value;
 }
 
-HSSStringConstant::p HSSStringConstant::clone() const{
-    return boost::static_pointer_cast<HSSStringConstant, HSSClonable>(this->cloneImpl());
+HSSStringConstant::p HSSStringConstant::clone() const
+{
+    return boost::static_pointer_cast<HSSStringConstant, HSSClonable > (this->cloneImpl());
 }
 
 HSSStringConstant::~HSSStringConstant()
@@ -70,9 +71,10 @@ std::string HSSStringConstant::getValue()
 
 std::string HSSStringConstant::toString()
 {
-    return "HSSStringConstant with value "+this->value;
+    return "HSSStringConstant with value " + this->value;
 }
 
-HSSClonable::p HSSStringConstant::cloneImpl() const{
+HSSClonable::p HSSStringConstant::cloneImpl() const
+{
     return HSSClonable::p(new HSSStringConstant(*this));
 }

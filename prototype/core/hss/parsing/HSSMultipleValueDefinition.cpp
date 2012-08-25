@@ -49,8 +49,9 @@ HSSMultipleValueDefinition::HSSMultipleValueDefinition()
 
 }
 
-HSSMultipleValueDefinition::p HSSMultipleValueDefinition::clone() const{
-    return boost::static_pointer_cast<HSSMultipleValueDefinition, HSSClonable>(this->cloneImpl());
+HSSMultipleValueDefinition::p HSSMultipleValueDefinition::clone() const
+{
+    return boost::static_pointer_cast<HSSMultipleValueDefinition, HSSClonable > (this->cloneImpl());
 }
 
 HSSMultipleValueDefinition::~HSSMultipleValueDefinition()
@@ -63,7 +64,8 @@ std::string HSSMultipleValueDefinition::toString()
     std::string tempstr = std::string("HSSMultipleValueDefinition with the following values:\n");
 
     std::vector<HSSParserNode::p>::iterator it;
-    for (it=this->values.begin(); it!=this->values.end(); it++) {
+    for (it = this->values.begin(); it != this->values.end(); it++)
+    {
         HSSParserNode::p value = *it;
         tempstr.append(value->toString().append("\n"));
     }
@@ -81,10 +83,12 @@ void HSSMultipleValueDefinition::setValues(std::vector<HSSParserNode::p> newValu
     this->values = newValues;
 }
 
-void HSSMultipleValueDefinition::add(HSSParserNode::p newValue){
+void HSSMultipleValueDefinition::add(HSSParserNode::p newValue)
+{
     this->values.push_back(newValue);
 }
 
-HSSClonable::p HSSMultipleValueDefinition::cloneImpl() const{
+HSSClonable::p HSSMultipleValueDefinition::cloneImpl() const
+{
     return HSSClonable::p(new HSSMultipleValueDefinition(*this));
 }

@@ -45,7 +45,8 @@
 #include "HSSAction.h"
 #include "HSSContainer.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief The object type representing an action that loads content into the page. Sort of like
@@ -133,18 +134,18 @@ namespace AXR {
         /**
          *  @todo Implement mode property.
          */
-//        //mode
-//        HSSParserNode::p getDMode();
-//        void setDMode(HSSParserNode::p);
-//        void modeChanged(HSSObservableProperty source, void*data);
+        //        //mode
+        //        HSSParserNode::p getDMode();
+        //        void setDMode(HSSParserNode::p);
+        //        void modeChanged(HSSObservableProperty source, void*data);
 
         /**
          *  @todo Implement target property.
          */
-//        //contentTarget
-//        HSSParserNode::p getDContentTarget();
-//        void setDContentTarget(HSSParserNode::p);
-//        void contentTargetChanged(HSSObservableProperty source, void*data);
+        //        //contentTarget
+        //        HSSParserNode::p getDContentTarget();
+        //        void setDContentTarget(HSSParserNode::p);
+        //        void contentTargetChanged(HSSObservableProperty source, void*data);
 
 
     private:

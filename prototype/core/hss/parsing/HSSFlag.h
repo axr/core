@@ -48,7 +48,8 @@
 #include "HSSFilter.h"
 #include "HSSRule.h"
 
-namespace AXR {
+namespace AXR
+{
 
     class HSSSelectorChain;
     class HSSDisplayObject;

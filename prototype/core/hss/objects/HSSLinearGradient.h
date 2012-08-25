@@ -47,7 +47,8 @@
 #include "HSSGradient.h"
 #include "HSSRgb.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief The object type representing a linear gradient in HSS.
@@ -215,13 +216,13 @@ namespace AXR {
 
         long double _setLDProperty(
                                    void(HSSLinearGradient::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p       value,
-                                   long double            percentageBase,
-                                   HSSObservableProperty  observedProperty,
-                                   HSSObservable *        observedObject,
-                                   HSSObservableProperty  observedSourceProperty,
-                                   HSSObservable *        &observedStore,
-                                   HSSObservableProperty  &observedStoreProperty
+                                   HSSParserNode::p value,
+                                   long double percentageBase,
+                                   HSSObservableProperty observedProperty,
+                                   HSSObservable * observedObject,
+                                   HSSObservableProperty observedSourceProperty,
+                                   HSSObservable * &observedStore,
+                                   HSSObservableProperty &observedStoreProperty
                                    );
     private:
         virtual HSSClonable::p cloneImpl() const;

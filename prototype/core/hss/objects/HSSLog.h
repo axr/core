@@ -44,7 +44,8 @@
 
 #include "HSSAction.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief This action object type logs values to the console.

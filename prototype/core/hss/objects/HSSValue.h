@@ -45,7 +45,8 @@
 #include "HSSMultipleValueDefinition.h"
 #include "HSSObject.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Represents value objects in HSS (@value).

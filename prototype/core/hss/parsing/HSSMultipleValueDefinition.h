@@ -46,7 +46,8 @@
 #include "HSSMultipleValue.h"
 #include "HSSParserNode.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief This nodes holds multiple parser nodes inside.

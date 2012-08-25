@@ -65,8 +65,8 @@ HSSRule::HSSRule(const HSSRule & orig)
 
 HSSRule::p HSSRule::clone() const
 {
-    HSSRule::p clone = boost::static_pointer_cast<HSSRule, HSSClonable>(this->cloneImpl());
-    if(this->instruction)
+    HSSRule::p clone = boost::static_pointer_cast<HSSRule, HSSClonable > (this->cloneImpl());
+    if (this->instruction)
         clone->instruction = this->instruction->clone();
     return clone;
 }
@@ -74,10 +74,12 @@ HSSRule::p HSSRule::clone() const
 HSSRule::~HSSRule()
 {
     unsigned i;
-    for(i=0; i<this->properties.size(); i++){
+    for (i = 0; i<this->properties.size(); i++)
+    {
         this->propertiesRemoveLast();
     }
-    if(this->observedTreeChanger != NULL){
+    if (this->observedTreeChanger != NULL)
+    {
         this->observedTreeChanger->removeObserver(HSSObservablePropertyTreeChange, HSSObservablePropertyValue, this);
     }
 }
@@ -85,30 +87,38 @@ HSSRule::~HSSRule()
 std::string HSSRule::toString()
 {
     std::string tempstr = std::string("HSSRule with the following selector chain: \n");
-    if (this->selectorChains.size() > 0){
+    if (this->selectorChains.size() > 0)
+    {
         HSSSelectorChain::const_it sIt;
-        for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+        for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+        {
             tempstr.append("   ").append((*sIt)->toString());
         }
 
-    } else {
+    }
+    else
+    {
         tempstr.append("WARNING: this rule has no selector chain!\n");
     }
 
     const int pccount = this->propertiesSize();
-    if(pccount > 0){
+    if (pccount > 0)
+    {
         tempstr.append(" and the following properties: \n");
         unsigned j;
-        for (j=0; j<pccount; j++) {
+        for (j = 0; j < pccount; j++)
+        {
             tempstr.append("   ").append(this->properties[j]->toString()).append("\n");
         }
     }
 
     const int srcount = this->children.size();
-    if (srcount > 0) {
+    if (srcount > 0)
+    {
         tempstr.append(" with the following sub-rules: \n");
         unsigned k;
-        for (k=0; k<srcount; k++) {
+        for (k = 0; k < srcount; k++)
+        {
             tempstr.append("    ").append(this->children[k]->toString()).append("\n");
         }
     }
@@ -120,7 +130,8 @@ void HSSRule::setSelectorChains(std::vector<HSSSelectorChain::p> newChains)
 {
     this->selectorChains = newChains;
     HSSSelectorChain::it it;
-    for(it=this->selectorChains.begin(); it!=this->selectorChains.end(); it++){
+    for (it = this->selectorChains.begin(); it != this->selectorChains.end(); it++)
+    {
         (*it)->setParentNode(this->shared_from_this());
     }
 }
@@ -132,7 +143,7 @@ const std::vector<HSSSelectorChain::p> & HSSRule::getSelectorChains() const
 
 void HSSRule::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
 {
-    if(newSelectorChain)
+    if (newSelectorChain)
     {
         std_log3("Added selector chain: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
@@ -142,7 +153,7 @@ void HSSRule::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
 
 void HSSRule::selectorChainsRemove(unsigned int index)
 {
-    this->selectorChains.erase(this->selectorChains.begin()+index);
+    this->selectorChains.erase(this->selectorChains.begin() + index);
 }
 
 void HSSRule::selectorChainsRemoveLast()
@@ -172,7 +183,7 @@ const std::vector<HSSPropertyDefinition::p> & HSSRule::getProperties() const
 
 void HSSRule::propertiesAdd(HSSPropertyDefinition::p & newProperty)
 {
-    if(newProperty)
+    if (newProperty)
     {
         std_log3("Added property: " + newProperty->toString());
         newProperty->setParentNode(this->shared_from_this());
@@ -182,7 +193,7 @@ void HSSRule::propertiesAdd(HSSPropertyDefinition::p & newProperty)
 
 void HSSRule::propertiesRemove(unsigned int index)
 {
-    this->properties.erase(this->properties.begin()+index);
+    this->properties.erase(this->properties.begin() + index);
 }
 
 void HSSRule::propertiesRemoveLast()
@@ -205,7 +216,6 @@ const int HSSRule::propertiesSize()
     return this->properties.size();
 }
 
-
 void HSSRule::childrenAdd(HSSRule::p newRule)
 {
     newRule->setParentNode(this->shared_from_this()); //parent in the node tree
@@ -219,7 +229,7 @@ HSSRule::p HSSRule::childrenGet(unsigned index)
 
 void HSSRule::childrenRemove(unsigned index)
 {
-    this->children.erase(this->children.begin()+index);
+    this->children.erase(this->children.begin() + index);
 }
 
 void HSSRule::childrenRemoveLast()
@@ -245,24 +255,25 @@ HSSInstruction::p HSSRule::getInstruction()
 
 HSSRule::p HSSRule::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSRule>(HSSStatement::shared_from_this());
+    return boost::static_pointer_cast<HSSRule > (HSSStatement::shared_from_this());
 }
-
 
 void HSSRule::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
 {
     HSSSelectorChain::const_it sIt;
-    for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+    for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+    {
         (*sIt)->setThisObj(value);
     }
     std::vector<HSSPropertyDefinition::p>::iterator it;
-    for (it=this->properties.begin(); it!=this->properties.end(); it++) {
+    for (it = this->properties.begin(); it != this->properties.end(); it++)
+    {
         (*it)->setThisObj(value);
     }
-//    std::vector<HSSRule::p>::iterator it2;
-//    for (it2=this->children.begin(); it2!=this->children.end(); it2++) {
-//        (*it2)->setThisObj(value);
-//    }
+    //    std::vector<HSSRule::p>::iterator it2;
+    //    for (it2=this->children.begin(); it2!=this->children.end(); it2++) {
+    //        (*it2)->setThisObj(value);
+    //    }
     HSSStatement::setThisObj(value);
 }
 
@@ -270,7 +281,8 @@ void HSSRule::treeChanged(HSSObservableProperty source, void*data)
 {
     HSSDisplayObject::p thisObj = this->getThisObj();
     AXRController * theController = thisObj->getController();
-    if(thisObj->isA(HSSObjectTypeContainer)){
+    if (thisObj->isA(HSSObjectTypeContainer))
+    {
         HSSContainer::p thisContainer = HSSContainer::asContainer(thisObj);
         theController->recursiveMatchRulesToDisplayObjects(this->shared_from_this(), thisContainer->getChildren(), thisContainer, false);
     }
@@ -298,7 +310,7 @@ void HSSRule::setAppliedTo(std::vector<boost::weak_ptr<HSSDisplayObject> > newOb
 
 void HSSRule::appliedToAdd(HSSDisplayObject::p displayObject)
 {
-    this->appliedTo.push_back(boost::weak_ptr<HSSDisplayObject>(displayObject));
+    this->appliedTo.push_back(boost::weak_ptr<HSSDisplayObject > (displayObject));
 }
 
 HSSClonable::p HSSRule::cloneImpl() const
@@ -306,21 +318,24 @@ HSSClonable::p HSSRule::cloneImpl() const
     HSSRule::p clone = HSSRule::p(new HSSRule(*this));
 
     HSSSelectorChain::const_it sIt;
-    for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+    for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+    {
         HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }
     HSSPropertyDefinition::const_it pIt;
-    for (pIt=this->properties.begin(); pIt!=this->properties.end(); pIt++) {
+    for (pIt = this->properties.begin(); pIt != this->properties.end(); pIt++)
+    {
         HSSPropertyDefinition::p clonedPropDef = (*pIt)->clone();
         clone->propertiesAdd(clonedPropDef);
     }
     std::vector<HSSRule::p>::const_iterator rIt;
-    for (rIt=this->children.begin(); rIt!=this->children.end(); rIt++) {
+    for (rIt = this->children.begin(); rIt != this->children.end(); rIt++)
+    {
         HSSRule::p clonedRule = (*rIt)->clone();
         clone->childrenAdd(clonedRule);
     }
-    if(this->instruction) clone->setInstruction(this->instruction->clone());
+    if (this->instruction) clone->setInstruction(this->instruction->clone());
 
     return clone;
 }
@@ -329,6 +344,7 @@ const std::vector<boost::shared_ptr<HSSDisplayObject> > HSSRule::getOriginalScop
 {
     return this->_originalScope;
 }
+
 void HSSRule::setOriginalScope(const std::vector<boost::shared_ptr<HSSDisplayObject> > & scope)
 {
     this->_originalScope = scope;

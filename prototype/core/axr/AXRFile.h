@@ -44,7 +44,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace AXR {
+namespace AXR
+{
+
     /**
      *  @brief This class encapsulates a representation of a file (.xml or .hss)
      *  to be used inside the parsers. While this class holds the buffer to the

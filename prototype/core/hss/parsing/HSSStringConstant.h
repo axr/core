@@ -45,7 +45,8 @@
 #include <boost/shared_ptr.hpp>
 #include "HSSExpression.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Parser node that represents either a single or double quoted string.

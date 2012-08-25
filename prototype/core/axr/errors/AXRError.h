@@ -46,7 +46,9 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
 
-namespace AXR {
+namespace AXR
+{
+
     /**
      *  @brief  This class, and it's subclass AXRWarning, are used for error handling in
      *  the rendering engine. They can be displayed using raise() or thrown.

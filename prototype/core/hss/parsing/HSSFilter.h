@@ -49,7 +49,8 @@
 #include "HSSFilterType.h"
 #include "HSSParserNode.h"
 
-namespace AXR {
+namespace AXR
+{
 
     class HSSSelectorChain;
 
@@ -119,9 +120,9 @@ namespace AXR {
          *
          *  @todo should this return an empty selection?
          */
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing) =0;
+        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing) = 0;
 
-        virtual HSSFilter::p clone() const =0;
+        virtual HSSFilter::p clone() const = 0;
 
         /**
          *  Allows you to check if this filter is of the given type.

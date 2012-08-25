@@ -49,7 +49,6 @@ HSSInstruction::HSSInstruction(HSSInstructionType type)
     this->instructionType = type;
 }
 
-
 HSSInstruction::HSSInstruction(HSSInstructionType type, std::string value)
 : HSSStatement(HSSStatementTypeInstruction)
 {
@@ -67,7 +66,7 @@ HSSInstruction::HSSInstruction(const HSSInstruction &orig)
 
 HSSInstruction::p HSSInstruction::clone() const
 {
-    return boost::static_pointer_cast<HSSInstruction, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSInstruction, HSSClonable > (this->cloneImpl());
 }
 
 HSSInstruction::~HSSInstruction()
@@ -92,20 +91,22 @@ bool HSSInstruction::isA(HSSInstructionType type)
 
 std::string HSSInstruction::toString()
 {
-    std::string tempstr = "HSSInstruction of type: "+this->instructionStringRepresentation(this->instructionType);
+    std::string tempstr = "HSSInstruction of type: " + this->instructionStringRepresentation(this->instructionType);
     if (
-        this->instructionType != HSSNewInstruction
-        && this->instructionType != HSSEnsureInstruction
-        && this->instructionType != HSSImportInstruction
-        && this->instructionType != HSSMoveInstruction
-        && this->instructionType != HSSDeleteInstruction
-    ){
-        tempstr.append(" and value: "+this->value);
+            this->instructionType != HSSNewInstruction
+            && this->instructionType != HSSEnsureInstruction
+            && this->instructionType != HSSImportInstruction
+            && this->instructionType != HSSMoveInstruction
+            && this->instructionType != HSSDeleteInstruction
+            )
+    {
+        tempstr.append(" and value: " + this->value);
     }
     return tempstr;
 }
 
-std::string HSSInstruction::instructionStringRepresentation(HSSInstructionType type){
+std::string HSSInstruction::instructionStringRepresentation(HSSInstructionType type)
+{
     std::string types[20];
     types[HSSNewInstruction] = "HSSNewInstruction";
     types[HSSEnsureInstruction] = "HSSEnsureInstruction";
@@ -126,7 +127,11 @@ HSSClonable::p HSSInstruction::cloneImpl() const
     return HSSClonable::p(new HSSInstruction(*this));
 }
 
-HSSParserNode::p HSSInstruction::getArgument() { return this->argument; }
+HSSParserNode::p HSSInstruction::getArgument()
+{
+    return this->argument;
+}
+
 void HSSInstruction::setArgument(HSSParserNode::p newValue)
 {
     this->argument = newValue;

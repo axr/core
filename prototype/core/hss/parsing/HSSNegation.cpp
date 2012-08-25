@@ -49,8 +49,9 @@ HSSNegation::HSSNegation()
 
 }
 
-HSSNegation::p HSSNegation::clone() const{
-    return boost::static_pointer_cast<HSSNegation, HSSClonable>(this->cloneImpl());
+HSSNegation::p HSSNegation::clone() const
+{
+    return boost::static_pointer_cast<HSSNegation, HSSClonable > (this->cloneImpl());
 }
 
 HSSNegation::~HSSNegation()
@@ -62,6 +63,8 @@ std::string HSSNegation::toString()
 {
     return "Negation";
 }
-HSSClonable::p HSSNegation::cloneImpl() const{
+
+HSSClonable::p HSSNegation::cloneImpl() const
+{
     return HSSClonable::p(new HSSNegation(*this));
 }

@@ -51,10 +51,12 @@
 
 using namespace AXR;
 
-HSSObject::p HSSObject::newObjectWithType(std::string type){
+HSSObject::p HSSObject::newObjectWithType(std::string type)
+{
 
     static boost::unordered_map<std::string, HSSObjectType>types;
-    if (types.size() == 0) {
+    if (types.size() == 0)
+    {
         types["container"] = HSSObjectTypeContainer;
         types["displayObject"] = HSSObjectTypeDisplayObject;
         types["lineBorder"] = HSSObjectTypeBorder;
@@ -87,117 +89,130 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
     }
 
     HSSObjectType objectType = HSSObjectTypeNone;
-    if(types.find(type) != types.end()){
+    if (types.find(type) != types.end())
+    {
         objectType = types[type];
     }
 
-    switch (objectType) {
-        case HSSObjectTypeContainer:
+    switch (objectType)
+    {
+    case HSSObjectTypeContainer:
+    {
+        return HSSContainer::p(new HSSContainer());
+    }
+
+    case HSSObjectTypeDisplayObject:
+    {
+        return HSSDisplayObject::p(new HSSDisplayObject());
+    }
+
+    case HSSObjectTypeBorder:
+    {
+        /**
+         *  @todo border tyes?
+         */
+        return HSSLineBorder::p(new HSSLineBorder());
+    }
+
+    case HSSObjectTypeGradient:
+    {
+        /**
+         *  @todo gradient tyes?
+         */
+        return HSSLinearGradient::p(new HSSLinearGradient());
+    }
+
+    case HSSObjectTypeColorStop:
+    {
+        return HSSColorStop::p(new HSSColorStop());
+    }
+
+    case HSSObjectTypeValue:
+    {
+        return HSSValue::p(new HSSValue());
+    }
+
+    case HSSObjectTypeMargin:
+    {
+        return HSSMargin::p(new HSSMargin());
+    }
+
+    case HSSObjectTypeRgb:
+    {
+        return HSSRgb::p(new HSSRgb());
+    }
+
+    case HSSObjectTypeFont:
+    {
+        return HSSFont::p(new HSSFont());
+    }
+
+    case HSSObjectTypeShape:
+    {
+        if (type == "rectangle")
         {
-            return HSSContainer::p(new HSSContainer());
+            return HSSRectangle::p(new HSSRectangle());
+        }
+        else if (type == "roundedRect")
+        {
+            return HSSRoundedRect::p(new HSSRoundedRect());
+        }
+        else if (type == "circle")
+        {
+            return HSSCircle::p(new HSSCircle());
+        }
+        else if (type == "polygon")
+        {
+            return HSSPolygon::p(new HSSPolygon());
+        }
+    }
+
+    case HSSObjectTypeEvent:
+    {
+        static boost::unordered_map<std::string, HSSEventType>eventTypes;
+        if (eventTypes.size() == 0)
+        {
+            eventTypes["load"] = HSSEventTypeLoad;
+            eventTypes["click"] = HSSEventTypeClick;
+            eventTypes["doubleClick"] = HSSEventTypeDoubleClick;
+            eventTypes["tripleClick"] = HSSEventTypeTripleClick;
+            eventTypes["mouseDown"] = HSSEventTypeMouseDown;
+            eventTypes["mouseUp"] = HSSEventTypeMouseUp;
+            eventTypes["mouseOver"] = HSSEventTypeMouseOver;
+            eventTypes["mouseOut"] = HSSEventTypeMouseOut;
+            eventTypes["mouseHold"] = HSSEventTypeMouseHold;
+            eventTypes["mouseMove"] = HSSEventTypeMouseMove;
+            eventTypes["clickSecondary"] = HSSEventTypeClickSecondary;
+            eventTypes["clickTertiary"] = HSSEventTypeClickTertiary;
+            eventTypes["scroll"] = HSSEventTypeScroll;
         }
 
-        case HSSObjectTypeDisplayObject:
+        if (eventTypes.find(type) != eventTypes.end())
         {
-            return HSSDisplayObject::p(new HSSDisplayObject());
+            return HSSEvent::p(new HSSEvent(eventTypes[type]));
         }
 
-        case HSSObjectTypeBorder:
+        //fall through
+    }
+
+    case HSSObjectTypeAction:
+    {
+        if (type == "request")
         {
-            /**
-             *  @todo border tyes?
-             */
-            return HSSLineBorder::p(new HSSLineBorder());
+            return HSSRequest::p(new HSSRequest());
         }
-
-        case HSSObjectTypeGradient:
+        else if (type == "log")
         {
-            /**
-             *  @todo gradient tyes?
-             */
-            return HSSLinearGradient::p(new HSSLinearGradient());
+            return HSSLog::p(new HSSLog());
         }
+    }
 
-        case HSSObjectTypeColorStop:
-        {
-            return HSSColorStop::p(new HSSColorStop());
-        }
-
-        case HSSObjectTypeValue:
-        {
-            return HSSValue::p(new HSSValue());
-        }
-
-        case HSSObjectTypeMargin:
-        {
-            return HSSMargin::p(new HSSMargin());
-        }
-
-        case HSSObjectTypeRgb:
-        {
-            return HSSRgb::p(new HSSRgb());
-        }
-
-        case HSSObjectTypeFont:
-        {
-            return HSSFont::p(new HSSFont());
-        }
-
-        case HSSObjectTypeShape:
-        {
-            if (type == "rectangle"){
-                return HSSRectangle::p(new HSSRectangle());
-            } else if (type == "roundedRect"){
-                return HSSRoundedRect::p(new HSSRoundedRect());
-            } else if (type == "circle"){
-                return HSSCircle::p(new HSSCircle());
-            } else if (type == "polygon"){
-                return HSSPolygon::p(new HSSPolygon());
-            }
-        }
-
-        case HSSObjectTypeEvent:
-        {
-            static boost::unordered_map<std::string, HSSEventType>eventTypes;
-            if (eventTypes.size() == 0) {
-                eventTypes["load"] = HSSEventTypeLoad;
-                eventTypes["click"] = HSSEventTypeClick;
-                eventTypes["doubleClick"] = HSSEventTypeDoubleClick;
-                eventTypes["tripleClick"] = HSSEventTypeTripleClick;
-                eventTypes["mouseDown"] = HSSEventTypeMouseDown;
-                eventTypes["mouseUp"] = HSSEventTypeMouseUp;
-                eventTypes["mouseOver"] = HSSEventTypeMouseOver;
-                eventTypes["mouseOut"] = HSSEventTypeMouseOut;
-                eventTypes["mouseHold"] = HSSEventTypeMouseHold;
-                eventTypes["mouseMove"] = HSSEventTypeMouseMove;
-                eventTypes["clickSecondary"] = HSSEventTypeClickSecondary;
-                eventTypes["clickTertiary"] = HSSEventTypeClickTertiary;
-                eventTypes["scroll"] = HSSEventTypeScroll;
-            }
-
-            if(eventTypes.find(type) != eventTypes.end()){
-                return HSSEvent::p(new HSSEvent(eventTypes[type]));
-            }
-
-            //fall through
-        }
-
-        case HSSObjectTypeAction:
-        {
-            if (type == "request"){
-                return HSSRequest::p(new HSSRequest());
-            } else if (type == "log"){
-                return HSSLog::p(new HSSLog());
-            }
-        }
-
-        default:
-            throw AXRError::p(new AXRError("HSSObject", type));
+    default:
+        throw AXRError::p(new AXRError("HSSObject", type));
     }
 
     return HSSObject::p();
 }
-
 
 HSSObject::HSSObject(HSSObjectType type)
 {
@@ -219,12 +234,13 @@ HSSObject::HSSObject(const HSSObject & orig)
 
 }
 
-HSSObject::p HSSObject::clone() const{
-    return boost::static_pointer_cast<HSSObject, HSSClonable>(this->cloneImpl());
+HSSObject::p HSSObject::clone() const
+{
+    return boost::static_pointer_cast<HSSObject, HSSClonable > (this->cloneImpl());
 }
 
-
-HSSClonable::p HSSObject::cloneImpl() const{
+HSSClonable::p HSSObject::cloneImpl() const
+{
     return HSSClonable::p(new HSSObject(*this));
 }
 
@@ -235,42 +251,50 @@ HSSObject::~HSSObject()
 
 bool HSSObject::isKeyword(std::string value, std::string property)
 {
-    if(   value == "default"
-       || value == "inherit"
-       || value == "undefined"
-       || value == "none"      ){
+    if (value == "default"
+            || value == "inherit"
+            || value == "undefined"
+            || value == "none")
+    {
         return true;
-    } else {
+    }
+    else
+    {
         return false;
     }
 }
 
 bool HSSObject::isFunction(std::string value, std::string property)
 {
-    if(   value == "min"
-       || value == "max"
-       || value == "floor"
-       || value == "ceil"
-       || value == "round"
-       || value == "ref"
-       || value == "sel"
-       || value == "flag"
-       || value == "unflag"
-       || value == "toggleFlag"
-       || value == "attr"
-    ){
+    if (value == "min"
+            || value == "max"
+            || value == "floor"
+            || value == "ceil"
+            || value == "round"
+            || value == "ref"
+            || value == "sel"
+            || value == "flag"
+            || value == "unflag"
+            || value == "toggleFlag"
+            || value == "attr"
+            )
+    {
         return true;
-    } else {
+    }
+    else
+    {
         return AXRCore::getInstance()->isCustomFunction(value);
     }
 }
 
-
 std::string HSSObject::toString()
 {
-    if (this->isNamed()) {
+    if (this->isNamed())
+    {
         return std::string("HSSObject: ").append(this->name);
-    } else {
+    }
+    else
+    {
         return "Annonymous HSSObject";
     }
 }
@@ -282,7 +306,7 @@ bool HSSObject::isNamed()
 
 void HSSObject::setName(std::string newName)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSObject: setting name to "+newName);
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSObject: setting name to " + newName);
     this->name = newName;
     this->_isNamed = true;
 }
@@ -298,12 +322,13 @@ void HSSObject::dropName()
     this->_isNamed = false;
 }
 
-
-std::string HSSObject::defaultObjectType(){
+std::string HSSObject::defaultObjectType()
+{
     return "value";
 }
 
-std::string HSSObject::defaultObjectType(std::string property){
+std::string HSSObject::defaultObjectType(std::string property)
+{
     return "value";
 }
 
@@ -313,10 +338,13 @@ std::string HSSObject::getPropertyForCurrentValue()
     std::string ret;
 
     security_brake_init();
-    while (!done) {
-        if(this->shorthandProperties.size() > this->shorthandIndex){
+    while (!done)
+    {
+        if (this->shorthandProperties.size() > this->shorthandIndex)
+        {
             ret = this->shorthandProperties[this->shorthandIndex];
-            if(this->skipShorthand.find(ret) == this->skipShorthand.end()){
+            if (this->skipShorthand.find(ret) == this->skipShorthand.end())
+            {
                 return ret;
             }
         }
@@ -342,7 +370,8 @@ void HSSObject::shorthandSkip(std::string propertyName)
 
 bool HSSObject::shorthandNext()
 {
-    if( this->shorthandIndex < this->shorthandProperties.size() + 1){
+    if (this->shorthandIndex < this->shorthandProperties.size() + 1)
+    {
         this->shorthandIndex++;
         return true;
     }
@@ -361,14 +390,21 @@ unsigned HSSObject::getShorthandIndex()
 
 void HSSObject::setShorthandIndex(unsigned newValue)
 {
-    if( newValue < this->shorthandProperties.size()){
+    if (newValue < this->shorthandProperties.size())
+    {
         this->shorthandIndex = newValue;
-    } else {
+    }
+    else
+    {
         this->shorthandIndex = this->shorthandProperties.size();
     }
 }
 
-HSSParserNode::p HSSObject::getDIsA() { return this->dIsA; }
+HSSParserNode::p HSSObject::getDIsA()
+{
+    return this->dIsA;
+}
+
 void HSSObject::setDIsA(HSSParserNode::p value)
 {
     this->dIsA = value;
@@ -379,75 +415,90 @@ void HSSObject::addDIsA(HSSParserNode::p value)
 {
     bool valid = false;
 
-    switch (value->getType()) {
-        case HSSParserNodeTypeMultipleValueDefinition:
+    switch (value->getType())
+    {
+    case HSSParserNodeTypeMultipleValueDefinition:
+    {
+        HSSParserNode::it iterator;
+        HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
+        std::vector<HSSParserNode::p> values = multiDef->getValues();
+        for (iterator = values.begin(); iterator != values.end(); iterator++)
         {
-            HSSParserNode::it iterator;
-            HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition>(value);
-            std::vector<HSSParserNode::p> values = multiDef->getValues();
-            for (iterator = values.begin(); iterator != values.end(); iterator++) {
-                this->addDIsA(*iterator);
+            this->addDIsA(*iterator);
+        }
+        valid = true;
+        break;
+    }
+
+    case HSSParserNodeTypeObjectNameConstant:
+    {
+        try
+        {
+            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            //objdef->apply();
+            std::deque<HSSPropertyDefinition::p> properties = objdef->getProperties();
+            unsigned i, size;
+            for (i = 0, size = properties.size(); i < size; i++)
+            {
+                HSSObservableProperty propertyName = HSSObservable::observablePropertyFromString(properties[i]->getName());
+                if (propertyName != HSSObservablePropertyNone)
+                {
+                    try
+                    {
+                        this->setProperty(propertyName, properties[i]->getValue()->clone());
+                    }
+                    catch (AXRError::p e)
+                    {
+                        e->raise();
+                    }
+                    catch (AXRWarning::p e)
+                    {
+                        e->raise();
+                    }
+                }
+
+                //else store as value
             }
             valid = true;
-            break;
-        }
 
-        case HSSParserNodeTypeObjectNameConstant:
+        }
+        catch (AXRError::p e)
         {
-            try {
-                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant>(value);
-                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
-                //objdef->apply();
-                std::deque<HSSPropertyDefinition::p> properties = objdef->getProperties();
-                unsigned i, size;
-                for (i = 0, size = properties.size(); i<size; i++){
-                    HSSObservableProperty propertyName = HSSObservable::observablePropertyFromString(properties[i]->getName());
-                    if(propertyName != HSSObservablePropertyNone){
-                        try {
-                            this->setProperty(propertyName, properties[i]->getValue()->clone());
-                        } catch (AXRError::p e) {
-                            e->raise();
-                        } catch (AXRWarning::p e) {
-                            e->raise();
-                        }
-                    }
-
-                    //else store as value
-                }
-                valid = true;
-
-            } catch (AXRError::p e) {
-                e->raise();
-            } catch (AXRWarning::p e) {
-                e->raise();
-            }
-
-            break;
+            e->raise();
         }
-
-        case HSSParserNodeTypeKeywordConstant:
+        catch (AXRWarning::p e)
         {
-            AXRError::p(new AXRError("HSSObject", "HSSParserNodeTypeKeywordConstant Unimplemented"))->raise();
-            break;
+            e->raise();
         }
 
-        default:
-            break;
+        break;
     }
 
-    switch (value->getStatementType()) {
-        case HSSStatementTypeObjectDefinition:
-        {
-            AXRError::p(new AXRError("HSSObject", "HSSStatementTypeObjectDefinition Unimplemented in isA"))->raise();
-            break;
-        }
-
-        default:
-            break;
+    case HSSParserNodeTypeKeywordConstant:
+    {
+        AXRError::p(new AXRError("HSSObject", "HSSParserNodeTypeKeywordConstant Unimplemented"))->raise();
+        break;
     }
 
-    if(!valid)
-        throw AXRWarning::p(new AXRWarning("HSSObject", "Invalid value for isA of "+this->name));
+    default:
+        break;
+    }
+
+    switch (value->getStatementType())
+    {
+    case HSSStatementTypeObjectDefinition:
+    {
+        AXRError::p(new AXRError("HSSObject", "HSSStatementTypeObjectDefinition Unimplemented in isA"))->raise();
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    if (!valid)
+        throw AXRWarning::p(new AXRWarning("HSSObject", "Invalid value for isA of " + this->name));
 
     this->notifyObservers(HSSObservablePropertyIsA, &this->dIsA);
 }
@@ -460,32 +511,39 @@ void HSSObject::isAChanged(AXR::HSSObservableProperty source, void *data)
 void HSSObject::setPropertyWithName(std::string name, HSSParserNode::p value)
 {
     HSSObservableProperty property = HSSObservable::observablePropertyFromString(name);
-    if(property != HSSObservablePropertyNone){
+    if (property != HSSObservablePropertyNone)
+    {
         this->setProperty(property, value);
-    } else {
-        AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property "+name+", ignoring value"))->raise();
+    }
+    else
+    {
+        AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property " + name + ", ignoring value"))->raise();
     }
 }
 
 void HSSObject::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
-    if (name == HSSObservablePropertyIsA) {
+    if (name == HSSObservablePropertyIsA)
+    {
         this->setDIsA(value);
 
-    } else {
-        AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property "+HSSObservable::observablePropertyStringRepresentation(name)+", ignoring value"))->raise();
+    }
+    else
+    {
+        AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property " + HSSObservable::observablePropertyStringRepresentation(name) + ", ignoring value"))->raise();
     }
 }
 
 void HSSObject::setProperty(HSSObservableProperty name, void * value)
 {
-    AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property "+HSSObservable::observablePropertyStringRepresentation(name)+", ignoring value"))->raise();
+    AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property " + HSSObservable::observablePropertyStringRepresentation(name) + ", ignoring value"))->raise();
 }
 
 void * HSSObject::getProperty(HSSObservableProperty name)
 {
-    if (this->properties.find(name) == this->properties.end()){
-        AXRError::p(new AXRError("HSSObject", "Unknown property "+HSSObservable::observablePropertyStringRepresentation(name)))->raise();
+    if (this->properties.find(name) == this->properties.end())
+    {
+        AXRError::p(new AXRError("HSSObject", "Unknown property " + HSSObservable::observablePropertyStringRepresentation(name)))->raise();
         return NULL;
     }
     return this->properties[name];
@@ -526,17 +584,52 @@ HSSDisplayObject::p HSSObject::getThisObj()
     return thisObj;
 }
 
-bool HSSObject::isA(HSSObjectType otherType) { return otherType == this->type; }
-HSSObjectType HSSObject::getObjectType() { return this->type; }
+bool HSSObject::isA(HSSObjectType otherType)
+{
+    return otherType == this->type;
+}
 
-bool HSSObject::isA(HSSShapeType otherType) { return false; }
-HSSShapeType HSSObject::getShapeType() { return HSSShapeTypeNone; }
+HSSObjectType HSSObject::getObjectType()
+{
+    return this->type;
+}
 
-bool HSSObject::isA(HSSRequestModeType otherType) { return false; }
-HSSRequestModeType HSSObject::getRequestModeType() { return HSSRequestModeTypeNone; }
+bool HSSObject::isA(HSSShapeType otherType)
+{
+    return false;
+}
 
-bool HSSObject::isA(HSSEventType otherType) { return false; }
-HSSEventType HSSObject::getEventType() { return HSSEventTypeNone; }
+HSSShapeType HSSObject::getShapeType()
+{
+    return HSSShapeTypeNone;
+}
 
-bool HSSObject::isA(HSSActionType otherType) { return false; }
-HSSActionType HSSObject::getActionType() { return HSSActionTypeNone; }
+bool HSSObject::isA(HSSRequestModeType otherType)
+{
+    return false;
+}
+
+HSSRequestModeType HSSObject::getRequestModeType()
+{
+    return HSSRequestModeTypeNone;
+}
+
+bool HSSObject::isA(HSSEventType otherType)
+{
+    return false;
+}
+
+HSSEventType HSSObject::getEventType()
+{
+    return HSSEventTypeNone;
+}
+
+bool HSSObject::isA(HSSActionType otherType)
+{
+    return false;
+}
+
+HSSActionType HSSObject::getActionType()
+{
+    return HSSActionTypeNone;
+}

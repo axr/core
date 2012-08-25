@@ -46,7 +46,8 @@
 #include <boost/shared_ptr.hpp>
 #include "HSSSelector.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief Combinators are used inside of selector chains, to define the relations between the elements that
@@ -55,7 +56,8 @@ namespace AXR {
      *  This class encapsulates all types of combinators. The actual behavior of the selection
      *  is defined in AXRController.
      */
-    class HSSCombinator : public HSSSelector {
+    class HSSCombinator : public HSSSelector
+    {
     public:
         typedef boost::shared_ptr<HSSCombinator> p;
 

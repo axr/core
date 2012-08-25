@@ -47,7 +47,8 @@
 #include "HSSObject.h"
 #include "HSSStatement.h"
 
-namespace AXR {
+namespace AXR
+{
 
     /**
      *  @brief A property definition holds a value that is paired with the name of the property.

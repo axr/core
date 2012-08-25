@@ -98,20 +98,20 @@ int main(int argc, char **argv)
     // Declare the supported options.
     po::options_description desc("Allowed options");
     desc.add_options()
-        ("help", "show this message")
-        ("file", po::value<std::string>(), "path to file to open")
-        ("layout-tests", po::value<std::string>(), "run layout tests")
-        ;
+            ("help", "show this message")
+            ("file", po::value<std::string > (), "path to file to open")
+            ("layout-tests", po::value<std::string > (), "run layout tests")
+            ;
 
     po::variables_map varmap;
     std::vector<std::string> additionalArgs;
 
     // Parse arguments
     po::parsed_options parsed = po::command_line_parser(argc, argv)
-        .options(desc).allow_unregistered().run();
+            .options(desc).allow_unregistered().run();
     po::store(parsed, varmap);
     additionalArgs = po::collect_unrecognized(parsed.options,
-        po::include_positional);
+                                              po::include_positional);
     po::notify(varmap);
 
     // Display help message
@@ -127,33 +127,33 @@ int main(int argc, char **argv)
 
     SDL_WM_SetCaption(WINDOW_TITLE, 0);
 
-    #ifdef _WIN32
+#ifdef _WIN32
     HINSTANCE handle = ::GetModuleHandle(NULL);
     mainicon = ::LoadIcon(handle, "main");
     SDL_SysWMinfo wminfo;
     SDL_VERSION(&wminfo.version);
     if (SDL_GetWMInfo(&wminfo) == 1)
-        ::SetClassLong(wminfo.window, GCL_HICON, (LONG)mainicon);
-    #endif
+        ::SetClassLong(wminfo.window, GCL_HICON, (LONG) mainicon);
+#endif
 
     SDL_EnableKeyRepeat(300, 50);
     SDL_EnableUNICODE(1);
 
     wrapper = new AXR_WRAPPER_CLASS();
     AXRCore::tp & core = AXRCore::getInstance();
-    #ifdef _WIN32
+#ifdef _WIN32
     wrapper->hwnd = wminfo.window;
-    #endif
+#endif
 
     if (varmap.count("layout-tests"))
     {
-        wrapper->_layoutTestsFilePath = varmap["layout-tests"].as<std::string>();
+        wrapper->_layoutTestsFilePath = varmap["layout-tests"].as<std::string > ();
 
         core->registerCustomFunction("AXRLayoutTestsExecute",
-            new AXR::HSSValueChangedCallback<AXR_WRAPPER_CLASS>(wrapper, &AXR::AXRWrapper::executeLayoutTests));
+                                     new AXR::HSSValueChangedCallback<AXR_WRAPPER_CLASS > (wrapper, &AXR::AXRWrapper::executeLayoutTests));
 
         wrapper->loadFileByPath(wrapper->getPathToResources() +
-            "/views/layoutTests.hss");
+                                "/views/layoutTests.hss");
     }
     else if (varmap.count("file") || additionalArgs.empty() == 0)
     {
@@ -161,7 +161,7 @@ int main(int argc, char **argv)
 
         if (additionalArgs.empty())
         {
-            filepath = varmap["file"].as<std::string>();
+            filepath = varmap["file"].as<std::string > ();
         }
         else
         {
@@ -266,9 +266,9 @@ int main(int argc, char **argv)
 
     SDL_Quit();
 
-    #ifdef _WIN32
+#ifdef _WIN32
     ::DestroyIcon(mainicon);
-    #endif
+#endif
 
     free(wrapper);
     free(screen);

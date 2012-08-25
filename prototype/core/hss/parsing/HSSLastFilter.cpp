@@ -49,8 +49,9 @@ HSSLastFilter::HSSLastFilter()
 
 }
 
-HSSLastFilter::p HSSLastFilter::clone() const{
-    return boost::static_pointer_cast<HSSLastFilter, HSSClonable>(this->cloneImpl());
+HSSLastFilter::p HSSLastFilter::clone() const
+{
+    return boost::static_pointer_cast<HSSLastFilter, HSSClonable > (this->cloneImpl());
 }
 
 HSSLastFilter::~HSSLastFilter()
@@ -63,24 +64,30 @@ std::string HSSLastFilter::toString()
     return "Last Filter";
 }
 
-
 const std::vector<HSSDisplayObject::p> HSSLastFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
 {
-    if(scope.size() > 0){
-        if(this->getNegating()){
+    if (scope.size() > 0)
+    {
+        if (this->getNegating())
+        {
             std::vector<HSSDisplayObject::p> ret;
             ret.insert(ret.begin(), scope.begin(), scope.end() - 1);
             return ret;
-        } else {
+        }
+        else
+        {
             std::vector<HSSDisplayObject::p> ret;
-            ret.push_back(scope[scope.size()-1]);
+            ret.push_back(scope[scope.size() - 1]);
             return ret;
         }
-    } else {
+    }
+    else
+    {
         return scope;
     }
 }
 
-HSSClonable::p HSSLastFilter::cloneImpl() const{
+HSSClonable::p HSSLastFilter::cloneImpl() const
+{
     return HSSClonable::p(new HSSLastFilter(*this));
 }

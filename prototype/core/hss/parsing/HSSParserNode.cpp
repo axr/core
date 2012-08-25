@@ -44,9 +44,11 @@
 
 using namespace AXR;
 
-std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type){
+std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type)
+{
     static boost::unordered_map<HSSParserNodeType, std::string> types;
-    if (types.size() == 0) {
+    if (types.size() == 0)
+    {
         types[HSSParserNodeTypeGeneric] = "HSSParserNode";
         types[HSSParserNodeTypeSelector] = "HSSSelector";
         types[HSSParserNodeTypeCombinator] = "HSSCombinator";
@@ -64,7 +66,8 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
         types[HSSParserNodeTypeFlag] = "HSSParserNodeTypeFlag";
     }
     std::string ret = "";
-    if(types.find(type) != types.end()){
+    if (types.find(type) != types.end())
+    {
         ret = types[type];
     }
 
@@ -77,6 +80,7 @@ HSSParserNode::HSSParserNode(HSSParserNodeType type)
 }
 
 //doesn't clone any part of the node tree, nor the observers array
+
 HSSParserNode::HSSParserNode(const HSSParserNode &orig)
 {
     this->nodeType = orig.nodeType;
@@ -85,7 +89,7 @@ HSSParserNode::HSSParserNode(const HSSParserNode &orig)
 
 HSSParserNode::p HSSParserNode::clone() const
 {
-    return boost::static_pointer_cast<HSSParserNode, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSParserNode, HSSClonable > (this->cloneImpl());
 }
 
 std::string HSSParserNode::toString()
@@ -105,10 +109,13 @@ HSSParserNodeType HSSParserNode::getType()
 
 HSSParserNode::p HSSParserNode::getParentNode()
 {
-    if (!this->_parentNode.expired()) {
+    if (!this->_parentNode.expired())
+    {
         HSSParserNode::p parent = this->_parentNode.lock();
         return parent;
-    } else {
+    }
+    else
+    {
         return HSSParserNode::p();
     }
 }
@@ -121,7 +128,7 @@ void HSSParserNode::setParentNode(HSSParserNode::p newParent)
 void HSSParserNode::removeFromParentNode()
 {
     HSSParserNode::p parentNode = this->getParentNode();
-    if(parentNode) parentNode->removeNode(this->shared_from_this());
+    if (parentNode) parentNode->removeNode(this->shared_from_this());
 }
 
 void HSSParserNode::addNode(HSSParserNode::p child)
@@ -132,7 +139,8 @@ void HSSParserNode::addNode(HSSParserNode::p child)
 void HSSParserNode::removeNode(HSSParserNode::p child)
 {
     HSSParserNode::it it = find(this->_childNodes.begin(), this->_childNodes.end(), child);
-    if(it != this->_childNodes.end()){
+    if (it != this->_childNodes.end())
+    {
         this->_childNodes.erase(it);
     }
 }
@@ -157,26 +165,82 @@ HSSDisplayObject::p HSSParserNode::getThisObj()
     return thisObj;
 }
 
-bool HSSParserNode::isA(HSSExpressionType otherType) { return false; }
-HSSExpressionType HSSParserNode::getExpressionType() { return HSSExpressionTypeNone; }
+bool HSSParserNode::isA(HSSExpressionType otherType)
+{
+    return false;
+}
 
-bool HSSParserNode::isA(HSSStatementType otherType) { return false; }
-HSSStatementType HSSParserNode::getStatementType() { return HSSStatementTypeNone; }
+HSSExpressionType HSSParserNode::getExpressionType()
+{
+    return HSSExpressionTypeNone;
+}
 
-bool HSSParserNode::isA(HSSInstructionType otherType) { return false; }
-HSSInstructionType HSSParserNode::getInstructionType() { return HSSInstructionTypeNone; }
+bool HSSParserNode::isA(HSSStatementType otherType)
+{
+    return false;
+}
 
-bool HSSParserNode::isA(HSSSelectorType otherType) { return false; }
-HSSSelectorType HSSParserNode::getSelectorType() { return HSSSelectorTypeNone; }
+HSSStatementType HSSParserNode::getStatementType()
+{
+    return HSSStatementTypeNone;
+}
 
-bool HSSParserNode::isA(HSSCombinatorType otherType) { return false; }
-HSSCombinatorType HSSParserNode::getCombinatorType() { return HSSCombinatorTypeNone; }
+bool HSSParserNode::isA(HSSInstructionType otherType)
+{
+    return false;
+}
 
-bool HSSParserNode::isA(HSSFilterType otherType) { return false; }
-HSSFilterType HSSParserNode::getFilterType() { return HSSFilterTypeNone; }
+HSSInstructionType HSSParserNode::getInstructionType()
+{
+    return HSSInstructionTypeNone;
+}
 
-bool HSSParserNode::isA(HSSFunctionType otherType) { return false; }
-HSSFunctionType HSSParserNode::getFunctionType() { return HSSFunctionTypeNone; }
+bool HSSParserNode::isA(HSSSelectorType otherType)
+{
+    return false;
+}
 
-bool HSSParserNode::isA(HSSFlagFunctionType otherType) { return false; }
-HSSFlagFunctionType HSSParserNode::getFlagFunctionType() { return HSSFlagFunctionTypeNone; }
+HSSSelectorType HSSParserNode::getSelectorType()
+{
+    return HSSSelectorTypeNone;
+}
+
+bool HSSParserNode::isA(HSSCombinatorType otherType)
+{
+    return false;
+}
+
+HSSCombinatorType HSSParserNode::getCombinatorType()
+{
+    return HSSCombinatorTypeNone;
+}
+
+bool HSSParserNode::isA(HSSFilterType otherType)
+{
+    return false;
+}
+
+HSSFilterType HSSParserNode::getFilterType()
+{
+    return HSSFilterTypeNone;
+}
+
+bool HSSParserNode::isA(HSSFunctionType otherType)
+{
+    return false;
+}
+
+HSSFunctionType HSSParserNode::getFunctionType()
+{
+    return HSSFunctionTypeNone;
+}
+
+bool HSSParserNode::isA(HSSFlagFunctionType otherType)
+{
+    return false;
+}
+
+HSSFlagFunctionType HSSParserNode::getFlagFunctionType()
+{
+    return HSSFlagFunctionTypeNone;
+}

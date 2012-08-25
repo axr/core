@@ -60,8 +60,9 @@ HSSSelectorChain::HSSSelectorChain(const HSSSelectorChain &orig)
 
 }
 
-HSSSelectorChain::p HSSSelectorChain::clone() const{
-    return boost::static_pointer_cast<HSSSelectorChain, HSSClonable>(this->cloneImpl());
+HSSSelectorChain::p HSSSelectorChain::clone() const
+{
+    return boost::static_pointer_cast<HSSSelectorChain, HSSClonable > (this->cloneImpl());
 }
 
 HSSSelectorChain::~HSSSelectorChain()
@@ -72,11 +73,13 @@ HSSSelectorChain::~HSSSelectorChain()
 std::string HSSSelectorChain::toString()
 {
     std::string tempstr = "HSSSelectorChain with the following nodes:\n";
-    int sccount = (int)this->nodeList.size();
-    if(sccount > 0){
+    int sccount = (int) this->nodeList.size();
+    if (sccount > 0)
+    {
 
         unsigned i;
-        for (i=0; i<sccount; i++) {
+        for (i = 0; i < sccount; i++)
+        {
             tempstr.append("      ").append(this->nodeList[i]->toString()).append("\n");
         }
     }
@@ -92,7 +95,7 @@ const HSSParserNode::p & HSSSelectorChain::get(const int i) const
 
 void HSSSelectorChain::add(HSSParserNode::p newNode)
 {
-    if(newNode)
+    if (newNode)
     {
         std_log3("HSSSelectorChain: Added node of type " + newNode->toString());
         newNode->setParentNode(this->shared_from_this());
@@ -102,7 +105,7 @@ void HSSSelectorChain::add(HSSParserNode::p newNode)
 
 void HSSSelectorChain::prepend(HSSParserNode::p newNode)
 {
-    if(newNode)
+    if (newNode)
     {
         std_log3("HSSSelectorChain: Added node of type " + newNode->toString() + " to the front of the selector");
         newNode->setParentNode(this->shared_from_this());
@@ -131,16 +134,23 @@ HSSSimpleSelector::p HSSSelectorChain::subject()
     /**
      *  @todo subject selectors need to be implemented
      */
-    if(this->nodeList.size() > 0){
-        if(this->nodeList.back()->isA(HSSParserNodeTypeSelector)){
-            HSSSelector::p selector = boost::static_pointer_cast<HSSSelector>(this->nodeList.back());
-            if(selector->isA(HSSSelectorTypeSimpleSelector)){
-                ret = boost::static_pointer_cast<HSSSimpleSelector>(selector);
-            } else {
+    if (this->nodeList.size() > 0)
+    {
+        if (this->nodeList.back()->isA(HSSParserNodeTypeSelector))
+        {
+            HSSSelector::p selector = boost::static_pointer_cast<HSSSelector > (this->nodeList.back());
+            if (selector->isA(HSSSelectorTypeSimpleSelector))
+            {
+                ret = boost::static_pointer_cast<HSSSimpleSelector > (selector);
+            }
+            else
+            {
                 std_log1("########### subject in selector chain could not be determined");
             }
 
-        } else {
+        }
+        else
+        {
             std_log1("########### subject in selector chain could not be determined");
         }
     }
@@ -150,23 +160,24 @@ HSSSimpleSelector::p HSSSelectorChain::subject()
 void HSSSelectorChain::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
 {
     std::deque<HSSParserNode::p>::iterator it;
-    for (it=this->nodeList.begin(); it!=this->nodeList.end(); it++) {
+    for (it = this->nodeList.begin(); it != this->nodeList.end(); it++)
+    {
         (*it)->setThisObj(value);
     }
     HSSParserNode::setThisObj(value);
 }
 
-
 HSSSelectorChain::p HSSSelectorChain::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSSelectorChain>(HSSParserNode::shared_from_this());
+    return boost::static_pointer_cast<HSSSelectorChain > (HSSParserNode::shared_from_this());
 }
 
 HSSClonable::p HSSSelectorChain::cloneImpl() const
 {
     HSSSelectorChain::p clone = HSSSelectorChain::p(new HSSSelectorChain(*this));
     std::deque<HSSParserNode::p>::const_iterator it;
-    for (it=this->nodeList.begin(); it!=this->nodeList.end(); it++) {
+    for (it = this->nodeList.begin(); it != this->nodeList.end(); it++)
+    {
         HSSParserNode::p clonedNode = (*it)->clone();
         clone->add(clonedNode);
     }

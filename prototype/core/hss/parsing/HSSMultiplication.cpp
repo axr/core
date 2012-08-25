@@ -55,8 +55,9 @@ HSSMultiplication::HSSMultiplication(const HSSMultiplication &orig)
 
 }
 
-HSSMultiplication::p HSSMultiplication::clone() const{
-    return boost::static_pointer_cast<HSSMultiplication, HSSClonable>(this->cloneImpl());
+HSSMultiplication::p HSSMultiplication::clone() const
+{
+    return boost::static_pointer_cast<HSSMultiplication, HSSClonable > (this->cloneImpl());
 }
 
 HSSMultiplication::~HSSMultiplication()
@@ -69,6 +70,7 @@ long double HSSMultiplication::calculate(long double leftval, long double rightv
     return leftval * rightval;
 }
 
-HSSClonable::p HSSMultiplication::cloneImpl() const{
+HSSClonable::p HSSMultiplication::cloneImpl() const
+{
     return HSSClonable::p(new HSSMultiplication(*this));
 }

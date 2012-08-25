@@ -55,8 +55,9 @@ HSSNameSelector::HSSNameSelector(const HSSNameSelector &orig)
     this->elementName = orig.elementName;
 }
 
-HSSNameSelector::p HSSNameSelector::clone() const{
-    return boost::static_pointer_cast<HSSNameSelector, HSSClonable>(this->cloneImpl());
+HSSNameSelector::p HSSNameSelector::clone() const
+{
+    return boost::static_pointer_cast<HSSNameSelector, HSSClonable > (this->cloneImpl());
 }
 
 std::string HSSNameSelector::getElementName()
@@ -64,8 +65,9 @@ std::string HSSNameSelector::getElementName()
     return this->elementName;
 }
 
-std::string HSSNameSelector::toString(){
-    return "Name selector targeting an element with name "+this->elementName;
+std::string HSSNameSelector::toString()
+{
+    return "Name selector targeting an element with name " + this->elementName;
 }
 
 HSSClonable::p HSSNameSelector::cloneImpl() const
@@ -78,9 +80,11 @@ std::vector<HSSDisplayObject::p> HSSNameSelector::filterSelection(const std::vec
     std::vector< HSSDisplayObject::p> ret;
     unsigned i, size;
     //select only elements with matching element name
-    for (i=0, size=scope.size(); i<size; i++) {
+    for (i = 0, size = scope.size(); i < size; i++)
+    {
         bool match = scope[i]->getElementName() == this->getElementName();
-        if((match && !this->getNegating()) || (!match && this->getNegating()) ){
+        if ((match && !this->getNegating()) || (!match && this->getNegating()))
+        {
             ret.push_back(scope[i]);
         }
     }

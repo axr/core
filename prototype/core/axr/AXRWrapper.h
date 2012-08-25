@@ -61,6 +61,7 @@ namespace AXR
     typedef unsigned AXRFileHandle;
 
     class AXRCore;
+
     /**
      *  @brief This is the abstract superclass from with all OS-specific wrappers
      *  should inherit from.
@@ -213,7 +214,6 @@ namespace AXR
         unsigned int _currentLayoutChild;
     };
 
-
     class AXRTestThread
     {
     private:
@@ -227,12 +227,13 @@ namespace AXR
         AXRTestThread(AXRWrapper * wrapper, std::string filePath, HSSContainer::p status);
         void operator () ();
     };
+
     class AXRTestProducer
     {
     private:
         AXRWrapper * wrapper;
         std::string basePath;
-        std::vector<std::string> test;              // the filename of the test
+        std::vector<std::string> test; // the filename of the test
         unsigned * totalTests;
         unsigned * totalPassed;
         HSSContainer::p status;

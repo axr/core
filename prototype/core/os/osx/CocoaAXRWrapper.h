@@ -44,6 +44,7 @@
 
 namespace AXR
 {
+
     class CocoaAXRWrapper : public AXRWrapper
     {
     public:

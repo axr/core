@@ -48,13 +48,16 @@ using namespace AXR;
 
 HSSFlagFunctionType HSSFlagFunction::flagFunctionTypeFromString(std::string name)
 {
-    if( name == "flag" ){
+    if (name == "flag")
+    {
         return HSSFlagFunctionTypeFlag;
     }
-    if( name == "unflag" ){
+    if (name == "unflag")
+    {
         return HSSFlagFunctionTypeUnflag;
     }
-    if( name == "toggleFlag" ){
+    if (name == "toggleFlag")
+    {
         return HSSFlagFunctionTypeToggleFlag;
     }
 
@@ -76,7 +79,7 @@ HSSFlagFunction::HSSFlagFunction(const HSSFlagFunction & orig)
 
 HSSFunction::p HSSFlagFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable>(this->cloneImpl());
+    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 HSSFlagFunction::~HSSFlagFunction()
@@ -108,7 +111,7 @@ void HSSFlagFunction::setSelectorChains(std::vector<HSSSelectorChain::p> newValu
 
 void HSSFlagFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
 {
-    if(newSelectorChain)
+    if (newSelectorChain)
     {
         std_log3("Added selector chain to HSSFlagFunction: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
@@ -118,7 +121,7 @@ void HSSFlagFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
 
 void HSSFlagFunction::selectorChainsRemove(unsigned int index)
 {
-    this->selectorChains.erase(this->selectorChains.begin()+index);
+    this->selectorChains.erase(this->selectorChains.begin() + index);
 }
 
 void HSSFlagFunction::selectorChainsRemoveLast()
@@ -155,7 +158,7 @@ void HSSFlagFunction::valueChanged(HSSObservableProperty source, void*data)
 {
     this->setDirty(true);
     this->_value = data;
-    this->notifyObservers(HSSObservablePropertyValue, (void *) &this->_value);
+    this->notifyObservers(HSSObservablePropertyValue, (void *) & this->_value);
 }
 
 HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType()
@@ -163,12 +166,14 @@ HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType()
     return this->_flagFunctionType;
 }
 
-HSSClonable::p HSSFlagFunction::cloneImpl() const{
+HSSClonable::p HSSFlagFunction::cloneImpl() const
+{
 
     HSSFlagFunction::p clone = HSSFlagFunction::p(new HSSFlagFunction(*this));
 
     HSSSelectorChain::const_it sIt;
-    for (sIt=this->selectorChains.begin(); sIt!=this->selectorChains.end(); sIt++) {
+    for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+    {
         HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }
