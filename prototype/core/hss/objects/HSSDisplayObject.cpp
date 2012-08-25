@@ -44,9 +44,9 @@
 #include <cmath>
 #include <sstream>
 #include <string>
-#include <boost/pointer_cast.hpp>
 #include <boost/any.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/pointer_cast.hpp>
 #include <cairo/cairo.h>
 #include "errors.h"
 #include "AXR.h"

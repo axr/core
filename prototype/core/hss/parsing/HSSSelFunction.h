@@ -139,12 +139,6 @@ namespace AXR {
          */
         virtual boost::any _evaluate();
         
-        /**
-         *  Calls _evaluate();
-         *  @deprecated Do not use this.
-         */
-        virtual boost::any _evaluate(std::deque<HSSParserNode::p> arguments);
-        
 //        void valueChanged(HSSObservableProperty source, void*data);
         
     protected:

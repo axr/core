@@ -127,11 +127,6 @@ boost::any HSSSelFunction::_evaluate()
     return this->_value;
 }
 
-boost::any HSSSelFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
-{
-    return this->_evaluate();
-}
-
 //void HSSSelFunction::valueChanged(HSSObservableProperty source, void*data)
 //{
 //    std_log1("######################### valueChanged");

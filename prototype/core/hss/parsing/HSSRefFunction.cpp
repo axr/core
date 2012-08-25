@@ -189,11 +189,6 @@ boost::any HSSRefFunction::_evaluate()
     return this->_value;
 }
 
-boost::any HSSRefFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
-{
-    return this->_evaluate();
-}
-
 void HSSRefFunction::valueChanged(HSSObservableProperty source, void*data)
 {
     this->setDirty(true);
