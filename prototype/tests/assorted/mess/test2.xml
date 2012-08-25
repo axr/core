@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="application/x-hss" src="style.hss" version="1.0"?>
 <parent>
-	<child1 arg1="test">This is a test element</child1>
-	<child2>This is another</child2>
-	<child3><subchild>This is a child inside its parent</subchild></child3>
+    <child1 arg1="test">This is a test element</child1>
+    <child2>This is another</child2>
+    <child3><subchild>This is a child inside its parent</subchild></child3>
 </parent>

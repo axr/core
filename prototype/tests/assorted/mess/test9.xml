@@ -2,14 +2,14 @@
 <?xml-stylesheet type="application/x-hss" src="style9.hss" version="1.0"?>
 <!--<?xml-sitemap type="application/xml" src="sitemap.xml"?>-->
 <document>
-	<header>
-		<logo>Logo</logo>
-		<navigation>
-			<home href="home.xml">Home</home>
-			<about href="about.xml">About</about>
-			<features href="features.xml">Features</features>
-			<contact href="contact.xml">Contact</contact>
-		</navigation>
-	</header>
-	<content>This is the content</content>
+    <header>
+        <logo>Logo</logo>
+        <navigation>
+            <home href="home.xml">Home</home>
+            <about href="about.xml">About</about>
+            <features href="features.xml">Features</features>
+            <contact href="contact.xml">Contact</contact>
+        </navigation>
+    </header>
+    <content>This is the content</content>
 </document>

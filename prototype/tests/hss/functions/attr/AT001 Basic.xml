@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Test AT001 Basic
-	Created by Miro Keller on 2012-08-23.
+    Test AT001 Basic
+    Created by Miro Keller on 2012-08-23.
 -->
 <?xml-stylesheet type="application/x-hss" src="AT001 Basic.hss"?>
 <test>
-	<value val="300" />
-	<value val="250" />
-	<value val="180" />
+    <value val="300" />
+    <value val="250" />
+    <value val="180" />
 </test>

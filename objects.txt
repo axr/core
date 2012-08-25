@@ -4,364 +4,358 @@ Those properties that accept multiple values are marked with [].
 
 
 @object
-	isA[]
-	shorthandOrder[]
-	
-		@displayObject
-			x
-			y
-			z
-			width
-			height
-			bounds
-			anchorX
-			anchorY
-			flow
-			parent
-			alignX
-			alignY
-			margin[]
-			border[]
-			zoomFactor
-			transform[]
-			effects[]
-			transition
-			animation[]
-			behavior[]
-			visible
-			drawIndex
-			tabIndex
-			focused
-			mask
-			contentText
-			attributes[]
-			
-				@container
-					shape
-					innerMargin[]
-					content
-					contentOrder[]
-					primaryDirection
-					secondaryDirection
-					contentAlignX
-					contentAlignY
-					background
-					font[]
-				
-				@textBlock
-					text
-					textTransform
-					primaryDirection
-					secondaryDirection
-					
-						@word
-						@glyph
-				
-				@image
-					source
-					clip
-					zoomRange
-				
-				@imageFamily
-					images
-					
-				@video
-					source[]
-					autoplay
-				
-				@blob
-					shape
-		
-		@box
-			x
-			y
-			width
-			height
-		
-		@shape
-			bounds
-			keywords
-			
-				@rect
-				
-						@roundedRect
-							corners[]
-				
-				@circle
-					segments
-					angle
-				
-				@polygon
-					sides
-					angle
-				
-				@star
-					spikes
-					angle
-					innerAngle[]
-		@path
-			startX
-			startY
-			segments[]
-			bounds
-		
-		@pathSegment
-			keyword
-			
-				@line
-					endX
-					endY
-				
-						@arc
-							radialAngle
-						
-						@arcTangents
-							cornerX
-							cornerY
-							radius
-						
-						@curve
-							point1X
-							point1Y
-							point2X
-							point2Y
-						
-						@quadCurve
-							pointX
-							pointY
-		
-		@pathOperation
-			shapes[]
-			
-				@union
-				@perforation
-				@intersection
-		
-		@margin
-			size
-			segments[]
-			
-				@projectedMargin
-					angle
-					extent
-				
-				@straightMargin
-					angle
-		
-		@border
-			size
-			offset
-			segments[]
-			position
-			effects[]
-			
-				@lineBorder
-					color
-					joins[]
-					caps[]
-				
-				@shapeBorder
-					color
-					shape
-					joins[]
-					caps[]
-				
-				@calligraphicBorder
-					color
-					roundness
-					angle
-				
-				@tiledBorder
-					tiles[]
-		
-		@color
-			alpha
-			
-				@rgb
-					red
-					green
-					blue
-				
-				@hsb
-					hue
-					saturation
-					brightness
-				
-				@cmyk
-					cyan
-					magenta
-					yellow
-					black	
-		
-		@pattern
-			width
-			height
-			content
-		
-		@gradient
-			startColor
-			endColor
-			colorStops[]
-			balance
-			
-				@linearGradient
-					startX
-					startY
-					endX
-					endY
-				
-				@radialGradient
-					centerX
-					centerY
-					sideX
-					sideY
-					roundness
-				
-				@contourGradient
-		
-		@colorStop
-			color
-			position
-			balance
-		
-		@font
-			size
-			face[]
-			color
-			wheight
-			style
-		
-		@interpolation
-			duration
-			easing
-			delay
-			
-				@transition
-					property
-		
-				@animation
-					repeat
-					keyframes
-		
-		@keyframe
-			progress
-			state
-		
-		@effect
-			postProcess
-					
-				@generatorEffect
-					direction
-					size
-					color
-					blur
-					
-						@shadow
-							angle
-						
-						@glow
-					
-				@modifierEffect
-					amount
-					
-						@blur
-						@motionBlur
-						@blurBelow
-							feather
-						@opacity
-						@blending
-							mode
-				
-				@colorHSB
-					hue
-					saturation
-					brightness
-					colorize
-				
-				@colorBC
-					brightness
-					contrast
-				
-				
-		
-		@transform
-			x
-			y
-			
-				@scale
-				@skew
-				@translate
-					z
-		
-		@rotate
-			z
-			x
-			y
-			
-		@value
-			value
-				@keyValue
-					value
-		
-		@request
-			url
-			method
-			data[]
-		
-		@event
-			action
-			
-				@mouseEvent
-					button
-					
-						@press
-						@release
-						@click
-							times
-						@drag
-							distance
-				
-				@over
-				@out
-				@rollOver
-				@rollOut
-				@dragOver
-				@dragOut
-				@keyboardEvent
-					key
-						@keyUp
-						@keyDown
-				
-				@gestures
-					amount
-						@pinch
-						@spread
-						@rotate
-							clockwise
-				
-				@modifierEvent
-					modifiers[]
-					event
-				
-				@error
-		
-		@jsFunction
-			name
-			arguments
-		
-		@javascript
-			script
-			src
-		
-		@filter
-			script
+    isA[]
+    shorthandOrder[]
 
-		@load
-			source
-			target
+        @displayObject
+            x
+            y
+            z
+            width
+            height
+            bounds
+            anchorX
+            anchorY
+            flow
+            parent
+            alignX
+            alignY
+            margin[]
+            border[]
+            zoomFactor
+            transform[]
+            effects[]
+            transition
+            animation[]
+            behavior[]
+            visible
+            drawIndex
+            tabIndex
+            focused
+            mask
+            contentText
+            attributes[]
+
+                @container
+                    shape
+                    innerMargin[]
+                    content
+                    contentOrder[]
+                    primaryDirection
+                    secondaryDirection
+                    contentAlignX
+                    contentAlignY
+                    background
+                    font[]
+
+                @textBlock
+                    text
+                    textTransform
+                    primaryDirection
+                    secondaryDirection
+
+                        @word
+                        @glyph
+
+                @image
+                    source
+                    clip
+                    zoomRange
+
+                @imageFamily
+                    images
+
+                @video
+                    source[]
+                    autoplay
+
+                @blob
+                    shape
+
+        @box
+            x
+            y
+            width
+            height
+
+        @shape
+            bounds
+            keywords
+
+                @rect
+
+                        @roundedRect
+                            corners[]
+
+                @circle
+                    segments
+                    angle
+
+                @polygon
+                    sides
+                    angle
+
+                @star
+                    spikes
+                    angle
+                    innerAngle[]
+        @path
+            startX
+            startY
+            segments[]
+            bounds
+
+        @pathSegment
+            keyword
+
+                @line
+                    endX
+                    endY
+
+                        @arc
+                            radialAngle
+
+                        @arcTangents
+                            cornerX
+                            cornerY
+                            radius
+
+                        @curve
+                            point1X
+                            point1Y
+                            point2X
+                            point2Y
+
+                        @quadCurve
+                            pointX
+                            pointY
+
+        @pathOperation
+            shapes[]
+
+                @union
+                @perforation
+                @intersection
+
+        @margin
+            size
+            segments[]
+
+                @projectedMargin
+                    angle
+                    extent
+
+                @straightMargin
+                    angle
+
+        @border
+            size
+            offset
+            segments[]
+            position
+            effects[]
+
+                @lineBorder
+                    color
+                    joins[]
+                    caps[]
+
+                @shapeBorder
+                    color
+                    shape
+                    joins[]
+                    caps[]
+
+                @calligraphicBorder
+                    color
+                    roundness
+                    angle
+
+                @tiledBorder
+                    tiles[]
+
+        @color
+            alpha
+
+                @rgb
+                    red
+                    green
+                    blue
+
+                @hsb
+                    hue
+                    saturation
+                    brightness
+
+                @cmyk
+                    cyan
+                    magenta
+                    yellow
+                    black
+
+        @pattern
+            width
+            height
+            content
+
+        @gradient
+            startColor
+            endColor
+            colorStops[]
+            balance
+
+                @linearGradient
+                    startX
+                    startY
+                    endX
+                    endY
+
+                @radialGradient
+                    centerX
+                    centerY
+                    sideX
+                    sideY
+                    roundness
+
+                @contourGradient
+
+        @colorStop
+            color
+            position
+            balance
+
+        @font
+            size
+            face[]
+            color
+            wheight
+            style
+
+        @interpolation
+            duration
+            easing
+            delay
+
+                @transition
+                    property
+
+                @animation
+                    repeat
+                    keyframes
+
+        @keyframe
+            progress
+            state
+
+        @effect
+            postProcess
+
+                @generatorEffect
+                    direction
+                    size
+                    color
+                    blur
+
+                        @shadow
+                            angle
+
+                        @glow
+
+                @modifierEffect
+                    amount
+
+                        @blur
+                        @motionBlur
+                        @blurBelow
+                            feather
+                        @opacity
+                        @blending
+                            mode
+
+                @colorHSB
+                    hue
+                    saturation
+                    brightness
+                    colorize
+
+                @colorBC
+                    brightness
+                    contrast
 
 
 
+        @transform
+            x
+            y
 
+                @scale
+                @skew
+                @translate
+                    z
 
+        @rotate
+            z
+            x
+            y
 
+        @value
+            value
+                @keyValue
+                    value
+
+        @request
+            url
+            method
+            data[]
+
+        @event
+            action
+
+                @mouseEvent
+                    button
+
+                        @press
+                        @release
+                        @click
+                            times
+                        @drag
+                            distance
+
+                @over
+                @out
+                @rollOver
+                @rollOut
+                @dragOver
+                @dragOut
+                @keyboardEvent
+                    key
+                        @keyUp
+                        @keyDown
+
+                @gestures
+                    amount
+                        @pinch
+                        @spread
+                        @rotate
+                            clockwise
+
+                @modifierEvent
+                    modifiers[]
+                    event
+
+                @error
+
+        @jsFunction
+            name
+            arguments
+
+        @javascript
+            script
+            src
+
+        @filter
+            script
+
+        @load
+            source
+            target

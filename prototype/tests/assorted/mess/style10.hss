@@ -2,7 +2,7 @@ document
 {
     contentAlignY: 50%;
     background: @rgb { red:163; green:180; blue:196 };
-    
+
     message
     {
         width: 80%;

@@ -10,7 +10,7 @@
         height: 50;
         background: #E;
     }
-    
+
     //Comment and uncomment these lines as needed to understand what's
     //going on. Also, a good idea is to remove filters from the right
     //and see how the selection is affected.

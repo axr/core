@@ -1,7 +1,7 @@
 @container
 {
     font: fontStyle1;
-    
+
     &@ button1
     {
         font: title2Font;
@@ -51,9 +51,9 @@
         alignModePrimary: distribute;
         content: @request { "navigation.xml" };
         // padding: @{ 50 left }, @{ 50 right};
-        
+
         // #unwrap navigation;
-        
+
         * {
             isA: button1;
             behavior: @click {
@@ -61,22 +61,22 @@
             };
         }
     }
-    
+
     #new content
     {
         height: 100% - (ref(height of menu) + ref(height of footer));
         contentAlignY: 50%;
     }
-    
+
     #new footer
     {
         height: max(150, min(50, 20%));
     }
-    
+
     *
     {
         parent: content;
     }
-    
+
     #delete metadata;
 }

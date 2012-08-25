@@ -1,16 +1,16 @@
 /*
-	Test SH001 Rectangle
-	Created by Miro Keller on 2011-10-19.
+    Test SH001 Rectangle
+    Created by Miro Keller on 2011-10-19.
 */
 
 test
 {
-	shapeElement
-	{
-	    width: 200;
-	    height: 200;
-	    shape: @rectangle; //default value
-	    background: #C;
-	    alignY: 50%;
-	}
+    shapeElement
+    {
+        width: 200;
+        height: 200;
+        shape: @rectangle; //default value
+        background: #C;
+        alignY: 50%;
+    }
 }

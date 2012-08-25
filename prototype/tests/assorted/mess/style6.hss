@@ -1,29 +1,29 @@
 parent
 {
-	contentAlignX: 100%;
-	contentAlignY: 100%;
-	
-	child
-	{
-		width: 250;
-		height: 150;
-	}
-	
-	child2
-	{
-		width: 250;
-		height: 150;
-	}
+    contentAlignX: 100%;
+    contentAlignY: 100%;
 
-	child3
-	{
-		width: 250;
-		height: 150;
-	}  
+    child
+    {
+        width: 250;
+        height: 150;
+    }
 
-	child4
-	{
-		width: 250;
-		height: 150;
-	}
+    child2
+    {
+        width: 250;
+        height: 150;
+    }
+
+    child3
+    {
+        width: 250;
+        height: 150;
+    }
+
+    child4
+    {
+        width: 250;
+        height: 150;
+    }
 }

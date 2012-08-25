@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="application/x-hss" src="style11.hss" version="1.0"?>
 <document>
-	<container>
-	    <child>1</child>
-    	<child>2</child>
-	</container>
+    <container>
+        <child>1</child>
+        <child>2</child>
+    </container>
 </document>

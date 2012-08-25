@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -54,9 +54,9 @@
 #include "HSSTypeEnums.h"
 
 namespace AXR {
-    
+
     class HSSDisplayObject;
-    
+
     /**
      *  @brief Abstract base class that provides the basic functionality of a parser node. Do not use directly,
      *  but one of its subclasses instead.
@@ -68,34 +68,34 @@ namespace AXR {
     class HSSParserNode : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSParserNode>
     {
     public:
-        
+
         /**
          *  The shared pointer to instances of this class.
          */
         typedef boost::shared_ptr<HSSParserNode> p;
-        
+
         /**
          *  Iterator for vectors of shared pointers to parser nodes.
          */
         typedef std::vector<HSSParserNode::p>::iterator it;
-        
+
         /**
          *  Iterator for vectors of shared pointers to parser nodes, const version.
          */
         typedef std::vector<HSSParserNode::p>::const_iterator const_it;
-        
+
         /**
          *  "Parent Pointer". A weak pointer used to break cyclic references.
          */
         typedef boost::weak_ptr<HSSParserNode> pp;
-        
+
         /**
          *  When logging, you often need a string representation of the parser node type.
          *  @param type     The parser node type to represent as a string.
          *  @return A string representation of the given type.
          */
         static std::string parserNodeStringRepresentation(HSSParserNodeType type);
-        
+
         /**
          *  Creates a new instance of a parser node. This class shouldn't be called directly,
          *  but by the subclasses.
@@ -105,49 +105,49 @@ namespace AXR {
          *  @todo There is no destructor on this class.
          */
         HSSParserNode(HSSParserNodeType type);
-        
+
         /**
          *  Copy constructor for HSSParserNode objects. Do not call directly, use clone() instead.
          */
         HSSParserNode(const HSSParserNode &orig);
-        
+
         /**
          *  Clones an instance of HSSParserNode and gives a shared pointer of the
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSParserNode
          */
         p clone() const;
-        
+
         /**
          *  Prints itself as a textual representation. Each object overrides this method to .
          *  @return A textual representation of the object.
          */
         virtual std::string toString();
-        
+
         /**
          *  Call this to know if a parser node is of the given type.
          *  @param otherType    The parser node type to compare against.
          *  @return Wether the instance is an parser node of given type.
          */
         bool isA(HSSParserNodeType otherType);
-        
+
         /**
          *  @return The parser node type of the current instance.
          */
         HSSParserNodeType getType();
-        
+
         /**
          *  Traversal method of the parser tree.
          *  @return The parent parser node in the parser tree or an empty pointer if none.
          */
         p getParentNode();
-        
+
         /**
          *  Saves the given shared pointer as the parent of this instance in the parser tree.
          *  @param newParent    A shared pointer to the new parent node.
          */
         void setParentNode(p newParent);
-        
+
         /**
          *  Removes itself from its parent node in the parser tree.
          *  @param newParent    A shared pointer to the new parent node.
@@ -155,25 +155,25 @@ namespace AXR {
          *  @todo The saved pointer to the parent is not touched, it just removes itself on the parent.
          */
         void removeFromParentNode();
-        
+
         /**
          *  Adds the given child node to the list of children
          *  @param child    A shared pointer to the child node to add.
          */
         void addNode(p child);
-        
+
         /**
          *  Removes the given child node from the list of children.
          *  @param child    A shared pointer to the child node to remove.
          */
         void removeNode(p child);
-        
+
         /**
          *  Traversal method of the parser tree.
          *  @param child    A vector of shared pointers to the child nodes.
          */
         const std::vector<HSSParserNode::p> getChildNodes() const;
-        
+
         /**
          *  Setter for the "this object", which is a shared pointer to the nearest display object
          *  (including itself).
@@ -186,32 +186,32 @@ namespace AXR {
          *  @return A shared pointer to the nearest display object.
          */
         virtual boost::shared_ptr<HSSDisplayObject> getThisObj();
-        
+
         //add all type isAs here
         virtual bool isA(HSSExpressionType otherType);
         virtual HSSExpressionType getExpressionType();
-        
+
         virtual bool isA(HSSStatementType otherType);
         virtual HSSStatementType getStatementType();
-        
+
         virtual bool isA(HSSInstructionType otherType);
         virtual HSSInstructionType getInstructionType();
-        
+
         virtual bool isA(HSSSelectorType otherType);
         virtual HSSSelectorType getSelectorType();
-        
+
         virtual bool isA(HSSCombinatorType otherType);
         virtual HSSCombinatorType getCombinatorType();
-        
+
         virtual bool isA(HSSFilterType otherType);
         virtual HSSFilterType getFilterType();
-        
+
         virtual bool isA(HSSFunctionType otherType);
         virtual HSSFunctionType getFunctionType();
-        
+
         virtual bool isA(HSSFlagFunctionType otherType);
         virtual HSSFlagFunctionType getFlagFunctionType();
-        
+
     protected:
         boost::shared_ptr<HSSDisplayObject> thisObj;
     private:

@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -56,13 +56,13 @@ HSSColorStop::HSSColorStop()
 :HSSObject(HSSObjectTypeColorStop)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: creating color stop object");
-    
+
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("color");
     shorthandProperties.push_back("position");
     shorthandProperties.push_back("balance");
     this->setShorthandProperties(shorthandProperties);
-    
+
     this->registerProperty(HSSObservablePropertyColor, (void *) &this->color);
     this->registerProperty(HSSObservablePropertyPosition, (void *) &this->position);
     this->registerProperty(HSSObservablePropertyBalance, (void *) &this->balance);
@@ -77,7 +77,7 @@ HSSColorStop::HSSColorStop(const HSSColorStop & orig)
     shorthandProperties.push_back("position");
     shorthandProperties.push_back("balance");
     this->setShorthandProperties(shorthandProperties);
-    
+
     this->registerProperty(HSSObservablePropertyColor, (void *) &this->color);
     this->registerProperty(HSSObservablePropertyPosition, (void *) &this->position);
     this->registerProperty(HSSObservablePropertyBalance, (void *) &this->balance);
@@ -128,7 +128,7 @@ bool HSSColorStop::isKeyword(std::string value, std::string property)
             return true;
         }
     }
-    
+
     //if we reached this far, let the superclass handle it
     return HSSObject::isKeyword(value, property);
 }
@@ -156,7 +156,7 @@ HSSParserNode::p HSSColorStop::getDColor() { return this->dColor; }
 void HSSColorStop::setDColor(HSSParserNode::p value)
 {
     bool valid = false;
-    
+
     switch (value->getType()) {
         case HSSParserNodeTypeObjectNameConstant:
         {
@@ -166,17 +166,17 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDColor(objdef);
                 valid = true;
-                
+
             } catch (AXRError::p e){
                 e->raise();
             } catch (AXRWarning::p e){
                 e->raise();
             }
-            
+
             break;
         }
-            
-            
+
+
         case HSSParserNodeTypeFunctionCall:
         {
             this->dColor = value;
@@ -189,18 +189,18 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
                     this->color = boost::any_cast<HSSRgb::p>(remoteValue);
                     valid = true;
                 } catch (...) {
-                    
+
                 }
-                
+
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSColorStop>(this, &HSSColorStop::colorChanged));
             }
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     switch (value->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
         {
@@ -214,17 +214,17 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
                 this->color = boost::static_pointer_cast<HSSRgb>(theobj);
                 valid = true;
             }
-            
+
             break;
         }
-        
+
         default:
             break;
     }
-    
+
     if(!valid)
         throw AXRWarning::p(new AXRWarning("HSSColorStop", "Invalid value for color of "+this->name));
-    
+
     this->notifyObservers(HSSObservablePropertyColor, &this->color);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -235,11 +235,11 @@ void HSSColorStop::colorChanged(HSSObservableProperty source, void*data)
         case HSSParserNodeTypeFunctionCall:
             this->color = *(HSSRgb::p*)data;
             break;
-            
+
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertyPosition, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -261,9 +261,9 @@ void HSSColorStop::setDPosition(HSSParserNode::p value)
                                                  this->observedPosition,
                                                  this->observedPositionProperty
                                                  );
-            
+
             break;
-            
+
         case HSSParserNodeTypeFunctionCall:
         {
             this->dPosition = value;
@@ -275,18 +275,18 @@ void HSSColorStop::setDPosition(HSSParserNode::p value)
                 try {
                     this->position = boost::any_cast<long double>(remoteValue);
                 } catch (...) {
-                    
+
                 }
-                
+
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyPosition, this, new HSSValueChangedCallback<HSSColorStop>(this, &HSSColorStop::positionChanged));
-                
+
             } else {
                 throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid function type for position of "+this->name));
             }
-            
+
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSColorStop", "Invalid value for position of "+this->name));
     }
@@ -302,18 +302,18 @@ void HSSColorStop::positionChanged(HSSObservableProperty source, void*data)
         case HSSParserNodeTypeFunctionCall:
             this->position = *(long double*)data;
             break;
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dPosition);
             this->position = percentageValue->getValue(*(long double*)data);
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertyPosition, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -335,9 +335,9 @@ void HSSColorStop::setDBalance(HSSParserNode::p value)
                                                  this->observedBalance,
                                                  this->observedBalanceProperty
                                                  );
-            
+
             break;
-            
+
         case HSSParserNodeTypeFunctionCall:
         {
             this->dBalance = value;
@@ -349,18 +349,18 @@ void HSSColorStop::setDBalance(HSSParserNode::p value)
                 try {
                     this->balance = boost::any_cast<long double>(remoteValue);
                 } catch (...) {
-                    
+
                 }
-                
+
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyBalance, this, new HSSValueChangedCallback<HSSColorStop>(this, &HSSColorStop::balanceChanged));
-                
+
             } else {
                 throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid function type for balance of "+this->name));
             }
-            
+
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSColorStop", "Invalid value for balance of "+this->name));
     }
@@ -376,18 +376,18 @@ void HSSColorStop::balanceChanged(AXR::HSSObservableProperty source, void *data)
         case HSSParserNodeTypeFunctionCall:
             this->balance = *(long double*)data;
             break;
-        
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dBalance);
             this->balance = percentageValue->getValue(*(long double*)data);
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertyBalance, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -402,7 +402,7 @@ long double HSSColorStop::_setLDProperty(
                                         )
 {
     long double ret;
-    
+
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType) {
         case HSSParserNodeTypeNumberConstant:
@@ -411,14 +411,14 @@ long double HSSColorStop::_setLDProperty(
             ret = numberValue->getValue();
             break;
         }
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
             ret = percentageValue->getValue(percentageBase);
             break;
         }
-            
+
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
@@ -429,20 +429,18 @@ long double HSSColorStop::_setLDProperty(
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSColorStop>(this, callback));
             }
-            
+
             break;
         }
-            
+
         case HSSParserNodeTypeKeywordConstant:
-            
+
             break;
-            
+
         default:
             AXRWarning::p(new AXRWarning("HSSColorStop", "Unknown parser node type while setting value for HSSLineGradient property"))->raise();
             break;
     }
-    
+
     return ret;
 }
-
-

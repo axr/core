@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -55,7 +55,7 @@
 using namespace AXR;
 
 HSSObject::p HSSObject::newObjectWithType(std::string type){
-    
+
     static boost::unordered_map<std::string, HSSObjectType>types;
     if (types.size() == 0) {
         types["container"] = HSSObjectTypeContainer;
@@ -88,23 +88,23 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
         types["request"] = HSSObjectTypeAction;
         types["log"] = HSSObjectTypeAction;
     }
-    
+
     HSSObjectType objectType = HSSObjectTypeNone;
     if(types.find(type) != types.end()){
         objectType = types[type];
     }
-    
+
     switch (objectType) {
         case HSSObjectTypeContainer:
         {
             return HSSContainer::p(new HSSContainer());
         }
-            
+
         case HSSObjectTypeDisplayObject:
         {
             return HSSDisplayObject::p(new HSSDisplayObject());
         }
-            
+
         case HSSObjectTypeBorder:
         {
             /**
@@ -112,7 +112,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
              */
             return HSSLineBorder::p(new HSSLineBorder());
         }
-            
+
         case HSSObjectTypeGradient:
         {
             /**
@@ -120,32 +120,32 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
              */
             return HSSLinearGradient::p(new HSSLinearGradient());
         }
-            
+
         case HSSObjectTypeColorStop:
         {
             return HSSColorStop::p(new HSSColorStop());
         }
-            
+
         case HSSObjectTypeValue:
         {
             return HSSValue::p(new HSSValue());
         }
-            
+
         case HSSObjectTypeMargin:
         {
             return HSSMargin::p(new HSSMargin());
         }
-            
+
         case HSSObjectTypeRgb:
         {
             return HSSRgb::p(new HSSRgb());
         }
-            
+
         case HSSObjectTypeFont:
         {
             return HSSFont::p(new HSSFont());
         }
-            
+
         case HSSObjectTypeShape:
         {
             if (type == "rectangle"){
@@ -158,7 +158,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
                 return HSSPolygon::p(new HSSPolygon());
             }
         }
-            
+
         case HSSObjectTypeEvent:
         {
             static boost::unordered_map<std::string, HSSEventType>eventTypes;
@@ -177,14 +177,14 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
                 eventTypes["clickTertiary"] = HSSEventTypeClickTertiary;
                 eventTypes["scroll"] = HSSEventTypeScroll;
             }
-            
+
             if(eventTypes.find(type) != eventTypes.end()){
                 return HSSEvent::p(new HSSEvent(eventTypes[type]));
             }
-            
+
             //fall through
         }
-            
+
         case HSSObjectTypeAction:
         {
             if (type == "request"){
@@ -193,11 +193,11 @@ HSSObject::p HSSObject::newObjectWithType(std::string type){
                 return HSSLog::p(new HSSLog());
             }
         }
-            
+
         default:
             throw AXRError::p(new AXRError("HSSObject", type));
     }
-    
+
     return HSSObject::p();
 }
 
@@ -219,7 +219,7 @@ HSSObject::HSSObject(const HSSObject & orig)
     this->thisObj = orig.thisObj;
     this->axrController = orig.axrController;
     this->shorthandIndex = orig.shorthandIndex;
-    
+
 }
 
 HSSObject::p HSSObject::clone() const{
@@ -233,7 +233,7 @@ HSSClonable::p HSSObject::cloneImpl() const{
 
 HSSObject::~HSSObject()
 {
-    
+
 }
 
 bool HSSObject::isKeyword(std::string value, std::string property)
@@ -314,7 +314,7 @@ std::string HSSObject::getPropertyForCurrentValue()
 {
     bool done = false;
     std::string ret;
-    
+
     security_brake_init();
     while (!done) {
         if(this->shorthandProperties.size() > this->shorthandIndex){
@@ -323,9 +323,9 @@ std::string HSSObject::getPropertyForCurrentValue()
                 return ret;
             }
         }
-        
+
         done = !this->shorthandNext();
-        
+
         security_brake();
     }
     security_brake_reset();
@@ -381,7 +381,7 @@ void HSSObject::setDIsA(HSSParserNode::p value)
 void HSSObject::addDIsA(HSSParserNode::p value)
 {
     bool valid = false;
-    
+
     switch (value->getType()) {
         case HSSParserNodeTypeMultipleValueDefinition:
         {
@@ -394,7 +394,7 @@ void HSSObject::addDIsA(HSSParserNode::p value)
             valid = true;
             break;
         }
-            
+
         case HSSParserNodeTypeObjectNameConstant:
         {
             try {
@@ -414,50 +414,50 @@ void HSSObject::addDIsA(HSSParserNode::p value)
                             e->raise();
                         }
                     }
-                    
+
                     //else store as value
                 }
                 valid = true;
-                
+
             } catch (AXRError::p e) {
                 e->raise();
             } catch (AXRWarning::p e) {
                 e->raise();
             }
-            
+
             break;
         }
-            
+
         case HSSParserNodeTypeKeywordConstant:
         {
             AXRError::p(new AXRError("HSSObject", "HSSParserNodeTypeKeywordConstant Unimplemented"))->raise();
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     switch (value->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
         {
             AXRError::p(new AXRError("HSSObject", "HSSStatementTypeObjectDefinition Unimplemented in isA"))->raise();
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     if(!valid)
         throw AXRWarning::p(new AXRWarning("HSSObject", "Invalid value for isA of "+this->name));
-    
+
     this->notifyObservers(HSSObservablePropertyIsA, &this->dIsA);
 }
 
 void HSSObject::isAChanged(AXR::HSSObservableProperty source, void *data)
 {
-    
+
 }
 
 void HSSObject::setPropertyWithName(std::string name, HSSParserNode::p value)
@@ -474,7 +474,7 @@ void HSSObject::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 {
     if (name == HSSObservablePropertyIsA) {
         this->setDIsA(value);
-        
+
     } else {
         AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property "+HSSObservable::observablePropertyStringRepresentation(name)+", ignoring value"))->raise();
     }
@@ -543,5 +543,3 @@ HSSEventType HSSObject::getEventType() { return HSSEventTypeNone; }
 
 bool HSSObject::isA(HSSActionType otherType) { return false; }
 HSSActionType HSSObject::getActionType() { return HSSActionTypeNone; }
-
-

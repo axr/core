@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -56,44 +56,44 @@ using namespace AXR;
 HSSTokenizer::HSSTokenizer()
 {
     //these start out empty
-	this->currentChar = NULL;
-	
-	//initialize the currentTokenText
-	this->currentTokenText = std::string();
-	
-	//we start out with an empty buffer
-	this->buflen = 0;
-	//we start at the beginning of the buffer
-	this->bufpos = 0;
+    this->currentChar = NULL;
+
+    //initialize the currentTokenText
+    this->currentTokenText = std::string();
+
+    //we start out with an empty buffer
+    this->buflen = 0;
+    //we start at the beginning of the buffer
+    this->bufpos = 0;
     //the peeking offset is 0
     this->peekpos = this->peekColumn = this->peekLine =  0;
     //we start at line 1 and column 1
     this->currentLine = this->currentColumn = 1;
-    
+
     //by default, numbers are read as real numbers and A-F will be an identifier
     this->preferHex = false;
 }
 
 HSSTokenizer::~HSSTokenizer()
 {
-    
+
 }
 
 void HSSTokenizer::reset()
 {
-    
+
     this->file.reset();
     //this starts out empty
-	this->currentChar = NULL;
-	
-	//initialize the currentTokenText
-	this->currentTokenText = std::string();
-	
-	//we start out at the beginning of an empty buffer
-	this->buflen = this->bufpos = this->peekpos = 0;
+    this->currentChar = NULL;
+
+    //initialize the currentTokenText
+    this->currentTokenText = std::string();
+
+    //we start out at the beginning of an empty buffer
+    this->buflen = this->bufpos = this->peekpos = 0;
     //we start at line 0 and column 0
     this->currentLine = this->currentColumn = 1;
-    
+
     //by default, numbers are read as real numbers and A-F will be an identifier
     this->preferHex = false;
 }
@@ -103,113 +103,113 @@ AXRFile::p HSSTokenizer::getFile() { return this->file; }
 
 HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
 {
-	if(this->buflen == this->bufpos){
-		this->currentChar = '\0';
-	} else {
+    if(this->buflen == this->bufpos){
+        this->currentChar = '\0';
+    } else {
         char * buffer = this->file->getBuffer();
-		this->currentChar = buffer[this->bufpos];
-	}
+        this->currentChar = buffer[this->bufpos];
+    }
 
     std::stringstream msg;
     msg << "read charachter L" << this->currentLine << "C" << this->currentColumn << "|" << this->currentChar << "|";
     axr_log(AXR_DEBUG_CH_TOKENIZING, msg.str());
 
-	this->bufpos++;
+    this->bufpos++;
     this->currentColumn++;
-    
-	
-	return HSSTokenizerOK;
+
+
+    return HSSTokenizerOK;
 }
 
 HSSToken::p HSSTokenizer::readNextToken()
 {
     HSSToken::p ret;
-    
-	//if we're at the end of the source
-	if (this->atEndOfSource()) {
-		return ret;
-	}
-	
-	char cc = this->currentChar;
-    
-	//identifiers can start with a letter or an underscore
-	if (isalpha(cc) || cc == '_') {
+
+    //if we're at the end of the source
+    if (this->atEndOfSource()) {
+        return ret;
+    }
+
+    char cc = this->currentChar;
+
+    //identifiers can start with a letter or an underscore
+    if (isalpha(cc) || cc == '_') {
         if(this->preferHex){
             return this->readHexOrIdentifier();
         } else {
             return this->readIdentifier();
         }
-	}
-	
+    }
+
     //the \302 is the character that appears when pressing
     //alt+space in TextMate, a weird unicode space
-	if (isspace(cc) || cc == '\302') {
-		return this->readWhitespace();
-	}
-	
-	//if it starts with a number it is either a number or a percentage
-	if (isdigit(cc)) {
+    if (isspace(cc) || cc == '\302') {
+        return this->readWhitespace();
+    }
+
+    //if it starts with a number it is either a number or a percentage
+    if (isdigit(cc)) {
         if(this->preferHex){
             return this->readHexOrIdentifier();
         } else {
             return this->readNumberOrPercentage();
         }
-	}
-	
-	switch (cc) {
-		//if it starts with quotes, either single or double, it is a string
-		case '"':
-		case '\'':
-			return this->readString();
+    }
+
+    switch (cc) {
+        //if it starts with quotes, either single or double, it is a string
+        case '"':
+        case '\'':
+            return this->readString();
         case '#':
             ret = HSSToken::p(new HSSToken(HSSInstructionSign, this->currentLine, this->currentColumn -1));
             this->readNextChar();
             return ret;
-		case '@':
-			ret = HSSToken::p(new HSSToken(HSSObjectSign, this->currentLine, this->currentColumn -1));
-			this->readNextChar();
-			return ret;
+        case '@':
+            ret = HSSToken::p(new HSSToken(HSSObjectSign, this->currentLine, this->currentColumn -1));
+            this->readNextChar();
+            return ret;
         case '&':
-			ret = HSSToken::p(new HSSToken(HSSAmpersand, this->currentLine, this->currentColumn -1));
-			this->readNextChar();
-			return ret;
-		case '{':
-			ret = HSSToken::p(new HSSToken(HSSBlockOpen, this->currentLine, this->currentColumn -1));
-			this->readNextChar();
-			return ret;
-		case '}':
-			ret = HSSToken::p(new HSSToken(HSSBlockClose, this->currentLine, this->currentColumn -1));
-			this->readNextChar();
-			return ret;
+            ret = HSSToken::p(new HSSToken(HSSAmpersand, this->currentLine, this->currentColumn -1));
+            this->readNextChar();
+            return ret;
+        case '{':
+            ret = HSSToken::p(new HSSToken(HSSBlockOpen, this->currentLine, this->currentColumn -1));
+            this->readNextChar();
+            return ret;
+        case '}':
+            ret = HSSToken::p(new HSSToken(HSSBlockClose, this->currentLine, this->currentColumn -1));
+            this->readNextChar();
+            return ret;
         case ',':
-			ret = HSSToken::p(new HSSToken(HSSComma, this->currentLine, this->currentColumn -1));
-			this->readNextChar();
-			return ret;
+            ret = HSSToken::p(new HSSToken(HSSComma, this->currentLine, this->currentColumn -1));
+            this->readNextChar();
+            return ret;
         case ':':
-			ret = HSSToken::p(new HSSToken(HSSColon, this->currentLine, this->currentColumn -1));
-			this->readNextChar();
-			return ret;
-		case ';':
-			ret = HSSToken::p(new HSSToken(HSSEndOfStatement, this->currentLine, this->currentColumn -1));
-			this->readNextChar();
-			return ret;
-		case '(':
-			ret = HSSToken::p(new HSSToken(HSSParenthesisOpen, this->currentLine, this->currentColumn -1));
-			this->readNextChar();
-			return ret;
-		case ')':
-			ret = HSSToken::p(new HSSToken(HSSParenthesisClose, this->currentLine, this->currentColumn -1));
-			this->readNextChar();
-			return ret;
+            ret = HSSToken::p(new HSSToken(HSSColon, this->currentLine, this->currentColumn -1));
+            this->readNextChar();
+            return ret;
+        case ';':
+            ret = HSSToken::p(new HSSToken(HSSEndOfStatement, this->currentLine, this->currentColumn -1));
+            this->readNextChar();
+            return ret;
+        case '(':
+            ret = HSSToken::p(new HSSToken(HSSParenthesisOpen, this->currentLine, this->currentColumn -1));
+            this->readNextChar();
+            return ret;
+        case ')':
+            ret = HSSToken::p(new HSSToken(HSSParenthesisClose, this->currentLine, this->currentColumn -1));
+            this->readNextChar();
+            return ret;
         case '/':
             return this->readCommentOrSymbol();
         case '!':
             ret = HSSToken::p(new HSSToken(HSSNegator, this->currentLine, this->currentColumn -1));
             this->readNextChar();
             return ret;
-		default:
-			return this->readSymbol();
-	}
+        default:
+            return this->readSymbol();
+    }
 }
 
 HSSToken::p HSSTokenizer::peekNextToken()
@@ -224,11 +224,11 @@ HSSToken::p HSSTokenizer::peekNextToken()
     this->peekpos += (this->bufpos - curpos);
     this->peekLine += (this->currentLine - curline);
     this->peekColumn += (this->currentColumn - curcol);
-    
+
     std::stringstream msg;
     msg << "new peekpos: " << this->peekpos << " because bufpos: " << this->bufpos << " and curpos: " << curpos;
     axr_log(AXR_DEBUG_CH_TOKENIZING, msg.str());
-    
+
     return ret;
 }
 
@@ -241,7 +241,7 @@ void HSSTokenizer::resetPeek()
     this->currentColumn -= this->peekColumn+1;
     std_log4("end bufpos: " + this->bufpos);
     this->readNextChar();
-    
+
     //reset the offset to 0
     this->peekpos = 0;
     this->peekLine = 0;
@@ -255,7 +255,7 @@ void HSSTokenizer::setBufferLength(unsigned length)
 
 HSS_TOKENIZING_STATUS HSSTokenizer::skipWhitespace()
 {
-	while (isspace(this->currentChar) || this->currentChar == '\302'){
+    while (isspace(this->currentChar) || this->currentChar == '\302'){
         //if there is this weird space char, skip another byte
         if (this->currentChar == '\302') {
             this->readNextChar();
@@ -264,36 +264,36 @@ HSS_TOKENIZING_STATUS HSSTokenizer::skipWhitespace()
             this->currentLine++;
             this->currentColumn = 1;
         }
-		this->readNextChar();
-	}
-	
-	return HSSTokenizerOK;
+        this->readNextChar();
+    }
+
+    return HSSTokenizerOK;
 }
 
 bool HSSTokenizer::atEndOfSource()
 {
-	return this->currentChar == '\0';
+    return this->currentChar == '\0';
 }
 
 HSS_TOKENIZING_STATUS HSSTokenizer::storeCurrentCharAndReadNext()
 {
-	this->currentTokenText.append(1, this->currentChar);
-	this->readNextChar();
-	
-	return HSSTokenizerOK;
+    this->currentTokenText.append(1, this->currentChar);
+    this->readNextChar();
+
+    return HSSTokenizerOK;
 }
 
 HSS_TOKENIZING_STATUS HSSTokenizer::storeChar(char value)
 {
-	this->currentTokenText.append(1, value);
-	return HSSTokenizerOK;
+    this->currentTokenText.append(1, value);
+    return HSSTokenizerOK;
 }
 
 std::string HSSTokenizer::extractCurrentTokenText()
 {
-	std::string tempctt = this->currentTokenText;
-	this->currentTokenText.clear();
-	return tempctt;
+    std::string tempctt = this->currentTokenText;
+    this->currentTokenText.clear();
+    return tempctt;
 }
 
 
@@ -302,9 +302,9 @@ HSSToken::p HSSTokenizer::readWhitespace()
 {
     unsigned line = this->currentLine;
     unsigned column = this->currentColumn - 1;
-    
-	this->skipWhitespace();
-	return HSSToken::p(new HSSToken(HSSWhitespace, line, column));
+
+    this->skipWhitespace();
+    return HSSToken::p(new HSSToken(HSSWhitespace, line, column));
 }
 
 //reads and returns an identifier token
@@ -312,11 +312,11 @@ HSSToken::p HSSTokenizer::readIdentifier()
 {
     unsigned line = this->currentLine;
     unsigned column = this->currentColumn - 1;
-    
-	while (isalnum(this->currentChar) || this->currentChar == '_') {
-		this->storeCurrentCharAndReadNext();
-	}
-	return HSSValueToken::p(new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText(), line, column));
+
+    while (isalnum(this->currentChar) || this->currentChar == '_') {
+        this->storeCurrentCharAndReadNext();
+    }
+    return HSSValueToken::p(new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText(), line, column));
 }
 
 //reads and returns a hexadecimal number or an identifier
@@ -324,11 +324,11 @@ HSSToken::p HSSTokenizer::readHexOrIdentifier()
 {
     unsigned line = this->currentLine;
     unsigned column = this->currentColumn -1;
-    
+
     security_brake_init();
     bool done = false;
     this->currentTokenText.clear();
-	while (!done) {
+    while (!done) {
         switch (this->currentChar) {
             case 'a':
             case 'A':
@@ -344,7 +344,7 @@ HSSToken::p HSSTokenizer::readHexOrIdentifier()
             case 'F':
                 this->storeCurrentCharAndReadNext();
                 continue;
-                
+
             default:
                 if (isdigit(this->currentChar)){
                     this->storeCurrentCharAndReadNext();
@@ -362,8 +362,8 @@ HSSToken::p HSSTokenizer::readHexOrIdentifier()
                 }
         }
         security_brake();
-	}
-    
+    }
+
     //if we reached this far, it is an identifier - finish reading it
     return this->readIdentifier();
 }
@@ -375,25 +375,25 @@ HSSToken::p HSSTokenizer::readNumberOrPercentage()
     unsigned line = this->currentLine;
     unsigned column = this->currentColumn -1;
     bool dotFound = false;
-	while (isdigit(this->currentChar) || this->currentChar == '.'){
+    while (isdigit(this->currentChar) || this->currentChar == '.'){
         if(this->currentChar == '.'){
             if(dotFound){
-                break; 
+                break;
             } else {
                 dotFound = true;
             }
         }
-        
-		this->storeCurrentCharAndReadNext();
-	}
+
+        this->storeCurrentCharAndReadNext();
+    }
     HSSToken::p ret;
    if(currentChar == '%'){
-	   ret = HSSValueToken::p(new HSSValueToken(HSSPercentageNumber, this->extractCurrentTokenText(), line, column));
+       ret = HSSValueToken::p(new HSSValueToken(HSSPercentageNumber, this->extractCurrentTokenText(), line, column));
        this->readNextChar();
    } else {
-	   ret = HSSValueToken::p(new HSSValueToken(HSSNumber, this->extractCurrentTokenText(), line, column));
+       ret = HSSValueToken::p(new HSSValueToken(HSSNumber, this->extractCurrentTokenText(), line, column));
    }
-	return ret;
+    return ret;
 }
 
 //reads and returns either a single quoted or double quoted string token
@@ -402,7 +402,7 @@ HSSToken::p HSSTokenizer::readString()
 {
     unsigned line = this->currentLine;
     unsigned column = this->currentColumn -1;
-    
+
     HSSToken::p ret;
     if(this->currentChar == '"'){
         this->readNextChar();
@@ -423,9 +423,9 @@ HSSToken::p HSSTokenizer::readString()
         }
         ret = HSSValueToken::p(new HSSValueToken(HSSSingleQuoteString, this->extractCurrentTokenText(), line, column));
     }
-    
+
     this->readNextChar();
-	return ret;
+    return ret;
 }
 
 //reads and returns a comment or a symbol token
@@ -434,7 +434,7 @@ HSSToken::p HSSTokenizer::readCommentOrSymbol()
 {
     unsigned line = this->currentLine;
     unsigned column = this->currentColumn -1;
-    
+
     HSSValueToken::p ret;
     this->readNextChar();
     if (this->currentChar == '/'){
@@ -459,7 +459,7 @@ HSSToken::p HSSTokenizer::readCommentOrSymbol()
             } else if(this->atEndOfSource()) {
                 break;
             }
-            
+
             this->storeCurrentCharAndReadNext();
         }
         ret = HSSValueToken::p(new HSSValueToken(HSSBlockComment, this->extractCurrentTokenText(), line, column));
@@ -467,7 +467,7 @@ HSSToken::p HSSTokenizer::readCommentOrSymbol()
     } else {
         ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, '/', line, column));
     }
-    
+
     return ret;
 }
 
@@ -476,9 +476,9 @@ HSSToken::p HSSTokenizer::readSymbol()
 {
     unsigned line = this->currentLine;
     unsigned column = this->currentColumn -1;
-    
+
     HSSToken::p ret;
-    
+
     switch (this->currentChar) {
         case '.':
             this->storeCurrentCharAndReadNext();
@@ -487,35 +487,18 @@ HSSToken::p HSSTokenizer::readSymbol()
                 if(this->currentChar == '.'){
                     this->storeCurrentCharAndReadNext();
                 }
-                
+
                 ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText(), line, column));
                 return ret;
             }
-            
+
             ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText(), line, column));
             readNextChar();
             return ret;
-                        
+
         default:
             ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->currentChar, line, column));
             this->readNextChar();
             return ret;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

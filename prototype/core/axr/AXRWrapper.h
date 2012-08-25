@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -61,7 +61,7 @@ namespace AXR
      *  @todo are we going to use this?
      */
     typedef unsigned AXRFileHandle;
-    
+
     class AXRCore;
     /**
      *  @brief This is the abstract superclass from with all OS-specific wrappers
@@ -80,7 +80,7 @@ namespace AXR
          */
         AXRWrapper();
         /**
-         *  
+         *
          */
         virtual AXRWrapper * createWrapper() = 0;
         /**
@@ -97,7 +97,7 @@ namespace AXR
          *  Reads the data in the file.
          *  Subclasses should override this method with the OS specific implementation.
          *  @param theFile  A shared pointer to the file to be read.
-         *  @return the size 
+         *  @return the size
          */
         virtual size_t readFile(AXRFile::p theFile) = 0;
         /**
@@ -153,14 +153,14 @@ namespace AXR
          *  @return Wether it has been loaded successfully or not.
          */
         bool loadXMLFile(std::string xmlfilepath);
-		/**
+        /**
          *  Loads the file you provide, and then handles it according to its file extension.
-         *  @param  filepath	A string containing the path to the file on the local system, can be
-		 *						either an XML or an HSS file.
-		 *
+         *  @param  filepath    A string containing the path to the file on the local system, can be
+         *                      either an XML or an HSS file.
+         *
          *  @return Wether it has been loaded successfully or not.
          */
-		bool loadFileByPath(std::string filepath);
+        bool loadFileByPath(std::string filepath);
         /**
          *  Loads the HSS file at the path you provide.
          *  @param  hssfilepath A string containing the path to the file on the local system.
@@ -179,13 +179,13 @@ namespace AXR
         bool hasLoadedFile();
         /**
          *  Each platform specific wrapper defines how it gets the path to the resources folder.
-         *  @return A string containing the path to where the HSS resources files are 
+         *  @return A string containing the path to where the HSS resources files are
          *  stored.
          */
         virtual std::string getPathToResources() = 0;
 
-		/**
-		 */
+        /**
+         */
         virtual std::string getPathToTestsFile();
 
         bool showLayoutSteps();
@@ -199,13 +199,13 @@ namespace AXR
         void resetLayoutChild();
         bool layoutChildDone();
         void breakIfNeeded();
-        
+
         void executeLayoutTests(HSSObservableProperty passnull, void*data);
-        
+
         boost::unordered_map<AXRFileHandle, AXRFile::p> files;
-        
+
     protected:
-        
+
     private:
         bool _isHSSOnly;
         bool _hasLoadedFile;
@@ -214,24 +214,24 @@ namespace AXR
         unsigned int _currentLayoutTick;
         unsigned int _currentLayoutChild;
     };
-    
-    
+
+
     class AXRTestThread
-	{
-	private:
+    {
+    private:
         AXRWrapper * wrapper;
         std::string filePath;
         unsigned totalTests;
         unsigned totalPassed;
         HSSContainer::p status;
-        
-	public:
+
+    public:
         AXRTestThread(AXRWrapper * wrapper, std::string filePath, HSSContainer::p status);
         void operator () ();
-	};
+    };
     class AXRTestProducer
-	{
-	private:
+    {
+    private:
         AXRWrapper * wrapper;
         std::string basePath;
         std::vector<std::string> test;              // the filename of the test
@@ -241,11 +241,11 @@ namespace AXR
         static boost::mutex totalTestsMutex;
         static boost::mutex totalPassedMutex;
         static boost::mutex statusMutex;
-        
-	public:
+
+    public:
         AXRTestProducer(AXRWrapper * wrapper, std::string basePath, std::vector<std::string> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
         void operator () ();
-	};
+    };
 }
 
 #endif

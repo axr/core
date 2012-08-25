@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -60,14 +60,14 @@ HSSLinearGradient::HSSLinearGradient()
     shorthandProperties.push_back("endColor");
     shorthandProperties.push_back("endY");
     this->setShorthandProperties(shorthandProperties);
-    
+
     this->registerProperty(HSSObservablePropertyStartX, (void *) &this->startX);
     this->registerProperty(HSSObservablePropertyStartY, (void *) &this->startY);
     this->registerProperty(HSSObservablePropertyEndX, (void *) &this->startY);
     this->registerProperty(HSSObservablePropertyEndY, (void *) &this->startY);
-    
+
     this->startX = this->startY = this->endX = endY = 0.;
-    
+
     this->observedStartX = this->observedStartY
     = this->observedEndX = this->observedEndY
     = NULL;
@@ -81,14 +81,14 @@ HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
     shorthandProperties.push_back("endColor");
     shorthandProperties.push_back("endY");
     this->setShorthandProperties(shorthandProperties);
-    
+
     this->registerProperty(HSSObservablePropertyStartX, (void *) &this->startX);
     this->registerProperty(HSSObservablePropertyStartY, (void *) &this->startY);
     this->registerProperty(HSSObservablePropertyEndX, (void *) &this->startY);
     this->registerProperty(HSSObservablePropertyEndY, (void *) &this->startY);
-    
+
     this->startX = this->startY = this->endX = endY = 0.;
-    
+
     this->observedStartX = this->observedStartY
     = this->observedEndX = this->observedEndY
     = NULL;
@@ -138,7 +138,7 @@ std::string HSSLinearGradient::defaultObjectType()
 std::string HSSLinearGradient::defaultObjectType(std::string property)
 {
 //    if (property == "bla"){
-//        
+//
 //    } else {
         return HSSGradient::defaultObjectType(property);
 //    }
@@ -155,7 +155,7 @@ bool HSSLinearGradient::isKeyword(std::string value, std::string property)
             return true;
         }
     }
-    
+
     //if we reached this far, let the superclass handle it
     return HSSGradient::isKeyword(value, property);
 }
@@ -192,13 +192,13 @@ void HSSLinearGradient::setDStartX(HSSParserNode::p value)
         case HSSParserNodeTypeExpression:
         {
             this->dStartX = value;
-            
+
             HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
             if(this->observedStartX != NULL)
             {
                 this->observedStartX->removeObserver(this->observedStartXProperty, HSSObservablePropertyStartX, this);
             }
-            
+
             this->startX = this->_setLDProperty(
                                                 &HSSLinearGradient::startXChanged,
                                                 value,
@@ -209,10 +209,10 @@ void HSSLinearGradient::setDStartX(HSSParserNode::p value)
                                                 this->observedStartX,
                                                 this->observedStartXProperty
                                                 );
-            
+
             break;
         }
-            
+
         default:
             break;
     }
@@ -226,18 +226,18 @@ void HSSLinearGradient::startXChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypeFunctionCall:
             this->startX = *(long double*)data;
             break;
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dStartX);
             this->startX = percentageValue->getValue(*(long double*)data);
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertyStartX, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -253,13 +253,13 @@ void HSSLinearGradient::setDStartY(HSSParserNode::p value)
         case HSSParserNodeTypeExpression:
         {
             this->dStartY = value;
-            
+
             HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
             if(this->observedStartY != NULL)
             {
                 this->observedStartY->removeObserver(this->observedStartYProperty, HSSObservablePropertyStartY, this);
             }
-            
+
             this->startY = this->_setLDProperty(
                                                 &HSSLinearGradient::startYChanged,
                                                 value,
@@ -270,10 +270,10 @@ void HSSLinearGradient::setDStartY(HSSParserNode::p value)
                                                 this->observedStartY,
                                                 this->observedStartYProperty
                                                 );
-            
+
             break;
         }
-            
+
         default:
             break;
     }
@@ -288,18 +288,18 @@ void HSSLinearGradient::startYChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypeFunctionCall:
             this->startY = *(long double*)data;
             break;
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dStartY);
             this->startY = percentageValue->getValue(*(long double*)data);
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertyStartY, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -314,13 +314,13 @@ void HSSLinearGradient::setDEndX(HSSParserNode::p value)
         case HSSParserNodeTypeExpression:
         {
             this->dEndX = value;
-            
+
             HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
             if(this->observedEndX != NULL)
             {
                 this->observedEndX->removeObserver(this->observedEndXProperty, HSSObservablePropertyEndX, this);
             }
-            
+
             this->endX = this->_setLDProperty(
                                               &HSSLinearGradient::endXChanged,
                                               value,
@@ -331,10 +331,10 @@ void HSSLinearGradient::setDEndX(HSSParserNode::p value)
                                               this->observedEndX,
                                               this->observedEndXProperty
                                               );
-            
+
             break;
         }
-            
+
         default:
             break;
     }
@@ -348,18 +348,18 @@ void HSSLinearGradient::endXChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypeFunctionCall:
             this->endX = *(long double*)data;
             break;
-        
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dEndX);
             this->endX = percentageValue->getValue(*(long double*)data);
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertyEndX, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -375,13 +375,13 @@ void HSSLinearGradient::setDEndY(HSSParserNode::p value)
         case HSSParserNodeTypeExpression:
         {
             this->dEndY = value;
-            
+
             HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
             if(this->observedEndY != NULL)
             {
                 this->observedEndY->removeObserver(this->observedEndYProperty, HSSObservablePropertyEndY, this);
             }
-            
+
             this->endY = this->_setLDProperty(
                                               &HSSLinearGradient::endYChanged,
                                               value,
@@ -392,10 +392,10 @@ void HSSLinearGradient::setDEndY(HSSParserNode::p value)
                                               this->observedEndY,
                                               this->observedEndYProperty
                                               );
-            
+
             break;
         }
-            
+
         default:
             break;
     }
@@ -410,18 +410,18 @@ void HSSLinearGradient::endYChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypeFunctionCall:
             this->endY = *(long double*)data;
             break;
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dEndY);
             this->endY = percentageValue->getValue(*(long double*)data);
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertyEndY, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -438,7 +438,7 @@ long double HSSLinearGradient::_setLDProperty(
                                         )
 {
     long double ret;
-    
+
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType) {
         case HSSParserNodeTypeNumberConstant:
@@ -447,7 +447,7 @@ long double HSSLinearGradient::_setLDProperty(
             ret = numberValue->getValue();
             break;
         }
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
@@ -460,7 +460,7 @@ long double HSSLinearGradient::_setLDProperty(
             }
             break;
         }
-            
+
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
@@ -472,19 +472,19 @@ long double HSSLinearGradient::_setLDProperty(
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSLinearGradient>(this, callback));
             }
-            
+
             break;
         }
-            
+
         case HSSParserNodeTypeKeywordConstant:
-            
+
             break;
-            
+
         default:
             AXRWarning::p(new AXRWarning("HSSLinearGradient", "Unknown parser node type while setting value for HSSLinearGradient property"))->raise();
             break;
     }
-    
+
     return ret;
 }
 
@@ -496,7 +496,7 @@ void HSSLinearGradient::draw(cairo_t * cairo)
     } else {
         cairo_pattern_add_color_stop_rgba (pat, 0., 0., 0., 0., 0.);
     }
-    
+
     //add color stops
     std::vector<HSSObject::p>::iterator it;
     for(it=this->colorStops.begin(); it!=this->colorStops.end(); it++){
@@ -524,21 +524,16 @@ void HSSLinearGradient::draw(cairo_t * cairo)
         } else {
             AXRWarning::p(new AXRWarning("HSSLinearGradient", "The color stop had no color defined"))->raise();
         }
-        
+
     }
-    
+
     if(this->endColor){
         cairo_pattern_add_color_stop_rgba (pat, 1., this->endColor->getRed()/255., this->endColor->getGreen()/255., this->endColor->getBlue()/255., this->endColor->getAlpha()/255.);
     } else {
         cairo_pattern_add_color_stop_rgba (pat, 0., 0., 0., 0., 0.);
     }
-    
+
     cairo_set_source (cairo, pat);
     cairo_fill_preserve (cairo);
     cairo_pattern_destroy (pat);
 }
-
-
-
-
-

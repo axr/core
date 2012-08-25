@@ -1,14 +1,14 @@
 /*
-	Test BR004 Borders ref size
-	Created by Miro Keller on 2011-12-20.
+    Test BR004 Borders ref size
+    Created by Miro Keller on 2011-12-20.
 */
 
 test
 {
     background: #D;
-    
+
     contentAlignY: middle;
-    
+
     #new test
     {
         width: 200;

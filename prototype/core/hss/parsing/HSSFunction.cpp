@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -76,13 +76,13 @@ HSSFunction::p HSSFunction::clone() const
 }
 
 HSSClonable::p HSSFunction::cloneImpl() const{
-    
+
     HSSFunction::p clone = HSSFunction::p(new HSSFunction(*this));
     std::deque<HSSParserNode::p>::const_iterator it;
     for (it=this->_arguments.begin(); it!=this->_arguments.end(); it++) {
         HSSParserNode::p clonedArgument = (*it)->clone();
         clone->_arguments.push_back(clonedArgument);
-    }   
+    }
     return clone;
 }
 
@@ -95,7 +95,7 @@ HSSFunction::~HSSFunction()
 }
 
 std::string HSSFunction::toString()
-{    
+{
     std::string tempstr = std::string("HSSFunction\n");
     return tempstr;
 }
@@ -104,10 +104,10 @@ boost::any HSSFunction::evaluate()
 {
     if(this->_isDirty){
         this->_isDirty = false;
-        
+
         this->_value = this->_evaluate();
     }
-    
+
     return this->_value;
 }
 
@@ -115,10 +115,10 @@ boost::any HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
 {
     if(this->_isDirty){
         this->_isDirty = false;
-        
+
         this->_value = this->_evaluate(arguments);
     }
-    
+
     return this->_value;
 }
 
@@ -169,18 +169,18 @@ void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
                 func->setScope(newScope);
                 break;
             }
-                
+
             case HSSParserNodeTypeExpression:
             {
                 HSSExpression::p exp = boost::static_pointer_cast<HSSExpression>(node);
                 exp->setScope(newScope);
                 break;
             }
-                
+
             default:
                 break;
         }
-        
+
         switch (node->getStatementType()) {
             case HSSStatementTypeObjectDefinition:
             {
@@ -188,11 +188,11 @@ void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
                 objdef->setScope(newScope);
                 break;
             }
-                
+
             default:
                 break;
         }
-    } 
+    }
 }
 
 void HSSFunction::setDirty(bool value)
@@ -249,4 +249,3 @@ std::string HSSFunction::getName()
 {
     return this->_name;
 }
-

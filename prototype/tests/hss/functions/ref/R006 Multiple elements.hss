@@ -1,22 +1,22 @@
 test
 {
-	master
-	{
-		width: 150;
-		height: 150;
-		background: #C;
-	}
-	
-	master + master
-	{
-		height: 200;
-		background: #B;
-	}
+    master
+    {
+        width: 150;
+        height: 150;
+        background: #C;
+    }
 
-	slave
-	{
-		width: 150;
-		height: ref(height of master);
-		background: #A;
-	}
+    master + master
+    {
+        height: 200;
+        background: #B;
+    }
+
+    slave
+    {
+        width: 150;
+        height: ref(height of master);
+        background: #A;
+    }
 }

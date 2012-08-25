@@ -1,16 +1,16 @@
 test
 {
-	fixed
-	{
-		height: 150;
-		background: #D;
-	}
-	
-	relative
-	{
-		height: ref(height of fixed);
-		background: #A0;
-	}
-	
-	* { width: 50% }
+    fixed
+    {
+        height: 150;
+        background: #D;
+    }
+
+    relative
+    {
+        height: ref(height of fixed);
+        background: #A0;
+    }
+
+    * { width: 50% }
 }

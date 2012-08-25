@@ -1,4 +1,4 @@
-/* 
+/*
  * ExpatMM - C++ Wrapper for Expat available at http://expat.sourceforge.net/
  * Copyright (c) 2007, 2008, 2009 IntelliTree Solutions llc
  * Author: Coleman Kane <ckane@intellitree.com>
@@ -47,7 +47,7 @@ ExpatXMLParser::ExpatXMLParser(void) {
     //xml_buffer = new XML_Char[xml_buffer_size];
 
     //if(xml_buffer == NULL)
-	//return;
+    //return;
 
   /* Allocate a new parser state-object */
   expat_parser = XML_ParserCreate(NULL);
@@ -55,7 +55,7 @@ ExpatXMLParser::ExpatXMLParser(void) {
   if(expat_parser == NULL) {
       //delete xml_buffer;
       //xml_buffer = NULL;
-	return;
+    return;
   }
 
     //memset(xml_buffer, 0, XML_CHUNK_SIZE * sizeof(XML_Char));
@@ -77,7 +77,7 @@ ExpatXMLParser::ExpatXMLParser(size_t chunk_size) {
     //xml_buffer = new XML_Char[xml_buffer_size];
 
     //if(xml_buffer == NULL)
-	//return;
+    //return;
 
   /* Allocate a new parser state-object */
   expat_parser = XML_ParserCreate(NULL);
@@ -85,7 +85,7 @@ ExpatXMLParser::ExpatXMLParser(size_t chunk_size) {
   if(expat_parser == NULL) {
       //delete xml_buffer;
       //xml_buffer = NULL;
-	return;
+    return;
   }
 
     //memset(xml_buffer, 0, chunk_size * sizeof(XML_Char));
@@ -100,8 +100,8 @@ ExpatXMLParser::~ExpatXMLParser(void) {
   valid_parser = false;
 
   if(expat_parser != NULL) {
-	XML_ParserFree(expat_parser);
-	expat_parser = NULL;
+    XML_ParserFree(expat_parser);
+    expat_parser = NULL;
   }
 
     //if(xml_buffer != NULL) {
@@ -110,22 +110,22 @@ ExpatXMLParser::~ExpatXMLParser(void) {
     //}
 }
 
-/* 
+/*
    This function causes Expat to register this's default static handlers
    with the Expat events.
 */
 void
 ExpatXMLParser::register_default_handlers(void) {
   XML_SetElementHandler(expat_parser, &ExpatXMLParser::_element_start_handler,
-	  &ExpatXMLParser::_element_end_handler);
+      &ExpatXMLParser::_element_end_handler);
   XML_SetCharacterDataHandler(expat_parser,
-	  &ExpatXMLParser::_character_data_handler);
+      &ExpatXMLParser::_character_data_handler);
   XML_SetProcessingInstructionHandler(expat_parser,
-	  &ExpatXMLParser::_processing_instr_handler);
+      &ExpatXMLParser::_processing_instr_handler);
   XML_SetCommentHandler(expat_parser, &ExpatXMLParser::_comment_handler);
   XML_SetCdataSectionHandler(expat_parser,
-	  &ExpatXMLParser::_cdata_start_handler,
-	  &ExpatXMLParser::_cdata_end_handler);
+      &ExpatXMLParser::_cdata_start_handler,
+      &ExpatXMLParser::_cdata_end_handler);
   XML_SetDefaultHandler(expat_parser, &ExpatXMLParser::_default_handler);
 }
 
@@ -157,108 +157,108 @@ ExpatXMLParser::Parse(void) {
 
   /* Ensure that the parser is ready */
   if(!Ready())
-	return false;
+    return false;
 
   /* Loop, reading the XML source block by block */
   while((bytes_read = read_block()) > 0) { //MK: fixed a bug here that caused an infinite loop when the file was empty
-	  XML_Status local_status = 
-		XML_Parse(expat_parser, getBuffer(), bytes_read, XML_FALSE);
+      XML_Status local_status =
+        XML_Parse(expat_parser, getBuffer(), bytes_read, XML_FALSE);
 
-	  if(local_status != XML_STATUS_OK) {
-		status = local_status;
-		last_error = XML_GetErrorCode(expat_parser);
-		break;
-	  }
+      if(local_status != XML_STATUS_OK) {
+        status = local_status;
+        last_error = XML_GetErrorCode(expat_parser);
+        break;
+      }
 
-	  /* Break on successful "short read", in event of EOF */
-	  if(getLastError() == XML_ERROR_FINISHED)
-		break;
+      /* Break on successful "short read", in event of EOF */
+      if(getLastError() == XML_ERROR_FINISHED)
+        break;
   }
 
   /* Finalize the parser */
   if((getStatus() == XML_STATUS_OK) || (getLastError() == XML_ERROR_FINISHED)) {
-	XML_Parse(expat_parser, getBuffer(), 0, XML_TRUE);
-	return true;
+    XML_Parse(expat_parser, getBuffer(), 0, XML_TRUE);
+    return true;
   }
 
   /* Return false in the event of an error. The parser is not finalized
-	 on error. */
+     on error. */
   return false;
 }
 
 
-/* 
+/*
    **** INTERNAL HANDLER FUNCTIONS *****
    The expatmm protocol is to pass (this) as the userData argument
-   in the XML_Parser structure. These static methods will convert 
+   in the XML_Parser structure. These static methods will convert
    handlers into upcalls to the instantiated class's virtual members
    to do the actual handling work.
 */
 void XMLCALL
 ExpatXMLParser::_element_start_handler(void *userData, const XML_Char *name,
-	const XML_Char **atts) {
+    const XML_Char **atts) {
   ExpatXMLParser *me = (ExpatXMLParser*)userData;
-  
+
   if(me != NULL)
-	me->StartElement(name, atts);
+    me->StartElement(name, atts);
 }
 
 void XMLCALL
 ExpatXMLParser::_element_end_handler(void *userData, const XML_Char *name) {
   ExpatXMLParser *me = (ExpatXMLParser*)userData;
-  
+
   if(me != NULL)
-	me->EndElement(name);
+    me->EndElement(name);
 }
 
 void XMLCALL
 ExpatXMLParser::_character_data_handler(void *userData,
-	const XML_Char *s, int len) {
+    const XML_Char *s, int len) {
   ExpatXMLParser *me = (ExpatXMLParser*)userData;
-  
+
   if(me != NULL)
-	me->CharacterData(s, len);
+    me->CharacterData(s, len);
 }
 
 void XMLCALL
 ExpatXMLParser::_processing_instr_handler(void *userData,
-	const XML_Char *target, const XML_Char *data) {
+    const XML_Char *target, const XML_Char *data) {
   ExpatXMLParser *me = (ExpatXMLParser*)userData;
-  
+
   if(me != NULL)
-	me->ProcessingInstruction(target, data);
+    me->ProcessingInstruction(target, data);
 }
 
 void XMLCALL
 ExpatXMLParser::_comment_handler(void *userData, const XML_Char *data) {
   ExpatXMLParser *me = (ExpatXMLParser*)userData;
-  
+
   if(me != NULL)
-	me->CommentData(data);
+    me->CommentData(data);
 }
 
 void XMLCALL
 ExpatXMLParser::_default_handler(void *userData, const XML_Char *s, int len) {
   ExpatXMLParser *me = (ExpatXMLParser*)userData;
-  
+
   if(me != NULL)
-	me->DefaultHandler(s, len);
+    me->DefaultHandler(s, len);
 }
 
 void XMLCALL
 ExpatXMLParser::_cdata_start_handler(void *userData) {
   ExpatXMLParser *me = (ExpatXMLParser*)userData;
-  
+
   if(me != NULL)
-	me->CDataStart();
+    me->CDataStart();
 }
 
 void XMLCALL
 ExpatXMLParser::_cdata_end_handler(void *userData) {
   ExpatXMLParser *me = (ExpatXMLParser*)userData;
-  
+
   if(me != NULL)
-	me->CDataEnd();
+    me->CDataEnd();
 }
 
 void
@@ -278,7 +278,7 @@ ExpatXMLParser::CharacterData(const XML_Char *s, int len) {
 
 void
 ExpatXMLParser::ProcessingInstruction(const XML_Char *target,
-	const XML_Char *data) {
+    const XML_Char *data) {
 
 }
 

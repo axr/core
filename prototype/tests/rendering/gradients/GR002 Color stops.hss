@@ -1,7 +1,7 @@
 /*
-	Test GR002 Color stops
-	Created by Miro Keller on 2011-12-27.
-	Last modified: 2011-03-08
+    Test GR002 Color stops
+    Created by Miro Keller on 2011-12-27.
+    Last modified: 2011-03-08
 */
 
 #F00 bgColor;
@@ -13,7 +13,7 @@
     width: 200;
     height: 50%;
     shape: @{10};
-    border: @{ 1 #FFF5 }, @{ 1 #0008 }; 
+    border: @{ 1 #FFF5 }, @{ 1 #0008 };
 }
 
 @linearGradient glossGradient
@@ -28,7 +28,7 @@ master
 {
     contentAlignY: 50%;
     background: #3;
-    
+
     #new test
     {
         isA: pane;
@@ -42,16 +42,16 @@ master
                 position: 50%;
             };
         };
-        
+
         alignX: 50% - 120;
     }
-    
+
     #new test2
     {
         isA: pane;
         background: glossGradient;
         alignX: 50% + 120;
-        
+
         @::hover
         {
             background: #0004, glossGradient;

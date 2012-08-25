@@ -1,6 +1,6 @@
 /*
-	Test BH002 Mouse events
-	Created by Miro Keller on 2011-11-20.
+    Test BH002 Mouse events
+    Created by Miro Keller on 2011-11-20.
 */
 
 test
@@ -13,15 +13,15 @@ test
         shape: @{15};
         alignY: 50%;
     }
-    
+
     mouseDown
     {
-        behavior: @mouseDown { @log { ref(width of mouseUp) } } 
+        behavior: @mouseDown { @log { ref(width of mouseUp) } }
     }
-    
+
     mouseUp
     {
-        behavior: @mouseUp { @log { "mouseUp" } } 
+        behavior: @mouseUp { @log { "mouseUp" } }
     }
-    
+
 }

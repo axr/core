@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -61,12 +61,12 @@ HSSPolygon::HSSPolygon()
     shorthandProperties.push_back("sides");
     shorthandProperties.push_back("angle");
     this->setShorthandProperties(shorthandProperties);
-    
+
     this->registerProperty(HSSObservablePropertySides, (void *) &this->sides);
     this->registerProperty(HSSObservablePropertyAngle, (void *) &this->angle);
     this->sides = 3;
     this->angle = 0;
-    
+
     this->observedSides = NULL;
     this->observedAngle = NULL;
 }
@@ -78,12 +78,12 @@ HSSPolygon::HSSPolygon(const HSSPolygon & orig)
     shorthandProperties.push_back("sides");
     shorthandProperties.push_back("angle");
     this->setShorthandProperties(shorthandProperties);
-    
+
     this->registerProperty(HSSObservablePropertySides, (void *) &this->sides);
     this->registerProperty(HSSObservablePropertyAngle, (void *) &this->angle);
     this->sides = 3;
     this->angle = 0;
-    
+
     this->observedSides = NULL;
     this->observedAngle = NULL;
 }
@@ -123,7 +123,7 @@ bool HSSPolygon::isKeyword(std::string value, std::string property)
             return true;
         }
     }
-    
+
     //if we reached this far, let the superclass handle it
     return HSSShape::isKeyword(value, property);
 }
@@ -148,7 +148,7 @@ void HSSPolygon::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSU
     cairo_save(cairo);
     cairo_translate(cairo, x + width / 2., y + height / 2.);
     cairo_scale(cairo, 1. * (width / 2.), 1. * (height / 2.));
-    
+
     HSSUnit radius = 1;
     int sides = this->sides < 3 ? 3 : (int)this->sides;
     long double step = 360.0f / sides;
@@ -164,19 +164,19 @@ void HSSPolygon::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSU
         } else {
             cairo_line_to(cairo, p_x, p_y);
         }
-        
+
         l_angle += step;
     }
     cairo_close_path(cairo);
-    
+
     cairo_restore(cairo);
     return;
-    
-    
-    
-    
+
+
+
+
     cairo_arc(cairo, 0., 0., 1., 0., 2 * M_PI);
-    
+
 }
 
 
@@ -197,9 +197,9 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
                                                   this->observedSides,
                                                   this->observedSidesProperty
                                                   );
-            
+
             break;
-            
+
         case HSSParserNodeTypeFunctionCall:
         {
             this->dSides = value;
@@ -211,18 +211,18 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
                 try {
                     this->sides = boost::any_cast<long double>(remoteValue);
                 } catch (...) {
-                    
+
                 }
-                
+
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertySides, this, new HSSValueChangedCallback<HSSPolygon>(this, &HSSPolygon::sidesChanged));
-                
+
             } else {
                 throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid function type for sides of @polygon "+this->name));
             }
-            
+
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSPolygon", "Invalid value for sides of @polygon "+this->name));
     }
@@ -238,18 +238,18 @@ void HSSPolygon::sidesChanged(HSSObservableProperty source, void*data)
         case HSSParserNodeTypeFunctionCall:
             this->sides = *(long double*)data;
             break;
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dSides);
             this->sides = percentageValue->getValue(*(long double*)data);
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertySides, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -271,9 +271,9 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
                                                this->observedAngle,
                                                this->observedAngleProperty
                                                );
-            
+
             break;
-            
+
         case HSSParserNodeTypeFunctionCall:
         {
             this->dAngle = value;
@@ -285,18 +285,18 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
                 try {
                     this->angle = boost::any_cast<long double>(remoteValue);
                 } catch (...) {
-                    
+
                 }
-                
+
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyAngle, this, new HSSValueChangedCallback<HSSPolygon>(this, &HSSPolygon::angleChanged));
-                
+
             } else {
                 throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid function type for angle of @polygon "+this->name));
             }
-            
+
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSPolygon", "Invalid value for angle of @polygon "+this->name));
     }
@@ -312,18 +312,18 @@ void HSSPolygon::angleChanged(HSSObservableProperty source, void*data)
         case HSSParserNodeTypeFunctionCall:
             this->angle = *(long double*)data;
             break;
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(this->dAngle);
             this->angle = percentageValue->getValue(*(long double*)data);
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertySides, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -339,7 +339,7 @@ long double HSSPolygon::_setLDProperty(
                                          )
 {
     long double ret;
-    
+
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType) {
         case HSSParserNodeTypeNumberConstant:
@@ -348,14 +348,14 @@ long double HSSPolygon::_setLDProperty(
             ret = numberValue->getValue();
             break;
         }
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
             ret = percentageValue->getValue(percentageBase);
             break;
         }
-            
+
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
@@ -366,19 +366,18 @@ long double HSSPolygon::_setLDProperty(
             if(callback != NULL){
                 expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSPolygon>(this, callback));
             }
-            
+
             break;
         }
-            
+
         case HSSParserNodeTypeKeywordConstant:
-            
+
             break;
-            
+
         default:
             AXRWarning::p(new AXRWarning("HSSPolygon", "Unknown parser node type while setting value for @polygon property"))->raise();
             break;
     }
-    
+
     return ret;
 }
-

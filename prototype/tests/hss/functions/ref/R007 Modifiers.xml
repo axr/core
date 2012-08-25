@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Test R007 Modifiers
-	Created by Miro Keller on 2011-10-02.
+    Test R007 Modifiers
+    Created by Miro Keller on 2011-10-02.
 -->
 <?xml-stylesheet type="application/x-hss" src="R007 Modifiers.hss"?>
 <test>
-	<master>Master: smaller</master>
-	<master>Master: bigger</master>
-	<refmin>Reference to the smaller Master </refmin>
-	<refmax>Reference to the bigger Master</refmax>
-	<refavg>Reference to the average of both</refavg>
+    <master>Master: smaller</master>
+    <master>Master: bigger</master>
+    <refmin>Reference to the smaller Master </refmin>
+    <refmax>Reference to the bigger Master</refmax>
+    <refavg>Reference to the average of both</refavg>
 </test>

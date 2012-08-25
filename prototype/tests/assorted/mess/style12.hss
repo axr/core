@@ -6,21 +6,21 @@
 
 document
 {
-	background: grayColor;
-	contentAlignY: 50%;
-	
-	*
-	{
-		width: 150;
-		height: 50;
-		background: redColor;
-	}
-	test1
-	{
-		background: greenColor;
-	}
-	test2
-	{
-		background: blueColor;
-	}
+    background: grayColor;
+    contentAlignY: 50%;
+
+    *
+    {
+        width: 150;
+        height: 50;
+        background: redColor;
+    }
+    test1
+    {
+        background: greenColor;
+    }
+    test2
+    {
+        background: blueColor;
+    }
 }

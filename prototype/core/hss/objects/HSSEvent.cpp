@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -71,7 +71,7 @@ std::string HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
     types[HSSEventTypeClickSecondary] = "HSSEventTypeClickSecondary";
     types[HSSEventTypeClickTertiary ] = "HSSEventTypeClickTertiary";
     types[HSSEventTypeScroll        ] = "HSSEventTypeScroll";
-    
+
     return types[eventType];
 }
 
@@ -80,11 +80,11 @@ HSSEvent::HSSEvent(HSSEventType type)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: creating event object");
     this->eventType = type;
-    
+
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
-    
+
     this->registerProperty(HSSObservablePropertyAction, &this->action);
 }
 
@@ -92,11 +92,11 @@ HSSEvent::HSSEvent(const HSSEvent & orig)
 : HSSObject(orig)
 {
     this->eventType = orig.eventType;
-    
+
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
-    
+
     this->registerProperty(HSSObservablePropertyAction, &this->action);
 }
 
@@ -139,7 +139,7 @@ void HSSEvent::setProperty(HSSObservableProperty name, HSSParserNode::p value)
         case HSSObservablePropertyAction:
             this->setDAction(value);
             break;
-            
+
         default:
             HSSObject::setProperty(name, value);
             break;
@@ -168,7 +168,7 @@ void HSSEvent::setDAction(HSSParserNode::p value)
 void HSSEvent::addDAction(HSSParserNode::p value)
 {
     bool valid = false;
-    
+
     switch (value->getType()) {
         case HSSParserNodeTypeMultipleValueDefinition:
         {
@@ -181,7 +181,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             valid = true;
             break;
         }
-            
+
         case HSSParserNodeTypeObjectNameConstant:
         {
             try {
@@ -190,24 +190,24 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                 objdef->setScope(this->scope);
                 objdef->setThisObj(this->getThisObj());
                 objdef->apply();
-                
+
                 HSSObject::p obj = objdef->getObject();
                 switch (obj->getObjectType()) {
                     case HSSObjectTypeAction:
                         this->action.push_back(boost::static_pointer_cast<HSSAction>(obj));
                         valid = true;
                         break;
-                        
+
                     default:
                         break;
                 }
-                
+
             } catch (AXRError::p e) {
                 e->raise();
             }
             break;
         }
-            
+
         case HSSParserNodeTypeFunctionCall:
         {
             HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
@@ -224,12 +224,12 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                     } catch (AXRError::p e) {
                         e->raise();
                     } catch (...) {
-                        
+
                     }
-                    
+
                     break;
                 }
-                    
+
                 case HSSFunctionTypeFlag:
                 {
                     fnct->setScope(this->scope);
@@ -244,7 +244,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                     valid = true;
                     break;
                 }
-                    
+
                 case HSSFunctionTypeCustom:
                 {
                     fnct->setScope(this->scope);
@@ -259,18 +259,18 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                     valid = true;
                     break;
                 }
-                    
+
                 default:
                     break;
             }
-            
+
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     switch (value->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
         {
@@ -286,14 +286,14 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             }
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     if (!valid)
         throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for action of @event "+this->name));
-    
+
     this->notifyObservers(HSSObservablePropertyAction, &this->action);
 }
 
@@ -308,8 +308,5 @@ void HSSEvent::fire()
     unsigned i, size;
     for (i=0, size=actions.size(); i<size; i++) {
         actions[i]->fire();
-    } 
+    }
 }
-
-
-

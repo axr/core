@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -57,7 +57,7 @@ HSSExpression::HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSS
     this->expressionType = type;
     this->setLeft(_left);
     this->setRight(_right);
-    
+
     this->percentageObserved = NULL;
     this->leftObserved = NULL;
     this->rightObserved = NULL;
@@ -87,7 +87,7 @@ HSSExpression::~HSSExpression()
 }
 
 std::string HSSExpression::toString()
-{    
+{
     std::string tempstr = std::string("HSSExpression with following components:\n");
     tempstr.append(this->getLeft()->toString()+"\n"+this->getRight()->toString());
     return tempstr;
@@ -95,7 +95,7 @@ std::string HSSExpression::toString()
 
 bool HSSExpression::isA(HSSExpressionType otherType)
 {
-	return otherType == this->expressionType;
+    return otherType == this->expressionType;
 }
 
 HSSExpressionType HSSExpression::getExpressionType()
@@ -105,12 +105,12 @@ HSSExpressionType HSSExpression::getExpressionType()
 
 std::string HSSExpression::expressionTypeStringRepresentation(HSSExpressionType type){
     std::string types[20];
-	types[HSSExpressionTypeNone] = "HSSExpression";
-	types[HSSExpressionTypeSum] = "HSSSum";
-	types[HSSExpressionTypeSubtraction] = "HSSSubtraction";
-	types[HSSExpressionTypeMultiplication] = "HSSMultiplication";
-	types[HSSExpressionTypeDivision] = "HSSDivision";
-    
+    types[HSSExpressionTypeNone] = "HSSExpression";
+    types[HSSExpressionTypeSum] = "HSSSum";
+    types[HSSExpressionTypeSubtraction] = "HSSSubtraction";
+    types[HSSExpressionTypeMultiplication] = "HSSMultiplication";
+    types[HSSExpressionTypeDivision] = "HSSDivision";
+
     return types[type];
 }
 
@@ -118,7 +118,7 @@ long double HSSExpression::evaluate()
 {
     if (this->isDirty()) {
         this->setDirty(false);
-        
+
         //left
         switch (this->getLeft()->getType()) {
             case HSSParserNodeTypeExpression:
@@ -134,14 +134,14 @@ long double HSSExpression::evaluate()
                 this->leftObservedProperty = HSSObservablePropertyValue;
                 break;
             }
-                
+
             case HSSParserNodeTypeNumberConstant:
             {
                 HSSNumberConstant::p leftNumber = boost::static_pointer_cast<HSSNumberConstant>(this->getLeft());
                 this->leftval = leftNumber->getValue();
                 break;
             }
-                
+
             case HSSParserNodeTypePercentageConstant:
             {
                 HSSPercentageConstant::p leftPercentage = boost::static_pointer_cast<HSSPercentageConstant>(this->getLeft());
@@ -155,7 +155,7 @@ long double HSSExpression::evaluate()
                 this->leftObservedProperty = this->percentageObservedProperty;
                 break;
             }
-                
+
             case HSSParserNodeTypeFunctionCall:
             {
                 HSSFunction::p leftFunction = boost::static_pointer_cast<HSSFunction>(this->getLeft());
@@ -169,20 +169,20 @@ long double HSSExpression::evaluate()
                     leftFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
                     this->leftObserved = leftFunction.get();
                     this->leftObservedProperty = HSSObservablePropertyValue;
-                    
+
                 } catch (...) {
                     this->rightval = 0.;
                 }
-                
+
                 break;
             }
-                
+
             default:
                 std_log1("############ HSSExpression::evaluate() unknwown node type in left member");
                 break;
         }
-        
-        
+
+
         //right
         switch (this->getRight()->getType()) {
             case HSSParserNodeTypeExpression:
@@ -198,14 +198,14 @@ long double HSSExpression::evaluate()
                 this->rightObservedProperty = HSSObservablePropertyValue;
                 break;
             }
-                
+
             case HSSParserNodeTypeNumberConstant:
             {
                 HSSNumberConstant::p rightNumber = boost::static_pointer_cast<HSSNumberConstant>(this->getRight());
                 this->rightval = rightNumber->getValue();
                 break;
             }
-                
+
             case HSSParserNodeTypePercentageConstant:
             {
                 HSSPercentageConstant::p rightPercentage = boost::static_pointer_cast<HSSPercentageConstant>(this->getRight());
@@ -219,7 +219,7 @@ long double HSSExpression::evaluate()
                 this->rightObservedProperty = this->percentageObservedProperty;
                 break;
             }
-                
+
             case HSSParserNodeTypeFunctionCall:
             {
                 HSSFunction::p rightFunction = boost::static_pointer_cast<HSSFunction>(this->getRight());
@@ -233,22 +233,22 @@ long double HSSExpression::evaluate()
                     rightFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
                     this->rightObserved = rightFunction.get();
                     this->rightObservedProperty = HSSObservablePropertyValue;
-                    
+
                 } catch (...) {
                     this->rightval = 0.;
                 }
-                
+
                 break;
             }
-                
+
             default:
                 std_log1("############ HSSExpression::evaluate() unknwown node type in right member");
                 break;
         }
-        
+
         this->setValue(this->calculate(this->leftval, this->rightval));
     }
-    
+
     return this->getValue();
 }
 
@@ -294,19 +294,19 @@ void HSSExpression::leftChanged(HSSObservableProperty property, void* data)
             this->leftval = *(long double*) data;
             break;
         }
-        
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p leftPercentage = boost::static_pointer_cast<HSSPercentageConstant>(this->getLeft());
             this->leftval = leftPercentage->getValue(*(long double*) data);
             break;
         }
-            
+
         default:
             std_log1("############ HSSExpression::evaluate() unknwown node type in left member");
             break;
     }
-    
+
     this->_value = this->calculate(this->leftval, this->rightval);
     this->notifyObservers(HSSObservablePropertyValue, &this->_value);
 }
@@ -321,14 +321,14 @@ void HSSExpression::rightChanged(HSSObservableProperty property, void* data)
             this->rightval = *(long double*) data;
             break;
         }
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p rightPercentage = boost::static_pointer_cast<HSSPercentageConstant>(this->getRight());
             this->rightval = rightPercentage->getValue(*(long double*) data);
             break;
         }
-            
+
         default:
             std_log1("############ HSSExpression::evaluate() unknwown node type in right member");
             break;
@@ -359,7 +359,7 @@ long double HSSExpression::getValue()
 void HSSExpression::setPercentageBase(long double value)
 {
     this->percentageBase = value;
-    
+
     //propagate values
     if (this->left && this->left->isA(HSSParserNodeTypeExpression)) {
         HSSExpression::p leftExpression = boost::static_pointer_cast<HSSExpression>(this->left);
@@ -375,15 +375,15 @@ void HSSExpression::setPercentageBase(long double value)
         HSSFunction::p rightFunction = boost::static_pointer_cast<HSSFunction>(this->right);
         rightFunction->setPercentageBase(value);
     }
-    
+
     this->setDirty(true);
 }
 
 void HSSExpression::setPercentageObserved(HSSObservableProperty property, HSSObservable *observed)
-{  
+{
     this->percentageObserved = observed;
     this->percentageObservedProperty = property;
-    
+
     //propagate values
     if (this->left && this->left->isA(HSSParserNodeTypeExpression)) {
         HSSExpression::p leftExpression = boost::static_pointer_cast<HSSExpression>(this->left);
@@ -399,7 +399,7 @@ void HSSExpression::setPercentageObserved(HSSObservableProperty property, HSSObs
         HSSFunction::p rightFunction = boost::static_pointer_cast<HSSFunction>(this->right);
         rightFunction->setPercentageObserved(property, observed);
     }
-    
+
     this->setDirty(true);
 }
 
@@ -421,7 +421,7 @@ void HSSExpression::setScope(const std::vector<HSSDisplayObject::p> * newScope)
         HSSFunction::p rightFunction = boost::static_pointer_cast<HSSFunction>(this->right);
         rightFunction->setScope(newScope);
     }
-    
+
     this->setDirty(true);
 }
 
@@ -430,6 +430,6 @@ void HSSExpression::setThisObj(HSSDisplayObject::p value)
     //propagate values
     if(this->left) this->left->setThisObj(value);
     if(this->right) this->right->setThisObj(value);
-    
+
     HSSParserNode::setThisObj(value);
 }

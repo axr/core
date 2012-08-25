@@ -11,7 +11,7 @@
 #BE boxBottomColor;
 
 @linearGradient glossColor {
-    // colorStops: 
+    // colorStops:
     //     @{ @modifier { ref(startColor) @colorBC { 10 0 } } 50% },
     //     @{ @modifier { ref(endColor) @colorBC { 5 0 } } 50% };
 }
@@ -23,7 +23,7 @@
     endY: 100%;
     startColor: darkBarTopColor;
     endColor: darkBarBottomColor;
-    
+
     &@ darkBarGradientGloss { isA: glossColor }
 }
 
@@ -34,6 +34,6 @@
     endY: 100%;
     startColor: boxTopColor;
     endColor: boxBottomColor;
-    
+
     &@ boxGradientGloss { isA: glossColor }
 }

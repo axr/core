@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <navigation xmlns:a="urn:vg.axr.accessibility">
-	<a:hint>Please select one of the following</a:hint>
-	<home href="home.xml">Home</home>
-	<about href="about.xml">About</about>
-	<contact href="contact.xml">Contact</contact>
+    <a:hint>Please select one of the following</a:hint>
+    <home href="home.xml">Home</home>
+    <about href="about.xml">About</about>
+    <contact href="contact.xml">Contact</contact>
 </navigation>

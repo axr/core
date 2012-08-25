@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller, Anando Gopal Chetterjee
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -51,7 +51,7 @@ using namespace AXR;
 HSSParentFilter::HSSParentFilter()
 : HSSFilter(HSSFilterTypeParent)
 {
-    
+
 }
 
 HSSParentFilter::p HSSParentFilter::clone() const{
@@ -60,14 +60,13 @@ HSSParentFilter::p HSSParentFilter::clone() const{
 
 HSSParentFilter::~HSSParentFilter()
 {
-    
+
 }
 
 std::string HSSParentFilter::toString()
 {
     return "Parent Filter";
 }
-
 
 const std::vector<HSSDisplayObject::p> HSSParentFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
 {
@@ -77,14 +76,14 @@ const std::vector<HSSDisplayObject::p> HSSParentFilter::apply(const std::vector<
         HSSContainer::p container;
         if (!this->getNegating())
             for (int i=0; i<size; i++){
-				container = HSSContainer::asContainer(scope[i]);
+                container = HSSContainer::asContainer(scope[i]);
                 if (container && container->getChildren(false).size()>0)
                     ret.push_back(scope[i]);
-			}
+            }
 
         else
             for (int i=0; i<size; i++){
-			    container = HSSContainer::asContainer(scope[i]);
+                container = HSSContainer::asContainer(scope[i]);
                 if (container && container->getChildren(false).size()==0)
                     ret.push_back(scope[i]);
             }
@@ -94,6 +93,7 @@ const std::vector<HSSDisplayObject::p> HSSParentFilter::apply(const std::vector<
     }
 }
 
-HSSClonable::p HSSParentFilter::cloneImpl() const{
+HSSClonable::p HSSParentFilter::cloneImpl() const
+{
     return HSSClonable::p(new HSSParentFilter(*this));
 }

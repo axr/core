@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Test S006 Negations
-	Created by Miro Keller on 2012-03-15.
+    Test S006 Negations
+    Created by Miro Keller on 2012-03-15.
 -->
 <?xml-stylesheet type="application/x-hss" src="S006 Negations.hss"?>
 <test>
-	<child>(Child) This should be red</child>
-	<child>(Child) This should be yellow</child>
-	<child>(Child) This should be blue</child>
-	<child2>(Child2) This should be orange</child2>
-	<child2>(Child2) this should be green</child2>
+    <child>(Child) This should be red</child>
+    <child>(Child) This should be yellow</child>
+    <child>(Child) This should be blue</child>
+    <child2>(Child2) This should be orange</child2>
+    <child2>(Child2) this should be green</child2>
 </test>

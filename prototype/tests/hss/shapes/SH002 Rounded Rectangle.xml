@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Test SH002 Rounded Rectangle
-	Created by Miro Keller on 2011-09-26.
+    Test SH002 Rounded Rectangle
+    Created by Miro Keller on 2011-09-26.
 -->
 <?xml-stylesheet type="application/x-hss" src="SH002 Rounded Rectangle.hss"?>
 <test>
-	<shapeElement/>
+    <shapeElement/>
 </test>

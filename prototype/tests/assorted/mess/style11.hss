@@ -2,19 +2,19 @@ document
 {
     background: @rgb { alpha: 10%; };
     contentAlignY: 50%;
-    
+
     container
     {
         background: @rgb { alpha: 10%; };
         contentAlignY: 50%;
-        
+
         child
         {
             background: @rgb { alpha: 10%; };
             width: 100;
             height: 100;
         }
-        
+
         child+child
         {
             background: @rgb { alpha: 20%; };

@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -62,7 +62,7 @@ HSSTextTransformType HSSTextBlock::textTransformTypeFromString(std::string value
         types["capitalize"] = HSSTextTransformTypeCapitalize;
         types["humanize"] = HSSTextTransformTypeHumanize;
     }
-    
+
     HSSTextTransformType type = HSSTextTransformTypeNone;
     if(types.find(value) != types.end()){
         type = types[value];
@@ -79,7 +79,7 @@ HSSTextAlignType HSSTextBlock::textAlignTypeFromString(std::string value)
         types["center"] = HSSTextAlignTypeCenter;
         types["justify"] = HSSTextAlignTypeJustify;
     }
-    
+
     HSSTextAlignType type = HSSTextAlignTypeNone;
     if(types.find(value) != types.end()){
         type = types[value];
@@ -91,16 +91,16 @@ HSSTextBlock::HSSTextBlock()
 : HSSDisplayObject(HSSObjectTypeTextBlock)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: creating text block object");
-    
+
     this->observedTextAlign = this->observedTransform = this->observedText
     = NULL;
-    
+
     this->registerProperty(HSSObservablePropertyText, (void *) &this->text);
     this->registerProperty(HSSObservablePropertyTransform, (void *) &this->transform);
     this->registerProperty(HSSObservablePropertyTextAlign, (void *) &this->textAlign);
 //    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) &this->directionPrimary);
 //    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) &this->directionSecondary);
-    
+
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("text");
     shorthandProperties.push_back("textAlign");
@@ -108,7 +108,7 @@ HSSTextBlock::HSSTextBlock()
     shorthandProperties.push_back("direction");
     shorthandProperties.push_back("wrapDirection");
     this->setShorthandProperties(shorthandProperties);
-    
+
     PangoFontMap * fontMap = pango_cairo_font_map_new();
     this->_layout = pango_layout_new(pango_font_map_create_context(fontMap));
 }
@@ -118,13 +118,13 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
 {
     this->observedTextAlign = this->observedTransform = this->observedText
     = NULL;
-    
+
     this->registerProperty(HSSObservablePropertyText, (void *) &this->text);
     this->registerProperty(HSSObservablePropertyTransform, (void *) &this->transform);
     this->registerProperty(HSSObservablePropertyTextAlign, (void *) &this->textAlign);
     //    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) &this->directionPrimary);
     //    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) &this->directionSecondary);
-    
+
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("text");
     shorthandProperties.push_back("textAlign");
@@ -132,7 +132,7 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
     shorthandProperties.push_back("direction");
     shorthandProperties.push_back("wrapDirection");
     this->setShorthandProperties(shorthandProperties);
-    
+
     PangoFontMap * fontMap = pango_cairo_font_map_new();
     this->_layout = pango_layout_new(pango_font_map_create_context(fontMap));
 }
@@ -178,7 +178,7 @@ bool HSSTextBlock::isKeyword(std::string value, std::string property)
             return true;
         }
     }
-    
+
     //if we reached this far, let the superclass handle it
     return HSSDisplayObject::isKeyword(value, property);
 }
@@ -191,7 +191,7 @@ std::string HSSTextBlock::toString()
 void HSSTextBlock::setDefaults()
 {
     HSSDisplayObject::setDefaults();
-    
+
     //transform
     HSSKeywordConstant::p newDTransform(new HSSKeywordConstant("none"));
     this->setDTransform(newDTransform);
@@ -234,14 +234,14 @@ void HSSTextBlock::drawForeground()
     cairo_t * cairo = cairo_create(this->foregroundSurface);
     if (this->font.size() > 0){
         HSSFont::p theFont = *this->font.begin();
-        
+
         if (theFont->getColor()){
             HSSRgb::p textColor = boost::static_pointer_cast<HSSRgb>(theFont->getColor());
             cairo_set_source_rgb (cairo, textColor->getRed()/255, textColor->getGreen()/255, textColor->getBlue()/255);
         } else {
             cairo_set_source_rgb (cairo, 0, 0, 0);
         }
-        
+
     } else {
         cairo_set_source_rgb (cairo, 0, 0, 0);
     }
@@ -254,13 +254,13 @@ void HSSTextBlock::drawForeground()
 void HSSTextBlock::layout()
 {
     this->_needsLayout = false;
-    
+
     PangoFontDescription *font_description;
-    
+
     pango_layout_set_width(this->_layout, this->width * PANGO_SCALE);
-    
+
     font_description = pango_font_description_new ();
-    
+
     if (this->font.size() > 0){
         HSSFont::p theFont = *this->font.begin();
         pango_font_description_set_family (font_description, theFont->getFace().c_str());
@@ -269,13 +269,13 @@ void HSSTextBlock::layout()
             pango_font_description_set_weight (font_description, this->_pangoWeightFromKeyword(weightKw->getValue()));
         }
         pango_font_description_set_absolute_size (font_description, theFont->getSize() * PANGO_SCALE);
-        
+
     } else {
         pango_font_description_set_family (font_description, "monospace");
         pango_font_description_set_weight (font_description, PANGO_WEIGHT_NORMAL);
         pango_font_description_set_absolute_size (font_description, 12 * PANGO_SCALE);
     }
-    
+
     if (this->textAlign) {
         switch (this->textAlign) {
             case HSSTextAlignTypeLeft:
@@ -291,13 +291,13 @@ void HSSTextBlock::layout()
                 pango_layout_set_alignment(this->_layout, PANGO_ALIGN_LEFT);
                 pango_layout_set_justify(this->_layout, true);
                 break;
-                
+
             default:
                 break;
         }
-        
+
     }
-    
+
     pango_layout_set_font_description (this->_layout, font_description);
     pango_font_description_free (font_description);
     pango_layout_set_text (this->_layout, this->getText().c_str(), -1);
@@ -316,7 +316,7 @@ HSSParserNode::p HSSTextBlock::getDTransform() { return this->dTransform; }
 void HSSTextBlock::setDTransform(HSSParserNode::p value)
 {
     bool valid = false;
-    
+
     switch (value->getType()) {
         case HSSParserNodeTypeObjectNameConstant:
         {
@@ -326,15 +326,15 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDTransform(objdef);
                 valid = true;
-                
+
             } catch (AXRError::p e) {
                 e->raise();
             }
-            
+
             break;
         }
-            
-            
+
+
         case HSSParserNodeTypeFunctionCall:
         {
             this->dTransform = value;
@@ -347,15 +347,15 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
                     this->transform = boost::any_cast<HSSTextTransformType>(remoteValue);
                     valid = true;
                 } catch (...) {
-                    
+
                 }
-                
+
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTransform, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::transformChanged));
             }
-            
+
             break;
         }
-            
+
         case HSSParserNodeTypeKeywordConstant:
         {
             this->dTransform = value;
@@ -363,11 +363,11 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
             valid = true;
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     switch (value->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
         {
@@ -382,16 +382,16 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
                 std_log("######## FIXME ################");
                 valid = true;
             }
-            
+
             break;
         }
         default:
             break;
     }
-    
+
     if(!valid)
         throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for transform of "+this->name));
-    
+
     this->notifyObservers(HSSObservablePropertyTransform, &this->transform);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -401,11 +401,11 @@ void HSSTextBlock::transformChanged(HSSObservableProperty source, void *data)
     switch (this->dTransform->getType()) {
         case HSSParserNodeTypeFunctionCall:
             this->transform = *(HSSTextTransformType *)data;
-            break; 
+            break;
         default:
             break;
     }
-    
+
     switch (this->dTransform->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
             this->transform = *(HSSTextTransformType *)data;
@@ -413,7 +413,7 @@ void HSSTextBlock::transformChanged(HSSObservableProperty source, void *data)
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertyTransform, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -423,7 +423,7 @@ HSSParserNode::p HSSTextBlock::getDTextAlign() { return this->dTextAlign; }
 void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
 {
     bool valid = false;
-    
+
     switch (value->getType()) {
         case HSSParserNodeTypeObjectNameConstant:
         {
@@ -436,11 +436,11 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
             } catch (AXRError::p e) {
                 e->raise();
             }
-            
+
             break;
         }
-            
-            
+
+
         case HSSParserNodeTypeFunctionCall:
         {
             this->dTextAlign = value;
@@ -453,15 +453,15 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
                     this->textAlign = boost::any_cast<HSSTextAlignType>(remoteValue);
                     valid = true;
                 } catch (...) {
-                    
+
                 }
-                
+
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::textAlignChanged));
             }
-            
+
             break;
         }
-            
+
         case HSSParserNodeTypeKeywordConstant:
         {
             this->dTextAlign = value;
@@ -480,11 +480,11 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
             }
             break;
         }
-            
+
         default:
             valid = false;
     }
-    
+
     switch (value->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
         {
@@ -499,17 +499,17 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
                 std_log("######## FIXME ################");
                 valid = true;
             }
-            
+
             break;
         }
-        
+
         default:
             break;
     }
-    
+
     if(!valid)
         throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for textAlign of "+this->name));
-    
+
     this->notifyObservers(HSSObservablePropertyTextAlign, &this->textAlign);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -524,16 +524,16 @@ void HSSTextBlock::textAlignChanged(HSSObservableProperty source, void *data)
         default:
             break;
     }
-    
+
     switch (this->dTextAlign->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
             this->textAlign = *(HSSTextAlignType *)data;
             break;
-            
+
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertyTextAlign, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -543,7 +543,7 @@ HSSParserNode::p HSSTextBlock::getDText() { return this->dText; }
 void HSSTextBlock::setDText(HSSParserNode::p value)
 {
     bool valid = false;
-    
+
     switch (value->getType()) {
         case HSSParserNodeTypeStringConstant:
         {
@@ -552,7 +552,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
             valid = true;
             break;
         }
-            
+
         case HSSParserNodeTypeObjectNameConstant:
         {
             try {
@@ -560,15 +560,15 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDText(objdef);
                 valid = true;
-                
+
             } catch (AXRError::p e) {
                 e->raise();
             }
-            
+
             break;
         }
-            
-            
+
+
         case HSSParserNodeTypeFunctionCall:
         {
             this->dText = value;
@@ -581,15 +581,15 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
                     this->text = boost::any_cast<std::string>(remoteValue);
                     valid = true;
                 } catch (...) {
-                    
+
                 }
-                
+
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyText, this, new HSSValueChangedCallback<HSSTextBlock>(this, &HSSTextBlock::textChanged));
             }
-            
+
             break;
         }
-           
+
         case HSSParserNodeTypeKeywordConstant:
         {
             this->dText = value;
@@ -600,11 +600,11 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
             }
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     switch (value->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
         {
@@ -619,17 +619,17 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
                 std_log("######## FIXME ################");
                 valid = true;
             }
-            
+
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     if(!valid)
         throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for text of "+this->name));
-    
+
     this->notifyObservers(HSSObservablePropertyText, &this->text);
 }
 
@@ -639,20 +639,20 @@ void HSSTextBlock::textChanged(HSSObservableProperty source, void *data)
         case HSSParserNodeTypeFunctionCall:
             this->text = *(std::string *)data;
             break;
-            
+
         default:
             break;
     }
-    
+
     switch (this->dText->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
             this->text = *(std::string *)data;
             break;
-            
+
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertyText, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -669,56 +669,39 @@ PangoWeight HSSTextBlock::_pangoWeightFromKeyword(std::string keyword)
 {
     if(keyword == "normal")
         return PANGO_WEIGHT_NORMAL;
-    
+
     if(keyword == "bold")
         return PANGO_WEIGHT_BOLD;
-    
+
     if(keyword == "medium")
         return PANGO_WEIGHT_MEDIUM;
-    
-    
+
+
     if(keyword == "thin")
         return PANGO_WEIGHT_THIN;
-    
+
     if(keyword == "light")
         return PANGO_WEIGHT_LIGHT;
-    
+
     if(keyword == "book")
         return PANGO_WEIGHT_BOOK;
-    
+
     if(keyword == "heavy")
         return PANGO_WEIGHT_HEAVY;
-    
-    
+
+
     if(keyword == "ultralight")
         return PANGO_WEIGHT_ULTRALIGHT;
-    
+
     if(keyword == "semibold")
         return PANGO_WEIGHT_SEMIBOLD;
-    
+
     if(keyword == "ultrabold")
         return PANGO_WEIGHT_ULTRABOLD;
-    
+
     if(keyword == "ultraheavy")
         return PANGO_WEIGHT_ULTRAHEAVY;
-    
+
     //default
-    return PANGO_WEIGHT_NORMAL; 
+    return PANGO_WEIGHT_NORMAL;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

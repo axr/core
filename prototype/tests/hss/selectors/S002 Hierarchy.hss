@@ -1,17 +1,17 @@
 test
 {
-	element1
-	{
-		background: #66F;
-	}
+    element1
+    {
+        background: #66F;
+    }
 
-	element2
-	{
-		background: #FF6;
-	}
+    element2
+    {
+        background: #FF6;
+    }
 
-	element3
-	{
-		background: #6F6;
-	}
+    element3
+    {
+        background: #6F6;
+    }
 }

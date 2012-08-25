@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -57,7 +57,7 @@ HSSRoundedRect::HSSRoundedRect()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: creating rounded rectangle object");
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
     this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
-    
+
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("corners");
     this->setShorthandProperties(shorthandProperties);
@@ -68,7 +68,7 @@ HSSRoundedRect::HSSRoundedRect(const HSSRoundedRect & orig)
 {
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
     this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
-    
+
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("corners");
     this->setShorthandProperties(shorthandProperties);
@@ -139,7 +139,7 @@ void HSSRoundedRect::setProperty(HSSObservableProperty name, HSSParserNode::p va
         case HSSObservablePropertyLeftBottom:
             this->setDLeftBottom(value);
             break;
-            
+
         default:
             HSSShape::setProperty(name, value);
             break;
@@ -212,16 +212,16 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value){
                                                   this->scope );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
     }
-    
+
     this->dCorners = value;
     HSSMultipleValue::p newCorners(new HSSMultipleValue());
     newCorners->add(value);
     this->corners = newCorners;
-    
+
     this->notifyObservers(HSSObservablePropertyCorners, &this->corners);
 }
 
@@ -262,11 +262,11 @@ void HSSRoundedRect::setDLeft(HSSParserNode::p value){
                                                   this->scope );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTL);
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBL);
 }
@@ -294,11 +294,11 @@ void HSSRoundedRect::setDLeftTop(HSSParserNode::p value){
                                                   this->scope );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTL);
 }
 
@@ -339,11 +339,11 @@ void HSSRoundedRect::setDTop(HSSParserNode::p value){
                                                   this->scope );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTL);
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTR);
 }
@@ -371,11 +371,11 @@ void HSSRoundedRect::setDRightTop(HSSParserNode::p value){
                                                   this->scope );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTR);
 }
 
@@ -416,11 +416,11 @@ void HSSRoundedRect::setDRight(HSSParserNode::p value){
                                                   this->scope );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTR);
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBR);
 }
@@ -448,11 +448,11 @@ void HSSRoundedRect::setDRightBottom(HSSParserNode::p value){
                                                   this->scope );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBR);
 }
 
@@ -493,11 +493,11 @@ void HSSRoundedRect::setDBottom(HSSParserNode::p value){
                                                   this->scope );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBL);
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBR);
 }
@@ -525,11 +525,11 @@ void HSSRoundedRect::setDLeftBottom(HSSParserNode::p value){
                                                   this->scope );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBL);
 }
 
@@ -560,7 +560,7 @@ void HSSRoundedRect::cornerBLChanged(AXR::HSSObservableProperty source, void *da
 void HSSRoundedRect::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
     double long degrees = M_PI / 180.0;
-    
+
     cairo_new_sub_path (cairo);
     cairo_arc (cairo, x + width - this->cornerTR, y + this->cornerTR, this->cornerTR, -90 * degrees, 0 * degrees);
     cairo_arc (cairo, x + width - this->cornerBR, y + height - this->cornerBR, this->cornerBR, 0 * degrees, 90 * degrees);
@@ -582,7 +582,7 @@ long double HSSRoundedRect::_setLDProperty(
                                            const std::vector<HSSDisplayObject::p> * scope
 ) {
     long double ret;
-    
+
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType) {
         case HSSParserNodeTypeNumberConstant:
@@ -592,7 +592,7 @@ long double HSSRoundedRect::_setLDProperty(
             observedStore = NULL;
             break;
         }
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
@@ -605,7 +605,7 @@ long double HSSRoundedRect::_setLDProperty(
             }
             break;
         }
-            
+
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
@@ -619,14 +619,14 @@ long double HSSRoundedRect::_setLDProperty(
                 observedStore = expressionValue.get();
                 observedStoreProperty = HSSObservablePropertyValue;
             }
-            
+
             break;
         }
-            
+
         case HSSParserNodeTypeKeywordConstant:
-            
+
             break;
-            
+
         case HSSParserNodeTypeFunctionCall:
         {
             HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
@@ -634,13 +634,13 @@ long double HSSRoundedRect::_setLDProperty(
             fnct->setPercentageObserved(observedProperty, observedObject);
             fnct->setScope(scope);
             fnct->setThisObj(this->getThisObj());
-            
+
             boost::any remoteValue = fnct->evaluate();
             try {
                 ret = boost::any_cast<long double>(remoteValue);
-                
+
             } catch (...) {
-                
+
             }
             if(callback != NULL){
                 fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect>(this, callback));
@@ -649,11 +649,10 @@ long double HSSRoundedRect::_setLDProperty(
             }
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     return ret;
 }
-

@@ -1,18 +1,18 @@
 @container box
 {
-	background: @rgb { alpha: 50% };
+    background: @rgb { alpha: 50% };
 }
 
 document
 {
-	background: @rgb { red: 190; green: 234; blue: 190; };
-	
-	message
-	{
-		isA: box;
-		width: 150;
-		height: 50;
-		alignY: 50%;
-		background: @rgb { alpha: 50% };
-	}
+    background: @rgb { red: 190; green: 234; blue: 190; };
+
+    message
+    {
+        isA: box;
+        width: 150;
+        height: 50;
+        alignY: 50%;
+        background: @rgb { alpha: 50% };
+    }
 }

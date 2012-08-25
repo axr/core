@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -55,13 +55,13 @@ HSSRequest::HSSRequest()
     this->observedSrc
     = this->observedTarget
     = NULL;
-    
+
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("src");
     shorthandProperties.push_back("target");
     //shorthandProperties.push_back("mode");
     this->setShorthandProperties(shorthandProperties);
-    
+
     this->mode = HSSRequestModeTypeAuto;
 }
 
@@ -71,7 +71,7 @@ HSSRequest::HSSRequest(const HSSRequest & orig)
     this->observedSrc
     = this->observedTarget
     = NULL;
-    
+
     this->mode = orig.mode;
 }
 
@@ -105,18 +105,18 @@ void HSSRequest::setProperty(HSSObservableProperty name, HSSParserNode::p value)
         case HSSObservablePropertySrc:
             this->setDSrc(value);
             break;
-            
+
         case HSSObservablePropertyTarget:
             this->setDTarget(value);
             break;
-            
+
 //        case HSSObservablePropertyMode:
 //            this->setDMode(value);
 //            break;
-//            
+//
 //        case HSSObservablePropertyContentTarget:
 //            this->setDContentTarget(value);
-            
+
         default:
             HSSAction::setProperty(name, value);
             break;
@@ -147,14 +147,14 @@ void HSSRequest::fire()
                 } catch (AXRError::p e) {
                     e->raise();
                 }
-                
+
                 if(newFile){
                     bool loadingSuccess = xmlParser->loadFile(newFile);
                     if(!loadingSuccess){
                         AXRError::p(new AXRError("AXRCore", "Could not load the XML file"))->raise();
                     } else {
                         HSSContainer::p root = boost::static_pointer_cast<HSSContainer>(controller->getRoot());
-                        
+
                         if (root) {
                             std::vector<std::string> loadSheets = controller->loadSheetsGet();
                             std::vector<std::string>::iterator sheetsIt;
@@ -177,15 +177,15 @@ void HSSRequest::fire()
                                     e->raise();
                                     continue;
                                 }
-                                
+
                                 hssParser->setBasePath(newFile->getBasePath());
                                 if(! hssParser->loadFile(hssfile)){
                                     AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
                                 }
                             }
-                            
+
                             controller->matchRulesToContentTree();
-                            
+
                             std::vector<HSSDisplayObject::p>::const_iterator targetIt, childIt;
                             for (targetIt=this->target.begin(); targetIt!=this->target.end(); ++targetIt) {
                                 const HSSDisplayObject::p & theDO = *targetIt;
@@ -198,7 +198,7 @@ void HSSRequest::fire()
                                     }
                                 }
                             }
-                            
+
                             root->setNeedsRereadRules(true);
                             root->recursiveReadDefinitionObjects();
                             root->handleEvent(HSSEventTypeLoad, NULL);
@@ -206,22 +206,22 @@ void HSSRequest::fire()
                         }
                     }
                 }
-                
+
 //                AXRCore::tp core = AXRCore::getInstance();
 //                AXRWrapper * wrapper = core->getWrapper();
 //                AXRFile::p baseFile = core->getFile();
-//                
+//
 //                bool loadingSuccess = wrapper->loadFile(baseFile->basePath+this->src, this->src);
 //                if(loadingSuccess){
 //                    unsigned i, size;
 //                    for (i=0, size=this->target.size(); i<size; i++) {
 //                        std_log1("Adding loaded file to target");
-//                        
+//
 //                        if(this->target[i]->isA(HSSObjectTypeContainer)){
 //                            const HSSContainer::p & theCont = boost::static_pointer_cast<HSSContainer>(this->target[i]);
 //                            const HSSContainer::p & loadedRoot = fileController.getRoot();
 //                            theCont->add(loadedRoot);
-//                            
+//
 //                            unsigned j, k, size2, size3;
 //                            const std::vector<HSSDisplayObject::p> &scope = theCont->getChildren();
 //                            for (j=0, size2=fileController.rulesSize(); j<size2; j++) {
@@ -235,7 +235,7 @@ void HSSRequest::fire()
 //                                    this->axrController->recursiveMatchRulesToDisplayObjects(childRule, scope, theCont);
 //                                }
 //                            }
-//                            
+//
 //                            theCont->recursiveReadDefinitionObjects();
 //                            theCont->setNeedsLayout(true);
 //                        }
@@ -261,21 +261,21 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
             {
                 this->observedSrc->removeObserver(this->observedSrcProperty, HSSObservablePropertySrc, this);
             }
-            
+
             switch (value->getType()) {
                 case HSSParserNodeTypeKeywordConstant:
                     /**
                      *  @todo what here?
                      */
                     break;
-                    
+
                 case HSSParserNodeTypeStringConstant:
                 {
                     HSSStringConstant::p theString = boost::static_pointer_cast<HSSStringConstant>(value);
                     this->src = theString->getValue();
                     break;
                 }
-                    
+
                 case HSSParserNodeTypeFunctionCall:
                 {
                     HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
@@ -285,23 +285,23 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
                     try {
                         this->src = boost::any_cast<std::string>(remoteValue);
                     } catch (...) {
-                        
+
                     }
-                    
+
                     break;
                 }
-                
+
                 default:
                     break;
             }
-            
-            
-            
+
+
+
             this->notifyObservers(HSSObservablePropertySrc, &this->src);
-            
+
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSRequest", "Invalid value for src of "+this->name));
     }
@@ -324,14 +324,14 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
             {
                 this->observedTarget->removeObserver(this->observedTargetProperty, HSSObservablePropertyTarget, this);
             }
-            
+
             switch (value->getType()) {
                 case HSSParserNodeTypeKeywordConstant:
                     /**
                      *  @todo what here?
                      */
                     break;
-                    
+
                 case HSSParserNodeTypeFunctionCall:
                 {
                     HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
@@ -348,10 +348,10 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                                 this->target.insert(this->target.end(), inner.begin(), inner.end());
                             }
                         } catch (...) {
-                            
+
                         }
-                        
-                        
+
+
                         /**
                          *  @todo potentially leaking
                          */
@@ -359,19 +359,19 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                         this->observedTarget = fnct.get();
                         this->observedTargetProperty = HSSObservablePropertyValue;
                     }
-                    
+
                     break;
                 }
-                    
+
                 default:
                     break;
             }
-            
+
             this->notifyObservers(HSSObservablePropertySrc, &this->src);
-            
+
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSRequest", "Invalid value for src of "+this->name));
     }
@@ -381,11 +381,3 @@ void HSSRequest::targetChanged(AXR::HSSObservableProperty source, void *data)
 {
     AXRWarning::p(new AXRWarning("HSSRequest", "unimplemented"))->raise();
 }
-
-
-
-
-
-
-
-

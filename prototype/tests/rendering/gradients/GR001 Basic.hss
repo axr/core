@@ -1,6 +1,6 @@
 /*
-	Test GR001 Basic
-	Created by Miro Keller on 2011-12-26.
+    Test GR001 Basic
+    Created by Miro Keller on 2011-12-26.
 */
 
 #0 bgColor;
@@ -10,7 +10,7 @@ master
 {
     contentAlignY: 50%;
     background: #3;
-    
+
     #new test
     {
         width: 200;

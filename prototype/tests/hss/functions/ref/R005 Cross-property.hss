@@ -1,16 +1,16 @@
 test
 {
-	master
-	{
-		width: 20%;
-		height: 20%;
-		background: #C;
-	}
+    master
+    {
+        width: 20%;
+        height: 20%;
+        background: #C;
+    }
 
-	slave
-	{
-		width: ref(height of master) * 2;
-		height: ref(width of master) * 2;
-		background: #A;
-	}
+    slave
+    {
+        width: ref(height of master) * 2;
+        height: ref(width of master) * 2;
+        background: #A;
+    }
 }

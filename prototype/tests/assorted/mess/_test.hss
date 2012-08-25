@@ -1,17 +1,17 @@
 @projectedMargin myMargin1
 {
-	size: 12;
+    size: 12;
 }
 
 
 root
 {
-	parent
-	{
-		child
-		{
-			width: 100%;
-			margin: myMargin1;
-		}
-	}
+    parent
+    {
+        child
+        {
+            width: 100%;
+            margin: myMargin1;
+        }
+    }
 }

@@ -3,7 +3,7 @@
 test
 {
     background: background;
-    
+
     * { isA: box; }
     :first { background: boxHighlight }
 }

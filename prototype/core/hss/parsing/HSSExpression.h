@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -51,7 +51,7 @@
 #include "HSSParserNode.h"
 
 namespace AXR {
-    
+
     /**
      *  @brief Abstract base class for all expressions.
      *  Do not use directly, use a specific subclass instead.
@@ -60,7 +60,7 @@ namespace AXR {
     {
     public:
         typedef boost::shared_ptr<HSSExpression> p;
-        
+
         /**
          *  Creates a new instance of an expression.
          *  This class shouldn't be called directly, but by the subclasses.
@@ -69,19 +69,19 @@ namespace AXR {
          *  @param type     The type of this expression subclass for identification purposes.
          */
         HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right);
-        
+
         /**
          *  Copy constructor for HSSExpression objects. Do not call directly, use clone() instead.
          */
         HSSExpression(const HSSExpression &orig);
-        
+
         /**
          *  Destructor for this class.
          */
         virtual ~HSSExpression();
         std::string toString();
         long double evaluate();
-        
+
         /**
          *  Each subclass implements the specific operation that needs to be done.
          *
@@ -89,47 +89,47 @@ namespace AXR {
          *  @param rightval  A long double that holds the right value.
          */
         virtual long double calculate(long double leftval, long double rightval) =0;
-        
+
         bool isA(HSSExpressionType otherType);
         HSSExpressionType getExpressionType();
-        
+
         /**
          *  When logging, you often need a string representation of the expression type.
          *  @param type     The expression type to represent as a string.
          *  @return A string representation of the given type.
          */
         static std::string expressionTypeStringRepresentation(HSSExpressionType type);
-        
+
         /**
          *  Setter for the left hand member of the expression.
          *  @param  newLeft     A shared pointer to a parser node representing the left
          *                      member of the expression.
          */
         void setLeft(HSSParserNode::p newLeft);
-        
+
         /**
          *  Getter for the left hand member of the expression.
          *  @return A shared pointer to a parser node representing the left member of
          *  the expression.
          */
         HSSParserNode::p getLeft();
-        
+
         /**
          *  Setter for the right hand member of the expression.
          *  @param  newLeft     A shared pointer to a parser node representing the right
          *                      member of the expression.
          */
         void setRight(HSSParserNode::p newRight);
-        
+
         /**
          *  Getter for the right hand member of the expression.
          *  @return A shared pointer to a parser node representing the right member of
          *  the expression.
          */
         HSSParserNode::p getRight();
-        
+
         virtual void propertyChanged(HSSObservableProperty property, void* data);
-        
+
         /**
          *  Method to be passed as callback when observing changes that will affect the left
          *  member of the expression.
@@ -137,7 +137,7 @@ namespace AXR {
          *  @param data     A pointer to the data that is sent along the notification.
          */
         virtual void leftChanged(HSSObservableProperty property, void* data);
-        
+
         /**
          *  Method to be passed as callback when observing changes that will affect the right
          *  member of the expression.
@@ -145,22 +145,22 @@ namespace AXR {
          *  @param data     A pointer to the data that is sent along the notification.
          */
         virtual void rightChanged(HSSObservableProperty property, void* data);
-        
+
         /**
          *  The percentage base is the number that corresponds to 100%.
          *  @param value    A long double containing the base for percentage calculations.
          */
         virtual void setPercentageBase(long double value);
-        
+
         /**
          *  When we are using percentages, we keep track of the value and update accordingly.
          *  @param property     The property which we are observing.
-         *  @param observed     A regular pointer to the object we are observing. 
+         *  @param observed     A regular pointer to the object we are observing.
          *
          *  @todo what if both left and right are percentages?
          */
         virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
-        
+
         /**
          *  Setter for the scope which to pass to members like references or selections.
          *  @param newScope     The new scope, a regular pointer to a vector of shared poninters
@@ -169,31 +169,31 @@ namespace AXR {
          *  @todo how is memory handled for the scopes?
          */
         virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
-        
+
         /**
          *  Setter for the "\@this object" which to pass to members like references or selections.
          *  @param value    A shared pointer to a display object representing the \@this object.
          */
         virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
-        
+
         /**
          *  Whenever an expression needs to recalculate its value, it should be set to true.
          *  @param value    A boolean, wether it needs to recalculate or not.
          */
         void setDirty(bool value);
-        
+
         /**
          *  Tells if the expression needs to recalculate its value.
          *  @return Wether it needs recalculating or not.
          */
         bool isDirty();
-        
+
         /**
          *  Setter for the value.
          *  @param newValue     A long double containing the new calculated value for this expression.
          */
         void setValue(long double newValue);
-        
+
         /**
          *  Getter for the value.
          *  @return The calculated value of the expression.
@@ -205,21 +205,21 @@ namespace AXR {
         long double leftval;
         long double rightval;
         HSSParserNode::p right;
-        
+
         long double percentageBase;
         HSSObservableProperty percentageObservedProperty;
         HSSObservable * percentageObserved;
-        
+
         HSSObservableProperty leftObservedProperty;
         HSSObservable * leftObserved;
         HSSObservableProperty rightObservedProperty;
         HSSObservable * rightObserved;
-        
+
         const std::vector<HSSDisplayObject::p> * scope;
-        
+
         bool _isDirty;
         long double _value;
-        
+
     private:
         HSSExpressionType expressionType;
     };

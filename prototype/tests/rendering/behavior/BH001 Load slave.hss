@@ -1,6 +1,6 @@
 /*
-	Test BH001 Load slave
-	Created by Miro Keller on 2011-11-05.
+    Test BH001 Load slave
+    Created by Miro Keller on 2011-11-05.
 */
 
 #import "BH001 Common Styles.hss";
@@ -9,11 +9,11 @@ slave
 {
    background: bgGrad;
    contentAlignY: middle;
-   
+
    #new wrapper
    {
       width: 60%;
-      
+
       #move message
       {
           font: heading1;

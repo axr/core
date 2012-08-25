@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -52,9 +52,9 @@
 #include "HSSParserNode.h"
 
 namespace AXR {
-    
+
     class HSSSelectorChain;
-    
+
     /**
      *  @brief Abstract base class for parser node types representing filters.
      *  Do not use directly, use one of the specific subclasses instead.
@@ -65,14 +65,14 @@ namespace AXR {
     {
     public:
         typedef boost::shared_ptr<HSSFilter> p;
-        
+
         /**
          *  When logging, you often need a string representation of the filter type.
          *  @param actionType   The action type to represent as a string.
          *  @return A string representation of the given type.
          */
         static std::string filterTypeStringRepresentation(HSSFilterType filterType);
-        
+
         /**
          *  Gives a HSSFilterType representation from a string representation.
          *  @param name     The name of the filter (e.g. "first").
@@ -81,7 +81,7 @@ namespace AXR {
          *  @todo what if not found? there should be an error state in the enum
          */
         static HSSFilterType filterTypeFromString(std::string name);
-        
+
         /**
          *  Instantiates a specific subclass for the given textual representation
          *  of a string (e.g. "first").
@@ -89,27 +89,27 @@ namespace AXR {
          *  @return A shared pointer to a new instance of a filter of the given type.
          */
         static HSSFilter::p newFilterWithStringType(std::string stringType);
-        
+
         /**
          *  Instantiates a specific subclass for the given HSSFilterType.
          *  @param filterType   The filter type for the new instance.
          *  @return A shared pointer to a new instance of a filter of the given type.
          */
         static HSSFilter::p newFilterWithType(HSSFilterType filterType);
-        
+
         /**
          *  Creates a new instance of a filter. Do not use directly.
          *  @param type     The type of the filter, to uniquely identify each subclass.
          */
         HSSFilter(HSSFilterType type);
-        
+
         /**
          *  Destructor for this class.
          */
         virtual ~HSSFilter();
-        
+
         virtual std::string toString();
-        
+
         /**
          *  Each subclass implements its own way of processing the selection.
          *  This base implementation is (I think) what gets called when you use
@@ -122,26 +122,26 @@ namespace AXR {
          *  @todo should this return an empty selection?
          */
         virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing) =0;
-        
+
         virtual HSSFilter::p clone() const =0;
-        
+
         /**
          *  Allows you to check if this filter is of the given type.
          *  @param  type    The filter type to which to check against.
          *  @return Wether it is of the given type or not.
          */
         bool isA(HSSFilterType type);
-        
+
         /**
          *  @return The filter type of this instance.
          */
         HSSFilterType getFilterType();
-        
+
         const bool getNegating() const;
         void setNegating(bool value);
-        
+
     private:
-        HSSFilterType filterType;    
+        HSSFilterType filterType;
         bool _negating;
     };
 }

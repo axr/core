@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Test R004 Expressions
-	Created by Miro Keller on 2011-10-02.
+    Test R004 Expressions
+    Created by Miro Keller on 2011-10-02.
 -->
 <?xml-stylesheet type="application/x-hss" src="R004 Expressions.hss"?>
 <test>
-	<testA>
-		<master>Master A1</master>
-		<master2>Master A2</master2>
-		<slave>Slave A: Master A1 + Master A2</slave>
-	</testA>
-	<testB>
-		<master>Master B</master>
-		<slave>Slave B: Reference to Master B + percentage</slave>
-	</testB>
-	<testC>
-		<master>Master C1</master>
-		<slave>Slave C1: Reference to Master C1</slave>
-		<slave2>Slave C2: Reference to Slave C1</slave2>
-	</testC>
-	<testD>
-		<master>Master D</master>
-		<slave>Slave D: Nested expressions and parentheses</slave>
-	</testD>
+    <testA>
+        <master>Master A1</master>
+        <master2>Master A2</master2>
+        <slave>Slave A: Master A1 + Master A2</slave>
+    </testA>
+    <testB>
+        <master>Master B</master>
+        <slave>Slave B: Reference to Master B + percentage</slave>
+    </testB>
+    <testC>
+        <master>Master C1</master>
+        <slave>Slave C1: Reference to Master C1</slave>
+        <slave2>Slave C2: Reference to Slave C1</slave2>
+    </testC>
+    <testD>
+        <master>Master D</master>
+        <slave>Slave D: Nested expressions and parentheses</slave>
+    </testD>
 </test>

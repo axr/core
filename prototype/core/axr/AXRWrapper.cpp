@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -64,7 +64,7 @@ AXRWrapper::AXRWrapper()
 
 AXRWrapper::~AXRWrapper()
 {
-    
+
 }
 
 AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
@@ -82,21 +82,21 @@ AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
     }
     ret->setExtension("xml");
     std::string dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" src=\"file://"+stylesheet+"\" version=\"1.0\"?><root></root>";
-    
+
     ret->setFileHandle(tmpfile());
     char * buffer = new char[ret->getBufferSize()];
     ret->setBuffer(buffer);
     dummyXML.copy(ret->getBuffer(), ret->getBufferSize(), 0);
-    
+
     size_t bfsz = dummyXML.size();
     ret->setFileSize(bfsz);
     ret->setBufferSize(bfsz);
-    
+
     fwrite(buffer, sizeof(buffer[0]), ret->getBufferSize(), ret->getFileHandle());
     rewind(ret->getFileHandle());
-    
+
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: creating dummy XML file");
-    
+
     return ret;
 }
 
@@ -116,7 +116,7 @@ bool AXRWrapper::loadFileByPath(std::string filepath)
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: loading file "+filepath.substr(filepath.rfind("/") + 1, filepath.length())+" by path");
     axr_log(AXR_DEBUG_CH_FULL_FILENAMES, filepath);
-    
+
     std::string filename = std::string();
     std::string fileextension = std::string();
 
@@ -135,24 +135,24 @@ bool AXRWrapper::loadFileByPath(std::string filepath)
 bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, std::string("AXRWrapper: opening XML document: ").append(xmlfilepath));
-    
+
     this->_isHSSOnly = false;
-    
+
     AXRCore::tp & core = AXRCore::getInstance();
     if (core->getFile()) {
         core->reset();
     }
-    
+
     std::string fullpath = "file://"+xmlfilepath;
     try {
         AXRFile::p theFile = this->getFile(fullpath);
         core->setFile(theFile);
-        
+
     } catch (AXRError::p e) {
         e->raise();
         return false;
     }
-    
+
     try {
         core->run();
     } catch (AXRError::p e) {
@@ -160,9 +160,9 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
     } catch (AXRWarning::p e) {
         e->raise();
     }
-    
+
     this->setNeedsDisplay(true);
-    
+
     return true;
 }
 
@@ -172,7 +172,7 @@ bool AXRWrapper::reload()
     this->_currentLayoutStep = 0;
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
-    
+
     AXRCore::tp & core = AXRCore::getInstance();
     if(!this->_isHSSOnly){
         std::string cur_path = core->getFile()->getBasePath()+"/"+core->getFile()->getFileName();
@@ -187,17 +187,17 @@ bool AXRWrapper::reload()
 bool AXRWrapper::loadHSSFile(std::string hssfilepath)
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, std::string("AXRWrapper: opening HSS document: ").append(hssfilepath));
-    
+
     this->_isHSSOnly = true;
     AXRCore::tp & core = AXRCore::getInstance();
     if (core->getFile()) {
         core->reset();
     }
-    
+
     core->setFile(this->createDummyXML(hssfilepath));
     core->run();
     this->setNeedsDisplay(true);
-    
+
     return true;
 }
 
@@ -223,7 +223,7 @@ void AXRWrapper::previousLayoutStep()
     if(this->_currentLayoutStep > 0){
         this->_currentLayoutStep -= 1;
     }
-    
+
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
     this->setNeedsDisplay(true);
@@ -276,10 +276,10 @@ bool AXRWrapper::layoutChildDone()
 
 std::string AXRWrapper::getPathToTestsFile()
 {
-	std::string filePath;
-	this->openFileDialog(filePath);
+    std::string filePath;
+    this->openFileDialog(filePath);
 
-	return filePath;
+    return filePath;
 }
 
 void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
@@ -299,7 +299,7 @@ void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
                 std::vector<HSSDisplayObject::p> innerSelection = selection[0];
                 status = HSSContainer::asContainer(innerSelection[0]);
             } catch (...) {
-                
+
             }
         }
     }
@@ -330,14 +330,14 @@ void AXRTestThread::operator () ()
         AXRFile::p testsFile = wrapper->getFile(fullPath);
         bool loadingSuccess = parser->loadFile(testsFile);
         if (loadingSuccess) {
-            
+
             //find all the tests that need to be executed
             std::vector<std::vector<std::string> > tests;
             AXRController::p controller = core->getController();
             HSSContainer::p root = controller->getRoot();
             const std::vector<HSSDisplayObject::p> & children = root->getChildren(true);
             std::vector<HSSDisplayObject::p>::const_iterator it;
-            
+
             for (it=children.begin(); it!=children.end(); it++) {
                 const HSSDisplayObject::p & child = *it;
                 if(child->attributes.find("src") != child->attributes.end() && child->attributes.find("expect") != child->attributes.end()){
@@ -357,18 +357,18 @@ void AXRTestThread::operator () ()
                 producers.create_thread(prdcr);
                 boost::this_thread::yield();
             }
-            
+
             producers.join_all();
-            
+
             std_log("\n\nTEST RESULTS SUMMARY");
             std_log("===============================");
             std_log("Passed "+boost::lexical_cast<std::string>(this->totalPassed)+" out of "+boost::lexical_cast<std::string>(this->totalTests));
             std_log("===============================");
-            
+
         } else {
             std_log("Could not load the tests XML file");
         }
-        
+
     } catch (AXRError::p e) {
         e->raise();
     } catch (AXRWarning::p e) {
@@ -391,20 +391,20 @@ AXRTestProducer::AXRTestProducer(AXRWrapper * wrapper, std::string basePath, std
 boost::mutex AXRTestProducer::statusMutex;
 void AXRTestProducer::operator () ()
 {
-    
+
     bool testLoaded = false;
     bool expectedLoaded = false;
     bool result = false;
     std::string testRep;
     std::string expectedRep;
-    
+
     //load the XML
     AXRCore core = *AXRCore::getInstance();
     AXRWrapper * wrapper = this->wrapper->createWrapper();
     core = *AXRCore::getInstance();
-    
+
     testLoaded = wrapper->loadXMLFile(this->basePath+"/"+this->test[0]);
-    
+
     if(testLoaded){
         AXRCore::tp & core = AXRCore::getInstance();
         AXRController::p controller = core->getController();
@@ -418,7 +418,7 @@ void AXRTestProducer::operator () ()
     } else {
         std_log("could not load the test file");
     }
-    
+
     //load the "expected" file
     if(testLoaded){
         AXRFile::p expectedFile = this->wrapper->getFile("file://"+this->basePath+"/"+test[1]);
@@ -432,12 +432,12 @@ void AXRTestProducer::operator () ()
         }
         this->wrapper->closeFile(expectedFile);
     }
-    
+
     //compare the two
     if(testLoaded && expectedLoaded){
         result = testRep.compare(expectedRep) == 0;
     }
-    
+
     if (result) {
         std_log("PASSED test "+test[0]);
         *this->totalPassed += 1;

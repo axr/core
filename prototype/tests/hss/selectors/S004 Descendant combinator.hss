@@ -1,17 +1,17 @@
 test
 {
-	.. child
-	{
-		background: #66F;
-	}
-	
-	.. subchild
-	{
-		background: #6F6;
-	}
-	
-	parent .. subchild
-	{
-		background: #FF6;
-	}
+    .. child
+    {
+        background: #66F;
+    }
+
+    .. subchild
+    {
+        background: #6F6;
+    }
+
+    parent .. subchild
+    {
+        background: #FF6;
+    }
 }

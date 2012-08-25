@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Test R006 Multiple elements
-	Created by Miro Keller on 2011-10-02.
+    Test R006 Multiple elements
+    Created by Miro Keller on 2011-10-02.
 -->
 <?xml-stylesheet type="application/x-hss" src="R006 Multiple elements.hss"?>
 <test>
-	<master>Master 1: smaller</master>
-	<master>Master 2: bigger</master>
-	<slave>Slave: Reference to master - should be smaller</slave>
+    <master>Master 1: smaller</master>
+    <master>Master 2: bigger</master>
+    <slave>Slave: Reference to master - should be smaller</slave>
 </test>

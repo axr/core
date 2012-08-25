@@ -22,11 +22,11 @@
     size: 14;
     color: bodyTextColor;
     face: "Helvetica";
-    
+
     &@ buttonFont
     {
         size: 16;
-        
+
         &@ buttonFontGreen { color: darkGreenColor; }
         &@ buttonFontRed { color: darkRedColor; }
     }

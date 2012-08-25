@@ -1,30 +1,30 @@
 /*
-	Test F001 - Basic
-	Created by Miro Keller on 2011-09-26.
+    Test F001 - Basic
+    Created by Miro Keller on 2011-09-26.
 */
 
 test
 {
-	background: #C;
-	
-	hello
-	{
-		width: 350;
-		height: 50%;
-		alignX: 100% - 15;
-		alignY: 15;
-		anchorX: 100%;
-		anchorY: 0;
-		
-		background: @rgb {
-			red: 255;
-			green: 250;
-			blue: 150;
-			alpha: 50%;
-		};
-		font: @font {
-			size: 50;
-			face: "Helvetica";
-		}
-	}
+    background: #C;
+
+    hello
+    {
+        width: 350;
+        height: 50%;
+        alignX: 100% - 15;
+        alignY: 15;
+        anchorX: 100%;
+        anchorY: 0;
+
+        background: @rgb {
+            red: 255;
+            green: 250;
+            blue: 150;
+            alpha: 50%;
+        };
+        font: @font {
+            size: 50;
+            face: "Helvetica";
+        }
+    }
 }

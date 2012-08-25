@@ -1,7 +1,7 @@
 parent
 {
-	child {
-		width: 150;
-		
-	}
+    child {
+        width: 150;
+
+    }
 }

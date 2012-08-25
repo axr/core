@@ -3,13 +3,13 @@ home
     content
     {
         #remove metadata;
-        
+
         about, nextSteps
         {
             isA: paragraph;
         }
     }
-    
+
     #new search
     {
         isA: textfield;

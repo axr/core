@@ -1,6 +1,6 @@
 /*
-	Test BH001 Load
-	Created by Miro Keller on 2011-11-05.
+    Test BH001 Load
+    Created by Miro Keller on 2011-11-05.
 */
 
 #import "BH001 Common Styles.hss";
@@ -8,12 +8,12 @@
 master
 {
     background: bgGrad;
-    
+
     #new top
     {
         height: 50% - 40;
         contentAlignY: middle;
-        
+
         #move changeLocation
         {
             isA: button;
@@ -24,21 +24,21 @@ master
             };
         }
     }
-    
+
     #new highlight
     {
         height: 1;
         background: #F;
         alignY: 50% - 30;
     }
-     
+
     #new shadow
     {
         height: 1;
         background: #BE;
         alignY: 50% - 30;
     }
-    
+
     #new shadow
     {
         height: 10;
@@ -49,7 +49,7 @@ master
         };
         alignY: 50% - 30;
     }
-    
+
     #new bottom
     {
         width: 100% - 100;
@@ -59,8 +59,8 @@ master
         contentAlignY: 50%;
         background: #F;
         shape: @{3};
-       
-        
+
+
         #move loadInto
         {
             isA: button;

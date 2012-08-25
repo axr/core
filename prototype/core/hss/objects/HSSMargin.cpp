@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -80,7 +80,7 @@ HSSClonable::p HSSMargin::cloneImpl() const{
 
 HSSMargin::~HSSMargin()
 {
-    
+
 }
 
 std::string HSSMargin::toString()
@@ -122,7 +122,7 @@ void HSSMargin::setProperty(HSSObservableProperty name, HSSParserNode::p value)
         case HSSObservablePropertyBottom:
             this->setDBottom(value);
             break;
-            
+
         default:
             HSSObject::setProperty(name, value);
             break;
@@ -195,11 +195,11 @@ void HSSMargin::setDSize(HSSParserNode::p value){
                                              NULL );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSMargin", "Invalid value for size of @margin object "+this->name));
     }
-    
+
     this->dSize = value;
 }
 
@@ -227,11 +227,11 @@ void HSSMargin::setDTop(HSSParserNode::p value){
                                                   NULL );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSMargin", "Invalid value for corners of @margin object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyTop, &this->top);
 }
 
@@ -265,11 +265,11 @@ void HSSMargin::setDRight(HSSParserNode::p value){
                                                   NULL );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSMargin", "Invalid value for corners of @margin object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyRight, &this->right);
 }
 
@@ -303,11 +303,11 @@ void HSSMargin::setDBottom(HSSParserNode::p value){
                                                   NULL );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSMargin", "Invalid value for corners of @margin object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyBottom, &this->bottom);
 }
 
@@ -341,11 +341,11 @@ void HSSMargin::setDLeft(HSSParserNode::p value){
                                                   NULL );
             break;
         }
-            
+
         default:
             throw AXRWarning::p(new AXRWarning("HSSMargin", "Invalid value for corners of @margin object "+this->name));
     }
-    
+
     this->notifyObservers(HSSObservablePropertyLeft, &this->left);
 }
 
@@ -367,7 +367,7 @@ long double HSSMargin::_setLDProperty(
                                            const std::vector<HSSDisplayObject::p> * scope
                                            ) {
     long double ret;
-    
+
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType) {
         case HSSParserNodeTypeNumberConstant:
@@ -377,7 +377,7 @@ long double HSSMargin::_setLDProperty(
             observedStore = NULL;
             break;
         }
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
@@ -390,7 +390,7 @@ long double HSSMargin::_setLDProperty(
             }
             break;
         }
-            
+
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
@@ -404,14 +404,14 @@ long double HSSMargin::_setLDProperty(
                 observedStore = expressionValue.get();
                 observedStoreProperty = HSSObservablePropertyValue;
             }
-            
+
             break;
         }
-            
+
         case HSSParserNodeTypeKeywordConstant:
-            
+
             break;
-            
+
         case HSSParserNodeTypeFunctionCall:
         {
             HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction>(value)->clone();
@@ -419,14 +419,14 @@ long double HSSMargin::_setLDProperty(
             fnct->setPercentageObserved(observedProperty, observedObject);
             fnct->setScope(scope);
             fnct->setThisObj(this->getThisObj());
-            
+
             boost::any remoteValue = fnct->evaluate();
             try {
                 ret = boost::any_cast<long double>(remoteValue);
             } catch (...) {
                 ret = 0.;
             }
-            
+
             if(callback != NULL){
                 fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSMargin>(this, callback));
                 observedStore = fnct.get();
@@ -434,10 +434,10 @@ long double HSSMargin::_setLDProperty(
             }
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     return ret;
 }

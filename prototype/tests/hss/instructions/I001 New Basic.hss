@@ -1,9 +1,9 @@
 test
 {
-	#new newElement {
-		width: 250;
-		height: 200;
-		background: #D;
-		alignY: 50%;
-	}
+    #new newElement {
+        width: 250;
+        height: 200;
+        background: #D;
+        alignY: 50%;
+    }
 }

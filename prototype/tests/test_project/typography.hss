@@ -4,7 +4,7 @@
     weight: bold;
     color: foreground2Color;
     kerning: 3;
-    
+
     fallback: @{
         family: "Futura";
         color: foreground2Color;
@@ -15,7 +15,7 @@
 {
     isA: fontStyle1;
     size: 20;
-    
+
     &@ title2Font {
         size: 16;
         &@ title2FontAcc { color: highlight1Color }
@@ -34,6 +34,6 @@
 {
     isA: fontStyle1;
     size: 12;
-    
+
     &@ bodyFontAcc { color: highlight1Color }
 }

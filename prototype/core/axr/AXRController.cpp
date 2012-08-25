@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -64,7 +64,7 @@ AXRController::AXRController()
 AXRController::~AXRController()
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRController: destructing controller");
-    
+
     this->objectTree.clear();
     this->loadSheets.clear();
     this->rules.clear();
@@ -77,7 +77,7 @@ void AXRController::matchRulesToContentTree()
     const HSSDisplayObject::p rootScopeArr[1] = {this->getRoot()};
     const std::vector<HSSDisplayObject::p>scope(rootScopeArr, rootScopeArr+1);
     unsigned i, size;
-    
+
     for (i=0, size=rules.size(); i<size; i++) {
         const HSSRule::p& rule = rules[i];
         std::vector<HSSSelectorChain::p> selectorChains = rule->getSelectorChains();
@@ -90,7 +90,7 @@ void AXRController::matchRulesToContentTree()
             } catch (AXRWarning::p e) {
                 e->raise();
             }
-            
+
             unsigned i, j, k, size, size2, size3;
             for (i=0, size=selection.size(); i<size; i++) {
                 std::vector<HSSDisplayObject::p> inner = selection[i];
@@ -98,11 +98,11 @@ void AXRController::matchRulesToContentTree()
                     const HSSDisplayObject::p & displayObject = inner[j];
                     axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: match "+displayObject->getElementName());
                     displayObject->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff ));
-                    
+
                     displayObject->setNeedsRereadRules(true);
                     displayObject->setNeedsSurface(true);
                     displayObject->setDirty(true);
-                    
+
                     //if it is a container it may have children
                     if(displayObject->isA(HSSObjectTypeContainer)){
                         HSSContainer::p selectedContainer = boost::static_pointer_cast<HSSContainer>(displayObject);
@@ -113,7 +113,7 @@ void AXRController::matchRulesToContentTree()
                         }
                         this->currentContext.pop();
                     }
-                    
+
                     displayObject->setNeedsRereadRules(true);
                 }
             }
@@ -136,7 +136,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                         HSSNameSelector::p nameSel = subject->getName();
                         elementName = nameSel->getElementName();
                     }
-                    
+
                     unsigned i;
                     unsigned argssize = 1;
                     HSSParserNode::p argument = instruction->getArgument();
@@ -146,7 +146,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                             argssize = (int)argnum->getValue();
                         }
                     }
-                    
+
                     for (i=0; i<argssize; i++) {
                         HSSContainer::p newContainer = HSSContainer::p(new HSSContainer());
                         newContainer->setName(elementName);
@@ -172,10 +172,10 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                 } else {
                     AXRWarning::p(new AXRWarning("AXRController", "You cannot use the #new instruction at root level"))->raise();
                 }
-                
+
                 break;
             }
-                
+
             case HSSMoveInstruction:
             {
                 if(container){
@@ -184,7 +184,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                         std::vector<HSSDisplayObject::p> moveScope = parent->getChildren();
                         std::vector< std::vector<HSSDisplayObject::p> > selection = this->select(rule->getSelectorChains(), moveScope, container);
                         unsigned i, j, k, size, size2, size3;
-                        
+
                         this->currentContext.push(container);
                         //move the children over
                         for (i=0, size=selection.size(); i<size; i++) {
@@ -201,7 +201,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                                     theDO->setNeedsRereadRules(true);
                                     theDO->setNeedsSurface(true);
                                     theDO->setDirty(true);
-                                    
+
                                     if(theDO->isA(HSSObjectTypeContainer)){
                                         HSSContainer::p theContainer = boost::static_pointer_cast<HSSContainer>(theDO);
                                         this->currentContext.push(theContainer);
@@ -212,11 +212,11 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                                         }
                                         this->currentContext.pop();
                                     }
-                                    
+
                                     theDO->setNeedsRereadRules(true);
                                     //theDO->fireEvent(HSSEventTypeLoad);
                                 }
-                                
+
                             }
                         }
                         this->currentContext.pop();
@@ -224,10 +224,10 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                         AXRWarning::p(new AXRWarning("AXRController", "You cannot use the #move instruction at root level"))->raise();
                     }
                 }
-                
+
                 break;
             }
-                
+
             case HSSDeleteInstruction:
             {
                 if(container){
@@ -245,16 +245,16 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                 }
                 break;
             }
-            
+
             default:
                 break;
         }
-        
+
     } else if(!instruction) {
         std::vector<HSSSelectorChain::p> selectorChains = rule->getSelectorChains();
         if(selectorChains.size() > 0){
             std::vector< std::vector<HSSDisplayObject::p> > selection;
-            
+
             if (container){
                 if (applyingInstructions) {
                     //we observe the parent for dom changes
@@ -263,7 +263,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                     rule->setThisObj(container);
                     rule->setOriginalScope(scope);
                 }
-                
+
                 try {
                     selection = this->select(selectorChains, scope, container);
                 } catch (AXRError::p e) {
@@ -271,7 +271,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                 } catch (AXRWarning::p e) {
                     e->raise();
                 }
-                
+
             } else {
                 try {
                     selection = this->select(selectorChains, scope, this->getRoot());
@@ -281,7 +281,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                     e->raise();
                 }
             }
-            
+
             unsigned i, j, k, size, size2, size3;
             for (i=0, size=selection.size(); i<size; i++) {
                 std::vector<HSSDisplayObject::p> inner = selection[i];
@@ -289,11 +289,11 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                     const HSSDisplayObject::p & displayObject = inner[j];
                     axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: match "+displayObject->getElementName());
                     displayObject->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff ));
-                    
+
                     displayObject->setNeedsRereadRules(true);
                     displayObject->setNeedsSurface(true);
                     displayObject->setDirty(true);
-                    
+
                     //if it is a container it may have children
                     if(displayObject->isA(HSSObjectTypeContainer)){
                         HSSContainer::p selectedContainer = boost::static_pointer_cast<HSSContainer>(displayObject);
@@ -304,7 +304,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                         }
                         this->currentContext.pop();
                     }
-                    
+
                     displayObject->setNeedsRereadRules(true);
                 }
             }
@@ -343,7 +343,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::select(std::vecto
     std::vector< std::vector<HSSDisplayObject::p> > ret;
     std::vector< std::vector<HSSDisplayObject::p> > selections;
     HSSSelectorChain::const_it it;
-    
+
     for (it=selectorChains.begin(); it!=selectorChains.end(); it++) {
         this->initializeSelectorChain(*it);
         selections = this->selectHierarchical(scope, thisObj, processing);
@@ -355,7 +355,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::select(std::vecto
             }
         }
     }
-    
+
     return ret;
 }
 
@@ -393,7 +393,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectHierarchica
                 }
                 return ret;
             }
-                
+
             case HSSCombinatorTypeDescendants:
             {
                 //if found, create a new scope with the children of the previous selections
@@ -416,22 +416,22 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectHierarchica
                 return this->selectAllHierarchical(newScope, thisObj, processing);
                 break;
             }
-                
+
             default:
                 break;
-        } 
+        }
     }
-    
+
     return selections;
 }
 
 std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     std::vector< std::vector<HSSDisplayObject::p> > selections = this->selectOnLevel(scope, thisObj, processing);
-    
+
     unsigned i, j, k, size, size2, size3;
     for (i=0, size=selections.size(); i<size; i++) {
-        
+
         std::vector<HSSDisplayObject::p> newSearch;
         for(j=0, size2=scope.size(); j<size2; j++){
             if(scope[j]->isA(HSSObjectTypeContainer)){
@@ -442,7 +442,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectAllHierarch
                 }
             }
         }
-        
+
         std::vector< std::vector<HSSDisplayObject::p> > childSelection;
         if(newSearch.size() > 0){
             this->currentChainCount -= 1;
@@ -456,7 +456,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectAllHierarch
             }
         }
     }
-    
+
     return selections;
 }
 
@@ -480,7 +480,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(con
                 }
                 return ret;
             }
-                
+
             case HSSCombinatorTypeNextSiblings:
             {
                 //find the selected ones on the right, and select all the following ones that match
@@ -499,7 +499,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(con
                 }
                 return ret;
             }
-                
+
             case HSSCombinatorTypePreviousSiblings:
             {
                 //find the selected ones on the left, and select all the previous ones that match
@@ -516,16 +516,16 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(con
                         std::vector< std::vector<HSSDisplayObject::p> > newSelection = this->selectSimple(right, thisObj, processing);
                         ret.insert(ret.end(), newSelection.begin(), newSelection.end());
                     }
-                    
+
                 }
                 return ret;
             }
-                
+
             default:
                 break;
-        } 
+        }
     }
-    
+
     return selections;
 }
 
@@ -535,7 +535,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(cons
     bool done = false;
     bool needsReadNext = true;
     std::vector<HSSDisplayObject::p> selection = scope;
-    
+
     while (!done){
         switch (this->currentSelectorNode->getSelectorType()) {
             case HSSSelectorTypeSimpleSelector:
@@ -550,7 +550,7 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(cons
                 selection.push_back(thisObj);
                 break;
             }
-                
+
             default:
             {
                 done = true;
@@ -558,16 +558,16 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(cons
                 break;
             }
         }
-        
+
         if(this->isAtEndOfSelector()){
             done = true;
         } else if(needsReadNext) {
             this->readNextSelectorNode();
         }
     }
-    
+
     ret.push_back(selection);
-    
+
     return ret;
 }
 
@@ -576,7 +576,7 @@ std::string AXRController::toString()
     std::string tempstr = "AXR Controller\n";
     if(this->root != NULL){
         tempstr.append("\n\n\nROOT:");
-        tempstr = this->root->toString();  
+        tempstr = this->root->toString();
     }
     unsigned i;
     if(this->objectTree.size() > 0)
@@ -586,7 +586,7 @@ std::string AXRController::toString()
             tempstr.append("\n").append(this->objectTree[i]->toString());
         }
     }
-    
+
     if(this->parserTree.size() > 0)
     {
         tempstr.append("\n\n\nPARSER TREE:");
@@ -595,7 +595,7 @@ std::string AXRController::toString()
             tempstr.append("\n").append((*pIt)->toString());
         }
     }
-    
+
     return tempstr;
 }
 
@@ -603,7 +603,7 @@ std::string AXRController::toString()
 void AXRController::reset()
 {
     unsigned i;
-    
+
     this->objectTree.clear();
     this->loadSheets.clear();
     this->parserTree.clear();
@@ -613,7 +613,7 @@ void AXRController::reset()
     {
         this->currentContext.pop();
     }
-    
+
     this->currentChain.reset();
     this->currentSelectorNode.reset();
     this->currentChainCount = 0;
@@ -669,7 +669,7 @@ void AXRController::exitElement()
 void AXRController::add(HSSDisplayObject::p newElement)
 {
     newElement->setController(this);
-    
+
     if(!this->root){
         HSSContainer::p cont = HSSContainer::asContainer(newElement);
         if (cont){
@@ -677,12 +677,12 @@ void AXRController::add(HSSDisplayObject::p newElement)
         } else {
             std_log("############## HSSController: cannot add non-controller as root");
         }
-        
+
     } else {
         if(this->currentContext.size() != 0){
             HSSContainer::p theCurrent = this->currentContext.top();
             theCurrent->add(newElement);
-            
+
         } else {
             std_log("############## HSSController: tried to add a container to nonexistent current");
         }
@@ -717,7 +717,7 @@ HSSObjectDefinition::p & AXRController::objectTreeGet(std::string name)
             return theObj;
         }
     }
-    
+
     throw AXRError::p(new AXRError("AXRController", "No object with name "+name+" was found"));
 }
 
@@ -792,8 +792,3 @@ unsigned const AXRController::rulesSize()
 {
     return this->rules.size();
 }
-
-
-
-
-

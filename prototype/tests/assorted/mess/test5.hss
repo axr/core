@@ -2,15 +2,15 @@
 
 @container
 {
-	contentText: "annonymous container object";
+    contentText: "annonymous container object";
 }
 
 /*@container myContainer
 {
-	width: 150;
+    width: 150;
 }
 
 @lineBorder myBorder
 {
-	color: @rgb { 127, 127, 128, 20% }
+    color: @rgb { 127, 127, 128, 20% }
 }*/

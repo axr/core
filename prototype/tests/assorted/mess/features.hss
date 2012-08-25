@@ -1,7 +1,7 @@
 #AAE baseColor;
 @rgb {
     isA: baseColor;
-    
+
     &@rgb demoButtonBase { alpha: 20% }
     &@rgb demoButtonHL { alpha: 10% }
     &@rgb demoButtonSH { alpha: 30% }
@@ -30,7 +30,7 @@
 @lineBorder demoButtonOuterBorder {
     size: 1;
     color: demoButtonBase;
-    
+
     &@ demoButtonInnerBorder { color: demoButtonHL2 }
 }
 
@@ -39,7 +39,7 @@
     background: demoButtonBg;
     shape: @roundedRect { corners: 10 };
     border: demoButtonInnerBorder, demoButtonOuterBorder;
-    
+
     @::hover
     {
         background: demoButtonBg2;
@@ -52,7 +52,7 @@
         height: 150;
         background: @{baseColor ; #F; 100% };
     }
-    
+
     #new wrapper
     {
         contentAlignY: middle;
@@ -61,7 +61,7 @@
         width: 70%;
         alignY: middle;
         flow: no;
-        
+
         #new(5) demo
         {
             isA: demoButton;

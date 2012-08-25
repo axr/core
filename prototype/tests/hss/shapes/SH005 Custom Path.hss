@@ -4,13 +4,13 @@
 test
 {
     .. * { alignY: 50% }
-    
-	shapeElement
-	{
-	    width: 200;
-	    height: 200;
-	    background: #C;
-	    //not ready yet
-	    //shape: triangle;
-	}
+
+    shapeElement
+    {
+        width: 200;
+        height: 200;
+        background: #C;
+        //not ready yet
+        //shape: triangle;
+    }
 }

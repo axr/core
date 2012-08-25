@@ -1,6 +1,6 @@
 /*
-	Test FL001 - Basic
-	Created by Miro Keller on 2012-02-23.
+    Test FL001 - Basic
+    Created by Miro Keller on 2012-02-23.
 */
 
 #A66 red;
@@ -19,12 +19,12 @@
 test
 {
     background: #E;
-    
-	* { isA: box }
-	:first
-	{
-	    background: red;
-	}
+
+    * { isA: box }
+    :first
+    {
+        background: red;
+    }
     :last
     {
         background: green;

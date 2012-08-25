@@ -1,4 +1,4 @@
-/* 
+/*
  * ExpatMM - C++ Wrapper for Expat available at http://expat.sourceforge.net/
  * Copyright (c) 2007, 2008, 2009 IntelliTree Solutions llc
  * Author: Coleman Kane <ckane@intellitree.com>
@@ -46,96 +46,96 @@ namespace expatmm {
      *  @brief Expatmm C to C++ bridge for Expat.
      */
   class ExpatXMLParser {
-      
+
     private:
-	  void register_default_handlers(void);
+      void register_default_handlers(void);
 
-	  static XMLCALL void _element_start_handler(void *userData,
-		  const XML_Char *name, const XML_Char **atts);
-	  static XMLCALL void _element_end_handler(void *userData,
-		  const XML_Char *name);
-	  static XMLCALL void _character_data_handler(void *userData,
-		  const XML_Char *s, int len);
-	  static XMLCALL void _processing_instr_handler(void *userData,
-		  const XML_Char *target, const XML_Char *data);
-	  static XMLCALL void _comment_handler(void *userData,
-		  const XML_Char *data);
-	  static XMLCALL void _default_handler(void *userData,
-		  const XML_Char *s, int len);
-	  static XMLCALL void _cdata_start_handler(void *userData);
-	  static XMLCALL void _cdata_end_handler(void *userData);
-	protected:
+      static XMLCALL void _element_start_handler(void *userData,
+          const XML_Char *name, const XML_Char **atts);
+      static XMLCALL void _element_end_handler(void *userData,
+          const XML_Char *name);
+      static XMLCALL void _character_data_handler(void *userData,
+          const XML_Char *s, int len);
+      static XMLCALL void _processing_instr_handler(void *userData,
+          const XML_Char *target, const XML_Char *data);
+      static XMLCALL void _comment_handler(void *userData,
+          const XML_Char *data);
+      static XMLCALL void _default_handler(void *userData,
+          const XML_Char *s, int len);
+      static XMLCALL void _cdata_start_handler(void *userData);
+      static XMLCALL void _cdata_end_handler(void *userData);
+    protected:
       /* The handle for the parser (expat) */
-	  XML_Parser expat_parser;
-      
-	  /* Temporary buffer where data is streamed in */
-	  //XML_Char *xml_buffer;
-	  //size_t xml_buffer_size;
-      
-	  /* Tells if the parser is ready to accept data */
-	  bool valid_parser;
-      
-	  /* Status and Error codes in the event of unforseen events */
-	  XML_Status status;
-	  XML_Error last_error;
-      
-	  /*
-		 Override this to implement your container-specific parser.
+      XML_Parser expat_parser;
 
-		 You must:
-		   put new XML data into xml_buffer 
-		   set status
-		   set last_error
-		   return the amount of XML_Char's written to xml_buffer
+      /* Temporary buffer where data is streamed in */
+      //XML_Char *xml_buffer;
+      //size_t xml_buffer_size;
 
-		   on error, return < 0. The contents of xml_buffer will be
-		   thrown away in this event, so it is the derived class's
-		   responsibility to reseek the "data cursor" to re-get any
-		   data in the buffer on an error condition.
+      /* Tells if the parser is ready to accept data */
+      bool valid_parser;
 
-		   Use setReadiness, setStatus, and setLastError to handle
-		   error, status, and control events and codes. 
+      /* Status and Error codes in the event of unforseen events */
+      XML_Status status;
+      XML_Error last_error;
+
+      /*
+         Override this to implement your container-specific parser.
+
+         You must:
+           put new XML data into xml_buffer
+           set status
+           set last_error
+           return the amount of XML_Char's written to xml_buffer
+
+           on error, return < 0. The contents of xml_buffer will be
+           thrown away in this event, so it is the derived class's
+           responsibility to reseek the "data cursor" to re-get any
+           data in the buffer on an error condition.
+
+           Use setReadiness, setStatus, and setLastError to handle
+           error, status, and control events and codes.
       */
       virtual XML_Char *getBuffer(void) = 0;
-	  //virtual XML_Char *getBuffer(void) { return xml_buffer; };
+      //virtual XML_Char *getBuffer(void) { return xml_buffer; };
       virtual size_t getBlockSize(void) = 0;
-	  //virtual size_t getBlockSize(void) { return xml_buffer_size; };
-	  virtual ssize_t read_block(void);
-	  virtual void setReadiness(bool ready) { valid_parser = ready; };
-	  virtual void setStatus(XML_Status new_status) { status = new_status; };
-	  virtual void setLastError(XML_Error new_last_error) {
-		last_error = new_last_error;
-	  };
+      //virtual size_t getBlockSize(void) { return xml_buffer_size; };
+      virtual ssize_t read_block(void);
+      virtual void setReadiness(bool ready) { valid_parser = ready; };
+      virtual void setStatus(XML_Status new_status) { status = new_status; };
+      virtual void setLastError(XML_Error new_last_error) {
+        last_error = new_last_error;
+      };
 
-	  /* Called by the static handler methods to process the XML Document */
-	  virtual void StartElement(const XML_Char *name, const XML_Char **atts);
-	  virtual void EndElement(const XML_Char *name);
-	  virtual void CharacterData(const XML_Char *s, int len);
-	  virtual void ProcessingInstruction(const XML_Char *target,
-		  const XML_Char *data);
-	  virtual void CommentData(const XML_Char *data);
-	  virtual void DefaultHandler(const XML_Char *s, int len);
-	  virtual void CDataStart(void);
-	  virtual void CDataEnd(void);
+      /* Called by the static handler methods to process the XML Document */
+      virtual void StartElement(const XML_Char *name, const XML_Char **atts);
+      virtual void EndElement(const XML_Char *name);
+      virtual void CharacterData(const XML_Char *s, int len);
+      virtual void ProcessingInstruction(const XML_Char *target,
+          const XML_Char *data);
+      virtual void CommentData(const XML_Char *data);
+      virtual void DefaultHandler(const XML_Char *s, int len);
+      virtual void CDataStart(void);
+      virtual void CDataEnd(void);
 
-	public:
-	  
-	  /* Create a new parser, using the default Chunk Size */
-	  ExpatXMLParser(void);
+    public:
 
-	  /* Create a new parser, using a user-supplied chunk size */
-	  ExpatXMLParser(size_t chunk_size);
+      /* Create a new parser, using the default Chunk Size */
+      ExpatXMLParser(void);
 
-	  /* Destructor that cleans up xml_buffer and parser */
-	  virtual ~ExpatXMLParser(void);
+      /* Create a new parser, using a user-supplied chunk size */
+      ExpatXMLParser(size_t chunk_size);
 
-	  /* Attempts to parse an entire XML source */
-	  virtual bool Parse(void);
+      /* Destructor that cleans up xml_buffer and parser */
+      virtual ~ExpatXMLParser(void);
 
-	  /* Expose status, error, and control codes to users */
-	  virtual bool Ready(void) { return valid_parser; };
-	  virtual XML_Error getLastError(void) { return last_error; };
-	  virtual XML_Status getStatus(void) { return status; };
+      /* Attempts to parse an entire XML source */
+      virtual bool Parse(void);
+
+      /* Expose status, error, and control codes to users */
+      virtual bool Ready(void) { return valid_parser; };
+      virtual XML_Error getLastError(void) { return last_error; };
+      virtual XML_Status getStatus(void) { return status; };
   };
 };
 

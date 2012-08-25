@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -58,13 +58,13 @@ AXRCore::tp & AXRCore::getInstance()
 
 AXRCore::AXRCore()
 {
-    
+
 }
 
 void AXRCore::initialize(AXRWrapper * wrpr)
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: initializing core for thread " + boost::lexical_cast<std::string>(pthread_self()));
-    
+
     AXRController::p ctrlr = AXRController::p(new AXRController());
     AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.get()));
     this->setWrapper(wrpr);
@@ -102,23 +102,23 @@ void AXRCore::run()
         return;
     }
     bool loadingSuccess = this->parserXML->loadFile(this->file);
-    
+
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished parsing "+this->file->getFileName());
     axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath()+"/"+this->file->getFileName());
-    
+
     if(!loadingSuccess){
         AXRError::p(new AXRError("AXRCore", "Could not load the XML file"))->raise();
     } else {
         //needs reset on next load
         this->_hasLoadedFile = true;
-        
+
         HSSContainer::p root = boost::static_pointer_cast<HSSContainer>(this->controller->getRoot());
         unsigned i, size;
         std::string hssfilename, hssfilepath;
-        
+
         std::vector<std::string> loadSheets = this->controller->loadSheetsGet();
         for (i=0, size = loadSheets.size(); i<size; i++) {
-            
+
             hssfilename = loadSheets[i];
             if(hssfilename.substr(0,7) == "file://"){
                 hssfilepath = hssfilename;
@@ -136,7 +136,7 @@ void AXRCore::run()
                 e->raise();
                 continue;
             }
-            
+
             this->parserHSS->setBasePath(this->file->getBasePath());
             if(! this->parserHSS->loadFile(hssfile)){
                 AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
@@ -144,18 +144,18 @@ void AXRCore::run()
         }
         axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished loading stylesheets for "+this->file->getFileName());
         axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath()+"/"+this->file->getFileName());
-        
+
         axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: matching rules to the content tree");
         //assign the rules to the objects
         this->controller->matchRulesToContentTree();
         root->setNeedsRereadRules(true);
-        
+
         if (root) {
             root->recursiveReadDefinitionObjects();
             root->handleEvent(HSSEventTypeLoad, NULL);
         }
     }
-    
+
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: run complete, entering event loop\n\n\n");
 }
 
@@ -211,5 +211,3 @@ void AXRCore::evaluateCustomFunction(std::string name, void* data)
         this->_customFunctions[name]->call(HSSObservablePropertyValue, data);
     }
 }
-
-

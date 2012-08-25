@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -74,15 +74,15 @@ char Buff[BUFFSIZE];
 //    axr_debug_activate_channel(AXR_DEBUG_CH_EVENTS);
 //    axr_debug_activate_channel(AXR_DEBUG_CH_EVENTS_SPECIFIC);
 //    axr_debug_activate_channel(AXR_DEBUG_CH_TOKENIZING);
-    
+
     return self;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    
+
 //    NSString * filepath = [[NSBundle mainBundle] pathForResource:@"blank" ofType:@"xml" inDirectory:@"views"];
 //    [[self axrView] loadFile:filepath];
-    
+
     if([self needsFile]){
         [self openDocument:self];
         [self setNeedsFile:NO];
@@ -100,7 +100,7 @@ char Buff[BUFFSIZE];
 void listHSSStatements(NSString *filepath)
 {
 //    std_log1(std::string("******************************************************************\n* reading all statements from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
-//    
+//
 //    //FIXME: this is uh-gly
 //    AXR::AXRController controller = AXR::AXRController() ;
 //    AXR::HSSParser hssparser = AXR::HSSParser(&controller);
@@ -114,7 +114,7 @@ void listHSSStatements(NSString *filepath)
 //    } else {
 //        std_log1("error loading file");
 //    }
-//    
+//
 //    std_log1("reached end of source");
 //    std_log1("\n\n\n\n");
 //
@@ -127,15 +127,15 @@ void listHSSStatements(NSString *filepath)
 void listHSSTokens(NSString *filepath)
 {
 //    std_log1(std::string("******************************************************************\n* reading all tokens from\n* ").append([filepath UTF8String]).append("\n******************************************************************\n"));
-//    
+//
 //    FILE * hssfile = fopen([filepath UTF8String], "r");
 //    AXR::HSSTokenizer tokenizer = AXR::HSSTokenizer();
 //    int len = (int)fread(tokenizer.getBuffer().get(), 1, AXR_HSS_BUFFER_SIZE, hssfile);
 //    tokenizer.setBufferLength(len);
 //    tokenizer.readNextChar();
 //    fclose(hssfile);
-//    
-//    
+//
+//
 //    AXR::HSSToken::p token;
 //    bool done = FALSE;
 //    int security_count = 0;
@@ -149,7 +149,7 @@ void listHSSTokens(NSString *filepath)
 //        } else {
 //            std::cout << token->toString() << std::endl;
 //        }
-//        
+//
 //        if(security_count == 99999)
 //        {
 //            break;
@@ -167,7 +167,7 @@ void listHSSTokens(NSString *filepath)
 void listXMLElements(NSString *filepath)
 {
 //    std_log1(std::string("******************************************************************\n* reading all XML elements from\n* ").append([filepath UTF8String]).append("\n******************************************************************"));
-//    
+//
 //    AXR::AXRController * controller = new AXR::AXRController();
 //    AXR::XMLParser parser = AXR::XMLParser(controller, [filepath UTF8String], [[filepath lastPathComponent] UTF8String]);
 //    try {
@@ -182,7 +182,7 @@ void listXMLElements(NSString *filepath)
 //    catch(AXR::XMLMalformedProcessingInstructionException e){
 //        std::cout << e.toString() << std::endl;
 //    }
-//    
+//
 //    std::cout << std::endl << "-----------------------------" << std::endl
 //    <<  controller->toString() << std::endl << "-----------------------------" << std::endl;
 }
@@ -190,52 +190,52 @@ void listXMLElements(NSString *filepath)
 - (void)listXMLElements
 {
 //    //load the XML file
-//	NSArray *xmlFileType = [NSArray arrayWithObject:@"xml"];
-//	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-//	int result;
-//	[openPanel setCanChooseFiles:TRUE];
-//	[openPanel setAllowsMultipleSelection:FALSE];
-//	result = [openPanel runModalForTypes:xmlFileType];
-//	if(result == NSOKButton){
-//		if([[openPanel filenames] count] > 0){
-//			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
+//  NSArray *xmlFileType = [NSArray arrayWithObject:@"xml"];
+//  NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+//  int result;
+//  [openPanel setCanChooseFiles:TRUE];
+//  [openPanel setAllowsMultipleSelection:FALSE];
+//  result = [openPanel runModalForTypes:xmlFileType];
+//  if(result == NSOKButton){
+//      if([[openPanel filenames] count] > 0){
+//          NSString *filepath = [[openPanel filenames] objectAtIndex:0];
 //            listXMLElements(filepath);
-//		}
-//	}
+//      }
+//  }
 //    std_log1("reached end of source");
 //    std_log1("\n\n\n\n");
 }
 
 - (IBAction)listStatements:(id)sender {
 //    //load the HSS file
-//	NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
-//	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-//	int result;
-//	[openPanel setCanChooseFiles:TRUE];
-//	[openPanel setAllowsMultipleSelection:FALSE];
-//	result = [openPanel runModalForTypes:hssFileType];
-//	if(result == NSOKButton){
-//		if([[openPanel filenames] count] > 0){
-//			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
+//  NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
+//  NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+//  int result;
+//  [openPanel setCanChooseFiles:TRUE];
+//  [openPanel setAllowsMultipleSelection:FALSE];
+//  result = [openPanel runModalForTypes:hssFileType];
+//  if(result == NSOKButton){
+//      if([[openPanel filenames] count] > 0){
+//          NSString *filepath = [[openPanel filenames] objectAtIndex:0];
 //            listHSSStatements(filepath);
-//		}
-//	}
+//      }
+//  }
 }
 
 - (IBAction)listTokens:(id)sender {
 //    //load the HSS file
-//	NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
-//	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-//	int result;
-//	[openPanel setCanChooseFiles:TRUE];
-//	[openPanel setAllowsMultipleSelection:FALSE];
-//	result = [openPanel runModalForTypes:hssFileType];
-//	if(result == NSOKButton){
-//		if([[openPanel filenames] count] > 0){
-//			NSString *filepath = [[openPanel filenames] objectAtIndex:0];
+//  NSArray *hssFileType = [NSArray arrayWithObject:@"hss"];
+//  NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+//  int result;
+//  [openPanel setCanChooseFiles:TRUE];
+//  [openPanel setAllowsMultipleSelection:FALSE];
+//  result = [openPanel runModalForTypes:hssFileType];
+//  if(result == NSOKButton){
+//      if([[openPanel filenames] count] > 0){
+//          NSString *filepath = [[openPanel filenames] objectAtIndex:0];
 //            listHSSTokens(filepath);
-//		}
-//	}
+//      }
+//  }
 }
 
 - (IBAction)listXMLElements:(id)sender {
@@ -249,7 +249,7 @@ void listXMLElements(NSString *filepath)
 }
 
 - (IBAction)layoutTests:(id)sender {
-    
+
     [[self axrWindow] makeKeyAndOrderFront:self];
     NSString * filepath = [[NSBundle mainBundle] pathForResource:@"layoutTests" ofType:@"hss" inDirectory:@"views"];
     AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[[self axrView] axrWrapper];

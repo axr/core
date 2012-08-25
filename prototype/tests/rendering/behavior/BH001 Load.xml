@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Test BH001 Load
-	Created by Miro Keller on 2011-11-05.
+    Test BH001 Load
+    Created by Miro Keller on 2011-11-05.
 -->
 <?xml-stylesheet type="application/x-hss" src="BH001 Load.hss"?>
 <master>
-	<changeLocation>Click here to load another page</changeLocation>
-	<loadInto>Click here to load the page into here</loadInto>
+    <changeLocation>Click here to load another page</changeLocation>
+    <loadInto>Click here to load the page into here</loadInto>
 </master>

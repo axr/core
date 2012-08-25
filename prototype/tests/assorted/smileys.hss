@@ -6,7 +6,7 @@
     alignY: middle;
     shape: @circle;
     directionPrimary: topToBottom;
-    
+
     #new(2) eyes
     {
         width: 20%;
@@ -28,30 +28,30 @@
         height: 15%;
         background: #D;
         alignY: 65%;
-        
+
         shape: @roundedRect {
             corners: 5;
         };
     }
-    
+
     @::hover mouth
     {
         height: 40%;
         shape: @roundedRect {
             corners: 5;
             bottom: 30;
-        }; 
+        };
     }
 }
 
 * {
     contentAlignX: distribute;
-    
+
     #new(3) face
     {
         isA: face;
     }
-    
+
     @::hover face eyes
     {
         height: 25%;

@@ -1,22 +1,22 @@
 test
 {
-	child2 - child
-	{
-		background: #6FF;
-	}
-	
-	child + child
-	{
-		background: #66F;
-	}
-	
-	child = child2
-	{
-		background: #FF6;
-	}
-	
-	child2 + child2
-	{
-		background: #6F6;
-	}
+    child2 - child
+    {
+        background: #6FF;
+    }
+
+    child + child
+    {
+        background: #66F;
+    }
+
+    child = child2
+    {
+        background: #FF6;
+    }
+
+    child2 + child2
+    {
+        background: #6F6;
+    }
 }

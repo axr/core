@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Test S001 - Simple Selectors
-	Created by Miro Keller on 2011-09-17.
+    Test S001 - Simple Selectors
+    Created by Miro Keller on 2011-09-17.
 -->
 <?xml-stylesheet type="application/x-hss" src="S002 Hierarchy.hss"?>
 <test>
-	<element1>(Element 1) This should be blue</element1>
-	<element2>(Element 2) This should be yellow</element2>
-	<element3>(Element 3) This should be green</element3>
+    <element1>(Element 1) This should be blue</element1>
+    <element2>(Element 2) This should be yellow</element2>
+    <element3>(Element 3) This should be green</element3>
 </test>

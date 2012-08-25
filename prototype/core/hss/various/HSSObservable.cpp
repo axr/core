@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -53,12 +53,12 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
     static bool HSSObservableHasInitializedTypes = false;
     if (!HSSObservableHasInitializedTypes) {
         HSSObservableHasInitializedTypes = true;
-        
+
         types[HSSObservablePropertyNone] = "unknown";
-        
+
         //HSSObject
         types[HSSObservablePropertyIsA] = "HSSObservablePropertyIsA";
-        
+
         //HSSDisplayObject
         types[HSSObservablePropertyValue] = "HSSObservablePropertyValue";
         types[HSSObservablePropertyWidth] = "HSSObservablePropertyWidth";
@@ -79,7 +79,7 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyBorder] = "HSSObservablePropertyBorder";
         types[HSSObservablePropertyFlagChanged] = "HSSObservablePropertyFlagChanged";
         types[HSSObservablePropertyVisible] = "HSSObservablePropertyVisible";
-        
+
         //HSSContainer
         types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
         types[HSSObservablePropertyContentAlignY] = "HSSObservablePropertyContentAlignY";
@@ -87,39 +87,39 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyDirectionSecondary] = "HSSObservablePropertyWrapDirection";
         types[HSSObservablePropertyFont] = "HSSObservablePropertyFont";
         types[HSSObservablePropertyShape] = "HSSObservablePropertyShape";
-        
+
         //HSSTextBlock
         types[HSSObservablePropertyTransform] = "HSSObservablePropertyTransform";
         types[HSSObservablePropertyTextAlign] = "HSSObservablePropertyTextAlign";
         types[HSSObservablePropertyText] = "HSSObservablePropertyText";
-        
+
         //HSSRgb
         types[HSSObservablePropertyRed] = "HSSObservablePropertyRed";
         types[HSSObservablePropertyGreen] = "HSSObservablePropertyGreen";
         types[HSSObservablePropertyBlue] = "HSSObservablePropertyBlue";
         types[HSSObservablePropertyAlpha] = "HSSObservablePropertyAlpha";
-        
+
         //HSSGradient
         types[HSSObservablePropertyStartColor] = "HSSObservablePropertyStartColor";
         types[HSSObservablePropertyEndColor] = "HSSObservablePropertyEndColor";
         types[HSSObservablePropertyBalance] = "HSSObservablePropertyBalance";
         types[HSSObservablePropertyColorStops] = "HSSObservablePropertyColorStops";
-        
+
         //HSSLinearGradient
         types[HSSObservablePropertyStartX] = "HSSObservablePropertyStartX";
         types[HSSObservablePropertyStartY] = "HSSObservablePropertyStartY";
         types[HSSObservablePropertyEndX] = "HSSObservablePropertyEndX";
         types[HSSObservablePropertyEndY] = "HSSObservablePropertyEndY";
-        
+
         //HSSColorStop
         types[HSSObservablePropertyPosition] = "HSSObservablePropertyPosition";
-        
+
         //HSSFont
         types[HSSObservablePropertySize] = "HSSObservablePropertySize";
         types[HSSObservablePropertyFace] = "HSSObservablePropertyFace";
         types[HSSObservablePropertyColor] = "HSSObservablePropertyColor";
         types[HSSObservablePropertyWeight] = "HSSObservablePropertyWeight";
-        
+
         //HSSRoundedRect
         types[HSSObservablePropertyCorners] = "HSSObservablePropertyCorners";
         types[HSSObservablePropertyLeft] = "HSSObservablePropertyLeft";
@@ -130,35 +130,35 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyRightBottom] = "HSSObservablePropertyRightBottom";
         types[HSSObservablePropertyBottom] = "HSSObservablePropertyBottom";
         types[HSSObservablePropertyLeftBottom] = "HSSObservablePropertyLeftBottom";
-        
+
         //HSSEvent
         types[HSSObservablePropertyAction] = "HSSObservablePropertyAction";
-        
+
         //HSSRequest
         types[HSSObservablePropertySrc] = "HSSObservablePropertySrc";
         types[HSSObservablePropertyTarget] = "HSSObservablePropertyTarget";
         types[HSSObservablePropertyMode] = "HSSObservablePropertyMode";
         types[HSSObservablePropertyContentTarget] = "HSSObservablePropertyContentTarget";
-        
+
         //various
         types[HSSObservablePropertyTreeChange] = "HSSObservablePropertyTreeChange";
-        
+
         //HSSPolygon
         types[HSSObservablePropertySides] = "HSSObservablePropertySides";
         types[HSSObservablePropertyAngle] = "HSSObservablePropertyAngle";
     }
-    
+
     return types[property];
 }
 
 HSSObservableProperty HSSObservable::observablePropertyFromString(std::string name)
 {
     static boost::unordered_map<std::string, HSSObservableProperty> properties;
-    
+
     if (properties.size() == 0) {
         //HSSObject
         properties["isA"] = HSSObservablePropertyIsA;
-        
+
         //HSSDisplayObject
         properties["value"] = HSSObservablePropertyValue;
         properties["width"] = HSSObservablePropertyWidth;
@@ -173,7 +173,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["content"] = HSSObservablePropertyContent;
         properties["on"] = HSSObservablePropertyOn;
         properties["visible"] = HSSObservablePropertyVisible;
-        
+
         //HSSContainer
         properties["contentAlignX"] = HSSObservablePropertyContentAlignX;
         properties["contentAlignY"] = HSSObservablePropertyContentAlignY;
@@ -185,39 +185,39 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["margin"] = HSSObservablePropertyMargin;
         properties["padding"] = HSSObservablePropertyPadding;
         properties["border"] = HSSObservablePropertyBorder;
-        
+
         //HSSTextBlock
         properties["transform"] = HSSObservablePropertyTransform;
         properties["textAlign"] = HSSObservablePropertyTextAlign;
         properties["text"] = HSSObservablePropertyText;
-        
+
         //HSSRgb
         properties["red"] = HSSObservablePropertyRed;
         properties["green"] = HSSObservablePropertyGreen;
         properties["blue"] = HSSObservablePropertyBlue;
         properties["alpha"] = HSSObservablePropertyAlpha;
-        
+
         //HSSGradient
         properties["startColor"] = HSSObservablePropertyStartColor;
         properties["endColor"] = HSSObservablePropertyEndColor;
         properties["balance"] = HSSObservablePropertyBalance;
         properties["colorStops"] = HSSObservablePropertyColorStops;
-        
+
         //HSSLinearGradient
         properties["startX"] = HSSObservablePropertyStartX;
         properties["startY"] = HSSObservablePropertyStartY;
         properties["endX"] = HSSObservablePropertyEndX;
         properties["endY"] = HSSObservablePropertyEndY;
-        
+
         //HSSColorStop
         properties["position"] = HSSObservablePropertyPosition;
-        
+
         //HSSFont
         properties["size"] = HSSObservablePropertySize;
         properties["face"] = HSSObservablePropertyFace;
         properties["color"] = HSSObservablePropertyColor;
         properties["weight"] = HSSObservablePropertyWeight;
-        
+
         //HSSRoundedRect
         properties["corners"] = HSSObservablePropertyCorners;
         properties["left"] = HSSObservablePropertyLeft;
@@ -228,28 +228,28 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["rightBottom"] = HSSObservablePropertyRightBottom;
         properties["bottom"] = HSSObservablePropertyBottom;
         properties["leftBottom"] = HSSObservablePropertyLeftBottom;
-        
+
         //HSSPolygon
         properties["sides"] = HSSObservablePropertySides;
         properties["angle"] = HSSObservablePropertyAngle;
-        
+
         //HSSEvent
         properties["action"] = HSSObservablePropertyAction;
-        
+
         //HSSRequest
         properties["src"] = HSSObservablePropertySrc;
         properties["target"] = HSSObservablePropertyTarget;
         properties["mode"] = HSSObservablePropertyMode;
         properties["contentTarget"] = HSSObservablePropertyContentTarget;
     }
-    
-    
+
+
     return properties[name];
 }
 
 HSSObservable::HSSObservable()
 {
-    
+
 }
 
 HSSObservable::~HSSObservable()
@@ -263,7 +263,7 @@ void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty 
     std::size_t hash = 0;
     boost::hash_combine(hash, object);
     boost::hash_combine(hash, source);
-    
+
     if(this->_propertyObservers.count(target) != 0){
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
         theObserved[hash] = callback;

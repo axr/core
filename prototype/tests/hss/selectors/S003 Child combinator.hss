@@ -4,9 +4,9 @@ test
     {
      background: #66F;
     }
-	
-	parent child subchild
-	{
-		background: #FF6;
-	}
+
+    parent child subchild
+    {
+        background: #FF6;
+    }
 }

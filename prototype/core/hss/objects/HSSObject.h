@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -55,11 +55,11 @@
 #include "HSSTypeEnums.h"
 
 namespace AXR {
-    
+
     class AXRController;
     class HSSMultipleValueDefinition;
     class HSSDisplayObject;
-    
+
     /**
      *  @brief The class from which all HSS objects inherit from. Handles general properties such as
      *  isA.
@@ -87,14 +87,14 @@ namespace AXR {
          *  @return A shared pointer to the new HSSObject
          */
         static HSSObject::p newObjectWithType(std::string type);
-        
+
         /**
          *  This stores the name of the object.
          *
          *  @todo this should be protected and with getter/setter
          */
         std::string name;
-        
+
         /**
          *  Constructor for HSSObject.
          *  @param type     The type of this object subclass for identification purposes.
@@ -130,7 +130,7 @@ namespace AXR {
          *  @param value        The identifier.
          *  @param property     The property to which the identifier is being passed.
          *  @return Wether the identifier is a keyword for the given property.
-         *  
+         *
          *  @todo is this really needed?
          */
         virtual bool isFunction(std::string value, std::string property);
@@ -209,7 +209,7 @@ namespace AXR {
          *  @param newValue     The new shorthand index.
          */
         void setShorthandIndex(unsigned newValue);
-        
+
         /**
          *  Getter for the definition object for the isA property.
          *  @return A shared pointer to the parser node that defines the isA property.
@@ -221,7 +221,7 @@ namespace AXR {
          */
         void setDIsA(HSSParserNode::p value);
         void addDIsA(HSSParserNode::p value);
-        
+
         /**
          *  Callback to receive notifications of when the isA property has changed.
          *  @warning Currently unimplemented
@@ -302,8 +302,8 @@ namespace AXR {
          *  @return A shared pointer to the nearest display object.
          */
         boost::shared_ptr<HSSDisplayObject> getThisObj();
-        
-        
+
+
         /**
          *  Call this to know if a HSSObject subclass is of type otherType.
          *  @param otherType    The HSSObjectType to compare against.
@@ -314,7 +314,7 @@ namespace AXR {
          *  @return The object type.
          */
         HSSObjectType getObjectType();
-        
+
         virtual bool isA(HSSShapeType otherType);
         virtual HSSShapeType getShapeType();
 
@@ -323,7 +323,7 @@ namespace AXR {
 
         virtual bool isA(HSSEventType otherType);
         virtual HSSEventType getEventType();
-        
+
         virtual bool isA(HSSActionType otherType);
         virtual HSSActionType getActionType();
 
@@ -332,19 +332,19 @@ namespace AXR {
         std::vector<std::string> shorthandProperties;
         boost::unordered_map<std::string, bool> skipShorthand;
         unsigned shorthandIndex;
-        
+
         HSSParserNode::p dIsA;
-        
+
         const std::vector<boost::shared_ptr<HSSDisplayObject> > * scope;
         boost::shared_ptr<HSSDisplayObject> thisObj;
         AXRController * axrController;
-        
+
     private:
         HSSObjectType type;
         bool _isNamed;
-        
+
         virtual HSSClonable::p cloneImpl() const;
-        
+
     };
 
 }

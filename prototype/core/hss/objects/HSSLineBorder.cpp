@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -57,7 +57,7 @@ HSSLineBorder::HSSLineBorder()
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("color");
-    
+
     this->setShorthandProperties(shorthandProperties);
     this->registerProperty(HSSObservablePropertyColor, (void *) &this->color);
 }
@@ -69,7 +69,7 @@ HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("color");
-    
+
     this->setShorthandProperties(shorthandProperties);
     this->registerProperty(HSSObservablePropertyColor, (void *) &this->color);
 }
@@ -122,7 +122,7 @@ bool HSSLineBorder::isKeyword(std::string value, std::string property)
             return true;
         }
     }
-    
+
     //if we reached this far, let the superclass handle it
     return HSSBorder::isKeyword(value, property);
 }
@@ -141,9 +141,9 @@ void HSSLineBorder::setProperty(HSSObservableProperty name, HSSParserNode::p val
 
 HSSObject::p HSSLineBorder::getColor() { return this->color; }
 void HSSLineBorder::setDColor(HSSParserNode::p value){
-    
+
     bool valid = false;
-    
+
     switch (value->getType()) {
         case HSSParserNodeTypeObjectNameConstant:
         {
@@ -158,11 +158,11 @@ void HSSLineBorder::setDColor(HSSParserNode::p value){
             } catch (AXRWarning::p e){
                 e->raise();
             }
-            
+
             break;
         }
-            
-            
+
+
         case HSSParserNodeTypeFunctionCall:
         {
             this->dColor = value;
@@ -176,19 +176,19 @@ void HSSLineBorder::setDColor(HSSParserNode::p value){
                 } catch (...) {
                     this->color = HSSRgb::p(new HSSRgb());
                 }
-                
+
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSLineBorder>(this, &HSSLineBorder::colorChanged));
                 valid = true;
-                
+
             }
-            
+
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     switch (value->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
         {
@@ -202,17 +202,17 @@ void HSSLineBorder::setDColor(HSSParserNode::p value){
                 this->color = boost::static_pointer_cast<HSSRgb>(theobj);
                 valid = true;
             }
-            
+
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     if(!valid)
         throw AXRWarning::p(new AXRWarning("HSSLineBorder", "Invalid value for color of "+this->name));
-    
+
     this->notifyObservers(HSSObservablePropertyStartColor, &this->color);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -235,4 +235,3 @@ void HSSLineBorder::draw(cairo_t * cairo)
     cairo_set_line_width(cairo, this->size);
     cairo_stroke(cairo);
 }
-

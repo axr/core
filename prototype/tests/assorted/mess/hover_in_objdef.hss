@@ -5,7 +5,7 @@
     shape: @{10};
     border: @{ 1 #0 };
     background: #C;
-    
+
     @:hover
     {
         background: #F00;

@@ -1,20 +1,20 @@
 parent
 {
-	left
-	{
-		width: 120;
-		height: 50%;
-	}
-	
-	middle
-	{
-		width: 100% - 240;
-		height: 50%;
-	}
-	
-	right
-	{
-		width: 120;
-		height: 50%;
-	}
+    left
+    {
+        width: 120;
+        height: 50%;
+    }
+
+    middle
+    {
+        width: 100% - 240;
+        height: 50%;
+    }
+
+    right
+    {
+        width: 120;
+        height: 50%;
+    }
 }

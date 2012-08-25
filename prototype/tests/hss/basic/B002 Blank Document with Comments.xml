@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-	Test B002 Blank Document with Comments.hss
-	Created by Miro Keller on 2011-09-27.
+    Test B002 Blank Document with Comments.hss
+    Created by Miro Keller on 2011-09-27.
 -->
 <?xml-stylesheet type="application/x-hss" src="B002 Blank Document with Comments.hss"?>
 <test>
-	<!-- this is a html comment -->
+    <!-- this is a html comment -->
 </test>

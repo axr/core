@@ -11,13 +11,13 @@
     face: "Helvetica";
     size: 15;
     color: brown;
-    
+
     &@ titleFont1
     {
         size: 18;
         color: brownDarker;
     }
-    
+
     &@ smallFont
     {
         size: 12;
@@ -83,9 +83,9 @@
         startY: 80;
         endY: 150;
     };
-    
+
     .. * { font: stdFont }
-    
+
     #new menu
     {
         height: 60;
@@ -95,7 +95,7 @@
             endColor: brown;
             endY: 100%;
         };
-        
+
         #new menuLightPx
         {
             height: 1;
@@ -109,25 +109,25 @@
             alignY: bottom;
         }
     }
-    
-    
-    
+
+
+
     #new shadow
     {
         isA: shadow1;
     }
-    
+
     #new wrapper
     {
         width: 100% - 100;
         alignY: 50% + 6;
-        
+
         #move food
         {
             isA: box;
             width: 220;
             height: 220;
-            
+
             name { isA: boxTitle; alignY: top }
             price { isA: priceTag; alignY: top }
             description { isA: paragraph; alignY: 63%; }

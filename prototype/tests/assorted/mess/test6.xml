@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="application/x-hss" src="style6.hss" version="1.0"?>
 <parent>
-	<child>red</child>
-	<child2>green</child2>
-	<child3>blue</child3>
-	<child4>white</child4>
+    <child>red</child>
+    <child2>green</child2>
+    <child3>blue</child3>
+    <child4>white</child4>
 </parent>

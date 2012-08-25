@@ -2,7 +2,7 @@
 
 element1
 {
-	alignX: alignment1;
-	alignY: center;
-	width: 50%;
+    alignX: alignment1;
+    alignY: center;
+    width: 50%;
 }

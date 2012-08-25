@@ -9,7 +9,7 @@
         angle: ref(height) * 10;
     };
     border: @{ 1 #F }, @{ 1 #9 };
-    
+
     @::hover
     {
         shape: @polygon {

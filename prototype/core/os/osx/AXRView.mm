@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -67,7 +67,7 @@
     if (self) {
         //nothing here
     }
-    
+
     return self;
 }
 
@@ -76,7 +76,7 @@
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRView: awaking from NIB");
     [self setNeedsFile:YES];
     AXR::CocoaAXRWrapper * wrapper = new AXR::CocoaAXRWrapper(self);
-    
+
     [self setAxrWrapper:wrapper];
 }
 
@@ -95,20 +95,20 @@
 - (void)drawRect:(NSRect)dirtyRect
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRView: drawing");
-    
+
     NSRect bounds = [self bounds];
-    
+
     if (![self needsFile])
     {
         AXR::AXRCore::tp & core = AXR::AXRCore::getInstance();
         [[NSColor whiteColor] set];
         NSRectFill(bounds);
-        
+
         CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
         //invert the coordinate system
         CGContextTranslateCTM (ctxt, 0.0, (int)bounds.size.height);
         CGContextScaleCTM (ctxt, 1.0, -1.0);
-        
+
         cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, dirtyRect.size.width, dirtyRect.size.height);
         cairo_t * tempcairo = cairo_create(targetSurface);
         cairo_surface_destroy(targetSurface);
@@ -123,7 +123,7 @@
         NSColor *lightGrayColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1];
         [lightGrayColor set];
         NSRectFill(bounds);
-        
+
         // Display an indicator that no file is currently loaded
         NSFont *errorFont = [NSFont fontWithName:@"Helvetica" size:200];
         NSShadow *shadow = [[NSShadow alloc] init];
@@ -137,7 +137,7 @@
         NSString *message = @"?";
         NSSize size = [message sizeWithAttributes:attributes];
         NSRect stringBounds = NSMakeRect((bounds.size.width - size.width) / 2, (bounds.size.height - size.height) / 2, size.width, size.height);
-        
+
         [message drawInRect:stringBounds withAttributes:attributes];
     }
 }
@@ -218,7 +218,7 @@
         [self setNeedsDisplay:YES];
         [self setNeedsFile:NO];
     }
-    
+
     return loaded;
 }
 
@@ -234,7 +234,7 @@
         [self setNeedsFile:NO];
         [self setAxrWrapper:wrapper];
     }
-    
+
     return loaded;
 }
 
@@ -247,7 +247,7 @@
         [self setNeedsDisplay:YES];
         return loaded;
     }
-    
+
     return false;
 }
 

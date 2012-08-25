@@ -1,6 +1,6 @@
 /*
-	Test BR003 Ref borders
-	Created by Miro Keller on 2011-12-20.
+    Test BR003 Ref borders
+    Created by Miro Keller on 2011-12-20.
 */
 
 @lineBorder shadowBorder { 1 #6 }
@@ -18,14 +18,14 @@
 *
 {
     background: #C;
-    
+
     #new test
     {
         isA: test;
         border: shadowBorder, highlightBorder;
         alignX: 30%;
     }
-    
+
     #new test2
     {
         isA: test;

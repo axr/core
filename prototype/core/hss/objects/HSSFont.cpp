@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -56,9 +56,9 @@ HSSFont::HSSFont()
 :HSSObject(HSSObjectTypeFont)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFont: creating font object");
-    
+
     this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;
-    
+
     this->size = 18.;
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("face");
@@ -91,7 +91,7 @@ HSSClonable::p HSSFont::cloneImpl() const{
 
 HSSFont::~HSSFont()
 {
-    
+
 }
 
 std::string HSSFont::toString()
@@ -136,7 +136,7 @@ bool HSSFont::isKeyword(std::string value, std::string property)
             return true;
         }
     }
-    
+
     //if we reached this far, let the superclass handle it
     return HSSObject::isKeyword(value, property);
 }
@@ -156,7 +156,7 @@ void HSSFont::setProperty(HSSObservableProperty name, HSSParserNode::p value)
         case HSSObservablePropertyWeight:
             this->setDWeight(value);
             break;
-            
+
         default:
             HSSObject::setProperty(name, value);
             break;
@@ -173,7 +173,7 @@ void HSSFont::setDSize(HSSParserNode::p value){
         default:
             throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for size of @font object "+this->name));
     }
-    
+
     this->dSize = value;
     this->size = this->_setLDProperty(
                                        &HSSFont::sizeChanged,
@@ -183,7 +183,7 @@ void HSSFont::setDSize(HSSParserNode::p value){
                                        this->observedSize,
                                        this->observedSizeProperty
                                        );
-    
+
     this->notifyObservers(HSSObservablePropertySize, &this->size);
 }
 
@@ -194,7 +194,7 @@ void HSSFont::sizeChanged(AXR::HSSObservableProperty source, void *data)
 
 std::string HSSFont::getFace() { return this->face; }
 void HSSFont::setDFace(HSSParserNode::p value){
-    
+
     if (value->isA(HSSParserNodeTypeStringConstant)){
         this->dFace = value;
         HSSStringConstant::p theString = boost::static_pointer_cast<HSSStringConstant>(value);
@@ -213,7 +213,7 @@ HSSParserNode::p HSSFont::getDColor() { return this->dColor; }
 void HSSFont::setDColor(HSSParserNode::p value)
 {
     bool valid = false;
-    
+
     switch (value->getType()) {
         case HSSParserNodeTypeObjectNameConstant:
         {
@@ -223,18 +223,18 @@ void HSSFont::setDColor(HSSParserNode::p value)
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 this->setDColor(objdef);
                 valid = true;
-                
+
             } catch (AXRError::p e){
                 e->raise();
             } catch (AXRWarning::p e){
                 e->raise();
             }
 
-            
+
             break;
         }
-            
-            
+
+
         case HSSParserNodeTypeFunctionCall:
         {
             this->dColor = value;
@@ -242,26 +242,26 @@ void HSSFont::setDColor(HSSParserNode::p value)
             if(fnct && fnct->isA(HSSFunctionTypeRef)){
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                
+
                 boost::any remoteValue = fnct->evaluate();
                 try {
                     this->color = boost::any_cast<HSSRgb::p>(remoteValue);
-                    
+
                 } catch (...) {
                     this->color = HSSRgb::p(new HSSRgb());
                 }
-                
+
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSFont>(this, &HSSFont::colorChanged));
                 valid = true;
             }
-            
+
             break;
         }
-            
+
         default:
             valid = false;
     }
-    
+
     switch (value->getStatementType()) {
         case HSSStatementTypeObjectDefinition:
         {
@@ -275,17 +275,17 @@ void HSSFont::setDColor(HSSParserNode::p value)
                 this->color = boost::static_pointer_cast<HSSRgb>(theobj);
                 valid = true;
             }
-            
+
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     if(!valid)
         throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for color of "+this->name));
-    
+
     this->notifyObservers(HSSObservablePropertyColor, &this->color);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -297,11 +297,11 @@ void HSSFont::colorChanged(AXR::HSSObservableProperty source, void *data)
 
 HSSKeywordConstant::p HSSFont::getWeight() { return this->weight; }
 void HSSFont::setDWeight(HSSParserNode::p value){
-    
+
     bool valid = false;
-    
-    switch (value->getType()) {  
-   
+
+    switch (value->getType()) {
+
         case HSSParserNodeTypeFunctionCall:
         {
             this->dWeight = value;
@@ -314,15 +314,15 @@ void HSSFont::setDWeight(HSSParserNode::p value){
                     this->weight = boost::any_cast<HSSKeywordConstant::p>(remoteValue);
                     valid = true;
                 } catch (...) {
-                    
+
                 }
-                
+
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyWeight, this, new HSSValueChangedCallback<HSSFont>(this, &HSSFont::weightChanged));
             }
-            
+
             break;
         }
-            
+
         case HSSParserNodeTypeKeywordConstant:
         {
             HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant>(value);
@@ -330,14 +330,14 @@ void HSSFont::setDWeight(HSSParserNode::p value){
             valid = true;
             break;
         }
-            
+
         default:
             break;
     }
-    
+
     if(!valid)
         throw AXRWarning::p(new AXRWarning("HSSFont", "Invalid value for weight of "+this->name));
-    
+
     this->notifyObservers(HSSObservablePropertyWeight, &this->weight);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -357,7 +357,7 @@ long double HSSFont::_setLDProperty(
                                     )
 {
     long double ret;
-    
+
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType) {
         case HSSParserNodeTypeNumberConstant:
@@ -366,14 +366,14 @@ long double HSSFont::_setLDProperty(
             ret = numberValue->getValue();
             break;
         }
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
             ret = percentageValue->getValue(percentageBase);
             break;
         }
-            
+
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
@@ -385,18 +385,18 @@ long double HSSFont::_setLDProperty(
                 observedStore = expressionValue.get();
                 observedStoreProperty = HSSObservablePropertyValue;
             }
-            
+
             break;
         }
-            
+
         case HSSParserNodeTypeKeywordConstant:
-            
+
             break;
-            
+
         default:
             AXRWarning::p(new AXRWarning("HSSFont", "Unknown parser node type while setting value for HSSFont property"))->raise();
             break;
     }
-    
+
     return ret;
 }

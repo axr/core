@@ -60,7 +60,7 @@ namespace AXR
      * @brief Represents an HSS unit. Currently defined as a long double.
      */
     typedef long double HSSUnit;
-    
+
     /**
      * @brief   A resolution independent point.
      */
@@ -76,11 +76,11 @@ namespace AXR
         HSSPoint() : x(0), y(0) { }
         HSSPoint(HSSUnit xAndY) : x(xAndY), y(xAndY) { }
         HSSPoint(HSSUnit x, HSSUnit y) : x(x), y(y) { }
-        
+
         HSSUnit x; /**< the location of the point in horizontal dimension. */
         HSSUnit y; /**< the location of the point in vertical dimension. */
     };
-    
+
     /**
      * @brief   Represents a size measure.
      */
@@ -93,12 +93,12 @@ namespace AXR
         HSSSize() : width(0), height(0) { }
         HSSSize(HSSUnit widthAndHeight) : width(widthAndHeight), height(widthAndHeight) { }
         HSSSize(HSSUnit width, HSSUnit height) : width(width), height(height) { }
-        
+
         HSSUnit width; /**< measure in the horizontal dimension. */
         HSSUnit height; /**< measure in the vertical dimension. */
     };
-    
-    
+
+
     /**
      * @brief   A basic rectangle.
      */
@@ -115,7 +115,7 @@ namespace AXR
         HSSRect(const HSSSize &size) : origin(HSSPoint()), size(size) { }
         HSSRect(const HSSPoint &origin, const HSSSize &size) : origin(origin), size(size) { }
         HSSRect(HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height) : origin(HSSPoint(x, y)), size(HSSSize(width, height)) { }
-        
+
         HSSPoint origin; /**< Where the rectangle starts. This point is on the top left corner of the rectangle. */
         HSSSize size; /**< The dimensions of the rectangle. */
     };

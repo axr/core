@@ -1,32 +1,32 @@
 /********************************************************************
- *             a  A                                                        
- *            AM\/MA                                                         
- *           (MA:MMD                                                         
+ *             a  A
+ *            AM\/MA
+ *           (MA:MMD
  *            :: VD
- *           ::  º                                                         
- *          ::                                                              
- *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6             
- +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6            
- *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6              
- *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM                   
- *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM                  
- *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM                   
- *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM                   
- *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM                   
- *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM                   
- *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM                   
- *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM                   
- *      TMMM MMMM                                                           
- *     TMMM  .MMM                                         
- *     TMM   .MMD       ARBITRARY·······XML········RENDERING                           
- *     TMM    MMA       ====================================                              
- *     TMN    MM                               
- *      MN    ZM                       
+ *           ::  º
+ *          ::
+ *         ::   **      .A$MMMMND   AMMMD     AMMM6    MMMM  MMMM6
+ +       6::Z. TMMM    MMMMMMMMMDA   VMMMD   AMMM6     MMMMMMMMM6
+ *      6M:AMMJMMOD     V     MMMA    VMMMD AMMM6      MMMMMMM6
+ *      ::  TMMTMC         ___MMMM     VMMMMMMM6       MMMM
+ *     MMM  TMMMTTM,     AMMMMMMMM      VMMMMM6        MMMM
+ *    :: MM TMMTMMMD    MMMMMMMMMM       MMMMMM        MMMM
+ *   ::   MMMTTMMM6    MMMMMMMMMMM      AMMMMMMD       MMMM
+ *  :.     MMMMMM6    MMMM    MMMM     AMMMMMMMMD      MMMM
+ *         TTMMT      MMMM    MMMM    AMMM6  MMMMD     MMMM
+ *        TMMMM8       MMMMMMMMMMM   AMMM6    MMMMD    MMMM
+ *       TMMMMMM$       MMMM6 MMMM  AMMM6      MMMMD   MMMM
+ *      TMMM MMMM
+ *     TMMM  .MMM
+ *     TMM   .MMD       ARBITRARY·······XML········RENDERING
+ *     TMM    MMA       ====================================
+ *     TMN    MM
+ *      MN    ZM
  *            MM,
  *
- * 
+ *
  *      AUTHORS: Miro Keller
- *      
+ *
  *      COPYRIGHT: ©2011 - All Rights Reserved
  *
  *      LICENSE: see License.txt file
@@ -54,19 +54,19 @@ HSSRgb::HSSRgb()
 :HSSObject(HSSObjectTypeRgb)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: creating rgb object");
-    
+
     this->red = this->green = this->blue = 0.;
     this->alpha = 255.;
-    
+
     this->observedRed = this->observedGreen = this->observedBlue = this->observedAlpha = NULL;
-    
+
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("isA");
     shorthandProperties.push_back("alpha");
     shorthandProperties.push_back("red");
     shorthandProperties.push_back("green");
     shorthandProperties.push_back("blue");
-    
+
     this->setShorthandProperties(shorthandProperties);
 }
 
@@ -82,7 +82,7 @@ HSSRgb::HSSRgb(const HSSRgb & orig)
     shorthandProperties.push_back("red");
     shorthandProperties.push_back("green");
     shorthandProperties.push_back("blue");
-    
+
     this->setShorthandProperties(shorthandProperties);
 }
 
@@ -110,7 +110,7 @@ std::string HSSRgb::toString()
         gs << this->green;
         bs << this->blue;
         as << this->alpha;
-        
+
         return "Annonymous HSSRgb with red: "+rs.str()+" green: "+gs.str()+" blue: "+bs.str()+" alpha: "+as.str();
     }
 }
@@ -134,7 +134,7 @@ std::string HSSRgb::defaultObjectType(std::string property)
 //    if (value == "transparent"){
 //        return true;
 //    }
-//    
+//
 //    //if we reached this far, let the superclass handle it
 //    return HSSObject::isKeyword(value, property);
 //}
@@ -155,7 +155,7 @@ void HSSRgb::setProperty(HSSObservableProperty name, HSSParserNode::p value)
         case HSSObservablePropertyAlpha:
             this->setDAlpha(value);
             break;
-            
+
         default:
             HSSObject::setProperty(name, value);
             break;
@@ -241,7 +241,7 @@ long double HSSRgb::_setLDProperty(
                                              )
 {
     long double ret;
-    
+
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType) {
         case HSSParserNodeTypeNumberConstant:
@@ -250,14 +250,14 @@ long double HSSRgb::_setLDProperty(
             ret = numberValue->getValue();
             break;
         }
-            
+
         case HSSParserNodeTypePercentageConstant:
         {
             HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant>(value);
             ret = percentageValue->getValue(percentageBase);
             break;
         }
-            
+
         case HSSParserNodeTypeExpression:
         {
             HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression>(value);
@@ -270,25 +270,18 @@ long double HSSRgb::_setLDProperty(
                 observedStore = expressionValue.get();
                 observedStoreProperty = HSSObservablePropertyValue;
             }
-            
+
             break;
         }
-            
+
         case HSSParserNodeTypeKeywordConstant:
-            
+
             break;
-            
+
         default:
             throw AXRError::p(new AXRError("HSSRgb", "Unknown parser node type "+HSSParserNode::parserNodeStringRepresentation(nodeType)+" while setting value for HSSRgb property"));
             break;
     }
-    
+
     return ret;
 }
-
-
-
-
-
-
-
