@@ -115,12 +115,12 @@ void HSSContainer::initialize()
 
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyContentAlignX, (void *) & this->contentAlignX);
-    this->registerProperty(HSSObservablePropertyContentAlignY, (void *) & this->contentAlignY);
-    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) & this->directionPrimary);
-    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) & this->directionSecondary);
-    this->registerProperty(HSSObservablePropertyShape, (void *) & this->shape);
-    this->registerProperty(HSSObservablePropertyTextAlign, (void *) & this->textAlign);
+    this->registerProperty(HSSObservablePropertyContentAlignX, & this->contentAlignX);
+    this->registerProperty(HSSObservablePropertyContentAlignY, & this->contentAlignY);
+    this->registerProperty(HSSObservablePropertyDirectionPrimary, & this->directionPrimary);
+    this->registerProperty(HSSObservablePropertyDirectionSecondary, & this->directionSecondary);
+    this->registerProperty(HSSObservablePropertyShape, & this->shape);
+    this->registerProperty(HSSObservablePropertyTextAlign, & this->textAlign);
 }
 
 HSSContainer::HSSContainer(const HSSContainer & orig)

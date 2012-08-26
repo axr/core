@@ -61,9 +61,9 @@ HSSColorStop::HSSColorStop()
     shorthandProperties.push_back("balance");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyColor, (void *) & this->color);
-    this->registerProperty(HSSObservablePropertyPosition, (void *) & this->position);
-    this->registerProperty(HSSObservablePropertyBalance, (void *) & this->balance);
+    this->registerProperty(HSSObservablePropertyColor, & this->color);
+    this->registerProperty(HSSObservablePropertyPosition, & this->position);
+    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
     this->position = this->balance = 0.5;
 }
 
@@ -76,9 +76,9 @@ HSSColorStop::HSSColorStop(const HSSColorStop & orig)
     shorthandProperties.push_back("balance");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyColor, (void *) & this->color);
-    this->registerProperty(HSSObservablePropertyPosition, (void *) & this->position);
-    this->registerProperty(HSSObservablePropertyBalance, (void *) & this->balance);
+    this->registerProperty(HSSObservablePropertyColor, & this->color);
+    this->registerProperty(HSSObservablePropertyPosition, & this->position);
+    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
     this->position = this->balance = 0.5;
 }
 

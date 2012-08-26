@@ -57,7 +57,7 @@ HSSLineBorder::HSSLineBorder()
     shorthandProperties.push_back("color");
 
     this->setShorthandProperties(shorthandProperties);
-    this->registerProperty(HSSObservablePropertyColor, (void *) & this->color);
+    this->registerProperty(HSSObservablePropertyColor, & this->color);
 }
 
 HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
@@ -69,7 +69,7 @@ HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
     shorthandProperties.push_back("color");
 
     this->setShorthandProperties(shorthandProperties);
-    this->registerProperty(HSSObservablePropertyColor, (void *) & this->color);
+    this->registerProperty(HSSObservablePropertyColor, & this->color);
 }
 
 HSSLineBorder::p HSSLineBorder::clone() const

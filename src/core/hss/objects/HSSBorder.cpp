@@ -52,14 +52,14 @@ HSSBorder::HSSBorder()
 : HSSObject(HSSObjectTypeBorder)
 {
     this->observedSize = NULL;
-    this->registerProperty(HSSObservablePropertySize, (void *) & this->size);
+    this->registerProperty(HSSObservablePropertySize, & this->size);
 }
 
 HSSBorder::HSSBorder(const HSSBorder & orig)
 : HSSObject(orig)
 {
     this->observedSize = NULL;
-    this->registerProperty(HSSObservablePropertySize, (void *) & this->size);
+    this->registerProperty(HSSObservablePropertySize, & this->size);
 }
 
 HSSBorder::~HSSBorder()

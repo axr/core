@@ -97,11 +97,11 @@ HSSTextBlock::HSSTextBlock()
     this->observedTextAlign = this->observedTransform = this->observedText
             = NULL;
 
-    this->registerProperty(HSSObservablePropertyText, (void *) & this->text);
-    this->registerProperty(HSSObservablePropertyTransform, (void *) & this->transform);
-    this->registerProperty(HSSObservablePropertyTextAlign, (void *) & this->textAlign);
-    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) &this->directionPrimary);
-    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) &this->directionSecondary);
+    this->registerProperty(HSSObservablePropertyText, & this->text);
+    this->registerProperty(HSSObservablePropertyTransform, & this->transform);
+    this->registerProperty(HSSObservablePropertyTextAlign, & this->textAlign);
+    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, &this->directionPrimary);
+    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
 
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("text");
@@ -121,11 +121,11 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
     this->observedTextAlign = this->observedTransform = this->observedText
             = NULL;
 
-    this->registerProperty(HSSObservablePropertyText, (void *) & this->text);
-    this->registerProperty(HSSObservablePropertyTransform, (void *) & this->transform);
-    this->registerProperty(HSSObservablePropertyTextAlign, (void *) & this->textAlign);
-    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) &this->directionPrimary);
-    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) &this->directionSecondary);
+    this->registerProperty(HSSObservablePropertyText, & this->text);
+    this->registerProperty(HSSObservablePropertyTransform, & this->transform);
+    this->registerProperty(HSSObservablePropertyTextAlign, & this->textAlign);
+    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, &this->directionPrimary);
+    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
 
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("text");

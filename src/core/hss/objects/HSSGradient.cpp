@@ -53,19 +53,19 @@ using namespace AXR;
 HSSGradient::HSSGradient()
 : HSSObject(HSSObjectTypeGradient)
 {
-    this->registerProperty(HSSObservablePropertyStartColor, (void *) & this->startColor);
-    this->registerProperty(HSSObservablePropertyEndColor, (void *) & this->endColor);
-    this->registerProperty(HSSObservablePropertyBalance, (void *) & this->balance);
-    this->registerProperty(HSSObservablePropertyColorStops, (void *) & this->colorStops);
+    this->registerProperty(HSSObservablePropertyStartColor, & this->startColor);
+    this->registerProperty(HSSObservablePropertyEndColor, & this->endColor);
+    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
+    this->registerProperty(HSSObservablePropertyColorStops, & this->colorStops);
 }
 
 HSSGradient::HSSGradient(const HSSGradient & orig)
 : HSSObject(orig)
 {
-    this->registerProperty(HSSObservablePropertyStartColor, (void *) & this->startColor);
-    this->registerProperty(HSSObservablePropertyEndColor, (void *) & this->endColor);
-    this->registerProperty(HSSObservablePropertyBalance, (void *) & this->balance);
-    this->registerProperty(HSSObservablePropertyColorStops, (void *) & this->colorStops);
+    this->registerProperty(HSSObservablePropertyStartColor, & this->startColor);
+    this->registerProperty(HSSObservablePropertyEndColor, & this->endColor);
+    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
+    this->registerProperty(HSSObservablePropertyColorStops, & this->colorStops);
 }
 
 HSSGradient::~HSSGradient()

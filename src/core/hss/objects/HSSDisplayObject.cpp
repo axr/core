@@ -113,20 +113,20 @@ void HSSDisplayObject::initialize()
 
     this->borderBleeding = 0.;
 
-    this->registerProperty(HSSObservablePropertyAlignX, (void *) & this->alignX);
-    this->registerProperty(HSSObservablePropertyAlignY, (void *) & this->alignY);
-    this->registerProperty(HSSObservablePropertyAnchorX, (void *) & this->anchorX);
-    this->registerProperty(HSSObservablePropertyAnchorY, (void *) & this->anchorY);
-    this->registerProperty(HSSObservablePropertyFlow, (void *) & this->flow);
-    this->registerProperty(HSSObservablePropertyOverflow, (void *) & this->overflow);
-    this->registerProperty(HSSObservablePropertyHeight, (void *) & this->height);
-    this->registerProperty(HSSObservablePropertyWidth, (void *) & this->width);
-    this->registerProperty(HSSObservablePropertyBackground, (void *) & this->background);
-    this->registerProperty(HSSObservablePropertyContent, (void *) & this->content);
-    this->registerProperty(HSSObservablePropertyFont, (void *) & this->font);
-    this->registerProperty(HSSObservablePropertyOn, (void *) & this->on);
-    this->registerProperty(HSSObservablePropertyBorder, (void *) & this->border);
-    this->registerProperty(HSSObservablePropertyVisible, (void *) & this->visible);
+    this->registerProperty(HSSObservablePropertyAlignX, & this->alignX);
+    this->registerProperty(HSSObservablePropertyAlignY, & this->alignY);
+    this->registerProperty(HSSObservablePropertyAnchorX, & this->anchorX);
+    this->registerProperty(HSSObservablePropertyAnchorY, & this->anchorY);
+    this->registerProperty(HSSObservablePropertyFlow, & this->flow);
+    this->registerProperty(HSSObservablePropertyOverflow, & this->overflow);
+    this->registerProperty(HSSObservablePropertyHeight, & this->height);
+    this->registerProperty(HSSObservablePropertyWidth, & this->width);
+    this->registerProperty(HSSObservablePropertyBackground, & this->background);
+    this->registerProperty(HSSObservablePropertyContent, & this->content);
+    this->registerProperty(HSSObservablePropertyFont, & this->font);
+    this->registerProperty(HSSObservablePropertyOn, & this->on);
+    this->registerProperty(HSSObservablePropertyBorder, & this->border);
+    this->registerProperty(HSSObservablePropertyVisible, & this->visible);
 
     this->_isHover = false;
     this->_layoutFlagIsInSecondaryGroup = false;

@@ -44,6 +44,7 @@
 
 #include <string>
 #include <vector>
+#include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/unordered_map.hpp>
 #include "errors.h"
@@ -245,25 +246,23 @@ namespace AXR
          */
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         /**
-         *  @todo remove this
+         *  @todo remove this if not used
          */
-        virtual void setProperty(HSSObservableProperty name, void* value);
+        virtual void setProperty(HSSObservableProperty name, boost::any);
         /**
          *  When a subclass registers a observable property name with a pointer, it can be
          *  retrieved with this method.
          *  @param name     The observable property name.
          *  @return The parser node defining the value for the given property.
-         *
-         *  @todo change this to return a HSSParserNode::p instead
          */
-        virtual void * getProperty(HSSObservableProperty name);
+        virtual boost::any getProperty(HSSObservableProperty name);
         /**
          *  Each subclass must register each property name it uses with the pointer to the data,
          *  so that it can easily be accessed later.
          *  @param name     The observable property name.
-         *  @return The pointer to the data holding the actual value of the property.
+         *  @return A boost any wrapping the pointer to the data holding the actual value of the property.
          */
-        virtual void registerProperty(HSSObservableProperty name, void* property);
+        virtual void registerProperty(HSSObservableProperty name, boost::any property);
         /**
          *  Getter for the current scope this object is operating on.
          *  @return A pointer to the vector of shared pointers to display objects
@@ -327,7 +326,7 @@ namespace AXR
         virtual HSSActionType getActionType();
 
     protected:
-        boost::unordered_map<HSSObservableProperty, void*> properties;
+        boost::unordered_map<HSSObservableProperty, boost::any> properties;
         std::vector<std::string> shorthandProperties;
         boost::unordered_map<std::string, bool> skipShorthand;
         unsigned shorthandIndex;

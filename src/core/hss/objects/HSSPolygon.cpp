@@ -60,8 +60,8 @@ HSSPolygon::HSSPolygon()
     shorthandProperties.push_back("angle");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertySides, (void *) & this->sides);
-    this->registerProperty(HSSObservablePropertyAngle, (void *) & this->angle);
+    this->registerProperty(HSSObservablePropertySides, & this->sides);
+    this->registerProperty(HSSObservablePropertyAngle, & this->angle);
     this->sides = 3;
     this->angle = 0;
 
@@ -77,8 +77,8 @@ HSSPolygon::HSSPolygon(const HSSPolygon & orig)
     shorthandProperties.push_back("angle");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertySides, (void *) & this->sides);
-    this->registerProperty(HSSObservablePropertyAngle, (void *) & this->angle);
+    this->registerProperty(HSSObservablePropertySides, & this->sides);
+    this->registerProperty(HSSObservablePropertyAngle, & this->angle);
     this->sides = 3;
     this->angle = 0;
 
