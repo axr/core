@@ -117,7 +117,9 @@ std::string HSSInstruction::instructionStringRepresentation(HSSInstructionType t
     types[HSSGrayscale2Instruction] = "HSSGrayscale2Instruction";
     types[HSSRGBInstruction] = "HSSRGBInstruction";
     types[HSSRGBAInstruction] = "HSSRGBAInstruction";
+    types[HSSRGBAAInstruction] = "HSSRGBAAInstruction";
     types[HSSRRGGBBInstruction] = "HSSRRGGBBInstruction";
+    types[HSSRRGGBBAInstruction] = "HSSRRGGBBAInstruction";
     types[HSSRRGGBBAAInstruction] = "HSSRRGGBBAAInstruction";
     return types[type];
 }

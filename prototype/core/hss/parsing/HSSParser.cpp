@@ -230,8 +230,10 @@ bool HSSParser::readNextStatement()
         case HSSGrayscale1Instruction:
         case HSSGrayscale2Instruction:
         case HSSRGBInstruction:
-        case HSSRRGGBBInstruction:
         case HSSRGBAInstruction:
+        case HSSRGBAAInstruction:
+        case HSSRRGGBBInstruction:
+        case HSSRRGGBBAInstruction:
         case HSSRRGGBBAAInstruction:
         {
             HSSObjectDefinition::p theObj = this->getObjectFromInstruction(theInstr);
@@ -2152,40 +2154,41 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
         currentval = VALUE_TOKEN(this->currentToken)->getString();
         switch (currentval.length())
         {
-            //1 digit grayscale
         case 1:
             ret = HSSInstruction::p(new HSSInstruction(HSSGrayscale1Instruction, currentval));
             this->readNextToken();
             break;
-            //2 digit grayscale
         case 2:
             ret = HSSInstruction::p(new HSSInstruction(HSSGrayscale2Instruction, currentval));
             this->readNextToken();
             break;
-            //rgb
         case 3:
             ret = HSSInstruction::p(new HSSInstruction(HSSRGBInstruction, currentval));
             this->readNextToken();
             break;
-            //rgba
         case 4:
             ret = HSSInstruction::p(new HSSInstruction(HSSRGBAInstruction, currentval));
             this->readNextToken();
             break;
-            //rrggbb
+        case 5:
+            ret = HSSInstruction::p(new HSSInstruction(HSSRGBAAInstruction, currentval));
+            this->readNextToken();
+            break;
         case 6:
             ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBInstruction, currentval));
             this->readNextToken();
             break;
-            //rrggbbaa
+        case 7:
+            ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBAInstruction, currentval));
+            this->readNextToken();
+            break;
         case 8:
             ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBAAInstruction, currentval));
             this->readNextToken();
             break;
 
         default:
-            //balk
-            AXRError::p(new AXRWarning("HSSParser", "Wrong length for hexadecimal number (should be 1, 2, 3, 4, 6 or 8 digits long)", this->currentFile->getFileName(), this->line, this->column))->raise();
+            AXRError::p(new AXRWarning("HSSParser", "Wrong length for hexadecimal number (should be between 1 and 8 digits long, inclusive)", this->currentFile->getFileName(), this->line, this->column))->raise();
             return ret;
         }
 
@@ -2341,7 +2344,9 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
 
     case HSSRGBInstruction:
     case HSSRGBAInstruction:
+    case HSSRGBAAInstruction:
     case HSSRRGGBBInstruction:
+    case HSSRRGGBBAInstruction:
     case HSSRRGGBBAAInstruction:
     {
         //try to create an object of that type
@@ -2361,42 +2366,51 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
         {
         case HSSRGBInstruction:
             red = instruction->getValue().substr(0, 1);
-            red = red + red;
+            red += red;
             green = instruction->getValue().substr(1, 1);
-            green = green + green;
+            green += green;
             blue = instruction->getValue().substr(2, 1);
-            blue = blue + blue;
+            blue += blue;
             alpha = "FF";
-
             break;
         case HSSRGBAInstruction:
             red = instruction->getValue().substr(0, 1);
-            red = red + red;
+            red += red;
             green = instruction->getValue().substr(1, 1);
-            green = green + green;
+            green += green;
             blue = instruction->getValue().substr(2, 1);
-            blue = blue + blue;
+            blue += blue;
             alpha = instruction->getValue().substr(3, 1);
-            alpha = alpha + alpha;
-
+            alpha += alpha;
             break;
-
+        case HSSRGBAAInstruction:
+            red = instruction->getValue().substr(0, 1);
+            red += red;
+            green = instruction->getValue().substr(1, 1);
+            green += green;
+            blue = instruction->getValue().substr(2, 1);
+            blue += blue;
+            alpha = instruction->getValue().substr(3, 2);
+            break;
         case HSSRRGGBBInstruction:
             red = instruction->getValue().substr(0, 2);
             green = instruction->getValue().substr(2, 2);
             blue = instruction->getValue().substr(4, 2);
             alpha = "FF";
-
             break;
-
+        case HSSRRGGBBAInstruction:
+            red = instruction->getValue().substr(0, 2);
+            green = instruction->getValue().substr(2, 2);
+            blue = instruction->getValue().substr(4, 2);
+            alpha = instruction->getValue().substr(6, 1);
+            alpha += alpha;
+            break;
         case HSSRRGGBBAAInstruction:
             red = instruction->getValue().substr(0, 2);
             green = instruction->getValue().substr(2, 2);
             blue = instruction->getValue().substr(4, 2);
             alpha = instruction->getValue().substr(6, 2);
-
             break;
-
         default:
             break;
         }

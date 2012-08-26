@@ -130,7 +130,9 @@ namespace AXR
         HSSGrayscale2Instruction, /**< Creates a color object (e.g. #CC). */
         HSSRGBInstruction, /**< Creates a color object (e.g. #CCC). */
         HSSRGBAInstruction, /**< Creates a color object (e.g. #CCCF). */
+        HSSRGBAAInstruction, /**< Creates a color object (e.g. #CCCFF). */
         HSSRRGGBBInstruction, /**< Creates a color object (e.g. #CCCCCC). */
+        HSSRRGGBBAInstruction, /**< Creates a color object (e.g. #CCCCCCF). */
         HSSRRGGBBAAInstruction /**< Creates a color object (e.g. #CCCCCCFF). */
     };
     /** @} */

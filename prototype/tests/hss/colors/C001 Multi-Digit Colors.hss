@@ -1,0 +1,57 @@
+*
+{
+    *
+    {
+        width: 100;
+        height: 100;
+    }
+
+    #new box
+    {
+        background: #0;
+        content: '#0 (pure black)';
+        // TODO: white font
+    }
+
+    #new box
+    {
+        background: #ff;
+        content: '#ff (pure white)';
+    }
+
+    #new box
+    {
+        background: #f0f;
+        content: '#f0f (pure purple)';
+    }
+
+    #new box
+    {
+        background: #f009;
+        content: '#f009 (transparent red)';
+    }
+
+    #new box
+    {
+        background: #0f00f;
+        content: '#0f00f (transparent green)';
+    }
+
+    #new box
+    {
+        background: #00ffff;
+        content: '#00ffff (pure cyan)';
+    }
+
+    #new box
+    {
+        background: #ffff00f;
+        content: '#ffff00f (pure yellow)';
+    }
+
+    #new box
+    {
+        background: #ffff0033;
+        content: '#ffff0033 (transparent yellow)';
+    }
+}
