@@ -533,9 +533,14 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
                 this->observedTextAlign->removeObserver(this->observedTextAlignProperty, HSSObservablePropertyTextAlign, this);
             }
             HSSContainer::p parent = this->getParent();
-            this->textAlign = *(HSSTextAlignType *) parent->getProperty(HSSObservablePropertyTextAlign);
-            parent->observe(HSSObservablePropertyTextAlign, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::textAlignChanged));
-            valid = true;
+            boost::any remoteValue = parent->getProperty(HSSObservablePropertyTextAlign);
+            try {
+                this->textAlign = * boost::any_cast<HSSTextAlignType *>(remoteValue);
+                parent->observe(HSSObservablePropertyTextAlign, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::textAlignChanged));
+                valid = true;
+            } catch (boost::bad_any_cast & e) {
+                //do nothing
+            }
         }
         else
         {
