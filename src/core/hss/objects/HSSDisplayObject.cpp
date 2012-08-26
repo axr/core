@@ -1157,8 +1157,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
     {
         throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for width of " + this->getElementName()));
     }
-
-    this->notifyObservers(HSSObservablePropertyVisible, &this->visible);
+    this->notifyObservers(HSSObservablePropertyWidth, &this->width);
 }
 
 void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
@@ -1388,8 +1387,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
     {
         throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for height of " + this->getElementName()));
     }
-
-    this->notifyObservers(HSSObservablePropertyVisible, &this->visible);
+    this->notifyObservers(HSSObservablePropertyHeight, &this->height);
 }
 
 void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
