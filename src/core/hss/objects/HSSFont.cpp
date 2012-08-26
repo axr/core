@@ -288,7 +288,7 @@ void HSSFont::setDColor(HSSParserNode::p value)
                 this->color = boost::any_cast<HSSRgb::p > (remoteValue);
 
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
                 this->color = HSSRgb::p(new HSSRgb());
             }
@@ -366,9 +366,9 @@ void HSSFont::setDWeight(HSSParserNode::p value)
                 this->weight = boost::any_cast<HSSKeywordConstant::p > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyWeight, this, new HSSValueChangedCallback<HSSFont > (this, &HSSFont::weightChanged));

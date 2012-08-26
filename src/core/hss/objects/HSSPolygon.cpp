@@ -230,9 +230,9 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
             {
                 this->sides = boost::any_cast<long double>(remoteValue);
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertySides, this, new HSSValueChangedCallback<HSSPolygon > (this, &HSSPolygon::sidesChanged));
@@ -320,9 +320,9 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
             {
                 this->angle = boost::any_cast<long double>(remoteValue);
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyAngle, this, new HSSValueChangedCallback<HSSPolygon > (this, &HSSPolygon::angleChanged));

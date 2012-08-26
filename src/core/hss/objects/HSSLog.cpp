@@ -130,9 +130,9 @@ void HSSLog::fire()
                 std_log(theVal);
                 done = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
             try
             {
@@ -140,9 +140,9 @@ void HSSLog::fire()
                 std_log(boost::lexical_cast<std::string > (theVal));
                 done = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
             try
             {
@@ -150,9 +150,9 @@ void HSSLog::fire()
                 std_log(theVal->toString());
                 done = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
             try
             {
@@ -171,9 +171,9 @@ void HSSLog::fire()
                 }
                 done = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
             try
             {
@@ -197,9 +197,9 @@ void HSSLog::fire()
                 }
                 done = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
         }
         break;

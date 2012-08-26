@@ -173,7 +173,7 @@ long double HSSExpression::evaluate()
                 this->leftObservedProperty = HSSObservablePropertyValue;
 
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
                 this->rightval = 0.;
             }
@@ -241,7 +241,7 @@ long double HSSExpression::evaluate()
                 this->rightObservedProperty = HSSObservablePropertyValue;
 
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
                 this->rightval = 0.;
             }

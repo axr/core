@@ -2922,9 +2922,9 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
                 this->textAlign = boost::any_cast<HSSTextAlignType > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSContainer > (this, &HSSContainer::textAlignChanged));
@@ -3103,7 +3103,7 @@ long double HSSContainer::_setLDProperty(
         {
             ret = boost::any_cast<long double>(remoteValue);
         }
-        catch (...)
+        catch (boost::bad_any_cast & e)
         {
             ret = 0.;
         }

@@ -246,9 +246,9 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             {
                 e->raise();
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             break;

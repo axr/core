@@ -385,9 +385,9 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
                 this->transform = boost::any_cast<HSSTextTransformType > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTransform, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::transformChanged));
@@ -511,9 +511,9 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
                 this->textAlign = boost::any_cast<HSSTextAlignType > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::textAlignChanged));
@@ -663,9 +663,9 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
                 this->text = boost::any_cast<std::string > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyText, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::textChanged));

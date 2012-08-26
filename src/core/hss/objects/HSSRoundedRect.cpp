@@ -665,9 +665,9 @@ long double HSSRoundedRect::_setLDProperty(
             ret = boost::any_cast<long double>(remoteValue);
 
         }
-        catch (...)
+        catch (boost::bad_any_cast & e)
         {
-
+            //do nothing
         }
         if (callback != NULL)
         {
