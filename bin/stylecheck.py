@@ -104,6 +104,16 @@ def buildInspectionFileList(directory):
         if ".git" in subFolders:
             subFolders.remove(".git")
 
+        ignoreDirectory = False
+
+        for file in files:
+            if file == ".stylecheckignore":
+                print("Ignoring directory " + root)
+                ignoreDirectory = True
+
+        if ignoreDirectory:
+            continue
+
         for file in files:
             absFile = os.path.realpath(os.path.join(root, file))
 
