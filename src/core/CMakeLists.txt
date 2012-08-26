@@ -1,23 +1,30 @@
-file(GLOB AXR_CORE_SRCS *.cpp *.h)
-file(GLOB_RECURSE AXR_SRCS axr/*.cpp axr/*.h)
-file(GLOB_RECURSE XML_SRCS xml/*.cpp xml/*.h)
-file(GLOB_RECURSE HSS_SRCS hss/*.cpp hss/*.h)
+file(GLOB_RECURSE core_SOURCES *.c *.cpp *.h *.m *.mm)
+list(SORT core_SOURCES)
 
-if(WIN32)
-    file(GLOB_RECURSE WRAPPER_SRCS os/win/*.cpp os/win/*.h)
-elseif(APPLE)
-    file(GLOB_RECURSE WRAPPER_SRCS os/osx/*.mm os/osx/*.h)
+if(NOT WIN32)
+    file(GLOB_RECURSE windows_SOURCES os/win/*)
+    list(REMOVE_ITEM core_SOURCES ${windows_SOURCES})
 endif()
 
-file(GLOB WRAPPER_SRCS_GENERIC os/*.cpp os/*.h)
+if(NOT APPLE)
+    file(GLOB_RECURSE osx_SOURCES os/osx/*)
+    list(REMOVE_ITEM core_SOURCES ${osx_SOURCES})
+endif()
 
-source_group("AXR" FILES ${AXR_SRCS})
-source_group("XML" FILES ${XML_SRCS})
-source_group("HSS" FILES ${HSS_SRCS})
-source_group("OS" FILES ${WRAPPER_SRCS} ${WRAPPER_SRCS_GENERIC})
-source_group("" FILES ${AXR_CORE_SRCS})
+foreach(core_SOURCE ${core_SOURCES})
+    # Get the path of the file relative to the current source directory
+    file(RELATIVE_PATH core_SOURCE_relative "${CMAKE_CURRENT_SOURCE_DIR}" "${core_SOURCE}")
 
-add_library(AXR_core ${AXR_CORE_SRCS} ${AXR_SRCS} ${XML_SRCS} ${HSS_SRCS} ${WRAPPER_SRCS} ${WRAPPER_SRCS_GENERIC})
+    # Get the relative folder path
+    get_filename_component(core_SOURCE_dir "${core_SOURCE_relative}" PATH)
+
+    # Convert forward slashes to backslashes to get source group identifiers
+    string(REPLACE "/" "\\" core_SOURCE_group "${core_SOURCE_dir}")
+
+    source_group("${core_SOURCE_group}" FILES "${core_SOURCE}")
+endforeach()
+
+add_library(AXR_core ${core_SOURCES})
 
 if(APPLE)
     find_library(COCOA_LIBRARY Cocoa)
