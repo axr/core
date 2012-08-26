@@ -3862,6 +3862,7 @@ void HSSDisplayObject::_setOuterWidth()
         this->leftMargin += theMargin->getLeft();
     }
     this->outerWidth = outerWidth;
+    this->notifyObservers(HSSObservablePropertyOuterWidth, &this->outerWidth);
 }
 
 void HSSDisplayObject::_setOuterHeight()
@@ -3877,6 +3878,7 @@ void HSSDisplayObject::_setOuterHeight()
         this->bottomMargin += theMargin->getBottom();
     }
     this->outerHeight = outerHeight;
+    this->notifyObservers(HSSObservablePropertyOuterHeight, &this->outerHeight);
 }
 
 bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)

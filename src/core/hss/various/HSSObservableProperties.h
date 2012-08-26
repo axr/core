@@ -56,6 +56,8 @@ namespace AXR
         HSSObservablePropertyWidth,
         HSSObservablePropertyInnerWidth,
         HSSObservablePropertyInnerHeight,
+        HSSObservablePropertyOuterWidth,
+        HSSObservablePropertyOuterHeight,
         HSSObservablePropertyHeight,
         HSSObservablePropertyAnchorX,
         HSSObservablePropertyAnchorY,
