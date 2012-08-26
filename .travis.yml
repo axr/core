@@ -2,7 +2,7 @@ language: cpp
 compiler:
   - gcc
   - clang
-before_script: sudo dependencies/install.sh && .travis/configure.sh
+before_script: sudo ./pre-configure.sh && .travis/configure.sh
 script: .travis/make.sh
 branches:
   only:
