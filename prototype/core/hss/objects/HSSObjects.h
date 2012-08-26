@@ -27,7 +27,7 @@
  *
  *      COPYRIGHT: ©2012 - All Rights Reserved
  *
- *      LICENSE: see License.txt file
+ *      LICENSE: see LICENSE file
  *
  *      WEB: http://axr.vg
  *

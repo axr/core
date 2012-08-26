@@ -27,7 +27,7 @@
  *
  *      COPYRIGHT: ©2012 - All Rights Reserved
  *
- *      LICENSE: see License.txt file
+ *      LICENSE: see LICENSE file
  *
  *      WEB: http://axr.vg
  *
@@ -50,7 +50,7 @@ void std_log_level(const std::string &message, int debugLevel, bool newline)
         std::cout << message.c_str();
         if (newline)
             std::cout << std::endl;
-        
+
         std::cout.flush();
     }
 }
