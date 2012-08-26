@@ -21,7 +21,7 @@ with open(os.path.join(repositoryDirectory, "share", "source-header.txt")) as so
     sourceHeader = sourceHeaderFile.read()
 
 # File names and extensions to ignore
-ignoredFiles = [".gitmodules", "CMakeCache.txt", "COPYING"]
+ignoredFiles = ["CMakeCache.txt"]
 ignoredExtensions = ["nib", "plist", "strings"]
 licenseIgnoredFiles = ["ExpatXMLParser.cpp", "ExpatXMLParser.h", "cairosdl.c", "cairosdl.h"]
 
@@ -64,7 +64,10 @@ def findProblemSequences(wholeFile, line, file, lineNumber, totalLines):
         problems.append("File contains UTF-8 BOM; skipping additional checks for this file")
         return problems
 
-    if lineNumber == 1 and (line.startswith(" ") or line.startswith("\t") or line.startswith("\n")):
+    if lineNumber == 1 and ( \
+        (line.startswith(" ") and not os.path.basename(file) == "COPYING") or \
+        (line.startswith("\t") and not os.path.basename(file) == ".gitignore") or \
+        line.startswith("\n")):
         problems.append("Leading whitespace in file")
 
     if lineNumber == totalLines and not line.endswith("\n"):
@@ -78,7 +81,7 @@ def findProblemSequences(wholeFile, line, file, lineNumber, totalLines):
     if "\r" in line:
         problems.append("Windows carriage return")
 
-    if "\t" in line:
+    if "\t" in line and not os.path.basename(file) == ".gitmodules":
         problems.append("Tab characters")
 
     if line.endswith(" ") or line.endswith(" \n"):
