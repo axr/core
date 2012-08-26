@@ -1,3 +1,3 @@
-[submodule "prototype/resources/framework"]
-	path = prototype/resources/framework
+[submodule "share/hss-framework"]
+	path = share/hss-framework
 	url = https://github.com/AXR/Framework.git

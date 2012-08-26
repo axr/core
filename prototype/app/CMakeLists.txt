@@ -13,8 +13,12 @@ if(APPLE)
     )
 
     # HSS framework source files
-    file(GLOB_RECURSE hss_SOURCES ../resources/framework/*.hss)
+    file(GLOB_RECURSE hss_SOURCES ${CMAKE_SOURCE_DIR}/share/hss-framework/*.hss)
+    source_group("HSS Framework" FILES ${hss_SOURCES})
+
+    # Prototype application dogfood
     file(GLOB_RECURSE views_SOURCES ../resources/views/*.hss ../resources/views/*.xml)
+    source_group("Views" FILES ${views_SOURCES})
 
     add_executable("${TARGET_NAME}" MACOSX_BUNDLE ${axr_SOURCES} ${hss_SOURCES} ${views_SOURCES})
 
