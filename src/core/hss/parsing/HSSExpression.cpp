@@ -163,7 +163,7 @@ long double HSSExpression::evaluate()
             boost::any remoteValue = leftFunction->evaluate();
             try
             {
-                this->leftval = boost::any_cast<long double>(remoteValue);
+                this->leftval = * boost::any_cast<HSSUnit *>(remoteValue);
                 if (this->leftObserved != NULL)
                 {
                     this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
@@ -231,7 +231,7 @@ long double HSSExpression::evaluate()
             boost::any remoteValue = rightFunction->evaluate();
             try
             {
-                this->rightval = boost::any_cast<long double>(remoteValue);
+                this->rightval = * boost::any_cast<HSSUnit *>(remoteValue);
                 if (this->rightObserved != NULL)
                 {
                     this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);

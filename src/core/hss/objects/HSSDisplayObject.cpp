@@ -3779,15 +3779,15 @@ long double HSSDisplayObject::_setLDProperty(
         fnct->setThisObj(this->shared_from_this());
 
         boost::any remoteValue = fnct->evaluate();
-        if (typeid (long double) == remoteValue.type())
+        if (typeid (HSSUnit *) == remoteValue.type())
         {
-            ret = boost::any_cast<long double>(remoteValue);
+            ret = * boost::any_cast<HSSUnit *>(remoteValue);
         }
         else if (typeid (std::string) == remoteValue.type())
         {
             try
             {
-                ret = boost::lexical_cast<long double>(boost::any_cast<std::string > (remoteValue));
+                ret = boost::lexical_cast<HSSUnit>(boost::any_cast<std::string > (remoteValue));
             }
             catch (...)
             {
