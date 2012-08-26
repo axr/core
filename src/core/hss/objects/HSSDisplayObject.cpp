@@ -1398,26 +1398,27 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p heightValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dHeight);
-        this->height = heightValue->getValue(*(HSSUnit*) data);
+        this->height = floor(heightValue->getValue(*(HSSUnit*) data));
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
         HSSExpression::p heightExpression = boost::static_pointer_cast<HSSExpression > (this->dHeight);
-        this->height = heightExpression->evaluate();
+        this->height = floor(heightExpression->evaluate());
         break;
     }
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        this->height = *(HSSUnit*) data;
+        this->height = floor(*(HSSUnit*) data);
         break;
     }
 
     case HSSParserNodeTypeFunctionCall:
     {
-        this->height = *(HSSUnit*) data;
+        this->height = floor(*(HSSUnit*) data);
+        break;
     }
 
     default:
