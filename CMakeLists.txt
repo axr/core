@@ -62,4 +62,4 @@ set(CMAKE_C_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g")
 
-add_subdirectory(prototype)
+add_subdirectory(src)
