@@ -502,8 +502,10 @@ namespace AXR
         HSSDisplayObject::p shared_from_this();
 
     protected:
-        void _setInnerDimensions();
-        void _setOuterDimensions();
+        void _setInnerWidth();
+        void _setInnerHeight();
+        void _setOuterWidth();
+        void _setOuterHeight();
 
     private:
         long double _setLDProperty(

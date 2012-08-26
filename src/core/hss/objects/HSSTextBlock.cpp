@@ -329,8 +329,8 @@ void HSSTextBlock::layout()
     PangoRectangle rect;
     pango_layout_get_extents(this->_layout, NULL, &rect);
     this->height = rect.height / PANGO_SCALE;
-    this->_setInnerDimensions();
-    this->_setOuterDimensions();
+    this->_setInnerHeight();
+    this->_setOuterHeight();
     this->notifyObservers(HSSObservablePropertyHeight, &this->height);
     this->setNeedsSurface(true);
 }

@@ -871,8 +871,8 @@ void HSSContainer::layout()
                     if (this->height != newValue)
                     {
                         this->height = newValue;
-                        this->_setInnerDimensions();
-                        this->_setOuterDimensions();
+                        this->_setInnerHeight();
+                        this->_setOuterHeight();
                         this->setNeedsSurface(true);
                         this->setDirty(true);
                         this->notifyObservers(HSSObservablePropertyHeight, &this->height);
