@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # Whitespace checks
 
+from __future__ import print_function
 import os
 import glob
 import sys
 
 if sys.version_info < (2,7):
-    print >> sys.stderr, "must be run with at least Python 2.7"
+    print("must be run with at least Python 2.7", file=sys.stderr)
     sys.exit(1)
 
 # Absolute path to directory of Python script
@@ -36,7 +37,7 @@ def is_binary(filename):
         CHUNKSIZE = 1024
         while 1:
             chunk = fin.read(CHUNKSIZE)
-            if '\0' in chunk: # found null byte
+            if b'\0' in chunk: # found null byte
                 return True
             if len(chunk) < CHUNKSIZE:
                 break # done
@@ -127,15 +128,15 @@ def runComplianceCheck(directory):
                 problems = findProblemSequences(''.join(lines), line, file, lineNumber, len(lines))
                 if problems:
                     hasProblems = True
-                    print >> sys.stderr, toRepositoryRelativePath(file, directory) + ":" + str(lineNumber)
+                    print(toRepositoryRelativePath(file, directory) + ":" + str(lineNumber), file=sys.stderr)
                     for problem in problems:
-                        print >> sys.stderr, "\t" + problem
+                        print("\t" + problem, file=sys.stderr)
 
             f.close()
 
     return hasProblems
 
 if not runComplianceCheck(repositoryDirectory):
-    print "No problems found!"
+    print("No problems found!")
 else:
     sys.exit(1)
