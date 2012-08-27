@@ -22,7 +22,7 @@ repositoryDirectory = os.path.realpath(os.path.join(scriptDirectory, ".."))
 args = parser.parse_args()
 
 sourceHeader = ""
-with open(os.path.join(repositoryDirectory, "share", "source-header.txt")) as sourceHeaderFile:
+with open(os.path.join(repositoryDirectory, "share", "header.txt")) as sourceHeaderFile:
     sourceHeader = sourceHeaderFile.read()
 
 # File names and extensions to ignore
