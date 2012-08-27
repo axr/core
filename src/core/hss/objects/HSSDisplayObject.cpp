@@ -1072,7 +1072,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
                     this->observedWidth = parent;
                     this->observedWidthProperty = HSSObservablePropertyWidth;
                     valid = true;
-                    
+
                 } catch (boost::bad_any_cast & e) {
                     //do nothing
                 }
@@ -1302,7 +1302,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
                     this->observedHeight = parent;
                     this->observedHeightProperty = HSSObservablePropertyHeight;
                     valid = true;
-                    
+
                 } catch (boost::bad_any_cast & e) {
                     //do nothing
                 }
@@ -2730,7 +2730,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                 this->font = * boost::any_cast<std::vector<HSSFont::p> *>(remoteValue);
                 parent->observe(HSSObservablePropertyFont, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::fontChanged));
                 valid = true;
-                
+
             } catch (boost::bad_any_cast & e) {
                 //do nothing
             }
@@ -3604,7 +3604,7 @@ void HSSDisplayObject::setDVisible(HSSParserNode::p value)
                     parent->observe(HSSObservablePropertyVisible, HSSObservablePropertyVisible, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::visibleChanged));
                     this->observedVisible = parent;
                     this->observedVisibleProperty = HSSObservablePropertyVisible;
-                    
+
                 } catch (boost::bad_any_cast & e) {
                     //do nothing
                 }
