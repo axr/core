@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# Whitespace checks
 
 from __future__ import print_function
+import argparse
 import os
 import glob
 import sys
@@ -10,11 +10,16 @@ if sys.version_info < (2,7):
     print("must be run with at least Python 2.7", file=sys.stderr)
     sys.exit(1)
 
+parser = argparse.ArgumentParser(description="Verifies that files in the repository adhere to certain stylistic guidelines.")
+parser.add_argument("--autofix", action="store_true", help="attempt to fix detected problems automatically")
+
 # Absolute path to directory of Python script
 scriptDirectory = os.path.dirname(os.path.realpath(__file__))
 
 # Root directory of the Git repository
 repositoryDirectory = os.path.realpath(os.path.join(scriptDirectory, ".."))
+
+args = parser.parse_args()
 
 sourceHeader = ""
 with open(os.path.join(repositoryDirectory, "share", "source-header.txt")) as sourceHeaderFile:
@@ -62,30 +67,43 @@ def findProblemSequences(wholeFile, line, file, lineNumber, totalLines):
 
     if lineNumber == 1 and line.startswith("\xEF\xBB\xBF"):
         problems.append("File contains UTF-8 BOM; skipping additional checks for this file")
-        return problems
+        return problems, line
 
     if lineNumber == 1 and ( \
         (line.startswith(" ") and not os.path.basename(file) == "COPYING") or \
         (line.startswith("\t") and not os.path.basename(file) == ".gitignore") or \
         line.startswith("\n")):
-        problems.append("Leading whitespace in file")
+        if args.autofix:
+            line = line.lstrip(" ")
+        else:
+            problems.append("Leading whitespace in file")
 
     if lineNumber == totalLines and not line.endswith("\n"):
-        problems.append("File did not end with a newline")
+        if args.autofix:
+            line = line + "\n"
+        else:
+            problems.append("File did not end with a newline")
 
-    # We check for lineNumber == 1 here just so this message appears
-    # only once per file... kind of a hack, but at least it's a safe one
     if lineNumber == 1 and wholeFile.endswith("\n\n"):
         problems.append("File contained multiple ending newlines")
 
     if "\r" in line:
-        problems.append("Windows carriage return")
+        if args.autofix:
+            line = line.replace("\r", "")
+        else:
+            problems.append("Windows carriage return")
 
     if "\t" in line and not os.path.basename(file) == ".gitmodules":
-        problems.append("Tab characters")
+        if args.autofix:
+            line = line.replace("\t", "")
+        else:
+            problems.append("Tab characters")
 
-    if line.endswith(" ") or line.endswith(" \n"):
-        problems.append("Trailing whitespace")
+    if line.endswith(" \n"):
+        if args.autofix:
+            line = line.rstrip(" \n") + "\n"
+        else:
+            problems.append("Trailing whitespace")
 
     if lineNumber == 1 and \
         (file.endswith(".h") or \
@@ -95,7 +113,7 @@ def findProblemSequences(wholeFile, line, file, lineNumber, totalLines):
         file.endswith(".mm")) and not os.path.basename(file) in licenseIgnoredFiles and not wholeFile.startswith(sourceHeader):
         problems.append("C-language source code file does not contain standard header")
 
-    return problems
+    return problems, line
 
 # Build a list of all files to check
 def buildInspectionFileList(directory):
@@ -130,20 +148,28 @@ def runComplianceCheck(directory):
 
     # Go through each file for potential issues
     for file in fileList:
-        with open(file) as f:
+        with open(file, "r+") as f:
             lines = f.readlines()
+            correctedLines = []
+            f.seek(0, 0)
 
             # Check each line in the file for gremlins
             for counter, line in enumerate(lines):
                 lineNumber = counter + 1
 
                 # If the line contained gremlins, show details
-                problems = findProblemSequences(''.join(lines), line, file, lineNumber, len(lines))
+                problems, line = findProblemSequences(''.join(lines), line, file, lineNumber, len(lines))
                 if problems:
                     hasProblems = True
                     print(toRepositoryRelativePath(file, directory) + ":" + str(lineNumber), file=sys.stderr)
                     for problem in problems:
                         print("\t" + problem, file=sys.stderr)
+
+                if args.autofix:
+                    correctedLines.append(line)
+
+            for l in correctedLines:
+                f.write(l)
 
             f.close()
 
