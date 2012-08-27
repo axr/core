@@ -42,6 +42,24 @@
 #ifndef AXRGLOBAL_H
 #define AXRGLOBAL_H
 
+// Qt for example has immensely complex ways of defining this
+// but the following should suffice in the meantime
+#if defined(_MSC_VER)
+#define AXR_DECL_EXPORT __declspec(dllexport)
+#define AXR_DECL_IMPORT __declspec(dllimport)
+#elif defined(__linux__)
+#define AXR_DECL_EXPORT __attribute__((visibility("default")))
+#define AXR_DECL_IMPORT __attribute__((visibility("default")))
+#endif
+
+#if defined(AXR_EXPORTS)
+#define AXR_API __declspec(dllexport)
+#elif defined(AXR_IMPORTS)
+#define AXR_API __declspec(dllimport)
+#else
+#define AXR_API
+#endif
+
 #if defined(_MSC_VER)
 #define AXR_DECL_DEPRECATED __declspec(deprecated)
 #if defined(__INTEL_COMPILER) // Intel compiler disguised as MSVC doesn't allow variable deprecation
