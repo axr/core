@@ -9,5 +9,5 @@ if [ -z "$AUTHORS" ] ; then
     exit 1
 fi
 
-# Display the authors list and write it to the file
-echo "$AUTHORS" | tee "$(git rev-parse --show-toplevel)/AUTHORS"
+# Write the authors list to the file
+echo "$AUTHORS" | tee "$(git rev-parse --show-toplevel)/AUTHORS" > /dev/null
