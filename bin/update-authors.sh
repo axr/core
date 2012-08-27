@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+echo "Inserting authors' names into /AUTHORS ..."
+
 # Get a list of authors ordered by number of commits
 # and remove the commit count column
 AUTHORS=$(git --no-pager shortlog HEAD -nse | cut -f 2-)

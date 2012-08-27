@@ -175,6 +175,8 @@ def runComplianceCheck(directory):
 
     return hasProblems
 
+print("Checking code style...")
+
 if not runComplianceCheck(repositoryDirectory):
     print("No problems found!")
 else:
