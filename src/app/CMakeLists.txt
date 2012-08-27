@@ -37,5 +37,5 @@ endif()
 
 # SDL application
 include_directories(cairosdl)
-add_executable("AXR SDL" WIN32 ${axr_res_SOURCES} cairosdl/cairosdl.c cairosdl/cairosdl.h sdlmain.cpp)
-target_link_libraries("AXR SDL" AXR_core ${SDLMAIN_LIBRARY} ${SDL_LIBRARY})
+add_executable("AXR_SDL" WIN32 ${axr_res_SOURCES} cairosdl/cairosdl.c cairosdl/cairosdl.h sdlmain.cpp)
+target_link_libraries("AXR_SDL" AXR_core ${SDLMAIN_LIBRARY} ${SDL_LIBRARY})
