@@ -56,7 +56,7 @@ HSSValue::HSSValue()
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyValue, &this->dValue);
+    this->registerProperty(HSSObservablePropertyValue, & this->dValue);
 }
 
 HSSValue::HSSValue(const HSSValue & orig)
@@ -66,7 +66,7 @@ HSSValue::HSSValue(const HSSValue & orig)
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyValue, &this->dValue);
+    this->registerProperty(HSSObservablePropertyValue, & this->dValue);
 }
 
 HSSValue::p HSSValue::clone() const

@@ -115,12 +115,12 @@ void HSSContainer::initialize()
 
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyContentAlignX, (void *) & this->contentAlignX);
-    this->registerProperty(HSSObservablePropertyContentAlignY, (void *) & this->contentAlignY);
-    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) & this->directionPrimary);
-    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) & this->directionSecondary);
-    this->registerProperty(HSSObservablePropertyShape, (void *) & this->shape);
-    this->registerProperty(HSSObservablePropertyTextAlign, (void *) & this->textAlign);
+    this->registerProperty(HSSObservablePropertyContentAlignX, & this->contentAlignX);
+    this->registerProperty(HSSObservablePropertyContentAlignY, & this->contentAlignY);
+    this->registerProperty(HSSObservablePropertyDirectionPrimary, & this->directionPrimary);
+    this->registerProperty(HSSObservablePropertyDirectionSecondary, & this->directionSecondary);
+    this->registerProperty(HSSObservablePropertyShape, & this->shape);
+    this->registerProperty(HSSObservablePropertyTextAlign, & this->textAlign);
 }
 
 HSSContainer::HSSContainer(const HSSContainer & orig)
@@ -871,8 +871,8 @@ void HSSContainer::layout()
                     if (this->height != newValue)
                     {
                         this->height = newValue;
-                        this->_setInnerDimensions();
-                        this->_setOuterDimensions();
+                        this->_setInnerHeight();
+                        this->_setOuterHeight();
                         this->setNeedsSurface(true);
                         this->setDirty(true);
                         this->notifyObservers(HSSObservablePropertyHeight, &this->height);
@@ -2922,9 +2922,9 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
                 this->textAlign = boost::any_cast<HSSTextAlignType > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSContainer > (this, &HSSContainer::textAlignChanged));
@@ -3103,7 +3103,7 @@ long double HSSContainer::_setLDProperty(
         {
             ret = boost::any_cast<long double>(remoteValue);
         }
-        catch (...)
+        catch (boost::bad_any_cast & e)
         {
             ret = 0.;
         }

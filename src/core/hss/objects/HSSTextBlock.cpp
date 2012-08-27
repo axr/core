@@ -97,11 +97,11 @@ HSSTextBlock::HSSTextBlock()
     this->observedTextAlign = this->observedTransform = this->observedText
             = NULL;
 
-    this->registerProperty(HSSObservablePropertyText, (void *) & this->text);
-    this->registerProperty(HSSObservablePropertyTransform, (void *) & this->transform);
-    this->registerProperty(HSSObservablePropertyTextAlign, (void *) & this->textAlign);
-    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) &this->directionPrimary);
-    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) &this->directionSecondary);
+    this->registerProperty(HSSObservablePropertyText, & this->text);
+    this->registerProperty(HSSObservablePropertyTransform, & this->transform);
+    this->registerProperty(HSSObservablePropertyTextAlign, & this->textAlign);
+    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, &this->directionPrimary);
+    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
 
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("text");
@@ -121,11 +121,11 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
     this->observedTextAlign = this->observedTransform = this->observedText
             = NULL;
 
-    this->registerProperty(HSSObservablePropertyText, (void *) & this->text);
-    this->registerProperty(HSSObservablePropertyTransform, (void *) & this->transform);
-    this->registerProperty(HSSObservablePropertyTextAlign, (void *) & this->textAlign);
-    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, (void *) &this->directionPrimary);
-    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, (void *) &this->directionSecondary);
+    this->registerProperty(HSSObservablePropertyText, & this->text);
+    this->registerProperty(HSSObservablePropertyTransform, & this->transform);
+    this->registerProperty(HSSObservablePropertyTextAlign, & this->textAlign);
+    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, &this->directionPrimary);
+    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
 
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("text");
@@ -329,8 +329,8 @@ void HSSTextBlock::layout()
     PangoRectangle rect;
     pango_layout_get_extents(this->_layout, NULL, &rect);
     this->height = rect.height / PANGO_SCALE;
-    this->_setInnerDimensions();
-    this->_setOuterDimensions();
+    this->_setInnerHeight();
+    this->_setOuterHeight();
     this->notifyObservers(HSSObservablePropertyHeight, &this->height);
     this->setNeedsSurface(true);
 }
@@ -385,9 +385,9 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
                 this->transform = boost::any_cast<HSSTextTransformType > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTransform, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::transformChanged));
@@ -511,9 +511,9 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
                 this->textAlign = boost::any_cast<HSSTextAlignType > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::textAlignChanged));
@@ -533,9 +533,14 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
                 this->observedTextAlign->removeObserver(this->observedTextAlignProperty, HSSObservablePropertyTextAlign, this);
             }
             HSSContainer::p parent = this->getParent();
-            this->textAlign = *(HSSTextAlignType *) parent->getProperty(HSSObservablePropertyTextAlign);
-            parent->observe(HSSObservablePropertyTextAlign, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::textAlignChanged));
-            valid = true;
+            boost::any remoteValue = parent->getProperty(HSSObservablePropertyTextAlign);
+            try {
+                this->textAlign = * boost::any_cast<HSSTextAlignType *>(remoteValue);
+                parent->observe(HSSObservablePropertyTextAlign, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::textAlignChanged));
+                valid = true;
+            } catch (boost::bad_any_cast & e) {
+                //do nothing
+            }
         }
         else
         {
@@ -663,9 +668,9 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
                 this->text = boost::any_cast<std::string > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyText, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::textChanged));

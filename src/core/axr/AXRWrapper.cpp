@@ -328,9 +328,9 @@ void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
                 std::vector<HSSDisplayObject::p> innerSelection = selection[0];
                 status = HSSContainer::asContainer(innerSelection[0]);
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
         }
     }

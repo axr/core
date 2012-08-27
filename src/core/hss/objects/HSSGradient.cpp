@@ -53,19 +53,19 @@ using namespace AXR;
 HSSGradient::HSSGradient()
 : HSSObject(HSSObjectTypeGradient)
 {
-    this->registerProperty(HSSObservablePropertyStartColor, (void *) & this->startColor);
-    this->registerProperty(HSSObservablePropertyEndColor, (void *) & this->endColor);
-    this->registerProperty(HSSObservablePropertyBalance, (void *) & this->balance);
-    this->registerProperty(HSSObservablePropertyColorStops, (void *) & this->colorStops);
+    this->registerProperty(HSSObservablePropertyStartColor, & this->startColor);
+    this->registerProperty(HSSObservablePropertyEndColor, & this->endColor);
+    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
+    this->registerProperty(HSSObservablePropertyColorStops, & this->colorStops);
 }
 
 HSSGradient::HSSGradient(const HSSGradient & orig)
 : HSSObject(orig)
 {
-    this->registerProperty(HSSObservablePropertyStartColor, (void *) & this->startColor);
-    this->registerProperty(HSSObservablePropertyEndColor, (void *) & this->endColor);
-    this->registerProperty(HSSObservablePropertyBalance, (void *) & this->balance);
-    this->registerProperty(HSSObservablePropertyColorStops, (void *) & this->colorStops);
+    this->registerProperty(HSSObservablePropertyStartColor, & this->startColor);
+    this->registerProperty(HSSObservablePropertyEndColor, & this->endColor);
+    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
+    this->registerProperty(HSSObservablePropertyColorStops, & this->colorStops);
 }
 
 HSSGradient::~HSSGradient()
@@ -197,9 +197,9 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
                 this->startColor = boost::any_cast<HSSRgb::p > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyStartColor, this, new HSSValueChangedCallback<HSSGradient > (this, &HSSGradient::startColorChanged));
@@ -302,9 +302,9 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
                 this->endColor = boost::any_cast<HSSRgb::p > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyEndColor, this, new HSSValueChangedCallback<HSSGradient > (this, &HSSGradient::endColorChanged));
@@ -393,9 +393,9 @@ void HSSGradient::setDBalance(HSSParserNode::p value)
             {
                 this->balance = boost::any_cast<long double>(remoteValue);
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyBalance, this, new HSSValueChangedCallback<HSSGradient > (this, &HSSGradient::balanceChanged));
@@ -508,9 +508,9 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
             {
                 e->raise();
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
         }
         break;

@@ -59,10 +59,10 @@ HSSLinearGradient::HSSLinearGradient()
     shorthandProperties.push_back("endY");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyStartX, (void *) & this->startX);
-    this->registerProperty(HSSObservablePropertyStartY, (void *) & this->startY);
-    this->registerProperty(HSSObservablePropertyEndX, (void *) & this->startY);
-    this->registerProperty(HSSObservablePropertyEndY, (void *) & this->startY);
+    this->registerProperty(HSSObservablePropertyStartX, & this->startX);
+    this->registerProperty(HSSObservablePropertyStartY, & this->startY);
+    this->registerProperty(HSSObservablePropertyEndX, & this->startY);
+    this->registerProperty(HSSObservablePropertyEndY, & this->startY);
 
     this->startX = this->startY = this->endX = endY = 0.;
 
@@ -80,10 +80,10 @@ HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
     shorthandProperties.push_back("endY");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyStartX, (void *) & this->startX);
-    this->registerProperty(HSSObservablePropertyStartY, (void *) & this->startY);
-    this->registerProperty(HSSObservablePropertyEndX, (void *) & this->startY);
-    this->registerProperty(HSSObservablePropertyEndY, (void *) & this->startY);
+    this->registerProperty(HSSObservablePropertyStartX, & this->startX);
+    this->registerProperty(HSSObservablePropertyStartY, & this->startY);
+    this->registerProperty(HSSObservablePropertyEndX, & this->startY);
+    this->registerProperty(HSSObservablePropertyEndY, & this->startY);
 
     this->startX = this->startY = this->endX = endY = 0.;
 

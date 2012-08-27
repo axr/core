@@ -61,9 +61,9 @@ HSSColorStop::HSSColorStop()
     shorthandProperties.push_back("balance");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyColor, (void *) & this->color);
-    this->registerProperty(HSSObservablePropertyPosition, (void *) & this->position);
-    this->registerProperty(HSSObservablePropertyBalance, (void *) & this->balance);
+    this->registerProperty(HSSObservablePropertyColor, & this->color);
+    this->registerProperty(HSSObservablePropertyPosition, & this->position);
+    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
     this->position = this->balance = 0.5;
 }
 
@@ -76,9 +76,9 @@ HSSColorStop::HSSColorStop(const HSSColorStop & orig)
     shorthandProperties.push_back("balance");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyColor, (void *) & this->color);
-    this->registerProperty(HSSObservablePropertyPosition, (void *) & this->position);
-    this->registerProperty(HSSObservablePropertyBalance, (void *) & this->balance);
+    this->registerProperty(HSSObservablePropertyColor, & this->color);
+    this->registerProperty(HSSObservablePropertyPosition, & this->position);
+    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
     this->position = this->balance = 0.5;
 }
 
@@ -214,9 +214,9 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
                 this->color = boost::any_cast<HSSRgb::p > (remoteValue);
                 valid = true;
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSColorStop > (this, &HSSColorStop::colorChanged));
@@ -316,9 +316,9 @@ void HSSColorStop::setDPosition(HSSParserNode::p value)
             {
                 this->position = boost::any_cast<long double>(remoteValue);
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyPosition, this, new HSSValueChangedCallback<HSSColorStop > (this, &HSSColorStop::positionChanged));
@@ -406,9 +406,9 @@ void HSSColorStop::setDBalance(HSSParserNode::p value)
             {
                 this->balance = boost::any_cast<long double>(remoteValue);
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyBalance, this, new HSSValueChangedCallback<HSSColorStop > (this, &HSSColorStop::balanceChanged));

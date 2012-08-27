@@ -534,12 +534,12 @@ void HSSObject::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
 }
 
-void HSSObject::setProperty(HSSObservableProperty name, void * value)
+void HSSObject::setProperty(HSSObservableProperty name, boost::any value)
 {
     AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property " + HSSObservable::observablePropertyStringRepresentation(name) + ", ignoring value"))->raise();
 }
 
-void * HSSObject::getProperty(HSSObservableProperty name)
+boost::any HSSObject::getProperty(HSSObservableProperty name)
 {
     if (this->properties.find(name) == this->properties.end())
     {
@@ -549,7 +549,7 @@ void * HSSObject::getProperty(HSSObservableProperty name)
     return this->properties[name];
 }
 
-void HSSObject::registerProperty(HSSObservableProperty name, void * property)
+void HSSObject::registerProperty(HSSObservableProperty name, boost::any property)
 {
     this->properties[name] = property;
 }

@@ -458,7 +458,7 @@ long double HSSMargin::_setLDProperty(
         {
             ret = boost::any_cast<long double>(remoteValue);
         }
-        catch (...)
+        catch (boost::bad_any_cast & e)
         {
             ret = 0.;
         }

@@ -60,8 +60,8 @@ HSSPolygon::HSSPolygon()
     shorthandProperties.push_back("angle");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertySides, (void *) & this->sides);
-    this->registerProperty(HSSObservablePropertyAngle, (void *) & this->angle);
+    this->registerProperty(HSSObservablePropertySides, & this->sides);
+    this->registerProperty(HSSObservablePropertyAngle, & this->angle);
     this->sides = 3;
     this->angle = 0;
 
@@ -77,8 +77,8 @@ HSSPolygon::HSSPolygon(const HSSPolygon & orig)
     shorthandProperties.push_back("angle");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertySides, (void *) & this->sides);
-    this->registerProperty(HSSObservablePropertyAngle, (void *) & this->angle);
+    this->registerProperty(HSSObservablePropertySides, & this->sides);
+    this->registerProperty(HSSObservablePropertyAngle, & this->angle);
     this->sides = 3;
     this->angle = 0;
 
@@ -230,9 +230,9 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
             {
                 this->sides = boost::any_cast<long double>(remoteValue);
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertySides, this, new HSSValueChangedCallback<HSSPolygon > (this, &HSSPolygon::sidesChanged));
@@ -320,9 +320,9 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
             {
                 this->angle = boost::any_cast<long double>(remoteValue);
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyAngle, this, new HSSValueChangedCallback<HSSPolygon > (this, &HSSPolygon::angleChanged));

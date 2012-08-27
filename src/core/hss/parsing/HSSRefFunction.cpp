@@ -197,12 +197,11 @@ void HSSRefFunction::valueChanged(HSSObservableProperty source, void*data)
 {
     this->setDirty(true);
     this->_value = data;
-    this->notifyObservers(HSSObservablePropertyValue, (void*) & this->_value);
+    this->notifyObservers(HSSObservablePropertyValue, data);
 }
 
 HSSClonable::p HSSRefFunction::cloneImpl() const
 {
-
     HSSRefFunction::p clone = HSSRefFunction::p(new HSSRefFunction(*this));
 
     HSSSelectorChain::const_it sIt;

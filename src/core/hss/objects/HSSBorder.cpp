@@ -52,14 +52,14 @@ HSSBorder::HSSBorder()
 : HSSObject(HSSObjectTypeBorder)
 {
     this->observedSize = NULL;
-    this->registerProperty(HSSObservablePropertySize, (void *) & this->size);
+    this->registerProperty(HSSObservablePropertySize, & this->size);
 }
 
 HSSBorder::HSSBorder(const HSSBorder & orig)
 : HSSObject(orig)
 {
     this->observedSize = NULL;
-    this->registerProperty(HSSObservablePropertySize, (void *) & this->size);
+    this->registerProperty(HSSObservablePropertySize, & this->size);
 }
 
 HSSBorder::~HSSBorder()
@@ -160,7 +160,7 @@ void HSSBorder::setDSize(HSSParserNode::p value)
             {
                 this->size = boost::any_cast<HSSUnit > (remoteValue);
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
                 this->size = 1.;
             }

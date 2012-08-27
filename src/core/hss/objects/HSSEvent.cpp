@@ -83,7 +83,7 @@ HSSEvent::HSSEvent(HSSEventType type)
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyAction, &this->action);
+    this->registerProperty(HSSObservablePropertyAction, & this->action);
 }
 
 HSSEvent::HSSEvent(const HSSEvent & orig)
@@ -95,7 +95,7 @@ HSSEvent::HSSEvent(const HSSEvent & orig)
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyAction, &this->action);
+    this->registerProperty(HSSObservablePropertyAction, & this->action);
 }
 
 HSSEvent::p HSSEvent::clone() const
@@ -246,9 +246,9 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             {
                 e->raise();
             }
-            catch (...)
+            catch (boost::bad_any_cast & e)
             {
-
+                //do nothing
             }
 
             break;
