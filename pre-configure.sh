@@ -27,6 +27,9 @@ doc()
 }
 
 if [ "$UNAME" = "Darwin" ] ; then
+    # Target the earliest Intel version of OS X for maximum compatibility
+    export MACOSX_DEPLOYMENT_TARGET=10.4
+
     # TODO: Allow the user to prefer a particular package manager if they have multiple
     if [ $(which port 2>/dev/null) ] ; then # MacPorts
         # NOTE: Qt +debug is BOTH debug and release
