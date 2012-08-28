@@ -72,7 +72,9 @@ Read our [wiki page](http://axr.vg/wiki/Building).
 Pre-commit hook
 ===============
 It is reccommended that you use our pre-commit hook. In order to do so, simply
-copy or symlink the executable at bin/pre-commit to .git/hooks/
+copy or symlink the executable at bin/pre-commit to .git/hooks/, for example:
+
+    ln -s ../../bin/pre-commit "$(git rev-parse --show-toplevel)/.git/hooks/pre-commit"
 
 Where to file bug reports
 =========================
