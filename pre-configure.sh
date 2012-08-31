@@ -28,10 +28,35 @@ doc()
 
 if [ "$UNAME" = "Darwin" ] ; then
     # Target the earliest Intel version of OS X for maximum compatibility
-    export MACOSX_DEPLOYMENT_TARGET=10.4
+    mp_target=10.4
+    export MACOSX_DEPLOYMENT_TARGET=$mp_target
 
     # TODO: Allow the user to prefer a particular package manager if they have multiple
     if [ $(which port 2>/dev/null) ] ; then # MacPorts
+        # Determine MacPorts installation path
+        mp="$(which port)"
+        mp_prefix="${mp%/bin/port}"
+        if [ -z "$mp_prefix" ] ; then
+            echo "Could not determine MacPorts installation prefix"
+            exit 1
+        fi
+
+        # Get MacPorts configuration file path
+        mp_conf="$mp_prefix/etc/macports/macports.conf"
+
+        # Check the MacPorts deployment target configuration and change it if necessary
+        mp_deployment_target=$(egrep "^macosx_deployment_target\s+([0-9.]+)\s*$" "$mp_conf" | cut -d ' ' -f 2- | tr -d ' \t')
+        if [ ! -z "$mp_deployment_target" ] ; then
+            echo "$mp_deployment_target"
+            if [ "$mp_deployment_target" != "$mp_target" ] ; then
+                echo "MacPorts macosx_deployment_target setting was found ($mp_deployment_target) - changing to $mp_target..."
+                sed -i '.bak' "s/macosx_deployment_target $mp_deployment_target/macosx_deployment_target $mp_target/g" "$mp_conf"
+            fi
+        else
+            echo "MacPorts macosx_deployment_target setting was not found - setting to $mp_target..."
+            echo "macosx_deployment_target $mp_target" | tee -a "$mp_conf" > /dev/null
+        fi
+
         # NOTE: Qt +debug is BOTH debug and release
         port install \
             qt4-mac +debug +framework +quartz +universal \
