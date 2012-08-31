@@ -27,8 +27,9 @@ doc()
 }
 
 if [ "$UNAME" = "Darwin" ] ; then
-    # Target the earliest Intel version of OS X for maximum compatibility
-    mp_target=10.4
+    # Tiger's far too old to bother with; Leopard was really the beginning of modern OS X
+    # and is the first virtualizable OS X operating system
+    mp_target=10.5
     export MACOSX_DEPLOYMENT_TARGET=$mp_target
 
     # TODO: Allow the user to prefer a particular package manager if they have multiple
@@ -66,7 +67,7 @@ if [ "$UNAME" = "Darwin" ] ; then
             cairo +quartz +universal \
             pango +quartz +universal
     elif [ $(which brew 2>/dev/null) ] ; then # Brew
-        # brew install ...
+        # brew install cairo pango boost ...
         echo "ERROR: brew support is not yet implemented"
         exit 1
     elif [ $(which fink 2>/dev/null) ] ; then # Fink
@@ -83,7 +84,7 @@ if [ "$UNAME" = "Darwin" ] ; then
 elif [ "$UNAME" = "Linux" ] ; then
     if [ $(which apt-get 2>/dev/null) ] ; then
         # Debian, Ubuntu
-        apt-get install qt-sdk libboost-all-dev libsdl1.2-dev libexpat1-dev libcairo2-dev libpango1.0-dev
+        apt-get install build-essential qt-sdk libboost-all-dev libsdl1.2-dev libexpat1-dev libcairo2-dev libpango1.0-dev
     elif [ $(which yum 2>/dev/null) ] ; then
         # Fedora, RHEL, Yellow Dog Linux
         echo "ERROR: yum support is not yet implemented"
