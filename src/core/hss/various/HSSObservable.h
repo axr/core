@@ -44,6 +44,7 @@
 
 #include <map>
 #include <string>
+#include <boost/shared_ptr.hpp>
 #include <boost/unordered_map.hpp>
 #include "HSSCallback.h"
 #include "HSSObservableProperties.h"
