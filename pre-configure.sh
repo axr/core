@@ -60,12 +60,12 @@ if [ "$UNAME" = "Darwin" ] ; then
 
         # NOTE: Qt +debug is BOTH debug and release
         port install \
-            qt4-mac +debug +framework +quartz +universal \
             boost +no-static +universal \
             libsdl +universal \
             expat +universal \
             cairo +quartz +universal \
-            pango +quartz +universal
+            pango +quartz +universal \
+            qt4-mac +debug +framework +quartz +universal
     elif [ $(which brew 2>/dev/null) ] ; then # Brew
         # brew install cairo pango boost ...
         echo "ERROR: brew support is not yet implemented"
