@@ -115,129 +115,134 @@ void HSSLog::fire()
     bool done = false;
     switch (this->dValue->getType())
     {
-    case HSSParserNodeTypeFunctionCall:
-    {
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (this->dValue)->clone();
-        if (fnct->isA(HSSFunctionTypeRef))
+        case HSSParserNodeTypeFunctionCall:
         {
-            HSSRefFunction::p refFnct = boost::static_pointer_cast<HSSRefFunction > (fnct);
-            refFnct->setScope(this->scope);
-            refFnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = refFnct->evaluate();
-            try
+            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (this->dValue)->clone();
+            if (fnct->isA(HSSFunctionTypeRef))
             {
-                std::string theVal = boost::any_cast<std::string > (remoteValue);
-                std_log(theVal);
-                done = true;
-            }
-            catch (boost::bad_any_cast & e)
-            {
-                //do nothing
-            }
-            try
-            {
-                HSSUnit theVal = boost::any_cast<HSSUnit > (remoteValue);
-                std_log(boost::lexical_cast<std::string > (theVal));
-                done = true;
-            }
-            catch (boost::bad_any_cast & e)
-            {
-                //do nothing
-            }
-            try
-            {
-                HSSObject::p theVal = boost::any_cast<HSSObject::p > (remoteValue);
-                std_log(theVal->toString());
-                done = true;
-            }
-            catch (boost::bad_any_cast & e)
-            {
-                //do nothing
-            }
-            try
-            {
-                std::vector<HSSObject::p> v_data = boost::any_cast< std::vector<HSSObject::p> >(remoteValue);
-                std::vector<HSSObject::p>::iterator it;
-                if (v_data.size() == 0)
+                HSSRefFunction::p refFnct = boost::static_pointer_cast<HSSRefFunction > (fnct);
+                refFnct->setScope(this->scope);
+                refFnct->setThisObj(this->getThisObj());
+                boost::any remoteValue = refFnct->evaluate();
+                try
                 {
-                    std_log("empty");
+                    std::string theVal = boost::any_cast<std::string > (remoteValue);
+                    std_log(theVal);
+                    done = true;
                 }
-                else
+                catch (boost::bad_any_cast & e)
                 {
-                    for (it = v_data.begin(); it != v_data.end(); it++)
+                    //do nothing
+                }
+                try
+                {
+                    HSSUnit theVal = boost::any_cast<HSSUnit > (remoteValue);
+                    std_log(boost::lexical_cast<std::string > (theVal));
+                    done = true;
+                }
+                catch (boost::bad_any_cast & e)
+                {
+                    //do nothing
+                }
+                try
+                {
+                    HSSObject::p theVal = boost::any_cast<HSSObject::p > (remoteValue);
+                    std_log(theVal->toString());
+                    done = true;
+                }
+                catch (boost::bad_any_cast & e)
+                {
+                    //do nothing
+                }
+                try
+                {
+                    std::vector<HSSObject::p> v_data = boost::any_cast< std::vector<HSSObject::p> >(remoteValue);
+                    std::vector<HSSObject::p>::iterator it;
+                    if (v_data.size() == 0)
                     {
-                        std_log((*it)->toString());
+                        std_log("empty");
                     }
-                }
-                done = true;
-            }
-            catch (boost::bad_any_cast & e)
-            {
-                //do nothing
-            }
-            try
-            {
-                boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > m_data = boost::any_cast< boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > >(remoteValue);
-                boost::unordered_map<HSSEventType, std::vector<HSSObject::p> >::iterator it;
-                if (m_data.size() == 0)
-                {
-                    std_log("empty");
-                }
-                else
-                {
-                    for (it = m_data.begin(); it != m_data.end(); it++)
+                    else
                     {
-                        std::vector<HSSObject::p> v_data = (*it).second;
-                        std::vector<HSSObject::p>::iterator it2;
-                        for (it2 = v_data.begin(); it2 != v_data.end(); it2++)
+                        for (it = v_data.begin(); it != v_data.end(); it++)
                         {
-                            std_log((*it2)->toString());
+                            std_log((*it)->toString());
                         }
                     }
+                    done = true;
                 }
+                catch (boost::bad_any_cast & e)
+                {
+                    //do nothing
+                }
+                try
+                {
+                    boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > m_data = boost::any_cast< boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > >(remoteValue);
+                    boost::unordered_map<HSSEventType, std::vector<HSSObject::p> >::iterator it;
+                    if (m_data.size() == 0)
+                    {
+                        std_log("empty");
+                    }
+                    else
+                    {
+                        for (it = m_data.begin(); it != m_data.end(); it++)
+                        {
+                            std::vector<HSSObject::p> v_data = (*it).second;
+                            std::vector<HSSObject::p>::iterator it2;
+                            for (it2 = v_data.begin(); it2 != v_data.end(); it2++)
+                            {
+                                std_log((*it2)->toString());
+                            }
+                        }
+                    }
+                    done = true;
+                }
+                catch (boost::bad_any_cast & e)
+                {
+                    //do nothing
+                }
+            }
+            break;
+        }
+
+        case HSSParserNodeTypeStringConstant:
+        {
+            HSSStringConstant::p str = boost::static_pointer_cast<HSSStringConstant > (this->dValue);
+            std_log(str->getValue());
+            done = true;
+            break;
+        }
+
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try
+            {
+                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (this->dValue);
+                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                objdef->setThisObj(this->getThisObj());
+                objdef->setScope(this->scope);
+                objdef->apply();
+                HSSObject::p theObject = objdef->getObject();
+                std_log(theObject->toString());
                 done = true;
             }
-            catch (boost::bad_any_cast & e)
+            catch (AXRError::p e)
             {
-                //do nothing
+                e->raise();
+
             }
+            catch (AXRWarning::p e)
+            {
+                e->raise();
+            }
+
+            break;
         }
-        break;
-    }
-
-    case HSSParserNodeTypeStringConstant:
-    {
-        HSSStringConstant::p str = boost::static_pointer_cast<HSSStringConstant > (this->dValue);
-        std_log(str->getValue());
-        done = true;
-        break;
-    }
-
-    case HSSParserNodeTypeObjectNameConstant:
-    {
-        try
+            
+        default:
         {
-            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (this->dValue);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
-            objdef->setThisObj(this->getThisObj());
-            objdef->setScope(this->scope);
-            objdef->apply();
-            HSSObject::p theObject = objdef->getObject();
-            std_log(theObject->toString());
-            done = true;
+            break;
         }
-        catch (AXRError::p e)
-        {
-            e->raise();
-
-        }
-        catch (AXRWarning::p e)
-        {
-            e->raise();
-        }
-
-        break;
-    }
     }
 
 
