@@ -1782,6 +1782,8 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 {
                     propertyName = VALUE_TOKEN(this->currentToken)->getString();
                     this->readNextToken();
+                    //allow whitespace before colon
+                    this->skip(HSSWhitespace);
                     //now must come a colon
                     this->skipExpected(HSSColon);
                     //we don't give a f$%# about whitespace
