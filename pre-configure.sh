@@ -48,7 +48,7 @@ if [ "$UNAME" = "Darwin" ] ; then
         # Check the MacPorts deployment target configuration and change it if necessary
         mp_deployment_target=$(egrep "^macosx_deployment_target\s+([0-9.]+)\s*$" "$mp_conf" | cut -d ' ' -f 2- | tr -d ' \t')
         if [ ! -z "$mp_deployment_target" ] ; then
-            echo "$mp_deployment_target"
+            echo "Building MacPorts dependencies for OS X $mp_deployment_target+"
             if [ "$mp_deployment_target" != "$mp_target" ] ; then
                 echo "MacPorts macosx_deployment_target setting was found ($mp_deployment_target) - changing to $mp_target..."
                 sed -i '.bak' "s/macosx_deployment_target $mp_deployment_target/macosx_deployment_target $mp_target/g" "$mp_conf"
