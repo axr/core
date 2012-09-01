@@ -88,8 +88,7 @@ namespace AXR
          *  Getter for the actual value of the sides property.
          *  @return A long double containing the amount of sides.
          */
-#warning This should probably be an integer... a shape can't have a decimal number of sides
-        long double getSides();
+        unsigned int getSides();
 
         /**
          *  Getter for the definition object of sides.
@@ -138,7 +137,7 @@ namespace AXR
     protected:
         //sides
         HSSParserNode::p dSides;
-        long double sides;
+        unsigned int sides;
         HSSObservable * observedSides;
         HSSObservableProperty observedSidesProperty;
 

@@ -56,7 +56,7 @@
 
 extern unsigned int axr_debug_level;
 
-void std_log_level(const std::string &message, int debugLevel = 0, bool newline = true);
+void std_log_level(const std::string &message, unsigned int debugLevel = 0, bool newline = true);
 void std_log(const std::string &message, bool newline = true);
 void std_log1(const std::string &message, bool newline = true);
 void std_log2(const std::string &message, bool newline = true);

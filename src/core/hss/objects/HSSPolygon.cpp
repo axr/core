@@ -156,7 +156,7 @@ void HSSPolygon::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSU
     cairo_scale(cairo, 1. * (width / 2.), 1. * (height / 2.));
 
     HSSUnit radius = 1;
-    int sides = this->sides < 3 ? 3 : (int) this->sides;
+    unsigned int sides = this->sides < 3 ? 3 : this->sides;
     long double step = 360.0f / sides;
     long double i;
     long double l_angle = this->angle;
@@ -188,7 +188,7 @@ void HSSPolygon::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSU
 
 }
 
-long double HSSPolygon::getSides()
+unsigned int HSSPolygon::getSides()
 {
     return this->sides;
 }
@@ -206,14 +206,14 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
     case HSSParserNodeTypePercentageConstant:
     case HSSParserNodeTypeExpression:
         this->dSides = value;
-        this->sides = this->_setLDProperty(
+        this->sides = floor(this->_setLDProperty(
                                            &HSSPolygon::sidesChanged,
                                            value,
                                            1.,
                                            HSSObservablePropertySides,
                                            this->observedSides,
                                            this->observedSidesProperty
-                                           );
+                                           ));
 
         break;
 
@@ -228,7 +228,15 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
             boost::any remoteValue = fnct->evaluate();
             try
             {
-                this->sides = boost::any_cast<long double>(remoteValue);
+                this->sides = floor(boost::any_cast<long double>(remoteValue));
+            }
+            catch (boost::bad_any_cast & e)
+            {
+                //do nothing
+            }
+            try
+            {
+                this->sides = boost::any_cast<unsigned int>(remoteValue);
             }
             catch (boost::bad_any_cast & e)
             {
@@ -260,13 +268,13 @@ void HSSPolygon::sidesChanged(HSSObservableProperty source, void*data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
-        this->sides = *(long double*) data;
+        this->sides = floor(*(long double*) data);
         break;
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dSides);
-        this->sides = percentageValue->getValue(*(long double*) data);
+        this->sides = floor(percentageValue->getValue(*(long double*) data));
         break;
     }
 

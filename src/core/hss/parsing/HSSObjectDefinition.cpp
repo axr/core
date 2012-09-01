@@ -85,7 +85,7 @@ std::string HSSObjectDefinition::toString()
     std::string tempstr = std::string("HSSObjectDefinition with object of type:");
     tempstr.append(this->prototype->toString());
 
-    const int pccount = this->propertiesSize();
+    const unsigned int pccount = this->propertiesSize();
     if (pccount > 0)
     {
         tempstr.append(" and the following properties: \n");

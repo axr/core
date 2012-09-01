@@ -73,7 +73,7 @@ HSSSelectorChain::~HSSSelectorChain()
 std::string HSSSelectorChain::toString()
 {
     std::string tempstr = "HSSSelectorChain with the following nodes:\n";
-    int sccount = (int) this->nodeList.size();
+    unsigned int sccount = this->nodeList.size();
     if (sccount > 0)
     {
 

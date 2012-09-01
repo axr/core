@@ -101,7 +101,7 @@ std::string HSSRule::toString()
         tempstr.append("WARNING: this rule has no selector chain!\n");
     }
 
-    const int pccount = this->propertiesSize();
+    const unsigned int pccount = this->propertiesSize();
     if (pccount > 0)
     {
         tempstr.append(" and the following properties: \n");
@@ -112,7 +112,7 @@ std::string HSSRule::toString()
         }
     }
 
-    const int srcount = this->children.size();
+    const unsigned int srcount = this->children.size();
     if (srcount > 0)
     {
         tempstr.append(" with the following sub-rules: \n");
@@ -211,7 +211,7 @@ HSSPropertyDefinition::p & HSSRule::propertiesLast()
     return this->properties.back();
 }
 
-const int HSSRule::propertiesSize()
+const unsigned int HSSRule::propertiesSize()
 {
     return this->properties.size();
 }

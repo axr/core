@@ -43,7 +43,7 @@
 
 unsigned int axr_debug_level = 1;
 
-void std_log_level(const std::string &message, int debugLevel, bool newline)
+void std_log_level(const std::string &message, unsigned int debugLevel, bool newline)
 {
     if (debugLevel <= axr_debug_level)
     {

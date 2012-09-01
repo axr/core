@@ -81,7 +81,7 @@ std::string HSSMultipleValue::toString()
 {
     std::string tempstr = std::string("HSSMultipleValue");
 
-    const int vcount = this->size();
+    const unsigned int vcount = this->size();
     if (vcount > 0)
     {
         tempstr.append(" with the following values: \n");

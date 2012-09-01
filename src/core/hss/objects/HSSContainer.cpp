@@ -1774,7 +1774,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
             if (startY > (this->height - this->bottomPadding) - group->height) startY = (this->height - this->bottomPadding) - group->height;
             if (startY < this->topPadding) startY = this->topPadding;
             HSSDisplayObject::it bobjIt, bobjIt2;
-            int i = 0, size = biggestGroup->objects.size();
+            unsigned int i = 0, size = biggestGroup->objects.size();
             for (bobjIt = biggestGroup->objects.begin(); bobjIt != biggestGroup->objects.end(); bobjIt++)
             {
                 HSSDisplayObject::p otherChild2 = *bobjIt;
@@ -1984,7 +1984,7 @@ void HSSContainer::_recursiveGetPushGroup(HSSDisplayObject::p objA, HSSDisplayOb
     }
 }
 
-bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup::p group, int i, HSSDisplayObject::p child)
+bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup::p group, unsigned int i, HSSDisplayObject::p child)
 {
     bool ret = false;
     HSSUnit constraintStore = constraint;

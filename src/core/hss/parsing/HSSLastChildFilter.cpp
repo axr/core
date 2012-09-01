@@ -72,7 +72,7 @@ const std::vector<HSSDisplayObject::p> HSSLastChildFilter::apply(const std::vect
     for (it = scope.begin(); it != scope.end(); it++)
     {
         const HSSDisplayObject::p & theDO = *it;
-        int lastIndex = theDO->getParent()->getChildren().size() - 1;
+        unsigned int lastIndex = theDO->getParent()->getChildren().size() - 1;
         if (this->getNegating())
         {
             if (theDO->getIndex() != lastIndex)
