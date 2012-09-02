@@ -238,7 +238,7 @@ void HSSLog::fire()
 
             break;
         }
-            
+
         default:
         {
             break;
