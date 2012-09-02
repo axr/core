@@ -234,11 +234,8 @@ int main(int argc, char **argv)
             {
                 if (event.key.keysym.sym == SDLK_F5)
                 {
-                    if (wrapper->hasLoadedFile())
-                    {
-                        std::cout << "Reloading file\n";
-                        wrapper->reload();
-                    }
+                    std::cout << "Reloading file\n";
+                    wrapper->reload();
                 }
                 else if (event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))
                 {
