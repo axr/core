@@ -39,18 +39,50 @@
  *
  ********************************************************************/
 
-#ifndef HSSFILTERS_H
-#define HSSFILTERS_H
-
-#include "HSSEvenChildFilter.h"
-#include "HSSEvenFilter.h"
-#include "HSSFirstChildFilter.h"
-#include "HSSFirstFilter.h"
-#include "HSSLastChildFilter.h"
-#include "HSSLastFilter.h"
-#include "HSSOddChildFilter.h"
-#include "HSSOddFilter.h"
-#include "HSSParentFilter.h"
+#include "HSSContainer.h"
 #include "HSSEmptyFilter.h"
 
-#endif
+using namespace AXR;
+
+HSSEmptyFilter::HSSEmptyFilter()
+: HSSFilter(HSSFilterTypeLast)
+{
+
+}
+
+HSSEmptyFilter::p HSSEmptyFilter::clone() const
+{
+    return boost::static_pointer_cast<HSSEmptyFilter, HSSClonable > (this->cloneImpl());
+}
+
+HSSEmptyFilter::~HSSEmptyFilter()
+{
+
+}
+
+std::string HSSEmptyFilter::toString()
+{
+    return "Empty Filter";
+}
+
+const std::vector<HSSDisplayObject::p> HSSEmptyFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
+{
+    std::vector<HSSDisplayObject::p> ret;
+    HSSDisplayObject::const_it it;
+    for (it = scope.begin(); it != scope.end(); it++)
+    {
+        const HSSDisplayObject::p & theDO = *it;
+        const HSSContainer::p & container = HSSContainer::asContainer(*it);
+
+        if (container->getChildren(true).size() == 0)
+        {
+            ret.push_back(theDO);
+        }
+    }
+    return ret;
+}
+
+HSSClonable::p HSSEmptyFilter::cloneImpl() const
+{
+    return HSSClonable::p(new HSSEmptyFilter(*this));
+}
