@@ -1,7 +1,5 @@
 # Cocoa application
 if(APPLE)
-    set(TARGET_NAME "AXR Prototype")
-
     list(APPEND axr_code_SOURCES main.m AXRTestAppAppDelegate.h AXRTestAppAppDelegate.mm)
 
     # Icons .rc, and property lists
@@ -22,8 +20,8 @@ if(APPLE)
 
     set(axr_SOURCES ${axr_res_SOURCES} ${axr_lproj_SOURCES} ${axr_code_SOURCES} ${hss_SOURCES} ${views_SOURCES})
 
-    add_executable("${TARGET_NAME}" MACOSX_BUNDLE ${axr_SOURCES})
-    target_link_libraries("${TARGET_NAME}" AXR_core)
+    add_executable("${TARGET_NAME_APP_COCOA}" MACOSX_BUNDLE ${axr_SOURCES})
+    target_link_libraries("${TARGET_NAME_APP_COCOA}" ${TARGET_NAME_LIB_COCOA})
 
     set(MACOSX_BUNDLE_ICON_FILE axr.icns)
     set_source_files_properties(axr.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
@@ -32,10 +30,10 @@ if(APPLE)
     set_source_files_properties(${hss_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/framework)
     set_source_files_properties(${views_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/views)
 
-    set_target_properties("${TARGET_NAME}" PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist")
+    set_target_properties("${TARGET_NAME_APP_COCOA}" PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist")
 endif()
 
 # SDL application
 include_directories(cairosdl)
-add_executable("AXR_SDL" WIN32 ${axr_res_SOURCES} cairosdl/cairosdl.c cairosdl/cairosdl.h sdlmain.cpp)
-target_link_libraries("AXR_SDL" AXR_core ${SDLMAIN_LIBRARY} ${SDL_LIBRARY})
+add_executable(${TARGET_NAME_APP_SDL} WIN32 ${axr_res_SOURCES} cairosdl/cairosdl.c cairosdl/cairosdl.h sdlmain.cpp)
+target_link_libraries(${TARGET_NAME_APP_SDL} ${TARGET_NAME_LIB_CORE} ${SDLMAIN_LIBRARY} ${SDL_LIBRARY})
