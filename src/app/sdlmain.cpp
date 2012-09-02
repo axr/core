@@ -261,10 +261,7 @@ int main(int argc, char **argv)
 
                 if (root)
                 {
-                    HSSPoint thePoint;
-                    thePoint.x = -1;
-                    thePoint.y = -1;
-                    root->handleEvent(HSSEventTypeMouseMove, &thePoint);
+                    root->handleEvent(HSSEventTypeExitedWindow, NULL);
                 }
             }
             else

@@ -69,6 +69,7 @@ std::string HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
     types[HSSEventTypeClickSecondary] = "HSSEventTypeClickSecondary";
     types[HSSEventTypeClickTertiary ] = "HSSEventTypeClickTertiary";
     types[HSSEventTypeScroll ] = "HSSEventTypeScroll";
+    types[HSSEventTypeExitedWindow ] = "HSSEventTypeExitedWindow";
 
     return types[eventType];
 }

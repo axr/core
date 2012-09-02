@@ -399,7 +399,8 @@ namespace AXR
         HSSEventTypeMouseMove, /**< Fires when the mouse pointer is moved over an area of the screen. */
         HSSEventTypeClickSecondary, /**< Fires when clicking with the secondary mouse button. */
         HSSEventTypeClickTertiary, /**< Fires when clicking with the third (if there) mouse button. */
-        HSSEventTypeScroll /**< Fires when the sroll mechanism is activated on the mouse (e.g. scroll wheel). */
+        HSSEventTypeScroll, /**< Fires when the sroll mechanism is activated on the mouse (e.g. scroll wheel). */
+        HSSEventTypeExitedWindow /**< Fires when the mouse pointer leaves the window. */
     };
     /** @} */
 

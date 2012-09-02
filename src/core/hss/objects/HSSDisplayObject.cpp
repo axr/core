@@ -3928,6 +3928,16 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
         break;
     }
 
+    case HSSEventTypeExitedWindow:
+    {
+        if (this->_isHover)
+        {
+            this->setHover(false);
+        }
+
+        return this->fireEvent(type);
+    }
+
     default:
         throw AXRError::p(new AXRError("HSSDisplayObject", "Unknown event type"));
     }
