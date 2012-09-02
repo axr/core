@@ -127,6 +127,7 @@ def buildInspectionFileList(directory):
         for file in files:
             if file == ".stylecheckignore":
                 print("Ignoring directory " + root)
+                del subFolders[:]
                 ignoreDirectory = True
 
         if ignoreDirectory:
