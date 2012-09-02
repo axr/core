@@ -253,6 +253,20 @@ int main(int argc, char **argv)
                 cr = cairosdl_create(screen);
                 wrapper->setNeedsDisplay(true);
             }
+            else if (event.active.state & SDL_APPMOUSEFOCUS &&
+                event.active.gain == 0)
+            {
+                AXRCore::tp & core = AXRCore::getInstance();
+                HSSContainer::p root = core->getController()->getRoot();
+
+                if (root)
+                {
+                    HSSPoint thePoint;
+                    thePoint.x = -1;
+                    thePoint.y = -1;
+                    root->handleEvent(HSSEventTypeMouseMove, &thePoint);
+                }
+            }
             else
             {
             }
