@@ -820,8 +820,8 @@ void HSSContainer::layout()
             //            newGroup->height += (*linesIt)->height;
             //        }
 
-            //sort biggest group first, smallest last
-            this->_qs_sort(secondaryGroups, 0, secondaryGroups.size() - 1);
+            // Sort tallest group first, shortest last
+            std::sort(secondaryGroups.begin(), secondaryGroups.end(), displayGroup::heightGreater);
 
             bool first = true;
             for (std::vector<displayGroup::p>::iterator sgIt = secondaryGroups.begin(); sgIt != secondaryGroups.end(); ++sgIt)
@@ -1082,41 +1082,6 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
         } // lineBDone
 
     } //while !lineADone || !lineBDone
-}
-
-/* quicksort algorithm taken from http://developer-resource.blogspot.com.es/2008/09/quicksort-c.html */
-
-void HSSContainer::_qs_swap(std::vector<displayGroup::p> &arr, int a, int b)
-{
-    std::swap(arr[a], arr[b]);
-}
-
-int HSSContainer::_qs_partition(std::vector<displayGroup::p> &arr, int left, int right, int pivotIndex)
-{
-    displayGroup::p pivotValue = arr[pivotIndex];
-    this->_qs_swap(arr, right, pivotIndex);
-    int storeIndex = left;
-    for (int i = left; i <= right - 1; ++i)
-    {
-        if (arr[i]->height > pivotValue->height)
-        {
-            this->_qs_swap(arr, i, storeIndex);
-            storeIndex++;
-        }
-    }
-    this->_qs_swap(arr, storeIndex, right);
-    return storeIndex;
-}
-
-void HSSContainer::_qs_sort(std::vector<displayGroup::p> &arr, int left, int right)
-{
-    if (right > left)
-    {
-        int pivotIndex = left;
-        int pivotNewIndex = this->_qs_partition(arr, left, right, pivotIndex);
-        this->_qs_sort(arr, left, pivotNewIndex - 1);
-        this->_qs_sort(arr, pivotNewIndex + 1, right);
-    }
 }
 
 bool HSSContainer::_overlaps(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB)
