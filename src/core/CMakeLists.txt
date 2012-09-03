@@ -38,3 +38,22 @@ if(APPLE)
     mark_as_advanced(COCOA_LIBRARY)
     target_link_libraries(${TARGET_NAME_LIB_COCOA} ${COCOA_LIBRARY} ${TARGET_NAME_LIB_CORE})
 endif()
+
+# AXR core documentation
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    # Copy the Doxygen configuration file to the output and append the INPUT configuration
+    # directive to point to the source directory - we do this instead of using the @ syntax
+    # within the file so that Doxygen can be run without requiring CMake to be run
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile ${CMAKE_BINARY_DIR}/Doxyfile)
+    file(APPEND ${CMAKE_BINARY_DIR}/Doxyfile "INPUT = ${CMAKE_CURRENT_SOURCE_DIR}")
+
+    add_custom_target(docs
+        COMMAND ${DOXYGEN_EXECUTABLE}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Building documentation for AXR core..."
+        SOURCES Doxyfile
+    )
+else()
+    message(STATUS "Doxygen was NOT found; will not build documentation")
+endif()
