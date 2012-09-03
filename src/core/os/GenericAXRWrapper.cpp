@@ -72,7 +72,7 @@ AXRFile::p GenericAXRWrapper::getFile(std::string url)
         ret->setFileName(clean_path.substr(slashpos + 1, clean_path.size()));
         ret->setBasePath(clean_path.substr(0, slashpos));
 
-        ret->setBufferSize(20240);
+        ret->setBufferSize(10240);
         ret->setBuffer(new char[ret->getBufferSize()]);
         ret->setFileHandle(fopen(clean_path.c_str(), "r"));
 

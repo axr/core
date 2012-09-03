@@ -46,7 +46,6 @@
 
 namespace AXR
 {
-
     class GenericAXRWrapper : public AXRWrapper
     {
     public:
