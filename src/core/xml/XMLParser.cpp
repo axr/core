@@ -284,8 +284,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
         }
         else
         {
-            //warn
-            //AXRWarning::p(new AXRWarning("XMLParser", "Ignoring stylesheet of unknown type", this->file->getFileName(), (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+1))->raise();
+            axr_log(AXR_DEBUG_CH_XML, "Ignoring stylesheet of unknown type: " + sheetType + " in file " + this->file->getFileName());
         }
     }
 
