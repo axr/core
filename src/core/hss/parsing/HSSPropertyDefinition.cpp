@@ -82,7 +82,7 @@ HSSPropertyDefinition::~HSSPropertyDefinition()
 std::string HSSPropertyDefinition::toString()
 {
     std::string ret = "HSSPropertyDefinition: " + this->name;
-    if (this->value != NULL)
+    if (this->value)
     {
         ret.append(" with value: " + this->value->toString());
     }

@@ -98,7 +98,7 @@ HSSParser::~HSSParser()
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSParser: destructing HSS parser");
     unsigned i;
-    for (i = 0; i<this->currentObjectContext.size(); i++)
+    for (i = 0; i<this->currentObjectContext.size(); ++i)
     {
         this->currentObjectContext.pop();
     }
@@ -112,7 +112,7 @@ void HSSParser::reset()
 
     //clear the current object context
     unsigned i;
-    for (i = 0; i<this->currentObjectContext.size(); i++)
+    for (i = 0; i<this->currentObjectContext.size(); ++i)
     {
         this->currentObjectContext.pop();
     }
@@ -181,7 +181,7 @@ bool HSSParser::loadFile(AXRFile::p file)
 
             done = !this->readNextStatement();
         }
-        catch (AXR::AXRError::p e)
+        catch (const AXR::AXRError::p &e)
         {
             e->raise();
             this->readNextToken();
@@ -190,7 +190,7 @@ bool HSSParser::loadFile(AXRFile::p file)
                 this->skip(HSSWhitespace);
             }
         }
-        catch (AXR::AXRWarning::p e)
+        catch (const AXR::AXRWarning::p &e)
         {
             e->raise();
             this->readNextToken();
@@ -292,7 +292,7 @@ bool HSSParser::readNextStatement()
                 }
 
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
                 //restore
@@ -440,7 +440,7 @@ HSSRule::p HSSParser::readRule()
         }
 
     }
-    catch (AXRError::p e)
+    catch (const AXRError::p &e)
     {
         this->readNextToken();
         this->checkForUnexpectedEndOfSource();
@@ -521,7 +521,7 @@ HSSRule::p HSSParser::readRule()
             }
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             AXRWarning::p(new AXRWarning("HSSParser", "Invalid value for " + e->getMessage(), this->currentFile->getFileName(), this->line, this->column))->raise();
             if (!this->atEndOfSource())
@@ -1499,7 +1499,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
         {
             obj = HSSObject::newObjectWithType(objtype);
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             AXRWarning::p(new AXRWarning("HSSParser", "Invalid object name " + e->getMessage(), this->currentFile->getFileName(), this->line, this->column))->raise();
             if (this->currentObjectContext.size() > 0)
@@ -1522,7 +1522,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
             {
                 obj = HSSObject::newObjectWithType(objtype);
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 objtype = "value";
                 obj = HSSObject::newObjectWithType(objtype);
@@ -1678,7 +1678,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
             }
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             AXRWarning::p(new AXRWarning("HSSParser", "Invalid value for " + e->getMessage(), this->currentFile->getFileName(), this->line, this->column))->raise();
             if (!this->atEndOfSource())
@@ -1728,7 +1728,7 @@ void HSSParser::recursiveAddObjectDefinition(HSSObjectDefinition::p objDef)
     this->controller->objectTreeAdd(objDef);
     unsigned i, size;
     const std::vector<HSSObjectDefinition::p>children = objDef->getChildren();
-    for (i = 0, size = children.size(); i < size; i++)
+    for (i = 0, size = children.size(); i < size; ++i)
     {
         HSSObjectDefinition::p child = children[i];
         std::deque<HSSPropertyDefinition::p> properties = objDef->getProperties();
@@ -1740,7 +1740,7 @@ void HSSParser::recursiveAddObjectDefinition(HSSObjectDefinition::p objDef)
         }
         std::deque<HSSRule::p>::const_reverse_iterator it;
         const std::deque<HSSRule::p> rules = objDef->getRules();
-        for (it = rules.rbegin(); it != rules.rend(); it++)
+        for (it = rules.rbegin(); it != rules.rend(); ++it)
         {
             child->rulesPrepend((*it));
         }
@@ -1790,7 +1790,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                     this->skip(HSSWhitespace);
                     this->currentObjectContext.top()->shorthandSkip(propertyName);
                 }
-                catch (AXRError::p e)
+                catch (const AXRError::p &e)
                 {
                     e->raise();
                     valid = false;
@@ -1820,7 +1820,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             //consume the property
             this->currentObjectContext.top()->shorthandNext();
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             AXRError::p(new AXRError("HSSParser", "Could not get property for current value"))->raise();
             valid = false;
@@ -1852,11 +1852,11 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                             ret->addValue(objdef);
                         }
                     }
-                    catch (AXRError::p e)
+                    catch (const AXRError::p &e)
                     {
                         e->raise();
                     }
-                    catch (AXRWarning::p e)
+                    catch (const AXRWarning::p &e)
                     {
                         e->raise();
                     }
@@ -1971,7 +1971,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 done = true;
             }
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
             valid = false;
@@ -2118,7 +2118,7 @@ HSSParserNode::p HSSParser::readValue(std::string propertyName, bool &valid)
             isValid = false;
         }
     }
-    catch (AXRError::p e)
+    catch (const AXRError::p &e)
     {
         e->raise();
         isValid = false;
@@ -2489,7 +2489,7 @@ HSSRule::p HSSParser::readInstructionRule()
             //skip any whitespace
             this->skip(HSSWhitespace, true);
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             this->readNextToken();
             this->checkForUnexpectedEndOfSource();
@@ -2829,7 +2829,7 @@ HSSParserNode::p HSSParser::readFunction()
                 //skip any whitespace
                 this->skip(HSSWhitespace, true);
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 this->readNextToken(true);
                 this->skip(HSSWhitespace);
@@ -3054,7 +3054,7 @@ void HSSParser::readNextToken(bool checkForUnexpectedEndOfSource)
         }
 
     }
-    catch (AXRError::p e)
+    catch (const AXRError::p &e)
     {
         this->currentToken = HSSToken::p();
         throw;

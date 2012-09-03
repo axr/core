@@ -54,7 +54,7 @@ using namespace AXR;
 HSSTextTransformType HSSTextBlock::textTransformTypeFromString(std::string value)
 {
     static boost::unordered_map<std::string, HSSTextTransformType>types;
-    if (types.size() == 0)
+    if (types.empty())
     {
         types["lowercase"] = HSSTextTransformTypeLowercase;
         types["uppercase"] = HSSTextTransformTypeUppercase;
@@ -73,7 +73,7 @@ HSSTextTransformType HSSTextBlock::textTransformTypeFromString(std::string value
 HSSTextAlignType HSSTextBlock::textAlignTypeFromString(std::string value)
 {
     static boost::unordered_map<std::string, HSSTextAlignType>types;
-    if (types.size() == 0)
+    if (types.empty())
     {
         types["left"] = HSSTextAlignTypeLeft;
         types["right"] = HSSTextAlignTypeRight;
@@ -362,7 +362,7 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -488,7 +488,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
             this->setDTextAlign(objdef);
             valid = true;
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -528,7 +528,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
         std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
         if (kwValue == "inherit")
         {
-            if (this->observedTextAlign != NULL)
+            if (this->observedTextAlign)
             {
                 this->observedTextAlign->removeObserver(this->observedTextAlignProperty, HSSObservablePropertyTextAlign, this);
             }
@@ -645,7 +645,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }

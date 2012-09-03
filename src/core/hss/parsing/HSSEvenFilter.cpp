@@ -68,7 +68,7 @@ const std::vector<HSSDisplayObject::p> HSSEvenFilter::apply(const std::vector<HS
 {
     std::vector<HSSDisplayObject::p> ret;
     unsigned i, size;
-    for (i = 0, size = scope.size(); i < size; i++)
+    for (i = 0, size = scope.size(); i < size; ++i)
     {
         if (this->getNegating())
         {

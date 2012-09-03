@@ -259,15 +259,14 @@ void HSSFont::setDColor(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }
-
 
         break;
     }
@@ -435,7 +434,7 @@ long double HSSFont::_setLDProperty(
         expressionValue->setPercentageBase(percentageBase);
         //expressionValue->setScope(scope);
         ret = expressionValue->evaluate();
-        if (callback != NULL)
+        if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSFont > (this, callback));
             observedStore = expressionValue.get();

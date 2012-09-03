@@ -55,7 +55,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type)
 {
 
     static boost::unordered_map<std::string, HSSObjectType>types;
-    if (types.size() == 0)
+    if (types.empty())
     {
         types["container"] = HSSObjectTypeContainer;
         types["displayObject"] = HSSObjectTypeDisplayObject;
@@ -170,7 +170,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type)
     case HSSObjectTypeEvent:
     {
         static boost::unordered_map<std::string, HSSEventType>eventTypes;
-        if (eventTypes.size() == 0)
+        if (eventTypes.empty())
         {
             eventTypes["load"] = HSSEventTypeLoad;
             eventTypes["click"] = HSSEventTypeClick;
@@ -251,17 +251,7 @@ HSSObject::~HSSObject()
 
 bool HSSObject::isKeyword(std::string value, std::string property)
 {
-    if (value == "default"
-            || value == "inherit"
-            || value == "undefined"
-            || value == "none")
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return (value == "default" || value == "inherit" || value == "undefined" || value == "none");
 }
 
 bool HSSObject::isFunction(std::string value, std::string property)
@@ -419,13 +409,13 @@ void HSSObject::addDIsA(HSSParserNode::p value)
     {
     case HSSParserNodeTypeMultipleValueDefinition:
     {
-        HSSParserNode::it iterator;
         HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
-        for (iterator = values.begin(); iterator != values.end(); iterator++)
+        for (HSSParserNode::it iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDIsA(*iterator);
         }
+
         valid = true;
         break;
     }
@@ -438,8 +428,8 @@ void HSSObject::addDIsA(HSSParserNode::p value)
             HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
             //objdef->apply();
             std::deque<HSSPropertyDefinition::p> properties = objdef->getProperties();
-            unsigned i, size;
-            for (i = 0, size = properties.size(); i < size; i++)
+
+            for (unsigned i = 0, size = properties.size(); i < size; ++i)
             {
                 HSSObservableProperty propertyName = HSSObservable::observablePropertyFromString(properties[i]->getName());
                 if (propertyName != HSSObservablePropertyNone)
@@ -448,11 +438,11 @@ void HSSObject::addDIsA(HSSParserNode::p value)
                     {
                         this->setProperty(propertyName, properties[i]->getValue()->clone());
                     }
-                    catch (AXRError::p e)
+                    catch (const AXRError::p &e)
                     {
                         e->raise();
                     }
-                    catch (AXRWarning::p e)
+                    catch (const AXRWarning::p &e)
                     {
                         e->raise();
                     }
@@ -460,14 +450,14 @@ void HSSObject::addDIsA(HSSParserNode::p value)
 
                 //else store as value
             }
-            valid = true;
 
+            valid = true;
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }

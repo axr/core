@@ -80,7 +80,7 @@ std::vector<HSSDisplayObject::p> HSSNameSelector::filterSelection(const std::vec
     std::vector< HSSDisplayObject::p> ret;
     unsigned i, size;
     //select only elements with matching element name
-    for (i = 0, size = scope.size(); i < size; i++)
+    for (i = 0, size = scope.size(); i < size; ++i)
     {
         bool match = scope[i]->getElementName() == this->getElementName();
         if ((match && !this->getNegating()) || (!match && this->getNegating()))

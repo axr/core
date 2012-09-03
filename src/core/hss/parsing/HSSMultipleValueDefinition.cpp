@@ -63,8 +63,7 @@ std::string HSSMultipleValueDefinition::toString()
 {
     std::string tempstr = std::string("HSSMultipleValueDefinition with the following values:\n");
 
-    std::vector<HSSParserNode::p>::iterator it;
-    for (it = this->values.begin(); it != this->values.end(); it++)
+    for (std::vector<HSSParserNode::p>::iterator it = this->values.begin(); it != this->values.end(); ++it)
     {
         HSSParserNode::p value = *it;
         tempstr.append(value->toString().append("\n"));

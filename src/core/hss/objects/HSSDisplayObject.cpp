@@ -292,10 +292,6 @@ std::string HSSDisplayObject::defaultObjectType(std::string property)
     {
         return "font";
     }
-    else if (property == "on")
-    {
-        return "click";
-    }
     else
     {
         return HSSObject::defaultObjectType(property);
@@ -434,7 +430,7 @@ void HSSDisplayObject::rulesAdd(HSSRule::p newRule, HSSRuleState defaultState)
         //iterate over the property defs and try to find an isA property
         const std::vector<HSSPropertyDefinition::p> & props = newRule->getProperties();
         HSSPropertyDefinition::const_it it;
-        for (it = props.begin(); it != props.end(); it++)
+        for (it = props.begin(); it != props.end(); ++it)
         {
             HSSPropertyDefinition::p propdef = *it;
             if (propdef->getName() == "isA")
@@ -464,7 +460,7 @@ void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSS
                 this->axrController->currentContext.push(thisCont);
                 HSSRule::const_it it;
                 const std::deque<HSSRule::p> rules = objdef->getRules();
-                for (it = rules.begin(); it != rules.end(); it++)
+                for (it = rules.begin(); it != rules.end(); ++it)
                 {
                     HSSRule::p clonedRule = (*it)->clone();
                     this->axrController->recursiveMatchRulesToDisplayObjects(clonedRule, thisCont->getChildren(), thisCont, true);
@@ -472,7 +468,7 @@ void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSS
                 this->axrController->currentContext.pop();
             }
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -513,7 +509,7 @@ void HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)
     bool found = false;
 
     std::vector<HSSRuleStatus::p>::iterator it;
-    for (it = this->rules.begin(); it != this->rules.end(); it++)
+    for (it = this->rules.begin(); it != this->rules.end(); ++it)
     {
         HSSRuleStatus::p rs = *it;
         HSSRule::p existingRule = rs->rule;
@@ -558,7 +554,7 @@ bool HSSDisplayObject::hasRule(HSSRule::p rule)
 {
     bool found = false;
     std::vector<HSSRuleStatus::p>::iterator it;
-    for (it = this->rules.begin(); it != this->rules.end(); it++)
+    for (it = this->rules.begin(); it != this->rules.end(); ++it)
     {
         HSSRuleStatus::p status = *it;
         if (rule == status->rule)
@@ -590,7 +586,7 @@ void HSSDisplayObject::readDefinitionObjects()
         }
 
         std::string propertyName;
-        for (i = 0; i<this->rules.size(); i++)
+        for (i = 0; i<this->rules.size(); ++i)
         {
             HSSRuleStatus::p & ruleStatus = this->rules[i];
             switch (ruleStatus->state)
@@ -604,7 +600,7 @@ void HSSDisplayObject::readDefinitionObjects()
             case HSSRuleStateOn:
             {
                 HSSRule::p & rule = ruleStatus->rule;
-                for (j = 0; j < rule->propertiesSize(); j++)
+                for (j = 0; j < rule->propertiesSize(); ++j)
                 {
                     try
                     {
@@ -612,11 +608,11 @@ void HSSDisplayObject::readDefinitionObjects()
                         propertyName = propertyDefinition->getName();
                         this->setPropertyWithName(propertyName, propertyDefinition->getValue());
                     }
-                    catch (AXRError::p e)
+                    catch (const AXRError::p &e)
                     {
                         e->raise();
                     }
-                    catch (AXRWarning::p e)
+                    catch (const AXRWarning::p &e)
                     {
                         e->raise();
                     }
@@ -729,7 +725,7 @@ void HSSDisplayObject::regenerateSurfaces()
         {
             HSSBorder::it it;
             this->borderBleeding = 0.;
-            for (it = this->border.begin(); it != this->border.end(); it++)
+            for (it = this->border.begin(); it != this->border.end(); ++it)
             {
                 this->borderBleeding += (*it)->getSize();
             }
@@ -822,7 +818,7 @@ void HSSDisplayObject::drawBackground()
 void HSSDisplayObject::_drawBackground(cairo_t * cairo)
 {
     std::vector<HSSObject::p>::iterator it;
-    for (it = this->background.begin(); it != this->background.end(); it++)
+    for (it = this->background.begin(); it != this->background.end(); ++it)
     {
         HSSObject::p theobj = *it;
         switch (theobj->getObjectType())
@@ -994,12 +990,12 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
             needsPostProcess = false;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
 
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }
@@ -1124,11 +1120,11 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
                 valid = true;
                 needsPostProcess = false;
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
             }
-            catch (AXRWarning::p e)
+            catch (const AXRWarning::p &e)
             {
                 e->raise();
             }
@@ -1224,12 +1220,12 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
             needsPostProcess = false;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
 
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }
@@ -1354,11 +1350,11 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
                 valid = true;
                 needsPostProcess = false;
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
             }
-            catch (AXRWarning::p e)
+            catch (const AXRWarning::p &e)
             {
                 e->raise();
             }
@@ -1709,12 +1705,12 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
 
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }
@@ -1863,12 +1859,12 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
 
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }
@@ -2300,7 +2296,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
         HSSParserNode::it iterator;
         HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
-        for (iterator = values.begin(); iterator != values.end(); iterator++)
+        for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDBackground(*iterator);
         }
@@ -2316,7 +2312,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
             this->addDBackground(this->axrController->objectTreeGet(objname->getValue()));
             valid = true;
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -2450,7 +2446,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
         HSSParserNode::it iterator;
         HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
-        for (iterator = values.begin(); iterator != values.end(); iterator++)
+        for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDContent(*iterator);
         }
@@ -2467,7 +2463,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -2500,7 +2496,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                     this->addDContent(theVal);
                     valid = true;
                 }
-                catch (AXRError::p e)
+                catch (const AXRError::p &e)
                 {
                     e->raise();
                 }
@@ -2636,7 +2632,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
         HSSParserNode::it iterator;
         HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
-        for (iterator = values.begin(); iterator != values.end(); iterator++)
+        for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDFont(*iterator);
         }
@@ -2676,7 +2672,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
             }
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -2841,7 +2837,7 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
         HSSParserNode::it iterator;
         HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
-        for (iterator = values.begin(); iterator != values.end(); iterator++)
+        for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDOn(*iterator);
         }
@@ -2858,7 +2854,7 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -2888,7 +2884,7 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
                 this->addDOn(theVal);
                 valid = true;
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
             }
@@ -2978,7 +2974,7 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
     {
         std::vector<HSSObject::p> events = this->on[type];
         HSSObject::it it;
-        for (it = events.begin(); it != events.end(); it++)
+        for (it = events.begin(); it != events.end(); ++it)
         {
             if ((*it)->isA(HSSObjectTypeEvent))
             {
@@ -3020,7 +3016,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
         HSSParserNode::it iterator;
         HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
-        for (iterator = values.begin(); iterator != values.end(); iterator++)
+        for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDMargin(*iterator);
         }
@@ -3064,7 +3060,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
             }
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -3096,7 +3092,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
                 this->_setOuterHeight();
                 valid = true;
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
             }
@@ -3205,7 +3201,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
         HSSParserNode::it iterator;
         HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
-        for (iterator = values.begin(); iterator != values.end(); iterator++)
+        for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDPadding(*iterator);
         }
@@ -3249,7 +3245,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
             }
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -3281,7 +3277,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
                 this->_setInnerHeight();
                 valid = true;
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
             }
@@ -3390,7 +3386,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
         HSSParserNode::it iterator;
         HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
-        for (iterator = values.begin(); iterator != values.end(); iterator++)
+        for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDBorder(*iterator);
         }
@@ -3430,7 +3426,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
             }
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -3460,7 +3456,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
                 this->addDBorder(theVal);
                 valid = true;
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
             }
@@ -3735,7 +3731,7 @@ long double HSSDisplayObject::_setLDProperty(
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
-        if (callback != NULL)
+        if (callback)
         {
             observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject > (this, callback));
             observedStore = observedObject;
@@ -3752,7 +3748,7 @@ long double HSSDisplayObject::_setLDProperty(
         expressionValue->setScope(scope);
         expressionValue->setThisObj(this->shared_from_this());
         ret = expressionValue->evaluate();
-        if (callback != NULL)
+        if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject > (this, callback));
             observedStore = expressionValue;
@@ -3795,7 +3791,7 @@ long double HSSDisplayObject::_setLDProperty(
             }
         }
 
-        if (callback != NULL)
+        if (callback)
         {
             fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject > (this, callback));
             observedStore = fnct;
@@ -3821,7 +3817,7 @@ void HSSDisplayObject::_setInnerWidth()
     std::vector<HSSMargin::p>::const_iterator it;
     HSSUnit innerWidth = this->width;
     this->rightPadding = this->leftPadding = 0;
-    for (it = this->padding.begin(); it != this->padding.end(); it++)
+    for (it = this->padding.begin(); it != this->padding.end(); ++it)
     {
         HSSMargin::p theMargin = *it;
         innerWidth -= theMargin->getLeft() + theMargin->getRight();
@@ -3837,7 +3833,7 @@ void HSSDisplayObject::_setInnerHeight()
     std::vector<HSSMargin::p>::const_iterator it;
     HSSUnit innerHeight = this->height;
     this->topPadding = this->bottomPadding = 0;
-    for (it = this->padding.begin(); it != this->padding.end(); it++)
+    for (it = this->padding.begin(); it != this->padding.end(); ++it)
     {
         HSSMargin::p theMargin = *it;
         innerHeight -= theMargin->getTop() + theMargin->getBottom();
@@ -3853,7 +3849,7 @@ void HSSDisplayObject::_setOuterWidth()
     std::vector<HSSMargin::p>::const_iterator it;
     HSSUnit outerWidth = this->width;
     this->rightMargin = this->leftMargin = 0;
-    for (it = this->margin.begin(); it != this->margin.end(); it++)
+    for (it = this->margin.begin(); it != this->margin.end(); ++it)
     {
         HSSMargin::p theMargin = *it;
         outerWidth += theMargin->getLeft() + theMargin->getRight();
@@ -3869,7 +3865,7 @@ void HSSDisplayObject::_setOuterHeight()
     std::vector<HSSMargin::p>::const_iterator it;
     HSSUnit outerHeight = this->height;
     this->topMargin = this->bottomMargin = 0;
-    for (it = this->margin.begin(); it != this->margin.end(); it++)
+    for (it = this->margin.begin(); it != this->margin.end(); ++it)
     {
         HSSMargin::p theMargin = *it;
         outerHeight += theMargin->getTop() + theMargin->getBottom();
@@ -4006,7 +4002,7 @@ void HSSDisplayObject::flagsActivate(std::string name)
         std::vector<HSSFlag::p> flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
         std::vector<HSSFlag::p>::iterator it;
-        for (it = flags.begin(); it != flags.end(); it++)
+        for (it = flags.begin(); it != flags.end(); ++it)
         {
             HSSFlag::p theFlag = *it;
             theFlag->setThisObj(this->shared_from_this());
@@ -4026,13 +4022,13 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
     {
         boost::unordered_map<std::string, std::vector<HSSFlag::p> >::const_iterator it;
         //std_log("deactivating all flags on element "+this->getElementName());
-        for (it = this->_flags.begin(); it != this->_flags.end(); it++)
+        for (it = this->_flags.begin(); it != this->_flags.end(); ++it)
         {
             HSSRuleState newValue = HSSRuleStatePurge;
             std::vector<HSSFlag::p> flags = it->second;
             this->_flagsStatus[it->first] = newValue;
             std::vector<HSSFlag::p>::iterator it;
-            for (it = flags.begin(); it != flags.end(); it++)
+            for (it = flags.begin(); it != flags.end(); ++it)
             {
                 HSSFlag::p theFlag = *it;
                 theFlag->setThisObj(this->shared_from_this());
@@ -4050,7 +4046,7 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
         std::vector<HSSFlag::p> flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
         std::vector<HSSFlag::p>::iterator it;
-        for (it = flags.begin(); it != flags.end(); it++)
+        for (it = flags.begin(); it != flags.end(); ++it)
         {
             HSSFlag::p theFlag = *it;
             theFlag->setThisObj(this->shared_from_this());
@@ -4074,7 +4070,7 @@ void HSSDisplayObject::flagsToggle(std::string name)
         std::vector<HSSFlag::p> flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
         std::vector<HSSFlag::p>::iterator it;
-        for (it = flags.begin(); it != flags.end(); it++)
+        for (it = flags.begin(); it != flags.end(); ++it)
         {
             HSSFlag::p theFlag = *it;
             theFlag->setThisObj(this->shared_from_this());

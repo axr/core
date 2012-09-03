@@ -74,11 +74,11 @@ HSSExpression::HSSExpression(const HSSExpression &orig)
 
 HSSExpression::~HSSExpression()
 {
-    if (this->leftObserved != NULL)
+    if (this->leftObserved)
     {
         this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
     }
-    if (this->rightObserved != NULL)
+    if (this->rightObserved)
     {
         this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
     }
@@ -126,7 +126,7 @@ long double HSSExpression::evaluate()
         {
             HSSExpression::p leftExpression = boost::static_pointer_cast<HSSExpression > (this->getLeft());
             this->leftval = leftExpression->evaluate();
-            if (this->leftObserved != NULL)
+            if (this->leftObserved)
             {
                 this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
             }
@@ -147,7 +147,7 @@ long double HSSExpression::evaluate()
         {
             HSSPercentageConstant::p leftPercentage = boost::static_pointer_cast<HSSPercentageConstant > (this->getLeft());
             this->leftval = leftPercentage->getValue(this->percentageBase);
-            if (this->leftObserved != NULL)
+            if (this->leftObserved)
             {
                 this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
             }
@@ -164,7 +164,7 @@ long double HSSExpression::evaluate()
             try
             {
                 this->leftval = * boost::any_cast<HSSUnit *>(remoteValue);
-                if (this->leftObserved != NULL)
+                if (this->leftObserved)
                 {
                     this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
                 }
@@ -194,7 +194,7 @@ long double HSSExpression::evaluate()
         {
             HSSExpression::p rightExpression = boost::static_pointer_cast<HSSExpression > (this->getRight());
             this->rightval = rightExpression->evaluate();
-            if (this->rightObserved != NULL)
+            if (this->rightObserved)
             {
                 this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
             }
@@ -215,7 +215,7 @@ long double HSSExpression::evaluate()
         {
             HSSPercentageConstant::p rightPercentage = boost::static_pointer_cast<HSSPercentageConstant > (this->getRight());
             this->rightval = rightPercentage->getValue(this->percentageBase);
-            if (this->rightObserved != NULL)
+            if (this->rightObserved)
             {
                 this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
             }
@@ -232,7 +232,7 @@ long double HSSExpression::evaluate()
             try
             {
                 this->rightval = * boost::any_cast<HSSUnit *>(remoteValue);
-                if (this->rightObserved != NULL)
+                if (this->rightObserved)
                 {
                     this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
                 }

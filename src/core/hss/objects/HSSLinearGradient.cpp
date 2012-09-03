@@ -107,19 +107,19 @@ HSSClonable::p HSSLinearGradient::cloneImpl() const
 HSSLinearGradient::~HSSLinearGradient()
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: destructing linear gradient object");
-    if (this->observedStartX != NULL)
+    if (this->observedStartX)
     {
         this->observedStartX->removeObserver(this->observedStartXProperty, HSSObservablePropertyStartX, this);
     }
-    if (this->observedStartY != NULL)
+    if (this->observedStartY)
     {
         this->observedStartY->removeObserver(this->observedStartYProperty, HSSObservablePropertyStartY, this);
     }
-    if (this->observedEndX != NULL)
+    if (this->observedEndX)
     {
         this->observedEndX->removeObserver(this->observedEndXProperty, HSSObservablePropertyEndX, this);
     }
-    if (this->observedEndY != NULL)
+    if (this->observedEndY)
     {
         this->observedEndY->removeObserver(this->observedEndYProperty, HSSObservablePropertyEndY, this);
     }
@@ -215,7 +215,7 @@ void HSSLinearGradient::setDStartX(HSSParserNode::p value)
         this->dStartX = value;
 
         HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
-        if (this->observedStartX != NULL)
+        if (this->observedStartX)
         {
             this->observedStartX->removeObserver(this->observedStartXProperty, HSSObservablePropertyStartX, this);
         }
@@ -285,7 +285,7 @@ void HSSLinearGradient::setDStartY(HSSParserNode::p value)
         this->dStartY = value;
 
         HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
-        if (this->observedStartY != NULL)
+        if (this->observedStartY)
         {
             this->observedStartY->removeObserver(this->observedStartYProperty, HSSObservablePropertyStartY, this);
         }
@@ -355,7 +355,7 @@ void HSSLinearGradient::setDEndX(HSSParserNode::p value)
         this->dEndX = value;
 
         HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
-        if (this->observedEndX != NULL)
+        if (this->observedEndX)
         {
             this->observedEndX->removeObserver(this->observedEndXProperty, HSSObservablePropertyEndX, this);
         }
@@ -425,7 +425,7 @@ void HSSLinearGradient::setDEndY(HSSParserNode::p value)
         this->dEndY = value;
 
         HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
-        if (this->observedEndY != NULL)
+        if (this->observedEndY)
         {
             this->observedEndY->removeObserver(this->observedEndYProperty, HSSObservablePropertyEndY, this);
         }
@@ -501,7 +501,7 @@ long double HSSLinearGradient::_setLDProperty(
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
-        if (callback != NULL)
+        if (callback)
         {
             observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSLinearGradient > (this, callback));
             observedStore = observedObject;
@@ -518,7 +518,7 @@ long double HSSLinearGradient::_setLDProperty(
         expressionValue->setScope(this->scope);
         expressionValue->setThisObj(this->getThisObj());
         ret = expressionValue->evaluate();
-        if (callback != NULL)
+        if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSLinearGradient > (this, callback));
         }
@@ -551,8 +551,7 @@ void HSSLinearGradient::draw(cairo_t * cairo)
     }
 
     //add color stops
-    std::vector<HSSObject::p>::iterator it;
-    for (it = this->colorStops.begin(); it != this->colorStops.end(); it++)
+    for (std::vector<HSSObject::p>::iterator it = this->colorStops.begin(); it != this->colorStops.end(); ++it)
     {
         HSSObject::p theStopObj = *it;
         if (theStopObj->isA(HSSObjectTypeColorStop))

@@ -187,11 +187,11 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }
@@ -489,7 +489,7 @@ long double HSSColorStop::_setLDProperty(
         expressionValue->setScope(this->scope);
         expressionValue->setThisObj(this->getThisObj());
         ret = expressionValue->evaluate();
-        if (callback != NULL)
+        if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSColorStop > (this, callback));
         }

@@ -215,7 +215,7 @@
 {
     AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
     bool loaded = false;
-    if (wrapper != NULL)
+    if (wrapper)
     {
         loaded = wrapper->loadFile();
     }
@@ -232,7 +232,7 @@
 {
     AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
     bool loaded = false;
-    if (wrapper != NULL)
+    if (wrapper)
     {
         loaded = wrapper->loadFileByPath(std::string([filePath UTF8String]));
     }

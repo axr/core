@@ -67,7 +67,7 @@ HSSFunction::p HSSRefFunction::clone() const
 
 HSSRefFunction::~HSSRefFunction()
 {
-    if (this->observed != NULL)
+    if (this->observed)
     {
         this->observed->removeObserver(this->propertyName, HSSObservablePropertyValue, this);
     }
@@ -149,7 +149,7 @@ boost::any HSSRefFunction::_evaluate()
      */
 
     std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj(), false);
-    if (selection.size() == 0 || (selection.size() == 1 && selection[0].size() == 0))
+    if (selection.empty() || (selection.size() == 1 && selection[0].empty()))
     {
         // ignore
     }
@@ -169,7 +169,7 @@ boost::any HSSRefFunction::_evaluate()
             unsigned i, size;
             long double tempval;
             HSSDisplayObject::p container;
-            for (i=0, size = selection.size(); i<size; i++) {
+            for (i=0, size = selection.size(); i<size; ++i) {
                 tempval = *(long double*)selection[i]->getProperty(this->propertyName);
                 if (tempval < *(long double*)this->_value){
                     this->_value = &tempval;
@@ -204,11 +204,11 @@ HSSClonable::p HSSRefFunction::cloneImpl() const
 {
     HSSRefFunction::p clone = HSSRefFunction::p(new HSSRefFunction(*this));
 
-    HSSSelectorChain::const_it sIt;
-    for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+    for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)
     {
         HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }
+
     return clone;
 }

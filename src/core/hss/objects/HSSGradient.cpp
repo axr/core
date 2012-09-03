@@ -70,7 +70,6 @@ HSSGradient::HSSGradient(const HSSGradient & orig)
 
 HSSGradient::~HSSGradient()
 {
-
 }
 
 std::string HSSGradient::toString()
@@ -109,12 +108,9 @@ std::string HSSGradient::defaultObjectType(std::string property)
 
 bool HSSGradient::isKeyword(std::string value, std::string property)
 {
-    if (value == "inside" || value == "centered" || value == "outside")
+    if ((value == "inside" || value == "centered" || value == "outside") && (property == "position"))
     {
-        if (property == "position")
-        {
-            return true;
-        }
+        return true;
     }
 
     //if we reached this far, let the superclass handle it
@@ -170,11 +166,11 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }
@@ -275,11 +271,11 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }
@@ -463,13 +459,13 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
     {
     case HSSParserNodeTypeMultipleValueDefinition:
     {
-        HSSParserNode::it iterator;
         HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
-        for (iterator = values.begin(); iterator != values.end(); iterator++)
+        for (HSSParserNode::it iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDColorStops(*iterator);
         }
+
         valid = true;
         break;
     }
@@ -481,12 +477,12 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
             HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
             this->addDColorStops(this->axrController->objectTreeGet(objname->getValue()));
             valid = true;
-
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
+
         break;
     }
 
@@ -504,7 +500,7 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
                 this->addDColorStops(theVal);
                 valid = true;
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
             }
@@ -526,6 +522,7 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
         {
             valid = false;
         }
+
         break;
     }
 
@@ -604,7 +601,7 @@ long double HSSGradient::_setLDProperty(
         expressionValue->setScope(this->scope);
         expressionValue->setThisObj(this->getThisObj());
         ret = expressionValue->evaluate();
-        if (callback != NULL)
+        if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSGradient > (this, callback));
         }
@@ -613,7 +610,6 @@ long double HSSGradient::_setLDProperty(
     }
 
     case HSSParserNodeTypeKeywordConstant:
-
         break;
 
     default:

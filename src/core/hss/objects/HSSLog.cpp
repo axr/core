@@ -157,18 +157,18 @@ void HSSLog::fire()
                 try
                 {
                     std::vector<HSSObject::p> v_data = boost::any_cast< std::vector<HSSObject::p> >(remoteValue);
-                    std::vector<HSSObject::p>::iterator it;
-                    if (v_data.size() == 0)
+                    if (v_data.empty())
                     {
                         std_log("empty");
                     }
                     else
                     {
-                        for (it = v_data.begin(); it != v_data.end(); it++)
+                        for (std::vector<HSSObject::p>::iterator it = v_data.begin(); it != v_data.end(); ++it)
                         {
                             std_log((*it)->toString());
                         }
                     }
+
                     done = true;
                 }
                 catch (boost::bad_any_cast & e)
@@ -178,23 +178,22 @@ void HSSLog::fire()
                 try
                 {
                     boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > m_data = boost::any_cast< boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > >(remoteValue);
-                    boost::unordered_map<HSSEventType, std::vector<HSSObject::p> >::iterator it;
-                    if (m_data.size() == 0)
+                    if (m_data.empty())
                     {
                         std_log("empty");
                     }
                     else
                     {
-                        for (it = m_data.begin(); it != m_data.end(); it++)
+                        for (boost::unordered_map<HSSEventType, std::vector<HSSObject::p> >::iterator it = m_data.begin(); it != m_data.end(); ++it)
                         {
                             std::vector<HSSObject::p> v_data = (*it).second;
-                            std::vector<HSSObject::p>::iterator it2;
-                            for (it2 = v_data.begin(); it2 != v_data.end(); it2++)
+                            for (std::vector<HSSObject::p>::iterator it2 = v_data.begin(); it2 != v_data.end(); ++it2)
                             {
                                 std_log((*it2)->toString());
                             }
                         }
                     }
+
                     done = true;
                 }
                 catch (boost::bad_any_cast & e)
@@ -226,12 +225,12 @@ void HSSLog::fire()
                 std_log(theObject->toString());
                 done = true;
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
 
             }
-            catch (AXRWarning::p e)
+            catch (const AXRWarning::p &e)
             {
                 e->raise();
             }
@@ -244,8 +243,6 @@ void HSSLog::fire()
             break;
         }
     }
-
-
 
     if (!done)
     {
@@ -262,7 +259,7 @@ void HSSLog::setDValue(HSSParserNode::p value)
 {
     this->dValue = value;
     this->dValue->setThisObj(this->getThisObj());
-    if (this->observedValue != NULL)
+    if (this->observedValue)
     {
         this->observedValue->removeObserver(this->observedValueProperty, HSSObservablePropertyValue, this);
     }

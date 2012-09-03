@@ -62,7 +62,6 @@ AXRWrapper::AXRWrapper()
 
 AXRWrapper::~AXRWrapper()
 {
-
 }
 
 AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
@@ -121,7 +120,6 @@ bool AXRWrapper::loadFileByPath(std::string filepath)
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: loading file " + filepath.substr(filepath.rfind("/") + 1, filepath.length()) + " by path");
     axr_log(AXR_DEBUG_CH_FULL_FILENAMES, filepath);
 
-    std::string filename = std::string();
     std::string fileextension = std::string();
 
     fileextension = filepath.substr(filepath.rfind(".") + 1, filepath.length());
@@ -160,7 +158,7 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
         core->setFile(theFile);
 
     }
-    catch (AXRError::p e)
+    catch (const AXRError::p &e)
     {
         e->raise();
         return false;
@@ -170,11 +168,11 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
     {
         core->run();
     }
-    catch (AXRError::p e)
+    catch (const AXRError::p &e)
     {
         e->raise();
     }
-    catch (AXRWarning::p e)
+    catch (const AXRWarning::p &e)
     {
         e->raise();
     }
@@ -280,8 +278,8 @@ void AXRWrapper::breakIfNeeded()
 {
     if (this->_currentLayoutTick >= this->_currentLayoutStep - 1)
     {
-        int breakvar;
-        breakvar = 1; //we need something to break on, two steps to avoid warnings
+        // TODO: What is this supposed to do? this code block does nothing...
+        int breakvar = 1;
     }
 }
 
@@ -314,8 +312,8 @@ void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
     AXRCore::tp & core = AXRCore::getInstance();
     HSSContainer::p root = core->getController()->getRoot();
     std::deque<HSSParserNode::p> arguments = *(std::deque<HSSParserNode::p>*)data;
-    std::deque<HSSParserNode::p>::iterator it;
-    for (it = arguments.begin(); it != arguments.end(); it++)
+
+    for (std::deque<HSSParserNode::p>::iterator it = arguments.begin(); it != arguments.end(); ++it)
     {
         HSSParserNode::p argument = *it;
         if (argument->isA(HSSFunctionTypeSel))
@@ -363,15 +361,13 @@ void AXRTestThread::operator () ()
         bool loadingSuccess = parser->loadFile(testsFile);
         if (loadingSuccess)
         {
-
             //find all the tests that need to be executed
             std::vector<std::vector<std::string> > tests;
             AXRController::p controller = core->getController();
             HSSContainer::p root = controller->getRoot();
             const std::vector<HSSDisplayObject::p> & children = root->getChildren(true);
-            std::vector<HSSDisplayObject::p>::const_iterator it;
 
-            for (it = children.begin(); it != children.end(); it++)
+            for (std::vector<HSSDisplayObject::p>::const_iterator it = children.begin(); it != children.end(); ++it)
             {
                 const HSSDisplayObject::p & child = *it;
                 if (child->attributes.find("src") != child->attributes.end() && child->attributes.find("expect") != child->attributes.end())
@@ -388,8 +384,8 @@ void AXRTestThread::operator () ()
             }
             //execute all the tests
             boost::thread_group producers;
-            std::vector<std::vector<std::string> >::iterator it2;
-            for (it2 = tests.begin(); it2 != tests.end(); it2++)
+
+            for (std::vector<std::vector<std::string> >::iterator it2 = tests.begin(); it2 != tests.end(); ++it2)
             {
                 AXRTestProducer prdcr(this->wrapper, testsFile->getBasePath(), *it2, &this->totalTests, &this->totalPassed, status);
                 producers.create_thread(prdcr);
@@ -410,11 +406,11 @@ void AXRTestThread::operator () ()
         }
 
     }
-    catch (AXRError::p e)
+    catch (const AXRError::p &e)
     {
         e->raise();
     }
-    catch (AXRWarning::p e)
+    catch (const AXRWarning::p &e)
     {
         e->raise();
     }

@@ -76,16 +76,13 @@ std::string HSSSelectorChain::toString()
     unsigned int sccount = this->nodeList.size();
     if (sccount > 0)
     {
-
-        unsigned i;
-        for (i = 0; i < sccount; i++)
+        for (unsigned i = 0; i < sccount; ++i)
         {
             tempstr.append("      ").append(this->nodeList[i]->toString()).append("\n");
         }
     }
 
     return tempstr;
-    return "";
 }
 
 const HSSParserNode::p & HSSSelectorChain::get(const int i) const
@@ -159,11 +156,11 @@ HSSSimpleSelector::p HSSSelectorChain::subject()
 
 void HSSSelectorChain::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
 {
-    std::deque<HSSParserNode::p>::iterator it;
-    for (it = this->nodeList.begin(); it != this->nodeList.end(); it++)
+    for (std::deque<HSSParserNode::p>::iterator it = this->nodeList.begin(); it != this->nodeList.end(); ++it)
     {
         (*it)->setThisObj(value);
     }
+
     HSSParserNode::setThisObj(value);
 }
 
@@ -175,11 +172,12 @@ HSSSelectorChain::p HSSSelectorChain::shared_from_this()
 HSSClonable::p HSSSelectorChain::cloneImpl() const
 {
     HSSSelectorChain::p clone = HSSSelectorChain::p(new HSSSelectorChain(*this));
-    std::deque<HSSParserNode::p>::const_iterator it;
-    for (it = this->nodeList.begin(); it != this->nodeList.end(); it++)
+
+    for (std::deque<HSSParserNode::p>::const_iterator it = this->nodeList.begin(); it != this->nodeList.end(); ++it)
     {
         HSSParserNode::p clonedNode = (*it)->clone();
         clone->add(clonedNode);
     }
+
     return clone;
 }

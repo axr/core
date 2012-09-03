@@ -186,13 +186,13 @@ void HSSEvent::addDAction(HSSParserNode::p value)
     {
     case HSSParserNodeTypeMultipleValueDefinition:
     {
-        HSSParserNode::it iterator;
         HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
-        for (iterator = values.begin(); iterator != values.end(); iterator++)
+        for (HSSParserNode::it iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDAction(*iterator);
         }
+
         valid = true;
         break;
     }
@@ -220,10 +220,11 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             }
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
+
         break;
     }
 
@@ -243,7 +244,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
                 this->addDAction(theVal);
                 valid = true;
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
             }
@@ -332,8 +333,8 @@ void HSSEvent::actionChanged(HSSObservableProperty source, void*data)
 void HSSEvent::fire()
 {
     std::vector<HSSAction::p> actions = this->getAction();
-    unsigned i, size;
-    for (i = 0, size = actions.size(); i < size; i++)
+
+    for (unsigned i = 0, size = actions.size(); i < size; ++i)
     {
         actions[i]->fire();
     }

@@ -157,7 +157,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
 {
     static boost::unordered_map<std::string, HSSObservableProperty> properties;
 
-    if (properties.size() == 0)
+    if (properties.empty())
     {
         //HSSObject
         properties["isA"] = HSSObservablePropertyIsA;
@@ -308,17 +308,17 @@ void HSSObservable::propertyChanged(HSSObservableProperty property, void *data)
 
 void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
 {
-    HSSObservable::observed::iterator it;
     if (this->_propertyObservers.count(property) != 0)
     {
         HSSObservable::observed &theObserved = this->_propertyObservers[property];
-        for (it = theObserved.begin(); it != theObserved.end(); it++)
+        for (HSSObservable::observed::iterator it = theObserved.begin(); it != theObserved.end(); ++it)
         {
             HSSCallback * callback = (*it).second;
-            if (data == NULL)
+            if (!data)
             {
                 axr_log(AXR_DEBUG_CH_OBSERVING, "data is null");
             }
+
             callback->call(property, data);
         }
     }

@@ -127,7 +127,7 @@ void HSSRequest::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 void HSSRequest::fire()
 {
     //if there is no target
-    if (this->target.size() == 0)
+    if (this->target.empty())
     {
         AXRCore::tp & core = AXRCore::getInstance();
         AXRWrapper * wrapper = core->getWrapper();
@@ -150,7 +150,7 @@ void HSSRequest::fire()
             {
                 newFile = wrapper->getFile("file://" + baseFile->getBasePath() + "/" + this->src);
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
             }
@@ -195,7 +195,7 @@ void HSSRequest::fire()
                             {
                                 hssfile = wrapper->getFile(hssfilepath);
                             }
-                            catch (AXRError::p e)
+                            catch (const AXRError::p &e)
                             {
                                 e->raise();
                                 continue;
@@ -241,7 +241,7 @@ void HSSRequest::fire()
             //                bool loadingSuccess = wrapper->loadFile(baseFile->basePath+this->src, this->src);
             //                if(loadingSuccess){
             //                    unsigned i, size;
-            //                    for (i=0, size=this->target.size(); i<size; i++) {
+            //                    for (i=0, size=this->target.size(); i<size; ++i) {
             //                        std_log1("Adding loaded file to target");
             //
             //                        if(this->target[i]->isA(HSSObjectTypeContainer)){
@@ -251,13 +251,13 @@ void HSSRequest::fire()
             //
             //                            unsigned j, k, size2, size3;
             //                            const std::vector<HSSDisplayObject::p> &scope = theCont->getChildren();
-            //                            for (j=0, size2=fileController.rulesSize(); j<size2; j++) {
+            //                            for (j=0, size2=fileController.rulesSize(); j<size2; ++j) {
             //                                HSSRule::p & theRule = fileController.rulesGet(j);
             //                                theRule->childrenAdd(theRule);
             //                            }
-            //                            for (j=0, size2=theCont->rulesSize(); j<size2; j++) {
+            //                            for (j=0, size2=theCont->rulesSize(); j<size2; ++j) {
             //                                HSSRule::p theRule = theCont->rulesGet(j);
-            //                                for (k=0, size3=theRule->childrenSize(); k<size3; k++) {
+            //                                for (k=0, size3=theRule->childrenSize(); k<size3; ++k) {
             //                                    HSSRule::p childRule = theRule->childrenGet(k);
             //                                    this->axrController->recursiveMatchRulesToDisplayObjects(childRule, scope, theCont);
             //                                }
@@ -288,7 +288,7 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
     case HSSParserNodeTypeStringConstant:
     {
         this->dSrc = value;
-        if (this->observedSrc != NULL)
+        if (this->observedSrc)
         {
             this->observedSrc->removeObserver(this->observedSrcProperty, HSSObservablePropertySrc, this);
         }
@@ -330,8 +330,6 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
             break;
         }
 
-
-
         this->notifyObservers(HSSObservablePropertySrc, &this->src);
 
         break;
@@ -360,7 +358,7 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dTarget = value;
-        if (this->observedTarget != NULL)
+        if (this->observedTarget)
         {
             this->observedTarget->removeObserver(this->observedTargetProperty, HSSObservablePropertyTarget, this);
         }
@@ -386,7 +384,7 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                     std::vector< std::vector<HSSDisplayObject::p> > selection = boost::any_cast< std::vector< std::vector<HSSDisplayObject::p> > >(remoteValue);
                     unsigned i, size;
                     this->target.clear();
-                    for (i = 0, size = selection.size(); i < size; i++)
+                    for (i = 0, size = selection.size(); i < size; ++i)
                     {
                         std::vector<HSSDisplayObject::p> inner = selection[i];
                         this->target.insert(this->target.end(), inner.begin(), inner.end());

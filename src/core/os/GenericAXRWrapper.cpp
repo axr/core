@@ -76,7 +76,7 @@ AXRFile::p GenericAXRWrapper::getFile(std::string url)
         ret->setBuffer(new char[ret->getBufferSize()]);
         ret->setFileHandle(fopen(clean_path.c_str(), "r"));
 
-        if (ret->getFileHandle() == NULL)
+        if (!ret->getFileHandle())
         {
             AXRError::p(new AXRError("GenericAXRWrapper", "the file " + ret->getFileName() + " doesn't exist " + ret->getBasePath()))->raise();
         }

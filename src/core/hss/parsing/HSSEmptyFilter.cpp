@@ -69,12 +69,12 @@ const std::vector<HSSDisplayObject::p> HSSEmptyFilter::apply(const std::vector<H
 {
     std::vector<HSSDisplayObject::p> ret;
     HSSDisplayObject::const_it it;
-    for (it = scope.begin(); it != scope.end(); it++)
+    for (it = scope.begin(); it != scope.end(); ++it)
     {
         const HSSDisplayObject::p & theDO = *it;
         const HSSContainer::p & container = HSSContainer::asContainer(*it);
 
-        if (container->getChildren(true).size() == 0)
+        if (container->getChildren(true).empty())
         {
             ret.push_back(theDO);
         }

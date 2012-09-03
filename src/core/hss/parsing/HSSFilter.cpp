@@ -99,7 +99,7 @@ HSSFilterType HSSFilter::filterTypeFromString(std::string name)
 {
     static boost::unordered_map<std::string, HSSFilterType> filterTypes;
 
-    if (filterTypes.size() == 0)
+    if (filterTypes.empty())
     {
         //position
         filterTypes["first"] = HSSFilterTypeFirst;

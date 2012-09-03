@@ -87,20 +87,16 @@ void HSSFlagAction::fire()
 {
     HSSFlagFunction::p flagFunction = this->getFlagFunction();
     std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->select(flagFunction->getSelectorChains(), *this->scope, this->getThisObj(), false);
-    if (selection.size() == 0)
+    if (selection.empty())
     {
         // ignore
     }
     else
     {
-
-        std::vector< std::vector<HSSDisplayObject::p> >::iterator outerIt;
-        std::vector<HSSDisplayObject::p>::iterator innerIt;
-
-        for (outerIt = selection.begin(); outerIt != selection.end(); outerIt++)
+        for (std::vector< std::vector<HSSDisplayObject::p> >::iterator outerIt = selection.begin(); outerIt != selection.end(); ++outerIt)
         {
             std::vector<HSSDisplayObject::p> & inner = *outerIt;
-            for (innerIt = inner.begin(); innerIt != inner.end(); innerIt++)
+            for (std::vector<HSSDisplayObject::p>::iterator innerIt = inner.begin(); innerIt != inner.end(); ++innerIt)
             {
                 HSSDisplayObject::p container = *innerIt;
                 switch (flagFunction->getFlagFunctionType())
