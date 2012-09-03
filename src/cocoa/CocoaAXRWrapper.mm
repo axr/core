@@ -60,16 +60,15 @@ AXRWrapper * CocoaAXRWrapper::createWrapper()
 
 CocoaAXRWrapper::~CocoaAXRWrapper()
 {
-
 }
-
-//throws AXRError::p
 
 AXRFile::p CocoaAXRWrapper::getFile(std::string url)
 {
     AXRFile::p ret = AXRFile::p(new AXRFile());
 
-    if (url.substr(0, 7) == "file://")
+    std::string fileProtocolPrefix = "file://";
+
+    if (url.substr(0, fileProtocolPrefix.length()) == fileProtocolPrefix)
     {
         std::string clean_path = url.substr(7, url.size());
         int slashpos = clean_path.rfind("/");
@@ -87,7 +86,6 @@ AXRFile::p CocoaAXRWrapper::getFile(std::string url)
         {
             throw AXRError::p(new AXRError("CocoaAXRWrapper", "the file " + url + " couldn't be read"));
         }
-
     }
     else
     {
@@ -110,6 +108,7 @@ size_t CocoaAXRWrapper::readFile(AXRFile::p theFile)
         AXRError::p(new AXRError("CocoaAXRWrapper", "The file " + theFile->getFileName() + " couldn't be read"))->raise();
         return -1;
     }
+
     return size;
 }
 
@@ -128,23 +127,18 @@ bool CocoaAXRWrapper::openFileDialog(std::string &filePath)
 {
     axr_log(AXR_DEBUG_CH_GENERAL, "CocoaAXRWrapper: Opening File Dialog");
 
-    //load a file
-    NSArray *fileTypes = [NSArray arrayWithObjects : @"xml", @"hss", nil];
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-    int result;
     [openPanel setCanChooseFiles : TRUE];
     [openPanel setAllowsMultipleSelection : FALSE];
-    result = [openPanel runModalForTypes : fileTypes];
-    if (result == NSOKButton)
-    {
-        if ([[openPanel filenames] count] > 0)
-        {
-            NSString *filepath_s = [[openPanel filenames] objectAtIndex : 0];
-            filePath = std::string([filepath_s UTF8String]);
-            axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: User selected file " + filePath);
 
-            return true;
-        }
+    int result = [openPanel runModalForTypes : [NSArray arrayWithObjects : @"xml", @"hss", nil]];
+    if (result == NSOKButton && [[openPanel filenames] count] > 0)
+    {
+        NSString *filepath_s = [[openPanel filenames] objectAtIndex : 0];
+        filePath = std::string([filepath_s UTF8String]);
+        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: User selected file " + filePath);
+
+        return true;
     }
 
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: No file selected from open dialog, returning false");

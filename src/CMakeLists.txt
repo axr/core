@@ -8,11 +8,15 @@ include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}/core/hss/tokenizing"
     "${CMAKE_CURRENT_SOURCE_DIR}/core/hss/various"
     "${CMAKE_CURRENT_SOURCE_DIR}/core/os"
-    "${CMAKE_CURRENT_SOURCE_DIR}/core/os/linux"
-    "${CMAKE_CURRENT_SOURCE_DIR}/core/os/osx"
     "${CMAKE_CURRENT_SOURCE_DIR}/core/os/win"
     "${CMAKE_CURRENT_SOURCE_DIR}/core/xml"
 )
 
 add_subdirectory(core)
+
+if(APPLE)
+    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/cocoa")
+    add_subdirectory(cocoa)
+endif()
+
 add_subdirectory(app)
