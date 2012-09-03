@@ -87,7 +87,7 @@ HSSValue::~HSSValue()
 
 std::string HSSValue::toString()
 {
-    return "HSSValue: " + this->dValue->toString();
+    return "HSSValue: " + (dValue ? dValue->toString() : "(null)");
 }
 
 std::string HSSValue::defaultObjectType()
