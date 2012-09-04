@@ -723,9 +723,8 @@ void HSSDisplayObject::regenerateSurfaces()
         //get the sum of all sizes
         if (this->border.size() > 0)
         {
-            HSSBorder::it it;
-            this->borderBleeding = 0.;
-            for (it = this->border.begin(); it != this->border.end(); ++it)
+            this->borderBleeding = 0;
+            for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
             {
                 this->borderBleeding += (*it)->getSize();
             }
@@ -817,8 +816,7 @@ void HSSDisplayObject::drawBackground()
 
 void HSSDisplayObject::_drawBackground(cairo_t * cairo)
 {
-    std::vector<HSSObject::p>::iterator it;
-    for (it = this->background.begin(); it != this->background.end(); ++it)
+    for (std::vector<HSSObject::p>::iterator it = this->background.begin(); it != this->background.end(); ++it)
     {
         HSSObject::p theobj = *it;
         switch (theobj->getObjectType())
@@ -3946,7 +3944,7 @@ void HSSDisplayObject::setHover(bool newValue)
     if (this->_isHover != newValue)
     {
         this->_isHover = newValue;
-        if (newValue == TRUE)
+        if (newValue)
         {
             this->flagsActivate("hover");
         }

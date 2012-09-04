@@ -48,13 +48,10 @@
 
 using namespace AXR;
 
-HSSRgb::HSSRgb()
-: HSSObject(HSSObjectTypeRgb)
+HSSRgb::HSSRgb(long double red, long double green, long double blue, long double alpha)
+: HSSObject(HSSObjectTypeRgb), red(red), green(green), blue(blue), alpha(alpha)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: creating rgb object");
-
-    this->red = this->green = this->blue = 0.;
-    this->alpha = 255.;
 
     this->observedRed = this->observedGreen = this->observedBlue = this->observedAlpha = NULL;
 

@@ -42,12 +42,13 @@
 #ifndef HSSTEXTBLOCK_H
 #define HSSTEXTBLOCK_H
 
-#include <pango/pangocairo.h>
 #include "HSSDisplayObject.h"
+
+struct _PangoLayout;
+typedef struct _PangoLayout PangoLayout;
 
 namespace AXR
 {
-
     enum HSSTextTransformType
     {
         HSSTextTransformTypeNone = 0,
@@ -143,7 +144,6 @@ namespace AXR
 
     private:
         HSSClonable::p cloneImpl() const;
-        PangoWeight _pangoWeightFromKeyword(std::string keyword);
     };
 }
 

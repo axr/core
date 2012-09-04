@@ -450,18 +450,23 @@ void HSSContainer::drawBackground()
 void HSSContainer::drawBorders()
 {
     cairo_t * cairo = cairo_create(this->bordersSurface);
-    HSSUnit total = 0., i = 0., offset = 0., correction = 0.;
 
+    // Calculate the combined thickness of all borders
+    HSSUnit total = 0;
     for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
     {
         total += (*it)->getSize();
     }
 
-    if ((int) total % 2)
+    // If the combined border thickness is an odd number of units, ???
+    // TODO: What is the purpose of this value?
+    HSSUnit correction = 0;
+    if ((int)total % 2)
     {
         correction = 0.5;
     }
 
+    HSSUnit i = 0, offset = 0;
     for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
     {
         HSSBorder::p theBorder = *it;
@@ -474,6 +479,7 @@ void HSSContainer::drawBorders()
 
         i += theSize;
     }
+
     cairo_destroy(cairo);
 }
 

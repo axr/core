@@ -40,6 +40,7 @@
  ********************************************************************/
 
 #include <boost/algorithm/string.hpp>
+#include <pango/pangocairo.h>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "HSSFunctions.h"
@@ -50,6 +51,34 @@
 #include "HSSValue.h"
 
 using namespace AXR;
+
+PangoWeight _pangoWeightFromKeyword(std::string keyword)
+{
+    if (keyword == "normal")
+        return PANGO_WEIGHT_NORMAL;
+    if (keyword == "bold")
+        return PANGO_WEIGHT_BOLD;
+    if (keyword == "medium")
+        return PANGO_WEIGHT_MEDIUM;
+    if (keyword == "thin")
+        return PANGO_WEIGHT_THIN;
+    if (keyword == "light")
+        return PANGO_WEIGHT_LIGHT;
+    if (keyword == "book")
+        return PANGO_WEIGHT_BOOK;
+    if (keyword == "heavy")
+        return PANGO_WEIGHT_HEAVY;
+    if (keyword == "ultralight")
+        return PANGO_WEIGHT_ULTRALIGHT;
+    if (keyword == "semibold")
+        return PANGO_WEIGHT_SEMIBOLD;
+    if (keyword == "ultrabold")
+        return PANGO_WEIGHT_ULTRABOLD;
+    if (keyword == "ultraheavy")
+        return PANGO_WEIGHT_ULTRAHEAVY;
+
+    return PANGO_WEIGHT_NORMAL;
+}
 
 HSSTextTransformType HSSTextBlock::textTransformTypeFromString(std::string value)
 {
@@ -750,45 +779,4 @@ void HSSTextBlock::trimContentText()
     boost::algorithm::trim(trmstr)
             ;
     this->text = trmstr;
-}
-
-PangoWeight HSSTextBlock::_pangoWeightFromKeyword(std::string keyword)
-{
-    if (keyword == "normal")
-        return PANGO_WEIGHT_NORMAL;
-
-    if (keyword == "bold")
-        return PANGO_WEIGHT_BOLD;
-
-    if (keyword == "medium")
-        return PANGO_WEIGHT_MEDIUM;
-
-
-    if (keyword == "thin")
-        return PANGO_WEIGHT_THIN;
-
-    if (keyword == "light")
-        return PANGO_WEIGHT_LIGHT;
-
-    if (keyword == "book")
-        return PANGO_WEIGHT_BOOK;
-
-    if (keyword == "heavy")
-        return PANGO_WEIGHT_HEAVY;
-
-
-    if (keyword == "ultralight")
-        return PANGO_WEIGHT_ULTRALIGHT;
-
-    if (keyword == "semibold")
-        return PANGO_WEIGHT_SEMIBOLD;
-
-    if (keyword == "ultrabold")
-        return PANGO_WEIGHT_ULTRABOLD;
-
-    if (keyword == "ultraheavy")
-        return PANGO_WEIGHT_ULTRAHEAVY;
-
-    //default
-    return PANGO_WEIGHT_NORMAL;
 }
