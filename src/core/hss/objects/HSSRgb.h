@@ -87,8 +87,8 @@ namespace AXR
          */
         virtual ~HSSRgb();
 
-        inline static HSSRgb::p transparentColor() { return HSSRgb::p(new HSSRgb(0, 0, 0, 0)); }
-        inline static HSSRgb::p defaultColor() { return HSSRgb::p(new HSSRgb()); }
+        inline static p transparentColor() { return p(new HSSRgb(0, 0, 0, 0)); }
+        inline static p defaultColor() { return p(new HSSRgb()); }
 
         virtual std::string toString();
         virtual std::string defaultObjectType();
