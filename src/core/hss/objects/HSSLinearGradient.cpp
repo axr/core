@@ -562,7 +562,7 @@ void HSSLinearGradient::draw(cairo_t * cairo)
         if (theStopObj->isA(HSSObjectTypeColorStop))
         {
             HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop > (theStopObj);
-            
+
             //calculate the position
             long double position;
             if (theStop->getDPosition()->isA(HSSParserNodeTypePercentageConstant))
@@ -576,7 +576,7 @@ void HSSLinearGradient::draw(cairo_t * cairo)
                 long double hypotenuse = hypot(width, height);
                 position = theStop->getPosition() / hypotenuse;
             }
-            
+
             //determine the color
             HSSRgb::p theColor = theStop->getColor();
             if (theColor)

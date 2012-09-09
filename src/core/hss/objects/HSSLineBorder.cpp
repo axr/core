@@ -215,7 +215,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
 
         break;
     }
-            
+
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
@@ -240,7 +240,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
             this->color = transColor;
             valid = true;
         }
-        
+
         break;
     }
 

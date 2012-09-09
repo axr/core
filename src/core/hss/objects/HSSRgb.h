@@ -64,13 +64,13 @@ namespace AXR
         //virtual bool isKeyword(std::string value, std::string property);
 
         friend class HSSParser;
-        
+
         /**
          *  Creates a new instance of a black color.
          *  @return A shared pointer to the new color object.
          */
         static HSSRgb::p blackColor();
-        
+
         /**
          *  Creates a new instance of a white color.
          *  @return A shared pointer to the new color object.

@@ -169,12 +169,12 @@ HSSRgb::p HSSGradient::getColorAfterFirst()
     if (!ret){
         ret = this->endColor;
     }
-    
+
     //not even that? use transparent black
     if (!ret){
         ret = HSSRgb::transparentColor();
     }
-    
+
     return ret;
 }
 
@@ -201,12 +201,12 @@ HSSRgb::p HSSGradient::getColorBeforeLast()
     if (!ret){
         ret = this->startColor;
     }
-    
+
     //not even that? use transparent black
     if (!ret){
         ret = HSSRgb::transparentColor();
     }
-    
+
     return ret;
 }
 
@@ -230,17 +230,17 @@ HSSRgb::p HSSGradient::getNextColorFromStops(std::vector<HSSObject::p>::iterator
             }
         }
     }
-    
+
     //not found yet? we'll use the endColor
     if(!ret){
         ret = this->endColor;
     }
-    
+
     //not even that? use transparent black
     if (!ret){
         ret = HSSRgb::transparentColor();
     }
-    
+
     return ret;
 }
 
@@ -309,7 +309,7 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
 
         break;
     }
-            
+
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
@@ -334,7 +334,7 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
             this->startColor.reset();
             valid = true;
         }
-        
+
         break;
     }
 
@@ -440,7 +440,7 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
         }
         break;
     }
-    
+
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
@@ -465,10 +465,10 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
             this->endColor.reset();
             valid = true;
         }
-        
+
         break;
     }
-    
+
     default:
         break;
     }

@@ -228,12 +228,12 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
         }
         break;
     }
-            
+
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
         std::string kwValue = theKW->getValue();
-        
+
         if (kwValue == "black")
         {
             this->color = HSSRgb::blackColor();
@@ -250,7 +250,7 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
             this->color.reset();
             valid = true;
         }
-        
+
         break;
     }
 
