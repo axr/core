@@ -39,8 +39,6 @@
  *
  ********************************************************************/
 
-#warning __FILE__ " is using deprecated enum members. Remove this message once the project compiles cleanly with AXR_NO_DEPRECATED_ENUMS defined."
-
 #include <boost/unordered_map.hpp>
 #include "HSSDisplayObject.h"
 #include "HSSFilter.h"
@@ -61,22 +59,9 @@ std::string HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType)
         types[HSSFilterTypeLast] = "HSSFilterTypeLast";
         types[HSSFilterTypeEven] = "HSSFilterTypeEven";
         types[HSSFilterTypeOdd] = "HSSFilterTypeOdd";
-        types[HSSFilterTypeIndex] = "HSSFilterTypeIndex";
-        types[HSSFiltertypeRange] = "HSSFiltertypeRange";
         types[HSSFilterTypeNth] = "HSSFilterTypeNth";
         //hierarchy
-        types[HSSFilterTypeParent] = "HSSFilterTypeParent";
-        types[HSSFilterTypeParentOf] = "HSSFilterTypeParentOf";
-        types[HSSFilterTypeAncestorOf] = "HSSFilterTypeAncestorOf";
         types[HSSFilterTypeHas] = "HSSFilterTypeHas";
-        //interaction
-        types[HSSFilterTypePressed] = "HSSFilterTypePressed";
-        types[HSSFilterTypeDragged] = "HSSFilterTypeDragged";
-        types[HSSFilterTypeDestination] = "HSSFilterTypeDestination";
-        types[HSSFilterTypeTarget] = "HSSFilterTypeTarget";
-        types[HSSFilterTypeFocused] = "HSSFilterTypeFocused";
-        types[HSSFilterTypeBlurred] = "HSSFilterTypeBlurred";
-        types[HSSFilterTypeAnimated] = "HSSFilterTypeAnimated";
         //text matching
         types[HSSFilterTypeContains] = "HSSFilterTypeContains";
         types[HSSFilterTypeEquals] = "HSSFilterTypeEquals";
@@ -106,22 +91,9 @@ HSSFilterType HSSFilter::filterTypeFromString(std::string name)
         filterTypes["last"] = HSSFilterTypeLast;
         filterTypes["even"] = HSSFilterTypeEven;
         filterTypes["odd"] = HSSFilterTypeOdd;
-        filterTypes["index"] = HSSFilterTypeIndex;
-        filterTypes["range"] = HSSFiltertypeRange;
         filterTypes["nth"] = HSSFilterTypeNth;
         //hierarchy
-        filterTypes["parent"] = HSSFilterTypeParent;
-        filterTypes["parentOf"] = HSSFilterTypeParentOf;
-        filterTypes["ancestorOf"] = HSSFilterTypeAncestorOf;
         filterTypes["has"] = HSSFilterTypeHas;
-        //interaction
-        filterTypes["pressed"] = HSSFilterTypePressed;
-        filterTypes["dragged"] = HSSFilterTypeDragged;
-        filterTypes["destination"] = HSSFilterTypeDestination;
-        filterTypes["target"] = HSSFilterTypeTarget;
-        filterTypes["focused"] = HSSFilterTypeFocused;
-        filterTypes["blurred"] = HSSFilterTypeBlurred;
-        filterTypes["animated"] = HSSFilterTypeAnimated;
         //text matching
         filterTypes["contains"] = HSSFilterTypeContains;
         filterTypes["equals"] = HSSFilterTypeEquals;
@@ -154,12 +126,6 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
     HSSFilter::p ret;
     switch (filterType)
     {
-    case HSSFilterTypeParent:
-    {
-        ret = HSSParentFilter::p(new HSSParentFilter());
-        break;
-    }
-
     case HSSFilterTypeFirst:
     {
         ret = HSSFirstFilter::p(new HSSFirstFilter());

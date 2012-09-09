@@ -171,9 +171,6 @@ namespace AXR
         HSSCombinatorTypeNextSiblings, /**< Select elements on the same level that come after the previously selected elements (+) */
         HSSCombinatorTypeChildren, /**< Select children of the previously selected elements (whitespace) */
         HSSCombinatorTypeDescendants, /**< Select descendants of the previously selected elements (..) */
-#ifndef AXR_NO_DEPRECATED_ENUMS
-        HSSCombinatorTypeAllDescendants, /**< Deprecated */
-#endif
         HSSCombinatorTypeTextSelection /**< Switches the selection to text space */
     };
     /** @} */
@@ -193,29 +190,9 @@ namespace AXR
         HSSFilterTypeLast, /**< Selects the last element in the selection. */
         HSSFilterTypeEven, /**< Selects elements at even positions in the selection. */
         HSSFilterTypeOdd, /**< Selects elements at odd positions in the selection. */
-#ifndef AXR_NO_DEPRECATED_ENUMS
-        HSSFilterTypeIndex, /**< Deprecated. Use HSSFilterTypeNth instead. */
-        HSSFiltertypeRange, /**< Deprecated. Use HSSFilterTypeNth instead. */
-#endif
         HSSFilterTypeNth, /**< Selects elements at positions in the selection according to parameters. */
         //hierarchy
-#ifndef AXR_NO_DEPRECATED_ENUMS
-        HSSFilterTypeParent, /**< Deprecated. */
-        HSSFilterTypeParentOf, /**< Deprecated. Use HSSFilterTypeHas instead. */
-        HSSFilterTypeAncestorOf, /**< Deprecated. Use HSSFilterTypeHas instead. */
-#endif
         HSSFilterTypeHas, /**< Selects element depending if the children or descendants match a given selector. */
-        //interaction
-#ifndef AXR_NO_DEPRECATED_ENUMS
-        HSSFilterTypeHover, /**< Deprecated by flags. */
-        HSSFilterTypePressed, /**< Deprecated by flags. */
-        HSSFilterTypeDragged, /**< Deprecated by flags. */
-        HSSFilterTypeDestination, /**< Deprecated by flags. */
-        HSSFilterTypeTarget, /**< Deprecated by flags. */
-        HSSFilterTypeFocused, /**< Deprecated by flags. */
-        HSSFilterTypeBlurred, /**< Deprecated by flags. */
-        HSSFilterTypeAnimated, /**< Deprecated by flags. */
-#endif
         //text matching
         HSSFilterTypeContains, /**< Selects elements if the given text is found in the context text. */
         HSSFilterTypeEquals, /**< Selects elements if the given text is the same as the context text. */

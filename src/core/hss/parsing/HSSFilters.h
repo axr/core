@@ -51,6 +51,5 @@
 #include "HSSLastFilter.h"
 #include "HSSOddChildFilter.h"
 #include "HSSOddFilter.h"
-#include "HSSParentFilter.h"
 
 #endif

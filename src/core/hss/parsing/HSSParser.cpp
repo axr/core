@@ -39,8 +39,6 @@
  *
  ********************************************************************/
 
-#warning __FILE__ " is using deprecated enum members. Remove this message once the project compiles cleanly with AXR_NO_DEPRECATED_ENUMS defined."
-
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -1411,10 +1409,6 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
         if (VALUE_TOKEN(this->currentToken)->getString() == "..")
         {
             ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeDescendants));
-        }
-        else if (VALUE_TOKEN(this->currentToken)->getString() == "...")
-        {
-            ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeAllDescendants));
         }
 
         break;
