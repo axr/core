@@ -1,13 +1,19 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-import argparse
 import os
 import glob
 import sys
 
-if sys.version_info < (2,7):
-    print("must be run with at least Python 2.7", file=sys.stderr)
+if sys.version_info < (2,6):
+    print("must be run with at least Python 2.6", file=sys.stderr)
+    sys.exit(1)
+
+try:
+    import argparse
+except ImportError:
+    print("Could not find argparse module! This indicates you are running a version of Python "
+        "older than 2.7. Run `sudo easy_install argparse` to install it and try again.")
     sys.exit(1)
 
 parser = argparse.ArgumentParser(description="Verifies that files in the repository adhere to certain stylistic guidelines.")
