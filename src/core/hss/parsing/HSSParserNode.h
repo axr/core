@@ -59,7 +59,7 @@ namespace AXR
      *  @brief Abstract base class that provides the basic functionality of a parser node.
      *
      *  When parsing an HSS file, HSSParser will create an Abstract Syntax Tree with subclasses of this class.
-     *  Go to https://docs.google.com/drawings/d/1yMMwh3uddC1fFJqWt8RMShJFGhO2pq_IHEpgQYh7dKY/ to see a diagram
+     *  Go to https://docs.google.com/drawings/d/1yMMwh3uddC1fFJqWt8RMShJFGhO2pq_IHEpgQYh7dKY/edit to see a diagram
      *  of the inheritance tree of parser nodes.
      */
     class HSSParserNode : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSParserNode>
