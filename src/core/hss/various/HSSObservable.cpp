@@ -70,7 +70,7 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyAnchorX] = "HSSObservablePropertyAnchorX";
         types[HSSObservablePropertyAnchorY] = "HSSObservablePropertyAnchorY";
         types[HSSObservablePropertyFlow] = "HSSObservablePropertyFlow";
-        types[HSSObservablePropertyOverflow] = "HSSObservablePropertyOverflow";
+        types[HSSObservablePropertyContained] = "HSSObservablePropertyContained";
         types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
         types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
         types[HSSObservablePropertyBackground] = "HSSObservablePropertyBackground";
@@ -169,7 +169,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(std::string na
         properties["anchorX"] = HSSObservablePropertyAnchorX;
         properties["anchorY"] = HSSObservablePropertyAnchorY;
         properties["flow"] = HSSObservablePropertyFlow;
-        properties["overflow"] = HSSObservablePropertyOverflow;
+        properties["contained"] = HSSObservablePropertyContained;
         properties["alignX"] = HSSObservablePropertyAlignX;
         properties["alignY"] = HSSObservablePropertyAlignY;
         properties["background"] = HSSObservablePropertyBackground;

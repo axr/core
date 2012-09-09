@@ -553,7 +553,7 @@ void HSSContainer::layout()
                         child->y = child->alignY - child->anchorY;
                     }
 
-                    if (!child->getOverflow())
+                    if (child->getContained())
                     {
                         if ((child->x + child->width + child->rightMargin) > (this->width - this->rightPadding)) child->x = (this->width - this->rightPadding) - (child->width + child->rightMargin);
                         if (child->x < child->leftMargin + this->leftPadding) child->x = child->leftMargin + this->leftPadding;
@@ -588,7 +588,7 @@ void HSSContainer::layout()
                                     if (primaryGroups[j]->lines.empty())
                                     {
                                         displayGroup::p & currentPGroup = primaryGroups[j];
-                                        addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
+                                        addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, true);
                                         if (!addedToGroup && currentPGroup->complete)
                                         {
                                             //transform the current group into a line
@@ -1125,7 +1125,7 @@ bool HSSContainer::_overlaps_vertical(HSSDisplayObject::p & childA, HSSDisplayOb
     }
 }
 
-bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSSContainer::displayGroup::p &group, HSSDirectionValue direction, bool overflow)
+bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSSContainer::displayGroup::p &group, HSSDirectionValue direction, bool contained)
 {
     unsigned i, size;
     bool isHorizontal = (direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft);
@@ -1157,7 +1157,7 @@ bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSS
             if (i >= size - 1)
             {
                 //check if we have enough space to add it to the end of the line
-                if (!overflow)
+                if (contained)
                 {
                     if (isHorizontal)
                     {

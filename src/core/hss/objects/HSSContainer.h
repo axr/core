@@ -478,7 +478,7 @@ namespace AXR
         bool _overlaps(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
         bool _overlaps_horizontal(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
         bool _overlaps_vertical(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
-        bool _addChildToGroupIfNeeded(HSSDisplayObject::p &child, displayGroup::p &group, HSSDirectionValue direction, bool overflow);
+        bool _addChildToGroupIfNeeded(HSSDisplayObject::p &child, displayGroup::p &group, HSSDirectionValue direction, bool contained);
         //std::vector<HSSContainer::displayGroup::p> _getGroupsOverlapping(HSSDisplayObject::p &child, std::vector<HSSContainer::displayGroup::p> &group, HSSDirectionValue direction);
         bool _mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p &otherGroup, HSSDirectionValue direction);
         void _arrange(displayGroup::p &groups, HSSDirectionValue direction);

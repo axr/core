@@ -260,11 +260,11 @@ namespace AXR
         void setDFlow(HSSParserNode::p value);
         void flowChanged(HSSObservableProperty source, void*data);
 
-        //overflow
-        bool getOverflow();
-        HSSParserNode::p getDOverflow();
-        void setDOverflow(HSSParserNode::p value);
-        void overflowChanged(HSSObservableProperty source, void*data);
+        //contained
+        bool getContained();
+        HSSParserNode::p getDContained();
+        void setDContained(HSSParserNode::p value);
+        void containedChanged(HSSObservableProperty source, void*data);
 
         //height
         HSSUnit getHeight();
@@ -415,9 +415,9 @@ namespace AXR
         HSSParserNode::p dFlow;
         bool flow;
         bool does_float;
-        //overflow
-        HSSParserNode::p dOverflow;
-        bool overflow;
+        //contained
+        HSSParserNode::p dContained;
+        bool contained;
         //alignX
         HSSParserNode::p dAlignX;
         HSSUnit alignX;

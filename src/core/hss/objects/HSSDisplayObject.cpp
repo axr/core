@@ -100,7 +100,7 @@ void HSSDisplayObject::initialize()
     this->drawIndex = this->_index = 0;
     this->tabIndex = this->zoomFactor = 1;
     this->flow = this->visible = true;
-    this->overflow = false;
+    this->contained = true;
     /**
      *  @todo change to camelCase
      */
@@ -118,7 +118,7 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyAnchorX, & this->anchorX);
     this->registerProperty(HSSObservablePropertyAnchorY, & this->anchorY);
     this->registerProperty(HSSObservablePropertyFlow, & this->flow);
-    this->registerProperty(HSSObservablePropertyOverflow, & this->overflow);
+    this->registerProperty(HSSObservablePropertyContained, & this->contained);
     this->registerProperty(HSSObservablePropertyHeight, & this->height);
     this->registerProperty(HSSObservablePropertyWidth, & this->width);
     this->registerProperty(HSSObservablePropertyBackground, & this->background);
@@ -317,7 +317,7 @@ bool HSSDisplayObject::isKeyword(std::string value, std::string property)
             return true;
         }
     }
-    else if (property == "flow" || property == "overflow" || property == "visible")
+    else if (property == "flow" || property == "contained" || property == "visible")
     {
         if (value == "yes" || value == "no")
         {
@@ -661,8 +661,8 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p 
     case HSSObservablePropertyFlow:
         this->setDFlow(value);
         break;
-    case HSSObservablePropertyOverflow:
-        this->setDOverflow(value);
+    case HSSObservablePropertyContained:
+        this->setDContained(value);
         break;
     case HSSObservablePropertyAlignX:
         this->setDAlignX(value);
@@ -1835,19 +1835,19 @@ void HSSDisplayObject::flowChanged(HSSObservableProperty source, void*data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-//overflow
+//contained
 
-bool HSSDisplayObject::getOverflow()
+bool HSSDisplayObject::getContained()
 {
-    return this->overflow;
+    return this->contained;
 }
 
-HSSParserNode::p HSSDisplayObject::getDOverflow()
+HSSParserNode::p HSSDisplayObject::getDContained()
 {
-    return this->dOverflow;
+    return this->dContained;
 }
 
-void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
+void HSSDisplayObject::setDContained(HSSParserNode::p value)
 {
     bool valid = false;
 
@@ -1855,12 +1855,12 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
     {
     case HSSParserNodeTypeObjectNameConstant:
     {
-        this->dOverflow = value;
+        this->dContained = value;
         try
         {
             HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
             HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
-            this->setDOverflow(objdef);
+            this->setDContained(objdef);
             valid = true;
 
         }
@@ -1880,7 +1880,7 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        this->dOverflow = value;
+        this->dContained = value;
         HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
@@ -1898,14 +1898,14 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
             boost::any remoteValue = fnct->evaluate();
             try
             {
-                this->overflow = boost::any_cast<bool>(remoteValue);
+                this->contained = boost::any_cast<bool>(remoteValue);
             }
             catch (boost::bad_any_cast & e)
             {
-                this->overflow = false;
+                this->contained = false;
             }
 
-            fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyOverflow, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::overflowChanged));
+            fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyContained, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::containedChanged));
             valid = true;
         }
 
@@ -1917,14 +1917,14 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
         HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "yes")
         {
-            this->overflow = true;
+            this->contained = true;
             valid = true;
             break;
         }
         else if (keywordValue->getValue() == "no")
         {
-            this->overflow = false;
-            valid = false;
+            this->contained = false;
+            valid = true;
             break;
         }
     }
@@ -1937,7 +1937,7 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
     {
     case HSSStatementTypeObjectDefinition:
     {
-        this->dOverflow = value;
+        this->dContained = value;
         HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (value);
         HSSContainer::p parent = this->getParent();
         if (parent)
@@ -1954,7 +1954,7 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
         HSSObject::p theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
-            //this->overflow = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
+            //this->contained = (bool)boost::static_pointer_cast<HSSValue>(theobj)->getIntValue();
             std_log("########### FIXME #################");
             valid = true;
         }
@@ -1967,25 +1967,25 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
     }
 
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for overflow of " + this->name));
+        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for contained of " + this->name));
 
-    this->notifyObservers(HSSObservablePropertyOverflow, &this->overflow);
+    this->notifyObservers(HSSObservablePropertyContained, &this->contained);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-void HSSDisplayObject::overflowChanged(HSSObservableProperty source, void*data)
+void HSSDisplayObject::containedChanged(HSSObservableProperty source, void*data)
 {
-    switch (this->dOverflow->getType())
+    switch (this->dContained->getType())
     {
     case HSSParserNodeTypeFunctionCall:
-        this->overflow = *(bool*)data;
+        this->contained = *(bool*)data;
         break;
 
     default:
         break;
     }
 
-    this->notifyObservers(HSSObservablePropertyOverflow, data);
+    this->notifyObservers(HSSObservablePropertyContained, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 

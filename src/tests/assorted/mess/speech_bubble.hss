@@ -6,7 +6,7 @@
     background: #CCC0;
     anchorY: 100% + ref(height of @this tip);
     flow: no;
-    overflow: yes;
+    contained: no;
 
     #new tip
     {
@@ -19,7 +19,7 @@
         background: #CCC0;
         anchorY: ref(height) / 3;
         alignY: bottom;
-        overflow: yes;
+        contained: no;
     }
 }
 

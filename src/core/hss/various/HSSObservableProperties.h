@@ -132,7 +132,7 @@ namespace AXR
         HSSObservablePropertyPosition,
 
         HSSObservablePropertyTreeChange,
-        HSSObservablePropertyOverflow,
+        HSSObservablePropertyContained,
 
         //HSSPolygon
         HSSObservablePropertySides,
