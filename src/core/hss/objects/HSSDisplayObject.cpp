@@ -1740,7 +1740,7 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
                 fnct->setScope(&(thisCont->getChildren()));
             }
-
+            fnct->setThisObj(this->shared_from_this());
             boost::any remoteValue = fnct->evaluate();
             try
             {
@@ -1894,6 +1894,7 @@ void HSSDisplayObject::setDOverflow(HSSParserNode::p value)
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
                 fnct->setScope(&(thisCont->getChildren()));
             }
+            fnct->setThisObj(this->shared_from_this());
             boost::any remoteValue = fnct->evaluate();
             try
             {
@@ -2340,10 +2341,11 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
                 fnct->setScope(&(thisCont->getChildren()));
             }
+            fnct->setThisObj(this->shared_from_this());
             boost::any remoteValue = fnct->evaluate();
             try
             {
-                std::vector<HSSObject::p> values = boost::any_cast< std::vector<HSSObject::p> >(remoteValue);
+                std::vector<HSSObject::p> values = *boost::any_cast< std::vector<HSSObject::p> * >(remoteValue);
                 std::vector<HSSObject::p>::const_iterator it;
                 for (it = values.begin(); it != values.end(); ++it)
                 {
@@ -2511,6 +2513,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *> (this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
+                fnct->setThisObj(this->shared_from_this());
                 boost::any remoteValue = fnct->evaluate();
                 try
                 {
@@ -2717,6 +2720,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
                 fnct->setScope(&(thisCont->getChildren()));
             }
+            fnct->setThisObj(this->shared_from_this());
             boost::any remoteValue = fnct->evaluate();
             try
             {
@@ -3105,6 +3109,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
                 fnct->setScope(&(thisCont->getChildren()));
             }
+            fnct->setThisObj(this->shared_from_this());
             boost::any remoteValue = fnct->evaluate();
             try
             {
@@ -3290,6 +3295,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
                 fnct->setScope(&(thisCont->getChildren()));
             }
+            fnct->setThisObj(this->shared_from_this());
             boost::any remoteValue = fnct->evaluate();
             try
             {
@@ -3471,6 +3477,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
                 fnct->setScope(&(thisCont->getChildren()));
             }
+            fnct->setThisObj(this->shared_from_this());
             boost::any remoteValue = fnct->evaluate();
             try
             {
@@ -3581,6 +3588,7 @@ void HSSDisplayObject::setDVisible(HSSParserNode::p value)
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
                 fnct->setScope(&(thisCont->getChildren()));
             }
+            fnct->setThisObj(this->shared_from_this());
             boost::any remoteValue = fnct->evaluate();
             try
             {

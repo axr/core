@@ -2854,6 +2854,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
             {
                 fnct->setScope(&(this->getChildren()));
             }
+            fnct->setThisObj(this->shared_from_this());
             boost::any remoteValue = fnct->evaluate();
             try
             {
@@ -3035,7 +3036,7 @@ long double HSSContainer::_setLDProperty(
         fnct->setPercentageBase(percentageBase);
         fnct->setPercentageObserved(observedProperty, observedObject);
         fnct->setScope(scope);
-
+        fnct->setThisObj(this->shared_from_this());
         boost::any remoteValue = fnct->evaluate();
         try
         {
