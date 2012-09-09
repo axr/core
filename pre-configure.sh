@@ -96,8 +96,10 @@ if [ "$UNAME" = "Darwin" ] ; then
         port install boost +debug +no-static +universal
 
         # earliest OS X that Qt 4.8.x Cocoa will build on
+        # NOTE: for some reason MacPorts' Qt won't work with
+        # the framework variant
         set_mp_target 10.5
-        port install qt4-mac +debug +framework +quartz +universal
+        port install qt4-mac +debug +quartz +universal
 
         # reset deployment target to 10.4 when finished
         set_mp_target 10.4
