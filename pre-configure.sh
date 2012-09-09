@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 if [ "$(id -u)" != "0" ] ; then
@@ -26,46 +26,81 @@ doc()
     deps
 }
 
-if [ "$UNAME" = "Darwin" ] ; then
-    # Tiger's far too old to bother with; Leopard was really the beginning of modern OS X
-    # and is the first virtualizable OS X operating system
-    mp_target=10.5
+set_mp_target()
+{
+    mp_target=$1
     export MACOSX_DEPLOYMENT_TARGET=$mp_target
+
+    # Determine MacPorts installation path
+    mp="$(which port)"
+    mp_prefix="${mp%/bin/port}"
+    if [ -z "$mp_prefix" ] ; then
+        echo "Could not determine MacPorts installation prefix"
+        exit 1
+    fi
+
+    # Get MacPorts configuration file path
+    mp_conf="$mp_prefix/etc/macports/macports.conf"
+
+    # Check the MacPorts deployment target configuration and change it if necessary
+    mp_deployment_target=$(egrep "^macosx_deployment_target\s+([0-9.]+)\s*$" "$mp_conf" | cut -d ' ' -f 2- | tr -d ' \t')
+    if [ ! -z "$mp_deployment_target" ] ; then
+        echo "Building MacPorts dependencies for OS X $mp_deployment_target+"
+        if [ "$mp_deployment_target" != "$mp_target" ] ; then
+            echo "MacPorts macosx_deployment_target setting was found ($mp_deployment_target) - changing to $mp_target..."
+            sed -i '.bak' "s/macosx_deployment_target $mp_deployment_target/macosx_deployment_target $mp_target/g" "$mp_conf"
+        fi
+    else
+        echo "MacPorts macosx_deployment_target setting was not found - setting to $mp_target..."
+        echo "macosx_deployment_target $mp_target" | tee -a "$mp_conf" > /dev/null
+    fi
+}
+
+if [ "$UNAME" = "Darwin" ] ; then
+    osx_current=$(sw_vers -productVersion | cut -f 1-2 -d '.')
+    if [ -z "$osx_current" ] ; then
+        echo "Unable to determine current OS X version"
+        exit 1
+    fi
 
     # TODO: Allow the user to prefer a particular package manager if they have multiple
     if [ $(which port 2>/dev/null) ] ; then # MacPorts
-        # Determine MacPorts installation path
-        mp="$(which port)"
-        mp_prefix="${mp%/bin/port}"
-        if [ -z "$mp_prefix" ] ; then
-            echo "Could not determine MacPorts installation prefix"
-            exit 1
-        fi
+        # NOTE: At least for Boost and Qt, +debug builds debug AND release libraries
 
-        # Get MacPorts configuration file path
-        mp_conf="$mp_prefix/etc/macports/macports.conf"
+        # depof:<port> does not allow to specify variants of the <port> itself,
+        # and since variants may install extra dependencies depof:<port> may not
+        # necessarily install all dependencies - however, comparing the output of
+        # `port deps <port>` and `port deps <port> +variant1 +variant2 +variant3`
+        # will allow you to tell whether additional dependencies that won't be picked
+        # up by depof:<port> will need to be installed
 
-        # Check the MacPorts deployment target configuration and change it if necessary
-        mp_deployment_target=$(egrep "^macosx_deployment_target\s+([0-9.]+)\s*$" "$mp_conf" | cut -d ' ' -f 2- | tr -d ' \t')
-        if [ ! -z "$mp_deployment_target" ] ; then
-            echo "Building MacPorts dependencies for OS X $mp_deployment_target+"
-            if [ "$mp_deployment_target" != "$mp_target" ] ; then
-                echo "MacPorts macosx_deployment_target setting was found ($mp_deployment_target) - changing to $mp_target..."
-                sed -i '.bak' "s/macosx_deployment_target $mp_deployment_target/macosx_deployment_target $mp_target/g" "$mp_conf"
-            fi
-        else
-            echo "MacPorts macosx_deployment_target setting was not found - setting to $mp_target..."
-            echo "macosx_deployment_target $mp_target" | tee -a "$mp_conf" > /dev/null
-        fi
+        # Currently our selected variants of Boost and Qt don't require extra deps
+        # so depof:boost and depof:qt4-mac will be sufficient
 
-        # NOTE: Qt +debug is BOTH debug and release
+        set_mp_target 10.4
         port install \
-            boost +no-static +universal \
             libsdl +universal \
             expat +universal \
             cairo +quartz +universal \
             pango +quartz +universal \
-            qt4-mac +debug +framework +quartz +universal
+            depof:boost +universal \
+            depof:qt4-mac +universal \
+            depof:cmake +universal
+
+        set_mp_target $osx_current
+        port install doxygen +universal
+
+        # Boost has problems building for 10.5, not sure why...
+        # TODO: We need to find out how to fix this
+        set_mp_target 10.6
+        port install boost +debug +no-static +universal
+
+        # earliest OS X that Qt 4.8.x Cocoa will build on
+        set_mp_target 10.5
+        port install qt4-mac +debug +framework +quartz +universal
+
+        # reset deployment target to 10.4 when finished
+        set_mp_target 10.4
     elif [ $(which brew 2>/dev/null) ] ; then # Brew
         # brew install cairo pango boost ...
         echo "ERROR: brew support is not yet implemented"

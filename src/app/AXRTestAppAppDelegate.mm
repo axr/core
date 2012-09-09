@@ -108,7 +108,7 @@ void listHSSStatements(NSString *filepath)
     //    if(loaded){
     //        unsigned i;
     //        const std::vector<AXR::HSSStatement::p> statements = controller.getStatements();
-    //        for(i=0; i<statements.size(); i++){
+    //        for(i=0; i<statements.size(); ++i){
     //            std_log1(statements[i]->toString());
     //        }
     //    } else {

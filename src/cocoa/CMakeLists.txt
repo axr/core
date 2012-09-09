@@ -1,0 +1,12 @@
+set(cocoa_SOURCES
+    AXRView.h
+    AXRView.mm
+    CocoaAXRWrapper.h
+    CocoaAXRWrapper.mm
+)
+
+add_library(${TARGET_NAME_LIB_COCOA} ${cocoa_SOURCES})
+
+find_library(COCOA_LIBRARY Cocoa)
+mark_as_advanced(COCOA_LIBRARY)
+target_link_libraries(${TARGET_NAME_LIB_COCOA} ${COCOA_LIBRARY} ${TARGET_NAME_LIB_CORE})

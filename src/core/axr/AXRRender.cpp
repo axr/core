@@ -65,9 +65,10 @@ AXRRender::~AXRRender()
 
 void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
-    if (this->cairo == NULL)
+    if (!this->cairo)
     {
         AXRError::p(new AXRError("AXRRender", "Fatal error: Cairo was not defined"))->raise();
+#warning Do NOT use exit(0) in a library, especially since this feigns a successful exit...
         exit(0);
     }
 
@@ -156,7 +157,7 @@ void AXRRender::mouseUp(HSSUnit x, HSSUnit y)
         {
             root->handleEvent(HSSEventTypeMouseUp, (void*) &thePoint);
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }

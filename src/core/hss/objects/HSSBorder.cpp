@@ -236,7 +236,7 @@ long double HSSBorder::_setLDProperty(
         expressionValue->setScope(this->scope);
         expressionValue->setThisObj(this->getThisObj());
         ret = expressionValue->evaluate();
-        if (callback != NULL)
+        if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSBorder > (this, callback));
         }

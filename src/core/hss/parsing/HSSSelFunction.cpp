@@ -135,14 +135,13 @@ boost::any HSSSelFunction::_evaluate()
 
 HSSClonable::p HSSSelFunction::cloneImpl() const
 {
-
     HSSSelFunction::p clone = HSSSelFunction::p(new HSSSelFunction(*this));
 
-    HSSSelectorChain::const_it sIt;
-    for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+    for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)
     {
         HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }
+
     return clone;
 }

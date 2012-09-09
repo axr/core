@@ -93,6 +93,11 @@ namespace AXR
             bool complete;
             std::vector<HSSContainer::displayGroup::p>lines;
             std::vector<HSSDisplayObject::p>objects;
+
+            static bool heightGreater(const displayGroup::p& x, const displayGroup::p& y)
+            {
+                return x->height > y->height;
+            }
         };
 
         /**
@@ -469,10 +474,6 @@ namespace AXR
                                              bool needsShoveling,
                                              bool onlyAddToBIfNotInGroupYet
                                              );
-
-        void _qs_swap(std::vector<displayGroup::p> &arr, int a, int b);
-        int _qs_partition(std::vector<displayGroup::p> &arr, int left, int right, int pivotIndex);
-        void _qs_sort(std::vector<displayGroup::p> &arr, int left, int right);
 
         bool _overlaps(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
         bool _overlaps_horizontal(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);

@@ -146,23 +146,23 @@ HSSContainer::~HSSContainer()
     this->children.clear();
     this->allChildren.clear();
 
-    if (this->observedContentAlignX != NULL)
+    if (this->observedContentAlignX)
     {
         this->observedContentAlignX->removeObserver(this->observedContentAlignXProperty, HSSObservablePropertyAlignX, this);
     }
-    if (this->observedContentAlignY != NULL)
+    if (this->observedContentAlignY)
     {
         this->observedContentAlignY->removeObserver(this->observedContentAlignYProperty, HSSObservablePropertyAlignY, this);
     }
-    if (this->observedDirectionPrimary != NULL)
+    if (this->observedDirectionPrimary)
     {
         this->observedDirectionPrimary->removeObserver(this->observedDirectionPrimaryProperty, HSSObservablePropertyDirectionPrimary, this);
     }
-    if (this->observedDirectionSecondary != NULL)
+    if (this->observedDirectionSecondary)
     {
         this->observedDirectionSecondary->removeObserver(this->observedDirectionSecondaryProperty, HSSObservablePropertyDirectionSecondary, this);
     }
-    if (this->observedShape != NULL)
+    if (this->observedShape)
     {
         this->observedShape->removeObserver(this->observedShapeProperty, HSSObservablePropertyShape, this);
     }
@@ -171,8 +171,6 @@ HSSContainer::~HSSContainer()
 std::string HSSContainer::toString()
 {
     std::string tempstr;
-    unsigned i;
-    std::map<std::string, std::string>::iterator it;
 
     if (this->isNamed())
     {
@@ -186,7 +184,7 @@ std::string HSSContainer::toString()
     if (this->attributes.size() > 0)
     {
         tempstr.append("\n").append("with the following attributes:");
-        for (it = this->attributes.begin(); it != this->attributes.end(); it++)
+        for (std::map<std::string, std::string>::iterator it = this->attributes.begin(); it != this->attributes.end(); ++it)
         {
             tempstr.append("\n").append("- ").append((*it).first).append(": ").append((*it).second);
         }
@@ -196,7 +194,7 @@ std::string HSSContainer::toString()
     if (this->children.size() > 0)
     {
         tempstr.append("\n").append("with the following children objects:");
-        for (i = 0; i<this->children.size(); i++)
+        for (unsigned i = 0; i<this->children.size(); ++i)
         {
             tempstr.append("\n").append(this->children[i]->toString());
         }
@@ -281,8 +279,7 @@ void HSSContainer::add(HSSDisplayObject::p child)
 
 void HSSContainer::remove(unsigned index)
 {
-    HSSDisplayObject::it it;
-    for (it = this->children.begin(); it != this->children.end(); it++)
+    for (HSSDisplayObject::it it = this->children.begin(); it != this->children.end(); ++it)
     {
         HSSDisplayObject::p child = *it;
         if (child->getIndex() == index)
@@ -290,7 +287,8 @@ void HSSContainer::remove(unsigned index)
             this->children.erase(it);
         }
     }
-    for (it = this->allChildren.begin(); it != this->allChildren.end(); it++)
+
+    for (HSSDisplayObject::it it = this->allChildren.begin(); it != this->allChildren.end(); ++it)
     {
         HSSDisplayObject::p child = *it;
         if (child->getIndex() == index)
@@ -298,6 +296,7 @@ void HSSContainer::remove(unsigned index)
             this->allChildren.erase(it);
         }
     }
+
     this->resetChildrenIndexes();
     this->notifyObservers(HSSObservablePropertyTreeChange, this);
 }
@@ -310,8 +309,7 @@ void HSSContainer::clear()
 
 void HSSContainer::resetChildrenIndexes()
 {
-    unsigned i, size;
-    for (i = 0, size = this->allChildren.size(); i < size; i++)
+    for (unsigned i = 0, size = this->allChildren.size(); i < size; ++i)
     {
         this->allChildren[i]->setIndex(i);
     }
@@ -322,7 +320,7 @@ void HSSContainer::setContentText(std::string text)
     boost::algorithm::trim(text);
     if (text != "")
     {
-        if (this->allChildren.size() == 0)
+        if (this->allChildren.empty())
         {
             HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
             txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
@@ -351,7 +349,7 @@ void HSSContainer::appendContentText(std::string text)
     boost::algorithm::trim(text);
     if (text != "")
     {
-        if (this->allChildren.size() == 0)
+        if (this->allChildren.empty())
         {
             HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
             txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
@@ -414,8 +412,8 @@ void HSSContainer::setProperty(HSSObservableProperty name, HSSParserNode::p valu
 void HSSContainer::recursiveReadDefinitionObjects()
 {
     this->readDefinitionObjects();
-    unsigned i;
-    for (i = 0; i<this->allChildren.size(); i++)
+
+    for (unsigned i = 0; i<this->allChildren.size(); ++i)
     {
         this->allChildren[i]->recursiveReadDefinitionObjects();
     }
@@ -425,8 +423,7 @@ void HSSContainer::recursiveRegenerateSurfaces()
 {
     this->regenerateSurfaces();
 
-    unsigned i, size;
-    for (i = 0, size = this->allChildren.size(); i < size; i++)
+    for (unsigned i = 0, size = this->allChildren.size(); i < size; ++i)
     {
         this->allChildren[i]->recursiveRegenerateSurfaces();
     }
@@ -435,8 +432,8 @@ void HSSContainer::recursiveRegenerateSurfaces()
 void HSSContainer::recursiveDraw(cairo_t * cairo)
 {
     this->draw(cairo);
-    unsigned i, size;
-    for (i = 0, size = this->allChildren.size(); i < size; i++)
+
+    for (unsigned i = 0, size = this->allChildren.size(); i < size; ++i)
     {
         this->allChildren[i]->recursiveDraw(cairo);
     }
@@ -452,21 +449,25 @@ void HSSContainer::drawBackground()
 
 void HSSContainer::drawBorders()
 {
-    HSSBorder::it it;
     cairo_t * cairo = cairo_create(this->bordersSurface);
-    HSSUnit total = 0., i = 0., offset = 0., correction = 0.;
 
-    for (it = this->border.begin(); it != this->border.end(); it++)
+    // Calculate the combined thickness of all borders
+    HSSUnit total = 0;
+    for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
     {
         total += (*it)->getSize();
     }
 
-    if ((int) total % 2)
+    // If the combined border thickness is an odd number of units, ???
+    // TODO: What is the purpose of this value?
+    HSSUnit correction = 0;
+    if ((int)total % 2)
     {
         correction = 0.5;
     }
 
-    for (it = this->border.begin(); it != this->border.end(); it++)
+    HSSUnit i = 0, offset = 0;
+    for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
     {
         HSSBorder::p theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
@@ -478,6 +479,7 @@ void HSSContainer::drawBorders()
 
         i += theSize;
     }
+
     cairo_destroy(cairo);
 }
 
@@ -503,7 +505,7 @@ void HSSContainer::drawBorders()
 void HSSContainer::layout()
 {
     bool done = false;
-    if (this->allChildren.size() == 0) done = true;
+    if (this->allChildren.empty()) done = true;
 
     //reset flag
     this->_needsLayout = true;
@@ -525,7 +527,7 @@ void HSSContainer::layout()
             //bool secondaryIsHorizontal = (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft);
 
             //create groups and lines
-            for (i = 0, size = this->allChildren.size(); i < size; i++)
+            for (i = 0, size = this->allChildren.size(); i < size; ++i)
             {
                 if (!done)
                 {
@@ -574,15 +576,16 @@ void HSSContainer::layout()
 
                     if (!done)
                     {
-                        bool addedToGroup = false;
                         if (child->getFlow() == true)
                         {
+                            bool addedToGroup = false;
+
                             if (i != 0)
                             {
                                 j = 0;
                                 while (j < primaryGroups.size() && done == false)
                                 {
-                                    if (primaryGroups[j]->lines.size() == 0)
+                                    if (primaryGroups[j]->lines.empty())
                                     {
                                         displayGroup::p & currentPGroup = primaryGroups[j];
                                         addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
@@ -627,12 +630,12 @@ void HSSContainer::layout()
                                                     }
                                                     else
                                                     {
-                                                        k++;
+                                                        ++k;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    k++;
+                                                    ++k;
                                                 }
                                             }
                                         }
@@ -684,12 +687,12 @@ void HSSContainer::layout()
                                                     }
                                                     else
                                                     {
-                                                        k++;
+                                                        ++k;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    k++;
+                                                    ++k;
                                                 }
                                             }
                                         }
@@ -706,7 +709,7 @@ void HSSContainer::layout()
                                         }
                                     }
 
-                                    j++;
+                                    ++j;
                                     security_brake();
                                 }
                             }
@@ -739,11 +742,10 @@ void HSSContainer::layout()
                 bool primaryIsHorizontal = (this->directionPrimary == HSSDirectionLeftToRight || this->directionPrimary == HSSDirectionRightToLeft);
                 if ((this->distributeX && primaryIsHorizontal) || (this->distributeY && !primaryIsHorizontal))
                 {
-                    std::vector<displayGroup::p>::iterator pgIt;
-                    for (pgIt = primaryGroups.begin(); pgIt != primaryGroups.end(); pgIt++)
+                    for (std::vector<displayGroup::p>::iterator pgIt = primaryGroups.begin(); pgIt != primaryGroups.end(); ++pgIt)
                     {
                         displayGroup::p & pgGrp = *pgIt;
-                        if (pgGrp->lines.size() == 0)
+                        if (pgGrp->lines.empty())
                         {
                             this->_distribute(pgGrp, this->directionPrimary);
                             if (wrapper->showLayoutSteps())
@@ -759,8 +761,7 @@ void HSSContainer::layout()
                         }
                         else
                         {
-                            std::vector<displayGroup::p>::iterator pgLineIt;
-                            for (pgLineIt = pgGrp->lines.begin(); pgLineIt != pgGrp->lines.end(); pgLineIt++)
+                            for (std::vector<displayGroup::p>::iterator pgLineIt = pgGrp->lines.begin(); pgLineIt != pgGrp->lines.end(); ++pgLineIt)
                             {
                                 this->_distribute(*pgLineIt, this->directionPrimary);
                                 if (wrapper->showLayoutSteps())
@@ -783,8 +784,7 @@ void HSSContainer::layout()
 
                 if (!done)
                 {
-                    std::vector<displayGroup::p>::iterator pgIt;
-                    for (pgIt = primaryGroups.begin(); pgIt != primaryGroups.end(); pgIt++)
+                    for (std::vector<displayGroup::p>::iterator pgIt = primaryGroups.begin(); pgIt != primaryGroups.end(); ++pgIt)
                     {
                         displayGroup::p theDG = *pgIt;
                         if (theDG->lines.size() > 0)
@@ -796,7 +796,7 @@ void HSSContainer::layout()
                             lineA = *pglIt;
                             lineAIt = lineA->objects.begin();
 
-                            pglIt++;
+                            ++pglIt;
                             lineB = *pglIt;
                             lineBIt = lineB->objects.begin();
                             displayGroup::p newGroup;
@@ -808,8 +808,8 @@ void HSSContainer::layout()
                             displayGroup::p newGroup = displayGroup::p(new displayGroup());
                             newGroup->lines.push_back(theDG);
                             newGroup->height = 0.;
-                            std::vector<HSSDisplayObject::p>::iterator it;
-                            for (it = theDG->objects.begin(); it != theDG->objects.end(); it++)
+
+                            for (std::vector<HSSDisplayObject::p>::iterator it = theDG->objects.begin(); it != theDG->objects.end(); ++it)
                             {
                                 HSSDisplayObject::p & theDO = *it;
                                 if (theDO->outerHeight > newGroup->height) newGroup->height = theDO->outerHeight;
@@ -822,28 +822,27 @@ void HSSContainer::layout()
 
             } //if !done
 
-            //        std::vector<displayGroup::p>::iterator linesIt;
-            //        for (linesIt=newGroup->lines.begin(); linesIt!=newGroup->lines.end(); linesIt++) {
+            //        for (std::vector<displayGroup::p>::iterator linesIt = newGroup->lines.begin(); linesIt != newGroup->lines.end(); ++linesIt) {
             //            newGroup->height += (*linesIt)->height;
             //        }
 
-            //sort biggest group first, smallest last
-            this->_qs_sort(secondaryGroups, 0, secondaryGroups.size() - 1);
+            // Sort tallest group first, shortest last
+            std::sort(secondaryGroups.begin(), secondaryGroups.end(), displayGroup::heightGreater);
 
-            std::vector<displayGroup::p>::iterator sgIt;
             bool first = true;
-            for (sgIt = secondaryGroups.begin(); sgIt != secondaryGroups.end(); sgIt++)
+            for (std::vector<displayGroup::p>::iterator sgIt = secondaryGroups.begin(); sgIt != secondaryGroups.end(); ++sgIt)
             {
                 if (!this->_arrangeLines(*sgIt, this->directionSecondary, first))
                 {
                     break;
                 }
+
                 first = false;
             }
 
 
             //assign the globalX and globalY and clean up flags
-            for (i = 0, size = this->allChildren.size(); i < size; i++)
+            for (i = 0, size = this->allChildren.size(); i < size; ++i)
             {
                 HSSDisplayObject::p &child = this->allChildren[i];
                 child->setGlobalX(round(this->globalX + child->x));
@@ -858,7 +857,7 @@ void HSSContainer::layout()
             {
                 HSSUnit maxHeight = 0.;
 
-                for (i = 0, size = secondaryGroups.size(); i < size; i++)
+                for (i = 0, size = secondaryGroups.size(); i < size; ++i)
                 {
                     if (secondaryGroups[i]->height > maxHeight)
                     {
@@ -982,7 +981,7 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
                 bool shovelDone = false;
                 while (!shovelDone)
                 {
-                    lineAIt++;
+                    ++lineAIt;
                     if (lineAIt != lineAStopIt)
                     {
                         objA = *lineAIt;
@@ -1020,7 +1019,7 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
             } //needs shoveling
 
             //get next objB
-            lineBIt++;
+            ++lineBIt;
             if (lineBIt != lineBStopIt)
             {
                 objB = *lineBIt;
@@ -1034,7 +1033,7 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
         else
         {
             //get next objB
-            lineBIt++;
+            ++lineBIt;
             if (lineBIt != lineBStopIt)
             {
                 objB = *lineBIt;
@@ -1048,7 +1047,7 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
         if (lineBDone)
         {
             std::vector<displayGroup::p>::iterator pglItStore = pglIt;
-            pglIt++;
+            ++pglIt;
             if (pglIt != pglStopIt)
             {
                 displayGroup::p nextLine = *pglIt;
@@ -1066,7 +1065,7 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
                 this->_recursiveCreateSecondaryGroups(lineAIt, lineAStopIt, nextLine->objects.begin(), nextLine->objects.end(), targetA, targetB, newGroup, pglIt, pglStopIt, false, secondaryGroups, false, true);
             }
             pglIt = pglItStore;
-            lineAIt++;
+            ++lineAIt;
             if (lineAIt != lineAStopIt)
             {
                 objA = *lineAIt;
@@ -1089,41 +1088,6 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
         } // lineBDone
 
     } //while !lineADone || !lineBDone
-}
-
-/* quicksort algorithm taken from http://developer-resource.blogspot.com.es/2008/09/quicksort-c.html */
-
-void HSSContainer::_qs_swap(std::vector<displayGroup::p> &arr, int a, int b)
-{
-    std::swap(arr[a], arr[b]);
-}
-
-int HSSContainer::_qs_partition(std::vector<displayGroup::p> &arr, int left, int right, int pivotIndex)
-{
-    displayGroup::p pivotValue = arr[pivotIndex];
-    this->_qs_swap(arr, right, pivotIndex);
-    int storeIndex = left;
-    for (int i = left; i <= right - 1; ++i)
-    {
-        if (arr[i]->height > pivotValue->height)
-        {
-            this->_qs_swap(arr, i, storeIndex);
-            storeIndex++;
-        }
-    }
-    this->_qs_swap(arr, storeIndex, right);
-    return storeIndex;
-}
-
-void HSSContainer::_qs_sort(std::vector<displayGroup::p> &arr, int left, int right)
-{
-    if (right > left)
-    {
-        int pivotIndex = left;
-        int pivotNewIndex = this->_qs_partition(arr, left, right, pivotIndex);
-        this->_qs_sort(arr, left, pivotNewIndex - 1);
-        this->_qs_sort(arr, pivotNewIndex + 1, right);
-    }
 }
 
 bool HSSContainer::_overlaps(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB)
@@ -1171,7 +1135,7 @@ bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSS
     HSSUnit originalX = child->x;
     HSSUnit originalY = child->y;
 
-    for (i = 0, size = group->objects.size(); i < size; i++)
+    for (i = 0, size = group->objects.size(); i < size; ++i)
     {
         HSSDisplayObject::p & otherChild = group->objects[i];
         if (isHorizontal)
@@ -1286,15 +1250,15 @@ bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSS
 //    unsigned i, size, j, size2;
 //    bool overlaps = false;
 //
-//    for (it=groups.begin(); it!=groups.end(); it++) {
+//    for (it=groups.begin(); it!=groups.end(); ++it) {
 //        HSSContainer::displayGroup::p group = *it;
-//        for (j=0, size2=group->lines.size(); j<size2; j++) {
+//        for (j=0, size2=group->lines.size(); j<size2; ++j) {
 //            const HSSContainer::displayGroup::p & otherGroup = group->lines[j];
 //            if(
 //               ((child->x + child->outerWidth) > otherGroup->x) && ((child->x - child->leftMargin) < (otherGroup->x + otherGroup->width))
 //               && ((child->y + child->outerHeight) > otherGroup->y) && ((child->y - child->leftMargin) < (otherGroup->y + otherGroup->height))
 //               ){
-//                for (i=0, size = otherGroup->objects.size(); i<size; i++) {
+//                for (i=0, size = otherGroup->objects.size(); i<size; ++i) {
 //                    const HSSDisplayObject::p & otherChild = otherGroup->objects[i];
 //                    if(direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft){
 //                        if( ((child->y + child->outerHeight) > (otherChild->y - otherChild->topMargin)) && ((child->y - child->topMargin) < (otherChild->y + otherChild->outerHeight)) ){
@@ -1321,23 +1285,16 @@ bool HSSContainer::_addChildToGroupIfNeeded(HSSDisplayObject::p &child, AXR::HSS
 
 bool HSSContainer::_mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p &otherGroup, HSSDirectionValue direction)
 {
-    unsigned i, size, j, size2;
-    if (
-            ((group->x + group->width) > otherGroup->x) && (group->x < (otherGroup->x + otherGroup->width))
-            && ((group->y + group->height) > otherGroup->y) && (group->y < (otherGroup->y + otherGroup->height))
-            )
+    if (((group->x + group->width) > otherGroup->x) && (group->x < (otherGroup->x + otherGroup->width)) && ((group->y + group->height) > otherGroup->y) && (group->y < (otherGroup->y + otherGroup->height)))
     {
         //if the group bounds overlap, check each individual element against each other
-        for (i = 0, size = group->objects.size(); i < size; i++)
+        for (unsigned i = 0, size = group->objects.size(); i < size; ++i)
         {
             HSSDisplayObject::p & child = group->objects[i];
-            for (j = 0, size2 = otherGroup->objects.size(); j < size2; j++)
+            for (unsigned j = 0, size2 = otherGroup->objects.size(); j < size2; ++j)
             {
                 HSSDisplayObject::p &otherChild = otherGroup->objects[j];
-                if (
-                        ((child->x + child->outerWidth) > (otherChild->x - otherChild->leftMargin)) && ((child->x - child->leftMargin) < (otherChild->x + otherChild->outerWidth))
-                        && ((child->y + child->outerHeight) > (otherChild->y - otherChild->topMargin)) && ((child->y - child->topMargin) < (otherChild->y + otherChild->outerHeight))
-                        )
+                if (((child->x + child->outerWidth) > (otherChild->x - otherChild->leftMargin)) && ((child->x - child->leftMargin) < (otherChild->x + otherChild->outerWidth)) && ((child->y + child->outerHeight) > (otherChild->y - otherChild->topMargin)) && ((child->y - child->topMargin) < (otherChild->y + otherChild->outerHeight)))
                 {
                     //there is an overlap, merge the groups
                     //add all the elements of this group to the overlapping one
@@ -1359,8 +1316,6 @@ bool HSSContainer::_mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p 
         }
     }
 
-
-
     return false;
 }
 
@@ -1373,7 +1328,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
     case HSSDirectionRightToLeft:
     {
         bool byAnchors = false;
-        for (i = 0, size = group->objects.size(); i < size; i++)
+        for (i = 0, size = group->objects.size(); i < size; ++i)
         {
             if (!group->objects[i]->_anchorXdefault)
             {
@@ -1388,7 +1343,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit alignmentTotal = 0.;
             HSSUnit accWidth = groupFirst->anchorX;
             HSSUnit anchorsTotal = 0.;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignX;
@@ -1406,7 +1361,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if (startX - group->width < 0) startX = group->width;
             if (startX > this->width) startX = this->width;
             accWidth = 0.;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & otherChild2 = group->objects[i];
                 otherChild2->x = startX - otherChild2->width - accWidth;
@@ -1422,7 +1377,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit alignmentTotal = 0.;
             HSSUnit accWidth = 0.;
             HSSUnit widthsTotal = 0.;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignX;
@@ -1432,7 +1387,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit startX = groupAlignX + widthsTotal / 2;
             if (startX > (this->width - this->rightPadding)) startX = (this->width - this->rightPadding);
             if (startX - group->width < this->leftPadding) startX = this->leftPadding + group->width;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 accWidth += currentChild->outerWidth;
@@ -1446,7 +1401,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
     case HSSDirectionTopToBottom:
     {
         bool byAnchors = false;
-        for (i = 0, size = group->objects.size(); i < size; i++)
+        for (i = 0, size = group->objects.size(); i < size; ++i)
         {
             if (!group->objects[i]->_anchorYdefault)
             {
@@ -1461,7 +1416,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit alignmentTotal = 0.;
             HSSUnit accHeight = groupFirst->height - groupFirst->anchorY;
             HSSUnit anchorsTotal = 0.;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignY;
@@ -1479,7 +1434,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if (startY > this->height - group->height) startY = this->height - group->height;
             if (startY < 0) startY = 0.;
             accHeight = 0.;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & otherChild2 = group->objects[i];
                 otherChild2->y = startY + accHeight;
@@ -1494,7 +1449,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit alignmentTotal = 0.;
             HSSUnit accHeight = 0.;
             HSSUnit heightsTotal = 0.;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignY;
@@ -1505,7 +1460,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if (startY > (this->width - this->bottomPadding) - group->height) startY = (this->height - this->bottomPadding) - group->height;
             if (startY < this->topPadding) startY = this->topPadding;
             group->y = startY;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 currentChild->y = startY + accHeight + currentChild->topMargin;
@@ -1518,7 +1473,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
     case HSSDirectionBottomToTop:
     {
         bool byAnchors = false;
-        for (i = 0, size = group->objects.size(); i < size; i++)
+        for (i = 0, size = group->objects.size(); i < size; ++i)
         {
             if (!group->objects[i]->_anchorYdefault)
             {
@@ -1533,7 +1488,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit alignmentTotal = 0;
             HSSUnit accHeight = groupFirst->anchorY;
             HSSUnit anchorsTotal = 0;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignY;
@@ -1551,7 +1506,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if (startY - group->height < 0) startY = group->height;
             if (startY > this->height) startY = this->height;
             accHeight = 0;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & otherChild2 = group->objects[i];
                 otherChild2->y = startY - otherChild2->height - accHeight;
@@ -1566,7 +1521,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit alignmentTotal = 0.;
             HSSUnit accHeight = 0.;
             HSSUnit heightsTotal = 0.;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignY;
@@ -1576,7 +1531,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit startY = groupAlignY + heightsTotal / 2;
             if (startY > (this->height - this->bottomPadding)) startY = (this->height - this->bottomPadding);
             if (startY - group->height < this->topPadding) startY = this->topPadding + group->height;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 accHeight += currentChild->outerHeight;
@@ -1591,7 +1546,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
     default:
     {
         bool byAnchors = false;
-        for (i = 0, size = group->objects.size(); i < size; i++)
+        for (i = 0, size = group->objects.size(); i < size; ++i)
         {
             if (!group->objects[i]->_anchorXdefault)
             {
@@ -1606,7 +1561,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit alignmentTotal = 0.;
             HSSUnit accWidth = groupFirst->outerWidth - groupFirst->anchorX;
             HSSUnit anchorsTotal = 0.;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignX;
@@ -1624,7 +1579,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if (startX > (this->width - this->rightPadding) - group->width) startX = (this->width - this->rightPadding) - group->width;
             if (startX < 0.) startX = 0.;
             accWidth = 0.;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & otherChild2 = group->objects[i];
                 otherChild2->x = startX + accWidth + otherChild2->leftMargin;
@@ -1640,7 +1595,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit alignmentTotal = 0.;
             HSSUnit accWidth = 0.;
             HSSUnit widthsTotal = 0.;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 alignmentTotal += currentChild->alignX;
@@ -1651,7 +1606,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if (startX > (this->width - this->rightPadding) - group->width) startX = (this->width - this->rightPadding) - group->width;
             if (startX < this->leftPadding) startX = this->leftPadding;
             group->x = startX;
-            for (i = 0, size = group->objects.size(); i < size; i++)
+            for (i = 0, size = group->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = group->objects[i];
                 currentChild->x = startX + accWidth + currentChild->leftMargin;
@@ -1671,7 +1626,6 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
     }
 
     AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
-    unsigned i, j, size, size2;
 
     switch (direction)
     {
@@ -1684,10 +1638,10 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
     case HSSDirectionTopToBottom:
     {
         bool byAnchors = false;
-        for (i = 0, size = group->lines.size(); i < size; i++)
+        for (unsigned i = 0, size = group->lines.size(); i < size; ++i)
         {
             displayGroup::p line = group->lines[i];
-            for (j = 0, size2 = line->objects.size(); j < size2; j++)
+            for (unsigned j = 0, size2 = line->objects.size(); j < size2; ++j)
             {
                 if (!line->objects[j]->_anchorYdefault)
                 {
@@ -1717,7 +1671,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
             lineA = *pglIt;
             lineAIt = lineA->objects.begin();
             objA = *lineAIt;
-            pglIt++;
+            ++pglIt;
             lineB = *pglIt;
             lineBIt = lineB->objects.begin();
             objB = *lineBIt;
@@ -1731,7 +1685,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
                     biggestGroup = newGroup;
                     biggest = newGroup->height;
                 }
-                lineBIt++;
+                ++lineBIt;
                 if (lineBIt != lineB->objects.end())
                 {
                     objB = *lineBIt;
@@ -1741,7 +1695,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
                     lineBIt = lineB->objects.begin();
                     objB = *lineBIt;
 
-                    lineAIt++;
+                    ++lineAIt;
                     if (lineAIt != lineA->objects.end())
                     {
                         objA = *lineAIt;
@@ -1759,7 +1713,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
 
             group->height = biggestGroup->height;
 
-            for (i = 0, size = biggestGroup->objects.size(); i < size; i++)
+            for (unsigned i = 0, size = biggestGroup->objects.size(); i < size; ++i)
             {
                 HSSDisplayObject::p & currentChild = biggestGroup->objects[i];
                 alignmentTotal += currentChild->alignY;
@@ -1767,15 +1721,15 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
             }
 
             //calculate the alignment point for the biggest elements
-            HSSUnit groupAlignY = alignmentTotal / size;
+            HSSUnit groupAlignY = alignmentTotal / biggestGroup->objects.size();
 
             //reposition the elements in the group
             HSSUnit startY = groupAlignY - totalSize / 2;
             if (startY > (this->height - this->bottomPadding) - group->height) startY = (this->height - this->bottomPadding) - group->height;
             if (startY < this->topPadding) startY = this->topPadding;
-            HSSDisplayObject::it bobjIt, bobjIt2;
+
             unsigned int i = 0, size = biggestGroup->objects.size();
-            for (bobjIt = biggestGroup->objects.begin(); bobjIt != biggestGroup->objects.end(); bobjIt++)
+            for (HSSDisplayObject::it bobjIt = biggestGroup->objects.begin(); bobjIt != biggestGroup->objects.end(); ++bobjIt)
             {
                 HSSDisplayObject::p otherChild2 = *bobjIt;
                 HSSUnit newValue = startY + accHeight + otherChild2->topMargin;
@@ -1850,13 +1804,13 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
                     otherChild2->_layoutFlagLockBottom = true;
                     //otherChild2->_layoutLockBottomPosition = otherChild2->y + otherChild2->height + otherChild2->bottomMargin;
                 }
-                i++;
+                ++i;
             }
 
-            for (i = 0, size = group->lines.size(); i < size; i++)
+            for (i = 0, size = group->lines.size(); i < size; ++i)
             {
                 displayGroup::p & line = group->lines[i];
-                for (j = 0, size2 = line->objects.size(); j < size2; j++)
+                for (unsigned j = 0, size2 = line->objects.size(); j < size2; ++j)
                 {
                     HSSDisplayObject::p & currentChild = line->objects[j];
 
@@ -1868,8 +1822,8 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
                         if (group->lines.size() > i + 1)
                         {
                             displayGroup::p nextLine = group->lines[i + 1];
-                            std::vector<HSSDisplayObject::p>::iterator nlIt;
-                            for (nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); nlIt++)
+
+                            for (std::vector<HSSDisplayObject::p>::iterator nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); ++nlIt)
                             {
                                 HSSDisplayObject::p nlObj = *nlIt;
                                 if (nlObj->_layoutFlagLockTop && this->_overlaps_horizontal(nlObj, currentChild))
@@ -1906,8 +1860,8 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
                         if (i != 0)
                         {
                             displayGroup::p previousLine = group->lines[i - 1];
-                            std::vector<HSSDisplayObject::p>::iterator plIt;
-                            for (plIt = previousLine->objects.begin(); plIt != previousLine->objects.end(); plIt++)
+
+                            for (std::vector<HSSDisplayObject::p>::iterator plIt = previousLine->objects.begin(); plIt != previousLine->objects.end(); ++plIt)
                             {
                                 HSSDisplayObject::p plObj = *plIt;
                                 if (plObj->_layoutFlagLockBottom && this->_overlaps_horizontal(plObj, currentChild))
@@ -1944,13 +1898,11 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
 
     case HSSDirectionBottomToTop:
     {
-
         break;
     }
 
     default:
     {
-
         break;
     }
     }
@@ -1975,7 +1927,7 @@ void HSSContainer::_recursiveGetPushGroup(HSSDisplayObject::p objA, HSSDisplayOb
             ret->height += objB->outerHeight;
         }
     }
-    linesIt++;
+    ++linesIt;
     if (linesIt != stopIt)
     {
         displayGroup::p nextLine = *linesIt;
@@ -1988,15 +1940,15 @@ bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup
 {
     bool ret = false;
     HSSUnit constraintStore = constraint;
-    displayGroup::p nextLine;
+
     if (i >= group->lines.size() - 1)
     {
         return false;
     }
-    nextLine = group->lines[i + 1];
 
-    std::vector<HSSDisplayObject::p>::iterator nlIt;
-    for (nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); nlIt++)
+    displayGroup::p nextLine = group->lines[i + 1];
+
+    for (std::vector<HSSDisplayObject::p>::iterator nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); ++nlIt)
     {
         HSSDisplayObject::p nlObj = *nlIt;
         if (nlObj->_layoutFlagLockTop && this->_overlaps_horizontal(nlObj, child))
@@ -2025,6 +1977,7 @@ bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup
             }
         }
     }
+
     return ret;
 }
 
@@ -2032,15 +1985,15 @@ bool HSSContainer::_recursiveFindBottomConstraint(HSSUnit &constraint, displayGr
 {
     bool ret = false;
     HSSUnit constraintStore = constraint;
-    displayGroup::p nextLine;
+
     if (i < 1)
     {
         return false;
     }
-    nextLine = group->lines[i - 1];
 
-    std::vector<HSSDisplayObject::p>::iterator nlIt;
-    for (nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); nlIt++)
+    displayGroup::p nextLine = group->lines[i - 1];
+
+    for (std::vector<HSSDisplayObject::p>::iterator nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); ++nlIt)
     {
         HSSDisplayObject::p nlObj = *nlIt;
         if (nlObj->_layoutFlagLockBottom && this->_overlaps_horizontal(nlObj, child))
@@ -2069,6 +2022,7 @@ bool HSSContainer::_recursiveFindBottomConstraint(HSSUnit &constraint, displayGr
             }
         }
     }
+
     return ret;
 }
 
@@ -2085,17 +2039,14 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
             theDO->x = this->leftPadding + newValue;
             group->x = 0.;
             group->y = theDO->y;
-
-
         }
         else
         {
-            HSSDisplayObject::it it;
             HSSUnit accWidth = this->rightPadding;
             HSSUnit totalWidth = 0.;
 
             //calculate the total width of the group
-            for (it = group->objects.begin(); it != group->objects.end(); it++)
+            for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
             {
                 totalWidth += (*it)->outerWidth;
             }
@@ -2107,12 +2058,12 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 //divide it by the number of elements-1
                 HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
                 unsigned i = 0;
-                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
                     HSSDisplayObject::p &theDO = *it;
                     theDO->x = this->width - accWidth - (spaceChunk * i) - theDO->width - theDO->rightMargin;
                     accWidth += theDO->outerWidth;
-                    i++;
+                    ++i;
                 }
                 group->x = 0.;
                 group->y = group->objects.back()->y;
@@ -2124,12 +2075,12 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 //divide it by the number of elements+1
                 HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
                 unsigned i = 0;
-                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
                     HSSDisplayObject::p &theDO = *it;
                     theDO->x = this->width - accWidth - spaceChunk - (spaceChunk * i) - theDO->width - theDO->leftMargin;
                     accWidth += theDO->outerWidth;
-                    i++;
+                    ++i;
                 }
                 group->x = 0.;
                 group->y = group->objects.front()->y;
@@ -2141,7 +2092,6 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
 
     case HSSDirectionTopToBottom:
     {
-
         if (group->objects.size() == 1)
         {
             HSSDisplayObject::p &theDO = group->objects.front();
@@ -2149,17 +2099,14 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
             theDO->y = this->topPadding + newValue;
             group->y = 0.;
             group->x = theDO->x;
-
-
         }
         else
         {
-            HSSDisplayObject::it it;
             HSSUnit accHeight = this->topPadding;
             HSSUnit totalHeight = 0.;
 
             //calculate the total height of the group
-            for (it = group->objects.begin(); it != group->objects.end(); it++)
+            for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
             {
                 totalHeight += (*it)->outerHeight;
             }
@@ -2171,12 +2118,12 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 //divide it by the number of elements-1
                 HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
                 unsigned i = 0;
-                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
                     HSSDisplayObject::p &theDO = *it;
                     theDO->y = accHeight + (spaceChunk * i) + theDO->topMargin;
                     accHeight += theDO->outerHeight;
-                    i++;
+                    ++i;
                 }
                 group->x = 0.;
                 group->y = group->objects.front()->y;
@@ -2188,12 +2135,12 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 //divide it by the number of elements+1
                 HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
                 unsigned i = 0;
-                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
                     HSSDisplayObject::p &theDO = *it;
                     theDO->y = accHeight + spaceChunk + (spaceChunk * i) + theDO->topMargin;
                     accHeight += theDO->outerHeight;
-                    i++;
+                    ++i;
                 }
                 group->y = 0.;
                 group->x = group->objects.front()->x;
@@ -2211,17 +2158,14 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
             theDO->y = this->topPadding + newValue;
             group->y = 0.;
             group->x = theDO->x;
-
-
         }
         else
         {
-            HSSDisplayObject::it it;
             HSSUnit accHeight = this->bottomPadding;
             HSSUnit totalHeight = 0.;
 
             //calculate the total height of the group
-            for (it = group->objects.begin(); it != group->objects.end(); it++)
+            for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
             {
                 totalHeight += (*it)->outerHeight;
             }
@@ -2233,12 +2177,12 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 //divide it by the number of elements-1
                 HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
                 unsigned i = 0;
-                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
                     HSSDisplayObject::p &theDO = *it;
                     theDO->y = this->height - accHeight - (spaceChunk * i) - theDO->height - theDO->bottomMargin;
                     accHeight += theDO->outerHeight;
-                    i++;
+                    ++i;
                 }
                 group->y = 0.;
                 group->x = group->objects.back()->x;
@@ -2250,12 +2194,12 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 //divide it by the number of elements+1
                 HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
                 unsigned i = 0;
-                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
                     HSSDisplayObject::p &theDO = *it;
                     theDO->y = this->height - accHeight - spaceChunk - (spaceChunk * i) - theDO->height - theDO->topMargin;
                     accHeight += theDO->outerHeight;
-                    i++;
+                    ++i;
                 }
                 group->y = 0.;
                 group->x = group->objects.front()->x;
@@ -2273,17 +2217,14 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
             theDO->x = this->leftPadding + newValue;
             group->x = 0.;
             group->y = theDO->y;
-
-
         }
         else
         {
-            HSSDisplayObject::it it;
             HSSUnit accWidth = this->leftPadding;
             HSSUnit totalWidth = 0.;
 
             //calculate the total width of the group
-            for (it = group->objects.begin(); it != group->objects.end(); it++)
+            for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
             {
                 totalWidth += (*it)->outerWidth;
             }
@@ -2295,11 +2236,11 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 //divide it by the number of elements-1
                 HSSUnit spaceChunk = remainingSpace / (group->objects.size() - 1);
                 unsigned i = 0;
-                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
                     (*it)->x = accWidth + (spaceChunk * i) + (*it)->leftMargin;
                     accWidth += (*it)->outerWidth;
-                    i++;
+                    ++i;
                 }
                 group->x = 0.;
                 group->y = group->objects.front()->y;
@@ -2311,11 +2252,11 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 //divide it by the number of elements+1
                 HSSUnit spaceChunk = remainingSpace / (group->objects.size() + 1);
                 unsigned i = 0;
-                for (it = group->objects.begin(); it != group->objects.end(); it++)
+                for (HSSDisplayObject::it it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
                     (*it)->x = accWidth + spaceChunk + (spaceChunk * i) + (*it)->leftMargin;
                     accWidth += (*it)->outerWidth;
-                    i++;
+                    ++i;
                 }
                 group->x = 0.;
                 group->y = group->objects.front()->y;
@@ -2329,11 +2270,11 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
 
 void HSSContainer::recursiveLayout()
 {
-    unsigned i, size;
-    for (i = 0, size = this->allChildren.size(); i < size; i++)
+    for (unsigned i = 0, size = this->allChildren.size(); i < size; ++i)
     {
         this->allChildren[i]->recursiveLayout();
     }
+
     this->layout();
 }
 
@@ -2341,8 +2282,8 @@ void HSSContainer::setGlobalX(HSSUnit newValue)
 {
     HSSUnit delta = newValue - this->globalX;
     HSSDisplayObject::setGlobalX(newValue);
-    unsigned i, size;
-    for (i = 0, size = this->allChildren.size(); i < size; i++)
+
+    for (unsigned i = 0, size = this->allChildren.size(); i < size; ++i)
     {
         HSSDisplayObject::p theChild = this->allChildren[i];
         theChild->setGlobalX(theChild->globalX + delta);
@@ -2353,8 +2294,8 @@ void HSSContainer::setGlobalY(HSSUnit newValue)
 {
     HSSUnit delta = newValue - this->globalY;
     HSSDisplayObject::setGlobalY(newValue);
-    unsigned i, size;
-    for (i = 0, size = this->allChildren.size(); i < size; i++)
+
+    for (unsigned i = 0, size = this->allChildren.size(); i < size; ++i)
     {
         HSSDisplayObject::p theChild = this->allChildren[i];
         theChild->setGlobalY(theChild->globalY + delta);
@@ -2365,8 +2306,8 @@ void HSSContainer::setChildren(std::vector<HSSDisplayObject::p> newChildren)
 {
     this->children = newChildren;
     this->allChildren = newChildren;
-    unsigned i, size;
-    for (i = 0, size = this->children.size(); i < size; i++)
+
+    for (unsigned i = 0, size = this->children.size(); i < size; ++i)
     {
         this->children[i]->setParent(this->shared_from_this());
     }
@@ -2410,7 +2351,7 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
         throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of " + this->getElementName()));
     }
 
-    if (this->observedContentAlignX != NULL)
+    if (this->observedContentAlignX)
     {
         this->observedContentAlignX->removeObserver(this->observedContentAlignXProperty, HSSObservablePropertyAlignX, this);
         this->observedContentAlignX = NULL;
@@ -2522,7 +2463,7 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
         throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of " + this->getElementName()));
     }
 
-    if (this->observedContentAlignY != NULL)
+    if (this->observedContentAlignY)
     {
         this->observedContentAlignY->removeObserver(this->observedContentAlignYProperty, HSSObservablePropertyAlignY, this);
         this->observedContentAlignY = NULL;
@@ -2532,7 +2473,6 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
 
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
-
         HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "top")
         {
@@ -2560,7 +2500,6 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
         {
             throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of " + this->getElementName()));
         }
-
     }
     else
     {
@@ -2628,7 +2567,7 @@ HSSParserNode::p HSSContainer::getDDirectionPrimary()
 void HSSContainer::setDDirectionPrimary(HSSParserNode::p value)
 {
     this->dDirectionPrimary = value;
-    if (this->observedDirectionPrimary != NULL)
+    if (this->observedDirectionPrimary)
     {
         this->observedDirectionPrimary->removeObserver(this->observedDirectionPrimaryProperty, HSSObservablePropertyDirectionPrimary, this);
     }
@@ -2694,7 +2633,7 @@ HSSParserNode::p HSSContainer::getDDirectionSecondary()
 void HSSContainer::setDDirectionSecondary(HSSParserNode::p value)
 {
     this->dDirectionSecondary = value;
-    if (this->observedDirectionSecondary != NULL)
+    if (this->observedDirectionSecondary)
     {
         this->observedDirectionSecondary->removeObserver(this->observedDirectionSecondaryProperty, HSSObservablePropertyDirectionSecondary, this);
     }
@@ -2717,7 +2656,6 @@ void HSSContainer::setDDirectionSecondary(HSSParserNode::p value)
             {
                 this->directionSecondary = HSSDirectionRightToLeft;
             }
-
         }
         else if (stringValue == "topToBottom" || stringValue == "bottomToTop")
         {
@@ -2763,7 +2701,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
     bool valid = false;
 
     this->dShape = value;
-    if (this->observedShape != NULL)
+    if (this->observedShape)
     {
         this->observedShape->removeObserver(this->observedShapeProperty, HSSObservablePropertyShape, this);
     }
@@ -2806,12 +2744,12 @@ void HSSContainer::setDShape(HSSParserNode::p value)
             }
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
 
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }
@@ -2892,7 +2830,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
             this->setDTextAlign(objdef);
             valid = true;
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -3062,7 +3000,7 @@ long double HSSContainer::_setLDProperty(
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
-        if (callback != NULL)
+        if (callback)
         {
             observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer > (this, callback));
             observedStore = observedObject;
@@ -3078,7 +3016,7 @@ long double HSSContainer::_setLDProperty(
         expressionValue->setPercentageObserved(observedProperty, observedObject);
         expressionValue->setScope(scope);
         ret = expressionValue->evaluate();
-        if (callback != NULL)
+        if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer > (this, callback));
             observedStore = expressionValue.get();
@@ -3107,7 +3045,7 @@ long double HSSContainer::_setLDProperty(
         {
             ret = 0.;
         }
-        if (callback != NULL)
+        if (callback)
         {
             fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer > (this, callback));
             observedStore = fnct.get();
@@ -3125,13 +3063,11 @@ long double HSSContainer::_setLDProperty(
 
 bool HSSContainer::handleEvent(HSSEventType type, void* data)
 {
-    HSSDisplayObject::it it;
     bool handled = false;
-    for (it = this->allChildren.begin(); it < this->allChildren.end(); it++)
+    for (HSSDisplayObject::it it = this->allChildren.begin(); it < this->allChildren.end(); ++it)
     {
         HSSDisplayObject::p child = *it;
-        bool childHandled = false;
-        childHandled = child->handleEvent(type, data);
+        bool childHandled = child->handleEvent(type, data);
         if (childHandled)
         {
             handled = true;
@@ -3150,8 +3086,7 @@ bool HSSContainer::handleEvent(HSSEventType type, void* data)
 void HSSContainer::setController(AXRController * controller)
 {
     //propagate
-    HSSDisplayObject::it it;
-    for (it = this->allChildren.begin(); it < this->allChildren.end(); it++)
+    for (HSSDisplayObject::it it = this->allChildren.begin(); it < this->allChildren.end(); ++it)
     {
         HSSDisplayObject::p child = *it;
         child->setController(controller);

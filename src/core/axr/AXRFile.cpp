@@ -59,7 +59,7 @@ AXRFile::AXRFile()
 
 AXRFile::~AXRFile()
 {
-    if (this->fileHandle != NULL)
+    if (this->fileHandle)
     {
         fclose(this->fileHandle);
     }

@@ -39,57 +39,50 @@
  *
  ********************************************************************/
 
-#include "HSSOddChildFilter.h"
+#include "HSSContainer.h"
+#include "HSSEmptyFilter.h"
 
 using namespace AXR;
 
-HSSOddChildFilter::HSSOddChildFilter()
-: HSSFilter(HSSFilterTypeFirst)
+HSSEmptyFilter::HSSEmptyFilter()
+: HSSFilter(HSSFilterTypeLast)
 {
 
 }
 
-HSSOddChildFilter::p HSSOddChildFilter::clone() const
+HSSEmptyFilter::p HSSEmptyFilter::clone() const
 {
-    return boost::static_pointer_cast<HSSOddChildFilter, HSSClonable > (this->cloneImpl());
+    return boost::static_pointer_cast<HSSEmptyFilter, HSSClonable > (this->cloneImpl());
 }
 
-HSSOddChildFilter::~HSSOddChildFilter()
+HSSEmptyFilter::~HSSEmptyFilter()
 {
 
 }
 
-std::string HSSOddChildFilter::toString()
+std::string HSSEmptyFilter::toString()
 {
-    return "Odd Child Filter";
+    return "Empty Filter";
 }
 
-const std::vector<HSSDisplayObject::p> HSSOddChildFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
+const std::vector<HSSDisplayObject::p> HSSEmptyFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
 {
     std::vector<HSSDisplayObject::p> ret;
     HSSDisplayObject::const_it it;
     for (it = scope.begin(); it != scope.end(); ++it)
     {
         const HSSDisplayObject::p & theDO = *it;
-        if (this->getNegating())
+        const HSSContainer::p & container = HSSContainer::asContainer(*it);
+
+        if (container->getChildren(true).empty())
         {
-            if (theDO->getIndex() % 2 != 0)
-            {
-                ret.push_back(theDO);
-            }
-        }
-        else
-        {
-            if (theDO->getIndex() % 2 == 0)
-            {
-                ret.push_back(theDO);
-            }
+            ret.push_back(theDO);
         }
     }
     return ret;
 }
 
-HSSClonable::p HSSOddChildFilter::cloneImpl() const
+HSSClonable::p HSSEmptyFilter::cloneImpl() const
 {
-    return HSSClonable::p(new HSSOddChildFilter(*this));
+    return HSSClonable::p(new HSSEmptyFilter(*this));
 }

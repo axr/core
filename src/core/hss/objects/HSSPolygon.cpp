@@ -411,7 +411,7 @@ long double HSSPolygon::_setLDProperty(
         expressionValue->setScope(this->scope);
         expressionValue->setThisObj(this->thisObj);
         ret = expressionValue->evaluate();
-        if (callback != NULL)
+        if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSPolygon > (this, callback));
         }

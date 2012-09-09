@@ -80,7 +80,7 @@ namespace AXR
         /**
          *  Constructor for HSSRgb objects
          */
-        HSSRgb();
+        HSSRgb(long double red = 0, long double green = 0, long double blue = 0, long double alpha = 255);
 
         /**
          *  Copy constructor for HSSRgb objects
@@ -98,6 +98,9 @@ namespace AXR
          *  Destructor for this class.
          */
         virtual ~HSSRgb();
+
+        inline static p transparentColor() { return p(new HSSRgb(0, 0, 0, 0)); }
+        inline static p defaultColor() { return p(new HSSRgb()); }
 
         virtual std::string toString();
         virtual std::string defaultObjectType();

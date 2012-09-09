@@ -47,13 +47,13 @@ ExpatXMLParser::ExpatXMLParser(void)
     //xml_buffer_size = XML_CHUNK_SIZE;
     //xml_buffer = new XML_Char[xml_buffer_size];
 
-    //if(xml_buffer == NULL)
+    //if(!xml_buffer)
     //return;
 
     /* Allocate a new parser state-object */
     expat_parser = XML_ParserCreate(NULL);
 
-    if (expat_parser == NULL)
+    if (!expat_parser)
     {
         //delete xml_buffer;
         //xml_buffer = NULL;
@@ -79,13 +79,13 @@ ExpatXMLParser::ExpatXMLParser(size_t chunk_size)
     //xml_buffer_size = chunk_size;
     //xml_buffer = new XML_Char[xml_buffer_size];
 
-    //if(xml_buffer == NULL)
+    //if(!xml_buffer)
     //return;
 
     /* Allocate a new parser state-object */
     expat_parser = XML_ParserCreate(NULL);
 
-    if (expat_parser == NULL)
+    if (!expat_parser)
     {
         //delete xml_buffer;
         //xml_buffer = NULL;
@@ -104,13 +104,13 @@ ExpatXMLParser::~ExpatXMLParser(void)
 {
     valid_parser = false;
 
-    if (expat_parser != NULL)
+    if (expat_parser)
     {
         XML_ParserFree(expat_parser);
         expat_parser = NULL;
     }
 
-    //if(xml_buffer != NULL) {
+    //if(xml_buffer) {
     //delete xml_buffer;
     //xml_buffer = NULL;
     //}
@@ -211,7 +211,7 @@ ExpatXMLParser::_element_start_handler(void *userData, const XML_Char *name,
 {
     ExpatXMLParser *me = (ExpatXMLParser*) userData;
 
-    if (me != NULL)
+    if (me)
         me->StartElement(name, atts);
 }
 
@@ -220,7 +220,7 @@ ExpatXMLParser::_element_end_handler(void *userData, const XML_Char *name)
 {
     ExpatXMLParser *me = (ExpatXMLParser*) userData;
 
-    if (me != NULL)
+    if (me)
         me->EndElement(name);
 }
 
@@ -230,7 +230,7 @@ ExpatXMLParser::_character_data_handler(void *userData,
 {
     ExpatXMLParser *me = (ExpatXMLParser*) userData;
 
-    if (me != NULL)
+    if (me)
         me->CharacterData(s, len);
 }
 
@@ -240,7 +240,7 @@ ExpatXMLParser::_processing_instr_handler(void *userData,
 {
     ExpatXMLParser *me = (ExpatXMLParser*) userData;
 
-    if (me != NULL)
+    if (me)
         me->ProcessingInstruction(target, data);
 }
 
@@ -249,7 +249,7 @@ ExpatXMLParser::_comment_handler(void *userData, const XML_Char *data)
 {
     ExpatXMLParser *me = (ExpatXMLParser*) userData;
 
-    if (me != NULL)
+    if (me)
         me->CommentData(data);
 }
 
@@ -258,7 +258,7 @@ ExpatXMLParser::_default_handler(void *userData, const XML_Char *s, int len)
 {
     ExpatXMLParser *me = (ExpatXMLParser*) userData;
 
-    if (me != NULL)
+    if (me)
         me->DefaultHandler(s, len);
 }
 
@@ -267,7 +267,7 @@ ExpatXMLParser::_cdata_start_handler(void *userData)
 {
     ExpatXMLParser *me = (ExpatXMLParser*) userData;
 
-    if (me != NULL)
+    if (me)
         me->CDataStart();
 }
 
@@ -276,7 +276,7 @@ ExpatXMLParser::_cdata_end_handler(void *userData)
 {
     ExpatXMLParser *me = (ExpatXMLParser*) userData;
 
-    if (me != NULL)
+    if (me)
         me->CDataEnd();
 }
 

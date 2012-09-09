@@ -75,7 +75,7 @@ const std::vector<HSSDisplayObject::p> HSSParentFilter::apply(const std::vector<
         int size = scope.size();
         HSSContainer::p container;
         if (!this->getNegating())
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < size; ++i)
             {
                 container = HSSContainer::asContainer(scope[i]);
                 if (container && container->getChildren(false).size() > 0)
@@ -83,10 +83,10 @@ const std::vector<HSSDisplayObject::p> HSSParentFilter::apply(const std::vector<
             }
 
         else
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < size; ++i)
             {
                 container = HSSContainer::asContainer(scope[i]);
-                if (container && container->getChildren(false).size() == 0)
+                if (container && container->getChildren(false).empty())
                     ret.push_back(scope[i]);
             }
         return ret;

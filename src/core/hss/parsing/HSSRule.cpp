@@ -73,12 +73,12 @@ HSSRule::p HSSRule::clone() const
 
 HSSRule::~HSSRule()
 {
-    unsigned i;
-    for (i = 0; i<this->properties.size(); i++)
+    for (unsigned i = 0; i<this->properties.size(); ++i)
     {
         this->propertiesRemoveLast();
     }
-    if (this->observedTreeChanger != NULL)
+
+    if (this->observedTreeChanger)
     {
         this->observedTreeChanger->removeObserver(HSSObservablePropertyTreeChange, HSSObservablePropertyValue, this);
     }
@@ -89,12 +89,10 @@ std::string HSSRule::toString()
     std::string tempstr = std::string("HSSRule with the following selector chain: \n");
     if (this->selectorChains.size() > 0)
     {
-        HSSSelectorChain::const_it sIt;
-        for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+        for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)
         {
             tempstr.append("   ").append((*sIt)->toString());
         }
-
     }
     else
     {
@@ -105,8 +103,8 @@ std::string HSSRule::toString()
     if (pccount > 0)
     {
         tempstr.append(" and the following properties: \n");
-        unsigned j;
-        for (j = 0; j < pccount; j++)
+
+        for (unsigned j = 0; j < pccount; ++j)
         {
             tempstr.append("   ").append(this->properties[j]->toString()).append("\n");
         }
@@ -116,8 +114,8 @@ std::string HSSRule::toString()
     if (srcount > 0)
     {
         tempstr.append(" with the following sub-rules: \n");
-        unsigned k;
-        for (k = 0; k < srcount; k++)
+
+        for (unsigned k = 0; k < srcount; ++k)
         {
             tempstr.append("    ").append(this->children[k]->toString()).append("\n");
         }
@@ -129,8 +127,8 @@ std::string HSSRule::toString()
 void HSSRule::setSelectorChains(std::vector<HSSSelectorChain::p> newChains)
 {
     this->selectorChains = newChains;
-    HSSSelectorChain::it it;
-    for (it = this->selectorChains.begin(); it != this->selectorChains.end(); it++)
+
+    for (HSSSelectorChain::it it = this->selectorChains.begin(); it != this->selectorChains.end(); ++it)
     {
         (*it)->setParentNode(this->shared_from_this());
     }
@@ -260,20 +258,20 @@ HSSRule::p HSSRule::shared_from_this()
 
 void HSSRule::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
 {
-    HSSSelectorChain::const_it sIt;
-    for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+    for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)
     {
         (*sIt)->setThisObj(value);
     }
-    std::vector<HSSPropertyDefinition::p>::iterator it;
-    for (it = this->properties.begin(); it != this->properties.end(); it++)
+
+    for (std::vector<HSSPropertyDefinition::p>::iterator it = this->properties.begin(); it != this->properties.end(); ++it)
     {
         (*it)->setThisObj(value);
     }
-    //    std::vector<HSSRule::p>::iterator it2;
-    //    for (it2=this->children.begin(); it2!=this->children.end(); it2++) {
+
+    //    for (std::vector<HSSRule::p>::iterator it2 = this->children.begin(); it2 != this->children.end(); ++it2) {
     //        (*it2)->setThisObj(value);
     //    }
+
     HSSStatement::setThisObj(value);
 }
 
@@ -317,25 +315,26 @@ HSSClonable::p HSSRule::cloneImpl() const
 {
     HSSRule::p clone = HSSRule::p(new HSSRule(*this));
 
-    HSSSelectorChain::const_it sIt;
-    for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+    for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)
     {
         HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }
-    HSSPropertyDefinition::const_it pIt;
-    for (pIt = this->properties.begin(); pIt != this->properties.end(); pIt++)
+
+    for (HSSPropertyDefinition::const_it pIt = this->properties.begin(); pIt != this->properties.end(); ++pIt)
     {
         HSSPropertyDefinition::p clonedPropDef = (*pIt)->clone();
         clone->propertiesAdd(clonedPropDef);
     }
-    std::vector<HSSRule::p>::const_iterator rIt;
-    for (rIt = this->children.begin(); rIt != this->children.end(); rIt++)
+
+    for (std::vector<HSSRule::p>::const_iterator rIt = this->children.begin(); rIt != this->children.end(); ++rIt)
     {
         HSSRule::p clonedRule = (*rIt)->clone();
         clone->childrenAdd(clonedRule);
     }
-    if (this->instruction) clone->setInstruction(this->instruction->clone());
+
+    if (this->instruction)
+        clone->setInstruction(this->instruction->clone());
 
     return clone;
 }

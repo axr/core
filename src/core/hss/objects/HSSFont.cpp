@@ -50,6 +50,8 @@
 
 using namespace AXR;
 
+const long double HSSFont::DEFAULT_SIZE = 18;
+
 HSSFont::HSSFont()
 : HSSObject(HSSObjectTypeFont)
 {
@@ -57,7 +59,7 @@ HSSFont::HSSFont()
 
     this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;
 
-    this->size = 18.;
+    this->size = DEFAULT_SIZE;
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("face");
     shorthandProperties.push_back("size");
@@ -70,7 +72,7 @@ HSSFont::HSSFont(const HSSFont & orig)
 : HSSObject(orig)
 {
     this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;
-    this->size = 18.;
+    this->size = DEFAULT_SIZE;
     std::vector<std::string> shorthandProperties;
     shorthandProperties.push_back("face");
     shorthandProperties.push_back("size");
@@ -193,7 +195,7 @@ void HSSFont::setDSize(HSSParserNode::p value)
     this->size = this->_setLDProperty(
                                       &HSSFont::sizeChanged,
                                       value,
-                                      18.,
+                                      DEFAULT_SIZE,
                                       HSSObservablePropertySize,
                                       this->observedSize,
                                       this->observedSizeProperty
@@ -259,15 +261,14 @@ void HSSFont::setDColor(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }
-
 
         break;
     }
@@ -435,7 +436,7 @@ long double HSSFont::_setLDProperty(
         expressionValue->setPercentageBase(percentageBase);
         //expressionValue->setScope(scope);
         ret = expressionValue->evaluate();
-        if (callback != NULL)
+        if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSFont > (this, callback));
             observedStore = expressionValue.get();

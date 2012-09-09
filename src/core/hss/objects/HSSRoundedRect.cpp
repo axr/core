@@ -160,7 +160,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedTLCorner != NULL)
+        if (this->observedTLCorner)
         {
             this->observedTLCorner->removeObserver(this->observedTLCornerProperty, HSSObservablePropertyCorners, this);
         }
@@ -174,7 +174,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value)
                                               this->observedTLCorner,
                                               this->observedTLCornerProperty,
                                               this->scope);
-        if (this->observedTRCorner != NULL)
+        if (this->observedTRCorner)
         {
             this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyCorners, this);
         }
@@ -188,7 +188,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value)
                                               this->observedTRCorner,
                                               this->observedTRCornerProperty,
                                               this->scope);
-        if (this->observedBRCorner != NULL)
+        if (this->observedBRCorner)
         {
             this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyCorners, this);
         }
@@ -202,7 +202,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value)
                                               this->observedBRCorner,
                                               this->observedBRCornerProperty,
                                               this->scope);
-        if (this->observedBLCorner != NULL)
+        if (this->observedBLCorner)
         {
             this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyCorners, this);
         }
@@ -240,7 +240,7 @@ void HSSRoundedRect::setDLeft(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedTLCorner != NULL)
+        if (this->observedTLCorner)
         {
             this->observedTLCorner->removeObserver(this->observedTLCornerProperty, HSSObservablePropertyLeft, this);
         }
@@ -254,7 +254,7 @@ void HSSRoundedRect::setDLeft(HSSParserNode::p value)
                                               this->observedTLCorner,
                                               this->observedTLCornerProperty,
                                               this->scope);
-        if (this->observedBLCorner != NULL)
+        if (this->observedBLCorner)
         {
             this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyLeft, this);
         }
@@ -288,7 +288,7 @@ void HSSRoundedRect::setDLeftTop(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedTLCorner != NULL)
+        if (this->observedTLCorner)
         {
             this->observedTLCorner->removeObserver(this->observedTLCornerProperty, HSSObservablePropertyLeftTop, this);
         }
@@ -321,7 +321,7 @@ void HSSRoundedRect::setDTop(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedTLCorner != NULL)
+        if (this->observedTLCorner)
         {
             this->observedTLCorner->removeObserver(this->observedTLCornerProperty, HSSObservablePropertyTop, this);
         }
@@ -335,7 +335,7 @@ void HSSRoundedRect::setDTop(HSSParserNode::p value)
                                               this->observedTLCorner,
                                               this->observedTLCornerProperty,
                                               this->scope);
-        if (this->observedTRCorner != NULL)
+        if (this->observedTRCorner)
         {
             this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyTop, this);
         }
@@ -369,7 +369,7 @@ void HSSRoundedRect::setDRightTop(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedTRCorner != NULL)
+        if (this->observedTRCorner)
         {
             this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyRightTop, this);
         }
@@ -402,7 +402,7 @@ void HSSRoundedRect::setDRight(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedTRCorner != NULL)
+        if (this->observedTRCorner)
         {
             this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyRight, this);
         }
@@ -416,7 +416,7 @@ void HSSRoundedRect::setDRight(HSSParserNode::p value)
                                               this->observedTRCorner,
                                               this->observedTRCornerProperty,
                                               this->scope);
-        if (this->observedBRCorner != NULL)
+        if (this->observedBRCorner)
         {
             this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyRight, this);
         }
@@ -450,7 +450,7 @@ void HSSRoundedRect::setDRightBottom(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedBRCorner != NULL)
+        if (this->observedBRCorner)
         {
             this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyRightBottom, this);
         }
@@ -483,7 +483,7 @@ void HSSRoundedRect::setDBottom(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedBRCorner != NULL)
+        if (this->observedBRCorner)
         {
             this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyBottom, this);
         }
@@ -497,7 +497,7 @@ void HSSRoundedRect::setDBottom(HSSParserNode::p value)
                                               this->observedBRCorner,
                                               this->observedBRCornerProperty,
                                               this->scope);
-        if (this->observedBLCorner != NULL)
+        if (this->observedBLCorner)
         {
             this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyBottom, this);
         }
@@ -531,7 +531,7 @@ void HSSRoundedRect::setDLeftBottom(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedBLCorner != NULL)
+        if (this->observedBLCorner)
         {
             this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyLeftBottom, this);
         }
@@ -620,7 +620,7 @@ long double HSSRoundedRect::_setLDProperty(
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
-        if (callback != NULL)
+        if (callback)
         {
             observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect > (this, callback));
             observedStore = observedObject;
@@ -637,7 +637,7 @@ long double HSSRoundedRect::_setLDProperty(
         expressionValue->setScope(scope);
         expressionValue->setThisObj(this->getThisObj());
         ret = expressionValue->evaluate();
-        if (callback != NULL)
+        if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect > (this, callback));
             observedStore = expressionValue.get();
@@ -669,7 +669,7 @@ long double HSSRoundedRect::_setLDProperty(
         {
             //do nothing
         }
-        if (callback != NULL)
+        if (callback)
         {
             fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect > (this, callback));
             observedStore = fnct.get();

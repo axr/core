@@ -60,6 +60,8 @@ namespace AXR
 
         typedef boost::shared_ptr<HSSFont> p;
 
+        static const long double DEFAULT_SIZE;
+
         /**
          *  Creates a new instance of a HSSFont object.
          */

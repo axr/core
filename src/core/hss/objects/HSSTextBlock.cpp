@@ -40,6 +40,7 @@
  ********************************************************************/
 
 #include <boost/algorithm/string.hpp>
+#include <pango/pangocairo.h>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "HSSFunctions.h"
@@ -51,10 +52,38 @@
 
 using namespace AXR;
 
+PangoWeight _pangoWeightFromKeyword(std::string keyword)
+{
+    if (keyword == "normal")
+        return PANGO_WEIGHT_NORMAL;
+    if (keyword == "bold")
+        return PANGO_WEIGHT_BOLD;
+    if (keyword == "medium")
+        return PANGO_WEIGHT_MEDIUM;
+    if (keyword == "thin")
+        return PANGO_WEIGHT_THIN;
+    if (keyword == "light")
+        return PANGO_WEIGHT_LIGHT;
+    if (keyword == "book")
+        return PANGO_WEIGHT_BOOK;
+    if (keyword == "heavy")
+        return PANGO_WEIGHT_HEAVY;
+    if (keyword == "ultralight")
+        return PANGO_WEIGHT_ULTRALIGHT;
+    if (keyword == "semibold")
+        return PANGO_WEIGHT_SEMIBOLD;
+    if (keyword == "ultrabold")
+        return PANGO_WEIGHT_ULTRABOLD;
+    if (keyword == "ultraheavy")
+        return PANGO_WEIGHT_ULTRAHEAVY;
+
+    return PANGO_WEIGHT_NORMAL;
+}
+
 HSSTextTransformType HSSTextBlock::textTransformTypeFromString(std::string value)
 {
     static boost::unordered_map<std::string, HSSTextTransformType>types;
-    if (types.size() == 0)
+    if (types.empty())
     {
         types["lowercase"] = HSSTextTransformTypeLowercase;
         types["uppercase"] = HSSTextTransformTypeUppercase;
@@ -73,7 +102,7 @@ HSSTextTransformType HSSTextBlock::textTransformTypeFromString(std::string value
 HSSTextAlignType HSSTextBlock::textAlignTypeFromString(std::string value)
 {
     static boost::unordered_map<std::string, HSSTextAlignType>types;
-    if (types.size() == 0)
+    if (types.empty())
     {
         types["left"] = HSSTextAlignTypeLeft;
         types["right"] = HSSTextAlignTypeRight;
@@ -274,53 +303,46 @@ void HSSTextBlock::layout()
 {
     this->_needsLayout = false;
 
-    PangoFontDescription *font_description;
-
     pango_layout_set_width(this->_layout, this->width * PANGO_SCALE);
 
-    font_description = pango_font_description_new();
+    PangoFontDescription *font_description = pango_font_description_new();
 
-    if (this->font.size() > 0)
-    {
-        HSSFont::p theFont = *this->font.begin();
+    // Get the first font available
+    HSSFont::p theFont;
+    if (font.size() > 0)
+        theFont = *font.begin();
+
+    // Set the font family - be sure it's not empty or Pango will crash in pango_layout_get_extents
+    if (theFont && !theFont->getFace().empty())
         pango_font_description_set_family(font_description, theFont->getFace().c_str());
-        HSSKeywordConstant::p weightKw = theFont->getWeight();
-        if (weightKw)
-        {
-            pango_font_description_set_weight(font_description, this->_pangoWeightFromKeyword(weightKw->getValue()));
-        }
-        pango_font_description_set_absolute_size(font_description, theFont->getSize() * PANGO_SCALE);
-
-    }
     else
-    {
         pango_font_description_set_family(font_description, "monospace");
+
+    // Set the weight of the font (bold, italic, etc.) if available
+    if (theFont && theFont->getWeight())
+        pango_font_description_set_weight(font_description, _pangoWeightFromKeyword(theFont->getWeight()->getValue()));
+    else
         pango_font_description_set_weight(font_description, PANGO_WEIGHT_NORMAL);
-        pango_font_description_set_absolute_size(font_description, 12 * PANGO_SCALE);
-    }
 
-    if (this->textAlign)
+    pango_font_description_set_absolute_size(font_description, (theFont ? theFont->getSize() : HSSFont::DEFAULT_SIZE) * PANGO_SCALE);
+
+    switch (textAlign)
     {
-        switch (this->textAlign)
-        {
-        case HSSTextAlignTypeLeft:
-            pango_layout_set_alignment(this->_layout, PANGO_ALIGN_LEFT);
-            break;
-        case HSSTextAlignTypeRight:
-            pango_layout_set_alignment(this->_layout, PANGO_ALIGN_RIGHT);
-            break;
-        case HSSTextAlignTypeCenter:
-            pango_layout_set_alignment(this->_layout, PANGO_ALIGN_CENTER);
-            break;
-        case HSSTextAlignTypeJustify:
-            pango_layout_set_alignment(this->_layout, PANGO_ALIGN_LEFT);
-            pango_layout_set_justify(this->_layout, true);
-            break;
-
-        default:
-            break;
-        }
-
+    case HSSTextAlignTypeLeft:
+        pango_layout_set_alignment(this->_layout, PANGO_ALIGN_LEFT);
+        break;
+    case HSSTextAlignTypeRight:
+        pango_layout_set_alignment(this->_layout, PANGO_ALIGN_RIGHT);
+        break;
+    case HSSTextAlignTypeCenter:
+        pango_layout_set_alignment(this->_layout, PANGO_ALIGN_CENTER);
+        break;
+    case HSSTextAlignTypeJustify:
+        pango_layout_set_alignment(this->_layout, PANGO_ALIGN_LEFT);
+        pango_layout_set_justify(this->_layout, true);
+        break;
+    default:
+        break;
     }
 
     pango_layout_set_font_description(this->_layout, font_description);
@@ -362,7 +384,7 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -488,7 +510,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
             this->setDTextAlign(objdef);
             valid = true;
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -528,7 +550,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
         std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
         if (kwValue == "inherit")
         {
-            if (this->observedTextAlign != NULL)
+            if (this->observedTextAlign)
             {
                 this->observedTextAlign->removeObserver(this->observedTextAlignProperty, HSSObservablePropertyTextAlign, this);
             }
@@ -645,7 +667,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
             valid = true;
 
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
@@ -757,45 +779,4 @@ void HSSTextBlock::trimContentText()
     boost::algorithm::trim(trmstr)
             ;
     this->text = trmstr;
-}
-
-PangoWeight HSSTextBlock::_pangoWeightFromKeyword(std::string keyword)
-{
-    if (keyword == "normal")
-        return PANGO_WEIGHT_NORMAL;
-
-    if (keyword == "bold")
-        return PANGO_WEIGHT_BOLD;
-
-    if (keyword == "medium")
-        return PANGO_WEIGHT_MEDIUM;
-
-
-    if (keyword == "thin")
-        return PANGO_WEIGHT_THIN;
-
-    if (keyword == "light")
-        return PANGO_WEIGHT_LIGHT;
-
-    if (keyword == "book")
-        return PANGO_WEIGHT_BOOK;
-
-    if (keyword == "heavy")
-        return PANGO_WEIGHT_HEAVY;
-
-
-    if (keyword == "ultralight")
-        return PANGO_WEIGHT_ULTRALIGHT;
-
-    if (keyword == "semibold")
-        return PANGO_WEIGHT_SEMIBOLD;
-
-    if (keyword == "ultrabold")
-        return PANGO_WEIGHT_ULTRABOLD;
-
-    if (keyword == "ultraheavy")
-        return PANGO_WEIGHT_ULTRAHEAVY;
-
-    //default
-    return PANGO_WEIGHT_NORMAL;
 }

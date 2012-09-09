@@ -75,20 +75,20 @@ HSSFunction::p HSSFunction::clone() const
 
 HSSClonable::p HSSFunction::cloneImpl() const
 {
-
     HSSFunction::p clone = HSSFunction::p(new HSSFunction(*this));
-    std::deque<HSSParserNode::p>::const_iterator it;
-    for (it = this->_arguments.begin(); it != this->_arguments.end(); it++)
+
+    for (std::deque<HSSParserNode::p>::const_iterator it = this->_arguments.begin(); it != this->_arguments.end(); ++it)
     {
         HSSParserNode::p clonedArgument = (*it)->clone();
         clone->_arguments.push_back(clonedArgument);
     }
+
     return clone;
 }
 
 HSSFunction::~HSSFunction()
 {
-    //    if (this->percentageObserved != NULL) {
+    //    if (this->percentageObserved) {
     //        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
     //        this->percentageObserved = NULL;
     //    }
@@ -148,7 +148,7 @@ void HSSFunction::setPercentageBase(long double value)
 
 void HSSFunction::setPercentageObserved(HSSObservableProperty property, HSSObservable *observed)
 {
-    //    if(this->percentageObserved != NULL)
+    //    if(this->percentageObserved)
     //    {
     //        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
     //        this->percentageObserved = NULL;
@@ -162,7 +162,7 @@ void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
 {
     this->scope = newScope;
     std::deque<HSSParserNode::p>::const_iterator it;
-    for (it = this->_arguments.begin(); it != this->_arguments.end(); it++)
+    for (it = this->_arguments.begin(); it != this->_arguments.end(); ++it)
     {
         const HSSParserNode::p node = (*it);
         switch (node->getType())

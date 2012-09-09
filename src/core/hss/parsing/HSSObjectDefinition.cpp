@@ -56,16 +56,17 @@ HSSObjectDefinition::HSSObjectDefinition(const HSSObjectDefinition & orig)
 : HSSStatement(orig)
 {
     this->prototype = orig.prototype->clone();
-    std::deque<HSSPropertyDefinition::p>::const_iterator p_it;
-    for (p_it = orig.properties.begin(); p_it != orig.properties.end(); p_it++)
+
+    for (std::deque<HSSPropertyDefinition::p>::const_iterator p_it = orig.properties.begin(); p_it != orig.properties.end(); ++p_it)
     {
         this->properties.push_back((*p_it)->clone());
     }
-    std::vector<HSSObjectDefinition::p>::const_iterator c_it;
-    for (c_it = orig.children.begin(); c_it != orig.children.end(); c_it++)
+
+    for (std::vector<HSSObjectDefinition::p>::const_iterator c_it = orig.children.begin(); c_it != orig.children.end(); ++c_it)
     {
         this->children.push_back((*c_it)->clone());
     }
+
     //shallow copy
     this->scope = NULL;
 }
@@ -90,8 +91,7 @@ std::string HSSObjectDefinition::toString()
     {
         tempstr.append(" and the following properties: \n");
 
-        unsigned j;
-        for (j = 0; j < pccount; j++)
+        for (unsigned j = 0; j < pccount; ++j)
         {
             tempstr.append(this->properties[j]->toString().append("\n"));
         }
@@ -103,7 +103,7 @@ std::string HSSObjectDefinition::toString()
 void HSSObjectDefinition::apply()
 {
     unsigned i, size;
-    for (i = 0, size = this->propertiesSize(); i < size; i++)
+    for (i = 0, size = this->propertiesSize(); i < size; ++i)
     {
         HSSPropertyDefinition::p theProperty = this->properties[i];
         this->prototype->setPropertyWithName(theProperty->getName(), theProperty->getValue());

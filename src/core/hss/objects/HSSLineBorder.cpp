@@ -127,12 +127,9 @@ std::string HSSLineBorder::defaultObjectType(std::string property)
 
 bool HSSLineBorder::isKeyword(std::string value, std::string property)
 {
-    if (value == "rounded" || value == "projected")
+    if ((value == "rounded" || value == "projected") && (property == "caps"))
     {
-        if (property == "caps")
-        {
-            return true;
-        }
+        return true;
     }
     else if ( value == "black" || value == "white" || value == "transparent")
     {
@@ -142,7 +139,6 @@ bool HSSLineBorder::isKeyword(std::string value, std::string property)
         }
     }
 
-    //if we reached this far, let the superclass handle it
     return HSSBorder::isKeyword(value, property);
 }
 
@@ -181,11 +177,11 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
             this->setDColor(objdef);
             valid = true;
         }
-        catch (AXRError::p e)
+        catch (const AXRError::p &e)
         {
             e->raise();
         }
-        catch (AXRWarning::p e)
+        catch (const AXRWarning::p &e)
         {
             e->raise();
         }

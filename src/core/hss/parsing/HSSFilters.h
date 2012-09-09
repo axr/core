@@ -42,6 +42,7 @@
 #ifndef HSSFILTERS_H
 #define HSSFILTERS_H
 
+#include "HSSEmptyFilter.h"
 #include "HSSEvenChildFilter.h"
 #include "HSSEvenFilter.h"
 #include "HSSFirstChildFilter.h"

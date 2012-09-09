@@ -59,7 +59,7 @@ XMLParser::XMLParser(AXRController * theController)
 //    this->filepath = filepath;
 //    this->filename = filename;
 //  this->filehandle = fopen(filepath.c_str(), "r");
-//  if(this->filehandle != NULL){
+//  if(this->filehandle){
 //        expatmm::ExpatXMLParser::setReadiness(true);
 //    } else {
 //        this->setReadiness(false);
@@ -79,7 +79,7 @@ bool XMLParser::loadFile(AXRFile::p file)
     axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->getBasePath() + "/" + file->getFileName());
 
     this->file = file;
-    if (file->getFileHandle() != NULL)
+    if (file->getFileHandle())
     {
         expatmm::ExpatXMLParser::setReadiness(true);
     }
@@ -95,7 +95,7 @@ bool XMLParser::loadFile(AXRFile::p file)
     {
         ret = this->Parse();
     }
-    catch (AXRError::p e)
+    catch (const AXRError::p &e)
     {
         e->raise();
         ret = false;
@@ -117,7 +117,7 @@ size_t XMLParser::getBlockSize(void)
 ssize_t XMLParser::read_block(void)
 {
     AXRFile::p file = this->file;
-    if (file->getFileHandle() == NULL)
+    if (!file->getFileHandle())
     {
         return -1;
     }
@@ -135,7 +135,6 @@ ssize_t XMLParser::read_block(void)
         if (ferror(file->getFileHandle()))
         {
             this->setStatus(XML_STATUS_ERROR);
-
         }
     }
 
@@ -152,8 +151,8 @@ void XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)
 {
     axr_log(AXR_DEBUG_CH_XML, "XMLParser: found opening tag with name " + std::string(name));
     this->controller->enterElement(std::string(name));
-    unsigned i;
-    for (i = 0; attrs[i]; i += 2)
+
+    for (unsigned i = 0; attrs[i]; i += 2)
     {
         this->controller->addAttribute(std::string(attrs[i]), std::string(attrs[i + 1]));
     }
@@ -186,7 +185,7 @@ void XMLParser::EndElement(const XML_Char *name)
 void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *data)
 {
     axr_log(AXR_DEBUG_CH_XML, "XMLParser: found xml instruction with name " + std::string(target));
-    if (this->controller == NULL)
+    if (!this->controller)
     {
         throw AXRError::p(new AXRError("XMLParser", "The controller was not set on the XML parser"));
     }
@@ -199,13 +198,13 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
     std::string sheetType;
     std::string sheetName;
 
-    bool readingAttr = true;
-
-    unsigned datai = 0;
-    unsigned tempi = 0;
     security_brake_init();
     if (instructionName == "xml-stylesheet")
     {
+        bool readingAttr = true;
+        unsigned datai = 0;
+        unsigned tempi = 0;
+
         while (data[datai] != '\0')
         {
             if (readingAttr && isspace(data[datai]))
@@ -285,8 +284,7 @@ void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *da
         }
         else
         {
-            //warn
-            //AXRWarning::p(new AXRWarning("XMLParser", "Ignoring stylesheet of unknown type", this->file->getFileName(), (int)XML_GetCurrentLineNumber(this->expat_parser), (int)XML_GetCurrentColumnNumber(this->expat_parser)+1))->raise();
+            axr_log(AXR_DEBUG_CH_XML, "Ignoring stylesheet of unknown type: " + sheetType + " in file " + this->file->getFileName());
         }
     }
 

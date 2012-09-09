@@ -143,7 +143,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedTop != NULL)
+        if (this->observedTop)
         {
             this->observedTop->removeObserver(this->observedTopProperty, HSSObservablePropertySize, this);
         }
@@ -157,7 +157,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
                                          this->observedTop,
                                          this->observedTopProperty,
                                          NULL);
-        if (this->observedRight != NULL)
+        if (this->observedRight)
         {
             this->observedRight->removeObserver(this->observedRightProperty, HSSObservablePropertySize, this);
         }
@@ -171,7 +171,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
                                            this->observedRight,
                                            this->observedRightProperty,
                                            NULL);
-        if (this->observedBottom != NULL)
+        if (this->observedBottom)
         {
             this->observedBottom->removeObserver(this->observedBottomProperty, HSSObservablePropertySize, this);
         }
@@ -185,7 +185,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
                                             this->observedBottom,
                                             this->observedBottomProperty,
                                             NULL);
-        if (this->observedLeft != NULL)
+        if (this->observedLeft)
         {
             this->observedLeft->removeObserver(this->observedLeftProperty, HSSObservablePropertySize, this);
         }
@@ -223,7 +223,7 @@ void HSSMargin::setDTop(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedTop != NULL)
+        if (this->observedTop)
         {
             this->observedTop->removeObserver(this->observedTopProperty, HSSObservablePropertyTop, this);
         }
@@ -267,7 +267,7 @@ void HSSMargin::setDRight(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedRight != NULL)
+        if (this->observedRight)
         {
             this->observedRight->removeObserver(this->observedRightProperty, HSSObservablePropertyRight, this);
         }
@@ -311,7 +311,7 @@ void HSSMargin::setDBottom(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedBottom != NULL)
+        if (this->observedBottom)
         {
             this->observedBottom->removeObserver(this->observedBottomProperty, HSSObservablePropertyBottom, this);
         }
@@ -355,7 +355,7 @@ void HSSMargin::setDLeft(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        if (this->observedLeft != NULL)
+        if (this->observedLeft)
         {
             this->observedLeft->removeObserver(this->observedLeftProperty, HSSObservablePropertyLeft, this);
         }
@@ -414,7 +414,7 @@ long double HSSMargin::_setLDProperty(
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
-        if (callback != NULL)
+        if (callback)
         {
             observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSMargin > (this, callback));
             observedStore = observedObject;
@@ -431,7 +431,7 @@ long double HSSMargin::_setLDProperty(
         expressionValue->setScope(scope);
         expressionValue->setThisObj(this->getThisObj());
         ret = expressionValue->evaluate();
-        if (callback != NULL)
+        if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSMargin > (this, callback));
             observedStore = expressionValue.get();
@@ -463,7 +463,7 @@ long double HSSMargin::_setLDProperty(
             ret = 0.;
         }
 
-        if (callback != NULL)
+        if (callback)
         {
             fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSMargin > (this, callback));
             observedStore = fnct.get();

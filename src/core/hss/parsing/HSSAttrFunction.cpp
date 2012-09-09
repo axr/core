@@ -66,7 +66,7 @@ HSSFunction::p HSSAttrFunction::clone() const
 
 HSSAttrFunction::~HSSAttrFunction()
 {
-    if (this->observed != NULL)
+    if (this->observed)
     {
         this->observed->removeObserver(this->observedProperty, HSSObservablePropertyValue, this);
     }
@@ -132,11 +132,11 @@ const int HSSAttrFunction::selectorChainsSize()
 boost::any HSSAttrFunction::_evaluate()
 {
     std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj());
-    if (selection.size() == 0)
+    if (selection.empty())
     {
         // ignore
     }
-    else if (selection.size() > 0 && selection[0].size() > 0)
+    else if (!selection.empty() && !selection[0].empty())
     {
         HSSDisplayObject::p container = selection[0][0];
         this->_value = container->attributes[this->attributeName];
@@ -167,14 +167,13 @@ void HSSAttrFunction::valueChanged(HSSObservableProperty source, void*data)
 
 HSSClonable::p HSSAttrFunction::cloneImpl() const
 {
-
     HSSAttrFunction::p clone = HSSAttrFunction::p(new HSSAttrFunction(*this));
 
-    HSSSelectorChain::const_it sIt;
-    for (sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); sIt++)
+    for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)
     {
         HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }
+
     return clone;
 }

@@ -64,7 +64,7 @@ extern "C"
     sdl_surface_destroy_func(void *param)
     {
         SDL_Surface *sdl_surface = (SDL_Surface *) param;
-        if (sdl_surface != NULL)
+        if (sdl_surface)
             SDL_FreeSurface(sdl_surface);
     }
 
@@ -164,7 +164,7 @@ unsupported_format:
                                         size_t *OUT_height)
     {
         SDL_Surface *sdl_surface = cairosdl_surface_get_target(surface);
-        if (sdl_surface == NULL)
+        if (!sdl_surface)
             return CAIRO_STATUS_NULL_POINTER;
 
         if (OUT_buffer)
@@ -195,13 +195,13 @@ unsupported_format:
         if (format != CAIRO_FORMAT_ARGB32)
             return CAIRO_STATUS_INVALID_FORMAT;
 
-        if (OUT_buffer != NULL)
+        if (OUT_buffer)
             *OUT_buffer = cairo_image_surface_get_data(surface);
-        if (OUT_stride != NULL)
+        if (OUT_stride)
             *OUT_stride = cairo_image_surface_get_stride(surface);
-        if (OUT_width != NULL)
+        if (OUT_width)
             *OUT_width = cairo_image_surface_get_width(surface);
-        if (OUT_height != NULL)
+        if (OUT_height)
             *OUT_height = cairo_image_surface_get_height(surface);
         return CAIRO_STATUS_SUCCESS;
     }

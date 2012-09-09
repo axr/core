@@ -101,7 +101,7 @@ void AXRCore::run()
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: running");
     //check for wrapper
-    if (this->getWrapper() == NULL)
+    if (!this->getWrapper())
     {
         AXRError::p(new AXRError("AXRCore", "The wrapper was not defined"))->raise();
         return;
@@ -125,7 +125,7 @@ void AXRCore::run()
         std::string hssfilename, hssfilepath;
 
         std::vector<std::string> loadSheets = this->controller->loadSheetsGet();
-        for (i = 0, size = loadSheets.size(); i < size; i++)
+        for (i = 0, size = loadSheets.size(); i < size; ++i)
         {
 
             hssfilename = loadSheets[i];
@@ -150,7 +150,7 @@ void AXRCore::run()
             {
                 hssfile = this->wrapper->getFile(hssfilepath);
             }
-            catch (AXRError::p e)
+            catch (const AXRError::p &e)
             {
                 e->raise();
                 continue;

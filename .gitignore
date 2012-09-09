@@ -3,5 +3,5 @@
 CMakeCache.txt
 CMakeFiles
 
-# Exclude OS X folder attributes
-.DS_Store
+# In-source doxygen builds
+src/core/docs

@@ -43,30 +43,21 @@
 #define WindowsAXRWrapper_H
 
 #include <windows.h>
-#include "AXRWrapper.h"
+#include "GenericAXRWrapper.h"
 
 namespace AXR
 {
-
-    class WindowsAXRWrapper : public AXRWrapper
+    class WindowsAXRWrapper : public GenericAXRWrapper
     {
     public:
-        HWND hwnd;
         WindowsAXRWrapper();
         AXRWrapper * createWrapper();
         virtual ~WindowsAXRWrapper();
 
-        virtual AXRFile::p getFile(std::string url);
-        virtual size_t readFile(AXRFile::p theFile);
-        virtual void closeFile(AXRFile::p theFile);
-        virtual void handleError(AXRError::p theError);
         virtual bool openFileDialog(std::string &filePath);
-        virtual void setNeedsDisplay(bool newValue);
 
-        bool needsDisplay;
-
+        HWND hwnd;
     };
 }
-
 
 #endif

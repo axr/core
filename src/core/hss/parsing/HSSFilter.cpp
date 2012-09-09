@@ -99,7 +99,7 @@ HSSFilterType HSSFilter::filterTypeFromString(std::string name)
 {
     static boost::unordered_map<std::string, HSSFilterType> filterTypes;
 
-    if (filterTypes.size() == 0)
+    if (filterTypes.empty())
     {
         //position
         filterTypes["first"] = HSSFilterTypeFirst;
@@ -128,6 +128,7 @@ HSSFilterType HSSFilter::filterTypeFromString(std::string name)
         filterTypes["startsWith"] = HSSFilterTypeStartsWith;
         filterTypes["endsWith"] = HSSFilterTypeEndsWith;
         filterTypes["match"] = HSSFilterTypeMatch;
+        filterTypes["empty"] = HSSFilterTypeEmpty;
         filterTypes["length"] = HSSFilterTypeLength;
         //special
         filterTypes["each"] = HSSFilterTypeEach;
@@ -206,6 +207,13 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
         ret = HSSOddChildFilter::p(new HSSOddChildFilter());
         break;
     }
+
+    case HSSFilterTypeEmpty:
+    {
+        ret = HSSEmptyFilter::p(new HSSEmptyFilter());
+        break;
+    }
+
 
         //        case HSSFilterTypeEach:
         //        {

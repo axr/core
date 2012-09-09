@@ -47,7 +47,7 @@ using namespace AXR;
 std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type)
 {
     static boost::unordered_map<HSSParserNodeType, std::string> types;
-    if (types.size() == 0)
+    if (types.empty())
     {
         types[HSSParserNodeTypeGeneric] = "HSSParserNode";
         types[HSSParserNodeTypeSelector] = "HSSSelector";

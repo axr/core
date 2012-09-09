@@ -69,12 +69,13 @@ HSSClonable::p HSSSimpleSelector::cloneImpl() const
 {
     HSSSimpleSelector::p clone = HSSSimpleSelector::p(new HSSSimpleSelector(*this));
     clone->setName(this->name->clone());
-    std::list<HSSFilter::p>::const_iterator it;
-    for (it = this->filters.begin(); it != this->filters.end(); it++)
+
+    for (std::list<HSSFilter::p>::const_iterator it = this->filters.begin(); it != this->filters.end(); ++it)
     {
         const HSSFilter::p & flt = (*it);
         clone->filtersAdd(flt->clone());
     }
+
     return clone;
 }
 
@@ -110,7 +111,7 @@ std::vector<HSSDisplayObject::p> HSSSimpleSelector::_recursiveFilterSelection(co
     else
     {
         std::vector<HSSDisplayObject::p> tempSel = (*it)->apply(selection, processing);
-        it++;
+        ++it;
         return this->_recursiveFilterSelection(tempSel, it, end_it, processing);
     }
 }
@@ -129,10 +130,11 @@ void HSSSimpleSelector::setName(HSSNameSelector::p name)
 void HSSSimpleSelector::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
 {
     this->name->setThisObj(value);
-    std::list<HSSFilter::p>::iterator it;
-    for (it = this->filters.begin(); it != this->filters.end(); it++)
+
+    for (std::list<HSSFilter::p>::iterator it = this->filters.begin(); it != this->filters.end(); ++it)
     {
         (*it)->setThisObj(value);
     }
+
     HSSSelector::setThisObj(value);
 }

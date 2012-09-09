@@ -1,4 +1,4 @@
-The AXR Project
+[The AXR Project](http://axr.vg/) [![Build Status](https://secure.travis-ci.org/AXR/Prototype.png)](http://travis-ci.org/AXR/Prototype)
 ===============
 The AXR Project is a revolutionary open source project that will fundamentally
 improve our tools to create web sites and apps.

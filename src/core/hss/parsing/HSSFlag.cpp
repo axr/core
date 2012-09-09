@@ -60,7 +60,6 @@ HSSFilter::p HSSFlag::clone() const
 
 HSSFlag::~HSSFlag()
 {
-
 }
 
 std::string HSSFlag::toString()
@@ -94,12 +93,11 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
             this->setPurging(newStatus);
             std::vector<std::vector<HSSDisplayObject::p> > selection = controller->select(theRule->getSelectorChains(), scope, this->getThisObj(), false);
             this->setPurging(HSSRuleStateOff);
-            std::vector<std::vector<HSSDisplayObject::p> >::const_iterator outer;
-            std::vector<HSSDisplayObject::p>::const_iterator inner;
-            for (outer = selection.begin(); outer != selection.end(); outer++)
+
+            for (std::vector<std::vector<HSSDisplayObject::p> >::const_iterator outer = selection.begin(); outer != selection.end(); ++outer)
             {
                 const std::vector<HSSDisplayObject::p> & innerv = *outer;
-                for (inner = innerv.begin(); inner != innerv.end(); inner++)
+                for (std::vector<HSSDisplayObject::p>::const_iterator inner = innerv.begin(); inner != innerv.end(); ++inner)
                 {
                     (*inner)->setRuleStatus(theRule, newStatus);
                 }
@@ -112,8 +110,7 @@ const std::vector<HSSDisplayObject::p> HSSFlag::apply(const std::vector<HSSDispl
 {
     if (processing)
     {
-        HSSDisplayObject::const_it it;
-        for (it = scope.begin(); it != scope.end(); it++)
+        for (HSSDisplayObject::const_it it = scope.begin(); it != scope.end(); ++it)
         {
             const HSSDisplayObject::p & theDO = *it;
             //parent is simple selector, grandparent is selector chain, grandgrandparent is the rule
@@ -138,8 +135,7 @@ const std::vector<HSSDisplayObject::p> HSSFlag::apply(const std::vector<HSSDispl
         if (scope.size() > 0)
         {
             std::vector<HSSDisplayObject::p> ret;
-            HSSDisplayObject::const_it it;
-            for (it = scope.begin(); it != scope.end(); it++)
+            for (HSSDisplayObject::const_it it = scope.begin(); it != scope.end(); ++it)
             {
                 const HSSDisplayObject::p & theDO = *it;
                 HSSRuleState purgingState = this->getPurging();

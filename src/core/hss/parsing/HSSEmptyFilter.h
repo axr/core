@@ -39,57 +39,42 @@
  *
  ********************************************************************/
 
-#include "HSSOddChildFilter.h"
+#ifndef HSSEMPTYFILTER_H
+#define HSSEMPTYFILTER_H
 
-using namespace AXR;
+#include "HSSFilter.h"
 
-HSSOddChildFilter::HSSOddChildFilter()
-: HSSFilter(HSSFilterTypeFirst)
+namespace AXR
 {
 
-}
-
-HSSOddChildFilter::p HSSOddChildFilter::clone() const
-{
-    return boost::static_pointer_cast<HSSOddChildFilter, HSSClonable > (this->cloneImpl());
-}
-
-HSSOddChildFilter::~HSSOddChildFilter()
-{
-
-}
-
-std::string HSSOddChildFilter::toString()
-{
-    return "Odd Child Filter";
-}
-
-const std::vector<HSSDisplayObject::p> HSSOddChildFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
-{
-    std::vector<HSSDisplayObject::p> ret;
-    HSSDisplayObject::const_it it;
-    for (it = scope.begin(); it != scope.end(); ++it)
+    /**
+     *  @brief Selects the first element of the selection.
+     */
+    class HSSEmptyFilter : public HSSFilter
     {
-        const HSSDisplayObject::p & theDO = *it;
-        if (this->getNegating())
-        {
-            if (theDO->getIndex() % 2 != 0)
-            {
-                ret.push_back(theDO);
-            }
-        }
-        else
-        {
-            if (theDO->getIndex() % 2 == 0)
-            {
-                ret.push_back(theDO);
-            }
-        }
-    }
-    return ret;
+    public:
+        /**
+         *  @brief Creates a new instance of a :empty filter.
+         */
+        HSSEmptyFilter();
+
+        /**
+         *  Clones an instance of HSSEmptyFilter and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSEmptyFilter
+         */
+        HSSFilter::p clone() const;
+
+        /**
+         *  Destructor for this class.
+         */
+        virtual ~HSSEmptyFilter();
+        virtual std::string toString();
+
+        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
+    private:
+        virtual HSSClonable::p cloneImpl() const;
+    };
 }
 
-HSSClonable::p HSSOddChildFilter::cloneImpl() const
-{
-    return HSSClonable::p(new HSSOddChildFilter(*this));
-}
+#endif
