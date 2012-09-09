@@ -86,7 +86,7 @@ namespace AXR
         {
         }
 
-        HSSPoint(HSSUnit x, HSSUnit y) : x(x), y(y)
+        HSSPoint(HSSUnit pointX, HSSUnit pointY) : x(pointX), y(pointY)
         {
         }
 
@@ -115,7 +115,7 @@ namespace AXR
         {
         }
 
-        HSSSize(HSSUnit width, HSSUnit height) : width(width), height(height)
+        HSSSize(HSSUnit sizeWidth, HSSUnit sizeHeight) : width(sizeWidth), height(sizeHeight)
         {
         }
 
@@ -146,11 +146,11 @@ namespace AXR
         {
         }
 
-        HSSRect(const HSSSize &size) : origin(HSSPoint()), size(size)
+        HSSRect(const HSSSize &rectSize) : origin(HSSPoint()), size(rectSize)
         {
         }
 
-        HSSRect(const HSSPoint &origin, const HSSSize &size) : origin(origin), size(size)
+        HSSRect(const HSSPoint &rectOrigin, const HSSSize &rectSize) : origin(rectOrigin), size(rectSize)
         {
         }
 
