@@ -276,11 +276,13 @@ bool AXRWrapper::layoutStepDone()
 
 void AXRWrapper::breakIfNeeded()
 {
-    if (this->_currentLayoutTick >= this->_currentLayoutStep - 1)
-    {
-        // TODO: What is this supposed to do? this code block does nothing...
-        int breakvar = 1;
-    }
+    bool breakvar = _currentLayoutTick >= (_currentLayoutStep - 1);
+
+    std::stringstream ss;
+    ss << "currentLayoutTick = " << _currentLayoutTick << ", "
+        << "currentLayoutStep = " << _currentLayoutStep << ", "
+        << breakvar;
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, ss.str());
 }
 
 void AXRWrapper::nextLayoutChild()
