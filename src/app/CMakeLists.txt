@@ -3,7 +3,8 @@ if(APPLE)
     list(APPEND axr_code_SOURCES main.m AXRTestAppAppDelegate.h AXRTestAppAppDelegate.mm)
 
     # Icons .rc, and property lists
-    set(axr_res_SOURCES axr.icns axr.ico axr.rc Info.plist)
+    file(GLOB axr_icon_SOURCES ${CMAKE_SOURCE_DIR}/share/icons/*.icns)
+    set(axr_res_SOURCES axr.rc Info.plist ${axr_icon_SOURCES})
     source_group("Resources" FILES ${axr_res_SOURCES})
 
     # Xcode nib files
@@ -23,9 +24,9 @@ if(APPLE)
     add_executable("${TARGET_NAME_APP_COCOA}" MACOSX_BUNDLE ${axr_SOURCES})
     target_link_libraries("${TARGET_NAME_APP_COCOA}" ${TARGET_NAME_LIB_COCOA})
 
-    set(MACOSX_BUNDLE_ICON_FILE axr.icns)
-    set_source_files_properties(axr.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    set(MACOSX_BUNDLE_ICON_FILE prototype.icns)
 
+    set_source_files_properties(${axr_icon_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     set_source_files_properties(${axr_lproj_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/English.lproj)
     set_source_files_properties(${hss_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/framework)
     set_source_files_properties(${views_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/views)

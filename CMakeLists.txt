@@ -20,6 +20,8 @@ check_pathnames()
 project(AXR)
 cmake_minimum_required(VERSION 2.8)
 
+set(AXR_VERSION_STRING "0.4.7")
+
 # Default to building universal binaries on OS X only during release builds
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     set(BUILD_UNIVERSAL_BINARIES_DEFAULT ON)
