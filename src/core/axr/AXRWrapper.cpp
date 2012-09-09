@@ -192,8 +192,13 @@ bool AXRWrapper::reload()
     AXRCore::tp & core = AXRCore::getInstance();
     if (!this->_isHSSOnly)
     {
-        std::string cur_path = core->getFile()->getBasePath() + "/" + core->getFile()->getFileName();
-        return this->loadXMLFile(cur_path);
+        if (core->getFile()) {
+            std::string cur_path = core->getFile()->getBasePath() + "/" + core->getFile()->getFileName();
+            return this->loadXMLFile(cur_path);
+        } else {
+            AXRWarning::p(new AXRWarning("AXRWrapper", "no file loaded"))->raise();
+            return false;
+        }
     }
     else
     {
