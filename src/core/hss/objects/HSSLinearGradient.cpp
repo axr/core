@@ -590,7 +590,7 @@ void HSSLinearGradient::draw(cairo_t * cairo)
                 //one with the previous color
                 cairo_pattern_add_color_stop_rgba(pat, position, prevColor->getRed() / 255., prevColor->getGreen() / 255., prevColor->getBlue() / 255., 0.);
                 //and one with the next color
-                innerIt = it;
+                std::vector<HSSObject::p>::iterator innerIt = it;
                 ++innerIt;
                 HSSRgb::p nextColor = this->getNextColorFromStops(innerIt, this->colorStops.end());
                 cairo_pattern_add_color_stop_rgba(pat, position, nextColor->getRed() / 255., nextColor->getGreen() / 255., nextColor->getBlue() / 255., 0.);
