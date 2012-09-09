@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-//This line is deditacted to the memory of Steven P. Jobs, may he rest in peace.
+//This line is dedicated to the memory of Steven P. Jobs, may he rest in peace.
 //Farewell, Steve!
 
 
