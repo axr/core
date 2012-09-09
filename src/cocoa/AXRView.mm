@@ -249,13 +249,10 @@
 -(bool)reload
 {
     AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
-    if (wrapper->hasLoadedFile())
-    {
-        axr_log(AXR_DEBUG_CH_OVERVIEW, "\n\n\nAXRView: reloading file");
-        bool loaded = wrapper->reload();
-        [self setNeedsDisplay : YES];
-        return loaded;
-    }
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "\n\n\nAXRView: reloading file");
+    bool loaded = wrapper->reload();
+    [self setNeedsDisplay : YES];
+    return loaded;
 
     return false;
 }
