@@ -48,10 +48,8 @@
 
 namespace AXR
 {
-
     /**
-     *  @brief Abstract base class that provides the basic functionality for statements. Do not use directly,
-     *  but one of its subclasses instead.
+     *  @brief Abstract base class that provides the basic functionality for statements.
      *
      *  Statements are the basic execution units for the rendering engine. They are high level abstractions
      *  of groups of parser nodes that have a particular meaning (e.g. a rule is for applying properties to an element,
@@ -65,19 +63,6 @@ namespace AXR
          *  The shared pointer to instances of this class.
          */
         typedef boost::shared_ptr<HSSStatement> p;
-
-        /**
-         *  Creates a new instance of a statement node. This class shouldn't be called directly,
-         *  but by the subclasses.
-         *  @param type The type of this statement subclass for identification purposes.
-         */
-        HSSStatement(HSSStatementType type);
-
-        /**
-         *  Copy constructor for HSSStatement nodes. Do not call directly, use clone() on one of the
-         *  subclasses instead.
-         */
-        HSSStatement(const HSSStatement & orig);
 
         virtual std::string toString() = 0;
 
@@ -101,7 +86,21 @@ namespace AXR
         std::string statementStringRepresentation(HSSStatementType type);
 
     protected:
+        /**
+         *  Creates a new instance of a statement node. This class shouldn't be called directly,
+         *  but by the subclasses.
+         *  @param type The type of this statement subclass for identification purposes.
+         */
+        HSSStatement(HSSStatementType type);
+
+        /**
+         *  Copy constructor for HSSStatement nodes. Do not call directly, use clone() on one of the
+         *  subclasses instead.
+         */
+        HSSStatement(const HSSStatement & orig);
+
         HSSStatement::p shared_from_this();
+
     private:
         HSSStatementType type;
     };

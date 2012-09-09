@@ -174,7 +174,8 @@ namespace AXR
     /**
      *  @brief This is the object that encapsulates the core library.
      *
-     *  Do not instantiate it directly. Instead, call the getInstance() method.
+     *  This class cannot be instantiated directly. Instead, call the getInstance() method
+     *  to retrieve a thread-specific shared pointer to a singleton instance.
      */
     class AXRCore
     {
@@ -190,12 +191,6 @@ namespace AXR
          *  @return A thread specific pointer to core for this thread
          */
         static AXRCore::tp &getInstance();
-
-        /**
-         *  Creates a new AXRCore object.
-         *  @warning Do not call directly. Call getInstance() instead.
-         */
-        AXRCore();
 
         /**
          *  Initializes all default values.
@@ -338,6 +333,12 @@ namespace AXR
 
         bool _hasLoadedFile;
         boost::unordered_map<std::string, HSSCallback*> _customFunctions;
+
+    private:
+        /**
+         *  Creates a new AXRCore object.
+         */
+        AXRCore();
     };
 }
 

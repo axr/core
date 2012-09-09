@@ -47,10 +47,8 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Abstract base class for all action objects.
-     *  Do not use directly, use a specific subclass instead.
      */
     class HSSAction : public HSSObject
     {
@@ -63,18 +61,6 @@ namespace AXR
          *  @return A string representation of the given type.
          */
         static std::string actionTypeStringRepresentation(HSSActionType actionType);
-
-        /**
-         *  This class shouldn't be called directly, but by the subclasses.
-         *  @param  type    The HSSActionType that this action corresponds to. Usually set
-         *                  from withing a subclass' constructor method.
-         */
-        HSSAction(HSSActionType type);
-
-        /**
-         *  Copy constructor for HSSAction objects. Do not call directly, use clone() instead.
-         */
-        HSSAction(const HSSAction & orig);
 
         /**
          *  Clones an instance of HSSAction and gives a shared pointer of the
@@ -111,6 +97,19 @@ namespace AXR
          *  is defined by each specific subclass.
          */
         virtual void fire();
+
+    protected:
+        /**
+         *  This class shouldn't be called directly, but by the subclasses.
+         *  @param  type    The HSSActionType that this action corresponds to. Usually set
+         *                  from withing a subclass' constructor method.
+         */
+        HSSAction(HSSActionType type);
+
+        /**
+         *  Copy constructor for HSSAction objects. Do not call directly, use clone() instead.
+         */
+        HSSAction(const HSSAction & orig);
 
     private:
         HSSActionType actionType;

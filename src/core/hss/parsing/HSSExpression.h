@@ -53,26 +53,11 @@ namespace AXR
 
     /**
      *  @brief Abstract base class for all expressions.
-     *  Do not use directly, use a specific subclass instead.
      */
     class HSSExpression : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSExpression> p;
-
-        /**
-         *  Creates a new instance of an expression.
-         *  This class shouldn't be called directly, but by the subclasses.
-         *  @param left     The value on the left hand side of the operator.
-         *  @param right    The value on the right hand side of the operator.
-         *  @param type     The type of this expression subclass for identification purposes.
-         */
-        HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right);
-
-        /**
-         *  Copy constructor for HSSExpression objects. Do not call directly, use clone() instead.
-         */
-        HSSExpression(const HSSExpression &orig);
 
         /**
          *  Destructor for this class.
@@ -200,6 +185,20 @@ namespace AXR
         long double getValue();
 
     protected:
+        /**
+         *  Creates a new instance of an expression.
+         *  This class shouldn't be called directly, but by the subclasses.
+         *  @param left     The value on the left hand side of the operator.
+         *  @param right    The value on the right hand side of the operator.
+         *  @param type     The type of this expression subclass for identification purposes.
+         */
+        HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right);
+
+        /**
+         *  Copy constructor for HSSExpression objects. Do not call directly, use clone() instead.
+         */
+        HSSExpression(const HSSExpression &orig);
+
         HSSParserNode::p left;
         long double leftval;
         long double rightval;

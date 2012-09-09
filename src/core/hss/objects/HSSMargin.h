@@ -49,7 +49,6 @@
 
 namespace AXR
 {
-
     class HSSDisplayObject;
 
     /**

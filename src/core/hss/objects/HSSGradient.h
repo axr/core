@@ -50,10 +50,8 @@
 
 namespace AXR
 {
-
     /**
-     *  @brief Abstract base class for gradient objects. Do not use directly, but one of its
-     *  subclasses instead.
+     *  @brief Abstract base class for gradient objects.
      *
      *  Surfaces that can be filled with a color generally also accept a gradient. This class
      *  provides the base functionality that is common to all gradient objects.
@@ -63,15 +61,6 @@ namespace AXR
     public:
         typedef boost::shared_ptr<HSSGradient> p;
         typedef std::vector<HSSGradient::p>::iterator it;
-
-        /**
-         *  Constructor for HSSGradient objects
-         */
-        HSSGradient();
-        /**
-         *  Copy constructor for HSSGradient objects
-         */
-        HSSGradient(const HSSGradient & orig);
 
         /**
          *  Destructor for this class.
@@ -221,6 +210,16 @@ namespace AXR
         void colorStopsChanged(HSSObservableProperty source, void*data);
 
     protected:
+        /**
+         *  Constructor for HSSGradient objects
+         */
+        HSSGradient();
+
+        /**
+         *  Copy constructor for HSSGradient objects
+         */
+        HSSGradient(const HSSGradient & orig);
+
         //startColor
         HSSRgb::p startColor;
         HSSParserNode::p dStartColor;

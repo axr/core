@@ -303,7 +303,6 @@ namespace AXR
         HSSObjectTypeGeneric, /**< Abstract type for generic objects, probably error state. */
         HSSObjectTypeValue, /**< Values store values. */
         HSSObjectTypeMultipleValue, /**< Multiple values separated by commas passed to a property are wrapped in these. */
-        HSSObjectTypeDisplayObject, /**< Abstract type for display objects, probably error state. */
         HSSObjectTypeContainer, /**< Containers can contain other display objects. */
         HSSObjectTypeTextBlock, /**< Each container has at least one text block. It's task is to render the content text. */
         HSSObjectTypeBorder, /**< All borders share this type */

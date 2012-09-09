@@ -51,12 +51,10 @@
 
 namespace AXR
 {
-
     class HSSSelectorChain;
 
     /**
      *  @brief Abstract base class for parser node types representing filters.
-     *  Do not use directly, use one of the specific subclasses instead.
      *
      *  Filters are used in the selector chain to reduce the size of the selection.
      */
@@ -97,12 +95,6 @@ namespace AXR
         static HSSFilter::p newFilterWithType(HSSFilterType filterType);
 
         /**
-         *  Creates a new instance of a filter. Do not use directly.
-         *  @param type     The type of the filter, to uniquely identify each subclass.
-         */
-        HSSFilter(HSSFilterType type);
-
-        /**
          *  Destructor for this class.
          */
         virtual ~HSSFilter();
@@ -138,6 +130,13 @@ namespace AXR
 
         const bool getNegating() const;
         void setNegating(bool value);
+
+    protected:
+        /**
+         *  Creates a new instance of a filter. Do not use directly.
+         *  @param type     The type of the filter, to uniquely identify each subclass.
+         */
+        HSSFilter(HSSFilterType type);
 
     private:
         HSSFilterType filterType;

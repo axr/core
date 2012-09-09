@@ -74,11 +74,6 @@ namespace AXR
          */
         typedef boost::shared_ptr<AXRWrapper> p;
         /**
-         *  Creates a new instance of the wrapper. It will obtain the singleton instance of
-         *  the AXRCore and initialize it.
-         */
-        AXRWrapper();
-        /**
          *
          */
         virtual AXRWrapper * createWrapper() = 0;
@@ -204,6 +199,11 @@ namespace AXR
         boost::unordered_map<AXRFileHandle, AXRFile::p> files;
 
     protected:
+        /**
+         *  Creates a new instance of the wrapper. It will obtain the singleton instance of
+         *  the AXRCore and initialize it.
+         */
+        AXRWrapper();
 
     private:
         bool _isHSSOnly;

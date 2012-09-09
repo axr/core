@@ -53,12 +53,10 @@
 
 namespace AXR
 {
-
     class AXRController;
 
     /**
      *  @brief Abstract base class for all function objects.
-     *  Do not use directly, use a specific subclass instead.
      */
     class HSSFunction : public HSSParserNode
     {
@@ -66,19 +64,6 @@ namespace AXR
         friend class HSSParser;
 
         typedef boost::shared_ptr<HSSFunction> p;
-
-        /**
-         *  Creates a new instance of a function, with given function type. Most of the time this
-         *  will be HSSFunctionTypeCustom.
-         *  @param type The type of the function subclass for identification purposes.
-         */
-        HSSFunction(HSSFunctionType type);
-
-        /**
-         *  Copy constructor for HSSFunction objects. Do not call directly, use clone() on
-         *  on of the subclasses instead.
-         */
-        HSSFunction(const HSSFunction & orig);
 
         /**
          *  Clones an instance of HSSFunction and gives a shared pointer of the
@@ -194,6 +179,19 @@ namespace AXR
         void setName(std::string newName);
 
     protected:
+        /**
+         *  Creates a new instance of a function, with given function type. Most of the time this
+         *  will be HSSFunctionTypeCustom.
+         *  @param type The type of the function subclass for identification purposes.
+         */
+        HSSFunction(HSSFunctionType type);
+
+        /**
+         *  Copy constructor for HSSFunction objects. Do not call directly, use clone() on
+         *  on of the subclasses instead.
+         */
+        HSSFunction(const HSSFunction & orig);
+
         bool _isDirty;
         boost::any _value;
 

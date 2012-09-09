@@ -62,12 +62,6 @@
 
 using namespace AXR;
 
-HSSDisplayObject::HSSDisplayObject()
-: HSSObject(HSSObjectTypeDisplayObject)
-{
-    this->initialize();
-}
-
 HSSDisplayObject::HSSDisplayObject(HSSObjectType type)
 : HSSObject(type)
 {
@@ -153,16 +147,6 @@ HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
     this->tabIndex = orig.tabIndex;
     this->heightByContent = orig.heightByContent;
     this->widthByContent = orig.widthByContent;
-}
-
-HSSDisplayObject::p HSSDisplayObject::clone() const
-{
-    return boost::static_pointer_cast<HSSDisplayObject, HSSClonable > (this->cloneImpl());
-}
-
-HSSClonable::p HSSDisplayObject::cloneImpl() const
-{
-    return HSSClonable::p(new HSSDisplayObject(*this));
 }
 
 HSSDisplayObject::~HSSDisplayObject()

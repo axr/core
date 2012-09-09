@@ -58,7 +58,6 @@ HSSObject::p HSSObject::newObjectWithType(std::string type)
     if (types.empty())
     {
         types["container"] = HSSObjectTypeContainer;
-        types["displayObject"] = HSSObjectTypeDisplayObject;
         types["lineBorder"] = HSSObjectTypeBorder;
         types["object"] = HSSObjectTypeGeneric;
         types["value"] = HSSObjectTypeValue;
@@ -99,11 +98,6 @@ HSSObject::p HSSObject::newObjectWithType(std::string type)
     case HSSObjectTypeContainer:
     {
         return HSSContainer::p(new HSSContainer());
-    }
-
-    case HSSObjectTypeDisplayObject:
-    {
-        return HSSDisplayObject::p(new HSSDisplayObject());
     }
 
     case HSSObjectTypeBorder:

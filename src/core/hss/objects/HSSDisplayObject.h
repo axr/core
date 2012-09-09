@@ -61,21 +61,18 @@
 
 namespace AXR
 {
-
     class HSSContainer;
     class HSSFlag;
 
     /**
      *  @brief Abstract superclass for any object that should be rendered on the screen.
      *
-     *  This is an abstract class, and should not be used directly. Create a specific subclass
-     *  instead. It provides basic functionality for drawing and integration into the layout system,
+     *  It provides basic functionality for drawing and integration into the layout system,
      *  as well as basic support for the information stored in an XML element.
      */
     class HSSDisplayObject : public HSSObject
     {
     public:
-
         friend class HSSContainer;
 
         typedef boost::shared_ptr<HSSDisplayObject> p;
@@ -89,32 +86,9 @@ namespace AXR
         typedef std::vector<HSSDisplayObject::p>::const_iterator const_it;
 
         /**
-         *  Constructor for HSSDisplayObject objects.
-         */
-        HSSDisplayObject();
-
-        /**
-         *  Constructor for HSSDisplayObject objects.
-         *  @param type     Subclasses pass their own type here.
-         */
-        HSSDisplayObject(HSSObjectType type);
-
-        /**
          *  Initializes all ivars to default values.
          */
         void initialize();
-
-        /**
-         *  Copy constructor for HSSDisplayObject objects.
-         */
-        HSSDisplayObject(const HSSDisplayObject & orig);
-
-        /**
-         *  Clones an instance of HSSDisplayObject and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSDisplayObject.
-         */
-        p clone() const;
 
         /**
          *  Destructor for this class.
@@ -502,6 +476,17 @@ namespace AXR
         HSSDisplayObject::p shared_from_this();
 
     protected:
+        /**
+         *  Copy constructor for HSSDisplayObject objects.
+         */
+        HSSDisplayObject(const HSSDisplayObject & orig);
+
+        /**
+         *  Constructor for HSSDisplayObject objects.
+         *  @param type     Subclasses pass their own type here.
+         */
+        HSSDisplayObject(HSSObjectType type);
+
         void _setInnerWidth();
         void _setInnerHeight();
         void _setOuterWidth();
@@ -519,7 +504,6 @@ namespace AXR
                                    HSSObservableProperty &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
-        HSSClonable::p cloneImpl() const;
         bool _isHover;
         bool _isRoot;
 

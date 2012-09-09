@@ -53,12 +53,10 @@
 
 namespace AXR
 {
-
     class HSSDisplayObject;
 
     /**
-     *  @brief Abstract base class that provides the basic functionality of a parser node. Do not use directly,
-     *  but one of its subclasses instead.
+     *  @brief Abstract base class that provides the basic functionality of a parser node.
      *
      *  When parsing an HSS file, HSSParser will create an Abstract Syntax Tree with subclasses of this class.
      *  Go to https://docs.google.com/drawings/d/1yMMwh3uddC1fFJqWt8RMShJFGhO2pq_IHEpgQYh7dKY/ to see a diagram
@@ -67,7 +65,6 @@ namespace AXR
     class HSSParserNode : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSParserNode>
     {
     public:
-
         /**
          *  The shared pointer to instances of this class.
          */
@@ -94,21 +91,6 @@ namespace AXR
          *  @return A string representation of the given type.
          */
         static std::string parserNodeStringRepresentation(HSSParserNodeType type);
-
-        /**
-         *  Creates a new instance of a parser node. This class shouldn't be called directly,
-         *  but by the subclasses.
-         *  @param  type    The HSSActionType that this action corresponds to. Usually set
-         *                  from withing a subclass' constructor method.
-         *
-         *  @todo There is no destructor on this class.
-         */
-        HSSParserNode(HSSParserNodeType type);
-
-        /**
-         *  Copy constructor for HSSParserNode objects. Do not call directly, use clone() instead.
-         */
-        HSSParserNode(const HSSParserNode &orig);
 
         /**
          *  Clones an instance of HSSParserNode and gives a shared pointer of the
@@ -212,7 +194,23 @@ namespace AXR
         virtual HSSFlagFunctionType getFlagFunctionType();
 
     protected:
+        /**
+         *  Creates a new instance of a parser node. This class shouldn't be called directly,
+         *  but by the subclasses.
+         *  @param  type    The HSSActionType that this action corresponds to. Usually set
+         *                  from withing a subclass' constructor method.
+         *
+         *  @todo There is no destructor on this class.
+         */
+        HSSParserNode(HSSParserNodeType type);
+
+        /**
+         *  Copy constructor for HSSParserNode objects. Do not call directly, use clone() instead.
+         */
+        HSSParserNode(const HSSParserNode &orig);
+
         boost::shared_ptr<HSSDisplayObject> thisObj;
+
     private:
         HSSParserNodeType nodeType;
         pp _parentNode;

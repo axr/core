@@ -50,26 +50,13 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Abstract base class for all shape objects.
-     *  Do not use directly, use a specific subclass instead.
      */
     class HSSShape : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSShape> p;
-
-        /**
-         *  Creates a new instance of a shape object. Do call directly, use one of the sublcasses instead.
-         *  @param type     The type of this shape subclass for identification purposes.
-         */
-        HSSShape(HSSShapeType type);
-
-        /**
-         *  Copy constructor for HSSShape objects. Do not call directly, use clone() instead.
-         */
-        HSSShape(const HSSShape & orig);
 
         /**
          *  Destructor for this class.
@@ -106,6 +93,18 @@ namespace AXR
          *  @param height   The height of the bounding box of the shape.
          */
         virtual void draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height) = 0;
+
+    protected:
+        /**
+         *  Creates a new instance of a shape object. Do call directly, use one of the sublcasses instead.
+         *  @param type     The type of this shape subclass for identification purposes.
+         */
+        HSSShape(HSSShapeType type);
+
+        /**
+         *  Copy constructor for HSSShape objects. Do not call directly, use clone() instead.
+         */
+        HSSShape(const HSSShape & orig);
 
     private:
         HSSShapeType shapeType;

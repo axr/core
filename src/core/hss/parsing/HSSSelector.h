@@ -47,7 +47,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Abstract base class for a common interface for all selector nodes
      */
@@ -56,11 +55,6 @@ namespace AXR
     public:
         typedef boost::shared_ptr<HSSSelector> p;
 
-        /**
-         *  Creates a new instance of a simple selector, for use of the subclasses.
-         *  @param type     The type of the selector node.
-         */
-        HSSSelector(HSSSelectorType type);
         ~HSSSelector();
 
         /**
@@ -73,6 +67,13 @@ namespace AXR
 
         bool isA(HSSSelectorType otherType);
         HSSSelectorType getSelectorType();
+
+    protected:
+        /**
+         *  Creates a new instance of a simple selector, for use of the subclasses.
+         *  @param type     The type of the selector node.
+         */
+        HSSSelector(HSSSelectorType type);
 
     private:
         HSSSelectorType _selectorType;

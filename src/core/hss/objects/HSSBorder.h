@@ -50,7 +50,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Abstract base class for all border objects.
      */
@@ -60,14 +59,6 @@ namespace AXR
         typedef boost::shared_ptr<HSSBorder> p;
         typedef std::vector<HSSBorder::p>::iterator it;
 
-        /**
-         *  Creates a new HSSBorder object.
-         */
-        HSSBorder();
-        /**
-         *  Copy constructor for HSSBorder objects.
-         */
-        HSSBorder(const HSSBorder & orig);
         /**
          *  Destructor for HSSBorder objects.
          */
@@ -109,6 +100,16 @@ namespace AXR
         void sizeChanged(HSSObservableProperty source, void*data);
 
     protected:
+        /**
+         *  Creates a new HSSBorder object.
+         */
+        HSSBorder();
+
+        /**
+         *  Copy constructor for HSSBorder objects.
+         */
+        HSSBorder(const HSSBorder & orig);
+
         HSSUnit size;
         HSSParserNode::p dSize;
         HSSObservable * observedSize;
