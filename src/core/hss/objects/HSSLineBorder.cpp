@@ -134,6 +134,13 @@ bool HSSLineBorder::isKeyword(std::string value, std::string property)
             return true;
         }
     }
+    else if ( value == "black" || value == "white" || value == "transparent")
+    {
+        if (property == "color")
+        {
+            return true;
+        }
+    }
 
     //if we reached this far, let the superclass handle it
     return HSSBorder::isKeyword(value, property);
@@ -210,6 +217,34 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
 
         }
 
+        break;
+    }
+            
+    case HSSParserNodeTypeKeywordConstant:
+    {
+        HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        if (theKW->getValue() == "none")
+        {
+            valid = true;
+        }
+        else if (theKW->getValue() == "black")
+        {
+            this->color = HSSRgb::blackColor();
+            valid = true;
+        }
+        else if (theKW->getValue() == "white")
+        {
+            this->color = HSSRgb::whiteColor();
+            valid = true;
+        }
+        else if (theKW->getValue() == "transparent")
+        {
+            HSSRgb::p transColor = HSSRgb::blackColor();
+            transColor->setDAlpha(HSSNumberConstant::p(new HSSNumberConstant(0.0)));
+            this->color = transColor;
+            valid = true;
+        }
+        
         break;
     }
 

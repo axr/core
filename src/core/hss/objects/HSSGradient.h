@@ -90,7 +90,33 @@ namespace AXR
         virtual void draw(cairo_t * cairo) = 0;
 
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-
+        
+        /**
+         *  If the start color is transparent, we need to be able to find the next color that is not
+         *  transparent, wether it is inside the color stops, or the end color.
+         *  @return A shared pointer to the next suitable color from the color stops, the end color, or
+         *          transparent black.
+         */
+        HSSRgb::p getColorAfterFirst();
+        
+        /**
+         *  If the end color is transparent, we need to be able to find the previous color that is not
+         *  transparent, wether it is inside the color stops, or the end color.
+         *  @return A shared pointer to the previous suitable color from the color stops, the start color, or
+         *          transparent black.
+         */
+        HSSRgb::p getColorBeforeLast();
+        
+        /**
+         *  When a transparent color stop is found, this method allows to continue iterating through the
+         *  color stops to find the next color that is not transparent.
+         *  @param it       The current iterator.
+         *  @param endIt    The iterator that points to the end of the color stops.
+         *  @return A shared pointer to the next suitable color from the color stops, starting at the given
+         *          iterator, the end color, or transparent black.
+         */
+        HSSRgb::p getNextColorFromStops(std::vector<HSSObject::p>::iterator it, std::vector<HSSObject::p>::iterator endIt);
+        
         /**
          *  Getter for the actual value of startColor.
          *  @return A shared pointer to the HSSRgb object that holds the start color information.

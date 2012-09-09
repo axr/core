@@ -328,6 +328,13 @@ bool HSSDisplayObject::isKeyword(std::string value, std::string property)
             return true;
         }
     }
+    else if (property == "background")
+    {
+        if (value == "black" || value == "white" || value == "transparent")
+        {
+            return true;
+        }
+    }
 
     //    else if (property == "font") {
     //        if (   value == "thin"
@@ -2368,8 +2375,25 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        if (boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue() == "none")
+        HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        std::string kwValue = theKW->getValue();
+        if (kwValue == "none")
         {
+            valid = true;
+        }
+        else if (kwValue == "black")
+        {
+            this->background.push_back(HSSRgb::blackColor());
+            valid = true;
+        }
+        else if (kwValue == "white")
+        {
+            this->background.push_back(HSSRgb::whiteColor());
+            valid = true;
+        }
+        else if (kwValue == "transparent")
+        {
+            this->background.push_back(HSSRgb::transparentColor());
             valid = true;
         }
         break;

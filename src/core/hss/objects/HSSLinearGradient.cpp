@@ -540,46 +540,64 @@ long double HSSLinearGradient::_setLDProperty(
 
 void HSSLinearGradient::draw(cairo_t * cairo)
 {
+    HSSRgb::p prevColor;
     cairo_pattern_t * pat = cairo_pattern_create_linear(this->startX, this->startY, this->endX, this->endY);
     if (this->startColor)
     {
         cairo_pattern_add_color_stop_rgba(pat, 0., this->startColor->getRed() / 255., this->startColor->getGreen() / 255., this->startColor->getBlue() / 255., this->startColor->getAlpha() / 255.);
+        prevColor = this->startColor;
     }
     else
     {
-        cairo_pattern_add_color_stop_rgba(pat, 0., 0., 0., 0., 0.);
+        HSSRgb::p nextColor = this->getColorAfterFirst();
+        cairo_pattern_add_color_stop_rgba(pat, 0., nextColor->getRed() / 255., nextColor->getGreen() / 255., nextColor->getBlue() / 255., 0.);
+        prevColor = nextColor;
     }
 
     //add color stops
-    std::vector<HSSObject::p>::iterator it;
+    std::vector<HSSObject::p>::iterator it, innerIt;
     for (it = this->colorStops.begin(); it != this->colorStops.end(); it++)
     {
         HSSObject::p theStopObj = *it;
+        //if it's a color stop
         if (theStopObj->isA(HSSObjectTypeColorStop))
         {
             HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop > (theStopObj);
-            HSSRgb::p theColor = theStop->getColor();
-            if (theColor)
+            
+            //calculate the position
+            long double position;
+            if (theStop->getDPosition()->isA(HSSParserNodeTypePercentageConstant))
             {
-                long double position;
-                if (theStop->getDPosition()->isA(HSSParserNodeTypePercentageConstant))
-                {
-                    position = theStop->getPosition();
-                }
-                else
-                {
-                    long double width = (this->endX - this->startX);
-                    long double height = (this->endY - this->startY);
-                    long double hypotenuse = hypot(width, height);
-                    position = theStop->getPosition() / hypotenuse;
-                }
-                cairo_pattern_add_color_stop_rgba(pat, position, theColor->getRed() / 255., theColor->getGreen() / 255., theColor->getBlue() / 255., theColor->getAlpha() / 255.);
+                position = theStop->getPosition();
             }
             else
             {
-                AXRWarning::p(new AXRWarning("HSSLinearGradient", "The color stop had no color defined"))->raise();
+                long double width = (this->endX - this->startX);
+                long double height = (this->endY - this->startY);
+                long double hypotenuse = hypot(width, height);
+                position = theStop->getPosition() / hypotenuse;
+            }
+            
+            //determine the color
+            HSSRgb::p theColor = theStop->getColor();
+            if (theColor)
+            {
+                cairo_pattern_add_color_stop_rgba(pat, position, theColor->getRed() / 255., theColor->getGreen() / 255., theColor->getBlue() / 255., theColor->getAlpha() / 255.);
+                prevColor = theColor;
+            }
+            else
+            {
+                //create two stops:
+                //one with the previous color
+                cairo_pattern_add_color_stop_rgba(pat, position, prevColor->getRed() / 255., prevColor->getGreen() / 255., prevColor->getBlue() / 255., 0.);
+                //and one with the next color
+                innerIt = it;
+                ++innerIt;
+                HSSRgb::p nextColor = this->getNextColorFromStops(innerIt, this->colorStops.end());
+                cairo_pattern_add_color_stop_rgba(pat, position, nextColor->getRed() / 255., nextColor->getGreen() / 255., nextColor->getBlue() / 255., 0.);
             }
         }
+        //if it's a simple color
         else if (theStopObj->isA(HSSObjectTypeRgb))
         {
             HSSRgb::p theColor = boost::static_pointer_cast<HSSRgb > (theStopObj);
@@ -598,7 +616,8 @@ void HSSLinearGradient::draw(cairo_t * cairo)
     }
     else
     {
-        cairo_pattern_add_color_stop_rgba(pat, 0., 0., 0., 0., 0.);
+        HSSRgb::p prevColor = this->getColorBeforeLast();
+        cairo_pattern_add_color_stop_rgba(pat, 1., prevColor->getRed() / 255., prevColor->getGreen() / 255., prevColor->getBlue() / 255., 0.);
     }
 
     cairo_set_source(cairo, pat);

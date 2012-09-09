@@ -116,6 +116,13 @@ bool HSSGradient::isKeyword(std::string value, std::string property)
             return true;
         }
     }
+    else if ( value == "black" || value == "white" || value == "transparent")
+    {
+        if (property == "startColor" || property == "endColor" || property == "colorStops")
+        {
+            return true;
+        }
+    }
 
     //if we reached this far, let the superclass handle it
     return HSSObject::isKeyword(value, property);
@@ -141,6 +148,104 @@ void HSSGradient::setProperty(HSSObservableProperty name, HSSParserNode::p value
         HSSObject::setProperty(name, value);
         break;
     }
+}
+
+HSSRgb::p HSSGradient::getColorAfterFirst()
+{
+    //first, look into the color stops to see if we find a suitable color
+    HSSRgb::p ret;
+    if (this->colorStops.size() > 0) {
+        for (std::vector<HSSObject::p>::const_iterator it = this->colorStops.begin(); it != this->colorStops.end(); it++) {
+            const HSSObject::p & theStopObj = *it;
+            if (theStopObj->isA(HSSObjectTypeColorStop)) {
+                HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop>(theStopObj);
+                ret = theStop->getColor();
+                if(ret){
+                    break;
+                }
+            } else if (theStopObj->isA(HSSObjectTypeRgb)) {
+                ret = boost::static_pointer_cast<HSSRgb>(theStopObj);
+                break;
+            }
+        }
+    }
+    //not found yet? we'll use the endColor
+    if (!ret){
+        ret = this->endColor;
+    }
+    
+    //not even that? use transparent black
+    if (!ret){
+        ret = HSSRgb::transparentColor();
+    }
+    
+    return ret;
+}
+
+HSSRgb::p HSSGradient::getColorBeforeLast()
+{
+    //first, look into the color stops (in reverse order) to see if we find a suitable color
+    HSSRgb::p ret;
+    if (this->colorStops.size() > 0) {
+        for (std::vector<HSSObject::p>::const_reverse_iterator it = this->colorStops.rbegin(); it != this->colorStops.rend(); it++) {
+            const HSSObject::p & theStopObj = *it;
+            if (theStopObj->isA(HSSObjectTypeColorStop)) {
+                HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop>(theStopObj);
+                ret = theStop->getColor();
+                if(ret){
+                    break;
+                }
+            } else if (theStopObj->isA(HSSObjectTypeRgb)) {
+                ret = boost::static_pointer_cast<HSSRgb>(theStopObj);
+                break;
+            }
+        }
+    }
+    //not found yet? we'll use the startColor
+    if (!ret){
+        ret = this->startColor;
+    }
+    
+    //not even that? use transparent black
+    if (!ret){
+        ret = HSSRgb::transparentColor();
+    }
+    
+    return ret;
+}
+
+HSSRgb::p HSSGradient::getNextColorFromStops(std::vector<HSSObject::p>::iterator it, std::vector<HSSObject::p>::iterator endIt)
+{
+    //first, look into the color stops to see if we find a suitable color
+    HSSRgb::p ret;
+    for (; it != endIt; ++it) {
+        const HSSObject::p & stopObj = *it;
+        if (stopObj->isA(HSSObjectTypeRgb)) {
+            ret = boost::static_pointer_cast<HSSRgb>(stopObj);
+            break;
+        }
+        else if (stopObj->isA(HSSObjectTypeColorStop))
+        {
+            const HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop>(stopObj);
+            if(HSSRgb::p theColor = theStop->getColor())
+            {
+                ret = theColor;
+                break;
+            }
+        }
+    }
+    
+    //not found yet? we'll use the endColor
+    if(!ret){
+        ret = this->endColor;
+    }
+    
+    //not even that? use transparent black
+    if (!ret){
+        ret = HSSRgb::transparentColor();
+    }
+    
+    return ret;
 }
 
 HSSRgb::p HSSGradient::getStartColor()
@@ -206,6 +311,34 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
 
         }
 
+        break;
+    }
+            
+    case HSSParserNodeTypeKeywordConstant:
+    {
+        HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        if (theKW->getValue() == "none")
+        {
+            ///@todo should we deprecate this in favor of `transparent`?
+            this->startColor.reset();
+            valid = true;
+        }
+        else if (theKW->getValue() == "black")
+        {
+            this->startColor = HSSRgb::blackColor();
+            valid = true;
+        }
+        else if (theKW->getValue() == "white")
+        {
+            this->startColor = HSSRgb::whiteColor();
+            valid = true;
+        }
+        else if (theKW->getValue() == "transparent")
+        {
+            this->startColor.reset();
+            valid = true;
+        }
+        
         break;
     }
 
@@ -311,7 +444,35 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
         }
         break;
     }
-
+    
+    case HSSParserNodeTypeKeywordConstant:
+    {
+        HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        if (theKW->getValue() == "none")
+        {
+            ///@todo should we deprecate this in favor of `transparent`?
+            this->endColor.reset();
+            valid = true;
+        }
+        else if (theKW->getValue() == "black")
+        {
+            this->endColor = HSSRgb::blackColor();
+            valid = true;
+        }
+        else if (theKW->getValue() == "white")
+        {
+            this->endColor = HSSRgb::whiteColor();
+            valid = true;
+        }
+        else if (theKW->getValue() == "transparent")
+        {
+            this->endColor.reset();
+            valid = true;
+        }
+        
+        break;
+    }
+    
     default:
         break;
     }
@@ -518,9 +679,29 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        if (boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue() == "none")
+        HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant > (value);
+        if (theKW->getValue() == "none")
         {
-            //ignore
+            ///@todo should we deprecate this in favor of `transparent`?
+            valid = true;
+        }
+        else if (theKW->getValue() == "white")
+        {
+            this->colorStops.push_back(HSSRgb::whiteColor());
+            valid = true;
+        }
+        else if (theKW->getValue() == "black")
+        {
+            this->colorStops.push_back(HSSRgb::blackColor());
+            valid = true;
+        }
+        else if (theKW->getValue() == "transparent")
+        {
+            //the stop's color will remain empty, we just define the position
+            HSSColorStop::p theStop(new HSSColorStop());
+            theStop->setDPosition(HSSPercentageConstant::p(new HSSPercentageConstant(50.)));
+            this->colorStops.push_back(theStop);
+            valid = true;
         }
         else
         {

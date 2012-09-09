@@ -136,6 +136,11 @@ bool HSSColorStop::isKeyword(std::string value, std::string property)
             return true;
         }
     }
+    else if (value == "transparent"){
+        if (property == "color" ) {
+            return true;
+        }
+    }
 
     //if we reached this far, let the superclass handle it
     return HSSObject::isKeyword(value, property);
@@ -221,6 +226,31 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSColorStop > (this, &HSSColorStop::colorChanged));
         }
+        break;
+    }
+            
+    case HSSParserNodeTypeKeywordConstant:
+    {
+        HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        std::string kwValue = theKW->getValue();
+        
+        if (kwValue == "black")
+        {
+            this->color = HSSRgb::blackColor();
+            valid = true;
+        }
+        else if (kwValue == "white")
+        {
+            this->color = HSSRgb::whiteColor();
+            valid = true;
+        }
+        else if (kwValue == "transparent")
+        {
+            //the color will remain empty for transparent
+            this->color.reset();
+            valid = true;
+        }
+        
         break;
     }
 

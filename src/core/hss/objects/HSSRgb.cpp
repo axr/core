@@ -48,6 +48,24 @@
 
 using namespace AXR;
 
+HSSRgb::p HSSRgb::blackColor()
+{
+    //create a new color object, it will have all its color channels set to
+    //0 and the alpha to 255 by default in the constructor
+    return HSSRgb::p(new HSSRgb());
+}
+
+HSSRgb::p HSSRgb::whiteColor()
+{
+    //create a new color object with default value
+    HSSRgb::p whiteColor = HSSRgb::p(new HSSRgb());
+    //set all the color channels to the maximum value
+    whiteColor->setDRed(HSSNumberConstant::p(new HSSNumberConstant(255.0)));
+    whiteColor->setDGreen(HSSNumberConstant::p(new HSSNumberConstant(255.0)));
+    whiteColor->setDBlue(HSSNumberConstant::p(new HSSNumberConstant(255.0)));
+    return whiteColor;
+}
+
 HSSRgb::HSSRgb()
 : HSSObject(HSSObjectTypeRgb)
 {
