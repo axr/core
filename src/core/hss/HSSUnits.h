@@ -90,6 +90,16 @@ namespace AXR
         {
         }
 
+        bool operator==(const HSSPoint &other) const
+        {
+            return x == other.x && y == other.y;
+        }
+
+        bool operator!=(const HSSPoint &other) const
+        {
+            return !(*this == other);
+        }
+
         HSSUnit x; /**< the location of the point in horizontal dimension. */
         HSSUnit y; /**< the location of the point in vertical dimension. */
     };
@@ -117,6 +127,16 @@ namespace AXR
 
         HSSSize(HSSUnit sizeWidth, HSSUnit sizeHeight) : width(sizeWidth), height(sizeHeight)
         {
+        }
+
+        bool operator==(const HSSSize &other) const
+        {
+            return width == other.width && height == other.height;
+        }
+
+        bool operator!=(const HSSSize &other) const
+        {
+            return !(*this == other);
         }
 
         HSSUnit width; /**< measure in the horizontal dimension. */
@@ -156,6 +176,16 @@ namespace AXR
 
         HSSRect(HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height) : origin(HSSPoint(x, y)), size(HSSSize(width, height))
         {
+        }
+
+        bool operator==(const HSSRect &other) const
+        {
+            return origin == other.origin && size == other.size;
+        }
+
+        bool operator!=(const HSSRect &other) const
+        {
+            return !(*this == other);
         }
 
         HSSPoint origin; /**< Where the rectangle starts. This point is on the top left corner of the rectangle. */
