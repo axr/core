@@ -280,9 +280,8 @@ int main(int argc, char **argv)
     ::DestroyIcon(mainicon);
 #endif
 
-    free(wrapper);
-    free(screen);
-    free(cr);
+    delete wrapper;
+    cairosdl_destroy(cr);
 
     return 0;
 }
