@@ -80,7 +80,9 @@ AXRFile::p AXRWrapper::getFile(std::string url)
         ret->setBasePath(clean_path.substr(0, slashpos));
 
         ret->setBufferSize(10240);
-        ret->setBuffer(new char[ret->getBufferSize()]);
+        char *buffer = new char[ret->getBufferSize()];
+        memset(buffer, 0, ret->getBufferSize());
+        ret->setBuffer(buffer);
         ret->setFileHandle(fopen(clean_path.c_str(), "r"));
 
         if (!ret->getFileHandle())
@@ -186,8 +188,7 @@ AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
 
     ret->setFileHandle(tmpfile());
     char * buffer = new char[ret->getBufferSize()];
-    char * bufferEnd = buffer + ret->getBufferSize();
-    *bufferEnd = NULL;
+    memset(buffer, 0, ret->getBufferSize());
 
     ret->setBuffer(buffer);
     dummyXML.copy(ret->getBuffer(), ret->getBufferSize(), 0);
