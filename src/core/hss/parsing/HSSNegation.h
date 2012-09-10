@@ -25,6 +25,8 @@
  *            MM,
  *
  *
+ *      AUTHORS: see AUTHORS file
+ *
  *      COPYRIGHT: ©2012 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
