@@ -40,32 +40,25 @@
  ********************************************************************/
 
 #include <sstream>
+#include <QStringList>
 #include "AXR.h"
 #include "AXRDebugging.h"
 #include "AXRError.h"
 
 using namespace AXR;
 
-AXRError::AXRError(std::string origin, std::string message)
-{
-    this->origin = origin;
-    this->message = message;
-    this->in_file = false;
-}
-
 AXRError::AXRError(std::string origin, std::string message, std::string filename, int line, int column)
 {
     this->origin = origin;
     this->message = message;
     this->filename = filename;
+    this->in_file = !filename.empty();
     this->line = line;
     this->column = column;
-    this->in_file = true;
 }
 
 AXRError::~AXRError()
 {
-
 }
 
 void AXRError::raise()
@@ -77,18 +70,29 @@ void AXRError::raise()
 
 std::string AXRError::toString()
 {
-    if (this->in_file)
+    return toProblemString("Error");
+}
+
+std::string AXRError::toProblemString(const std::string &label)
+{
+    QStringList parts;
+    parts << QString("%1: %2").arg(QString::fromStdString(label)).arg(QString::fromStdString(message));
+
+    if (in_file)
+        parts << QString("in %1").arg(QString::fromStdString(filename));
+
+    if (line > 0 || column > 0)
     {
-        std::ostringstream linnum;
-        linnum << this->line;
-        std::ostringstream colnum;
-        colnum << this->column;
-        return "Error: " + this->message + " in " + this->filename + " on line " + linnum.str() + " on column " + colnum.str();
+        parts << "on";
+
+        if (line > 0)
+            parts << QString("line %1").arg(line);
+
+        if (column > 0)
+            parts << QString("column %1").arg(column);
     }
-    else
-    {
-        return "Error: " + this->message;
-    }
+
+    return parts.join(" ").toStdString();
 }
 
 std::string AXRError::getMessage()

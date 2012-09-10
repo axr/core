@@ -45,6 +45,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <QString>
 #include <boost/cstdint.hpp>
 
 // Debug levels:
@@ -152,6 +153,10 @@ enum axr_debug_ch
 
 void axr_log(uint32_t channels, const std::string &message);
 void axr_log_inline(uint32_t channels, const std::string &message);
+void axr_log(uint32_t channels, const QString &message);
+void axr_log_inline(uint32_t channels, const QString &message);
+void axr_log(uint32_t channels, const char *message);
+void axr_log_inline(uint32_t channels, const char *message);
 void axr_debug_activate_channel(uint32_t channels);
 
 #endif //AXRDEBUGGING_H

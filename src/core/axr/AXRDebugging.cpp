@@ -94,6 +94,27 @@ void axr_log_inline(uint32_t channels, const std::string &message)
         std_log(message, false);
 }
 
+
+void axr_log(uint32_t channels, const QString &message)
+{
+    axr_log(channels, message.toStdString());
+}
+
+void axr_log_inline(uint32_t channels, const QString &message)
+{
+    axr_log(channels, message.toStdString());
+}
+
+void axr_log(uint32_t channels, const char *message)
+{
+    axr_log(channels, QString(message));
+}
+
+void axr_log_inline(uint32_t channels, const char *message)
+{
+    axr_log(channels, QString(message));
+}
+
 void axr_debug_activate_channel(uint32_t channels)
 {
     axr_debug_active_channels = (axr_debug_active_channels | channels);

@@ -14,7 +14,6 @@ deps()
     echo "- Qt 4"
     echo "- Boost"
     echo "- SDL"
-    echo "- Expat"
     echo "- Cairo"
     echo "- Pango"
 }
@@ -80,7 +79,6 @@ if [ "$UNAME" = "Darwin" ] ; then
         set_mp_target 10.4
         port install \
             libsdl +universal \
-            expat +universal \
             cairo +quartz +universal \
             pango +quartz +universal \
             depof:boost +universal \
@@ -121,7 +119,7 @@ if [ "$UNAME" = "Darwin" ] ; then
 elif [ "$UNAME" = "Linux" ] ; then
     if [ $(which apt-get 2>/dev/null) ] ; then
         # Debian, Ubuntu
-        apt-get install build-essential qt-sdk libboost-all-dev libsdl1.2-dev libexpat1-dev libcairo2-dev libpango1.0-dev
+        apt-get install build-essential qt-sdk libboost-all-dev libsdl1.2-dev libcairo2-dev libpango1.0-dev
     elif [ $(which yum 2>/dev/null) ] ; then
         # Fedora, RHEL, Yellow Dog Linux
         echo "ERROR: yum support is not yet implemented"
@@ -136,7 +134,7 @@ elif [ "$UNAME" = "Linux" ] ; then
         exit 1
     elif [ $(which pacman 2>/dev/null) ] ; then
         # Arch Linux
-        pacman -S qt boost sdl expat cairo pango
+        pacman -S qt boost sdl cairo pango
     elif [ $(which emerge 2>/dev/null) ] ; then
         # Gentoo
         echo "ERROR: portage support is not yet implemented"

@@ -45,6 +45,10 @@ option(BUILD_UNIVERSAL_BINARIES "Build OS X universal binaries (i386 + x86_64)" 
 option(BUILD_SHARED_LIBS "Builds shared instead of static libraries" ON)
 
 if(BUILD_PROTOTYPE)
+    find_package(Qt4 4.8 COMPONENTS QtCore QtGui QtXml REQUIRED)
+    include(${QT_USE_FILE})
+    add_definitions(${QT_DEFINITIONS})
+
     # Don't use static Boost because this will result in relocation errors due to
     # Boost not being compiled with -fPIC (at least on 64-bit Linux)
     set(Boost_USE_STATIC_LIBS OFF)
@@ -53,7 +57,6 @@ if(BUILD_PROTOTYPE)
 
     find_package(Boost COMPONENTS thread system program_options REQUIRED)
     find_package(SDL REQUIRED)
-    find_package(EXPAT REQUIRED expat>=2.0)
 
     # TODO: Avoid using pkg-config
     find_package(PkgConfig REQUIRED)
@@ -64,7 +67,6 @@ if(BUILD_PROTOTYPE)
     include_directories(
         ${Boost_INCLUDE_DIRS}
         ${SDL_INCLUDE_DIR}
-        ${EXPAT_INCLUDE_DIRS}
         ${PANGO_INCLUDE_DIRS}
         ${CAIRO_INCLUDE_DIRS}
         ${PANGOCAIRO_INCLUDE_DIRS}

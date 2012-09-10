@@ -46,7 +46,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief This is a subclass of AXRError, that should be used when something happened
      *  which isn't really an error, but still should be shown to the user somehow.
@@ -58,12 +57,7 @@ namespace AXR
          *  The shared pointer to the warning.
          */
         typedef boost::shared_ptr<AXRWarning>p;
-        /**
-         *  Creates a new instance of a warning, simple mode.
-         *  @param origin   The name of the class where the warning originated.
-         *  @param message  The warning message to be shown.
-         */
-        AXRWarning(std::string origin, std::string message);
+
         /**
          *  Creates a new instance of a warning, with information about the filename,
          *  the line and column where it originated.
@@ -73,7 +67,8 @@ namespace AXR
          *  @param line     The line index (starting at 1) in the file where the warning originated.
          *  @param column   The column index (starting at 1) in the line where the warning originated.
          */
-        AXRWarning(std::string origin, std::string message, std::string filename, int line, int column);
+        AXRWarning(std::string origin, std::string message, std::string filename = "", int line = 0, int column = 0);
+
         /**
          *  Destructor for the warning.
          */

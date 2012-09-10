@@ -39,7 +39,8 @@
  *
  ********************************************************************/
 
-#include <iostream>
+#include <QtCore>
+#include <QtXml>
 #include "errors.h"
 #include "AXR.h"
 #include "AXRController.h"
@@ -48,247 +49,152 @@
 
 using namespace AXR;
 
-XMLParser::XMLParser(AXRController * theController)
-: expatmm::ExpatXMLParser()
+XMLParser::XMLParser(AXRController *theController)
+: controller(theController)
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "XMLParser: creating XML parser");
-    this->controller = theController;
 }
-
-//XMLParser::XMLParser(AXRController * controller, std::string filepath, std::string filename) : expatmm::ExpatXMLParser() {
-//    this->filepath = filepath;
-//    this->filename = filename;
-//  this->filehandle = fopen(filepath.c_str(), "r");
-//  if(this->filehandle){
-//        expatmm::ExpatXMLParser::setReadiness(true);
-//    } else {
-//        this->setReadiness(false);
-//    }
-//
-//    this->controller = controller;
-//}
 
 XMLParser::~XMLParser()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "XMLParser: destructing XML parser");
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "XMLParser: destroying XML parser");
 }
 
 bool XMLParser::loadFile(AXRFile::p file)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: loading file " + file->getFileName());
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->getBasePath() + "/" + file->getFileName());
-
-    this->file = file;
-    if (file->getFileHandle())
-    {
-        expatmm::ExpatXMLParser::setReadiness(true);
-    }
-    else
-    {
-        this->setReadiness(false);
-        return false;
-    }
-
-    bool ret;
-
-    try
-    {
-        ret = this->Parse();
-    }
-    catch (const AXRError::p &e)
-    {
-        e->raise();
-        ret = false;
-    }
-
-    return ret;
-}
-
-XML_Char * XMLParser::getBuffer(void)
-{
-    return this->file->getBuffer();
-}
-
-size_t XMLParser::getBlockSize(void)
-{
-    return this->file->getBufferSize();
-}
-
-ssize_t XMLParser::read_block(void)
-{
-    AXRFile::p file = this->file;
-    if (!file->getFileHandle())
-    {
-        return -1;
-    }
-
-    size_t bytesRead = AXRCore::getInstance()->getWrapper()->readFile(this->file);
-    ssize_t code = (ssize_t) bytesRead;
-
-    if (bytesRead <= this->getBlockSize())
-    {
-        if (feof(file->getFileHandle()))
-        {
-            this->setLastError(XML_ERROR_FINISHED);
-            return bytesRead;
-        }
-        if (ferror(file->getFileHandle()))
-        {
-            this->setStatus(XML_STATUS_ERROR);
-        }
-    }
-
-    if (bytesRead == 0)
-    {
-        this->setStatus(XML_STATUS_OK);
-        this->setLastError(XML_ERROR_FINISHED);
-        code = -1;
-    }
-    return code;
-}
-
-void XMLParser::StartElement(const XML_Char *name, const XML_Char **attrs)
-{
-    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found opening tag with name " + std::string(name));
-    this->controller->enterElement(std::string(name));
-
-    for (unsigned i = 0; attrs[i]; i += 2)
-    {
-        this->controller->addAttribute(std::string(attrs[i]), std::string(attrs[i + 1]));
-    }
-}
-
-void XMLParser::CharacterData(const XML_Char *s, int len)
-{
-    axr_log(AXR_DEBUG_CH_XML, "XMLParser: reading character data: \"" + std::string(s, len) + "\"");
-    /**
-     *  @todo make this better
-     */
-    //for now, just ignore pure newlines and tabs
-    std::string tempstr = std::string(s, len);
-    if (tempstr != "\n" && tempstr != "\r" && tempstr != "\t")
-    {
-        this->controller->appendContentText(tempstr);
-    }
-}
-
-void XMLParser::EndElement(const XML_Char *name)
-{
-    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found closing tag with name " + std::string(name));
-    this->controller->exitElement();
-}
-
-/**
- *  @todo this should be fleshed out into specialized tokenizing and parsing classes
- *  to better handle unexpected characters and such
- */
-void XMLParser::ProcessingInstruction(const XML_Char *target, const XML_Char *data)
-{
-    axr_log(AXR_DEBUG_CH_XML, "XMLParser: found xml instruction with name " + std::string(target));
-    if (!this->controller)
+    if (!controller)
     {
         throw AXRError::p(new AXRError("XMLParser", "The controller was not set on the XML parser"));
     }
 
-    std::string instructionName = std::string(target);
-    //maximum size of temp is the same as data (+1 for the \0)
-    XML_Char * temp = new XML_Char[strlen(data) + 1];
-    std::string attribute;
-    std::string content;
-    std::string sheetType;
-    std::string sheetName;
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: loading file " + file->getFileName());
+    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->getBasePath() + "/" + file->getFileName());
 
-    security_brake_init();
-    if (instructionName == "xml-stylesheet")
+    this->file = file;
+    if (!file->getFileHandle())
     {
-        bool readingAttr = true;
-        unsigned datai = 0;
-        unsigned tempi = 0;
-
-        while (data[datai] != '\0')
-        {
-            if (readingAttr && isspace(data[datai]))
-            {
-                //ignore the whitespace
-                /**
-                 *  @todo set behavior according to XML spec
-                 */
-            }
-            else if (data[datai] == '=')
-            {
-                if (readingAttr)
-                {
-                    //finished reading the attribute
-                    readingAttr = false;
-                    temp[tempi] = '\0';
-                    attribute = std::string(temp);
-                    tempi = 0;
-                    //we now expect a double quote
-                    datai++;
-                    if (data[datai] != '"')
-                    {
-                        throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->file->getFileName(), (int) XML_GetCurrentLineNumber(this->expat_parser), (int) XML_GetCurrentColumnNumber(this->expat_parser) + datai + strlen(target) + 4));
-                    }
-
-                    //std_log1(attribute);
-                }
-                else
-                {
-                    //this must be part of the value
-                    temp[tempi] = data[datai];
-                    tempi++;
-                }
-
-            }
-            else if (data[datai] == '"')
-            {
-                if (readingAttr)
-                {
-                    throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction", this->file->getFileName(), (int) XML_GetCurrentLineNumber(this->expat_parser), (int) XML_GetCurrentColumnNumber(this->expat_parser) + datai + strlen(target) + 4));
-
-                }
-                else
-                {
-                    readingAttr = true;
-                    temp[tempi] = '\0';
-                    content = std::string(temp);
-                    //std_log1(attribute);
-                    if (attribute == "type")
-                    {
-                        sheetType = content;
-                    }
-                    else if (attribute == "src")
-                    {
-                        sheetName = content;
-                    }
-                    tempi = 0;
-                }
-            }
-            else
-            {
-                temp[tempi] = data[datai];
-                tempi++;
-            }
-            datai++;
-            security_brake();
-        }
-
-        if (sheetType == "application/x-hss" || sheetType == "text/hss")
-        {
-            //add to load later
-            this->controller->loadSheetsAdd(sheetName);
-        }
-        else if (sheetType == "application/xsl")
-        {
-            //ignore silently
-        }
-        else
-        {
-            axr_log(AXR_DEBUG_CH_XML, "Ignoring stylesheet of unknown type: " + sheetType + " in file " + this->file->getFileName());
-        }
+        return false;
     }
 
-    delete [] temp;
+    try
+    {
+        // Try to open the file from which to read the XML file
+        // TODO: Replace or augment AXRFile with the QIODevice infrastructure
+        if (!AXRCore::getInstance()->getWrapper()->readFile(file))
+        {
+            axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: failed to load file " + file->getFileName());
+            return false;
+        }
+
+        // Parse the XML file...
+        QXmlStreamReader xml(file->getBuffer());
+        while (!xml.atEnd() && !xml.hasError())
+        {
+            xml.readNext();
+            if (xml.isStartElement())
+            {
+                QString name = xml.name().toString();
+                axr_log(AXR_DEBUG_CH_XML, "XMLParser: found opening tag with name " + name);
+                controller->enterElement(name.toStdString());
+
+                Q_FOREACH (const QXmlStreamAttribute &attr, xml.attributes())
+                {
+                    controller->addAttribute(attr.name().toString().toStdString(), attr.value().toString().toStdString());
+                }
+            }
+            else if (xml.isEndElement())
+            {
+                axr_log(AXR_DEBUG_CH_XML, "XMLParser: found closing tag with name " + xml.name().toString());
+                controller->exitElement();
+            }
+            else if (xml.isCDATA())
+            {
+                axr_log(AXR_DEBUG_CH_XML, QString("XMLParser: reading character data: \"%1\"").arg(xml.text().toString()));
+                controller->appendContentText(xml.text().toString().toStdString());
+            }
+            else if (xml.isProcessingInstruction())
+            {
+                QString instructionName = xml.processingInstructionTarget().toString();
+                axr_log(AXR_DEBUG_CH_XML, "XMLParser: found XML instruction with name " + instructionName);
+
+                // Probable HSS stylesheet encountered, try to load it into the controller
+                if (instructionName == "xml-stylesheet")
+                {
+                    QMap<QString, QString> instructionAttributes;
+
+                    // A little trickery to easily parse the key-value pairs from the instruction...
+                    // We basically embed the processing instruction value, which looks like a set of XML
+                    // attributes, within a fake XML tag to create a document that we can parse, allowing
+                    // the XML parser to handle the syntax instead of doing it manually
+                    QXmlStreamReader instructionParser(QString("<node %1 />").arg(xml.processingInstructionData().toString()));
+                    while (!instructionParser.atEnd() && !instructionParser.hasError())
+                    {
+                        instructionParser.readNext();
+                        if (instructionParser.isStartElement())
+                        {
+                            // Read all the attributes from our fake tag, which are the xml-stylesheet parameters
+                            Q_FOREACH (const QXmlStreamAttribute &attr, instructionParser.attributes())
+                            {
+                                instructionAttributes.insert(attr.name().toString(), attr.value().toString());
+                            }
+                        }
+                    }
+
+                    // The xml-stylesheet instruction was invalid, error out
+                    if (instructionParser.hasError())
+                    {
+                        throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction - " + instructionParser.errorString().toStdString(), file->getFileName(), xml.lineNumber()));
+                    }
+
+                    // Require a type attribute so we can verify the stylesheet has the correct MIME type for HSS
+                    if (!instructionAttributes.contains("type"))
+                    {
+                        throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - missing type attribute", file->getFileName(), xml.lineNumber()));
+                    }
+
+                    // Require an src attribute so we know where to load the HSS file from
+                    if (!instructionAttributes.contains("src"))
+                    {
+                        throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - missing src attribute", file->getFileName(), xml.lineNumber()));
+                    }
+
+                    const QUrl &sheetUrl = instructionAttributes.value("src");
+                    const QString &sheetType = instructionAttributes.value("type");
+                    if (sheetType == "application/x-hss" || sheetType == "text/hss")
+                    {
+                        // We've got the right MIME type, now do we even have a URL?
+                        if (!sheetUrl.isValid())
+                        {
+                            throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed URL in src attribute - " + sheetUrl.errorString().toStdString(), file->getFileName(), xml.lineNumber()));
+                        }
+
+                        // TODO: "Add to load later"?
+                        controller->loadSheetsAdd(sheetUrl.toString().toStdString());
+                    }
+                    else if (sheetType == "application/xsl")
+                    {
+                        axr_log(AXR_DEBUG_CH_XML, "Ignoring XSL stylesheet in file " + file->getFileName());
+                    }
+                    else
+                    {
+                        axr_log(AXR_DEBUG_CH_XML, "Ignoring stylesheet of unknown type: " + sheetType.toStdString() + " in file " + file->getFileName());
+                    }
+                }
+            }
+        }
+
+        if (xml.hasError())
+        {
+            throw AXRError::p(new AXRError("XMLParser", "XML error - " + xml.errorString().toStdString(), file->getFileName(), xml.lineNumber(), xml.columnNumber()));
+        }
+
+        return true;
+    }
+    catch (const AXRError::p &e)
+    {
+        e->raise();
+        return false;
+    }
 }
 
 std::string XMLParser::getFilePath()
