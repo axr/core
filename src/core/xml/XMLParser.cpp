@@ -148,26 +148,36 @@ bool XMLParser::loadFile(AXRFile::p file)
                         throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction - " + instructionParser.errorString().toStdString(), file->getFileName(), xml.lineNumber()));
                     }
 
-                    // Require a type attribute so we can verify the stylesheet has the correct MIME type for HSS
-                    if (!instructionAttributes.contains("type"))
+                    // Check that all required attributes are present in the xml-stylesheet processing instruction
+                    QStringList requiredAttributes;
+                    requiredAttributes << "type" << "src" << "version";
+
+                    Q_FOREACH (const QString &attr, requiredAttributes)
                     {
-                        throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - missing type attribute", file->getFileName(), xml.lineNumber()));
+                        if (!instructionAttributes.contains(attr))
+                        {
+                            throw AXRError::p(new AXRError("XMLParser", QString("Invalid xml-stylesheet instruction - missing %1 attribute").arg(attr).toStdString(), file->getFileName(), xml.lineNumber()));
+                        }
                     }
 
-                    // Require an src attribute so we know where to load the HSS file from
-                    if (!instructionAttributes.contains("src"))
-                    {
-                        throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - missing src attribute", file->getFileName(), xml.lineNumber()));
-                    }
-
-                    const QUrl &sheetUrl = instructionAttributes.value("src");
+                    // Verify the stylesheet has the correct MIME type for HSS
                     const QString &sheetType = instructionAttributes.value("type");
                     if (sheetType == "application/x-hss" || sheetType == "text/hss")
                     {
-                        // We've got the right MIME type, now do we even have a URL?
+                        // We've got the right MIME type, now do we even have a valid URL?
+                        const QUrl &sheetUrl = instructionAttributes.value("src");
                         if (!sheetUrl.isValid())
                         {
                             throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed URL in src attribute - " + sheetUrl.errorString().toStdString(), file->getFileName(), xml.lineNumber()));
+                        }
+
+                        // Do we have a valid version?
+                        // TODO: This should be a QVersion *type*; if (!sheetVersion.isValid()) ...
+                        // I have an implementation lying around somewhere...
+                        const QString &sheetVersion = instructionAttributes.value("version");
+                        if (sheetVersion.isEmpty())
+                        {
+                            throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed version attribute - " + sheetUrl.errorString().toStdString(), file->getFileName(), xml.lineNumber()));
                         }
 
                         // TODO: "Add to load later"?
