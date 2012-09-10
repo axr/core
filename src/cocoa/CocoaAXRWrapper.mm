@@ -64,67 +64,6 @@ CocoaAXRWrapper::~CocoaAXRWrapper()
 {
 }
 
-AXRFile::p CocoaAXRWrapper::getFile(std::string url)
-{
-    AXRFile::p ret = AXRFile::p(new AXRFile());
-
-    std::string fileProtocolPrefix = "file://";
-
-    if (url.substr(0, fileProtocolPrefix.length()) == fileProtocolPrefix)
-    {
-        std::string clean_path = url.substr(7, url.size());
-        int slashpos = clean_path.rfind("/");
-        ret->setFileName(clean_path.substr(slashpos + 1, clean_path.size()));
-        ret->setBasePath(clean_path.substr(0, slashpos));
-
-        ret->setBufferSize(20240);
-        ret->setBuffer(new char[ret->getBufferSize()]);
-        ret->setFileHandle(fopen(clean_path.c_str(), "r"));
-        if (!ret->getFileHandle())
-        {
-            throw AXRError::p(new AXRError("CocoaAXRWrapper", "the file " + url + " doesn't exist"));
-        }
-        else if (ferror(ret->getFileHandle()))
-        {
-            throw AXRError::p(new AXRError("CocoaAXRWrapper", "the file " + url + " couldn't be read"));
-        }
-    }
-    else
-    {
-        std_log("http is not implemented yet");
-    }
-
-    return ret;
-}
-
-size_t CocoaAXRWrapper::readFile(AXRFile::p theFile)
-{
-    char * buffer = theFile->getBuffer();
-    size_t size = fread(buffer, sizeof (buffer[0]), theFile->getBufferSize(), theFile->getFileHandle());
-    if (feof(theFile->getFileHandle()))
-    {
-        theFile->setAtEndOfFile(true);
-    }
-    if (ferror(theFile->getFileHandle()))
-    {
-        AXRError::p(new AXRError("CocoaAXRWrapper", "The file " + theFile->getFileName() + " couldn't be read"))->raise();
-        return -1;
-    }
-
-    return size;
-}
-
-void CocoaAXRWrapper::closeFile(AXRFile::p theFile)
-{
-    fclose(theFile->getFileHandle());
-    theFile->setFileHandle(NULL);
-}
-
-void CocoaAXRWrapper::handleError(AXRError::p theError)
-{
-    std_log(theError->toString());
-}
-
 bool CocoaAXRWrapper::openFileDialog(std::string &filePath)
 {
     axr_log(AXR_DEBUG_CH_GENERAL, "CocoaAXRWrapper: Opening File Dialog");

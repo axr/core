@@ -54,12 +54,7 @@ namespace AXR
         AXRWrapper * createWrapper();
         virtual ~CocoaAXRWrapper();
 
-        virtual AXRFile::p getFile(std::string url);
-        virtual size_t readFile(AXRFile::p theFile);
-        virtual void closeFile(AXRFile::p theFile);
-        virtual void handleError(AXRError::p theError);
         virtual bool openFileDialog(std::string &filePath);
-
         void setNeedsDisplay(bool newValue);
         std::string getPathToResources();
 

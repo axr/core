@@ -88,26 +88,26 @@ namespace AXR
          *  Subclasses should override this method with the OS specific implementation.
          *  @param url  A string containing the url to the file
          */
-        virtual AXRFile::p getFile(std::string url) = 0;
+        virtual AXRFile::p getFile(std::string url);
         /**
          *  Reads the data in the file.
          *  Subclasses should override this method with the OS specific implementation.
          *  @param theFile  A shared pointer to the file to be read.
          *  @return the size
          */
-        virtual size_t readFile(AXRFile::p theFile) = 0;
+        virtual size_t readFile(AXRFile::p theFile);
         /**
          *  Closes the file. To be called after the file has been read to the end.
          *  Subclasses should override this method with the OS specific implementation.
          *  @param theFile  A shared pointer to the file to be closed.
          */
-        virtual void closeFile(AXRFile::p theFile) = 0;
+        virtual void closeFile(AXRFile::p theFile);
         /**
          *  The wrapper is responsible for handling the error (maybe show it in a console)
          *  Subclasses should override this method with the OS specific implementation.
          *  @param theError A shared pointer to the error that should be handled.
          */
-        virtual void handleError(AXRError::p theError) = 0;
+        virtual void handleError(AXRError::p theError);
         /**
          *  Shows a dialog to choose a local file.
          *  Subclasses should override this method with the OS specific implementation.
@@ -115,13 +115,13 @@ namespace AXR
          *                      selected by the user
          *  @return Wether a path has been selected or not.
          */
-        virtual bool openFileDialog(std::string &filePath) = 0;
+        virtual bool openFileDialog(std::string &filePath);
         /**
          *  This is to be called when something happens that needs to trigger a redraw.
          *  Subclasses should override this method with the OS specific implementation.
          *  @param  newValue    A boolean containing the new state.
          */
-        virtual void setNeedsDisplay(bool newValue) = 0;
+        virtual void setNeedsDisplay(bool newValue);
         /**
          *  Getter for the core.
          *  @return A shared pointer to the core object.
@@ -178,7 +178,7 @@ namespace AXR
          *  @return A string containing the path to where the HSS resources files are
          *  stored.
          */
-        virtual std::string getPathToResources() = 0;
+        virtual std::string getPathToResources();
 
         /**
          */

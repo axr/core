@@ -55,17 +55,10 @@ namespace AXR
         AXRWrapper * createWrapper();
         virtual ~GenericAXRWrapper();
 
-        virtual AXRFile::p getFile(std::string url);
-        virtual size_t readFile(AXRFile::p theFile);
-        virtual void closeFile(AXRFile::p theFile);
-        virtual void handleError(AXRError::p theError);
-        virtual bool openFileDialog(std::string &filePath);
-        virtual void setNeedsDisplay(bool newValue);
-        virtual std::string getPathToResources();
         virtual std::string getPathToTestsFile();
 
-        bool needsDisplay;
         std::string _layoutTestsFilePath;
+        bool needsDisplay;
     };
 }
 
