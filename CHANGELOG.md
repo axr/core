@@ -4,11 +4,15 @@
 * Add support for @polygon
 * Improved readme to encourage participation
 * Add support for the @root reference object
+* Add support for a new contentAlignX value
 * Fix many crashes and error messages
 * Add "content" property (accepts strings to override the content text)
 * Add basic infrastructure for layout tests
+* Add documentation about most of the classes
 * Make AXRCore a thread-specific singleton
 * Implement selector grouping
+* Add support for importing the HSS framework
+* Minor fixes
 
 ### Version 0.4.6
 2012-04-08
