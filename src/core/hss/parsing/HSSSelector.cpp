@@ -76,3 +76,8 @@ HSSSelectorType HSSSelector::getSelectorType()
 {
     return this->_selectorType;
 }
+
+bool HSSSelector::isA(HSSCombinatorType otherType)
+{
+    return HSSParserNode::isA(otherType);
+}

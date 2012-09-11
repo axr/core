@@ -87,6 +87,8 @@ namespace AXR
          */
         std::string statementStringRepresentation(HSSStatementType type);
 
+        bool isA(HSSInstructionType type);
+
     protected:
         /**
          *  Creates a new instance of a statement node. This class shouldn't be called directly,

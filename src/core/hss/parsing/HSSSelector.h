@@ -70,6 +70,8 @@ namespace AXR
         bool isA(HSSSelectorType otherType);
         HSSSelectorType getSelectorType();
 
+        bool isA(HSSCombinatorType otherType);
+
     protected:
         /**
          *  Creates a new instance of a simple selector, for use of the subclasses.
