@@ -116,7 +116,7 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
     }
     else
     {
-        char * buffer = this->file->getBuffer();
+        const char * buffer = this->file->getBuffer().constData();
         this->currentChar = buffer[this->bufpos];
     }
 

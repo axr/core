@@ -44,13 +44,6 @@
 #ifndef HSS_H
 #define HSS_H
 
-#ifndef AXR_HSS_BUFFER_SIZE
-/**
- *  @todo This is not used anywhere, I think
- */
-#define AXR_HSS_BUFFER_SIZE 10240 //1kB
-#endif
-
 #include "HSSParser.h"
 #include "HSSTokenizer.h"
 

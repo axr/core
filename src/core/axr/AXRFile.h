@@ -46,6 +46,7 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <QByteArray>
 
 namespace AXR
 {
@@ -90,37 +91,25 @@ namespace AXR
          *  Setter for the buffer where the contents of the file will be stored.
          *  @param buffer   A char * pointer to the buffer.
          */
-        void setBuffer(char * buffer);
+        void setBuffer(const QByteArray &buffer);
 
         /**
          *  Getter for the buffer where the contents of the file will be stored.
          *  @return A char * pointer to the buffer.
          */
-        char * getBuffer();
-
-        /**
-         *  Setter for the size of the file.
-         *  @param size     A long int holding the size of the file.
-         */
-        void setFileSize(long int size);
+        QByteArray& getBuffer();
 
         /**
          *  Getter for the size of the file.
          *  @return A long int holding the size of the file.
          */
-        long int getFileSize();
-
-        /**
-         *  Setter for the length of the buffer.
-         *  @param size A long int holding the size of the buffer.
-         */
-        void setBufferSize(long int size);
+        int getFileSize();
 
         /**
          *  Getter for the length of the buffer.
          *  @return A long int holding the size of the buffer.
          */
-        long int getBufferSize();
+        int getBufferSize();
 
         /**
          *  Setter for the base path. This + / + the filename form the full path to
@@ -197,9 +186,7 @@ namespace AXR
     private:
         bool _atEndOfFile;
 
-        char * buffer;
-        long int bufferSize;
-        long int fileSize;
+        QByteArray buffer;
         std::string mimeType;
         std::string basePath;
         std::string extension;

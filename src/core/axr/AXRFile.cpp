@@ -49,9 +49,6 @@ using namespace AXR;
 AXRFile::AXRFile()
 {
     this->fileName = "";
-    this->buffer = NULL;
-    this->bufferSize = 0;
-    this->fileSize = 0;
     this->mimeType = "";
     this->basePath = "";
     this->extension = "";
@@ -65,7 +62,6 @@ AXRFile::~AXRFile()
     {
         fclose(this->fileHandle);
     }
-    delete [] this->buffer;
 }
 
 void AXRFile::setFileName(std::string value)
@@ -78,34 +74,24 @@ std::string AXRFile::getFileName()
     return this->fileName;
 }
 
-void AXRFile::setBuffer(char * buffer)
+void AXRFile::setBuffer(const QByteArray &buffer)
 {
     this->buffer = buffer;
 }
 
-char * AXRFile::getBuffer()
+QByteArray& AXRFile::getBuffer()
 {
     return this->buffer;
 }
 
-void AXRFile::setFileSize(long int size)
+int AXRFile::getFileSize()
 {
-    this->fileSize = size;
+    return this->buffer.size();
 }
 
-long int AXRFile::getFileSize()
+int AXRFile::getBufferSize()
 {
-    return this->fileSize;
-}
-
-void AXRFile::setBufferSize(long int size)
-{
-    this->bufferSize = size;
-}
-
-long int AXRFile::getBufferSize()
-{
-    return this->bufferSize;
+    return this->buffer.size();
 }
 
 void AXRFile::setBasePath(std::string path)

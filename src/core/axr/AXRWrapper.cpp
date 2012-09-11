@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include <boost/lexical_cast.hpp>
+#include <QFile>
 #include "AXR.h"
 #include "AXRWrapper.h"
 #include "HSSFunction.h"
@@ -79,10 +80,7 @@ AXRFile::p AXRWrapper::getFile(std::string url)
         ret->setFileName(clean_path.substr(slashpos + 1, clean_path.size()));
         ret->setBasePath(clean_path.substr(0, slashpos));
 
-        ret->setBufferSize(10240);
-        char *buffer = new char[ret->getBufferSize()];
-        memset(buffer, 0, ret->getBufferSize());
-        ret->setBuffer(buffer);
+        ret->setBuffer(QByteArray());
         ret->setFileHandle(fopen(clean_path.c_str(), "r"));
 
         if (!ret->getFileHandle())
@@ -104,21 +102,21 @@ AXRFile::p AXRWrapper::getFile(std::string url)
 
 size_t AXRWrapper::readFile(AXRFile::p theFile)
 {
-    char * buffer = theFile->getBuffer();
-    size_t size = fread(buffer, sizeof (buffer[0]), theFile->getBufferSize(), theFile->getFileHandle());
-
-    if (feof(theFile->getFileHandle()))
+    QFile file(QString::fromStdString(theFile->getBasePath() + "/" + theFile->getFileName()));
+    if (file.open(QIODevice::ReadOnly))
     {
-        theFile->setAtEndOfFile(true);
+        theFile->setBuffer(file.readAll());
+        if (file.error() != QFile::NoError)
+            theFile->setAtEndOfFile(true);
     }
 
-    if (ferror(theFile->getFileHandle()))
+    if (file.error() != QFile::NoError)
     {
         AXRError::p(new AXRError("AXRWrapper", "The file " + theFile->getFileName() + " couldn't be read"))->raise();
         return -1;
     }
 
-    return size;
+    return theFile->getBufferSize();
 }
 
 void AXRWrapper::closeFile(AXRFile::p theFile)
@@ -170,7 +168,6 @@ void AXRWrapper::setNeedsDisplay(bool newValue)
 AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
 {
     AXRFile::p ret = AXRFile::p(new AXRFile());
-    ret->setBufferSize(10240);
     ret->setMimeType("text/xml");
     size_t slashpos = stylesheet.rfind("/");
     if (slashpos != std::string::npos)
@@ -187,17 +184,9 @@ AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
     std::string dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" src=\"file://" + stylesheet + "\" version=\"1.0\"?><root></root>";
 
     ret->setFileHandle(tmpfile());
-    char * buffer = new char[ret->getBufferSize()];
-    memset(buffer, 0, ret->getBufferSize());
 
-    ret->setBuffer(buffer);
-    dummyXML.copy(ret->getBuffer(), ret->getBufferSize(), 0);
+    ret->setBuffer(QString::fromStdString(dummyXML).toUtf8());
 
-    size_t bfsz = dummyXML.size();
-    ret->setFileSize(bfsz);
-    ret->setBufferSize(bfsz);
-
-    fwrite(buffer, sizeof (buffer[0]), ret->getBufferSize(), ret->getFileHandle());
     rewind(ret->getFileHandle());
 
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: creating dummy XML file");
