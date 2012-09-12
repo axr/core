@@ -140,6 +140,8 @@ namespace AXR
         HSSObservableProperty observedTextProperty;
 
     private:
+        QFont getFont() const;
+
         HSSClonable::p cloneImpl() const;
     };
 }

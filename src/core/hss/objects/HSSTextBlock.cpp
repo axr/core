@@ -282,6 +282,31 @@ void HSSTextBlock::setProperty(HSSObservableProperty name, HSSParserNode::p valu
     }
 }
 
+QFont HSSTextBlock::getFont() const
+{
+    QFont font_description;
+
+    // Get the first font available
+    HSSFont::p theFont;
+    if (font.size() > 0)
+        theFont = *font.begin();
+
+    if (theFont && !theFont->getFace().empty())
+        font_description.setFamily(QString::fromStdString(theFont->getFace()));
+    else
+        font_description.setFamily("monospace");
+
+    // Set the weight of the font (bold, italic, etc.) if available
+    if (theFont && theFont->getWeight())
+        font_description.setWeight(getQtWeight(theFont->getWeight()->getValue()));
+    else
+        font_description.setWeight(QFont::Normal);
+
+    font_description.setPointSize(theFont ? theFont->getSize() : HSSFont::DEFAULT_SIZE);
+
+    return font_description;
+}
+
 void HSSTextBlock::drawForeground()
 {
     QPainter painter(this->foregroundSurface);
@@ -302,6 +327,8 @@ void HSSTextBlock::drawForeground()
     }
 
     painter.setPen(pen);
+
+    painter.setFont(getFont());
 
     int flags = 0;
     switch (this->textAlign)
@@ -329,26 +356,6 @@ void HSSTextBlock::layout()
 {
     this->_needsLayout = false;
 
-    QFont font_description;
-
-    // Get the first font available
-    HSSFont::p theFont;
-    if (font.size() > 0)
-        theFont = *font.begin();
-
-    if (theFont && !theFont->getFace().empty())
-        font_description.setFamily(QString::fromStdString(theFont->getFace()));
-    else
-        font_description.setFamily("monospace");
-
-    // Set the weight of the font (bold, italic, etc.) if available
-    if (theFont && theFont->getWeight())
-        font_description.setWeight(getQtWeight(theFont->getWeight()->getValue()));
-    else
-        font_description.setWeight(QFont::Normal);
-
-    font_description.setPointSize(theFont ? theFont->getSize() : HSSFont::DEFAULT_SIZE);
-
     int flags = 0;
     switch (this->textAlign)
     {
@@ -368,7 +375,7 @@ void HSSTextBlock::layout()
         break;
     }
 
-    QFontMetrics fontMetrics(font_description);
+    QFontMetrics fontMetrics(getFont());
     QRect bounds = fontMetrics.boundingRect(0, 0, this->width, std::numeric_limits<int>::max(), flags, QString::fromStdString(this->getText()));
 
     this->height = bounds.height();
