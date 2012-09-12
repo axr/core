@@ -143,7 +143,7 @@ namespace AXR
         /**
          *  @return How many nodes there are in the selector chain.
          */
-        const int size();
+        int size();
 
         /**
          *  The subject of the selector chain is the last simple selector, but this can

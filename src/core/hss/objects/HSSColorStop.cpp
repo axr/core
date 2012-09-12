@@ -221,7 +221,7 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
                 this->color = boost::any_cast<HSSRgb::p > (remoteValue);
                 valid = true;
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -348,7 +348,7 @@ void HSSColorStop::setDPosition(HSSParserNode::p value)
             {
                 this->position = boost::any_cast<long double>(remoteValue);
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -438,7 +438,7 @@ void HSSColorStop::setDBalance(HSSParserNode::p value)
             {
                 this->balance = boost::any_cast<long double>(remoteValue);
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }

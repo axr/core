@@ -57,7 +57,7 @@ HSSSelector::~HSSSelector()
 
 }
 
-const bool HSSSelector::getNegating() const
+bool HSSSelector::getNegating() const
 {
     return this->_negating;
 }

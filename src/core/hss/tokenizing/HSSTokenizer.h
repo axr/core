@@ -59,7 +59,7 @@ namespace AXR
     {
         HSSTokenizerUnknownError = -1,
         HSSTokenizerDone = 0,
-        HSSTokenizerOK = 1,
+        HSSTokenizerOK = 1
     };
 
     class HSSTokenizer

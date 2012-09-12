@@ -171,7 +171,7 @@ HSSSelectorChain::p & HSSRule::selectorChainsLast()
     return this->selectorChains.back();
 }
 
-const int HSSRule::selectorChainsSize()
+int HSSRule::selectorChainsSize()
 {
     return this->selectorChains.size();
 }
@@ -211,7 +211,7 @@ HSSPropertyDefinition::p & HSSRule::propertiesLast()
     return this->properties.back();
 }
 
-const unsigned int HSSRule::propertiesSize()
+unsigned int HSSRule::propertiesSize()
 {
     return this->properties.size();
 }
@@ -237,7 +237,7 @@ void HSSRule::childrenRemoveLast()
     this->children.pop_back();
 }
 
-const int HSSRule::childrenSize()
+int HSSRule::childrenSize()
 {
     return this->children.size();
 }

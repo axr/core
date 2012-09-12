@@ -224,7 +224,7 @@ HSSFilterType HSSFilter::getFilterType()
     return this->filterType;
 }
 
-const bool HSSFilter::getNegating() const
+bool HSSFilter::getNegating() const
 {
     return this->_negating;
 }

@@ -149,7 +149,7 @@ enum axr_debug_ch
 
     //
 
-    AXR_DEBUG_CH_FULL_FILENAMES = 1 << 28, //c
+    AXR_DEBUG_CH_FULL_FILENAMES = 1 << 28 //c
 };
 
 void axr_log(quint32 channels, const std::string &message);

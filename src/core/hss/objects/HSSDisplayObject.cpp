@@ -493,7 +493,7 @@ void HSSDisplayObject::rulesRemoveLast()
     this->rules.pop_back();
 }
 
-const int HSSDisplayObject::rulesSize()
+int HSSDisplayObject::rulesSize()
 {
     return this->rules.size();
 }
@@ -868,7 +868,7 @@ void HSSDisplayObject::setNeedsLayout(bool value)
     this->_needsLayout = value;
 }
 
-const bool HSSDisplayObject::needsLayout() const
+bool HSSDisplayObject::needsLayout() const
 {
     return this->_needsLayout;
 }
@@ -3482,7 +3482,7 @@ void HSSDisplayObject::borderChanged(HSSObservableProperty source, void*data)
 
 }
 
-const bool HSSDisplayObject::getVisible() const
+bool HSSDisplayObject::getVisible() const
 {
     return this->visible;
 }

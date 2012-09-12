@@ -121,7 +121,7 @@ HSSParserNode::p HSSMultipleValue::last()
     return this->valueList.back();
 }
 
-const int HSSMultipleValue::size()
+int HSSMultipleValue::size()
 {
     return this->valueList.size();
 }

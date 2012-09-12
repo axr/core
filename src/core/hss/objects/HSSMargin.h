@@ -117,7 +117,7 @@ namespace AXR
          *  Getter for the actual value of top.
          *  @return An HSSUnit containing the value of size.
          */
-        const HSSUnit getTop() const;
+        HSSUnit getTop() const;
 
         /**
          *  Getter for the definition object of top.
@@ -142,7 +142,7 @@ namespace AXR
          *  Getter for the actual value of right.
          *  @return An HSSUnit containing the value of size.
          */
-        const HSSUnit getRight() const;
+        HSSUnit getRight() const;
 
         /**
          *  Getter for the definition object of right.
@@ -167,7 +167,7 @@ namespace AXR
          *  Getter for the actual value of bottom.
          *  @return An HSSUnit containing the value of size.
          */
-        const HSSUnit getBottom() const;
+        HSSUnit getBottom() const;
 
         /**
          *  Getter for the definition object of bottom.
@@ -192,7 +192,7 @@ namespace AXR
          *  Getter for the actual value of left.
          *  @return An HSSUnit containing the value of size.
          */
-        const HSSUnit getLeft() const;
+        HSSUnit getLeft() const;
 
         /**
          *  Getter for the definition object of left.

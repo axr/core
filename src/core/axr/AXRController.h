@@ -274,7 +274,7 @@ namespace AXR
          *
          *  @return         The number of entries in the list of rules.
          */
-        unsigned const rulesSize();
+        unsigned rulesSize();
 
         /**
          *  Set the given selector chain as the current one. It will set the new current chain size,

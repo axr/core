@@ -122,7 +122,7 @@ HSSParserNode::p HSSSelectorChain::last()
     return this->nodeList.back();
 }
 
-const int HSSSelectorChain::size()
+int HSSSelectorChain::size()
 {
     return this->nodeList.size();
 }

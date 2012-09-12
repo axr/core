@@ -76,7 +76,7 @@ namespace AXR
         HSSParserNodeTypeSelectorChain, /**< A group of selector nodes that define what elements will be selected. */
         HSSParserNodeTypeNegation, /**< Inverts the meaning of one or more selectors. */
         HSSParserNodeTypeFlag, /**< Conditionally applies properties to elements. */
-        HSSParserNodeTypeRootSelector, /**< Returns the root element. */
+        HSSParserNodeTypeRootSelector /**< Returns the root element. */
     };
     /** @} */
 
@@ -92,7 +92,7 @@ namespace AXR
         HSSExpressionTypeSum, /**< A+B. */
         HSSExpressionTypeSubtraction, /**< A-B. */
         HSSExpressionTypeMultiplication, /**< A*B. */
-        HSSExpressionTypeDivision, /**< A/B. */
+        HSSExpressionTypeDivision /**< A/B. */
     };
     /** @} */
 
@@ -155,7 +155,7 @@ namespace AXR
         HSSSelectorTypeSuperSelector, /**< Selects the element that owns the current one. */
         HSSSelectorTypeSubjectSelector, /**< Changes what will be selected by a selector chain ($). */
         HSSSelectorTypeCombinator, /**< Defines relations between parts of the selector chain. */
-        HSSSelectorTypeSimpleSelector, /**< Represents a basic block of a selector chain. */
+        HSSSelectorTypeSimpleSelector /**< Represents a basic block of a selector chain. */
     };
     /** @} */
 
@@ -213,7 +213,7 @@ namespace AXR
         HSSFilterTypeFirstChild, /**< Selects the elements from the selection that are first child in each parent. */
         HSSFilterTypeLastChild, /**< Selects the elements from the selection that are last child in each parent. */
         HSSFilterTypeEvenChild, /**< Selects the elements from the selection that have even index in each parent. */
-        HSSFilterTypeOddChild, /**< Selects the elements from the selection that have odd index in each parent. */
+        HSSFilterTypeOddChild /**< Selects the elements from the selection that have odd index in each parent. */
     };
     /** @} */
 
@@ -237,7 +237,7 @@ namespace AXR
         HSSFunctionTypeUnflag, /**< Deactivates the given flag on the selected elements. */
         HSSFunctionTypeToggleFlag, /**< Toggles the given flag on the selected elements. */
         HSSFunctionTypeCustom, /**< A function whose name has been registered on the core with a callback. */
-        HSSFunctionTypeAttr, /**< Returns a value from an attribute of an XML element. */
+        HSSFunctionTypeAttr /**< Returns a value from an attribute of an XML element. */
     };
     /** @} */
 
@@ -316,7 +316,7 @@ namespace AXR
         HSSObjectTypeShape, /**< All shapes share this type */
         HSSObjectTypeEvent, /**< All events share this type */
         HSSObjectTypeAction, /**< All actions share this type */
-        HSSObjectTypeColorStop, /**< Color stops are used inside gradients */
+        HSSObjectTypeColorStop /**< Color stops are used inside gradients */
     };
     /** @} */
 
@@ -352,7 +352,7 @@ namespace AXR
                                  the current content into the loaded one. */
         HSSRequestModeTypePrepend, /**< Inserts the loaded content into the target, before existing children. */
         HSSRequestModeTypeAppend, /**< Inserts the loaded content into the target, after existing children. */
-        HSSRequestModeTypeReturn, /**< Just returns the content. */ ///@todo This is not clear, needs discussion.
+        HSSRequestModeTypeReturn /**< Just returns the content. */ ///@todo This is not clear, needs discussion.
     };
     /** @} */
 

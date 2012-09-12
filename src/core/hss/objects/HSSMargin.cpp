@@ -211,7 +211,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
     this->dSize = value;
 }
 
-const HSSUnit HSSMargin::getTop() const
+HSSUnit HSSMargin::getTop() const
 {
     return this->top;
 }
@@ -255,7 +255,7 @@ void HSSMargin::topChanged(AXR::HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyTop, &this->top);
 }
 
-const HSSUnit HSSMargin::getRight() const
+HSSUnit HSSMargin::getRight() const
 {
     return this->right;
 }
@@ -299,7 +299,7 @@ void HSSMargin::rightChanged(AXR::HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyRight, &this->right);
 }
 
-const HSSUnit HSSMargin::getBottom() const
+HSSUnit HSSMargin::getBottom() const
 {
     return this->bottom;
 }
@@ -343,7 +343,7 @@ void HSSMargin::bottomChanged(AXR::HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyBottom, &this->bottom);
 }
 
-const HSSUnit HSSMargin::getLeft() const
+HSSUnit HSSMargin::getLeft() const
 {
     return this->left;
 }

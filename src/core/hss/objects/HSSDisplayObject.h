@@ -179,7 +179,7 @@ namespace AXR
         HSSRule::p rulesGet(unsigned index);
         void rulesRemove(unsigned index);
         void rulesRemoveLast();
-        const int rulesSize();
+        int rulesSize();
         void setRuleStatus(HSSRule::p rule, HSSRuleState newValue);
         bool hasRule(HSSRule::p rule);
         virtual void readDefinitionObjects();
@@ -204,7 +204,7 @@ namespace AXR
         virtual void recursiveDraw(QPainter &painter);
 
         void setNeedsLayout(bool value);
-        const bool needsLayout() const;
+        bool needsLayout() const;
         virtual void layout();
         virtual void recursiveLayout();
         virtual void setGlobalX(HSSUnit newValue);
@@ -301,7 +301,7 @@ namespace AXR
         void borderChanged(HSSObservableProperty source, void*data);
 
         //visible
-        const bool getVisible() const;
+        bool getVisible() const;
         const HSSParserNode::p getDVisible() const;
         void setDVisible(HSSParserNode::p value);
         void visibleChanged(HSSObservableProperty source, void*data);

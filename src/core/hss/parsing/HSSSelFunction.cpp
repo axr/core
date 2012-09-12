@@ -115,7 +115,7 @@ HSSSelectorChain::p & HSSSelFunction::selectorChainsLast()
     return this->selectorChains.back();
 }
 
-const int HSSSelFunction::selectorChainsSize()
+int HSSSelFunction::selectorChainsSize()
 {
     return this->selectorChains.size();
 }

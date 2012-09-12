@@ -140,7 +140,7 @@ namespace AXR
         /**
          *  @return How many statements there are in the properties list.
          */
-        const int propertiesSize();
+        int propertiesSize();
 
         /**
          *  @return All the properties in the list, contained in a double ended queue holding shared
@@ -173,7 +173,7 @@ namespace AXR
         /**
          *  @return How many statements there are in the children list.
          */
-        const int childrenSize();
+        int childrenSize();
 
         /**
          *  @return A vector of shared pointers to object defnitions, the children.

@@ -173,7 +173,7 @@ namespace AXR
         /**
          *  @return the size of the selector chains vector
          */
-        const int selectorChainsSize();
+        int selectorChainsSize();
 
         /**
          *  @todo Add setter for properties vector.
@@ -219,7 +219,7 @@ namespace AXR
         /**
          *  @return the size of the properties vector
          */
-        const unsigned int propertiesSize();
+        unsigned int propertiesSize();
 
         /**
          *  Add a child rule.
@@ -248,7 +248,7 @@ namespace AXR
         /**
          *  @return the size of the children vector
          */
-        const int childrenSize();
+        int childrenSize();
 
         void setInstruction(HSSInstruction::p newInstruction);
 

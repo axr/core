@@ -881,7 +881,7 @@ HSSRule::p & AXRController::rulesGet(unsigned index)
     return this->rules[index];
 }
 
-unsigned const AXRController::rulesSize()
+unsigned AXRController::rulesSize()
 {
     return this->rules.size();
 }

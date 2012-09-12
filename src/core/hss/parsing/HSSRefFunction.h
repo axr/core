@@ -160,7 +160,7 @@ namespace AXR
         /**
          *  @return the size of the selector chains vector
          */
-        const int selectorChainsSize();
+        int selectorChainsSize();
 
         /**
          *  This is the actual implementation of what the function does. It selects from the elements

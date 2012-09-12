@@ -64,7 +64,7 @@ namespace AXR
          */
         virtual std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing) = 0;
 
-        const bool getNegating() const;
+        bool getNegating() const;
         void setNegating(bool value);
 
         bool isA(HSSSelectorType otherType);

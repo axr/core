@@ -163,7 +163,7 @@ HSSPropertyDefinition::p &HSSObjectDefinition::propertiesLast()
     return this->properties.back();
 }
 
-const int HSSObjectDefinition::propertiesSize()
+int HSSObjectDefinition::propertiesSize()
 {
     return this->properties.size();
 }
@@ -201,7 +201,7 @@ HSSObjectDefinition::p &HSSObjectDefinition::childrenLast()
     return this->children.back();
 }
 
-const int HSSObjectDefinition::childrenSize()
+int HSSObjectDefinition::childrenSize()
 {
     return this->children.size();
 }

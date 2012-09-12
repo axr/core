@@ -130,7 +130,7 @@ namespace AXR
          */
         HSSFilterType getFilterType();
 
-        const bool getNegating() const;
+        bool getNegating() const;
         void setNegating(bool value);
 
     protected:
