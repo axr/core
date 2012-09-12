@@ -486,8 +486,8 @@ namespace AXR
         bool _arrangeLines(displayGroup::p &groups, HSSDirectionValue direction, bool isFirstGroup);
         void _recursiveGetPushGroup(HSSDisplayObject::p objA, HSSDisplayObject::p objB, std::vector<displayGroup::p>::iterator linesIt, std::vector<displayGroup::p>::iterator stopIt, displayGroup::p &ret);
         void _distribute(displayGroup::p &groups, HSSDirectionValue direction);
-        bool _recursiveFindTopConstraint(long double & constraint, displayGroup::p group, unsigned int i, HSSDisplayObject::p child);
-        bool _recursiveFindBottomConstraint(long double & constraint, displayGroup::p group, int i, HSSDisplayObject::p child);
+        bool _recursiveFindTopConstraint(HSSUnit & constraint, displayGroup::p group, unsigned int i, HSSDisplayObject::p child);
+        bool _recursiveFindBottomConstraint(HSSUnit & constraint, displayGroup::p group, int i, HSSDisplayObject::p child);
         HSSClonable::p cloneImpl() const;
 
     };

@@ -300,7 +300,7 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
                 this->startColor = boost::any_cast<HSSRgb::p > (remoteValue);
                 valid = true;
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -433,7 +433,7 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
                 this->endColor = boost::any_cast<HSSRgb::p > (remoteValue);
                 valid = true;
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -552,7 +552,7 @@ void HSSGradient::setDBalance(HSSParserNode::p value)
             {
                 this->balance = boost::any_cast<long double>(remoteValue);
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -667,7 +667,7 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
             {
                 e->raise();
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }

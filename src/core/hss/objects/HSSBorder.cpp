@@ -162,7 +162,7 @@ void HSSBorder::setDSize(HSSParserNode::p value)
             {
                 this->size = boost::any_cast<HSSUnit > (remoteValue);
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 this->size = 1.;
             }

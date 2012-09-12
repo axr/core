@@ -320,7 +320,7 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
             {
                 this->src = boost::any_cast<std::string > (remoteValue);
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -392,7 +392,7 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                         this->target.insert(this->target.end(), inner.begin(), inner.end());
                     }
                 }
-                catch (boost::bad_any_cast & e)
+                catch (boost::bad_any_cast &)
                 {
                     //do nothing
                 }

@@ -205,7 +205,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
             {
                 this->color = boost::any_cast<HSSRgb::p > (remoteValue);
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 this->color = HSSRgb::p(new HSSRgb());
             }

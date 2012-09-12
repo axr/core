@@ -250,7 +250,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             {
                 e->raise();
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }

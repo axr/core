@@ -220,7 +220,7 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
             {
                 this->sides = floor(boost::any_cast<long double>(remoteValue));
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -228,7 +228,7 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
             {
                 this->sides = boost::any_cast<unsigned int>(remoteValue);
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -318,7 +318,7 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
             {
                 this->angle = boost::any_cast<long double>(remoteValue);
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }

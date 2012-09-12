@@ -249,8 +249,6 @@
     bool loaded = wrapper->reload();
     [self setNeedsDisplay : YES];
     return loaded;
-
-    return false;
 }
 
 @end

@@ -1518,7 +1518,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
             {
                 obj = HSSObject::newObjectWithType(objtype);
             }
-            catch (const AXRError::p &e)
+            catch (const AXRError::p &)
             {
                 objtype = "value";
                 obj = HSSObject::newObjectWithType(objtype);
@@ -1816,7 +1816,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             //consume the property
             this->currentObjectContext.top()->shorthandNext();
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError::p &)
         {
             AXRError::p(new AXRError("HSSParser", "Could not get property for current value"))->raise();
             valid = false;
@@ -3050,7 +3050,7 @@ void HSSParser::readNextToken(bool checkForUnexpectedEndOfSource)
         }
 
     }
-    catch (const AXRError::p &e)
+    catch (const AXRError::p &)
     {
         this->currentToken = HSSToken::p();
         throw;

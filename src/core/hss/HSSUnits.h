@@ -44,6 +44,9 @@
 #ifndef AXR_HSSUNITS_H
 #define AXR_HSSUNITS_H
 
+#include <QPoint>
+#include <QRect>
+
 #if defined(_WIN32)
 #include <windows.h>
 #define HSS_UNITS_NATIVE_CONSTRUCTORS_WIN32
@@ -57,9 +60,9 @@
 namespace AXR
 {
     /**
-     * @brief Represents an HSS unit. Currently defined as a long double.
+     * @brief Represents an HSS unit.
      */
-    typedef long double HSSUnit;
+    typedef double HSSUnit;
 
     /**
      * @brief   A resolution independent point.
@@ -80,6 +83,14 @@ namespace AXR
         }
 #endif
 
+        HSSPoint(const QPointF &point) : x(point.x()), y(point.y())
+        {
+        }
+
+        HSSPoint(const QPoint &point) : x(point.x()), y(point.y())
+        {
+        }
+
         HSSPoint() : x(0), y(0)
         {
         }
@@ -94,7 +105,7 @@ namespace AXR
 
         bool operator==(const HSSPoint &other) const
         {
-            return x == other.x && y == other.y;
+            return qFuzzyIsNull(x - other.x) && qFuzzyIsNull(y - other.y);
         }
 
         bool operator!=(const HSSPoint &other) const
@@ -119,6 +130,14 @@ namespace AXR
         }
 #endif
 
+        HSSSize(const QSizeF &size) : width(size.width()), height(size.height())
+        {
+        }
+
+        HSSSize(const QSize &size) : width(size.width()), height(size.height())
+        {
+        }
+
         HSSSize() : width(0), height(0)
         {
         }
@@ -133,7 +152,7 @@ namespace AXR
 
         bool operator==(const HSSSize &other) const
         {
-            return width == other.width && height == other.height;
+            return qFuzzyIsNull(width - other.width) && qFuzzyIsNull(height - other.height);
         }
 
         bool operator!=(const HSSSize &other) const
@@ -163,6 +182,14 @@ namespace AXR
         {
         }
 #endif
+
+        HSSRect(const QRectF &rect) : origin(rect.topLeft()), size(rect.size())
+        {
+        }
+
+        HSSRect(const QRect &rect) : origin(rect.topLeft()), size(rect.size())
+        {
+        }
 
         HSSRect()
         {

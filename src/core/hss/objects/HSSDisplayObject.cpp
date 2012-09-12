@@ -999,7 +999,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
                     this->observedWidthProperty = HSSObservablePropertyWidth;
                     valid = true;
 
-                } catch (boost::bad_any_cast & e) {
+                } catch (boost::bad_any_cast &) {
                     //do nothing
                 }
             }
@@ -1229,7 +1229,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
                     this->observedHeightProperty = HSSObservablePropertyHeight;
                     valid = true;
 
-                } catch (boost::bad_any_cast & e) {
+                } catch (boost::bad_any_cast &) {
                     //do nothing
                 }
             }
@@ -1671,7 +1671,7 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
             {
                 this->flow = boost::any_cast<bool>(remoteValue);
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 this->flow = true;
             }
@@ -1825,7 +1825,7 @@ void HSSDisplayObject::setDContained(HSSParserNode::p value)
             {
                 this->contained = boost::any_cast<bool>(remoteValue);
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 this->contained = false;
             }
@@ -2280,7 +2280,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
                 valid = true;
 
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -2450,7 +2450,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                 {
                     e->raise();
                 }
-                catch (boost::bad_any_cast & e)
+                catch (boost::bad_any_cast &)
                 {
                     //do nothing
                 }
@@ -2478,7 +2478,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                     valid = true;
 
                 }
-                catch (boost::bad_any_cast & e)
+                catch (boost::bad_any_cast &)
                 {
                     this->setContentText("");
                 }
@@ -2653,7 +2653,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                 this->addDFont(theVal);
                 valid = true;
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -2678,7 +2678,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
                 parent->observe(HSSObservablePropertyFont, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::fontChanged));
                 valid = true;
 
-            } catch (boost::bad_any_cast & e) {
+            } catch (boost::bad_any_cast &) {
                 //do nothing
             }
         }
@@ -2839,7 +2839,7 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
             {
                 e->raise();
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -3048,7 +3048,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
             {
                 e->raise();
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -3234,7 +3234,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
             {
                 e->raise();
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -3414,7 +3414,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
             {
                 e->raise();
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -3520,7 +3520,7 @@ void HSSDisplayObject::setDVisible(HSSParserNode::p value)
                 this->visible = boost::any_cast<bool>(remoteValue);
                 valid = true;
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 this->visible = true;
             }
@@ -3556,7 +3556,7 @@ void HSSDisplayObject::setDVisible(HSSParserNode::p value)
                     this->observedVisible = parent;
                     this->observedVisibleProperty = HSSObservablePropertyVisible;
 
-                } catch (boost::bad_any_cast & e) {
+                } catch (boost::bad_any_cast &) {
                     //do nothing
                 }
             }

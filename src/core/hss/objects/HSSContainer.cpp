@@ -2839,7 +2839,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
                 this->textAlign = boost::any_cast<HSSTextAlignType > (remoteValue);
                 valid = true;
             }
-            catch (boost::bad_any_cast & e)
+            catch (boost::bad_any_cast &)
             {
                 //do nothing
             }
@@ -3020,7 +3020,7 @@ long double HSSContainer::_setLDProperty(
         {
             ret = boost::any_cast<long double>(remoteValue);
         }
-        catch (boost::bad_any_cast & e)
+        catch (boost::bad_any_cast &)
         {
             ret = 0.;
         }
