@@ -82,42 +82,42 @@ void std_log4(const std::string &message, bool newline)
     std_log_level(message, 4, newline);
 }
 
-unsigned axr_debug_active_channels = 0;
+quint32 axr_debug_active_channels = 0;
 
-void axr_log(uint32_t channels, const std::string &message)
+void axr_log(quint32 channels, const std::string &message)
 {
     if ((axr_debug_active_channels & AXR_DEBUG_CH_ON) && (axr_debug_active_channels & channels))
         std_log(message);
 }
 
-void axr_log_inline(uint32_t channels, const std::string &message)
+void axr_log_inline(quint32 channels, const std::string &message)
 {
     if ((axr_debug_active_channels & AXR_DEBUG_CH_ON) && (axr_debug_active_channels & channels))
         std_log(message, false);
 }
 
 
-void axr_log(uint32_t channels, const QString &message)
+void axr_log(quint32 channels, const QString &message)
 {
     axr_log(channels, message.toStdString());
 }
 
-void axr_log_inline(uint32_t channels, const QString &message)
+void axr_log_inline(quint32 channels, const QString &message)
 {
     axr_log(channels, message.toStdString());
 }
 
-void axr_log(uint32_t channels, const char *message)
+void axr_log(quint32 channels, const char *message)
 {
     axr_log(channels, QString(message));
 }
 
-void axr_log_inline(uint32_t channels, const char *message)
+void axr_log_inline(quint32 channels, const char *message)
 {
     axr_log(channels, QString(message));
 }
 
-void axr_debug_activate_channel(uint32_t channels)
+void axr_debug_activate_channel(quint32 channels)
 {
     axr_debug_active_channels = (axr_debug_active_channels | channels);
 }

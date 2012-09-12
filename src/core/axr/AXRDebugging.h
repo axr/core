@@ -123,7 +123,7 @@ void std_log4(const std::string &message, bool newline = true);
  *
  */
 
-unsigned int extern axr_debug_active_channels;
+quint32 extern axr_debug_active_channels;
 
 enum axr_debug_ch
 {
@@ -152,12 +152,12 @@ enum axr_debug_ch
     AXR_DEBUG_CH_FULL_FILENAMES = 1 << 28, //c
 };
 
-void axr_log(uint32_t channels, const std::string &message);
-void axr_log_inline(uint32_t channels, const std::string &message);
-void axr_log(uint32_t channels, const QString &message);
-void axr_log_inline(uint32_t channels, const QString &message);
-void axr_log(uint32_t channels, const char *message);
-void axr_log_inline(uint32_t channels, const char *message);
-void axr_debug_activate_channel(uint32_t channels);
+void axr_log(quint32 channels, const std::string &message);
+void axr_log_inline(quint32 channels, const std::string &message);
+void axr_log(quint32 channels, const QString &message);
+void axr_log_inline(quint32 channels, const QString &message);
+void axr_log(quint32 channels, const char *message);
+void axr_log_inline(quint32 channels, const char *message);
+void axr_debug_activate_channel(quint32 channels);
 
 #endif //AXRDEBUGGING_H
