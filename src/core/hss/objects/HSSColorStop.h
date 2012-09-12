@@ -46,7 +46,6 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include <cairo/cairo.h>
 #include "HSSObject.h"
 #include "HSSRgb.h"
 

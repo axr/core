@@ -44,6 +44,7 @@
 #ifndef HSSCIRCLE_H
 #define HSSCIRCLE_H
 
+#include <QPainter>
 #include "HSSShape.h"
 
 namespace AXR
@@ -85,15 +86,15 @@ namespace AXR
         virtual bool isKeyword(std::string value, std::string property);
 
         /**
-         *  Call this method when you need to draw shape into the cairo context. The coordinates are used
+         *  Call this method when you need to draw the shape. The coordinates are used
          *  to define the bounding box into which the shape will be drawn.
-         *  @param cairo    A regular pointer to a cairo handle representing the drawing context.
+         *  @param painter  A QPainter context used to draw onto a surface.
          *  @param x        The horizontal position of the shape.
          *  @param y        The vertical position of the shape.
          *  @param width    The width of the shape.
          *  @param height   The height of the shape.
          */
-        virtual void draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
 
     private:
         HSSClonable::p cloneImpl() const;

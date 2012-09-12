@@ -45,7 +45,7 @@
 
 /**
  *  @brief (OSX only) This is a NSView subclass, for using inside a window in
- *  Apple's cocoa framework.
+ *  Apple's Cocoa framework.
  */
 @interface AXRView : NSView
 {
@@ -69,7 +69,7 @@
 -(BOOL) isOpaque;
 /**
  *  Method that is called to draw on OSX. From within this, we can get access to the current
- *  graphics port, which is turned into a cairo surface.
+ *  AXR compositor output graphics port, which is then blitted onto the NSView.
  */
 -(void) drawRect : (NSRect) dirtyRect;
 /**

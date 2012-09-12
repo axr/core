@@ -49,7 +49,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Shape object, representing the HSS object \@rect.
      */
@@ -86,7 +85,7 @@ namespace AXR
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
 
-        virtual void draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
 
     private:
         HSSClonable::p cloneImpl() const;

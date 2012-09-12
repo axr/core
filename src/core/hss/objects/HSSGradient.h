@@ -46,7 +46,8 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include <cairo/cairo.h>
+#include <QPainter>
+#include <QPainterPath>
 #include "HSSObject.h"
 #include "HSSRgb.h"
 
@@ -78,7 +79,7 @@ namespace AXR
          *  Call this method when you need to draw the gradient. Each specific
          *  subclass implements its own way of drawing the gradient.
          */
-        virtual void draw(cairo_t * cairo) = 0;
+        virtual void draw(QPainter &painter, const QPainterPath &path) = 0;
 
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
 

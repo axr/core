@@ -93,7 +93,7 @@ bool HSSRectangle::isKeyword(std::string value, std::string property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSRectangle::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
+void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
-    cairo_rectangle(cairo, x, y, width, height);
+    path.addRect(x, y, width, height);
 }

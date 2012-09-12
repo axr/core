@@ -46,9 +46,6 @@
 
 #include "HSSDisplayObject.h"
 
-struct _PangoLayout;
-typedef struct _PangoLayout PangoLayout;
-
 namespace AXR
 {
     enum HSSTextTransformType
@@ -141,8 +138,6 @@ namespace AXR
         HSSParserNode::p dText;
         HSSObservable * observedText;
         HSSObservableProperty observedTextProperty;
-
-        PangoLayout * _layout;
 
     private:
         HSSClonable::p cloneImpl() const;

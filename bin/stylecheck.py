@@ -34,7 +34,7 @@ with open(os.path.join(repositoryDirectory, "share", "header.txt")) as sourceHea
 # File names and extensions to ignore
 ignoredFiles = ["CMakeCache.txt"]
 ignoredExtensions = ["nib", "plist", "strings"]
-licenseIgnoredFiles = ["ExpatXMLParser.cpp", "ExpatXMLParser.h", "cairosdl.c", "cairosdl.h"]
+licenseIgnoredFiles = []
 
 # http://stackoverflow.com/a/3002505/343845
 def is_binary(filename):

@@ -14,8 +14,6 @@ deps()
     echo "- Qt 4"
     echo "- Boost"
     echo "- SDL"
-    echo "- Cairo"
-    echo "- Pango"
 }
 
 doc()
@@ -79,8 +77,6 @@ if [ "$UNAME" = "Darwin" ] ; then
         set_mp_target 10.4
         port install \
             libsdl +universal \
-            cairo +quartz +universal \
-            pango +quartz +universal \
             depof:boost +universal \
             depof:qt4-mac +universal \
             depof:cmake +universal
@@ -102,7 +98,7 @@ if [ "$UNAME" = "Darwin" ] ; then
         # reset deployment target to 10.4 when finished
         set_mp_target 10.4
     elif [ $(which brew 2>/dev/null) ] ; then # Brew
-        # brew install cairo pango boost ...
+        # brew install boost ...
         echo "ERROR: brew support is not yet implemented"
         exit 1
     elif [ $(which fink 2>/dev/null) ] ; then # Fink
@@ -119,7 +115,7 @@ if [ "$UNAME" = "Darwin" ] ; then
 elif [ "$UNAME" = "Linux" ] ; then
     if [ $(which apt-get 2>/dev/null) ] ; then
         # Debian, Ubuntu
-        apt-get install build-essential qt-sdk libboost-all-dev libsdl1.2-dev libcairo2-dev libpango1.0-dev
+        apt-get install build-essential qt-sdk libboost-all-dev libsdl1.2-dev
     elif [ $(which yum 2>/dev/null) ] ; then
         # Fedora, RHEL, Yellow Dog Linux
         echo "ERROR: yum support is not yet implemented"
@@ -134,7 +130,7 @@ elif [ "$UNAME" = "Linux" ] ; then
         exit 1
     elif [ $(which pacman 2>/dev/null) ] ; then
         # Arch Linux
-        pacman -S qt boost sdl cairo pango
+        pacman -S qt boost sdl
     elif [ $(which emerge 2>/dev/null) ] ; then
         # Gentoo
         echo "ERROR: portage support is not yet implemented"

@@ -54,7 +54,6 @@ HSSCircle::HSSCircle()
 HSSCircle::HSSCircle(const HSSCircle & orig)
 : HSSShape(orig)
 {
-
 }
 
 HSSCircle::p HSSCircle::clone() const
@@ -93,11 +92,7 @@ bool HSSCircle::isKeyword(std::string value, std::string property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSCircle::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
+void HSSCircle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
-    cairo_save(cairo);
-    cairo_translate(cairo, x + width / 2., y + height / 2.);
-    cairo_scale(cairo, 1. * (width / 2.), 1. * (height / 2.));
-    cairo_arc(cairo, 0., 0., 1., 0., 2 * M_PI);
-    cairo_restore(cairo);
+    path.addEllipse(x, y, width, height);
 }

@@ -540,19 +540,19 @@ long double HSSLinearGradient::_setLDProperty(
     return ret;
 }
 
-void HSSLinearGradient::draw(cairo_t * cairo)
+void HSSLinearGradient::draw(QPainter &painter, const QPainterPath &path)
 {
     HSSRgb::p prevColor;
-    cairo_pattern_t * pat = cairo_pattern_create_linear(this->startX, this->startY, this->endX, this->endY);
+    QLinearGradient pat(this->startX, this->startY, this->endX, this->endY);
     if (this->startColor)
     {
-        cairo_pattern_add_color_stop_rgba(pat, 0., this->startColor->getRed() / 255., this->startColor->getGreen() / 255., this->startColor->getBlue() / 255., this->startColor->getAlpha() / 255.);
+        pat.setColorAt(0, QColor(this->startColor->getRed(), this->startColor->getGreen(), this->startColor->getBlue(), this->startColor->getAlpha()));
         prevColor = this->startColor;
     }
     else
     {
         HSSRgb::p nextColor = this->getColorAfterFirst();
-        cairo_pattern_add_color_stop_rgba(pat, 0., nextColor->getRed() / 255., nextColor->getGreen() / 255., nextColor->getBlue() / 255., 0.);
+        pat.setColorAt(0, QColor(nextColor->getRed(), nextColor->getGreen(), nextColor->getBlue(), 0));
         prevColor = nextColor;
     }
 
@@ -583,26 +583,26 @@ void HSSLinearGradient::draw(cairo_t * cairo)
             HSSRgb::p theColor = theStop->getColor();
             if (theColor)
             {
-                cairo_pattern_add_color_stop_rgba(pat, position, theColor->getRed() / 255., theColor->getGreen() / 255., theColor->getBlue() / 255., theColor->getAlpha() / 255.);
+                pat.setColorAt(position, QColor(theColor->getRed(), theColor->getGreen(), theColor->getBlue(), theColor->getAlpha()));
                 prevColor = theColor;
             }
             else
             {
                 //create two stops:
                 //one with the previous color
-                cairo_pattern_add_color_stop_rgba(pat, position, prevColor->getRed() / 255., prevColor->getGreen() / 255., prevColor->getBlue() / 255., 0.);
+                pat.setColorAt(position, QColor(prevColor->getRed(), prevColor->getGreen(), prevColor->getBlue(), 0));
                 //and one with the next color
                 std::vector<HSSObject::p>::iterator innerIt = it;
                 ++innerIt;
                 HSSRgb::p nextColor = this->getNextColorFromStops(innerIt, this->colorStops.end());
-                cairo_pattern_add_color_stop_rgba(pat, position, nextColor->getRed() / 255., nextColor->getGreen() / 255., nextColor->getBlue() / 255., 0.);
+                pat.setColorAt(position, QColor(nextColor->getRed(), nextColor->getGreen(), nextColor->getBlue(), 0));
             }
         }
         //if it's a simple color
         else if (theStopObj->isA(HSSObjectTypeRgb))
         {
             HSSRgb::p theColor = boost::static_pointer_cast<HSSRgb > (theStopObj);
-            cairo_pattern_add_color_stop_rgba(pat, 0.5, theColor->getRed() / 255., theColor->getGreen() / 255., theColor->getBlue() / 255., theColor->getAlpha() / 255.);
+            pat.setColorAt(0.5, QColor(theColor->getRed(), theColor->getGreen(), theColor->getBlue(), theColor->getAlpha()));
         }
         else
         {
@@ -613,15 +613,14 @@ void HSSLinearGradient::draw(cairo_t * cairo)
 
     if (this->endColor)
     {
-        cairo_pattern_add_color_stop_rgba(pat, 1., this->endColor->getRed() / 255., this->endColor->getGreen() / 255., this->endColor->getBlue() / 255., this->endColor->getAlpha() / 255.);
+        pat.setColorAt(1, QColor(this->endColor->getRed(), this->endColor->getGreen(), this->endColor->getBlue(), this->endColor->getAlpha()));
     }
     else
     {
         HSSRgb::p prevColor = this->getColorBeforeLast();
-        cairo_pattern_add_color_stop_rgba(pat, 1., prevColor->getRed() / 255., prevColor->getGreen() / 255., prevColor->getBlue() / 255., 0.);
+        pat.setColorAt(1, QColor(prevColor->getRed(), prevColor->getGreen(), prevColor->getBlue(), 0));
     }
 
-    cairo_set_source(cairo, pat);
-    cairo_fill_preserve(cairo);
-    cairo_pattern_destroy(pat);
+    QBrush brush(pat);
+    painter.fillPath(path, brush);
 }

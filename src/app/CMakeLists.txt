@@ -1,11 +1,15 @@
+# Icons .rc, and property lists
+file(GLOB axr_icon_SOURCES ${CMAKE_SOURCE_DIR}/share/icons/*.icns)
+set(axr_res_SOURCES axr.rc Info.plist ${axr_icon_SOURCES})
+source_group("Resources" FILES ${axr_res_SOURCES})
+
+# SDL application
+add_executable(${TARGET_NAME_APP_SDL} WIN32 MACOSX_BUNDLE ${axr_res_SOURCES} sdlmain.cpp)
+target_link_libraries(${TARGET_NAME_APP_SDL} ${TARGET_NAME_LIB_CORE} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${SDLMAIN_LIBRARY} ${SDL_LIBRARY})
+
 # Cocoa application
 if(APPLE)
-    list(APPEND axr_code_SOURCES main.m AXRTestAppAppDelegate.h AXRTestAppAppDelegate.mm)
-
-    # Icons .rc, and property lists
-    file(GLOB axr_icon_SOURCES ${CMAKE_SOURCE_DIR}/share/icons/*.icns)
-    set(axr_res_SOURCES axr.rc Info.plist ${axr_icon_SOURCES})
-    source_group("Resources" FILES ${axr_res_SOURCES})
+    list(APPEND axr_code_SOURCES main.mm AXRTestAppAppDelegate.h AXRTestAppAppDelegate.mm)
 
     # Xcode nib files
     set(axr_lproj_SOURCES English.lproj/InfoPlist.strings English.lproj/MainMenu.nib)
@@ -33,8 +37,3 @@ if(APPLE)
 
     set_target_properties("${TARGET_NAME_APP_COCOA}" PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist")
 endif()
-
-# SDL application
-include_directories(cairosdl)
-add_executable(${TARGET_NAME_APP_SDL} WIN32 MACOSX_BUNDLE ${axr_res_SOURCES} cairosdl/cairosdl.c cairosdl/cairosdl.h sdlmain.cpp)
-target_link_libraries(${TARGET_NAME_APP_SDL} ${TARGET_NAME_LIB_CORE} ${SDLMAIN_LIBRARY} ${SDL_LIBRARY})

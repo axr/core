@@ -81,16 +81,6 @@ AXRCore::~AXRCore()
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: destructing core");
 }
 
-void AXRCore::setCairo(cairo_t * cr)
-{
-    this->render->setCairo(cr);
-}
-
-cairo_t * AXRCore::getCairo()
-{
-    return this->render->getCairo();
-}
-
 void AXRCore::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
     if (this->render)
@@ -123,11 +113,10 @@ void AXRCore::run()
         this->_hasLoadedFile = true;
 
         HSSContainer::p root = boost::static_pointer_cast<HSSContainer > (this->controller->getRoot());
-        unsigned i, size;
         std::string hssfilename, hssfilepath;
 
         std::vector<std::string> loadSheets = this->controller->loadSheetsGet();
-        for (i = 0, size = loadSheets.size(); i < size; ++i)
+        for (unsigned i = 0, size = loadSheets.size(); i < size; ++i)
         {
 
             hssfilename = loadSheets[i];

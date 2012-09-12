@@ -84,7 +84,7 @@ namespace AXR
         virtual std::string defaultObjectType();
         virtual bool isKeyword(std::string value, std::string property);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-        virtual void draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
 
         /**
          *  Getter for the actual value of the sides property.

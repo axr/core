@@ -3,8 +3,9 @@ WARNING!!! these instructions have not been completed, don't complain if they do
 
 Build instructions:
 
-Mac OSX (latest tested 10.6)
-Make sure you have the Developer Tools installed, you can get them from Apple http://itunes.apple.com/us/app/xcode/id448457090?mt=12
+OS X
+
+Make sure you have Xcode installed, you can get it from Apple: http://itunes.apple.com/us/app/xcode/id497799835?mt=12
 
 1 - Set up Git and configure GitHub [http://help.github.com/mac-set-up-git/]
 
@@ -16,24 +17,12 @@ Make sure you have the Developer Tools installed, you can get them from Apple ht
         git clone git://github.com/AXR/Prototype.git
 
 3 - Download and install all required libraries:
+
     - Boost:
-        http://sourceforge.net/projects/boost/files/boost/1.49.0/boost_1_49_0.zip/download
+        http://www.boost.org/users/download/
 
-        - Expat:
-        http://sourceforge.net/projects/expat/files/latest/download?_test=goal
-
-    - Cairo:
-        Dependencies:
-            - Pixman: http://cairographics.org/releases/pixman-0.22.2.tar.gz
-        Library:
-            - Cairo: http://www.cairographics.org/releases/cairo-1.10.2.tar.gz
-
-    - Pango:
-        Dependencies:
-            - GLib: ftp://ftp.gnome.org/pub/gnome/sources/glib/2.29/glib-2.29.6.tar.bz2
-            - Libiconv: http://ftpmirror.gnu.org/libiconv/libiconv-1.14.tar.gz
-        Library:
-            - Pango: http://ftp.gnome.org/pub/GNOME/sources/pango/1.28/pango-1.28.4.tar.bz2
+    - Qt:
+        http://qt-project.org/downloads
 
 4 - Open the Xcode project (prototype/mac/AXR Test App.xcodeproj) and hit Run
 

@@ -46,6 +46,7 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <QPainterPath>
 #include "HSSBorder.h"
 #include "HSSRgb.h"
 
@@ -109,7 +110,7 @@ namespace AXR
          */
         void colorChanged(HSSObservableProperty source, void*data);
 
-        virtual void draw(cairo_t * cairo);
+        virtual void draw(QPainter &painter, const QPainterPath &path);
 
     protected:
         //color

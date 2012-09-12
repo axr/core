@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #import <iostream>
-#import <cairo/cairo-quartz.h>
+#import <QPixmap>
 #import "AXR.h"
 #import "AXRController.h"
 #import "AXRDebugging.h"
@@ -102,22 +102,16 @@
 
     if (![self needsFile])
     {
+        // Perform compositing in AXR
         AXR::AXRCore::tp & core = AXR::AXRCore::getInstance();
+        core->drawInRectWithBounds(dirtyRect, bounds);
+
+        // Fill the NSView with white...
         [[NSColor whiteColor] set];
         NSRectFill(bounds);
 
-        CGContextRef ctxt = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
-        //invert the coordinate system
-        CGContextTranslateCTM(ctxt, 0.0, (int) bounds.size.height);
-        CGContextScaleCTM(ctxt, 1.0, -1.0);
-
-        cairo_surface_t * targetSurface = cairo_quartz_surface_create_for_cg_context(ctxt, dirtyRect.size.width, dirtyRect.size.height);
-        cairo_t * tempcairo = cairo_create(targetSurface);
-        cairo_surface_destroy(targetSurface);
-        core->setCairo(tempcairo);
-        core->drawInRectWithBounds(dirtyRect, bounds);
-        cairo_destroy(tempcairo);
-        core->setCairo(NULL);
+        // Present the AXR surface into the NSView
+        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], bounds, QPixmap::fromImage(*core->getRender()->surface()).toMacCGImageRef());
     }
     else
     {

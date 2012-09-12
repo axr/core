@@ -47,7 +47,8 @@
 #include <boost/any.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/pointer_cast.hpp>
-#include <cairo/cairo.h>
+#include <QImage>
+#include <QPainterPath>
 #include "errors.h"
 #include "AXR.h"
 #include "AXRController.h"
@@ -76,9 +77,9 @@ void HSSDisplayObject::initialize()
     this->_needsRereadRules = true;
     this->_needsSurface = true;
     this->_needsLayout = true;
-    this->backgroundSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
-    this->foregroundSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
-    this->bordersSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 0, 0);
+    this->backgroundSurface = new QImage();
+    this->foregroundSurface = new QImage();
+    this->bordersSurface = new QImage();
 
     this->x = this->y
             = this->globalX = this->globalY
@@ -210,9 +211,10 @@ HSSDisplayObject::~HSSDisplayObject()
     {
         this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
     }
-    cairo_surface_destroy(this->backgroundSurface);
-    cairo_surface_destroy(this->foregroundSurface);
-    cairo_surface_destroy(this->bordersSurface);
+
+    delete this->backgroundSurface;
+    delete this->foregroundSurface;
+    delete this->bordersSurface;
 }
 
 std::string HSSDisplayObject::toString()
@@ -706,23 +708,26 @@ void HSSDisplayObject::regenerateSurfaces()
 {
     if (this->_needsSurface)
     {
-        cairo_surface_destroy(this->backgroundSurface);
-        cairo_surface_destroy(this->foregroundSurface);
-        if (this->border.size() > 0)
-            cairo_surface_destroy(this->bordersSurface);
-        this->backgroundSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, ceil(this->width), ceil(this->height));
-        this->foregroundSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, ceil(this->width), ceil(this->height));
+        delete this->backgroundSurface;
+        this->backgroundSurface = new QImage(ceil(this->width), ceil(this->height), QImage::Format_ARGB32_Premultiplied);
+        this->backgroundSurface->fill(Qt::transparent);
 
-        //get the sum of all sizes
+        delete this->foregroundSurface;
+        this->foregroundSurface = new QImage(ceil(this->width), ceil(this->height), QImage::Format_ARGB32_Premultiplied);
+        this->foregroundSurface->fill(Qt::transparent);
+
         if (this->border.size() > 0)
         {
+            // Get the sum of all sizes
             this->borderBleeding = 0;
             for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
             {
                 this->borderBleeding += (*it)->getSize();
             }
 
-            this->bordersSurface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, ceil(this->width + this->borderBleeding + this->borderBleeding), ceil(this->height + this->borderBleeding + this->borderBleeding));
+            delete this->bordersSurface;
+            this->bordersSurface = new QImage(ceil(this->width + this->borderBleeding + this->borderBleeding), ceil(this->height + this->borderBleeding + this->borderBleeding), QImage::Format_ARGB32_Premultiplied);
+            this->bordersSurface->fill(Qt::transparent);
         }
 
         this->setDirty(true);
@@ -760,7 +765,7 @@ bool HSSDisplayObject::isDirty()
     return this->_isDirty;
 }
 
-void HSSDisplayObject::draw(cairo_t * cairo)
+void HSSDisplayObject::draw(QPainter &painter)
 {
     AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
     if (wrapper->showLayoutSteps())
@@ -787,27 +792,25 @@ void HSSDisplayObject::draw(cairo_t * cairo)
 
     if (this->visible)
     {
-        cairo_set_source_surface(cairo, this->backgroundSurface, this->globalX, this->globalY);
-        cairo_paint(cairo);
-        cairo_set_source_surface(cairo, this->foregroundSurface, this->globalX, this->globalY);
-        cairo_paint(cairo);
+        painter.drawImage(QPointF(this->globalX, this->globalY), *this->backgroundSurface);
+        painter.drawImage(QPointF(this->globalX, this->globalY), *this->foregroundSurface);
+
         if (this->border.size() > 0)
         {
-            cairo_set_source_surface(cairo, this->bordersSurface, this->globalX - this->borderBleeding, this->globalY - this->borderBleeding);
-            cairo_paint(cairo);
+            painter.drawImage(QPointF(this->globalX - this->borderBleeding, this->globalY - this->borderBleeding), *this->bordersSurface);
         }
     }
 }
 
 void HSSDisplayObject::drawBackground()
 {
-    cairo_t * cairo = cairo_create(this->backgroundSurface);
-    cairo_rectangle(cairo, 0., 0., this->width, this->height);
-    this->_drawBackground(cairo);
-    cairo_destroy(cairo);
+    QPainter painter(this->backgroundSurface);
+    QPainterPath path;
+    path.addRect(0, 0, this->width, this->height);
+    this->_drawBackground(painter, path);
 }
 
-void HSSDisplayObject::_drawBackground(cairo_t * cairo)
+void HSSDisplayObject::_drawBackground(QPainter &painter, const QPainterPath &path)
 {
     for (std::vector<HSSObject::p>::iterator it = this->background.begin(); it != this->background.end(); ++it)
     {
@@ -827,8 +830,7 @@ void HSSDisplayObject::_drawBackground(cairo_t * cairo)
                 a = color->getAlpha();
             }
 
-            cairo_set_source_rgba(cairo, (r / 255), (g / 255), (b / 255), (a / 255));
-            cairo_fill_preserve(cairo);
+            painter.fillPath(path, QColor(r, g, b, a));
 
             break;
         }
@@ -836,7 +838,7 @@ void HSSDisplayObject::_drawBackground(cairo_t * cairo)
         case HSSObjectTypeGradient:
         {
             HSSLinearGradient::p grad = boost::static_pointer_cast<HSSLinearGradient > (theobj);
-            grad->draw(cairo);
+            grad->draw(painter, path);
             break;
         }
 
@@ -848,78 +850,15 @@ void HSSDisplayObject::_drawBackground(cairo_t * cairo)
 
 void HSSDisplayObject::drawForeground()
 {
-    //    cairo_t * cairo = cairo_create(this->foregroundSurface);
-    //
-    //    PangoLayout *layout;
-    //    PangoFontDescription *font_description;
-    //
-    //    //FIXME: precalculate this layout somehow earlier, to get the height for the container
-    //    //based on the text height
-    //    layout = pango_cairo_create_layout (cairo);
-    //    pango_layout_set_width(layout, this->width * PANGO_SCALE);
-    //
-    //    font_description = pango_font_description_new ();
-    //
-    //    if (this->font){
-    //        pango_font_description_set_family (font_description, this->font->getFace().c_str());
-    //
-    //        //FIXME: add support for weights in fonts
-    //        pango_font_description_set_weight (font_description, PANGO_WEIGHT_NORMAL);
-    //        pango_font_description_set_absolute_size (font_description, this->font->getSize() * PANGO_SCALE);
-    //
-    //        if (this->font->getColor()){
-    //            HSSRgb::p textColor = boost::static_pointer_cast<HSSRgb>(this->font->getColor());
-    //            cairo_set_source_rgb (cairo, textColor->getRed()/255, textColor->getGreen()/255, textColor->getBlue()/255);
-    //        } else {
-    //            cairo_set_source_rgb (cairo, 0, 0, 0);
-    //        }
-    //
-    //    } else {
-    //        pango_font_description_set_family (font_description, "monospace");
-    //        pango_font_description_set_weight (font_description, PANGO_WEIGHT_NORMAL);
-    //        pango_font_description_set_absolute_size (font_description, 12 * PANGO_SCALE);
-    //        cairo_set_source_rgb (cairo, 0, 0, 0);
-    //    }
-    //
-    //    pango_layout_set_font_description (layout, font_description);
-    //    pango_layout_set_text (layout, this->getContentText().c_str(), -1);
-    //
-    //
-    //    cairo_move_to (cairo, 0, 0);
-    //    pango_cairo_show_layout (cairo, layout);
-    //
-    //    g_object_unref (layout);
-    //    pango_font_description_free (font_description);
-
-
-
-
-
-
-    //    cairo_t * cairo = cairo_create(this->foregroundSurface);
-    //    cairo_select_font_face (cairo, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-    //    cairo_set_font_size (cairo, 12.0);
-    //    cairo_set_source_rgb (cairo, 0.0, 0.0, 0.0);
-    //    cairo_move_to (cairo, 0.0, 12.0);
-    //    std_log1(this->getContentText());
-    //    cairo_show_text (cairo, this->getContentText().c_str());
-
-    //    cairo_destroy(cairo);
 }
 
 void HSSDisplayObject::drawBorders()
 {
-    //    cairo_t * cairo = cairo_create(this->bordersSurface);
-    //    cairo_rectangle(cairo, 0., 0., this->width, this->height);
-    //    cairo_set_source_rgb(cairo, 0,0,0);
-    //    cairo_stroke(cairo);
-    //
-    //    cairo_destroy(cairo);
 }
 
-void HSSDisplayObject::recursiveDraw(cairo_t * cairo)
+void HSSDisplayObject::recursiveDraw(QPainter &painter)
 {
-    this->draw(cairo);
+    this->draw(painter);
 }
 
 //layout

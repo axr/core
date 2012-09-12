@@ -189,7 +189,7 @@ namespace AXR
          */
         void endYChanged(HSSObservableProperty source, void *data);
 
-        virtual void draw(cairo_t * cairo);
+        virtual void draw(QPainter &painter, const QPainterPath &path);
 
     protected:
         //startX

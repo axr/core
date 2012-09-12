@@ -581,16 +581,25 @@ void HSSRoundedRect::cornerBLChanged(AXR::HSSObservableProperty source, void *da
     this->notifyObservers(HSSObservablePropertyCorners, &this->corners);
 }
 
-void HSSRoundedRect::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
+void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
-    double long degrees = M_PI / 180.0;
+    // Draw top-left corner
+    QRectF topLeftBounds(x, y, cornerTL*2, cornerTL*2);
+    QRectF bottomLeftBounds(x, y + height - cornerBL*2, cornerBL*2, cornerBL*2);
+    QRectF bottomRightBounds(x + width - cornerBR*2, y + height - cornerBR*2, cornerBR*2, cornerBR*2);
+    QRectF topRightBounds(x + width - cornerTR*2, y, cornerTR*2, cornerTR*2);
 
-    cairo_new_sub_path(cairo);
-    cairo_arc(cairo, x + width - this->cornerTR, y + this->cornerTR, this->cornerTR, -90 * degrees, 0 * degrees);
-    cairo_arc(cairo, x + width - this->cornerBR, y + height - this->cornerBR, this->cornerBR, 0 * degrees, 90 * degrees);
-    cairo_arc(cairo, x + cornerBL, y + height - this->cornerBL, this->cornerBL, 90 * degrees, 180 * degrees);
-    cairo_arc(cairo, x + this->cornerTL, y + this->cornerTL, this->cornerTL, 180 * degrees, 270 * degrees);
-    cairo_close_path(cairo);
+    QVector<QRectF> corners;
+    corners << topLeftBounds << bottomLeftBounds << bottomRightBounds << topRightBounds;
+
+    path.arcMoveTo(corners[0], 90);
+
+    for (int i = 1; i <= corners.size(); ++i)
+    {
+        path.arcTo(corners[i - 1], i * 90, 90);
+    }
+
+    path.closeSubpath();
 }
 
 long double HSSRoundedRect::_setLDProperty(

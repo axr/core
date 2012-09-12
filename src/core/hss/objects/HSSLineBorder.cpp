@@ -285,7 +285,7 @@ void HSSLineBorder::colorChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** colorChanged unimplemented ****************************");
 }
 
-void HSSLineBorder::draw(cairo_t * cairo)
+void HSSLineBorder::draw(QPainter &painter, const QPainterPath &path)
 {
     long double r = 0., g = 0., b = 0., a = 255.;
     if (this->color)
@@ -295,7 +295,9 @@ void HSSLineBorder::draw(cairo_t * cairo)
         b = this->color->getBlue();
         a = this->color->getAlpha();
     }
-    cairo_set_source_rgba(cairo, (r / 255), (g / 255), (b / 255), (a / 255));
-    cairo_set_line_width(cairo, this->size);
-    cairo_stroke(cairo);
+
+    QPen pen;
+    pen.setColor(QColor(r, g, b, a));
+    pen.setWidthF(this->size);
+    painter.strokePath(path, pen);
 }

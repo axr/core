@@ -48,7 +48,6 @@
 #include <sstream>
 #include <string>
 #include <QString>
-#include <boost/cstdint.hpp>
 
 // Debug levels:
 // - 0 No debug

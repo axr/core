@@ -43,6 +43,8 @@
 
 #include <iostream>
 #include <boost/lexical_cast.hpp>
+#include <QImage>
+#include <QString>
 #include "errors.h"
 #include "AXR.h"
 #include "AXRController.h"
@@ -52,28 +54,17 @@
 
 using namespace AXR;
 
-AXRRender::AXRRender(AXRController * controller)
+AXRRender::AXRRender(AXRController *theController)
+: windowWidth(0), windowHeight(0), controller(theController), rootSurface(new QImage())
 {
-    this->controller = controller;
-    this->windowWidth = 0;
-    this->windowHeight = 0;
-    this->cairo = NULL;
 }
 
 AXRRender::~AXRRender()
 {
-
 }
 
 void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
-    if (!this->cairo)
-    {
-        AXRError::p(new AXRError("AXRRender", "Fatal error: Cairo was not defined"))->raise();
-#warning Do NOT use exit(0) in a library, especially since this feigns a successful exit...
-        exit(0);
-    }
-
     //prepare values
     HSSContainer::p root = this->controller->getRoot();
     AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
@@ -82,14 +73,22 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
     {
         ///@todo find out what objects lie in that rect
 
-        //if the window size has changed, make new size
+        // If the window size has changed, make new size
         if (bounds.size.width != this->windowWidth || bounds.size.height != this->windowHeight)
         {
-            axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: window size changed, setting to width: " + boost::lexical_cast<std::string > (bounds.size.width) + " and height: " + boost::lexical_cast<std::string > (bounds.size.height));
+            axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, QString("AXRRender: window size changed, setting to width: %1 and height: %2").arg((int)bounds.size.width).arg((int)bounds.size.height));
+
             this->windowWidth = bounds.size.width;
             this->windowHeight = bounds.size.height;
+
+            // Regenerate root surface
+            delete this->rootSurface;
+            this->rootSurface = new QImage(this->windowWidth, this->windowHeight, QImage::Format_ARGB32_Premultiplied);
+            this->rootSurface->fill(Qt::transparent);
+
             root->setNeedsRereadRules(true);
         }
+
         //draw the elements
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: reading object definitions");
         root->recursiveReadDefinitionObjects();
@@ -104,7 +103,9 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
         root->recursiveRegenerateSurfaces();
         axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: drawing tree");
         wrapper->nextLayoutChild();
-        root->recursiveDraw(this->cairo);
+
+        QPainter painter(this->rootSurface);
+        root->recursiveDraw(painter);
         if (wrapper->showLayoutSteps())
         {
             wrapper->resetLayoutTicks();
@@ -123,6 +124,11 @@ void AXRRender::reset()
 {
     this->windowWidth = 0;
     this->windowHeight = 0;
+}
+
+const QImage* AXRRender::surface() const
+{
+    return this->rootSurface;
 }
 
 void AXRRender::mouseDown(HSSUnit x, HSSUnit y)
@@ -164,16 +170,6 @@ void AXRRender::mouseUp(HSSUnit x, HSSUnit y)
             e->raise();
         }
     }
-}
-
-void AXRRender::setCairo(cairo_t * cairo)
-{
-    this->cairo = cairo;
-}
-
-cairo_t * AXRRender::getCairo()
-{
-    return this->cairo;
 }
 
 double AXRRender::getWindowWidth()

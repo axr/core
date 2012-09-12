@@ -47,7 +47,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <boost/algorithm/string.hpp>
 #include <boost/pointer_cast.hpp>
 #include "errors.h"
 #include "AXR.h"
@@ -319,7 +318,8 @@ void HSSContainer::resetChildrenIndexes()
 
 void HSSContainer::setContentText(std::string text)
 {
-    boost::algorithm::trim(text);
+    text = QString::fromStdString(text).trimmed().toStdString();
+
     if (text != "")
     {
         if (this->allChildren.empty())
@@ -348,7 +348,8 @@ void HSSContainer::setContentText(std::string text)
 
 void HSSContainer::appendContentText(std::string text)
 {
-    boost::algorithm::trim(text);
+    text = QString::fromStdString(text).trimmed().toStdString();
+
     if (text != "")
     {
         if (this->allChildren.empty())
@@ -431,78 +432,53 @@ void HSSContainer::recursiveRegenerateSurfaces()
     }
 }
 
-void HSSContainer::recursiveDraw(cairo_t * cairo)
+void HSSContainer::recursiveDraw(QPainter &painter)
 {
-    this->draw(cairo);
+    this->draw(painter);
 
     for (unsigned i = 0, size = this->allChildren.size(); i < size; ++i)
     {
-        this->allChildren[i]->recursiveDraw(cairo);
+        this->allChildren[i]->recursiveDraw(painter);
     }
 }
 
 void HSSContainer::drawBackground()
 {
-    cairo_t * cairo = cairo_create(this->backgroundSurface);
-    this->shape->draw(cairo, 0., 0., this->width, this->height);
-    HSSDisplayObject::_drawBackground(cairo);
-    cairo_destroy(cairo);
+    QPainter painter(this->backgroundSurface);
+    QPainterPath path;
+    this->shape->createPath(path, 0, 0, this->width, this->height);
+    HSSDisplayObject::_drawBackground(painter, path);
 }
 
 void HSSContainer::drawBorders()
 {
-    cairo_t * cairo = cairo_create(this->bordersSurface);
+    QPainter painter(this->bordersSurface);
 
     // Calculate the combined thickness of all borders
-    HSSUnit total = 0;
+    HSSUnit combinedThickness = 0;
     for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
     {
-        total += (*it)->getSize();
+        combinedThickness += (*it)->getSize();
     }
 
-    // If the combined border thickness is an odd number of units, ???
-    // TODO: What is the purpose of this value?
-    HSSUnit correction = 0;
-    if ((int)total % 2)
-    {
-        correction = 0.5;
-    }
+    // Cumulative combined thickness
+    HSSUnit cumulativeThickness = 0;
 
-    HSSUnit i = 0, offset = 0;
+    // Draw all borders
     for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
     {
         HSSBorder::p theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
-        offset = (total / 2) - i - (theSize / 2) + correction;
+        HSSUnit offset = cumulativeThickness - (theSize / 2);
 
-        this->shape->draw(cairo, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2);
-        theBorder->draw(cairo);
+        QPainterPath path;
+        this->shape->createPath(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2);
+        theBorder->draw(painter, path);
 
-        i += theSize;
+        cumulativeThickness += theSize;
     }
-
-    cairo_destroy(cairo);
 }
-
-//void HSSContainer::drawShape(cairo_t *cairo)
-//{
-//    switch (this->shape->getShapeType()) {
-//        case HSSShapeTypeRectangle:
-//            cairo_rectangle(cairo, 0., 0., this->width, this->height);
-//            break;
-//        case HSSShapeTypeCircle:
-//        {
-//            HSSUnit halfWidth = this->width * 0.5;
-//            cairo_arc(cairo, halfWidth, this->height * 0.5, halfWidth, 0., 2*M_PI);
-//            break;
-//        }
-//
-//        default:
-//            throw AXRError::p(new AXRError("HSSContainer", "Unknown shape type"));
-//            break;
-//    }
-//}
 
 void HSSContainer::layout()
 {

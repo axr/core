@@ -46,9 +46,9 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include <cairo/cairo.h>
 #include "HSSObject.h"
 #include "HSSUnits.h"
+#include <QPainter>
 
 namespace AXR
 {
@@ -88,13 +88,13 @@ namespace AXR
          *  theses are the x: 0, y:0 (upper left corner) and as wide and tall as the container, but they can be
          *  different in case of joining paths together, for example.
          *
-         *  @param cairo    A regular pointer to the cairo handle in which to create the path.
+         *  @param painter  A QPainter context used to draw onto a surface.
          *  @param x        The horizontal coordinate for the upper left corner of the bounding box of the shape.
          *  @param y        The vertical coordinate for the upper left corner of the bounding box of the shape.
          *  @param width    The width of the bounding box of the shape.
          *  @param height   The height of the bounding box of the shape.
          */
-        virtual void draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height) = 0;
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height) = 0;
 
     protected:
         /**

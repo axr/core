@@ -122,9 +122,7 @@
  *
  *  @section drawing Drawing on screen
  *
- *  Currently for drawing we are using Cairo and Pango for text layout, but we have plans to
- *  switch to a library that allows more fine grained control, like AntiGrain Geometry or its
- *  successor Fog do, this is still under discussion.
+ *  Currently for drawing we are using Qt.
  *
  *  When the OS asks for drawing, it is the duty of the wrapper to tell the core to draw in a given
  *  rectangle (the current implementation still always redraws the whole screen, though), which will then
@@ -139,8 +137,8 @@
  *  HSSContainer.
  *
  *  Then it will regenerate all the surfaces as needed and finally it will tell it to draw, also as a
- *  recursive operation, passing the cairo object that holds the drawing context in which we will finally composite all
- *  the individual surfaces of the objects.
+ *  recursive operation, and finally composites all the individual surfaces of the objects into the final
+ *  surface which is retrieved by the client and blitted onto the screen in an OS and toolkit-dependent manner.
  *
  *  In the process of drawing, each object type which draws (display objects) implements and handles
  *  all the properties inside to calculate the visual rendering, each generating bitmap surfaces for the
@@ -160,7 +158,6 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/tss.hpp>
-#include <cairo/cairo.h>
 #include "hss.h"
 #include "xml.h"
 #include "AXRController.h"
@@ -207,17 +204,6 @@ namespace AXR
          *  Destroys the object
          */
         virtual ~AXRCore();
-
-        /**
-         *  Sets up the Cairo object that will do the final compositing.
-         *  @param cr A pointer to a cairo_t
-         *  @warning This MUST be set before drawing.
-         */
-        void setCairo(cairo_t * cr);
-        /**
-         *  @return the Cairo object that is used to do the final compositing.
-         */
-        cairo_t * getCairo();
 
         /**
          *  Main drawing function.

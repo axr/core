@@ -41,8 +41,9 @@
  *
  ********************************************************************/
 
-#include "boost/program_options.hpp"
-#include "cairosdl/cairosdl.h"
+#include <boost/program_options.hpp>
+#include <QApplication>
+#include <QFileDialog>
 #include "AXR.h"
 
 #if defined(_WIN32)
@@ -60,8 +61,6 @@
 #endif
 #endif
 
-#define cairo_argb(cr,argb) cairo_set_source_rgba(cr,(((argb)>>16)&0x000000ff)/256.f,(((argb)>>8)&0x000000ff)/256.f,((argb)&0x000000ff)/256.f,(((argb)>>24)&0x000000ff)/256.f)
-
 namespace po = boost::program_options;
 using namespace AXR;
 
@@ -69,27 +68,43 @@ const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 const char* WINDOW_TITLE = "AXR SDL";
 
-cairo_t *cr;
 AXR_WRAPPER_CLASS *wrapper;
-SDL_Surface* screen;
+SDL_Surface* screen = NULL;
 
 #ifdef _WIN32
 HICON mainicon;
+#endif
+
+/* SDL interprets each pixel as a 32-bit number, so our masks must depend
+ on the endianness (byte order) of the machine */
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+Uint32 rmask = 0xff000000;
+Uint32 gmask = 0x00ff0000;
+Uint32 bmask = 0x0000ff00;
+Uint32 amask = 0x000000ff;
+#else
+Uint32 rmask = 0x000000ff;
+Uint32 gmask = 0x0000ff00;
+Uint32 bmask = 0x00ff0000;
+Uint32 amask = 0xff000000;
 #endif
 
 void render()
 {
     if (wrapper->needsDisplay)
     {
-        SDL_FillRect(screen, NULL, 0x00ffffff);
+        SDL_FillRect(screen, NULL, SDL_MapRGBA(screen->format, 255, 255, 255, 255));
 
+        AXRCore::tp &core = AXRCore::getInstance();
         HSSRect bounds(0, 0, screen->w, screen->h);
-
-        AXRCore::tp & core = AXRCore::getInstance();
-
-        core->setCairo(cr);
         core->drawInRectWithBounds(bounds, bounds);
-        core->setCairo(NULL);
+
+        const QImage *qsurf = core->getRender()->surface();
+
+        SDL_Surface *surf = SDL_CreateRGBSurfaceFrom((void*)qsurf->constBits(), qsurf->width(), qsurf->height(), 32, qsurf->width() * 4, rmask, gmask, bmask, amask);
+        SDL_BlitSurface(surf, NULL, screen, NULL);
+        SDL_FreeSurface(surf);
+        SDL_Flip(screen);
 
         wrapper->setNeedsDisplay(false);
     }
@@ -97,6 +112,8 @@ void render()
 
 int main(int argc, char **argv)
 {
+    QApplication a(argc, argv);
+
     // Declare the supported options.
     po::options_description desc("Allowed options");
     desc.add_options()
@@ -125,7 +142,6 @@ int main(int argc, char **argv)
 
     SDL_Init(SDL_INIT_VIDEO);
     screen = SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
-    cr = cairosdl_create(screen);
 
     SDL_WM_SetCaption(WINDOW_TITLE, 0);
 
@@ -174,7 +190,8 @@ int main(int argc, char **argv)
     }
     else
     {
-        wrapper->loadFile();
+        QString filepath = QFileDialog::getOpenFileName(NULL, QObject::tr("Open File"), QString(), QObject::tr("AXR Files (*.xml *.hss)"));
+        wrapper->loadFileByPath(filepath.toStdString());
     }
 
     int done = 0;
@@ -246,14 +263,10 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_VIDEORESIZE)
             {
-                cairosdl_destroy(cr);
                 screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
-                SDL_SetAlpha(screen, SDL_SRCALPHA, CAIROSDL_AMASK);
-                cr = cairosdl_create(screen);
                 wrapper->setNeedsDisplay(true);
             }
-            else if (event.active.state & SDL_APPMOUSEFOCUS &&
-                event.active.gain == 0)
+            else if (event.active.state & SDL_APPMOUSEFOCUS && event.active.gain == 0)
             {
                 AXRCore::tp & core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
@@ -263,14 +276,10 @@ int main(int argc, char **argv)
                     root->handleEvent(HSSEventTypeExitedWindow, NULL);
                 }
             }
-            else
-            {
-            }
         }
 
         render();
 
-        SDL_Flip(screen);
         SDL_Delay(1000 / 30);
     }
 
@@ -281,7 +290,6 @@ int main(int argc, char **argv)
 #endif
 
     delete wrapper;
-    cairosdl_destroy(cr);
 
     return 0;
 }

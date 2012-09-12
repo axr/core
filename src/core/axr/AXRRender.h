@@ -45,7 +45,6 @@
 #define AXRRENDER_H
 
 #include <boost/shared_ptr.hpp>
-#include <cairo/cairo.h>
 #include "AXRGlobal.h"
 #include "HSSNumberConstant.h"
 #include "HSSUnits.h"
@@ -102,16 +101,7 @@ namespace AXR
          *  Reset the renderer to initial values, for example when reloading a file.
          */
         void reset();
-        /**
-         *  Setter for the pointer to the cairo handle for the window surface.
-         *  @param  cairo   A regular pointer to a cairo handle.
-         */
-        void setCairo(cairo_t * cairo);
-        /**
-         *  Getter for the pointer to the cairo handle for the window surface.
-         *  @return A regular pointer to a cairo handle.
-         */
-        cairo_t * getCairo();
+        const QImage* surface() const;
         /**
          *  @return The width of the window.
          */
@@ -132,10 +122,8 @@ namespace AXR
         double windowHeight;
 
     protected:
-        //weak pointer
-        AXRController * controller;
-        cairo_t * cairo;
-        cairo_surface_t * rootSurface;
+        AXRController *controller;
+        QImage *rootSurface;
     };
 }
 

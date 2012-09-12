@@ -45,7 +45,6 @@
 #define HSSCONTAINER_H
 
 #include <list>
-#include <cairo/cairo.h>
 #include "HSSDisplayObject.h"
 #include "HSSEvent.h"
 #include "HSSShape.h"
@@ -212,9 +211,9 @@ namespace AXR
 
         /**
          *  Propagates the draw() call to all the children.
-         *  @param cairo    A regular pointer to the cairo handle used for drawing.
+         *  @param painter A QPainter context used to draw onto a surface.
          */
-        void recursiveDraw(cairo_t * cairo);
+        void recursiveDraw(QPainter &painter);
 
         /**
          *  Sets the shape of the container and then calls the base class method for actually

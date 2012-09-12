@@ -58,25 +58,9 @@ if(BUILD_PROTOTYPE)
     find_package(Boost COMPONENTS thread system program_options REQUIRED)
     find_package(SDL REQUIRED)
 
-    # TODO: Avoid using pkg-config
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(PANGO REQUIRED pango)
-    pkg_check_modules(CAIRO REQUIRED cairo)
-    pkg_check_modules(PANGOCAIRO REQUIRED pangocairo)
-
     include_directories(
         ${Boost_INCLUDE_DIRS}
         ${SDL_INCLUDE_DIR}
-        ${PANGO_INCLUDE_DIRS}
-        ${CAIRO_INCLUDE_DIRS}
-        ${PANGOCAIRO_INCLUDE_DIRS}
-    )
-
-    # TODO: Only necessary due to pkg-config usage
-    link_directories(
-        ${PANGO_LIBRARY_DIRS}
-        ${CAIRO_LIBRARY_DIRS}
-        ${PANGOCAIRO_LIBRARY_DIRS}
     )
 
     if(AXR_NO_DEPRECATED_ENUMS)
@@ -88,6 +72,13 @@ if(BUILD_PROTOTYPE)
     endif()
 
     set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
+
+    # Required to avoid "Symbol not found: __objc_empty_cache" from dyld
+    if(APPLE)
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lobjc")
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lobjc")
+        set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -lobjc")
+    endif()
 
     # Set output directories for binaries and static and shared libraries
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

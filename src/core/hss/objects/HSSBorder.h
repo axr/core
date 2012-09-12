@@ -46,7 +46,8 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include <cairo/cairo.h>
+#include <QPainter>
+#include <QPainterPath>
 #include "HSSObject.h"
 #include "HSSUnits.h"
 
@@ -73,12 +74,10 @@ namespace AXR
 
         /**
          *  Each type of border implements its own drawing routines. Call this method
-         *  when you need to draw the border on the surface that is represented by the
-         *  cairo handle.
-         *  @param cairo    A regular pointer to a cairo handle, holding the surface on
-         *                  which to draw on.
+         *  when you need to draw the border on a surface.
+         *  @param painter A QPainter context used to draw onto a surface.
          */
-        virtual void draw(cairo_t * cairo) = 0;
+        virtual void draw(QPainter &painter, const QPainterPath &path) = 0;
 
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
 

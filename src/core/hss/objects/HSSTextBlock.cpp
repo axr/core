@@ -41,8 +41,6 @@
  *
  ********************************************************************/
 
-#include <boost/algorithm/string.hpp>
-#include <pango/pangocairo.h>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "HSSFunctions.h"
@@ -54,32 +52,50 @@
 
 using namespace AXR;
 
-PangoWeight _pangoWeightFromKeyword(std::string keyword)
+static int weightClassFromKeyword(std::string keyword)
 {
-    if (keyword == "normal")
-        return PANGO_WEIGHT_NORMAL;
-    if (keyword == "bold")
-        return PANGO_WEIGHT_BOLD;
-    if (keyword == "medium")
-        return PANGO_WEIGHT_MEDIUM;
     if (keyword == "thin")
-        return PANGO_WEIGHT_THIN;
-    if (keyword == "light")
-        return PANGO_WEIGHT_LIGHT;
-    if (keyword == "book")
-        return PANGO_WEIGHT_BOOK;
-    if (keyword == "heavy")
-        return PANGO_WEIGHT_HEAVY;
+        return 100;
     if (keyword == "ultralight")
-        return PANGO_WEIGHT_ULTRALIGHT;
+        return 200;
+    if (keyword == "light")
+        return 300;
+    if (keyword == "normal")
+        return 400;
+    if (keyword == "medium")
+        return 500;
     if (keyword == "semibold")
-        return PANGO_WEIGHT_SEMIBOLD;
-    if (keyword == "ultrabold")
-        return PANGO_WEIGHT_ULTRABOLD;
-    if (keyword == "ultraheavy")
-        return PANGO_WEIGHT_ULTRAHEAVY;
+        return 600;
+    if (keyword == "bold")
+        return 700;
+    if (keyword == "heavy")
+        return 800;
+    if (keyword == "black")
+        return 900;
 
-    return PANGO_WEIGHT_NORMAL;
+    return 400;
+}
+
+// From qfontconfigdatabase.cpp
+static int getQtWeight(int fc_weight)
+{
+    int qtweight = QFont::Black;
+
+    if (fc_weight <= (weightClassFromKeyword("light") + weightClassFromKeyword("medium")) / 2)
+        qtweight = QFont::Light;
+    else if (fc_weight <= (weightClassFromKeyword("medium") + weightClassFromKeyword("semibold")) / 2)
+        qtweight = QFont::Normal;
+    else if (fc_weight <= (weightClassFromKeyword("semibold") + weightClassFromKeyword("bold")) / 2)
+        qtweight = QFont::DemiBold;
+    else if (fc_weight <= (weightClassFromKeyword("bold") + weightClassFromKeyword("black")) / 2)
+        qtweight = QFont::Bold;
+
+    return qtweight;
+}
+
+static int getQtWeight(std::string keyword)
+{
+    return getQtWeight(weightClassFromKeyword(keyword));
 }
 
 HSSTextTransformType HSSTextBlock::textTransformTypeFromString(std::string value)
@@ -141,9 +157,6 @@ HSSTextBlock::HSSTextBlock()
     shorthandProperties.push_back("direction");
     shorthandProperties.push_back("wrapDirection");
     this->setShorthandProperties(shorthandProperties);
-
-    PangoFontMap * fontMap = pango_cairo_font_map_new();
-    this->_layout = pango_layout_new(pango_font_map_create_context(fontMap));
 }
 
 HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
@@ -165,9 +178,6 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
     shorthandProperties.push_back("direction");
     shorthandProperties.push_back("wrapDirection");
     this->setShorthandProperties(shorthandProperties);
-
-    PangoFontMap * fontMap = pango_cairo_font_map_new();
-    this->_layout = pango_layout_new(pango_font_map_create_context(fontMap));
 }
 
 HSSTextBlock::p HSSTextBlock::clone() const
@@ -184,7 +194,6 @@ HSSClonable::p HSSTextBlock::cloneImpl() const
 HSSTextBlock::~HSSTextBlock()
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: destructing text block object");
-    g_object_unref(this->_layout);
 }
 
 std::string HSSTextBlock::defaultObjectType()
@@ -275,84 +284,94 @@ void HSSTextBlock::setProperty(HSSObservableProperty name, HSSParserNode::p valu
 
 void HSSTextBlock::drawForeground()
 {
-    cairo_t * cairo = cairo_create(this->foregroundSurface);
-    if (this->font.size() > 0)
+    QPainter painter(this->foregroundSurface);
+
+    HSSFont::p theFont;
+    if (font.size() > 0)
+        theFont = *font.begin();
+
+    QPen pen;
+    if (theFont && theFont->getColor())
     {
-        HSSFont::p theFont = *this->font.begin();
-
-        if (theFont->getColor())
-        {
-            HSSRgb::p textColor = boost::static_pointer_cast<HSSRgb > (theFont->getColor());
-            cairo_set_source_rgb(cairo, textColor->getRed() / 255, textColor->getGreen() / 255, textColor->getBlue() / 255);
-        }
-        else
-        {
-            cairo_set_source_rgb(cairo, 0, 0, 0);
-        }
-
+        HSSRgb::p textColor = boost::static_pointer_cast<HSSRgb>(theFont->getColor());
+        pen.setColor(QColor(textColor->getRed(), textColor->getGreen(), textColor->getBlue(), textColor->getAlpha()));
     }
     else
     {
-        cairo_set_source_rgb(cairo, 0, 0, 0);
+        pen.setColor(QColor(0, 0, 0));
     }
-    pango_cairo_update_layout(cairo, this->_layout);
-    cairo_move_to(cairo, 0, 0);
-    pango_cairo_show_layout(cairo, this->_layout);
-    cairo_destroy(cairo);
+
+    painter.setPen(pen);
+
+    int flags = 0;
+    switch (this->textAlign)
+    {
+        case HSSTextAlignTypeLeft:
+            flags = Qt::AlignLeft;
+            break;
+        case HSSTextAlignTypeRight:
+            flags = Qt::AlignRight;
+            break;
+        case HSSTextAlignTypeCenter:
+            flags = Qt::AlignCenter;
+            break;
+        case HSSTextAlignTypeJustify:
+            flags = Qt::AlignJustify;
+            break;
+        default:
+            break;
+    }
+
+    painter.drawText(0, 0, this->width, this->height, flags, QString::fromStdString(this->getText()));
 }
 
 void HSSTextBlock::layout()
 {
     this->_needsLayout = false;
 
-    pango_layout_set_width(this->_layout, this->width * PANGO_SCALE);
-
-    PangoFontDescription *font_description = pango_font_description_new();
+    QFont font_description;
 
     // Get the first font available
     HSSFont::p theFont;
     if (font.size() > 0)
         theFont = *font.begin();
 
-    // Set the font family - be sure it's not empty or Pango will crash in pango_layout_get_extents
     if (theFont && !theFont->getFace().empty())
-        pango_font_description_set_family(font_description, theFont->getFace().c_str());
+        font_description.setFamily(QString::fromStdString(theFont->getFace()));
     else
-        pango_font_description_set_family(font_description, "monospace");
+        font_description.setFamily("monospace");
 
     // Set the weight of the font (bold, italic, etc.) if available
     if (theFont && theFont->getWeight())
-        pango_font_description_set_weight(font_description, _pangoWeightFromKeyword(theFont->getWeight()->getValue()));
+        font_description.setWeight(getQtWeight(theFont->getWeight()->getValue()));
     else
-        pango_font_description_set_weight(font_description, PANGO_WEIGHT_NORMAL);
+        font_description.setWeight(QFont::Normal);
 
-    pango_font_description_set_absolute_size(font_description, (theFont ? theFont->getSize() : HSSFont::DEFAULT_SIZE) * PANGO_SCALE);
+    font_description.setPointSize(theFont ? theFont->getSize() : HSSFont::DEFAULT_SIZE);
 
-    switch (textAlign)
+    int flags = 0;
+    switch (this->textAlign)
     {
     case HSSTextAlignTypeLeft:
-        pango_layout_set_alignment(this->_layout, PANGO_ALIGN_LEFT);
+        flags = Qt::AlignLeft;
         break;
     case HSSTextAlignTypeRight:
-        pango_layout_set_alignment(this->_layout, PANGO_ALIGN_RIGHT);
+        flags = Qt::AlignRight;
         break;
     case HSSTextAlignTypeCenter:
-        pango_layout_set_alignment(this->_layout, PANGO_ALIGN_CENTER);
+        flags = Qt::AlignCenter;
         break;
     case HSSTextAlignTypeJustify:
-        pango_layout_set_alignment(this->_layout, PANGO_ALIGN_LEFT);
-        pango_layout_set_justify(this->_layout, true);
+        flags = Qt::AlignJustify;
         break;
     default:
         break;
     }
 
-    pango_layout_set_font_description(this->_layout, font_description);
-    pango_font_description_free(font_description);
-    pango_layout_set_text(this->_layout, this->getText().c_str(), -1);
-    PangoRectangle rect;
-    pango_layout_get_extents(this->_layout, NULL, &rect);
-    this->height = rect.height / PANGO_SCALE;
+    QFontMetrics fontMetrics(font_description);
+    QRect bounds = fontMetrics.boundingRect(0, 0, this->width, std::numeric_limits<int>::max(), flags, QString::fromStdString(this->getText()));
+
+    this->height = bounds.height();
     this->_setInnerHeight();
     this->_setOuterHeight();
     this->notifyObservers(HSSObservablePropertyHeight, &this->height);
@@ -777,8 +796,5 @@ void HSSTextBlock::textChanged(HSSObservableProperty source, void *data)
 
 void HSSTextBlock::trimContentText()
 {
-    std::string trmstr = this->text;
-    boost::algorithm::trim(trmstr)
-            ;
-    this->text = trmstr;
+    this->text = QString::fromStdString(this->text).trimmed().toStdString();
 }

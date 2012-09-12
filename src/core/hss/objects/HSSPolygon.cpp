@@ -151,43 +151,31 @@ void HSSPolygon::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
 }
 
-void HSSPolygon::draw(cairo_t * cairo, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
+void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
-    cairo_save(cairo);
-    cairo_translate(cairo, x + width / 2., y + height / 2.);
-    cairo_scale(cairo, 1. * (width / 2.), 1. * (height / 2.));
+    // The center point of the polygon
+    const QPointF centerPoint(x + (width / 2.), y + (height / 2.));
 
-    HSSUnit radius = 1;
-    unsigned int sides = this->sides < 3 ? 3 : this->sides;
-    long double step = 360.0f / sides;
-    long double i;
-    long double l_angle = this->angle;
-    for (i = this->angle; i < this->angle + 360.0; i += step) //go in a full circle
+    // 2 dimensional radius for stretched polygons
+    const QSizeF radius(width / 2., height / 2.);
+
+    // Number of sides in the polygon
+    const unsigned int sides = qMax(3u, this->sides);
+
+    // Angle of rotation of the entire polygon specified in radians
+    const long double theta = this->angle * (M_PI / 180.);
+
+    // Build a list of points comprising the polygon vertices
+    QVector<QPointF> points;
+    for (int i = 1; i <= this->sides; ++i)
     {
-        double radians = l_angle * M_PI / 180.0;
-        HSSUnit p_x = cosl(radians) * radius;
-        HSSUnit p_y = sinl(radians) * radius;
-        if (i == this->angle)
-        {
-            cairo_move_to(cairo, p_x, p_y);
-        }
-        else
-        {
-            cairo_line_to(cairo, p_x, p_y);
-        }
-
-        l_angle += step;
+        double px = radius.width() * cos(((2 * M_PI * i) / sides) + theta) + centerPoint.x();
+        double py = radius.height() * sin(((2 * M_PI * i) / sides) + theta) + centerPoint.y();
+        points << QPointF(px, py);
     }
-    cairo_close_path(cairo);
 
-    cairo_restore(cairo);
-    return;
-
-
-
-
-    cairo_arc(cairo, 0., 0., 1., 0., 2 * M_PI);
-
+    // Create a polygon from the vertex list and add to the path
+    path.addPolygon(QPolygonF(points));
 }
 
 unsigned int HSSPolygon::getSides()

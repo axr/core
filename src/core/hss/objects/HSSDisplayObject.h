@@ -50,7 +50,8 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
-#include <cairo/cairo.h>
+#include <QPainter>
+#include <QPainterPath>
 #include "AXRGlobal.h"
 #include "HSSBorder.h"
 #include "HSSEvent.h"
@@ -60,6 +61,8 @@
 #include "HSSObject.h"
 #include "HSSRgb.h"
 #include "HSSRule.h"
+
+class QImage;
 
 namespace AXR
 {
@@ -193,12 +196,12 @@ namespace AXR
 
         void setDirty(bool value);
         bool isDirty();
-        virtual void draw(cairo_t * cairo);
+        virtual void draw(QPainter &painter);
         virtual void drawBackground();
-        virtual void _drawBackground(cairo_t * cairo);
+        virtual void _drawBackground(QPainter &painter, const QPainterPath &path);
         virtual void drawForeground();
         virtual void drawBorders();
-        virtual void recursiveDraw(cairo_t * cairo);
+        virtual void recursiveDraw(QPainter &painter);
 
         void setNeedsLayout(bool value);
         const bool needsLayout() const;
@@ -338,9 +341,9 @@ namespace AXR
 
         //if it needs to resize the surface
         bool _needsSurface;
-        cairo_surface_t * backgroundSurface;
-        cairo_surface_t * foregroundSurface;
-        cairo_surface_t * bordersSurface;
+        QImage * backgroundSurface;
+        QImage * foregroundSurface;
+        QImage * bordersSurface;
 
         //flags
         boost::unordered_map<std::string, HSSRuleState> _flagsStatus;
