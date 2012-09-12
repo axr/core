@@ -96,7 +96,6 @@ void axr_log_inline(quint32 channels, const std::string &message)
         std_log(message, false);
 }
 
-
 void axr_log(quint32 channels, const QString &message)
 {
     axr_log(channels, message.toStdString());

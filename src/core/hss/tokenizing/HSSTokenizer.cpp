@@ -55,46 +55,34 @@ using namespace AXR;
 
 HSSTokenizer::HSSTokenizer()
 {
-    //these start out empty
-    this->currentChar = NULL;
-
-    //initialize the currentTokenText
-    this->currentTokenText = std::string();
-
-    //we start out with an empty buffer
-    this->buflen = 0;
-    //we start at the beginning of the buffer
-    this->bufpos = 0;
-    //the peeking offset is 0
-    this->peekpos = this->peekColumn = this->peekLine = 0;
-    //we start at line 1 and column 1
-    this->currentLine = this->currentColumn = 1;
-
-    //by default, numbers are read as real numbers and A-F will be an identifier
-    this->preferHex = false;
+    this->reset();
 }
 
 HSSTokenizer::~HSSTokenizer()
 {
-
 }
 
 void HSSTokenizer::reset()
 {
+    if (this->file)
+        this->file.reset();
 
-    this->file.reset();
-    //this starts out empty
-    this->currentChar = NULL;
+    // This starts out empty
+    this->currentChar = '\0';
 
-    //initialize the currentTokenText
+    // Initialize the currentTokenText
     this->currentTokenText = std::string();
 
-    //we start out at the beginning of an empty buffer
-    this->buflen = this->bufpos = this->peekpos = 0;
-    //we start at line 0 and column 0
+    // We start out at the beginning of an empty buffer
+    this->buflen = this->bufpos = 0;
+
+    // The peeking offset is 0
+    this->peekpos = this->peekColumn = this->peekLine = 0;
+
+    // We start at line 1 and column 1
     this->currentLine = this->currentColumn = 1;
 
-    //by default, numbers are read as real numbers and A-F will be an identifier
+    // By default, numbers are read as real numbers and A-F will be an identifier
     this->preferHex = false;
 }
 
@@ -235,13 +223,17 @@ HSSToken::p HSSTokenizer::readNextToken()
 
 HSSToken::p HSSTokenizer::peekNextToken()
 {
-    std_log4("bufpos: " + this->bufpos);
-    //store the current position in the buffer
+    std::stringstream ss;
+    ss << "bufpos: " << this->bufpos;
+    std_log4(ss.str());
+
+    // Store the current position in the buffer
     int curpos = this->bufpos;
     unsigned curline = this->currentLine;
     unsigned curcol = this->currentColumn;
     HSSToken::p ret = this->readNextToken();
-    //store the new offset
+
+    // Store the new offset
     this->peekpos += (this->bufpos - curpos);
     this->peekLine += (this->currentLine - curline);
     this->peekColumn += (this->currentColumn - curcol);
@@ -260,7 +252,11 @@ void HSSTokenizer::resetPeek()
     this->bufpos -= this->peekpos + 1;
     this->currentLine -= this->peekLine;
     this->currentColumn -= this->peekColumn + 1;
-    std_log4("end bufpos: " + this->bufpos);
+
+    std::stringstream ss;
+    ss << "end bufpos: " << this->bufpos;
+    std_log4(ss.str());
+
     this->readNextChar();
 
     //reset the offset to 0
@@ -278,11 +274,12 @@ HSS_TOKENIZING_STATUS HSSTokenizer::skipWhitespace()
 {
     while (isspace(this->currentChar) || this->currentChar == '\302')
     {
-        //if there is this weird space char, skip another byte
+        // If there is this weird space char, skip another byte
         if (this->currentChar == '\302')
         {
             this->readNextChar();
         }
+
         if (this->currentChar == '\n' || this->currentChar == '\r')
         {
             this->currentLine++;
@@ -343,6 +340,7 @@ HSSToken::p HSSTokenizer::readIdentifier()
     {
         this->storeCurrentCharAndReadNext();
     }
+
     return HSSValueToken::p(new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText(), line, column));
 }
 
