@@ -9,8 +9,8 @@ mkdir ../build-shared ../build-static
 
 # Configure using CMake (shared)
 cd ../build-shared
-cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ../Prototype
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DALL_WARNINGS=ON ../Prototype
 
 # Configure using CMake (static)
 cd ../build-static
-cmake -DCMAKE_BUILD_TYPE=Release ../Prototype
+cmake -DCMAKE_BUILD_TYPE=Release -DALL_WARNINGS=ON ../Prototype

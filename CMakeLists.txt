@@ -38,6 +38,7 @@ if (found_vs GREATER -1 OR found_blocks GREATER -1 OR "${CMAKE_GENERATOR}" STREQ
 endif()
 
 option(AXR_NO_DEPRECATED_ENUMS "Disallow use of deprecated enum members" OFF)
+option(ALL_WARNINGS "Display as many warnings as possible" OFF)
 option(BUILD_PROTOTYPE "Builds the prototype including libraries and demo app" ON)
 option(BUILD_DOCS "Build documentation using doxygen" ON)
 option(BUILD_EXAMPLES "Builds example programs showing usage of the AXR library" OFF)
@@ -62,6 +63,17 @@ if(BUILD_PROTOTYPE)
         ${Boost_INCLUDE_DIRS}
         ${SDL_INCLUDE_DIR}
     )
+
+    if(ALL_WARNINGS)
+        if(CMAKE_COMPILER_IS_GNUCXX)
+            add_definitions(-Weverything -Wall -pedantic)
+
+            # Treat all external dependency headers as system headers so we don't see warnings for them
+            foreach(dir ${Boost_INCLUDE_DIRS} ${SDL_INCLUDE_DIR} ${QT_INCLUDES})
+                add_definitions(-isystem ${dir})
+            endforeach()
+        endif()
+    endif()
 
     if(AXR_NO_DEPRECATED_ENUMS)
         add_definitions(-DAXR_NO_DEPRECATED_ENUMS)
