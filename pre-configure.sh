@@ -13,7 +13,8 @@ deps()
 {
     echo "- Qt 4"
     echo "- Boost"
-    echo "- SDL"
+    echo "- SDL (optional)"
+    echo "- Doxygen (optional)"
 }
 
 doc()
@@ -115,7 +116,7 @@ if [ "$UNAME" = "Darwin" ] ; then
 elif [ "$UNAME" = "Linux" ] ; then
     if [ $(which apt-get 2>/dev/null) ] ; then
         # Debian, Ubuntu
-        apt-get install build-essential qt-sdk libboost-all-dev libsdl1.2-dev
+        apt-get install build-essential qt-sdk libboost-all-dev libsdl1.2-dev doxygen
     elif [ $(which yum 2>/dev/null) ] ; then
         # Fedora, RHEL, Yellow Dog Linux
         echo "ERROR: yum support is not yet implemented"
@@ -130,7 +131,7 @@ elif [ "$UNAME" = "Linux" ] ; then
         exit 1
     elif [ $(which pacman 2>/dev/null) ] ; then
         # Arch Linux
-        pacman -S qt boost sdl
+        pacman -S qt boost sdl doxygen
     elif [ $(which emerge 2>/dev/null) ] ; then
         # Gentoo
         echo "ERROR: portage support is not yet implemented"
