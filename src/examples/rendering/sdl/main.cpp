@@ -99,9 +99,9 @@ void render()
         HSSRect bounds(0, 0, screen->w, screen->h);
         core->drawInRectWithBounds(bounds, bounds);
 
-        const QImage *qsurf = core->getRender()->surface();
+        const QImage qsurf = core->getRender()->surface();
 
-        SDL_Surface *surf = SDL_CreateRGBSurfaceFrom((void*)qsurf->constBits(), qsurf->width(), qsurf->height(), 32, qsurf->width() * 4, rmask, gmask, bmask, amask);
+        SDL_Surface *surf = SDL_CreateRGBSurfaceFrom((void*)qsurf.constBits(), qsurf.width(), qsurf.height(), 32, qsurf.width() * 4, rmask, gmask, bmask, amask);
         SDL_BlitSurface(surf, NULL, screen, NULL);
         SDL_FreeSurface(surf);
         SDL_Flip(screen);

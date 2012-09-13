@@ -101,7 +101,7 @@ namespace AXR
          *  Reset the renderer to initial values, for example when reloading a file.
          */
         void reset();
-        const QImage* surface() const;
+        const QImage surface() const;
         /**
          *  @return The width of the window.
          */
@@ -124,6 +124,7 @@ namespace AXR
     protected:
         AXRController *controller;
         QImage *rootSurface;
+        QImage rootSurfaceFinal;
     };
 }
 

@@ -111,7 +111,7 @@
         NSRectFill(bounds);
 
         // Present the AXR surface into the NSView
-        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], bounds, QPixmap::fromImage(*core->getRender()->surface()).toMacCGImageRef());
+        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], bounds, QPixmap::fromImage(core->getRender()->surface()).toMacCGImageRef());
     }
     else
     {

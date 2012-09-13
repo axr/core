@@ -85,6 +85,7 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
             delete this->rootSurface;
             this->rootSurface = new QImage(this->windowWidth, this->windowHeight, QImage::Format_ARGB32_Premultiplied);
             this->rootSurface->fill(Qt::transparent);
+            this->rootSurfaceFinal = this->rootSurface->convertToFormat(QImage::Format_ARGB32);
 
             root->setNeedsRereadRules(true);
         }
@@ -109,6 +110,7 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 
         this->rootSurface->fill(Qt::transparent);
         root->recursiveDraw(painter);
+        this->rootSurfaceFinal = this->rootSurface->convertToFormat(QImage::Format_ARGB32);
 
         if (wrapper->showLayoutSteps())
         {
@@ -130,9 +132,9 @@ void AXRRender::reset()
     this->windowHeight = 0;
 }
 
-const QImage* AXRRender::surface() const
+const QImage AXRRender::surface() const
 {
-    return this->rootSurface;
+    return this->rootSurfaceFinal;
 }
 
 void AXRRender::mouseDown(HSSUnit x, HSSUnit y)
