@@ -66,7 +66,7 @@ using namespace AXR;
 
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
-const char* WINDOW_TITLE = "AXR SDL";
+const char* WINDOW_TITLE = "AXR SDL Demo";
 
 AXR_WRAPPER_CLASS *wrapper;
 SDL_Surface* screen = NULL;

@@ -44,15 +44,15 @@
 #import <iostream>
 #import <string>
 #import "AXRDebugging.h"
-#import "AXRTestAppAppDelegate.h"
 #import "HSSCallback.h"
 #import "HSSDisplayObject.h"
+#import "CocoaAppDelegate.h"
 #import "CocoaAXRWrapper.h"
 
 #define BUFFSIZE 8192
 char Buff[BUFFSIZE];
 
-@implementation AXRTestAppAppDelegate
+@implementation CocoaAppDelegate
 
 @synthesize testsWindow;
 @synthesize errorsWindow;

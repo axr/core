@@ -19,4 +19,8 @@ if(APPLE)
     add_subdirectory(cocoa)
 endif()
 
-add_subdirectory(app)
+add_subdirectory(prototype)
+
+if(AXR_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()

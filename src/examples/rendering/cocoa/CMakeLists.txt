@@ -1,26 +1,15 @@
-# Icons .rc, and property lists
-file(GLOB axr_icon_SOURCES ${CMAKE_SOURCE_DIR}/share/icons/*.icns)
-set(axr_res_SOURCES axr.rc Info.plist ${axr_icon_SOURCES})
-source_group("Resources" FILES ${axr_res_SOURCES})
-
-# SDL application
-add_executable(${TARGET_NAME_APP_SDL} WIN32 MACOSX_BUNDLE ${axr_res_SOURCES} sdlmain.cpp)
-target_link_libraries(${TARGET_NAME_APP_SDL} ${TARGET_NAME_LIB_CORE} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${SDLMAIN_LIBRARY} ${SDL_LIBRARY})
-
-# Cocoa application
 if(APPLE)
-    list(APPEND axr_code_SOURCES main.mm AXRTestAppAppDelegate.h AXRTestAppAppDelegate.mm)
+    set(axr_res_SOURCES Info.plist)
+    source_group("Resources" FILES ${axr_res_SOURCES})
+
+    list(APPEND axr_code_SOURCES main.mm CocoaAppDelegate.h CocoaAppDelegate.mm)
 
     # Xcode nib files
     set(axr_lproj_SOURCES English.lproj/InfoPlist.strings English.lproj/MainMenu.nib)
     source_group("Resources\\English.lproj" FILES ${axr_lproj_SOURCES})
 
-    # HSS framework source files
-    file(GLOB_RECURSE hss_SOURCES ${CMAKE_SOURCE_DIR}/share/hss-framework/*.hss)
-    source_group("HSS Framework" FILES ${hss_SOURCES})
-
     # Prototype application dogfood
-    file(GLOB_RECURSE views_SOURCES ../resources/views/*.hss ../resources/views/*.xml)
+    file(GLOB_RECURSE views_SOURCES views/*.hss views/*.xml)
     source_group("Views" FILES ${views_SOURCES})
 
     set(axr_SOURCES ${axr_res_SOURCES} ${axr_lproj_SOURCES} ${axr_code_SOURCES} ${hss_SOURCES} ${views_SOURCES})

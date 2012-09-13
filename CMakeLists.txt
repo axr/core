@@ -17,6 +17,9 @@ cmake_minimum_required(VERSION 2.8)
 
 set(AXR_VERSION_STRING "0.4.7")
 
+# This list is for OS X application bundles to copy in all necessary icons
+file(GLOB axr_icon_SOURCES ${CMAKE_SOURCE_DIR}/share/icons/*.icns)
+
 # If we're using an IDE build system such as Visual Studio or Xcode,
 # use fancier target names such as "Documentation" vs "docs"
 string(FIND "${CMAKE_GENERATOR}" "Visual Studio" found_vs)
@@ -97,14 +100,45 @@ if(AXR_BUILD_PROTOTYPE)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-    set(TARGET_NAME_APP_COCOA "AXR Prototype")
-    set(TARGET_NAME_APP_SDL AXRSDL)
-    set(TARGET_NAME_LIB_CORE AXRCore)
-    set(TARGET_NAME_LIB_COCOA AXRCocoa)
+    set(TARGET_NAME_APP_COCOA Cocoa)
+    set(TARGET_NAME_APP_SDL SDL)
+    set(TARGET_NAME_APP_PROTOTYPE Prototype)
+    set(TARGET_NAME_LIB_CORE Core)
+    set(TARGET_NAME_LIB_COCOA CoreCocoa)
 
     add_subdirectory(src)
 endif()
 
 if(AXR_BUILD_DOCS)
     add_subdirectory(docs)
+endif()
+
+if(FANCY_TARGET_NAMES)
+    # All of the metadata-type files in the repository root directory
+    add_custom_target("Meta" SOURCES AUTHORS CHANGELOG.md COPYING INSTALL LICENSE README.md)
+
+    # Configuration and utility scripts
+    add_custom_target("Scripts" SOURCES .travis/configure.sh .travis/make.sh .travis.yml .gitignore .mailmap bin/pre-commit bin/stylecheck.py bin/update-authors.sh pre-configure.bat pre-configure.sh)
+
+    # All CMake scripts since some IDEs don't show the hierarchy
+    # TODO: Organize by folder within this target!
+    file(GLOB_RECURSE cmake_SOURCES ${CMAKE_SOURCE_DIR}/*/CMakeLists.txt ${CMAKE_SOURCE_DIR}/*.cmake)
+    add_custom_target("CMake" SOURCES ${cmake_SOURCES})
+
+    # The HSS framework
+    set(d ${CMAKE_SOURCE_DIR}/share/hss-framework)
+    file(GLOB_RECURSE hss_SOURCES ${d}/*.hss ${d}/*.md)
+    add_custom_target("HSS" SOURCES ${hss_SOURCES})
+
+    # Other shared resources (i.e. to be distributed in $prefix/share or elsewhere)
+    set(d ${CMAKE_SOURCE_DIR}/share)
+    file(GLOB_RECURSE shared_SOURCES ${d}/*.txt ${d}/*.ico ${d}/*.icns ${d}/*.png)
+    list(REMOVE_ITEM shared_SOURCES ${hss_SOURCES})
+    add_custom_target("Shared" SOURCES ${shared_SOURCES})
+
+    # Test files for the renderer
+    # TODO: Organize by folder within this target!
+    set(d ${CMAKE_SOURCE_DIR}/tests)
+    file(GLOB_RECURSE tests_SOURCES ${d}/*.hss ${d}/*.xml ${d}/*.txt ${d}/*/README)
+    add_custom_target("Tests" SOURCES ${tests_SOURCES})
 endif()
