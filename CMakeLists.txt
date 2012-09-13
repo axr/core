@@ -9,6 +9,9 @@ include(Utilities)
 # Verify that the source/build paths do not contain any spaces
 check_pathnames()
 
+# Compiler detection
+check_clang()
+
 project(AXR)
 cmake_minimum_required(VERSION 2.8)
 
@@ -58,13 +61,17 @@ if(AXR_BUILD_PROTOTYPE)
     )
 
     if(AXR_ALL_WARNINGS)
-        if(CMAKE_COMPILER_IS_GNUCXX)
-            add_definitions(-Weverything -Wall -pedantic)
+        if(CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCXX)
+            add_definitions(-Wall -pedantic)
 
             # Treat all external dependency headers as system headers so we don't see warnings for them
             foreach(dir ${Boost_INCLUDE_DIRS} ${SDL_INCLUDE_DIR} ${QT_INCLUDES})
                 add_definitions(-isystem ${dir})
             endforeach()
+        endif()
+
+        if(CMAKE_COMPILER_IS_CLANGXX)
+            add_definitions(-Weverything)
         endif()
     endif()
 
