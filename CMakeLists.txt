@@ -2,32 +2,17 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
     message(FATAL_ERROR "You should not build in-source. Use a directory outside the source tree or a subdirectory such as: ${CMAKE_SOURCE_DIR}/build")
 endif()
 
-# NOTE: Untested on Windows
-function(check_pathnames)
-    if(WIN32)
-        set(separator ":")
-    endif()
+# Set the module path and include utility modules
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+include(Utilities)
 
-    set(path_regex "^([A-Za-z0-9._/-${separator}]+)$")
-
-    if(NOT "${CMAKE_SOURCE_DIR}" MATCHES "${path_regex}" OR NOT "${CMAKE_BINARY_DIR}" MATCHES "${path_regex}")
-        message(FATAL_ERROR "Ensure that the source and build paths contain only the following characters: alphanumeric, dash, underscore, slash, dot (and colon on Windows)")
-    endif()
-endfunction()
-
+# Verify that the source/build paths do not contain any spaces
 check_pathnames()
 
 project(AXR)
 cmake_minimum_required(VERSION 2.8)
 
 set(AXR_VERSION_STRING "0.4.7")
-
-# Default to building universal binaries on OS X only during release builds
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    set(BUILD_UNIVERSAL_BINARIES_DEFAULT ON)
-else()
-    set(BUILD_UNIVERSAL_BINARIES_DEFAULT OFF)
-endif()
 
 # If we're using an IDE build system such as Visual Studio or Xcode,
 # use fancier target names such as "Documentation" vs "docs"
@@ -38,14 +23,22 @@ if (found_vs GREATER -1 OR found_blocks GREATER -1 OR "${CMAKE_GENERATOR}" STREQ
 endif()
 
 option(AXR_NO_DEPRECATED_ENUMS "Disallow use of deprecated enum members" OFF)
-option(ALL_WARNINGS "Display as many warnings as possible" OFF)
-option(BUILD_PROTOTYPE "Builds the prototype including libraries and demo app" ON)
-option(BUILD_DOCS "Build documentation using doxygen" ON)
-option(BUILD_EXAMPLES "Builds example programs showing usage of the AXR library" OFF)
-option(BUILD_UNIVERSAL_BINARIES "Build OS X universal binaries (i386 + x86_64)" ${BUILD_UNIVERSAL_BINARIES_DEFAULT})
+option(AXR_ALL_WARNINGS "Display as many warnings as possible" OFF)
+option(AXR_BUILD_PROTOTYPE "Builds the prototype including libraries and demo app" ON)
+option(AXR_BUILD_DOCS "Build documentation using doxygen" ON)
+option(AXR_BUILD_EXAMPLES "Builds example programs showing usage of the AXR library" OFF)
+
+# Default to building universal binaries on OS X only during release builds
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    set(unibin ON)
+else()
+    set(unibin OFF)
+endif()
+
+option(BUILD_UNIVERSAL_BINS "Build OS X universal binaries (i386 + x86_64)" ${unibin})
 option(BUILD_SHARED_LIBS "Builds shared instead of static libraries" ON)
 
-if(BUILD_PROTOTYPE)
+if(AXR_BUILD_PROTOTYPE)
     find_package(Qt4 4.8 COMPONENTS QtCore QtGui QtXml REQUIRED)
     include(${QT_USE_FILE})
     add_definitions(${QT_DEFINITIONS})
@@ -64,7 +57,7 @@ if(BUILD_PROTOTYPE)
         ${SDL_INCLUDE_DIR}
     )
 
-    if(ALL_WARNINGS)
+    if(AXR_ALL_WARNINGS)
         if(CMAKE_COMPILER_IS_GNUCXX)
             add_definitions(-Weverything -Wall -pedantic)
 
@@ -79,8 +72,8 @@ if(BUILD_PROTOTYPE)
         add_definitions(-DAXR_NO_DEPRECATED_ENUMS)
     endif()
 
-    if(BUILD_UNIVERSAL_BINARIES OR "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-        set(CMAKE_OSX_ARCHITECTURES i386 x86_64)
+    if(BUILD_UNIVERSAL_BINS)
+        set(CMAKE_OSX_ARCHITECTURES "i386 x86_64")
     endif()
 
     set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
@@ -105,6 +98,6 @@ if(BUILD_PROTOTYPE)
     add_subdirectory(src)
 endif()
 
-if(BUILD_DOCS)
+if(AXR_BUILD_DOCS)
     add_subdirectory(docs)
 endif()
