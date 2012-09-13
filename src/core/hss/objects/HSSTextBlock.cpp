@@ -349,7 +349,8 @@ void HSSTextBlock::drawForeground()
             break;
     }
 
-    painter.drawText(0, 0, this->width, this->height, flags, QString::fromStdString(this->getText()));
+    std::string text = this->getText();
+    painter.drawText(0, 0, this->width, this->height, flags, QString::fromUtf8(text.data(), text.length()));
 }
 
 void HSSTextBlock::layout()
