@@ -445,6 +445,7 @@ void HSSContainer::recursiveDraw(QPainter &painter)
 void HSSContainer::drawBackground()
 {
     QPainter painter(this->backgroundSurface);
+    painter.setRenderHint(QPainter::Antialiasing);
     QPainterPath path;
     this->shape->createPath(path, 0, 0, this->width, this->height);
     HSSDisplayObject::_drawBackground(painter, path);
@@ -453,6 +454,7 @@ void HSSContainer::drawBackground()
 void HSSContainer::drawBorders()
 {
     QPainter painter(this->bordersSurface);
+    painter.setRenderHint(QPainter::Antialiasing);
 
     // Calculate the combined thickness of all borders
     HSSUnit combinedThickness = 0;

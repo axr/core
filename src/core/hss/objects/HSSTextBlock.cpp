@@ -310,6 +310,7 @@ QFont HSSTextBlock::getFont() const
 void HSSTextBlock::drawForeground()
 {
     QPainter painter(this->foregroundSurface);
+    painter.setRenderHint(QPainter::Antialiasing);
 
     HSSFont::p theFont;
     if (font.size() > 0)

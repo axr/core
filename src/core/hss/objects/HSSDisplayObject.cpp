@@ -805,6 +805,7 @@ void HSSDisplayObject::draw(QPainter &painter)
 void HSSDisplayObject::drawBackground()
 {
     QPainter painter(this->backgroundSurface);
+    painter.setRenderHint(QPainter::Antialiasing);
     QPainterPath path;
     path.addRect(0, 0, this->width, this->height);
     this->_drawBackground(painter, path);
