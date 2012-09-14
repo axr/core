@@ -282,7 +282,9 @@ void PrototypeWindow::paintEvent(QPaintEvent *event)
 {
     // Perform compositing in AXR
     AXRCore::tp &core = AXRCore::getInstance();
-    core->drawInRectWithBounds(event->rect(), this->rect());
+
+    // TODO: There should be a separate widget for rendering!
+    core->drawInRectWithBounds(event->rect(), this->ui->renderingView->geometry());
 
     // Fill with white...
     QPainter painter(this);
