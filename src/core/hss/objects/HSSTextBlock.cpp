@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXR.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "HSSFunctions.h"
@@ -309,8 +310,11 @@ QFont HSSTextBlock::getFont() const
 
 void HSSTextBlock::drawForeground()
 {
+    this->foregroundSurface->fill(Qt::transparent);
+
     QPainter painter(this->foregroundSurface);
-    painter.setRenderHint(QPainter::Antialiasing);
+    if (AXRCore::getInstance()->getRender()->globalAntialiasingEnabled())
+        painter.setRenderHint(QPainter::Antialiasing);
 
     HSSFont::p theFont;
     if (font.size() > 0)

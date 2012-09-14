@@ -41,31 +41,13 @@
  *
  ********************************************************************/
 
-#import <Cocoa/Cocoa.h>
-#import "AXR.h"
-#import "AXRView.h"
+#include <QApplication>
+#include "PrototypeWindow.h"
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
-#define Superclass <NSApplicationDelegate>
-#endif
-
-@interface CocoaAppDelegate : NSObject Superclass
+int main(int argc, char *argv[])
 {
-    NSWindow *window;
-    NSWindow *axrWindow;
-    AXRView *axrView;
-    BOOL needsFile;
+    QApplication a(argc, argv);
+    PrototypeWindow window;
+    window.show();
+    return a.exec();
 }
-
-@property(assign) IBOutlet NSWindow *axrWindow;
-@property(assign) IBOutlet AXRView *axrView;
-@property(assign) BOOL needsFile;
-
--(id) init;
--(void) applicationDidFinishLaunching : (NSNotification *) aNotification;
--(BOOL) application : (NSApplication *) theApplication openFile : (NSString *) filename;
-
--(IBAction) openDocument : (id) sender;
--(IBAction) reload : (id) sender;
-
-@end

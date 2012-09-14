@@ -188,8 +188,8 @@ namespace AXR
         void setNeedsRereadRules(bool value);
         bool needsRereadRules();
 
-        virtual void regenerateSurfaces();
-        virtual void recursiveRegenerateSurfaces();
+        virtual void regenerateSurfaces(bool force = false);
+        virtual void recursiveRegenerateSurfaces(bool force = false);
 
         void setNeedsSurface(bool value);
         bool needsSurface();

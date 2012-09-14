@@ -41,31 +41,36 @@
  *
  ********************************************************************/
 
-#import <Cocoa/Cocoa.h>
-#import "AXR.h"
-#import "AXRView.h"
+#include "LogWindow.h"
+#include "ui_LogWindow.h"
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
-#define Superclass <NSApplicationDelegate>
-#endif
-
-@interface CocoaAppDelegate : NSObject Superclass
+LogWindow::LogWindow(QWidget *parent)
+: QDialog(parent), ui(new Ui::LogWindow)
 {
-    NSWindow *window;
-    NSWindow *axrWindow;
-    AXRView *axrView;
-    BOOL needsFile;
+    this->ui->setupUi(this);
 }
 
-@property(assign) IBOutlet NSWindow *axrWindow;
-@property(assign) IBOutlet AXRView *axrView;
-@property(assign) BOOL needsFile;
+LogWindow::~LogWindow()
+{
+    delete this->ui;
+}
 
--(id) init;
--(void) applicationDidFinishLaunching : (NSNotification *) aNotification;
--(BOOL) application : (NSApplication *) theApplication openFile : (NSString *) filename;
+QString LogWindow::logText() const
+{
+    return this->ui->logTextEdit->toPlainText();
+}
 
--(IBAction) openDocument : (id) sender;
--(IBAction) reload : (id) sender;
+void LogWindow::setLogText(const QString &text)
+{
+    this->ui->logTextEdit->setPlainText(text);
+}
 
-@end
+void LogWindow::appendLogText(const QString &text)
+{
+    this->setLogText(this->logText() + text);
+}
+
+void LogWindow::clearLogText()
+{
+    this->setLogText(QString());
+}

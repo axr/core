@@ -41,31 +41,46 @@
  *
  ********************************************************************/
 
-#import <Cocoa/Cocoa.h>
-#import "AXR.h"
-#import "AXRView.h"
+#ifndef AXR_PROTOTYPE_PROTOTYPEWINDOW
+#define AXR_PROTOTYPE_PROTOTYPEWINDOW
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
-#define Superclass <NSApplicationDelegate>
-#endif
+#include <QMainWindow>
 
-@interface CocoaAppDelegate : NSObject Superclass
+namespace Ui
 {
-    NSWindow *window;
-    NSWindow *axrWindow;
-    AXRView *axrView;
-    BOOL needsFile;
+    class PrototypeWindow;
 }
 
-@property(assign) IBOutlet NSWindow *axrWindow;
-@property(assign) IBOutlet AXRView *axrView;
-@property(assign) BOOL needsFile;
+class PrototypeWindow : public QMainWindow
+{
+    Q_OBJECT
 
--(id) init;
--(void) applicationDidFinishLaunching : (NSNotification *) aNotification;
--(BOOL) application : (NSApplication *) theApplication openFile : (NSString *) filename;
+public:
+    PrototypeWindow(QWidget *parent = NULL);
+    virtual ~PrototypeWindow();
 
--(IBAction) openDocument : (id) sender;
--(IBAction) reload : (id) sender;
+public slots:
+    void openFile();
+    void openFile(const QString &filePath);
+    void reloadFile();
+    void closeFile();
+    void previousLayoutStep();
+    void nextLayoutStep();
+    void listXmlElements();
+    void listHssStatements();
+    void listHssTokens();
+    void runLayoutTests();
+    void showErrorLog();
+    void showAbout();
+    void toggleAntialiasing(bool on);
 
-@end
+protected:
+    void paintEvent(QPaintEvent *event);
+
+private:
+    class Private;
+    Private *d;
+    Ui::PrototypeWindow *ui;
+};
+
+#endif

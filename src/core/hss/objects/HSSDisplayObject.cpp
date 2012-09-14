@@ -704,9 +704,9 @@ void HSSDisplayObject::recursiveReadDefinitionObjects()
     this->readDefinitionObjects();
 }
 
-void HSSDisplayObject::regenerateSurfaces()
+void HSSDisplayObject::regenerateSurfaces(bool force)
 {
-    if (this->_needsSurface)
+    if (force || this->_needsSurface)
     {
         delete this->backgroundSurface;
         this->backgroundSurface = new QImage(ceil(this->width), ceil(this->height), QImage::Format_ARGB32_Premultiplied);
@@ -739,9 +739,9 @@ void HSSDisplayObject::regenerateSurfaces()
     }
 }
 
-void HSSDisplayObject::recursiveRegenerateSurfaces()
+void HSSDisplayObject::recursiveRegenerateSurfaces(bool force)
 {
-    this->regenerateSurfaces();
+    this->regenerateSurfaces(force);
 }
 
 void HSSDisplayObject::setNeedsSurface(bool value)
@@ -804,8 +804,12 @@ void HSSDisplayObject::draw(QPainter &painter)
 
 void HSSDisplayObject::drawBackground()
 {
+    this->backgroundSurface->fill(Qt::transparent);
+
     QPainter painter(this->backgroundSurface);
-    painter.setRenderHint(QPainter::Antialiasing);
+    if (AXRCore::getInstance()->getRender()->globalAntialiasingEnabled())
+        painter.setRenderHint(QPainter::Antialiasing);
+
     QPainterPath path;
     path.addRect(0, 0, this->width, this->height);
     this->_drawBackground(painter, path);

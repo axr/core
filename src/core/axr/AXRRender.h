@@ -121,7 +121,14 @@ namespace AXR
          */
         double windowHeight;
 
+        bool globalAntialiasingEnabled() const;
+        void setGlobalAntialiasingEnabled(bool enable);
+
+        void regenerateRootSurface();
+
     protected:
+        bool _globalAntialiasingEnabled;
+        bool _needsSurfaces;
         AXRController *controller;
         QImage *rootSurface;
         QImage rootSurfaceFinal;

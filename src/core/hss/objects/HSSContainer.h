@@ -207,7 +207,7 @@ namespace AXR
         /**
          *  Propagates the regenerateSurfaces() call to all the children.
          */
-        void recursiveRegenerateSurfaces();
+        void recursiveRegenerateSurfaces(bool force = false);
 
         /**
          *  Propagates the draw() call to all the children.

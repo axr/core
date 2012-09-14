@@ -41,31 +41,32 @@
  *
  ********************************************************************/
 
-#import <Cocoa/Cocoa.h>
-#import "AXR.h"
-#import "AXRView.h"
+#ifndef AXR_PROTOTYPE_LOGWINDOW
+#define AXR_PROTOTYPE_LOGWINDOW
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
-#define Superclass <NSApplicationDelegate>
-#endif
+#include <QDialog>
 
-@interface CocoaAppDelegate : NSObject Superclass
+namespace Ui
 {
-    NSWindow *window;
-    NSWindow *axrWindow;
-    AXRView *axrView;
-    BOOL needsFile;
+    class LogWindow;
 }
 
-@property(assign) IBOutlet NSWindow *axrWindow;
-@property(assign) IBOutlet AXRView *axrView;
-@property(assign) BOOL needsFile;
+class LogWindow : public QDialog
+{
+    Q_OBJECT
 
--(id) init;
--(void) applicationDidFinishLaunching : (NSNotification *) aNotification;
--(BOOL) application : (NSApplication *) theApplication openFile : (NSString *) filename;
+public:
+    LogWindow(QWidget *parent = NULL);
+    virtual ~LogWindow();
+    QString logText() const;
 
--(IBAction) openDocument : (id) sender;
--(IBAction) reload : (id) sender;
+public slots:
+    void setLogText(const QString &text);
+    void appendLogText(const QString &text);
+    void clearLogText();
 
-@end
+private:
+    Ui::LogWindow *ui;
+};
+
+#endif

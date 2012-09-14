@@ -55,7 +55,7 @@
 using namespace AXR;
 
 AXRRender::AXRRender(AXRController *theController)
-: windowWidth(0), windowHeight(0), controller(theController), rootSurface(new QImage())
+: windowWidth(0), windowHeight(0), _globalAntialiasingEnabled(true), _needsSurfaces(true), controller(theController), rootSurface(NULL)
 {
 }
 
@@ -80,12 +80,7 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 
             this->windowWidth = bounds.size.width;
             this->windowHeight = bounds.size.height;
-
-            // Regenerate root surface
-            delete this->rootSurface;
-            this->rootSurface = new QImage(this->windowWidth, this->windowHeight, QImage::Format_ARGB32_Premultiplied);
-            this->rootSurface->fill(Qt::transparent);
-            this->rootSurfaceFinal = this->rootSurface->convertToFormat(QImage::Format_ARGB32);
+            _needsSurfaces = true;
 
             root->setNeedsRereadRules(true);
         }
@@ -101,12 +96,13 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
         }
 
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: regenerating surfaces");
-        root->recursiveRegenerateSurfaces();
+        regenerateRootSurface();
         axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: drawing tree");
         wrapper->nextLayoutChild();
 
         QPainter painter(this->rootSurface);
-        painter.setRenderHint(QPainter::Antialiasing);
+        if (_globalAntialiasingEnabled)
+            painter.setRenderHint(QPainter::Antialiasing);
 
         this->rootSurface->fill(Qt::transparent);
         root->recursiveDraw(painter);
@@ -186,4 +182,33 @@ double AXRRender::getWindowWidth()
 double AXRRender::getWindowHeight()
 {
     return this->windowHeight;
+}
+
+bool AXRRender::globalAntialiasingEnabled() const
+{
+    return this->_globalAntialiasingEnabled;
+}
+
+void AXRRender::setGlobalAntialiasingEnabled(bool enable)
+{
+    if (this->_globalAntialiasingEnabled != enable)
+    {
+        this->_globalAntialiasingEnabled = enable;
+        this->_needsSurfaces = true;
+    }
+}
+
+void AXRRender::regenerateRootSurface()
+{
+    if (_needsSurfaces)
+    {
+        if (this->rootSurface)
+            delete this->rootSurface;
+
+        this->rootSurface = new QImage(this->windowWidth, this->windowHeight, QImage::Format_ARGB32_Premultiplied);
+    }
+
+    controller->getRoot()->recursiveRegenerateSurfaces(_needsSurfaces);
+
+    _needsSurfaces = false;
 }

@@ -422,13 +422,13 @@ void HSSContainer::recursiveReadDefinitionObjects()
     }
 }
 
-void HSSContainer::recursiveRegenerateSurfaces()
+void HSSContainer::recursiveRegenerateSurfaces(bool force)
 {
-    this->regenerateSurfaces();
+    this->regenerateSurfaces(force);
 
     for (unsigned i = 0, size = this->allChildren.size(); i < size; ++i)
     {
-        this->allChildren[i]->recursiveRegenerateSurfaces();
+        this->allChildren[i]->recursiveRegenerateSurfaces(force);
     }
 }
 
@@ -444,8 +444,12 @@ void HSSContainer::recursiveDraw(QPainter &painter)
 
 void HSSContainer::drawBackground()
 {
+    this->backgroundSurface->fill(Qt::transparent);
+
     QPainter painter(this->backgroundSurface);
-    painter.setRenderHint(QPainter::Antialiasing);
+    if (AXRCore::getInstance()->getRender()->globalAntialiasingEnabled())
+        painter.setRenderHint(QPainter::Antialiasing);
+
     QPainterPath path;
     this->shape->createPath(path, 0, 0, this->width, this->height);
     HSSDisplayObject::_drawBackground(painter, path);
@@ -453,8 +457,11 @@ void HSSContainer::drawBackground()
 
 void HSSContainer::drawBorders()
 {
+    this->bordersSurface->fill(Qt::transparent);
+
     QPainter painter(this->bordersSurface);
-    painter.setRenderHint(QPainter::Antialiasing);
+    if (AXRCore::getInstance()->getRender()->globalAntialiasingEnabled())
+        painter.setRenderHint(QPainter::Antialiasing);
 
     // Calculate the combined thickness of all borders
     HSSUnit combinedThickness = 0;

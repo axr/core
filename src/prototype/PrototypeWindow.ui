@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PrototypeWindow</class>
+ <widget class="QMainWindow" name="PrototypeWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>AXR Prototype</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="fileMenu">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="openAction"/>
+    <addaction name="reloadAction"/>
+    <addaction name="separator"/>
+    <addaction name="closeAction"/>
+    <addaction name="separator"/>
+    <addaction name="exitAction"/>
+   </widget>
+   <widget class="QMenu" name="menuDebug">
+    <property name="title">
+     <string>Debug</string>
+    </property>
+    <addaction name="previousLayoutStepAction"/>
+    <addaction name="nextLayoutStepAction"/>
+    <addaction name="separator"/>
+    <addaction name="listXmlElementsAction"/>
+    <addaction name="listHssStatementsAction"/>
+    <addaction name="listHssTokensAction"/>
+    <addaction name="separator"/>
+    <addaction name="runLayoutTestsAction"/>
+   </widget>
+   <widget class="QMenu" name="windowMenu">
+    <property name="title">
+     <string>&amp;Window</string>
+    </property>
+    <addaction name="errorLogAction"/>
+   </widget>
+   <widget class="QMenu" name="helpMenu">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="aboutAction"/>
+   </widget>
+   <widget class="QMenu" name="viewMenu">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="enableAntialiasingAction"/>
+   </widget>
+   <addaction name="fileMenu"/>
+   <addaction name="viewMenu"/>
+   <addaction name="menuDebug"/>
+   <addaction name="windowMenu"/>
+   <addaction name="helpMenu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="openAction">
+   <property name="text">
+    <string>&amp;Open...</string>
+   </property>
+  </action>
+  <action name="reloadAction">
+   <property name="text">
+    <string>Reload</string>
+   </property>
+  </action>
+  <action name="closeAction">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="exitAction">
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
+  <action name="previousLayoutStepAction">
+   <property name="text">
+    <string>Previous Layout Step</string>
+   </property>
+  </action>
+  <action name="nextLayoutStepAction">
+   <property name="text">
+    <string>Next Layout Step</string>
+   </property>
+  </action>
+  <action name="listXmlElementsAction">
+   <property name="text">
+    <string>List XML Elements</string>
+   </property>
+  </action>
+  <action name="listHssStatementsAction">
+   <property name="text">
+    <string>List HSS Statements</string>
+   </property>
+  </action>
+  <action name="listHssTokensAction">
+   <property name="text">
+    <string>List HSS Tokens</string>
+   </property>
+  </action>
+  <action name="runLayoutTestsAction">
+   <property name="text">
+    <string>Run Layout Tests</string>
+   </property>
+  </action>
+  <action name="errorLogAction">
+   <property name="text">
+    <string>Error Log</string>
+   </property>
+  </action>
+  <action name="aboutAction">
+   <property name="text">
+    <string>About AXR Prototype</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
+  </action>
+  <action name="enableAntialiasingAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Enable Antialiasing</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>openAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>openFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reloadAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>reloadFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>closeAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>closeFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>previousLayoutStepAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>previousLayoutStep()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>nextLayoutStepAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>nextLayoutStep()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listXmlElementsAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>listXmlElements()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listHssStatementsAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>listHssStatements()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>listHssTokensAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>listHssTokens()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>runLayoutTestsAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>runLayoutTests()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>errorLogAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>showErrorLog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>aboutAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>showAbout()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>enableAntialiasingAction</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>toggleAntialiasing(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exitAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>openFile()</slot>
+  <slot>closeFile()</slot>
+  <slot>reloadFile()</slot>
+  <slot>previousLayoutStep()</slot>
+  <slot>nextLayoutStep()</slot>
+  <slot>listXmlElements()</slot>
+  <slot>listHssStatements()</slot>
+  <slot>listHssTokens()</slot>
+  <slot>runLayoutTests()</slot>
+  <slot>showErrorLog()</slot>
+  <slot>showAbout()</slot>
+  <slot>toggleAntialiasing(bool)</slot>
+ </slots>
+</ui>
