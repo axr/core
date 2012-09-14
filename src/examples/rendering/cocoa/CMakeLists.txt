@@ -12,7 +12,7 @@ if(APPLE)
     file(GLOB_RECURSE views_SOURCES views/*.hss views/*.xml)
     source_group("Views" FILES ${views_SOURCES})
 
-    set(axr_SOURCES ${axr_res_SOURCES} ${axr_lproj_SOURCES} ${axr_code_SOURCES} ${hss_SOURCES} ${views_SOURCES})
+    set(axr_SOURCES ${axr_res_SOURCES} ${axr_lproj_SOURCES} ${axr_code_SOURCES} ${hss_SOURCES} ${views_SOURCES} ${axr_icon_SOURCES} ${hss_SOURCES})
 
     add_executable("${TARGET_NAME_APP_COCOA}" MACOSX_BUNDLE ${axr_SOURCES})
     target_link_libraries("${TARGET_NAME_APP_COCOA}" ${TARGET_NAME_LIB_COCOA})
@@ -24,5 +24,5 @@ if(APPLE)
     set_source_files_properties(${hss_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/framework)
     set_source_files_properties(${views_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/views)
 
-    set_target_properties("${TARGET_NAME_APP_COCOA}" PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist")
+    set_target_properties(${TARGET_NAME_APP_COCOA} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
 endif()
