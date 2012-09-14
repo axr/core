@@ -65,12 +65,7 @@ if(AXR_BUILD_PROTOTYPE)
     set(Boost_USE_STATIC_RUNTIME OFF)
 
     find_package(Boost COMPONENTS thread system program_options REQUIRED)
-    find_package(SDL REQUIRED)
-
-    include_directories(
-        ${Boost_INCLUDE_DIRS}
-        ${SDL_INCLUDE_DIR}
-    )
+    include_directories(${Boost_INCLUDE_DIRS})
 
     if(AXR_ALL_WARNINGS)
         if(CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCXX)
