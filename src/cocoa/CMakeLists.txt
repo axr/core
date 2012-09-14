@@ -5,6 +5,8 @@ set(cocoa_SOURCES
     CocoaAXRWrapper.mm
 )
 
+qt_transform_sources(cocoa_SOURCES "${cocoa_SOURCES}")
+
 add_library(${TARGET_NAME_LIB_COCOA} ${cocoa_SOURCES})
 
 find_library(COCOA_LIBRARY Cocoa)

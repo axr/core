@@ -1,10 +1,13 @@
+cmake_minimum_required(VERSION 2.8)
+
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
     message(FATAL_ERROR "You should not build in-source. Use a directory outside the source tree or a subdirectory such as: ${CMAKE_SOURCE_DIR}/build")
 endif()
 
 # Set the module path and include utility modules
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_SOURCE_DIR}/cmake/solar ${CMAKE_MODULE_PATH})
 include(Utilities)
+include(Solar)
 
 # Verify that the source/build paths do not contain any spaces
 check_pathnames()
@@ -13,12 +16,18 @@ check_pathnames()
 check_clang()
 
 project(AXR)
-cmake_minimum_required(VERSION 2.8)
+
+# Help out Windows
+use_qt_sdk_locations()
 
 set(AXR_VERSION_STRING "0.4.7")
 
 # This list is for OS X application bundles to copy in all necessary icons
 file(GLOB axr_icon_SOURCES ${CMAKE_SOURCE_DIR}/share/icons/*.icns)
+
+# The HSS framework, to be copied into application bundles
+file(GLOB hss_SOURCES ${CMAKE_SOURCE_DIR}/share/hss-framework/*)
+list(REMOVE_ITEM hss_SOURCES ${CMAKE_SOURCE_DIR}/share/hss-framework/.git)
 
 # If we're using an IDE build system such as Visual Studio or Xcode,
 # use fancier target names such as "Documentation" vs "docs"
@@ -118,27 +127,28 @@ if(FANCY_TARGET_NAMES)
     add_custom_target("Meta" SOURCES AUTHORS CHANGELOG.md COPYING INSTALL LICENSE README.md)
 
     # Configuration and utility scripts
-    add_custom_target("Scripts" SOURCES .travis/configure.sh .travis/make.sh .travis.yml .gitignore .mailmap bin/pre-commit bin/stylecheck.py bin/update-authors.sh pre-configure.bat pre-configure.sh)
+    file(GLOB_RECURSE scripts_SOURCES .travis/configure.sh .travis/make.sh .travis.yml .gitignore .mailmap bin/pre-commit bin/stylecheck.py bin/update-authors.sh pre-configure.bat pre-configure.sh)
+    group_by_folder(${CMAKE_CURRENT_SOURCE_DIR} "${scripts_SOURCES}")
+    add_custom_target("Scripts" SOURCES ${scripts_SOURCES})
 
     # All CMake scripts since some IDEs don't show the hierarchy
-    # TODO: Organize by folder within this target!
     file(GLOB_RECURSE cmake_SOURCES ${CMAKE_SOURCE_DIR}/*/CMakeLists.txt ${CMAKE_SOURCE_DIR}/*.cmake)
+    group_by_folder(${CMAKE_CURRENT_SOURCE_DIR} "${cmake_SOURCES}")
     add_custom_target("CMake" SOURCES ${cmake_SOURCES})
 
     # The HSS framework
-    set(d ${CMAKE_SOURCE_DIR}/share/hss-framework)
-    file(GLOB_RECURSE hss_SOURCES ${d}/*.hss ${d}/*.md)
     add_custom_target("HSS" SOURCES ${hss_SOURCES})
 
     # Other shared resources (i.e. to be distributed in $prefix/share or elsewhere)
     set(d ${CMAKE_SOURCE_DIR}/share)
     file(GLOB_RECURSE shared_SOURCES ${d}/*.txt ${d}/*.ico ${d}/*.icns ${d}/*.png)
-    list(REMOVE_ITEM shared_SOURCES ${hss_SOURCES})
+    list(REMOVE_ITEM shared_SOURCES ${CMAKE_SOURCE_DIR}/share/hss-framework)
+    group_by_folder(${d} "${shared_SOURCES}")
     add_custom_target("Shared" SOURCES ${shared_SOURCES})
 
     # Test files for the renderer
-    # TODO: Organize by folder within this target!
     set(d ${CMAKE_SOURCE_DIR}/tests)
     file(GLOB_RECURSE tests_SOURCES ${d}/*.hss ${d}/*.xml ${d}/*.txt ${d}/*/README)
+    group_by_folder(${d} "${tests_SOURCES}")
     add_custom_target("Tests" SOURCES ${tests_SOURCES})
 endif()

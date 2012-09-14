@@ -1,6 +1,16 @@
-# Icons .rc, and property lists
-set(axr_res_SOURCES axr.rc Info.plist)
-source_group("Resources" FILES ${axr_res_SOURCES})
+set(sdl_SOURCES
+    axr.rc
+    Info.plist
+    main.cpp
+
+    # These need to be included so they can be copied to the bundle
+    ${axr_icon_SOURCES}
+    ${hss_SOURCES}
+)
+
+source_group("Resources\\HSS Framework" FILES ${hss_SOURCES})
+
+qt_transform_sources(sdl_SOURCES "${sdl_SOURCES}")
 
 # SDL application
 add_executable(${TARGET_NAME_APP_SDL} WIN32 MACOSX_BUNDLE ${axr_res_SOURCES} main.cpp ${axr_icon_SOURCES} ${hss_SOURCES})

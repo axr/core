@@ -1,14 +1,21 @@
-set(axr_res_SOURCES Info.plist)
-source_group("Resources" FILES ${axr_res_SOURCES})
+set(prototype_SOURCES
+    Info.plist
+    LogWindow.cpp
+    LogWindow.h
+    LogWindow.ui
+    main.cpp
+    PrototypeWindow.cpp
+    PrototypeWindow.h
+    PrototypeWindow.ui
 
-file(GLOB_RECURSE prototype_SOURCES *.h *.cpp *.ui)
+    # These need to be included so they can be copied to the bundle
+    ${axr_icon_SOURCES}
+    ${hss_SOURCES}
+)
 
-qt4_wrap_ui(uic_stuff PrototypeWindow.ui LogWindow.ui)
-qt4_wrap_cpp(moc_stuff PrototypeWindow.h LogWindow.h)
+source_group("Resources\\HSS Framework" FILES ${hss_SOURCES})
 
-list(APPEND prototype_SOURCES ${axr_icon_SOURCES} ${hss_SOURCES} ${axr_res_SOURCES} ${uic_stuff} ${moc_stuff})
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+qt_transform_sources(prototype_SOURCES "${prototype_SOURCES}")
 
 add_executable(${TARGET_NAME_APP_PROTOTYPE} WIN32 MACOSX_BUNDLE ${prototype_SOURCES})
 target_link_libraries(${TARGET_NAME_APP_PROTOTYPE} ${TARGET_NAME_LIB_CORE})

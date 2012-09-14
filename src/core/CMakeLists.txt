@@ -9,19 +9,7 @@ if(NOT WIN32)
     list(REMOVE_ITEM core_SOURCES ${windows_SOURCES})
 endif()
 
-# Sort and group source files
-foreach(core_SOURCE ${core_SOURCES})
-    # Get the path of the file relative to the current source directory
-    file(RELATIVE_PATH core_SOURCE_relative "${CMAKE_CURRENT_SOURCE_DIR}" "${core_SOURCE}")
-
-    # Get the relative folder path
-    get_filename_component(core_SOURCE_dir "${core_SOURCE_relative}" PATH)
-
-    # Convert forward slashes to backslashes to get source group identifiers
-    string(REPLACE "/" "\\" core_SOURCE_group "${core_SOURCE_dir}")
-
-    source_group("${core_SOURCE_group}" FILES "${core_SOURCE}")
-endforeach()
+group_by_folder(${CMAKE_CURRENT_SOURCE_DIR} "${core_SOURCES}")
 
 add_library(${TARGET_NAME_LIB_CORE} ${core_SOURCES})
 target_link_libraries(${TARGET_NAME_LIB_CORE} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTXML_LIBRARY})
