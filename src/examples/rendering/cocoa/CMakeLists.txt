@@ -29,5 +29,5 @@ if(APPLE)
 
     set_target_properties(${TARGET_NAME_APP_COCOA} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
 else()
-    add_custom_target(${TARGET_NAME_APP_COCOA} SOURCES "${cocoa_SOURCES}")
+    add_custom_target(${TARGET_NAME_APP_COCOA} SOURCES ${cocoa_SOURCES})
 endif()
