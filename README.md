@@ -13,10 +13,10 @@ references (bindings between objects), and a very long etc.
 
 Prototype
 =========
-The Prototype is an application where the  written in C++. It uses Expat for
-parsing XML and Cairo for rendering the graphics. It serves as a testing ground
-and for developing the initial draft of the core library that will power the AXR
-platform.
+The Prototype is an application written in C++. It uses Qt for parsing XML and
+rendering the graphics, as well as other functionality. It serves as a testing
+ground and for developing the initial draft of the core library that will power
+the AXR platform.
 
 Repository manager
 ===================

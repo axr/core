@@ -101,10 +101,9 @@
  *  fly, which contains only one element called "root".
  *
  *  So now let's jump to ../AXR.cpp, and have a look at the run() method. It gives the XML
- *  file to the XML parser. We currently use Expat, and the file XMLParser.cpp provides
- *  the glue code in form of callbacks for when the elements are parsed, adding them on
- *  axr/AXRController.cpp using enterElement(), addAttribute(), appendContentText() and
- *  exitElement().
+ *  file to the XML parser. We currently use Qt, and the file XMLParser.cpp parses the
+ *  elements and adds them on axr/AXRController.cpp using enterElement(), addAttribute(),
+ *  appendContentText() and exitElement().
  *
  *  When it finds an XML instruction it will parse it and if it is a link to a HSS stylesheet
  *  it calls loadSheetsAdd() on the controller to take note. Which brings us back to
