@@ -42,23 +42,15 @@
  ********************************************************************/
 
 #include <boost/program_options.hpp>
+#include <SDL/SDL.h>
 #include <QApplication>
 #include <QFileDialog>
 #include "AXR.h"
+#include "GenericAXRWrapper.h"
 
 #if defined(_WIN32)
 #include <SDL/SDL_syswm.h>
 #include <windows.h>
-#include "WindowsAXRWrapper.h"
-#ifndef AXR_WRAPPER_CLASS
-#define AXR_WRAPPER_CLASS WindowsAXRWrapper
-#endif
-#else
-#include <SDL/SDL.h>
-#include "GenericAXRWrapper.h"
-#ifndef AXR_WRAPPER_CLASS
-#define AXR_WRAPPER_CLASS GenericAXRWrapper
-#endif
 #endif
 
 namespace po = boost::program_options;
@@ -68,7 +60,7 @@ const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 const char* WINDOW_TITLE = "AXR SDL Demo";
 
-AXR_WRAPPER_CLASS *wrapper;
+GenericAXRWrapper *wrapper;
 SDL_Surface* screen = NULL;
 
 #ifdef _WIN32
@@ -169,18 +161,15 @@ int main(int argc, char **argv)
     SDL_EnableKeyRepeat(300, 50);
     SDL_EnableUNICODE(1);
 
-    wrapper = new AXR_WRAPPER_CLASS();
-    AXRCore::tp & core = AXRCore::getInstance();
-#ifdef _WIN32
-    wrapper->hwnd = wminfo.window;
-#endif
+    wrapper = new GenericAXRWrapper();
+    AXRCore::tp &core = AXRCore::getInstance();
 
     if (varmap.count("layout-tests"))
     {
-        wrapper->_layoutTestsFilePath = varmap["layout-tests"].as<std::string > ();
+        wrapper->_layoutTestsFilePath = varmap["layout-tests"].as<std::string>();
 
         core->registerCustomFunction("AXRLayoutTestsExecute",
-                                     new AXR::HSSValueChangedCallback<AXR_WRAPPER_CLASS > (wrapper, &AXR::AXRWrapper::executeLayoutTests));
+                                     new AXR::HSSValueChangedCallback<GenericAXRWrapper>(wrapper, &AXRWrapper::executeLayoutTests));
 
         wrapper->loadFileByPath(wrapper->getPathToResources() +
                                 "/views/layoutTests.hss");
