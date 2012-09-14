@@ -75,10 +75,13 @@ namespace AXR
          *  The shared pointer to the wrapper.
          */
         typedef boost::shared_ptr<AXRWrapper> p;
+
         /**
-         *
+         *  Creates a new instance of the wrapper. It will obtain the singleton instance of
+         *  the AXRCore and initialize it.
          */
-        virtual AXRWrapper * createWrapper() = 0;
+        AXRWrapper();
+
         /**
          *  Destructs the wrapper
          */
@@ -116,6 +119,7 @@ namespace AXR
          *  @return Wether a path has been selected or not.
          */
         virtual bool openFileDialog(std::string &filePath);
+        virtual bool needsDisplay() const;
         /**
          *  This is to be called when something happens that needs to trigger a redraw.
          *  Subclasses should override this method with the OS specific implementation.
@@ -200,13 +204,6 @@ namespace AXR
 
         boost::unordered_map<AXRFileHandle, AXRFile::p> files;
 
-    protected:
-        /**
-         *  Creates a new instance of the wrapper. It will obtain the singleton instance of
-         *  the AXRCore and initialize it.
-         */
-        AXRWrapper();
-
     private:
         bool _isHSSOnly;
         bool _hasLoadedFile;
@@ -214,6 +211,10 @@ namespace AXR
         unsigned int _currentLayoutStep;
         unsigned int _currentLayoutTick;
         unsigned int _currentLayoutChild;
+        bool _needsDisplay;
+
+    public:
+        std::string _layoutTestsFilePath;
     };
 
     class AXRTestThread

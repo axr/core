@@ -46,7 +46,7 @@
 #include <QApplication>
 #include <QFileDialog>
 #include "AXR.h"
-#include "GenericAXRWrapper.h"
+#include "AXRWrapper.h"
 
 #if defined(_WIN32)
 #include <SDL/SDL_syswm.h>
@@ -60,7 +60,7 @@ const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 const char* WINDOW_TITLE = "AXR SDL Demo";
 
-GenericAXRWrapper *wrapper;
+AXRWrapper *wrapper;
 SDL_Surface* screen = NULL;
 
 #ifdef _WIN32
@@ -98,7 +98,7 @@ SDL_Surface* QImage_toSDLSurface(const QImage &sourceImage)
 
 void render()
 {
-    if (wrapper->needsDisplay)
+    if (wrapper->needsDisplay())
     {
         AXRCore::tp &core = AXRCore::getInstance();
         HSSRect bounds(0, 0, screen->w, screen->h);
@@ -161,7 +161,7 @@ int main(int argc, char **argv)
     SDL_EnableKeyRepeat(300, 50);
     SDL_EnableUNICODE(1);
 
-    wrapper = new GenericAXRWrapper();
+    wrapper = new AXRWrapper();
     AXRCore::tp &core = AXRCore::getInstance();
 
     if (varmap.count("layout-tests"))
@@ -169,7 +169,7 @@ int main(int argc, char **argv)
         wrapper->_layoutTestsFilePath = varmap["layout-tests"].as<std::string>();
 
         core->registerCustomFunction("AXRLayoutTestsExecute",
-                                     new AXR::HSSValueChangedCallback<GenericAXRWrapper>(wrapper, &AXRWrapper::executeLayoutTests));
+                                     new AXR::HSSValueChangedCallback<AXRWrapper>(wrapper, &AXRWrapper::executeLayoutTests));
 
         wrapper->loadFileByPath(wrapper->getPathToResources() +
                                 "/views/layoutTests.hss");

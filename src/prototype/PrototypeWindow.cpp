@@ -48,7 +48,7 @@
 
 #include "AXR.h"
 #include "AXRController.h"
-#include "GenericAXRWrapper.h"
+#include "AXRWrapper.h"
 #include "XMLParser.h"
 
 #include "LogWindow.h"
@@ -62,7 +62,7 @@ using namespace AXR;
 class PrototypeWindow::Private
 {
 public:
-    Private() : wrapper(new GenericAXRWrapper()), logWindow(new LogWindow())
+    Private() : wrapper(new AXRWrapper()), logWindow(new LogWindow())
     {
         logWindow->setWindowTitle(tr("Error Log"));
     }
@@ -73,7 +73,7 @@ public:
         delete logWindow;
     }
 
-    GenericAXRWrapper *wrapper;
+    AXRWrapper *wrapper;
     LogWindow *logWindow;
 };
 

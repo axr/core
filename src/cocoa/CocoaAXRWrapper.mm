@@ -55,11 +55,6 @@ CocoaAXRWrapper::CocoaAXRWrapper(AXRView * mainView)
     this->mainView = mainView;
 }
 
-AXRWrapper * CocoaAXRWrapper::createWrapper()
-{
-    return new CocoaAXRWrapper(NULL);
-}
-
 CocoaAXRWrapper::~CocoaAXRWrapper()
 {
 }

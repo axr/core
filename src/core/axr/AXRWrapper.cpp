@@ -59,6 +59,7 @@ AXRWrapper::AXRWrapper()
     this->_currentLayoutStep = 0;
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
+    this->_needsDisplay = true;
     AXRCore::tp & axr = AXRCore::getInstance();
     axr->initialize(this);
 }
@@ -161,8 +162,14 @@ bool AXRWrapper::openFileDialog(std::string &filePath)
     return true;
 }
 
+bool AXRWrapper::needsDisplay() const
+{
+    return this->_needsDisplay;
+}
+
 void AXRWrapper::setNeedsDisplay(bool newValue)
 {
+    this->_needsDisplay = newValue;
 }
 
 AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
@@ -424,10 +431,7 @@ std::string AXRWrapper::getPathToResources()
 
 std::string AXRWrapper::getPathToTestsFile()
 {
-    std::string filePath;
-    this->openFileDialog(filePath);
-
-    return filePath;
+    return _layoutTestsFilePath;
 }
 
 void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
@@ -476,7 +480,7 @@ void AXRTestThread::operator () ()
     try
     {
         //load the XML file
-        AXRWrapper * wrapper = this->wrapper->createWrapper();
+        AXRWrapper * wrapper = this->wrapper;
         AXRCore::tp & core = AXRCore::getInstance();
         XMLParser::p parser = core->getParserXML();
         std::string fullPath = "file://" + this->filePath;
@@ -566,7 +570,7 @@ void AXRTestProducer::operator () ()
 
     //load the XML
     AXRCore core = *AXRCore::getInstance();
-    AXRWrapper * wrapper = this->wrapper->createWrapper();
+    AXRWrapper * wrapper = this->wrapper;
     core = *AXRCore::getInstance();
 
     testLoaded = wrapper->loadXMLFile(this->basePath + "/" + this->test[0]);

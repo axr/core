@@ -46,12 +46,10 @@
 
 namespace AXR
 {
-
     class CocoaAXRWrapper : public AXRWrapper
     {
     public:
         CocoaAXRWrapper(AXRView * mainView);
-        AXRWrapper * createWrapper();
         virtual ~CocoaAXRWrapper();
 
         virtual bool openFileDialog(std::string &filePath);

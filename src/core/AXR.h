@@ -87,8 +87,6 @@
  *  - axr: Here we find the guts of the library which is not related to one specific language
  *  but manage stuff across the rendering engine.
  *  - hss: In here we find the HSS parser, the parser nodes and all the object types.
- *  - os: This is the place for the platform specific wrappers that abstract calls to the
- *  operating system.
  *  - xml: In here we find the XML parser
  *
  *  @section parsing Parsing the content and getting up and runnig
