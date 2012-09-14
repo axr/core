@@ -77,37 +77,28 @@ HICON mainicon;
 
 /*!
  * Converts a QImage to an SDL_Surface.
- * The source image is converted to ARGB32 format if it is not in that format already.
+ * The source image is converted to ARGB32 format if it is not already.
  * The caller is responsible for deallocating the returned pointer.
  */
 SDL_Surface* QImage_toSDLSurface(const QImage &sourceImage)
 {
-    /* SDL interprets each pixel as a 32-bit number, so our masks must depend
-     on the endianness (byte order) of the machine */
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    Uint32 rmask = 0xff000000;
-    Uint32 gmask = 0x00ff0000;
-    Uint32 bmask = 0x0000ff00;
-    Uint32 amask = 0x000000ff;
-#else
-    Uint32 rmask = 0x000000ff;
-    Uint32 gmask = 0x0000ff00;
-    Uint32 bmask = 0x00ff0000;
-    Uint32 amask = 0xff000000;
-#endif
-
     // Ensure that the source image is in the correct pixel format
     QImage image = sourceImage;
     if (image.format() != QImage::Format_ARGB32)
         image = image.convertToFormat(QImage::Format_ARGB32);
 
-    // TODO: TERRIBLE HACK! Handle this in a more portable manner
-    // It's not QImage's fault because the underlying data representation
-    // is ALWAYS ARGB regardless of platform, but for some reason SDL is
-    // not taking the ARGB-formatted surface and swapping red and blue for
-    // CoreGraphics's consumption.
-#ifdef Q_WS_MACX
-    image = image.rgbSwapped();
+    // QImage stores each pixel in ARGB format
+    // Mask appropriately for the endianness
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    Uint32 amask = 0x000000ff;
+    Uint32 rmask = 0x0000ff00;
+    Uint32 gmask = 0x00ff0000;
+    Uint32 bmask = 0xff000000;
+#else
+    Uint32 amask = 0xff000000;
+    Uint32 rmask = 0x00ff0000;
+    Uint32 gmask = 0x0000ff00;
+    Uint32 bmask = 0x000000ff;
 #endif
 
     return SDL_CreateRGBSurfaceFrom((void*)image.constBits(), image.width(), image.height(), image.depth(), image.bytesPerLine(), rmask, gmask, bmask, amask);
