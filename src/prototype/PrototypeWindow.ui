@@ -19,7 +19,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QWidget" name="renderingView" native="true"/>
+     <widget class="AXRWidget" name="renderingView" native="true"/>
     </item>
    </layout>
   </widget>
@@ -156,6 +156,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AXRWidget</class>
+   <extends>QWidget</extends>
+   <header>AXRWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

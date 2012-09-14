@@ -277,21 +277,3 @@ void PrototypeWindow::toggleAntialiasing(bool on)
     core->getRender()->setGlobalAntialiasingEnabled(on);
     update();
 }
-
-void PrototypeWindow::paintEvent(QPaintEvent *event)
-{
-    // Perform compositing in AXR
-    AXRCore::tp &core = AXRCore::getInstance();
-
-    QRect paintRect = this->ui->renderingView->geometry();
-
-    // TODO: There should be a separate widget for rendering!
-    core->drawInRectWithBounds(event->rect(), paintRect);
-
-    // Fill with white...
-    QPainter painter(this);
-    painter.fillRect(paintRect, Qt::white);
-
-    // Present the AXR surface
-    painter.drawImage(paintRect.topLeft(), core->getRender()->surface());
-}

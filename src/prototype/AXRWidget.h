@@ -41,43 +41,37 @@
  *
  ********************************************************************/
 
-#ifndef AXR_PROTOTYPE_PROTOTYPEWINDOW
-#define AXR_PROTOTYPE_PROTOTYPEWINDOW
+#ifndef AXR_PROTOTYPE_AXRWIDGET
+#define AXR_PROTOTYPE_AXRWIDGET
 
-#include <QMainWindow>
+#include <QWidget>
 
-namespace Ui
+namespace AXR
 {
-    class PrototypeWindow;
+    class AXRRender;
 }
 
-class PrototypeWindow : public QMainWindow
+class AXRWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    PrototypeWindow(QWidget *parent = NULL);
-    virtual ~PrototypeWindow();
+    AXRWidget(QWidget *parent = NULL);
+    virtual ~AXRWidget();
 
-public slots:
-    void openFile();
-    void openFile(const QString &filePath);
-    void reloadFile();
-    void closeFile();
-    void previousLayoutStep();
-    void nextLayoutStep();
-    void listXmlElements();
-    void listHssStatements();
-    void listHssTokens();
-    void runLayoutTests();
-    void showErrorLog();
-    void showAbout();
-    void toggleAntialiasing(bool on);
+    QColor backgroundFillColor() const;
+    void setBackgroundFillColor(const QColor &color);
+
+protected:
+    void paintEvent(QPaintEvent *e);
+    void mouseDoubleClickEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
 
 private:
     class Private;
     Private *d;
-    Ui::PrototypeWindow *ui;
 };
 
 #endif

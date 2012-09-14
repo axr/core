@@ -1,4 +1,8 @@
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 set(prototype_SOURCES
+    AXRWidget.cpp
+    AXRWidget.h
     Info.plist
     LogWindow.cpp
     LogWindow.h
