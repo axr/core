@@ -49,7 +49,7 @@
 
 using namespace AXR;
 
-AXRError::AXRError(std::string origin, std::string message, std::string filename, int line, int column)
+AXRError::AXRError(const std::string &origin, const std::string &message, const std::string &filename, int line, int column)
 {
     this->origin = origin;
     this->message = message;
@@ -63,19 +63,19 @@ AXRError::~AXRError()
 {
 }
 
-void AXRError::raise()
+void AXRError::raise() const
 {
     AXRCore::tp & core = AXRCore::getInstance();
     AXRWrapper * wrapper = core->getWrapper();
     wrapper->handleError(this->shared_from_this());
 }
 
-std::string AXRError::toString()
+std::string AXRError::toString() const
 {
     return toProblemString("Error");
 }
 
-std::string AXRError::toProblemString(const std::string &label)
+std::string AXRError::toProblemString(const std::string &label) const
 {
     QStringList parts;
     parts << QString("%1: %2").arg(QString::fromStdString(label)).arg(QString::fromStdString(message));
@@ -97,7 +97,7 @@ std::string AXRError::toProblemString(const std::string &label)
     return parts.join(" ").toStdString();
 }
 
-std::string AXRError::getMessage()
+std::string AXRError::getMessage() const
 {
     return this->message;
 }

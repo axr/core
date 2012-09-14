@@ -125,7 +125,7 @@ void AXRWrapper::closeFile(AXRFile::p theFile)
     theFile->setFileHandle(NULL);
 }
 
-void AXRWrapper::handleError(AXRError::p theError)
+void AXRWrapper::handleError(AXRError::cp theError)
 {
     std_log(theError->toString());
 }

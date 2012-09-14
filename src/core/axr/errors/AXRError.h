@@ -61,6 +61,7 @@ namespace AXR
          *  The shared pointer to the error.
          */
         typedef boost::shared_ptr<AXRError>p;
+        typedef boost::shared_ptr<const AXRError> cp;
 
         /**
          *  Creates a new instance of an error, with information about the filename,
@@ -71,7 +72,7 @@ namespace AXR
          *  @param line     The line index (starting at 1) in the file where the error happened.
          *  @param column   The column index (starting at 1) in the line where the error happened.
          */
-        AXRError(std::string origin, std::string message, std::string filename = "", int line = 0, int column = 0);
+        AXRError(const std::string &origin, const std::string &message, const std::string &filename = "", int line = 0, int column = 0);
 
         /**
          *  Destructor for the error.
@@ -82,22 +83,22 @@ namespace AXR
          *  Call this if you want the message to be displayed. The actual implementation is
          *  handled by the OS-specific wrapper.
          */
-        void raise();
+        void raise() const;
 
         /**
          *  Print itself as a textual representation.
          *  @return A string containing the textual representation of the error.
          */
-        virtual std::string toString();
+        virtual std::string toString() const;
 
         /**
          *  Getter for message.
          *  @return The message in this error.
          */
-        std::string getMessage();
+        std::string getMessage() const;
 
     protected:
-        virtual std::string toProblemString(const std::string &label);
+        virtual std::string toProblemString(const std::string &label) const;
 
         std::string origin;
         std::string message;

@@ -107,7 +107,7 @@ namespace AXR
          *  Subclasses should override this method with the OS specific implementation.
          *  @param theError A shared pointer to the error that should be handled.
          */
-        virtual void handleError(AXRError::p theError);
+        virtual void handleError(AXRError::cp theError);
         /**
          *  Shows a dialog to choose a local file.
          *  Subclasses should override this method with the OS specific implementation.

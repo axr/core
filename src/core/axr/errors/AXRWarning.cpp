@@ -47,7 +47,7 @@
 
 using namespace AXR;
 
-AXRWarning::AXRWarning(std::string origin, std::string message, std::string filename, int line, int column)
+AXRWarning::AXRWarning(const std::string &origin, const std::string &message, const std::string &filename, int line, int column)
 : AXRError(origin, message, filename, line, column)
 {
 }
@@ -56,7 +56,7 @@ AXRWarning::~AXRWarning()
 {
 }
 
-std::string AXRWarning::toString()
+std::string AXRWarning::toString() const
 {
     return toProblemString("Warning");
 }
