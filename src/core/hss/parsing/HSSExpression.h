@@ -102,7 +102,7 @@ namespace AXR
 
         /**
          *  Setter for the right hand member of the expression.
-         *  @param  newLeft     A shared pointer to a parser node representing the right
+         *  @param  newRight    A shared pointer to a parser node representing the right
          *                      member of the expression.
          */
         void setRight(HSSParserNode::p newRight);
@@ -190,8 +190,8 @@ namespace AXR
         /**
          *  Creates a new instance of an expression.
          *  This class shouldn't be called directly, but by the subclasses.
-         *  @param left     The value on the left hand side of the operator.
-         *  @param right    The value on the right hand side of the operator.
+         *  @param _left    The value on the left hand side of the operator.
+         *  @param _right   The value on the right hand side of the operator.
          *  @param type     The type of this expression subclass for identification purposes.
          */
         HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right);

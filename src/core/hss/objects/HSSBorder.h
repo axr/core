@@ -76,6 +76,7 @@ namespace AXR
          *  Each type of border implements its own drawing routines. Call this method
          *  when you need to draw the border on a surface.
          *  @param painter A QPainter context used to draw onto a surface.
+         *  @param path The path comprising the object shape.
          */
         virtual void draw(QPainter &painter, const QPainterPath &path) = 0;
 

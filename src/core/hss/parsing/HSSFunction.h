@@ -97,15 +97,11 @@ namespace AXR
          *  @todo make protected or private
          */
         virtual boost::any _evaluate();
-
-        /**
-         *
-         */
         virtual boost::any _evaluate(std::deque<HSSParserNode::p> arguments);
 
         /**
          *  Method to be passed as callback when observing changes.
-         *  @param source   The property which we are observing.
+         *  @param property The property which we are observing.
          *  @param data     A pointer to the data that is sent along the notification.
          */
         virtual void propertyChanged(HSSObservableProperty property, void* data);
@@ -118,7 +114,7 @@ namespace AXR
 
         /**
          *  When we are using percentages, we keep track of the value and update accordingly.
-         *  @param property The property which we are observing.
+         *  @param property     The property which we are observing.
          *  @param observed     A regular pointer to the object we are observing.
          */
         virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);

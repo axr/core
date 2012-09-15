@@ -143,7 +143,7 @@ namespace AXR
          *  For a rule, it adds it to the rules list on the controller; for an object defnition it
          *  recursively adds it  to the object tree on the controller as well as copying all the property
          *  definitions from the parent to the child rule; comments are added to the parser node tree, but
-         *  skipped otherwise; and for instructions, the only allowed statement instruction is #import which
+         *  skipped otherwise; and for instructions, the only allowed statement instruction is \#import which
          *  will be executed immediately.
          *
          *  @return Wether we arrived at the end of file or not
@@ -261,7 +261,7 @@ namespace AXR
          *  current object context. It also reads the value directly in the same function.
          *  @param shorthandChecked     For performance reasons, if we already checked the shorthand
          *                              we can avoid it to be checked again passing false to this parameter.
-         *  @param isShorhand           If shorthand was checked, pass the value here.
+         *  @param isShorthand          If shorthand was checked, pass the value here.
          *
          *  @todo should reading values go into a separate function, maybe called readValue()?
          */
@@ -386,14 +386,14 @@ namespace AXR
         /**
          *  Shorthand for skipExpected(HSSTokenType, std::string, false) passing false to the last parameter.
          *  @param type     The token type to expect.
-         *  @param type     The string value to expect.
+         *  @param value    The string value to expect.
          */
         void skipExpected(HSSTokenType type, std::string value);
 
         /**
          *  Check if the current token matches the given type and value.
          *  @param type                             The token type to expect (not used).
-         *  @param type                             The string value to expect.
+         *  @param value                            The string value to expect.
          *  @param checkForUnexpectedEndOfSource    Wether to check and throw an error on unexpected end of file.
          *
          *  @warning this method assumes the current token to be a value token.

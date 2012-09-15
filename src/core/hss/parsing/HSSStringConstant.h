@@ -87,11 +87,9 @@ namespace AXR
 
         /**
          *  Getter for the value.
-         *  @param newValue     A string containing the new value for this constant.
          */
         std::string getValue();
 
-        //see HSSParserNode.h for documentation of this method
         std::string toString();
 
     protected:

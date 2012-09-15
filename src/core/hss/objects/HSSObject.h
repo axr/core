@@ -242,7 +242,7 @@ namespace AXR
         virtual void setPropertyWithName(std::string name, HSSParserNode::p value);
         /**
          *  Sets the parser node that defines the value of the given property. Each subclass
-         *  will call the specific setD<<property>>() method.
+         *  will call the specific setD\<\<property\>\>() method.
          *  @param name     The observable property name
          *  @param value    The parser node defining the value for the property
          */
@@ -262,7 +262,7 @@ namespace AXR
          *  Each subclass must register each property name it uses with the pointer to the data,
          *  so that it can easily be accessed later.
          *  @param name     The observable property name.
-         *  @return A boost any wrapping the pointer to the data holding the actual value of the property.
+         *  @param property A boost any wrapping the pointer to the data holding the actual value of the property.
          */
         virtual void registerProperty(HSSObservableProperty name, boost::any property);
         /**

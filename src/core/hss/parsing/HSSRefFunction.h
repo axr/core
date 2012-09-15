@@ -124,13 +124,13 @@ namespace AXR
 
         /**
          *  Setter for the selector chains.
-         *  @param newValue     A vector of shared pointers to the new selector chains to be used.
+         *  @param newValues    A vector of shared pointers to the new selector chains to be used.
          */
         void setSelectorChains(std::vector<HSSSelectorChain::p> newValues);
 
         /**
          *  Add a selector chain to the selector chains vector.
-         *  @param newValue A shared pointer to the selector chain to be added.
+         *  @param newSelectorChain A shared pointer to the selector chain to be added.
          */
         void selectorChainsAdd(HSSSelectorChain::p & newSelectorChain);
 

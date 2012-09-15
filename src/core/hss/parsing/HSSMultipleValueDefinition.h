@@ -99,7 +99,7 @@ namespace AXR
 
         /**
          *  Adds a node to the values list.
-         *  @param newValues    A vector of shared pointers to parser nodes that to store them inside this
+         *  @param newValue    A vector of shared pointers to parser nodes that to store them inside this
          *  multiple value definition.
          */
         void add(HSSParserNode::p newValue);

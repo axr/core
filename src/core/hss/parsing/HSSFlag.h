@@ -58,7 +58,7 @@ namespace AXR
 
     /**
      *  @brief Parser Node type representing flags.
-     *  Flags (e.g. ::hover) are a way to conditionally target elements in HSS, inside
+     *  Flags (e.g. \::hover) are a way to conditionally target elements in HSS, inside
      *  a selector chain.
      */
     class HSSFlag : public HSSFilter
@@ -116,6 +116,7 @@ namespace AXR
          *  When selecting (not connecting, which is different) elements based on the flag,
          *  the flag acts like a filter, reducing the size of the selection.
          *  @param scope        The original selection: A vector of shared pointers to display objects.
+         *  @param processing   Wether we are processing the filter or not.
          *  @return A vector of shared pointers to the display objects in the resulting selection.
          */
         const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);

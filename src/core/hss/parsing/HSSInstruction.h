@@ -64,7 +64,7 @@ namespace AXR
 
         /**
          *  Creates a new instance of an instruction node with the given type. To be used when
-         *  a value is not applicable, such as #delete.
+         *  a value is not applicable, such as \#delete.
          *
          *  @param type     The HSSInstructionType that corresponds to the wanted type of instruction.
          */
@@ -128,7 +128,7 @@ namespace AXR
 
         /**
          *  Setter for argument.
-         *  Some instructions accept an argument, when written in functional notation (e.g. #new(3) { ... }).
+         *  Some instructions accept an argument, when written in functional notation (e.g. \#new(3) { ... }).
          *  When using an argument, this will hold the parser node that represents that value.
          *
          *  @param newValue     A shared pointer to the parser node that holds the argument.
@@ -137,7 +137,7 @@ namespace AXR
 
         /**
          *  Getter for argument.
-         *  Some instructions accept an argument, when written in functional notation (e.g. #new(3) { ... }).
+         *  Some instructions accept an argument, when written in functional notation (e.g. \#new(3) { ... }).
          *  When using an argument, this will hold the parser node that represents that value.
          *
          *  @return A shared pointer to the parser node that holds the argument.

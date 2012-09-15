@@ -51,7 +51,7 @@ namespace AXR
 {
 
     /**
-     *  @brief Represents value objects in HSS (@value).
+     *  @brief Represents value objects in HSS (\@value).
      */
     class HSSValue : public HSSObject
     {

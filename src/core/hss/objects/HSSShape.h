@@ -85,10 +85,10 @@ namespace AXR
         /**
          *  Each shape object subclass implements its own drawing routines, creating the path as needed.
          *  The x, y, width and height parameters are used to define the size of the resulting shape. Usually
-         *  theses are the x: 0, y:0 (upper left corner) and as wide and tall as the container, but they can be
+         *  theses are the x:0, y:0 (upper left corner) and as wide and tall as the container, but they can be
          *  different in case of joining paths together, for example.
          *
-         *  @param painter  A QPainter context used to draw onto a surface.
+         *  @param path     A QPainterPath to configure the shape of the object.
          *  @param x        The horizontal coordinate for the upper left corner of the bounding box of the shape.
          *  @param y        The vertical coordinate for the upper left corner of the bounding box of the shape.
          *  @param width    The width of the bounding box of the shape.

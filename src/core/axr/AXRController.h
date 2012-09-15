@@ -300,7 +300,7 @@ namespace AXR
          *  @param scope            A reference to the current scope, a vector containing shared pointers
          *                          to display objects.
          *  @param thisObj          A shared pointer to the display object that will be selected when using
-         *                          @this in HSS.
+         *                          \@this in HSS.
          *  @param processing       The first time the rules are matched to the display objects, we want to
          *                          process stuff like flags, instead of just plain selecting.
          *  @return         A vector of selections of the elements that were selected, each of these
@@ -318,7 +318,7 @@ namespace AXR
          *  @param scope    A reference to the current scope, a vector containing shared pointers
          *                  to display objects.
          *  @param thisObj  A shared pointer to the display object that will be selected when using
-         *                  @this in HSS.
+         *                  \@this in HSS.
          *  @return         A vector of selections of the elements that were selected, each of these
          *                  is a vector containing shared pointers to display objects.
          */
@@ -332,10 +332,9 @@ namespace AXR
          *  @param scope        A reference to the current scope, a vector containing shared pointers
          *                      to display objects.
          *  @param thisObj      A shared pointer to the display object that will be selected when using
-         *                      @this in HSS.
+         *                      \@this in HSS.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
-         *  @param initializing Wether to initialize
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
@@ -350,7 +349,7 @@ namespace AXR
          *  @param scope        A reference to the current scope, a vector containing shared pointers
          *                      to display objects.
          *  @param thisObj      A shared pointer to the display object that will be selected when using
-         *                      @this in HSS.
+         *                      \@this in HSS.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
          *  @return             A vector of selections of the elements that were selected, each of these
@@ -367,7 +366,7 @@ namespace AXR
          *  @param scope        A reference to the current scope, a vector containing shared pointers
          *                      to display objects.
          *  @param thisObj      A shared pointer to the display object that will be selected when using
-         *                      @this in HSS.
+         *                      \@this in HSS.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
          *  @return             A vector of selections of the elements that were selected, each of these
@@ -384,7 +383,7 @@ namespace AXR
          *  @param scope        A reference to the current scope, a vector containing shared pointers
          *                      to display objects.
          *  @param thisObj      A shared pointer to the display object that will be selected when using
-         *                      @this in HSS.
+         *                      \@this in HSS.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
          *  @return             A vector of selections of the elements that were selected, each of these

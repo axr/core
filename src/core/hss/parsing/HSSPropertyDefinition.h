@@ -128,14 +128,14 @@ namespace AXR
 
         /**
          *  Setter for the value of the property.
-         *  @param name     A shared pointer to the parser node that represents the value of the property.
+         *  @param value    A shared pointer to the parser node that represents the value of the property.
          */
         void setValue(HSSParserNode::p value);
 
         /**
          *  Adds a value to the property definition. If the value is not already a multiple value definition,
          *  it will create one and add the current value to it too.
-         *  @param name     A shared pointer to the parser node that represents the value to add to the property
+         *  @param value    A shared pointer to the parser node that represents the value to add to the property
          *                  definition.
          */
         void addValue(HSSParserNode::p value);

@@ -140,7 +140,7 @@ namespace AXR
          *  The implementation in this class is to just out the name of the property when we are debugging,
          *  otherwise does nothing.
          *
-         *  @param source   The property which we are observing.
+         *  @param property The property which we are observing.
          *  @param data     A pointer to the data that is sent along the notification.
          */
         virtual void propertyChanged(HSSObservableProperty property, void * data);
@@ -149,7 +149,7 @@ namespace AXR
          *  Subclasses should call this method on themselves to trigger the delivery of the notification.
          *  These are syncronous, which means that they won't return until the function receiving the
          *  notification have completed.
-         *  @param source   The property which we are observing.
+         *  @param property The property which we are observing.
          *  @param data     A pointer to the data that is sent along the notification (e.g. the new value).
          */
         void notifyObservers(HSSObservableProperty property, void * data);

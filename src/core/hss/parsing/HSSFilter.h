@@ -67,7 +67,7 @@ namespace AXR
 
         /**
          *  When logging, you often need a string representation of the filter type.
-         *  @param actionType   The action type to represent as a string.
+         *  @param filterType   The action type to represent as a string.
          *  @return A string representation of the given type.
          */
         static std::string filterTypeStringRepresentation(HSSFilterType filterType);
@@ -109,7 +109,7 @@ namespace AXR
          *  an unknown filter name in the source code, which currently returns the entire scope.
          *
          *  @param scope        The original selection: A vector of shared pointers to display objects.
-         *  @param negating     Wether we are negating the filter or not.
+         *  @param processing   Wether we are processing the filter or not.
          *  @return A vector of shared pointers to the display objects in the resulting selection.
          *
          *  @todo should this return an empty selection?

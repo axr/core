@@ -130,7 +130,7 @@ namespace AXR
         /**
          *  Setter fo the selector chains, which are used to select elements from the
          *  content tree.
-         *  @param newChain     A vector of shared pointers to selector chains.
+         *  @param newChains A vector of shared pointers to selector chains.
          */
         void setSelectorChains(std::vector<HSSSelectorChain::p> newChains);
 
@@ -143,7 +143,7 @@ namespace AXR
 
         /**
          *  Add a selector chain to the selector chains vector.
-         *  @param newValue A shared pointer to the selector chain to be added.
+         *  @param newSelectorChain A shared pointer to the selector chain to be added.
          */
         void selectorChainsAdd(HSSSelectorChain::p & newSelectorChain);
 
@@ -175,14 +175,14 @@ namespace AXR
          */
         int selectorChainsSize();
 
-        /**
+        /*
          *  @todo Add setter for properties vector.
-         *  Setter fo the property definitions that this rules holds.
-         *  //@param newChain     A vector of shared pointers to property definitions.
+         *  Setter for the property definitions that this rules holds.
+         *  @param newChain A vector of shared pointers to property definitions.
          */
 
         /**
-         *  Getter fo the property definitions vector.
+         *  Getter for the property definitions vector.
          *  @return A vector of shared pointers to property definitions.
          */
         const std::vector<HSSPropertyDefinition::p> & getProperties() const;
@@ -223,7 +223,7 @@ namespace AXR
 
         /**
          *  Add a child rule.
-         *  @param newProperty  A shared pointer to the rule to be added.
+         *  @param newRule A shared pointer to the rule to be added.
          */
         void childrenAdd(HSSRule::p newRule);
 

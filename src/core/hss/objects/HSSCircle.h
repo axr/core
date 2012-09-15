@@ -85,15 +85,6 @@ namespace AXR
         virtual std::string defaultObjectType(std::string property);
         virtual bool isKeyword(std::string value, std::string property);
 
-        /**
-         *  Call this method when you need to draw the shape. The coordinates are used
-         *  to define the bounding box into which the shape will be drawn.
-         *  @param painter  A QPainter context used to draw onto a surface.
-         *  @param x        The horizontal position of the shape.
-         *  @param y        The vertical position of the shape.
-         *  @param width    The width of the shape.
-         *  @param height   The height of the shape.
-         */
         virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
 
     private:

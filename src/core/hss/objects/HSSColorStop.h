@@ -53,7 +53,7 @@ namespace AXR
 {
 
     /**
-     *  @brief This class represents HSS objects of type @colorStop.
+     *  @brief This class represents HSS objects of type \@colorStop.
      */
     class HSSColorStop : public HSSObject
     {

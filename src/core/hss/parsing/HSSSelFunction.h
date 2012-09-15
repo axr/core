@@ -83,7 +83,6 @@ namespace AXR
          */
         virtual ~HSSSelFunction();
 
-        //see HSSObject.h for documentation of this method
         virtual std::string toString();
 
         /**
@@ -100,7 +99,7 @@ namespace AXR
 
         /**
          *  Add a selector chain to the selector chains vector.
-         *  @param newValue A shared pointer to the selector chain to be added.
+         *  @param newSelectorChain A shared pointer to the selector chain to be added.
          */
         void selectorChainsAdd(HSSSelectorChain::p & newSelectorChain);
 

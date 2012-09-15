@@ -108,8 +108,8 @@ namespace AXR
         HSSStatementTypeRule, /**< Rules are used to apply property definitions to elements. */
         HSSStatementTypePropertyDefinition, /**< Define a value for a property name. */
         HSSStatementTypeObjectDefinition, /**< Define a reusable group of property definitions under a name. */
-        HSSStatementTypeComment, /**< . */
-        HSSStatementTypeInstruction /**< . */
+        HSSStatementTypeComment,
+        HSSStatementTypeInstruction
     };
     /** @} */
 
@@ -128,14 +128,14 @@ namespace AXR
         HSSImportInstruction, /**< Loads code from the given file and adds it to the current document. */
         HSSMoveInstruction, /**< Moves elements from one part of the tree to another. */
         HSSDeleteInstruction, /**< Removes elements from the content tree. */
-        HSSGrayscale1Instruction, /**< Creates a color object (e.g. #C). */
-        HSSGrayscale2Instruction, /**< Creates a color object (e.g. #CC). */
-        HSSRGBInstruction, /**< Creates a color object (e.g. #CCC). */
-        HSSRGBAInstruction, /**< Creates a color object (e.g. #CCCF). */
-        HSSRGBAAInstruction, /**< Creates a color object (e.g. #CCCFF). */
-        HSSRRGGBBInstruction, /**< Creates a color object (e.g. #CCCCCC). */
-        HSSRRGGBBAInstruction, /**< Creates a color object (e.g. #CCCCCCF). */
-        HSSRRGGBBAAInstruction /**< Creates a color object (e.g. #CCCCCCFF). */
+        HSSGrayscale1Instruction, /**< Creates a color object (e.g. \#C). */
+        HSSGrayscale2Instruction, /**< Creates a color object (e.g. \#CC). */
+        HSSRGBInstruction, /**< Creates a color object (e.g. \#CCC). */
+        HSSRGBAInstruction, /**< Creates a color object (e.g. \#CCCF). */
+        HSSRGBAAInstruction, /**< Creates a color object (e.g. \#CCCFF). */
+        HSSRRGGBBInstruction, /**< Creates a color object (e.g. \#CCCCCC). */
+        HSSRRGGBBAInstruction, /**< Creates a color object (e.g. \#CCCCCCF). */
+        HSSRRGGBBAAInstruction /**< Creates a color object (e.g. \#CCCCCCFF). */
     };
     /** @} */
 
@@ -311,7 +311,7 @@ namespace AXR
         HSSObjectTypeMargin, /**< All margins share this type */
         HSSObjectTypeRgb, /**< Colors in RGB */
         HSSObjectTypeGradient, /**< All gradients share this type */
-        HSSObjectTypeFont, /**< Not font files, but HSS @font objects */
+        HSSObjectTypeFont, /**< Not font files, but HSS \@font objects */
         HSSObjectTypeFunction, /**< All functions share this type */
         HSSObjectTypeShape, /**< All shapes share this type */
         HSSObjectTypeEvent, /**< All events share this type */

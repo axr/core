@@ -133,7 +133,6 @@ namespace AXR
 
         /**
          *  Removes itself from its parent node in the parser tree.
-         *  @param newParent    A shared pointer to the new parent node.
          *
          *  @todo The saved pointer to the parent is not touched, it just removes itself on the parent.
          */
@@ -153,7 +152,6 @@ namespace AXR
 
         /**
          *  Traversal method of the parser tree.
-         *  @param child    A vector of shared pointers to the child nodes.
          */
         const std::vector<HSSParserNode::p> getChildNodes() const;
 

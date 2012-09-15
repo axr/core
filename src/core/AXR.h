@@ -147,7 +147,7 @@
  *  @section diagram Diagram of the structure of the library
  *
  *  In the following diagram you can see a graphical representation of how the AXR core library is structured:
- *  @image html library_structure.jpg
+ *  @image html library-structure.jpg
  */
 
 #ifndef AXR_H
