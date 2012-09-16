@@ -153,7 +153,7 @@ HSSRgb::p HSSGradient::getColorAfterFirst()
     //first, look into the color stops to see if we find a suitable color
     HSSRgb::p ret;
     if (this->colorStops.size() > 0) {
-        for (std::vector<HSSObject::p>::const_iterator it = this->colorStops.begin(); it != this->colorStops.end(); it++) {
+        for (std::vector<HSSObject::p>::const_iterator it = this->colorStops.begin(); it != this->colorStops.end(); ++it) {
             const HSSObject::p & theStopObj = *it;
             if (theStopObj->isA(HSSObjectTypeColorStop)) {
                 HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop>(theStopObj);
@@ -185,7 +185,7 @@ HSSRgb::p HSSGradient::getColorBeforeLast()
     //first, look into the color stops (in reverse order) to see if we find a suitable color
     HSSRgb::p ret;
     if (this->colorStops.size() > 0) {
-        for (std::vector<HSSObject::p>::const_reverse_iterator it = this->colorStops.rbegin(); it != this->colorStops.rend(); it++) {
+        for (std::vector<HSSObject::p>::const_reverse_iterator it = this->colorStops.rbegin(); it != this->colorStops.rend(); ++it) {
             const HSSObject::p & theStopObj = *it;
             if (theStopObj->isA(HSSObjectTypeColorStop)) {
                 HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop>(theStopObj);
