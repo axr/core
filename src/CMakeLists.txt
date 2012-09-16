@@ -7,8 +7,6 @@ include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}/core/hss/parsing"
     "${CMAKE_CURRENT_SOURCE_DIR}/core/hss/tokenizing"
     "${CMAKE_CURRENT_SOURCE_DIR}/core/hss/various"
-    "${CMAKE_CURRENT_SOURCE_DIR}/core/os"
-    "${CMAKE_CURRENT_SOURCE_DIR}/core/os/win"
     "${CMAKE_CURRENT_SOURCE_DIR}/core/xml"
 )
 
