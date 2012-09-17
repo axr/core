@@ -15,6 +15,7 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_SOURCE_DIR}/cmake/solar ${CMAKE_MODULE_PATH})
 include(Utilities)
 include(Solar)
+include(Variables)
 
 # Verify that the source/build paths do not contain any spaces
 check_pathnames()
@@ -26,8 +27,6 @@ project(AXR)
 
 # Help out Windows
 use_qt_sdk_locations()
-
-set(AXR_VERSION_STRING "0.4.7")
 
 # This list is for OS X application bundles to copy in all necessary icons
 file(GLOB axr_icon_SOURCES ${CMAKE_SOURCE_DIR}/share/icons/*.icns)
