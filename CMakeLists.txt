@@ -4,6 +4,13 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
     message(FATAL_ERROR "You should not build in-source. Use a directory outside the source tree or a subdirectory such as: ${CMAKE_SOURCE_DIR}/build")
 endif()
 
+# Default to debug builds
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
+
 # Set the module path and include utility modules
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_SOURCE_DIR}/cmake/solar ${CMAKE_MODULE_PATH})
 include(Utilities)
@@ -89,8 +96,6 @@ if(AXR_BUILD_PROTOTYPE)
     if(BUILD_UNIVERSAL_BINS)
         set(CMAKE_OSX_ARCHITECTURES "i386 x86_64")
     endif()
-
-    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
 
     # Required to avoid "Symbol not found: __objc_empty_cache" from dyld
     if(APPLE)
