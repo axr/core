@@ -26,6 +26,12 @@ if(SDL_FOUND)
     set_source_files_properties(${hss_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/framework)
 
     set_target_properties(${TARGET_NAME_APP_SDL} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
+
+    install_bundle(TARGET ${TARGET_NAME_APP_SDL}
+        COMPONENT examples
+        BUNDLE_DESTINATION Examples
+        RUNTIME_DESTINATION bin/examples
+    )
 else()
     message(STATUS "SDL was NOT found; will not build SDL example")
 endif()

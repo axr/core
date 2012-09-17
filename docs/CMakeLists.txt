@@ -11,8 +11,13 @@ if(DOXYGEN_FOUND)
     add_custom_target(${doxygen_target}
         COMMAND ${DOXYGEN_EXECUTABLE}
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        COMMENT "Building documentation for AXR core..."
+        COMMENT "Building AXR documentation using Doxygen..."
         SOURCES Doxyfile
+    )
+
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/docs/html"
+        COMPONENT doc
+        DESTINATION "share/doc/axr"
     )
 else()
     message(STATUS "Doxygen was NOT found; will not build documentation")

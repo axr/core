@@ -16,6 +16,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_SOURCE_D
 include(Utilities)
 include(Solar)
 include(Variables)
+include(Package)
 
 # Verify that the source/build paths do not contain any spaces
 check_pathnames()
@@ -151,3 +152,6 @@ if(FANCY_TARGET_NAMES)
     group_by_folder(${d} "${tests_SOURCES}")
     add_custom_target("Tests" SOURCES ${tests_SOURCES})
 endif()
+
+include(InstallRequiredSystemLibraries)
+include(CPack)

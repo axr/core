@@ -28,6 +28,12 @@ if(APPLE)
     set_source_files_properties(views PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     set_target_properties(${TARGET_NAME_APP_COCOA} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
+
+    install_bundle(TARGET ${TARGET_NAME_APP_COCOA}
+        COMPONENT examples
+        BUNDLE_DESTINATION Examples
+        RUNTIME_DESTINATION bin/examples
+    )
 else()
     add_custom_target(${TARGET_NAME_APP_COCOA} SOURCES ${cocoa_SOURCES})
 endif()
