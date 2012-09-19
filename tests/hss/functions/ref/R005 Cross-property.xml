@@ -3,7 +3,7 @@
     Test R005 Cross-property
     Created by Miro Keller on 2011-10-02.
 -->
-<?xml-stylesheet type="application/x-hss" src="R005 Cross-property.hss"?>
+<?xml-stylesheet type="application/x-hss" src="R005 Cross-property.hss" version="0.4.7" ?>
 <test>
     <master>Master</master>
     <slave>Slave: Cross-property Reference to Master and multiplication</slave>

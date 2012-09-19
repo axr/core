@@ -3,7 +3,7 @@
     Test I002 Wrapping
     Created by Miro Keller on 2011-10-05.
 -->
-<?xml-stylesheet type="application/x-hss" src="I002 Wrapping.hss"?>
+<?xml-stylesheet type="application/x-hss" src="I002 Wrapping.hss" version="0.4.7" ?>
 <test>
     <child1 />
     <child2 />

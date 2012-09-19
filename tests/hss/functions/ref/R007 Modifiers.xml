@@ -3,7 +3,7 @@
     Test R007 Modifiers
     Created by Miro Keller on 2011-10-02.
 -->
-<?xml-stylesheet type="application/x-hss" src="R007 Modifiers.hss"?>
+<?xml-stylesheet type="application/x-hss" src="R007 Modifiers.hss" version="0.4.7" ?>
 <test>
     <master>Master: smaller</master>
     <master>Master: bigger</master>

@@ -3,7 +3,7 @@
     Test BR002 Multiple Borders
     Created by Miro Keller on 2011-12-15.
 -->
-<?xml-stylesheet type="application/x-hss" src="BR002 Multiple Borders.hss"?>
+<?xml-stylesheet type="application/x-hss" src="BR002 Multiple Borders.hss" version="0.4.8" ?>
 <test>
 
 </test>

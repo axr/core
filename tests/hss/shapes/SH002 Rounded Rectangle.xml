@@ -3,7 +3,7 @@
     Test SH002 Rounded Rectangle
     Created by Miro Keller on 2011-09-26.
 -->
-<?xml-stylesheet type="application/x-hss" src="SH002 Rounded Rectangle.hss"?>
+<?xml-stylesheet type="application/x-hss" src="SH002 Rounded Rectangle.hss" version="0.4.7" ?>
 <test>
     <shapeElement/>
 </test>

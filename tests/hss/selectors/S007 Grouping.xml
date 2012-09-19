@@ -3,7 +3,7 @@
     Test S007 Grouping
     Created by Miro Keller on 2012-06-14.
 -->
-<?xml-stylesheet type="application/x-hss" src="S007 Grouping.hss"?>
+<?xml-stylesheet type="application/x-hss" src="S007 Grouping.hss" version="0.4.7" ?>
 <test>
     <child>(Child) This should be blue</child>
     <child2>(Child) This should be green</child2>

@@ -3,7 +3,7 @@
     Test BR003 Ref borders
     Created by Miro Keller on 2011-12-20.
 -->
-<?xml-stylesheet type="application/x-hss" src="BR003 Ref borders.hss"?>
+<?xml-stylesheet type="application/x-hss" src="BR003 Ref borders.hss" version="0.4.8" ?>
 <test>
 
 </test>

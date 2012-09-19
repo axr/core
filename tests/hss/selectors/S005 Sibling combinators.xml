@@ -3,7 +3,7 @@
     Test S001 - Simple Selectors
     Created by Miro Keller on 2011-09-17.
 -->
-<?xml-stylesheet type="application/x-hss" src="S005 Sibling combinators.hss"?>
+<?xml-stylesheet type="application/x-hss" src="S005 Sibling combinators.hss" version="0.4.7" ?>
 <test>
     <child>(Child) This should be cyan</child>
     <child>(Child) This should be blue</child>

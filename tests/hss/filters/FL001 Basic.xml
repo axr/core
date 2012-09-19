@@ -3,7 +3,7 @@
     Test FL001 - Basic
     Created by Miro Keller on 2012-02-23.
 -->
-<?xml-stylesheet type="application/x-hss" src="FL001 Basic.hss"?>
+<?xml-stylesheet type="application/x-hss" src="FL001 Basic.hss" version="0.4.7" ?>
 <test>
     <elemA>(Elem A) This should be red</elemA>
     <elemB>B</elemB>
