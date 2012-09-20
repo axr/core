@@ -109,7 +109,7 @@ bool XMLParser::loadFile(AXRFile::p file)
                 axr_log(AXR_DEBUG_CH_XML, "XMLParser: found closing tag with name " + xml.name().toString());
                 controller->exitElement();
             }
-            else if (xml.isCDATA())
+            else if (xml.isCharacters())
             {
                 axr_log(AXR_DEBUG_CH_XML, QString("XMLParser: reading character data: \"%1\"").arg(xml.text().toString()));
                 controller->appendContentText(xml.text().toString().toStdString());
