@@ -80,7 +80,6 @@
    <addaction name="windowMenu"/>
    <addaction name="helpMenu"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="openAction">
    <property name="text">
     <string>&amp;Open...</string>
