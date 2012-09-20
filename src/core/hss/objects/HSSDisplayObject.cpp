@@ -385,12 +385,12 @@ std::string HSSDisplayObject::getContentText()
     return this->contentText;
 }
 
-void HSSDisplayObject::setContentText(std::string text)
+void HSSDisplayObject::setContentText(const std::string &text)
 {
     this->contentText = text;
 }
 
-void HSSDisplayObject::appendContentText(std::string text)
+void HSSDisplayObject::appendContentText(const std::string &text)
 {
     this->contentText.append(text);
 }

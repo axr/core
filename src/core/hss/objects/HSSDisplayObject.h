@@ -161,13 +161,13 @@ namespace AXR
          *  Setter for the content text.
          *  @param text     A string containing the new value for content text.
          */
-        virtual void setContentText(std::string text);
+        virtual void setContentText(const std::string &text);
 
         /**
          *  Append a piece of text to the content text.
          *  @param text     A string containing the value to be appended to the content text.
          */
-        virtual void appendContentText(std::string text);
+        virtual void appendContentText(const std::string &text);
 
         /**
          *  Add a rule to the list of rules associated with this display object.

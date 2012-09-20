@@ -180,7 +180,7 @@ namespace AXR
          *  at the beginning and end of the text.
          *  @param text     A string containing the new content text.
          */
-        virtual void setContentText(std::string text);
+        virtual void setContentText(const std::string &text);
 
         /**
          *  If the last child is a text block, it appends the given text to the text content
@@ -188,7 +188,7 @@ namespace AXR
          *  at the beginning and end of the text.
          *  @param text     A string containing the new content text.
          */
-        virtual void appendContentText(std::string text);
+        virtual void appendContentText(const std::string &text);
 
         /**
          *  @return The content text of the element (potentially made up by various text blocks).

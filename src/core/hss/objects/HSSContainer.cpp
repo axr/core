@@ -316,11 +316,11 @@ void HSSContainer::resetChildrenIndexes()
     }
 }
 
-void HSSContainer::setContentText(std::string text)
+void HSSContainer::setContentText(const std::string &contextText)
 {
-    text = QString::fromStdString(text).trimmed().toStdString();
+    std::string text = QString::fromStdString(contextText).trimmed().toStdString();
 
-    if (text != "")
+    if (!text.empty())
     {
         if (this->allChildren.empty())
         {
@@ -346,11 +346,11 @@ void HSSContainer::setContentText(std::string text)
     }
 }
 
-void HSSContainer::appendContentText(std::string text)
+void HSSContainer::appendContentText(const std::string &contextText)
 {
-    text = QString::fromStdString(text).trimmed().toStdString();
+    std::string text = QString::fromStdString(contextText).trimmed().toStdString();
 
-    if (text != "")
+    if (!text.empty())
     {
         if (this->allChildren.empty())
         {
