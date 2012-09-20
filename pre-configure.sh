@@ -116,7 +116,7 @@ if [ "$UNAME" = "Darwin" ] ; then
 elif [ "$UNAME" = "Linux" ] ; then
     if [ $(which apt-get 2>/dev/null) ] ; then
         # Debian, Ubuntu
-        apt-get install build-essential qt-sdk libboost-all-dev libsdl1.2-dev doxygen
+        apt-get -y install build-essential qt-sdk libboost-all-dev libsdl1.2-dev doxygen
     elif [ $(which yum 2>/dev/null) ] ; then
         # Fedora, RHEL, Yellow Dog Linux
         echo "ERROR: yum support is not yet implemented"
