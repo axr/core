@@ -9,5 +9,6 @@ target_link_libraries(${TARGET_NAME_LIB_CORE} ${Boost_SYSTEM_LIBRARY} ${Boost_TH
 
 install(TARGETS ${TARGET_NAME_LIB_CORE}
     LIBRARY DESTINATION lib COMPONENT libraries
+    ARCHIVE DESTINATION lib COMPONENT libraries
     FRAMEWORK DESTINATION Frameworks COMPONENT frameworks
 )
