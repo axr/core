@@ -42,6 +42,8 @@
  ********************************************************************/
 
 #include <boost/lexical_cast.hpp>
+#include <QCoreApplication>
+#include <QDir>
 #include <QFile>
 #include "AXR.h"
 #include "AXRWrapper.h"
@@ -362,25 +364,15 @@ bool AXRWrapper::layoutChildDone()
 
 std::string AXRWrapper::getPathToResources()
 {
-    // Code taken from: http://www.gamedev.net/community/forums/topic.asp?topic_id=459511
-    std::string path = "";
-    pid_t pid = getpid();
-    char buf[20] = {0};
-    sprintf(buf, "%d", pid);
-    std::string _link = "/proc/";
-    _link.append(buf);
-    _link.append("/exe");
-    char proc[512];
-    int ch = readlink(_link.c_str(), proc, 512);
-    if (ch != -1)
-    {
-        proc[ch] = 0;
-        path = proc;
-        std::string::size_type t = path.find_last_of("/");
-        path = path.substr(0, t);
-    }
-
-    return path + std::string("/resources");
+    // TODO: it's best to do this in a different way entirely... the library
+    // shouldn't be using the client process's directory to determine where
+    // to load resources from. For example, two different browsers will be
+    // at different file paths, while the resources path will be independent
+    // of either of them. Perhaps an AXR configuration file at a standard
+    // location? /etc/axr.conf on Unix and %WINDIR%/axr.ini on Windows?
+    QDir applicationDir(QCoreApplication::applicationDirPath());
+    applicationDir.cd("resources");
+    return applicationDir.canonicalPath().toStdString();
 }
 
 std::string AXRWrapper::getPathToTestsFile()
