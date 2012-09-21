@@ -8,7 +8,7 @@ if(DOXYGEN_FOUND)
         set(doxygen_target docs)
     endif()
 
-    add_custom_target(${doxygen_target}
+    add_custom_target(${doxygen_target} ALL
         COMMAND ${DOXYGEN_EXECUTABLE}
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         COMMENT "Building AXR documentation using Doxygen..."
