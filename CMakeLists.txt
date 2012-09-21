@@ -63,7 +63,7 @@ option(BUILD_SHARED_LIBS "Builds shared instead of static libraries" ON)
 if(AXR_BUILD_PROTOTYPE)
     find_package(Qt4 4.8 COMPONENTS QtCore QtGui QtXml REQUIRED)
     include(${QT_USE_FILE})
-    add_definitions(${QT_DEFINITIONS})
+    add_definitions(${QT_DEFINITIONS} -DNOMINMAX)
 
     # Don't use static Boost because this will result in relocation errors due to
     # Boost not being compiled with -fPIC (at least on 64-bit Linux)

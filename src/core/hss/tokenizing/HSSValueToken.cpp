@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include <sstream>
+#include <QString>
 #include "HSSValueToken.h"
 
 using namespace AXR;
@@ -53,7 +54,7 @@ HSSValueToken::HSSValueToken(HSSTokenType type, std::string value, unsigned line
     this->type = type;
     if (this->isNumeric())
     {
-        this->longValue = strtold(value.c_str(), NULL);
+        this->longValue = QString::fromStdString(value).toDouble();
     }
     else
     {

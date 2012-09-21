@@ -798,8 +798,7 @@ HSSObjectDefinition::p & AXRController::objectTreeGet(std::string name)
     /**
      *  @todo do this with an unordered_map for better performance
      */
-    unsigned i, size;
-    for (i = 0, size = this->objectTree.size(); i < size; ++i)
+    for (unsigned i = 0, size = this->objectTree.size(); i < size; ++i)
     {
         HSSObjectDefinition::p & theObj = this->objectTreeGet(i);
         if (theObj && theObj->getObject()->name == name)

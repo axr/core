@@ -832,8 +832,8 @@ void HSSContainer::layout()
             for (i = 0, size = this->allChildren.size(); i < size; ++i)
             {
                 HSSDisplayObject::p &child = this->allChildren[i];
-                child->setGlobalX(round(this->globalX + child->x));
-                child->setGlobalY(round(this->globalY + child->y));
+                child->setGlobalX(qRound(this->globalX + child->x));
+                child->setGlobalY(qRound(this->globalY + child->y));
                 child->_layoutFlagIsInSecondaryGroup = false;
                 child->_layoutFlagIsInSecondaryLine = false;
                 child->_layoutFlagLockTop = false;

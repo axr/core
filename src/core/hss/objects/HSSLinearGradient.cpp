@@ -45,6 +45,7 @@
  *  @todo set defaults
  */
 
+#include <cmath>
 #include "HSSColorStop.h"
 #include "HSSLinearGradient.h"
 #include "HSSObjectDefinition.h"

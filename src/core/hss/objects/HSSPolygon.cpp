@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#define _USE_MATH_DEFINES // for M_PI when using MSVC
 #include <cmath>
 #include "errors.h"
 #include "AXRController.h"
