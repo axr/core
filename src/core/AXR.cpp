@@ -41,8 +41,6 @@
  *
  ********************************************************************/
 
-#include <boost/lexical_cast.hpp>
-#include <pthread.h>
 #include "AXR.h"
 
 using namespace AXR;
@@ -64,7 +62,7 @@ AXRCore::AXRCore()
 
 void AXRCore::initialize(AXRWrapper * wrpr)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: initializing core for thread " + boost::lexical_cast<std::string > (pthread_self()));
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: initializing core for thread");
 
     AXRController::p ctrlr = AXRController::p(new AXRController());
     AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.get()));
