@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include <boost/unordered_map.hpp>
+#include <QMap>
 #include "AXR.h"
 #include "AXRController.h"
 #include "HSSMultipleValue.h"
@@ -55,8 +55,7 @@ using namespace AXR;
 
 HSSObject::p HSSObject::newObjectWithType(std::string type)
 {
-
-    static boost::unordered_map<std::string, HSSObjectType>types;
+    static QMap<std::string, HSSObjectType> types;
     if (types.empty())
     {
         types["container"] = HSSObjectTypeContainer;
@@ -90,7 +89,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type)
     }
 
     HSSObjectType objectType = HSSObjectTypeNone;
-    if (types.find(type) != types.end())
+    if (types.contains(type))
     {
         objectType = types[type];
     }
@@ -165,7 +164,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type)
 
     case HSSObjectTypeEvent:
     {
-        static boost::unordered_map<std::string, HSSEventType>eventTypes;
+        static QMap<std::string, HSSEventType> eventTypes;
         if (eventTypes.empty())
         {
             eventTypes["load"] = HSSEventTypeLoad;
@@ -183,7 +182,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type)
             eventTypes["scroll"] = HSSEventTypeScroll;
         }
 
-        if (eventTypes.find(type) != eventTypes.end())
+        if (eventTypes.contains(type))
         {
             return HSSEvent::p(new HSSEvent(eventTypes[type]));
         }

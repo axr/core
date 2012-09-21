@@ -48,8 +48,8 @@ using namespace AXR;
 
 std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type)
 {
-    static boost::unordered_map<HSSParserNodeType, std::string> types;
-    if (types.empty())
+    static QMap<HSSParserNodeType, std::string> types;
+    if (types.isEmpty())
     {
         types[HSSParserNodeTypeGeneric] = "HSSParserNode";
         types[HSSParserNodeTypeSelector] = "HSSSelector";
@@ -67,8 +67,9 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
         types[HSSParserNodeTypeNegation] = "HSSParserNodeTypeNegation";
         types[HSSParserNodeTypeFlag] = "HSSParserNodeTypeFlag";
     }
+
     std::string ret = "";
-    if (types.find(type) != types.end())
+    if (types.contains(type))
     {
         ret = types[type];
     }

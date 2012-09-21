@@ -47,7 +47,6 @@
 #include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
-#include <boost/unordered_map.hpp>
 #include "HSSFilterType.h"
 #include "HSSInstruction.h"
 #include "HSSPropertyDefinition.h"

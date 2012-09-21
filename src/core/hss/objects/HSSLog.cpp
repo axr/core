@@ -179,16 +179,16 @@ void HSSLog::fire()
                 }
                 try
                 {
-                    boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > m_data = boost::any_cast< boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > >(remoteValue);
+                    QMap<HSSEventType, std::vector<HSSObject::p> > m_data = boost::any_cast< QMap<HSSEventType, std::vector<HSSObject::p> > >(remoteValue);
                     if (m_data.empty())
                     {
                         std_log("empty");
                     }
                     else
                     {
-                        for (boost::unordered_map<HSSEventType, std::vector<HSSObject::p> >::iterator it = m_data.begin(); it != m_data.end(); ++it)
+                        for (QMap<HSSEventType, std::vector<HSSObject::p> >::iterator it = m_data.begin(); it != m_data.end(); ++it)
                         {
-                            std::vector<HSSObject::p> v_data = (*it).second;
+                            std::vector<HSSObject::p> v_data = it.value();
                             for (std::vector<HSSObject::p>::iterator it2 = v_data.begin(); it2 != v_data.end(); ++it2)
                             {
                                 std_log((*it2)->toString());

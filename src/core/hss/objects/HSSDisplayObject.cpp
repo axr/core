@@ -3980,24 +3980,20 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
 {
     if (name == "*")
     {
-        boost::unordered_map<std::string, std::vector<HSSFlag::p> >::const_iterator it;
         //std_log("deactivating all flags on element "+this->getElementName());
-        for (it = this->_flags.begin(); it != this->_flags.end(); ++it)
+        for (QMap<std::string, std::vector<HSSFlag::p> >::const_iterator it = this->_flags.begin(); it != this->_flags.end(); ++it)
         {
             HSSRuleState newValue = HSSRuleStatePurge;
-            std::vector<HSSFlag::p> flags = it->second;
-            this->_flagsStatus[it->first] = newValue;
-            std::vector<HSSFlag::p>::iterator it;
-            for (it = flags.begin(); it != flags.end(); ++it)
+            std::vector<HSSFlag::p> flags = it.value();
+            this->_flagsStatus[it.key()] = newValue;
+
+            for (std::vector<HSSFlag::p>::iterator it = flags.begin(); it != flags.end(); ++it)
             {
                 HSSFlag::p theFlag = *it;
                 theFlag->setThisObj(this->shared_from_this());
                 theFlag->flagChanged(newValue);
             }
-
         }
-
-
     }
     else if (this->hasFlag(name))
     {
@@ -4005,15 +4001,14 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
         HSSRuleState newValue = HSSRuleStatePurge;
         std::vector<HSSFlag::p> flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
-        std::vector<HSSFlag::p>::iterator it;
-        for (it = flags.begin(); it != flags.end(); ++it)
+        for (std::vector<HSSFlag::p>::iterator it = flags.begin(); it != flags.end(); ++it)
         {
             HSSFlag::p theFlag = *it;
             theFlag->setThisObj(this->shared_from_this());
             theFlag->flagChanged(newValue);
         }
-        this->_flagsStatus[name] = HSSRuleStateOff;
 
+        this->_flagsStatus[name] = HSSRuleStateOff;
     }
     else
     {

@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include <boost/pointer_cast.hpp>
-#include <boost/unordered_map.hpp>
+#include <QMap>
 #include "AXRController.h"
 #include "HSSAction.h"
 #include "HSSEvent.h"
@@ -56,24 +56,24 @@ using namespace AXR;
 
 std::string HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
 {
-    boost::unordered_map<HSSEventType, std::string> types;
-    types[HSSEventTypeNone ] = "HSSEventTypeNone";
-    types[HSSEventTypeLoad ] = "HSSEventTypeLoad";
-    types[HSSEventTypeClick ] = "HSSEventTypeClick";
-    types[HSSEventTypeDoubleClick ] = "HSSEventTypeDoubleClick";
-    types[HSSEventTypeTripleClick ] = "HSSEventTypeTripleClick";
-    types[HSSEventTypeMouseDown ] = "HSSEventTypeMouseDown";
-    types[HSSEventTypeMouseUp ] = "HSSEventTypeMouseUp";
-    types[HSSEventTypeMouseOver ] = "HSSEventTypeMouseOver";
-    types[HSSEventTypeMouseOut ] = "HSSEventTypeMouseOut";
-    types[HSSEventTypeMouseHold ] = "HSSEventTypeMouseHold";
-    types[HSSEventTypeMouseMove ] = "HSSEventTypeMouseMove";
+    QMap<HSSEventType, QString> types;
+    types[HSSEventTypeNone] = "HSSEventTypeNone";
+    types[HSSEventTypeLoad] = "HSSEventTypeLoad";
+    types[HSSEventTypeClick] = "HSSEventTypeClick";
+    types[HSSEventTypeDoubleClick] = "HSSEventTypeDoubleClick";
+    types[HSSEventTypeTripleClick] = "HSSEventTypeTripleClick";
+    types[HSSEventTypeMouseDown] = "HSSEventTypeMouseDown";
+    types[HSSEventTypeMouseUp] = "HSSEventTypeMouseUp";
+    types[HSSEventTypeMouseOver] = "HSSEventTypeMouseOver";
+    types[HSSEventTypeMouseOut] = "HSSEventTypeMouseOut";
+    types[HSSEventTypeMouseHold] = "HSSEventTypeMouseHold";
+    types[HSSEventTypeMouseMove] = "HSSEventTypeMouseMove";
     types[HSSEventTypeClickSecondary] = "HSSEventTypeClickSecondary";
-    types[HSSEventTypeClickTertiary ] = "HSSEventTypeClickTertiary";
-    types[HSSEventTypeScroll ] = "HSSEventTypeScroll";
-    types[HSSEventTypeExitedWindow ] = "HSSEventTypeExitedWindow";
+    types[HSSEventTypeClickTertiary] = "HSSEventTypeClickTertiary";
+    types[HSSEventTypeScroll] = "HSSEventTypeScroll";
+    types[HSSEventTypeExitedWindow] = "HSSEventTypeExitedWindow";
 
-    return types[eventType];
+    return types[eventType].toStdString();
 }
 
 HSSEvent::HSSEvent(HSSEventType type)

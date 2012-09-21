@@ -42,7 +42,8 @@
  ********************************************************************/
 
 #include <iostream>
-#include <boost/unordered_map.hpp>
+#include <QHash>
+#include <QMap>
 #include "AXRDebugging.h"
 #include "HSSObservable.h"
 
@@ -50,12 +51,9 @@ using namespace AXR;
 
 std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property)
 {
-    static std::string types[66];
-    static bool HSSObservableHasInitializedTypes = false;
-    if (!HSSObservableHasInitializedTypes)
+    static QMap<HSSObservableProperty, QString> types;
+    if (types.isEmpty())
     {
-        HSSObservableHasInitializedTypes = true;
-
         types[HSSObservablePropertyNone] = "unknown";
 
         //HSSObject
@@ -152,12 +150,12 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyAngle] = "HSSObservablePropertyAngle";
     }
 
-    return types[property];
+    return types[property].toStdString();
 }
 
 HSSObservableProperty HSSObservable::observablePropertyFromString(std::string name)
 {
-    static boost::unordered_map<std::string, HSSObservableProperty> properties;
+    static QMap<std::string, HSSObservableProperty> properties;
 
     if (properties.empty())
     {
@@ -262,12 +260,15 @@ HSSObservable::~HSSObservable()
     this->_propertyObservers.clear();
 }
 
+size_t hash_combine(size_t hash1, size_t hash2)
+{
+    return hash1 ^ (hash2 + 0x9e3779b9 + (hash1 << 6) + (hash1 >> 2));
+}
+
 void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object, HSSCallback *callback)
 {
     //std_log1("added observer: "+object->name);
-    std::size_t hash = 0;
-    boost::hash_combine(hash, object);
-    boost::hash_combine(hash, source);
+    std::size_t hash = hash_combine(qHash(object), qHash(source));
 
     if (this->_propertyObservers.count(target) != 0)
     {
@@ -289,13 +290,11 @@ void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservablePr
     if (this->_propertyObservers.find(target) != this->_propertyObservers.end())
     {
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
-        std::size_t hash = 0;
-        boost::hash_combine(hash, object);
-        boost::hash_combine(hash, source);
+        std::size_t hash = hash_combine(qHash(object), qHash(source));
         if (theObserved.count(hash) != 0)
         {
             delete theObserved[hash];
-            theObserved.erase(hash);
+            theObserved.remove(hash);
             axr_log(AXR_DEBUG_CH_OBSERVING, "removing observer for " + HSSObservable::observablePropertyStringRepresentation(target));
             return;
         }
@@ -315,7 +314,7 @@ void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
         HSSObservable::observed &theObserved = this->_propertyObservers[property];
         for (HSSObservable::observed::iterator it = theObserved.begin(); it != theObserved.end(); ++it)
         {
-            HSSCallback * callback = (*it).second;
+            HSSCallback *callback = it.value();
             if (!data)
             {
                 axr_log(AXR_DEBUG_CH_OBSERVING, "data is null");

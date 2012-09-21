@@ -317,7 +317,7 @@ namespace AXR
         HSSParser::p parserHSS;
 
         bool _hasLoadedFile;
-        boost::unordered_map<std::string, HSSCallback*> _customFunctions;
+        QMap<std::string, HSSCallback*> _customFunctions;
 
     private:
         /**

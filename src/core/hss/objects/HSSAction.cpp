@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include <boost/pointer_cast.hpp>
-#include <boost/unordered_map.hpp>
+#include <QMap>
 #include "AXRController.h"
 #include "HSSAction.h"
 #include "HSSObjectDefinition.h"
@@ -52,17 +52,17 @@ using namespace AXR;
 
 std::string HSSAction::actionTypeStringRepresentation(HSSActionType actionType)
 {
-    boost::unordered_map<HSSActionType, std::string> types;
-    types[HSSActionTypeRequest ] = "HSSActionTypeRequest";
+    QMap<HSSActionType, QString> types;
+    types[HSSActionTypeRequest] = "HSSActionTypeRequest";
     types[HSSActionTypeSetProperty] = "HSSActionTypeSetProperty";
-    types[HSSActionTypeJavascript ] = "HSSActionTypeJavascript";
-    types[HSSActionTypeJsFunction ] = "HSSActionTypeJsFunction";
-    types[HSSActionTypeAlert ] = "HSSActionTypeAlert";
-    types[HSSActionTypeLog ] = "HSSActionTypeLog";
-    types[HSSActionTypeFlag ] = "HSSActionTypeFlag";
-    types[HSSActionTypeFunction ] = "HSSActionTypeFunction";
+    types[HSSActionTypeJavascript] = "HSSActionTypeJavascript";
+    types[HSSActionTypeJsFunction] = "HSSActionTypeJsFunction";
+    types[HSSActionTypeAlert] = "HSSActionTypeAlert";
+    types[HSSActionTypeLog] = "HSSActionTypeLog";
+    types[HSSActionTypeFlag] = "HSSActionTypeFlag";
+    types[HSSActionTypeFunction] = "HSSActionTypeFunction";
 
-    return types[actionType];
+    return types[actionType].toStdString();
 }
 
 HSSAction::HSSAction(HSSActionType type)

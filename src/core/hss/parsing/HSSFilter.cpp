@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include <boost/unordered_map.hpp>
+#include <QMap>
 #include "HSSDisplayObject.h"
 #include "HSSFilter.h"
 #include "HSSFilters.h"
@@ -50,12 +50,9 @@ using namespace AXR;
 
 std::string HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType)
 {
-    static std::string types[30];
-    static bool HSSFilterHasInitializedTypes = false;
-    if (!HSSFilterHasInitializedTypes)
+    static QMap<HSSFilterType, QString> types;
+    if (types.isEmpty())
     {
-        HSSFilterHasInitializedTypes = true;
-
         //position
         types[HSSFilterTypeFirst] = "HSSFilterTypeFirst";
         types[HSSFilterTypeLast] = "HSSFilterTypeLast";
@@ -79,14 +76,13 @@ std::string HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType)
         types[HSSFilterTypeFlag] = "HSSFilterTypeFlag";
     }
 
-    return types[filterType];
+    return types[filterType].toStdString();
 }
 
 HSSFilterType HSSFilter::filterTypeFromString(std::string name)
 {
-    static boost::unordered_map<std::string, HSSFilterType> filterTypes;
-
-    if (filterTypes.empty())
+    static QMap<std::string, HSSFilterType> filterTypes;
+    if (filterTypes.isEmpty())
     {
         //position
         filterTypes["first"] = HSSFilterTypeFirst;
@@ -113,7 +109,6 @@ HSSFilterType HSSFilter::filterTypeFromString(std::string name)
         filterTypes["evenChild"] = HSSFilterTypeEvenChild;
         filterTypes["oddChild"] = HSSFilterTypeOddChild;
     }
-
 
     return filterTypes[name];
 }

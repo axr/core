@@ -48,7 +48,7 @@
 #include <vector>
 #include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/unordered_map.hpp>
+#include <QMap>
 #include "errors.h"
 #include "AXRDebugging.h"
 #include "HSSObservable.h"
@@ -328,9 +328,9 @@ namespace AXR
         virtual HSSActionType getActionType();
 
     protected:
-        boost::unordered_map<HSSObservableProperty, boost::any> properties;
+        QMap<HSSObservableProperty, boost::any> properties;
         std::vector<std::string> shorthandProperties;
-        boost::unordered_map<std::string, bool> skipShorthand;
+        QMap<std::string, bool> skipShorthand;
         unsigned shorthandIndex;
 
         HSSParserNode::p dIsA;

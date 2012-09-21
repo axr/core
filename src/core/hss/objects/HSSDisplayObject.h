@@ -346,8 +346,8 @@ namespace AXR
         QImage * bordersSurface;
 
         //flags
-        boost::unordered_map<std::string, HSSRuleState> _flagsStatus;
-        boost::unordered_map<std::string, std::vector< boost::shared_ptr<HSSFlag> > > _flags;
+        QMap<std::string, HSSRuleState> _flagsStatus;
+        QMap<std::string, std::vector< boost::shared_ptr<HSSFlag> > > _flags;
 
         //if it needs to redraw
         bool _isDirty;
@@ -427,7 +427,7 @@ namespace AXR
         HSSParserNode::p dOn;
         HSSObservable::p observedOn;
         HSSObservableProperty observedOnProperty;
-        boost::unordered_map<HSSEventType, std::vector<HSSObject::p> > on;
+        QMap<HSSEventType, std::vector<HSSObject::p> > on;
 
         //margin
         HSSParserNode::p dMargin;

@@ -49,7 +49,7 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
-#include <boost/unordered_map.hpp>
+#include <QMap>
 #include "AXRError.h"
 #include "AXRFile.h"
 #include "HSSContainer.h"
@@ -189,7 +189,7 @@ namespace AXR
 
         void executeLayoutTests(HSSObservableProperty passnull, void*data);
 
-        boost::unordered_map<AXRFileHandle, AXRFile::p> files;
+        QMap<AXRFileHandle, AXRFile::p> files;
 
     private:
         bool _isHSSOnly;

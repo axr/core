@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <boost/unordered_map.hpp>
 #include "AXR.h"
 #include "AXRController.h"
 #include "HSSDisplayObject.h"
