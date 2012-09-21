@@ -114,6 +114,12 @@ void render()
     }
 }
 
+void loadFile(AXRWrapper *wrapper)
+{
+    QString filepath = QFileDialog::getOpenFileName(NULL, QObject::tr("Open File"), QString(), QObject::tr("AXR Files (*.xml *.hss)"));
+    wrapper->loadFileByPath(filepath.toStdString());
+}
+
 int main(int argc, char **argv)
 {
     QApplication a(argc, argv);
@@ -191,8 +197,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        QString filepath = QFileDialog::getOpenFileName(NULL, QObject::tr("Open File"), QString(), QObject::tr("AXR Files (*.xml *.hss)"));
-        wrapper->loadFileByPath(filepath.toStdString());
+        loadFile(wrapper);
     }
 
     int done = 0;
@@ -259,7 +264,7 @@ int main(int argc, char **argv)
                 }
                 else if (event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))
                 {
-                    wrapper->loadFile();
+                    loadFile(wrapper);
                 }
             }
             else if (event.type == SDL_VIDEORESIZE)

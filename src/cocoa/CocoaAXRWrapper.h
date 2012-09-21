@@ -52,7 +52,6 @@ namespace AXR
         CocoaAXRWrapper(AXRView * mainView);
         virtual ~CocoaAXRWrapper();
 
-        virtual bool openFileDialog(std::string &filePath);
         void setNeedsDisplay(bool newValue);
         std::string getPathToResources();
 

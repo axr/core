@@ -59,29 +59,6 @@ CocoaAXRWrapper::~CocoaAXRWrapper()
 {
 }
 
-bool CocoaAXRWrapper::openFileDialog(std::string &filePath)
-{
-    axr_log(AXR_DEBUG_CH_GENERAL, "CocoaAXRWrapper: Opening File Dialog");
-
-    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-    [openPanel setCanChooseFiles : TRUE];
-    [openPanel setAllowsMultipleSelection : FALSE];
-
-    int result = [openPanel runModalForTypes : [NSArray arrayWithObjects : @"xml", @"hss", nil]];
-    if (result == NSOKButton && [[openPanel filenames] count] > 0)
-    {
-        NSString *filepath_s = [[openPanel filenames] objectAtIndex : 0];
-        filePath = std::string([filepath_s UTF8String]);
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: User selected file " + filePath);
-
-        return true;
-    }
-
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: No file selected from open dialog, returning false");
-
-    return false;
-}
-
 void CocoaAXRWrapper::setNeedsDisplay(bool newValue)
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];

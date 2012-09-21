@@ -211,10 +211,29 @@
 {
     AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
     bool loaded = false;
+
     if (wrapper)
     {
-        loaded = wrapper->loadFile();
+        axr_log(AXR_DEBUG_CH_GENERAL, "CocoaAXRWrapper: Opening File Dialog");
+
+        NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+        [openPanel setCanChooseFiles : TRUE];
+        [openPanel setAllowsMultipleSelection : FALSE];
+
+        int result = [openPanel runModalForTypes : [NSArray arrayWithObjects : @"xml", @"hss", nil]];
+        if (result == NSOKButton && [[openPanel filenames] count] > 0)
+        {
+            NSString *filepath_s = [[openPanel filenames] objectAtIndex : 0];
+            std::string filePath = std::string([filepath_s UTF8String]);
+            axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: User selected file " + filePath);
+            loaded = wrapper->loadFileByPath(filePath);
+        }
+        else
+        {
+            axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: No file selected from open dialog, returning false");
+        }
     }
+
     if (loaded)
     {
         [self setNeedsDisplay : YES];

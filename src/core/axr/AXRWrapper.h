@@ -111,14 +111,6 @@ namespace AXR
          *  @param theError A shared pointer to the error that should be handled.
          */
         virtual void handleError(AXRError::cp theError);
-        /**
-         *  Shows a dialog to choose a local file.
-         *  Subclasses should override this method with the OS specific implementation.
-         *  @param filePath     A regular pointer to the string that will hold the path that was
-         *                      selected by the user
-         *  @return Wether a path has been selected or not.
-         */
-        virtual bool openFileDialog(std::string &filePath);
         virtual bool needsDisplay() const;
         /**
          *  This is to be called when something happens that needs to trigger a redraw.
@@ -142,11 +134,6 @@ namespace AXR
          *  @return A shared pointer to the AXRFile representation of the basic XML document.
          */
         AXRFile::p createDummyXML(std::string stylesheet);
-        /**
-         *  Shows a dialog asking for a file to load, and then opens it.
-         *  @return Wether it has been loaded successfully or not.
-         */
-        bool loadFile();
         /**
          *  Loads the XML file at the path you provide.
          *  @param  xmlfilepath A string containing the path to the file on the local system.

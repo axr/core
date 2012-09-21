@@ -131,37 +131,6 @@ void AXRWrapper::handleError(AXRError::cp theError)
     std_log(theError->toString());
 }
 
-bool AXRWrapper::openFileDialog(std::string &filePath)
-{
-    char file[FILENAME_MAX];
-
-    std::cout << "Open file: ";
-    fgets(file, FILENAME_MAX, stdin);
-
-    if (file[strlen(file) - 1] == '\n')
-    {
-        file[strlen(file) - 1] = '\0';
-    }
-
-    if (file[0] == '/')
-    {
-        filePath = file;
-    }
-    else
-    {
-        char cwd[FILENAME_MAX];
-        getcwd(cwd, FILENAME_MAX);
-
-        std::stringstream ss;
-        ss << cwd << "/" << file;
-        filePath = ss.str();
-    }
-
-    std::cout << std::endl;
-
-    return true;
-}
-
 bool AXRWrapper::needsDisplay() const
 {
     return this->_needsDisplay;
@@ -199,21 +168,6 @@ AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: creating dummy XML file");
 
     return ret;
-}
-
-bool AXRWrapper::loadFile()
-{
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: load file by showing open file dialog");
-    std::string filepath = std::string();
-    bool success = this->openFileDialog(filepath);
-    if (success)
-    {
-        return this->loadFileByPath(filepath);
-    }
-    else
-    {
-        return false;
-    }
 }
 
 bool AXRWrapper::loadFileByPath(std::string filepath)
