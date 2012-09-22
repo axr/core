@@ -16,7 +16,7 @@ set(AXR_README_FILE_TXT "${CMAKE_BINARY_DIR}/README.txt")
 set(AXR_LICENSE_FILE_TXT "${CMAKE_BINARY_DIR}/COPYING.txt")
 
 if(WIN32)
-    set(AXR_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/share/icons/prototype.ico")
+    set(AXR_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\share\\\\icons\\\\prototype.ico")
 elseif(APPLE)
     set(AXR_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/share/icons/prototype.icns")
 else()

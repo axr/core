@@ -67,6 +67,15 @@ function(install_bundle)
     # TODO: Install plugins according to which Qt libraries are linked to the target
     install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION "${path_plugin_dir}/plugins" COMPONENT ${install_bundle_COMPONENT})
 
+    # TODO: Don't hardcode this here... some sort of autodetect perhaps?
+    list(APPEND LIBDIRS "${QT_BINARY_DIR}") # DLLs are in the bin directory on Windows
+    list(APPEND LIBDIRS "${QT_LIBRARY_DIR}")
+    list(APPEND LIBDIRS "${Boost_LIBRARY_DIRS}")
+
+    # TODO: All the DLL copying is problematic since it'll both BOTH debug and release libs
+    # for both regular Qt libs and for Qt plugins
+    list(APPEND LIBDIRS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+    list(APPEND LIBDIRS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}")
     list(APPEND LIBDIRS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
     list(APPEND LIBDIRS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}")
 
