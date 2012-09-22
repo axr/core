@@ -61,7 +61,7 @@ HSSFirstFilter::~HSSFirstFilter()
 
 }
 
-std::string HSSFirstFilter::toString()
+AXRString HSSFirstFilter::toString()
 {
     return "First Filter";
 }

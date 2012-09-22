@@ -44,6 +44,7 @@
 #ifndef HSSNEGATION_H
 #define HSSNEGATION_H
 
+#include "AXRString.h"
 #include "HSSParserNode.h"
 
 namespace AXR
@@ -73,7 +74,8 @@ namespace AXR
          */
         virtual ~HSSNegation();
 
-        virtual std::string toString();
+        virtual AXRString toString();
+
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

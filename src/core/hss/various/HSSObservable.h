@@ -45,7 +45,6 @@
 #define HSSOBSERVABLE_H
 
 #include <map>
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include <QMap>
 #include "AXRGlobal.h"
@@ -73,7 +72,7 @@ namespace AXR
          *  @param property     The property in enum representation.
          *  @return A string containing a textual representation of the HSSObservableProperty.
          */
-        static std::string observablePropertyStringRepresentation(HSSObservableProperty property);
+        static AXRString observablePropertyStringRepresentation(HSSObservableProperty property);
 
         /**
          *  Returns a HSSObservableProperty from a string representation of a property name. In situations like
@@ -84,7 +83,7 @@ namespace AXR
          *  @return The HSSObservableProperty that corresponds to that name, or HSSObservablePropertyNone if
          *  not found.
          */
-        static HSSObservableProperty observablePropertyFromString(std::string name);
+        static HSSObservableProperty observablePropertyFromString(AXRString name);
 
         /**
          *  The typedef for the inner map, which will be stored as the value for each HSSObservableProperty as

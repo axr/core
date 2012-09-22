@@ -45,7 +45,7 @@
 
 using namespace AXR;
 
-HSSStringConstant::HSSStringConstant(std::string value)
+HSSStringConstant::HSSStringConstant(AXRString value)
 : HSSParserNode(HSSParserNodeTypeStringConstant)
 {
     this->value = value;
@@ -61,17 +61,17 @@ HSSStringConstant::~HSSStringConstant()
 
 }
 
-void HSSStringConstant::setValue(std::string newValue)
+void HSSStringConstant::setValue(AXRString newValue)
 {
     this->value = newValue;
 }
 
-std::string HSSStringConstant::getValue()
+AXRString HSSStringConstant::getValue()
 {
     return this->value;
 }
 
-std::string HSSStringConstant::toString()
+AXRString HSSStringConstant::toString()
 {
     return "HSSStringConstant with value " + this->value;
 }

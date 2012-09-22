@@ -46,9 +46,9 @@
 
 using namespace AXR;
 
-std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type)
+AXRString HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type)
 {
-    static QMap<HSSParserNodeType, std::string> types;
+    static QMap<HSSParserNodeType, AXRString> types;
     if (types.isEmpty())
     {
         types[HSSParserNodeTypeGeneric] = "HSSParserNode";
@@ -68,7 +68,7 @@ std::string HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type
         types[HSSParserNodeTypeFlag] = "HSSParserNodeTypeFlag";
     }
 
-    std::string ret = "";
+    AXRString ret = "";
     if (types.contains(type))
     {
         ret = types[type];
@@ -95,7 +95,7 @@ HSSParserNode::p HSSParserNode::clone() const
     return boost::static_pointer_cast<HSSParserNode, HSSClonable > (this->cloneImpl());
 }
 
-std::string HSSParserNode::toString()
+AXRString HSSParserNode::toString()
 {
     return "Generic parser node - you forgot to override toString in your subclass or somehow using HSSParserNode directly";
 }

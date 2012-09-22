@@ -45,6 +45,7 @@
 #define HSSNUMBERCONSTANT_H
 
 #include <boost/shared_ptr.hpp>
+#include "AXRString.h"
 #include "HSSParserNode.h"
 
 namespace AXR
@@ -90,7 +91,7 @@ namespace AXR
          */
         long double getValue();
 
-        std::string toString();
+        AXRString toString();
 
     protected:
         long double value;

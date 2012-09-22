@@ -49,12 +49,12 @@
 
 using namespace AXR;
 
-AXRError::AXRError(const std::string &origin, const std::string &message, const std::string &filename, int line, int column)
+AXRError::AXRError(const AXRString &origin, const AXRString &message, const AXRString &filename, int line, int column)
 {
     this->origin = origin;
     this->message = message;
     this->filename = filename;
-    this->in_file = !filename.empty();
+    this->in_file = !filename.isEmpty();
     this->line = line;
     this->column = column;
 }
@@ -70,34 +70,34 @@ void AXRError::raise() const
     wrapper->handleError(this->shared_from_this());
 }
 
-std::string AXRError::toString() const
+AXRString AXRError::toString() const
 {
     return toProblemString("Error");
 }
 
-std::string AXRError::toProblemString(const std::string &label) const
+AXRString AXRError::toProblemString(const AXRString &label) const
 {
     QStringList parts;
-    parts << QString("%1: %2").arg(QString::fromStdString(label)).arg(QString::fromStdString(message));
+    parts << AXRString("%1: %2").arg(label).arg(message);
 
     if (in_file)
-        parts << QString("in %1").arg(QString::fromStdString(filename));
+        parts << AXRString("in %1").arg(filename);
 
     if (line > 0 || column > 0)
     {
         parts << "on";
 
         if (line > 0)
-            parts << QString("line %1").arg(line);
+            parts << AXRString("line %1").arg(line);
 
         if (column > 0)
-            parts << QString("column %1").arg(column);
+            parts << AXRString("column %1").arg(column);
     }
 
-    return parts.join(" ").toStdString();
+    return parts.join(" ");
 }
 
-std::string AXRError::getMessage() const
+AXRString AXRError::getMessage() const
 {
     return this->message;
 }

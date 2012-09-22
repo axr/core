@@ -54,7 +54,7 @@ HSSValue::HSSValue()
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
 
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
 
@@ -64,7 +64,7 @@ HSSValue::HSSValue()
 HSSValue::HSSValue(const HSSValue & orig)
 : HSSObject(orig)
 {
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
 
@@ -87,17 +87,17 @@ HSSValue::~HSSValue()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: destructing value object");
 }
 
-std::string HSSValue::toString()
+AXRString HSSValue::toString()
 {
     return "HSSValue: " + (dValue ? dValue->toString() : "(null)");
 }
 
-std::string HSSValue::defaultObjectType()
+AXRString HSSValue::defaultObjectType()
 {
     return "value";
 }
 
-std::string HSSValue::defaultObjectType(std::string property)
+AXRString HSSValue::defaultObjectType(AXRString property)
 {
     if (property == "value")
     {

@@ -45,6 +45,7 @@
 #define AXR_PROTOTYPE_PROTOTYPEWINDOW
 
 #include <QMainWindow>
+#include "AXRString.h"
 
 namespace Ui
 {
@@ -61,7 +62,7 @@ public:
 
 public slots:
     void openFile();
-    void openFile(const QString &filePath);
+    void openFile(const AXR::AXRString &filePath);
     void reloadFile();
     void closeFile();
     void previousLayoutStep();

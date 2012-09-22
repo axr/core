@@ -61,7 +61,7 @@ HSSEvenFilter::~HSSEvenFilter()
 
 }
 
-std::string HSSEvenFilter::toString()
+AXRString HSSEvenFilter::toString()
 {
     return "Even Filter";
 }

@@ -57,19 +57,19 @@ namespace AXR
     public:
         typedef boost::shared_ptr<HSSValueToken> p;
 
-        HSSValueToken(HSSTokenType type, std::string value, unsigned line, unsigned column);
+        HSSValueToken(HSSTokenType type, AXRString value, unsigned line, unsigned column);
         HSSValueToken(HSSTokenType type, char value, unsigned line, unsigned column);
         HSSValueToken(HSSTokenType type, double long value, unsigned line, unsigned column);
         virtual ~HSSValueToken();
-        std::string getString();
+        AXRString getString();
         double long getLong();
-        bool equals(HSSTokenType otherType, std::string otherValue);
+        bool equals(HSSTokenType otherType, AXRString otherValue);
         bool equals(HSSTokenType otherType, double long otherValue);
-        std::string toString();
+        AXRString toString();
         bool isNumeric();
 
     private:
-        std::string stringValue;
+        AXRString stringValue;
         double long longValue;
     };
 }

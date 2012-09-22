@@ -44,7 +44,6 @@
 #ifndef HSSFLAG_H
 #define HSSFLAG_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "HSSFilter.h"
@@ -82,20 +81,20 @@ namespace AXR
          */
         virtual ~HSSFlag();
 
-        virtual std::string toString();
+        virtual AXRString toString();
 
         /**
          *  Getter for the name.
          *  @return The name of the flag. This is what comes after the double colon
          *  in HSS (e.g. "hover").
          */
-        std::string getName();
+        AXRString getName();
 
         /**
          *  Setter for the name.
          *  @param  newValue    A string containing the new name of the flag.
          */
-        void setName(std::string newValue);
+        void setName(AXRString newValue);
 
         /**
          *  When the status of a flag changes, this method should be called. It will create a
@@ -133,7 +132,7 @@ namespace AXR
         void setPurging(HSSRuleState newValue);
 
     protected:
-        std::string _name;
+        AXRString _name;
 
     private:
         virtual HSSClonable::p cloneImpl() const;

@@ -45,6 +45,7 @@
 #define AXR_PROTOTYPE_LOGWINDOW
 
 #include <QDialog>
+#include "AXRString.h"
 
 namespace Ui
 {
@@ -58,11 +59,11 @@ class LogWindow : public QDialog
 public:
     LogWindow(QWidget *parent = NULL);
     virtual ~LogWindow();
-    QString logText() const;
+    AXR::AXRString logText() const;
 
 public slots:
-    void setLogText(const QString &text);
-    void appendLogText(const QString &text);
+    void setLogText(const AXR::AXRString &text);
+    void appendLogText(const AXR::AXRString &text);
     void clearLogText();
 
 private:

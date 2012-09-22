@@ -81,8 +81,8 @@ namespace AXR
          */
         virtual ~HSSFlagAction();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
 
         /**
          *  This method is called when the flagging action should be executed.

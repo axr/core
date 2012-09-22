@@ -69,14 +69,14 @@ namespace AXR
          *  @param line     The line index (starting at 1) in the file where the warning originated.
          *  @param column   The column index (starting at 1) in the line where the warning originated.
          */
-        AXRWarning(const std::string &origin, const std::string &message, const std::string &filename = "", int line = 0, int column = 0);
+        AXRWarning(const AXRString &origin, const AXRString &message, const AXRString &filename = "", int line = 0, int column = 0);
 
         /**
          *  Destructor for the warning.
          */
         virtual ~AXRWarning();
 
-        virtual std::string toString() const;
+        virtual AXRString toString() const;
     };
 }
 

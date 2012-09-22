@@ -143,7 +143,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
             if (container)
             {
                 HSSSimpleSelector::p subject = rule->selectorChainsLast()->subject();
-                std::string elementName = "";
+                AXRString elementName = "";
                 if (subject)
                 {
                     HSSNameSelector::p nameSel = subject->getName();
@@ -649,9 +649,9 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectSimple(cons
     return ret;
 }
 
-std::string AXRController::toString()
+AXRString AXRController::toString()
 {
-    std::string tempstr = "AXR Controller\n";
+    AXRString tempstr = "AXR Controller\n";
     if (this->root)
     {
         tempstr.append("\n\n\nROOT:");
@@ -715,7 +715,7 @@ void AXRController::setRoot(HSSContainer::p newRoot)
     newRoot->setRoot(true);
 }
 
-void AXRController::enterElement(std::string elementName)
+void AXRController::enterElement(AXRString elementName)
 {
     //std_log1("enter element " + elementName);
     HSSContainer::p newContainer(new HSSContainer());
@@ -725,18 +725,18 @@ void AXRController::enterElement(std::string elementName)
     this->currentContext.push(newContainer);
 }
 
-void AXRController::addAttribute(std::string name, std::string value)
+void AXRController::addAttribute(AXRString name, AXRString value)
 {
-    //std_log1(std::string("adding attribute " + name + " and value " + value));
+    //std_log1(AXRString("adding attribute " + name + " and value " + value));
     this->currentContext.top()->attributesAdd(name, value);
 }
 
-void AXRController::setContentText(std::string text)
+void AXRController::setContentText(AXRString text)
 {
     this->currentContext.top()->setContentText(text);
 }
 
-void AXRController::appendContentText(std::string text)
+void AXRController::appendContentText(AXRString text)
 {
     this->currentContext.top()->appendContentText(text);
 }
@@ -793,7 +793,7 @@ HSSObjectDefinition::p & AXRController::objectTreeGet(unsigned index)
     return this->objectTree[index];
 }
 
-HSSObjectDefinition::p & AXRController::objectTreeGet(std::string name)
+HSSObjectDefinition::p & AXRController::objectTreeGet(AXRString name)
 {
     /**
      *  @todo do this with an unordered_map for better performance
@@ -812,7 +812,7 @@ HSSObjectDefinition::p & AXRController::objectTreeGet(std::string name)
 
 //loadSheets
 
-void AXRController::loadSheetsAdd(std::string sheet)
+void AXRController::loadSheetsAdd(AXRString sheet)
 {
     this->loadSheets.push_back(sheet);
 }
@@ -822,12 +822,12 @@ void AXRController::loadSheetsRemove(unsigned index)
     this->loadSheets.erase(this->loadSheets.begin() + index);
 }
 
-std::string AXRController::loadSheetsGet(unsigned index)
+AXRString AXRController::loadSheetsGet(unsigned index)
 {
     return this->loadSheets[index];
 }
 
-const std::vector<std::string> AXRController::loadSheetsGet() const
+const std::vector<AXRString> AXRController::loadSheetsGet() const
 {
     return this->loadSheets;
 }

@@ -63,7 +63,7 @@ namespace AXR
          *  @param name   The action type to represent as a string.
          *  @return A string representation of the given type.
          */
-        static HSSFlagFunctionType flagFunctionTypeFromString(std::string name);
+        static HSSFlagFunctionType flagFunctionTypeFromString(AXRString name);
 
         /**
          *  Creates a new instance of a flagging function, of the given type.
@@ -93,13 +93,13 @@ namespace AXR
          *  Getter for the name parameter.
          *  @return A string containing the name of the HSS property the function should access.
          */
-        const std::string & getName();
+        const AXRString & getName();
 
         /**
          *  Setter for the name parameter.
          *  @param newValue The new HSS property name which the function should use.
          */
-        void setName(std::string newValue);
+        void setName(AXRString newValue);
 
         /**
          *  Getter for the selector chain parameter.
@@ -170,7 +170,7 @@ namespace AXR
         HSSFlagFunctionType getFlagFunctionType();
 
     protected:
-        std::string _name;
+        AXRString _name;
         std::vector<HSSSelectorChain::p> selectorChains;
         HSSFlagFunctionType _flagFunctionType;
 

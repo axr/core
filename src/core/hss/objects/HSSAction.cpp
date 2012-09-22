@@ -50,19 +50,22 @@
 
 using namespace AXR;
 
-std::string HSSAction::actionTypeStringRepresentation(HSSActionType actionType)
+AXRString HSSAction::actionTypeStringRepresentation(HSSActionType actionType)
 {
-    QMap<HSSActionType, QString> types;
-    types[HSSActionTypeRequest] = "HSSActionTypeRequest";
-    types[HSSActionTypeSetProperty] = "HSSActionTypeSetProperty";
-    types[HSSActionTypeJavascript] = "HSSActionTypeJavascript";
-    types[HSSActionTypeJsFunction] = "HSSActionTypeJsFunction";
-    types[HSSActionTypeAlert] = "HSSActionTypeAlert";
-    types[HSSActionTypeLog] = "HSSActionTypeLog";
-    types[HSSActionTypeFlag] = "HSSActionTypeFlag";
-    types[HSSActionTypeFunction] = "HSSActionTypeFunction";
+    static QMap<HSSActionType, AXRString> types;
+    if (types.isEmpty())
+    {
+        types[HSSActionTypeRequest] = "HSSActionTypeRequest";
+        types[HSSActionTypeSetProperty] = "HSSActionTypeSetProperty";
+        types[HSSActionTypeJavascript] = "HSSActionTypeJavascript";
+        types[HSSActionTypeJsFunction] = "HSSActionTypeJsFunction";
+        types[HSSActionTypeAlert] = "HSSActionTypeAlert";
+        types[HSSActionTypeLog] = "HSSActionTypeLog";
+        types[HSSActionTypeFlag] = "HSSActionTypeFlag";
+        types[HSSActionTypeFunction] = "HSSActionTypeFunction";
+    }
 
-    return types[actionType].toStdString();
+    return types[actionType];
 }
 
 HSSAction::HSSAction(HSSActionType type)
@@ -92,17 +95,17 @@ HSSAction::~HSSAction()
 
 }
 
-std::string HSSAction::toString()
+AXRString HSSAction::toString()
 {
     return "Generic HSSAction of type" + HSSAction::actionTypeStringRepresentation(this->actionType);
 }
 
-std::string HSSAction::defaultObjectType()
+AXRString HSSAction::defaultObjectType()
 {
     return "action";
 }
 
-std::string HSSAction::defaultObjectType(std::string property)
+AXRString HSSAction::defaultObjectType(AXRString property)
 {
     return HSSObject::defaultObjectType(property);
 }

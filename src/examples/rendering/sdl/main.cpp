@@ -116,8 +116,8 @@ void render()
 
 void loadFile(AXRWrapper *wrapper)
 {
-    QString filepath = QFileDialog::getOpenFileName(NULL, QObject::tr("Open File"), QString(), QObject::tr("AXR Files (*.xml *.hss)"));
-    wrapper->loadFileByPath(filepath.toStdString());
+    AXRString filepath = QFileDialog::getOpenFileName(NULL, QObject::tr("Open File"), AXRString(), QObject::tr("AXR Files (*.xml *.hss)"));
+    wrapper->loadFileByPath(filepath);
 }
 
 int main(int argc, char **argv)
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
 
     if (varmap.count("layout-tests"))
     {
-        wrapper->_layoutTestsFilePath = varmap["layout-tests"].as<std::string>();
+        wrapper->_layoutTestsFilePath = AXRString::fromStdString(varmap["layout-tests"].as<std::string>());
 
         core->registerCustomFunction("AXRLayoutTestsExecute",
                                      new AXR::HSSValueChangedCallback<AXRWrapper>(wrapper, &AXRWrapper::executeLayoutTests));
@@ -186,14 +186,14 @@ int main(int argc, char **argv)
 
         if (additionalArgs.empty())
         {
-            filepath = varmap["file"].as<std::string > ();
+            filepath = varmap["file"].as<std::string>();
         }
         else
         {
             filepath = additionalArgs[0];
         }
 
-        wrapper->loadFileByPath(filepath);
+        wrapper->loadFileByPath(AXRString::fromStdString(filepath));
     }
     else
     {

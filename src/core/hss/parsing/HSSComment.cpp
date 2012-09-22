@@ -45,7 +45,7 @@
 
 using namespace AXR;
 
-HSSComment::HSSComment(std::string value)
+HSSComment::HSSComment(AXRString value)
 : HSSStatement(HSSStatementTypeComment)
 {
     this->value = value;
@@ -56,17 +56,17 @@ HSSComment::p HSSComment::clone() const
     return boost::static_pointer_cast<HSSComment, HSSClonable > (this->cloneImpl());
 }
 
-std::string HSSComment::getValue()
+AXRString HSSComment::getValue()
 {
     return this->value;
 }
 
-void HSSComment::setValue(std::string newValue)
+void HSSComment::setValue(AXRString newValue)
 {
     this->value = newValue;
 }
 
-std::string HSSComment::toString()
+AXRString HSSComment::toString()
 {
     return "HSSComment with value:\n" + this->value;
 }

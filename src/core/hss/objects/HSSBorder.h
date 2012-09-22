@@ -44,7 +44,6 @@
 #ifndef HSSBORDER_H
 #define HSSBORDER_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include <QPainter>
 #include <QPainterPath>
@@ -67,10 +66,10 @@ namespace AXR
          */
         virtual ~HSSBorder();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
+        virtual bool isKeyword(AXRString value, AXRString property);
 
         /**
          *  Each type of border implements its own drawing routines. Call this method

@@ -53,11 +53,10 @@
 
 #include "LogWindow.h"
 #include "PrototypeWindow.h"
-#include "ui_PrototypeWindow.h"
-
-#include <QDebug>
 
 using namespace AXR;
+
+#include "ui_PrototypeWindow.h"
 
 class PrototypeWindow::Private
 {
@@ -112,17 +111,17 @@ PrototypeWindow::~PrototypeWindow()
 
 void PrototypeWindow::openFile()
 {
-    QString file = QFileDialog::getOpenFileName(this, tr("Open XML/HSS File"), QString(), "AXR Files (*.xml *.hss)");
+    AXRString file = QFileDialog::getOpenFileName(this, tr("Open XML/HSS File"), AXRString(), "AXR Files (*.xml *.hss)");
     if (!file.isEmpty())
     {
         openFile(file);
     }
 }
 
-void PrototypeWindow::openFile(const QString &filePath)
+void PrototypeWindow::openFile(const AXRString &filePath)
 {
     setWindowFilePath(filePath);
-    d->wrapper->loadFileByPath(filePath.toStdString());
+    d->wrapper->loadFileByPath(filePath);
     update();
 }
 
@@ -151,7 +150,7 @@ void PrototypeWindow::nextLayoutStep()
 
 void PrototypeWindow::listXmlElements()
 {
-    QString file = QFileDialog::getOpenFileName(this, tr("Open XML File"), QString(), "XML Files (*.xml)");
+    AXRString file = QFileDialog::getOpenFileName(this, tr("Open XML File"), AXRString(), "XML Files (*.xml)");
     if (!file.isEmpty())
     {
         QFile qfile(file);
@@ -159,7 +158,7 @@ void PrototypeWindow::listXmlElements()
 
         AXRFile::p f(new AXRFile());
         f->setFileHandle(fopen(file.toStdString().c_str(), "r"));
-        f->setFileName(file.toStdString());
+        f->setFileName(file);
         f->setBuffer(qfile.readAll());
 
         AXRController *controller = new AXRController();
@@ -168,18 +167,18 @@ void PrototypeWindow::listXmlElements()
         if (!parser.loadFile(f))
         {
             QErrorMessage error(this);
-            error.showMessage(QString::fromStdString("Could not parse the given file"));
+            error.showMessage(AXRString::fromStdString("Could not parse the given file"));
         }
 
         LogWindow w(this);
-        w.setLogText(QString::fromStdString(controller->toString()));
+        w.setLogText(controller->toString());
         w.exec();
     }
 }
 
 void PrototypeWindow::listHssStatements()
 {
-    QString file = QFileDialog::getOpenFileName(this, tr("Open HSS File"), QString(), "HSS Files (*.hss)");
+    AXRString file = QFileDialog::getOpenFileName(this, tr("Open HSS File"), AXRString(), "HSS Files (*.hss)");
     if (!file.isEmpty())
     {
         QFile qfile(file);
@@ -187,7 +186,7 @@ void PrototypeWindow::listHssStatements()
 
         AXRFile::p f(new AXRFile());
         f->setFileHandle(fopen(file.toStdString().c_str(), "r"));
-        f->setFileName(file.toStdString());
+        f->setFileName(file);
         f->setBuffer(qfile.readAll());
 
         AXRController controller;
@@ -204,14 +203,14 @@ void PrototypeWindow::listHssStatements()
         else
         {
             QErrorMessage error(this);
-            error.showMessage(QString::fromStdString("Could not parse the given file"));
+            error.showMessage(AXRString::fromStdString("Could not parse the given file"));
         }
     }
 }
 
 void PrototypeWindow::listHssTokens()
 {
-    QString file = QFileDialog::getOpenFileName(this, tr("Open HSS File"), QString(), "HSS Files (*.hss)");
+    AXRString file = QFileDialog::getOpenFileName(this, tr("Open HSS File"), AXRString(), "HSS Files (*.hss)");
     if (!file.isEmpty())
     {
         QFile qfile(file);
@@ -219,7 +218,7 @@ void PrototypeWindow::listHssTokens()
 
         AXRFile::p f(new AXRFile());
         f->setFileHandle(fopen(file.toStdString().c_str(), "r"));
-        f->setFileName(file.toStdString());
+        f->setFileName(file);
         f->setBuffer(qfile.readAll());
 
         HSSTokenizer tokenizer;
@@ -228,7 +227,7 @@ void PrototypeWindow::listHssTokens()
         tokenizer.readNextChar();
 
         AXR::HSSToken::p token;
-        std::stringstream ss;
+        AXRString ss;
         forever
         {
             if (token)
@@ -239,11 +238,11 @@ void PrototypeWindow::listHssTokens()
             if (!token)
                 break;
 
-            ss << token->toString() << std::endl;
+            ss += token->toString() + "\n";
         }
 
         QErrorMessage error(this);
-        error.showMessage(QString::fromStdString(ss.str()));
+        error.showMessage(ss);
     }
 }
 

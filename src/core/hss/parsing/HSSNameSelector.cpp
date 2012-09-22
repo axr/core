@@ -45,7 +45,7 @@
 
 using namespace AXR;
 
-HSSNameSelector::HSSNameSelector(std::string elementName)
+HSSNameSelector::HSSNameSelector(AXRString elementName)
 : HSSSelector(HSSSelectorTypeNameSelector)
 {
     this->elementName = elementName;
@@ -62,12 +62,12 @@ HSSNameSelector::p HSSNameSelector::clone() const
     return boost::static_pointer_cast<HSSNameSelector, HSSClonable > (this->cloneImpl());
 }
 
-std::string HSSNameSelector::getElementName()
+AXRString HSSNameSelector::getElementName()
 {
     return this->elementName;
 }
 
-std::string HSSNameSelector::toString()
+AXRString HSSNameSelector::toString()
 {
     return "Name selector targeting an element with name " + this->elementName;
 }

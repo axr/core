@@ -54,26 +54,29 @@
 
 using namespace AXR;
 
-std::string HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
+AXRString HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
 {
-    QMap<HSSEventType, QString> types;
-    types[HSSEventTypeNone] = "HSSEventTypeNone";
-    types[HSSEventTypeLoad] = "HSSEventTypeLoad";
-    types[HSSEventTypeClick] = "HSSEventTypeClick";
-    types[HSSEventTypeDoubleClick] = "HSSEventTypeDoubleClick";
-    types[HSSEventTypeTripleClick] = "HSSEventTypeTripleClick";
-    types[HSSEventTypeMouseDown] = "HSSEventTypeMouseDown";
-    types[HSSEventTypeMouseUp] = "HSSEventTypeMouseUp";
-    types[HSSEventTypeMouseOver] = "HSSEventTypeMouseOver";
-    types[HSSEventTypeMouseOut] = "HSSEventTypeMouseOut";
-    types[HSSEventTypeMouseHold] = "HSSEventTypeMouseHold";
-    types[HSSEventTypeMouseMove] = "HSSEventTypeMouseMove";
-    types[HSSEventTypeClickSecondary] = "HSSEventTypeClickSecondary";
-    types[HSSEventTypeClickTertiary] = "HSSEventTypeClickTertiary";
-    types[HSSEventTypeScroll] = "HSSEventTypeScroll";
-    types[HSSEventTypeExitedWindow] = "HSSEventTypeExitedWindow";
+    static QMap<HSSEventType, AXRString> types;
+    if (types.isEmpty())
+    {
+        types[HSSEventTypeNone] = "HSSEventTypeNone";
+        types[HSSEventTypeLoad] = "HSSEventTypeLoad";
+        types[HSSEventTypeClick] = "HSSEventTypeClick";
+        types[HSSEventTypeDoubleClick] = "HSSEventTypeDoubleClick";
+        types[HSSEventTypeTripleClick] = "HSSEventTypeTripleClick";
+        types[HSSEventTypeMouseDown] = "HSSEventTypeMouseDown";
+        types[HSSEventTypeMouseUp] = "HSSEventTypeMouseUp";
+        types[HSSEventTypeMouseOver] = "HSSEventTypeMouseOver";
+        types[HSSEventTypeMouseOut] = "HSSEventTypeMouseOut";
+        types[HSSEventTypeMouseHold] = "HSSEventTypeMouseHold";
+        types[HSSEventTypeMouseMove] = "HSSEventTypeMouseMove";
+        types[HSSEventTypeClickSecondary] = "HSSEventTypeClickSecondary";
+        types[HSSEventTypeClickTertiary] = "HSSEventTypeClickTertiary";
+        types[HSSEventTypeScroll] = "HSSEventTypeScroll";
+        types[HSSEventTypeExitedWindow] = "HSSEventTypeExitedWindow";
+    }
 
-    return types[eventType].toStdString();
+    return types[eventType];
 }
 
 HSSEvent::HSSEvent(HSSEventType type)
@@ -82,7 +85,7 @@ HSSEvent::HSSEvent(HSSEventType type)
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: creating event object");
     this->eventType = type;
 
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
 
@@ -94,7 +97,7 @@ HSSEvent::HSSEvent(const HSSEvent & orig)
 {
     this->eventType = orig.eventType;
 
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
 
@@ -117,17 +120,17 @@ HSSEvent::~HSSEvent()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: destructing event object");
 }
 
-std::string HSSEvent::toString()
+AXRString HSSEvent::toString()
 {
     return "Generic HSSEvent of type" + HSSEvent::eventTypeStringRepresentation(this->eventType);
 }
 
-std::string HSSEvent::defaultObjectType()
+AXRString HSSEvent::defaultObjectType()
 {
     return "event";
 }
 
-std::string HSSEvent::defaultObjectType(std::string property)
+AXRString HSSEvent::defaultObjectType(AXRString property)
 {
     if (property == "action")
     {

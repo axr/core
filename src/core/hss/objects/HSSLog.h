@@ -78,8 +78,8 @@ namespace AXR
          */
         virtual ~HSSLog();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         virtual void fire();
 

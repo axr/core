@@ -88,10 +88,10 @@ namespace AXR
         virtual ~HSSMargin();
 
         //see HSSObject.h for documentation of these
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
+        virtual bool isKeyword(AXRString value, AXRString property);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
 
         /**

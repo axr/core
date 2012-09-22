@@ -64,7 +64,7 @@ namespace AXR
          *  Creates a new instance of a string constant node which holds the given value.
          *  @param value    A string containing the value for the constant.
          */
-        HSSStringConstant(std::string value);
+        HSSStringConstant(AXRString value);
 
         /**
          *  Clones an instance of HSSStringConstant and gives a shared pointer of the
@@ -82,17 +82,17 @@ namespace AXR
          *  Setter for the value.
          *  @param newValue     A string containing the new value for this constant.
          */
-        void setValue(std::string newValue);
+        void setValue(AXRString newValue);
 
         /**
          *  Getter for the value.
          */
-        std::string getValue();
+        AXRString getValue();
 
-        std::string toString();
+        AXRString toString();
 
     protected:
-        std::string value;
+        AXRString value;
 
     private:
         virtual HSSClonable::p cloneImpl() const;

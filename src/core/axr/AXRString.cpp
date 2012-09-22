@@ -41,32 +41,6 @@
  *
  ********************************************************************/
 
-#include "HSSNegation.h"
+#include "AXRString.h"
 
 using namespace AXR;
-
-HSSNegation::HSSNegation()
-: HSSParserNode(HSSParserNodeTypeNegation)
-{
-
-}
-
-HSSNegation::p HSSNegation::clone() const
-{
-    return boost::static_pointer_cast<HSSNegation, HSSClonable > (this->cloneImpl());
-}
-
-HSSNegation::~HSSNegation()
-{
-
-}
-
-AXRString HSSNegation::toString()
-{
-    return "Negation";
-}
-
-HSSClonable::p HSSNegation::cloneImpl() const
-{
-    return HSSClonable::p(new HSSNegation(*this));
-}

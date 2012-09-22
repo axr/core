@@ -45,7 +45,6 @@
 #define HSSPARSER_H
 
 #include <stack>
-#include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <boost/unordered_set.hpp>
@@ -237,7 +236,7 @@ namespace AXR
          *  @return A shared pointer to the object definition that was read.
          *  @warning This function assumes the current token to be an object sign.
          */
-        HSSObjectDefinition::p readObjectDefinition(std::string propertyName);
+        HSSObjectDefinition::p readObjectDefinition(AXRString propertyName);
 
         /**
          *  Recursively adds the given object definition to the object tree on the controller as well as copying
@@ -383,11 +382,11 @@ namespace AXR
         void skipExpected(HSSTokenType type, bool checkForUnexpectedEndOfSource);
 
         /**
-         *  Shorthand for skipExpected(HSSTokenType, std::string, false) passing false to the last parameter.
+         *  Shorthand for skipExpected(HSSTokenType, AXRString, false) passing false to the last parameter.
          *  @param type     The token type to expect.
          *  @param value    The string value to expect.
          */
-        void skipExpected(HSSTokenType type, std::string value);
+        void skipExpected(HSSTokenType type, AXRString value);
 
         /**
          *  Check if the current token matches the given type and value.
@@ -397,7 +396,7 @@ namespace AXR
          *
          *  @warning this method assumes the current token to be a value token.
          */
-        void skipExpected(HSSTokenType type, std::string value, bool checkForUnexpectedEndOfSource);
+        void skipExpected(HSSTokenType type, AXRString value, bool checkForUnexpectedEndOfSource);
 
         /**
          *  Shorthand for skip(HSSTokenType, bool), passing false as the last parameter.
@@ -445,16 +444,16 @@ namespace AXR
          *  able to resolve relative paths.
          *  @param value    A string containing the base path.
          */
-        void setBasePath(std::string value);
+        void setBasePath(AXRString value);
 
         /**
          *  Getter for the base path. When reading a file, we store the path to the folder that contains it, to be
          *  able to resolve relative paths.
          *  @return A string containing the base path.
          */
-        std::string getBasePath();
+        AXRString getBasePath();
 
-        HSSParserNode::p readValue(std::string propertyName, bool &valid);
+        HSSParserNode::p readValue(AXRString propertyName, bool &valid);
 
     private:
         HSSTokenizer::p tokenizer;
@@ -469,13 +468,13 @@ namespace AXR
         unsigned line;
         unsigned column;
 
-        std::string basepath;
+        AXRString basepath;
         AXRFile::p currentFile;
 
         boost::unordered_set<AXRFile::p> loadedFiles;
 
         HSSObject::p _genericContext;
-        std::string _lastObjectType;
+        AXRString _lastObjectType;
 
     };
 }

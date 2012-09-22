@@ -63,17 +63,17 @@ HSSFlag::~HSSFlag()
 {
 }
 
-std::string HSSFlag::toString()
+AXRString HSSFlag::toString()
 {
     return "Flag with name " + this->_name;
 }
 
-std::string HSSFlag::getName()
+AXRString HSSFlag::getName()
 {
     return this->_name;
 }
 
-void HSSFlag::setName(std::string newValue)
+void HSSFlag::setName(AXRString newValue)
 {
     this->_name = newValue;
 }

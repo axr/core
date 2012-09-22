@@ -49,9 +49,9 @@
 
 using namespace AXR;
 
-std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property)
+AXRString HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property)
 {
-    static QMap<HSSObservableProperty, QString> types;
+    static QMap<HSSObservableProperty, AXRString> types;
     if (types.isEmpty())
     {
         types[HSSObservablePropertyNone] = "unknown";
@@ -150,12 +150,12 @@ std::string HSSObservable::observablePropertyStringRepresentation(HSSObservableP
         types[HSSObservablePropertyAngle] = "HSSObservablePropertyAngle";
     }
 
-    return types[property].toStdString();
+    return types[property];
 }
 
-HSSObservableProperty HSSObservable::observablePropertyFromString(std::string name)
+HSSObservableProperty HSSObservable::observablePropertyFromString(AXRString name)
 {
-    static QMap<std::string, HSSObservableProperty> properties;
+    static QMap<AXRString, HSSObservableProperty> properties;
 
     if (properties.empty())
     {

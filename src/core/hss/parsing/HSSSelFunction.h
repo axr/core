@@ -82,7 +82,7 @@ namespace AXR
          */
         virtual ~HSSSelFunction();
 
-        virtual std::string toString();
+        virtual AXRString toString();
 
         /**
          *  Getter for the selector chains.

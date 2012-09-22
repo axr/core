@@ -42,6 +42,9 @@
  ********************************************************************/
 
 #include "LogWindow.h"
+
+using namespace AXR;
+
 #include "ui_LogWindow.h"
 
 LogWindow::LogWindow(QWidget *parent)
@@ -55,22 +58,22 @@ LogWindow::~LogWindow()
     delete this->ui;
 }
 
-QString LogWindow::logText() const
+AXRString LogWindow::logText() const
 {
     return this->ui->logTextEdit->toPlainText();
 }
 
-void LogWindow::setLogText(const QString &text)
+void LogWindow::setLogText(const AXRString &text)
 {
     this->ui->logTextEdit->setPlainText(text);
 }
 
-void LogWindow::appendLogText(const QString &text)
+void LogWindow::appendLogText(const AXRString &text)
 {
     this->setLogText(this->logText() + text);
 }
 
 void LogWindow::clearLogText()
 {
-    this->setLogText(QString());
+    this->setLogText(AXRString());
 }

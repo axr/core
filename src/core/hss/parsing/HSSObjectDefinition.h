@@ -45,7 +45,6 @@
 #define HSSOBJECTDEFINITION_H
 
 #include <deque>
-#include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
@@ -90,7 +89,7 @@ namespace AXR
          */
         ~HSSObjectDefinition();
 
-        virtual std::string toString();
+        virtual AXRString toString();
 
         /**
          *  Call this to apply the property definitions to the prototype object. You can

@@ -85,22 +85,22 @@ HSSMargin::~HSSMargin()
 
 }
 
-std::string HSSMargin::toString()
+AXRString HSSMargin::toString()
 {
     return "HSSMargin";
 }
 
-std::string HSSMargin::defaultObjectType()
+AXRString HSSMargin::defaultObjectType()
 {
     return "margin";
 }
 
-std::string HSSMargin::defaultObjectType(std::string property)
+AXRString HSSMargin::defaultObjectType(AXRString property)
 {
     return HSSObject::defaultObjectType(property);
 }
 
-bool HSSMargin::isKeyword(std::string value, std::string property)
+bool HSSMargin::isKeyword(AXRString value, AXRString property)
 {
     return false;
 }

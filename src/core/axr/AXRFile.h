@@ -44,9 +44,9 @@
 #ifndef AXRFILE_H
 #define AXRFILE_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include <QByteArray>
+#include "AXRString.h"
 #include "AXRGlobal.h"
 
 namespace AXR
@@ -78,13 +78,13 @@ namespace AXR
          *  Setter for fileName.
          *  @param value    A string containing the file name. Should include the extension.
          */
-        void setFileName(std::string value);
+        void setFileName(AXRString value);
 
         /**
          *  Getter for fileName
          *  @return A string containing the file name, including extension.
          */
-        std::string getFileName();
+        AXRString getFileName();
 
         /**
          *  Setter for the buffer where the contents of the file will be stored.
@@ -115,40 +115,40 @@ namespace AXR
          *  the file.
          *  @param path     A string containing the base path of the file.
          */
-        void setBasePath(std::string path);
+        void setBasePath(AXRString path);
 
         /**
          *  Getter for the base path. This + / + the filename form the full path to
          *  the file.
          *  @return A string containing the base path of the file.
          */
-        std::string getBasePath();
+        AXRString getBasePath();
 
         /**
          *  Setter for the MIME type of the file.
          *  @param mime     A string containing the MIME type of the file.
          */
-        void setMimeType(std::string mime);
+        void setMimeType(AXRString mime);
 
         /**
          *  Getter for the MIME type of the file.
          *  @return A string containing the MIME type of the file.
          */
-        std::string getMimeType();
+        AXRString getMimeType();
 
         /**
          *  Setter for the file extension. The file name already includes the
          *  file extensions, so this is mostly used for file type checking.
          *  @param value    A string containing the extension of the file.
          */
-        void setExtension(std::string value);
+        void setExtension(AXRString value);
 
         /**
          *  Getter for the file extension. The file name already includes the
          *  file extensions, so this is mostly used for file type checking.
          *  @return A string containing the extension of the file.
          */
-        std::string getExtension();
+        AXRString getExtension();
 
         /**
          *  Setter for the file handle, an opaque OS pointer type.
@@ -165,7 +165,7 @@ namespace AXR
         /**
          *  @return A textual representation of the file.
          */
-        std::string toString();
+        AXRString toString();
 
         /**
          *  Call this to check if the file is marked as being at end of file.
@@ -180,15 +180,15 @@ namespace AXR
         void setAtEndOfFile(bool newValue);
 
     protected:
-        std::string fileName;
+        AXRString fileName;
 
     private:
         bool _atEndOfFile;
 
         QByteArray buffer;
-        std::string mimeType;
-        std::string basePath;
-        std::string extension;
+        AXRString mimeType;
+        AXRString basePath;
+        AXRString extension;
         FILE * fileHandle;
     };
 }

@@ -44,7 +44,6 @@
 #ifndef HSSLINEARGRADIENT_H
 #define HSSLINEARGRADIENT_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include "HSSGradient.h"
 #include "HSSRgb.h"
@@ -82,10 +81,10 @@ namespace AXR
          */
         virtual ~HSSLinearGradient();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
+        virtual bool isKeyword(AXRString value, AXRString property);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
 
         /**

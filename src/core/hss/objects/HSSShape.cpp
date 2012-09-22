@@ -72,22 +72,22 @@ HSSShapeType HSSShape::getShapeType()
     return this->shapeType;
 }
 
-std::string HSSShape::toString()
+AXRString HSSShape::toString()
 {
     return "HSSShape";
 }
 
-std::string HSSShape::defaultObjectType()
+AXRString HSSShape::defaultObjectType()
 {
     return "HSSShape";
 }
 
-std::string HSSShape::defaultObjectType(std::string property)
+AXRString HSSShape::defaultObjectType(AXRString property)
 {
     return HSSObject::defaultObjectType(property);
 }
 
-bool HSSShape::isKeyword(std::string value, std::string property)
+bool HSSShape::isKeyword(AXRString value, AXRString property)
 {
     return HSSObject::isKeyword(value, property);
 }

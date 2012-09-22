@@ -44,7 +44,6 @@
 #ifndef HSSCOLORSTOP_H
 #define HSSCOLORSTOP_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include "HSSObject.h"
 #include "HSSRgb.h"
@@ -76,10 +75,10 @@ namespace AXR
         p clone() const;
         virtual ~HSSColorStop();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
+        virtual bool isKeyword(AXRString value, AXRString property);
 
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
 

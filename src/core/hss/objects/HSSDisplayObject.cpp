@@ -43,9 +43,7 @@
 
 #include <cmath>
 #include <sstream>
-#include <string>
 #include <boost/any.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/pointer_cast.hpp>
 #include <QImage>
 #include <QPainterPath>
@@ -105,8 +103,8 @@ void HSSDisplayObject::initialize()
     this->heightByContent = this->widthByContent = false;
     this->_isRoot = false;
 
-    this->elementName = std::string();
-    this->contentText = std::string();
+    this->elementName = AXRString();
+    this->contentText = AXRString();
 
     this->borderBleeding = 0.;
 
@@ -154,7 +152,7 @@ HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
 
 HSSDisplayObject::~HSSDisplayObject()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, std::string("destroying display object with name ").append(this->name));
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("destroying display object with name ").append(this->name));
     if (this->observedWidth)
     {
         this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
@@ -217,11 +215,11 @@ HSSDisplayObject::~HSSDisplayObject()
     delete this->bordersSurface;
 }
 
-std::string HSSDisplayObject::toString()
+AXRString HSSDisplayObject::toString()
 {
     if (this->isNamed())
     {
-        return std::string("HSSDisplayObject: ").append(this->name);
+        return AXRString("HSSDisplayObject: ").append(this->name);
     }
     else
     {
@@ -229,12 +227,12 @@ std::string HSSDisplayObject::toString()
     }
 }
 
-std::string HSSDisplayObject::defaultObjectType()
+AXRString HSSDisplayObject::defaultObjectType()
 {
     return "displayObject";
 }
 
-std::string HSSDisplayObject::defaultObjectType(std::string property)
+AXRString HSSDisplayObject::defaultObjectType(AXRString property)
 {
     if (property == "margin")
     {
@@ -286,7 +284,7 @@ std::string HSSDisplayObject::defaultObjectType(std::string property)
     }
 }
 
-bool HSSDisplayObject::isKeyword(std::string value, std::string property)
+bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
 {
     if (property == "anchorX"
             || property == "anchorY"
@@ -370,37 +368,37 @@ unsigned HSSDisplayObject::getIndex()
     return this->_index;
 }
 
-void HSSDisplayObject::attributesAdd(std::string name, std::string value)
+void HSSDisplayObject::attributesAdd(AXRString name, AXRString value)
 {
     this->attributes[name] = value;
 }
 
-void HSSDisplayObject::attributesRemove(std::string name)
+void HSSDisplayObject::attributesRemove(AXRString name)
 {
     this->attributes.erase(name);
 }
 
-std::string HSSDisplayObject::getContentText()
+AXRString HSSDisplayObject::getContentText()
 {
     return this->contentText;
 }
 
-void HSSDisplayObject::setContentText(const std::string &text)
+void HSSDisplayObject::setContentText(const AXRString &text)
 {
     this->contentText = text;
 }
 
-void HSSDisplayObject::appendContentText(const std::string &text)
+void HSSDisplayObject::appendContentText(const AXRString &text)
 {
     this->contentText.append(text);
 }
 
-std::string HSSDisplayObject::getElementName()
+AXRString HSSDisplayObject::getElementName()
 {
     return this->elementName;
 }
 
-void HSSDisplayObject::setElementName(std::string newName)
+void HSSDisplayObject::setElementName(AXRString newName)
 {
     this->elementName = newName;
 }
@@ -580,7 +578,7 @@ void HSSDisplayObject::readDefinitionObjects()
             this->setDHeight(newDHeight);
         }
 
-        std::string propertyName;
+        AXRString propertyName;
         for (i = 0; i<this->rules.size(); ++i)
         {
             HSSRuleStatus::p & ruleStatus = this->rules[i];
@@ -733,9 +731,7 @@ void HSSDisplayObject::regenerateSurfaces(bool force)
         this->setDirty(true);
         this->_needsSurface = false;
 
-        std::stringstream msg;
-        msg << "HSSDisplayObject: created a new surface width:" << this->width << " height:" << this->height;
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, msg.str());
+        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("HSSDisplayObject: created a new surface width:%1 height:%2").arg(this->width).arg(this->height));
     }
 }
 
@@ -777,9 +773,7 @@ void HSSDisplayObject::draw(QPainter &painter)
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: drawing " + this->elementName);
     if (this->_isDirty)
     {
-        std::stringstream msg;
-        msg << "HSSDisplayObject: redrawing contents of " << this->elementName.c_str() << " with x: " << this->x << " and y: " << this->y;
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, msg.str());
+        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("HSSDisplayObject: redrawing contents of %1 with x: %2 and y: %3").arg(this->elementName).arg(this->x).arg(this->y));
 
         this->_isDirty = false;
         this->drawBackground();
@@ -985,7 +979,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        AXRString kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
         if (kwValue == "inherit")
         {
             HSSContainer::p parent = this->getParent();
@@ -1215,7 +1209,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        AXRString kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
         if (kwValue == "inherit")
         {
             HSSContainer::p parent = this->getParent();
@@ -2302,7 +2296,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
-        std::string kwValue = theKW->getValue();
+        AXRString kwValue = theKW->getValue();
         if (kwValue == "none")
         {
             valid = true;
@@ -2478,7 +2472,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                 boost::any remoteValue = fnct->evaluate();
                 try
                 {
-                    std::string theVal = boost::any_cast<std::string > (remoteValue);
+                    AXRString theVal = boost::any_cast<AXRString > (remoteValue);
                     this->setContentText(theVal);
                     valid = true;
 
@@ -2669,7 +2663,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        AXRString kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
         if (kwValue == "inherit")
         {
             if (this->observedFont)
@@ -3544,7 +3538,7 @@ void HSSDisplayObject::setDVisible(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        AXRString kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
         if (kwValue == "inherit")
         {
             HSSContainer::p parent = this->getParent();
@@ -3739,11 +3733,11 @@ long double HSSDisplayObject::_setLDProperty(
         {
             ret = * boost::any_cast<HSSUnit *>(remoteValue);
         }
-        else if (typeid (std::string) == remoteValue.type())
+        else if (typeid (AXRString) == remoteValue.type())
         {
             try
             {
-                ret = boost::lexical_cast<HSSUnit>(boost::any_cast<std::string > (remoteValue));
+                ret = (boost::any_cast<AXRString>(remoteValue)).toLong();
             }
             catch (...)
             {
@@ -3935,7 +3929,7 @@ void HSSDisplayObject::createFlag(HSSFlag::p flag, HSSRuleState defaultValue)
     this->_flags[flag->getName()].push_back(flag);
 }
 
-bool HSSDisplayObject::hasFlag(std::string name)
+bool HSSDisplayObject::hasFlag(AXRString name)
 {
     if (this->_flagsStatus.find(name) != this->_flagsStatus.end())
     {
@@ -3944,7 +3938,7 @@ bool HSSDisplayObject::hasFlag(std::string name)
     return false;
 }
 
-HSSRuleState HSSDisplayObject::flagState(std::string name)
+HSSRuleState HSSDisplayObject::flagState(AXRString name)
 {
     if (this->_flagsStatus.find(name) != this->_flagsStatus.end())
     {
@@ -3953,7 +3947,7 @@ HSSRuleState HSSDisplayObject::flagState(std::string name)
     return HSSRuleStateOff;
 }
 
-void HSSDisplayObject::flagsActivate(std::string name)
+void HSSDisplayObject::flagsActivate(AXRString name)
 {
     if (this->hasFlag(name))
     {
@@ -3976,12 +3970,12 @@ void HSSDisplayObject::flagsActivate(std::string name)
     }
 }
 
-void HSSDisplayObject::flagsDeactivate(std::string name)
+void HSSDisplayObject::flagsDeactivate(AXRString name)
 {
     if (name == "*")
     {
         //std_log("deactivating all flags on element "+this->getElementName());
-        for (QMap<std::string, std::vector<HSSFlag::p> >::const_iterator it = this->_flags.begin(); it != this->_flags.end(); ++it)
+        for (QMap<AXRString, std::vector<HSSFlag::p> >::const_iterator it = this->_flags.begin(); it != this->_flags.end(); ++it)
         {
             HSSRuleState newValue = HSSRuleStatePurge;
             std::vector<HSSFlag::p> flags = it.value();
@@ -4016,7 +4010,7 @@ void HSSDisplayObject::flagsDeactivate(std::string name)
     }
 }
 
-void HSSDisplayObject::flagsToggle(std::string name)
+void HSSDisplayObject::flagsToggle(AXRString name)
 {
     if (this->hasFlag(name))
     {

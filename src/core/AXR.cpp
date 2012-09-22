@@ -111,22 +111,22 @@ void AXRCore::run()
         this->_hasLoadedFile = true;
 
         HSSContainer::p root = boost::static_pointer_cast<HSSContainer > (this->controller->getRoot());
-        std::string hssfilename, hssfilepath;
+        AXRString hssfilename, hssfilepath;
 
-        std::vector<std::string> loadSheets = this->controller->loadSheetsGet();
+        std::vector<AXRString> loadSheets = this->controller->loadSheetsGet();
         for (unsigned i = 0, size = loadSheets.size(); i < size; ++i)
         {
 
             hssfilename = loadSheets[i];
-            if (hssfilename.substr(0, 7) == "file://")
+            if (hssfilename.startsWith("file://"))
             {
                 hssfilepath = hssfilename;
             }
-            else if (hssfilename.substr(0, 7) == "http://")
+            else if (hssfilename.startsWith("http://"))
             {
                 AXRError::p(new AXRError("AXRCore", "HTTP has not been implemented yet"))->raise();
             }
-            else if (hssfilename.substr(0, 1) == "/")
+            else if (hssfilename.startsWith("/"))
             {
                 hssfilepath = this->file->getBasePath() + hssfilename;
             }
@@ -247,18 +247,18 @@ void AXRCore::setParserHSS(HSSParser::p parser)
     this->parserHSS = parser;
 }
 
-bool AXRCore::isCustomFunction(std::string name)
+bool AXRCore::isCustomFunction(AXRString name)
 {
     bool ret = this->_customFunctions.find(name) != this->_customFunctions.end();
     return ret;
 }
 
-void AXRCore::registerCustomFunction(std::string name, HSSCallback* fn)
+void AXRCore::registerCustomFunction(AXRString name, HSSCallback* fn)
 {
     this->_customFunctions[name] = fn;
 }
 
-void AXRCore::evaluateCustomFunction(std::string name, void* data)
+void AXRCore::evaluateCustomFunction(AXRString name, void* data)
 {
     if (this->isCustomFunction(name))
     {

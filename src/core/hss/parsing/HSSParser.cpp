@@ -45,6 +45,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <boost/pointer_cast.hpp>
+#include <QUrl>
 #include "errors.h"
 #include "hss.h"
 #include "AXR.h"
@@ -82,7 +83,7 @@ HSSParser::HSSParser(AXRController * theController, AXRWrapper * wrapper)
     this->column = 1;
 }
 
-//HSSParser::HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, std::string filename)
+//HSSParser::HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, AXRString filename)
 //{
 //    this->tokenizer = HSSTokenizer::p(new HSSTokenizer(buffer, buflen));
 //    this->filename = filename;
@@ -261,7 +262,7 @@ bool HSSParser::readNextStatement()
         {
             //save
             HSSTokenizer::p currentTokenizer = this->tokenizer;
-            std::string currentBasepath = this->basepath;
+            AXRString currentBasepath = this->basepath;
             AXRFile::p currentFile = this->currentFile;
             unsigned currentLine = this->line;
             unsigned currentColumn = this->column;
@@ -276,10 +277,9 @@ bool HSSParser::readNextStatement()
             AXRFile::p theFile;
             try
             {
-                if (theInstr->getValue().substr(0, HSSFRAMEWORK_PROTOCOL_LEN) == HSSFRAMEWORK_PROTOCOL)
+                if (theInstr->getValue().startsWith(HSSFRAMEWORK_PROTOCOL))
                 {
-                    std::string filepath = theInstr->getValue().substr(HSSFRAMEWORK_PROTOCOL_LEN);
-                    theFile = this->wrapper->getFile("file://" + this->wrapper->getPathToResources() + filepath);
+                    theFile = this->wrapper->getFile("file://" + this->wrapper->getPathToResources() + QUrl(theInstr->getValue()).toLocalFile());
                 }
                 else
                 {
@@ -536,7 +536,7 @@ HSSRule::p HSSParser::readRule()
         if (this->atEndOfSource())
         {
             HSSNameSelector::p sbjct = selectorChains.back()->subject()->getName();
-            std::string lmntnm;
+            AXRString lmntnm;
             if (sbjct)
             {
                 lmntnm = sbjct->getElementName();
@@ -668,7 +668,7 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
 
     case HSSSymbol:
     {
-        const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
+        const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->getString()).toStdString().c_str();
         switch (currentTokenValue)
         {
         case '*':
@@ -775,7 +775,7 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
     //        {
     //            this->readNextToken(true);
     //            if(this->currentToken->isA(HSSIdentifier)){
-    //                std::string objtype = VALUE_TOKEN(this->currentToken)->getString();
+    //                AXRString objtype = VALUE_TOKEN(this->currentToken)->getString();
     //                if (objtype == "this") {
     //                    ret->add(HSSThisSelector::p(new HSSThisSelector()));
     //                    this->readNextToken(true);
@@ -836,7 +836,7 @@ HSSNameSelector::p HSSParser::readObjectSelector()
         this->readNextToken(true);
         if (this->currentToken->isA(HSSIdentifier))
         {
-            std::string objtype = VALUE_TOKEN(this->currentToken)->getString();
+            AXRString objtype = VALUE_TOKEN(this->currentToken)->getString();
             if (objtype == "this")
             {
                 ret = HSSThisSelector::p(new HSSThisSelector());
@@ -907,7 +907,7 @@ HSSFilter::p HSSParser::readFilter()
         if (this->currentToken->isA(HSSColon))
         {
             this->readNextToken();
-            std::string flagName = VALUE_TOKEN(this->currentToken)->getString();
+            AXRString flagName = VALUE_TOKEN(this->currentToken)->getString();
             HSSFlag::p theFlag = HSSFlag::p(new HSSFlag());
             theFlag->setName(flagName);
             ret = theFlag;
@@ -919,7 +919,7 @@ HSSFilter::p HSSParser::readFilter()
         {
             this->expect(HSSIdentifier);
 
-            std::string filterName = VALUE_TOKEN(this->currentToken)->getString();
+            AXRString filterName = VALUE_TOKEN(this->currentToken)->getString();
             ret = HSSFilter::newFilterWithStringType(filterName);
 
             this->readNextToken();
@@ -937,7 +937,7 @@ HSSCombinator::p HSSParser::readCombinator()
 
     if (this->currentToken->isA(HSSSymbol))
     {
-        const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
+        const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->getString()).toStdString().c_str();
         switch (currentTokenValue)
         {
         case '=':
@@ -1081,7 +1081,7 @@ HSSCombinator::p HSSParser::readCombinator()
 //            {
 //                this->readNextToken(true);
 //                if(this->currentToken->isA(HSSIdentifier)){
-//                    std::string objtype = VALUE_TOKEN(this->currentToken)->getString();
+//                    AXRString objtype = VALUE_TOKEN(this->currentToken)->getString();
 //                    if (objtype == "this") {
 //                        ret->add(HSSThisSelector::p(new HSSThisSelector()));
 //                        this->readNextToken(true);
@@ -1169,7 +1169,7 @@ bool HSSParser::isCombinator(HSSToken::p token)
     //all combinators are symbols
     if (token->isA(HSSSymbol))
     {
-        const char currentTokenChar = *(VALUE_TOKEN(token).get()->getString()).c_str();
+        const char currentTokenChar = *(VALUE_TOKEN(token).get()->getString()).toStdString().c_str();
         switch (currentTokenChar)
         {
         case '=':
@@ -1270,7 +1270,7 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
             {
                 if (peekToken->isA(HSSIdentifier))
                 {
-                    std::string objtype = VALUE_TOKEN(peekToken)->getString();
+                    AXRString objtype = VALUE_TOKEN(peekToken)->getString();
                     if ((objtype == "this")
                             || (objtype == "super")
                             || (objtype == "parent")
@@ -1316,7 +1316,7 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
                     {
                         this->checkForUnexpectedEndOfSource();
                         peekToken = this->tokenizer->peekNextToken();
-                        std::string objtype = VALUE_TOKEN(peekToken)->getString();
+                        AXRString objtype = VALUE_TOKEN(peekToken)->getString();
                         if ((objtype == "this")
                                 || (objtype == "super")
                                 || (objtype == "parent")
@@ -1395,7 +1395,7 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
      *  @todo check the context
      */
     HSSCombinator::p ret;
-    const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
+    const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).toStdString().c_str();
     switch (currentTokenChar)
     {
     case '=':
@@ -1430,7 +1430,7 @@ HSSNameSelector::p HSSParser::readNameSelector(bool isNegating)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading name selector");
 
-    std::string theValue = VALUE_TOKEN(this->currentToken)->getString();
+    AXRString theValue = VALUE_TOKEN(this->currentToken)->getString();
     HSSNameSelector::p ret = HSSNameSelector::p(new HSSNameSelector(theValue));
     ret->setNegating(isNegating);
     this->readNextToken();
@@ -1441,12 +1441,12 @@ HSSNameSelector::p HSSParser::readNameSelector(bool isNegating)
 
 //this assumes currentToken is an object sign or an ampersand
 
-HSSObjectDefinition::p HSSParser::readObjectDefinition(std::string propertyName)
+HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading object definition");
 
     HSSObjectDefinition::p ret;
-    std::string objtype;
+    AXRString objtype;
     HSSObject::p obj;
 
     //set the current context
@@ -1753,7 +1753,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading property definition");
 
-    std::string propertyName;
+    AXRString propertyName;
 
     //end of source is no good
     this->checkForUnexpectedEndOfSource();
@@ -1896,7 +1896,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             {
                 //this is either a function, a keyword or an object name
 
-                std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
+                AXRString valuestr = VALUE_TOKEN(this->currentToken)->getString();
                 //check if it is a function
                 HSSObject::p objectContext = this->currentObjectContext.top();
 
@@ -2007,7 +2007,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
     return ret;
 }
 
-HSSParserNode::p HSSParser::readValue(std::string propertyName, bool &valid)
+HSSParserNode::p HSSParser::readValue(AXRString propertyName, bool &valid)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading value");
 
@@ -2061,7 +2061,7 @@ HSSParserNode::p HSSParser::readValue(std::string propertyName, bool &valid)
         {
             //this is either a function, a keyword or an object name
 
-            std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
+            AXRString valuestr = VALUE_TOKEN(this->currentToken)->getString();
             //check if it is a function
             HSSObject::p objectContext = this->currentObjectContext.top();
 
@@ -2135,7 +2135,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading instruction");
 
     HSSInstruction::p ret;
-    std::string currentval;
+    AXRString currentval;
 
     //set preference
     this->tokenizer->preferHex = preferHex;
@@ -2233,15 +2233,15 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
 
             if (this->currentToken->isA(HSSDoubleQuoteString) || this->currentToken->isA(HSSSingleQuoteString))
             {
-                std::string theString = VALUE_TOKEN(this->currentToken)->getString();
+                AXRString theString = VALUE_TOKEN(this->currentToken)->getString();
                 ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, theString));
             }
             else if (this->currentToken->isA(HSSIdentifier))
             {
-                std::string instructionKw = VALUE_TOKEN(this->currentToken)->getString();
+                AXRString instructionKw = VALUE_TOKEN(this->currentToken)->getString();
                 if (instructionKw == "UIFramework")
                 {
-                    std::string protocol = HSSFRAMEWORK_PROTOCOL;
+                    AXRString protocol = HSSFRAMEWORK_PROTOCOL;
                     ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, protocol.append("/framework/UIFramework.hss")));
                 }
                 else
@@ -2313,12 +2313,13 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
         HSSRgb::p obj = HSSRgb::p(new HSSRgb());
 
         unsigned int hexValue;
-        std::string tempstr = instruction->getValue();
+        AXRString tempstr = instruction->getValue();
         if (instructionType == HSSGrayscale1Instruction)
         {
             tempstr = tempstr + tempstr;
         }
-        sscanf(tempstr.c_str(), "%X", &hexValue);
+
+        hexValue = tempstr.toUInt(NULL, 16);
 
         ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
 
@@ -2350,73 +2351,73 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
         //try to create an object of that type
         HSSRgb::p obj = HSSRgb::p(new HSSRgb());
 
-        std::string red;
+        AXRString red;
         unsigned int redHex;
-        std::string green;
+        AXRString green;
         unsigned int greenHex;
-        std::string blue;
+        AXRString blue;
         unsigned int blueHex;
 
         unsigned int alphaHex;
-        std::string alpha;
+        AXRString alpha;
 
         switch (instructionType)
         {
         case HSSRGBInstruction:
-            red = instruction->getValue().substr(0, 1);
+            red = instruction->getValue().mid(0, 1);
             red += red;
-            green = instruction->getValue().substr(1, 1);
+            green = instruction->getValue().mid(1, 1);
             green += green;
-            blue = instruction->getValue().substr(2, 1);
+            blue = instruction->getValue().mid(2, 1);
             blue += blue;
             alpha = "FF";
             break;
         case HSSRGBAInstruction:
-            red = instruction->getValue().substr(0, 1);
+            red = instruction->getValue().mid(0, 1);
             red += red;
-            green = instruction->getValue().substr(1, 1);
+            green = instruction->getValue().mid(1, 1);
             green += green;
-            blue = instruction->getValue().substr(2, 1);
+            blue = instruction->getValue().mid(2, 1);
             blue += blue;
-            alpha = instruction->getValue().substr(3, 1);
+            alpha = instruction->getValue().mid(3, 1);
             alpha += alpha;
             break;
         case HSSRGBAAInstruction:
-            red = instruction->getValue().substr(0, 1);
+            red = instruction->getValue().mid(0, 1);
             red += red;
-            green = instruction->getValue().substr(1, 1);
+            green = instruction->getValue().mid(1, 1);
             green += green;
-            blue = instruction->getValue().substr(2, 1);
+            blue = instruction->getValue().mid(2, 1);
             blue += blue;
-            alpha = instruction->getValue().substr(3, 2);
+            alpha = instruction->getValue().mid(3, 2);
             break;
         case HSSRRGGBBInstruction:
-            red = instruction->getValue().substr(0, 2);
-            green = instruction->getValue().substr(2, 2);
-            blue = instruction->getValue().substr(4, 2);
+            red = instruction->getValue().mid(0, 2);
+            green = instruction->getValue().mid(2, 2);
+            blue = instruction->getValue().mid(4, 2);
             alpha = "FF";
             break;
         case HSSRRGGBBAInstruction:
-            red = instruction->getValue().substr(0, 2);
-            green = instruction->getValue().substr(2, 2);
-            blue = instruction->getValue().substr(4, 2);
-            alpha = instruction->getValue().substr(6, 1);
+            red = instruction->getValue().mid(0, 2);
+            green = instruction->getValue().mid(2, 2);
+            blue = instruction->getValue().mid(4, 2);
+            alpha = instruction->getValue().mid(6, 1);
             alpha += alpha;
             break;
         case HSSRRGGBBAAInstruction:
-            red = instruction->getValue().substr(0, 2);
-            green = instruction->getValue().substr(2, 2);
-            blue = instruction->getValue().substr(4, 2);
-            alpha = instruction->getValue().substr(6, 2);
+            red = instruction->getValue().mid(0, 2);
+            green = instruction->getValue().mid(2, 2);
+            blue = instruction->getValue().mid(4, 2);
+            alpha = instruction->getValue().mid(6, 2);
             break;
         default:
             break;
         }
 
-        sscanf(red.c_str(), "%X", &redHex);
-        sscanf(green.c_str(), "%X", &greenHex);
-        sscanf(blue.c_str(), "%X", &blueHex);
-        sscanf(alpha.c_str(), "%X", &alphaHex);
+        redHex = red.toUInt(NULL, 16);
+        greenHex = green.toUInt(NULL, 16);
+        blueHex = blue.toUInt(NULL, 16);
+        alphaHex = alpha.toUInt(NULL, 16);
 
         ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
 
@@ -2539,7 +2540,7 @@ HSSParserNode::p HSSParser::readAdditiveExpression()
     HSSParserNode::p left = this->readMultiplicativeExpression();
     while (!this->atEndOfSource() && this->currentToken->isA(HSSSymbol))
     {
-        const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
+        const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).toStdString().c_str();
         switch (currentTokenChar)
         {
         case '+':
@@ -2578,7 +2579,7 @@ HSSParserNode::p HSSParser::readMultiplicativeExpression()
     while (!this->atEndOfSource() && this->currentToken->isA(HSSSymbol))
     {
 
-        const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
+        const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).toStdString().c_str();
         switch (currentTokenChar)
         {
         case '*':
@@ -2644,7 +2645,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
     case HSSIdentifier:
     {
         /*
-        std::string valuestr = VALUE_TOKEN(this->currentToken)->getString();
+        AXRString valuestr = VALUE_TOKEN(this->currentToken)->getString();
         //check if it is a function
         HSSObject::p objectContext = this->currentObjectContext.top();
         if (objectContext->isFunction(valuestr, propertyName)){*/
@@ -2681,7 +2682,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
 //    HSSFilter::p ret;
 //    this->expect(HSSIdentifier);
 //
-//    std::string filterName = VALUE_TOKEN(this->currentToken)->getString();
+//    AXRString filterName = VALUE_TOKEN(this->currentToken)->getString();
 //    ret = HSSFilter::newFilterWithStringType(filterName);
 //
 //    this->readNextToken();
@@ -2701,7 +2702,7 @@ HSSParserNode::p HSSParser::readFlag()
     HSSFlag::p ret;
     this->expect(HSSIdentifier);
 
-    std::string flagName = VALUE_TOKEN(this->currentToken)->getString();
+    AXRString flagName = VALUE_TOKEN(this->currentToken)->getString();
     ret = HSSFlag::p(new HSSFlag());
     ret->setName(flagName);
 
@@ -2721,7 +2722,7 @@ HSSParserNode::p HSSParser::readFunction()
     if (this->currentToken->isA(HSSIdentifier))
     {
         //create new function
-        std::string name = VALUE_TOKEN(this->currentToken)->getString();
+        AXRString name = VALUE_TOKEN(this->currentToken)->getString();
         if (name == "ref")
         {
             HSSRefFunction::p refFunction = HSSRefFunction::p(new HSSRefFunction());
@@ -2739,7 +2740,7 @@ HSSParserNode::p HSSParser::readFunction()
             }
             else
             {
-                std::string firstValue = VALUE_TOKEN(this->currentToken)->getString();
+                AXRString firstValue = VALUE_TOKEN(this->currentToken)->getString();
                 if (firstValue == "min"
                         || firstValue == "max"
                         || firstValue == "avg")
@@ -3105,12 +3106,12 @@ void HSSParser::skipExpected(HSSTokenType type, bool checkForUnexpectedEndOfSour
     this->readNextToken(checkForUnexpectedEndOfSource);
 }
 
-void HSSParser::skipExpected(HSSTokenType type, std::string value)
+void HSSParser::skipExpected(HSSTokenType type, AXRString value)
 {
     this->skipExpected(type, value, false);
 }
 
-void HSSParser::skipExpected(HSSTokenType type, std::string value, bool checkForUnexpectedEndOfSource)
+void HSSParser::skipExpected(HSSTokenType type, AXRString value, bool checkForUnexpectedEndOfSource)
 {
     this->checkForUnexpectedEndOfSource();
     /**
@@ -3186,12 +3187,12 @@ void HSSParser::currentObjectContextAdd(HSSObject::p theObject)
     this->currentObjectContext.push(theObject);
 }
 
-void HSSParser::setBasePath(std::string value)
+void HSSParser::setBasePath(AXRString value)
 {
     this->basepath = value;
 }
 
-std::string HSSParser::getBasePath()
+AXRString HSSParser::getBasePath()
 {
     return this->basepath;
 }

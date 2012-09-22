@@ -44,7 +44,6 @@
 #ifndef HSSCALLBACK_H
 #define HSSCALLBACK_H
 
-#include <string>
 #include "AXRGlobal.h"
 #include "HSSObservableProperties.h"
 

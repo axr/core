@@ -86,9 +86,9 @@ HSSExpression::~HSSExpression()
     }
 }
 
-std::string HSSExpression::toString()
+AXRString HSSExpression::toString()
 {
-    std::string tempstr = std::string("HSSExpression with following components:\n");
+    AXRString tempstr = AXRString("HSSExpression with following components:\n");
     tempstr.append(this->getLeft()->toString() + "\n" + this->getRight()->toString());
     return tempstr;
 }
@@ -103,9 +103,9 @@ HSSExpressionType HSSExpression::getExpressionType()
     return this->expressionType;
 }
 
-std::string HSSExpression::expressionTypeStringRepresentation(HSSExpressionType type)
+AXRString HSSExpression::expressionTypeStringRepresentation(HSSExpressionType type)
 {
-    std::string types[20];
+    AXRString types[20];
     types[HSSExpressionTypeNone] = "HSSExpression";
     types[HSSExpressionTypeSum] = "HSSSum";
     types[HSSExpressionTypeSubtraction] = "HSSSubtraction";

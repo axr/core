@@ -61,7 +61,7 @@ HSSOddFilter::~HSSOddFilter()
 
 }
 
-std::string HSSOddFilter::toString()
+AXRString HSSOddFilter::toString()
 {
     return "Odd Filter";
 }

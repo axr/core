@@ -73,22 +73,22 @@ HSSRectangle::~HSSRectangle()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: destructing rectangle object");
 }
 
-std::string HSSRectangle::toString()
+AXRString HSSRectangle::toString()
 {
     return "HSSRectangle";
 }
 
-std::string HSSRectangle::defaultObjectType()
+AXRString HSSRectangle::defaultObjectType()
 {
     return "HSSRectangle";
 }
 
-std::string HSSRectangle::defaultObjectType(std::string property)
+AXRString HSSRectangle::defaultObjectType(AXRString property)
 {
     return HSSShape::defaultObjectType(property);
 }
 
-bool HSSRectangle::isKeyword(std::string value, std::string property)
+bool HSSRectangle::isKeyword(AXRString value, AXRString property)
 {
     return HSSShape::isKeyword(value, property);
 }

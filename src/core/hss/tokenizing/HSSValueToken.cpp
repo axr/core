@@ -42,19 +42,18 @@
  ********************************************************************/
 
 #include <sstream>
-#include <QString>
+#include "AXRString.h"
 #include "HSSValueToken.h"
 
 using namespace AXR;
 
-HSSValueToken::HSSValueToken(HSSTokenType type, std::string value, unsigned line, unsigned column)
+HSSValueToken::HSSValueToken(HSSTokenType type, AXRString value, unsigned line, unsigned column)
 : HSSToken(type, line, column)
 {
-
     this->type = type;
     if (this->isNumeric())
     {
-        this->longValue = QString::fromStdString(value).toDouble();
+        this->longValue = value.toDouble();
     }
     else
     {
@@ -65,9 +64,9 @@ HSSValueToken::HSSValueToken(HSSTokenType type, std::string value, unsigned line
 HSSValueToken::HSSValueToken(HSSTokenType type, char value, unsigned line, unsigned column)
 : HSSToken(type, line, column)
 {
-    //std::string tempstr (1, value);
+    //AXRString tempstr (1, value);
     this->type = type;
-    this->stringValue = std::string(1, value);
+    this->stringValue = AXRString(1, value);
 }
 
 HSSValueToken::HSSValueToken(HSSTokenType type, double long value, unsigned line, unsigned column)
@@ -81,7 +80,7 @@ HSSValueToken::~HSSValueToken()
 {
 }
 
-std::string HSSValueToken::getString()
+AXRString HSSValueToken::getString()
 {
     return this->stringValue;
 }
@@ -91,7 +90,7 @@ double long HSSValueToken::getLong()
     return this->longValue;
 }
 
-bool HSSValueToken::equals(HSSTokenType otherType, std::string otherValue)
+bool HSSValueToken::equals(HSSTokenType otherType, AXRString otherValue)
 {
     return otherType == this->type && otherValue == this->stringValue;
 }
@@ -101,20 +100,17 @@ bool HSSValueToken::equals(HSSTokenType otherType, double long otherValue)
     return otherType == this->type && otherValue == this->longValue;
 }
 
-std::string HSSValueToken::toString()
+AXRString HSSValueToken::toString()
 {
-    std::string tokenstr = this->tokenStringRepresentation(this->type);
+    AXRString tokenstr = this->tokenStringRepresentation(this->type);
     if (this->isNumeric())
     {
-        std::ostringstream tempstream;
-        tempstream << this->longValue;
-        return "HSSValueToken of type: " + tokenstr + " and value: " + tempstream.str();
+        return AXRString("HSSValueToken of type: %1 and value: %2").arg(tokenstr).arg((double)this->longValue);
     }
     else
     {
         return "HSSValueToken of type: " + tokenstr + " and value: " + this->stringValue;
     }
-
 }
 
 bool HSSValueToken::isNumeric()

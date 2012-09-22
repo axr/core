@@ -90,13 +90,13 @@ namespace AXR
          *  Getter for the attribute name.
          *  @return A string containing the attribute name we are referencing.
          */
-        const std::string & getAttributeName() const;
+        const AXRString & getAttributeName() const;
 
         /**
          *  Setter for the attribute name.
          *  @param  newValue    A string containing the attribute name we are referencing.
          */
-        void setAttributeName(std::string newValue);
+        void setAttributeName(AXRString newValue);
 
         /**
          *  Getter for the selector chain.
@@ -158,7 +158,7 @@ namespace AXR
         void valueChanged(HSSObservableProperty source, void*data);
 
     private:
-        std::string attributeName;
+        AXRString attributeName;
         std::vector<HSSSelectorChain::p> selectorChains;
 
         HSSObservable * observed;

@@ -74,12 +74,12 @@ HSSAttrFunction::~HSSAttrFunction()
     }
 }
 
-const std::string & HSSAttrFunction::getAttributeName() const
+const AXRString & HSSAttrFunction::getAttributeName() const
 {
     return this->attributeName;
 }
 
-void HSSAttrFunction::setAttributeName(std::string newValue)
+void HSSAttrFunction::setAttributeName(AXRString newValue)
 {
     this->attributeName = newValue;
     this->setDirty(true);

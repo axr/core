@@ -46,8 +46,7 @@
 
 #include <iostream>
 #include <sstream>
-#include <string>
-#include <QString>
+#include "AXRString.h"
 #include "AXRGlobal.h"
 
 // Debug levels:
@@ -59,12 +58,12 @@
 
 extern unsigned int axr_debug_level;
 
-void std_log_level(const std::string &message, unsigned int debugLevel = 0, bool newline = true);
-void std_log(const std::string &message, bool newline = true);
-void std_log1(const std::string &message, bool newline = true);
-void std_log2(const std::string &message, bool newline = true);
-void std_log3(const std::string &message, bool newline = true);
-void std_log4(const std::string &message, bool newline = true);
+void std_log_level(const AXR::AXRString &message, unsigned int debugLevel = 0, bool newline = true);
+void std_log(const AXR::AXRString &message, bool newline = true);
+void std_log1(const AXR::AXRString &message, bool newline = true);
+void std_log2(const AXR::AXRString &message, bool newline = true);
+void std_log3(const AXR::AXRString &message, bool newline = true);
+void std_log4(const AXR::AXRString &message, bool newline = true);
 
 // Security brakes for while loops
 #define AXR_DEBUG_BRAKE 9999
@@ -73,9 +72,7 @@ void std_log4(const std::string &message, bool newline = true);
 #define security_brake() \
     if (__axr_security_count > AXR_DEBUG_BRAKE) \
     { \
-        std::stringstream msg; \
-        msg << "WARNING: Loop iterated over " << AXR_DEBUG_BRAKE << " times. Broke out of possible infinite loop."; \
-        std_log1(msg.str()); \
+        std_log1(AXR::AXRString("WARNING: Loop iterated over %1 times. Broke out of possible infinite loop.").arg(AXR_DEBUG_BRAKE)); \
         break; \
     } \
     else \
@@ -153,12 +150,8 @@ enum AXR_API axr_debug_ch
     AXR_DEBUG_CH_FULL_FILENAMES = 1 << 28 //c
 };
 
-void axr_log(quint32 channels, const std::string &message);
-void axr_log_inline(quint32 channels, const std::string &message);
-void axr_log(quint32 channels, const QString &message);
-void axr_log_inline(quint32 channels, const QString &message);
-void axr_log(quint32 channels, const char *message);
-void axr_log_inline(quint32 channels, const char *message);
+void axr_log(quint32 channels, const AXR::AXRString &message);
+void axr_log_inline(quint32 channels, const AXR::AXRString &message);
 void axr_debug_activate_channel(quint32 channels);
 
 #endif //AXRDEBUGGING_H

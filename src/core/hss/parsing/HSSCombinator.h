@@ -44,7 +44,6 @@
 #ifndef HSSCOMBINATOR_H
 #define HSSCOMBINATOR_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include "HSSSelector.h"
 
@@ -80,7 +79,7 @@ namespace AXR
          *  @param type     The combinator type to represent as a string.
          *  @return A string representation of the given type.
          */
-        static std::string combinatorStringRepresentation(HSSCombinatorType type);
+        static AXRString combinatorStringRepresentation(HSSCombinatorType type);
 
         /**
          *  Allows you to check if this combinator is of the given type.
@@ -94,7 +93,7 @@ namespace AXR
          */
         HSSCombinatorType getCombinatorType();
 
-        virtual std::string toString();
+        virtual AXRString toString();
 
         std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
 

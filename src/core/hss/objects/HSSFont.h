@@ -44,7 +44,6 @@
 #ifndef HSSFONT_H
 #define HSSFONT_H
 
-#include <string>
 #include "HSSKeywordConstant.h"
 #include "HSSObject.h"
 #include "HSSRgb.h"
@@ -85,11 +84,11 @@ namespace AXR
          */
         virtual ~HSSFont();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-        bool isKeyword(std::string value, std::string property);
+        bool isKeyword(AXRString value, AXRString property);
 
         /**
          *  Getter for the actual value of size.
@@ -114,7 +113,7 @@ namespace AXR
          *  Getter for the actual value of face.
          *  @return A string containing the name of the typeface that will be used.
          */
-        std::string getFace();
+        AXRString getFace();
 
         /**
          *  Setter for the definition object of face. It will use the value as needed.
@@ -182,7 +181,7 @@ namespace AXR
         HSSObservable * observedSize;
         HSSObservableProperty observedSizeProperty;
         //face
-        std::string face;
+        AXRString face;
         HSSParserNode::p dFace;
         HSSObservable * observedFace;
         HSSObservableProperty observedFaceProperty;

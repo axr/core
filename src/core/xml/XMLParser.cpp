@@ -95,13 +95,13 @@ bool XMLParser::loadFile(AXRFile::p file)
             xml.readNext();
             if (xml.isStartElement())
             {
-                QString name = xml.name().toString();
+                AXRString name = xml.name().toString();
                 axr_log(AXR_DEBUG_CH_XML, "XMLParser: found opening tag with name " + name);
-                controller->enterElement(name.toStdString());
+                controller->enterElement(name);
 
                 Q_FOREACH (const QXmlStreamAttribute &attr, xml.attributes())
                 {
-                    controller->addAttribute(attr.name().toString().toStdString(), attr.value().toString().toStdString());
+                    controller->addAttribute(attr.name().toString(), attr.value().toString());
                 }
             }
             else if (xml.isEndElement())
@@ -111,24 +111,24 @@ bool XMLParser::loadFile(AXRFile::p file)
             }
             else if (xml.isCharacters())
             {
-                axr_log(AXR_DEBUG_CH_XML, QString("XMLParser: reading character data: \"%1\"").arg(xml.text().toString()));
-                controller->appendContentText(xml.text().toString().toStdString());
+                axr_log(AXR_DEBUG_CH_XML, AXRString("XMLParser: reading character data: \"%1\"").arg(xml.text().toString()));
+                controller->appendContentText(xml.text().toString());
             }
             else if (xml.isProcessingInstruction())
             {
-                QString instructionName = xml.processingInstructionTarget().toString();
+                AXRString instructionName = xml.processingInstructionTarget().toString();
                 axr_log(AXR_DEBUG_CH_XML, "XMLParser: found XML instruction with name " + instructionName);
 
                 // Probable HSS stylesheet encountered, try to load it into the controller
                 if (instructionName == "xml-stylesheet")
                 {
-                    QMap<QString, QString> instructionAttributes;
+                    QMap<AXRString, AXRString> instructionAttributes;
 
                     // A little trickery to easily parse the key-value pairs from the instruction...
                     // We basically embed the processing instruction value, which looks like a set of XML
                     // attributes, within a fake XML tag to create a document that we can parse, allowing
                     // the XML parser to handle the syntax instead of doing it manually
-                    QXmlStreamReader instructionParser(QString("<node %1 />").arg(xml.processingInstructionData().toString()));
+                    QXmlStreamReader instructionParser(AXRString("<node %1 />").arg(xml.processingInstructionData().toString()));
                     while (!instructionParser.atEnd() && !instructionParser.hasError())
                     {
                         instructionParser.readNext();
@@ -145,43 +145,43 @@ bool XMLParser::loadFile(AXRFile::p file)
                     // The xml-stylesheet instruction was invalid, error out
                     if (instructionParser.hasError())
                     {
-                        throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction - " + instructionParser.errorString().toStdString(), file->getFileName(), xml.lineNumber()));
+                        throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction - " + instructionParser.errorString(), file->getFileName(), xml.lineNumber()));
                     }
 
                     // Check that all required attributes are present in the xml-stylesheet processing instruction
                     QStringList requiredAttributes;
                     requiredAttributes << "type" << "src" << "version";
 
-                    Q_FOREACH (const QString &attr, requiredAttributes)
+                    Q_FOREACH (const AXRString &attr, requiredAttributes)
                     {
                         if (!instructionAttributes.contains(attr))
                         {
-                            throw AXRError::p(new AXRError("XMLParser", QString("Invalid xml-stylesheet instruction - missing %1 attribute").arg(attr).toStdString(), file->getFileName(), xml.lineNumber()));
+                            throw AXRError::p(new AXRError("XMLParser", AXRString("Invalid xml-stylesheet instruction - missing %1 attribute").arg(attr), file->getFileName(), xml.lineNumber()));
                         }
                     }
 
                     // Verify the stylesheet has the correct MIME type for HSS
-                    const QString &sheetType = instructionAttributes.value("type");
+                    const AXRString &sheetType = instructionAttributes.value("type");
                     if (sheetType == "application/x-hss" || sheetType == "text/hss")
                     {
                         // We've got the right MIME type, now do we even have a valid URL?
                         const QUrl &sheetUrl = instructionAttributes.value("src");
                         if (!sheetUrl.isValid())
                         {
-                            throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed URL in src attribute - " + sheetUrl.errorString().toStdString(), file->getFileName(), xml.lineNumber()));
+                            throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed URL in src attribute - " + sheetUrl.errorString(), file->getFileName(), xml.lineNumber()));
                         }
 
                         // Do we have a valid version?
                         // TODO: This should be a QVersion *type*; if (!sheetVersion.isValid()) ...
                         // I have an implementation lying around somewhere...
-                        const QString &sheetVersion = instructionAttributes.value("version");
+                        const AXRString &sheetVersion = instructionAttributes.value("version");
                         if (sheetVersion.isEmpty())
                         {
-                            throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed version attribute - " + sheetUrl.errorString().toStdString(), file->getFileName(), xml.lineNumber()));
+                            throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed version attribute - " + sheetUrl.errorString(), file->getFileName(), xml.lineNumber()));
                         }
 
                         // TODO: "Add to load later"?
-                        controller->loadSheetsAdd(sheetUrl.toString().toStdString());
+                        controller->loadSheetsAdd(sheetUrl.toString());
                     }
                     else if (sheetType == "application/xsl")
                     {
@@ -189,7 +189,7 @@ bool XMLParser::loadFile(AXRFile::p file)
                     }
                     else
                     {
-                        axr_log(AXR_DEBUG_CH_XML, "Ignoring stylesheet of unknown type: " + sheetType.toStdString() + " in file " + file->getFileName());
+                        axr_log(AXR_DEBUG_CH_XML, "Ignoring stylesheet of unknown type: " + sheetType + " in file " + file->getFileName());
                     }
                 }
             }
@@ -197,7 +197,7 @@ bool XMLParser::loadFile(AXRFile::p file)
 
         if (xml.hasError())
         {
-            throw AXRError::p(new AXRError("XMLParser", "XML error - " + xml.errorString().toStdString(), file->getFileName(), xml.lineNumber(), xml.columnNumber()));
+            throw AXRError::p(new AXRError("XMLParser", "XML error - " + xml.errorString(), file->getFileName(), xml.lineNumber(), xml.columnNumber()));
         }
 
         return true;
@@ -209,12 +209,12 @@ bool XMLParser::loadFile(AXRFile::p file)
     }
 }
 
-std::string XMLParser::getFilePath()
+AXRString XMLParser::getFilePath()
 {
     return this->file->getBasePath() + "/" + this->file->getFileName();
 }
 
-std::string XMLParser::getFileName()
+AXRString XMLParser::getFileName()
 {
     return this->file->getFileName();
 }

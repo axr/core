@@ -53,7 +53,7 @@ namespace AXR
         virtual ~CocoaAXRWrapper();
 
         void setNeedsDisplay(bool newValue);
-        std::string getPathToResources();
+        AXRString getPathToResources();
 
     private:
         AXRView * mainView;

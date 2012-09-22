@@ -44,7 +44,6 @@
 #ifndef HSSPROPERTYDEFINITION_H
 #define HSSPROPERTYDEFINITION_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include "HSSObject.h"
 #include "HSSStatement.h"
@@ -82,7 +81,7 @@ namespace AXR
          *  value.
          *  @param name     A string containing the name of the property.
          */
-        HSSPropertyDefinition(std::string name);
+        HSSPropertyDefinition(AXRString name);
 
         /**
          *  Creates a new instance of a property definition, with the given name and value.
@@ -90,7 +89,7 @@ namespace AXR
          *  @param value    A shared pointer to the parser node that holds the value of this
          *                  property definition.
          */
-        HSSPropertyDefinition(std::string name, HSSParserNode::p value);
+        HSSPropertyDefinition(AXRString name, HSSParserNode::p value);
 
         /**
          *  Copy constructor for HSSPropertyDefinition objects. Do not call directly, use clone() instead.
@@ -111,19 +110,19 @@ namespace AXR
          */
         ~HSSPropertyDefinition();
 
-        std::string toString();
+        AXRString toString();
 
         /**
          *  Setter for the name of the property.
          *  @param name     A string containing the name of the property.
          */
-        void setName(std::string name);
+        void setName(AXRString name);
 
         /**
          *  Getter for the name of the property.
          *  @return A string containing the name of the property.
          */
-        std::string getName();
+        AXRString getName();
 
         /**
          *  Setter for the value of the property.
@@ -150,7 +149,7 @@ namespace AXR
     protected:
         HSSPropertyDefinition::p shared_from_this();
 
-        std::string name;
+        AXRString name;
         HSSParserNode::p value;
 
     private:

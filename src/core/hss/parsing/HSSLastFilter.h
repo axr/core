@@ -75,7 +75,7 @@ namespace AXR
          *  Prints itself as a textual representation, useful for loggin or introspection.
          *  @return A string containing a textual representation of the keyword constant.
          */
-        virtual std::string toString();
+        virtual AXRString toString();
 
         virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
 

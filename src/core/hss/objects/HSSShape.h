@@ -44,7 +44,6 @@
 #ifndef HSSSHAPE_H
 #define HSSSHAPE_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include "HSSObject.h"
 #include "HSSUnits.h"
@@ -77,10 +76,10 @@ namespace AXR
          */
         HSSShapeType getShapeType();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
+        virtual bool isKeyword(AXRString value, AXRString property);
 
         /**
          *  Each shape object subclass implements its own drawing routines, creating the path as needed.

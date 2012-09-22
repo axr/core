@@ -45,6 +45,7 @@
 #define HSSCOMMENT_H
 
 #include <boost/shared_ptr.hpp>
+#include "AXRString.h"
 #include "HSSStatement.h"
 
 namespace AXR
@@ -55,7 +56,7 @@ namespace AXR
      */
     class AXR_API HSSComment : public HSSStatement
     {
-        std::string value;
+        AXRString value;
 
     public:
         typedef boost::shared_ptr<HSSComment> p;
@@ -64,7 +65,7 @@ namespace AXR
          *  Creates a new instance of a comment, containing the given text.
          *  @param value    A string containing the text of the comment.
          */
-        HSSComment(std::string value);
+        HSSComment(AXRString value);
 
         /**
          *  Clones an instance of HSSComment and gives a shared pointer of the
@@ -77,14 +78,14 @@ namespace AXR
          *  Getter for the value.
          *  @return A string containing the text of the comment.
          */
-        std::string getValue();
+        AXRString getValue();
 
         /**
          *  Setter for the value.
          *  @param newValue     A string containing the new text for the comment.
          */
-        void setValue(std::string newValue);
-        virtual std::string toString();
+        void setValue(AXRString newValue);
+        virtual AXRString toString();
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

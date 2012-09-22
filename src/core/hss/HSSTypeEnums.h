@@ -285,8 +285,8 @@ namespace AXR
     {
         HSSValueNumberInt, /**< Long Integer */
         HSSValueNumberFloat, /**< Long double */
-        HSSValueString, /**< std::string */
-        HSSValueKeyword/**< std::string */
+        HSSValueString, /**< AXRString */
+        HSSValueKeyword/**< AXRString */
     };
     /** @}*/
 

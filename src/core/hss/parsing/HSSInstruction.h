@@ -45,6 +45,7 @@
 #define HSSINSTRUCTION_H
 
 #include <boost/shared_ptr.hpp>
+#include "AXRString.h"
 #include "HSSStatement.h"
 
 namespace AXR
@@ -75,7 +76,7 @@ namespace AXR
          *  @param type     The HSSInstructionType that corresponds to the wanted type of instruction.
          *  @param value    A string containing the value of the instruction.
          */
-        HSSInstruction(HSSInstructionType type, std::string value);
+        HSSInstruction(HSSInstructionType type, AXRString value);
 
         /**
          *  Copy constructor for HSSInstructions objects. Do not call directly, use clone() instead.
@@ -103,7 +104,7 @@ namespace AXR
          *  Getter for the value of the instruction.
          *  @return A string containing a value of the instruction.
          */
-        std::string getValue();
+        AXRString getValue();
 
         /**
          *  Allows you to check if this instruction is of the given type.
@@ -117,13 +118,13 @@ namespace AXR
          *  @param type     The instruction type to represent as a string.
          *  @return A string representation of the given type.
          */
-        static std::string instructionStringRepresentation(HSSInstructionType type);
+        static AXRString instructionStringRepresentation(HSSInstructionType type);
 
         /**
          *  Prints itself as a textual representation, useful for loggin or introspection.
          *  @return A string containing a textual representation of the keyword constant.
          */
-        virtual std::string toString();
+        virtual AXRString toString();
 
         /**
          *  Setter for argument.
@@ -145,7 +146,7 @@ namespace AXR
 
     protected:
         HSSInstructionType instructionType;
-        std::string value;
+        AXRString value;
         HSSParserNode::p argument;
 
     private:

@@ -41,79 +41,63 @@
  *
  ********************************************************************/
 
+#include <QTextStream>
 #include "AXRDebugging.h"
+
+using namespace AXR;
 
 unsigned int axr_debug_level = 1;
 
-void std_log_level(const std::string &message, unsigned int debugLevel, bool newline)
+void std_log_level(const AXRString &message, unsigned int debugLevel, bool newline)
 {
     if (debugLevel <= axr_debug_level)
     {
-        std::cout << message.c_str();
+        QTextStream out(stdout);
+        out << message;
         if (newline)
-            std::cout << std::endl;
+            endl(out);
 
-        std::cout.flush();
+        out.flush();
     }
 }
 
-void std_log(const std::string &message, bool newline)
+void std_log(const AXRString &message, bool newline)
 {
     std_log_level(message, 0, newline);
 }
 
-void std_log1(const std::string &message, bool newline)
+void std_log1(const AXRString &message, bool newline)
 {
     std_log_level(message, 1, newline);
 }
 
-void std_log2(const std::string &message, bool newline)
+void std_log2(const AXRString &message, bool newline)
 {
     std_log_level(message, 2, newline);
 }
 
-void std_log3(const std::string &message, bool newline)
+void std_log3(const AXRString &message, bool newline)
 {
     std_log_level(message, 3, newline);
 }
 
-void std_log4(const std::string &message, bool newline)
+void std_log4(const AXRString &message, bool newline)
 {
     std_log_level(message, 4, newline);
 }
 
 quint32 axr_debug_active_channels = 0;
 
-void axr_log(quint32 channels, const std::string &message)
+void axr_log(quint32 channels, const AXRString &message)
 {
     if ((axr_debug_active_channels & AXR_DEBUG_CH_ON) && (axr_debug_active_channels & channels))
         std_log(message);
 }
 
-void axr_log_inline(quint32 channels, const std::string &message)
+void axr_log_inline(quint32 channels, const AXRString &message)
 {
     if ((axr_debug_active_channels & AXR_DEBUG_CH_ON) && (axr_debug_active_channels & channels))
         std_log(message, false);
-}
-
-void axr_log(quint32 channels, const QString &message)
-{
-    axr_log(channels, message.toStdString());
-}
-
-void axr_log_inline(quint32 channels, const QString &message)
-{
-    axr_log(channels, message.toStdString());
-}
-
-void axr_log(quint32 channels, const char *message)
-{
-    axr_log(channels, QString(message));
-}
-
-void axr_log_inline(quint32 channels, const char *message)
-{
-    axr_log(channels, QString(message));
 }
 
 void axr_debug_activate_channel(quint32 channels)

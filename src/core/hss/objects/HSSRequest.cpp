@@ -56,7 +56,7 @@ HSSRequest::HSSRequest()
             = this->observedTarget
             = NULL;
 
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("src");
     shorthandProperties.push_back("target");
     //shorthandProperties.push_back("mode");
@@ -91,12 +91,12 @@ HSSRequest::~HSSRequest()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRequest: destructing request object");
 }
 
-std::string HSSRequest::toString()
+AXRString HSSRequest::toString()
 {
     return "HSSRequest";
 }
 
-std::string HSSRequest::defaultObjectType()
+AXRString HSSRequest::defaultObjectType()
 {
     return "request";
 }
@@ -170,21 +170,21 @@ void HSSRequest::fire()
 
                     if (root)
                     {
-                        std::vector<std::string> loadSheets = controller->loadSheetsGet();
-                        std::vector<std::string>::iterator sheetsIt;
+                        std::vector<AXRString> loadSheets = controller->loadSheetsGet();
+                        std::vector<AXRString>::iterator sheetsIt;
                         for (sheetsIt = loadSheets.begin(); sheetsIt != loadSheets.end(); ++sheetsIt)
                         {
-                            std::string hssfilepath;
-                            std::string hssfilename = *sheetsIt;
-                            if (hssfilename.substr(0, 7) == "file://")
+                            AXRString hssfilepath;
+                            AXRString hssfilename = *sheetsIt;
+                            if (hssfilename.startsWith("file://"))
                             {
                                 hssfilepath = hssfilename;
                             }
-                            else if (hssfilename.substr(0, 7) == "http://")
+                            else if (hssfilename.startsWith("http://"))
                             {
                                 AXRError::p(new AXRError("AXRCore", "HTTP has not been implemented yet"))->raise();
                             }
-                            else if (hssfilename.substr(0, 1) == "/")
+                            else if (hssfilename.startsWith("/"))
                             {
                                 hssfilepath = newFile->getBasePath() + hssfilename;
                             }
@@ -318,7 +318,7 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
             boost::any remoteValue = fnct->evaluate();
             try
             {
-                this->src = boost::any_cast<std::string > (remoteValue);
+                this->src = boost::any_cast<AXRString > (remoteValue);
             }
             catch (boost::bad_any_cast &)
             {

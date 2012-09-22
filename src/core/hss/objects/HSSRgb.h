@@ -44,7 +44,6 @@
 #ifndef HSSRGB_H
 #define HSSRGB_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include "HSSObject.h"
 
@@ -62,7 +61,7 @@ namespace AXR
     public:
         typedef boost::shared_ptr<HSSRgb> p;
 
-        //virtual bool isKeyword(std::string value, std::string property);
+        //virtual bool isKeyword(AXRString value, AXRString property);
 
         friend class HSSParser;
 
@@ -81,7 +80,7 @@ namespace AXR
         /**
          *  Constructor for HSSRgb objects
          */
-        HSSRgb(long double red = 0, long double green = 0, long double blue = 0, long double alpha = 255);
+        HSSRgb(double red = 0, double green = 0, double blue = 0, double alpha = 255);
 
         /**
          *  Copy constructor for HSSRgb objects
@@ -103,9 +102,9 @@ namespace AXR
         inline static p transparentColor() { return p(new HSSRgb(0, 0, 0, 0)); }
         inline static p defaultColor() { return p(new HSSRgb()); }
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
 
 
@@ -114,7 +113,7 @@ namespace AXR
          *  @return A long double containing the value for the red channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        long double getRed();
+        double getRed();
 
         /**
          *  Setter for the definition object of red. It will use the value as needed.
@@ -134,7 +133,7 @@ namespace AXR
          *  @return A long double containing the value for the green channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        long double getGreen();
+        double getGreen();
 
         /**
          *  Setter for the definition object of green. It will use the value as needed.
@@ -154,7 +153,7 @@ namespace AXR
          *  @return A long double containing the value for the blue channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        long double getBlue();
+        double getBlue();
 
         /**
          *  Setter for the definition object of blue. It will use the value as needed.
@@ -174,7 +173,7 @@ namespace AXR
          *  @return A long double containing the value for the alpha channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        long double getAlpha();
+        double getAlpha();
 
         /**
          *  Setter for the definition object of alpha. It will use the value as needed.
@@ -190,10 +189,10 @@ namespace AXR
         void alphaChanged(HSSObservableProperty source, void*data);
 
     private:
-        long double red;
-        long double green;
-        long double blue;
-        long double alpha;
+        double red;
+        double green;
+        double blue;
+        double alpha;
 
         HSSParserNode::p dRed;
         HSSObservable * observedRed;

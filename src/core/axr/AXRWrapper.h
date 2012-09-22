@@ -46,7 +46,6 @@
 
 #include <cstdio>
 #include <queue>
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
 #include <QMap>
@@ -91,7 +90,7 @@ namespace AXR
          *  Subclasses should override this method with the OS specific implementation.
          *  @param url  A string containing the url to the file
          */
-        virtual AXRFile::p getFile(std::string url);
+        virtual AXRFile::p getFile(AXRString url);
         /**
          *  Reads the data in the file.
          *  Subclasses should override this method with the OS specific implementation.
@@ -133,13 +132,13 @@ namespace AXR
          *  It is used when a HSS file is loaded directly.
          *  @return A shared pointer to the AXRFile representation of the basic XML document.
          */
-        AXRFile::p createDummyXML(std::string stylesheet);
+        AXRFile::p createDummyXML(AXRString stylesheet);
         /**
          *  Loads the XML file at the path you provide.
          *  @param  xmlfilepath A string containing the path to the file on the local system.
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadXMLFile(std::string xmlfilepath);
+        bool loadXMLFile(AXRString xmlfilepath);
         /**
          *  Loads the file you provide, and then handles it according to its file extension.
          *  @param  filepath    A string containing the path to the file on the local system, can be
@@ -147,13 +146,13 @@ namespace AXR
          *
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadFileByPath(std::string filepath);
+        bool loadFileByPath(AXRString filepath);
         /**
          *  Loads the HSS file at the path you provide.
          *  @param  hssfilepath A string containing the path to the file on the local system.
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadHSSFile(std::string hssfilepath);
+        bool loadHSSFile(AXRString hssfilepath);
         /**
          *  Reloads the file that is currently loaded.
          *  @return Wether it has been reloaded successfully or not.
@@ -169,11 +168,11 @@ namespace AXR
          *  @return A string containing the path to where the HSS resources files are
          *  stored.
          */
-        virtual std::string getPathToResources();
+        virtual AXRString getPathToResources();
 
         /**
          */
-        virtual std::string getPathToTestsFile();
+        virtual AXRString getPathToTestsFile();
 
         bool showLayoutSteps();
         void setShowLayoutSteps(bool value);
@@ -201,20 +200,20 @@ namespace AXR
         bool _needsDisplay;
 
     public:
-        std::string _layoutTestsFilePath;
+        AXRString _layoutTestsFilePath;
     };
 
     class AXR_API AXRTestThread
     {
     private:
         AXRWrapper * wrapper;
-        std::string filePath;
+        AXRString filePath;
         unsigned totalTests;
         unsigned totalPassed;
         HSSContainer::p status;
 
     public:
-        AXRTestThread(AXRWrapper * wrapper, std::string filePath, HSSContainer::p status);
+        AXRTestThread(AXRWrapper * wrapper, AXRString filePath, HSSContainer::p status);
         void operator () ();
     };
 
@@ -222,8 +221,8 @@ namespace AXR
     {
     private:
         AXRWrapper * wrapper;
-        std::string basePath;
-        std::vector<std::string> test; // the filename of the test
+        AXRString basePath;
+        std::vector<AXRString> test; // the filename of the test
         unsigned * totalTests;
         unsigned * totalPassed;
         HSSContainer::p status;
@@ -232,7 +231,7 @@ namespace AXR
         static boost::mutex statusMutex;
 
     public:
-        AXRTestProducer(AXRWrapper * wrapper, std::string basePath, std::vector<std::string> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
+        AXRTestProducer(AXRWrapper * wrapper, AXRString basePath, std::vector<AXRString> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
         void operator () ();
     };
 }

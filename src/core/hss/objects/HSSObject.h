@@ -44,7 +44,6 @@
 #ifndef HSSOBJECT_H
 #define HSSOBJECT_H
 
-#include <string>
 #include <vector>
 #include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
@@ -87,14 +86,14 @@ namespace AXR
          *  @param type A string identifying the type for the new object
          *  @return A shared pointer to the new HSSObject
          */
-        static HSSObject::p newObjectWithType(std::string type);
+        static HSSObject::p newObjectWithType(AXRString type);
 
         /**
          *  This stores the name of the object.
          *
          *  @todo this should be protected and with getter/setter
          */
-        std::string name;
+        AXRString name;
 
         /**
          *  Constructor for HSSObject.
@@ -123,7 +122,7 @@ namespace AXR
          *  @param property     The property to which the identifier is being passed.
          *  @return Wether the identifier is a keyword for the given property.
          */
-        virtual bool isKeyword(std::string value, std::string property);
+        virtual bool isKeyword(AXRString value, AXRString property);
         /**
          *  All objects define their own functions depending on each property, so you need
          *  to call this method if you need to know wether an identifier is a function name
@@ -134,12 +133,12 @@ namespace AXR
          *
          *  @todo is this really needed?
          */
-        virtual bool isFunction(std::string value, std::string property);
+        virtual bool isFunction(AXRString value, AXRString property);
         /**
          *  Each object overrides this method to print itself to text when needed.
          *  @return A textual representation of the object.
          */
-        virtual std::string toString();
+        virtual AXRString toString();
         /**
          *  @return Wether the object is named or is annonymous.
          */
@@ -148,12 +147,12 @@ namespace AXR
          *  Sets the name of the object. After calling this, isNamed() will return TRUE.
          *  @param newName     A string with the new name.
          */
-        void setName(std::string newName);
+        void setName(AXRString newName);
         /**
          *  Getter for the name of the object.
          *  @return A string containing the name of the object.
          */
-        std::string getName();
+        AXRString getName();
         /**
          *  Sets the object to be annomymous. After calling this, the name will be empty and
          *  isNamed() will return FALSE.
@@ -164,14 +163,14 @@ namespace AXR
          *  nesting object defninitions and use just a @ in HSS.
          *  @return The default HSS object type for this object.
          */
-        virtual std::string defaultObjectType();
+        virtual AXRString defaultObjectType();
         /**
          *  Each subclass sets its own default object type for a given property. This is the
          *  object type used when writing just @ while setting a value for a property in HSS.
          *  @param property     The property to which the object definition is being passed.
          *  @return The default HSS object type for the given property, for this object.
          */
-        virtual std::string defaultObjectType(std::string property);
+        virtual AXRString defaultObjectType(AXRString property);
         /**
          *  Call this method when you need to get the property name when using shorthand notation
          *  in HSS. This will advance the shorhand index, so each time this method is called,
@@ -179,17 +178,17 @@ namespace AXR
          *  to each subclass.
          *  @return The current property name.
          */
-        std::string getPropertyForCurrentValue();
+        AXRString getPropertyForCurrentValue();
         /**
          *  Setter for the shorthand properties array.
          *  @param newValues        A STL vector of property names
          */
-        void setShorthandProperties(std::vector<std::string> newValues);
+        void setShorthandProperties(std::vector<AXRString> newValues);
         /**
          *  In HSS, property names already used are excluded from the shorthands.
          *  @param propertyName     The property name to be skipped
          */
-        void shorthandSkip(std::string propertyName);
+        void shorthandSkip(AXRString propertyName);
         /**
          *  Increases the shorthand index.
          */
@@ -238,7 +237,7 @@ namespace AXR
          *
          *  @todo this might be not necessary to be virtual
          */
-        virtual void setPropertyWithName(std::string name, HSSParserNode::p value);
+        virtual void setPropertyWithName(AXRString name, HSSParserNode::p value);
         /**
          *  Sets the parser node that defines the value of the given property. Each subclass
          *  will call the specific setD\<\<property\>\>() method.
@@ -328,8 +327,8 @@ namespace AXR
 
     protected:
         QMap<HSSObservableProperty, boost::any> properties;
-        std::vector<std::string> shorthandProperties;
-        QMap<std::string, bool> skipShorthand;
+        std::vector<AXRString> shorthandProperties;
+        QMap<AXRString, bool> skipShorthand;
         unsigned shorthandIndex;
 
         HSSParserNode::p dIsA;

@@ -44,7 +44,6 @@
 #ifndef HSSTOKENIZER_H
 #define HSSTOKENIZER_H
 
-#include <string>
 #include <vector>
 #include <boost/shared_array.hpp>
 #include "AXRFile.h"
@@ -111,7 +110,7 @@ namespace AXR
         //here's where the tokens are stored
         std::vector<HSSToken::p> tokenList;
         //here's where the current token's text is stored
-        std::string currentTokenText;
+        AXRString currentTokenText;
         //how long is the buffer?
         unsigned buflen;
         //the position into the buffer
@@ -130,7 +129,7 @@ namespace AXR
         //in some cases, storing specific chars in the currentTokenText is needed
         HSS_TOKENIZING_STATUS storeChar(char value);
         //returns the stored token text and clears the variable
-        std::string extractCurrentTokenText();
+        AXRString extractCurrentTokenText();
         //reads and returns a whitespace token
         HSSToken::p readWhitespace();
         //reads and returns an identifier token

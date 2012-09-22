@@ -53,9 +53,9 @@
 
 using namespace AXR;
 
-HSSObject::p HSSObject::newObjectWithType(std::string type)
+HSSObject::p HSSObject::newObjectWithType(AXRString type)
 {
-    static QMap<std::string, HSSObjectType> types;
+    static QMap<AXRString, HSSObjectType> types;
     if (types.empty())
     {
         types["container"] = HSSObjectTypeContainer;
@@ -164,7 +164,7 @@ HSSObject::p HSSObject::newObjectWithType(std::string type)
 
     case HSSObjectTypeEvent:
     {
-        static QMap<std::string, HSSEventType> eventTypes;
+        static QMap<AXRString, HSSEventType> eventTypes;
         if (eventTypes.empty())
         {
             eventTypes["load"] = HSSEventTypeLoad;
@@ -244,12 +244,12 @@ HSSObject::~HSSObject()
 
 }
 
-bool HSSObject::isKeyword(std::string value, std::string property)
+bool HSSObject::isKeyword(AXRString value, AXRString property)
 {
     return (value == "default" || value == "inherit" || value == "undefined" || value == "none");
 }
 
-bool HSSObject::isFunction(std::string value, std::string property)
+bool HSSObject::isFunction(AXRString value, AXRString property)
 {
     if (value == "min"
             || value == "max"
@@ -272,11 +272,11 @@ bool HSSObject::isFunction(std::string value, std::string property)
     }
 }
 
-std::string HSSObject::toString()
+AXRString HSSObject::toString()
 {
     if (this->isNamed())
     {
-        return std::string("HSSObject: ").append(this->name);
+        return AXRString("HSSObject: ").append(this->name);
     }
     else
     {
@@ -289,14 +289,14 @@ bool HSSObject::isNamed()
     return this->_isNamed;
 }
 
-void HSSObject::setName(std::string newName)
+void HSSObject::setName(AXRString newName)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSObject: setting name to " + newName);
     this->name = newName;
     this->_isNamed = true;
 }
 
-std::string HSSObject::getName()
+AXRString HSSObject::getName()
 {
     return this->name;
 }
@@ -307,20 +307,20 @@ void HSSObject::dropName()
     this->_isNamed = false;
 }
 
-std::string HSSObject::defaultObjectType()
+AXRString HSSObject::defaultObjectType()
 {
     return "value";
 }
 
-std::string HSSObject::defaultObjectType(std::string property)
+AXRString HSSObject::defaultObjectType(AXRString property)
 {
     return "value";
 }
 
-std::string HSSObject::getPropertyForCurrentValue()
+AXRString HSSObject::getPropertyForCurrentValue()
 {
     bool done = false;
-    std::string ret;
+    AXRString ret;
 
     security_brake_init();
     while (!done)
@@ -342,13 +342,13 @@ std::string HSSObject::getPropertyForCurrentValue()
     return "";
 }
 
-void HSSObject::setShorthandProperties(std::vector<std::string> newValues)
+void HSSObject::setShorthandProperties(std::vector<AXRString> newValues)
 {
     this->shorthandProperties = newValues;
     this->shorthandReset();
 }
 
-void HSSObject::shorthandSkip(std::string propertyName)
+void HSSObject::shorthandSkip(AXRString propertyName)
 {
     this->skipShorthand[propertyName] = true;
 }
@@ -493,7 +493,7 @@ void HSSObject::isAChanged(AXR::HSSObservableProperty source, void *data)
 
 }
 
-void HSSObject::setPropertyWithName(std::string name, HSSParserNode::p value)
+void HSSObject::setPropertyWithName(AXRString name, HSSParserNode::p value)
 {
     HSSObservableProperty property = HSSObservable::observablePropertyFromString(name);
     if (property != HSSObservablePropertyNone)

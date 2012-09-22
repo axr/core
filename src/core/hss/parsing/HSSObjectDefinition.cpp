@@ -83,9 +83,9 @@ HSSObjectDefinition::~HSSObjectDefinition()
 
 }
 
-std::string HSSObjectDefinition::toString()
+AXRString HSSObjectDefinition::toString()
 {
-    std::string tempstr = std::string("HSSObjectDefinition with object of type:");
+    AXRString tempstr = AXRString("HSSObjectDefinition with object of type:");
     tempstr.append(this->prototype->toString());
 
     const unsigned int pccount = this->propertiesSize();

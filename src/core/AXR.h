@@ -295,7 +295,7 @@ namespace AXR
          *  @param name     A string containing the function name.
          *  @return Wether the string is registered as a custom function
          */
-        bool isCustomFunction(std::string name);
+        bool isCustomFunction(AXRString name);
 
         /**
          *  Allows for registering a custom function name. @todo explain more
@@ -303,8 +303,8 @@ namespace AXR
          *  @param fn       A pointer to the callback that encapsulates the
          *                  c++ function that will be called.
          */
-        void registerCustomFunction(std::string name, HSSCallback* fn);
-        void evaluateCustomFunction(std::string name, void* data);
+        void registerCustomFunction(AXRString name, HSSCallback* fn);
+        void evaluateCustomFunction(AXRString name, void* data);
 
     protected:
         AXRWrapper * wrapper;
@@ -316,7 +316,7 @@ namespace AXR
         HSSParser::p parserHSS;
 
         bool _hasLoadedFile;
-        QMap<std::string, HSSCallback*> _customFunctions;
+        QMap<AXRString, HSSCallback*> _customFunctions;
 
     private:
         /**

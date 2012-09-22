@@ -68,9 +68,9 @@ HSSFunction::p HSSSelFunction::clone() const
     return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
-std::string HSSSelFunction::toString()
+AXRString HSSSelFunction::toString()
 {
-    std::string tempstr = std::string("HSSSelFunction\n");
+    AXRString tempstr = AXRString("HSSSelFunction\n");
     return tempstr;
 }
 

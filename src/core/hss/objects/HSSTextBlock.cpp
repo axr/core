@@ -54,7 +54,7 @@
 
 using namespace AXR;
 
-static int weightClassFromKeyword(std::string keyword)
+static int weightClassFromKeyword(AXRString keyword)
 {
     if (keyword == "thin")
         return 100;
@@ -95,14 +95,14 @@ static int getQtWeight(int fc_weight)
     return qtweight;
 }
 
-static int getQtWeight(std::string keyword)
+static int getQtWeight(AXRString keyword)
 {
     return getQtWeight(weightClassFromKeyword(keyword));
 }
 
-HSSTextTransformType HSSTextBlock::textTransformTypeFromString(std::string value)
+HSSTextTransformType HSSTextBlock::textTransformTypeFromString(AXRString value)
 {
-    static QMap<std::string, HSSTextTransformType> types;
+    static QMap<AXRString, HSSTextTransformType> types;
     if (types.isEmpty())
     {
         types["lowercase"] = HSSTextTransformTypeLowercase;
@@ -120,9 +120,9 @@ HSSTextTransformType HSSTextBlock::textTransformTypeFromString(std::string value
     return type;
 }
 
-HSSTextAlignType HSSTextBlock::textAlignTypeFromString(std::string value)
+HSSTextAlignType HSSTextBlock::textAlignTypeFromString(AXRString value)
 {
-    static QMap<std::string, HSSTextAlignType>types;
+    static QMap<AXRString, HSSTextAlignType>types;
     if (types.isEmpty())
     {
         types["left"] = HSSTextAlignTypeLeft;
@@ -154,7 +154,7 @@ HSSTextBlock::HSSTextBlock()
     //    this->registerProperty(HSSObservablePropertyDirectionPrimary, &this->directionPrimary);
     //    this->registerProperty(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
 
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("text");
     shorthandProperties.push_back("textAlign");
     shorthandProperties.push_back("transform");
@@ -175,7 +175,7 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
     //    this->registerProperty(HSSObservablePropertyDirectionPrimary, &this->directionPrimary);
     //    this->registerProperty(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
 
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("text");
     shorthandProperties.push_back("textAlign");
     shorthandProperties.push_back("transform");
@@ -200,12 +200,12 @@ HSSTextBlock::~HSSTextBlock()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: destructing text block object");
 }
 
-std::string HSSTextBlock::defaultObjectType()
+AXRString HSSTextBlock::defaultObjectType()
 {
     return "textBlock";
 }
 
-bool HSSTextBlock::isKeyword(std::string value, std::string property)
+bool HSSTextBlock::isKeyword(AXRString value, AXRString property)
 {
     if (property == "transform")
     {
@@ -239,7 +239,7 @@ bool HSSTextBlock::isKeyword(std::string value, std::string property)
     return HSSDisplayObject::isKeyword(value, property);
 }
 
-std::string HSSTextBlock::toString()
+AXRString HSSTextBlock::toString()
 {
     return "Text block with content:\n" + this->text;
 }
@@ -295,8 +295,8 @@ QFont HSSTextBlock::getFont() const
     if (font.size() > 0)
         theFont = *font.begin();
 
-    if (theFont && !theFont->getFace().empty())
-        font_description.setFamily(QString::fromStdString(theFont->getFace()));
+    if (theFont && !theFont->getFace().isEmpty())
+        font_description.setFamily(theFont->getFace());
     else
         font_description.setFamily("monospace");
 
@@ -357,8 +357,7 @@ void HSSTextBlock::drawForeground()
             break;
     }
 
-    std::string text = this->getText();
-    painter.drawText(0, 0, this->width, this->height, flags, QString::fromUtf8(text.data(), text.length()));
+    painter.drawText(0, 0, this->width, this->height, flags, this->getText());
 }
 
 void HSSTextBlock::layout()
@@ -385,7 +384,7 @@ void HSSTextBlock::layout()
     }
 
     QFontMetrics fontMetrics(getFont());
-    QRect bounds = fontMetrics.boundingRect(0, 0, this->width, std::numeric_limits<int>::max(), flags, QString::fromStdString(this->getText()));
+    QRect bounds = fontMetrics.boundingRect(0, 0, this->width, std::numeric_limits<int>::max(), flags, this->getText());
 
     this->height = bounds.height();
     this->_setInnerHeight();
@@ -584,7 +583,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         this->dTextAlign = value;
-        std::string kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        AXRString kwValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
         if (kwValue == "inherit")
         {
             if (this->observedTextAlign)
@@ -670,7 +669,7 @@ void HSSTextBlock::textAlignChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-std::string HSSTextBlock::getText()
+AXRString HSSTextBlock::getText()
 {
     return this->text;
 }
@@ -724,7 +723,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
             boost::any remoteValue = fnct->evaluate();
             try
             {
-                this->text = boost::any_cast<std::string > (remoteValue);
+                this->text = boost::any_cast<AXRString > (remoteValue);
                 valid = true;
             }
             catch (boost::bad_any_cast &)
@@ -789,7 +788,7 @@ void HSSTextBlock::textChanged(HSSObservableProperty source, void *data)
     switch (this->dText->getType())
     {
     case HSSParserNodeTypeFunctionCall:
-        this->text = *(std::string *)data;
+        this->text = *(AXRString *)data;
         break;
 
     default:
@@ -799,7 +798,7 @@ void HSSTextBlock::textChanged(HSSObservableProperty source, void *data)
     switch (this->dText->getStatementType())
     {
     case HSSStatementTypeObjectDefinition:
-        this->text = *(std::string *)data;
+        this->text = *(AXRString *)data;
         break;
 
     default:
@@ -812,5 +811,5 @@ void HSSTextBlock::textChanged(HSSObservableProperty source, void *data)
 
 void HSSTextBlock::trimContentText()
 {
-    this->text = QString::fromStdString(this->text).trimmed().toStdString();
+    this->text = this->text.trimmed();
 }

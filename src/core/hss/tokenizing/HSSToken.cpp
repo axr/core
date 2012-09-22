@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include <iostream>
+#include <QMap>
 #include "HSSToken.h"
 
 using namespace AXR;
@@ -67,34 +68,38 @@ HSSTokenType HSSToken::getType()
     return this->type;
 }
 
-std::string HSSToken::toString()
+AXRString HSSToken::toString()
 {
-    std::string tokenstr = HSSToken::tokenStringRepresentation(this->type);
+    AXRString tokenstr = HSSToken::tokenStringRepresentation(this->type);
     return "HSSToken of type: " + tokenstr;
 }
 
-std::string HSSToken::tokenStringRepresentation(HSSTokenType type)
+AXRString HSSToken::tokenStringRepresentation(HSSTokenType type)
 {
-    std::string types[20];
-    types[HSSNone] = "HSSNone";
-    types[HSSIdentifier] = "HSSIdentifier";
-    types[HSSNumber] = "HSSNumber";
-    types[HSSPercentageNumber] = "HSSPercentageNumber";
-    types[HSSHexNumber] = "HSSHexNumber";
-    types[HSSDoubleQuoteString] = "HSSDoubleQuoteString";
-    types[HSSSingleQuoteString] = "HSSSingleQuoteString";
-    types[HSSSymbol] = "HSSSymbol";
-    types[HSSWhitespace] = "HSSWhitespace";
-    types[HSSInstructionSign] = "HSSInstructionSign";
-    types[HSSObjectSign] = "HSSObjectSign";
-    types[HSSBlockOpen] = "HSSBlockOpen";
-    types[HSSBlockClose] = "HSSBlockClose";
-    types[HSSComma] = "HSSComma";
-    types[HSSColon] = "HSSColon";
-    types[HSSEndOfStatement] = "HSSEndOfStatement";
-    types[HSSParenthesisOpen] = "HSSParenthesisOpen";
-    types[HSSParenthesisClose] = "HSSParenthesisClose";
-    types[HSSLineComment] = "HSSLineComment";
-    types[HSSBlockComment] = "HSSBlockComment";
+    static QMap<HSSTokenType, AXRString> types;
+    if (types.isEmpty())
+    {
+        types[HSSNone] = "HSSNone";
+        types[HSSIdentifier] = "HSSIdentifier";
+        types[HSSNumber] = "HSSNumber";
+        types[HSSPercentageNumber] = "HSSPercentageNumber";
+        types[HSSHexNumber] = "HSSHexNumber";
+        types[HSSDoubleQuoteString] = "HSSDoubleQuoteString";
+        types[HSSSingleQuoteString] = "HSSSingleQuoteString";
+        types[HSSSymbol] = "HSSSymbol";
+        types[HSSWhitespace] = "HSSWhitespace";
+        types[HSSInstructionSign] = "HSSInstructionSign";
+        types[HSSObjectSign] = "HSSObjectSign";
+        types[HSSBlockOpen] = "HSSBlockOpen";
+        types[HSSBlockClose] = "HSSBlockClose";
+        types[HSSComma] = "HSSComma";
+        types[HSSColon] = "HSSColon";
+        types[HSSEndOfStatement] = "HSSEndOfStatement";
+        types[HSSParenthesisOpen] = "HSSParenthesisOpen";
+        types[HSSParenthesisClose] = "HSSParenthesisClose";
+        types[HSSLineComment] = "HSSLineComment";
+        types[HSSBlockComment] = "HSSBlockComment";
+    }
+
     return types[type];
 }

@@ -67,15 +67,18 @@ HSSStatementType HSSStatement::getStatementType()
     return this->type;
 }
 
-std::string HSSStatement::statementStringRepresentation(HSSStatementType type)
+AXRString HSSStatement::statementStringRepresentation(HSSStatementType type)
 {
-    std::string types[20];
-    types[HSSStatementTypeNone] = "HSSGenericStatement";
-    types[HSSStatementTypeRule] = "HSSRule";
-    types[HSSStatementTypePropertyDefinition] = "HSSPropertyDefinition";
-    types[HSSStatementTypeObjectDefinition] = "HSSObjectDefinition";
-    types[HSSStatementTypeComment] = "HSSComment";
-    types[HSSStatementTypeInstruction] = "HSSInstruction";
+    static QMap<HSSStatementType, AXRString> types;
+    if (types.isEmpty())
+    {
+        types[HSSStatementTypeNone] = "HSSGenericStatement";
+        types[HSSStatementTypeRule] = "HSSRule";
+        types[HSSStatementTypePropertyDefinition] = "HSSPropertyDefinition";
+        types[HSSStatementTypeObjectDefinition] = "HSSObjectDefinition";
+        types[HSSStatementTypeComment] = "HSSComment";
+        types[HSSStatementTypeInstruction] = "HSSInstruction";
+    }
 
     return types[type];
 }

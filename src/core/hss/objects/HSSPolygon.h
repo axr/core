@@ -79,9 +79,9 @@ namespace AXR
          */
         virtual ~HSSPolygon();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual bool isKeyword(std::string value, std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual bool isKeyword(AXRString value, AXRString property);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
 

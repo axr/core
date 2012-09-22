@@ -61,7 +61,7 @@ HSSEvenChildFilter::~HSSEvenChildFilter()
 
 }
 
-std::string HSSEvenChildFilter::toString()
+AXRString HSSEvenChildFilter::toString()
 {
     return "Even Child Filter";
 }

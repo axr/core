@@ -68,14 +68,14 @@ HSSRgb::p HSSRgb::whiteColor()
     return whiteColor;
 }
 
-HSSRgb::HSSRgb(long double red, long double green, long double blue, long double alpha)
+HSSRgb::HSSRgb(double red, double green, double blue, double alpha)
 : HSSObject(HSSObjectTypeRgb), red(red), green(green), blue(blue), alpha(alpha)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: creating rgb object");
 
     this->observedRed = this->observedGreen = this->observedBlue = this->observedAlpha = NULL;
 
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("isA");
     shorthandProperties.push_back("alpha");
     shorthandProperties.push_back("red");
@@ -91,7 +91,7 @@ HSSRgb::HSSRgb(const HSSRgb & orig)
     this->red = this->green = this->blue = 0.;
     this->alpha = 255.;
     this->observedRed = this->observedGreen = this->observedBlue = this->observedAlpha = NULL;
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("isA");
     shorthandProperties.push_back("alpha");
     shorthandProperties.push_back("red");
@@ -117,30 +117,24 @@ HSSRgb::~HSSRgb()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: destructing rgb object");
 }
 
-std::string HSSRgb::toString()
+AXRString HSSRgb::toString()
 {
     if (this->isNamed())
     {
-        return std::string("HSSRgb: ").append(this->name);
+        return AXRString("HSSRgb: ").append(this->name);
     }
     else
     {
-        std::ostringstream rs, gs, bs, as;
-        rs << this->red;
-        gs << this->green;
-        bs << this->blue;
-        as << this->alpha;
-
-        return "Annonymous HSSRgb with red: " + rs.str() + " green: " + gs.str() + " blue: " + bs.str() + " alpha: " + as.str();
+        return AXRString("Annonymous HSSRgb with red: %1 green: %2 blue: %3 alpha: %4").arg(this->red).arg(this->green).arg(this->blue).arg(this->alpha);
     }
 }
 
-std::string HSSRgb::defaultObjectType()
+AXRString HSSRgb::defaultObjectType()
 {
     return "rgb";
 }
 
-std::string HSSRgb::defaultObjectType(std::string property)
+AXRString HSSRgb::defaultObjectType(AXRString property)
 {
     if (property == "red" || property == "green" || property == "blue" || property == "alpha")
     {
@@ -152,7 +146,7 @@ std::string HSSRgb::defaultObjectType(std::string property)
     }
 }
 
-//bool HSSRgb::isKeyword(std::string value, std::string property)
+//bool HSSRgb::isKeyword(AXRString value, AXRString property)
 //{
 //    if (value == "transparent"){
 //        return true;
@@ -185,7 +179,7 @@ void HSSRgb::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
 }
 
-long double HSSRgb::getRed()
+double HSSRgb::getRed()
 {
     return this->red;
 }
@@ -208,7 +202,7 @@ void HSSRgb::redChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** redChanged unimplemented ****************************");
 }
 
-long double HSSRgb::getGreen()
+double HSSRgb::getGreen()
 {
     return this->green;
 }
@@ -231,7 +225,7 @@ void HSSRgb::greenChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** greenChanged unimplemented ****************************");
 }
 
-long double HSSRgb::getBlue()
+double HSSRgb::getBlue()
 {
     return this->blue;
 }
@@ -254,7 +248,7 @@ void HSSRgb::blueChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** blueChanged unimplemented ****************************");
 }
 
-long double HSSRgb::getAlpha()
+double HSSRgb::getAlpha()
 {
     return this->alpha;
 }

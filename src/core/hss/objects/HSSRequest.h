@@ -82,8 +82,8 @@ namespace AXR
          */
         virtual ~HSSRequest();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
 
         /**
@@ -149,7 +149,7 @@ namespace AXR
 
 
     private:
-        std::string src;
+        AXRString src;
         HSSParserNode::p dSrc;
         HSSObservable * observedSrc;
         HSSObservableProperty observedSrcProperty;

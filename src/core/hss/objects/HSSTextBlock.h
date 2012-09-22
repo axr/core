@@ -70,8 +70,8 @@ namespace AXR
     {
     public:
 
-        static HSSTextTransformType textTransformTypeFromString(std::string value);
-        static HSSTextAlignType textAlignTypeFromString(std::string value);
+        static HSSTextTransformType textTransformTypeFromString(AXRString value);
+        static HSSTextAlignType textAlignTypeFromString(AXRString value);
 
         typedef boost::shared_ptr<HSSTextBlock> p;
         typedef std::vector<HSSTextBlock::p>::iterator it;
@@ -92,9 +92,9 @@ namespace AXR
         p clone() const;
         virtual ~HSSTextBlock();
 
-        virtual std::string defaultObjectType();
-        virtual bool isKeyword(std::string value, std::string property);
-        virtual std::string toString();
+        virtual AXRString defaultObjectType();
+        virtual bool isKeyword(AXRString value, AXRString property);
+        virtual AXRString toString();
         virtual void setDefaults();
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
         virtual void drawForeground();
@@ -113,7 +113,7 @@ namespace AXR
         void textAlignChanged(HSSObservableProperty source, void*data);
 
         //text
-        std::string getText();
+        AXRString getText();
         HSSParserNode::p getDText();
         void setDText(HSSParserNode::p value);
         void textChanged(HSSObservableProperty source, void*data);
@@ -134,7 +134,7 @@ namespace AXR
         HSSObservableProperty observedTextAlignProperty;
 
         //text
-        std::string text;
+        AXRString text;
         HSSParserNode::p dText;
         HSSObservable * observedText;
         HSSObservableProperty observedTextProperty;

@@ -66,8 +66,8 @@ void CocoaAXRWrapper::setNeedsDisplay(bool newValue)
     [pool release];
 }
 
-std::string CocoaAXRWrapper::getPathToResources()
+AXRString CocoaAXRWrapper::getPathToResources()
 {
-    std::string resourcesPath = [[[NSBundle mainBundle] resourcePath] UTF8String];
+    AXRString resourcesPath = [[[NSBundle mainBundle] resourcePath] UTF8String];
     return resourcesPath;
 }

@@ -44,7 +44,6 @@
 #ifndef HSSRULE_H
 #define HSSRULE_H
 
-#include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include "HSSFilterType.h"
@@ -121,7 +120,7 @@ namespace AXR
          */
         ~HSSRule();
 
-        std::string toString();
+        AXRString toString();
 
         /**
          *  Setter fo the selector chains, which are used to select elements from the

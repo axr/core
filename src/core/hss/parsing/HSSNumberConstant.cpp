@@ -72,14 +72,9 @@ long double HSSNumberConstant::getValue()
     return this->value;
 }
 
-std::string HSSNumberConstant::toString()
+AXRString HSSNumberConstant::toString()
 {
-    std::string ret = "HSSNumberConstant with value ";
-    std::ostringstream tempstream;
-    //create a temp stream to convert the float to a string
-    tempstream << this->value;
-    ret.append(tempstream.str());
-    return ret;
+    return AXRString("HSSNumberConstant with value %1").arg((double)this->value);
 }
 
 HSSClonable::p HSSNumberConstant::cloneImpl() const

@@ -44,7 +44,6 @@
 #ifndef AXR_XMLPARSER_H
 #define AXR_XMLPARSER_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include "AXRGlobal.h"
 
@@ -62,8 +61,8 @@ namespace AXR
 
         bool loadFile(AXRFile::p file);
 
-        std::string getFilePath();
-        std::string getFileName();
+        AXRString getFilePath();
+        AXRString getFileName();
 
         AXRController *controller;
 

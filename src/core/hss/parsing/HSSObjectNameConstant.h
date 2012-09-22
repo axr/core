@@ -64,7 +64,7 @@ namespace AXR
          *  Creates a new instance of a object name constant, with given name.
          *  @param  value   A string containing the object name.
          */
-        HSSObjectNameConstant(std::string value);
+        HSSObjectNameConstant(AXRString value);
 
         /**
          *  Clones an instance of HSSObjectNameConstant and gives a shared pointer of the
@@ -82,22 +82,22 @@ namespace AXR
          *  Setter for the value of the object name constant.
          *  @param newValue     A string containing the new object name.
          */
-        void setValue(std::string newValue);
+        void setValue(AXRString newValue);
 
         /**
          *  Getter for the value of the object name constant.
          *  @return A string containing the object name.
          */
-        std::string getValue();
+        AXRString getValue();
 
         /**
          *  Prints itself as a textual representation, useful for loggin or introspection.
          *  @return A string containing a textual representation of the keyword constant.
          */
-        std::string toString();
+        AXRString toString();
 
     protected:
-        std::string value;
+        AXRString value;
 
     private:
         virtual HSSClonable::p cloneImpl() const;

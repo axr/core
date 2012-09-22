@@ -44,7 +44,7 @@
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 #include <QImage>
-#include <QString>
+#include "AXRString.h"
 #include "errors.h"
 #include "AXR.h"
 #include "AXRController.h"
@@ -76,7 +76,7 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
         // If the window size has changed, make new size
         if (bounds.size.width != this->windowWidth || bounds.size.height != this->windowHeight)
         {
-            axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, QString("AXRRender: window size changed, setting to width: %1 and height: %2").arg((int)bounds.size.width).arg((int)bounds.size.height));
+            axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("AXRRender: window size changed, setting to width: %1 and height: %2").arg((int)bounds.size.width).arg((int)bounds.size.height));
 
             this->windowWidth = bounds.size.width;
             this->windowHeight = bounds.size.height;

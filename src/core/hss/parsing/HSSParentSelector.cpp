@@ -58,7 +58,7 @@ HSSParentSelector::p HSSParentSelector::clone() const
     return boost::static_pointer_cast<HSSParentSelector, HSSClonable > (this->cloneImpl());
 }
 
-std::string HSSParentSelector::toString()
+AXRString HSSParentSelector::toString()
 {
     return "@parent selector";
 }
@@ -68,7 +68,7 @@ HSSClonable::p HSSParentSelector::cloneImpl() const
     return HSSClonable::p(new HSSParentSelector(*this));
 }
 
-std::string HSSParentSelector::getElementName()
+AXRString HSSParentSelector::getElementName()
 {
     return "@parent";
 }

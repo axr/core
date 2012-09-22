@@ -75,12 +75,12 @@ HSSFunctionAction::~HSSFunctionAction()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFunctionAction: destructing function action object");
 }
 
-std::string HSSFunctionAction::toString()
+AXRString HSSFunctionAction::toString()
 {
     return "HSSFunctionAction";
 }
 
-std::string HSSFunctionAction::defaultObjectType()
+AXRString HSSFunctionAction::defaultObjectType()
 {
     return "value";
 }

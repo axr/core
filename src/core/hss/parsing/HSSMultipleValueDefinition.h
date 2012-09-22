@@ -80,7 +80,7 @@ namespace AXR
          */
         virtual ~HSSMultipleValueDefinition();
 
-        virtual std::string toString();
+        virtual AXRString toString();
 
         /**
          *  Getter for values.

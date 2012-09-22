@@ -45,6 +45,7 @@
 #define HSSKEYWORDCONSTANT_H
 
 #include <boost/shared_ptr.hpp>
+#include "AXRString.h"
 #include "HSSParserNode.h"
 
 namespace AXR
@@ -61,7 +62,7 @@ namespace AXR
          *  Creates a new instance of a keyword constant, with given content.
          *  @param  value   A string containing the name of the keyword.
          */
-        HSSKeywordConstant(std::string value);
+        HSSKeywordConstant(AXRString value);
 
         /**
          *  Clones an instance of HSSKeywordConstant and gives a shared pointer of the
@@ -79,22 +80,22 @@ namespace AXR
          *  Setter for the value of the keyword constant.
          *  @param newValue     A string containing the new name of the keyword.
          */
-        void setValue(std::string newValue);
+        void setValue(AXRString newValue);
 
         /**
          *  Getter for the value of the keyword constant.
          *  @return A string containing the name of the keyword.
          */
-        std::string getValue();
+        AXRString getValue();
 
         /**
          *  Prints itself as a textual representation, useful for loggin or introspection.
          *  @return A string containing a textual representation of the keyword constant.
          */
-        std::string toString();
+        AXRString toString();
 
     protected:
-        std::string value;
+        AXRString value;
 
     private:
         virtual HSSClonable::p cloneImpl() const;

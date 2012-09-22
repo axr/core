@@ -45,7 +45,6 @@
 #define HSSSELECTORCHAIN_H
 
 #include <deque>
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "HSSParserNode.h"
@@ -108,7 +107,7 @@ namespace AXR
         ~HSSSelectorChain();
 
         //see HSSObject.h for the documentation of this method
-        std::string toString();
+        AXRString toString();
 
         /**
          *  Returns a node based on the index.

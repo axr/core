@@ -48,9 +48,9 @@
 
 using namespace AXR;
 
-std::string HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType)
+AXRString HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType)
 {
-    static QMap<HSSFilterType, QString> types;
+    static QMap<HSSFilterType, AXRString> types;
     if (types.isEmpty())
     {
         //position
@@ -76,12 +76,12 @@ std::string HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType)
         types[HSSFilterTypeFlag] = "HSSFilterTypeFlag";
     }
 
-    return types[filterType].toStdString();
+    return types[filterType];
 }
 
-HSSFilterType HSSFilter::filterTypeFromString(std::string name)
+HSSFilterType HSSFilter::filterTypeFromString(AXRString name)
 {
-    static QMap<std::string, HSSFilterType> filterTypes;
+    static QMap<AXRString, HSSFilterType> filterTypes;
     if (filterTypes.isEmpty())
     {
         //position
@@ -113,7 +113,7 @@ HSSFilterType HSSFilter::filterTypeFromString(std::string name)
     return filterTypes[name];
 }
 
-HSSFilter::p HSSFilter::newFilterWithStringType(std::string stringType)
+HSSFilter::p HSSFilter::newFilterWithStringType(AXRString stringType)
 {
     return HSSFilter::newFilterWithType(HSSFilter::filterTypeFromString(stringType));
 }
@@ -204,7 +204,7 @@ HSSFilter::~HSSFilter()
 
 }
 
-std::string HSSFilter::toString()
+AXRString HSSFilter::toString()
 {
     return "Generic filter";
 }

@@ -62,7 +62,7 @@ namespace AXR
          *  @param actionType   The action type to represent as a string.
          *  @return A string representation of the given type.
          */
-        static std::string actionTypeStringRepresentation(HSSActionType actionType);
+        static AXRString actionTypeStringRepresentation(HSSActionType actionType);
 
         /**
          *  Clones an instance of HSSAction and gives a shared pointer of the
@@ -77,9 +77,9 @@ namespace AXR
         virtual ~HSSAction();
 
         //see HSSObject.h for documentation of these
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
 
         /**

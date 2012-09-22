@@ -65,7 +65,7 @@ namespace AXR
          *  Print the type as a string, useful for logging.
          *  @param  eventType   The event type that will be printed as a string.
          */
-        static std::string eventTypeStringRepresentation(HSSEventType eventType);
+        static AXRString eventTypeStringRepresentation(HSSEventType eventType);
 
         /**
          *  Constructor for HSSEvent objects.
@@ -88,9 +88,9 @@ namespace AXR
          */
         virtual ~HSSEvent();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
 
         /**

@@ -57,7 +57,7 @@ HSSColorStop::HSSColorStop()
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: creating color stop object");
 
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("color");
     shorthandProperties.push_back("position");
     shorthandProperties.push_back("balance");
@@ -72,7 +72,7 @@ HSSColorStop::HSSColorStop()
 HSSColorStop::HSSColorStop(const HSSColorStop & orig)
 : HSSObject(orig)
 {
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("color");
     shorthandProperties.push_back("position");
     shorthandProperties.push_back("balance");
@@ -100,11 +100,11 @@ HSSColorStop::~HSSColorStop()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: destructing color stop object");
 }
 
-std::string HSSColorStop::toString()
+AXRString HSSColorStop::toString()
 {
     if (this->isNamed())
     {
-        return std::string("HSSColorStop: ").append(this->name);
+        return AXRString("HSSColorStop: ").append(this->name);
     }
     else
     {
@@ -112,12 +112,12 @@ std::string HSSColorStop::toString()
     }
 }
 
-std::string HSSColorStop::defaultObjectType()
+AXRString HSSColorStop::defaultObjectType()
 {
     return "colorStop";
 }
 
-std::string HSSColorStop::defaultObjectType(std::string property)
+AXRString HSSColorStop::defaultObjectType(AXRString property)
 {
     if (property == "color")
     {
@@ -129,7 +129,7 @@ std::string HSSColorStop::defaultObjectType(std::string property)
     }
 }
 
-bool HSSColorStop::isKeyword(std::string value, std::string property)
+bool HSSColorStop::isKeyword(AXRString value, AXRString property)
 {
     if (value == "start" || value == "middle" || value == "end")
     {
@@ -234,7 +234,7 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
-        std::string kwValue = theKW->getValue();
+        AXRString kwValue = theKW->getValue();
 
         if (kwValue == "black")
         {

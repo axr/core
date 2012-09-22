@@ -44,8 +44,8 @@
 #ifndef HSSSTATEMENT_H
 #define HSSSTATEMENT_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
+#include "AXRString.h"
 #include "HSSParserNode.h"
 
 namespace AXR
@@ -65,7 +65,7 @@ namespace AXR
          */
         typedef boost::shared_ptr<HSSStatement> p;
 
-        virtual std::string toString() = 0;
+        virtual AXRString toString() = 0;
 
         /**
          *  Call this to know if a statement is of the given type.
@@ -84,7 +84,7 @@ namespace AXR
          *  @param type     The statement type to represent as a string.
          *  @return A string representation of the given type.
          */
-        std::string statementStringRepresentation(HSSStatementType type);
+        AXRString statementStringRepresentation(HSSStatementType type);
 
         bool isA(HSSInstructionType type);
 

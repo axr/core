@@ -44,7 +44,6 @@
 #ifndef HSSPARSERNODE_H
 #define HSSPARSERNODE_H
 
-#include <string>
 #include <vector>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
@@ -92,7 +91,7 @@ namespace AXR
          *  @param type     The parser node type to represent as a string.
          *  @return A string representation of the given type.
          */
-        static std::string parserNodeStringRepresentation(HSSParserNodeType type);
+        static AXRString parserNodeStringRepresentation(HSSParserNodeType type);
 
         /**
          *  Clones an instance of HSSParserNode and gives a shared pointer of the
@@ -105,7 +104,7 @@ namespace AXR
          *  Prints itself as a textual representation. Each object overrides this method to .
          *  @return A textual representation of the object.
          */
-        virtual std::string toString();
+        virtual AXRString toString();
 
         /**
          *  Call this to know if a parser node is of the given type.

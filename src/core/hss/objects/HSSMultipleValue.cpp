@@ -79,9 +79,9 @@ HSSMultipleValue::~HSSMultipleValue()
     this->valueList.clear();
 }
 
-std::string HSSMultipleValue::toString()
+AXRString HSSMultipleValue::toString()
 {
-    std::string tempstr = std::string("HSSMultipleValue");
+    AXRString tempstr = AXRString("HSSMultipleValue");
 
     const unsigned int vcount = this->size();
     if (vcount > 0)

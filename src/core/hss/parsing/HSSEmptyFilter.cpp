@@ -62,7 +62,7 @@ HSSEmptyFilter::~HSSEmptyFilter()
 
 }
 
-std::string HSSEmptyFilter::toString()
+AXRString HSSEmptyFilter::toString()
 {
     return "Empty Filter";
 }

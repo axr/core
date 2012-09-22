@@ -74,11 +74,11 @@ HSSGradient::~HSSGradient()
 {
 }
 
-std::string HSSGradient::toString()
+AXRString HSSGradient::toString()
 {
     if (this->isNamed())
     {
-        return std::string("HSSGradient: ").append(this->name);
+        return AXRString("HSSGradient: ").append(this->name);
     }
     else
     {
@@ -86,12 +86,12 @@ std::string HSSGradient::toString()
     }
 }
 
-std::string HSSGradient::defaultObjectType()
+AXRString HSSGradient::defaultObjectType()
 {
     return "linearGradient";
 }
 
-std::string HSSGradient::defaultObjectType(std::string property)
+AXRString HSSGradient::defaultObjectType(AXRString property)
 {
     if (property == "startColor"
             || property == "endColor")
@@ -108,7 +108,7 @@ std::string HSSGradient::defaultObjectType(std::string property)
     }
 }
 
-bool HSSGradient::isKeyword(std::string value, std::string property)
+bool HSSGradient::isKeyword(AXRString value, AXRString property)
 {
     if ((value == "inside" || value == "centered" || value == "outside") && (property == "position"))
     {

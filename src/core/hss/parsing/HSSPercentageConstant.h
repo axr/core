@@ -44,7 +44,6 @@
 #ifndef HSSPERCENTAGECONSTANT_H
 #define HSSPERCENTAGECONSTANT_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include "HSSParserNode.h"
 
@@ -76,7 +75,7 @@ namespace AXR
          */
         virtual ~HSSPercentageConstant();
 
-        virtual std::string toString();
+        virtual AXRString toString();
 
         /**
          *  Setter for the value of the percentage constant.

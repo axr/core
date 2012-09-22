@@ -45,7 +45,6 @@
 #define AXRCONTROLLER_H
 
 #include <stack>
-#include <string>
 #include <vector>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
@@ -86,7 +85,7 @@ namespace AXR
         /**
          *  @return A textual representation of itself, as a string.
          */
-        virtual std::string toString();
+        virtual AXRString toString();
 
         /**
          *  Use this to clean up and start from fresh (e.g. when reloading a file).
@@ -111,7 +110,7 @@ namespace AXR
          *
          *  @param elementName  A string containing the name of the element we just entered.
          */
-        void enterElement(std::string elementName);
+        void enterElement(AXRString elementName);
 
         /**
          *  This method is called by the XML parser when it reads an attribute of the current element.
@@ -119,7 +118,7 @@ namespace AXR
          *  @param  name    A string containing the name of the attribute.
          *  @param  value   A string containing the value of the attribute.
          */
-        void addAttribute(std::string name, std::string value);
+        void addAttribute(AXRString name, AXRString value);
 
         /**
          *  This method is called by the XML parser when it reads the content text of the
@@ -127,7 +126,7 @@ namespace AXR
          *
          *  @param  text    A string containing the content text for the current element.
          */
-        void setContentText(std::string text);
+        void setContentText(AXRString text);
 
         /**
          *  When content text is read in chunks, this allows to append the text to the
@@ -135,7 +134,7 @@ namespace AXR
          *
          *  @param text     A string containing content text for the current element.
          */
-        void appendContentText(std::string text);
+        void appendContentText(AXRString text);
 
         /**
          *  This method is called by the XML parser when it reads a closing tag.
@@ -180,14 +179,14 @@ namespace AXR
          *  @param name     A string containing the name of the object to be returned.
          *  @return         The object definitionat with that name. May be an empty pointer if not found.
          */
-        HSSObjectDefinition::p & objectTreeGet(std::string name);
+        HSSObjectDefinition::p & objectTreeGet(AXRString name);
 
         /**
          *  Adds an entry in the list of sheets to be loaded.
          *
          *  @param sheet    A string containing the file name of the stylesheet
          */
-        void loadSheetsAdd(std::string sheet);
+        void loadSheetsAdd(AXRString sheet);
 
         /**
          *  Removes an entry in the list of sheets to be loaded.
@@ -202,14 +201,14 @@ namespace AXR
          *  @param index    An unsigned int containing the index of the sheet to be removed.
          *  @return         The sheet at that index.
          */
-        std::string loadSheetsGet(unsigned index);
+        AXRString loadSheetsGet(unsigned index);
 
         /**
          *  Returns all entries from the list of sheets to be loaded.
          *
          *  @return         The list of sheets to be loaded.
          */
-        const std::vector<std::string> loadSheetsGet() const;
+        const std::vector<AXRString> loadSheetsGet() const;
 
         /**
          *  Replaces the whole parser tree with what you give.
@@ -393,7 +392,7 @@ namespace AXR
         /**
          *  @todo make private and provide accessors.
          */
-        std::string basepath;
+        AXRString basepath;
 
         /**
          *  After reading the XML and HSS documents, this method is used to match the rules to the
@@ -415,7 +414,7 @@ namespace AXR
         HSSContainer::p root;
 
         std::vector<HSSObjectDefinition::p>objectTree;
-        std::vector<std::string>loadSheets;
+        std::vector<AXRString>loadSheets;
         std::vector<HSSParserNode::p>parserTree;
         std::vector<HSSRule::p>rules;
 

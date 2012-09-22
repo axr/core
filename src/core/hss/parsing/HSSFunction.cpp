@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <string>
 #include "AXR.h"
 #include "AXRDebugging.h"
 #include "HSSFunction.h"
@@ -96,9 +95,9 @@ HSSFunction::~HSSFunction()
     //    }
 }
 
-std::string HSSFunction::toString()
+AXRString HSSFunction::toString()
 {
-    std::string tempstr = std::string("HSSFunction\n");
+    AXRString tempstr = AXRString("HSSFunction\n");
     return tempstr;
 }
 
@@ -247,12 +246,12 @@ std::deque<HSSParserNode::p> HSSFunction::getArguments()
     return this->_arguments;
 }
 
-void HSSFunction::setName(std::string newName)
+void HSSFunction::setName(AXRString newName)
 {
     this->_name = newName;
 }
 
-std::string HSSFunction::getName()
+AXRString HSSFunction::getName()
 {
     return this->_name;
 }

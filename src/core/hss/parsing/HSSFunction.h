@@ -45,7 +45,6 @@
 #define HSSFUNCTION_H
 
 #include <deque>
-#include <string>
 #include <vector>
 #include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
@@ -79,7 +78,7 @@ namespace AXR
          */
         virtual ~HSSFunction();
 
-        virtual std::string toString();
+        virtual AXRString toString();
 
         /**
          *  Evaluate the function. The actual implementation is up to each specific subclass.
@@ -173,8 +172,8 @@ namespace AXR
 
         std::deque<HSSParserNode::p> getArguments();
         void setArguments(std::deque<HSSParserNode::p> arguments);
-        std::string getName();
-        void setName(std::string newName);
+        AXRString getName();
+        void setName(AXRString newName);
 
     protected:
         /**
@@ -203,7 +202,7 @@ namespace AXR
     private:
         HSSFunctionType functionType;
         std::deque<HSSParserNode::p> _arguments;
-        std::string _name;
+        AXRString _name;
 
         HSSClonable::p cloneImpl() const;
     };

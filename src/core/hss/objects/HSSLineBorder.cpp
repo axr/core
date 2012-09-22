@@ -54,7 +54,7 @@ HSSLineBorder::HSSLineBorder()
 : HSSBorder()
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLineBorder: creating line border object");
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("color");
 
@@ -66,7 +66,7 @@ HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
 : HSSBorder(orig)
 {
     this->observedColor = NULL;
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("color");
 
@@ -90,11 +90,11 @@ HSSLineBorder::~HSSLineBorder()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLineBorder: destructing line border object");
 }
 
-std::string HSSLineBorder::toString()
+AXRString HSSLineBorder::toString()
 {
     if (this->isNamed())
     {
-        return std::string("HSSLineBorder: ").append(this->name);
+        return AXRString("HSSLineBorder: ").append(this->name);
     }
     else
     {
@@ -102,12 +102,12 @@ std::string HSSLineBorder::toString()
     }
 }
 
-std::string HSSLineBorder::defaultObjectType()
+AXRString HSSLineBorder::defaultObjectType()
 {
     return "lineBorder";
 }
 
-std::string HSSLineBorder::defaultObjectType(std::string property)
+AXRString HSSLineBorder::defaultObjectType(AXRString property)
 {
     if (property == "color")
     {
@@ -127,7 +127,7 @@ std::string HSSLineBorder::defaultObjectType(std::string property)
     }
 }
 
-bool HSSLineBorder::isKeyword(std::string value, std::string property)
+bool HSSLineBorder::isKeyword(AXRString value, AXRString property)
 {
     if ((value == "rounded" || value == "projected") && (property == "caps"))
     {

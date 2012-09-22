@@ -78,7 +78,7 @@ namespace AXR
          *  Destructor for MultipleValue objects
          */
         virtual ~HSSMultipleValue();
-        virtual std::string toString();
+        virtual AXRString toString();
         /**
          *  Adds a parser node defining a value to the storage.
          *  @param newValue     A shared pointer to the parser node that defines the value

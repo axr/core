@@ -44,7 +44,6 @@
 #ifndef HSSNAMESELECTOR_H
 #define HSSNAMESELECTOR_H
 
-#include <string>
 #include "HSSSelector.h"
 
 namespace AXR
@@ -63,7 +62,7 @@ namespace AXR
         /**
          *  Creates a new instance of a selector.
          */
-        HSSNameSelector(std::string elementName);
+        HSSNameSelector(AXRString elementName);
 
         /**
          *  Copy constructor for HSSNameSelector objects. Do not call directly, use clone() instead.
@@ -81,15 +80,15 @@ namespace AXR
          *  Getter for the name of the element.
          *  @return A string containing the name of the element.
          */
-        virtual std::string getElementName();
+        virtual AXRString getElementName();
 
         //see HSSObject.h for documentation of this method
-        virtual std::string toString();
+        virtual AXRString toString();
 
         virtual std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
 
     protected:
-        std::string elementName;
+        AXRString elementName;
 
     private:
         virtual HSSClonable::p cloneImpl() const;

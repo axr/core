@@ -61,7 +61,7 @@ HSSOddChildFilter::~HSSOddChildFilter()
 
 }
 
-std::string HSSOddChildFilter::toString()
+AXRString HSSOddChildFilter::toString()
 {
     return "Odd Child Filter";
 }

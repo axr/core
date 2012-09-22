@@ -71,7 +71,7 @@ void HSSTokenizer::reset()
     this->currentChar = '\0';
 
     // Initialize the currentTokenText
-    this->currentTokenText = std::string();
+    this->currentTokenText = AXRString();
 
     // We start out at the beginning of an empty buffer
     this->buflen = this->bufpos = 0;
@@ -108,9 +108,7 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
         this->currentChar = buffer[this->bufpos];
     }
 
-    std::stringstream msg;
-    msg << "read charachter L" << this->currentLine << "C" << this->currentColumn << "|" << this->currentChar << "|";
-    axr_log(AXR_DEBUG_CH_TOKENIZING, msg.str());
+    axr_log(AXR_DEBUG_CH_TOKENIZING, AXRString("read charachter L%1C%2|%3|").arg(this->currentLine).arg(this->currentColumn).arg(this->currentChar));
 
     this->bufpos++;
     this->currentColumn++;
@@ -223,9 +221,7 @@ HSSToken::p HSSTokenizer::readNextToken()
 
 HSSToken::p HSSTokenizer::peekNextToken()
 {
-    std::stringstream ss;
-    ss << "bufpos: " << this->bufpos;
-    std_log4(ss.str());
+    std_log4(AXRString("bufpos: %1").arg(this->bufpos));
 
     // Store the current position in the buffer
     int curpos = this->bufpos;
@@ -238,9 +234,7 @@ HSSToken::p HSSTokenizer::peekNextToken()
     this->peekLine += (this->currentLine - curline);
     this->peekColumn += (this->currentColumn - curcol);
 
-    std::stringstream msg;
-    msg << "new peekpos: " << this->peekpos << " because bufpos: " << this->bufpos << " and curpos: " << curpos;
-    axr_log(AXR_DEBUG_CH_TOKENIZING, msg.str());
+    axr_log(AXR_DEBUG_CH_TOKENIZING, AXRString("new peekpos: %1 because bufpos: %2 and curpos: %3").arg(this->peekpos).arg(this->bufpos).arg(curpos));
 
     return ret;
 }
@@ -253,9 +247,7 @@ void HSSTokenizer::resetPeek()
     this->currentLine -= this->peekLine;
     this->currentColumn -= this->peekColumn + 1;
 
-    std::stringstream ss;
-    ss << "end bufpos: " << this->bufpos;
-    std_log4(ss.str());
+    std_log4(AXRString("end bufpos: %1").arg(this->bufpos));
 
     this->readNextChar();
 
@@ -298,7 +290,7 @@ bool HSSTokenizer::atEndOfSource()
 
 HSS_TOKENIZING_STATUS HSSTokenizer::storeCurrentCharAndReadNext()
 {
-    this->currentTokenText.append(1, this->currentChar);
+    this->currentTokenText += this->currentChar;
     this->readNextChar();
 
     return HSSTokenizerOK;
@@ -306,13 +298,13 @@ HSS_TOKENIZING_STATUS HSSTokenizer::storeCurrentCharAndReadNext()
 
 HSS_TOKENIZING_STATUS HSSTokenizer::storeChar(char value)
 {
-    this->currentTokenText.append(1, value);
+    this->currentTokenText += value;
     return HSSTokenizerOK;
 }
 
-std::string HSSTokenizer::extractCurrentTokenText()
+AXRString HSSTokenizer::extractCurrentTokenText()
 {
-    std::string tempctt = this->currentTokenText;
+    AXRString tempctt = this->currentTokenText;
     this->currentTokenText.clear();
     return tempctt;
 }

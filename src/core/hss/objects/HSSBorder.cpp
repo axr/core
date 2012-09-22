@@ -69,11 +69,11 @@ HSSBorder::~HSSBorder()
 
 }
 
-std::string HSSBorder::toString()
+AXRString HSSBorder::toString()
 {
     if (this->isNamed())
     {
-        return std::string("HSSBorder: ").append(this->name);
+        return AXRString("HSSBorder: ").append(this->name);
     }
     else
     {
@@ -81,12 +81,12 @@ std::string HSSBorder::toString()
     }
 }
 
-std::string HSSBorder::defaultObjectType()
+AXRString HSSBorder::defaultObjectType()
 {
     return "border";
 }
 
-std::string HSSBorder::defaultObjectType(std::string property)
+AXRString HSSBorder::defaultObjectType(AXRString property)
 {
     if (property == "effects")
     {
@@ -98,7 +98,7 @@ std::string HSSBorder::defaultObjectType(std::string property)
     }
 }
 
-bool HSSBorder::isKeyword(std::string value, std::string property)
+bool HSSBorder::isKeyword(AXRString value, AXRString property)
 {
     if (value == "inside" || value == "centered" || value == "outside")
     {

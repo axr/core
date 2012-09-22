@@ -62,7 +62,7 @@ HSSSimpleSelector::p HSSSimpleSelector::clone() const
     return boost::static_pointer_cast<HSSSimpleSelector, HSSClonable > (this->cloneImpl());
 }
 
-std::string HSSSimpleSelector::toString()
+AXRString HSSSimpleSelector::toString()
 {
     return "Simple SimpleSelector";
 }

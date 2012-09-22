@@ -64,7 +64,7 @@ namespace AXR
          *  Destructor for this class.
          */
         virtual ~HSSExpression();
-        std::string toString();
+        AXRString toString();
         long double evaluate();
 
         /**
@@ -83,7 +83,7 @@ namespace AXR
          *  @param type     The expression type to represent as a string.
          *  @return A string representation of the given type.
          */
-        static std::string expressionTypeStringRepresentation(HSSExpressionType type);
+        static AXRString expressionTypeStringRepresentation(HSSExpressionType type);
 
         /**
          *  Setter for the left hand member of the expression.

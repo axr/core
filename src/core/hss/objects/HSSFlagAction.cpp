@@ -75,12 +75,12 @@ HSSFlagAction::~HSSFlagAction()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFlagAction: destructing flag action object");
 }
 
-std::string HSSFlagAction::toString()
+AXRString HSSFlagAction::toString()
 {
     return "HSSFlag";
 }
 
-std::string HSSFlagAction::defaultObjectType()
+AXRString HSSFlagAction::defaultObjectType()
 {
     return "Flag";
 }

@@ -58,7 +58,7 @@ HSSPolygon::HSSPolygon()
 : HSSShape(HSSShapeTypePolygon)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: creating polygon object");
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("sides");
     shorthandProperties.push_back("angle");
     this->setShorthandProperties(shorthandProperties);
@@ -75,7 +75,7 @@ HSSPolygon::HSSPolygon()
 HSSPolygon::HSSPolygon(const HSSPolygon & orig)
 : HSSShape(orig)
 {
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("sides");
     shorthandProperties.push_back("angle");
     this->setShorthandProperties(shorthandProperties);
@@ -105,11 +105,11 @@ HSSPolygon::~HSSPolygon()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: destructing polygon object");
 }
 
-std::string HSSPolygon::toString()
+AXRString HSSPolygon::toString()
 {
     if (this->isNamed())
     {
-        return std::string("HSSPolygon: ").append(this->name);
+        return AXRString("HSSPolygon: ").append(this->name);
     }
     else
     {
@@ -117,12 +117,12 @@ std::string HSSPolygon::toString()
     }
 }
 
-std::string HSSPolygon::defaultObjectType()
+AXRString HSSPolygon::defaultObjectType()
 {
     return "polygon";
 }
 
-bool HSSPolygon::isKeyword(std::string value, std::string property)
+bool HSSPolygon::isKeyword(AXRString value, AXRString property)
 {
     if (property == "angle")
     {

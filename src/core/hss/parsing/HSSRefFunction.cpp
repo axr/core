@@ -75,12 +75,12 @@ HSSRefFunction::~HSSRefFunction()
     }
 }
 
-const std::string & HSSRefFunction::getModifier() const
+const AXRString & HSSRefFunction::getModifier() const
 {
     return this->modifier;
 }
 
-void HSSRefFunction::setModifier(std::string newValue)
+void HSSRefFunction::setModifier(AXRString newValue)
 {
     this->modifier = newValue;
     this->setDirty(true);

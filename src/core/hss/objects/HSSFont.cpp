@@ -62,7 +62,7 @@ HSSFont::HSSFont()
     this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;
 
     this->size = DEFAULT_SIZE;
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("face");
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("color");
@@ -75,7 +75,7 @@ HSSFont::HSSFont(const HSSFont & orig)
 {
     this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;
     this->size = DEFAULT_SIZE;
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("face");
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("color");
@@ -98,11 +98,11 @@ HSSFont::~HSSFont()
 
 }
 
-std::string HSSFont::toString()
+AXRString HSSFont::toString()
 {
     if (this->isNamed())
     {
-        return std::string("HSSFont: ").append(this->name);
+        return AXRString("HSSFont: ").append(this->name);
     }
     else
     {
@@ -110,12 +110,12 @@ std::string HSSFont::toString()
     }
 }
 
-std::string HSSFont::defaultObjectType()
+AXRString HSSFont::defaultObjectType()
 {
     return "font";
 }
 
-std::string HSSFont::defaultObjectType(std::string property)
+AXRString HSSFont::defaultObjectType(AXRString property)
 {
     if (property == "color")
     {
@@ -127,7 +127,7 @@ std::string HSSFont::defaultObjectType(std::string property)
     }
 }
 
-bool HSSFont::isKeyword(std::string value, std::string property)
+bool HSSFont::isKeyword(AXRString value, AXRString property)
 {
     if (property == "weight")
     {
@@ -211,7 +211,7 @@ void HSSFont::sizeChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** sizeChanged unimplemented ****************************");
 }
 
-std::string HSSFont::getFace()
+AXRString HSSFont::getFace()
 {
     return this->face;
 }

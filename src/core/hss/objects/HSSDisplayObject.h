@@ -45,7 +45,6 @@
 #define HSSDISPLAYOBJECT_H
 
 #include <map>
-#include <string>
 #include <vector>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
@@ -99,10 +98,10 @@ namespace AXR
          *  Destructor for this class.
          */
         virtual ~HSSDisplayObject();
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
+        virtual bool isKeyword(AXRString value, AXRString property);
 
         /**
          *  Each subclass should return wether it can have children or not. Right now the only
@@ -143,31 +142,31 @@ namespace AXR
          *  @param name     The name of the attribute. Will be used as they key to the data.
          *  @param value    The content of the attribute.
          */
-        void attributesAdd(std::string name, std::string value);
+        void attributesAdd(AXRString name, AXRString value);
 
         /**
          *  Removes an entry in the list of attributes.
          *  @param name     The name of the attribute. Will be used as they key to find the data.
          */
-        void attributesRemove(std::string name);
+        void attributesRemove(AXRString name);
 
         /**
          *  Getter for the content text.
          *  @return A string containing the content text.
          */
-        virtual std::string getContentText();
+        virtual AXRString getContentText();
 
         /**
          *  Setter for the content text.
          *  @param text     A string containing the new value for content text.
          */
-        virtual void setContentText(const std::string &text);
+        virtual void setContentText(const AXRString &text);
 
         /**
          *  Append a piece of text to the content text.
          *  @param text     A string containing the value to be appended to the content text.
          */
-        virtual void appendContentText(const std::string &text);
+        virtual void appendContentText(const AXRString &text);
 
         /**
          *  Add a rule to the list of rules associated with this display object.
@@ -210,8 +209,8 @@ namespace AXR
         virtual void setGlobalX(HSSUnit newValue);
         virtual void setGlobalY(HSSUnit newValue);
 
-        std::string getElementName();
-        void setElementName(std::string name);
+        AXRString getElementName();
+        void setElementName(AXRString name);
 
         HSSUnit getAlignX();
         HSSParserNode::p getDAlignX();
@@ -316,11 +315,11 @@ namespace AXR
         void ruleChanged(HSSObservableProperty source, void*data);
 
         void createFlag(boost::shared_ptr<HSSFlag> flag, HSSRuleState defaultValue);
-        bool hasFlag(std::string name);
-        HSSRuleState flagState(std::string name);
-        void flagsActivate(std::string name);
-        void flagsDeactivate(std::string name);
-        void flagsToggle(std::string name);
+        bool hasFlag(AXRString name);
+        HSSRuleState flagState(AXRString name);
+        void flagsActivate(AXRString name);
+        void flagsDeactivate(AXRString name);
+        void flagsToggle(AXRString name);
 
         bool isRoot();
         void setRoot(bool newValue);
@@ -328,12 +327,12 @@ namespace AXR
         /**
          *  @todo make private and add accessors
          */
-        std::map<std::string, std::string>attributes;
+        std::map<AXRString, AXRString>attributes;
 
     protected:
         pp parent;
-        std::string elementName;
-        std::string contentText;
+        AXRString elementName;
+        AXRString contentText;
         std::vector<HSSRuleStatus::p> rules;
 
         //if the rules have changed
@@ -346,8 +345,8 @@ namespace AXR
         QImage * bordersSurface;
 
         //flags
-        QMap<std::string, HSSRuleState> _flagsStatus;
-        QMap<std::string, std::vector< boost::shared_ptr<HSSFlag> > > _flags;
+        QMap<AXRString, HSSRuleState> _flagsStatus;
+        QMap<AXRString, std::vector< boost::shared_ptr<HSSFlag> > > _flags;
 
         //if it needs to redraw
         bool _isDirty;

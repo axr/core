@@ -61,7 +61,7 @@ HSSLastFilter::~HSSLastFilter()
 
 }
 
-std::string HSSLastFilter::toString()
+AXRString HSSLastFilter::toString()
 {
     return "Last Filter";
 }

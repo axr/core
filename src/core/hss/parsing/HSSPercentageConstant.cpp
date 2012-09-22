@@ -63,15 +63,9 @@ HSSPercentageConstant::~HSSPercentageConstant()
 
 }
 
-std::string HSSPercentageConstant::toString()
+AXRString HSSPercentageConstant::toString()
 {
-    std::string ret = "HSSPercentageConstant with value ";
-    std::ostringstream tempstream;
-    //create a temp stream to convert the float to a string
-    tempstream << this->value;
-    ret.append(tempstream.str());
-    ret.append("%");
-    return ret;
+    return AXRString("HSSPercentageConstant with value %1%").arg((double)this->value);
 }
 
 void HSSPercentageConstant::setValue(long double newValue)

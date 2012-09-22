@@ -44,9 +44,9 @@
 #ifndef AXRERROR_H
 #define AXRERROR_H
 
-#include <string>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
+#include "AXRString.h"
 #include "AXRGlobal.h"
 
 namespace AXR
@@ -73,7 +73,7 @@ namespace AXR
          *  @param line     The line index (starting at 1) in the file where the error happened.
          *  @param column   The column index (starting at 1) in the line where the error happened.
          */
-        AXRError(const std::string &origin, const std::string &message, const std::string &filename = "", int line = 0, int column = 0);
+        AXRError(const AXRString &origin, const AXRString &message, const AXRString &filename = "", int line = 0, int column = 0);
 
         /**
          *  Destructor for the error.
@@ -90,21 +90,21 @@ namespace AXR
          *  Print itself as a textual representation.
          *  @return A string containing the textual representation of the error.
          */
-        virtual std::string toString() const;
+        virtual AXRString toString() const;
 
         /**
          *  Getter for message.
          *  @return The message in this error.
          */
-        std::string getMessage() const;
+        AXRString getMessage() const;
 
     protected:
-        virtual std::string toProblemString(const std::string &label) const;
+        virtual AXRString toProblemString(const AXRString &label) const;
 
-        std::string origin;
-        std::string message;
+        AXRString origin;
+        AXRString message;
 
-        std::string filename;
+        AXRString filename;
         int line;
         int column;
 

@@ -48,7 +48,7 @@
 
 using namespace AXR;
 
-HSSFlagFunctionType HSSFlagFunction::flagFunctionTypeFromString(std::string name)
+HSSFlagFunctionType HSSFlagFunction::flagFunctionTypeFromString(AXRString name)
 {
     if (name == "flag")
     {
@@ -89,12 +89,12 @@ HSSFlagFunction::~HSSFlagFunction()
 
 }
 
-const std::string & HSSFlagFunction::getName()
+const AXRString & HSSFlagFunction::getName()
 {
     return this->_name;
 }
 
-void HSSFlagFunction::setName(std::string newValue)
+void HSSFlagFunction::setName(AXRString newValue)
 {
     this->_name = newValue;
     this->setDirty(true);

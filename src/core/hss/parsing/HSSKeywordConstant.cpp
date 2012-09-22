@@ -45,7 +45,7 @@
 
 using namespace AXR;
 
-HSSKeywordConstant::HSSKeywordConstant(std::string value)
+HSSKeywordConstant::HSSKeywordConstant(AXRString value)
 : HSSParserNode(HSSParserNodeTypeKeywordConstant)
 {
     this->value = value;
@@ -61,17 +61,17 @@ HSSKeywordConstant::~HSSKeywordConstant()
 
 }
 
-void HSSKeywordConstant::setValue(std::string newValue)
+void HSSKeywordConstant::setValue(AXRString newValue)
 {
     this->value = newValue;
 }
 
-std::string HSSKeywordConstant::getValue()
+AXRString HSSKeywordConstant::getValue()
 {
     return this->value;
 }
 
-std::string HSSKeywordConstant::toString()
+AXRString HSSKeywordConstant::toString()
 {
     return "HSSKeywordConstant with value " + this->value;
 }

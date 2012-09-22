@@ -45,7 +45,6 @@
 #define HSSSIMPLESELECTOR_H
 
 #include <list>
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include "HSSDisplayObject.h"
 #include "HSSFilter.h"
@@ -80,7 +79,7 @@ namespace AXR
         p clone() const;
 
         //see HSSObject.h for documentation of this method
-        virtual std::string toString();
+        virtual AXRString toString();
 
         void setName(HSSNameSelector::p name);
         const HSSNameSelector::p getName() const;

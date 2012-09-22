@@ -45,7 +45,7 @@
 
 using namespace AXR;
 
-HSSObjectNameConstant::HSSObjectNameConstant(std::string value)
+HSSObjectNameConstant::HSSObjectNameConstant(AXRString value)
 : HSSParserNode(HSSParserNodeTypeObjectNameConstant)
 {
     this->value = value;
@@ -61,17 +61,17 @@ HSSObjectNameConstant::~HSSObjectNameConstant()
 
 }
 
-void HSSObjectNameConstant::setValue(std::string newValue)
+void HSSObjectNameConstant::setValue(AXRString newValue)
 {
     this->value = newValue;
 }
 
-std::string HSSObjectNameConstant::getValue()
+AXRString HSSObjectNameConstant::getValue()
 {
     return this->value;
 }
 
-std::string HSSObjectNameConstant::toString()
+AXRString HSSObjectNameConstant::toString()
 {
     return "HSSObjectNameConstant with value " + this->value;
 }

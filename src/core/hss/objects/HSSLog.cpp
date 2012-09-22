@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <boost/lexical_cast.hpp>
 #include <boost/pointer_cast.hpp>
 #include "AXRController.h"
 #include "HSSFunction.h"
@@ -58,7 +57,7 @@ HSSLog::HSSLog()
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: creating log object");
     this->observedValue = NULL;
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
 }
@@ -67,7 +66,7 @@ HSSLog::HSSLog(const HSSLog & orig)
 : HSSAction(orig)
 {
     this->observedValue = NULL;
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
 }
@@ -88,12 +87,12 @@ HSSLog::~HSSLog()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: destructing log object");
 }
 
-std::string HSSLog::toString()
+AXRString HSSLog::toString()
 {
     return "HSSLog";
 }
 
-std::string HSSLog::defaultObjectType()
+AXRString HSSLog::defaultObjectType()
 {
     return "log";
 }
@@ -128,7 +127,7 @@ void HSSLog::fire()
                 boost::any remoteValue = refFnct->evaluate();
                 try
                 {
-                    std::string theVal = boost::any_cast<std::string > (remoteValue);
+                    AXRString theVal = boost::any_cast<AXRString > (remoteValue);
                     std_log(theVal);
                     done = true;
                 }
@@ -139,7 +138,7 @@ void HSSLog::fire()
                 try
                 {
                     HSSUnit theVal = boost::any_cast<HSSUnit > (remoteValue);
-                    std_log(boost::lexical_cast<std::string > (theVal));
+                    std_log(AXRString::number(theVal));
                     done = true;
                 }
                 catch (boost::bad_any_cast &)

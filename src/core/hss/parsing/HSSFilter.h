@@ -44,7 +44,6 @@
 #ifndef HSSFILTER_H
 #define HSSFILTER_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "HSSDisplayObject.h"
@@ -70,7 +69,7 @@ namespace AXR
          *  @param filterType   The action type to represent as a string.
          *  @return A string representation of the given type.
          */
-        static std::string filterTypeStringRepresentation(HSSFilterType filterType);
+        static AXRString filterTypeStringRepresentation(HSSFilterType filterType);
 
         /**
          *  Gives a HSSFilterType representation from a string representation.
@@ -79,7 +78,7 @@ namespace AXR
          *
          *  @todo what if not found? there should be an error state in the enum
          */
-        static HSSFilterType filterTypeFromString(std::string name);
+        static HSSFilterType filterTypeFromString(AXRString name);
 
         /**
          *  Instantiates a specific subclass for the given textual representation
@@ -87,7 +86,7 @@ namespace AXR
          *  @param stringType   The textual representation of the filter.
          *  @return A shared pointer to a new instance of a filter of the given type.
          */
-        static HSSFilter::p newFilterWithStringType(std::string stringType);
+        static HSSFilter::p newFilterWithStringType(AXRString stringType);
 
         /**
          *  Instantiates a specific subclass for the given HSSFilterType.
@@ -101,7 +100,7 @@ namespace AXR
          */
         virtual ~HSSFilter();
 
-        virtual std::string toString();
+        virtual AXRString toString();
 
         /**
          *  Each subclass implements its own way of processing the selection.

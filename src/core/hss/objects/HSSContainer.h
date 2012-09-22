@@ -89,7 +89,7 @@ namespace AXR
             HSSUnit y;
             HSSUnit width;
             HSSUnit height;
-            std::string name;
+            AXRString name;
             bool complete;
             std::vector<HSSContainer::displayGroup::p>lines;
             std::vector<HSSDisplayObject::p>objects;
@@ -145,10 +145,10 @@ namespace AXR
          */
         virtual ~HSSContainer();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
+        virtual bool isKeyword(AXRString value, AXRString property);
 
         /**
          *  Add a child to the content tree.
@@ -179,7 +179,7 @@ namespace AXR
          *  at the beginning and end of the text.
          *  @param text     A string containing the new content text.
          */
-        virtual void setContentText(const std::string &text);
+        virtual void setContentText(const AXRString &text);
 
         /**
          *  If the last child is a text block, it appends the given text to the text content
@@ -187,13 +187,13 @@ namespace AXR
          *  at the beginning and end of the text.
          *  @param text     A string containing the new content text.
          */
-        virtual void appendContentText(const std::string &text);
+        virtual void appendContentText(const AXRString &text);
 
         /**
          *  @return The content text of the element (potentially made up by various text blocks).
          *  @warning Currently unimplemented.
          */
-        virtual std::string getContentText();
+        virtual AXRString getContentText();
 
         //void readDefinitionObjects();
         /**

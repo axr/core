@@ -45,7 +45,6 @@
 #include <cmath>
 #include <map>
 #include <sstream>
-#include <string>
 #include <vector>
 #include <boost/pointer_cast.hpp>
 #include "errors.h"
@@ -88,7 +87,7 @@ HSSContainer::HSSContainer()
 
 void HSSContainer::initialize()
 {
-    this->contentText = std::string();
+    this->contentText = AXRString();
 
     this->contentAlignX = this->contentAlignY = 0;
     this->directionPrimary = HSSDirectionLeftToRight;
@@ -103,7 +102,7 @@ void HSSContainer::initialize()
             = this->distributeY = distributeYLinear
             = false;
 
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("isA");
     shorthandProperties.push_back("width");
     shorthandProperties.push_back("height");
@@ -169,13 +168,13 @@ HSSContainer::~HSSContainer()
     }
 }
 
-std::string HSSContainer::toString()
+AXRString HSSContainer::toString()
 {
-    std::string tempstr;
+    AXRString tempstr;
 
     if (this->isNamed())
     {
-        tempstr = std::string("HSSContainer: ").append(this->name);
+        tempstr = AXRString("HSSContainer: ").append(this->name);
     }
     else
     {
@@ -185,7 +184,7 @@ std::string HSSContainer::toString()
     if (this->attributes.size() > 0)
     {
         tempstr.append("\n").append("with the following attributes:");
-        for (std::map<std::string, std::string>::iterator it = this->attributes.begin(); it != this->attributes.end(); ++it)
+        for (std::map<AXRString, AXRString>::iterator it = this->attributes.begin(); it != this->attributes.end(); ++it)
         {
             tempstr.append("\n").append("- ").append((*it).first).append(": ").append((*it).second);
         }
@@ -205,12 +204,12 @@ std::string HSSContainer::toString()
     return tempstr;
 }
 
-std::string HSSContainer::defaultObjectType()
+AXRString HSSContainer::defaultObjectType()
 {
     return "container";
 }
 
-std::string HSSContainer::defaultObjectType(std::string property)
+AXRString HSSContainer::defaultObjectType(AXRString property)
 {
     if (property == "shape")
     {
@@ -222,7 +221,7 @@ std::string HSSContainer::defaultObjectType(std::string property)
     }
 }
 
-bool HSSContainer::isKeyword(std::string value, std::string property)
+bool HSSContainer::isKeyword(AXRString value, AXRString property)
 {
     if (property == "contentAlignX" || property == "contentAlignY")
     {
@@ -316,11 +315,11 @@ void HSSContainer::resetChildrenIndexes()
     }
 }
 
-void HSSContainer::setContentText(const std::string &contextText)
+void HSSContainer::setContentText(const AXRString &contextText)
 {
-    std::string text = QString::fromStdString(contextText).trimmed().toStdString();
+    AXRString text = contextText.trimmed();
 
-    if (!text.empty())
+    if (!text.isEmpty())
     {
         if (this->allChildren.empty())
         {
@@ -346,11 +345,11 @@ void HSSContainer::setContentText(const std::string &contextText)
     }
 }
 
-void HSSContainer::appendContentText(const std::string &contextText)
+void HSSContainer::appendContentText(const AXRString &contextText)
 {
-    std::string text = QString::fromStdString(contextText).trimmed().toStdString();
+    AXRString text = contextText.trimmed();
 
-    if (!text.empty())
+    if (!text.isEmpty())
     {
         if (this->allChildren.empty())
         {
@@ -376,7 +375,7 @@ void HSSContainer::appendContentText(const std::string &contextText)
     }
 }
 
-std::string HSSContainer::getContentText()
+AXRString HSSContainer::getContentText()
 {
     std_log("whateva");
     return "bla";
@@ -2561,7 +2560,7 @@ void HSSContainer::setDDirectionPrimary(HSSParserNode::p value)
 
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
-        std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        AXRString stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
         if (stringValue == "ltf" || stringValue == "rtl")
         {
             if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft)
@@ -2627,7 +2626,7 @@ void HSSContainer::setDDirectionSecondary(HSSParserNode::p value)
 
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
-        std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        AXRString stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
         if (stringValue == "leftToRight" || stringValue == "rightToLeft")
         {
             if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft)
@@ -2697,7 +2696,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
     {
     case HSSParserNodeTypeKeywordConstant:
     {
-        std::string stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        AXRString stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
         if (stringValue == "default")
         {
             this->shape = HSSRectangle::p(new HSSRectangle());

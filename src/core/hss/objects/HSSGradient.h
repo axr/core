@@ -44,7 +44,6 @@
 #ifndef HSSGRADIENT_H
 #define HSSGRADIENT_H
 
-#include <string>
 #include <boost/shared_ptr.hpp>
 #include <QPainter>
 #include <QPainterPath>
@@ -70,10 +69,10 @@ namespace AXR
          */
         virtual ~HSSGradient();
 
-        virtual std::string toString();
-        virtual std::string defaultObjectType();
-        virtual std::string defaultObjectType(std::string property);
-        virtual bool isKeyword(std::string value, std::string property);
+        virtual AXRString toString();
+        virtual AXRString defaultObjectType();
+        virtual AXRString defaultObjectType(AXRString property);
+        virtual bool isKeyword(AXRString value, AXRString property);
 
         /**
          *  Call this method when you need to draw the gradient. Each specific

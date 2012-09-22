@@ -92,7 +92,7 @@ namespace AXR
          *
          *  @todo Make an enum based on the string and use that instead.
          */
-        const std::string & getModifier() const;
+        const AXRString & getModifier() const;
 
         /**
          *  Setter for the modifier.
@@ -100,7 +100,7 @@ namespace AXR
          *
          *  @todo Make an enum based on the string and use that instead.
          */
-        void setModifier(std::string newValue);
+        void setModifier(AXRString newValue);
 
         /**
          *  Getter for the property name.
@@ -174,7 +174,7 @@ namespace AXR
         void valueChanged(HSSObservableProperty source, void*data);
 
     private:
-        std::string modifier;
+        AXRString modifier;
         HSSObservableProperty propertyName;
         std::vector<HSSSelectorChain::p> selectorChains;
 

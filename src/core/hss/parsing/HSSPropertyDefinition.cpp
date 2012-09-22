@@ -52,13 +52,13 @@ HSSPropertyDefinition::HSSPropertyDefinition()
     this->name = "";
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(std::string name)
+HSSPropertyDefinition::HSSPropertyDefinition(AXRString name)
 : HSSStatement(HSSStatementTypePropertyDefinition)
 {
     this->name = name;
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(std::string name, HSSParserNode::p value)
+HSSPropertyDefinition::HSSPropertyDefinition(AXRString name, HSSParserNode::p value)
 : HSSStatement(HSSStatementTypePropertyDefinition)
 {
     this->name = name;
@@ -81,9 +81,9 @@ HSSPropertyDefinition::~HSSPropertyDefinition()
 
 }
 
-std::string HSSPropertyDefinition::toString()
+AXRString HSSPropertyDefinition::toString()
 {
-    std::string ret = "HSSPropertyDefinition: " + this->name;
+    AXRString ret = "HSSPropertyDefinition: " + this->name;
     if (this->value)
     {
         ret.append(" with value: " + this->value->toString());
@@ -91,12 +91,12 @@ std::string HSSPropertyDefinition::toString()
     return ret;
 }
 
-void HSSPropertyDefinition::setName(std::string name)
+void HSSPropertyDefinition::setName(AXRString name)
 {
     this->name = name;
 }
 
-std::string HSSPropertyDefinition::getName()
+AXRString HSSPropertyDefinition::getName()
 {
     return this->name;
 }

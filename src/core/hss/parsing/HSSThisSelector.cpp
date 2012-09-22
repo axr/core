@@ -56,7 +56,7 @@ HSSThisSelector::p HSSThisSelector::clone() const
     return boost::static_pointer_cast<HSSThisSelector, HSSClonable > (this->cloneImpl());
 }
 
-std::string HSSThisSelector::toString()
+AXRString HSSThisSelector::toString()
 {
     return "@this selector";
 }

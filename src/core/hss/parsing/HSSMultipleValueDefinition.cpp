@@ -61,9 +61,9 @@ HSSMultipleValueDefinition::~HSSMultipleValueDefinition()
 
 }
 
-std::string HSSMultipleValueDefinition::toString()
+AXRString HSSMultipleValueDefinition::toString()
 {
-    std::string tempstr = std::string("HSSMultipleValueDefinition with the following values:\n");
+    AXRString tempstr = AXRString("HSSMultipleValueDefinition with the following values:\n");
 
     for (std::vector<HSSParserNode::p>::iterator it = this->values.begin(); it != this->values.end(); ++it)
     {

@@ -62,7 +62,7 @@ HSSLastChildFilter::~HSSLastChildFilter()
 
 }
 
-std::string HSSLastChildFilter::toString()
+AXRString HSSLastChildFilter::toString()
 {
     return "Last Child Filter";
 }

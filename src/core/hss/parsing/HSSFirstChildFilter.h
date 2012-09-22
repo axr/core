@@ -70,7 +70,7 @@ namespace AXR
          *  Destructor for this class.
          */
         virtual ~HSSFirstChildFilter();
-        virtual std::string toString();
+        virtual AXRString toString();
 
         virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
     private:

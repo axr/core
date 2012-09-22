@@ -86,9 +86,9 @@ HSSRule::~HSSRule()
     }
 }
 
-std::string HSSRule::toString()
+AXRString HSSRule::toString()
 {
-    std::string tempstr = std::string("HSSRule with the following selector chain: \n");
+    AXRString tempstr = AXRString("HSSRule with the following selector chain: \n");
     if (this->selectorChains.size() > 0)
     {
         for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)

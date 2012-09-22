@@ -51,7 +51,7 @@ HSSInstruction::HSSInstruction(HSSInstructionType type)
     this->instructionType = type;
 }
 
-HSSInstruction::HSSInstruction(HSSInstructionType type, std::string value)
+HSSInstruction::HSSInstruction(HSSInstructionType type, AXRString value)
 : HSSStatement(HSSStatementTypeInstruction)
 {
     this->instructionType = type;
@@ -81,7 +81,7 @@ HSSInstructionType HSSInstruction::getInstructionType()
     return this->instructionType;
 }
 
-std::string HSSInstruction::getValue()
+AXRString HSSInstruction::getValue()
 {
     return this->value;
 }
@@ -91,9 +91,9 @@ bool HSSInstruction::isA(HSSInstructionType type)
     return this->instructionType == type;
 }
 
-std::string HSSInstruction::toString()
+AXRString HSSInstruction::toString()
 {
-    std::string tempstr = "HSSInstruction of type: " + this->instructionStringRepresentation(this->instructionType);
+    AXRString tempstr = "HSSInstruction of type: " + this->instructionStringRepresentation(this->instructionType);
     if (
             this->instructionType != HSSNewInstruction
             && this->instructionType != HSSEnsureInstruction
@@ -107,9 +107,9 @@ std::string HSSInstruction::toString()
     return tempstr;
 }
 
-std::string HSSInstruction::instructionStringRepresentation(HSSInstructionType type)
+AXRString HSSInstruction::instructionStringRepresentation(HSSInstructionType type)
 {
-    std::string types[20];
+    AXRString types[20];
     types[HSSNewInstruction] = "HSSNewInstruction";
     types[HSSEnsureInstruction] = "HSSEnsureInstruction";
     types[HSSImportInstruction] = "HSSImportInstruction";

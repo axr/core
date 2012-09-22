@@ -56,7 +56,7 @@ HSSLinearGradient::HSSLinearGradient()
 : HSSGradient()
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: creating linear gradient object");
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("startColor");
     shorthandProperties.push_back("endColor");
     shorthandProperties.push_back("endY");
@@ -77,7 +77,7 @@ HSSLinearGradient::HSSLinearGradient()
 HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
 : HSSGradient(orig)
 {
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("startColor");
     shorthandProperties.push_back("endColor");
     shorthandProperties.push_back("endY");
@@ -128,11 +128,11 @@ HSSLinearGradient::~HSSLinearGradient()
     }
 }
 
-std::string HSSLinearGradient::toString()
+AXRString HSSLinearGradient::toString()
 {
     if (this->isNamed())
     {
-        return std::string("HSSLinearGradient: ").append(this->name);
+        return AXRString("HSSLinearGradient: ").append(this->name);
     }
     else
     {
@@ -140,12 +140,12 @@ std::string HSSLinearGradient::toString()
     }
 }
 
-std::string HSSLinearGradient::defaultObjectType()
+AXRString HSSLinearGradient::defaultObjectType()
 {
     return "linearGradient";
 }
 
-std::string HSSLinearGradient::defaultObjectType(std::string property)
+AXRString HSSLinearGradient::defaultObjectType(AXRString property)
 {
     //    if (property == "bla"){
     //
@@ -154,7 +154,7 @@ std::string HSSLinearGradient::defaultObjectType(std::string property)
     //    }
 }
 
-bool HSSLinearGradient::isKeyword(std::string value, std::string property)
+bool HSSLinearGradient::isKeyword(AXRString value, AXRString property)
 {
     if (value == "top" || value == "bottom")
     {

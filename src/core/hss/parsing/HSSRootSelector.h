@@ -44,7 +44,6 @@
 #ifndef HSSROOTSELECTOR_H
 #define HSSROOTSELECTOR_H
 
-#include <string>
 #include "HSSDisplayObject.h"
 #include "HSSNameSelector.h"
 
@@ -73,10 +72,10 @@ namespace AXR
         p clone() const;
 
         //see HSSNameSelector.h for the documentation of this method
-        std::string getElementName();
+        AXRString getElementName();
 
         //see HSSParserNode.h for the documentation of this method
-        virtual std::string toString();
+        virtual AXRString toString();
 
         std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
 

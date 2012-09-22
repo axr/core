@@ -66,14 +66,14 @@ HSSCombinatorType HSSCombinator::getCombinatorType()
     return this->combinatorType;
 }
 
-std::string HSSCombinator::toString()
+AXRString HSSCombinator::toString()
 {
     return "HSSCombinator of type  " + this->combinatorStringRepresentation(this->combinatorType);
 }
 
-std::string HSSCombinator::combinatorStringRepresentation(HSSCombinatorType type)
+AXRString HSSCombinator::combinatorStringRepresentation(HSSCombinatorType type)
 {
-    std::string types[20];
+    AXRString types[20];
     types[ HSSCombinatorTypeSiblings ] = "HSSCombinatorTypeSiblings";
     types[ HSSCombinatorTypePreviousSiblings ] = "HSSCombinatorTypePreviousSiblings";
     types[ HSSCombinatorTypeNextSiblings ] = "HSSCombinatorTypeNextSiblings";

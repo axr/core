@@ -72,22 +72,22 @@ HSSCircle::~HSSCircle()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSCircle: destructing circle object");
 }
 
-std::string HSSCircle::toString()
+AXRString HSSCircle::toString()
 {
     return "HSSCircle";
 }
 
-std::string HSSCircle::defaultObjectType()
+AXRString HSSCircle::defaultObjectType()
 {
     return "HSSCircle";
 }
 
-std::string HSSCircle::defaultObjectType(std::string property)
+AXRString HSSCircle::defaultObjectType(AXRString property)
 {
     return HSSShape::defaultObjectType(property);
 }
 
-bool HSSCircle::isKeyword(std::string value, std::string property)
+bool HSSCircle::isKeyword(AXRString value, AXRString property)
 {
     return HSSShape::isKeyword(value, property);
 }

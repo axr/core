@@ -72,9 +72,9 @@ HSSSelectorChain::~HSSSelectorChain()
     this->nodeList.clear();
 }
 
-std::string HSSSelectorChain::toString()
+AXRString HSSSelectorChain::toString()
 {
-    std::string tempstr = "HSSSelectorChain with the following nodes:\n";
+    AXRString tempstr = "HSSSelectorChain with the following nodes:\n";
     unsigned int sccount = this->nodeList.size();
     if (sccount > 0)
     {

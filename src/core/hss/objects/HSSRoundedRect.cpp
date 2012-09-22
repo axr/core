@@ -58,7 +58,7 @@ HSSRoundedRect::HSSRoundedRect()
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
     this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
 
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("corners");
     this->setShorthandProperties(shorthandProperties);
 }
@@ -69,7 +69,7 @@ HSSRoundedRect::HSSRoundedRect(const HSSRoundedRect & orig)
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
     this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
 
-    std::vector<std::string> shorthandProperties;
+    std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("corners");
     this->setShorthandProperties(shorthandProperties);
 }
@@ -90,22 +90,22 @@ HSSRoundedRect::~HSSRoundedRect()
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: destructing rounded rectangle object");
 }
 
-std::string HSSRoundedRect::toString()
+AXRString HSSRoundedRect::toString()
 {
     return "HSSRoundedRect";
 }
 
-std::string HSSRoundedRect::defaultObjectType()
+AXRString HSSRoundedRect::defaultObjectType()
 {
     return "roundedRect";
 }
 
-std::string HSSRoundedRect::defaultObjectType(std::string property)
+AXRString HSSRoundedRect::defaultObjectType(AXRString property)
 {
     return HSSShape::defaultObjectType(property);
 }
 
-bool HSSRoundedRect::isKeyword(std::string value, std::string property)
+bool HSSRoundedRect::isKeyword(AXRString value, AXRString property)
 {
     return HSSShape::isKeyword(value, property);
 }

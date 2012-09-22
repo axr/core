@@ -41,10 +41,10 @@
  *
  ********************************************************************/
 
-#include <boost/lexical_cast.hpp>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
+#include <QUrl>
 #include "AXR.h"
 #include "AXRWrapper.h"
 #include "HSSFunction.h"
@@ -70,34 +70,35 @@ AXRWrapper::~AXRWrapper()
 {
 }
 
-AXRFile::p AXRWrapper::getFile(std::string url)
+AXRFile::p AXRWrapper::getFile(AXRString url)
 {
     AXRFile::p ret = AXRFile::p(new AXRFile());
 
-    std::string fileProtocolPrefix = "file://";
-
-    if (url.substr(0, fileProtocolPrefix.length()) == fileProtocolPrefix)
+    QUrl u(url);
+    if (u.isValid())
     {
-        std::string clean_path = url.substr(7, url.size());
-        int slashpos = clean_path.rfind("/");
-        ret->setFileName(clean_path.substr(slashpos + 1, clean_path.size()));
-        ret->setBasePath(clean_path.substr(0, slashpos));
-
-        ret->setBuffer(QByteArray());
-        ret->setFileHandle(fopen(clean_path.c_str(), "r"));
-
-        if (!ret->getFileHandle())
+        if (u.scheme() == "file")
         {
-            throw AXRError::p(new AXRError("AXRWrapper", "the file " + url + " doesn't exist"));
+            QFileInfo fi(u.toLocalFile());
+            ret->setFileName(fi.fileName());
+            ret->setBasePath(fi.canonicalPath());
+
+            ret->setBuffer(QByteArray());
+            ret->setFileHandle(fopen(fi.canonicalFilePath().toStdString().c_str(), "r"));
+
+            if (!ret->getFileHandle())
+            {
+                throw AXRError::p(new AXRError("AXRWrapper", "the file " + url + " doesn't exist"));
+            }
+            else if (ferror(ret->getFileHandle()))
+            {
+                throw AXRError::p(new AXRError("AXRWrapper", "the file " + url + " couldn't be read"));
+            }
         }
-        else if (ferror(ret->getFileHandle()))
+        else if (u.scheme() == "http" || u.scheme() == "https")
         {
-            throw AXRError::p(new AXRError("AXRWrapper", "the file " + url + " couldn't be read"));
+            std_log("http is not implemented yet");
         }
-    }
-    else
-    {
-        std_log("http is not implemented yet");
     }
 
     return ret;
@@ -105,7 +106,7 @@ AXRFile::p AXRWrapper::getFile(std::string url)
 
 size_t AXRWrapper::readFile(AXRFile::p theFile)
 {
-    QFile file(QString::fromStdString(theFile->getBasePath() + "/" + theFile->getFileName()));
+    QFile file(theFile->getBasePath() + "/" + theFile->getFileName());
     if (file.open(QIODevice::ReadOnly))
     {
         theFile->setBuffer(file.readAll());
@@ -143,27 +144,30 @@ void AXRWrapper::setNeedsDisplay(bool newValue)
     this->_needsDisplay = newValue;
 }
 
-AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
+AXRFile::p AXRWrapper::createDummyXML(AXRString stylesheet)
 {
     AXRFile::p ret = AXRFile::p(new AXRFile());
     ret->setMimeType("text/xml");
-    size_t slashpos = stylesheet.rfind("/");
-    if (slashpos != std::string::npos)
+
+    QUrl url = stylesheet;
+    if (url.isValid())
     {
-        ret->setBasePath(stylesheet.substr(0, slashpos));
-        ret->setFileName("dummy-xml-for-" + stylesheet.substr(slashpos + 1) + ".xml");
+        QFileInfo fi(url.path());
+        ret->setBasePath(fi.canonicalPath());
+        ret->setFileName("dummy-xml-for-" + fi.fileName() + ".xml");
     }
     else
     {
+        // TODO: "Not a valid URL"
         AXRError::p(new AXRError("AXRWrapper", "Could not find a slash in the file path"))->raise();
         return ret;
     }
     ret->setExtension("xml");
-    std::string dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" src=\"file://" + stylesheet + "\" version=\"1.0\"?><root></root>";
+    AXRString dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" src=\"file://" + stylesheet + "\" version=\"1.0\"?><root></root>";
 
     ret->setFileHandle(tmpfile());
 
-    ret->setBuffer(QString::fromStdString(dummyXML).toUtf8());
+    ret->setBuffer(dummyXML.toUtf8());
 
     rewind(ret->getFileHandle());
 
@@ -172,20 +176,18 @@ AXRFile::p AXRWrapper::createDummyXML(std::string stylesheet)
     return ret;
 }
 
-bool AXRWrapper::loadFileByPath(std::string filepath)
+bool AXRWrapper::loadFileByPath(AXRString filepath)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: loading file " + filepath.substr(filepath.rfind("/") + 1, filepath.length()) + " by path");
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, filepath);
+    QFileInfo fi(filepath);
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: loading file " + fi.fileName() + " by path");
+    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, fi.canonicalFilePath());
 
-    std::string fileextension = std::string();
-
-    fileextension = filepath.substr(filepath.rfind(".") + 1, filepath.length());
-    if (fileextension == "xml")
+    if (fi.suffix() == "xml")
     {
         this->_isHSSOnly = false;
         return this->loadXMLFile(filepath);
     }
-    else if (fileextension == "hss")
+    else if (fi.suffix() == "hss")
     {
         return this->loadHSSFile(filepath);
     }
@@ -196,9 +198,9 @@ bool AXRWrapper::loadFileByPath(std::string filepath)
     }
 }
 
-bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
+bool AXRWrapper::loadXMLFile(AXRString xmlfilepath)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, std::string("AXRWrapper: opening XML document: ").append(xmlfilepath));
+    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening XML document: ").append(xmlfilepath));
 
     this->_isHSSOnly = false;
 
@@ -208,7 +210,7 @@ bool AXRWrapper::loadXMLFile(std::string xmlfilepath)
         core->reset();
     }
 
-    std::string fullpath = "file://" + xmlfilepath;
+    AXRString fullpath = "file://" + xmlfilepath;
     try
     {
         AXRFile::p theFile = this->getFile(fullpath);
@@ -250,7 +252,7 @@ bool AXRWrapper::reload()
     if (!this->_isHSSOnly)
     {
         if (core->getFile()) {
-            std::string cur_path = core->getFile()->getBasePath() + "/" + core->getFile()->getFileName();
+            AXRString cur_path = core->getFile()->getBasePath() + "/" + core->getFile()->getFileName();
             return this->loadXMLFile(cur_path);
         } else {
             AXRWarning::p(new AXRWarning("AXRWrapper", "no file loaded"))->raise();
@@ -259,15 +261,14 @@ bool AXRWrapper::reload()
     }
     else
     {
-        std::string cur_path = core->getController()->loadSheetsGet(0);
-        cur_path = cur_path.substr(7);
-        return this->loadHSSFile(cur_path);
+        QUrl currentPath = core->getController()->loadSheetsGet(0);
+        return this->loadHSSFile(currentPath.toLocalFile());
     }
 }
 
-bool AXRWrapper::loadHSSFile(std::string hssfilepath)
+bool AXRWrapper::loadHSSFile(AXRString hssfilepath)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, std::string("AXRWrapper: opening HSS document: ").append(hssfilepath));
+    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening HSS document: ").append(hssfilepath));
 
     this->_isHSSOnly = true;
     AXRCore::tp & core = AXRCore::getInstance();
@@ -340,11 +341,7 @@ void AXRWrapper::breakIfNeeded()
 {
     bool breakvar = _currentLayoutTick >= (_currentLayoutStep - 1);
 
-    std::stringstream ss;
-    ss << "currentLayoutTick = " << _currentLayoutTick << ", "
-        << "currentLayoutStep = " << _currentLayoutStep << ", "
-        << breakvar;
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, ss.str());
+    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("currentLayoutTick = %1, currentLayoutStep = %2, %3").arg(_currentLayoutTick).arg(_currentLayoutStep).arg(breakvar));
 }
 
 void AXRWrapper::nextLayoutChild()
@@ -362,7 +359,7 @@ bool AXRWrapper::layoutChildDone()
     return this->_currentLayoutTick >= this->_currentLayoutChild + 1;
 }
 
-std::string AXRWrapper::getPathToResources()
+AXRString AXRWrapper::getPathToResources()
 {
     // TODO: it's best to do this in a different way entirely... the library
     // shouldn't be using the client process's directory to determine where
@@ -372,10 +369,10 @@ std::string AXRWrapper::getPathToResources()
     // location? /etc/axr.conf on Unix and %WINDIR%/axr.ini on Windows?
     QDir applicationDir(QCoreApplication::applicationDirPath());
     applicationDir.cd("resources");
-    return applicationDir.canonicalPath().toStdString();
+    return applicationDir.canonicalPath();
 }
 
-std::string AXRWrapper::getPathToTestsFile()
+AXRString AXRWrapper::getPathToTestsFile()
 {
     return _layoutTestsFilePath;
 }
@@ -407,12 +404,12 @@ void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
         }
     }
 
-    std::string filePath = this->getPathToTestsFile();
+    AXRString filePath = this->getPathToTestsFile();
     boost::thread thrd(AXRTestThread(this, filePath, status));
     //        thrd.join();
 }
 
-AXRTestThread::AXRTestThread(AXRWrapper * wrapper, std::string filePath, HSSContainer::p status)
+AXRTestThread::AXRTestThread(AXRWrapper * wrapper, AXRString filePath, HSSContainer::p status)
 {
     this->wrapper = wrapper;
     this->filePath = filePath;
@@ -429,14 +426,14 @@ void AXRTestThread::operator () ()
         AXRWrapper * wrapper = this->wrapper;
         AXRCore::tp & core = AXRCore::getInstance();
         XMLParser::p parser = core->getParserXML();
-        std::string fullPath = "file://" + this->filePath;
+        AXRString fullPath = "file://" + this->filePath;
         HSSContainer::p status = this->status;
         AXRFile::p testsFile = wrapper->getFile(fullPath);
         bool loadingSuccess = parser->loadFile(testsFile);
         if (loadingSuccess)
         {
             //find all the tests that need to be executed
-            std::vector<std::vector<std::string> > tests;
+            std::vector<std::vector<AXRString> > tests;
             AXRController::p controller = core->getController();
             HSSContainer::p root = controller->getRoot();
             const std::vector<HSSDisplayObject::p> & children = root->getChildren(true);
@@ -446,8 +443,8 @@ void AXRTestThread::operator () ()
                 const HSSDisplayObject::p & child = *it;
                 if (child->attributes.find("src") != child->attributes.end() && child->attributes.find("expect") != child->attributes.end())
                 {
-                    const std::string test[2] = {child->attributes["src"], child->attributes["expect"]};
-                    std::vector<std::string>testVect(test, test + 2);
+                    const AXRString test[2] = {child->attributes["src"], child->attributes["expect"]};
+                    std::vector<AXRString>testVect(test, test + 2);
                     tests.push_back(testVect);
                     this->totalTests += 1;
                 }
@@ -459,7 +456,7 @@ void AXRTestThread::operator () ()
             //execute all the tests
             boost::thread_group producers;
 
-            for (std::vector<std::vector<std::string> >::iterator it2 = tests.begin(); it2 != tests.end(); ++it2)
+            for (std::vector<std::vector<AXRString> >::iterator it2 = tests.begin(); it2 != tests.end(); ++it2)
             {
                 AXRTestProducer prdcr(this->wrapper, testsFile->getBasePath(), *it2, &this->totalTests, &this->totalPassed, status);
                 producers.create_thread(prdcr);
@@ -470,7 +467,7 @@ void AXRTestThread::operator () ()
 
             std_log("\n\nTEST RESULTS SUMMARY");
             std_log("===============================");
-            std_log("Passed " + boost::lexical_cast<std::string > (this->totalPassed) + " out of " + boost::lexical_cast<std::string > (this->totalTests));
+            std_log(AXRString("Passed %1 out of %2").arg(this->totalPassed).arg(this->totalTests));
             std_log("===============================");
 
         }
@@ -492,7 +489,7 @@ void AXRTestThread::operator () ()
 
 // Constructor with name and the queue to use
 
-AXRTestProducer::AXRTestProducer(AXRWrapper * wrapper, std::string basePath, std::vector<std::string> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status)
+AXRTestProducer::AXRTestProducer(AXRWrapper * wrapper, AXRString basePath, std::vector<AXRString> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status)
 {
     this->wrapper = wrapper;
     this->basePath = basePath;
@@ -511,8 +508,8 @@ void AXRTestProducer::operator () ()
     bool testLoaded = false;
     bool expectedLoaded = false;
     bool result = false;
-    std::string testRep;
-    std::string expectedRep;
+    AXRString testRep;
+    AXRString expectedRep;
 
     //load the XML
     AXRCore core = *AXRCore::getInstance();
@@ -542,7 +539,7 @@ void AXRTestProducer::operator () ()
     if (testLoaded)
     {
         AXRFile::p expectedFile = this->wrapper->getFile("file://" + this->basePath + "/" + test[1]);
-        size_t fileLength = this->wrapper->readFile(expectedFile);
+        this->wrapper->readFile(expectedFile);
         if (ferror(expectedFile->getFileHandle()))
         {
             std_log("could not load file with expected results");
@@ -550,7 +547,7 @@ void AXRTestProducer::operator () ()
         else
         {
             expectedLoaded = true;
-            expectedRep = std::string(expectedFile->getBuffer(), fileLength);
+            expectedRep = AXRString(expectedFile->getBuffer());
             //std_log(expectedRep);
         }
         this->wrapper->closeFile(expectedFile);
@@ -567,7 +564,7 @@ void AXRTestProducer::operator () ()
         std_log("PASSED test " + test[0]);
         *this->totalPassed += 1;
         this->statusMutex.lock();
-        this->status->setContentText("Passed " + boost::lexical_cast<std::string > (*this->totalPassed) + " out of " + boost::lexical_cast<std::string > (*this->totalTests));
+        this->status->setContentText(AXRString("Passed %1 out of %2").arg(*this->totalPassed).arg(*this->totalTests));
         this->statusMutex.unlock();
         this->wrapper->setNeedsDisplay(true);
     }
