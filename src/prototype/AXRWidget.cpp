@@ -58,6 +58,7 @@ public:
 AXRWidget::AXRWidget(QWidget *parent)
 : QWidget(parent), d(new Private)
 {
+    this->setMouseTracking(true);
 }
 
 AXRWidget::~AXRWidget()
