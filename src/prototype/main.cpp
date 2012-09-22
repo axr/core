@@ -49,5 +49,6 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     PrototypeWindow window;
     window.show();
+    window.openFile();
     return a.exec();
 }
