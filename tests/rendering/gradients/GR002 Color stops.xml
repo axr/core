@@ -3,7 +3,7 @@
     Test GR002 Color stops
     Created by Miro Keller on 2011-12-27.
 -->
-<?xml-stylesheet type="application/x-hss" src="GR002 Color stops.hss"?>
+<?xml-stylesheet type="application/x-hss" src="GR002 Color stops.hss" version="0.4.8" ?>
 <master>
 
 </master>
