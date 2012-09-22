@@ -157,7 +157,7 @@ void PrototypeWindow::listXmlElements()
         qfile.open(QIODevice::ReadOnly);
 
         AXRFile::p f(new AXRFile());
-        f->setFileHandle(fopen(file.toStdString().c_str(), "r"));
+        f->setFileHandle(file);
         f->setFileName(file);
         f->setBuffer(qfile.readAll());
 
@@ -167,7 +167,7 @@ void PrototypeWindow::listXmlElements()
         if (!parser.loadFile(f))
         {
             QErrorMessage error(this);
-            error.showMessage(AXRString::fromStdString("Could not parse the given file"));
+            error.showMessage(AXR::fromStdString("Could not parse the given file"));
         }
 
         LogWindow w(this);
@@ -185,7 +185,7 @@ void PrototypeWindow::listHssStatements()
         qfile.open(QIODevice::ReadOnly);
 
         AXRFile::p f(new AXRFile());
-        f->setFileHandle(fopen(file.toStdString().c_str(), "r"));
+        f->setFileHandle(file);
         f->setFileName(file);
         f->setBuffer(qfile.readAll());
 
@@ -203,7 +203,7 @@ void PrototypeWindow::listHssStatements()
         else
         {
             QErrorMessage error(this);
-            error.showMessage(AXRString::fromStdString("Could not parse the given file"));
+            error.showMessage(AXR::fromStdString("Could not parse the given file"));
         }
     }
 }
@@ -217,7 +217,7 @@ void PrototypeWindow::listHssTokens()
         qfile.open(QIODevice::ReadOnly);
 
         AXRFile::p f(new AXRFile());
-        f->setFileHandle(fopen(file.toStdString().c_str(), "r"));
+        f->setFileHandle(file);
         f->setFileName(file);
         f->setBuffer(qfile.readAll());
 

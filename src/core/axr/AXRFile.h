@@ -155,6 +155,7 @@ namespace AXR
          *  @param handle   The file handle to be stored.
          */
         void setFileHandle(FILE * handle);
+        void setFileHandle(const AXRString &string, const char *fopenMode = "r");
 
         /**
          *  Getter for the file handle, an opaque OS pointer type.

@@ -68,6 +68,5 @@ void CocoaAXRWrapper::setNeedsDisplay(bool newValue)
 
 AXRString CocoaAXRWrapper::getPathToResources()
 {
-    AXRString resourcesPath = [[[NSBundle mainBundle] resourcePath] UTF8String];
-    return resourcesPath;
+    return AXR::fromNSString([[NSBundle mainBundle] resourcePath]);
 }

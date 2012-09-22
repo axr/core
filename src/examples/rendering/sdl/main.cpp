@@ -172,7 +172,7 @@ int main(int argc, char **argv)
 
     if (varmap.count("layout-tests"))
     {
-        wrapper->_layoutTestsFilePath = AXRString::fromStdString(varmap["layout-tests"].as<std::string>());
+        wrapper->_layoutTestsFilePath = AXR::fromStdString(varmap["layout-tests"].as<std::string>());
 
         core->registerCustomFunction("AXRLayoutTestsExecute",
                                      new AXR::HSSValueChangedCallback<AXRWrapper>(wrapper, &AXRWrapper::executeLayoutTests));
@@ -193,7 +193,7 @@ int main(int argc, char **argv)
             filepath = additionalArgs[0];
         }
 
-        wrapper->loadFileByPath(AXRString::fromStdString(filepath));
+        wrapper->loadFileByPath(AXR::fromStdString(filepath));
     }
     else
     {

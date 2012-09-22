@@ -129,6 +129,11 @@ void AXRFile::setFileHandle(FILE * path)
     this->fileHandle = path;
 }
 
+void AXRFile::setFileHandle(const AXRString &string, const char *fopenMode)
+{
+    this->fileHandle = fopen(AXR::toStdString(string).c_str(), fopenMode);
+}
+
 FILE * AXRFile::getFileHandle()
 {
     return this->fileHandle;

@@ -84,7 +84,7 @@ AXRFile::p AXRWrapper::getFile(AXRString url)
             ret->setBasePath(fi.canonicalPath());
 
             ret->setBuffer(QByteArray());
-            ret->setFileHandle(fopen(fi.canonicalFilePath().toStdString().c_str(), "r"));
+            ret->setFileHandle(fi.canonicalFilePath());
 
             if (!ret->getFileHandle())
             {

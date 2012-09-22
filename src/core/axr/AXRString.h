@@ -45,10 +45,76 @@
 #define AXRSTRING_H
 
 #include <QString>
+#include <string>
+
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#ifdef __OBJC__
+#import <Foundation/Foundation.h>
+#endif
+#endif
 
 namespace AXR
 {
+    typedef QChar AXRChar;
     typedef QString AXRString;
+
+    inline static std::string toStdString(const AXRString &string)
+    {
+        return string.toStdString();
+    }
+
+    inline static AXRString fromStdString(const std::string &string)
+    {
+        return AXRString::fromStdString(string);
+    }
+
+#ifdef QT_VERSION
+    inline static QString toQString(const AXRString &string)
+    {
+        return string;
+    }
+
+    inline static AXRString fromQString(const QString &string)
+    {
+        return string;
+    }
+#endif
+
+#ifdef __APPLE__
+    inline static AXRString fromCFStringRef(CFStringRef string)
+    {
+        if (!string)
+            return AXRString();
+
+        CFIndex length = CFStringGetLength(string);
+        const UniChar *chars = CFStringGetCharactersPtr(string);
+        if (chars)
+            return AXRString(reinterpret_cast<const AXRChar*>(chars), length);
+
+        UniChar buffer[length];
+        CFStringGetCharacters(string, CFRangeMake(0, length), buffer);
+        return AXRString(reinterpret_cast<const AXRChar*>(buffer), length);
+    }
+
+    inline static CFStringRef toCFStringRef(const AXRString &string)
+    {
+        return CFStringCreateWithCharacters(0, reinterpret_cast<const UniChar*>(string.unicode()), string.length());
+    }
+
+#ifdef __OBJC__
+    inline static NSString* toNSString(const AXRString &string)
+    {
+        // The const cast below is safe: CFStringRef and NSString are immutable
+        return [const_cast<NSString*>(reinterpret_cast<const NSString*>(toCFStringRef(string))) autorelease];
+    }
+
+    inline static AXRString fromNSString(const NSString *string)
+    {
+        return fromCFStringRef(reinterpret_cast<CFStringRef>(string));
+    }
+#endif
+#endif
 }
 
 #endif

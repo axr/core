@@ -223,8 +223,7 @@
         int result = [openPanel runModalForTypes : [NSArray arrayWithObjects : @"xml", @"hss", nil]];
         if (result == NSOKButton && [[openPanel filenames] count] > 0)
         {
-            NSString *filepath_s = [[openPanel filenames] objectAtIndex : 0];
-            AXR::AXRString filePath = AXR::AXRString([filepath_s UTF8String]);
+            AXR::AXRString filePath = AXR::fromNSString([[openPanel filenames] objectAtIndex : 0]);
             axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: User selected file " + filePath);
             loaded = wrapper->loadFileByPath(filePath);
         }
@@ -249,7 +248,7 @@
     bool loaded = false;
     if (wrapper)
     {
-        loaded = wrapper->loadFileByPath(AXR::AXRString([filePath UTF8String]));
+        loaded = wrapper->loadFileByPath(AXR::fromNSString(filePath));
     }
     if (loaded)
     {
