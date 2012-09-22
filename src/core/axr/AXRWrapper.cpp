@@ -367,9 +367,13 @@ AXRString AXRWrapper::getPathToResources()
     // at different file paths, while the resources path will be independent
     // of either of them. Perhaps an AXR configuration file at a standard
     // location? /etc/axr.conf on Unix and %WINDIR%/axr.ini on Windows?
-    QDir applicationDir(QCoreApplication::applicationDirPath());
-    applicationDir.cd("resources");
-    return applicationDir.canonicalPath();
+    QDir dir(QCoreApplication::applicationDirPath());
+#ifdef Q_WS_MACX
+    dir.cdUp();
+    dir.cd("Resources");
+#endif
+    dir.cd("resources");
+    return dir.canonicalPath();
 }
 
 AXRString AXRWrapper::getPathToTestsFile()

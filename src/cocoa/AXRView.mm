@@ -50,24 +50,15 @@
 #import "HSSContainer.h"
 #import "HSSEvent.h"
 #import "HSSTypeEnums.h"
-#import "CocoaAXRWrapper.h"
 
 @implementation AXRView
 @synthesize needsFile;
-
-//hack to make it work with IB from a dependent target
-
-+(void) _keepAtLinkTime
-{
-    //do nothing
-}
 
 -(id) initWithFrame : (NSRect) frame
 {
     self = [super initWithFrame : frame];
     if (self)
     {
-        //nothing here
     }
 
     return self;
@@ -77,15 +68,10 @@
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRView: awaking from NIB");
     [self setNeedsFile : YES];
-    AXR::CocoaAXRWrapper * wrapper = new AXR::CocoaAXRWrapper(self);
-
-    [self setAxrWrapper : wrapper];
 }
 
 -(void) dealloc
 {
-    AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
-    delete wrapper;
     [super dealloc];
 }
 
@@ -96,45 +82,19 @@
 
 -(void) drawRect : (NSRect) dirtyRect
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRView: drawing");
-
-    NSRect bounds = [self bounds];
-
-    if (![self needsFile])
+    AXR::AXRCore::tp & core = AXR::AXRCore::getInstance();
+    AXR::AXRRender::p renderer = core->getRender();
+    if (renderer && core->getController()->getRoot())
     {
-        // Perform compositing in AXR
-        AXR::AXRCore::tp & core = AXR::AXRCore::getInstance();
-        core->drawInRectWithBounds(dirtyRect, bounds);
+        NSRect paintRect = [self bounds];
 
-        // Fill the NSView with white...
+        // Fill the view with our background color...
         [[NSColor whiteColor] set];
-        NSRectFill(bounds);
+        NSRectFill(paintRect);
 
-        // Present the AXR surface into the NSView
-        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], bounds, QPixmap::fromImage(core->getRender()->surface()).toMacCGImageRef());
-    }
-    else
-    {
-        // Fill with light gray
-        NSColor *lightGrayColor = [NSColor colorWithCalibratedWhite : 0.8 alpha : 1];
-        [lightGrayColor set];
-        NSRectFill(bounds);
-
-        // Display an indicator that no file is currently loaded
-        NSFont *errorFont = [NSFont fontWithName : @"Helvetica" size : 200];
-        NSShadow *shadow = [[NSShadow alloc] init];
-        [shadow setShadowColor : [NSColor darkGrayColor]];
-        [shadow setShadowBlurRadius : 5];
-        NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys :
-                errorFont, NSFontAttributeName,
-                lightGrayColor, NSForegroundColorAttributeName,
-                shadow, NSShadowAttributeName,
-                nil];
-        NSString *message = @"?";
-        NSSize size = [message sizeWithAttributes : attributes];
-        NSRect stringBounds = NSMakeRect((bounds.size.width - size.width) / 2, (bounds.size.height - size.height) / 2, size.width, size.height);
-
-        [message drawInRect : stringBounds withAttributes : attributes];
+        // Render the final composite on to the screen
+        core->drawInRectWithBounds(dirtyRect, paintRect);
+        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, QPixmap::fromImage(renderer->surface()).toMacCGImageRef());
     }
 }
 
@@ -195,78 +155,6 @@
         thePoint.y = bounds.size.height - sysPoint.y;
         root->handleEvent(AXR::HSSEventTypeMouseMove, (void*) &thePoint);
     }
-}
-
--(void) setAxrWrapper : (void *) theWrapper
-{
-    axrWrapper = theWrapper;
-}
-
--(void *) axrWrapper
-{
-    return axrWrapper;
-}
-
--(bool)loadFile
-{
-    AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
-    bool loaded = false;
-
-    if (wrapper)
-    {
-        axr_log(AXR_DEBUG_CH_GENERAL, "CocoaAXRWrapper: Opening File Dialog");
-
-        NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-        [openPanel setCanChooseFiles : TRUE];
-        [openPanel setAllowsMultipleSelection : FALSE];
-
-        int result = [openPanel runModalForTypes : [NSArray arrayWithObjects : @"xml", @"hss", nil]];
-        if (result == NSOKButton && [[openPanel filenames] count] > 0)
-        {
-            AXR::AXRString filePath = AXR::fromNSString([[openPanel filenames] objectAtIndex : 0]);
-            axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: User selected file " + filePath);
-            loaded = wrapper->loadFileByPath(filePath);
-        }
-        else
-        {
-            axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: No file selected from open dialog, returning false");
-        }
-    }
-
-    if (loaded)
-    {
-        [self setNeedsDisplay : YES];
-        [self setNeedsFile : NO];
-    }
-
-    return loaded;
-}
-
--(bool)loadFile : (NSString *) filePath
-{
-    AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
-    bool loaded = false;
-    if (wrapper)
-    {
-        loaded = wrapper->loadFileByPath(AXR::fromNSString(filePath));
-    }
-    if (loaded)
-    {
-        [self setNeedsDisplay : YES];
-        [self setNeedsFile : NO];
-        [self setAxrWrapper : wrapper];
-    }
-
-    return loaded;
-}
-
--(bool)reload
-{
-    AXR::CocoaAXRWrapper * wrapper = (AXR::CocoaAXRWrapper *)[self axrWrapper];
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "\n\n\nAXRView: reloading file");
-    bool loaded = wrapper->reload();
-    [self setNeedsDisplay : YES];
-    return loaded;
 }
 
 @end

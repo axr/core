@@ -44,6 +44,7 @@
 #import <Cocoa/Cocoa.h>
 #import "AXR.h"
 #import "AXRView.h"
+#import "AXRWrapper.h"
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
 #define Superclass <NSApplicationDelegate>
@@ -54,6 +55,7 @@
     NSWindow *window;
     NSWindow *axrWindow;
     AXRView *axrView;
+    AXR::AXRWrapper *wrapper;
     BOOL needsFile;
 }
 
@@ -62,6 +64,7 @@
 @property(assign) BOOL needsFile;
 
 -(id) init;
+-(void) dealloc;
 -(void) applicationDidFinishLaunching : (NSNotification *) aNotification;
 -(BOOL) application : (NSApplication *) theApplication openFile : (NSString *) filename;
 

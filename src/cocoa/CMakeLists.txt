@@ -1,8 +1,6 @@
 set(cocoa_SOURCES
     AXRView.h
     AXRView.mm
-    CocoaAXRWrapper.h
-    CocoaAXRWrapper.mm
 )
 
 qt_transform_sources(cocoa_SOURCES "${cocoa_SOURCES}")

@@ -44,7 +44,6 @@
 #import "AXRDebugging.h"
 #import "HSSDisplayObject.h"
 #import "CocoaAppDelegate.h"
-#import "CocoaAXRWrapper.h"
 
 @implementation CocoaAppDelegate
 
@@ -54,6 +53,8 @@
 
 -(id) init
 {
+    wrapper = new AXR::AXRWrapper();
+
     [self setNeedsFile : YES];
     //    axr_debug_activate_channel(AXR_DEBUG_CH_ON);
     //    axr_debug_activate_channel(AXR_DEBUG_CH_OVERVIEW);
@@ -69,11 +70,16 @@
     return self;
 }
 
+-(void) dealloc
+{
+    delete wrapper;
+    [super dealloc];
+}
+
 -(void) applicationDidFinishLaunching : (NSNotification *) aNotification
 {
-
-    //    NSString * filepath = [[NSBundle mainBundle] pathForResource:@"blank" ofType:@"xml" inDirectory:@"views"];
-    //    [[self axrView] loadFile:filepath];
+    //NSString * filepath = [[NSBundle mainBundle] pathForResource:@"blank" ofType:@"xml" inDirectory:@"views"];
+    //[[self axrView] loadFile:filepath];
 
     if ([self needsFile])
     {
@@ -85,20 +91,42 @@
 -(BOOL) application : (NSApplication *) theApplication openFile : (NSString *) filename
 {
     [[self axrWindow] makeKeyAndOrderFront : self];
-    bool ret = [[self axrView] loadFile : filename];
-    [self setNeedsFile : NO];
-    return ret;
+
+    if (wrapper->loadFileByPath(AXR::fromNSString(filename)))
+    {
+        [[self axrView] setNeedsDisplay : YES];
+        [self setNeedsFile : NO];
+        return YES;
+    }
+
+    return NO;
 }
 
 -(IBAction) openDocument : (id) sender
 {
     [[self axrWindow] makeKeyAndOrderFront : self];
-    [[self axrView] loadFile];
+
+    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+    [openPanel setCanChooseFiles: TRUE];
+    [openPanel setAllowsMultipleSelection: FALSE];
+
+    if ([openPanel runModalForTypes: [NSArray arrayWithObjects: @"xml", @"hss", nil]] == NSOKButton)
+    {
+        AXR::AXRString filePath = AXR::fromNSString([[openPanel filenames] objectAtIndex: 0]);
+        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: User selected file " + filePath);
+
+        if (wrapper->loadFileByPath(filePath))
+        {
+            [[self axrView] setNeedsDisplay : YES];
+            [self setNeedsFile : NO];
+        }
+    }
 }
 
 -(IBAction) reload : (id) sender
 {
-    [[self axrView] reload];
+    wrapper->reload();
+    [[self axrView] setNeedsDisplay : YES];
 }
 
 @end

@@ -251,9 +251,8 @@ void PrototypeWindow::runLayoutTests()
     QDir dir = QDir(QCoreApplication::applicationDirPath());
 #ifdef Q_WS_MACX
     dir.cdUp();
-    dir.cdUp();
-    dir.cd("Resources");
 #endif
+    dir.cd("Resources");
     dir.cd("views");
 
     AXRCore::tp &core = AXRCore::getInstance();
