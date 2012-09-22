@@ -49,11 +49,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief A type of expression that uses the division operator "/".
      */
-    class HSSDivision : public HSSExpression
+    class AXR_API HSSDivision : public HSSExpression
     {
     public:
         typedef boost::shared_ptr<HSSDivision> p;

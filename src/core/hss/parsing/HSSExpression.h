@@ -52,11 +52,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Abstract base class for all expressions.
      */
-    class HSSExpression : public HSSParserNode
+    class AXR_API HSSExpression : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSExpression> p;

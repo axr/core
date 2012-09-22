@@ -60,7 +60,7 @@ namespace AXR
      *
      *  Filters are used in the selector chain to reduce the size of the selection.
      */
-    class HSSFilter : public HSSParserNode
+    class AXR_API HSSFilter : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSFilter> p;

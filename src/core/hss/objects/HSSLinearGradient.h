@@ -51,14 +51,13 @@
 
 namespace AXR
 {
-
     /**
      *  @brief The object type representing a linear gradient in HSS.
      *
      *  Linear gradients fade from one color to another in one direction, where
      *  each perpendicular line to the one that defines the direction are the same.
      */
-    class HSSLinearGradient : public HSSGradient
+    class AXR_API HSSLinearGradient : public HSSGradient
     {
     public:
         typedef boost::shared_ptr<HSSLinearGradient> p;
@@ -231,6 +230,5 @@ namespace AXR
 
     };
 }
-
 
 #endif

@@ -52,7 +52,7 @@ namespace AXR
      *  @brief This is a subclass of AXRError, that should be used when something happened
      *  which isn't really an error, but still should be shown to the user somehow.
      */
-    class AXRWarning : public AXRError
+    class AXR_API AXRWarning : public AXRError
     {
     public:
         /**
@@ -79,6 +79,5 @@ namespace AXR
         virtual std::string toString() const;
     };
 }
-
 
 #endif

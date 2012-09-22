@@ -49,14 +49,13 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Parser node that represents a number.
      *
      *  Numbers, both integers and floating points are represented as a long double inside the
      *  value property.
      */
-    class HSSNumberConstant : public HSSParserNode
+    class AXR_API HSSNumberConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSNumberConstant> p;
@@ -95,6 +94,7 @@ namespace AXR
 
     protected:
         long double value;
+
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

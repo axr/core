@@ -50,13 +50,12 @@
 
 namespace AXR
 {
-
     /**
      *  @brief The special object \@parent in HSS.
      *
      *  Used in selector chains, they always return the unique parent elements of the elements in scope.
      */
-    class HSSParentSelector : public HSSNameSelector
+    class AXR_API HSSParentSelector : public HSSNameSelector
     {
     public:
         typedef boost::shared_ptr<HSSParentSelector> p;
@@ -85,7 +84,5 @@ namespace AXR
         virtual HSSClonable::p cloneImpl() const;
     };
 }
-
-
 
 #endif

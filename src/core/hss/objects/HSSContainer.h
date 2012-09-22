@@ -52,8 +52,7 @@
 
 namespace AXR
 {
-
-    enum HSSDirectionValue
+    enum AXR_API HSSDirectionValue
     {
         HSSDirectionLeftToRight,
         HSSDirectionRightToLeft,
@@ -69,7 +68,7 @@ namespace AXR
      *  laying them out and to propagate events to them. It also implements the needed
      *  rendering routines for this type of object.
      */
-    class HSSContainer : public HSSDisplayObject
+    class AXR_API HSSContainer : public HSSDisplayObject
     {
     public:
         typedef boost::shared_ptr<HSSContainer> p;
@@ -82,7 +81,7 @@ namespace AXR
          *  together in a direction. They also contain lines, each of whose is also a
          *  display group. When there are lines, the objects vector should not be used.
          */
-        class displayGroup
+        class AXR_API displayGroup
         {
         public:
             typedef boost::shared_ptr<HSSContainer::displayGroup> p;

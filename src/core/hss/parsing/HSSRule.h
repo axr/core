@@ -55,10 +55,8 @@
 
 namespace AXR
 {
-
     class HSSDisplayObject;
     class HSSFilter;
-
     class HSSRule;
 
     /**
@@ -67,10 +65,9 @@ namespace AXR
      *  Display objects use these to determine if the rules they hold pointers to
      *  are to be applied or not.
      */
-    class HSSRuleStatus
+    class AXR_API HSSRuleStatus
     {
     public:
-
         /**
          *  The shared pointer to this class.
          */
@@ -94,7 +91,7 @@ namespace AXR
      *  Rules are read by the parser, then applied on display objects, where the property definitions
      *  are used to determine how the elements are going to be displayed on the page.
      */
-    class HSSRule : public HSSStatement
+    class AXR_API HSSRule : public HSSStatement
     {
     public:
         typedef boost::shared_ptr<HSSRule> p;

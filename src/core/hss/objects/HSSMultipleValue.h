@@ -51,16 +51,15 @@
 
 namespace AXR
 {
-
     /**
      *  @brief MultipleValue objects contain other values, and stores them
      *  together under the same object name.
      */
-    class HSSMultipleValue : public HSSObject
+    class AXR_API HSSMultipleValue : public HSSObject
     {
     public:
-
         typedef boost::shared_ptr<HSSMultipleValue> p;
+
         /**
          *  Constructor for MultipleValue objects
          */
@@ -115,6 +114,5 @@ namespace AXR
         HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

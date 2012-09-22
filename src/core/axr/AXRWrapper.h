@@ -68,7 +68,7 @@ namespace AXR
      *  @brief This is the abstract superclass from with all OS-specific wrappers
      *  should inherit from.
      */
-    class AXRWrapper
+    class AXR_API AXRWrapper
     {
     public:
         /**
@@ -204,7 +204,7 @@ namespace AXR
         std::string _layoutTestsFilePath;
     };
 
-    class AXRTestThread
+    class AXR_API AXRTestThread
     {
     private:
         AXRWrapper * wrapper;
@@ -218,7 +218,7 @@ namespace AXR
         void operator () ();
     };
 
-    class AXRTestProducer
+    class AXR_API AXRTestProducer
     {
     private:
         AXRWrapper * wrapper;

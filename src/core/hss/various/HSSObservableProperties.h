@@ -44,10 +44,11 @@
 #ifndef HSSOBSERVABLEPROPERTIES_H
 #define HSSOBSERVABLEPROPERTIES_H
 
+#include "AXRGlobal.h"
+
 namespace AXR
 {
-
-    enum HSSObservableProperty
+    enum AXR_API HSSObservableProperty
     {
         //HSSObject
         HSSObservablePropertyNone = 0,

@@ -49,11 +49,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Type of expression that multiplies the left value by the right value.
      */
-    class HSSMultiplication : public HSSExpression
+    class AXR_API HSSMultiplication : public HSSExpression
     {
     public:
         typedef boost::shared_ptr<HSSMultiplication> p;
@@ -92,4 +91,4 @@ namespace AXR
     };
 }
 
-#endif //HSSMULTIPLICATION_H
+#endif

@@ -47,6 +47,7 @@
 #include <string>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
+#include "AXRGlobal.h"
 
 namespace AXR
 {
@@ -54,7 +55,7 @@ namespace AXR
      *  @brief  This class, and it's subclass AXRWarning, are used for error handling in
      *  the rendering engine. They can be displayed using raise() or thrown.
      */
-    class AXRError : public boost::enable_shared_from_this<AXRError>
+    class AXR_API AXRError : public boost::enable_shared_from_this<AXRError>
     {
     public:
         /**

@@ -57,13 +57,12 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Object definitions in HSS are represented by this class.
      *
      *  Object definitions hold property definitions, rules and other object definitions.
      */
-    class HSSObjectDefinition : public HSSStatement
+    class AXR_API HSSObjectDefinition : public HSSStatement
     {
     public:
         typedef boost::shared_ptr<HSSObjectDefinition> p;
@@ -254,6 +253,5 @@ namespace AXR
         std::deque<HSSRule::p> _rules;
     };
 }
-
 
 #endif

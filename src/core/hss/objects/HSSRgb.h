@@ -50,7 +50,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief The object type representing a \@rgb color in HSS.
      *
@@ -58,7 +57,7 @@ namespace AXR
      *
      *  This object encapsulates
      */
-    class HSSRgb : public HSSObject
+    class AXR_API HSSRgb : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSRgb> p;
@@ -219,8 +218,6 @@ namespace AXR
                                    );
         HSSClonable::p cloneImpl() const;
     };
-
 }
-
 
 #endif

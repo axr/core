@@ -51,11 +51,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief This class represents the HSS object type \@font.
      */
-    class HSSFont : public HSSObject
+    class AXR_API HSSFont : public HSSObject
     {
     public:
         friend class HSSParser;
@@ -209,8 +208,6 @@ namespace AXR
                                    );
         HSSClonable::p cloneImpl() const;
     };
-
 }
-
 
 #endif

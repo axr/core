@@ -52,7 +52,6 @@
 
 namespace AXR
 {
-
     class HSSRule;
     class HSSSimpleSelector;
 
@@ -64,7 +63,7 @@ namespace AXR
      *  to determine which ones are eligible for the rule. These instructions can range from
      *  simple selections by name, over to very complex interdepencies between elements.
      */
-    class HSSSelectorChain : public HSSParserNode
+    class AXR_API HSSSelectorChain : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSSelectorChain> p;
@@ -167,7 +166,5 @@ namespace AXR
         pp rule;
     };
 }
-
-
 
 #endif

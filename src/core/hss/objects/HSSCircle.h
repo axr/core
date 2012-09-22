@@ -49,11 +49,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Shape object, representing the HSS object \@circle.
      */
-    class HSSCircle : public HSSShape
+    class AXR_API HSSCircle : public HSSShape
     {
     public:
         typedef boost::shared_ptr<HSSCircle> p;

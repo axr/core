@@ -57,10 +57,9 @@ namespace AXR
      *  of groups of parser nodes that have a particular meaning (e.g. a rule is for applying properties to an element,
      *  and is made up of a selector chain, and property definitions.
      */
-    class HSSStatement : public HSSParserNode
+    class AXR_API HSSStatement : public HSSParserNode
     {
     public:
-
         /**
          *  The shared pointer to instances of this class.
          */
@@ -109,6 +108,5 @@ namespace AXR
         HSSStatementType type;
     };
 }
-
 
 #endif

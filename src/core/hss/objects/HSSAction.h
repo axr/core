@@ -52,7 +52,7 @@ namespace AXR
     /**
      *  @brief Abstract base class for all action objects.
      */
-    class HSSAction : public HSSObject
+    class AXR_API HSSAction : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSAction> p;
@@ -118,6 +118,5 @@ namespace AXR
         HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

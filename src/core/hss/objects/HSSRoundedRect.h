@@ -51,7 +51,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief A shape object type that allows to create rectangles with rounded corners.
      *
@@ -60,7 +59,7 @@ namespace AXR
      *
      *  @todo Implement properties to allow for individual control of the corners.
      */
-    class HSSRoundedRect : public HSSShape
+    class AXR_API HSSRoundedRect : public HSSShape
     {
     public:
         typedef boost::shared_ptr<HSSRoundedRect> p;

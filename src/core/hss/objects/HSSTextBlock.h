@@ -48,7 +48,7 @@
 
 namespace AXR
 {
-    enum HSSTextTransformType
+    enum AXR_API HSSTextTransformType
     {
         HSSTextTransformTypeNone = 0,
         HSSTextTransformTypeLowercase,
@@ -57,7 +57,7 @@ namespace AXR
         HSSTextTransformTypeHumanize
     };
 
-    enum HSSTextAlignType
+    enum AXR_API HSSTextAlignType
     {
         HSSTextAlignTypeNone = 0,
         HSSTextAlignTypeLeft,
@@ -66,7 +66,7 @@ namespace AXR
         HSSTextAlignTypeJustify
     };
 
-    class HSSTextBlock : public HSSDisplayObject
+    class AXR_API HSSTextBlock : public HSSDisplayObject
     {
     public:
 

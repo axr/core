@@ -75,7 +75,7 @@ namespace AXR
      *  It provides basic functionality for drawing and integration into the layout system,
      *  as well as basic support for the information stored in an XML element.
      */
-    class HSSDisplayObject : public HSSObject
+    class AXR_API HSSDisplayObject : public HSSObject
     {
     public:
         friend class HSSContainer;
@@ -521,6 +521,5 @@ namespace AXR
         long double _layoutLockBottomPosition;
     };
 }
-
 
 #endif

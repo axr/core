@@ -48,11 +48,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Selects the first element of the selection.
      */
-    class HSSFirstChildFilter : public HSSFilter
+    class AXR_API HSSFirstChildFilter : public HSSFilter
     {
     public:
         /**

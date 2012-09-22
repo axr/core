@@ -55,7 +55,6 @@
 
 namespace AXR
 {
-
     class AXRRender;
     class AXRCore;
 
@@ -63,7 +62,7 @@ namespace AXR
      *  @brief  This class holds trees of objects, sheets, rules and the parser tree. Also,
      *  it has methods to select object in those trees.
      */
-    class AXRController
+    class AXR_API AXRController
     {
     public:
         /**

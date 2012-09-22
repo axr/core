@@ -54,11 +54,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Simple selectors are basic units of a selector chain.
      */
-    class HSSSimpleSelector : public HSSSelector
+    class AXR_API HSSSimpleSelector : public HSSSelector
     {
     public:
         typedef boost::shared_ptr<HSSSimpleSelector> p;
@@ -106,7 +105,5 @@ namespace AXR
         std::vector<HSSDisplayObject::p> _recursiveFilterSelection(const std::vector<HSSDisplayObject::p> & selection, std::list<HSSFilter::p>::const_iterator it, std::list<HSSFilter::p>::const_iterator end_it, bool processing);
     };
 }
-
-
 
 #endif

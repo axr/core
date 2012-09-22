@@ -49,11 +49,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Shape object, representing the HSS object \@polygon.
      */
-    class HSSPolygon : public HSSShape
+    class AXR_API HSSPolygon : public HSSShape
     {
     public:
         typedef boost::shared_ptr<HSSPolygon> p;

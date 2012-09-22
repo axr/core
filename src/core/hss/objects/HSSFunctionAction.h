@@ -49,11 +49,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief The action objects that represent custom functions functions.
      */
-    class HSSFunctionAction : public HSSAction
+    class AXR_API HSSFunctionAction : public HSSAction
     {
     public:
         typedef boost::shared_ptr<HSSFunctionAction> p;
@@ -106,6 +105,5 @@ namespace AXR
         virtual HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

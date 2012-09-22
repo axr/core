@@ -52,7 +52,7 @@ namespace AXR
     /**
      *  @brief Shape object, representing the HSS object \@rect.
      */
-    class HSSRectangle : public HSSShape
+    class AXR_API HSSRectangle : public HSSShape
     {
     public:
         typedef boost::shared_ptr<HSSRectangle> p;

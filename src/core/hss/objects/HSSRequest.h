@@ -49,7 +49,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief The object type representing an action that loads content into the page. Sort of like
      *  ajax.
@@ -57,10 +56,9 @@ namespace AXR
      *  When this action fires, the content at the given URL is loaded and inserted into the document
      *  according to the request mode type (currently only implements a basic load like links).
      */
-    class HSSRequest : public HSSAction
+    class AXR_API HSSRequest : public HSSAction
     {
     public:
-
         /**
          *  Creates a new instance of a request action.
          */

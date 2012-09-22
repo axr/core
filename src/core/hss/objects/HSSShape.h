@@ -55,7 +55,7 @@ namespace AXR
     /**
      *  @brief Abstract base class for all shape objects.
      */
-    class HSSShape : public HSSObject
+    class AXR_API HSSShape : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSShape> p;
@@ -112,6 +112,5 @@ namespace AXR
         HSSShapeType shapeType;
     };
 }
-
 
 #endif

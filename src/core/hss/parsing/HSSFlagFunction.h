@@ -49,15 +49,13 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Function type to manipulate the activation status of a flag.
      *  All of the flagging functions [flag(), unflag() and toggleFlag()] are handled by this class.
      */
-    class HSSFlagFunction : public HSSFunction
+    class AXR_API HSSFlagFunction : public HSSFunction
     {
     public:
-
         typedef boost::shared_ptr<HSSFlagFunction> p;
 
         /**
@@ -180,7 +178,5 @@ namespace AXR
         HSSClonable::p cloneImpl() const;
     };
 }
-
-
 
 #endif

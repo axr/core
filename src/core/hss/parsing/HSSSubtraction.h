@@ -49,13 +49,12 @@
 
 namespace AXR
 {
-
     /**
      *  @brief A type of expression that uses the subtraction operator "-".
      *
      *  The right member of this expression is subtracted from the left one.
      */
-    class HSSSubtraction : public HSSExpression
+    class AXR_API HSSSubtraction : public HSSExpression
     {
     public:
         typedef boost::shared_ptr<HSSSubtraction> p;
@@ -98,4 +97,4 @@ namespace AXR
     };
 }
 
-#endif //HSSSUBTRACTION_H
+#endif

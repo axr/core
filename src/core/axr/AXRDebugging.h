@@ -48,6 +48,7 @@
 #include <sstream>
 #include <string>
 #include <QString>
+#include "AXRGlobal.h"
 
 // Debug levels:
 // - 0 No debug
@@ -125,7 +126,7 @@ void std_log4(const std::string &message, bool newline = true);
 
 quint32 extern axr_debug_active_channels;
 
-enum axr_debug_ch
+enum AXR_API axr_debug_ch
 {
     AXR_DEBUG_CH_ON = 1, //A
     AXR_DEBUG_CH_OVERVIEW = 1 << 1, //B

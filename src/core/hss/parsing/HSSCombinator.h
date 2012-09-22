@@ -50,7 +50,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Combinators are used inside of selector chains, to define the relations between the elements that
      *  are selected.
@@ -58,7 +57,7 @@ namespace AXR
      *  This class encapsulates all types of combinators. The actual behavior of the selection
      *  is defined in AXRController.
      */
-    class HSSCombinator : public HSSSelector
+    class AXR_API HSSCombinator : public HSSSelector
     {
     public:
         typedef boost::shared_ptr<HSSCombinator> p;
@@ -105,6 +104,5 @@ namespace AXR
         virtual HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

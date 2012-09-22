@@ -50,7 +50,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief This nodes holds multiple parser nodes inside.
      *
@@ -59,7 +58,7 @@ namespace AXR
      *  laying them out and to propagate events to them. It also implements the needed
      *  rendering routines for this type of object.
      */
-    class HSSMultipleValueDefinition : public HSSParserNode
+    class AXR_API HSSMultipleValueDefinition : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSMultipleValueDefinition> p;
@@ -110,6 +109,5 @@ namespace AXR
         virtual HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

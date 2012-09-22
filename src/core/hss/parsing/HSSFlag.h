@@ -52,7 +52,6 @@
 
 namespace AXR
 {
-
     class HSSSelectorChain;
     class HSSDisplayObject;
 
@@ -61,7 +60,7 @@ namespace AXR
      *  Flags (e.g. \::hover) are a way to conditionally target elements in HSS, inside
      *  a selector chain.
      */
-    class HSSFlag : public HSSFilter
+    class AXR_API HSSFlag : public HSSFilter
     {
     public:
         typedef boost::shared_ptr<HSSFlag> p;

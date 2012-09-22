@@ -67,7 +67,12 @@ if(AXR_BUILD_PROTOTYPE)
 
     # Don't use static Boost because this will result in relocation errors due to
     # Boost not being compiled with -fPIC (at least on 64-bit Linux)
-    set(Boost_USE_STATIC_LIBS OFF)
+    if(MSVC)
+        set(Boost_USE_STATIC_LIBS ON)
+        link_directories(${Boost_LIBRARY_DIRS})
+    else()
+        set(Boost_USE_STATIC_LIBS OFF)
+    endif()
     set(Boost_USE_MULTITHREADED ON)
     set(Boost_USE_STATIC_RUNTIME OFF)
 

@@ -48,16 +48,14 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Parser node representing the negator "!".
      *
      *  The negator is prepended in front of simple selectors to invert their meaning.
      */
-    class HSSNegation : public HSSParserNode
+    class AXR_API HSSNegation : public HSSParserNode
     {
     public:
-
         /**
          *  Creates a new instance of a negation.
          */

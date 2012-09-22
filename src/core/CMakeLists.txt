@@ -1,3 +1,7 @@
+if(BUILD_SHARED_LIBS)
+    add_definitions(-DAXR_EXPORTS)
+endif()
+
 # Find all sources for core library
 file(GLOB_RECURSE core_SOURCES *.c *.cpp *.h)
 list(SORT core_SOURCES)

@@ -52,13 +52,12 @@
 
 namespace AXR
 {
-
     /**
      *  @brief The object type representing line borders in HSS.
      *
      *  This border style renders solid lines on whatever path they are applied.
      */
-    class HSSLineBorder : public HSSBorder
+    class AXR_API HSSLineBorder : public HSSBorder
     {
     public:
         typedef boost::shared_ptr<HSSLineBorder> p;
@@ -122,6 +121,5 @@ namespace AXR
         HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

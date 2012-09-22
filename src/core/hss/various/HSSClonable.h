@@ -45,14 +45,14 @@
 #define HSSCLONABLE_H
 
 #include <boost/shared_ptr.hpp>
+#include "AXRGlobal.h"
 
 namespace AXR
 {
-
     /**
      *  @brief Helper class that enables greater control over cloning of objects
      */
-    class HSSClonable
+    class AXR_API HSSClonable
     {
     public:
         /**
@@ -73,7 +73,6 @@ namespace AXR
         }
 
     private:
-
         virtual p cloneImpl() const
         {
             return p(new HSSClonable(*this));

@@ -57,7 +57,6 @@
 
 namespace AXR
 {
-
     class AXRController;
     class HSSMultipleValueDefinition;
     class HSSDisplayObject;
@@ -67,7 +66,7 @@ namespace AXR
      *  isA.
      *  @see HSSObjectType
      */
-    class HSSObject : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSObject>
+    class AXR_API HSSObject : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSObject>
     {
     public:
         /**
@@ -346,7 +345,6 @@ namespace AXR
         virtual HSSClonable::p cloneImpl() const;
 
     };
-
 }
 
 #endif

@@ -46,11 +46,11 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include "AXRGlobal.h"
 
 namespace AXR
 {
-
-    enum HSSTokenType
+    enum AXR_API HSSTokenType
     {
         HSSNone = 0,
         HSSIdentifier,
@@ -76,7 +76,7 @@ namespace AXR
         HSSAmpersand
     };
 
-    class HSSToken
+    class AXR_API HSSToken
     {
     public:
         typedef boost::shared_ptr<HSSToken> p;

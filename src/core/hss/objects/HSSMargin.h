@@ -59,7 +59,7 @@ namespace AXR
      *  Margins are spaces around elements, that won't be occupied by other elements that
      *  are in flow.
      */
-    class HSSMargin : public HSSObject
+    class AXR_API HSSMargin : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSMargin> p;

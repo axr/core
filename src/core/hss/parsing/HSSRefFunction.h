@@ -50,7 +50,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Implementation of the ref([<modfier>] <name> [of <selector chain>]) function in HSS.
      *
@@ -60,10 +59,9 @@ namespace AXR
      *
      *  The modifier determines what to do in case the selector chain returns multiple elements.
      */
-    class HSSRefFunction : public HSSFunction
+    class AXR_API HSSRefFunction : public HSSFunction
     {
     public:
-
         typedef boost::shared_ptr<HSSRefFunction> p;
 
         /**
@@ -185,7 +183,5 @@ namespace AXR
         HSSClonable::p cloneImpl() const;
     };
 }
-
-
 
 #endif

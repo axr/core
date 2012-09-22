@@ -47,19 +47,18 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <QByteArray>
+#include "AXRGlobal.h"
 
 namespace AXR
 {
-
     /**
      *  @brief This class encapsulates a representation of a file (.xml or .hss)
      *  to be used inside the parsers. While this class holds the buffer to the
      *  data, the actual loading of the data is up to the OS-specific wrapper.
      */
-    class AXRFile
+    class AXR_API AXRFile
     {
     public:
-
         /**
          *  The shared pointer to a file.
          */

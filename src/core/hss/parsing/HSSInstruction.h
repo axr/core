@@ -49,7 +49,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief This class encapsulates all the different types of instructions in HSS.
      *
@@ -57,7 +56,7 @@ namespace AXR
      *  when processing an instruction is not implemented in this class, this only holds information
      *  about what kind of information whas passed by the author in the HSS code.
      */
-    class HSSInstruction : public HSSStatement
+    class AXR_API HSSInstruction : public HSSStatement
     {
     public:
         typedef boost::shared_ptr<HSSInstruction> p;

@@ -49,14 +49,13 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Implementation of the sel(<selector chain>) function in HSS.
      *
      *  Sel functions allow the author of HSS documents to create selections that can
      *  be passed as a value to a property.
      */
-    class HSSSelFunction : public HSSFunction
+    class AXR_API HSSSelFunction : public HSSFunction
     {
     public:
         typedef boost::shared_ptr<HSSSelFunction> p;

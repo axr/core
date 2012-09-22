@@ -48,16 +48,14 @@
 
 namespace AXR
 {
-
     /**
      *  @brief This action object type logs values to the console.
      *
      *  It can either log stuff directly
      */
-    class HSSLog : public HSSAction
+    class AXR_API HSSLog : public HSSAction
     {
     public:
-
         /**
          *  Creates a new instance of a log action object.
          */
@@ -113,6 +111,5 @@ namespace AXR
         HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

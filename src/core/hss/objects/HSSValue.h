@@ -49,11 +49,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Represents value objects in HSS (\@value).
      */
-    class HSSValue : public HSSObject
+    class AXR_API HSSValue : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSValue> p;
@@ -120,6 +119,5 @@ namespace AXR
         HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

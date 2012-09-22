@@ -50,13 +50,12 @@
 
 namespace AXR
 {
-
     /**
      *  @brief The special object \@root in HSS.
      *
      *  Used in selector chains, they always return the root element.
      */
-    class HSSRootSelector : public HSSNameSelector
+    class AXR_API HSSRootSelector : public HSSNameSelector
     {
     public:
         typedef boost::shared_ptr<HSSRootSelector> p;
@@ -85,7 +84,5 @@ namespace AXR
         virtual HSSClonable::p cloneImpl() const;
     };
 }
-
-
 
 #endif

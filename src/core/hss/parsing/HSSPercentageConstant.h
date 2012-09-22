@@ -50,11 +50,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Parser node that represents a percentage constant in the HSS source.
      */
-    class HSSPercentageConstant : public HSSParserNode
+    class AXR_API HSSPercentageConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSPercentageConstant> p;
@@ -92,13 +91,13 @@ namespace AXR
          *  percentage value.
          */
         long double getValue(long double baseValue);
+
     protected:
         long double value;
+
     private:
         virtual HSSClonable::p cloneImpl() const;
     };
 }
-
-
 
 #endif

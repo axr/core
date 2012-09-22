@@ -49,11 +49,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Parser node that represents a keyword constant in the HSS source.
      */
-    class HSSKeywordConstant : public HSSParserNode
+    class AXR_API HSSKeywordConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSKeywordConstant> p;
@@ -96,10 +95,10 @@ namespace AXR
 
     protected:
         std::string value;
+
     private:
         virtual HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

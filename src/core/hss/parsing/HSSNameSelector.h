@@ -49,14 +49,13 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Selects elements by tag name.
      *
      *  This just holds information about the name of the elements that should
      *  be selected by AXRController when creating selections.
      */
-    class HSSNameSelector : public HSSSelector
+    class AXR_API HSSNameSelector : public HSSSelector
     {
     public:
         typedef boost::shared_ptr<HSSNameSelector> p;
@@ -96,7 +95,5 @@ namespace AXR
         virtual HSSClonable::p cloneImpl() const;
     };
 }
-
-
 
 #endif

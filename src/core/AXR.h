@@ -166,14 +166,13 @@
 
 namespace AXR
 {
-
     /**
      *  @brief This is the object that encapsulates the core library.
      *
      *  This class cannot be instantiated directly. Instead, call the getInstance() method
      *  to retrieve a thread-specific shared pointer to a singleton instance.
      */
-    class AXRCore
+    class AXR_API AXRCore
     {
     public:
         /**

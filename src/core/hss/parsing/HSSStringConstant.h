@@ -49,14 +49,13 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Parser node that represents either a single or double quoted string.
      *
      *  Text literals that are encolsed by single quotes ' or double quotes " in HSS.
      *  This class provides storage for that text.
      */
-    class HSSStringConstant : public HSSParserNode
+    class AXR_API HSSStringConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSStringConstant> p;
@@ -94,6 +93,7 @@ namespace AXR
 
     protected:
         std::string value;
+
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

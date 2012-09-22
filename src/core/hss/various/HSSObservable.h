@@ -48,12 +48,12 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <QMap>
+#include "AXRGlobal.h"
 #include "HSSCallback.h"
 #include "HSSObservableProperties.h"
 
 namespace AXR
 {
-
     /**
      *  @brief This class provides base functionality for property observing.
      *
@@ -61,10 +61,9 @@ namespace AXR
      *  the same object can be observing the same property (on the instance that inherits from this class),
      *  from within different properties in the observer.
      */
-    class HSSObservable
+    class AXR_API HSSObservable
     {
     public:
-
         typedef boost::shared_ptr<HSSObservable> p;
 
         /**
@@ -156,7 +155,6 @@ namespace AXR
 
     private:
         QMap<HSSObservableProperty, HSSObservable::observed>_propertyObservers;
-
     };
 }
 

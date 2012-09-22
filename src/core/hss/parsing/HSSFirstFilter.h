@@ -48,11 +48,10 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Selects the first element of the selection.
      */
-    class HSSFirstFilter : public HSSFilter
+    class AXR_API HSSFirstFilter : public HSSFilter
     {
     public:
         /**
@@ -74,6 +73,7 @@ namespace AXR
         virtual std::string toString();
 
         virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
+
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

@@ -44,55 +44,22 @@
 #ifndef AXRGLOBAL_H
 #define AXRGLOBAL_H
 
-// Qt for example has immensely complex ways of defining this
-// but the following should suffice in the meantime
-#if defined(_MSC_VER)
-#define AXR_DECL_EXPORT __declspec(dllexport)
-#define AXR_DECL_IMPORT __declspec(dllimport)
-#elif defined(__linux__)
-#define AXR_DECL_EXPORT __attribute__((visibility("default")))
-#define AXR_DECL_IMPORT __attribute__((visibility("default")))
-#endif
+#include <QtGlobal>
 
 #if defined(AXR_EXPORTS)
-#define AXR_API __declspec(dllexport)
+#define AXR_API Q_DECL_EXPORT
 #elif defined(AXR_IMPORTS)
-#define AXR_API __declspec(dllimport)
+#define AXR_API Q_DECL_IMPORT
 #else
 #define AXR_API
-#endif
-
-#if defined(_MSC_VER)
-#define AXR_DECL_DEPRECATED __declspec(deprecated)
-#if defined(__INTEL_COMPILER) // Intel compiler disguised as MSVC doesn't allow variable deprecation
-#define AXR_DECL_VARIABLE_DEPRECATED
-#endif
-#elif defined(__GNUC__) || defined(__ARMCC__) || defined(__CC_ARM)
-#define AXR_DECL_DEPRECATED __attribute__ ((__deprecated__))
-#endif
-
-#ifndef AXR_DECL_DEPRECATED
-#define AXR_DECL_DEPRECATED
-#endif
-
-#ifndef AXR_DECL_VARIABLE_DEPRECATED
-#define AXR_DECL_VARIABLE_DEPRECATED AXR_DECL_DEPRECATED
-#endif
-
-#ifdef AXR_DEPRECATED
-#undef AXR_DEPRECATED
-#endif
-
-#ifdef AXR_DEPRECATED_VARIABLE
-#undef AXR_DEPRECATED_VARIABLE
 #endif
 
 #if defined(AXR_NO_DEPRECATED)
 #define AXR_DEPRECATED
 #define AXR_DEPRECATED_VARIABLE
 #else
-#define AXR_DEPRECATED AXR_DECL_DEPRECATED
-#define AXR_DEPRECATED_VARIABLE AXR_DECL_VARIABLE_DEPRECATED
+#define AXR_DEPRECATED Q_DECL_DEPRECATED
+#define AXR_DEPRECATED_VARIABLE Q_DECL_VARIABLE_DEPRECATED
 #endif
 
 // define AXR_NO_DEPRECATED_ENUMS to restrict usage of deprecated enum members,

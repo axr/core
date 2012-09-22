@@ -45,14 +45,14 @@
 #define HSSVALUETOKEN_H
 
 #include <boost/shared_ptr.hpp>
+#include "AXRGlobal.h"
 #include "HSSToken.h"
 
 #define VALUE_TOKEN(thetoken) (boost::static_pointer_cast<HSSValueToken>(thetoken))
 
 namespace AXR
 {
-
-    class HSSValueToken : public HSSToken
+    class AXR_API HSSValueToken : public HSSToken
     {
     public:
         typedef boost::shared_ptr<HSSValueToken> p;

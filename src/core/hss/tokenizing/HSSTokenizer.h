@@ -55,14 +55,14 @@ namespace AXR
 {
     //the return states any part of the tokenizer will report
 
-    enum HSS_TOKENIZING_STATUS
+    enum AXR_API HSS_TOKENIZING_STATUS
     {
         HSSTokenizerUnknownError = -1,
         HSSTokenizerDone = 0,
         HSSTokenizerOK = 1
     };
 
-    class HSSTokenizer
+    class AXR_API HSSTokenizer
     {
     public:
         typedef boost::shared_ptr<HSSTokenizer> p;

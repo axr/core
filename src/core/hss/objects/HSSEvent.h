@@ -50,14 +50,13 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Represents all event objects in HSS.
      *
      *  All event objects, such as \@click, \@keyDown, etc, have the same behavior, they
      *  fire their assigned action, so only one class is needed.
      */
-    class HSSEvent : public HSSObject
+    class AXR_API HSSEvent : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSEvent> p;
@@ -157,6 +156,5 @@ namespace AXR
         HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

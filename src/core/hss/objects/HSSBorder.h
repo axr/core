@@ -56,7 +56,7 @@ namespace AXR
     /**
      *  @brief Abstract base class for all border objects.
      */
-    class HSSBorder : public HSSObject
+    class AXR_API HSSBorder : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSBorder> p;
@@ -127,6 +127,5 @@ namespace AXR
                                    );
     };
 }
-
 
 #endif

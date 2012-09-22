@@ -52,7 +52,7 @@ namespace AXR
     /**
      *  @brief Abstract base class for a common interface for all selector nodes
      */
-    class HSSSelector : public HSSParserNode
+    class AXR_API HSSSelector : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSSelector> p;

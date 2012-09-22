@@ -49,13 +49,12 @@
 
 namespace AXR
 {
-
     /**
      *  @brief A type of expression that uses the plus operator "+".
      *
      *  Both members are summed together, no matter what order they are put in.
      */
-    class HSSSum : public HSSExpression
+    class AXR_API HSSSum : public HSSExpression
     {
     public:
         typedef boost::shared_ptr<HSSSum> p;
@@ -100,4 +99,4 @@ namespace AXR
     };
 }
 
-#endif //HSSSUM_H
+#endif

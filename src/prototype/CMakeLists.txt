@@ -1,3 +1,7 @@
+if(BUILD_SHARED_LIBS)
+    add_definitions(-DAXR_IMPORTS)
+endif()
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(prototype_SOURCES
@@ -22,7 +26,7 @@ source_group("Resources\\HSS Framework" FILES ${hss_SOURCES})
 qt_transform_sources(prototype_SOURCES "${prototype_SOURCES}")
 
 add_executable(${TARGET_NAME_APP_PROTOTYPE} WIN32 MACOSX_BUNDLE ${prototype_SOURCES})
-target_link_libraries(${TARGET_NAME_APP_PROTOTYPE} ${TARGET_NAME_LIB_CORE})
+target_link_libraries(${TARGET_NAME_APP_PROTOTYPE} ${TARGET_NAME_LIB_CORE} ${QT_QTMAIN_LIBRARY})
 
 set(MACOSX_BUNDLE_ICON_FILE prototype.icns)
 

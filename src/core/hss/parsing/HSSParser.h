@@ -60,7 +60,6 @@
 
 namespace AXR
 {
-
     /**
      *  @addtogroup typeEnums
      *  @{
@@ -69,7 +68,7 @@ namespace AXR
      *  fully used yet, only in one or to places in the parser. This will probably useful
      *  in the future for better error handling and stuff like that.
      */
-    enum HSSParserContext
+    enum AXR_API HSSParserContext
     {
         HSSParserContextRoot, /**< When we are at the base level of the document. */
         HSSParserContextBlock, /**< When we are inside of a rule. */
@@ -91,7 +90,7 @@ namespace AXR
      *  readNextStatement() until done, processing each statement as needed, depending on
      *  what type it is (e.g. adds the rule to the controller).
      */
-    class HSSParser
+    class AXR_API HSSParser
     {
     public:
 

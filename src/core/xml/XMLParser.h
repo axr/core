@@ -46,12 +46,13 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include "AXRGlobal.h"
 
 namespace AXR
 {
     class AXRController;
 
-    class XMLParser
+    class AXR_API XMLParser
     {
     public:
         typedef boost::shared_ptr<XMLParser> p;

@@ -46,6 +46,7 @@
 
 #include <QPoint>
 #include <QRect>
+#include "AXRGlobal.h"
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -67,7 +68,7 @@ namespace AXR
     /**
      * @brief   A resolution independent point.
      */
-    class HSSPoint
+    class AXR_API HSSPoint
     {
     public:
 #if defined(HSS_UNITS_NATIVE_CONSTRUCTORS_WIN32)
@@ -120,7 +121,7 @@ namespace AXR
     /**
      * @brief   Represents a size measure.
      */
-    class HSSSize
+    class AXR_API HSSSize
     {
     public:
 #ifdef HSS_UNITS_NATIVE_CONSTRUCTORS_APPLE
@@ -167,7 +168,7 @@ namespace AXR
     /**
      * @brief   A basic rectangle.
      */
-    class HSSRect
+    class AXR_API HSSRect
     {
     public:
 #ifdef HSS_UNITS_NATIVE_CONSTRUCTORS_WIN32

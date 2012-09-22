@@ -59,7 +59,7 @@ namespace AXR
      *  Surfaces that can be filled with a color generally also accept a gradient. This class
      *  provides the base functionality that is common to all gradient objects.
      */
-    class HSSGradient : public HSSObject
+    class AXR_API HSSGradient : public HSSObject
     {
     public:
         typedef boost::shared_ptr<HSSGradient> p;
@@ -257,6 +257,5 @@ namespace AXR
                                    );
     };
 }
-
 
 #endif

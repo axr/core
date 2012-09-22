@@ -50,7 +50,6 @@
 
 namespace AXR
 {
-
     /**
      *  @brief The special object \@this in HSS.
      *
@@ -59,7 +58,7 @@ namespace AXR
      *  \@this is used, it points to the container, not the gradient. For the current object itself
      *  \@self is used.
      */
-    class HSSThisSelector : public HSSNameSelector
+    class AXR_API HSSThisSelector : public HSSNameSelector
     {
     public:
         typedef boost::shared_ptr<HSSThisSelector> p;
@@ -85,7 +84,5 @@ namespace AXR
         virtual HSSClonable::p cloneImpl() const;
     };
 }
-
-
 
 #endif

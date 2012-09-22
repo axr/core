@@ -49,12 +49,11 @@
 
 namespace AXR
 {
-
     /**
      *  @brief The HSS object counterparts to flagging functions.
      *  They actually work using flagging functions internally.
      */
-    class HSSFlagAction : public HSSAction
+    class AXR_API HSSFlagAction : public HSSAction
     {
     public:
         typedef boost::shared_ptr<HSSFlagAction> p;
@@ -107,6 +106,5 @@ namespace AXR
         virtual HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

@@ -50,7 +50,6 @@
 
 namespace AXR
 {
-
     /**
      *  @addtogroup typeEnums
      *  @{
@@ -58,7 +57,7 @@ namespace AXR
      *  The AST is generated using various types of parser nodes, each having a different meaning or use. This
      *  enum provides a way to identifying each node type, when they are processed.
      */
-    enum HSSParserNodeType
+    enum AXR_API HSSParserNodeType
     {
         HSSParserNodeTypeGeneric = 0, /**< Error state. */
         HSSParserNodeTypeSelector, /**< Generic type for all selector nodes. */
@@ -86,7 +85,7 @@ namespace AXR
      *  @enum HSSExpressionType
      *  The type of the expression, specific for each subclass.
      */
-    enum HSSExpressionType
+    enum AXR_API HSSExpressionType
     {
         HSSExpressionTypeNone = 0, /**< Error state. */
         HSSExpressionTypeSum, /**< A+B. */
@@ -102,7 +101,7 @@ namespace AXR
      *  @enum HSSStatementType
      *  The type of the statement, specific for each subclass.
      */
-    enum HSSStatementType
+    enum AXR_API HSSStatementType
     {
         HSSStatementTypeNone = 0, /**< Error state. */
         HSSStatementTypeRule, /**< Rules are used to apply property definitions to elements. */
@@ -119,7 +118,7 @@ namespace AXR
      *  @enum HSSInstructionType
      *  The type of the instruction node. It will determine what the instruction will be used for.
      */
-    enum HSSInstructionType
+    enum AXR_API HSSInstructionType
     {
         HSSInstructionTypeNone = 0, /**< Error state. */
         HSSNewInstruction, /**< This will cause a new element to be created when prepended in front of rules. */
@@ -145,7 +144,7 @@ namespace AXR
      *  @enum HSSSelectorType
      *  Each type of selector node has its own type.
      */
-    enum HSSSelectorType
+    enum AXR_API HSSSelectorType
     {
         HSSSelectorTypeNone = 0, /**< Error state. */
         HSSSelectorTypeNameSelector, /**< Selects elements based on the tag name. */
@@ -165,7 +164,7 @@ namespace AXR
      *  @enum HSSCombinatorType
      *  The type of the combinator which will determine what the behavior will be when used in AXRController.
      */
-    enum HSSCombinatorType
+    enum AXR_API HSSCombinatorType
     {
         HSSCombinatorTypeNone = 0, /**< Error state. */
         HSSCombinatorTypeSiblings, /**< Select elements on the same level (=) */
@@ -183,7 +182,7 @@ namespace AXR
      *  @enum HSSFilterType
      *  The type of the filter, specific for each subclass.
      */
-    enum HSSFilterType
+    enum AXR_API HSSFilterType
     {
         HSSFilterTypeNone = 0, /**< Error state. */
 
@@ -223,7 +222,7 @@ namespace AXR
      *  @enum HSSFunctionType
      *  The type of the function, specific for each subclass.
      */
-    enum HSSFunctionType
+    enum AXR_API HSSFunctionType
     {
         HSSFunctionTypeNone = 0, /**< Error state. */
         HSSFunctionTypeRef, /**< References a value on a selected element. */
@@ -248,7 +247,7 @@ namespace AXR
      *  The type of the flagging function. It will determine what the function
      *  actually does.
      */
-    enum HSSFlagFunctionType
+    enum AXR_API HSSFlagFunctionType
     {
         HSSFlagFunctionTypeNone = 0, /**< Error state. */
         HSSFlagFunctionTypeFlag, /**< Always set the flag to active. */
@@ -263,7 +262,7 @@ namespace AXR
      *  @enum HSSRuleState
      *  The status of the rule, to determine if the properties should be applied or not.
      */
-    enum HSSRuleState
+    enum AXR_API HSSRuleState
     {
         HSSRuleStateOff = 0, /**< Don't apply the contents of the rule. */
         HSSRuleStateOn = 1, /**< Do apply the contents of the rule. */
@@ -282,7 +281,7 @@ namespace AXR
      *  @todo is this a good design? and if so, aren't object definitions, object
      *  names and functions missing?
      */
-    enum HSSValueType
+    enum AXR_API HSSValueType
     {
         HSSValueNumberInt, /**< Long Integer */
         HSSValueNumberFloat, /**< Long double */
@@ -299,7 +298,7 @@ namespace AXR
      *  specific to their kind, such as gradients or shapes. In those cases
      *  they all share a generic object type.
      */
-    enum HSSObjectType
+    enum AXR_API HSSObjectType
     {
         HSSObjectTypeNone = 0, /**< Error state. */
         HSSObjectTypeGeneric, /**< Abstract type for generic objects, probably error state. */
@@ -326,7 +325,7 @@ namespace AXR
      *  @enum HSSShapeType
      *  The type of the shape object, specific for each subclass.
      */
-    enum HSSShapeType
+    enum AXR_API HSSShapeType
     {
         HSSShapeTypeNone = 0, /**< Error state. */
         HSSShapeTypeRectangle, /**< The default shape for all containers, a rectangle. */
@@ -343,7 +342,7 @@ namespace AXR
      *  @enum HSSRequestModeType
      *  What to do with the loaded content.
      */
-    enum HSSRequestModeType
+    enum AXR_API HSSRequestModeType
     {
         HSSRequestModeTypeNone = 0, /**< Error state. */
         HSSRequestModeTypeAuto, /**< Automatically determine what to do. */
@@ -362,7 +361,7 @@ namespace AXR
      *  @enum HSSEventType
      *  The type of the event object.
      */
-    enum HSSEventType
+    enum AXR_API HSSEventType
     {
         HSSEventTypeNone = 0, /**< Error state. */
         HSSEventTypeLoad, /**< Fires when everything has loaded. */
@@ -388,7 +387,7 @@ namespace AXR
      *  @enum HSSActionType
      *  The type of the action object, specific for each subclass.
      */
-    enum HSSActionType
+    enum AXR_API HSSActionType
     {
         HSSActionTypeNone = 0, /**< Error state. */
         HSSActionTypeRequest, /**< Requests load another xml files into the current one. */

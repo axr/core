@@ -64,7 +64,7 @@ namespace AXR
      *  Go to https://docs.google.com/drawings/d/1yMMwh3uddC1fFJqWt8RMShJFGhO2pq_IHEpgQYh7dKY/edit to see a diagram
      *  of the inheritance tree of parser nodes.
      */
-    class HSSParserNode : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSParserNode>
+    class AXR_API HSSParserNode : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSParserNode>
     {
     public:
         /**

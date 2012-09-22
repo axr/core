@@ -60,7 +60,7 @@ namespace AXR
     /**
      *  @brief Abstract base class for all function objects.
      */
-    class HSSFunction : public HSSParserNode
+    class AXR_API HSSFunction : public HSSParserNode
     {
     public:
         friend class HSSParser;

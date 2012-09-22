@@ -58,7 +58,7 @@ namespace AXR
      *  @brief This is the main control hub for rendering. Calls for drawing and handling
      *  errors should go through this class.
      */
-    class AXRRender
+    class AXR_API AXRRender
     {
     public:
         /**

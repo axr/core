@@ -48,14 +48,12 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Filters the selection down to the last item.
      */
-    class HSSLastFilter : public HSSFilter
+    class AXR_API HSSLastFilter : public HSSFilter
     {
     public:
-
         /**
          *  Creates a new instance of a last filter
          */
@@ -80,6 +78,7 @@ namespace AXR
         virtual std::string toString();
 
         virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
+
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

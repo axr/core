@@ -51,14 +51,13 @@
 
 namespace AXR
 {
-
     /**
      *  @brief A property definition holds a value that is paired with the name of the property.
      *
      *  Inside the blocks of rules and object definitions property definitions are defined, to
      *  apply te values to the corresponding property of each object.
      */
-    class HSSPropertyDefinition : public HSSStatement
+    class AXR_API HSSPropertyDefinition : public HSSStatement
     {
     public:
         typedef boost::shared_ptr<HSSPropertyDefinition> p;

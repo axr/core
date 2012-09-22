@@ -51,14 +51,12 @@
 
 namespace AXR
 {
-
     /**
      *  @brief This class represents HSS objects of type \@colorStop.
      */
-    class HSSColorStop : public HSSObject
+    class AXR_API HSSColorStop : public HSSObject
     {
     public:
-
         typedef boost::shared_ptr<HSSColorStop> p;
         typedef std::vector<HSSColorStop::p>::iterator it;
 

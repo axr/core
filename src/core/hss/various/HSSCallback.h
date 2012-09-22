@@ -45,18 +45,18 @@
 #define HSSCALLBACK_H
 
 #include <string>
+#include "AXRGlobal.h"
 #include "HSSObservableProperties.h"
 
 namespace AXR
 {
-
     /**
      *  @brief Helper class that allows you to create callbacks.
      */
-    class HSSCallback
+    class AXR_API HSSCallback
     {
     public:
-        virtual ~HSSCallback();
+        virtual ~HSSCallback() { }
 
         /**
          *  Execute the callback, calling the stored method on the stored object.
@@ -97,4 +97,4 @@ namespace AXR
     };
 }
 
-#endif //HSSCALLBACK_H
+#endif

@@ -49,12 +49,11 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Comments are statements that have no effect on the rendering of the page
      *  but are meant to be read along with the source code.
      */
-    class HSSComment : public HSSStatement
+    class AXR_API HSSComment : public HSSStatement
     {
         std::string value;
 

@@ -49,14 +49,13 @@
 
 namespace AXR
 {
-
     /**
      *  @brief Parser node that represents an object name constant.
      *
      *  When using object names in HSS, the system will look up the object with the name
      *  encapsulated in this class from the object tree on AXRController.
      */
-    class HSSObjectNameConstant : public HSSParserNode
+    class AXR_API HSSObjectNameConstant : public HSSParserNode
     {
     public:
         typedef boost::shared_ptr<HSSObjectNameConstant> p;
@@ -99,10 +98,10 @@ namespace AXR
 
     protected:
         std::string value;
+
     private:
         virtual HSSClonable::p cloneImpl() const;
     };
 }
-
 
 #endif

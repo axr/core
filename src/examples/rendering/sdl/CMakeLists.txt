@@ -1,5 +1,9 @@
 find_package(SDL)
 if(SDL_FOUND)
+    if(BUILD_SHARED_LIBS)
+        add_definitions(-DAXR_IMPORTS)
+    endif()
+
     include_directories(${SDL_INCLUDE_DIR})
 
     set(sdl_SOURCES
