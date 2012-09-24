@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include "errors.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "HSSFlagFunction.h"

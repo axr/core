@@ -42,9 +42,18 @@
  ********************************************************************/
 
 #include <QMap>
+#include "AXRError.h"
 #include "HSSDisplayObject.h"
+#include "HSSEmptyFilter.h"
+#include "HSSEvenChildFilter.h"
+#include "HSSEvenFilter.h"
 #include "HSSFilter.h"
-#include "HSSFilters.h"
+#include "HSSFirstChildFilter.h"
+#include "HSSFirstFilter.h"
+#include "HSSLastChildFilter.h"
+#include "HSSLastFilter.h"
+#include "HSSOddChildFilter.h"
+#include "HSSOddFilter.h"
 
 using namespace AXR;
 

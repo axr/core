@@ -50,7 +50,6 @@
 #include <boost/weak_ptr.hpp>
 #include "HSSDisplayObject.h"
 #include "HSSObject.h"
-#include "HSSParserNodes.h"
 #include "HSSRule.h"
 #include "HSSStatement.h"
 

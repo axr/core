@@ -42,10 +42,11 @@
  ********************************************************************/
 
 #include <sstream>
-#include "errors.h"
 #include "AXRDebugging.h"
-#include "HSSConstants.h"
+#include "AXRError.h"
 #include "HSSExpression.h"
+#include "HSSNumberConstant.h"
+#include "HSSPercentageConstant.h"
 #include "HSSRgb.h"
 
 using namespace AXR;

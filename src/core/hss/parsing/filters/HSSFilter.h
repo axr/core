@@ -47,7 +47,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include "HSSDisplayObject.h"
-#include "HSSFilterType.h"
 #include "HSSParserNode.h"
 
 namespace AXR

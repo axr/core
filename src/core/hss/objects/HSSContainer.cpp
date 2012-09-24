@@ -47,17 +47,18 @@
 #include <sstream>
 #include <vector>
 #include <boost/pointer_cast.hpp>
-#include "errors.h"
-#include "AXR.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
-#include "HSSConstants.h"
+#include "AXRInitializer.h"
+#include "AXRWarning.h"
 #include "HSSContainer.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
-#include "HSSShapes.h"
+#include "HSSPercentageConstant.h"
+#include "HSSRectangle.h"
+#include "HSSStringConstant.h"
 
 using namespace AXR;
 

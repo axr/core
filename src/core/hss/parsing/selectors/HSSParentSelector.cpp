@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include <set>
-#include "AXR.h"
+#include "AXRInitializer.h"
 #include "HSSParentSelector.h"
 
 using namespace AXR;

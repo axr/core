@@ -43,6 +43,7 @@
 
 #include <boost/pointer_cast.hpp>
 #include "AXRController.h"
+#include "AXRWarning.h"
 #include "HSSFunction.h"
 #include "HSSLog.h"
 #include "HSSObjectDefinition.h"

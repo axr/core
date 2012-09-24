@@ -45,7 +45,8 @@
 #include <QDir>
 #include <QFile>
 #include <QUrl>
-#include "AXR.h"
+#include "AXRInitializer.h"
+#include "AXRWarning.h"
 #include "AXRWrapper.h"
 #include "HSSFunction.h"
 #include "HSSSelFunction.h"

@@ -47,9 +47,9 @@
 
 #include <iostream>
 #include <sstream>
-#include "errors.h"
-#include "hss.h"
 #include "AXRDebugging.h"
+#include "AXRError.h"
+#include "HSSTokenizer.h"
 
 using namespace AXR;
 

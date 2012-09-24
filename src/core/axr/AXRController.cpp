@@ -43,14 +43,14 @@
 
 #include <sstream>
 #include <boost/pointer_cast.hpp>
-#include "errors.h"
-#include "AXR.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
+#include "AXRInitializer.h"
+#include "AXRWarning.h"
 #include "HSSDisplayObject.h"
-#include "HSSFilters.h"
 #include "HSSFlag.h"
 #include "HSSNegation.h"
+#include "HSSNumberConstant.h"
 #include "HSSSelectorChain.h"
 
 using namespace AXR;

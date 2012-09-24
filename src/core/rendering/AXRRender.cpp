@@ -44,12 +44,11 @@
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 #include <QImage>
-#include "AXRString.h"
-#include "errors.h"
-#include "AXR.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
+#include "AXRInitializer.h"
 #include "AXRRender.h"
+#include "AXRString.h"
 #include "HSSDisplayObject.h"
 
 using namespace AXR;

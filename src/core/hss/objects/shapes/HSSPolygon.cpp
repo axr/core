@@ -43,13 +43,14 @@
 
 #define _USE_MATH_DEFINES // for M_PI when using MSVC
 #include <cmath>
-#include "errors.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
-#include "HSSConstants.h"
+#include "AXRWarning.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
+#include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
+#include "HSSPercentageConstant.h"
 #include "HSSPolygon.h"
 
 using namespace AXR;

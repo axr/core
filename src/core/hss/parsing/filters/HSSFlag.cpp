@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
-#include "AXR.h"
 #include "AXRController.h"
+#include "AXRInitializer.h"
 #include "HSSDisplayObject.h"
 #include "HSSFlag.h"
 

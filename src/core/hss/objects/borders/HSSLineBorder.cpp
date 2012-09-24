@@ -42,11 +42,13 @@
  ********************************************************************/
 
 #include "AXRController.h"
-#include "HSSConstants.h"
+#include "AXRWarning.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
 #include "HSSLineBorder.h"
+#include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
+#include "HSSObjectNameConstant.h"
 
 using namespace AXR;
 

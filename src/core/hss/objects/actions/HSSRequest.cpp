@@ -41,10 +41,12 @@
  *
  ********************************************************************/
 
-#include "AXR.h"
 #include "AXRController.h"
+#include "AXRInitializer.h"
+#include "AXRWarning.h"
 #include "HSSRequest.h"
 #include "HSSSelFunction.h"
+#include "HSSStringConstant.h"
 
 using namespace AXR;
 

@@ -155,14 +155,13 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/tss.hpp>
-#include "hss.h"
-#include "xml.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRRender.h"
 #include "AXRWrapper.h"
 #include "HSSCallback.h"
 #include "HSSUnits.h"
+#include "XMLParser.h"
 
 namespace AXR
 {

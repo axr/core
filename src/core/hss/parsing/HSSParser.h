@@ -49,9 +49,9 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/unordered_set.hpp>
 #include "AXRFile.h"
-#include "HSSParserNodes.h"
-#include "HSSObjects.h"
-#include "HSSSelectorNodes.h"
+#include "HSSCombinator.h"
+#include "HSSObjectDefinition.h"
+#include "HSSSimpleSelector.h"
 #include "HSSTokenizer.h"
 
 #define HSSFRAMEWORK_PROTOCOL "axr://"

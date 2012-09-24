@@ -41,8 +41,9 @@
  *
  ********************************************************************/
 
-#include "AXR.h"
 #include "AXRDebugging.h"
+#include "AXRInitializer.h"
+#include "HSSExpression.h"
 #include "HSSFunction.h"
 
 using namespace AXR;

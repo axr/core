@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #import <Cocoa/Cocoa.h>
-#import "AXR.h"
+#import "AXRInitializer.h"
 #import "AXRView.h"
 #import "AXRWrapper.h"
 

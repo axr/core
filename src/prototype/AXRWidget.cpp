@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include <QPaintEvent>
-#include "AXR.h"
+#include "AXRInitializer.h"
 #include "AXRWidget.h"
 
 using namespace AXR;

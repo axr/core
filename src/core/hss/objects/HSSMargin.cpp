@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRWarning.h"
 #include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"

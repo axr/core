@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include <boost/pointer_cast.hpp>
-#include "errors.h"
+#include "AXRWarning.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
 #include "HSSNumberConstant.h"

@@ -44,6 +44,7 @@
 #include <boost/pointer_cast.hpp>
 #include <QMap>
 #include "AXRController.h"
+#include "AXRWarning.h"
 #include "HSSAction.h"
 #include "HSSEvent.h"
 #include "HSSFlagAction.h"

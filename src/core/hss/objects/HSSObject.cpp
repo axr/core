@@ -42,13 +42,22 @@
  ********************************************************************/
 
 #include <QMap>
-#include "AXR.h"
 #include "AXRController.h"
+#include "AXRInitializer.h"
+#include "AXRWarning.h"
+#include "HSSCircle.h"
+#include "HSSColorStop.h"
+#include "HSSLineBorder.h"
+#include "HSSLinearGradient.h"
+#include "HSSLog.h"
 #include "HSSMultipleValue.h"
 #include "HSSMultipleValueDefinition.h"
 #include "HSSObject.h"
-#include "HSSObjects.h"
 #include "HSSObjectNameConstant.h"
+#include "HSSPolygon.h"
+#include "HSSRectangle.h"
+#include "HSSRequest.h"
+#include "HSSRoundedRect.h"
 #include "HSSTypeEnums.h"
 
 using namespace AXR;

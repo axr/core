@@ -45,7 +45,7 @@
 #include <SDL/SDL.h>
 #include <QApplication>
 #include <QFileDialog>
-#include "AXR.h"
+#include "AXRInitializer.h"
 #include "AXRWrapper.h"
 
 #if defined(_WIN32)

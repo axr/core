@@ -42,12 +42,15 @@
  ********************************************************************/
 
 #include <limits>
-#include "AXR.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
-#include "HSSFunctions.h"
+#include "AXRInitializer.h"
+#include "AXRWarning.h"
+#include "HSSFunction.h"
 #include "HSSObjectDefinition.h"
+#include "HSSObjectNameConstant.h"
 #include "HSSSelectorChain.h"
+#include "HSSStringConstant.h"
 #include "HSSTextBlock.h"
 #include "HSSThisSelector.h"
 #include "HSSValue.h"

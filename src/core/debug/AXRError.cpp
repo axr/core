@@ -43,9 +43,9 @@
 
 #include <sstream>
 #include <QStringList>
-#include "AXR.h"
 #include "AXRDebugging.h"
 #include "AXRError.h"
+#include "AXRInitializer.h"
 
 using namespace AXR;
 

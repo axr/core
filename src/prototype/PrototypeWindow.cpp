@@ -46,8 +46,8 @@
 #include <QPaintEvent>
 #include <QTextEdit>
 
-#include "AXR.h"
 #include "AXRController.h"
+#include "AXRInitializer.h"
 #include "AXRWrapper.h"
 #include "XMLParser.h"
 

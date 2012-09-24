@@ -48,7 +48,6 @@
 #include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
 #include <QMap>
-#include "errors.h"
 #include "AXRDebugging.h"
 #include "HSSObservable.h"
 #include "HSSParserNode.h"

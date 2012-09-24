@@ -46,7 +46,6 @@
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
-#include "HSSFilterType.h"
 #include "HSSInstruction.h"
 #include "HSSPropertyDefinition.h"
 #include "HSSSelectorChain.h"

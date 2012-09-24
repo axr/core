@@ -43,9 +43,9 @@
 
 #import <iostream>
 #import <QPixmap>
-#import "AXR.h"
 #import "AXRController.h"
 #import "AXRDebugging.h"
+#import "AXRInitializer.h"
 #import "AXRView.h"
 #import "HSSContainer.h"
 #import "HSSEvent.h"

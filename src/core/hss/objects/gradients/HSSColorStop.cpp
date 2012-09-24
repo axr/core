@@ -41,14 +41,16 @@
  *
  ********************************************************************/
 
-#include "errors.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
+#include "AXRWarning.h"
 #include "HSSColorStop.h"
-#include "HSSConstants.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
+#include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
+#include "HSSObjectNameConstant.h"
+#include "HSSPercentageConstant.h"
 
 using namespace AXR;
 

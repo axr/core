@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "AXR.h"
+#include "AXRInitializer.h"
 
 using namespace AXR;
 

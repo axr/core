@@ -47,19 +47,22 @@
 #include <boost/pointer_cast.hpp>
 #include <QImage>
 #include <QPainterPath>
-#include "errors.h"
-#include "AXR.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
-#include "HSSConstants.h"
+#include "AXRInitializer.h"
+#include "AXRWarning.h"
 #include "HSSContainer.h"
 #include "HSSDisplayObject.h"
 #include "HSSExpression.h"
+#include "HSSFunction.h"
 #include "HSSFlag.h"
-#include "HSSFunctions.h"
+#include "HSSLinearGradient.h"
 #include "HSSObjectDefinition.h"
+#include "HSSObjectNameConstant.h"
 #include "HSSParserNode.h"
+#include "HSSPercentageConstant.h"
 #include "HSSRgb.h"
+#include "HSSStringConstant.h"
 
 using namespace AXR;
 
