@@ -1,7 +1,8 @@
 Find something to do
 ====================
-You can find work on the github issues tracker: https://github.com/axr/prototoype/issues.
-If there is an unassigned or an old task, post a comment asking for assignment.
+You can find work on the GitHub issue tracker: https://github.com/axr/prototoype/issues
+
+If there is an unassigned or old task, post a comment asking for assignment.
 Make sure you follow the coding standards and our workflow, which you can find
 below.
 
@@ -25,10 +26,10 @@ Coding standards
 ================
 Follow these coding standards when writing code for the prototype. The rules are
 quite simple and they ensure the code stays clean and readable. In general,
-follow the style as the code that is already present, but here are some
+follow the same style as the code that is already present, but here are some
 guidelines:
 
-** Please note: these are somewhat out of date and will be updated soon **
+**Please note: these are somewhat out of date and will be updated soon**
 
 - Variable and method names: in camelCase starting with a lowercase letter.
 - Class names: in CamelCase starting with a capital letter.
