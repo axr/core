@@ -241,6 +241,21 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>fileLaunchActionComboBox</tabstop>
+  <tabstop>onChannelCheckBox</tabstop>
+  <tabstop>overviewChannelCheckBox</tabstop>
+  <tabstop>generalChannelCheckBox</tabstop>
+  <tabstop>generalSpecificChannelCheckBox</tabstop>
+  <tabstop>xmlChannelCheckBox</tabstop>
+  <tabstop>hssChannelCheckBox</tabstop>
+  <tabstop>observingChannelCheckBox</tabstop>
+  <tabstop>eventsChannelCheckBox</tabstop>
+  <tabstop>eventsSpecificChannelCheckBox</tabstop>
+  <tabstop>tokenizingChannelCheckBox</tabstop>
+  <tabstop>fullFilenamesChannelCheckBox</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources>
   <include location="Resources.qrc"/>
  </resources>
