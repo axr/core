@@ -71,16 +71,27 @@ PrototypeApplication::PrototypeApplication(int &argc, char **argv)
     d->mainWindow = new PrototypeWindow();
     d->mainWindow->show();
 
-    switch (d->settings->fileLaunchAction())
+    // Check if the user wanted to load a file by command line
+    QStringList args = arguments();
+    args.removeFirst();
+    if (!args.empty())
     {
-        case PrototypeSettings::FileLaunchActionOpenLastFile:
-            d->mainWindow->openFile(d->settings->lastFileOpened());
-            break;
-        case PrototypeSettings::FileLaunchActionShowOpenFileDialog:
-            d->mainWindow->openFile();
-            break;
-        default:
-            break;
+        d->mainWindow->openFiles(args);
+    }
+    else
+    {
+        // Otherwise use the default action according to preferences
+        switch (d->settings->fileLaunchAction())
+        {
+            case PrototypeSettings::FileLaunchActionOpenLastFile:
+                d->mainWindow->openFile(d->settings->lastFileOpened());
+                break;
+            case PrototypeSettings::FileLaunchActionShowOpenFileDialog:
+                d->mainWindow->openFile();
+                break;
+            default:
+                break;
+        }
     }
 
     axr_debug_activate_channel(d->settings->debuggingChannelsMask());

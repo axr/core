@@ -62,7 +62,8 @@ public:
 
 public slots:
     void openFile();
-    void openFile(const AXR::AXRString &filePath);
+    void openFile(const QString &filePath);
+    void openFiles(const QStringList &filePaths);
     void reloadFile();
     void closeFile();
     void previousLayoutStep();

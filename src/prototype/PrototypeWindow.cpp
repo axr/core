@@ -114,19 +114,28 @@ PrototypeWindow::~PrototypeWindow()
 
 void PrototypeWindow::openFile()
 {
-    AXRString file = QFileDialog::getOpenFileName(this, tr("Open XML/HSS File"), AXRString(), "AXR Files (*.xml *.hss)");
+    QString file = QFileDialog::getOpenFileName(this, tr("Open XML/HSS File"), QString(), "AXR Files (*.xml *.hss)");
     if (!file.isEmpty())
     {
         openFile(file);
     }
 }
 
-void PrototypeWindow::openFile(const AXRString &filePath)
+void PrototypeWindow::openFile(const QString &filePath)
 {
     setWindowFilePath(filePath);
     d->wrapper->loadFileByPath(filePath);
     qApp->settings()->setLastFileOpened(filePath);
     update();
+}
+
+void PrototypeWindow::openFiles(const QStringList &filePaths)
+{
+    // TODO: This actually needs to open new windows or tabs
+    Q_FOREACH (QString path, filePaths)
+    {
+        openFile(path);
+    }
 }
 
 void PrototypeWindow::reloadFile()
