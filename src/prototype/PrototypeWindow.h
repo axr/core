@@ -60,6 +60,10 @@ public:
     PrototypeWindow(QWidget *parent = NULL);
     virtual ~PrototypeWindow();
 
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+
 public slots:
     void openFile();
     void openFile(const QString &filePath);

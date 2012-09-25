@@ -45,6 +45,7 @@
 #include <QFileDialog>
 #include <QPaintEvent>
 #include <QTextEdit>
+#include <QUrl>
 
 #include "AXRController.h"
 #include "AXRInitializer.h"
@@ -87,6 +88,9 @@ PrototypeWindow::PrototypeWindow(QWidget *parent)
     AXRCore::tp &core = AXRCore::getInstance();
     ui->enableAntialiasingAction->setChecked(core->getRender()->globalAntialiasingEnabled());
 
+    // The subview needs to accept drops as well even though the main window handles it
+    ui->renderingView->setAcceptDrops(true);
+
     ui->openAction->setShortcuts(QKeySequence::Open);
     ui->reloadAction->setShortcuts(QKeySequence::Refresh);
     ui->closeAction->setShortcuts(QKeySequence::Close);
@@ -110,6 +114,51 @@ PrototypeWindow::~PrototypeWindow()
 {
     delete ui;
     delete d;
+}
+
+void PrototypeWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    const QMimeData *mimeData = event->mimeData();
+    if (mimeData->hasUrls())
+    {
+        QList<QUrl> urlList = mimeData->urls();
+        Q_FOREACH (QUrl url, urlList)
+        {
+            QFileInfo fi(url.toLocalFile());
+            if (fi.exists() && (fi.suffix() == "xml" || fi.suffix() == "hss"))
+            {
+                event->setDropAction(Qt::CopyAction);
+                event->setAccepted(true);
+                break;
+            }
+        }
+    }
+    else
+    {
+        event->setAccepted(false);
+    }
+}
+
+void PrototypeWindow::dropEvent(QDropEvent *event)
+{
+    const QMimeData *mimeData = event->mimeData();
+    if (mimeData->hasUrls())
+    {
+        QList<QUrl> urlList = mimeData->urls();
+        QStringList pathList;
+
+        Q_FOREACH (QUrl url, urlList)
+        {
+            pathList += url.toLocalFile();
+        }
+
+        event->accept();
+        this->openFiles(pathList);
+    }
+    else
+    {
+        event->ignore();
+    }
 }
 
 void PrototypeWindow::openFile()
