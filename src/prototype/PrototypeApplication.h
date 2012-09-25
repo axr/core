@@ -59,6 +59,9 @@ public:
     PrototypeSettings* settings() const;
     void showPreferencesDialog();
 
+protected:
+    bool event(QEvent *e);
+
 private:
     class Private;
     Private *d;

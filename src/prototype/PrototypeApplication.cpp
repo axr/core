@@ -41,6 +41,8 @@
  *
  ********************************************************************/
 
+#include <QFileOpenEvent>
+#include <QUrl>
 #include "config.h"
 #include "AXRDebugging.h"
 #include "PreferencesDialog.h"
@@ -103,6 +105,27 @@ PrototypeApplication::~PrototypeApplication()
     delete d->preferencesDialog;
     delete d->settings;
     delete d;
+}
+
+bool PrototypeApplication::event(QEvent *e)
+{
+    switch (e->type())
+    {
+        case QEvent::FileOpen:
+        {
+            QFileOpenEvent *open = static_cast<QFileOpenEvent*>(e);
+
+            // TODO: this gets //localhost appended to the front for some reason
+            QUrl url = open->url();
+            if (url.scheme() == "file" && url.host() == "localhost")
+                url.setHost(QString());
+
+            d->mainWindow->openFile(url.toLocalFile());
+            return true;
+        }
+        default:
+            return QApplication::event(e);
+    }
 }
 
 PrototypeSettings* PrototypeApplication::settings() const
