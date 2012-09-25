@@ -55,7 +55,10 @@
 class PreferencesDialog::Private
 {
 public:
+    Private() : pageActionsGroup(NULL), finishedLoading(false) { }
+
     QActionGroup *pageActionsGroup;
+    bool finishedLoading;
 };
 
 PreferencesDialog::PreferencesDialog(QWidget *parent)
@@ -104,10 +107,17 @@ void PreferencesDialog::loadPreferences()
     ui->eventsSpecificChannelCheckBox->setChecked(mask & AXR_DEBUG_CH_EVENTS_SPECIFIC);
     ui->tokenizingChannelCheckBox->setChecked(mask & AXR_DEBUG_CH_TOKENIZING);
     ui->fullFilenamesChannelCheckBox->setChecked(mask & AXR_DEBUG_CH_FULL_FILENAMES);
+
+    d->finishedLoading = true;
 }
 
 void PreferencesDialog::accept()
 {
+    // Don't save settings until the dialog is fully loaded, otherwise we'll
+    // overwrite settings as we're reading them during the loading stage
+    if (!d->finishedLoading)
+        return;
+
     qApp->settings()->setFileLaunchAction(static_cast<PrototypeSettings::FileLaunchAction>(ui->fileLaunchActionComboBox->currentIndex()));
 
     quint32 mask = 0;

@@ -79,7 +79,7 @@ PrototypeSettings::FileLaunchAction PrototypeSettings::fileLaunchAction() const
 
 void PrototypeSettings::setFileLaunchAction(FileLaunchAction action)
 {
-    d->settings->setValue(key_fileLaunchAction, action);
+    d->settings->setValue(key_fileLaunchAction, static_cast<int>(action));
 }
 
 QString PrototypeSettings::lastFileOpened() const
@@ -94,10 +94,10 @@ void PrototypeSettings::setLastFileOpened(const QString &filePath)
 
 quint32 PrototypeSettings::debuggingChannelsMask() const
 {
-    return d->settings->value(key_debuggingChannelsMask, 0).toUInt();
+    return static_cast<quint32>(d->settings->value(key_debuggingChannelsMask, 0).toULongLong());
 }
 
 void PrototypeSettings::setDebuggingChannelsMask(quint32 mask)
 {
-    d->settings->setValue(key_debuggingChannelsMask, mask);
+    d->settings->setValue(key_debuggingChannelsMask, static_cast<qulonglong>(mask));
 }
