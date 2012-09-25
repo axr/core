@@ -41,10 +41,65 @@
  *
  ********************************************************************/
 
+#include "config.h"
+#include "AXRDebugging.h"
+#include "PreferencesDialog.h"
 #include "PrototypeApplication.h"
+#include "PrototypeSettings.h"
+#include "PrototypeWindow.h"
 
-int main(int argc, char *argv[])
+class PrototypeApplication::Private
 {
-    PrototypeApplication a(argc, argv);
-    return a.exec();
+public:
+    PrototypeSettings *settings;
+    PreferencesDialog *preferencesDialog;
+    PrototypeWindow *mainWindow;
+};
+
+PrototypeApplication::PrototypeApplication(int &argc, char **argv)
+: QApplication(argc, argv), d(new Private)
+{
+    Q_INIT_RESOURCE(Resources);
+
+    setOrganizationName(AXR_VENDOR);
+    setOrganizationDomain(AXR_DOMAIN);
+    setApplicationVersion(AXR_VERSION_STRING);
+    setApplicationName("AXR Prototype");
+
+    d->settings = new PrototypeSettings();
+    d->preferencesDialog = new PreferencesDialog();
+    d->mainWindow = new PrototypeWindow();
+    d->mainWindow->show();
+
+    switch (d->settings->fileLaunchAction())
+    {
+        case PrototypeSettings::FileLaunchActionOpenLastFile:
+            d->mainWindow->openFile(d->settings->lastFileOpened());
+            break;
+        case PrototypeSettings::FileLaunchActionShowOpenFileDialog:
+            d->mainWindow->openFile();
+            break;
+        default:
+            break;
+    }
+
+    axr_debug_activate_channel(d->settings->debuggingChannelsMask());
+}
+
+PrototypeApplication::~PrototypeApplication()
+{
+    delete d->mainWindow;
+    delete d->preferencesDialog;
+    delete d->settings;
+    delete d;
+}
+
+PrototypeSettings* PrototypeApplication::settings() const
+{
+    return d->settings;
+}
+
+void PrototypeApplication::showPreferencesDialog()
+{
+    d->preferencesDialog->show();
 }

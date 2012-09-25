@@ -41,10 +41,63 @@
  *
  ********************************************************************/
 
-#include "PrototypeApplication.h"
+#include "PrototypeSettings.h"
+#include <QtGlobal>
+#include <QSettings>
 
-int main(int argc, char *argv[])
+#define key_fileLaunchAction "general/fileLaunchAction"
+#define key_lastFileOpened "general/lastFileOpened"
+#define key_debuggingChannelsMask "debug/channelsMask"
+
+class PrototypeSettings::Private
 {
-    PrototypeApplication a(argc, argv);
-    return a.exec();
+public:
+    QSettings *settings;
+};
+
+PrototypeSettings::PrototypeSettings()
+: d(new Private)
+{
+    d->settings = new QSettings();
+}
+
+PrototypeSettings::~PrototypeSettings()
+{
+    delete d->settings;
+    delete d;
+}
+
+QSettings* PrototypeSettings::settings() const
+{
+    return d->settings;
+}
+
+PrototypeSettings::FileLaunchAction PrototypeSettings::fileLaunchAction() const
+{
+    return static_cast<FileLaunchAction>(qBound(0, d->settings->value(key_fileLaunchAction, 0).toInt(), static_cast<int>(FileLaunchActionMax) - 1));
+}
+
+void PrototypeSettings::setFileLaunchAction(FileLaunchAction action)
+{
+    d->settings->setValue(key_fileLaunchAction, action);
+}
+
+QString PrototypeSettings::lastFileOpened() const
+{
+    return d->settings->value(key_lastFileOpened).toString();
+}
+
+void PrototypeSettings::setLastFileOpened(const QString &filePath)
+{
+    d->settings->setValue(key_lastFileOpened, filePath);
+}
+
+quint32 PrototypeSettings::debuggingChannelsMask() const
+{
+    return d->settings->value(key_debuggingChannelsMask, 0).toUInt();
+}
+
+void PrototypeSettings::setDebuggingChannelsMask(quint32 mask)
+{
+    d->settings->setValue(key_debuggingChannelsMask, mask);
 }

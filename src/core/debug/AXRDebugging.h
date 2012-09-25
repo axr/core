@@ -152,6 +152,7 @@ enum AXR_API axr_debug_ch
 
 void axr_log(quint32 channels, const AXR::AXRString &message);
 void axr_log_inline(quint32 channels, const AXR::AXRString &message);
+bool axr_debug_channels_active(quint32 channels);
 void axr_debug_activate_channel(quint32 channels);
 
 #endif //AXRDEBUGGING_H

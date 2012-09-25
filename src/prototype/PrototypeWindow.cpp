@@ -52,6 +52,9 @@
 #include "XMLParser.h"
 
 #include "LogWindow.h"
+#include "PreferencesDialog.h"
+#include "PrototypeApplication.h"
+#include "PrototypeSettings.h"
 #include "PrototypeWindow.h"
 
 using namespace AXR;
@@ -122,6 +125,7 @@ void PrototypeWindow::openFile(const AXRString &filePath)
 {
     setWindowFilePath(filePath);
     d->wrapper->loadFileByPath(filePath);
+    qApp->settings()->setLastFileOpened(filePath);
     update();
 }
 
@@ -263,6 +267,11 @@ void PrototypeWindow::runLayoutTests()
 void PrototypeWindow::showErrorLog()
 {
     d->logWindow->show();
+}
+
+void PrototypeWindow::showPreferences()
+{
+    qApp->showPreferencesDialog();
 }
 
 void PrototypeWindow::showAbout()

@@ -41,10 +41,41 @@
  *
  ********************************************************************/
 
-#include "PrototypeApplication.h"
+#ifndef __AXR__PrototypeSettings__
+#define __AXR__PrototypeSettings__
 
-int main(int argc, char *argv[])
+#include <QtGlobal>
+#include <QString>
+
+class QSettings;
+
+class PrototypeSettings
 {
-    PrototypeApplication a(argc, argv);
-    return a.exec();
-}
+public:
+    enum FileLaunchAction
+    {
+        FileLaunchActionNone = 0,
+        FileLaunchActionOpenLastFile = 1,
+        FileLaunchActionShowOpenFileDialog = 2,
+        FileLaunchActionMax
+    };
+
+    PrototypeSettings();
+    virtual ~PrototypeSettings();
+    QSettings* settings() const;
+
+    FileLaunchAction fileLaunchAction() const;
+    void setFileLaunchAction(FileLaunchAction action);
+
+    QString lastFileOpened() const;
+    void setLastFileOpened(const QString &filePath);
+
+    quint32 debuggingChannelsMask() const;
+    void setDebuggingChannelsMask(quint32 mask);
+
+private:
+    class Private;
+    Private *d;
+};
+
+#endif

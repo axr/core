@@ -2,7 +2,7 @@ if(BUILD_SHARED_LIBS)
     add_definitions(-DAXR_IMPORTS)
 endif()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 
 set(prototype_SOURCES
     AXRWidget.cpp
@@ -12,9 +12,17 @@ set(prototype_SOURCES
     LogWindow.h
     LogWindow.ui
     main.cpp
+    PreferencesDialog.cpp
+    PreferencesDialog.h
+    PreferencesDialog.ui
+    PrototypeApplication.cpp
+    PrototypeApplication.h
+    PrototypeSettings.cpp
+    PrototypeSettings.h
     PrototypeWindow.cpp
     PrototypeWindow.h
     PrototypeWindow.ui
+    Resources.qrc
 
     # These need to be included so they can be copied to the bundle
     ${axr_icon_SOURCES}

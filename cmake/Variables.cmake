@@ -14,6 +14,7 @@ elseif(AXR_VERSION_PATCH GREATER 0)
 endif()
 
 set(AXR_VENDOR "AXR Project Contributors")
+set(AXR_DOMAIN "axr.vg")
 set(AXR_CONTACT "info@axr.vg")
 
 set(AXR_README_FILE "${CMAKE_SOURCE_DIR}/README.md")

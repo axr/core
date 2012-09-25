@@ -41,10 +41,39 @@
  *
  ********************************************************************/
 
-#include "PrototypeApplication.h"
+#ifndef __AXR__PreferencesDialog__
+#define __AXR__PreferencesDialog__
 
-int main(int argc, char *argv[])
+#include <QMainWindow>
+
+namespace Ui
 {
-    PrototypeApplication a(argc, argv);
-    return a.exec();
+    class PreferencesDialog;
 }
+
+class PreferencesDialog : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    PreferencesDialog(QWidget *parent = NULL);
+    virtual ~PreferencesDialog();
+
+public slots:
+    void accept();
+    void reject();
+
+private slots:
+    void preferenceChanged();
+    void switchPage();
+
+private:
+    void loadPreferences();
+
+private:
+    class Private;
+    Private *d;
+    Ui::PreferencesDialog *ui;
+};
+
+#endif

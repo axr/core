@@ -74,9 +74,16 @@
     </property>
     <addaction name="enableAntialiasingAction"/>
    </widget>
+   <widget class="QMenu" name="toolsMenu">
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <addaction name="preferencesAction"/>
+   </widget>
    <addaction name="fileMenu"/>
    <addaction name="viewMenu"/>
    <addaction name="menuDebug"/>
+   <addaction name="toolsMenu"/>
    <addaction name="windowMenu"/>
    <addaction name="helpMenu"/>
   </widget>
@@ -152,6 +159,14 @@
    </property>
    <property name="text">
     <string>Enable Antialiasing</string>
+   </property>
+  </action>
+  <action name="preferencesAction">
+   <property name="text">
+    <string>Options...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
    </property>
   </action>
  </widget>
@@ -373,6 +388,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>preferencesAction</sender>
+   <signal>triggered()</signal>
+   <receiver>PrototypeWindow</receiver>
+   <slot>showPreferences()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>openFile()</slot>
@@ -387,5 +418,6 @@
   <slot>showErrorLog()</slot>
   <slot>showAbout()</slot>
   <slot>toggleAntialiasing(bool)</slot>
+  <slot>showPreferences()</slot>
  </slots>
 </ui>

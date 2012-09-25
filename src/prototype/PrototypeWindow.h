@@ -72,6 +72,7 @@ public slots:
     void listHssTokens();
     void runLayoutTests();
     void showErrorLog();
+    void showPreferences();
     void showAbout();
     void toggleAntialiasing(bool on);
 

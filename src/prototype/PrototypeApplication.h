@@ -41,10 +41,32 @@
  *
  ********************************************************************/
 
-#include "PrototypeApplication.h"
+#ifndef __AXR__PrototypeApplication__
+#define __AXR__PrototypeApplication__
 
-int main(int argc, char *argv[])
+#include <QApplication>
+
+class PrototypeSettings;
+
+class PrototypeApplication : public QApplication
 {
-    PrototypeApplication a(argc, argv);
-    return a.exec();
-}
+    Q_OBJECT
+
+public:
+    PrototypeApplication(int &argc, char **argv);
+    virtual ~PrototypeApplication();
+    inline static PrototypeApplication* instance() { return qobject_cast<PrototypeApplication*>(QApplication::instance()); }
+    PrototypeSettings* settings() const;
+    void showPreferencesDialog();
+
+private:
+    class Private;
+    Private *d;
+};
+
+#ifdef qApp
+#undef qApp
+#endif
+#define qApp PrototypeApplication::instance()
+
+#endif

@@ -90,17 +90,22 @@ quint32 axr_debug_active_channels = 0;
 
 void axr_log(quint32 channels, const AXRString &message)
 {
-    if ((axr_debug_active_channels & AXR_DEBUG_CH_ON) && (axr_debug_active_channels & channels))
+    if (axr_debug_channels_active(AXR_DEBUG_CH_ON) && axr_debug_channels_active(channels))
         std_log(message);
 }
 
 void axr_log_inline(quint32 channels, const AXRString &message)
 {
-    if ((axr_debug_active_channels & AXR_DEBUG_CH_ON) && (axr_debug_active_channels & channels))
+    if (axr_debug_channels_active(AXR_DEBUG_CH_ON) && axr_debug_channels_active(channels))
         std_log(message, false);
+}
+
+bool axr_debug_channels_active(quint32 channels)
+{
+    return axr_debug_active_channels & channels;
 }
 
 void axr_debug_activate_channel(quint32 channels)
 {
-    axr_debug_active_channels = (axr_debug_active_channels | channels);
+    axr_debug_active_channels |= channels;
 }

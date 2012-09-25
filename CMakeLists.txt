@@ -120,6 +120,8 @@ if(AXR_BUILD_PROTOTYPE)
     set(TARGET_NAME_LIB_CORE Core)
     set(TARGET_NAME_LIB_COCOA CoreCocoa)
 
+    configure_file("${CMAKE_SOURCE_DIR}/config.in.h" "${CMAKE_BINARY_DIR}/config.h")
+
     add_subdirectory(src)
 endif()
 
@@ -139,7 +141,7 @@ if(FANCY_TARGET_NAMES)
     # All CMake scripts since some IDEs don't show the hierarchy
     file(GLOB_RECURSE cmake_SOURCES ${CMAKE_SOURCE_DIR}/*/CMakeLists.txt ${CMAKE_SOURCE_DIR}/*.cmake)
     group_by_folder(${CMAKE_CURRENT_SOURCE_DIR} "${cmake_SOURCES}")
-    add_custom_target("CMake" SOURCES ${cmake_SOURCES})
+    add_custom_target("CMake" SOURCES ${cmake_SOURCES} config.in.h)
 
     # The HSS framework
     add_custom_target("HSS" SOURCES ${hss_SOURCES})
