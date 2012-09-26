@@ -72,21 +72,14 @@ bool XMLParser::loadFile(AXRFile::p file)
     axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->getBasePath() + "/" + file->getFileName());
 
     this->file = file;
-    if (!file->getFileHandle())
+    if (!file->isValid())
     {
+        axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: failed to load file " + file->getFileName());
         return false;
     }
 
     try
     {
-        // Try to open the file from which to read the XML file
-        // TODO: Replace or augment AXRFile with the QIODevice infrastructure
-        if (!AXRCore::getInstance()->getWrapper()->readFile(file))
-        {
-            axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: failed to load file " + file->getFileName());
-            return false;
-        }
-
         // Parse the XML file...
         QXmlStreamReader xml(file->getBuffer());
         while (!xml.atEnd() && !xml.hasError())

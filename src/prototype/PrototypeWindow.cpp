@@ -216,12 +216,10 @@ void PrototypeWindow::listXmlElements()
     if (!file.isEmpty())
     {
         QFile qfile(file);
+        QFileInfo fi(qfile);
         qfile.open(QIODevice::ReadOnly);
 
-        AXRFile::p f(new AXRFile());
-        f->setFileHandle(file);
-        f->setFileName(file);
-        f->setBuffer(qfile.readAll());
+        AXRFile::p f(new AXRFile(fi));
 
         AXRController *controller = new AXRController();
         XMLParser parser(controller);
@@ -244,12 +242,10 @@ void PrototypeWindow::listHssStatements()
     if (!file.isEmpty())
     {
         QFile qfile(file);
+        QFileInfo fi(qfile);
         qfile.open(QIODevice::ReadOnly);
 
-        AXRFile::p f(new AXRFile());
-        f->setFileHandle(file);
-        f->setFileName(file);
-        f->setBuffer(qfile.readAll());
+        AXRFile::p f(new AXRFile(fi));
 
         AXRController controller;
         HSSParser hssparser(&controller, d->wrapper);
@@ -276,12 +272,10 @@ void PrototypeWindow::listHssTokens()
     if (!file.isEmpty())
     {
         QFile qfile(file);
+        QFileInfo fi(qfile);
         qfile.open(QIODevice::ReadOnly);
 
-        AXRFile::p f(new AXRFile());
-        f->setFileHandle(file);
-        f->setFileName(file);
-        f->setBuffer(qfile.readAll());
+        AXRFile::p f(new AXRFile(fi));
 
         HSSTokenizer tokenizer;
         tokenizer.setFile(f);

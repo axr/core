@@ -92,19 +92,6 @@ namespace AXR
          */
         virtual AXRFile::p getFile(AXRString url);
         /**
-         *  Reads the data in the file.
-         *  Subclasses should override this method with the OS specific implementation.
-         *  @param theFile  A shared pointer to the file to be read.
-         *  @return the size
-         */
-        virtual size_t readFile(AXRFile::p theFile);
-        /**
-         *  Closes the file. To be called after the file has been read to the end.
-         *  Subclasses should override this method with the OS specific implementation.
-         *  @param theFile  A shared pointer to the file to be closed.
-         */
-        virtual void closeFile(AXRFile::p theFile);
-        /**
          *  The wrapper is responsible for handling the error (maybe show it in a console)
          *  Subclasses should override this method with the OS specific implementation.
          *  @param theError A shared pointer to the error that should be handled.

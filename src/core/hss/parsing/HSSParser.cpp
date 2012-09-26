@@ -160,16 +160,11 @@ bool HSSParser::loadFile(AXRFile::p file)
     //propagate the file to the tokenizer
     this->tokenizer->setFile(file);
     //read the file
-    int len = this->wrapper->readFile(file);
+    int len = file->getBuffer().size();
 
     //initialize
     this->tokenizer->setBufferLength(len);
     this->tokenizer->readNextChar();
-
-    /**
-     *  @todo what if the file is longer than the buffer?
-     */
-    this->wrapper->closeFile(file);
 
     this->readNextToken();
 

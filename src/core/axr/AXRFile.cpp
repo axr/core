@@ -41,115 +41,63 @@
  *
  ********************************************************************/
 
-#include <cstdio>
 #include "AXRFile.h"
 
 using namespace AXR;
 
 AXRFile::AXRFile()
+: valid(false)
 {
-    this->fileName = "";
-    this->mimeType = "";
-    this->basePath = "";
-    this->extension = "";
-    this->fileHandle = NULL;
-    this->_atEndOfFile = false;
+}
+
+AXRFile::AXRFile(const QByteArray &data)
+: valid(true), buffer(data)
+{
+}
+
+AXRFile::AXRFile(const QFileInfo &filePath)
+{
+    QFile file(filePath.canonicalFilePath());
+    if (file.open(QIODevice::ReadOnly))
+    {
+        this->buffer = file.readAll();
+        this->sourceUrl = filePath.canonicalFilePath();
+        this->valid = this->buffer.size() == file.size();
+    }
+}
+
+AXRFile::AXRFile(const QFileInfo &filePath, const QByteArray &data)
+: valid(true), buffer(data), sourceUrl(filePath.canonicalFilePath())
+{
 }
 
 AXRFile::~AXRFile()
 {
-    if (this->fileHandle)
-    {
-        fclose(this->fileHandle);
-    }
 }
 
-void AXRFile::setFileName(AXRString value)
+AXRString AXRFile::getFileName() const
 {
-    this->fileName = value;
+    QFileInfo fi(this->sourceUrl.toLocalFile());
+    return fi.fileName();
 }
 
-AXRString AXRFile::getFileName()
+AXRString AXRFile::getBasePath() const
 {
-    return this->fileName;
+    QFileInfo fi(this->sourceUrl.toLocalFile());
+    return fi.canonicalPath();
 }
 
-void AXRFile::setBuffer(const QByteArray &buffer)
-{
-    this->buffer = buffer;
-}
-
-QByteArray& AXRFile::getBuffer()
+const QByteArray& AXRFile::getBuffer() const
 {
     return this->buffer;
 }
 
-int AXRFile::getFileSize()
+bool AXRFile::isValid() const
 {
-    return this->buffer.size();
+    return this->valid;
 }
 
-int AXRFile::getBufferSize()
+AXRString AXRFile::toString() const
 {
-    return this->buffer.size();
-}
-
-void AXRFile::setBasePath(AXRString path)
-{
-    this->basePath = path;
-}
-
-AXRString AXRFile::getBasePath()
-{
-    return this->basePath;
-}
-
-void AXRFile::setMimeType(AXRString mime)
-{
-    this->mimeType = mime;
-}
-
-AXRString AXRFile::getMimeType()
-{
-    return this->mimeType;
-}
-
-void AXRFile::setExtension(AXRString value)
-{
-    this->extension = value;
-}
-
-AXRString AXRFile::getExtension()
-{
-    return this->extension;
-}
-
-void AXRFile::setFileHandle(FILE * path)
-{
-    this->fileHandle = path;
-}
-
-void AXRFile::setFileHandle(const AXRString &string, const char *fopenMode)
-{
-    this->fileHandle = fopen(AXR::toStdString(string).c_str(), fopenMode);
-}
-
-FILE * AXRFile::getFileHandle()
-{
-    return this->fileHandle;
-}
-
-AXRString AXRFile::toString()
-{
-    return "AXRFile:\nFilename: " + this->fileName + "\nBasepath: " + this->basePath + "\n-------------------------\n";
-}
-
-bool AXRFile::isAtEndOfFile()
-{
-    return this->_atEndOfFile;
-}
-
-void AXRFile::setAtEndOfFile(bool newValue)
-{
-    this->_atEndOfFile = newValue;
+    return "AXRFile:\nFilename: " + getFileName() + "\nBasepath: " + getBasePath() + "\n-------------------------\n";
 }

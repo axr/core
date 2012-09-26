@@ -46,6 +46,8 @@
 
 #include <boost/shared_ptr.hpp>
 #include <QByteArray>
+#include <QFileInfo>
+#include <QUrl>
 #include "AXRString.h"
 #include "AXRGlobal.h"
 
@@ -65,132 +67,50 @@ namespace AXR
         typedef boost::shared_ptr<AXRFile> p;
 
         /**
-         *  Creates a new instance of a file.
+         *  Creates a new instance of an in-memory buffer.
          */
         AXRFile();
+        AXRFile(const QByteArray &data);
+        AXRFile(const QFileInfo &filePath);
+        AXRFile(const QFileInfo &filePath, const QByteArray &data);
 
         /**
          *  Destructor.
          */
         virtual ~AXRFile();
 
-        /**
-         *  Setter for fileName.
-         *  @param value    A string containing the file name. Should include the extension.
-         */
-        void setFileName(AXRString value);
+        QUrl url() const;
 
         /**
          *  Getter for fileName
          *  @return A string containing the file name, including extension.
          */
-        AXRString getFileName();
-
-        /**
-         *  Setter for the buffer where the contents of the file will be stored.
-         *  @param buffer   A char * pointer to the buffer.
-         */
-        void setBuffer(const QByteArray &buffer);
-
-        /**
-         *  Getter for the buffer where the contents of the file will be stored.
-         *  @return A char * pointer to the buffer.
-         */
-        QByteArray& getBuffer();
-
-        /**
-         *  Getter for the size of the file.
-         *  @return A long int holding the size of the file.
-         */
-        int getFileSize();
-
-        /**
-         *  Getter for the length of the buffer.
-         *  @return A long int holding the size of the buffer.
-         */
-        int getBufferSize();
-
-        /**
-         *  Setter for the base path. This + / + the filename form the full path to
-         *  the file.
-         *  @param path     A string containing the base path of the file.
-         */
-        void setBasePath(AXRString path);
+        AXRString getFileName() const;
 
         /**
          *  Getter for the base path. This + / + the filename form the full path to
          *  the file.
          *  @return A string containing the base path of the file.
          */
-        AXRString getBasePath();
+        AXRString getBasePath() const;
 
         /**
-         *  Setter for the MIME type of the file.
-         *  @param mime     A string containing the MIME type of the file.
+         *  Getter for the buffer where the contents of the file will be stored.
+         *  @return A char * pointer to the buffer.
          */
-        void setMimeType(AXRString mime);
+        const QByteArray& getBuffer() const;
 
-        /**
-         *  Getter for the MIME type of the file.
-         *  @return A string containing the MIME type of the file.
-         */
-        AXRString getMimeType();
-
-        /**
-         *  Setter for the file extension. The file name already includes the
-         *  file extensions, so this is mostly used for file type checking.
-         *  @param value    A string containing the extension of the file.
-         */
-        void setExtension(AXRString value);
-
-        /**
-         *  Getter for the file extension. The file name already includes the
-         *  file extensions, so this is mostly used for file type checking.
-         *  @return A string containing the extension of the file.
-         */
-        AXRString getExtension();
-
-        /**
-         *  Setter for the file handle, an opaque OS pointer type.
-         *  @param handle   The file handle to be stored.
-         */
-        void setFileHandle(FILE * handle);
-        void setFileHandle(const AXRString &string, const char *fopenMode = "r");
-
-        /**
-         *  Getter for the file handle, an opaque OS pointer type.
-         *  @return The file handle to be stored or NULL if none.
-         */
-        FILE * getFileHandle();
+        bool isValid() const;
 
         /**
          *  @return A textual representation of the file.
          */
-        AXRString toString();
-
-        /**
-         *  Call this to check if the file is marked as being at end of file.
-         *  @return true if it is at the end of the file, false otherwise.
-         */
-        bool isAtEndOfFile();
-
-        /**
-         *  Sets the file to be at end of file or not.
-         *  @param newValue A boolean containing the new status.
-         */
-        void setAtEndOfFile(bool newValue);
-
-    protected:
-        AXRString fileName;
+        AXRString toString() const;
 
     private:
-        bool _atEndOfFile;
-
+        bool valid;
         QByteArray buffer;
-        AXRString mimeType;
-        AXRString basePath;
-        AXRString extension;
-        FILE * fileHandle;
+        QUrl sourceUrl;
     };
 }
 

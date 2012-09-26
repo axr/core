@@ -73,28 +73,23 @@ AXRWrapper::~AXRWrapper()
 
 AXRFile::p AXRWrapper::getFile(AXRString url)
 {
-    AXRFile::p ret = AXRFile::p(new AXRFile());
-
     QUrl u(url);
     if (u.isValid())
     {
         if (u.scheme() == "file")
         {
             QFileInfo fi(u.toLocalFile());
-            ret->setFileName(fi.fileName());
-            ret->setBasePath(fi.canonicalPath());
-
-            ret->setBuffer(QByteArray());
-            ret->setFileHandle(fi.canonicalFilePath());
-
-            if (!ret->getFileHandle())
+            AXRFile::p ret = AXRFile::p(new AXRFile(fi));
+            if (!fi.exists())
             {
                 throw AXRError::p(new AXRError("AXRWrapper", "the file " + url + " doesn't exist"));
             }
-            else if (ferror(ret->getFileHandle()))
+            else if (!ret->isValid())
             {
                 throw AXRError::p(new AXRError("AXRWrapper", "the file " + url + " couldn't be read"));
             }
+
+            return ret;
         }
         else if (u.scheme() == "http" || u.scheme() == "https")
         {
@@ -102,32 +97,7 @@ AXRFile::p AXRWrapper::getFile(AXRString url)
         }
     }
 
-    return ret;
-}
-
-size_t AXRWrapper::readFile(AXRFile::p theFile)
-{
-    QFile file(theFile->getBasePath() + "/" + theFile->getFileName());
-    if (file.open(QIODevice::ReadOnly))
-    {
-        theFile->setBuffer(file.readAll());
-        if (file.error() != QFile::NoError)
-            theFile->setAtEndOfFile(true);
-    }
-
-    if (file.error() != QFile::NoError)
-    {
-        AXRError::p(new AXRError("AXRWrapper", "The file " + theFile->getFileName() + " couldn't be read"))->raise();
-        return -1;
-    }
-
-    return theFile->getBufferSize();
-}
-
-void AXRWrapper::closeFile(AXRFile::p theFile)
-{
-    fclose(theFile->getFileHandle());
-    theFile->setFileHandle(NULL);
+    return AXRFile::p(new AXRFile());
 }
 
 void AXRWrapper::handleError(AXRError::cp theError)
@@ -147,34 +117,20 @@ void AXRWrapper::setNeedsDisplay(bool newValue)
 
 AXRFile::p AXRWrapper::createDummyXML(AXRString stylesheet)
 {
-    AXRFile::p ret = AXRFile::p(new AXRFile());
-    ret->setMimeType("text/xml");
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: creating dummy XML file for HSS file " + stylesheet);
 
     QUrl url = stylesheet;
     if (url.isValid())
     {
-        QFileInfo fi(url.path());
-        ret->setBasePath(fi.canonicalPath());
-        ret->setFileName("dummy-xml-for-" + fi.fileName() + ".xml");
+        AXRString dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" src=\"file://" + stylesheet + "\" version=\"1.0\"?><root></root>";
+        return AXRFile::p(new AXRFile(dummyXML.toUtf8()));
     }
     else
     {
         // TODO: "Not a valid URL"
         AXRError::p(new AXRError("AXRWrapper", "Could not find a slash in the file path"))->raise();
-        return ret;
+        return AXRFile::p(new AXRFile());
     }
-    ret->setExtension("xml");
-    AXRString dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" src=\"file://" + stylesheet + "\" version=\"1.0\"?><root></root>";
-
-    ret->setFileHandle(tmpfile());
-
-    ret->setBuffer(dummyXML.toUtf8());
-
-    rewind(ret->getFileHandle());
-
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: creating dummy XML file");
-
-    return ret;
 }
 
 bool AXRWrapper::loadFileByPath(AXRString filepath)
@@ -186,11 +142,11 @@ bool AXRWrapper::loadFileByPath(AXRString filepath)
     if (fi.suffix() == "xml")
     {
         this->_isHSSOnly = false;
-        return this->loadXMLFile(filepath);
+        return this->loadXMLFile(fi.canonicalFilePath());
     }
     else if (fi.suffix() == "hss")
     {
-        return this->loadHSSFile(filepath);
+        return this->loadHSSFile(fi.canonicalFilePath());
     }
     else
     {
@@ -544,8 +500,7 @@ void AXRTestProducer::operator () ()
     if (testLoaded)
     {
         AXRFile::p expectedFile = this->wrapper->getFile("file://" + this->basePath + "/" + test[1]);
-        this->wrapper->readFile(expectedFile);
-        if (ferror(expectedFile->getFileHandle()))
+        if (!expectedFile->isValid())
         {
             std_log("could not load file with expected results");
         }
@@ -555,7 +510,6 @@ void AXRTestProducer::operator () ()
             expectedRep = AXRString(expectedFile->getBuffer());
             //std_log(expectedRep);
         }
-        this->wrapper->closeFile(expectedFile);
     }
 
     //compare the two
