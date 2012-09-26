@@ -602,10 +602,10 @@ void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUni
     path.closeSubpath();
 }
 
-long double HSSRoundedRect::_setLDProperty(
+HSSUnit HSSRoundedRect::_setLDProperty(
                                            void(HSSRoundedRect::*callback)(HSSObservableProperty property, void* data),
                                            HSSParserNode::p value,
-                                           long double percentageBase,
+                                           HSSUnit percentageBase,
                                            HSSObservableProperty observedProperty,
                                            HSSObservable * observedObject,
                                            HSSObservableProperty observedSourceProperty,
@@ -614,7 +614,7 @@ long double HSSRoundedRect::_setLDProperty(
                                            const std::vector<HSSDisplayObject::p> * scope
                                            )
 {
-    long double ret;
+    HSSUnit ret;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)
@@ -673,7 +673,7 @@ long double HSSRoundedRect::_setLDProperty(
         boost::any remoteValue = fnct->evaluate();
         try
         {
-            ret = boost::any_cast<long double>(remoteValue);
+            ret = boost::any_cast<HSSUnit>(remoteValue);
 
         }
         catch (boost::bad_any_cast &)

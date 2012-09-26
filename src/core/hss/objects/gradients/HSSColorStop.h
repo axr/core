@@ -109,9 +109,9 @@ namespace AXR
 
         /**
          *  Getter for the actual value of position
-         *  @return A long double containing the actual used position.
+         *  @return A HSSUnit containing the actual used position.
          */
-        long double getPosition();
+        HSSUnit getPosition();
 
         /**
          *  Getter for the definition object of position.
@@ -134,9 +134,9 @@ namespace AXR
 
         /**
          *  Getter for the actual value of balance
-         *  @return A long double containing the actual used balance.
+         *  @return A HSSUnit containing the actual used balance.
          */
-        long double getBalance();
+        HSSUnit getBalance();
 
         /**
          *  Getter for the definition object of balance.
@@ -165,21 +165,21 @@ namespace AXR
         HSSObservableProperty observedColorProperty;
 
         //position
-        long double position;
+        HSSUnit position;
         HSSParserNode::p dPosition;
         HSSObservable * observedPosition;
         HSSObservableProperty observedPositionProperty;
 
         //balance
-        long double balance;
+        HSSUnit balance;
         HSSParserNode::p dBalance;
         HSSObservable * observedBalance;
         HSSObservableProperty observedBalanceProperty;
 
-        long double _setLDProperty(
+        HSSUnit _setLDProperty(
                                    void(HSSColorStop::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty

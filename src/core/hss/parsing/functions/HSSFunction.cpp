@@ -143,7 +143,7 @@ void HSSFunction::propertyChanged(HSSObservableProperty property, void* data)
     this->notifyObservers(HSSObservablePropertyValue, data);
 }
 
-void HSSFunction::setPercentageBase(long double value)
+void HSSFunction::setPercentageBase(HSSUnit value)
 {
     this->percentageBase = value;
 }

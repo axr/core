@@ -173,12 +173,12 @@ void AXRRender::mouseUp(HSSUnit x, HSSUnit y)
     }
 }
 
-double AXRRender::getWindowWidth()
+HSSUnit AXRRender::getWindowWidth()
 {
     return this->windowWidth;
 }
 
-double AXRRender::getWindowHeight()
+HSSUnit AXRRender::getWindowHeight()
 {
     return this->windowHeight;
 }

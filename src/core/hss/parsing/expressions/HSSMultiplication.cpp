@@ -67,7 +67,7 @@ HSSMultiplication::~HSSMultiplication()
 
 }
 
-long double HSSMultiplication::calculate(long double leftval, long double rightval)
+HSSUnit HSSMultiplication::calculate(HSSUnit leftval, HSSUnit rightval)
 {
     return leftval * rightval;
 }

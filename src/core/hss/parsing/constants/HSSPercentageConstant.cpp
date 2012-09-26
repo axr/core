@@ -47,7 +47,7 @@
 
 using namespace AXR;
 
-HSSPercentageConstant::HSSPercentageConstant(long double value)
+HSSPercentageConstant::HSSPercentageConstant(HSSUnit value)
 : HSSParserNode(HSSParserNodeTypePercentageConstant)
 {
     this->value = value / 100.;
@@ -65,15 +65,15 @@ HSSPercentageConstant::~HSSPercentageConstant()
 
 AXRString HSSPercentageConstant::toString()
 {
-    return AXRString("HSSPercentageConstant with value %1%").arg((double)this->value);
+    return AXRString("HSSPercentageConstant with value %1%").arg(this->value);
 }
 
-void HSSPercentageConstant::setValue(long double newValue)
+void HSSPercentageConstant::setValue(HSSUnit newValue)
 {
     this->value = value / 100.;
 }
 
-long double HSSPercentageConstant::getValue(long double baseValue)
+HSSUnit HSSPercentageConstant::getValue(HSSUnit baseValue)
 {
     return this->value * baseValue;
 }

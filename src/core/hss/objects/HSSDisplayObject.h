@@ -445,7 +445,7 @@ namespace AXR
         HSSObservable::p observedBorder;
         HSSObservableProperty observedBorderProperty;
         std::vector<HSSBorder::p> border;
-        long double borderBleeding;
+        HSSUnit borderBleeding;
 
         //visible
         HSSParserNode::p dVisible;
@@ -453,7 +453,7 @@ namespace AXR
         HSSObservableProperty observedVisibleProperty;
         bool visible;
 
-        long double zoomFactor;
+        HSSUnit zoomFactor;
 
         /**
          *  @todo add "transform" property
@@ -497,10 +497,10 @@ namespace AXR
         void _setOuterHeight();
 
     private:
-        long double _setLDProperty(
+        HSSUnit _setLDProperty(
                                    void(HSSDisplayObject::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedProperty,
                                    HSSObservable::p observedObject,
                                    HSSObservableProperty observedSourceProperty,
@@ -515,9 +515,9 @@ namespace AXR
         bool _layoutFlagIsInSecondaryLine;
         bool _layoutFlagVerticallyAligned;
         bool _layoutFlagLockTop;
-        long double _layoutLockTopPosition;
+        HSSUnit _layoutLockTopPosition;
         bool _layoutFlagLockBottom;
-        long double _layoutLockBottomPosition;
+        HSSUnit _layoutLockBottomPosition;
     };
 }
 

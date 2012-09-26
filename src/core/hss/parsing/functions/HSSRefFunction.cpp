@@ -169,11 +169,11 @@ boost::any HSSRefFunction::_evaluate()
         /*
         if (this->modifier == "min"){
             unsigned i, size;
-            long double tempval;
+            HSSUnit tempval;
             HSSDisplayObject::p container;
             for (i=0, size = selection.size(); i<size; ++i) {
-                tempval = *(long double*)selection[i]->getProperty(this->propertyName);
-                if (tempval < *(long double*)this->_value){
+                tempval = *(HSSUnit*)selection[i]->getProperty(this->propertyName);
+                if (tempval < *(HSSUnit*)this->_value){
                     this->_value = &tempval;
                     container = selection[i];
                 }

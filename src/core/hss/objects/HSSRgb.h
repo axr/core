@@ -46,6 +46,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include "HSSObject.h"
+#include "HSSUnits.h"
 
 namespace AXR
 {
@@ -80,7 +81,7 @@ namespace AXR
         /**
          *  Constructor for HSSRgb objects
          */
-        HSSRgb(double red = 0, double green = 0, double blue = 0, double alpha = 255);
+        HSSRgb(HSSUnit red = 0, HSSUnit green = 0, HSSUnit blue = 0, HSSUnit alpha = 255);
 
         /**
          *  Copy constructor for HSSRgb objects
@@ -110,10 +111,10 @@ namespace AXR
 
         /**
          *  Getter for the actual value of the red channel.
-         *  @return A long double containing the value for the red channel. The range of this
+         *  @return A HSSUnit containing the value for the red channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        double getRed();
+        HSSUnit getRed();
 
         /**
          *  Setter for the definition object of red. It will use the value as needed.
@@ -130,10 +131,10 @@ namespace AXR
 
         /**
          *  Getter for the actual value of the green channel.
-         *  @return A long double containing the value for the green channel. The range of this
+         *  @return A HSSUnit containing the value for the green channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        double getGreen();
+        HSSUnit getGreen();
 
         /**
          *  Setter for the definition object of green. It will use the value as needed.
@@ -150,10 +151,10 @@ namespace AXR
 
         /**
          *  Getter for the actual value of the blue channel.
-         *  @return A long double containing the value for the blue channel. The range of this
+         *  @return A HSSUnit containing the value for the blue channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        double getBlue();
+        HSSUnit getBlue();
 
         /**
          *  Setter for the definition object of blue. It will use the value as needed.
@@ -170,10 +171,10 @@ namespace AXR
 
         /**
          *  Getter for the actual value of the alpha channel.
-         *  @return A long double containing the value for the alpha channel. The range of this
+         *  @return A HSSUnit containing the value for the alpha channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        double getAlpha();
+        HSSUnit getAlpha();
 
         /**
          *  Setter for the definition object of alpha. It will use the value as needed.
@@ -189,10 +190,10 @@ namespace AXR
         void alphaChanged(HSSObservableProperty source, void*data);
 
     private:
-        double red;
-        double green;
-        double blue;
-        double alpha;
+        HSSUnit red;
+        HSSUnit green;
+        HSSUnit blue;
+        HSSUnit alpha;
 
         HSSParserNode::p dRed;
         HSSObservable * observedRed;
@@ -207,10 +208,10 @@ namespace AXR
         HSSObservable * observedAlpha;
         HSSObservableProperty observedAlphaProperty;
 
-        long double _setLDProperty(
+        HSSUnit _setLDProperty(
                                    void(HSSRgb::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty

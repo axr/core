@@ -228,10 +228,10 @@ namespace AXR
         HSSObservableProperty observedLeftProperty;
         HSSUnit top, right, bottom, left;
 
-        long double _setLDProperty(
+        HSSUnit _setLDProperty(
                                    void(HSSMargin::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedProperty,
                                    HSSObservable * observedObject,
                                    HSSObservableProperty observedSourceProperty,

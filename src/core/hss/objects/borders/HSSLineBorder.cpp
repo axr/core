@@ -289,7 +289,7 @@ void HSSLineBorder::colorChanged(AXR::HSSObservableProperty source, void *data)
 
 void HSSLineBorder::draw(QPainter &painter, const QPainterPath &path)
 {
-    long double r = 0., g = 0., b = 0., a = 255.;
+    HSSUnit r = 0., g = 0., b = 0., a = 255.;
     if (this->color)
     {
         r = this->color->getRed();

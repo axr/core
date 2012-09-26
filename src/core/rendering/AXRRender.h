@@ -105,21 +105,21 @@ namespace AXR
         /**
          *  @return The width of the window.
          */
-        double getWindowWidth();
+        HSSUnit getWindowWidth();
         /**
          *  @return The height of the window.
          */
-        double getWindowHeight();
+        HSSUnit getWindowHeight();
 
         /**
          *  @todo create getter/setter and make private
          */
-        double windowWidth;
+        HSSUnit windowWidth;
 
         /**
          *  @todo create getter/setter and make private
          */
-        double windowHeight;
+        HSSUnit windowHeight;
 
         bool globalAntialiasingEnabled() const;
         void setGlobalAntialiasingEnabled(bool enable);

@@ -116,10 +116,10 @@ namespace AXR
         HSSObservable * observedSize;
         HSSObservableProperty observedSizeProperty;
 
-        long double _setLDProperty(
+        HSSUnit _setLDProperty(
                                    void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty

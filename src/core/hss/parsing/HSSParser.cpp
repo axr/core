@@ -2215,7 +2215,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
                 this->skip(HSSWhitespace);
                 if (this->currentToken->isA(HSSNumber))
                 {
-                    long double number = VALUE_TOKEN(this->currentToken)->getLong();
+                    HSSUnit number = VALUE_TOKEN(this->currentToken)->getLong();
                     ret->setArgument(HSSNumberConstant::p(new HSSNumberConstant(number)));
                     this->readNextToken(true);
                     this->skip(HSSWhitespace);

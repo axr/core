@@ -89,11 +89,11 @@ namespace AXR
         /**
          *  The actual implementation of the operation.
          *
-         *  @param leftval  A long double containing the left member.
-         *  @param rightval A long double containing the right member.
-         *  @return A long double containing the addition of both members.
+         *  @param leftval  A HSSUnit containing the left member.
+         *  @param rightval A HSSUnit containing the right member.
+         *  @return A HSSUnit containing the addition of both members.
          */
-        long double calculate(long double leftval, long double rightval);
+        HSSUnit calculate(HSSUnit leftval, HSSUnit rightval);
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

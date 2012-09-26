@@ -448,10 +448,10 @@ namespace AXR
         HSSContainer::p shared_from_this();
 
     private:
-        long double _setLDProperty(
+        HSSUnit _setLDProperty(
                                    void(HSSContainer::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedProperty,
                                    HSSObservable * observedObject,
                                    HSSObservableProperty observedSourceProperty,

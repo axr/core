@@ -87,7 +87,7 @@ namespace AXR
 
         /**
          *  Getter for the actual value of the sides property.
-         *  @return A long double containing the amount of sides.
+         *  @return A HSSUnit containing the amount of sides.
          */
         unsigned int getSides();
 
@@ -112,9 +112,9 @@ namespace AXR
 
         /**
          *  Getter for the actual value of the angle property.
-         *  @return A long double containing the amount of angle.
+         *  @return A HSSUnit containing the amount of angle.
          */
-        long double getAngle();
+        HSSUnit getAngle();
 
         /**
          *  Getter for the definition object of angle.
@@ -144,16 +144,16 @@ namespace AXR
 
         //angle
         HSSParserNode::p dAngle;
-        long double angle;
+        HSSUnit angle;
         HSSObservable * observedAngle;
         HSSObservableProperty observedAngleProperty;
 
     private:
         HSSClonable::p cloneImpl() const;
-        long double _setLDProperty(
+        HSSUnit _setLDProperty(
                                    void(HSSPolygon::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty

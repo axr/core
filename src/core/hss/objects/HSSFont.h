@@ -60,7 +60,7 @@ namespace AXR
 
         typedef boost::shared_ptr<HSSFont> p;
 
-        static const long double DEFAULT_SIZE;
+        static const HSSUnit DEFAULT_SIZE;
 
         /**
          *  Creates a new instance of a HSSFont object.
@@ -92,9 +92,9 @@ namespace AXR
 
         /**
          *  Getter for the actual value of size.
-         *  @return A long double containing the size in points of the font.
+         *  @return A HSSUnit containing the size in points of the font.
          */
-        long double getSize();
+        HSSUnit getSize();
 
         /**
          *  Setter for the definition object of size. It will use the value as needed.
@@ -176,7 +176,7 @@ namespace AXR
 
     private:
         //size
-        long double size;
+        HSSUnit size;
         HSSParserNode::p dSize;
         HSSObservable * observedSize;
         HSSObservableProperty observedSizeProperty;
@@ -197,10 +197,10 @@ namespace AXR
         HSSObservableProperty observedWeightProperty;
 
 
-        long double _setLDProperty(
+        HSSUnit _setLDProperty(
                                    void(HSSFont::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty

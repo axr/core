@@ -107,9 +107,9 @@ namespace AXR
 
         /**
          *  The percentage base is the number that corresponds to 100%.
-         *  @param value    A long double containing the base for percentage calculations.
+         *  @param value    A HSSUnit containing the base for percentage calculations.
          */
-        virtual void setPercentageBase(long double value);
+        virtual void setPercentageBase(HSSUnit value);
 
         /**
          *  When we are using percentages, we keep track of the value and update accordingly.
@@ -192,7 +192,7 @@ namespace AXR
         bool _isDirty;
         boost::any _value;
 
-        long double percentageBase;
+        HSSUnit percentageBase;
         HSSObservableProperty percentageObservedProperty;
         HSSObservable * percentageObserved;
         const std::vector<HSSDisplayObject::p> * scope;

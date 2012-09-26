@@ -55,7 +55,7 @@
 
 using namespace AXR;
 
-const long double HSSFont::DEFAULT_SIZE = 18;
+const HSSUnit HSSFont::DEFAULT_SIZE = 18;
 
 HSSFont::HSSFont()
 : HSSObject(HSSObjectTypeFont)
@@ -179,7 +179,7 @@ void HSSFont::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
 }
 
-long double HSSFont::getSize()
+HSSUnit HSSFont::getSize()
 {
     return this->size;
 }
@@ -407,16 +407,16 @@ void HSSFont::weightChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** weightChanged unimplemented ****************************");
 }
 
-long double HSSFont::_setLDProperty(
+HSSUnit HSSFont::_setLDProperty(
                                     void(HSSFont::*callback)(HSSObservableProperty property, void* data),
                                     HSSParserNode::p value,
-                                    long double percentageBase,
+                                    HSSUnit percentageBase,
                                     HSSObservableProperty observedSourceProperty,
                                     HSSObservable * &observedStore,
                                     HSSObservableProperty &observedStoreProperty
                                     )
 {
-    long double ret;
+    HSSUnit ret;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)

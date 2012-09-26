@@ -69,7 +69,7 @@ HSSValueToken::HSSValueToken(HSSTokenType type, char value, unsigned line, unsig
     this->stringValue = AXRString(1, value);
 }
 
-HSSValueToken::HSSValueToken(HSSTokenType type, double long value, unsigned line, unsigned column)
+HSSValueToken::HSSValueToken(HSSTokenType type, HSSUnit value, unsigned line, unsigned column)
 : HSSToken(type, line, column)
 {
     this->type = type;
@@ -85,7 +85,7 @@ AXRString HSSValueToken::getString()
     return this->stringValue;
 }
 
-double long HSSValueToken::getLong()
+HSSUnit HSSValueToken::getLong()
 {
     return this->longValue;
 }
@@ -95,7 +95,7 @@ bool HSSValueToken::equals(HSSTokenType otherType, AXRString otherValue)
     return otherType == this->type && otherValue == this->stringValue;
 }
 
-bool HSSValueToken::equals(HSSTokenType otherType, double long otherValue)
+bool HSSValueToken::equals(HSSTokenType otherType, HSSUnit otherValue)
 {
     return otherType == this->type && otherValue == this->longValue;
 }
@@ -105,7 +105,7 @@ AXRString HSSValueToken::toString()
     AXRString tokenstr = this->tokenStringRepresentation(this->type);
     if (this->isNumeric())
     {
-        return AXRString("HSSValueToken of type: %1 and value: %2").arg(tokenstr).arg((double)this->longValue);
+        return AXRString("HSSValueToken of type: %1 and value: %2").arg(tokenstr).arg(this->longValue);
     }
     else
     {

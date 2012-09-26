@@ -823,7 +823,7 @@ void HSSDisplayObject::_drawBackground(QPainter &painter, const QPainterPath &pa
         {
             HSSRgb::p color = boost::static_pointer_cast<HSSRgb > (theobj);
 
-            long double r = 0., g = 0., b = 0., a = 0;
+            HSSUnit r = 0., g = 0., b = 0., a = 0;
             if (color)
             {
                 r = color->getRed();
@@ -3659,10 +3659,10 @@ void HSSDisplayObject::setDefaults()
     this->setDVisible(newDVisible);
 }
 
-long double HSSDisplayObject::_setLDProperty(
+HSSUnit HSSDisplayObject::_setLDProperty(
                                              void(HSSDisplayObject::*callback)(HSSObservableProperty property, void* data),
                                              HSSParserNode::p value,
-                                             long double percentageBase,
+                                             HSSUnit percentageBase,
                                              HSSObservableProperty observedProperty,
                                              HSSObservable::p observedObject,
                                              HSSObservableProperty observedSourceProperty,
@@ -3671,7 +3671,7 @@ long double HSSDisplayObject::_setLDProperty(
                                              const std::vector<HSSDisplayObject::p> * scope
                                              )
 {
-    long double ret = 0.;
+    HSSUnit ret = 0.;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)

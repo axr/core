@@ -67,7 +67,7 @@ HSSDivision::~HSSDivision()
 
 }
 
-long double HSSDivision::calculate(long double leftval, long double rightval)
+HSSUnit HSSDivision::calculate(HSSUnit leftval, HSSUnit rightval)
 {
     return leftval / rightval;
 }

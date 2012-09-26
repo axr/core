@@ -61,7 +61,7 @@ namespace AXR
          *  Creates a new instance of a percentage constant, with given value.
          *  @param  value   A string containing the name of the keyword.
          */
-        HSSPercentageConstant(long double value);
+        HSSPercentageConstant(HSSUnit value);
 
         /**
          *  Clones an instance of HSSParserNode and gives a shared pointer of the
@@ -79,20 +79,20 @@ namespace AXR
 
         /**
          *  Setter for the value of the percentage constant.
-         *  @param newValue     A long double containing the numeric value of the percentage.
+         *  @param newValue     A HSSUnit containing the numeric value of the percentage.
          */
-        void setValue(long double newValue);
+        void setValue(HSSUnit newValue);
 
         /**
          *  Call this method when you need to calculate the actual resulting value.
-         *  @param baseValue    A long double containing the number that corresponds to 100%.
-         *  @return A long double containing the result of the calculation of the base value with the stored
+         *  @param baseValue    A HSSUnit containing the number that corresponds to 100%.
+         *  @return A HSSUnit containing the result of the calculation of the base value with the stored
          *  percentage value.
          */
-        long double getValue(long double baseValue);
+        HSSUnit getValue(HSSUnit baseValue);
 
     protected:
-        long double value;
+        HSSUnit value;
 
     private:
         virtual HSSClonable::p cloneImpl() const;

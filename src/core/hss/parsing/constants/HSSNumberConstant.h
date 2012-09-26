@@ -47,13 +47,14 @@
 #include <boost/shared_ptr.hpp>
 #include "AXRString.h"
 #include "HSSParserNode.h"
+#include "HSSUnits.h"
 
 namespace AXR
 {
     /**
      *  @brief Parser node that represents a number.
      *
-     *  Numbers, both integers and floating points are represented as a long double inside the
+     *  Numbers, both integers and floating points are represented as a HSSUnit inside the
      *  value property.
      */
     class AXR_API HSSNumberConstant : public HSSParserNode
@@ -63,9 +64,9 @@ namespace AXR
 
         /**
          *  Creates a new instance of a number constant node which holds the given value.
-         *  @param value    A long double containing the value for the constant.
+         *  @param value    A HSSUnit containing the value for the constant.
          */
-        HSSNumberConstant(long double value);
+        HSSNumberConstant(HSSUnit value);
 
         /**
          *  Clones an instance of HSSNumberConstant and gives a shared pointer of the
@@ -81,20 +82,20 @@ namespace AXR
 
         /**
          *  Setter for the value.
-         *  @param newValue     A long double containing the new calculated value for this constant.
+         *  @param newValue     A HSSUnit containing the new calculated value for this constant.
          */
-        void setValue(long double newValue);
+        void setValue(HSSUnit newValue);
 
         /**
          *  Getter for the value.
          *  @return The calculated value of the constant.
          */
-        long double getValue();
+        HSSUnit getValue();
 
         AXRString toString();
 
     protected:
-        long double value;
+        HSSUnit value;
 
     private:
         virtual HSSClonable::p cloneImpl() const;

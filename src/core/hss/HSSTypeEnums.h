@@ -284,7 +284,7 @@ namespace AXR
     enum AXR_API HSSValueType
     {
         HSSValueNumberInt, /**< Long Integer */
-        HSSValueNumberFloat, /**< Long double */
+        HSSValueNumberFloat, /**< HSSUnit */
         HSSValueString, /**< AXRString */
         HSSValueKeyword/**< AXRString */
     };

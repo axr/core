@@ -201,7 +201,7 @@ void HSSLinearGradient::setProperty(HSSObservableProperty name, HSSParserNode::p
     }
 }
 
-long double HSSLinearGradient::getStartX()
+HSSUnit HSSLinearGradient::getStartX()
 {
     return this->startX;
 }
@@ -253,13 +253,13 @@ void HSSLinearGradient::startXChanged(HSSObservableProperty source, void *data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
-        this->startX = *(long double*) data;
+        this->startX = *(HSSUnit*) data;
         break;
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dStartX);
-        this->startX = percentageValue->getValue(*(long double*) data);
+        this->startX = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
@@ -271,7 +271,7 @@ void HSSLinearGradient::startXChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-long double HSSLinearGradient::getStartY()
+HSSUnit HSSLinearGradient::getStartY()
 {
     return this->startY;
 }
@@ -323,13 +323,13 @@ void HSSLinearGradient::startYChanged(HSSObservableProperty source, void *data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
-        this->startY = *(long double*) data;
+        this->startY = *(HSSUnit*) data;
         break;
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dStartY);
-        this->startY = percentageValue->getValue(*(long double*) data);
+        this->startY = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
@@ -341,7 +341,7 @@ void HSSLinearGradient::startYChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-long double HSSLinearGradient::getEndX()
+HSSUnit HSSLinearGradient::getEndX()
 {
     return this->endX;
 }
@@ -393,13 +393,13 @@ void HSSLinearGradient::endXChanged(HSSObservableProperty source, void *data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
-        this->endX = *(long double*) data;
+        this->endX = *(HSSUnit*) data;
         break;
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dEndX);
-        this->endX = percentageValue->getValue(*(long double*) data);
+        this->endX = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
@@ -411,7 +411,7 @@ void HSSLinearGradient::endXChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-long double HSSLinearGradient::getEndY()
+HSSUnit HSSLinearGradient::getEndY()
 {
     return this->endY;
 }
@@ -463,13 +463,13 @@ void HSSLinearGradient::endYChanged(HSSObservableProperty source, void *data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
-        this->endY = *(long double*) data;
+        this->endY = *(HSSUnit*) data;
         break;
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dEndY);
-        this->endY = percentageValue->getValue(*(long double*) data);
+        this->endY = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
@@ -481,10 +481,10 @@ void HSSLinearGradient::endYChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-long double HSSLinearGradient::_setLDProperty(
+HSSUnit HSSLinearGradient::_setLDProperty(
                                               void(HSSLinearGradient::*callback)(HSSObservableProperty property, void* data),
                                               HSSParserNode::p value,
-                                              long double percentageBase,
+                                              HSSUnit percentageBase,
                                               HSSObservableProperty observedProperty,
                                               HSSObservable * observedObject,
                                               HSSObservableProperty observedSourceProperty,
@@ -492,7 +492,7 @@ long double HSSLinearGradient::_setLDProperty(
                                               HSSObservableProperty &observedStoreProperty
                                               )
 {
-    long double ret;
+    HSSUnit ret;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)
@@ -571,16 +571,16 @@ void HSSLinearGradient::draw(QPainter &painter, const QPainterPath &path)
             HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop > (theStopObj);
 
             //calculate the position
-            long double position;
+            HSSUnit position;
             if (theStop->getDPosition()->isA(HSSParserNodeTypePercentageConstant))
             {
                 position = theStop->getPosition();
             }
             else
             {
-                long double width = (this->endX - this->startX);
-                long double height = (this->endY - this->startY);
-                long double hypotenuse = hypot(width, height);
+                HSSUnit width = (this->endX - this->startX);
+                HSSUnit height = (this->endY - this->startY);
+                HSSUnit hypotenuse = hypot(width, height);
                 position = theStop->getPosition() / hypotenuse;
             }
 

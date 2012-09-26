@@ -165,7 +165,7 @@ void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit wi
     const unsigned int sides = qMax(3u, this->sides);
 
     // Angle of rotation of the entire polygon specified in radians
-    const long double theta = this->angle * (M_PI / 180.);
+    const HSSUnit theta = this->angle * (M_PI / 180.);
 
     // Build a list of points comprising the polygon vertices
     QVector<QPointF> points;
@@ -220,7 +220,7 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
             boost::any remoteValue = fnct->evaluate();
             try
             {
-                this->sides = floor(boost::any_cast<long double>(remoteValue));
+                this->sides = floor(boost::any_cast<HSSUnit>(remoteValue));
             }
             catch (boost::bad_any_cast &)
             {
@@ -260,13 +260,13 @@ void HSSPolygon::sidesChanged(HSSObservableProperty source, void*data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
-        this->sides = floor(*(long double*) data);
+        this->sides = floor(*(HSSUnit*) data);
         break;
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dSides);
-        this->sides = floor(percentageValue->getValue(*(long double*) data));
+        this->sides = floor(percentageValue->getValue(*(HSSUnit*) data));
         break;
     }
 
@@ -278,7 +278,7 @@ void HSSPolygon::sidesChanged(HSSObservableProperty source, void*data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-long double HSSPolygon::getAngle()
+HSSUnit HSSPolygon::getAngle()
 {
     return this->angle;
 }
@@ -318,7 +318,7 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
             boost::any remoteValue = fnct->evaluate();
             try
             {
-                this->angle = boost::any_cast<long double>(remoteValue);
+                this->angle = boost::any_cast<HSSUnit>(remoteValue);
             }
             catch (boost::bad_any_cast &)
             {
@@ -350,13 +350,13 @@ void HSSPolygon::angleChanged(HSSObservableProperty source, void*data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
-        this->angle = *(long double*) data;
+        this->angle = *(HSSUnit*) data;
         break;
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dAngle);
-        this->angle = percentageValue->getValue(*(long double*) data);
+        this->angle = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
@@ -368,16 +368,16 @@ void HSSPolygon::angleChanged(HSSObservableProperty source, void*data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-long double HSSPolygon::_setLDProperty(
+HSSUnit HSSPolygon::_setLDProperty(
                                        void(HSSPolygon::*callback)(HSSObservableProperty property, void* data),
                                        HSSParserNode::p value,
-                                       long double percentageBase,
+                                       HSSUnit percentageBase,
                                        HSSObservableProperty observedSourceProperty,
                                        HSSObservable * &observedStore,
                                        HSSObservableProperty &observedStoreProperty
                                        )
 {
-    long double ret;
+    HSSUnit ret;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)

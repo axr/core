@@ -65,15 +65,15 @@ namespace AXR
          */
         virtual ~HSSExpression();
         AXRString toString();
-        long double evaluate();
+        HSSUnit evaluate();
 
         /**
          *  Each subclass implements the specific operation that needs to be done.
          *
-         *  @param leftval  A long double that holds the left value.
-         *  @param rightval  A long double that holds the right value.
+         *  @param leftval  A HSSUnit that holds the left value.
+         *  @param rightval  A HSSUnit that holds the right value.
          */
-        virtual long double calculate(long double leftval, long double rightval) = 0;
+        virtual HSSUnit calculate(HSSUnit leftval, HSSUnit rightval) = 0;
 
         bool isA(HSSExpressionType otherType);
         HSSExpressionType getExpressionType();
@@ -133,9 +133,9 @@ namespace AXR
 
         /**
          *  The percentage base is the number that corresponds to 100%.
-         *  @param value    A long double containing the base for percentage calculations.
+         *  @param value    A HSSUnit containing the base for percentage calculations.
          */
-        virtual void setPercentageBase(long double value);
+        virtual void setPercentageBase(HSSUnit value);
 
         /**
          *  When we are using percentages, we keep track of the value and update accordingly.
@@ -175,15 +175,15 @@ namespace AXR
 
         /**
          *  Setter for the value.
-         *  @param newValue     A long double containing the new calculated value for this expression.
+         *  @param newValue     A HSSUnit containing the new calculated value for this expression.
          */
-        void setValue(long double newValue);
+        void setValue(HSSUnit newValue);
 
         /**
          *  Getter for the value.
          *  @return The calculated value of the expression.
          */
-        long double getValue();
+        HSSUnit getValue();
 
     protected:
         /**
@@ -201,11 +201,11 @@ namespace AXR
         HSSExpression(const HSSExpression &orig);
 
         HSSParserNode::p left;
-        long double leftval;
-        long double rightval;
+        HSSUnit leftval;
+        HSSUnit rightval;
         HSSParserNode::p right;
 
-        long double percentageBase;
+        HSSUnit percentageBase;
         HSSObservableProperty percentageObservedProperty;
         HSSObservable * percentageObserved;
 
@@ -217,7 +217,7 @@ namespace AXR
         const std::vector<HSSDisplayObject::p> * scope;
 
         bool _isDirty;
-        long double _value;
+        HSSUnit _value;
 
     private:
         HSSExpressionType expressionType;

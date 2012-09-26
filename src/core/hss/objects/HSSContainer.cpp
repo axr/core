@@ -2960,10 +2960,10 @@ void HSSContainer::setDefaults()
     this->setDTextAlign(HSSKeywordConstant::p(new HSSKeywordConstant("left")));
 }
 
-long double HSSContainer::_setLDProperty(
+HSSUnit HSSContainer::_setLDProperty(
                                          void(HSSContainer::*callback)(HSSObservableProperty property, void* data),
                                          HSSParserNode::p value,
-                                         long double percentageBase,
+                                         HSSUnit percentageBase,
                                          HSSObservableProperty observedProperty,
                                          HSSObservable * observedObject,
                                          HSSObservableProperty observedSourceProperty,
@@ -2972,7 +2972,7 @@ long double HSSContainer::_setLDProperty(
                                          const std::vector<HSSDisplayObject::p> * scope
                                          )
 {
-    long double ret;
+    HSSUnit ret;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)
@@ -3027,7 +3027,7 @@ long double HSSContainer::_setLDProperty(
         boost::any remoteValue = fnct->evaluate();
         try
         {
-            ret = boost::any_cast<long double>(remoteValue);
+            ret = boost::any_cast<HSSUnit>(remoteValue);
         }
         catch (boost::bad_any_cast &)
         {

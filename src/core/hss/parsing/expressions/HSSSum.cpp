@@ -67,7 +67,7 @@ HSSSum::~HSSSum()
 
 }
 
-long double HSSSum::calculate(long double leftval, long double rightval)
+HSSUnit HSSSum::calculate(HSSUnit leftval, HSSUnit rightval)
 {
     return leftval + rightval;
 }

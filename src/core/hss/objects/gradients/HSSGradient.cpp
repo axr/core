@@ -513,7 +513,7 @@ void HSSGradient::endColorChanged(HSSObservableProperty source, void*data)
 
 }
 
-long double HSSGradient::getBalance()
+HSSUnit HSSGradient::getBalance()
 {
     return this->balance;
 }
@@ -553,7 +553,7 @@ void HSSGradient::setDBalance(HSSParserNode::p value)
             boost::any remoteValue = fnct->evaluate();
             try
             {
-                this->balance = boost::any_cast<long double>(remoteValue);
+                this->balance = boost::any_cast<HSSUnit>(remoteValue);
             }
             catch (boost::bad_any_cast &)
             {
@@ -585,13 +585,13 @@ void HSSGradient::balanceChanged(AXR::HSSObservableProperty source, void *data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
-        this->balance = *(long double*) data;
+        this->balance = *(HSSUnit*) data;
         break;
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dBalance);
-        this->balance = percentageValue->getValue(*(long double*) data);
+        this->balance = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
@@ -752,16 +752,16 @@ void HSSGradient::colorStopsChanged(HSSObservableProperty source, void*data)
 
 }
 
-long double HSSGradient::_setLDProperty(
+HSSUnit HSSGradient::_setLDProperty(
                                         void(HSSGradient::*callback)(HSSObservableProperty property, void* data),
                                         HSSParserNode::p value,
-                                        long double percentageBase,
+                                        HSSUnit percentageBase,
                                         HSSObservableProperty observedSourceProperty,
                                         HSSObservable * &observedStore,
                                         HSSObservableProperty &observedStoreProperty
                                         )
 {
-    long double ret;
+    HSSUnit ret;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)

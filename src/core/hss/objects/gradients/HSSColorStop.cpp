@@ -308,7 +308,7 @@ void HSSColorStop::colorChanged(HSSObservableProperty source, void*data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-long double HSSColorStop::getPosition()
+HSSUnit HSSColorStop::getPosition()
 {
     return this->position;
 }
@@ -348,7 +348,7 @@ void HSSColorStop::setDPosition(HSSParserNode::p value)
             boost::any remoteValue = fnct->evaluate();
             try
             {
-                this->position = boost::any_cast<long double>(remoteValue);
+                this->position = boost::any_cast<HSSUnit>(remoteValue);
             }
             catch (boost::bad_any_cast &)
             {
@@ -380,13 +380,13 @@ void HSSColorStop::positionChanged(HSSObservableProperty source, void*data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
-        this->position = *(long double*) data;
+        this->position = *(HSSUnit*) data;
         break;
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dPosition);
-        this->position = percentageValue->getValue(*(long double*) data);
+        this->position = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
@@ -398,7 +398,7 @@ void HSSColorStop::positionChanged(HSSObservableProperty source, void*data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-long double HSSColorStop::getBalance()
+HSSUnit HSSColorStop::getBalance()
 {
     return this->balance;
 }
@@ -438,7 +438,7 @@ void HSSColorStop::setDBalance(HSSParserNode::p value)
             boost::any remoteValue = fnct->evaluate();
             try
             {
-                this->balance = boost::any_cast<long double>(remoteValue);
+                this->balance = boost::any_cast<HSSUnit>(remoteValue);
             }
             catch (boost::bad_any_cast &)
             {
@@ -470,13 +470,13 @@ void HSSColorStop::balanceChanged(AXR::HSSObservableProperty source, void *data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
-        this->balance = *(long double*) data;
+        this->balance = *(HSSUnit*) data;
         break;
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dBalance);
-        this->balance = percentageValue->getValue(*(long double*) data);
+        this->balance = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
@@ -488,16 +488,16 @@ void HSSColorStop::balanceChanged(AXR::HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-long double HSSColorStop::_setLDProperty(
+HSSUnit HSSColorStop::_setLDProperty(
                                          void(HSSColorStop::*callback)(HSSObservableProperty property, void* data),
                                          HSSParserNode::p value,
-                                         long double percentageBase,
+                                         HSSUnit percentageBase,
                                          HSSObservableProperty observedSourceProperty,
                                          HSSObservable * &observedStore,
                                          HSSObservableProperty &observedStoreProperty
                                          )
 {
-    long double ret;
+    HSSUnit ret;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)

@@ -89,9 +89,9 @@ namespace AXR
 
         /**
          *  Getter for the actual value object of startX.
-         *  @return A long double that contains the actual value of startX.
+         *  @return A HSSUnit that contains the actual value of startX.
          */
-        long double getStartX();
+        HSSUnit getStartX();
 
         /**
          *  Getter for the definition object of startX.
@@ -114,9 +114,9 @@ namespace AXR
 
         /**
          *  Getter for the actual value object of startY.
-         *  @return A long double that contains the actual value of startY.
+         *  @return A HSSUnit that contains the actual value of startY.
          */
-        long double getStartY();
+        HSSUnit getStartY();
 
         /**
          *  Getter for the definition object of startY.
@@ -139,9 +139,9 @@ namespace AXR
 
         /**
          *  Getter for the actual value object of endX.
-         *  @return A long double that contains the actual value of endX.
+         *  @return A HSSUnit that contains the actual value of endX.
          */
-        long double getEndX();
+        HSSUnit getEndX();
 
         /**
          *  Getter for the definition object of endX.
@@ -164,9 +164,9 @@ namespace AXR
 
         /**
          *  Getter for the actual value object of endY.
-         *  @return A long double that contains the actual value of endY.
+         *  @return A HSSUnit that contains the actual value of endY.
          */
-        long double getEndY();
+        HSSUnit getEndY();
 
         /**
          *  Getter for the definition object of endY.
@@ -191,33 +191,33 @@ namespace AXR
 
     protected:
         //startX
-        long double startX;
+        HSSUnit startX;
         HSSParserNode::p dStartX;
         HSSObservable * observedStartX;
         HSSObservableProperty observedStartXProperty;
 
         //startY
-        long double startY;
+        HSSUnit startY;
         HSSParserNode::p dStartY;
         HSSObservable * observedStartY;
         HSSObservableProperty observedStartYProperty;
 
         //endX
-        long double endX;
+        HSSUnit endX;
         HSSParserNode::p dEndX;
         HSSObservable * observedEndX;
         HSSObservableProperty observedEndXProperty;
 
         //endY
-        long double endY;
+        HSSUnit endY;
         HSSParserNode::p dEndY;
         HSSObservable * observedEndY;
         HSSObservableProperty observedEndYProperty;
 
-        long double _setLDProperty(
+        HSSUnit _setLDProperty(
                                    void(HSSLinearGradient::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedProperty,
                                    HSSObservable * observedObject,
                                    HSSObservableProperty observedSourceProperty,

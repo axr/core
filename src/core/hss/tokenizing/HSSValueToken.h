@@ -47,6 +47,7 @@
 #include <boost/shared_ptr.hpp>
 #include "AXRGlobal.h"
 #include "HSSToken.h"
+#include "HSSUnits.h"
 
 #define VALUE_TOKEN(thetoken) (boost::static_pointer_cast<HSSValueToken>(thetoken))
 
@@ -59,18 +60,18 @@ namespace AXR
 
         HSSValueToken(HSSTokenType type, AXRString value, unsigned line, unsigned column);
         HSSValueToken(HSSTokenType type, char value, unsigned line, unsigned column);
-        HSSValueToken(HSSTokenType type, double long value, unsigned line, unsigned column);
+        HSSValueToken(HSSTokenType type, HSSUnit value, unsigned line, unsigned column);
         virtual ~HSSValueToken();
         AXRString getString();
-        double long getLong();
+        HSSUnit getLong();
         bool equals(HSSTokenType otherType, AXRString otherValue);
-        bool equals(HSSTokenType otherType, double long otherValue);
+        bool equals(HSSTokenType otherType, HSSUnit otherValue);
         AXRString toString();
         bool isNumeric();
 
     private:
         AXRString stringValue;
-        double long longValue;
+        HSSUnit longValue;
     };
 }
 

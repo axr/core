@@ -69,7 +69,7 @@ HSSRgb::p HSSRgb::whiteColor()
     return whiteColor;
 }
 
-HSSRgb::HSSRgb(double red, double green, double blue, double alpha)
+HSSRgb::HSSRgb(HSSUnit red, HSSUnit green, HSSUnit blue, HSSUnit alpha)
 : HSSObject(HSSObjectTypeRgb), red(red), green(green), blue(blue), alpha(alpha)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: creating rgb object");
@@ -180,7 +180,7 @@ void HSSRgb::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
 }
 
-double HSSRgb::getRed()
+HSSUnit HSSRgb::getRed()
 {
     return this->red;
 }
@@ -203,7 +203,7 @@ void HSSRgb::redChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** redChanged unimplemented ****************************");
 }
 
-double HSSRgb::getGreen()
+HSSUnit HSSRgb::getGreen()
 {
     return this->green;
 }
@@ -226,7 +226,7 @@ void HSSRgb::greenChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** greenChanged unimplemented ****************************");
 }
 
-double HSSRgb::getBlue()
+HSSUnit HSSRgb::getBlue()
 {
     return this->blue;
 }
@@ -249,7 +249,7 @@ void HSSRgb::blueChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** blueChanged unimplemented ****************************");
 }
 
-double HSSRgb::getAlpha()
+HSSUnit HSSRgb::getAlpha()
 {
     return this->alpha;
 }
@@ -272,16 +272,16 @@ void HSSRgb::alphaChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** alphaChanged unimplemented ****************************");
 }
 
-long double HSSRgb::_setLDProperty(
+HSSUnit HSSRgb::_setLDProperty(
                                    void(HSSRgb::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty
                                    )
 {
-    long double ret;
+    HSSUnit ret;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)

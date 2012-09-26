@@ -388,10 +388,10 @@ void HSSMargin::leftChanged(AXR::HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyLeft, &this->left);
 }
 
-long double HSSMargin::_setLDProperty(
+HSSUnit HSSMargin::_setLDProperty(
                                       void(HSSMargin::*callback)(HSSObservableProperty property, void* data),
                                       HSSParserNode::p value,
-                                      long double percentageBase,
+                                      HSSUnit percentageBase,
                                       HSSObservableProperty observedProperty,
                                       HSSObservable * observedObject,
                                       HSSObservableProperty observedSourceProperty,
@@ -400,7 +400,7 @@ long double HSSMargin::_setLDProperty(
                                       const std::vector<HSSDisplayObject::p> * scope
                                       )
 {
-    long double ret;
+    HSSUnit ret;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)
@@ -459,7 +459,7 @@ long double HSSMargin::_setLDProperty(
         boost::any remoteValue = fnct->evaluate();
         try
         {
-            ret = boost::any_cast<long double>(remoteValue);
+            ret = boost::any_cast<HSSUnit>(remoteValue);
         }
         catch (boost::bad_any_cast &)
         {

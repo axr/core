@@ -159,10 +159,10 @@ namespace AXR
         HSSUnit cornerTL, cornerTR, cornerBR, cornerBL;
 
     private:
-        long double _setLDProperty(
+        HSSUnit _setLDProperty(
                                    void(HSSRoundedRect::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedProperty,
                                    HSSObservable * observedObject,
                                    HSSObservableProperty observedSourceProperty,

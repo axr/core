@@ -115,7 +115,7 @@ AXRString HSSExpression::expressionTypeStringRepresentation(HSSExpressionType ty
     return types[type];
 }
 
-long double HSSExpression::evaluate()
+HSSUnit HSSExpression::evaluate()
 {
     if (this->isDirty())
     {
@@ -286,7 +286,7 @@ void HSSExpression::propertyChanged(HSSObservableProperty property, void* data)
 {
     if (property == this->percentageObservedProperty)
     {
-        long double newPercentageBase = *(long double *) data;
+        HSSUnit newPercentageBase = *(HSSUnit *) data;
         this->setPercentageBase(newPercentageBase);
         std_log1("property of expression changed");
         this->notifyObservers(HSSObservablePropertyValue, NULL);
@@ -305,14 +305,14 @@ void HSSExpression::leftChanged(HSSObservableProperty property, void* data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeFunctionCall:
     {
-        this->leftval = *(long double*) data;
+        this->leftval = *(HSSUnit*) data;
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p leftPercentage = boost::static_pointer_cast<HSSPercentageConstant > (this->getLeft());
-        this->leftval = leftPercentage->getValue(*(long double*) data);
+        this->leftval = leftPercentage->getValue(*(HSSUnit*) data);
         break;
     }
 
@@ -333,14 +333,14 @@ void HSSExpression::rightChanged(HSSObservableProperty property, void* data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeFunctionCall:
     {
-        this->rightval = *(long double*) data;
+        this->rightval = *(HSSUnit*) data;
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
         HSSPercentageConstant::p rightPercentage = boost::static_pointer_cast<HSSPercentageConstant > (this->getRight());
-        this->rightval = rightPercentage->getValue(*(long double*) data);
+        this->rightval = rightPercentage->getValue(*(HSSUnit*) data);
         break;
     }
 
@@ -362,17 +362,17 @@ bool HSSExpression::isDirty()
     return this->_isDirty;
 }
 
-void HSSExpression::setValue(long double newValue)
+void HSSExpression::setValue(HSSUnit newValue)
 {
     this->_value = newValue;
 }
 
-long double HSSExpression::getValue()
+HSSUnit HSSExpression::getValue()
 {
     return this->_value;
 }
 
-void HSSExpression::setPercentageBase(long double value)
+void HSSExpression::setPercentageBase(HSSUnit value)
 {
     this->percentageBase = value;
 

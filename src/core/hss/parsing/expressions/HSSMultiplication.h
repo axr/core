@@ -84,7 +84,7 @@ namespace AXR
          */
         virtual ~HSSMultiplication();
 
-        long double calculate(long double leftval, long double rightval);
+        HSSUnit calculate(HSSUnit leftval, HSSUnit rightval);
 
     private:
         virtual HSSClonable::p cloneImpl() const;

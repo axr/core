@@ -87,11 +87,11 @@ namespace AXR
         /**
          *  The actual implementation of the operation.
          *
-         *  @param leftval  A long double containing the dividend.
-         *  @param rightval A long double containing the divisor.
-         *  @return A long double containing the quotient of the division.
+         *  @param leftval  A HSSUnit containing the dividend.
+         *  @param rightval A HSSUnit containing the divisor.
+         *  @return A HSSUnit containing the quotient of the division.
          */
-        long double calculate(long double leftval, long double rightval);
+        HSSUnit calculate(HSSUnit leftval, HSSUnit rightval);
     private:
         virtual HSSClonable::p cloneImpl() const;
     };

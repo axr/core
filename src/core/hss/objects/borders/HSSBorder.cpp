@@ -204,16 +204,16 @@ void HSSBorder::sizeChanged(AXR::HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-long double HSSBorder::_setLDProperty(
+HSSUnit HSSBorder::_setLDProperty(
                                       void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
                                       HSSParserNode::p value,
-                                      long double percentageBase,
+                                      HSSUnit percentageBase,
                                       HSSObservableProperty observedSourceProperty,
                                       HSSObservable * &observedStore,
                                       HSSObservableProperty &observedStoreProperty
                                       )
 {
-    long double ret;
+    HSSUnit ret;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)

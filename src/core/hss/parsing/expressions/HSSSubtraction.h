@@ -86,11 +86,11 @@ namespace AXR
         /**
          *  The actual implementation of the operation.
          *
-         *  @param leftval  A long double containing the value from which should be subtracted.
-         *  @param rightval A long double containing the value to be subtracted.
-         *  @return A long double containing result of the subtraction.
+         *  @param leftval  A HSSUnit containing the value from which should be subtracted.
+         *  @param rightval A HSSUnit containing the value to be subtracted.
+         *  @return A HSSUnit containing result of the subtraction.
          */
-        long double calculate(long double leftval, long double rightval);
+        HSSUnit calculate(HSSUnit leftval, HSSUnit rightval);
 
     private:
         virtual HSSClonable::p cloneImpl() const;

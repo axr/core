@@ -161,9 +161,9 @@ namespace AXR
 
         /**
          *  Getter for the actual value of balance.
-         *  @return A long double containing the calculated value of balance.
+         *  @return A HSSUnit containing the calculated value of balance.
          */
-        long double getBalance();
+        HSSUnit getBalance();
 
         /**
          *  Getter for the definition object of balance.
@@ -235,7 +235,7 @@ namespace AXR
         HSSObservableProperty observedEndColorProperty;
 
         //balance
-        long double balance;
+        HSSUnit balance;
         HSSParserNode::p dBalance;
         HSSObservable * observedBalance;
         HSSObservableProperty observedBalanceProperty;
@@ -246,10 +246,10 @@ namespace AXR
         HSSObservableProperty observedColorStopsProperty;
         std::vector<HSSObject::p> colorStops;
 
-        long double _setLDProperty(
+        HSSUnit _setLDProperty(
                                    void(HSSGradient::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
-                                   long double percentageBase,
+                                   HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty
