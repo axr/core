@@ -61,7 +61,7 @@ XMLParser::~XMLParser()
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "XMLParser: destroying XML parser");
 }
 
-bool XMLParser::loadFile(AXRFile::p file)
+bool XMLParser::loadFile(AXRBuffer::p file)
 {
     if (!controller)
     {

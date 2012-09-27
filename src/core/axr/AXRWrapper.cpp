@@ -71,7 +71,7 @@ AXRWrapper::~AXRWrapper()
 {
 }
 
-AXRFile::p AXRWrapper::getFile(AXRString url)
+AXRBuffer::p AXRWrapper::getFile(AXRString url)
 {
     QUrl u(url);
     if (u.isValid())
@@ -79,7 +79,7 @@ AXRFile::p AXRWrapper::getFile(AXRString url)
         if (u.scheme() == "file")
         {
             QFileInfo fi(u.toLocalFile());
-            AXRFile::p ret = AXRFile::p(new AXRFile(fi));
+            AXRBuffer::p ret = AXRBuffer::p(new AXRBuffer(fi));
             if (!fi.exists())
             {
                 throw AXRError::p(new AXRError("AXRWrapper", "the file " + url + " doesn't exist"));
@@ -97,7 +97,7 @@ AXRFile::p AXRWrapper::getFile(AXRString url)
         }
     }
 
-    return AXRFile::p(new AXRFile());
+    return AXRBuffer::p(new AXRBuffer());
 }
 
 bool AXRWrapper::needsDisplay() const
@@ -110,7 +110,7 @@ void AXRWrapper::setNeedsDisplay(bool newValue)
     this->_needsDisplay = newValue;
 }
 
-AXRFile::p AXRWrapper::createDummyXML(AXRString stylesheet)
+AXRBuffer::p AXRWrapper::createDummyXML(AXRString stylesheet)
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: creating dummy XML file for HSS file " + stylesheet);
 
@@ -118,13 +118,13 @@ AXRFile::p AXRWrapper::createDummyXML(AXRString stylesheet)
     if (url.isValid())
     {
         AXRString dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" src=\"file://" + stylesheet + "\" version=\"1.0\"?><root></root>";
-        return AXRFile::p(new AXRFile(dummyXML.toUtf8()));
+        return AXRBuffer::p(new AXRBuffer(dummyXML.toUtf8()));
     }
     else
     {
         // TODO: "Not a valid URL"
         AXRError::p(new AXRError("AXRWrapper", "Could not find a slash in the file path"))->raise();
-        return AXRFile::p(new AXRFile());
+        return AXRBuffer::p(new AXRBuffer());
     }
 }
 
@@ -165,7 +165,7 @@ bool AXRWrapper::loadXMLFile(AXRString xmlfilepath)
     AXRString fullpath = "file://" + xmlfilepath;
     try
     {
-        AXRFile::p theFile = this->getFile(fullpath);
+        AXRBuffer::p theFile = this->getFile(fullpath);
         core->setFile(theFile);
 
     }
@@ -384,7 +384,7 @@ void AXRTestThread::operator () ()
         XMLParser::p parser = core->getParserXML();
         AXRString fullPath = "file://" + this->filePath;
         HSSContainer::p status = this->status;
-        AXRFile::p testsFile = wrapper->getFile(fullPath);
+        AXRBuffer::p testsFile = wrapper->getFile(fullPath);
         bool loadingSuccess = parser->loadFile(testsFile);
         if (loadingSuccess)
         {
@@ -494,7 +494,7 @@ void AXRTestProducer::operator () ()
     //load the "expected" file
     if (testLoaded)
     {
-        AXRFile::p expectedFile = this->wrapper->getFile("file://" + this->basePath + "/" + test[1]);
+        AXRBuffer::p expectedFile = this->wrapper->getFile("file://" + this->basePath + "/" + test[1]);
         if (!expectedFile->isValid())
         {
             std_log("could not load file with expected results");

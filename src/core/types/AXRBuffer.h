@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
-#ifndef AXRFILE_H
-#define AXRFILE_H
+#ifndef AXRBUFFER_H
+#define AXRBUFFER_H
 
 #include <boost/shared_ptr.hpp>
 #include <QByteArray>
@@ -54,30 +54,29 @@
 namespace AXR
 {
     /**
-     *  @brief This class encapsulates a representation of a file (.xml or .hss)
-     *  to be used inside the parsers. While this class holds the buffer to the
-     *  data, the actual loading of the data is up to the OS-specific wrapper.
+     *  @brief Provides an array of bytes and references to the name of the file
+     *  it was loaded from.
      */
-    class AXR_API AXRFile
+    class AXR_API AXRBuffer
     {
     public:
         /**
          *  The shared pointer to a file.
          */
-        typedef boost::shared_ptr<AXRFile> p;
+        typedef boost::shared_ptr<AXRBuffer> p;
 
         /**
          *  Creates a new instance of an in-memory buffer.
          */
-        AXRFile();
-        AXRFile(const QByteArray &data);
-        AXRFile(const QFileInfo &filePath);
-        AXRFile(const QFileInfo &filePath, const QByteArray &data);
+        AXRBuffer();
+        AXRBuffer(const QByteArray &data);
+        AXRBuffer(const QFileInfo &filePath);
+        AXRBuffer(const QFileInfo &filePath, const QByteArray &data);
 
         /**
          *  Destructor.
          */
-        virtual ~AXRFile();
+        virtual ~AXRBuffer();
 
         QUrl url() const;
 
@@ -96,14 +95,14 @@ namespace AXR
 
         /**
          *  Getter for the buffer where the contents of the file will be stored.
-         *  @return A char * pointer to the buffer.
+         *  @return A reference to the internal buffer.
          */
         const QByteArray& getBuffer() const;
 
         bool isValid() const;
 
         /**
-         *  @return A textual representation of the file.
+         *  @return A textual representation of the buffer.
          */
         AXRString toString() const;
 

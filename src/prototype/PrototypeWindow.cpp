@@ -219,7 +219,7 @@ void PrototypeWindow::listXmlElements()
         QFileInfo fi(qfile);
         qfile.open(QIODevice::ReadOnly);
 
-        AXRFile::p f(new AXRFile(fi));
+        AXRBuffer::p f(new AXRBuffer(fi));
 
         AXRController *controller = new AXRController();
         XMLParser parser(controller);
@@ -245,7 +245,7 @@ void PrototypeWindow::listHssStatements()
         QFileInfo fi(qfile);
         qfile.open(QIODevice::ReadOnly);
 
-        AXRFile::p f(new AXRFile(fi));
+        AXRBuffer::p f(new AXRBuffer(fi));
 
         AXRController controller;
         HSSParser hssparser(&controller, d->wrapper);
@@ -275,7 +275,7 @@ void PrototypeWindow::listHssTokens()
         QFileInfo fi(qfile);
         qfile.open(QIODevice::ReadOnly);
 
-        AXRFile::p f(new AXRFile(fi));
+        AXRBuffer::p f(new AXRBuffer(fi));
 
         HSSTokenizer tokenizer;
         tokenizer.setFile(f);

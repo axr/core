@@ -41,21 +41,21 @@
  *
  ********************************************************************/
 
-#include "AXRFile.h"
+#include "AXRBuffer.h"
 
 using namespace AXR;
 
-AXRFile::AXRFile()
+AXRBuffer::AXRBuffer()
 : valid(false)
 {
 }
 
-AXRFile::AXRFile(const QByteArray &data)
+AXRBuffer::AXRBuffer(const QByteArray &data)
 : valid(true), buffer(data)
 {
 }
 
-AXRFile::AXRFile(const QFileInfo &filePath)
+AXRBuffer::AXRBuffer(const QFileInfo &filePath)
 {
     QFile file(filePath.canonicalFilePath());
     if (file.open(QIODevice::ReadOnly))
@@ -66,38 +66,38 @@ AXRFile::AXRFile(const QFileInfo &filePath)
     }
 }
 
-AXRFile::AXRFile(const QFileInfo &filePath, const QByteArray &data)
+AXRBuffer::AXRBuffer(const QFileInfo &filePath, const QByteArray &data)
 : valid(true), buffer(data), sourceUrl(filePath.canonicalFilePath())
 {
 }
 
-AXRFile::~AXRFile()
+AXRBuffer::~AXRBuffer()
 {
 }
 
-AXRString AXRFile::getFileName() const
+AXRString AXRBuffer::getFileName() const
 {
     QFileInfo fi(this->sourceUrl.toLocalFile());
     return fi.fileName();
 }
 
-AXRString AXRFile::getBasePath() const
+AXRString AXRBuffer::getBasePath() const
 {
     QFileInfo fi(this->sourceUrl.toLocalFile());
     return fi.canonicalPath();
 }
 
-const QByteArray& AXRFile::getBuffer() const
+const QByteArray& AXRBuffer::getBuffer() const
 {
     return this->buffer;
 }
 
-bool AXRFile::isValid() const
+bool AXRBuffer::isValid() const
 {
     return this->valid;
 }
 
-AXRString AXRFile::toString() const
+AXRString AXRBuffer::toString() const
 {
-    return "AXRFile:\nFilename: " + getFileName() + "\nBasepath: " + getBasePath() + "\n-------------------------\n";
+    return "AXRBuffer:\nFilename: " + getFileName() + "\nBasepath: " + getBasePath() + "\n-------------------------\n";
 }

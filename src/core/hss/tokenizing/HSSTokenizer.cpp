@@ -86,12 +86,12 @@ void HSSTokenizer::reset()
     this->preferHex = false;
 }
 
-void HSSTokenizer::setFile(AXRFile::p file)
+void HSSTokenizer::setFile(AXRBuffer::p file)
 {
     this->file = file;
 }
 
-AXRFile::p HSSTokenizer::getFile()
+AXRBuffer::p HSSTokenizer::getFile()
 {
     return this->file;
 }

@@ -148,8 +148,8 @@ void HSSRequest::fire()
             AXRController::p controller = AXRController::p(new AXRController());
             XMLParser::p xmlParser(new XMLParser(controller.get()));
             HSSParser::p hssParser(new HSSParser(controller.get(), wrapper));
-            AXRFile::p baseFile = core->getFile();
-            AXRFile::p newFile;
+            AXRBuffer::p baseFile = core->getFile();
+            AXRBuffer::p newFile;
             try
             {
                 newFile = wrapper->getFile("file://" + baseFile->getBasePath() + "/" + this->src);
@@ -194,7 +194,7 @@ void HSSRequest::fire()
                             {
                                 hssfilepath = "file://" + newFile->getBasePath() + "/" + hssfilename;
                             }
-                            AXRFile::p hssfile;
+                            AXRBuffer::p hssfile;
                             try
                             {
                                 hssfile = wrapper->getFile(hssfilepath);
@@ -240,7 +240,7 @@ void HSSRequest::fire()
 
             //                AXRCore::tp core = AXRCore::getInstance();
             //                AXRWrapper * wrapper = core->getWrapper();
-            //                AXRFile::p baseFile = core->getFile();
+            //                AXRBuffer::p baseFile = core->getFile();
             //
             //                bool loadingSuccess = wrapper->loadFile(baseFile->basePath+this->src, this->src);
             //                if(loadingSuccess){

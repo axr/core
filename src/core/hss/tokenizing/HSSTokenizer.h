@@ -46,7 +46,7 @@
 
 #include <vector>
 #include <boost/shared_array.hpp>
-#include "AXRFile.h"
+#include "AXRBuffer.h"
 #include "HSSToken.h"
 #include "HSSValueToken.h"
 
@@ -73,8 +73,8 @@ namespace AXR
         //this will reset all the properties of the tokenizer to default
         void reset();
 
-        void setFile(AXRFile::p file);
-        AXRFile::p getFile();
+        void setFile(AXRBuffer::p file);
+        AXRBuffer::p getFile();
 
         //reads a the next character and stores it, also keeps track of the position in the buffer
         //it will also set the corresponding state if the end of the buffer is reached, but expects
@@ -103,7 +103,7 @@ namespace AXR
         void setBufferLength(unsigned length);
 
     protected:
-        AXRFile::p file;
+        AXRBuffer::p file;
 
         //the current character that has been read
         char currentChar;

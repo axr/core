@@ -59,7 +59,7 @@ namespace AXR
         XMLParser(AXRController *theController);
         virtual ~XMLParser();
 
-        bool loadFile(AXRFile::p file);
+        bool loadFile(AXRBuffer::p file);
 
         AXRString getFilePath();
         AXRString getFileName();
@@ -67,7 +67,7 @@ namespace AXR
         AXRController *controller;
 
     private:
-        AXRFile::p file;
+        AXRBuffer::p file;
     };
 }
 

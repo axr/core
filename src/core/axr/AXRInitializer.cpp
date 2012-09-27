@@ -134,7 +134,7 @@ void AXRCore::run()
             {
                 hssfilepath = "file://" + this->file->getBasePath() + "/" + hssfilename;
             }
-            AXRFile::p hssfile;
+            AXRBuffer::p hssfile;
             try
             {
                 hssfile = this->wrapper->getFile(hssfilepath);
@@ -217,12 +217,12 @@ void AXRCore::setRender(AXRRender::p render)
     this->render = render;
 }
 
-AXRFile::p AXRCore::getFile()
+AXRBuffer::p AXRCore::getFile()
 {
     return this->file;
 }
 
-void AXRCore::setFile(AXRFile::p file)
+void AXRCore::setFile(AXRBuffer::p file)
 {
     this->file = file;
 }

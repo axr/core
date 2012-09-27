@@ -224,15 +224,15 @@ namespace AXR
         bool hasLoadedFile();
 
         /**
-         *  @return returns the current AXRFile that is opened. This can be either
+         *  @return returns the current AXRBuffer that is opened. This can be either
          *  an XML or an HSS file.
          */
-        AXRFile::p getFile();
+        AXRBuffer::p getFile();
         /**
-         *  Sets the current AXRFile to be used as the base document.
-         *  @param file     The AXRFile to store for later use.
+         *  Sets the current AXRBuffer to be used as the base document.
+         *  @param file     The AXRBuffer to store for later use.
          */
-        void setFile(AXRFile::p file);
+        void setFile(AXRBuffer::p file);
         /**
          *  @return a c++ pointer to the AXRWrapper
          */
@@ -309,7 +309,7 @@ namespace AXR
         AXRWrapper * wrapper;
         AXRRender::p render;
         AXRController::p controller;
-        AXRFile::p file;
+        AXRBuffer::p file;
 
         XMLParser::p parserXML;
         HSSParser::p parserHSS;

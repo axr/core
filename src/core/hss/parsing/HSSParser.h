@@ -48,7 +48,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <boost/unordered_set.hpp>
-#include "AXRFile.h"
+#include "AXRBuffer.h"
 #include "HSSCombinator.h"
 #include "HSSObjectDefinition.h"
 #include "HSSSimpleSelector.h"
@@ -127,9 +127,9 @@ namespace AXR
          *  to the beginning of the file and then, until done, loop over all statements found
          *  in the document.
          *
-         *  @param  file    A shared pointer to the AXRFile representing the HSS file.
+         *  @param  file    A shared pointer to the AXRBuffer representing the HSS file.
          */
-        bool loadFile(AXRFile::p file);
+        bool loadFile(AXRBuffer::p file);
 
         /**
          *  Reads the next statement in the document. This is called over and over again by loadFile().
@@ -469,9 +469,9 @@ namespace AXR
         unsigned column;
 
         AXRString basepath;
-        AXRFile::p currentFile;
+        AXRBuffer::p currentFile;
 
-        boost::unordered_set<AXRFile::p> loadedFiles;
+        boost::unordered_set<AXRBuffer::p> loadedFiles;
 
         HSSObject::p _genericContext;
         AXRString _lastObjectType;

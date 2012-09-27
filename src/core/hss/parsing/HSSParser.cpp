@@ -140,7 +140,7 @@ void HSSParser::reset()
 
 }
 
-bool HSSParser::loadFile(AXRFile::p file)
+bool HSSParser::loadFile(AXRBuffer::p file)
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, "HSSParser: loading file " + file->getFileName());
     axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->getBasePath() + "/" + file->getFileName());
@@ -267,7 +267,7 @@ bool HSSParser::readNextStatement()
             //save
             HSSTokenizer::p currentTokenizer = this->tokenizer;
             AXRString currentBasepath = this->basepath;
-            AXRFile::p currentFile = this->currentFile;
+            AXRBuffer::p currentFile = this->currentFile;
             unsigned currentLine = this->line;
             unsigned currentColumn = this->column;
             HSSToken::p currentCurrentToken = this->currentToken;
@@ -278,7 +278,7 @@ bool HSSParser::readNextStatement()
             this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
             this->line = 1;
             this->column = 1;
-            AXRFile::p theFile;
+            AXRBuffer::p theFile;
             try
             {
                 if (theInstr->getValue().startsWith(HSSFRAMEWORK_PROTOCOL))

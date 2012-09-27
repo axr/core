@@ -50,17 +50,12 @@
 #include <boost/thread/thread.hpp>
 #include <QMap>
 #include "AXRError.h"
-#include "AXRFile.h"
+#include "AXRBuffer.h"
 #include "HSSContainer.h"
 #include "HSSObservableProperties.h"
 
 namespace AXR
 {
-    /**
-     *  @todo are we going to use this?
-     */
-    typedef unsigned AXRFileHandle;
-
     class AXRCore;
 
     /**
@@ -86,11 +81,11 @@ namespace AXR
          */
         virtual ~AXRWrapper();
         /**
-         *  Creates a AXRFile representation from the url you provide.
+         *  Creates a AXRBuffer representation from the url you provide.
          *  Subclasses should override this method with the OS specific implementation.
          *  @param url  A string containing the url to the file
          */
-        virtual AXRFile::p getFile(AXRString url);
+        virtual AXRBuffer::p getFile(AXRString url);
         virtual bool needsDisplay() const;
         /**
          *  This is to be called when something happens that needs to trigger a redraw.
@@ -111,9 +106,9 @@ namespace AXR
         /**
          *  This creates a string containing a basic XML document with 1 element called "root".
          *  It is used when a HSS file is loaded directly.
-         *  @return A shared pointer to the AXRFile representation of the basic XML document.
+         *  @return A shared pointer to the AXRBuffer representation of the basic XML document.
          */
-        AXRFile::p createDummyXML(AXRString stylesheet);
+        AXRBuffer::p createDummyXML(AXRString stylesheet);
         /**
          *  Loads the XML file at the path you provide.
          *  @param  xmlfilepath A string containing the path to the file on the local system.
@@ -169,7 +164,7 @@ namespace AXR
 
         void executeLayoutTests(HSSObservableProperty passnull, void*data);
 
-        QMap<AXRFileHandle, AXRFile::p> files;
+        QMap<unsigned, AXRBuffer::p> files;
 
     private:
         bool _isHSSOnly;
