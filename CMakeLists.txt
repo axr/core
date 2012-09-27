@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 
-if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
-    message(FATAL_ERROR "You should not build in-source. Use a directory outside the source tree or a subdirectory such as: ${CMAKE_SOURCE_DIR}/build")
-endif()
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_SOURCE_DIR}/cmake/solar ${CMAKE_MODULE_PATH})
+include(ForceOutBuild)
+include(ForceLatinPaths)
+
+project(AXR)
 
 # Default to debug builds
 if(NOT CMAKE_BUILD_TYPE)
@@ -11,23 +13,11 @@ endif()
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
 
-# Set the module path and include utility modules
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_SOURCE_DIR}/cmake/solar ${CMAKE_MODULE_PATH})
+# Include utility modules
 include(Utilities)
 include(Solar)
 include(Variables)
 include(Package)
-
-# Verify that the source/build paths do not contain any spaces
-check_pathnames()
-
-# Compiler detection
-check_clang()
-
-project(AXR)
-
-# Help out Windows
-use_qt_sdk_locations()
 
 # This list is for OS X application bundles to copy in all necessary icons
 file(GLOB axr_icon_SOURCES ${CMAKE_SOURCE_DIR}/share/icons/*.icns)
