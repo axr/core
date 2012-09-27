@@ -13,6 +13,8 @@ elseif(AXR_VERSION_PATCH GREATER 0)
     set(AXR_VERSION_STRING "${AXR_VERSION_STRING}.${AXR_VERSION_PATCH}")
 endif()
 
+git_append_shorttag(AXR_VERSION_STRING)
+
 set(AXR_VENDOR "AXR Project Contributors")
 set(AXR_DOMAIN "axr.vg")
 set(AXR_CONTACT "info@axr.vg")
