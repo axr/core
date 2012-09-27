@@ -100,11 +100,6 @@ AXRFile::p AXRWrapper::getFile(AXRString url)
     return AXRFile::p(new AXRFile());
 }
 
-void AXRWrapper::handleError(AXRError::cp theError)
-{
-    std_log(theError->toString());
-}
-
 bool AXRWrapper::needsDisplay() const
 {
     return this->_needsDisplay;

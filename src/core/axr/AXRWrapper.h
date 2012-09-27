@@ -91,12 +91,6 @@ namespace AXR
          *  @param url  A string containing the url to the file
          */
         virtual AXRFile::p getFile(AXRString url);
-        /**
-         *  The wrapper is responsible for handling the error (maybe show it in a console)
-         *  Subclasses should override this method with the OS specific implementation.
-         *  @param theError A shared pointer to the error that should be handled.
-         */
-        virtual void handleError(AXRError::cp theError);
         virtual bool needsDisplay() const;
         /**
          *  This is to be called when something happens that needs to trigger a redraw.

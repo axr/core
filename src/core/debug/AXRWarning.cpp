@@ -41,8 +41,6 @@
  *
  ********************************************************************/
 
-#include <sstream>
-#include "AXRDebugging.h"
 #include "AXRWarning.h"
 
 using namespace AXR;

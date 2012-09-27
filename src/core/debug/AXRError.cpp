@@ -41,11 +41,9 @@
  *
  ********************************************************************/
 
-#include <sstream>
 #include <QStringList>
 #include "AXRDebugging.h"
 #include "AXRError.h"
-#include "AXRInitializer.h"
 
 using namespace AXR;
 
@@ -65,9 +63,7 @@ AXRError::~AXRError()
 
 void AXRError::raise() const
 {
-    AXRCore::tp & core = AXRCore::getInstance();
-    AXRWrapper * wrapper = core->getWrapper();
-    wrapper->handleError(this->shared_from_this());
+    std_log(toString());
 }
 
 AXRString AXRError::toString() const
