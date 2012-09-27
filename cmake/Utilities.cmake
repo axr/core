@@ -36,12 +36,14 @@ function(install_bundle)
     endif()
 
     if(APPLE)
+        set(path_plugin_dir_name  "PlugIns")
         join_path(path_bundle     "${install_bundle_BUNDLE_DESTINATION};${install_bundle_TARGET}.app")
-        join_path(path_plugin_dir "${install_bundle_BUNDLE_DESTINATION};${install_bundle_TARGET}.app/Contents/MacOS")
-        join_path(path_qtconf_dir "${install_bundle_BUNDLE_DESTINATION};${install_bundle_TARGET}.app/Contents/MacOS")
+        join_path(path_plugin_dir "${install_bundle_BUNDLE_DESTINATION};${install_bundle_TARGET}.app/Contents/${path_plugin_dir_name}")
+        join_path(path_qtconf_dir "${install_bundle_BUNDLE_DESTINATION};${install_bundle_TARGET}.app/Contents/Resources")
     else()
+        set(path_plugin_dir_name  "plugins")
         join_path(path_bundle     "${install_bundle_RUNTIME_DESTINATION};${install_bundle_TARGET}${CMAKE_EXECUTABLE_SUFFIX}")
-        join_path(path_plugin_dir "${install_bundle_RUNTIME_DESTINATION}")
+        join_path(path_plugin_dir "${install_bundle_RUNTIME_DESTINATION};${path_plugin_dir_name}")
         join_path(path_qtconf_dir "${install_bundle_RUNTIME_DESTINATION}")
     endif()
 
@@ -52,7 +54,7 @@ function(install_bundle)
 
     # Install Qt plugins - can be culled using 'REGEX "..." EXCLUDE'
     # TODO: Install plugins according to which Qt libraries are linked to the target
-    install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION "${path_plugin_dir}/plugins" COMPONENT ${install_bundle_COMPONENT})
+    install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION "${path_plugin_dir}" COMPONENT ${install_bundle_COMPONENT})
 
     # TODO: Don't hardcode this here... some sort of autodetect perhaps?
     list(APPEND LIBDIRS "${QT_BINARY_DIR}") # DLLs are in the bin directory on Windows
@@ -67,9 +69,13 @@ function(install_bundle)
     list(APPEND LIBDIRS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}")
 
     # Make the application bundle standalone
+    # The empty.lproj file is needed to translate the strings in native OS X dialogs according to the selected system locale
     file(WRITE "${CMAKE_BINARY_DIR}/${install_bundle_TARGET}.Target.CPack.txt" "
-        file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${path_qtconf_dir}/qt.conf\" \"\")
-        file(GLOB_RECURSE QTPLUGINS \"\${CMAKE_INSTALL_PREFIX}/${path_plugin_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+        file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${path_qtconf_dir}/qt.conf\" \"[Paths]\nPlugins = ${path_plugin_dir_name}\n\")
+        if(APPLE)
+            file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${path_qtconf_dir}/empty.lproj\" \"\")
+        endif()
+        file(GLOB_RECURSE QTPLUGINS \"\${CMAKE_INSTALL_PREFIX}/${path_plugin_dir}/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
         include(BundleUtilities)
         fixup_bundle(\"\${CMAKE_INSTALL_PREFIX}/${path_bundle}\" \"\${QTPLUGINS}\" \"${LIBDIRS}\")
         ")
