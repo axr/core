@@ -231,7 +231,7 @@ bool AXRWrapper::loadHSSFile(AXRString hssfilepath)
     this->_currentLayoutStep = 0;
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
-    
+
     AXRCore::tp & core = AXRCore::getInstance();
     if (core->getFile())
     {
