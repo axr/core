@@ -1,0 +1,9 @@
+#import "i003-import-slave.hss";
+
+test
+{
+    background: background;
+
+    * { isA: box; }
+    :first { background: boxHighlight }
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Test FL001 - Basic
+    Created by Miro Keller on 2012-02-23.
+-->
+<?xml-stylesheet type="application/x-hss" src="fl001-basic.hss" version="0.4.7" ?>
+<test>
+    <elemA>(Elem A) This should be red</elemA>
+    <elemB>B</elemB>
+    <elemC>C</elemC>
+    <elemD>D</elemD>
+    <elemE>(Elem E) this should be green</elemE>
+</test>

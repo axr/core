@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Test I004 Delete
+    Created by Miro Keller on 2011-11-05.
+-->
+<?xml-stylesheet type="application/x-hss" src="i004-delete.hss" version="0.4.7" ?>
+<test>
+    <error>If you see this, this test has failed</error>
+    <success>Success!</success>
+</test>

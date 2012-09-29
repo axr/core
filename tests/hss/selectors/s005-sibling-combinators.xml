@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Test S001 - Simple Selectors
+    Created by Miro Keller on 2011-09-17.
+-->
+<?xml-stylesheet type="application/x-hss" src="s005-sibling-combinators.hss" version="0.4.7" ?>
+<test>
+    <child>(Child) This should be cyan</child>
+    <child>(Child) This should be blue</child>
+    <child2>(Child2) This should be yellow</child2>
+    <child2>(Child2) This should be green</child2>
+</test>

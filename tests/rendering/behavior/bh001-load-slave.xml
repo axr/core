@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Test BH001 Load slave
+    Created by Miro Keller on 2011-11-05.
+-->
+<?xml-stylesheet type="application/x-hss" src="bh001-load-slave.hss" version="0.4.8" ?>
+<slave>
+    <message>Success!</message>
+    <tip>Click here to return to the previous page:</tip>
+    <button>go back</button>
+</slave>

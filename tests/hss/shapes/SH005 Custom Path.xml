@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
-    Test SH005 Custom Path
-    Created by Miro Keller on 2011-10-20.
--->
-<?xml-stylesheet type="application/x-hss" src="SH005 Custom Path.hss" version="0.4.7" ?>
-<test>
-    <shapeElement/>
-</test>
