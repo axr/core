@@ -150,7 +150,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
         {
             this->observedTop->removeObserver(this->observedTopProperty, HSSObservablePropertySize, this);
         }
-        this->top = this->_setLDProperty(
+        this->top = this->_evaluatePropertyValue(
                                          &HSSMargin::topChanged,
                                          value,
                                          100.,
@@ -164,7 +164,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
         {
             this->observedRight->removeObserver(this->observedRightProperty, HSSObservablePropertySize, this);
         }
-        this->right = this->_setLDProperty(
+        this->right = this->_evaluatePropertyValue(
                                            &HSSMargin::rightChanged,
                                            value,
                                            100.,
@@ -178,7 +178,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
         {
             this->observedBottom->removeObserver(this->observedBottomProperty, HSSObservablePropertySize, this);
         }
-        this->bottom = this->_setLDProperty(
+        this->bottom = this->_evaluatePropertyValue(
                                             &HSSMargin::bottomChanged,
                                             value,
                                             100.,
@@ -192,7 +192,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
         {
             this->observedLeft->removeObserver(this->observedLeftProperty, HSSObservablePropertySize, this);
         }
-        this->left = this->_setLDProperty(
+        this->left = this->_evaluatePropertyValue(
                                           &HSSMargin::leftChanged,
                                           value,
                                           100.,
@@ -230,7 +230,7 @@ void HSSMargin::setDTop(HSSParserNode::p value)
         {
             this->observedTop->removeObserver(this->observedTopProperty, HSSObservablePropertyTop, this);
         }
-        this->top = this->_setLDProperty(
+        this->top = this->_evaluatePropertyValue(
                                          &HSSMargin::topChanged,
                                          value,
                                          100.,
@@ -274,7 +274,7 @@ void HSSMargin::setDRight(HSSParserNode::p value)
         {
             this->observedRight->removeObserver(this->observedRightProperty, HSSObservablePropertyRight, this);
         }
-        this->right = this->_setLDProperty(
+        this->right = this->_evaluatePropertyValue(
                                            &HSSMargin::rightChanged,
                                            value,
                                            100.,
@@ -318,7 +318,7 @@ void HSSMargin::setDBottom(HSSParserNode::p value)
         {
             this->observedBottom->removeObserver(this->observedBottomProperty, HSSObservablePropertyBottom, this);
         }
-        this->bottom = this->_setLDProperty(
+        this->bottom = this->_evaluatePropertyValue(
                                             &HSSMargin::bottomChanged,
                                             value,
                                             100.,
@@ -362,7 +362,7 @@ void HSSMargin::setDLeft(HSSParserNode::p value)
         {
             this->observedLeft->removeObserver(this->observedLeftProperty, HSSObservablePropertyLeft, this);
         }
-        this->left = this->_setLDProperty(
+        this->left = this->_evaluatePropertyValue(
                                           &HSSMargin::leftChanged,
                                           value,
                                           100.,
@@ -388,7 +388,7 @@ void HSSMargin::leftChanged(AXR::HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyLeft, &this->left);
 }
 
-HSSUnit HSSMargin::_setLDProperty(
+HSSUnit HSSMargin::_evaluatePropertyValue(
                                       void(HSSMargin::*callback)(HSSObservableProperty property, void* data),
                                       HSSParserNode::p value,
                                       HSSUnit percentageBase,

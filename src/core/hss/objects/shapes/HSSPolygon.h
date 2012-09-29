@@ -150,7 +150,7 @@ namespace AXR
 
     private:
         HSSClonable::p cloneImpl() const;
-        HSSUnit _setLDProperty(
+        HSSUnit _evaluatePropertyValue(
                                    void(HSSPolygon::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
                                    HSSUnit percentageBase,

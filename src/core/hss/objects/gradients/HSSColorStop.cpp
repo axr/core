@@ -326,7 +326,7 @@ void HSSColorStop::setDPosition(HSSParserNode::p value)
     case HSSParserNodeTypePercentageConstant:
     case HSSParserNodeTypeExpression:
         this->dPosition = value;
-        this->position = this->_setLDProperty(
+        this->position = this->_evaluatePropertyValue(
                                               &HSSColorStop::positionChanged,
                                               value,
                                               1.,
@@ -416,7 +416,7 @@ void HSSColorStop::setDBalance(HSSParserNode::p value)
     case HSSParserNodeTypePercentageConstant:
     case HSSParserNodeTypeExpression:
         this->dBalance = value;
-        this->balance = this->_setLDProperty(
+        this->balance = this->_evaluatePropertyValue(
                                              &HSSColorStop::balanceChanged,
                                              value,
                                              1.,
@@ -488,7 +488,7 @@ void HSSColorStop::balanceChanged(AXR::HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-HSSUnit HSSColorStop::_setLDProperty(
+HSSUnit HSSColorStop::_evaluatePropertyValue(
                                          void(HSSColorStop::*callback)(HSSObservableProperty property, void* data),
                                          HSSParserNode::p value,
                                          HSSUnit percentageBase,

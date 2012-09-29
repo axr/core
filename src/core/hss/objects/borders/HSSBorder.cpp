@@ -139,7 +139,7 @@ void HSSBorder::setDSize(HSSParserNode::p value)
     case HSSParserNodeTypePercentageConstant:
     case HSSParserNodeTypeExpression:
         this->dSize = value;
-        this->size = this->_setLDProperty(
+        this->size = this->_evaluatePropertyValue(
                                           &HSSBorder::sizeChanged,
                                           value,
                                           18.,
@@ -204,7 +204,7 @@ void HSSBorder::sizeChanged(AXR::HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-HSSUnit HSSBorder::_setLDProperty(
+HSSUnit HSSBorder::_evaluatePropertyValue(
                                       void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
                                       HSSParserNode::p value,
                                       HSSUnit percentageBase,

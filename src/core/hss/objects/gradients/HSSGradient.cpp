@@ -531,7 +531,7 @@ void HSSGradient::setDBalance(HSSParserNode::p value)
     case HSSParserNodeTypePercentageConstant:
     case HSSParserNodeTypeExpression:
         this->dBalance = value;
-        this->balance = this->_setLDProperty(
+        this->balance = this->_evaluatePropertyValue(
                                              &HSSGradient::balanceChanged,
                                              value,
                                              1.,
@@ -752,7 +752,7 @@ void HSSGradient::colorStopsChanged(HSSObservableProperty source, void*data)
 
 }
 
-HSSUnit HSSGradient::_setLDProperty(
+HSSUnit HSSGradient::_evaluatePropertyValue(
                                         void(HSSGradient::*callback)(HSSObservableProperty property, void* data),
                                         HSSParserNode::p value,
                                         HSSUnit percentageBase,

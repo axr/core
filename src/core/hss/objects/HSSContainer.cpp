@@ -2390,7 +2390,7 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
         {
             scope = &(this->getChildren());
         }
-        this->contentAlignX = this->_setLDProperty(
+        this->contentAlignX = this->_evaluatePropertyValue(
                                                    &HSSContainer::contentAlignXChanged,
                                                    value,
                                                    this->width,
@@ -2504,7 +2504,7 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
         {
             scope = NULL;
         }
-        this->contentAlignY = this->_setLDProperty(
+        this->contentAlignY = this->_evaluatePropertyValue(
                                                    &HSSContainer::contentAlignYChanged,
                                                    value,
                                                    this->height,
@@ -2962,7 +2962,7 @@ void HSSContainer::setDefaults()
     this->setDTextAlign(HSSKeywordConstant::p(new HSSKeywordConstant("left")));
 }
 
-HSSUnit HSSContainer::_setLDProperty(
+HSSUnit HSSContainer::_evaluatePropertyValue(
                                          void(HSSContainer::*callback)(HSSObservableProperty property, void* data),
                                          HSSParserNode::p value,
                                          HSSUnit percentageBase,

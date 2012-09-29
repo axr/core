@@ -198,7 +198,7 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
     case HSSParserNodeTypePercentageConstant:
     case HSSParserNodeTypeExpression:
         this->dSides = value;
-        this->sides = floor(this->_setLDProperty(
+        this->sides = floor(this->_evaluatePropertyValue(
                                            &HSSPolygon::sidesChanged,
                                            value,
                                            1.,
@@ -296,7 +296,7 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
     case HSSParserNodeTypePercentageConstant:
     case HSSParserNodeTypeExpression:
         this->dAngle = value;
-        this->angle = this->_setLDProperty(
+        this->angle = this->_evaluatePropertyValue(
                                            &HSSPolygon::angleChanged,
                                            value,
                                            1.,
@@ -368,7 +368,7 @@ void HSSPolygon::angleChanged(HSSObservableProperty source, void*data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-HSSUnit HSSPolygon::_setLDProperty(
+HSSUnit HSSPolygon::_evaluatePropertyValue(
                                        void(HSSPolygon::*callback)(HSSObservableProperty property, void* data),
                                        HSSParserNode::p value,
                                        HSSUnit percentageBase,

@@ -497,7 +497,7 @@ namespace AXR
         void _setOuterHeight();
 
     private:
-        HSSUnit _setLDProperty(
+        HSSUnit _evaluatePropertyValue(
                                    void(HSSDisplayObject::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
                                    HSSUnit percentageBase,

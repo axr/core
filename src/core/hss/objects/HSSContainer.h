@@ -448,7 +448,7 @@ namespace AXR
         HSSContainer::p shared_from_this();
 
     private:
-        HSSUnit _setLDProperty(
+        HSSUnit _evaluatePropertyValue(
                                    void(HSSContainer::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
                                    HSSUnit percentageBase,

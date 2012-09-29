@@ -948,7 +948,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
         HSSContainer::p parentContainer = this->getParent();
         if (parentContainer)
         {
-            this->width = floor(this->_setLDProperty(
+            this->width = floor(this->_evaluatePropertyValue(
                                                      &HSSDisplayObject::widthChanged,
                                                      value,
                                                      parentContainer->innerWidth,
@@ -963,7 +963,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
         }
         else
         {
-            this->width = floor(this->_setLDProperty(
+            this->width = floor(this->_evaluatePropertyValue(
                                                      NULL,
                                                      value,
                                                      0,
@@ -1178,7 +1178,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         HSSContainer::p parentContainer = this->getParent();
         if (parentContainer)
         {
-            this->height = floor(this->_setLDProperty(
+            this->height = floor(this->_evaluatePropertyValue(
                                                       &HSSDisplayObject::heightChanged,
                                                       value,
                                                       parentContainer->innerHeight,
@@ -1193,7 +1193,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         }
         else
         {
-            this->height = floor(this->_setLDProperty(
+            this->height = floor(this->_evaluatePropertyValue(
                                                       NULL,
                                                       value,
                                                       0,
@@ -1398,7 +1398,7 @@ void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
         {
             scope = NULL;
         }
-        this->anchorX = this->_setLDProperty(
+        this->anchorX = this->_evaluatePropertyValue(
                                              &HSSDisplayObject::anchorXChanged,
                                              value,
                                              this->width,
@@ -1522,7 +1522,7 @@ void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
         {
             scope = NULL;
         }
-        this->anchorY = this->_setLDProperty(
+        this->anchorY = this->_evaluatePropertyValue(
                                              &HSSDisplayObject::anchorYChanged,
                                              value,
                                              this->width,
@@ -1992,7 +1992,7 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
         HSSContainer::p parentContainer = this->getParent();
         if (parentContainer)
         {
-            this->alignX = this->_setLDProperty(
+            this->alignX = this->_evaluatePropertyValue(
                                                 &HSSDisplayObject::alignXChanged,
                                                 value,
                                                 parentContainer->width,
@@ -2007,7 +2007,7 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
         }
         else
         {
-            this->alignX = this->_setLDProperty(
+            this->alignX = this->_evaluatePropertyValue(
                                                 NULL,
                                                 value,
                                                 0,
@@ -2135,7 +2135,7 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
         HSSContainer::p parentContainer = this->getParent();
         if (parentContainer)
         {
-            this->alignY = this->_setLDProperty(
+            this->alignY = this->_evaluatePropertyValue(
                                                 &HSSDisplayObject::alignYChanged,
                                                 value,
                                                 parentContainer->height,
@@ -2150,7 +2150,7 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
         }
         else
         {
-            this->alignY = this->_setLDProperty(
+            this->alignY = this->_evaluatePropertyValue(
                                                 NULL,
                                                 value,
                                                 0,
@@ -3659,7 +3659,7 @@ void HSSDisplayObject::setDefaults()
     this->setDVisible(newDVisible);
 }
 
-HSSUnit HSSDisplayObject::_setLDProperty(
+HSSUnit HSSDisplayObject::_evaluatePropertyValue(
                                              void(HSSDisplayObject::*callback)(HSSObservableProperty property, void* data),
                                              HSSParserNode::p value,
                                              HSSUnit percentageBase,

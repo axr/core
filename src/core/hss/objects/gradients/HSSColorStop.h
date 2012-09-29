@@ -176,7 +176,7 @@ namespace AXR
         HSSObservable * observedBalance;
         HSSObservableProperty observedBalanceProperty;
 
-        HSSUnit _setLDProperty(
+        HSSUnit _evaluatePropertyValue(
                                    void(HSSColorStop::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
                                    HSSUnit percentageBase,

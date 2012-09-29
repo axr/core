@@ -166,7 +166,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value)
         {
             this->observedTLCorner->removeObserver(this->observedTLCornerProperty, HSSObservablePropertyCorners, this);
         }
-        this->cornerTL = this->_setLDProperty(
+        this->cornerTL = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerTLChanged,
                                               value,
                                               100.,
@@ -180,7 +180,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value)
         {
             this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyCorners, this);
         }
-        this->cornerTR = this->_setLDProperty(
+        this->cornerTR = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerTRChanged,
                                               value,
                                               100.,
@@ -194,7 +194,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value)
         {
             this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyCorners, this);
         }
-        this->cornerBR = this->_setLDProperty(
+        this->cornerBR = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerBRChanged,
                                               value,
                                               100.,
@@ -208,7 +208,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value)
         {
             this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyCorners, this);
         }
-        this->cornerBL = this->_setLDProperty(
+        this->cornerBL = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerBLChanged,
                                               value,
                                               100.,
@@ -246,7 +246,7 @@ void HSSRoundedRect::setDLeft(HSSParserNode::p value)
         {
             this->observedTLCorner->removeObserver(this->observedTLCornerProperty, HSSObservablePropertyLeft, this);
         }
-        this->cornerTL = this->_setLDProperty(
+        this->cornerTL = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerTLChanged,
                                               value,
                                               100.,
@@ -260,7 +260,7 @@ void HSSRoundedRect::setDLeft(HSSParserNode::p value)
         {
             this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyLeft, this);
         }
-        this->cornerBL = this->_setLDProperty(
+        this->cornerBL = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerBLChanged,
                                               value,
                                               100.,
@@ -294,7 +294,7 @@ void HSSRoundedRect::setDLeftTop(HSSParserNode::p value)
         {
             this->observedTLCorner->removeObserver(this->observedTLCornerProperty, HSSObservablePropertyLeftTop, this);
         }
-        this->cornerTL = this->_setLDProperty(
+        this->cornerTL = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerTLChanged,
                                               value,
                                               100.,
@@ -327,7 +327,7 @@ void HSSRoundedRect::setDTop(HSSParserNode::p value)
         {
             this->observedTLCorner->removeObserver(this->observedTLCornerProperty, HSSObservablePropertyTop, this);
         }
-        this->cornerTL = this->_setLDProperty(
+        this->cornerTL = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerTLChanged,
                                               value,
                                               100.,
@@ -341,7 +341,7 @@ void HSSRoundedRect::setDTop(HSSParserNode::p value)
         {
             this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyTop, this);
         }
-        this->cornerTR = this->_setLDProperty(
+        this->cornerTR = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerTRChanged,
                                               value,
                                               100.,
@@ -375,7 +375,7 @@ void HSSRoundedRect::setDRightTop(HSSParserNode::p value)
         {
             this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyRightTop, this);
         }
-        this->cornerTR = this->_setLDProperty(
+        this->cornerTR = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerTRChanged,
                                               value,
                                               100.,
@@ -408,7 +408,7 @@ void HSSRoundedRect::setDRight(HSSParserNode::p value)
         {
             this->observedTRCorner->removeObserver(this->observedTRCornerProperty, HSSObservablePropertyRight, this);
         }
-        this->cornerTR = this->_setLDProperty(
+        this->cornerTR = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerTRChanged,
                                               value,
                                               100.,
@@ -422,7 +422,7 @@ void HSSRoundedRect::setDRight(HSSParserNode::p value)
         {
             this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyRight, this);
         }
-        this->cornerBR = this->_setLDProperty(
+        this->cornerBR = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerBRChanged,
                                               value,
                                               100.,
@@ -456,7 +456,7 @@ void HSSRoundedRect::setDRightBottom(HSSParserNode::p value)
         {
             this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyRightBottom, this);
         }
-        this->cornerBR = this->_setLDProperty(
+        this->cornerBR = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerBRChanged,
                                               value,
                                               100.,
@@ -489,7 +489,7 @@ void HSSRoundedRect::setDBottom(HSSParserNode::p value)
         {
             this->observedBRCorner->removeObserver(this->observedBRCornerProperty, HSSObservablePropertyBottom, this);
         }
-        this->cornerBR = this->_setLDProperty(
+        this->cornerBR = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerBRChanged,
                                               value,
                                               100.,
@@ -503,7 +503,7 @@ void HSSRoundedRect::setDBottom(HSSParserNode::p value)
         {
             this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyBottom, this);
         }
-        this->cornerBL = this->_setLDProperty(
+        this->cornerBL = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerBLChanged,
                                               value,
                                               100.,
@@ -537,7 +537,7 @@ void HSSRoundedRect::setDLeftBottom(HSSParserNode::p value)
         {
             this->observedBLCorner->removeObserver(this->observedBLCornerProperty, HSSObservablePropertyLeftBottom, this);
         }
-        this->cornerBL = this->_setLDProperty(
+        this->cornerBL = this->_evaluatePropertyValue(
                                               &HSSRoundedRect::cornerBLChanged,
                                               value,
                                               100.,
@@ -602,7 +602,7 @@ void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUni
     path.closeSubpath();
 }
 
-HSSUnit HSSRoundedRect::_setLDProperty(
+HSSUnit HSSRoundedRect::_evaluatePropertyValue(
                                            void(HSSRoundedRect::*callback)(HSSObservableProperty property, void* data),
                                            HSSParserNode::p value,
                                            HSSUnit percentageBase,

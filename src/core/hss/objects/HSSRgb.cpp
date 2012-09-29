@@ -188,7 +188,7 @@ HSSUnit HSSRgb::getRed()
 void HSSRgb::setDRed(HSSParserNode::p value)
 {
     this->dRed = value;
-    this->red = this->_setLDProperty(
+    this->red = this->_evaluatePropertyValue(
                                      &HSSRgb::redChanged,
                                      value,
                                      255.,
@@ -211,7 +211,7 @@ HSSUnit HSSRgb::getGreen()
 void HSSRgb::setDGreen(HSSParserNode::p value)
 {
     this->dGreen = value;
-    this->green = this->_setLDProperty(
+    this->green = this->_evaluatePropertyValue(
                                        &HSSRgb::greenChanged,
                                        value,
                                        255.,
@@ -234,7 +234,7 @@ HSSUnit HSSRgb::getBlue()
 void HSSRgb::setDBlue(HSSParserNode::p value)
 {
     this->dBlue = value;
-    this->blue = this->_setLDProperty(
+    this->blue = this->_evaluatePropertyValue(
                                       &HSSRgb::blueChanged,
                                       value,
                                       255.,
@@ -257,7 +257,7 @@ HSSUnit HSSRgb::getAlpha()
 void HSSRgb::setDAlpha(HSSParserNode::p value)
 {
     this->dAlpha = value;
-    this->alpha = this->_setLDProperty(
+    this->alpha = this->_evaluatePropertyValue(
                                        &HSSRgb::alphaChanged,
                                        value,
                                        255.,
@@ -272,7 +272,7 @@ void HSSRgb::alphaChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** alphaChanged unimplemented ****************************");
 }
 
-HSSUnit HSSRgb::_setLDProperty(
+HSSUnit HSSRgb::_evaluatePropertyValue(
                                    void(HSSRgb::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
                                    HSSUnit percentageBase,

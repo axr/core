@@ -208,7 +208,7 @@ namespace AXR
         HSSObservable * observedAlpha;
         HSSObservableProperty observedAlphaProperty;
 
-        HSSUnit _setLDProperty(
+        HSSUnit _evaluatePropertyValue(
                                    void(HSSRgb::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
                                    HSSUnit percentageBase,

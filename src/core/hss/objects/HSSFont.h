@@ -197,7 +197,7 @@ namespace AXR
         HSSObservableProperty observedWeightProperty;
 
 
-        HSSUnit _setLDProperty(
+        HSSUnit _evaluatePropertyValue(
                                    void(HSSFont::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
                                    HSSUnit percentageBase,

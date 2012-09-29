@@ -116,7 +116,7 @@ namespace AXR
         HSSObservable * observedSize;
         HSSObservableProperty observedSizeProperty;
 
-        HSSUnit _setLDProperty(
+        HSSUnit _evaluatePropertyValue(
                                    void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
                                    HSSUnit percentageBase,

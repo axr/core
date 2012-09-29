@@ -227,7 +227,7 @@ void HSSLinearGradient::setDStartX(HSSParserNode::p value)
             this->observedStartX->removeObserver(this->observedStartXProperty, HSSObservablePropertyStartX, this);
         }
 
-        this->startX = this->_setLDProperty(
+        this->startX = this->_evaluatePropertyValue(
                                             &HSSLinearGradient::startXChanged,
                                             value,
                                             this->getThisObj()->getWidth(),
@@ -297,7 +297,7 @@ void HSSLinearGradient::setDStartY(HSSParserNode::p value)
             this->observedStartY->removeObserver(this->observedStartYProperty, HSSObservablePropertyStartY, this);
         }
 
-        this->startY = this->_setLDProperty(
+        this->startY = this->_evaluatePropertyValue(
                                             &HSSLinearGradient::startYChanged,
                                             value,
                                             this->getThisObj()->getHeight(),
@@ -367,7 +367,7 @@ void HSSLinearGradient::setDEndX(HSSParserNode::p value)
             this->observedEndX->removeObserver(this->observedEndXProperty, HSSObservablePropertyEndX, this);
         }
 
-        this->endX = this->_setLDProperty(
+        this->endX = this->_evaluatePropertyValue(
                                           &HSSLinearGradient::endXChanged,
                                           value,
                                           this->getThisObj()->getWidth(),
@@ -437,7 +437,7 @@ void HSSLinearGradient::setDEndY(HSSParserNode::p value)
             this->observedEndY->removeObserver(this->observedEndYProperty, HSSObservablePropertyEndY, this);
         }
 
-        this->endY = this->_setLDProperty(
+        this->endY = this->_evaluatePropertyValue(
                                           &HSSLinearGradient::endYChanged,
                                           value,
                                           this->getThisObj()->getHeight(),
@@ -481,7 +481,7 @@ void HSSLinearGradient::endYChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-HSSUnit HSSLinearGradient::_setLDProperty(
+HSSUnit HSSLinearGradient::_evaluatePropertyValue(
                                               void(HSSLinearGradient::*callback)(HSSObservableProperty property, void* data),
                                               HSSParserNode::p value,
                                               HSSUnit percentageBase,

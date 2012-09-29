@@ -197,7 +197,7 @@ void HSSFont::setDSize(HSSParserNode::p value)
     }
 
     this->dSize = value;
-    this->size = this->_setLDProperty(
+    this->size = this->_evaluatePropertyValue(
                                       &HSSFont::sizeChanged,
                                       value,
                                       DEFAULT_SIZE,
@@ -407,7 +407,7 @@ void HSSFont::weightChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** weightChanged unimplemented ****************************");
 }
 
-HSSUnit HSSFont::_setLDProperty(
+HSSUnit HSSFont::_evaluatePropertyValue(
                                     void(HSSFont::*callback)(HSSObservableProperty property, void* data),
                                     HSSParserNode::p value,
                                     HSSUnit percentageBase,

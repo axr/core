@@ -246,7 +246,7 @@ namespace AXR
         HSSObservableProperty observedColorStopsProperty;
         std::vector<HSSObject::p> colorStops;
 
-        HSSUnit _setLDProperty(
+        HSSUnit _evaluatePropertyValue(
                                    void(HSSGradient::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
                                    HSSUnit percentageBase,

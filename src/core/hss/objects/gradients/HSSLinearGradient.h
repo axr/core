@@ -214,7 +214,7 @@ namespace AXR
         HSSObservable * observedEndY;
         HSSObservableProperty observedEndYProperty;
 
-        HSSUnit _setLDProperty(
+        HSSUnit _evaluatePropertyValue(
                                    void(HSSLinearGradient::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,
                                    HSSUnit percentageBase,
