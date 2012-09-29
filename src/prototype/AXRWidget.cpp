@@ -105,6 +105,7 @@ void AXRWidget::mouseMoveEvent(QMouseEvent *e)
     {
         HSSPoint thePoint(e->pos());
         root->handleEvent(AXR::HSSEventTypeMouseMove, (void*)&thePoint);
+        this->update();
     }
 }
 
@@ -115,6 +116,7 @@ void AXRWidget::mousePressEvent(QMouseEvent *e)
     {
         HSSPoint thePoint(e->pos());
         root->handleEvent(AXR::HSSEventTypeMouseDown, (void*)&thePoint);
+        this->update();
     }
 }
 
@@ -126,5 +128,6 @@ void AXRWidget::mouseReleaseEvent(QMouseEvent *e)
         HSSPoint thePoint(e->pos());
         root->handleEvent(AXR::HSSEventTypeMouseUp, (void*)&thePoint);
         root->handleEvent(AXR::HSSEventTypeClick, (void*)&thePoint);
+        this->update();
     }
 }
