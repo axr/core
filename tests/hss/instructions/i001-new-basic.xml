@@ -5,7 +5,4 @@
 -->
 <?xml-stylesheet type="application/x-hss" src="i001-new-basic.hss" version="0.4.7" ?>
 <test>
-    <child />
-    <child />
-    <child />
 </test>
