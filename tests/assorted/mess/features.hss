@@ -2,9 +2,9 @@
 @rgb {
     isA: baseColor;
 
-    &@rgb demoButtonBase { alpha: 20% }
-    &@rgb demoButtonHL { alpha: 10% }
-    &@rgb demoButtonSH { alpha: 30% }
+    & demoButtonBase { alpha: 20% }
+    & demoButtonHL { alpha: 10% }
+    & demoButtonSH { alpha: 30% }
 }
 
 #FFF5 demoButtonHL2;
@@ -31,10 +31,10 @@
     size: 1;
     color: demoButtonBase;
 
-    &@ demoButtonInnerBorder { color: demoButtonHL2 }
+    & demoButtonInnerBorder { color: demoButtonHL2 }
 }
 
-@ demoButton
+@container demoButton
 {
     background: demoButtonBg;
     shape: @roundedRect { corners: 10 };

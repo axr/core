@@ -1,6 +1,6 @@
 #30 mainBg;
 
-// @ separator
+// @container separator
 // {
 //     flow: no;
 //     height: 100%;
@@ -17,14 +17,14 @@
 //     }
 // }
 
-@ box
+@container box
 {
     width: 100;
     height: 100;
     background: #FFF4;
 }
 
-@ mainSidebar
+@container mainSidebar
 {
     width: 150;
     alignX: left;
