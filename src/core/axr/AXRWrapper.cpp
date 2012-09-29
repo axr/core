@@ -155,6 +155,10 @@ bool AXRWrapper::loadXMLFile(AXRString xmlfilepath)
     axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening XML document: ").append(xmlfilepath));
 
     this->_isHSSOnly = false;
+    this->_showLayoutSteps = false;
+    this->_currentLayoutStep = 0;
+    this->_currentLayoutTick = 0;
+    this->_currentLayoutChild = 0;
 
     AXRCore::tp & core = AXRCore::getInstance();
     if (core->getFile())
@@ -223,6 +227,11 @@ bool AXRWrapper::loadHSSFile(AXRString hssfilepath)
     axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening HSS document: ").append(hssfilepath));
 
     this->_isHSSOnly = true;
+    this->_showLayoutSteps = false;
+    this->_currentLayoutStep = 0;
+    this->_currentLayoutTick = 0;
+    this->_currentLayoutChild = 0;
+    
     AXRCore::tp & core = AXRCore::getInstance();
     if (core->getFile())
     {
