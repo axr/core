@@ -642,7 +642,7 @@ void HSSContainer::layout()
                                     else
                                     {
                                         displayGroup::p & currentPGroup = primaryGroups[j]->lines.back();
-                                        addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, false);
+                                        addedToGroup = this->_addChildToGroupIfNeeded(child, currentPGroup, this->directionPrimary, true);
                                         if (!addedToGroup && currentPGroup->complete)
                                         {
                                             //create new line
