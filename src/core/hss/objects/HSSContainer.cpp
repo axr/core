@@ -280,21 +280,23 @@ void HSSContainer::add(HSSDisplayObject::p child)
 
 void HSSContainer::remove(unsigned index)
 {
-    for (HSSDisplayObject::it it = this->children.begin(); it != this->children.end(); ++it)
+    for (unsigned i = 0, size = this->children.size(); i<size; ++i)
     {
-        HSSDisplayObject::p child = *it;
+        HSSDisplayObject::p child = this->children[i];
         if (child->getIndex() == index)
         {
-            this->children.erase(it);
+            this->children.erase(this->children.begin() + i);
+            --size;
         }
     }
 
-    for (HSSDisplayObject::it it = this->allChildren.begin(); it != this->allChildren.end(); ++it)
+    for (unsigned i = 0, size = this->allChildren.size(); i<size; ++i)
     {
-        HSSDisplayObject::p child = *it;
+        HSSDisplayObject::p child = this->allChildren[i];
         if (child->getIndex() == index)
         {
-            this->allChildren.erase(it);
+            this->allChildren.erase(this->allChildren.begin() + i);
+            --size;
         }
     }
 
