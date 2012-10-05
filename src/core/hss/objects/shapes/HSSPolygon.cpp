@@ -178,6 +178,9 @@ void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit wi
 
     // Create a polygon from the vertex list and add to the path
     path.addPolygon(QPolygonF(points));
+
+    // Close the path
+    path.closeSubpath();
 }
 
 unsigned int HSSPolygon::getSides()
