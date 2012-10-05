@@ -169,7 +169,7 @@ void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit wi
 
     // Build a list of points comprising the polygon vertices
     QVector<QPointF> points;
-    for (int i = 1; i <= this->sides; ++i)
+    for (unsigned int i = 1; i <= this->sides; ++i)
     {
         double px = radius.width() * cos(((2 * M_PI * i) / sides) + theta) + centerPoint.x();
         double py = radius.height() * sin(((2 * M_PI * i) / sides) + theta) + centerPoint.y();
