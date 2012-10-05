@@ -32,7 +32,7 @@ if(APPLE)
     install_bundle(TARGET ${TARGET_NAME_APP_COCOA}
         COMPONENT examples
         BUNDLE_DESTINATION Examples
-        RUNTIME_DESTINATION bin/examples
+        RUNTIME_DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_REL}/examples
     )
 else()
     add_custom_target(${TARGET_NAME_APP_COCOA} SOURCES ${cocoa_SOURCES})

@@ -34,7 +34,7 @@ if(SDL_FOUND)
     install_bundle(TARGET ${TARGET_NAME_APP_SDL}
         COMPONENT examples
         BUNDLE_DESTINATION Examples
-        RUNTIME_DESTINATION bin/examples
+        RUNTIME_DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_REL}/examples
     )
 else()
     message(STATUS "SDL was NOT found; will not build SDL example")
