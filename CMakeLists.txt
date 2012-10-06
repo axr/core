@@ -15,6 +15,12 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
+if("${CMAKE_BUILD_TYPE}" STREQUAL Release)
+    set(IS_RELEASE_BUILD TRUE)
+else()
+    set(IS_RELEASE_BUILD FALSE)
+endif()
+
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
 
 # Include utility modules
@@ -171,7 +177,11 @@ if(FANCY_TARGET_NAMES)
     add_custom_target("Tests" SOURCES ${tests_SOURCES})
 endif()
 
-if(AXR_BUILD_PROTOTYPE)
-    include(InstallRequiredSystemLibraries)
-    include(CPack)
+if(IS_RELEASE_BUILD)
+    if(AXR_BUILD_PROTOTYPE)
+        include(InstallRequiredSystemLibraries)
+        include(CPack)
+    endif()
+else()
+    install(CODE "message(FATAL_ERROR \"You cannot install or package debug builds\")")
 endif()

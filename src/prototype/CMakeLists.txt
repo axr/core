@@ -43,12 +43,14 @@ set_source_files_properties(${hss_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Re
 
 set_target_properties(${TARGET_NAME_APP_PROTOTYPE} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
 
-install(TARGETS ${TARGET_NAME_APP_PROTOTYPE}
-    BUNDLE DESTINATION . COMPONENT prototype
-    RUNTIME DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_REL} COMPONENT prototype
-)
+if(IS_RELEASE_BUILD)
+    install(TARGETS ${TARGET_NAME_APP_PROTOTYPE}
+        BUNDLE DESTINATION . COMPONENT prototype
+        RUNTIME DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_REL} COMPONENT prototype
+    )
 
-if(WIN32 OR APPLE)
-    install_qt4_executable("${TARGET_NAME_APP_PROTOTYPE}${CMAKE_USER_EXECUTABLE_SUFFIX}" "qtaccessiblewidgets qcncodecs qjpcodecs qkrcodecs qtwcodecs qsvgicon qgif qico qjpeg qmng qsvg qtiff" "" "${ALL_LIBRARY_DIRS}" "" "" prototype)
-    empty_lproj(${TARGET_NAME_APP_PROTOTYPE})
+    if(WIN32 OR APPLE)
+        install_qt4_executable("${TARGET_NAME_APP_PROTOTYPE}${CMAKE_USER_EXECUTABLE_SUFFIX}" "qtaccessiblewidgets qcncodecs qjpcodecs qkrcodecs qtwcodecs qsvgicon qgif qico qjpeg qmng qsvg qtiff" "" "${ALL_LIBRARY_DIRS}" "" "" prototype)
+        empty_lproj(${TARGET_NAME_APP_PROTOTYPE})
+    endif()
 endif()

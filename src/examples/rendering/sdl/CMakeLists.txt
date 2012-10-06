@@ -31,20 +31,22 @@ if(SDL_FOUND)
 
     set_target_properties(${TARGET_NAME_APP_SDL} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
 
-    install(TARGETS ${TARGET_NAME_APP_SDL}
-        BUNDLE DESTINATION Examples COMPONENT examples
-        RUNTIME DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_REL}/examples COMPONENT examples
-    )
+    if(IS_RELEASE_BUILD)
+        install(TARGETS ${TARGET_NAME_APP_SDL}
+            BUNDLE DESTINATION Examples COMPONENT examples
+            RUNTIME DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_REL}/examples COMPONENT examples
+        )
 
-    if(APPLE)
-        set(app_path Examples)
-    else()
-        set(app_path ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_REL}/examples)
-    endif()
+        if(APPLE)
+            set(app_path Examples)
+        else()
+            set(app_path ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_REL}/examples)
+        endif()
 
-    if(WIN32 OR APPLE)
-        install_qt4_executable("${app_path}/${TARGET_NAME_APP_SDL}${CMAKE_USER_EXECUTABLE_SUFFIX}" "qtaccessiblewidgets qcncodecs qjpcodecs qkrcodecs qtwcodecs qsvgicon qgif qico qjpeg qmng qsvg qtiff" "" "${ALL_LIBRARY_DIRS}" "" "" examples)
-        empty_lproj(${app_path}/${TARGET_NAME_APP_SDL})
+        if(WIN32 OR APPLE)
+            install_qt4_executable("${app_path}/${TARGET_NAME_APP_SDL}${CMAKE_USER_EXECUTABLE_SUFFIX}" "qtaccessiblewidgets qcncodecs qjpcodecs qkrcodecs qtwcodecs qsvgicon qgif qico qjpeg qmng qsvg qtiff" "" "${ALL_LIBRARY_DIRS}" "" "" examples)
+            empty_lproj(${app_path}/${TARGET_NAME_APP_SDL})
+        endif()
     endif()
 else()
     message(STATUS "SDL was NOT found; will not build SDL example")
