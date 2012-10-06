@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 2.8)
+if(WIN32 OR APPLE)
+    cmake_minimum_required(VERSION 2.8.7)
+else()
+    cmake_minimum_required(VERSION 2.8)
+endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_SOURCE_DIR}/cmake/solar ${CMAKE_MODULE_PATH})
 include(ForceOutBuild)
@@ -18,6 +22,7 @@ include(Utilities)
 include(Solar)
 include(Variables)
 include(Package)
+include(DeployQt4)
 
 # This list is for OS X application bundles to copy in all necessary icons
 file(GLOB axr_icon_SOURCES ${CMAKE_SOURCE_DIR}/share/icons/*.icns)
@@ -113,6 +118,12 @@ if(AXR_BUILD_PROTOTYPE)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_RUNTIME_OUTPUT_DIRECTORY_REL})
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_REL})
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_LIBRARY_OUTPUT_DIRECTORY_REL})
+
+    list(APPEND ALL_LIBRARY_DIRS "${Boost_LIBRARY_DIRS}")
+    list(APPEND ALL_LIBRARY_DIRS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+    list(APPEND ALL_LIBRARY_DIRS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}")
+    list(APPEND ALL_LIBRARY_DIRS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+    list(APPEND ALL_LIBRARY_DIRS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}")
 
     set(TARGET_NAME_APP_COCOA Cocoa)
     set(TARGET_NAME_APP_SDL SDL)
