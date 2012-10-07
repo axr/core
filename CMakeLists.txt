@@ -37,6 +37,7 @@ endif()
 # Include utility modules
 include(Utilities)
 include(Solar)
+include(FindDependencies)
 include(Variables)
 include(Package)
 include(DeployQt4)
@@ -57,24 +58,6 @@ if (found_vs GREATER -1 OR found_blocks GREATER -1 OR "${CMAKE_GENERATOR}" STREQ
 endif()
 
 if(AXR_BUILD_PROTOTYPE)
-    find_package(Qt4 4.8 COMPONENTS QtCore QtGui QtXml REQUIRED)
-    include(${QT_USE_FILE})
-    add_definitions(${QT_DEFINITIONS} -DNOMINMAX)
-
-    # Don't use static Boost because this will result in relocation errors due to
-    # Boost not being compiled with -fPIC (at least on 64-bit Linux)
-    if(MSVC)
-        set(Boost_USE_STATIC_LIBS ON)
-        link_directories(${Boost_LIBRARY_DIRS})
-    else()
-        set(Boost_USE_STATIC_LIBS OFF)
-    endif()
-    set(Boost_USE_MULTITHREADED ON)
-    set(Boost_USE_STATIC_RUNTIME OFF)
-
-    find_package(Boost COMPONENTS thread system program_options REQUIRED)
-    include_directories(${Boost_INCLUDE_DIRS})
-
     if(AXR_ALL_WARNINGS)
         if(CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCXX)
             add_definitions(-Wall -pedantic)
