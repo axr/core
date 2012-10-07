@@ -10,13 +10,17 @@ include(ForceLatinPaths)
 
 project(AXR)
 
-# Default to debug builds
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
-elseif("${CMAKE_BUILD_TYPE}" STREQUAL Release)
+if("${CMAKE_BUILD_TYPE}" STREQUAL Release)
     set(IS_RELEASE_BUILD TRUE)
+    set(IS_DEBUG_BUILD FALSE)
 else()
+    # Default to debug builds
+    if(NOT CMAKE_BUILD_TYPE)
+        set(CMAKE_BUILD_TYPE Debug)
+    endif()
+
     set(IS_RELEASE_BUILD FALSE)
+    set(IS_DEBUG_BUILD TRUE)
 endif()
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
