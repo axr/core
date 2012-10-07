@@ -90,7 +90,7 @@ if(WIN32)
 endif()
 
 if(APPLE)
-    set(CPACK_GENERATOR "DragNDrop;PackageMaker")
+    set(CPACK_GENERATOR "PackageMaker")
     set(CPACK_DMG_VOLUME_NAME "${AXR_PACKAGE_NAME} ${AXR_VERSION_STRING}")
     set(CPACK_OSX_PACKAGE_VERSION ${CMAKE_OSX_DEPLOYMENT_TARGET})
 endif()
