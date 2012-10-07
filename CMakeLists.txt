@@ -27,6 +27,7 @@ option(AXR_ALL_WARNINGS "Display as many warnings as possible" OFF)
 option(AXR_BUILD_PROTOTYPE "Builds the prototype including libraries and demo app" ON)
 option(AXR_BUILD_DOCS "Build documentation using doxygen" ON)
 option(AXR_BUILD_EXAMPLES "Builds example programs showing usage of the AXR library" OFF)
+option(AXR_BUILD_FRAMEWORKS "Build AXR libraries as frameworks on OS X" ON)
 option(BUILD_UNIVERSAL_BINS "Build OS X universal binaries (i386 + x86_64)" ${IS_RELEASE_BUILD})
 option(BUILD_SHARED_LIBS "Builds shared instead of static libraries" ON)
 
