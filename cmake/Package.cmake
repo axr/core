@@ -95,7 +95,7 @@ if(APPLE)
     set(CPACK_OSX_PACKAGE_VERSION ${CMAKE_OSX_DEPLOYMENT_TARGET})
 endif()
 
-if(__DEB)
+if(DPKG_FOUND)
     set(CPACK_GENERATOR "DEB")
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${AXR_VENDOR} <${AXR_CONTACT}>")
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt-sdk (>= 4.8), libboost") # TODO: probably the wrong Boost package
@@ -103,7 +103,7 @@ if(__DEB)
     set(CPACK_DEBIAN_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}+lenny1")
 endif()
 
-if(__RPM)
+if(RPMBUILD_FOUND)
     set(CPACK_GENERATOR "RPM")
     set(CPACK_RPM_PACKAGE_REQUIRES "qt >= 4.8")
     set(CPACK_RPM_PACKAGE_PROVIDES "axr-sdk")
