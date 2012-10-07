@@ -13,15 +13,26 @@ project(AXR)
 # Default to debug builds
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
-endif()
-
-if("${CMAKE_BUILD_TYPE}" STREQUAL Release)
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL Release)
     set(IS_RELEASE_BUILD TRUE)
 else()
     set(IS_RELEASE_BUILD FALSE)
 endif()
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
+
+# Options
+option(AXR_NO_DEPRECATED_ENUMS "Disallow use of deprecated enum members" OFF)
+option(AXR_ALL_WARNINGS "Display as many warnings as possible" OFF)
+option(AXR_BUILD_PROTOTYPE "Builds the prototype including libraries and demo app" ON)
+option(AXR_BUILD_DOCS "Build documentation using doxygen" ON)
+option(AXR_BUILD_EXAMPLES "Builds example programs showing usage of the AXR library" OFF)
+option(BUILD_UNIVERSAL_BINS "Build OS X universal binaries (i386 + x86_64)" ${IS_RELEASE_BUILD})
+option(BUILD_SHARED_LIBS "Builds shared instead of static libraries" ON)
+
+if(BUILD_UNIVERSAL_BINS)
+    set(CMAKE_OSX_ARCHITECTURES "i386;x86_64")
+endif()
 
 # Include utility modules
 include(Utilities)
@@ -44,22 +55,6 @@ string(FIND "${CMAKE_GENERATOR}" "CodeBlocks" found_blocks)
 if (found_vs GREATER -1 OR found_blocks GREATER -1 OR "${CMAKE_GENERATOR}" STREQUAL "Xcode")
     set(FANCY_TARGET_NAMES ON)
 endif()
-
-option(AXR_NO_DEPRECATED_ENUMS "Disallow use of deprecated enum members" OFF)
-option(AXR_ALL_WARNINGS "Display as many warnings as possible" OFF)
-option(AXR_BUILD_PROTOTYPE "Builds the prototype including libraries and demo app" ON)
-option(AXR_BUILD_DOCS "Build documentation using doxygen" ON)
-option(AXR_BUILD_EXAMPLES "Builds example programs showing usage of the AXR library" OFF)
-
-# Default to building universal binaries on OS X only during release builds
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    set(unibin ON)
-else()
-    set(unibin OFF)
-endif()
-
-option(BUILD_UNIVERSAL_BINS "Build OS X universal binaries (i386 + x86_64)" ${unibin})
-option(BUILD_SHARED_LIBS "Builds shared instead of static libraries" ON)
 
 if(AXR_BUILD_PROTOTYPE)
     find_package(Qt4 4.8 COMPONENTS QtCore QtGui QtXml REQUIRED)
@@ -97,10 +92,6 @@ if(AXR_BUILD_PROTOTYPE)
 
     if(AXR_NO_DEPRECATED_ENUMS)
         add_definitions(-DAXR_NO_DEPRECATED_ENUMS)
-    endif()
-
-    if(BUILD_UNIVERSAL_BINS)
-        set(CMAKE_OSX_ARCHITECTURES "i386 x86_64")
     endif()
 
     # Required to avoid "Symbol not found: __objc_empty_cache" from dyld
