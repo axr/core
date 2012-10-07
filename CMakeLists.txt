@@ -120,6 +120,8 @@ if(AXR_BUILD_PROTOTYPE)
         set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_REL .)
     endif()
 
+    set(CPACK_OUTPUT_FILE_PREFIX dist)
+
     # Set output directories for binaries and static and shared libraries
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_RUNTIME_OUTPUT_DIRECTORY_REL})
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_REL})
@@ -158,7 +160,7 @@ if(FANCY_TARGET_NAMES)
     # All CMake scripts since some IDEs don't show the hierarchy
     file(GLOB_RECURSE cmake_SOURCES ${CMAKE_SOURCE_DIR}/*/CMakeLists.txt ${CMAKE_SOURCE_DIR}/*.cmake)
     group_by_folder(${CMAKE_CURRENT_SOURCE_DIR} "${cmake_SOURCES}")
-    add_custom_target("CMake" SOURCES ${cmake_SOURCES} config.in.h)
+    add_custom_target("CMake" SOURCES ${cmake_SOURCES} config.in.h cmake/PackageOverrides.cmake.in)
 
     # The HSS framework
     add_custom_target("HSS" SOURCES ${hss_SOURCES})
