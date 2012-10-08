@@ -48,35 +48,32 @@
 
 #include "AXRAPI.h"
 
-///////////////////////////////////////////////////////////////////////////////
-/// @fn FB::variant AXRAPI::echo(const FB::variant& msg)
-///
-/// @brief  Echos whatever is passed from Javascript.
-///         Go ahead and change it. See what happens!
-///////////////////////////////////////////////////////////////////////////////
+/*!
+ * @brief Echos whatever is passed from Javascript.
+ *        Go ahead and change it. See what happens!
+ */
 FB::variant AXRAPI::echo(const FB::variant& msg)
 {
     static int n(0);
     fire_echo("So far, you clicked this many times: ", n++);
 
-    // return "foobar";
     return msg;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// @fn AXRPtr AXRAPI::getPlugin()
-///
-/// @brief  Gets a reference to the plugin that was passed in when the object
-///         was created.  If the plugin has already been released then this
-///         will throw a FB::script_error that will be translated into a
-///         javascript exception in the page.
-///////////////////////////////////////////////////////////////////////////////
+/*!
+ * @brief Gets a reference to the plugin that was passed in when the object
+ *        was created. If the plugin has already been released then this
+ *        will throw a FB::script_error that will be translated into a
+ *        javascript exception in the page.
+ */
 AXRPtr AXRAPI::getPlugin()
 {
     AXRPtr plugin(m_plugin.lock());
-    if (!plugin) {
+    if (!plugin)
+    {
         throw FB::script_error("The plugin is invalid");
     }
+
     return plugin;
 }
 

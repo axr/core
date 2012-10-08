@@ -45,44 +45,40 @@
 
 #include "AXR.h"
 
-///////////////////////////////////////////////////////////////////////////////
-/// @fn AXR::StaticInitialize()
-///
-/// @brief  Called from PluginFactory::globalPluginInitialize()
-///
-/// @see FB::FactoryBase::globalPluginInitialize
-///////////////////////////////////////////////////////////////////////////////
+/*!
+ * @brief Called from PluginFactory::globalPluginInitialize()
+ *
+ * @see FB::FactoryBase::globalPluginInitialize
+ */
 void AXR::StaticInitialize()
 {
     // Place one-time initialization stuff here; As of FireBreath 1.4 this should only
     // be called once per process
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// @fn AXR::StaticInitialize()
-///
-/// @brief  Called from PluginFactory::globalPluginDeinitialize()
-///
-/// @see FB::FactoryBase::globalPluginDeinitialize
-///////////////////////////////////////////////////////////////////////////////
+/*!
+ * @brief Called from PluginFactory::globalPluginDeinitialize()
+ *
+ * @see FB::FactoryBase::globalPluginDeinitialize
+ */
 void AXR::StaticDeinitialize()
 {
     // Place one-time deinitialization stuff here. As of FireBreath 1.4 this should
     // always be called just before the plugin library is unloaded
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// @brief  AXR constructor.  Note that your API is not available
-///         at this point, nor the window.  For best results wait to use
-///         the JSAPI object until the onPluginReady method is called
-///////////////////////////////////////////////////////////////////////////////
+/*!
+ * @brief AXR constructor. Note that your API is not available
+ *        at this point, nor the window. For best results wait to use
+ *        the JSAPI object until the onPluginReady method is called
+ */
 AXR::AXR()
 {
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// @brief  AXR destructor.
-///////////////////////////////////////////////////////////////////////////////
+/*!
+ * @brief AXR destructor.
+ */
 AXR::~AXR()
 {
     // This is optional, but if you reset m_api (the shared_ptr to your JSAPI
@@ -110,17 +106,17 @@ void AXR::shutdown()
     // references to this object will be valid
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// @brief  Creates an instance of the JSAPI object that provides your main
-///         Javascript interface.
-///
-/// Note that m_host is your BrowserHost and shared_ptr returns a
-/// FB::PluginCorePtr, which can be used to provide a
-/// boost::weak_ptr<AXR> for your JSAPI class.
-///
-/// Be very careful where you hold a shared_ptr to your plugin class from,
-/// as it could prevent your plugin class from getting destroyed properly.
-///////////////////////////////////////////////////////////////////////////////
+/*!
+ * @brief Creates an instance of the JSAPI object that provides your main
+ *        Javascript interface.
+ *
+ * Note that m_host is your BrowserHost and shared_ptr returns a
+ * FB::PluginCorePtr, which can be used to provide a
+ * boost::weak_ptr<AXR> for your JSAPI class.
+ *
+ * Be very careful where you hold a shared_ptr to your plugin class from,
+ * as it could prevent your plugin class from getting destroyed properly.
+ */
 FB::JSAPIPtr AXR::createJSAPI()
 {
     // m_host is the BrowserHost
