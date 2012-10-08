@@ -128,6 +128,9 @@ def buildInspectionFileList(directory):
         if ".git" in subFolders:
             subFolders.remove(".git")
 
+        if "firebreath" in subFolders:
+            subFolders.remove("firebreath")
+
         ignoreDirectory = False
 
         for file in files:

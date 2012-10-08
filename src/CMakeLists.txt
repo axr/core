@@ -34,3 +34,9 @@ add_subdirectory(prototype)
 if(AXR_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
+
+if(AXR_BUILD_PLUGIN)
+    set(FB_PROJECTS_DIR "${CMAKE_SOURCE_DIR}/src")
+    set(WITH_SYSTEM_BOOST TRUE) # TODO: Remove this once AXR itself no longer depends on Boost
+    add_subdirectory(firebreath)
+endif()

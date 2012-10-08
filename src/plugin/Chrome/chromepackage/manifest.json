@@ -1,0 +1,6 @@
+{
+  "name": "AXR",
+  "version": "${FBSTRING_PLUGIN_VERSION}",
+  "description": "The rendering engine that powers the AXR platform.",
+  "plugins": [ { "path": "npAXR.dll", "public": true } ]
+}
