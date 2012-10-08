@@ -6,6 +6,7 @@ set(cocoa_SOURCES
 qt_transform_sources(cocoa_SOURCES "${cocoa_SOURCES}")
 
 add_library(${TARGET_NAME_LIB_COCOA} ${cocoa_SOURCES})
+set_target_properties(${TARGET_NAME_LIB_COCOA} PROPERTIES FOLDER Libraries)
 
 find_library(COCOA_LIBRARY Cocoa)
 mark_as_advanced(COCOA_LIBRARY)

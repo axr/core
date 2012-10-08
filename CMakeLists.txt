@@ -130,11 +130,13 @@ endif()
 if(FANCY_TARGET_NAMES)
     # All of the metadata-type files in the repository root directory
     add_custom_target("Meta" SOURCES AUTHORS CHANGELOG.md COPYING INSTALL LICENSE README.md)
+    set_target_properties(Meta PROPERTIES FOLDER Auxiliary)
 
     # Configuration and utility scripts
     file(GLOB_RECURSE scripts_SOURCES .travis/configure.sh .travis/make.sh .travis.yml .gitignore .mailmap bin/pre-commit bin/stylecheck.py bin/update-authors.sh pre-configure.bat pre-configure.sh)
     group_by_folder(${CMAKE_CURRENT_SOURCE_DIR} "${scripts_SOURCES}")
     add_custom_target("Scripts" SOURCES ${scripts_SOURCES})
+    set_target_properties(Scripts PROPERTIES FOLDER Auxiliary)
 
     # All CMake scripts since some IDEs don't show the hierarchy
     file(GLOB_RECURSE cmake_SOURCES ${CMAKE_SOURCE_DIR}/*/CMakeLists.txt ${CMAKE_SOURCE_DIR}/*.cmake)
@@ -143,6 +145,7 @@ if(FANCY_TARGET_NAMES)
 
     # The HSS framework
     add_custom_target("HSS" SOURCES ${hss_SOURCES})
+    set_target_properties(HSS PROPERTIES FOLDER Auxiliary)
 
     # Other shared resources (i.e. to be distributed in $prefix/share or elsewhere)
     set(d ${CMAKE_SOURCE_DIR}/share)
@@ -150,6 +153,7 @@ if(FANCY_TARGET_NAMES)
     list(REMOVE_ITEM shared_SOURCES ${CMAKE_SOURCE_DIR}/share/hss-framework)
     group_by_folder(${d} "${shared_SOURCES}")
     add_custom_target("Shared" SOURCES ${shared_SOURCES})
+    set_target_properties(Shared PROPERTIES FOLDER Auxiliary)
 
     # Test files for the renderer
     set(d ${CMAKE_SOURCE_DIR}/tests)
