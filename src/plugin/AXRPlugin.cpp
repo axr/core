@@ -243,7 +243,10 @@ bool AXRPlugin::onDrawCoreGraphics(FB::CoreGraphicsDraw *evt, FB::PluginWindowMa
     CGContextScaleCTM(currentContext, 1, -1);
 
     CGRect paintRect = CGRectMake(0, 0, win->getWindowWidth(), win->getWindowHeight());
-    CGContextDrawImage(currentContext, paintRect, QPixmap::fromImage(composite(win->getWindowWidth(), win->getWindowHeight())).toMacCGImageRef());
+    QPixmap pix = QPixmap::fromImage(composite(win->getWindowWidth(), win->getWindowHeight()));
+    CGImageRef image = pix.toMacCGImageRef();
+    CGContextDrawImage(currentContext, paintRect, image);
+    CGImageRelease(image);
 
     return true;
 }
