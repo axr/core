@@ -43,8 +43,8 @@
 
 #include <QApplication>
 
-#include "AXR.h"
 #include "AXRAPI.h"
+#include "AXRPlugin.h"
 
 #include "AXRInitializer.h"
 #include "AXRRender.h"

@@ -46,7 +46,7 @@
 #include <boost/weak_ptr.hpp>
 #include "JSAPIAuto.h"
 #include "BrowserHost.h"
-#include "AXR.h"
+#include "AXRPlugin.h"
 
 #ifndef H_AXRAPI
 #define H_AXRAPI
