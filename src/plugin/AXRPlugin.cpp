@@ -41,8 +41,14 @@
  *
  ********************************************************************/
 
+#include <QApplication>
+
 #include "AXR.h"
 #include "AXRAPI.h"
+
+#include "AXRInitializer.h"
+#include "AXRRender.h"
+#include "AXRWrapper.h"
 
 #ifdef FB_WIN
 #include <windows.h>
@@ -55,15 +61,22 @@
 #include "PluginWindowMacCG.h"
 #endif
 
+using namespace AXR;
+
+static class QCoreApplication *app = NULL;
+
 /*!
  * @brief Called from PluginFactory::globalPluginInitialize()
  *
  * @see FB::FactoryBase::globalPluginInitialize
  */
-void AXR::StaticInitialize()
+void AXRPlugin::StaticInitialize()
 {
     // Place one-time initialization stuff here; As of FireBreath 1.4 this should only
     // be called once per process
+    int argc = 0;
+    char **argv = NULL;
+    app = new QApplication(argc, argv);
 }
 
 /*!
@@ -71,25 +84,27 @@ void AXR::StaticInitialize()
  *
  * @see FB::FactoryBase::globalPluginDeinitialize
  */
-void AXR::StaticDeinitialize()
+void AXRPlugin::StaticDeinitialize()
 {
     // Place one-time deinitialization stuff here. As of FireBreath 1.4 this should
     // always be called just before the plugin library is unloaded
+    delete app;
 }
 
 /*!
- * @brief AXR constructor. Note that your API is not available
+ * @brief AXRPlugin constructor. Note that your API is not available
  *        at this point, nor the window. For best results wait to use
  *        the JSAPI object until the onPluginReady method is called
  */
-AXR::AXR()
+AXRPlugin::AXRPlugin()
+: wrapper(new AXRWrapper())
 {
 }
 
 /*!
- * @brief AXR destructor.
+ * @brief AXRPlugin destructor.
  */
-AXR::~AXR()
+AXRPlugin::~AXRPlugin()
 {
     // This is optional, but if you reset m_api (the shared_ptr to your JSAPI
     // root object) and tell the host to free the retained JSAPI objects then
@@ -97,17 +112,21 @@ AXR::~AXR()
     // they will be released here.
     releaseRootJSAPI();
     m_host->freeRetainedObjects();
+    delete wrapper;
 }
 
-void AXR::onPluginReady()
+void AXRPlugin::onPluginReady()
 {
     // When this is called, the BrowserHost is attached, the JSAPI object is
     // created, and we are ready to interact with the page and such.  The
     // PluginWindow may or may not have already fire the AttachedEvent at
     // this point.
+
+    // TODO: Load the XML file from the URL here
+    // wrapper->loadFileByPath(QString("..."));
 }
 
-void AXR::shutdown()
+void AXRPlugin::shutdown()
 {
     // This will be called when it is time for the plugin to shut down;
     // any threads or anything else that may hold a shared_ptr to this
@@ -127,43 +146,58 @@ void AXR::shutdown()
  * Be very careful where you hold a shared_ptr to your plugin class from,
  * as it could prevent your plugin class from getting destroyed properly.
  */
-FB::JSAPIPtr AXR::createJSAPI()
+FB::JSAPIPtr AXRPlugin::createJSAPI()
 {
     // m_host is the BrowserHost
-    return boost::make_shared<AXRAPI>(FB::ptr_cast<AXR>(shared_from_this()), m_host);
+    return boost::make_shared<AXRAPI>(FB::ptr_cast<AXRPlugin>(shared_from_this()), m_host);
 }
 
-bool AXR::onMouseDown(FB::MouseDownEvent *evt, FB::PluginWindow *)
+bool AXRPlugin::onMouseDown(FB::MouseDownEvent *evt, FB::PluginWindow *)
 {
     //printf("Mouse down at: %d, %d\n", evt->m_x, evt->m_y);
     return false;
 }
 
-bool AXR::onMouseUp(FB::MouseUpEvent *evt, FB::PluginWindow *)
+bool AXRPlugin::onMouseUp(FB::MouseUpEvent *evt, FB::PluginWindow *)
 {
     //printf("Mouse up at: %d, %d\n", evt->m_x, evt->m_y);
     return false;
 }
 
-bool AXR::onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *)
+bool AXRPlugin::onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *)
 {
     //printf("Mouse move at: %d, %d\n", evt->m_x, evt->m_y);
     return false;
 }
-bool AXR::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *)
+bool AXRPlugin::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *)
 {
     // The window is attached; act appropriately
     return false;
 }
 
-bool AXR::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
+bool AXRPlugin::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
 {
     // The window is about to be detached; act appropriately
     return false;
 }
 
+QImage AXRPlugin::composite(int width, int height)
+{
+    AXRCore::tp &core = AXRCore::getInstance();
+    AXRRender::p renderer = core->getRender();
+    if (renderer && core->getController()->getRoot())
+    {
+        QRect paintRect = QRect(0, 0, width, height);
+
+        core->drawInRectWithBounds(paintRect, paintRect);
+        return renderer->surface();
+    }
+
+    return QImage();
+}
+
 #if FB_WIN
-bool AXR::onDrawGDIWindowed(FB::RefreshEvent *evt, FB::PluginWindowWin *win)
+bool AXRPlugin::onDrawGDIWindowed(FB::RefreshEvent *evt, FB::PluginWindowWin *win)
 {
     FB::Rect pos = win->getWindowPosition();
     pos.right -= pos.left;
@@ -185,7 +219,7 @@ bool AXR::onDrawGDIWindowed(FB::RefreshEvent *evt, FB::PluginWindowWin *win)
     return true;
 }
 
-bool AXR::onDrawGDIWindowless(FB::RefreshEvent *evt, FB::PluginWindowlessWin *win)
+bool AXRPlugin::onDrawGDIWindowless(FB::RefreshEvent *evt, FB::PluginWindowlessWin *win)
 {
     FB::Rect pos = win->getWindowPosition();
 
@@ -200,15 +234,16 @@ bool AXR::onDrawGDIWindowless(FB::RefreshEvent *evt, FB::PluginWindowlessWin *wi
     return true;
 }
 #elif FB_MACOSX
-bool AXR::onDrawCoreGraphics(FB::CoreGraphicsDraw *evt, FB::PluginWindowMacCG *win)
+bool AXRPlugin::onDrawCoreGraphics(FB::CoreGraphicsDraw *evt, FB::PluginWindowMacCG *win)
 {
     CGContextRef currentContext = evt->context;
 
-    CGContextSetStrokeColorWithColor(currentContext, CGColorCreateGenericRGB(1, 0, 0, 1));
-    CGContextSetLineWidth(currentContext, 5.0f);
-    CGContextMoveToPoint(currentContext, 50.0f, 10.0f);
-    CGContextAddLineToPoint(currentContext, 100.0f, 200.0f);
-    CGContextStrokePath(currentContext);
+    // Flip the coordinate system since Mac is upside down
+    CGContextTranslateCTM(currentContext, 0, win->getWindowHeight());
+    CGContextScaleCTM(currentContext, 1, -1);
+
+    CGRect paintRect = CGRectMake(0, 0, win->getWindowWidth(), win->getWindowHeight());
+    CGContextDrawImage(currentContext, paintRect, QPixmap::fromImage(composite(win->getWindowWidth(), win->getWindowHeight())).toMacCGImageRef());
 
     return true;
 }

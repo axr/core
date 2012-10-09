@@ -44,6 +44,8 @@
 #ifndef H_AXRPLUGIN
 #define H_AXRPLUGIN
 
+#include <QImage>
+
 #include "PluginCore.h"
 #include "PluginEvents/AttachedEvent.h"
 #include "PluginEvents/DrawingEvents.h"
@@ -61,16 +63,21 @@
 #include "PluginWindowX11.h"
 #endif
 
-FB_FORWARD_PTR(AXR)
-class AXR : public FB::PluginCore
+namespace AXR
+{
+    class AXRWrapper;
+}
+
+FB_FORWARD_PTR(AXRPlugin)
+class AXRPlugin : public FB::PluginCore
 {
 public:
     static void StaticInitialize();
     static void StaticDeinitialize();
 
 public:
-    AXR();
-    virtual ~AXR();
+    AXRPlugin();
+    virtual ~AXRPlugin();
 
 public:
     void onPluginReady();
@@ -107,7 +114,8 @@ public:
     virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);
     /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
 
-    
+    QImage composite(int width, int height);
+
 #if FB_WIN
     virtual bool onDrawGDIWindowed(FB::RefreshEvent *evt, FB::PluginWindowWin *);
     virtual bool onDrawGDIWindowless(FB::RefreshEvent *evt, FB::PluginWindowlessWin *);
@@ -116,6 +124,9 @@ public:
 #elif FB_X11
     virtual bool onDrawX11(FB::RefreshEvent *evt, FB::PluginWindowX11 *)
 #endif
+
+private:
+    AXR::AXRWrapper *wrapper;
 };
 
 #endif

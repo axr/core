@@ -54,7 +54,7 @@ public:
      */
     FB::PluginCorePtr createPlugin(const std::string& mimetype)
     {
-        return boost::make_shared<AXR>();
+        return boost::make_shared<AXRPlugin>();
     }
 
     /*!
@@ -62,7 +62,7 @@ public:
      */
     void globalPluginInitialize()
     {
-        AXR::StaticInitialize();
+        AXRPlugin::StaticInitialize();
     }
 
     /*!
@@ -70,7 +70,7 @@ public:
      */
     void globalPluginDeinitialize()
     {
-        AXR::StaticDeinitialize();
+        AXRPlugin::StaticDeinitialize();
     }
 };
 

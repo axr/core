@@ -66,9 +66,9 @@ FB::variant AXRAPI::echo(const FB::variant& msg)
  *        will throw a FB::script_error that will be translated into a
  *        javascript exception in the page.
  */
-AXRPtr AXRAPI::getPlugin()
+AXRPluginPtr AXRAPI::getPlugin()
 {
-    AXRPtr plugin(m_plugin.lock());
+    AXRPluginPtr plugin(m_plugin.lock());
     if (!plugin)
     {
         throw FB::script_error("The plugin is invalid");

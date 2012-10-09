@@ -65,7 +65,7 @@ public:
     /// @see FB::JSAPIAuto::registerProperty
     /// @see FB::JSAPIAuto::registerEvent
     ////////////////////////////////////////////////////////////////////////////
-    AXRAPI(const AXRPtr& plugin, const FB::BrowserHostPtr& host) :
+    AXRAPI(const AXRPluginPtr& plugin, const FB::BrowserHostPtr& host) :
         m_plugin(plugin), m_host(host)
     {
         registerMethod("echo",      make_method(this, &AXRAPI::echo));
@@ -92,7 +92,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     virtual ~AXRAPI() {};
 
-    AXRPtr getPlugin();
+    AXRPluginPtr getPlugin();
 
     // Read/Write property ${PROPERTY.ident}
     std::string get_testString();
@@ -112,7 +112,7 @@ public:
     void testEvent();
 
 private:
-    AXRWeakPtr m_plugin;
+    AXRPluginWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
 
     std::string m_testString;
