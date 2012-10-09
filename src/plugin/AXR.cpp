@@ -41,9 +41,19 @@
  *
  ********************************************************************/
 
+#include "AXR.h"
 #include "AXRAPI.h"
 
-#include "AXR.h"
+#ifdef FB_WIN
+#include <windows.h>
+#include "PluginWindowWin.h"
+#include "PluginWindowlessWin.h"
+#endif
+
+#ifdef FB_MACOSX
+#include <CoreGraphics/CoreGraphics.h>
+#include "PluginWindowMacCG.h"
+#endif
 
 /*!
  * @brief Called from PluginFactory::globalPluginInitialize()
@@ -151,3 +161,55 @@ bool AXR::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
     // The window is about to be detached; act appropriately
     return false;
 }
+
+#if FB_WIN
+bool AXR::onDrawGDIWindowed(FB::RefreshEvent *evt, FB::PluginWindowWin *win)
+{
+    FB::Rect pos = win->getWindowPosition();
+    pos.right -= pos.left;
+    pos.left = 0;
+    pos.bottom -= pos.top;
+    pos.top = 0;
+
+    PAINTSTRUCT ps;
+    HDC context = BeginPaint(win->getHWND(), &ps);
+
+    {
+        ::SetTextAlign(context, TA_CENTERITA_BASELINE);
+        LPCTSTR text = _T("FireBreath Plugin!");
+        ::TextOut(context, pos.left + (pos.right - pos.left) / 2, pos.top + (pos.bottom - pos.top) / 2, text, lstrlen(text));
+    }
+
+    EndPaint(windowed->getHWND());
+
+    return true;
+}
+
+bool AXR::onDrawGDIWindowless(FB::RefreshEvent *evt, FB::PluginWindowlessWin *win)
+{
+    FB::Rect pos = win->getWindowPosition();
+
+    HDC context = win->getHDC();
+
+    {
+        ::SetTextAlign(context, TA_CENTERITA_BASELINE);
+        LPCTSTR text = _T("FireBreath Plugin!");
+        ::TextOut(context, pos.left + (pos.right - pos.left) / 2, pos.top + (pos.bottom - pos.top) / 2, text, lstrlen(text));
+    }
+
+    return true;
+}
+#elif FB_MACOSX
+bool AXR::onDrawCoreGraphics(FB::CoreGraphicsDraw *evt, FB::PluginWindowMacCG *win)
+{
+    CGContextRef currentContext = evt->context;
+
+    CGContextSetStrokeColorWithColor(currentContext, CGColorCreateGenericRGB(1, 0, 0, 1));
+    CGContextSetLineWidth(currentContext, 5.0f);
+    CGContextMoveToPoint(currentContext, 50.0f, 10.0f);
+    CGContextAddLineToPoint(currentContext, 100.0f, 200.0f);
+    CGContextStrokePath(currentContext);
+
+    return true;
+}
+#endif
