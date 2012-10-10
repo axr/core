@@ -57,7 +57,7 @@
 #endif
 
 #ifdef FB_MACOSX
-#include <CoreGraphics/CoreGraphics.h>
+#include <ApplicationServices/ApplicationServices.h>
 #include "PluginWindowMacCG.h"
 #endif
 
