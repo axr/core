@@ -73,10 +73,8 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}-${AXR_VERSION_STRING}-
 set(CPACK_SOURCE_IGNORE_FILES ".git" ".DS_Store" "thumbs.db" "CMakeLists.txt.user")
 
 # Source package
-list(APPEND CPACK_SOURCE_GENERATOR "ZIP")
-if(UNIX)
-    list(APPEND CPACK_SOURCE_GENERATOR TGZ STGZ TBZ2 TZ)
-endif()
+# TODO: TBZ2 generator is broken in CI for some reason
+list(APPEND CPACK_SOURCE_GENERATOR ZIP TGZ STGZ TZ)
 
 if(WIN32)
     set(CPACK_GENERATOR "NSIS")
