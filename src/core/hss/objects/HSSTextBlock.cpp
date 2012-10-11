@@ -341,7 +341,7 @@ void HSSTextBlock::drawForeground()
 
     painter.setFont(getFont());
 
-    int flags = 0;
+    Qt::Alignment flags = 0;
     switch (this->textAlign)
     {
         case HSSTextAlignTypeLeft:
@@ -360,7 +360,7 @@ void HSSTextBlock::drawForeground()
             break;
     }
 
-    painter.drawText(0, 0, this->width, this->height, flags, this->getText());
+    painter.drawText(QRectF(0, 0, this->width, this->height), this->getText(), QTextOption(flags));
 }
 
 void HSSTextBlock::layout()
@@ -387,7 +387,7 @@ void HSSTextBlock::layout()
     }
 
     QFontMetrics fontMetrics(getFont());
-    QRect bounds = fontMetrics.boundingRect(0, 0, this->width, std::numeric_limits<int>::max(), flags, this->getText());
+    QRect bounds = fontMetrics.boundingRect(0, 0, this->width, std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, this->getText());
 
     this->height = bounds.height();
     this->_setInnerHeight();
