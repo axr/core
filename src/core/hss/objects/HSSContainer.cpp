@@ -2944,10 +2944,10 @@ void HSSContainer::setDefaults()
     HSSDisplayObject::setDefaults();
 
     //contentAlignX
-    HSSPercentageConstant::p newDContentAlignX(new HSSKeywordConstant("left"));
+    HSSKeywordConstant::p newDContentAlignX(new HSSKeywordConstant("left"));
     this->setDContentAlignX(newDContentAlignX);
     //contentAlignY
-    HSSNumberConstant::p newDContentAlignY(new HSSKeywordConstant("top"));
+    HSSKeywordConstant::p newDContentAlignY(new HSSKeywordConstant("top"));
     this->setDContentAlignY(newDContentAlignY);
     //directionPrimary
     HSSKeywordConstant::p newDDirectionPrimary(new HSSKeywordConstant("ltr"));
