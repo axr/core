@@ -3,7 +3,7 @@
     Test I005 New Quantity
     Created by Miro Keller on 2012-04-01.
 -->
-<?xml-stylesheet type="application/x-hss" src="i005-new-quantity.hss" version="0.4.7" ?>
+<?xml-stylesheet type="application/x-hss" href="i005-new-quantity.hss" version="0.4.7" ?>
 <test>
 
 </test>

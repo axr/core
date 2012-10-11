@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="application/x-hss" src="style9.hss" version="1.0"?>
-<!--<?xml-sitemap type="application/xml" src="sitemap.xml"?>-->
+<?xml-stylesheet type="application/x-hss" href="style9.hss" version="1.0"?>
+<!--<?xml-sitemap type="application/xml" href="sitemap.xml"?>-->
 <document>
     <header>
         <logo>Logo</logo>

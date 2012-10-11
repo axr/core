@@ -3,6 +3,6 @@
     Test I001 New Basic
     Created by Miro Keller on 2011-10-05.
 -->
-<?xml-stylesheet type="application/x-hss" src="i001-new-basic.hss" version="0.4.7" ?>
+<?xml-stylesheet type="application/x-hss" href="i001-new-basic.hss" version="0.4.7" ?>
 <test>
 </test>

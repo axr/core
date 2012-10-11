@@ -3,7 +3,7 @@
     Test BR001 Basic
     Created by Miro Keller on 2011-11-24.
 -->
-<?xml-stylesheet type="application/x-hss" src="br001-basic.hss" version="0.4.8" ?>
+<?xml-stylesheet type="application/x-hss" href="br001-basic.hss" version="0.4.8" ?>
 <master>
 
 </master>

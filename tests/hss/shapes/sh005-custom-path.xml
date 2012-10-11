@@ -3,7 +3,7 @@
     Test SH005 Custom Path
     Created by Miro Keller on 2011-10-20.
 -->
-<?xml-stylesheet type="application/x-hss" src="sh005-custom-path.hss" version="0.4.7" ?>
+<?xml-stylesheet type="application/x-hss" href="sh005-custom-path.hss" version="0.4.7" ?>
 <test>
     <shapeElement/>
 </test>

@@ -3,7 +3,7 @@
     Test BR004 Borders ref size
     Created by Miro Keller on 2011-12-15.
 -->
-<?xml-stylesheet type="application/x-hss" src="br004-borders-ref-size.hss" version="0.4.8" ?>
+<?xml-stylesheet type="application/x-hss" href="br004-borders-ref-size.hss" version="0.4.8" ?>
 <test>
 
 </test>

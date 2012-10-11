@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="application/x-hss" src="style13.hss" version="1.0"?>
-<!--<?xml-sitemap type="application/xml" src="sitemap.xml"?>-->
-<?xml-stylesheet type="text/xsl" src="axr2html.xsl" about="legacy"?>
+<?xml-stylesheet type="application/x-hss" href="style13.hss" version="1.0"?>
+<!--<?xml-sitemap type="application/xml" href="sitemap.xml"?>-->
+<?xml-stylesheet type="text/xsl" href="axr2html.xsl" about="legacy"?>
 <document>
     <message>
             Hello world

@@ -117,7 +117,7 @@ AXRBuffer::p AXRWrapper::createDummyXML(AXRString stylesheet)
     QUrl url = stylesheet;
     if (url.isValid())
     {
-        AXRString dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" src=\"file://" + stylesheet + "\" version=\"1.0\"?><root></root>";
+        AXRString dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" href=\"file://" + stylesheet + "\" version=\"1.0\"?><root></root>";
         return AXRBuffer::p(new AXRBuffer(dummyXML.toUtf8()));
     }
     else
@@ -406,16 +406,16 @@ void AXRTestThread::operator () ()
             for (std::vector<HSSDisplayObject::p>::const_iterator it = children.begin(); it != children.end(); ++it)
             {
                 const HSSDisplayObject::p & child = *it;
-                if (child->attributes.find("src") != child->attributes.end() && child->attributes.find("expect") != child->attributes.end())
+                if (child->attributes.find("href") != child->attributes.end() && child->attributes.find("expect") != child->attributes.end())
                 {
-                    const AXRString test[2] = {child->attributes["src"], child->attributes["expect"]};
+                    const AXRString test[2] = {child->attributes["href"], child->attributes["expect"]};
                     std::vector<AXRString>testVect(test, test + 2);
                     tests.push_back(testVect);
                     this->totalTests += 1;
                 }
                 else
                 {
-                    std_log("the test element needs to have expect and src attributes");
+                    std_log("the test element needs to have expect and href attributes");
                 }
             }
             //execute all the tests

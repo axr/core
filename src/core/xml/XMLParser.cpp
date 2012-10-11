@@ -140,16 +140,10 @@ bool XMLParser::loadFile(AXRBuffer::p file)
                         throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction - " + instructionParser.errorString(), file->getFileName(), xml.lineNumber()));
                     }
 
-                    // Check that all required attributes are present in the xml-stylesheet processing instruction
-                    QStringList requiredAttributes;
-                    requiredAttributes << "type" << "src" << "version";
-
-                    Q_FOREACH (const AXRString &attr, requiredAttributes)
+                    // href is required for any xml-stylesheet instruction according to W3C
+                    if (!instructionAttributes.contains("href"))
                     {
-                        if (!instructionAttributes.contains(attr))
-                        {
-                            throw AXRError::p(new AXRError("XMLParser", AXRString("Invalid xml-stylesheet instruction - missing %1 attribute").arg(attr), file->getFileName(), xml.lineNumber()));
-                        }
+                        throw AXRError::p(new AXRError("XMLParser", AXRString("Invalid xml-stylesheet instruction - missing href attribute"), file->getFileName(), xml.lineNumber()));
                     }
 
                     // Verify the stylesheet has the correct MIME type for HSS
@@ -157,10 +151,10 @@ bool XMLParser::loadFile(AXRBuffer::p file)
                     if (sheetType == "application/x-hss" || sheetType == "text/hss")
                     {
                         // We've got the right MIME type, now do we even have a valid URL?
-                        const QUrl &sheetUrl = instructionAttributes.value("src");
+                        const QUrl &sheetUrl = instructionAttributes.value("href");
                         if (!sheetUrl.isValid())
                         {
-                            throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed URL in src attribute - " + sheetUrl.errorString(), file->getFileName(), xml.lineNumber()));
+                            throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed URL in href attribute - " + sheetUrl.errorString(), file->getFileName(), xml.lineNumber()));
                         }
 
                         // Do we have a valid version?
@@ -169,19 +163,19 @@ bool XMLParser::loadFile(AXRBuffer::p file)
                         const AXRString &sheetVersion = instructionAttributes.value("version");
                         if (sheetVersion.isEmpty())
                         {
-                            throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed version attribute - " + sheetUrl.errorString(), file->getFileName(), xml.lineNumber()));
+                            AXRString message = instructionAttributes.contains("version")
+                                ? "malformed version attribute - " + sheetVersion
+                                : "missing version attribute";
+
+                            throw AXRError::p(new AXRError("XMLParser", AXRString("Invalid xml-stylesheet instruction - %1").arg(message), file->getFileName(), xml.lineNumber()));
                         }
 
                         // TODO: "Add to load later"?
                         controller->loadSheetsAdd(sheetUrl.toString());
                     }
-                    else if (sheetType == "application/xsl")
-                    {
-                        axr_log(AXR_DEBUG_CH_XML, "Ignoring XSL stylesheet in file " + file->getFileName());
-                    }
                     else
                     {
-                        axr_log(AXR_DEBUG_CH_XML, "Ignoring stylesheet of unknown type: " + sheetType + " in file " + file->getFileName());
+                        axr_log(AXR_DEBUG_CH_XML, "Ignoring stylesheet of type: " + sheetType + " in file " + file->getFileName());
                     }
                 }
             }

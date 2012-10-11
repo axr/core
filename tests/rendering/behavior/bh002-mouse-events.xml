@@ -3,7 +3,7 @@
     Test BH002 Mouse events
     Created by Miro Keller on 2011-11-20.
 -->
-<?xml-stylesheet type="application/x-hss" src="bh002-mouse-events.hss" version="0.4.8" ?>
+<?xml-stylesheet type="application/x-hss" href="bh002-mouse-events.hss" version="0.4.8" ?>
 <test>
     <mouseDown>mouseDown</mouseDown>
     <mouseUp>mouseUp</mouseUp>
