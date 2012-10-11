@@ -50,6 +50,8 @@
 #include "AXRRender.h"
 #include "AXRWrapper.h"
 
+#include "DOM/Window.h"
+
 #ifdef FB_WIN
 #include <windows.h>
 #include "PluginWindowWin.h"
@@ -122,8 +124,13 @@ void AXRPlugin::onPluginReady()
     // PluginWindow may or may not have already fire the AttachedEvent at
     // this point.
 
-    // TODO: Load the XML file from the URL here
-    // wrapper->loadFileByPath(QString("..."));
+    QUrl url(fromStdString(m_host->getDOMWindow()->getLocation()));
+
+    // TODO: Support HTTP/HTTPS...
+    if (url.isLocalFile())
+    {
+        wrapper->loadFileByPath(url.toLocalFile());
+    }
 }
 
 void AXRPlugin::shutdown()
