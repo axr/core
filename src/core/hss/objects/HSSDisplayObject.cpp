@@ -2472,6 +2472,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                     HSSContainer * thisCont = static_cast<HSSContainer *> (this);
                     fnct->setScope(&(thisCont->getChildren()));
                 }
+                fnct->setThisObj(this->shared_from_this());
                 boost::any remoteValue = fnct->evaluate();
                 try
                 {
