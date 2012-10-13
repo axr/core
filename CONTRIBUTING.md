@@ -40,9 +40,7 @@ guidelines:
   - Use Unix linebreaks (\n).
 - Line breaks:
   - Each statement should go on its own line.
-  - An "else" statement should go on its own line.
-  - Each brace on functions or methods should go on their own lines.
-  - The opening brace on "if" statements goes on the next line.
+  - Curly braces go on their own lines
 
 Pre-commit hook
 ===============
