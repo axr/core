@@ -67,6 +67,8 @@ class PrototypeWindow::Private
 public:
     Private() : wrapper(new AXRWrapper()), logWindow(new LogWindow())
     {
+        axr_debug_device = logWindow->logBuffer();
+
         logWindow->setWindowTitle(tr("Error Log"));
     }
 

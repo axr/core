@@ -41,26 +41,47 @@
  *
  ********************************************************************/
 
+#include <QBuffer>
 #include "LogWindow.h"
 
 using namespace AXR;
 
 #include "ui_LogWindow.h"
 
+class LogWindow::Private
+{
+public:
+    QByteArray logBuffer;
+    QBuffer *loggingDevice;
+};
+
 LogWindow::LogWindow(QWidget *parent)
-: QDialog(parent), ui(new Ui::LogWindow)
+: QDialog(parent), d(new Private()), ui(new Ui::LogWindow)
 {
     this->ui->setupUi(this);
+
+    d->loggingDevice = new QBuffer(&d->logBuffer);
+    d->loggingDevice->open(QIODevice::ReadWrite);
+    connect(d->loggingDevice, SIGNAL(bytesWritten(qint64)), SLOT(dataLogged(qint64)));
 }
 
 LogWindow::~LogWindow()
 {
+    disconnect(d->loggingDevice, SIGNAL(bytesWritten(qint64)), this, SLOT(dataLogged(qint64)));
+    delete d->loggingDevice;
+    delete d;
+
     delete this->ui;
 }
 
 AXRString LogWindow::logText() const
 {
     return this->ui->logTextEdit->toPlainText();
+}
+
+QIODevice* LogWindow::logBuffer() const
+{
+    return d->loggingDevice;
 }
 
 void LogWindow::setLogText(const AXRString &text)
@@ -76,4 +97,9 @@ void LogWindow::appendLogText(const AXRString &text)
 void LogWindow::clearLogText()
 {
     this->setLogText(AXRString());
+}
+
+void LogWindow::dataLogged(qint64 bytes)
+{
+    appendLogText(d->logBuffer.right(bytes));
 }

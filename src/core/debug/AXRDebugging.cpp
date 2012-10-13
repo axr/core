@@ -41,23 +41,31 @@
  *
  ********************************************************************/
 
+#include <QIODevice>
 #include <QTextStream>
 #include "AXRDebugging.h"
 
 using namespace AXR;
 
+QIODevice* axr_debug_device = NULL;
 unsigned int axr_debug_level = 1;
 
 void std_log_level(const AXRString &message, unsigned int debugLevel, bool newline)
 {
     if (debugLevel <= axr_debug_level)
     {
-        QTextStream out(stdout);
-        out << message;
-        if (newline)
-            endl(out);
+        QTextStream *out = NULL;
+        if (axr_debug_device)
+            out = new QTextStream(axr_debug_device);
+        else
+            out = new QTextStream(stderr);
 
-        out.flush();
+        *out << message;
+        if (newline)
+            endl(*out);
+
+        out->flush();
+        delete out;
     }
 }
 

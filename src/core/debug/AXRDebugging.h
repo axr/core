@@ -49,6 +49,9 @@
 #include "AXRString.h"
 #include "AXRGlobal.h"
 
+class QIODevice;
+extern QIODevice* axr_debug_device;
+
 // Debug levels:
 // - 0 No debug
 // - 1

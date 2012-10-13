@@ -60,13 +60,17 @@ public:
     LogWindow(QWidget *parent = NULL);
     virtual ~LogWindow();
     AXR::AXRString logText() const;
+    QIODevice* logBuffer() const;
 
 public slots:
     void setLogText(const AXR::AXRString &text);
     void appendLogText(const AXR::AXRString &text);
     void clearLogText();
+    void dataLogged(qint64 bytes);
 
 private:
+    class Private;
+    Private *d;
     Ui::LogWindow *ui;
 };
 
