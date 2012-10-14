@@ -128,6 +128,12 @@ namespace AXR
         void removeFromParent();
 
         /**
+         *  Gives the sibling elements.
+         *  @return A vector containing shared pointers to the siblings of this display object.
+         */
+        const std::vector<HSSDisplayObject::p> getSiblings();
+
+        /**
          *  Stores the given index.
          */
         void setIndex(unsigned newIndex);

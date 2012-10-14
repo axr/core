@@ -354,6 +354,21 @@ void HSSDisplayObject::removeFromParent()
     this->getParent()->remove(this->getIndex());
 }
 
+const std::vector<HSSDisplayObject::p> HSSDisplayObject::getSiblings()
+{
+    std::vector<HSSDisplayObject::p> ret;
+    const std::vector<HSSDisplayObject::p> children = this->getParent()->getChildren();
+    for (HSSDisplayObject::const_it it = children.begin(); it != children.end(); ++it)
+    {
+        const HSSDisplayObject::p theDO = *it;
+        if(theDO.get() != this)
+        {
+            ret.push_back(theDO);
+        }
+    }
+    return ret;
+}
+
 void HSSDisplayObject::setIndex(unsigned newIndex)
 {
     this->_index = newIndex;

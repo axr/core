@@ -524,14 +524,25 @@ std::vector< std::vector<HSSDisplayObject::p> > AXRController::selectOnLevel(con
         {
         case HSSCombinatorTypeSiblings:
         {
-            //if found, just select the right part
             this->readNextSelectorNode();
-
             for (unsigned i = 0, size = selections.size(); i < size; ++i)
             {
                 std::vector<HSSDisplayObject::p> selection = selections[i];
-                std::vector< std::vector<HSSDisplayObject::p> > newSelection = this->selectSimple(scope, thisObj, processing);
-                ret.insert(ret.end(), newSelection.begin(), newSelection.end());
+                std::vector<HSSDisplayObject::p> newSelection;
+                for (HSSDisplayObject::const_it it = selection.begin(); it!=selection.end(); ++it)
+                {
+                    const HSSDisplayObject::p & theDO = *it;
+                    const std::vector<HSSDisplayObject::p> siblings = theDO->getSiblings();
+                    for (HSSDisplayObject::const_it sIt = siblings.begin(); sIt!=siblings.end(); ++sIt)
+                    {
+                        const HSSDisplayObject::p & sibling = *sIt;
+                        if(std::find(selection.begin(), selection.end(), sibling) == selection.end())
+                        {
+                            newSelection.push_back(sibling);
+                        }
+                    }
+                }
+                ret.push_back(newSelection);
             }
             return ret;
         }
