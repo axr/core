@@ -85,7 +85,7 @@ AXRString HSSGradient::toString()
     }
     else
     {
-        return "Annonymous HSSGradient";
+        return "Anonymous HSSGradient";
     }
 }
 
@@ -318,13 +318,7 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
-        if (theKW->getValue() == "none")
-        {
-            ///@todo should we deprecate this in favor of `transparent`?
-            this->startColor.reset();
-            valid = true;
-        }
-        else if (theKW->getValue() == "black")
+        if (theKW->getValue() == "black")
         {
             this->startColor = HSSRgb::blackColor();
             valid = true;
@@ -449,13 +443,7 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
-        if (theKW->getValue() == "none")
-        {
-            ///@todo should we deprecate this in favor of `transparent`?
-            this->endColor.reset();
-            valid = true;
-        }
-        else if (theKW->getValue() == "black")
+        if (theKW->getValue() == "black")
         {
             this->endColor = HSSRgb::blackColor();
             valid = true;
@@ -681,12 +669,7 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant > (value);
-        if (theKW->getValue() == "none")
-        {
-            ///@todo should we deprecate this in favor of `transparent`?
-            valid = true;
-        }
-        else if (theKW->getValue() == "white")
+        if (theKW->getValue() == "white")
         {
             this->colorStops.push_back(HSSRgb::whiteColor());
             valid = true;
