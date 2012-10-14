@@ -103,9 +103,10 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
         if (_globalAntialiasingEnabled)
             painter.setRenderHint(QPainter::Antialiasing);
 
-        this->rootSurface->fill(Qt::transparent);
+        this->rootSurface->fill(Qt::white);
         root->recursiveDraw(painter);
-        this->rootSurfaceFinal = this->rootSurface->convertToFormat(QImage::Format_ARGB32);
+        //this->rootSurfaceFinal = this->rootSurface->convertToFormat(QImage::Format_ARGB32);
+        this->rootSurfaceFinal = *this->rootSurface;
 
         if (wrapper->showLayoutSteps())
         {
