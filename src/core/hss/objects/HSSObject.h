@@ -139,7 +139,7 @@ namespace AXR
          */
         virtual AXRString toString();
         /**
-         *  @return Wether the object is named or is annonymous.
+         *  @return Wether the object is named or is anonymous.
          */
         bool isNamed();
         /**

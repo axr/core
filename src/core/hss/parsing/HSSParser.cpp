@@ -1560,7 +1560,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
         this->readNextToken();
         break;
     case HSSBlockOpen:
-        //it is the opening curly brace, therefore an annonymous object:
+        //it is the opening curly brace, therefore an anonymous object:
         //do nothing
         break;
     case HSSEndOfStatement:
