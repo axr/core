@@ -223,7 +223,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
-        if (theKW->getValue() == "none")
+        if (theKW->getValue() == "no")
         {
             valid = true;
         }

@@ -226,7 +226,7 @@ AXRString HSSDisplayObject::toString()
     }
     else
     {
-        return "Annonymous HSSDisplayObject";
+        return "Anonymous HSSDisplayObject";
     }
 }
 
@@ -306,16 +306,9 @@ bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
             return true;
         }
     }
-    else if (property == "flow" || property == "contained" || property == "visible")
-    {
-        if (value == "yes" || value == "no")
-        {
-            return true;
-        }
-    }
     else if (property == "background")
     {
-        if (value == "black" || value == "white" || value == "transparent" || value == "no")
+        if (value == "black" || value == "white" || value == "transparent" )
         {
             return true;
         }
@@ -1422,7 +1415,7 @@ void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
         }
         //we don't need to observe anything here, since it will be handled by the layout algorithm
         HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
-        if (keywordValue->getValue() == "none" || keywordValue->getValue() == "default")
+        if (keywordValue->getValue() == "default" || keywordValue->getValue() == "no")
         {
             this->_anchorXdefault = true;
             valid = true;
@@ -1471,7 +1464,7 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (this->dAnchorX);
-        if (keywordValue->getValue() == "none" || keywordValue->getValue() == "default")
+        if (keywordValue->getValue() == "default" || keywordValue->getValue() == "no")
         {
             this->_anchorXdefault = true;
             this->anchorX = 0.;
@@ -1546,7 +1539,7 @@ void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
         }
         //we don't need to observe anything here, since it will be handled by the layout algorithm
         HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
-        if (keywordValue->getValue() == "none" || keywordValue->getValue() == "default")
+        if (keywordValue->getValue() == "default" || keywordValue->getValue() == "no")
         {
             this->_anchorYdefault = true;
             valid = true;
@@ -1592,7 +1585,7 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (this->dAnchorY);
-        if (keywordValue->getValue() == "none" || keywordValue->getValue() == "default")
+        if (keywordValue->getValue() == "default" || keywordValue->getValue() == "no")
         {
             this->_anchorYdefault = true;
             this->anchorY = 0.;
@@ -2300,7 +2293,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
         AXRString kwValue = theKW->getValue();
-        if (kwValue == "none" || kwValue == "no")
+        if (kwValue == "no")
         {
             valid = true;
         }
@@ -2499,7 +2492,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        if (boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue() == "none")
+        if (boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue() == "no")
         {
             valid = true;
         }
@@ -2853,7 +2846,7 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        if (boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue() == "none")
+        if (boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue() == "no")
         {
             valid = true;
         }
@@ -3063,7 +3056,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
-        if (keywordValue->getValue() == "none")
+        if (keywordValue->getValue() == "no")
         {
             valid = true;
             this->_setOuterWidth();
@@ -3249,7 +3242,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
-        if (keywordValue->getValue() == "none")
+        if (keywordValue->getValue() == "no")
         {
             valid = true;
             this->_setInnerWidth();
@@ -3429,7 +3422,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
-        if (keywordValue->getValue() == "none")
+        if (keywordValue->getValue() == "no")
         {
             valid = true;
             break;
@@ -3629,10 +3622,10 @@ void HSSDisplayObject::setDefaults()
     HSSKeywordConstant::p newDHeight(new HSSKeywordConstant("content"));
     this->setDHeight(newDHeight);
     //anchorX
-    HSSKeywordConstant::p newDAnchorX(new HSSKeywordConstant("none"));
+    HSSKeywordConstant::p newDAnchorX(new HSSKeywordConstant("no"));
     this->setDAnchorX(newDAnchorX);
     //anchorY
-    HSSKeywordConstant::p newDAnchorY(new HSSKeywordConstant("none"));
+    HSSKeywordConstant::p newDAnchorY(new HSSKeywordConstant("no"));
     this->setDAnchorY(newDAnchorY);
     //flow
     HSSKeywordConstant::p newDFlow(new HSSKeywordConstant("yes"));
@@ -3644,16 +3637,16 @@ void HSSDisplayObject::setDefaults()
     HSSKeywordConstant::p newDAlignY(new HSSKeywordConstant("auto"));
     this->setDAlignY(newDAlignY);
     //background
-    HSSKeywordConstant::p newDBackground(new HSSKeywordConstant("none"));
+    HSSKeywordConstant::p newDBackground(new HSSKeywordConstant("no"));
     this->setDBackground(newDBackground);
     //content
-    HSSKeywordConstant::p newDContent(new HSSKeywordConstant("none"));
+    HSSKeywordConstant::p newDContent(new HSSKeywordConstant("no"));
     this->setDContent(newDContent);
     //on
-    HSSKeywordConstant::p newDOn(new HSSKeywordConstant("none"));
+    HSSKeywordConstant::p newDOn(new HSSKeywordConstant("no"));
     this->setDOn(newDOn);
     //border
-    HSSKeywordConstant::p newDBorder(new HSSKeywordConstant("none"));
+    HSSKeywordConstant::p newDBorder(new HSSKeywordConstant("no"));
     this->setDBorder(newDBorder);
     //visible
     HSSKeywordConstant::p newDVisible(new HSSKeywordConstant("inherit"));
