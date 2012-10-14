@@ -179,7 +179,7 @@ AXRString HSSContainer::toString()
     }
     else
     {
-        tempstr = "Annonymous HSSContainer";
+        tempstr = "Anonymous HSSContainer";
     }
 
     if (this->attributes.size() > 0)
