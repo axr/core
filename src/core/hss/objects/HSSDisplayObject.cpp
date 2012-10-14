@@ -315,7 +315,7 @@ bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
     }
     else if (property == "background")
     {
-        if (value == "black" || value == "white" || value == "transparent")
+        if (value == "black" || value == "white" || value == "transparent" || value == "no")
         {
             return true;
         }
@@ -2300,7 +2300,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
         AXRString kwValue = theKW->getValue();
-        if (kwValue == "none")
+        if (kwValue == "none" || kwValue == "no")
         {
             valid = true;
         }
