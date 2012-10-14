@@ -585,17 +585,26 @@ std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stop
     std::vector<HSSSelectorChain::p> retvect;
     HSSSelectorChain::p ret = HSSSelectorChain::p(new HSSSelectorChain());
     bool done = false;
+    bool rootContext = false;
+
+    //at root context, we don't want to prepend with @this
+    if(this->currentContext.back() == HSSParserContextRoot){
+        rootContext = true;
+    }
 
     //set the current context
     this->currentContext.push_back(HSSParserContextSelectorChain);
-    HSSCombinator::p beginning_combinator = this->readCombinator();
-    if (beginning_combinator)
-    {
-        HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector());
-        newSs->setName(HSSThisSelector::p(new HSSThisSelector()));
-        ret->add(newSs);
-        ret->add(beginning_combinator);
+    if(!rootContext){
+        HSSCombinator::p beginning_combinator = this->readCombinator();
+        if (beginning_combinator)
+        {
+            HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector());
+            newSs->setName(HSSThisSelector::p(new HSSThisSelector()));
+            ret->add(newSs);
+            ret->add(beginning_combinator);
+        }
     }
+
     while (!done)
     {
         HSSSimpleSelector::p ss = this->readSimpleSelector();
