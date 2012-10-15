@@ -7,9 +7,9 @@ if(SDL_FOUND)
     include_directories(${SDL_INCLUDE_DIR})
 
     set(sdl_SOURCES
-        axr.rc
         Info.plist
         main.cpp
+        resources.rc
 
         # These need to be included so they can be copied to the bundle
         ${axr_icon_SOURCES}
