@@ -112,6 +112,8 @@ PrototypeWindow::PrototypeWindow(QWidget *parent)
     ui->runLayoutTestsAction->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
 
     ui->errorLogAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
+
+    this->closeFile();
 }
 
 PrototypeWindow::~PrototypeWindow()
@@ -176,7 +178,9 @@ void PrototypeWindow::openFile()
 
 void PrototypeWindow::openFile(const QString &filePath)
 {
+    setWindowTitle(QString());
     setWindowFilePath(filePath);
+
     d->wrapper->loadFileByPath(QUrl::fromLocalFile(filePath));
     qApp->settings()->setLastFileOpened(filePath);
     update();
@@ -198,6 +202,10 @@ void PrototypeWindow::reloadFile()
 
 void PrototypeWindow::closeFile()
 {
+    setWindowTitle(QCoreApplication::applicationName());
+    setWindowFilePath(QString());
+
+    // TODO: Actually close the file...
 }
 
 void PrototypeWindow::previousLayoutStep()
