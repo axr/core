@@ -2564,7 +2564,7 @@ void HSSContainer::setDDirectionPrimary(HSSParserNode::p value)
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
         AXRString stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
-        if (stringValue == "ltf" || stringValue == "rtl")
+        if (stringValue == "ltr" || stringValue == "rtl")
         {
             if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft)
             {
