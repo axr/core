@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <boost/program_options.hpp>
 #include <SDL/SDL.h>
 #include <QApplication>
 #include <QFileDialog>
@@ -54,7 +53,6 @@
 #include <windows.h>
 #endif
 
-namespace po = boost::program_options;
 using namespace AXR;
 
 const int WINDOW_WIDTH = 640;
@@ -125,31 +123,9 @@ int main(int argc, char **argv)
 {
     QApplication a(argc, argv);
 
-    // Declare the supported options.
-    po::options_description desc("Allowed options");
-    desc.add_options()
-            ("help", "show this message")
-            ("file", po::value<std::string > (), "path to file to open")
-            ("layout-tests", po::value<std::string > (), "run layout tests")
-            ;
-
-    po::variables_map varmap;
-    std::vector<std::string> additionalArgs;
-
-    // Parse arguments
-    po::parsed_options parsed = po::command_line_parser(argc, argv)
-            .options(desc).allow_unregistered().run();
-    po::store(parsed, varmap);
-    additionalArgs = po::collect_unrecognized(parsed.options,
-                                              po::include_positional);
-    po::notify(varmap);
-
-    // Display help message
-    if (varmap.count("help"))
-    {
-        std::cout << desc << "\n";
-        return 0;
-    }
+    // Get command-line arguments
+    QStringList args = a.arguments();
+    args.removeFirst();
 
     SDL_Init(SDL_INIT_VIDEO);
     screen = SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
@@ -171,32 +147,24 @@ int main(int argc, char **argv)
     wrapper = new AXRWrapper();
     AXRCore::tp &core = AXRCore::getInstance();
 
-    if (varmap.count("layout-tests"))
+    if (!args.empty())
     {
-        wrapper->_layoutTestsFilePath = AXR::fromStdString(varmap["layout-tests"].as<std::string>());
-
-        core->registerCustomFunction("AXRLayoutTestsExecute",
-                                     new AXR::HSSValueChangedCallback<AXRWrapper>(wrapper, &AXRWrapper::executeLayoutTests));
-
-        QDir dir(wrapper->getPathToResources());
-        dir.cd("views");
-
-        wrapper->loadFileByPath(QUrl::fromLocalFile(dir.absoluteFilePath("layoutTests.hss")));
-    }
-    else if (varmap.count("file") || additionalArgs.empty() == 0)
-    {
-        std::string filepath;
-
-        if (additionalArgs.empty())
+        if (args.first() == "--layout-tests")
         {
-            filepath = varmap["file"].as<std::string>();
+            QDir dir(wrapper->getPathToResources());
+            dir.cd("views");
+
+            wrapper->_layoutTestsFilePath = dir.absolutePath();
+
+            core->registerCustomFunction("AXRLayoutTestsExecute",
+                                         new AXR::HSSValueChangedCallback<AXRWrapper>(wrapper, &AXRWrapper::executeLayoutTests));
+
+            wrapper->loadFileByPath(QUrl::fromLocalFile(dir.absoluteFilePath("layoutTests.hss")));
         }
         else
         {
-            filepath = additionalArgs[0];
+            wrapper->loadFileByPath(QUrl::fromLocalFile(AXR::fromQString(args.first())));
         }
-
-        wrapper->loadFileByPath(QUrl::fromLocalFile(AXR::fromStdString(filepath)));
     }
     else
     {

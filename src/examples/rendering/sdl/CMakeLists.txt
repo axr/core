@@ -22,7 +22,7 @@ if(SDL_FOUND)
 
     # SDL application
     add_executable(${TARGET_NAME_APP_SDL} WIN32 MACOSX_BUNDLE ${axr_res_SOURCES} main.cpp ${axr_icon_SOURCES} ${hss_SOURCES})
-    target_link_libraries(${TARGET_NAME_APP_SDL} ${TARGET_NAME_LIB_CORE} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${SDLMAIN_LIBRARY} ${SDL_LIBRARY})
+    target_link_libraries(${TARGET_NAME_APP_SDL} ${TARGET_NAME_LIB_CORE} ${SDLMAIN_LIBRARY} ${SDL_LIBRARY})
 
     set(MACOSX_BUNDLE_ICON_FILE prototype.icns)
 
