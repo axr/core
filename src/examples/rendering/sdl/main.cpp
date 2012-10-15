@@ -45,6 +45,7 @@
 #include <SDL/SDL.h>
 #include <QApplication>
 #include <QFileDialog>
+#include <QUrl>
 #include "AXRInitializer.h"
 #include "AXRWrapper.h"
 
@@ -116,8 +117,8 @@ void render()
 
 void loadFile(AXRWrapper *wrapper)
 {
-    AXRString filepath = QFileDialog::getOpenFileName(NULL, QObject::tr("Open File"), AXRString(), QObject::tr("AXR Files (*.xml *.hss)"));
-    wrapper->loadFileByPath(filepath);
+    QString filepath = QFileDialog::getOpenFileName(NULL, QObject::tr("Open File"), QString(), QObject::tr("AXR Files (*.xml *.hss)"));
+    wrapper->loadFileByPath(QUrl::fromLocalFile(filepath));
 }
 
 int main(int argc, char **argv)
@@ -177,8 +178,10 @@ int main(int argc, char **argv)
         core->registerCustomFunction("AXRLayoutTestsExecute",
                                      new AXR::HSSValueChangedCallback<AXRWrapper>(wrapper, &AXRWrapper::executeLayoutTests));
 
-        wrapper->loadFileByPath(wrapper->getPathToResources() +
-                                "/views/layoutTests.hss");
+        QDir dir(wrapper->getPathToResources());
+        dir.cd("views");
+
+        wrapper->loadFileByPath(QUrl::fromLocalFile(dir.absoluteFilePath("layoutTests.hss")));
     }
     else if (varmap.count("file") || additionalArgs.empty() == 0)
     {
@@ -193,7 +196,7 @@ int main(int argc, char **argv)
             filepath = additionalArgs[0];
         }
 
-        wrapper->loadFileByPath(AXR::fromStdString(filepath));
+        wrapper->loadFileByPath(QUrl::fromLocalFile(AXR::fromStdString(filepath)));
     }
     else
     {

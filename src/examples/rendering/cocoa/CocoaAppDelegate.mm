@@ -92,7 +92,7 @@
 {
     [[self axrWindow] makeKeyAndOrderFront : self];
 
-    if (wrapper->loadFileByPath(AXR::fromNSString(filename)))
+    if (wrapper->loadFileByPath(QUrl::fromLocalFile(AXR::fromNSString(filename))))
     {
         [[self axrView] setNeedsDisplay : YES];
         [self setNeedsFile : NO];
@@ -115,7 +115,7 @@
         AXR::AXRString filePath = AXR::fromNSString([[openPanel filenames] objectAtIndex: 0]);
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: User selected file " + filePath);
 
-        if (wrapper->loadFileByPath(filePath))
+        if (wrapper->loadFileByPath(QUrl::fromLocalFile(filePath)))
         {
             [[self axrView] setNeedsDisplay : YES];
             [self setNeedsFile : NO];

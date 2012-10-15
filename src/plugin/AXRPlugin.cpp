@@ -124,13 +124,7 @@ void AXRPlugin::onPluginReady()
     // PluginWindow may or may not have already fire the AttachedEvent at
     // this point.
 
-    QUrl url(fromStdString(m_host->getDOMWindow()->getLocation()));
-
-    // TODO: Support HTTP/HTTPS...
-    if (url.isLocalFile())
-    {
-        wrapper->loadFileByPath(url.toLocalFile());
-    }
+    wrapper->loadFileByPath(QUrl(fromStdString(m_host->getDOMWindow()->getLocation())));
 }
 
 void AXRPlugin::shutdown()
