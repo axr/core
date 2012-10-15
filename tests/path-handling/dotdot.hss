@@ -1,0 +1,7 @@
+*
+{
+    #new file
+    {
+        content: 'This file is ../dotdot.hss';
+    }
+}

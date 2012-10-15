@@ -67,4 +67,6 @@
 // doesn't let us deprecate enum members in the same manner as classes and
 // class members
 
+#define HSSFRAMEWORK_PROTOCOL "axr"
+
 #endif

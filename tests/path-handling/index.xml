@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="axr.xsl" type="text/xsl" version="1.0" about="legacy"?>
+<?xml-stylesheet href="root-relative.hss" type="application/x-hss" version="1.0"?>
+<?xml-stylesheet href="subfolder/relative.hss" type="application/x-hss" version="1.0"?>
+<?xml-stylesheet href="/root-absolute.hss" type="application/x-hss" version="1.0"?>
+<root>
+    <description>
+        This file tests relative and absolute path handling within AXR from both
+        xml-stylesheet processing instructions in XML, and #import statements in
+        HSS.
+
+        Each HSS file successfully loaded will create a new element with the content
+        "This file is {path}" where path is the exact path it was referenced using,
+        within an xml-stylesheet or #import.
+
+        Note that /root-absolute.hss will need to be symlinked from / for the test
+        to work properly on local filesystems, and index.xml should be in the root
+        directory over HTTP.
+
+        The list of files that should get loaded (not necessarily in this order):
+        * dotdot.hss
+        * root-absolute.hss
+        * root-relative.hss
+        * dot.hss
+        * relative.hss
+    </description>
+</root>

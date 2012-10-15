@@ -54,9 +54,6 @@
 #include "HSSSimpleSelector.h"
 #include "HSSTokenizer.h"
 
-#define HSSFRAMEWORK_PROTOCOL "axr://"
-#define HSSFRAMEWORK_PROTOCOL_LEN 6
-
 namespace AXR
 {
     /**
@@ -438,20 +435,6 @@ namespace AXR
          *  @param theObject        A shared pointer to the object that should be made the new object context.
          */
         void currentObjectContextAdd(HSSObject::p theObject);
-
-        /**
-         *  Setter for the base path. When reading a file, we store the path to the folder that contains it, to be
-         *  able to resolve relative paths.
-         *  @param value    A string containing the base path.
-         */
-        void setBasePath(AXRString value);
-
-        /**
-         *  Getter for the base path. When reading a file, we store the path to the folder that contains it, to be
-         *  able to resolve relative paths.
-         *  @return A string containing the base path.
-         */
-        AXRString getBasePath();
 
         HSSParserNode::p readValue(AXRString propertyName, bool &valid);
 

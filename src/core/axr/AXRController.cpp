@@ -812,9 +812,9 @@ HSSObjectDefinition::p & AXRController::objectTreeGet(AXRString name)
 
 //loadSheets
 
-void AXRController::loadSheetsAdd(AXRString sheet)
+void AXRController::loadSheetsAdd(QUrl url)
 {
-    this->loadSheets.push_back(sheet);
+    this->loadSheets.push_back(url);
 }
 
 void AXRController::loadSheetsRemove(unsigned index)
@@ -822,12 +822,12 @@ void AXRController::loadSheetsRemove(unsigned index)
     this->loadSheets.erase(this->loadSheets.begin() + index);
 }
 
-AXRString AXRController::loadSheetsGet(unsigned index)
+QUrl AXRController::loadSheetsGet(unsigned index)
 {
     return this->loadSheets[index];
 }
 
-const std::vector<AXRString> AXRController::loadSheetsGet() const
+const std::vector<QUrl> AXRController::loadSheetsGet() const
 {
     return this->loadSheets;
 }

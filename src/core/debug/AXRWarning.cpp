@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-AXRWarning::AXRWarning(const AXRString &origin, const AXRString &message, const AXRString &filename, int line, int column)
-: AXRError(origin, message, filename, line, column)
+AXRWarning::AXRWarning(const AXRString &origin, const AXRString &message, const QUrl &url, int line, int column)
+: AXRError(origin, message, url, line, column)
 {
 }
 

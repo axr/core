@@ -83,6 +83,8 @@ if(AXR_BUILD_PROTOTYPE)
         add_definitions(-DAXR_NO_DEPRECATED_ENUMS)
     endif()
 
+    add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
+
     # Required to avoid "Symbol not found: __objc_empty_cache" from dyld
     if(APPLE)
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lobjc")

@@ -65,11 +65,11 @@ namespace AXR
          *  the line and column where it originated.
          *  @param origin   The name of the class where the warning originated.
          *  @param message  The warning message to be shown.
-         *  @param filename The path to the filename where the warning originated.
+         *  @param url      The URL of the file where the warning originated.
          *  @param line     The line index (starting at 1) in the file where the warning originated.
          *  @param column   The column index (starting at 1) in the line where the warning originated.
          */
-        AXRWarning(const AXRString &origin, const AXRString &message, const AXRString &filename = "", int line = 0, int column = 0);
+        AXRWarning(const AXRString &origin, const AXRString &message, const QUrl &url = QUrl(), int line = 0, int column = 0);
 
         /**
          *  Destructor for the warning.

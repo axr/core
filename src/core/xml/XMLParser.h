@@ -61,13 +61,7 @@ namespace AXR
 
         bool loadFile(AXRBuffer::p file);
 
-        AXRString getFilePath();
-        AXRString getFileName();
-
         AXRController *controller;
-
-    private:
-        AXRBuffer::p file;
     };
 }
 

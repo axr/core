@@ -42,17 +42,18 @@
  ********************************************************************/
 
 #include <QStringList>
+#include <QUrl>
 #include "AXRDebugging.h"
 #include "AXRError.h"
 
 using namespace AXR;
 
-AXRError::AXRError(const AXRString &origin, const AXRString &message, const AXRString &filename, int line, int column)
+AXRError::AXRError(const AXRString &origin, const AXRString &message, const QUrl &url, int line, int column)
 {
     this->origin = origin;
     this->message = message;
-    this->filename = filename;
-    this->in_file = !filename.isEmpty();
+    this->url = url;
+    this->inFile = !url.isEmpty();
     this->line = line;
     this->column = column;
 }
@@ -76,8 +77,8 @@ AXRString AXRError::toProblemString(const AXRString &label) const
     QStringList parts;
     parts << AXRString("%1: %2").arg(label).arg(message);
 
-    if (in_file)
-        parts << AXRString("in %1").arg(filename);
+    if (inFile)
+        parts << AXRString("in %1").arg(url.toString());
 
     if (line > 0 || column > 0)
     {

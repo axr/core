@@ -68,13 +68,12 @@ bool XMLParser::loadFile(AXRBuffer::p file)
         throw AXRError::p(new AXRError("XMLParser", "The controller was not set on the XML parser"));
     }
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: loading file " + file->getFileName());
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->getBasePath() + "/" + file->getFileName());
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: loading file " + file->sourceUrl().toString());
+    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->sourceUrl().toString());
 
-    this->file = file;
     if (!file->isValid())
     {
-        axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: failed to load file " + file->getFileName());
+        axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: failed to load file " + file->sourceUrl().toString());
         return false;
     }
 
@@ -137,13 +136,13 @@ bool XMLParser::loadFile(AXRBuffer::p file)
                     // The xml-stylesheet instruction was invalid, error out
                     if (instructionParser.hasError())
                     {
-                        throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction - " + instructionParser.errorString(), file->getFileName(), xml.lineNumber()));
+                        throw AXRError::p(new AXRError("XMLParser", "Malformed processing instruction - " + instructionParser.errorString(), file->sourceUrl(), xml.lineNumber()));
                     }
 
                     // href is required for any xml-stylesheet instruction according to W3C
                     if (!instructionAttributes.contains("href"))
                     {
-                        throw AXRError::p(new AXRError("XMLParser", AXRString("Invalid xml-stylesheet instruction - missing href attribute"), file->getFileName(), xml.lineNumber()));
+                        throw AXRError::p(new AXRError("XMLParser", AXRString("Invalid xml-stylesheet instruction - missing href attribute"), file->sourceUrl(), xml.lineNumber()));
                     }
 
                     // Verify the stylesheet has the correct MIME type for HSS
@@ -151,10 +150,10 @@ bool XMLParser::loadFile(AXRBuffer::p file)
                     if (sheetType == "application/x-hss" || sheetType == "text/hss")
                     {
                         // We've got the right MIME type, now do we even have a valid URL?
-                        const QUrl &sheetUrl = instructionAttributes.value("href");
+                        const QUrl sheetUrl(instructionAttributes.value("href"));
                         if (!sheetUrl.isValid())
                         {
-                            throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed URL in href attribute - " + sheetUrl.errorString(), file->getFileName(), xml.lineNumber()));
+                            throw AXRError::p(new AXRError("XMLParser", "Invalid xml-stylesheet instruction - malformed URL in href attribute - " + sheetUrl.errorString(), file->sourceUrl(), xml.lineNumber()));
                         }
 
                         // Do we have a valid version?
@@ -167,15 +166,17 @@ bool XMLParser::loadFile(AXRBuffer::p file)
                                 ? "malformed version attribute - " + sheetVersion
                                 : "missing version attribute";
 
-                            throw AXRError::p(new AXRError("XMLParser", AXRString("Invalid xml-stylesheet instruction - %1").arg(message), file->getFileName(), xml.lineNumber()));
+                            throw AXRError::p(new AXRError("XMLParser", AXRString("Invalid xml-stylesheet instruction - %1").arg(message), file->sourceUrl(), xml.lineNumber()));
                         }
 
-                        // TODO: "Add to load later"?
-                        controller->loadSheetsAdd(sheetUrl.toString());
+                        if (sheetUrl.isRelative())
+                            controller->loadSheetsAdd(file->sourceUrl().resolved(sheetUrl));
+                        else
+                            controller->loadSheetsAdd(sheetUrl);
                     }
                     else
                     {
-                        axr_log(AXR_DEBUG_CH_XML, "Ignoring stylesheet of type: " + sheetType + " in file " + file->getFileName());
+                        axr_log(AXR_DEBUG_CH_XML, "Ignoring stylesheet of type: " + sheetType + " in file " + file->sourceUrl().toString());
                     }
                 }
             }
@@ -183,7 +184,7 @@ bool XMLParser::loadFile(AXRBuffer::p file)
 
         if (xml.hasError())
         {
-            throw AXRError::p(new AXRError("XMLParser", "XML error - " + xml.errorString(), file->getFileName(), xml.lineNumber(), xml.columnNumber()));
+            throw AXRError::p(new AXRError("XMLParser", "XML error - " + xml.errorString(), file->sourceUrl(), xml.lineNumber(), xml.columnNumber()));
         }
 
         return true;
@@ -193,14 +194,4 @@ bool XMLParser::loadFile(AXRBuffer::p file)
         e->raise();
         return false;
     }
-}
-
-AXRString XMLParser::getFilePath()
-{
-    return this->file->getBasePath() + "/" + this->file->getFileName();
-}
-
-AXRString XMLParser::getFileName()
-{
-    return this->file->getFileName();
 }

@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include <QDir>
 #include "AXRInitializer.h"
 
 using namespace AXR;
@@ -98,8 +99,8 @@ void AXRCore::run()
     }
     bool loadingSuccess = this->parserXML->loadFile(this->file);
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished parsing " + this->file->getFileName());
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath() + "/" + this->file->getFileName());
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished parsing " + this->file->sourceUrl().toString());
+    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->sourceUrl().toString());
 
     if (!loadingSuccess)
     {
@@ -111,33 +112,14 @@ void AXRCore::run()
         this->_hasLoadedFile = true;
 
         HSSContainer::p root = boost::static_pointer_cast<HSSContainer > (this->controller->getRoot());
-        AXRString hssfilename, hssfilepath;
 
-        std::vector<AXRString> loadSheets = this->controller->loadSheetsGet();
+        std::vector<QUrl> loadSheets = this->controller->loadSheetsGet();
         for (unsigned i = 0, size = loadSheets.size(); i < size; ++i)
         {
-
-            hssfilename = loadSheets[i];
-            if (hssfilename.startsWith("file://"))
-            {
-                hssfilepath = hssfilename;
-            }
-            else if (hssfilename.startsWith("http://"))
-            {
-                AXRError::p(new AXRError("AXRCore", "HTTP has not been implemented yet"))->raise();
-            }
-            else if (hssfilename.startsWith("/"))
-            {
-                hssfilepath = this->file->getBasePath() + hssfilename;
-            }
-            else
-            {
-                hssfilepath = "file://" + this->file->getBasePath() + "/" + hssfilename;
-            }
             AXRBuffer::p hssfile;
             try
             {
-                hssfile = this->wrapper->getFile(hssfilepath);
+                hssfile = this->wrapper->getFile(loadSheets[i]);
             }
             catch (const AXRError::p &e)
             {
@@ -145,14 +127,13 @@ void AXRCore::run()
                 continue;
             }
 
-            this->parserHSS->setBasePath(this->file->getBasePath());
             if (!this->parserHSS->loadFile(hssfile))
             {
                 AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
             }
         }
-        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished loading stylesheets for " + this->file->getFileName());
-        axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath() + "/" + this->file->getFileName());
+        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished loading stylesheets for " + this->file->sourceUrl().toString());
+        axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->sourceUrl().toString());
 
         axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: matching rules to the content tree");
         //assign the rules to the objects

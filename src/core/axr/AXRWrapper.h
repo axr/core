@@ -85,7 +85,7 @@ namespace AXR
          *  Subclasses should override this method with the OS specific implementation.
          *  @param url  A string containing the url to the file
          */
-        virtual AXRBuffer::p getFile(AXRString url);
+        virtual AXRBuffer::p getFile(QUrl url);
         virtual bool needsDisplay() const;
         /**
          *  This is to be called when something happens that needs to trigger a redraw.
@@ -108,13 +108,13 @@ namespace AXR
          *  It is used when a HSS file is loaded directly.
          *  @return A shared pointer to the AXRBuffer representation of the basic XML document.
          */
-        AXRBuffer::p createDummyXML(AXRString stylesheet);
+        AXRBuffer::p createDummyXML(QUrl hssUrl);
         /**
          *  Loads the XML file at the path you provide.
          *  @param  xmlfilepath A string containing the path to the file on the local system.
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadXMLFile(AXRString xmlfilepath);
+        bool loadXMLFile(QUrl url);
         /**
          *  Loads the file you provide, and then handles it according to its file extension.
          *  @param  filepath    A string containing the path to the file on the local system, can be
@@ -122,13 +122,13 @@ namespace AXR
          *
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadFileByPath(AXRString filepath);
+        bool loadFileByPath(QUrl url);
         /**
          *  Loads the HSS file at the path you provide.
          *  @param  hssfilepath A string containing the path to the file on the local system.
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadHSSFile(AXRString hssfilepath);
+        bool loadHSSFile(QUrl url);
         /**
          *  Reloads the file that is currently loaded.
          *  @return Wether it has been reloaded successfully or not.
@@ -183,13 +183,13 @@ namespace AXR
     {
     private:
         AXRWrapper * wrapper;
-        AXRString filePath;
+        QUrl url;
         unsigned totalTests;
         unsigned totalPassed;
         HSSContainer::p status;
 
     public:
-        AXRTestThread(AXRWrapper * wrapper, AXRString filePath, HSSContainer::p status);
+        AXRTestThread(AXRWrapper * wrapper, QUrl url, HSSContainer::p status);
         void operator () ();
     };
 
@@ -197,8 +197,7 @@ namespace AXR
     {
     private:
         AXRWrapper * wrapper;
-        AXRString basePath;
-        std::vector<AXRString> test; // the filename of the test
+        std::vector<QUrl> test; // the filename of the test
         unsigned * totalTests;
         unsigned * totalPassed;
         HSSContainer::p status;
@@ -207,7 +206,7 @@ namespace AXR
         static boost::mutex statusMutex;
 
     public:
-        AXRTestProducer(AXRWrapper * wrapper, AXRString basePath, std::vector<AXRString> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
+        AXRTestProducer(AXRWrapper * wrapper, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
         void operator () ();
     };
 }

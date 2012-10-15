@@ -175,7 +175,7 @@ void PrototypeWindow::openFile()
 void PrototypeWindow::openFile(const QString &filePath)
 {
     setWindowFilePath(filePath);
-    d->wrapper->loadFileByPath(filePath);
+    d->wrapper->loadFileByPath(QUrl::fromLocalFile(filePath));
     qApp->settings()->setLastFileOpened(filePath);
     update();
 }

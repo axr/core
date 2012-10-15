@@ -135,7 +135,7 @@ void HSSRequest::fire()
     {
         AXRCore::tp & core = AXRCore::getInstance();
         AXRWrapper * wrapper = core->getWrapper();
-        wrapper->loadXMLFile(core->getFile()->getBasePath() + "/" + this->src);
+        wrapper->loadXMLFile(this->src);
     }
     else
     {
@@ -152,7 +152,7 @@ void HSSRequest::fire()
             AXRBuffer::p newFile;
             try
             {
-                newFile = wrapper->getFile("file://" + baseFile->getBasePath() + "/" + this->src);
+                newFile = wrapper->getFile(this->src);
             }
             catch (const AXRError::p &e)
             {
@@ -172,32 +172,13 @@ void HSSRequest::fire()
 
                     if (root)
                     {
-                        std::vector<AXRString> loadSheets = controller->loadSheetsGet();
-                        std::vector<AXRString>::iterator sheetsIt;
-                        for (sheetsIt = loadSheets.begin(); sheetsIt != loadSheets.end(); ++sheetsIt)
+                        std::vector<QUrl> loadSheets = controller->loadSheetsGet();
+                        for (std::vector<QUrl>::iterator sheetsIt = loadSheets.begin(); sheetsIt != loadSheets.end(); ++sheetsIt)
                         {
-                            AXRString hssfilepath;
-                            AXRString hssfilename = *sheetsIt;
-                            if (hssfilename.startsWith("file://"))
-                            {
-                                hssfilepath = hssfilename;
-                            }
-                            else if (hssfilename.startsWith("http://"))
-                            {
-                                AXRError::p(new AXRError("AXRCore", "HTTP has not been implemented yet"))->raise();
-                            }
-                            else if (hssfilename.startsWith("/"))
-                            {
-                                hssfilepath = newFile->getBasePath() + hssfilename;
-                            }
-                            else
-                            {
-                                hssfilepath = "file://" + newFile->getBasePath() + "/" + hssfilename;
-                            }
                             AXRBuffer::p hssfile;
                             try
                             {
-                                hssfile = wrapper->getFile(hssfilepath);
+                                hssfile = wrapper->getFile(*sheetsIt);
                             }
                             catch (const AXRError::p &e)
                             {
@@ -205,7 +186,6 @@ void HSSRequest::fire()
                                 continue;
                             }
 
-                            hssParser->setBasePath(newFile->getBasePath());
                             if (!hssParser->loadFile(hssfile))
                             {
                                 AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
@@ -308,7 +288,7 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
         case HSSParserNodeTypeStringConstant:
         {
             HSSStringConstant::p theString = boost::static_pointer_cast<HSSStringConstant > (value);
-            this->src = theString->getValue();
+            this->src = QUrl(theString->getValue());
             break;
         }
 
@@ -320,7 +300,7 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
             boost::any remoteValue = fnct->evaluate();
             try
             {
-                this->src = boost::any_cast<AXRString > (remoteValue);
+                this->src = QUrl(boost::any_cast<AXRString>(remoteValue));
             }
             catch (boost::bad_any_cast &)
             {

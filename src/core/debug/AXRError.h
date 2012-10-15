@@ -46,6 +46,7 @@
 
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
+#include <QUrl>
 #include "AXRString.h"
 #include "AXRGlobal.h"
 
@@ -69,11 +70,11 @@ namespace AXR
          *  the line and column where it happened.
          *  @param origin   The name of the class where the error happened.
          *  @param message  The error message to be shown.
-         *  @param filename The path to the filename where the error happened.
+         *  @param url      The URL of the file where the error happened.
          *  @param line     The line index (starting at 1) in the file where the error happened.
          *  @param column   The column index (starting at 1) in the line where the error happened.
          */
-        AXRError(const AXRString &origin, const AXRString &message, const AXRString &filename = "", int line = 0, int column = 0);
+        AXRError(const AXRString &origin, const AXRString &message, const QUrl &url = QUrl(), int line = 0, int column = 0);
 
         /**
          *  Destructor for the error.
@@ -104,11 +105,11 @@ namespace AXR
         AXRString origin;
         AXRString message;
 
-        AXRString filename;
+        QUrl url;
         int line;
         int column;
 
-        bool in_file;
+        bool inFile;
     };
 }
 
