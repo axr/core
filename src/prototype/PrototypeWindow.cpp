@@ -74,6 +74,8 @@ public:
 
     ~Private()
     {
+        axr_debug_device = NULL;
+
         delete wrapper;
         delete logWindow;
     }
