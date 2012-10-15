@@ -65,11 +65,9 @@ using namespace AXR;
 class PrototypeWindow::Private
 {
 public:
-    Private() : wrapper(new AXRWrapper()), logWindow(new LogWindow())
+    Private() : wrapper(new AXRWrapper())
     {
-        axr_debug_device = logWindow->logBuffer();
-
-        logWindow->setWindowTitle(tr("Error Log"));
+        axr_debug_device = qApp->loggingDevice();
     }
 
     ~Private()
@@ -77,11 +75,9 @@ public:
         axr_debug_device = NULL;
 
         delete wrapper;
-        delete logWindow;
     }
 
     AXRWrapper *wrapper;
-    LogWindow *logWindow;
 };
 
 PrototypeWindow::PrototypeWindow(QWidget *parent)
@@ -111,7 +107,7 @@ PrototypeWindow::PrototypeWindow(QWidget *parent)
 
     ui->runLayoutTestsAction->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
 
-    ui->errorLogAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
+    ui->logAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
 
     this->closeFile();
 }
@@ -330,7 +326,7 @@ void PrototypeWindow::runLayoutTests()
 
 void PrototypeWindow::showErrorLog()
 {
-    d->logWindow->show();
+    qApp->showLogWindow();
 }
 
 void PrototypeWindow::showPreferences()

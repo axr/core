@@ -45,6 +45,7 @@
 #include <QUrl>
 #include "config.h"
 #include "AXRDebugging.h"
+#include "LogWindow.h"
 #include "PreferencesDialog.h"
 #include "PrototypeApplication.h"
 #include "PrototypeSettings.h"
@@ -55,6 +56,7 @@ class PrototypeApplication::Private
 public:
     PrototypeSettings *settings;
     PreferencesDialog *preferencesDialog;
+    LogWindow *logWindow;
     PrototypeWindow *mainWindow;
 };
 
@@ -70,6 +72,7 @@ PrototypeApplication::PrototypeApplication(int &argc, char **argv)
 
     d->settings = new PrototypeSettings();
     d->preferencesDialog = new PreferencesDialog();
+    d->logWindow = new LogWindow();
     d->mainWindow = new PrototypeWindow();
     d->mainWindow->show();
 
@@ -102,6 +105,7 @@ PrototypeApplication::PrototypeApplication(int &argc, char **argv)
 PrototypeApplication::~PrototypeApplication()
 {
     delete d->mainWindow;
+    delete d->logWindow;
     delete d->preferencesDialog;
     delete d->settings;
     delete d;
@@ -133,7 +137,17 @@ PrototypeSettings* PrototypeApplication::settings() const
     return d->settings;
 }
 
+QIODevice* PrototypeApplication::loggingDevice() const
+{
+    return d->logWindow->logBuffer();
+}
+
 void PrototypeApplication::showPreferencesDialog()
 {
     d->preferencesDialog->show();
+}
+
+void PrototypeApplication::showLogWindow()
+{
+    d->logWindow->show();
 }
