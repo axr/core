@@ -2,7 +2,7 @@
 
 @container
 {
-    contentText: "annonymous container object";
+    contentText: "anonymous container object";
 }
 
 /*@container myContainer

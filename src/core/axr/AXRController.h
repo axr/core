@@ -419,6 +419,9 @@ namespace AXR
         unsigned currentChainSize;
         void readNextSelectorNode();
         bool isAtEndOfSelector();
+
+    private:
+        void _recursiveGetDescendants(std::vector<HSSDisplayObject::p> &ret, const std::vector<HSSDisplayObject::p> & scope);
     };
 }
 

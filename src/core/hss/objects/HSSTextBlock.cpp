@@ -252,7 +252,7 @@ void HSSTextBlock::setDefaults()
     HSSDisplayObject::setDefaults();
 
     //transform
-    HSSKeywordConstant::p newDTransform(new HSSKeywordConstant("none"));
+    HSSKeywordConstant::p newDTransform(new HSSKeywordConstant("no"));
     this->setDTransform(newDTransform);
     //textAlign
     HSSKeywordConstant::p newDTextAlign(new HSSKeywordConstant("inherit"));
@@ -744,7 +744,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
     {
         this->dText = value;
         HSSKeywordConstant::p kwd = boost::static_pointer_cast<HSSKeywordConstant > (value);
-        if (kwd->getValue() == "none")
+        if (kwd->getValue() == "no")
         {
             this->text = "";
             valid = true;

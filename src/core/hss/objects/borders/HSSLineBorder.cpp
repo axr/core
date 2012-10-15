@@ -223,7 +223,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
-        if (theKW->getValue() == "none")
+        if (theKW->getValue() == "no")
         {
             valid = true;
         }
@@ -298,8 +298,10 @@ void HSSLineBorder::draw(QPainter &painter, const QPainterPath &path)
         a = this->color->getAlpha();
     }
 
-    QPen pen;
-    pen.setColor(QColor(r, g, b, a));
-    pen.setWidthF(this->size);
-    painter.strokePath(path, pen);
+    QPainterPathStroker stroker;
+    stroker.setWidth(this->size);
+    stroker.setJoinStyle(Qt::MiterJoin);
+    stroker.setCapStyle(Qt::RoundCap);
+    QPainterPath borderPath = stroker.createStroke(path);
+    painter.fillPath(borderPath, QColor(r, g, b, a));
 }

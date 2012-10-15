@@ -255,7 +255,7 @@ HSSObject::~HSSObject()
 
 bool HSSObject::isKeyword(AXRString value, AXRString property)
 {
-    return (value == "default" || value == "inherit" || value == "undefined" || value == "none");
+    return (value == "default" || value == "inherit" || value == "undefined" || value == "yes" || value == "no");
 }
 
 bool HSSObject::isFunction(AXRString value, AXRString property)
@@ -289,7 +289,7 @@ AXRString HSSObject::toString()
     }
     else
     {
-        return "Annonymous HSSObject";
+        return "Anonymous HSSObject";
     }
 }
 
