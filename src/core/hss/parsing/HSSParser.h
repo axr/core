@@ -47,7 +47,7 @@
 #include <stack>
 #include <vector>
 #include <boost/shared_ptr.hpp>
-#include <boost/unordered_set.hpp>
+#include <QList>
 #include "AXRBuffer.h"
 #include "HSSCombinator.h"
 #include "HSSObjectDefinition.h"
@@ -454,7 +454,7 @@ namespace AXR
         AXRString basepath;
         AXRBuffer::p currentFile;
 
-        boost::unordered_set<AXRBuffer::p> loadedFiles;
+        QList<AXRBuffer::p> loadedFiles;
 
         HSSObject::p _genericContext;
         AXRString _lastObjectType;

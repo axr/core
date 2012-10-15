@@ -47,7 +47,6 @@
 #include <deque>
 #include <vector>
 #include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 #include "HSSDisplayObject.h"
 #include "HSSObject.h"
 #include "HSSRule.h"

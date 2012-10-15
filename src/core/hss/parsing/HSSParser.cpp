@@ -147,13 +147,13 @@ bool HSSParser::loadFile(AXRBuffer::p file)
     security_brake_init();
 
     //check if the file has been loaded already
-    if (this->loadedFiles.find(file) != this->loadedFiles.end())
+    if (!this->loadedFiles.contains(file))
     {
         AXRError::p(new AXRError("HSSParser", "Failed loading file " + file->sourceUrl().toString() + " because of circular reference"))->raise();
         return false;
     }
 
-    this->loadedFiles.insert(file);
+    this->loadedFiles.append(file);
     this->currentFile = file;
 
     //propagate the file to the tokenizer

@@ -42,7 +42,6 @@
  ********************************************************************/
 
 #include <iostream>
-#include <boost/lexical_cast.hpp>
 #include <QImage>
 #include "AXRController.h"
 #include "AXRDebugging.h"

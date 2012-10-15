@@ -45,7 +45,6 @@
 #define HSSTOKENIZER_H
 
 #include <vector>
-#include <boost/shared_array.hpp>
 #include "AXRBuffer.h"
 #include "HSSToken.h"
 #include "HSSValueToken.h"
