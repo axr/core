@@ -62,7 +62,7 @@ namespace AXR
     class AXR_API HSSRefFunction : public HSSFunction
     {
     public:
-        typedef boost::shared_ptr<HSSRefFunction> p;
+        typedef QSharedPointer<HSSRefFunction> p;
 
         /**
          *  Creates a new instance of a ref function.

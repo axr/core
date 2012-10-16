@@ -81,11 +81,11 @@ AXRBuffer::p AXRWrapper::getFile(QUrl u)
             AXRBuffer::p ret = AXRBuffer::p(new AXRBuffer(fi));
             if (!fi.exists())
             {
-                throw AXRError::p(new AXRError("AXRWrapper", "the file " + u.toLocalFile() + " doesn't exist"));
+                throw AXRError("AXRWrapper", "the file " + u.toLocalFile() + " doesn't exist");
             }
             else if (!ret->isValid())
             {
-                throw AXRError::p(new AXRError("AXRWrapper", "the file " + u.toLocalFile() + " couldn't be read"));
+                throw AXRError("AXRWrapper", "the file " + u.toLocalFile() + " couldn't be read");
             }
 
             return ret;
@@ -120,7 +120,7 @@ AXRBuffer::p AXRWrapper::createDummyXML(QUrl hssUrl)
     }
     else
     {
-        AXRError::p(new AXRError("AXRWrapper", "Could not create dummy XML for invalid HSS file URL"))->raise();
+        AXRError("AXRWrapper", "Could not create dummy XML for invalid HSS file URL").raise();
         return AXRBuffer::p(new AXRBuffer());
     }
 }
@@ -135,7 +135,7 @@ bool AXRWrapper::loadFileByPath(QUrl url)
         }
         else
         {
-            AXRError::p(new AXRError("AXRWrapper", "Could not load relative URL as main file", url))->raise();
+            AXRError("AXRWrapper", "Could not load relative URL as main file", url).raise();
             return false;
         }
     }
@@ -155,7 +155,7 @@ bool AXRWrapper::loadFileByPath(QUrl url)
     }
     else
     {
-        AXRError::p(new AXRError("AXRController", "Unknown file extension"))->raise();
+        AXRError("AXRController", "Unknown file extension").raise();
         return false;
     }
 }
@@ -181,9 +181,9 @@ bool AXRWrapper::loadXMLFile(QUrl url)
         AXRBuffer::p theFile = this->getFile(url);
         core->setFile(theFile);
     }
-    catch (const AXRError::p &e)
+    catch (const AXRError &e)
     {
-        e->raise();
+        e.raise();
         return false;
     }
 
@@ -191,13 +191,9 @@ bool AXRWrapper::loadXMLFile(QUrl url)
     {
         core->run();
     }
-    catch (const AXRError::p &e)
+    catch (const AXRError &e)
     {
-        e->raise();
-    }
-    catch (const AXRWarning::p &e)
-    {
-        e->raise();
+        e.raise();
     }
 
     this->setNeedsDisplay(true);
@@ -221,7 +217,7 @@ bool AXRWrapper::reload()
         }
         else
         {
-            AXRWarning::p(new AXRWarning("AXRWrapper", "no file loaded"))->raise();
+            AXRWarning("AXRWrapper", "no file loaded").raise();
             return false;
         }
     }
@@ -363,7 +359,7 @@ void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
         HSSParserNode::p argument = *it;
         if (argument->isA(HSSFunctionTypeSel))
         {
-            HSSSelFunction::p selFunction = boost::static_pointer_cast<HSSSelFunction > (argument);
+            HSSSelFunction::p selFunction = qSharedPointerCast<HSSSelFunction>(argument);
             boost::any remoteValue = selFunction->evaluate();
             try
             {
@@ -449,13 +445,9 @@ void AXRTestThread::operator () ()
         }
 
     }
-    catch (const AXRError::p &e)
+    catch (const AXRError &e)
     {
-        e->raise();
-    }
-    catch (const AXRWarning::p &e)
-    {
-        e->raise();
+        e.raise();
     }
 }
 

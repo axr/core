@@ -212,7 +212,7 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type)
     }
 
     default:
-        throw AXRError::p(new AXRError("HSSObject", type));
+        throw AXRError("HSSObject", type);
     }
 
     return HSSObject::p();
@@ -240,7 +240,7 @@ HSSObject::HSSObject(const HSSObject & orig)
 
 HSSObject::p HSSObject::clone() const
 {
-    return boost::static_pointer_cast<HSSObject, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSObject, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSObject::cloneImpl() const
@@ -413,7 +413,7 @@ void HSSObject::addDIsA(HSSParserNode::p value)
     {
     case HSSParserNodeTypeMultipleValueDefinition:
     {
-        HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
+        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
         for (HSSParserNode::it iterator = values.begin(); iterator != values.end(); ++iterator)
         {
@@ -428,7 +428,7 @@ void HSSObject::addDIsA(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
             //objdef->apply();
             std::deque<HSSPropertyDefinition::p> properties = objdef->getProperties();
@@ -442,13 +442,13 @@ void HSSObject::addDIsA(HSSParserNode::p value)
                     {
                         this->setProperty(propertyName, properties[i]->getValue()->clone());
                     }
-                    catch (const AXRError::p &e)
+                    catch (const AXRError &e)
                     {
-                        e->raise();
+                        e.raise();
                     }
-                    catch (const AXRWarning::p &e)
+                    catch (const AXRWarning &e)
                     {
-                        e->raise();
+                        e.raise();
                     }
                 }
 
@@ -457,13 +457,13 @@ void HSSObject::addDIsA(HSSParserNode::p value)
 
             valid = true;
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError &e)
         {
-            e->raise();
+            e.raise();
         }
-        catch (const AXRWarning::p &e)
+        catch (const AXRWarning &e)
         {
-            e->raise();
+            e.raise();
         }
 
         break;
@@ -471,7 +471,7 @@ void HSSObject::addDIsA(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        AXRError::p(new AXRError("HSSObject", "HSSParserNodeTypeKeywordConstant Unimplemented"))->raise();
+        AXRError("HSSObject", "HSSParserNodeTypeKeywordConstant Unimplemented").raise();
         break;
     }
 
@@ -483,7 +483,7 @@ void HSSObject::addDIsA(HSSParserNode::p value)
     {
     case HSSStatementTypeObjectDefinition:
     {
-        AXRError::p(new AXRError("HSSObject", "HSSStatementTypeObjectDefinition Unimplemented in isA"))->raise();
+        AXRError("HSSObject", "HSSStatementTypeObjectDefinition Unimplemented in isA").raise();
         break;
     }
 
@@ -492,7 +492,7 @@ void HSSObject::addDIsA(HSSParserNode::p value)
     }
 
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSObject", "Invalid value for isA of " + this->name));
+        throw AXRWarning("HSSObject", "Invalid value for isA of " + this->name);
 
     this->notifyObservers(HSSObservablePropertyIsA, &this->dIsA);
 }
@@ -511,7 +511,7 @@ void HSSObject::setPropertyWithName(AXRString name, HSSParserNode::p value)
     }
     else
     {
-        AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property " + name + ", ignoring value"))->raise();
+        AXRWarning("HSSDisplayObject", "Unknown property " + name + ", ignoring value").raise();
     }
 }
 
@@ -524,20 +524,20 @@ void HSSObject::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
     else
     {
-        AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property " + HSSObservable::observablePropertyStringRepresentation(name) + ", ignoring value"))->raise();
+        AXRWarning("HSSDisplayObject", "Unknown property " + HSSObservable::observablePropertyStringRepresentation(name) + ", ignoring value").raise();
     }
 }
 
 void HSSObject::setProperty(HSSObservableProperty name, boost::any value)
 {
-    AXRWarning::p(new AXRWarning("HSSDisplayObject", "Unknown property " + HSSObservable::observablePropertyStringRepresentation(name) + ", ignoring value"))->raise();
+    AXRWarning("HSSDisplayObject", "Unknown property " + HSSObservable::observablePropertyStringRepresentation(name) + ", ignoring value").raise();
 }
 
 boost::any HSSObject::getProperty(HSSObservableProperty name)
 {
     if (this->properties.find(name) == this->properties.end())
     {
-        AXRError::p(new AXRError("HSSObject", "Unknown property " + HSSObservable::observablePropertyStringRepresentation(name)))->raise();
+        AXRError("HSSObject", "Unknown property " + HSSObservable::observablePropertyStringRepresentation(name)).raise();
         return NULL;
     }
     return this->properties[name];
@@ -626,4 +626,12 @@ bool HSSObject::isA(HSSActionType otherType)
 HSSActionType HSSObject::getActionType()
 {
     return HSSActionTypeNone;
+}
+
+HSSObject::p HSSObject::shared_from_this()
+{
+    if (!ptr)
+        ptr = QWeakPointer<HSSObject>(this);
+
+    return HSSObject::p(ptr);
 }

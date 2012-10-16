@@ -60,7 +60,7 @@ namespace AXR
     class AXR_API HSSThisSelector : public HSSNameSelector
     {
     public:
-        typedef boost::shared_ptr<HSSThisSelector> p;
+        typedef QSharedPointer<HSSThisSelector> p;
 
         /**
          *  Creates a new instance of a this selector.

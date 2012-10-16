@@ -59,7 +59,7 @@ namespace AXR
     class AXR_API HSSEvent : public HSSObject
     {
     public:
-        typedef boost::shared_ptr<HSSEvent> p;
+        typedef QSharedPointer<HSSEvent> p;
 
         /**
          *  Print the type as a string, useful for logging.

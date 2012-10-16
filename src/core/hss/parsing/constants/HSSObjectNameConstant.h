@@ -44,7 +44,7 @@
 #ifndef HSSOBJECTNAMECONSTANT_H
 #define HSSOBJECTNAMECONSTANT_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSExpression.h"
 
 namespace AXR
@@ -58,7 +58,7 @@ namespace AXR
     class AXR_API HSSObjectNameConstant : public HSSParserNode
     {
     public:
-        typedef boost::shared_ptr<HSSObjectNameConstant> p;
+        typedef QSharedPointer<HSSObjectNameConstant> p;
 
         /**
          *  Creates a new instance of a object name constant, with given name.

@@ -44,7 +44,7 @@
 #ifndef HSSCLONABLE_H
 #define HSSCLONABLE_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "AXRGlobal.h"
 
 namespace AXR
@@ -58,7 +58,7 @@ namespace AXR
         /**
          *  The shared pointer for this class.
          */
-        typedef boost::shared_ptr<HSSClonable> p;
+        typedef QSharedPointer<HSSClonable> p;
 
         virtual ~HSSClonable()
         {

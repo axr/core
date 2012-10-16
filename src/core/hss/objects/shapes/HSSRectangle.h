@@ -55,7 +55,7 @@ namespace AXR
     class AXR_API HSSRectangle : public HSSShape
     {
     public:
-        typedef boost::shared_ptr<HSSRectangle> p;
+        typedef QSharedPointer<HSSRectangle> p;
 
         /**
          *  Constructor for HSSRectangle objects

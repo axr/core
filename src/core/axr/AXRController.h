@@ -46,8 +46,7 @@
 
 #include <stack>
 #include <vector>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSContainer.h"
 #include "HSSObject.h"
 #include "HSSParser.h"
@@ -67,7 +66,7 @@ namespace AXR
         /**
          *  The shared pointer to the controller.
          */
-        typedef boost::shared_ptr<AXRController> p;
+        typedef QSharedPointer<AXRController> p;
 
         /**
          *  Creates a new instance of a controller.

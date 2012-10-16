@@ -71,7 +71,7 @@ namespace AXR
     class AXR_API HSSContainer : public HSSDisplayObject
     {
     public:
-        typedef boost::shared_ptr<HSSContainer> p;
+        typedef QSharedPointer<HSSContainer> p;
 
         friend class HSSDisplayObject;
 
@@ -84,7 +84,7 @@ namespace AXR
         class AXR_API displayGroup
         {
         public:
-            typedef boost::shared_ptr<HSSContainer::displayGroup> p;
+            typedef QSharedPointer<HSSContainer::displayGroup> p;
             HSSUnit x;
             HSSUnit y;
             HSSUnit width;

@@ -46,7 +46,7 @@
 
 #include <deque>
 #include <vector>
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSDisplayObject.h"
 #include "HSSObject.h"
 #include "HSSRule.h"
@@ -62,7 +62,7 @@ namespace AXR
     class AXR_API HSSObjectDefinition : public HSSStatement
     {
     public:
-        typedef boost::shared_ptr<HSSObjectDefinition> p;
+        typedef QSharedPointer<HSSObjectDefinition> p;
 
         /**
          *  Creates a new instance of an object definition, storing the given object, to which
@@ -239,7 +239,6 @@ namespace AXR
 
         std::deque<HSSPropertyDefinition::p> properties;
         std::vector<HSSObjectDefinition::p> children;
-
 
         HSSDisplayObject::p thisObj;
         const std::vector<HSSDisplayObject::p> * scope;

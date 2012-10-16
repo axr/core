@@ -59,7 +59,7 @@ HSSDivision::HSSDivision(const HSSDivision &orig)
 
 HSSDivision::p HSSDivision::clone() const
 {
-    return boost::static_pointer_cast<HSSDivision, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSDivision, HSSClonable > (this->cloneImpl());
 }
 
 HSSDivision::~HSSDivision()

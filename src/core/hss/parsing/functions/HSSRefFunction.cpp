@@ -64,7 +64,7 @@ HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
 
 HSSFunction::p HSSRefFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 HSSRefFunction::~HSSRefFunction()
@@ -162,7 +162,7 @@ boost::any HSSRefFunction::_evaluate()
 
         container->observe(this->propertyName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
 
-        this->observed = container.get();
+        this->observed = container.data();
     }
     else
     {
@@ -190,7 +190,7 @@ boost::any HSSRefFunction::_evaluate()
 
         }
          */
-        throw AXRError::p(new AXRError("HSSRefFunciton", "Using modifiers in ref functions is not implemented yet"));
+        throw AXRError("HSSRefFunciton", "Using modifiers in ref functions is not implemented yet");
     }
     return this->_value;
 }

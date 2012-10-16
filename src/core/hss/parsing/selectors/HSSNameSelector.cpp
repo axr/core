@@ -59,7 +59,7 @@ HSSNameSelector::HSSNameSelector(const HSSNameSelector &orig)
 
 HSSNameSelector::p HSSNameSelector::clone() const
 {
-    return boost::static_pointer_cast<HSSNameSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSNameSelector, HSSClonable > (this->cloneImpl());
 }
 
 AXRString HSSNameSelector::getElementName()

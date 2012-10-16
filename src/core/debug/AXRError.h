@@ -44,8 +44,7 @@
 #ifndef AXRERROR_H
 #define AXRERROR_H
 
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
+#include <QSharedData>
 #include <QUrl>
 #include "AXRString.h"
 #include "AXRGlobal.h"
@@ -56,15 +55,9 @@ namespace AXR
      *  @brief  This class, and it's subclass AXRWarning, are used for error handling in
      *  the rendering engine. They can be displayed using raise() or thrown.
      */
-    class AXR_API AXRError : public boost::enable_shared_from_this<AXRError>
+    class AXR_API AXRError
     {
     public:
-        /**
-         *  The shared pointer to the error.
-         */
-        typedef boost::shared_ptr<AXRError>p;
-        typedef boost::shared_ptr<const AXRError> cp;
-
         /**
          *  Creates a new instance of an error, with information about the filename,
          *  the line and column where it happened.
@@ -75,10 +68,7 @@ namespace AXR
          *  @param column   The column index (starting at 1) in the line where the error happened.
          */
         AXRError(const AXRString &origin, const AXRString &message, const QUrl &url = QUrl(), int line = 0, int column = 0);
-
-        /**
-         *  Destructor for the error.
-         */
+        AXRError(const AXRError &other);
         virtual ~AXRError();
 
         /**
@@ -102,14 +92,9 @@ namespace AXR
     protected:
         virtual AXRString toProblemString(const AXRString &label) const;
 
-        AXRString origin;
-        AXRString message;
-
-        QUrl url;
-        int line;
-        int column;
-
-        bool inFile;
+    private:
+        class Data;
+        QSharedDataPointer<Data> d;
     };
 }
 

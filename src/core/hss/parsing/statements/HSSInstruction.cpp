@@ -68,7 +68,7 @@ HSSInstruction::HSSInstruction(const HSSInstruction &orig)
 
 HSSInstruction::p HSSInstruction::clone() const
 {
-    return boost::static_pointer_cast<HSSInstruction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSInstruction, HSSClonable > (this->cloneImpl());
 }
 
 HSSInstruction::~HSSInstruction()

@@ -44,19 +44,19 @@
 #ifndef HSSVALUETOKEN_H
 #define HSSVALUETOKEN_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "AXRGlobal.h"
 #include "HSSToken.h"
 #include "HSSUnits.h"
 
-#define VALUE_TOKEN(thetoken) (boost::static_pointer_cast<HSSValueToken>(thetoken))
+#define VALUE_TOKEN(thetoken) (qSharedPointerCast<HSSValueToken>(thetoken))
 
 namespace AXR
 {
     class AXR_API HSSValueToken : public HSSToken
     {
     public:
-        typedef boost::shared_ptr<HSSValueToken> p;
+        typedef QSharedPointer<HSSValueToken> p;
 
         HSSValueToken(HSSTokenType type, AXRString value, unsigned line, unsigned column);
         HSSValueToken(HSSTokenType type, char value, unsigned line, unsigned column);

@@ -93,7 +93,7 @@ HSSPolygon::HSSPolygon(const HSSPolygon & orig)
 HSSPolygon::p HSSPolygon::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: cloning polygon object");
-    return boost::static_pointer_cast<HSSPolygon, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSPolygon, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSPolygon::cloneImpl() const
@@ -215,7 +215,7 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dSides = value;
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
@@ -243,14 +243,14 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
         }
         else
         {
-            throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid function type for sides of @polygon " + this->name));
+            throw AXRWarning("HSSDGradient", "Invalid function type for sides of @polygon " + this->name);
         }
 
         break;
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSPolygon", "Invalid value for sides of @polygon " + this->name));
+        throw AXRWarning("HSSPolygon", "Invalid value for sides of @polygon " + this->name);
     }
     this->notifyObservers(HSSObservablePropertySides, &this->sides);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
@@ -268,7 +268,7 @@ void HSSPolygon::sidesChanged(HSSObservableProperty source, void*data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dSides);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dSides);
         this->sides = floor(percentageValue->getValue(*(HSSUnit*) data));
         break;
     }
@@ -313,7 +313,7 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dAngle = value;
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
@@ -333,14 +333,14 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
         }
         else
         {
-            throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid function type for angle of @polygon " + this->name));
+            throw AXRWarning("HSSDGradient", "Invalid function type for angle of @polygon " + this->name);
         }
 
         break;
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSPolygon", "Invalid value for angle of @polygon " + this->name));
+        throw AXRWarning("HSSPolygon", "Invalid value for angle of @polygon " + this->name);
     }
     this->notifyObservers(HSSObservablePropertyAngle, &this->angle);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
@@ -358,7 +358,7 @@ void HSSPolygon::angleChanged(HSSObservableProperty source, void*data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dAngle);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAngle);
         this->angle = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
@@ -387,21 +387,21 @@ HSSUnit HSSPolygon::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setScope(this->scope);
         expressionValue->setThisObj(this->thisObj);
@@ -419,7 +419,7 @@ HSSUnit HSSPolygon::_evaluatePropertyValue(
         break;
 
     default:
-        AXRWarning::p(new AXRWarning("HSSPolygon", "Unknown parser node type while setting value for @polygon property"))->raise();
+        AXRWarning("HSSPolygon", "Unknown parser node type while setting value for @polygon property").raise();
         break;
     }
 

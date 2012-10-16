@@ -44,7 +44,7 @@
 #ifndef AXRBUFFER_H
 #define AXRBUFFER_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include <QByteArray>
 #include <QFileInfo>
 #include <QUrl>
@@ -63,7 +63,7 @@ namespace AXR
         /**
          *  The shared pointer to a file.
          */
-        typedef boost::shared_ptr<AXRBuffer> p;
+        typedef QSharedPointer<AXRBuffer> p;
 
         /**
          *  Creates a new instance of an in-memory buffer.

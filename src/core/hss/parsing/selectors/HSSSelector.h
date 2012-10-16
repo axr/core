@@ -55,7 +55,7 @@ namespace AXR
     class AXR_API HSSSelector : public HSSParserNode
     {
     public:
-        typedef boost::shared_ptr<HSSSelector> p;
+        typedef QSharedPointer<HSSSelector> p;
 
         ~HSSSelector();
 

@@ -67,7 +67,7 @@ HSSRule::HSSRule(const HSSRule & orig)
 
 HSSRule::p HSSRule::clone() const
 {
-    HSSRule::p clone = boost::static_pointer_cast<HSSRule, HSSClonable > (this->cloneImpl());
+    HSSRule::p clone = qSharedPointerCast<HSSRule>(this->cloneImpl());
     if (this->instruction)
         clone->instruction = this->instruction->clone();
     return clone;
@@ -255,10 +255,10 @@ HSSInstruction::p HSSRule::getInstruction()
 
 HSSRule::p HSSRule::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSRule > (HSSStatement::shared_from_this());
+    return qSharedPointerCast<HSSRule > (HSSStatement::shared_from_this());
 }
 
-void HSSRule::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
+void HSSRule::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)
     {
@@ -298,19 +298,19 @@ void HSSRule::setActiveByDefault(bool newValue)
     this->_activeByDefault = newValue;
 }
 
-const std::vector<boost::weak_ptr<HSSDisplayObject> > HSSRule::getAppliedTo() const
+const std::vector<QWeakPointer<HSSDisplayObject> > HSSRule::getAppliedTo() const
 {
     return this->appliedTo;
 }
 
-void HSSRule::setAppliedTo(std::vector<boost::weak_ptr<HSSDisplayObject> > newObjects)
+void HSSRule::setAppliedTo(std::vector<QWeakPointer<HSSDisplayObject> > newObjects)
 {
     this->appliedTo = newObjects;
 }
 
 void HSSRule::appliedToAdd(HSSDisplayObject::p displayObject)
 {
-    this->appliedTo.push_back(boost::weak_ptr<HSSDisplayObject > (displayObject));
+    this->appliedTo.push_back(QWeakPointer<HSSDisplayObject > (displayObject));
 }
 
 HSSClonable::p HSSRule::cloneImpl() const
@@ -341,12 +341,12 @@ HSSClonable::p HSSRule::cloneImpl() const
     return clone;
 }
 
-const std::vector<boost::shared_ptr<HSSDisplayObject> > HSSRule::getOriginalScope() const
+const std::vector<QSharedPointer<HSSDisplayObject> > HSSRule::getOriginalScope() const
 {
     return this->_originalScope;
 }
 
-void HSSRule::setOriginalScope(const std::vector<boost::shared_ptr<HSSDisplayObject> > & scope)
+void HSSRule::setOriginalScope(const std::vector<QSharedPointer<HSSDisplayObject> > & scope)
 {
     this->_originalScope = scope;
 }

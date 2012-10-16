@@ -45,7 +45,7 @@
 #define HSSRULE_H
 
 #include <vector>
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSInstruction.h"
 #include "HSSPropertyDefinition.h"
 #include "HSSSelectorChain.h"
@@ -69,7 +69,7 @@ namespace AXR
         /**
          *  The shared pointer to this class.
          */
-        typedef boost::shared_ptr<HSSRuleStatus> p;
+        typedef QSharedPointer<HSSRuleStatus> p;
 
         /**
          *  The current state the rule.
@@ -79,7 +79,7 @@ namespace AXR
         /**
          *  A shared pointer to the rule.
          */
-        boost::shared_ptr<HSSRule> rule;
+        QSharedPointer<HSSRule> rule;
     };
 
     /**
@@ -92,7 +92,7 @@ namespace AXR
     class AXR_API HSSRule : public HSSStatement
     {
     public:
-        typedef boost::shared_ptr<HSSRule> p;
+        typedef QSharedPointer<HSSRule> p;
         typedef std::deque<p>::iterator it;
         typedef std::deque<p>::const_iterator const_it;
 
@@ -248,7 +248,7 @@ namespace AXR
 
         HSSInstruction::p getInstruction();
 
-        virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
         void treeChanged(HSSObservableProperty source, void*data);
 
@@ -256,15 +256,15 @@ namespace AXR
 
         void setActiveByDefault(bool newValue);
 
-        const std::vector<boost::weak_ptr<HSSDisplayObject> > getAppliedTo() const;
+        const std::vector<QWeakPointer<HSSDisplayObject> > getAppliedTo() const;
 
-        void setAppliedTo(std::vector<boost::weak_ptr<HSSDisplayObject> > newObjects);
+        void setAppliedTo(std::vector<QWeakPointer<HSSDisplayObject> > newObjects);
 
-        void appliedToAdd(boost::shared_ptr<HSSDisplayObject> displayObject);
+        void appliedToAdd(QSharedPointer<HSSDisplayObject> displayObject);
 
-        const std::vector<boost::shared_ptr<HSSDisplayObject> > getOriginalScope() const;
+        const std::vector<QSharedPointer<HSSDisplayObject> > getOriginalScope() const;
 
-        void setOriginalScope(const std::vector<boost::shared_ptr<HSSDisplayObject> > & scope);
+        void setOriginalScope(const std::vector<QSharedPointer<HSSDisplayObject> > & scope);
 
         void setObservedTreeChanger(HSSObservable * newValue);
 
@@ -279,9 +279,9 @@ namespace AXR
 
         bool _activeByDefault;
 
-        std::vector<boost::weak_ptr<HSSDisplayObject> > appliedTo;
+        std::vector<QWeakPointer<HSSDisplayObject> > appliedTo;
 
-        std::vector<boost::shared_ptr<HSSDisplayObject> > _originalScope;
+        std::vector<QSharedPointer<HSSDisplayObject> > _originalScope;
 
     private:
         virtual HSSClonable::p cloneImpl() const;

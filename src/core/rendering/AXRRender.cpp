@@ -115,7 +115,7 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
     }
     else
     {
-        AXRError::p(new AXRError("AXRRender", "Fatal error: No root"))->raise();
+        AXRError("AXRRender", "Fatal error: No root").raise();
     }
 }
 
@@ -166,9 +166,9 @@ void AXRRender::mouseUp(HSSUnit x, HSSUnit y)
         {
             root->handleEvent(HSSEventTypeMouseUp, (void*) &thePoint);
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError &e)
         {
-            e->raise();
+            e.raise();
         }
     }
 }

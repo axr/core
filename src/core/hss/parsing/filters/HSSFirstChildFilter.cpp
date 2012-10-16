@@ -53,7 +53,7 @@ HSSFirstChildFilter::HSSFirstChildFilter()
 
 HSSFirstChildFilter::p HSSFirstChildFilter::clone() const
 {
-    return boost::static_pointer_cast<HSSFirstChildFilter, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFirstChildFilter, HSSClonable > (this->cloneImpl());
 }
 
 HSSFirstChildFilter::~HSSFirstChildFilter()

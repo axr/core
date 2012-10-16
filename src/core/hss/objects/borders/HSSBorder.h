@@ -44,7 +44,7 @@
 #ifndef HSSBORDER_H
 #define HSSBORDER_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include <QPainter>
 #include <QPainterPath>
 #include "HSSObject.h"
@@ -58,7 +58,7 @@ namespace AXR
     class AXR_API HSSBorder : public HSSObject
     {
     public:
-        typedef boost::shared_ptr<HSSBorder> p;
+        typedef QSharedPointer<HSSBorder> p;
         typedef std::vector<HSSBorder::p>::iterator it;
 
         /**

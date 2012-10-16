@@ -63,7 +63,7 @@ namespace AXR
     class AXR_API HSSTokenizer
     {
     public:
-        typedef boost::shared_ptr<HSSTokenizer> p;
+        typedef QSharedPointer<HSSTokenizer> p;
 
         HSSTokenizer();
         //destructor

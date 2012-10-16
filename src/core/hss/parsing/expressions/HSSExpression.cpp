@@ -126,28 +126,28 @@ HSSUnit HSSExpression::evaluate()
         {
         case HSSParserNodeTypeExpression:
         {
-            HSSExpression::p leftExpression = boost::static_pointer_cast<HSSExpression > (this->getLeft());
+            HSSExpression::p leftExpression = qSharedPointerCast<HSSExpression > (this->getLeft());
             this->leftval = leftExpression->evaluate();
             if (this->leftObserved)
             {
                 this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
             }
             leftExpression->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::leftChanged));
-            this->leftObserved = leftExpression.get();
+            this->leftObserved = leftExpression.data();
             this->leftObservedProperty = HSSObservablePropertyValue;
             break;
         }
 
         case HSSParserNodeTypeNumberConstant:
         {
-            HSSNumberConstant::p leftNumber = boost::static_pointer_cast<HSSNumberConstant > (this->getLeft());
+            HSSNumberConstant::p leftNumber = qSharedPointerCast<HSSNumberConstant > (this->getLeft());
             this->leftval = leftNumber->getValue();
             break;
         }
 
         case HSSParserNodeTypePercentageConstant:
         {
-            HSSPercentageConstant::p leftPercentage = boost::static_pointer_cast<HSSPercentageConstant > (this->getLeft());
+            HSSPercentageConstant::p leftPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getLeft());
             this->leftval = leftPercentage->getValue(this->percentageBase);
             if (this->leftObserved)
             {
@@ -161,7 +161,7 @@ HSSUnit HSSExpression::evaluate()
 
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p leftFunction = boost::static_pointer_cast<HSSFunction > (this->getLeft());
+            HSSFunction::p leftFunction = qSharedPointerCast<HSSFunction > (this->getLeft());
             boost::any remoteValue = leftFunction->evaluate();
             try
             {
@@ -171,7 +171,7 @@ HSSUnit HSSExpression::evaluate()
                     this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
                 }
                 leftFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::leftChanged));
-                this->leftObserved = leftFunction.get();
+                this->leftObserved = leftFunction.data();
                 this->leftObservedProperty = HSSObservablePropertyValue;
 
             }
@@ -194,28 +194,28 @@ HSSUnit HSSExpression::evaluate()
         {
         case HSSParserNodeTypeExpression:
         {
-            HSSExpression::p rightExpression = boost::static_pointer_cast<HSSExpression > (this->getRight());
+            HSSExpression::p rightExpression = qSharedPointerCast<HSSExpression > (this->getRight());
             this->rightval = rightExpression->evaluate();
             if (this->rightObserved)
             {
                 this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
             }
             rightExpression->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
-            this->rightObserved = rightExpression.get();
+            this->rightObserved = rightExpression.data();
             this->rightObservedProperty = HSSObservablePropertyValue;
             break;
         }
 
         case HSSParserNodeTypeNumberConstant:
         {
-            HSSNumberConstant::p rightNumber = boost::static_pointer_cast<HSSNumberConstant > (this->getRight());
+            HSSNumberConstant::p rightNumber = qSharedPointerCast<HSSNumberConstant > (this->getRight());
             this->rightval = rightNumber->getValue();
             break;
         }
 
         case HSSParserNodeTypePercentageConstant:
         {
-            HSSPercentageConstant::p rightPercentage = boost::static_pointer_cast<HSSPercentageConstant > (this->getRight());
+            HSSPercentageConstant::p rightPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getRight());
             this->rightval = rightPercentage->getValue(this->percentageBase);
             if (this->rightObserved)
             {
@@ -229,7 +229,7 @@ HSSUnit HSSExpression::evaluate()
 
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p rightFunction = boost::static_pointer_cast<HSSFunction > (this->getRight());
+            HSSFunction::p rightFunction = qSharedPointerCast<HSSFunction > (this->getRight());
             boost::any remoteValue = rightFunction->evaluate();
             try
             {
@@ -239,7 +239,7 @@ HSSUnit HSSExpression::evaluate()
                     this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
                 }
                 rightFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
-                this->rightObserved = rightFunction.get();
+                this->rightObserved = rightFunction.data();
                 this->rightObservedProperty = HSSObservablePropertyValue;
 
             }
@@ -311,7 +311,7 @@ void HSSExpression::leftChanged(HSSObservableProperty property, void* data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p leftPercentage = boost::static_pointer_cast<HSSPercentageConstant > (this->getLeft());
+        HSSPercentageConstant::p leftPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getLeft());
         this->leftval = leftPercentage->getValue(*(HSSUnit*) data);
         break;
     }
@@ -339,7 +339,7 @@ void HSSExpression::rightChanged(HSSObservableProperty property, void* data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p rightPercentage = boost::static_pointer_cast<HSSPercentageConstant > (this->getRight());
+        HSSPercentageConstant::p rightPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getRight());
         this->rightval = rightPercentage->getValue(*(HSSUnit*) data);
         break;
     }
@@ -379,22 +379,22 @@ void HSSExpression::setPercentageBase(HSSUnit value)
     //propagate values
     if (this->left && this->left->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p leftExpression = boost::static_pointer_cast<HSSExpression > (this->left);
+        HSSExpression::p leftExpression = qSharedPointerCast<HSSExpression > (this->left);
         leftExpression->setPercentageBase(value);
     }
     else if (this->left && this->left->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p leftFunction = boost::static_pointer_cast<HSSFunction > (this->left);
+        HSSFunction::p leftFunction = qSharedPointerCast<HSSFunction > (this->left);
         leftFunction->setPercentageBase(value);
     }
     if (this->right && this->right->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p rightExpression = boost::static_pointer_cast<HSSExpression > (this->right);
+        HSSExpression::p rightExpression = qSharedPointerCast<HSSExpression > (this->right);
         rightExpression->setPercentageBase(value);
     }
     else if (this->right && this->right->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p rightFunction = boost::static_pointer_cast<HSSFunction > (this->right);
+        HSSFunction::p rightFunction = qSharedPointerCast<HSSFunction > (this->right);
         rightFunction->setPercentageBase(value);
     }
 
@@ -409,22 +409,22 @@ void HSSExpression::setPercentageObserved(HSSObservableProperty property, HSSObs
     //propagate values
     if (this->left && this->left->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p leftExpression = boost::static_pointer_cast<HSSExpression > (this->left);
+        HSSExpression::p leftExpression = qSharedPointerCast<HSSExpression > (this->left);
         leftExpression->setPercentageObserved(property, observed);
     }
     else if (this->left && this->left->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p leftFunction = boost::static_pointer_cast<HSSFunction > (this->left);
+        HSSFunction::p leftFunction = qSharedPointerCast<HSSFunction > (this->left);
         leftFunction->setPercentageObserved(property, observed);
     }
     if (this->right && this->right->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p rightExpression = boost::static_pointer_cast<HSSExpression > (this->right);
+        HSSExpression::p rightExpression = qSharedPointerCast<HSSExpression > (this->right);
         rightExpression->setPercentageObserved(property, observed);
     }
     else if (this->right && this->right->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p rightFunction = boost::static_pointer_cast<HSSFunction > (this->right);
+        HSSFunction::p rightFunction = qSharedPointerCast<HSSFunction > (this->right);
         rightFunction->setPercentageObserved(property, observed);
     }
 
@@ -437,22 +437,22 @@ void HSSExpression::setScope(const std::vector<HSSDisplayObject::p> * newScope)
     //propagate values
     if (this->left && this->left->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p leftExpression = boost::static_pointer_cast<HSSExpression > (this->left);
+        HSSExpression::p leftExpression = qSharedPointerCast<HSSExpression > (this->left);
         leftExpression->setScope(newScope);
     }
     else if (this->left && this->left->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p leftFunction = boost::static_pointer_cast<HSSFunction > (this->left);
+        HSSFunction::p leftFunction = qSharedPointerCast<HSSFunction > (this->left);
         leftFunction->setScope(newScope);
     }
     if (this->right && this->right->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p rightExpression = boost::static_pointer_cast<HSSExpression > (this->right);
+        HSSExpression::p rightExpression = qSharedPointerCast<HSSExpression > (this->right);
         rightExpression->setScope(newScope);
     }
     else if (this->right && this->right->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p rightFunction = boost::static_pointer_cast<HSSFunction > (this->right);
+        HSSFunction::p rightFunction = qSharedPointerCast<HSSFunction > (this->right);
         rightFunction->setScope(newScope);
     }
 

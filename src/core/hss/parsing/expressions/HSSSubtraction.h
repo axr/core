@@ -44,7 +44,7 @@
 #ifndef HSSSUBTRACTION_H
 #define HSSSUBTRACTION_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSExpression.h"
 
 namespace AXR
@@ -57,7 +57,7 @@ namespace AXR
     class AXR_API HSSSubtraction : public HSSExpression
     {
     public:
-        typedef boost::shared_ptr<HSSSubtraction> p;
+        typedef QSharedPointer<HSSSubtraction> p;
 
         /**
          *  Creates a new instance of a subtraction expression, with two

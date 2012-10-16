@@ -80,7 +80,7 @@ HSSFlagFunction::HSSFlagFunction(const HSSFlagFunction & orig)
 
 HSSFunction::p HSSFlagFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 HSSFlagFunction::~HSSFlagFunction()

@@ -46,7 +46,6 @@
 
 #include <vector>
 #include <boost/any.hpp>
-#include <boost/shared_ptr.hpp>
 #include <QMap>
 #include "AXRDebugging.h"
 #include "HSSObservable.h"
@@ -64,13 +63,13 @@ namespace AXR
      *  isA.
      *  @see HSSObjectType
      */
-    class AXR_API HSSObject : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSObject>
+    class AXR_API HSSObject : public HSSObservable, public HSSClonable, public QObject
     {
     public:
         /**
          *  The shared pointer to this kind of object.
          */
-        typedef boost::shared_ptr<HSSObject> p;
+        typedef QSharedPointer<HSSObject> p;
         /**
          *  Convenience iterator for vectors of shared pointers to this kind of object.
          */
@@ -268,14 +267,14 @@ namespace AXR
          *
          *  @todo this is probably a memory management nightmare
          */
-        const std::vector<boost::shared_ptr<HSSDisplayObject> > * getScope() const;
+        const std::vector<QSharedPointer<HSSDisplayObject> > * getScope() const;
         /**
          *  Setter for the current scope this object is operating on.
          *  @param newScope     A pointer to a vector of shared pointers to display objects
          *
          *  @todo this is probably a memory management nightmare.
          */
-        void setScope(const std::vector<boost::shared_ptr<HSSDisplayObject> > * newScope);
+        void setScope(const std::vector<QSharedPointer<HSSDisplayObject> > * newScope);
         /**
          *  Setter for the controller. The controller needs to be propagated across all
          *  HSSObject subclasses, so they get access to the DOM and such.
@@ -292,13 +291,13 @@ namespace AXR
          *  (including itself).
          *  @param value        A shared pointer to the nearest display object.
          */
-        void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        void setThisObj(QSharedPointer<HSSDisplayObject> value);
         /**
          *  Getter for the "this object", which is a shared pointer to the nearest display object
          *  (including itself).
          *  @return A shared pointer to the nearest display object.
          */
-        boost::shared_ptr<HSSDisplayObject> getThisObj();
+        QSharedPointer<HSSDisplayObject> getThisObj();
 
 
         /**
@@ -324,6 +323,8 @@ namespace AXR
         virtual bool isA(HSSActionType otherType);
         virtual HSSActionType getActionType();
 
+        HSSObject::p shared_from_this();
+
     protected:
         QMap<HSSObservableProperty, boost::any> properties;
         std::vector<AXRString> shorthandProperties;
@@ -332,8 +333,8 @@ namespace AXR
 
         HSSParserNode::p dIsA;
 
-        const std::vector<boost::shared_ptr<HSSDisplayObject> > * scope;
-        boost::shared_ptr<HSSDisplayObject> thisObj;
+        const std::vector<QSharedPointer<HSSDisplayObject> > * scope;
+        QSharedPointer<HSSDisplayObject> thisObj;
         AXRController * axrController;
 
     private:
@@ -342,6 +343,7 @@ namespace AXR
 
         virtual HSSClonable::p cloneImpl() const;
 
+        QWeakPointer<HSSObject> ptr;
     };
 }
 

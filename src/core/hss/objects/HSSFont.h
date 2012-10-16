@@ -58,7 +58,7 @@ namespace AXR
     public:
         friend class HSSParser;
 
-        typedef boost::shared_ptr<HSSFont> p;
+        typedef QSharedPointer<HSSFont> p;
 
         static const HSSUnit DEFAULT_SIZE;
 

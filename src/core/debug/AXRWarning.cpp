@@ -50,10 +50,6 @@ AXRWarning::AXRWarning(const AXRString &origin, const AXRString &message, const 
 {
 }
 
-AXRWarning::~AXRWarning()
-{
-}
-
 AXRString AXRWarning::toString() const
 {
     return toProblemString("Warning");

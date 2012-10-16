@@ -44,7 +44,7 @@
 #ifndef HSSTOKEN_H
 #define HSSTOKEN_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "AXRString.h"
 #include "AXRGlobal.h"
 
@@ -79,7 +79,7 @@ namespace AXR
     class AXR_API HSSToken
     {
     public:
-        typedef boost::shared_ptr<HSSToken> p;
+        typedef QSharedPointer<HSSToken> p;
 
         static AXRString tokenStringRepresentation(HSSTokenType type);
 

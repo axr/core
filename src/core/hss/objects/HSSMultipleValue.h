@@ -45,7 +45,7 @@
 #define HSSMULTIPLEVALUE_H
 
 #include <vector>
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSObject.h"
 #include "HSSParserNode.h"
 
@@ -58,7 +58,7 @@ namespace AXR
     class AXR_API HSSMultipleValue : public HSSObject
     {
     public:
-        typedef boost::shared_ptr<HSSMultipleValue> p;
+        typedef QSharedPointer<HSSMultipleValue> p;
 
         /**
          *  Constructor for MultipleValue objects

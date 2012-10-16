@@ -53,7 +53,7 @@ HSSObjectNameConstant::HSSObjectNameConstant(AXRString value)
 
 HSSObjectNameConstant::p HSSObjectNameConstant::clone() const
 {
-    return boost::static_pointer_cast<HSSObjectNameConstant, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSObjectNameConstant, HSSClonable > (this->cloneImpl());
 }
 
 HSSObjectNameConstant::~HSSObjectNameConstant()

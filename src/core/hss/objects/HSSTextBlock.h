@@ -73,7 +73,7 @@ namespace AXR
         static HSSTextTransformType textTransformTypeFromString(AXRString value);
         static HSSTextAlignType textAlignTypeFromString(AXRString value);
 
-        typedef boost::shared_ptr<HSSTextBlock> p;
+        typedef QSharedPointer<HSSTextBlock> p;
         typedef std::vector<HSSTextBlock::p>::iterator it;
 
         /**

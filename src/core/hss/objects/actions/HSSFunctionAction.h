@@ -55,7 +55,7 @@ namespace AXR
     class AXR_API HSSFunctionAction : public HSSAction
     {
     public:
-        typedef boost::shared_ptr<HSSFunctionAction> p;
+        typedef QSharedPointer<HSSFunctionAction> p;
 
         /**
          *  Constructor for HSSFunctionAction objects

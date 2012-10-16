@@ -44,7 +44,7 @@
 #ifndef HSSLINEBORDER_H
 #define HSSLINEBORDER_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include <QPainterPath>
 #include "HSSBorder.h"
 #include "HSSRgb.h"
@@ -59,7 +59,7 @@ namespace AXR
     class AXR_API HSSLineBorder : public HSSBorder
     {
     public:
-        typedef boost::shared_ptr<HSSLineBorder> p;
+        typedef QSharedPointer<HSSLineBorder> p;
 
         /**
          *  Creates a new instance of a line border object.

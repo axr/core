@@ -79,7 +79,7 @@ HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
 HSSLineBorder::p HSSLineBorder::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLineBorder: cloning line border object");
-    return boost::static_pointer_cast<HSSLineBorder, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSLineBorder, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSLineBorder::cloneImpl() const
@@ -176,18 +176,18 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
         this->dColor = value;
         try
         {
-            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
             this->setDColor(objdef);
             valid = true;
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError &e)
         {
-            e->raise();
+            e.raise();
         }
-        catch (const AXRWarning::p &e)
+        catch (const AXRWarning &e)
         {
-            e->raise();
+            e.raise();
         }
 
         break;
@@ -197,7 +197,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dColor = value;
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
@@ -222,7 +222,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        HSSKeywordConstant::p theKW = qSharedPointerCast<HSSKeywordConstant>(value);
         if (theKW->getValue() == "no")
         {
             valid = true;
@@ -257,14 +257,14 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dColor = value;
-        HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (value);
+        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setScope(this->scope);
         objdef->setThisObj(this->getThisObj());
         objdef->apply();
         HSSObject::p theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeRgb))
         {
-            this->color = boost::static_pointer_cast<HSSRgb > (theobj);
+            this->color = qSharedPointerCast<HSSRgb > (theobj);
             valid = true;
         }
 
@@ -276,7 +276,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
     }
 
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSLineBorder", "Invalid value for color of " + this->name));
+        throw AXRWarning("HSSLineBorder", "Invalid value for color of " + this->name);
 
     this->notifyObservers(HSSObservablePropertyStartColor, &this->color);
     this->notifyObservers(HSSObservablePropertyValue, NULL);

@@ -54,7 +54,7 @@ HSSNumberConstant::HSSNumberConstant(HSSUnit value)
 
 HSSNumberConstant::p HSSNumberConstant::clone() const
 {
-    return boost::static_pointer_cast<HSSNumberConstant, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSNumberConstant, HSSClonable > (this->cloneImpl());
 }
 
 HSSNumberConstant::~HSSNumberConstant()

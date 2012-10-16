@@ -54,7 +54,7 @@ HSSRootSelector::HSSRootSelector()
 
 HSSRootSelector::p HSSRootSelector::clone() const
 {
-    return boost::static_pointer_cast<HSSRootSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSRootSelector, HSSClonable > (this->cloneImpl());
 }
 
 AXRString HSSRootSelector::toString()

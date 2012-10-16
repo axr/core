@@ -46,7 +46,7 @@
 
 #include <cstdio>
 #include <queue>
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include <boost/thread/thread.hpp>
 #include <QMap>
 #include "AXRError.h"
@@ -68,7 +68,7 @@ namespace AXR
         /**
          *  The shared pointer to the wrapper.
          */
-        typedef boost::shared_ptr<AXRWrapper> p;
+        typedef QSharedPointer<AXRWrapper> p;
 
         /**
          *  Creates a new instance of the wrapper. It will obtain the singleton instance of
@@ -97,12 +97,12 @@ namespace AXR
          *  Getter for the core.
          *  @return A shared pointer to the core object.
          */
-        boost::shared_ptr<AXRCore> getCore();
+        QSharedPointer<AXRCore> getCore();
         /**
          *  Setter for the core.
          *  param xcr   A shared pointer to the core object.
          */
-        void setCore(boost::shared_ptr<AXRCore> xcr);
+        void setCore(QSharedPointer<AXRCore> xcr);
         /**
          *  This creates a string containing a basic XML document with 1 element called "root".
          *  It is used when a HSS file is loaded directly.

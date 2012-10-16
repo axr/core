@@ -44,7 +44,7 @@
 #ifndef HSSGRADIENT_H
 #define HSSGRADIENT_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include <QPainter>
 #include <QPainterPath>
 #include "HSSObject.h"
@@ -61,7 +61,7 @@ namespace AXR
     class AXR_API HSSGradient : public HSSObject
     {
     public:
-        typedef boost::shared_ptr<HSSGradient> p;
+        typedef QSharedPointer<HSSGradient> p;
         typedef std::vector<HSSGradient::p>::iterator it;
 
         /**

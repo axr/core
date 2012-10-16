@@ -72,7 +72,7 @@ HSSFunction::HSSFunction(const HSSFunction & orig)
 
 HSSFunction::p HSSFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSFunction::cloneImpl() const
@@ -171,14 +171,14 @@ void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
         {
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p func = boost::static_pointer_cast<HSSFunction > (node);
+            HSSFunction::p func = qSharedPointerCast<HSSFunction > (node);
             func->setScope(newScope);
             break;
         }
 
         case HSSParserNodeTypeExpression:
         {
-            HSSExpression::p exp = boost::static_pointer_cast<HSSExpression > (node);
+            HSSExpression::p exp = qSharedPointerCast<HSSExpression > (node);
             exp->setScope(newScope);
             break;
         }
@@ -191,7 +191,7 @@ void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
         {
         case HSSStatementTypeObjectDefinition:
         {
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (node);
+            HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (node);
             objdef->setScope(newScope);
             break;
         }

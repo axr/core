@@ -56,11 +56,6 @@ namespace AXR
     {
     public:
         /**
-         *  The shared pointer to the warning.
-         */
-        typedef boost::shared_ptr<AXRWarning>p;
-
-        /**
          *  Creates a new instance of a warning, with information about the filename,
          *  the line and column where it originated.
          *  @param origin   The name of the class where the warning originated.
@@ -70,11 +65,6 @@ namespace AXR
          *  @param column   The column index (starting at 1) in the line where the warning originated.
          */
         AXRWarning(const AXRString &origin, const AXRString &message, const QUrl &url = QUrl(), int line = 0, int column = 0);
-
-        /**
-         *  Destructor for the warning.
-         */
-        virtual ~AXRWarning();
 
         virtual AXRString toString() const;
     };

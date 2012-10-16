@@ -42,7 +42,6 @@
  ********************************************************************/
 
 #include <iostream>
-#include <boost/pointer_cast.hpp>
 #include "AXRDebugging.h"
 #include "HSSRule.h"
 #include "HSSSelectorChain.h"
@@ -64,7 +63,7 @@ HSSSelectorChain::HSSSelectorChain(const HSSSelectorChain &orig)
 
 HSSSelectorChain::p HSSSelectorChain::clone() const
 {
-    return boost::static_pointer_cast<HSSSelectorChain, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSSelectorChain, HSSClonable > (this->cloneImpl());
 }
 
 HSSSelectorChain::~HSSSelectorChain()
@@ -137,10 +136,10 @@ HSSSimpleSelector::p HSSSelectorChain::subject()
     {
         if (this->nodeList.back()->isA(HSSParserNodeTypeSelector))
         {
-            HSSSelector::p selector = boost::static_pointer_cast<HSSSelector > (this->nodeList.back());
+            HSSSelector::p selector = qSharedPointerCast<HSSSelector > (this->nodeList.back());
             if (selector->isA(HSSSelectorTypeSimpleSelector))
             {
-                ret = boost::static_pointer_cast<HSSSimpleSelector > (selector);
+                ret = qSharedPointerCast<HSSSimpleSelector > (selector);
             }
             else
             {
@@ -156,7 +155,7 @@ HSSSimpleSelector::p HSSSelectorChain::subject()
     return ret;
 }
 
-void HSSSelectorChain::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
+void HSSSelectorChain::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     for (std::deque<HSSParserNode::p>::iterator it = this->nodeList.begin(); it != this->nodeList.end(); ++it)
     {
@@ -168,7 +167,7 @@ void HSSSelectorChain::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
 
 HSSSelectorChain::p HSSSelectorChain::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSSelectorChain > (HSSParserNode::shared_from_this());
+    return qSharedPointerCast<HSSSelectorChain > (HSSParserNode::shared_from_this());
 }
 
 HSSClonable::p HSSSelectorChain::cloneImpl() const

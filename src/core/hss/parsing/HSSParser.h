@@ -46,7 +46,7 @@
 
 #include <stack>
 #include <vector>
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include <QList>
 #include "AXRBuffer.h"
 #include "HSSCombinator.h"
@@ -98,7 +98,7 @@ namespace AXR
         /**
          *  The shared pointer to instances of this class.
          */
-        typedef boost::shared_ptr<HSSParser> p;
+        typedef QSharedPointer<HSSParser> p;
 
         /**
          *  Creates a new instance of a parser object, linking it to the given controller and wrapper.

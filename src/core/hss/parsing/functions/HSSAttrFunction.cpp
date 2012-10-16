@@ -62,7 +62,7 @@ HSSAttrFunction::HSSAttrFunction(const HSSAttrFunction & orig)
 
 HSSFunction::p HSSAttrFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 HSSAttrFunction::~HSSAttrFunction()

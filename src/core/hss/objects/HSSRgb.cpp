@@ -105,7 +105,7 @@ HSSRgb::HSSRgb(const HSSRgb & orig)
 HSSRgb::p HSSRgb::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: cloning rgb object");
-    return boost::static_pointer_cast<HSSRgb, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSRgb, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSRgb::cloneImpl() const
@@ -288,21 +288,21 @@ HSSUnit HSSRgb::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setScope(this->getScope());
         expressionValue->setThisObj(this->getThisObj());
@@ -310,7 +310,7 @@ HSSUnit HSSRgb::_evaluatePropertyValue(
         if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRgb > (this, callback));
-            observedStore = expressionValue.get();
+            observedStore = expressionValue.data();
             observedStoreProperty = HSSObservablePropertyValue;
         }
 
@@ -322,7 +322,7 @@ HSSUnit HSSRgb::_evaluatePropertyValue(
         break;
 
     default:
-        throw AXRError::p(new AXRError("HSSRgb", "Unknown parser node type " + HSSParserNode::parserNodeStringRepresentation(nodeType) + " while setting value for HSSRgb property"));
+        throw AXRError("HSSRgb", "Unknown parser node type " + HSSParserNode::parserNodeStringRepresentation(nodeType) + " while setting value for HSSRgb property");
         break;
     }
 

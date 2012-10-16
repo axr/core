@@ -58,7 +58,7 @@ namespace AXR
     class AXR_API HSSSelFunction : public HSSFunction
     {
     public:
-        typedef boost::shared_ptr<HSSSelFunction> p;
+        typedef QSharedPointer<HSSSelFunction> p;
 
         /**
          *  Creates a new instance of a sel function.

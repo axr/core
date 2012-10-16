@@ -59,7 +59,7 @@ HSSSimpleSelector::HSSSimpleSelector(const HSSSimpleSelector &orig)
 
 HSSSimpleSelector::p HSSSimpleSelector::clone() const
 {
-    return boost::static_pointer_cast<HSSSimpleSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSSimpleSelector, HSSClonable > (this->cloneImpl());
 }
 
 AXRString HSSSimpleSelector::toString()
@@ -129,7 +129,7 @@ void HSSSimpleSelector::setName(HSSNameSelector::p name)
     name->setParentNode(this->shared_from_this());
 }
 
-void HSSSimpleSelector::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
+void HSSSimpleSelector::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     this->name->setThisObj(value);
 

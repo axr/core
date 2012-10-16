@@ -55,7 +55,7 @@ namespace AXR
     class AXR_API HSSCircle : public HSSShape
     {
     public:
-        typedef boost::shared_ptr<HSSCircle> p;
+        typedef QSharedPointer<HSSCircle> p;
 
         /**
          *  Constructor for HSSCircle objects. Do not call directly, use clone() instead.

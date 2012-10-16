@@ -53,7 +53,7 @@ HSSUniversalSelector::HSSUniversalSelector()
 
 HSSUniversalSelector::p HSSUniversalSelector::clone() const
 {
-    return boost::static_pointer_cast<HSSUniversalSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSUniversalSelector, HSSClonable > (this->cloneImpl());
 }
 
 AXRString HSSUniversalSelector::toString()

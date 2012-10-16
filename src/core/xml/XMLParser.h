@@ -44,7 +44,7 @@
 #ifndef AXR_XMLPARSER_H
 #define AXR_XMLPARSER_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "AXRGlobal.h"
 
 namespace AXR
@@ -54,7 +54,7 @@ namespace AXR
     class AXR_API XMLParser
     {
     public:
-        typedef boost::shared_ptr<XMLParser> p;
+        typedef QSharedPointer<XMLParser> p;
 
         XMLParser(AXRController *theController);
         virtual ~XMLParser();

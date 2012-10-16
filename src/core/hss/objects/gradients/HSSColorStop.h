@@ -44,7 +44,7 @@
 #ifndef HSSCOLORSTOP_H
 #define HSSCOLORSTOP_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSObject.h"
 #include "HSSRgb.h"
 
@@ -56,7 +56,7 @@ namespace AXR
     class AXR_API HSSColorStop : public HSSObject
     {
     public:
-        typedef boost::shared_ptr<HSSColorStop> p;
+        typedef QSharedPointer<HSSColorStop> p;
         typedef std::vector<HSSColorStop::p>::iterator it;
 
         /**

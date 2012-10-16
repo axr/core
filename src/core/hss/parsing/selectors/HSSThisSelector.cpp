@@ -53,7 +53,7 @@ HSSThisSelector::HSSThisSelector()
 
 HSSThisSelector::p HSSThisSelector::clone() const
 {
-    return boost::static_pointer_cast<HSSThisSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSThisSelector, HSSClonable > (this->cloneImpl());
 }
 
 AXRString HSSThisSelector::toString()

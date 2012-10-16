@@ -55,7 +55,7 @@ namespace AXR
     class AXR_API HSSValue : public HSSObject
     {
     public:
-        typedef boost::shared_ptr<HSSValue> p;
+        typedef QSharedPointer<HSSValue> p;
 
         /**
          *  Constructor for HSSValue objects.

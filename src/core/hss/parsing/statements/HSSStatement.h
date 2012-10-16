@@ -44,7 +44,7 @@
 #ifndef HSSSTATEMENT_H
 #define HSSSTATEMENT_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "AXRString.h"
 #include "HSSParserNode.h"
 
@@ -63,7 +63,7 @@ namespace AXR
         /**
          *  The shared pointer to instances of this class.
          */
-        typedef boost::shared_ptr<HSSStatement> p;
+        typedef QSharedPointer<HSSStatement> p;
 
         virtual AXRString toString() = 0;
 

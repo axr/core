@@ -55,7 +55,7 @@ HSSParentSelector::HSSParentSelector()
 
 HSSParentSelector::p HSSParentSelector::clone() const
 {
-    return boost::static_pointer_cast<HSSParentSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSParentSelector, HSSClonable > (this->cloneImpl());
 }
 
 AXRString HSSParentSelector::toString()

@@ -55,7 +55,7 @@ namespace AXR
     class AXR_API HSSPolygon : public HSSShape
     {
     public:
-        typedef boost::shared_ptr<HSSPolygon> p;
+        typedef QSharedPointer<HSSPolygon> p;
 
         /**
          *  Creates a new instance of a polygon shape.

@@ -47,7 +47,7 @@
 #include <deque>
 #include <vector>
 #include <boost/any.hpp>
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSDisplayObject.h"
 #include "HSSKeywordConstant.h"
 #include "HSSObject.h"
@@ -64,7 +64,7 @@ namespace AXR
     public:
         friend class HSSParser;
 
-        typedef boost::shared_ptr<HSSFunction> p;
+        typedef QSharedPointer<HSSFunction> p;
 
         /**
          *  Clones an instance of HSSFunction and gives a shared pointer of the

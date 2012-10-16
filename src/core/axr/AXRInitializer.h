@@ -153,7 +153,7 @@
 #ifndef AXR_H
 #define AXR_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include <boost/thread/tss.hpp>
 #include "AXRController.h"
 #include "AXRDebugging.h"

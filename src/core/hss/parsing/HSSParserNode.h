@@ -45,9 +45,6 @@
 #define HSSPARSERNODE_H
 
 #include <vector>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 #include "HSSClonable.h"
 #include "HSSObservable.h"
 #include "HSSTypeEnums.h"
@@ -63,13 +60,13 @@ namespace AXR
      *  Go to https://docs.google.com/drawings/d/1yMMwh3uddC1fFJqWt8RMShJFGhO2pq_IHEpgQYh7dKY/edit to see a diagram
      *  of the inheritance tree of parser nodes.
      */
-    class AXR_API HSSParserNode : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSParserNode>
+    class AXR_API HSSParserNode : public HSSObservable, public HSSClonable, public QObject
     {
     public:
         /**
          *  The shared pointer to instances of this class.
          */
-        typedef boost::shared_ptr<HSSParserNode> p;
+        typedef QSharedPointer<HSSParserNode> p;
 
         /**
          *  Iterator for vectors of shared pointers to parser nodes.
@@ -84,7 +81,7 @@ namespace AXR
         /**
          *  "Parent Pointer". A weak pointer used to break cyclic references.
          */
-        typedef boost::weak_ptr<HSSParserNode> pp;
+        typedef QWeakPointer<HSSParserNode> pp;
 
         /**
          *  When logging, you often need a string representation of the parser node type.
@@ -159,13 +156,13 @@ namespace AXR
          *  (including itself).
          *  @param value        A shared pointer to the nearest display object.
          */
-        virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
         /**
          *  Getter for the "this object", which is a shared pointer to the nearest display object
          *  (including itself).
          *  @return A shared pointer to the nearest display object.
          */
-        virtual boost::shared_ptr<HSSDisplayObject> getThisObj();
+        virtual QSharedPointer<HSSDisplayObject> getThisObj();
 
         //add all type isAs here
         virtual bool isA(HSSExpressionType otherType);
@@ -192,6 +189,8 @@ namespace AXR
         virtual bool isA(HSSFlagFunctionType otherType);
         virtual HSSFlagFunctionType getFlagFunctionType();
 
+        HSSParserNode::p shared_from_this();
+
     protected:
         /**
          *  Creates a new instance of a parser node. This class shouldn't be called directly,
@@ -208,13 +207,15 @@ namespace AXR
          */
         HSSParserNode(const HSSParserNode &orig);
 
-        boost::shared_ptr<HSSDisplayObject> thisObj;
+        QSharedPointer<HSSDisplayObject> thisObj;
 
     private:
         HSSParserNodeType nodeType;
         pp _parentNode;
         std::vector<p> _childNodes;
         virtual HSSClonable::p cloneImpl() const;
+
+        QWeakPointer<HSSParserNode> ptr;
     };
 }
 

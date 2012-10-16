@@ -56,7 +56,7 @@ namespace AXR
     class AXR_API HSSFlagFunction : public HSSFunction
     {
     public:
-        typedef boost::shared_ptr<HSSFlagFunction> p;
+        typedef QSharedPointer<HSSFlagFunction> p;
 
         /**
          *  When logging, you often need a string representation of the flag type.

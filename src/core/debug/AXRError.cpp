@@ -48,14 +48,34 @@
 
 using namespace AXR;
 
-AXRError::AXRError(const AXRString &origin, const AXRString &message, const QUrl &url, int line, int column)
+class AXRError::Data : public QSharedData
 {
-    this->origin = origin;
-    this->message = message;
-    this->url = url;
-    this->inFile = !url.isEmpty();
-    this->line = line;
-    this->column = column;
+public:
+    Data(const AXRString &origin, const AXRString &message, const QUrl &url, int line, int column, bool inFile)
+    : origin(origin), message(message), url(url), line(line),
+    column(column), inFile(inFile) { }
+    Data(const Data &other)
+    : QSharedData(other), origin(other.origin), message(other.message),
+    url(other.url), line(other.line), column(other.column),
+    inFile(other.inFile) { }
+    ~Data() { }
+
+    AXRString origin;
+    AXRString message;
+    QUrl url;
+    int line;
+    int column;
+    bool inFile;
+};
+
+AXRError::AXRError(const AXRString &origin, const AXRString &message, const QUrl &url, int line, int column)
+: d(new Data(origin, message, url, line, column, !url.isEmpty()))
+{
+}
+
+AXRError::AXRError(const AXRError &other)
+: d(other.d)
+{
 }
 
 AXRError::~AXRError()
@@ -75,20 +95,20 @@ AXRString AXRError::toString() const
 AXRString AXRError::toProblemString(const AXRString &label) const
 {
     QStringList parts;
-    parts << AXRString("%1: %2").arg(label).arg(message);
+    parts << AXRString("%1: %2").arg(label).arg(d->message);
 
-    if (inFile)
-        parts << AXRString("in %1").arg(url.toString());
+    if (d->inFile)
+        parts << AXRString("in %1").arg(d->url.toString());
 
-    if (line > 0 || column > 0)
+    if (d->line > 0 || d->column > 0)
     {
         parts << "on";
 
-        if (line > 0)
-            parts << AXRString("line %1").arg(line);
+        if (d->line > 0)
+            parts << AXRString("line %1").arg(d->line);
 
-        if (column > 0)
-            parts << AXRString("column %1").arg(column);
+        if (d->column > 0)
+            parts << AXRString("column %1").arg(d->column);
     }
 
     return parts.join(" ");
@@ -96,5 +116,5 @@ AXRString AXRError::toProblemString(const AXRString &label) const
 
 AXRString AXRError::getMessage() const
 {
-    return this->message;
+    return d->message;
 }

@@ -295,7 +295,7 @@ void PrototypeWindow::listHssTokens()
         forever
         {
             if (token)
-                token.reset();
+                token.clear();
 
             token = tokenizer.readNextToken();
 
