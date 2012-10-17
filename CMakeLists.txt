@@ -69,7 +69,7 @@ if(AXR_BUILD_PROTOTYPE)
             add_definitions(-Wall -pedantic)
 
             # Treat all external dependency headers as system headers so we don't see warnings for them
-            foreach(dir ${Boost_INCLUDE_DIRS} ${SDL_INCLUDE_DIR} ${QT_INCLUDES})
+            foreach(dir ${SDL_INCLUDE_DIR} ${QT_INCLUDES})
                 add_definitions(-isystem ${dir})
             endforeach()
         endif()
@@ -110,7 +110,6 @@ if(AXR_BUILD_PROTOTYPE)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_REL})
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_LIBRARY_OUTPUT_DIRECTORY_REL})
 
-    list(APPEND ALL_LIBRARY_DIRS "${Boost_LIBRARY_DIRS}")
     list(APPEND ALL_LIBRARY_DIRS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
     list(APPEND ALL_LIBRARY_DIRS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}")
     list(APPEND ALL_LIBRARY_DIRS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")

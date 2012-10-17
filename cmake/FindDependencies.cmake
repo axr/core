@@ -4,20 +4,6 @@ if(AXR_BUILD_PROTOTYPE)
     include(${QT_USE_FILE})
     add_definitions(${QT_DEFINITIONS} -DNOMINMAX)
 
-    ### Boost ###
-    # Don't use static Boost because this will result in relocation errors due to
-    # Boost not being compiled with -fPIC (at least on 64-bit Linux)
-    if(MSVC)
-        set(Boost_USE_STATIC_LIBS ON)
-        link_directories(${Boost_LIBRARY_DIRS})
-    else()
-        set(Boost_USE_STATIC_LIBS OFF)
-    endif()
-    set(Boost_USE_MULTITHREADED ON)
-    set(Boost_USE_STATIC_RUNTIME OFF)
-    find_package(Boost COMPONENTS thread system REQUIRED)
-    include_directories(${Boost_INCLUDE_DIRS})
-
     ### DPKG ###
     find_program(DPKG NAMES "dpkg-deb" PATHS "/usr/bin")
     if(DPKG)

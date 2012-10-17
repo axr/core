@@ -18,9 +18,6 @@ Make sure you have Xcode installed, you can get it from Apple: http://itunes.app
 
 3 - Download and install all required libraries:
 
-    - Boost:
-        http://www.boost.org/users/download/
-
     - Qt:
         http://qt-project.org/downloads
 

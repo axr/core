@@ -56,7 +56,7 @@ set(CPACK_COMPONENT_DOC_INSTALL_TYPES Developer)
 
 # Describe component groups
 set(CPACK_COMPONENT_GROUP_RUNTIME_DESCRIPTION "")
-set(CPACK_COMPONENT_GROUP_DEVELOPMENT_DESCRIPTION "All of the tools required to develop applications using AXR.\n\nNote that the Qt SDK and Boost C++ libraries must be installed separately, as well as a compiler environment (such as Visual Studio or Xcode).")
+set(CPACK_COMPONENT_GROUP_DEVELOPMENT_DESCRIPTION "All of the tools required to develop applications using AXR.\n\nNote that the Qt SDK and any other external dependencies must be installed separately, as well as a compiler environment (such as Visual Studio or Xcode).")
 
 # Platform name
 string(TOLOWER "${CMAKE_SYSTEM_NAME}" OS_CODE)
@@ -98,7 +98,7 @@ endif()
 if(DPKG_FOUND)
     set(CPACK_GENERATOR "DEB")
     set(CPACK_DEBIAN_PACKAGE_DEBUG ${IS_DEBUG_BUILD})
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt-sdk (>= 4.8), libboost") # TODO: probably the wrong Boost package
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt-sdk (>= 4.8)")
     set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${AXR_VENDOR} <${AXR_CONTACT}>")
     set(CPACK_DEBIAN_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")

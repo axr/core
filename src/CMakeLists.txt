@@ -37,6 +37,5 @@ endif()
 
 if(AXR_BUILD_PLUGIN)
     set(FB_PROJECTS_DIR "${CMAKE_SOURCE_DIR}/src")
-    set(WITH_SYSTEM_BOOST TRUE) # TODO: Remove this once AXR itself no longer depends on Boost
     add_subdirectory(firebreath)
 endif()

@@ -12,7 +12,6 @@ UNAME=$(uname)
 deps()
 {
     echo "- Qt 4"
-    echo "- Boost"
     echo "- SDL (optional)"
     echo "- Doxygen (optional)"
 }
@@ -63,7 +62,7 @@ if [ "$UNAME" = "Darwin" ] ; then
 
     # TODO: Allow the user to prefer a particular package manager if they have multiple
     if [ $(which port 2>/dev/null) ] ; then # MacPorts
-        # NOTE: At least for Boost and Qt, +debug builds debug AND release libraries
+        # NOTE: At least for Qt, +debug builds debug AND release libraries
 
         # depof:<port> does not allow to specify variants of the <port> itself,
         # and since variants may install extra dependencies depof:<port> may not
@@ -72,23 +71,17 @@ if [ "$UNAME" = "Darwin" ] ; then
         # will allow you to tell whether additional dependencies that won't be picked
         # up by depof:<port> will need to be installed
 
-        # Currently our selected variants of Boost and Qt don't require extra deps
-        # so depof:boost and depof:qt4-mac will be sufficient
+        # Currently our selected variants of Qt don't require extra deps
+        # so depof:qt4-mac will be sufficient
 
         set_mp_target 10.4
         port install \
             libsdl +universal \
-            depof:boost +universal \
             depof:qt4-mac +universal \
             depof:cmake +universal
 
         set_mp_target $osx_current
         port install doxygen +universal
-
-        # Boost has problems building for 10.5, not sure why...
-        # TODO: We need to find out how to fix this
-        set_mp_target 10.6
-        port install boost +debug +no-static +universal
 
         # earliest OS X that Qt 4.8.x Cocoa will build on
         # NOTE: for some reason MacPorts' Qt won't work with
@@ -99,7 +92,7 @@ if [ "$UNAME" = "Darwin" ] ; then
         # reset deployment target to 10.4 when finished
         set_mp_target 10.4
     elif [ $(which brew 2>/dev/null) ] ; then # Brew
-        # brew install boost ...
+        # brew install ...
         echo "ERROR: brew support is not yet implemented"
         exit 1
     elif [ $(which fink 2>/dev/null) ] ; then # Fink
@@ -116,7 +109,7 @@ if [ "$UNAME" = "Darwin" ] ; then
 elif [ "$UNAME" = "Linux" ] ; then
     if [ $(which apt-get 2>/dev/null) ] ; then
         # Debian, Ubuntu
-        apt-get -y install build-essential qt-sdk libboost-all-dev libsdl1.2-dev doxygen
+        apt-get -y install build-essential qt-sdk libsdl1.2-dev doxygen
     elif [ $(which yum 2>/dev/null) ] ; then
         # Fedora, RHEL, Yellow Dog Linux
         echo "ERROR: yum support is not yet implemented"
@@ -131,7 +124,7 @@ elif [ "$UNAME" = "Linux" ] ; then
         exit 1
     elif [ $(which pacman 2>/dev/null) ] ; then
         # Arch Linux
-        pacman -S qt boost sdl doxygen
+        pacman -S qt sdl doxygen
     elif [ $(which emerge 2>/dev/null) ] ; then
         # Gentoo
         echo "ERROR: portage support is not yet implemented"
