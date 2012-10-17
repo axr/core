@@ -58,7 +58,7 @@ namespace AXR
     class AXR_API HSSSelFunction : public HSSFunction
     {
     public:
-        typedef boost::shared_ptr<HSSSelFunction> p;
+        typedef QSharedPointer<HSSSelFunction> p;
 
         /**
          *  Creates a new instance of a sel function.
@@ -136,7 +136,7 @@ namespace AXR
          *  to display objects std::vector< std::vector<HSSDisplayObject::p> >.
          *  @return A pointer to a selection casted to void*.
          */
-        virtual boost::any _evaluate();
+        virtual QVariant _evaluate();
 
         //        void valueChanged(HSSObservableProperty source, void*data);
 

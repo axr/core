@@ -44,7 +44,7 @@
 #ifndef HSSLINEARGRADIENT_H
 #define HSSLINEARGRADIENT_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSGradient.h"
 #include "HSSRgb.h"
 
@@ -59,7 +59,7 @@ namespace AXR
     class AXR_API HSSLinearGradient : public HSSGradient
     {
     public:
-        typedef boost::shared_ptr<HSSLinearGradient> p;
+        typedef QSharedPointer<HSSLinearGradient> p;
 
         /**
          *  Creates a new instance of a

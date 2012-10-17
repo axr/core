@@ -53,7 +53,7 @@ HSSMultipleValueDefinition::HSSMultipleValueDefinition()
 
 HSSMultipleValueDefinition::p HSSMultipleValueDefinition::clone() const
 {
-    return boost::static_pointer_cast<HSSMultipleValueDefinition, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSMultipleValueDefinition, HSSClonable > (this->cloneImpl());
 }
 
 HSSMultipleValueDefinition::~HSSMultipleValueDefinition()

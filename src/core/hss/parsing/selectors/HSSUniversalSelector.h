@@ -44,7 +44,7 @@
 #ifndef HSSUNIVERSALSELECTOR_H
 #define HSSUNIVERSALSELECTOR_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSDisplayObject.h"
 #include "HSSNameSelector.h"
 
@@ -58,7 +58,7 @@ namespace AXR
     class AXR_API HSSUniversalSelector : public HSSNameSelector
     {
     public:
-        typedef boost::shared_ptr<HSSUniversalSelector> p;
+        typedef QSharedPointer<HSSUniversalSelector> p;
 
         /**
          *  Creates a new instance of a universal selector.

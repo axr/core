@@ -55,7 +55,7 @@ HSSPercentageConstant::HSSPercentageConstant(HSSUnit value)
 
 HSSPercentageConstant::p HSSPercentageConstant::clone() const
 {
-    return boost::static_pointer_cast<HSSPercentageConstant, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSPercentageConstant, HSSClonable > (this->cloneImpl());
 }
 
 HSSPercentageConstant::~HSSPercentageConstant()

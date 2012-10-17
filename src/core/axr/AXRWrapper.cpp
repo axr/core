@@ -63,7 +63,7 @@ AXRWrapper::AXRWrapper()
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
     this->_needsDisplay = true;
-    AXRCore::tp & axr = AXRCore::getInstance();
+    AXRCore* axr = AXRCore::getInstance();
     axr->initialize(this);
 }
 
@@ -71,9 +71,8 @@ AXRWrapper::~AXRWrapper()
 {
 }
 
-AXRBuffer::p AXRWrapper::getFile(AXRString url)
+AXRBuffer::p AXRWrapper::getFile(QUrl u)
 {
-    QUrl u(url);
     if (u.isValid())
     {
         if (u.scheme() == "file")
@@ -82,11 +81,11 @@ AXRBuffer::p AXRWrapper::getFile(AXRString url)
             AXRBuffer::p ret = AXRBuffer::p(new AXRBuffer(fi));
             if (!fi.exists())
             {
-                throw AXRError::p(new AXRError("AXRWrapper", "the file " + url + " doesn't exist"));
+                throw AXRError("AXRWrapper", "the file " + u.toLocalFile() + " doesn't exist");
             }
             else if (!ret->isValid())
             {
-                throw AXRError::p(new AXRError("AXRWrapper", "the file " + url + " couldn't be read"));
+                throw AXRError("AXRWrapper", "the file " + u.toLocalFile() + " couldn't be read");
             }
 
             return ret;
@@ -110,49 +109,60 @@ void AXRWrapper::setNeedsDisplay(bool newValue)
     this->_needsDisplay = newValue;
 }
 
-AXRBuffer::p AXRWrapper::createDummyXML(AXRString stylesheet)
+AXRBuffer::p AXRWrapper::createDummyXML(QUrl hssUrl)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: creating dummy XML file for HSS file " + stylesheet);
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: creating dummy XML file for HSS file " + hssUrl.toString());
 
-    QUrl url = stylesheet;
-    if (url.isValid())
+    if (hssUrl.isValid())
     {
-        AXRString dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" href=\"file://" + stylesheet + "\" version=\"1.0\"?><root></root>";
+        AXRString dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" href=\"" + hssUrl.toString() + "\" version=\"1.0\"?><root></root>";
         return AXRBuffer::p(new AXRBuffer(dummyXML.toUtf8()));
     }
     else
     {
-        // TODO: "Not a valid URL"
-        AXRError::p(new AXRError("AXRWrapper", "Could not find a slash in the file path"))->raise();
+        AXRError("AXRWrapper", "Could not create dummy XML for invalid HSS file URL").raise();
         return AXRBuffer::p(new AXRBuffer());
     }
 }
 
-bool AXRWrapper::loadFileByPath(AXRString filepath)
+bool AXRWrapper::loadFileByPath(QUrl url)
 {
-    QFileInfo fi(filepath);
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: loading file " + fi.fileName() + " by path");
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, fi.canonicalFilePath());
+    if (url.isRelative())
+    {
+        if (url.isLocalFile())
+        {
+            url = QUrl::fromLocalFile(QFileInfo(url.path()).canonicalFilePath());
+        }
+        else
+        {
+            AXRError("AXRWrapper", "Could not load relative URL as main file", url).raise();
+            return false;
+        }
+    }
 
-    if (fi.suffix() == "xml")
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: loading file " + url.toString());
+    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, url.toString());
+
+    QFileInfo pathInfo(url.path());
+    if (pathInfo.suffix() == "xml")
     {
         this->_isHSSOnly = false;
-        return this->loadXMLFile(fi.canonicalFilePath());
+        return this->loadXMLFile(url);
     }
-    else if (fi.suffix() == "hss")
+    else if (pathInfo.suffix() == "hss")
     {
-        return this->loadHSSFile(fi.canonicalFilePath());
+        return this->loadHSSFile(url);
     }
     else
     {
-        AXRError::p(new AXRError("AXRController", "Unknown file extension"))->raise();
+        AXRError("AXRController", "Unknown file extension").raise();
         return false;
     }
 }
 
-bool AXRWrapper::loadXMLFile(AXRString xmlfilepath)
+bool AXRWrapper::loadXMLFile(QUrl url)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening XML document: ").append(xmlfilepath));
+    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening XML document: %1").arg(url.toString()));
 
     this->_isHSSOnly = false;
     this->_showLayoutSteps = false;
@@ -160,22 +170,20 @@ bool AXRWrapper::loadXMLFile(AXRString xmlfilepath)
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
 
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     if (core->getFile())
     {
         core->reset();
     }
 
-    AXRString fullpath = "file://" + xmlfilepath;
     try
     {
-        AXRBuffer::p theFile = this->getFile(fullpath);
+        AXRBuffer::p theFile = this->getFile(url);
         core->setFile(theFile);
-
     }
-    catch (const AXRError::p &e)
+    catch (const AXRError &e)
     {
-        e->raise();
+        e.raise();
         return false;
     }
 
@@ -183,13 +191,9 @@ bool AXRWrapper::loadXMLFile(AXRString xmlfilepath)
     {
         core->run();
     }
-    catch (const AXRError::p &e)
+    catch (const AXRError &e)
     {
-        e->raise();
-    }
-    catch (const AXRWarning::p &e)
-    {
-        e->raise();
+        e.raise();
     }
 
     this->setNeedsDisplay(true);
@@ -204,27 +208,28 @@ bool AXRWrapper::reload()
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
 
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     if (!this->_isHSSOnly)
     {
-        if (core->getFile()) {
-            AXRString cur_path = core->getFile()->getBasePath() + "/" + core->getFile()->getFileName();
-            return this->loadXMLFile(cur_path);
-        } else {
-            AXRWarning::p(new AXRWarning("AXRWrapper", "no file loaded"))->raise();
+        if (core->getFile())
+        {
+            return this->loadXMLFile(core->getFile()->sourceUrl());
+        }
+        else
+        {
+            AXRWarning("AXRWrapper", "no file loaded").raise();
             return false;
         }
     }
     else
     {
-        QUrl currentPath = core->getController()->loadSheetsGet(0);
-        return this->loadHSSFile(currentPath.toLocalFile());
+        return this->loadHSSFile(core->getController()->loadSheetsGet(0));
     }
 }
 
-bool AXRWrapper::loadHSSFile(AXRString hssfilepath)
+bool AXRWrapper::loadHSSFile(QUrl url)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening HSS document: ").append(hssfilepath));
+    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening HSS document: %1").arg(url.toString()));
 
     this->_isHSSOnly = true;
     this->_showLayoutSteps = false;
@@ -232,13 +237,13 @@ bool AXRWrapper::loadHSSFile(AXRString hssfilepath)
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
 
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     if (core->getFile())
     {
         core->reset();
     }
 
-    core->setFile(this->createDummyXML(hssfilepath));
+    core->setFile(this->createDummyXML(url));
     core->run();
     this->setNeedsDisplay(true);
 
@@ -249,7 +254,7 @@ bool AXRWrapper::loadHSSFile(AXRString hssfilepath)
 
 bool AXRWrapper::hasLoadedFile()
 {
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     return core->hasLoadedFile();
 }
 
@@ -345,7 +350,7 @@ AXRString AXRWrapper::getPathToTestsFile()
 void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
 {
     HSSContainer::p status;
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     HSSContainer::p root = core->getController()->getRoot();
     std::deque<HSSParserNode::p> arguments = *(std::deque<HSSParserNode::p>*)data;
 
@@ -354,33 +359,33 @@ void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
         HSSParserNode::p argument = *it;
         if (argument->isA(HSSFunctionTypeSel))
         {
-            HSSSelFunction::p selFunction = boost::static_pointer_cast<HSSSelFunction > (argument);
-            boost::any remoteValue = selFunction->evaluate();
-            try
+            HSSSelFunction::p selFunction = qSharedPointerCast<HSSSelFunction>(argument);
+            QVariant remoteValue = selFunction->evaluate();
+            if (remoteValue.canConvert<std::vector< std::vector<HSSDisplayObject::p> > >())
             {
-                std::vector< std::vector<HSSDisplayObject::p> > selection = boost::any_cast< std::vector< std::vector<HSSDisplayObject::p> > >(remoteValue);
+                std::vector< std::vector<HSSDisplayObject::p> > selection = remoteValue.value<std::vector< std::vector<HSSDisplayObject::p> > >();
                 std::vector<HSSDisplayObject::p> innerSelection = selection[0];
                 status = HSSContainer::asContainer(innerSelection[0]);
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
             }
         }
     }
 
-    AXRString filePath = this->getPathToTestsFile();
-    boost::thread thrd(AXRTestThread(this, filePath, status));
-    //        thrd.join();
+    AXRTestThread thrd(this, QUrl::fromLocalFile(this->getPathToTestsFile()), status);
+    thrd.start();
 }
 
-AXRTestThread::AXRTestThread(AXRWrapper * wrapper, AXRString filePath, HSSContainer::p status)
+AXRTestThread::AXRTestThread(AXRWrapper * wrapper, QUrl url, HSSContainer::p status)
 {
     this->wrapper = wrapper;
-    this->filePath = filePath;
+    this->url = url;
     this->totalPassed = 0;
     this->totalTests = 0;
     this->status = status;
+}
+
+void AXRTestThread::run()
+{
+    operator()();
 }
 
 void AXRTestThread::operator () ()
@@ -389,16 +394,15 @@ void AXRTestThread::operator () ()
     {
         //load the XML file
         AXRWrapper * wrapper = this->wrapper;
-        AXRCore::tp & core = AXRCore::getInstance();
+        AXRCore* core = AXRCore::getInstance();
         XMLParser::p parser = core->getParserXML();
-        AXRString fullPath = "file://" + this->filePath;
         HSSContainer::p status = this->status;
-        AXRBuffer::p testsFile = wrapper->getFile(fullPath);
+        AXRBuffer::p testsFile = wrapper->getFile(this->url);
         bool loadingSuccess = parser->loadFile(testsFile);
         if (loadingSuccess)
         {
             //find all the tests that need to be executed
-            std::vector<std::vector<AXRString> > tests;
+            std::vector<std::vector<QUrl> > tests;
             AXRController::p controller = core->getController();
             HSSContainer::p root = controller->getRoot();
             const std::vector<HSSDisplayObject::p> & children = root->getChildren(true);
@@ -409,7 +413,7 @@ void AXRTestThread::operator () ()
                 if (child->attributes.find("href") != child->attributes.end() && child->attributes.find("expect") != child->attributes.end())
                 {
                     const AXRString test[2] = {child->attributes["href"], child->attributes["expect"]};
-                    std::vector<AXRString>testVect(test, test + 2);
+                    std::vector<QUrl>testVect(test, test + 2);
                     tests.push_back(testVect);
                     this->totalTests += 1;
                 }
@@ -419,16 +423,16 @@ void AXRTestThread::operator () ()
                 }
             }
             //execute all the tests
-            boost::thread_group producers;
+            QThreadPool producers;
 
-            for (std::vector<std::vector<AXRString> >::iterator it2 = tests.begin(); it2 != tests.end(); ++it2)
+            for (std::vector<std::vector<QUrl> >::iterator it2 = tests.begin(); it2 != tests.end(); ++it2)
             {
-                AXRTestProducer prdcr(this->wrapper, testsFile->getBasePath(), *it2, &this->totalTests, &this->totalPassed, status);
-                producers.create_thread(prdcr);
-                boost::this_thread::yield();
+                AXRTestProducer prdcr(this->wrapper, *it2, &this->totalTests, &this->totalPassed, status);
+                producers.start(&prdcr);
+                QThread::yieldCurrentThread();
             }
 
-            producers.join_all();
+            producers.waitForDone();
 
             std_log("\n\nTEST RESULTS SUMMARY");
             std_log("===============================");
@@ -442,22 +446,17 @@ void AXRTestThread::operator () ()
         }
 
     }
-    catch (const AXRError::p &e)
+    catch (const AXRError &e)
     {
-        e->raise();
-    }
-    catch (const AXRWarning::p &e)
-    {
-        e->raise();
+        e.raise();
     }
 }
 
 // Constructor with name and the queue to use
 
-AXRTestProducer::AXRTestProducer(AXRWrapper * wrapper, AXRString basePath, std::vector<AXRString> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status)
+AXRTestProducer::AXRTestProducer(AXRWrapper * wrapper, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status)
 {
     this->wrapper = wrapper;
-    this->basePath = basePath;
     this->test = test;
     this->totalPassed = totalPassed;
     this->totalTests = totalTests;
@@ -465,7 +464,12 @@ AXRTestProducer::AXRTestProducer(AXRWrapper * wrapper, AXRString basePath, std::
 }
 
 // The thread function fills the queue with data
-boost::mutex AXRTestProducer::statusMutex;
+QMutex AXRTestProducer::statusMutex;
+
+void AXRTestProducer::run()
+{
+    operator()();
+}
 
 void AXRTestProducer::operator () ()
 {
@@ -481,11 +485,11 @@ void AXRTestProducer::operator () ()
     AXRWrapper * wrapper = this->wrapper;
     core = *AXRCore::getInstance();
 
-    testLoaded = wrapper->loadXMLFile(this->basePath + "/" + this->test[0]);
+    testLoaded = wrapper->loadXMLFile(this->test[0]);
 
     if (testLoaded)
     {
-        AXRCore::tp & core = AXRCore::getInstance();
+        AXRCore* core = AXRCore::getInstance();
         AXRController::p controller = core->getController();
         HSSContainer::p root = controller->getRoot();
         core->getRender()->windowWidth = 400.;
@@ -503,7 +507,7 @@ void AXRTestProducer::operator () ()
     //load the "expected" file
     if (testLoaded)
     {
-        AXRBuffer::p expectedFile = this->wrapper->getFile("file://" + this->basePath + "/" + test[1]);
+        AXRBuffer::p expectedFile = this->wrapper->getFile(test[1]);
         if (!expectedFile->isValid())
         {
             std_log("could not load file with expected results");
@@ -524,7 +528,7 @@ void AXRTestProducer::operator () ()
 
     if (result)
     {
-        std_log("PASSED test " + test[0]);
+        std_log("PASSED test " + test[0].toString());
         *this->totalPassed += 1;
         this->statusMutex.lock();
         this->status->setContentText(AXRString("Passed %1 out of %2").arg(*this->totalPassed).arg(*this->totalTests));
@@ -533,7 +537,7 @@ void AXRTestProducer::operator () ()
     }
     else
     {
-        std_log("FAILED test " + test[0]);
+        std_log("FAILED test " + test[0].toString());
         std_log("This is the dump of the test:");
         std_log("===============================");
         std_log(testRep);

@@ -78,7 +78,7 @@ void AXRWidget::setBackgroundFillColor(const QColor &color)
 
 void AXRWidget::paintEvent(QPaintEvent *e)
 {
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
     AXRRender::p renderer = core->getRender();
     if (renderer && core->getController()->getRoot())
     {
@@ -100,34 +100,49 @@ void AXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
 
 void AXRWidget::mouseMoveEvent(QMouseEvent *e)
 {
-    HSSContainer::p root = AXRCore::getInstance()->getController()->getRoot();
+    AXRCore*core = AXRCore::getInstance();
+    HSSContainer::p root = core->getController()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
         root->handleEvent(AXR::HSSEventTypeMouseMove, (void*)&thePoint);
-        this->update();
+        AXRWrapper * wrapper = core->getWrapper();
+        if(wrapper->needsDisplay()){
+            this->update();
+            wrapper->setNeedsDisplay(false);
+        }
     }
 }
 
 void AXRWidget::mousePressEvent(QMouseEvent *e)
 {
-    HSSContainer::p root = AXRCore::getInstance()->getController()->getRoot();
+    AXRCore*core = AXRCore::getInstance();
+    HSSContainer::p root = core->getController()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
         root->handleEvent(AXR::HSSEventTypeMouseDown, (void*)&thePoint);
-        this->update();
+        AXRWrapper * wrapper = core->getWrapper();
+        if(wrapper->needsDisplay()){
+            this->update();
+            wrapper->setNeedsDisplay(false);
+        }
     }
 }
 
 void AXRWidget::mouseReleaseEvent(QMouseEvent *e)
 {
-    HSSContainer::p root = AXRCore::getInstance()->getController()->getRoot();
+    AXRCore*core = AXRCore::getInstance();
+    HSSContainer::p root = core->getController()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
         root->handleEvent(AXR::HSSEventTypeMouseUp, (void*)&thePoint);
         root->handleEvent(AXR::HSSEventTypeClick, (void*)&thePoint);
-        this->update();
+        AXRWrapper * wrapper = core->getWrapper();
+        if(wrapper->needsDisplay()){
+            this->update();
+            wrapper->setNeedsDisplay(false);
+        }
     }
 }

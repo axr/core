@@ -45,6 +45,10 @@
 #define AXRGLOBAL_H
 
 #include <QtGlobal>
+#include <QMetaType>
+
+Q_DECLARE_METATYPE(bool*);
+Q_DECLARE_METATYPE(unsigned int*);
 
 #if defined(AXR_EXPORTS)
 #define AXR_API Q_DECL_EXPORT
@@ -66,5 +70,7 @@
 // and surround them with #ifndef AXR_NO_DEPRECATED_ENUMS, because the compiler
 // doesn't let us deprecate enum members in the same manner as classes and
 // class members
+
+#define HSSFRAMEWORK_PROTOCOL "axr"
 
 #endif

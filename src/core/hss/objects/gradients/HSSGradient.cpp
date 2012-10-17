@@ -58,19 +58,19 @@ using namespace AXR;
 HSSGradient::HSSGradient()
 : HSSObject(HSSObjectTypeGradient)
 {
-    this->registerProperty(HSSObservablePropertyStartColor, & this->startColor);
-    this->registerProperty(HSSObservablePropertyEndColor, & this->endColor);
-    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
-    this->registerProperty(HSSObservablePropertyColorStops, & this->colorStops);
+    this->registerProperty(HSSObservablePropertyStartColor, QVariant::fromValue(&this->startColor));
+    this->registerProperty(HSSObservablePropertyEndColor, QVariant::fromValue(&this->endColor));
+    this->registerProperty(HSSObservablePropertyBalance, QVariant::fromValue(&this->balance));
+    this->registerProperty(HSSObservablePropertyColorStops, QVariant::fromValue(&this->colorStops));
 }
 
 HSSGradient::HSSGradient(const HSSGradient & orig)
 : HSSObject(orig)
 {
-    this->registerProperty(HSSObservablePropertyStartColor, & this->startColor);
-    this->registerProperty(HSSObservablePropertyEndColor, & this->endColor);
-    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
-    this->registerProperty(HSSObservablePropertyColorStops, & this->colorStops);
+    this->registerProperty(HSSObservablePropertyStartColor, QVariant::fromValue(&this->startColor));
+    this->registerProperty(HSSObservablePropertyEndColor, QVariant::fromValue(&this->endColor));
+    this->registerProperty(HSSObservablePropertyBalance, QVariant::fromValue(&this->balance));
+    this->registerProperty(HSSObservablePropertyColorStops, QVariant::fromValue(&this->colorStops));
 }
 
 HSSGradient::~HSSGradient()
@@ -159,13 +159,13 @@ HSSRgb::p HSSGradient::getColorAfterFirst()
         for (std::vector<HSSObject::p>::const_iterator it = this->colorStops.begin(); it != this->colorStops.end(); ++it) {
             const HSSObject::p & theStopObj = *it;
             if (theStopObj->isA(HSSObjectTypeColorStop)) {
-                HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop>(theStopObj);
+                HSSColorStop::p theStop = qSharedPointerCast<HSSColorStop>(theStopObj);
                 ret = theStop->getColor();
                 if(ret){
                     break;
                 }
             } else if (theStopObj->isA(HSSObjectTypeRgb)) {
-                ret = boost::static_pointer_cast<HSSRgb>(theStopObj);
+                ret = qSharedPointerCast<HSSRgb>(theStopObj);
                 break;
             }
         }
@@ -191,13 +191,13 @@ HSSRgb::p HSSGradient::getColorBeforeLast()
         for (std::vector<HSSObject::p>::const_reverse_iterator it = this->colorStops.rbegin(); it != this->colorStops.rend(); ++it) {
             const HSSObject::p & theStopObj = *it;
             if (theStopObj->isA(HSSObjectTypeColorStop)) {
-                HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop>(theStopObj);
+                HSSColorStop::p theStop = qSharedPointerCast<HSSColorStop>(theStopObj);
                 ret = theStop->getColor();
                 if(ret){
                     break;
                 }
             } else if (theStopObj->isA(HSSObjectTypeRgb)) {
-                ret = boost::static_pointer_cast<HSSRgb>(theStopObj);
+                ret = qSharedPointerCast<HSSRgb>(theStopObj);
                 break;
             }
         }
@@ -222,12 +222,12 @@ HSSRgb::p HSSGradient::getNextColorFromStops(std::vector<HSSObject::p>::iterator
     for (; it != endIt; ++it) {
         const HSSObject::p & stopObj = *it;
         if (stopObj->isA(HSSObjectTypeRgb)) {
-            ret = boost::static_pointer_cast<HSSRgb>(stopObj);
+            ret = qSharedPointerCast<HSSRgb>(stopObj);
             break;
         }
         else if (stopObj->isA(HSSObjectTypeColorStop))
         {
-            const HSSColorStop::p theStop = boost::static_pointer_cast<HSSColorStop>(stopObj);
+            const HSSColorStop::p theStop = qSharedPointerCast<HSSColorStop>(stopObj);
             if(HSSRgb::p theColor = theStop->getColor())
             {
                 ret = theColor;
@@ -270,19 +270,19 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
         this->dStartColor = value;
         try
         {
-            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
             this->setDStartColor(objdef);
             valid = true;
 
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError &e)
         {
-            e->raise();
+            e.raise();
         }
-        catch (const AXRWarning::p &e)
+        catch (const AXRWarning &e)
         {
-            e->raise();
+            e.raise();
         }
 
         break;
@@ -292,24 +292,19 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dStartColor = value;
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSRgb::p>())
             {
-                this->startColor = boost::any_cast<HSSRgb::p > (remoteValue);
+                this->startColor = remoteValue.value<HSSRgb::p>();
                 valid = true;
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyStartColor, this, new HSSValueChangedCallback<HSSGradient > (this, &HSSGradient::startColorChanged));
-
         }
 
         break;
@@ -317,7 +312,7 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        HSSKeywordConstant::p theKW = qSharedPointerCast<HSSKeywordConstant>(value);
         if (theKW->getValue() == "black")
         {
             this->startColor = HSSRgb::blackColor();
@@ -330,7 +325,7 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
         }
         else if (theKW->getValue() == "transparent")
         {
-            this->startColor.reset();
+            this->startColor.clear();
             valid = true;
         }
 
@@ -346,14 +341,14 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dStartColor = value;
-        HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (value);
+        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setScope(this->scope);
         objdef->setThisObj(this->getThisObj());
         objdef->apply();
         HSSObject::p theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeRgb))
         {
-            this->startColor = boost::static_pointer_cast<HSSRgb > (theobj);
+            this->startColor = qSharedPointerCast<HSSRgb > (theobj);
             valid = true;
         }
 
@@ -365,7 +360,7 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
     }
 
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for startColor of " + this->name));
+        throw AXRWarning("HSSDGradient", "Invalid value for startColor of " + this->name);
 
     this->notifyObservers(HSSObservablePropertyStartColor, &this->startColor);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
@@ -397,19 +392,19 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
         this->dEndColor = value;
         try
         {
-            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
             this->setDEndColor(objdef);
             valid = true;
 
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError &e)
         {
-            e->raise();
+            e.raise();
         }
-        catch (const AXRWarning::p &e)
+        catch (const AXRWarning &e)
         {
-            e->raise();
+            e.raise();
         }
 
 
@@ -419,20 +414,16 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dEndColor = value;
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSRgb::p>())
             {
-                this->endColor = boost::any_cast<HSSRgb::p > (remoteValue);
+                this->endColor = remoteValue.value<HSSRgb::p>();
                 valid = true;
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyEndColor, this, new HSSValueChangedCallback<HSSGradient > (this, &HSSGradient::endColorChanged));
@@ -442,7 +433,7 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant>(value);
+        HSSKeywordConstant::p theKW = qSharedPointerCast<HSSKeywordConstant>(value);
         if (theKW->getValue() == "black")
         {
             this->endColor = HSSRgb::blackColor();
@@ -455,7 +446,7 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
         }
         else if (theKW->getValue() == "transparent")
         {
-            this->endColor.reset();
+            this->endColor.clear();
             valid = true;
         }
 
@@ -471,14 +462,14 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dEndColor = value;
-        HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (value);
+        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setScope(this->scope);
         objdef->setThisObj(this->getThisObj());
         objdef->apply();
         HSSObject::p theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeRgb))
         {
-            this->endColor = boost::static_pointer_cast<HSSRgb > (theobj);
+            this->endColor = qSharedPointerCast<HSSRgb > (theobj);
             valid = true;
         }
 
@@ -490,7 +481,7 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
     }
 
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for endColor of " + this->name));
+        throw AXRWarning("HSSDGradient", "Invalid value for endColor of " + this->name);
 
     this->notifyObservers(HSSObservablePropertyEndColor, &this->endColor);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
@@ -533,19 +524,15 @@ void HSSGradient::setDBalance(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dBalance = value;
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSUnit>())
             {
-                this->balance = boost::any_cast<HSSUnit>(remoteValue);
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
+                this->balance = remoteValue.value<HSSUnit>();
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyBalance, this, new HSSValueChangedCallback<HSSGradient > (this, &HSSGradient::balanceChanged));
@@ -553,14 +540,14 @@ void HSSGradient::setDBalance(HSSParserNode::p value)
         }
         else
         {
-            throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid function type size of " + this->name));
+            throw AXRWarning("HSSDGradient", "Invalid function type size of " + this->name);
         }
 
         break;
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSGradient", "Invalid value for size of " + this->name));
+        throw AXRWarning("HSSGradient", "Invalid value for size of " + this->name);
     }
     this->notifyObservers(HSSObservablePropertyBalance, &this->balance);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
@@ -578,7 +565,7 @@ void HSSGradient::balanceChanged(AXR::HSSObservableProperty source, void *data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dBalance);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dBalance);
         this->balance = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
@@ -613,7 +600,7 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
     {
     case HSSParserNodeTypeMultipleValueDefinition:
     {
-        HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
+        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
         for (HSSParserNode::it iterator = values.begin(); iterator != values.end(); ++iterator)
         {
@@ -628,13 +615,13 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             this->addDColorStops(this->axrController->objectTreeGet(objname->getValue()));
             valid = true;
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError &e)
         {
-            e->raise();
+            e.raise();
         }
 
         break;
@@ -642,25 +629,24 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->getScope());
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSParserNode::p>())
             {
-                HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p > (remoteValue);
-                this->addDColorStops(theVal);
-                valid = true;
-            }
-            catch (const AXRError::p &e)
-            {
-                e->raise();
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
+                try
+                {
+                    HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                    this->addDColorStops(theVal);
+                    valid = true;
+                }
+                catch (const AXRError &e)
+                {
+                    e.raise();
+                }
             }
         }
         break;
@@ -668,7 +654,7 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p theKW = boost::static_pointer_cast<HSSKeywordConstant > (value);
+        HSSKeywordConstant::p theKW = qSharedPointerCast<HSSKeywordConstant > (value);
         if (theKW->getValue() == "white")
         {
             this->colorStops.push_back(HSSRgb::whiteColor());
@@ -705,7 +691,7 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dColorStops = value;
-        HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (value);
+        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         if (objdef->getObject()->isA(HSSObjectTypeColorStop) || objdef->getObject()->isA(HSSObjectTypeRgb))
         {
             objdef->setScope(this->getScope());
@@ -725,7 +711,7 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
     }
 
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSGradient", "Invalid value for colorStops of " + this->getName()));
+        throw AXRWarning("HSSGradient", "Invalid value for colorStops of " + this->getName());
 
     this->notifyObservers(HSSObservablePropertyColorStops, &this->colorStops);
 }
@@ -751,21 +737,21 @@ HSSUnit HSSGradient::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setScope(this->scope);
         expressionValue->setThisObj(this->getThisObj());
@@ -782,7 +768,7 @@ HSSUnit HSSGradient::_evaluatePropertyValue(
         break;
 
     default:
-        AXRWarning::p(new AXRWarning("HSSGradient", "Unknown parser node type while setting value for HSSLineGradient property"))->raise();
+        AXRWarning("HSSGradient", "Unknown parser node type while setting value for HSSLineGradient property").raise();
         break;
     }
 

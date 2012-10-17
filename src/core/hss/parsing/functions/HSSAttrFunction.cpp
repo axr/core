@@ -62,7 +62,7 @@ HSSAttrFunction::HSSAttrFunction(const HSSAttrFunction & orig)
 
 HSSFunction::p HSSAttrFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 HSSAttrFunction::~HSSAttrFunction()
@@ -130,7 +130,7 @@ int HSSAttrFunction::selectorChainsSize()
     return this->selectorChains.size();
 }
 
-boost::any HSSAttrFunction::_evaluate()
+QVariant HSSAttrFunction::_evaluate()
 {
     std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj());
     if (selection.empty())
@@ -157,8 +157,8 @@ boost::any HSSAttrFunction::_evaluate()
 void HSSAttrFunction::valueChanged(HSSObservableProperty source, void*data)
 {
     this->setDirty(true);
-    this->_value = data;
-    this->notifyObservers(HSSObservablePropertyValue, (void*) & this->_value);
+    this->_value = QVariant::fromValue(data);
+    this->notifyObservers(HSSObservablePropertyValue, this->_value.value<void*>());
 }
 
 HSSClonable::p HSSAttrFunction::cloneImpl() const

@@ -55,7 +55,7 @@ namespace AXR
     class AXR_API HSSAction : public HSSObject
     {
     public:
-        typedef boost::shared_ptr<HSSAction> p;
+        typedef QSharedPointer<HSSAction> p;
 
         /**
          *  When logging, you often need a string representation of the action type.
@@ -118,5 +118,8 @@ namespace AXR
         HSSClonable::p cloneImpl() const;
     };
 }
+
+Q_DECLARE_METATYPE(std::vector<AXR::HSSAction::p>);
+Q_DECLARE_METATYPE(std::vector<AXR::HSSAction::p>*);
 
 #endif

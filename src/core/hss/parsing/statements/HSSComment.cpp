@@ -53,7 +53,7 @@ HSSComment::HSSComment(AXRString value)
 
 HSSComment::p HSSComment::clone() const
 {
-    return boost::static_pointer_cast<HSSComment, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSComment, HSSClonable > (this->cloneImpl());
 }
 
 AXRString HSSComment::getValue()

@@ -44,7 +44,7 @@
 #ifndef HSSCOMMENT_H
 #define HSSCOMMENT_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "AXRString.h"
 #include "HSSStatement.h"
 
@@ -59,7 +59,7 @@ namespace AXR
         AXRString value;
 
     public:
-        typedef boost::shared_ptr<HSSComment> p;
+        typedef QSharedPointer<HSSComment> p;
 
         /**
          *  Creates a new instance of a comment, containing the given text.

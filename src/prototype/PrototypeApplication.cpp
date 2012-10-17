@@ -42,9 +42,12 @@
  ********************************************************************/
 
 #include <QFileOpenEvent>
+#include <QMessageBox>
 #include <QUrl>
 #include "config.h"
 #include "AXRDebugging.h"
+#include "AXRWarning.h"
+#include "LogWindow.h"
 #include "PreferencesDialog.h"
 #include "PrototypeApplication.h"
 #include "PrototypeSettings.h"
@@ -55,6 +58,7 @@ class PrototypeApplication::Private
 public:
     PrototypeSettings *settings;
     PreferencesDialog *preferencesDialog;
+    LogWindow *logWindow;
     PrototypeWindow *mainWindow;
 };
 
@@ -70,6 +74,7 @@ PrototypeApplication::PrototypeApplication(int &argc, char **argv)
 
     d->settings = new PrototypeSettings();
     d->preferencesDialog = new PreferencesDialog();
+    d->logWindow = new LogWindow();
     d->mainWindow = new PrototypeWindow();
     d->mainWindow->show();
 
@@ -102,6 +107,7 @@ PrototypeApplication::PrototypeApplication(int &argc, char **argv)
 PrototypeApplication::~PrototypeApplication()
 {
     delete d->mainWindow;
+    delete d->logWindow;
     delete d->preferencesDialog;
     delete d->settings;
     delete d;
@@ -128,12 +134,42 @@ bool PrototypeApplication::event(QEvent *e)
     }
 }
 
+// TODO: Remove this method once exceptions are eliminated from the core library
+bool PrototypeApplication::notify(QObject *receiver, QEvent *event)
+{
+    try
+    {
+        return QApplication::notify(receiver, event);
+    }
+    catch (AXR::AXRError &e)
+    {
+        QMessageBox::critical(d->mainWindow, "Fatal error",
+                              "The application has encountered a critical error and will terminate.\n\n"
+                              "This is the developers' fault.\n\n"
+                              "Complain here https://github.com/AXR/Prototype/issues/168 until they fix it!\n\n"
+                              + e.toString());
+        QApplication::exit(-1);
+    }
+
+    return false;
+}
+
 PrototypeSettings* PrototypeApplication::settings() const
 {
     return d->settings;
 }
 
+QIODevice* PrototypeApplication::loggingDevice() const
+{
+    return d->logWindow->logBuffer();
+}
+
 void PrototypeApplication::showPreferencesDialog()
 {
     d->preferencesDialog->show();
+}
+
+void PrototypeApplication::showLogWindow()
+{
+    d->logWindow->show();
 }

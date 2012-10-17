@@ -56,13 +56,13 @@ HSSFlagAction::HSSFlagAction()
 HSSFlagAction::HSSFlagAction(const HSSFlagAction & orig)
 : HSSAction(orig)
 {
-    this->_flagFunction = boost::static_pointer_cast<HSSFlagFunction > (orig._flagFunction->clone());
+    this->_flagFunction = qSharedPointerCast<HSSFlagFunction > (orig._flagFunction->clone());
 }
 
 HSSFlagAction::p HSSFlagAction::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFlagAction: cloning flag action object");
-    return boost::static_pointer_cast<HSSFlagAction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFlagAction, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSFlagAction::cloneImpl() const
@@ -115,7 +115,7 @@ void HSSFlagAction::fire()
                     break;
 
                 default:
-                    throw AXRWarning::p(new AXRWarning("HSSFlagAction", "Invalid flag function type for flag action"));
+                    throw AXRWarning("HSSFlagAction", "Invalid flag function type for flag action");
                     break;
                 }
             }

@@ -53,7 +53,7 @@ HSSKeywordConstant::HSSKeywordConstant(AXRString value)
 
 HSSKeywordConstant::p HSSKeywordConstant::clone() const
 {
-    return boost::static_pointer_cast<HSSKeywordConstant, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSKeywordConstant, HSSClonable > (this->cloneImpl());
 }
 
 HSSKeywordConstant::~HSSKeywordConstant()

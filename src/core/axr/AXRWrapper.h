@@ -44,11 +44,12 @@
 #ifndef AXRWRAPPER_H
 #define AXRWRAPPER_H
 
-#include <cstdio>
 #include <queue>
-#include <boost/shared_ptr.hpp>
-#include <boost/thread/thread.hpp>
 #include <QMap>
+#include <QMutex>
+#include <QSharedPointer>
+#include <QThread>
+#include <QThreadPool>
 #include "AXRError.h"
 #include "AXRBuffer.h"
 #include "HSSContainer.h"
@@ -68,7 +69,7 @@ namespace AXR
         /**
          *  The shared pointer to the wrapper.
          */
-        typedef boost::shared_ptr<AXRWrapper> p;
+        typedef QSharedPointer<AXRWrapper> p;
 
         /**
          *  Creates a new instance of the wrapper. It will obtain the singleton instance of
@@ -85,7 +86,7 @@ namespace AXR
          *  Subclasses should override this method with the OS specific implementation.
          *  @param url  A string containing the url to the file
          */
-        virtual AXRBuffer::p getFile(AXRString url);
+        virtual AXRBuffer::p getFile(QUrl url);
         virtual bool needsDisplay() const;
         /**
          *  This is to be called when something happens that needs to trigger a redraw.
@@ -97,24 +98,24 @@ namespace AXR
          *  Getter for the core.
          *  @return A shared pointer to the core object.
          */
-        boost::shared_ptr<AXRCore> getCore();
+        QSharedPointer<AXRCore> getCore();
         /**
          *  Setter for the core.
          *  param xcr   A shared pointer to the core object.
          */
-        void setCore(boost::shared_ptr<AXRCore> xcr);
+        void setCore(QSharedPointer<AXRCore> xcr);
         /**
          *  This creates a string containing a basic XML document with 1 element called "root".
          *  It is used when a HSS file is loaded directly.
          *  @return A shared pointer to the AXRBuffer representation of the basic XML document.
          */
-        AXRBuffer::p createDummyXML(AXRString stylesheet);
+        AXRBuffer::p createDummyXML(QUrl hssUrl);
         /**
          *  Loads the XML file at the path you provide.
          *  @param  xmlfilepath A string containing the path to the file on the local system.
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadXMLFile(AXRString xmlfilepath);
+        bool loadXMLFile(QUrl url);
         /**
          *  Loads the file you provide, and then handles it according to its file extension.
          *  @param  filepath    A string containing the path to the file on the local system, can be
@@ -122,13 +123,13 @@ namespace AXR
          *
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadFileByPath(AXRString filepath);
+        bool loadFileByPath(QUrl url);
         /**
          *  Loads the HSS file at the path you provide.
          *  @param  hssfilepath A string containing the path to the file on the local system.
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadHSSFile(AXRString hssfilepath);
+        bool loadHSSFile(QUrl url);
         /**
          *  Reloads the file that is currently loaded.
          *  @return Wether it has been reloaded successfully or not.
@@ -179,36 +180,37 @@ namespace AXR
         AXRString _layoutTestsFilePath;
     };
 
-    class AXR_API AXRTestThread
+    class AXR_API AXRTestThread : public QThread
     {
     private:
         AXRWrapper * wrapper;
-        AXRString filePath;
+        QUrl url;
         unsigned totalTests;
         unsigned totalPassed;
         HSSContainer::p status;
 
     public:
-        AXRTestThread(AXRWrapper * wrapper, AXRString filePath, HSSContainer::p status);
+        AXRTestThread(AXRWrapper * wrapper, QUrl url, HSSContainer::p status);
         void operator () ();
+        void run();
     };
 
-    class AXR_API AXRTestProducer
+    class AXR_API AXRTestProducer : public QRunnable
     {
     private:
         AXRWrapper * wrapper;
-        AXRString basePath;
-        std::vector<AXRString> test; // the filename of the test
+        std::vector<QUrl> test; // the filename of the test
         unsigned * totalTests;
         unsigned * totalPassed;
         HSSContainer::p status;
-        static boost::mutex totalTestsMutex;
-        static boost::mutex totalPassedMutex;
-        static boost::mutex statusMutex;
+        static QMutex totalTestsMutex;
+        static QMutex totalPassedMutex;
+        static QMutex statusMutex;
 
     public:
-        AXRTestProducer(AXRWrapper * wrapper, AXRString basePath, std::vector<AXRString> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
+        AXRTestProducer(AXRWrapper * wrapper, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
         void operator () ();
+        void run();
     };
 }
 

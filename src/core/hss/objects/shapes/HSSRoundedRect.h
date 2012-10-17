@@ -62,7 +62,7 @@ namespace AXR
     class AXR_API HSSRoundedRect : public HSSShape
     {
     public:
-        typedef boost::shared_ptr<HSSRoundedRect> p;
+        typedef QSharedPointer<HSSRoundedRect> p;
 
         /**
          *  Creates a new instance of a rounded  rect object.

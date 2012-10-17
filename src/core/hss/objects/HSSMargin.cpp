@@ -73,7 +73,7 @@ HSSMargin::HSSMargin(const HSSMargin & orig)
 
 HSSMargin::p HSSMargin::clone() const
 {
-    return boost::static_pointer_cast<HSSMargin, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSMargin, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSMargin::cloneImpl() const
@@ -206,7 +206,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSMargin", "Invalid value for size of @margin object " + this->name));
+        throw AXRWarning("HSSMargin", "Invalid value for size of @margin object " + this->name);
     }
 
     this->dSize = value;
@@ -244,7 +244,7 @@ void HSSMargin::setDTop(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSMargin", "Invalid value for corners of @margin object " + this->name));
+        throw AXRWarning("HSSMargin", "Invalid value for corners of @margin object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyTop, &this->top);
@@ -288,7 +288,7 @@ void HSSMargin::setDRight(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSMargin", "Invalid value for corners of @margin object " + this->name));
+        throw AXRWarning("HSSMargin", "Invalid value for corners of @margin object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyRight, &this->right);
@@ -332,7 +332,7 @@ void HSSMargin::setDBottom(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSMargin", "Invalid value for corners of @margin object " + this->name));
+        throw AXRWarning("HSSMargin", "Invalid value for corners of @margin object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyBottom, &this->bottom);
@@ -376,7 +376,7 @@ void HSSMargin::setDLeft(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSMargin", "Invalid value for corners of @margin object " + this->name));
+        throw AXRWarning("HSSMargin", "Invalid value for corners of @margin object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyLeft, &this->left);
@@ -407,7 +407,7 @@ HSSUnit HSSMargin::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         observedStore = NULL;
         break;
@@ -415,7 +415,7 @@ HSSUnit HSSMargin::_evaluatePropertyValue(
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         if (callback)
         {
@@ -428,7 +428,7 @@ HSSUnit HSSMargin::_evaluatePropertyValue(
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setPercentageObserved(observedProperty, observedObject);
         expressionValue->setScope(scope);
@@ -437,7 +437,7 @@ HSSUnit HSSMargin::_evaluatePropertyValue(
         if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSMargin > (this, callback));
-            observedStore = expressionValue.get();
+            observedStore = expressionValue.data();
             observedStoreProperty = HSSObservablePropertyValue;
         }
 
@@ -450,18 +450,18 @@ HSSUnit HSSMargin::_evaluatePropertyValue(
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         fnct->setPercentageBase(percentageBase);
         fnct->setPercentageObserved(observedProperty, observedObject);
         fnct->setScope(scope);
         fnct->setThisObj(this->getThisObj());
 
-        boost::any remoteValue = fnct->evaluate();
-        try
+        QVariant remoteValue = fnct->evaluate();
+        if (remoteValue.canConvert<HSSUnit>())
         {
-            ret = boost::any_cast<HSSUnit>(remoteValue);
+            ret = remoteValue.value<HSSUnit>();
         }
-        catch (boost::bad_any_cast &)
+        else
         {
             ret = 0.;
         }
@@ -469,7 +469,7 @@ HSSUnit HSSMargin::_evaluatePropertyValue(
         if (callback)
         {
             fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSMargin > (this, callback));
-            observedStore = fnct.get();
+            observedStore = fnct.data();
             observedStoreProperty = HSSObservablePropertyValue;
         }
         break;

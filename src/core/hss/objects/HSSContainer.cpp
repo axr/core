@@ -46,7 +46,6 @@
 #include <map>
 #include <sstream>
 #include <vector>
-#include <boost/pointer_cast.hpp>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRInitializer.h"
@@ -64,7 +63,7 @@ using namespace AXR;
 
 HSSDisplayObject::p HSSContainer::asDisplayObject(HSSContainer::p theContainer)
 {
-    return boost::static_pointer_cast<HSSDisplayObject > (theContainer);
+    return qSharedPointerCast<HSSDisplayObject > (theContainer);
 }
 
 //always test the return of this function. E.g. "HSSContainer::p cont = HSSContainer::asContainer(myDO); if(cont) { /* ... */ }
@@ -74,7 +73,7 @@ HSSContainer::p HSSContainer::asContainer(HSSDisplayObject::p theDisplayObject)
     HSSContainer::p ret;
     if (theDisplayObject->isA(HSSObjectTypeContainer))
     {
-        ret = boost::static_pointer_cast<HSSContainer > (theDisplayObject);
+        ret = qSharedPointerCast<HSSContainer > (theDisplayObject);
     }
     return ret;
 }
@@ -116,12 +115,12 @@ void HSSContainer::initialize()
 
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyContentAlignX, & this->contentAlignX);
-    this->registerProperty(HSSObservablePropertyContentAlignY, & this->contentAlignY);
-    this->registerProperty(HSSObservablePropertyDirectionPrimary, & this->directionPrimary);
-    this->registerProperty(HSSObservablePropertyDirectionSecondary, & this->directionSecondary);
-    this->registerProperty(HSSObservablePropertyShape, & this->shape);
-    this->registerProperty(HSSObservablePropertyTextAlign, & this->textAlign);
+    this->registerProperty(HSSObservablePropertyContentAlignX, QVariant::fromValue(&this->contentAlignX));
+    this->registerProperty(HSSObservablePropertyContentAlignY, QVariant::fromValue(&this->contentAlignY));
+    this->registerProperty(HSSObservablePropertyDirectionPrimary, QVariant::fromValue(&this->directionPrimary));
+    this->registerProperty(HSSObservablePropertyDirectionSecondary, QVariant::fromValue(&this->directionSecondary));
+    this->registerProperty(HSSObservablePropertyShape, QVariant::fromValue(&this->shape));
+    this->registerProperty(HSSObservablePropertyTextAlign, QVariant::fromValue(&this->textAlign));
 }
 
 HSSContainer::HSSContainer(const HSSContainer & orig)
@@ -133,7 +132,7 @@ HSSContainer::HSSContainer(const HSSContainer & orig)
 HSSContainer::p HSSContainer::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: cloning container");
-    return boost::static_pointer_cast<HSSContainer, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSContainer, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSContainer::cloneImpl() const
@@ -335,7 +334,7 @@ void HSSContainer::setContentText(const AXRString &contextText)
             HSSDisplayObject::p lastChild = this->allChildren.back();
             if (lastChild->isA(HSSObjectTypeTextBlock))
             {
-                HSSTextBlock::p textBlock = boost::static_pointer_cast<HSSTextBlock > (lastChild);
+                HSSTextBlock::p textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
                 textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
             }
             else
@@ -365,7 +364,7 @@ void HSSContainer::appendContentText(const AXRString &contextText)
             HSSDisplayObject::p lastChild = this->allChildren.back();
             if (lastChild->isA(HSSObjectTypeTextBlock))
             {
-                HSSTextBlock::p textBlock = boost::static_pointer_cast<HSSTextBlock > (lastChild);
+                HSSTextBlock::p textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
                 textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(textBlock->getText() + " " + text)));
             }
             else
@@ -1063,9 +1062,9 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
                 lineBDone = false;
                 if (addToSecondaryGroups)
                 {
-                    targetA.reset();
-                    targetB.reset();
-                    newGroup.reset();
+                    targetA.clear();
+                    targetB.clear();
+                    newGroup.clear();
                     needsShoveling = true;
                 }
             }
@@ -2337,7 +2336,7 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
         break;
     default:
-        throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of " + this->getElementName()));
+        throw AXRWarning("HSSContainer", "Invalid value for contentAlignX of " + this->getElementName());
     }
 
     if (this->observedContentAlignX)
@@ -2349,7 +2348,7 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
 
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
-        HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
+        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "left")
         {
             this->setDContentAlignX(HSSParserNode::p(new HSSNumberConstant(0)));
@@ -2374,7 +2373,7 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
         }
         else
         {
-            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignX of " + this->getElementName()));
+            throw AXRWarning("HSSContainer", "Invalid value for contentAlignX of " + this->getElementName());
         }
 
     }
@@ -2412,14 +2411,14 @@ void HSSContainer::contentAlignXChanged(HSSObservableProperty source, void *data
     {
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dContentAlignX);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dContentAlignX);
         this->contentAlignX = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (this->dContentAlignX);
+        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (this->dContentAlignX);
         this->contentAlignX = expressionValue->evaluate();
         break;
     }
@@ -2449,7 +2448,7 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
         break;
     default:
-        throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of " + this->getElementName()));
+        throw AXRWarning("HSSContainer", "Invalid value for contentAlignY of " + this->getElementName());
     }
 
     if (this->observedContentAlignY)
@@ -2462,7 +2461,7 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
 
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
-        HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
+        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "top")
         {
             this->setDContentAlignY(HSSParserNode::p(new HSSNumberConstant(0)));
@@ -2487,7 +2486,7 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
         }
         else
         {
-            throw AXRWarning::p(new AXRWarning("HSSContainer", "Invalid value for contentAlignY of " + this->getElementName()));
+            throw AXRWarning("HSSContainer", "Invalid value for contentAlignY of " + this->getElementName());
         }
     }
     else
@@ -2526,14 +2525,14 @@ void HSSContainer::contentAlignYChanged(HSSObservableProperty source, void *data
     {
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (this->dContentAlignY);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dContentAlignY);
         this->contentAlignY = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (this->dContentAlignY);
+        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (this->dContentAlignY);
         this->contentAlignY = expressionValue->evaluate();
         break;
     }
@@ -2563,8 +2562,8 @@ void HSSContainer::setDDirectionPrimary(HSSParserNode::p value)
 
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
-        AXRString stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
-        if (stringValue == "ltf" || stringValue == "rtl")
+        AXRString stringValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
+        if (stringValue == "ltr" || stringValue == "rtl")
         {
             if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft)
             {
@@ -2629,7 +2628,7 @@ void HSSContainer::setDDirectionSecondary(HSSParserNode::p value)
 
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
-        AXRString stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        AXRString stringValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
         if (stringValue == "leftToRight" || stringValue == "rightToLeft")
         {
             if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft)
@@ -2699,7 +2698,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
     {
     case HSSParserNodeTypeKeywordConstant:
     {
-        AXRString stringValue = boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue();
+        AXRString stringValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
         if (stringValue == "default")
         {
             this->shape = HSSRectangle::p(new HSSRectangle());
@@ -2712,7 +2711,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
             objdef->setThisObj(this->shared_from_this());
             HSSContainer::p parent = this->getParent();
@@ -2728,19 +2727,19 @@ void HSSContainer::setDShape(HSSParserNode::p value)
             HSSObject::p theObject = objdef->getObject();
             if (theObject->isA(HSSObjectTypeShape))
             {
-                this->shape = boost::static_pointer_cast<HSSShape > (theObject);
+                this->shape = qSharedPointerCast<HSSShape > (theObject);
                 valid = true;
             }
 
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError &e)
         {
-            e->raise();
+            e.raise();
 
         }
-        catch (const AXRWarning::p &e)
+        catch (const AXRWarning &e)
         {
-            e->raise();
+            e.raise();
         }
 
         break;
@@ -2754,7 +2753,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
     {
     case HSSStatementTypeObjectDefinition:
     {
-        HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (value);
+        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setThisObj(this->shared_from_this());
         HSSContainer::p parent = this->getParent();
         if (parent)
@@ -2769,7 +2768,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
         HSSObject::p objValue = objdef->getObject();
         if (objValue->isA(HSSObjectTypeShape))
         {
-            this->shape = boost::static_pointer_cast<HSSShape > (objValue);
+            this->shape = qSharedPointerCast<HSSShape > (objValue);
             valid = true;
         }
         break;
@@ -2780,7 +2779,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
     }
 
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for shape of " + this->getElementName()));
+        throw AXRWarning("HSSDisplayObject", "Invalid value for shape of " + this->getElementName());
 
     this->notifyObservers(HSSObservablePropertyShape, &this->shape);
 }
@@ -2814,14 +2813,14 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
         this->dTextAlign = value;
         try
         {
-            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
             this->setDTextAlign(objdef);
             valid = true;
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError &e)
         {
-            e->raise();
+            e.raise();
         }
 
         break;
@@ -2831,7 +2830,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dTextAlign = value;
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             HSSContainer::p parent = this->getParent();
@@ -2844,15 +2843,11 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
                 fnct->setScope(&(this->getChildren()));
             }
             fnct->setThisObj(this->shared_from_this());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSTextAlignType>())
             {
-                this->textAlign = boost::any_cast<HSSTextAlignType > (remoteValue);
+                this->textAlign = remoteValue.value<HSSTextAlignType>();
                 valid = true;
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSContainer > (this, &HSSContainer::textAlignChanged));
@@ -2864,7 +2859,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         this->dTextAlign = value;
-        this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSKeywordConstant > (value)->getValue());
+        this->textAlign = HSSTextBlock::textAlignTypeFromString(qSharedPointerCast<HSSKeywordConstant > (value)->getValue());
         valid = true;
         break;
     }
@@ -2878,7 +2873,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dTextAlign = value;
-        HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (value);
+        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setThisObj(this->shared_from_this());
         HSSContainer::p parent = this->getParent();
         if (parent)
@@ -2894,7 +2889,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
         HSSObject::p theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
-            //this->textAlign = HSSTextBlock::textAlignTypeFromString(boost::static_pointer_cast<HSSValue>(theobj)->getStringValue());
+            //this->textAlign = HSSTextBlock::textAlignTypeFromString(qSharedPointerCast<HSSValue>(theobj)->getStringValue());
             std_log("######## FIXME ################");
             valid = true;
         }
@@ -2907,7 +2902,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
     }
 
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for textAlign of " + this->name));
+        throw AXRWarning("HSSDGradient", "Invalid value for textAlign of " + this->name);
 
     this->notifyObservers(HSSObservablePropertyTextAlign, &this->textAlign);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
@@ -2981,14 +2976,14 @@ HSSUnit HSSContainer::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         if (callback)
         {
@@ -3001,7 +2996,7 @@ HSSUnit HSSContainer::_evaluatePropertyValue(
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setPercentageObserved(observedProperty, observedObject);
         expressionValue->setScope(scope);
@@ -3009,7 +3004,7 @@ HSSUnit HSSContainer::_evaluatePropertyValue(
         if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer > (this, callback));
-            observedStore = expressionValue.get();
+            observedStore = expressionValue.data();
             observedStoreProperty = HSSObservablePropertyValue;
         }
 
@@ -3021,31 +3016,31 @@ HSSUnit HSSContainer::_evaluatePropertyValue(
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         fnct->setPercentageBase(percentageBase);
         fnct->setPercentageObserved(observedProperty, observedObject);
         fnct->setScope(scope);
         fnct->setThisObj(this->shared_from_this());
-        boost::any remoteValue = fnct->evaluate();
-        try
+        QVariant remoteValue = fnct->evaluate();
+        if (remoteValue.canConvert<HSSUnit>())
         {
-            ret = boost::any_cast<HSSUnit>(remoteValue);
+            ret = remoteValue.value<HSSUnit>();
         }
-        catch (boost::bad_any_cast &)
+        else
         {
             ret = 0.;
         }
         if (callback)
         {
             fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSContainer > (this, callback));
-            observedStore = fnct.get();
+            observedStore = fnct.data();
             observedStoreProperty = HSSObservablePropertyValue;
         }
         break;
     }
 
     default:
-        throw AXRError::p(new AXRError("HSSContainer", "Unknown parser node type while setting LDProperty"));
+        throw AXRError("HSSContainer", "Unknown parser node type while setting LDProperty");
     }
 
     return ret;
@@ -3087,5 +3082,5 @@ void HSSContainer::setController(AXRController * controller)
 
 HSSContainer::p HSSContainer::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSContainer > (HSSDisplayObject::shared_from_this());
+    return qSharedPointerCast<HSSContainer > (HSSDisplayObject::shared_from_this());
 }

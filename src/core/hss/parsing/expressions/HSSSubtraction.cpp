@@ -59,7 +59,7 @@ HSSSubtraction::HSSSubtraction(const HSSSubtraction &orig)
 
 HSSSubtraction::p HSSSubtraction::clone() const
 {
-    return boost::static_pointer_cast<HSSSubtraction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSSubtraction, HSSClonable > (this->cloneImpl());
 }
 
 HSSSubtraction::~HSSSubtraction()

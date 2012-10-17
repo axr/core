@@ -53,7 +53,7 @@ HSSCombinator::HSSCombinator(HSSCombinatorType type)
 
 HSSCombinator::p HSSCombinator::clone() const
 {
-    return boost::static_pointer_cast<HSSCombinator, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSCombinator, HSSClonable > (this->cloneImpl());
 }
 
 bool HSSCombinator::isA(HSSCombinatorType otherType)

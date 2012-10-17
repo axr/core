@@ -55,14 +55,14 @@ HSSBorder::HSSBorder()
 : HSSObject(HSSObjectTypeBorder)
 {
     this->observedSize = NULL;
-    this->registerProperty(HSSObservablePropertySize, & this->size);
+    this->registerProperty(HSSObservablePropertySize, QVariant::fromValue(&this->size));
 }
 
 HSSBorder::HSSBorder(const HSSBorder & orig)
 : HSSObject(orig)
 {
     this->observedSize = NULL;
-    this->registerProperty(HSSObservablePropertySize, & this->size);
+    this->registerProperty(HSSObservablePropertySize, QVariant::fromValue(&this->size));
 }
 
 HSSBorder::~HSSBorder()
@@ -153,17 +153,17 @@ void HSSBorder::setDSize(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dSize = value;
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSUnit>())
             {
-                this->size = boost::any_cast<HSSUnit > (remoteValue);
+                this->size = remoteValue.value<HSSUnit>();
             }
-            catch (boost::bad_any_cast &)
+            else
             {
                 this->size = 1.;
             }
@@ -173,14 +173,14 @@ void HSSBorder::setDSize(HSSParserNode::p value)
         }
         else
         {
-            throw AXRWarning::p(new AXRWarning("HSSDBorder", "Invalid function type size of " + this->name));
+            throw AXRWarning("HSSDBorder", "Invalid function type size of " + this->name);
         }
 
         break;
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSBorder", "Invalid value for size of " + this->name));
+        throw AXRWarning("HSSBorder", "Invalid value for size of " + this->name);
     }
     this->notifyObservers(HSSObservablePropertySize, &this->size);
 }
@@ -220,21 +220,21 @@ HSSUnit HSSBorder::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setScope(this->scope);
         expressionValue->setThisObj(this->getThisObj());
@@ -252,7 +252,7 @@ HSSUnit HSSBorder::_evaluatePropertyValue(
         break;
 
     default:
-        AXRWarning::p(new AXRWarning("HSSLineBorder", "Unknown parser node type while setting value for HSSLineBorder property"))->raise();
+        AXRWarning("HSSLineBorder", "Unknown parser node type while setting value for HSSLineBorder property").raise();
         break;
     }
 

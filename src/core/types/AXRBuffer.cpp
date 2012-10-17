@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include "AXRBuffer.h"
+#include "AXRDebugging.h"
 
 using namespace AXR;
 
@@ -61,13 +62,18 @@ AXRBuffer::AXRBuffer(const QFileInfo &filePath)
     if (file.open(QIODevice::ReadOnly))
     {
         this->buffer = file.readAll();
-        this->sourceUrl = filePath.canonicalFilePath();
+        this->sourceUrl_ = QUrl::fromLocalFile(filePath.canonicalFilePath());
         this->valid = this->buffer.size() == file.size();
+    }
+    else
+    {
+        // TODO: AXR_DEBUG_CH_IO?
+        axr_log(AXR_DEBUG_CH_ON | AXR_DEBUG_CH_GENERAL, AXRString("AXRBuffer: Could not open file '%1' - %2").arg(filePath.canonicalFilePath()).arg(file.errorString()));
     }
 }
 
 AXRBuffer::AXRBuffer(const QFileInfo &filePath, const QByteArray &data)
-: valid(true), buffer(data), sourceUrl(filePath.canonicalFilePath())
+: valid(true), buffer(data), sourceUrl_(filePath.canonicalFilePath())
 {
 }
 
@@ -75,16 +81,15 @@ AXRBuffer::~AXRBuffer()
 {
 }
 
-AXRString AXRBuffer::getFileName() const
+QUrl AXRBuffer::sourceUrl() const
 {
-    QFileInfo fi(this->sourceUrl.toLocalFile());
-    return fi.fileName();
+    return this->sourceUrl_;
 }
 
-AXRString AXRBuffer::getBasePath() const
+AXRString AXRBuffer::getFileName() const
 {
-    QFileInfo fi(this->sourceUrl.toLocalFile());
-    return fi.canonicalPath();
+    QFileInfo fi(this->sourceUrl_.path());
+    return fi.fileName();
 }
 
 const QByteArray& AXRBuffer::getBuffer() const
@@ -99,5 +104,11 @@ bool AXRBuffer::isValid() const
 
 AXRString AXRBuffer::toString() const
 {
-    return "AXRBuffer:\nFilename: " + getFileName() + "\nBasepath: " + getBasePath() + "\n-------------------------\n";
+    AXRString str = "AXRBuffer:\n";
+    if (this->sourceUrl_.isValid())
+    {
+        str += AXRString("URL: %1\n").arg(this->sourceUrl_.toString());
+    }
+
+    return str;
 }

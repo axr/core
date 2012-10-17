@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <boost/pointer_cast.hpp>
 #include "AXRWarning.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
@@ -77,7 +76,7 @@ HSSRoundedRect::HSSRoundedRect(const HSSRoundedRect & orig)
 HSSRoundedRect::p HSSRoundedRect::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: cloning rounded rectangle object");
-    return boost::static_pointer_cast<HSSRoundedRect, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSRoundedRect>(this->cloneImpl());
 }
 
 HSSClonable::p HSSRoundedRect::cloneImpl() const
@@ -222,7 +221,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name));
+        throw AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name);
     }
 
     this->dCorners = value;
@@ -274,7 +273,7 @@ void HSSRoundedRect::setDLeft(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name));
+        throw AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTL);
@@ -308,7 +307,7 @@ void HSSRoundedRect::setDLeftTop(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name));
+        throw AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTL);
@@ -355,7 +354,7 @@ void HSSRoundedRect::setDTop(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name));
+        throw AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTL);
@@ -389,7 +388,7 @@ void HSSRoundedRect::setDRightTop(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name));
+        throw AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTR);
@@ -436,7 +435,7 @@ void HSSRoundedRect::setDRight(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name));
+        throw AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTR);
@@ -470,7 +469,7 @@ void HSSRoundedRect::setDRightBottom(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name));
+        throw AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBR);
@@ -517,7 +516,7 @@ void HSSRoundedRect::setDBottom(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name));
+        throw AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBL);
@@ -551,7 +550,7 @@ void HSSRoundedRect::setDLeftBottom(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name));
+        throw AXRWarning("HSSRoundedRect", "Invalid value for corners of @roundedRect object " + this->name);
     }
 
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBL);
@@ -621,7 +620,7 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant>(value);
         ret = numberValue->getValue();
         observedStore = NULL;
         break;
@@ -629,7 +628,7 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant>(value);
         ret = percentageValue->getValue(percentageBase);
         if (callback)
         {
@@ -642,7 +641,7 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression>(value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setPercentageObserved(observedProperty, observedObject);
         expressionValue->setScope(scope);
@@ -651,7 +650,7 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
         if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect > (this, callback));
-            observedStore = expressionValue.get();
+            observedStore = expressionValue.data();
             observedStoreProperty = HSSObservablePropertyValue;
         }
 
@@ -664,26 +663,22 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction>(value)->clone();
         fnct->setPercentageBase(percentageBase);
         fnct->setPercentageObserved(observedProperty, observedObject);
         fnct->setScope(scope);
         fnct->setThisObj(this->getThisObj());
 
-        boost::any remoteValue = fnct->evaluate();
-        try
+        QVariant remoteValue = fnct->evaluate();
+        if (remoteValue.canConvert<HSSUnit>())
         {
-            ret = boost::any_cast<HSSUnit>(remoteValue);
+            ret = remoteValue.value<HSSUnit>();
+        }
 
-        }
-        catch (boost::bad_any_cast &)
-        {
-            //do nothing
-        }
         if (callback)
         {
             fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect > (this, callback));
-            observedStore = fnct.get();
+            observedStore = fnct.data();
             observedStoreProperty = HSSObservablePropertyValue;
         }
         break;

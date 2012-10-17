@@ -45,7 +45,6 @@
 #define HSSTOKENIZER_H
 
 #include <vector>
-#include <boost/shared_array.hpp>
 #include "AXRBuffer.h"
 #include "HSSToken.h"
 #include "HSSValueToken.h"
@@ -64,7 +63,7 @@ namespace AXR
     class AXR_API HSSTokenizer
     {
     public:
-        typedef boost::shared_ptr<HSSTokenizer> p;
+        typedef QSharedPointer<HSSTokenizer> p;
 
         HSSTokenizer();
         //destructor

@@ -1,6 +1,3 @@
-# for NSIS to create Start Menu shortcuts
-#set(CPACK_PACKAGE_EXECUTABLES "${TARGET_NAME};${CMAKE_PROJECT_NAME}")
-
 # Per-generator overrides
 set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_BINARY_DIR}/PackageOverrides.cmake")
 
@@ -73,8 +70,10 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}-${AXR_VERSION_STRING}-
 set(CPACK_SOURCE_IGNORE_FILES ".git" ".DS_Store" "thumbs.db" "CMakeLists.txt.user")
 
 # Source package
-# TODO: TZ and TBZ2 generators are broken in CI for some reason
-list(APPEND CPACK_SOURCE_GENERATOR ZIP TGZ STGZ)
+list(APPEND CPACK_SOURCE_GENERATOR ZIP TGZ STGZ TZ TBZ2)
+
+# for NSIS to create Start Menu shortcuts
+set(CPACK_PACKAGE_EXECUTABLES "Prototype;Prototype")
 
 if(WIN32)
     set(CPACK_GENERATOR "NSIS")
@@ -85,6 +84,9 @@ if(WIN32)
     set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\axr.vg")
     set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\axr.vg")
     set(CPACK_NSIS_CONTACT "${AXR_CONTACT}")
+
+    # NSIS assumes executables are in bin by default
+    set(CPACK_NSIS_EXECUTABLES_DIRECTORY .)
 endif()
 
 if(APPLE)

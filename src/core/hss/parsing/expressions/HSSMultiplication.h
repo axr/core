@@ -44,7 +44,7 @@
 #ifndef HSSMULTIPLICATION_H
 #define HSSMULTIPLICATION_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSExpression.h"
 
 namespace AXR
@@ -55,7 +55,7 @@ namespace AXR
     class AXR_API HSSMultiplication : public HSSExpression
     {
     public:
-        typedef boost::shared_ptr<HSSMultiplication> p;
+        typedef QSharedPointer<HSSMultiplication> p;
 
         /**
          *  Creates a new instance of a multiplication expression with the two

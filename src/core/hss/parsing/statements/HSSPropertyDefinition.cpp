@@ -73,7 +73,7 @@ HSSPropertyDefinition::HSSPropertyDefinition(const HSSPropertyDefinition &orig)
 
 HSSPropertyDefinition::p HSSPropertyDefinition::clone() const
 {
-    return boost::static_pointer_cast<HSSPropertyDefinition, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSPropertyDefinition, HSSClonable > (this->cloneImpl());
 }
 
 HSSPropertyDefinition::~HSSPropertyDefinition()
@@ -113,7 +113,7 @@ void HSSPropertyDefinition::addValue(HSSParserNode::p value)
     {
         if (this->value->isA(HSSParserNodeTypeMultipleValueDefinition))
         {
-            HSSMultipleValueDefinition::p mvDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (this->value);
+            HSSMultipleValueDefinition::p mvDef = qSharedPointerCast<HSSMultipleValueDefinition > (this->value);
             value->setParentNode(this->shared_from_this());
             mvDef->add(value);
         }
@@ -138,7 +138,7 @@ HSSParserNode::p HSSPropertyDefinition::getValue()
     return this->value;
 }
 
-void HSSPropertyDefinition::setThisObj(boost::shared_ptr<HSSDisplayObject> value)
+void HSSPropertyDefinition::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     this->value->setThisObj(value);
     HSSStatement::setThisObj(value);
@@ -146,7 +146,7 @@ void HSSPropertyDefinition::setThisObj(boost::shared_ptr<HSSDisplayObject> value
 
 HSSPropertyDefinition::p HSSPropertyDefinition::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSPropertyDefinition > (HSSStatement::shared_from_this());
+    return qSharedPointerCast<HSSPropertyDefinition > (HSSStatement::shared_from_this());
 }
 
 HSSClonable::p HSSPropertyDefinition::cloneImpl() const

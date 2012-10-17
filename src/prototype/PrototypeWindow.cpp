@@ -65,21 +65,19 @@ using namespace AXR;
 class PrototypeWindow::Private
 {
 public:
-    Private() : wrapper(new AXRWrapper()), logWindow(new LogWindow())
+    Private() : wrapper(new AXRWrapper())
     {
-        axr_debug_device = logWindow->logBuffer();
-
-        logWindow->setWindowTitle(tr("Error Log"));
+        axr_debug_device = qApp->loggingDevice();
     }
 
     ~Private()
     {
+        axr_debug_device = NULL;
+
         delete wrapper;
-        delete logWindow;
     }
 
     AXRWrapper *wrapper;
-    LogWindow *logWindow;
 };
 
 PrototypeWindow::PrototypeWindow(QWidget *parent)
@@ -87,7 +85,7 @@ PrototypeWindow::PrototypeWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
     ui->enableAntialiasingAction->setChecked(core->getRender()->globalAntialiasingEnabled());
 
     // The subview needs to accept drops as well even though the main window handles it
@@ -109,7 +107,9 @@ PrototypeWindow::PrototypeWindow(QWidget *parent)
 
     ui->runLayoutTestsAction->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_T));
 
-    ui->errorLogAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
+    ui->logAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
+
+    this->closeFile();
 }
 
 PrototypeWindow::~PrototypeWindow()
@@ -174,8 +174,10 @@ void PrototypeWindow::openFile()
 
 void PrototypeWindow::openFile(const QString &filePath)
 {
+    setWindowTitle(QString());
     setWindowFilePath(filePath);
-    d->wrapper->loadFileByPath(filePath);
+
+    d->wrapper->loadFileByPath(QUrl::fromLocalFile(filePath));
     qApp->settings()->setLastFileOpened(filePath);
     update();
 }
@@ -196,6 +198,10 @@ void PrototypeWindow::reloadFile()
 
 void PrototypeWindow::closeFile()
 {
+    setWindowTitle(QCoreApplication::applicationName());
+    setWindowFilePath(QString());
+
+    // TODO: Actually close the file...
 }
 
 void PrototypeWindow::previousLayoutStep()
@@ -289,7 +295,7 @@ void PrototypeWindow::listHssTokens()
         forever
         {
             if (token)
-                token.reset();
+                token.clear();
 
             token = tokenizer.readNextToken();
 
@@ -313,14 +319,14 @@ void PrototypeWindow::runLayoutTests()
     dir.cd("Resources");
     dir.cd("views");
 
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
     core->registerCustomFunction("AXRLayoutTestsExecute", new HSSValueChangedCallback<AXRWrapper>(d->wrapper, &AXRWrapper::executeLayoutTests));
     this->openFile(dir.filePath("layoutTests.hss"));
 }
 
 void PrototypeWindow::showErrorLog()
 {
-    d->logWindow->show();
+    qApp->showLogWindow();
 }
 
 void PrototypeWindow::showPreferences()
@@ -334,7 +340,7 @@ void PrototypeWindow::showAbout()
 
 void PrototypeWindow::toggleAntialiasing(bool on)
 {
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
     core->getRender()->setGlobalAntialiasingEnabled(on);
     update();
 }

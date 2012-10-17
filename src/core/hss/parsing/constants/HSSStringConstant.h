@@ -44,7 +44,7 @@
 #ifndef HSSSTRINGCONSTANT_H
 #define HSSSTRINGCONSTANT_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSExpression.h"
 
 namespace AXR
@@ -58,7 +58,7 @@ namespace AXR
     class AXR_API HSSStringConstant : public HSSParserNode
     {
     public:
-        typedef boost::shared_ptr<HSSStringConstant> p;
+        typedef QSharedPointer<HSSStringConstant> p;
 
         /**
          *  Creates a new instance of a string constant node which holds the given value.

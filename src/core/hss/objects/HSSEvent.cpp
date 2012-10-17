@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <boost/pointer_cast.hpp>
 #include <QMap>
 #include "AXRController.h"
 #include "AXRWarning.h"
@@ -90,7 +89,7 @@ HSSEvent::HSSEvent(HSSEventType type)
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyAction, & this->action);
+    this->registerProperty(HSSObservablePropertyAction, QVariant::fromValue(&this->action));
 }
 
 HSSEvent::HSSEvent(const HSSEvent & orig)
@@ -102,13 +101,13 @@ HSSEvent::HSSEvent(const HSSEvent & orig)
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyAction, & this->action);
+    this->registerProperty(HSSObservablePropertyAction, QVariant::fromValue(&this->action));
 }
 
 HSSEvent::p HSSEvent::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: cloning event object");
-    return boost::static_pointer_cast<HSSEvent, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSEvent>(this->cloneImpl());
 }
 
 HSSClonable::p HSSEvent::cloneImpl() const
@@ -192,7 +191,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
     {
     case HSSParserNodeTypeMultipleValueDefinition:
     {
-        HSSMultipleValueDefinition::p multiDef = boost::static_pointer_cast<HSSMultipleValueDefinition > (value);
+        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition>(value);
         std::vector<HSSParserNode::p> values = multiDef->getValues();
         for (HSSParserNode::it iterator = values.begin(); iterator != values.end(); ++iterator)
         {
@@ -207,7 +206,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant>(value);
             HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue())->clone();
             objdef->setScope(this->scope);
             objdef->setThisObj(this->getThisObj());
@@ -217,7 +216,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             switch (obj->getObjectType())
             {
             case HSSObjectTypeAction:
-                this->action.push_back(boost::static_pointer_cast<HSSAction > (obj));
+                this->action.push_back(qSharedPointerCast<HSSAction>(obj));
                 valid = true;
                 break;
 
@@ -226,9 +225,9 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             }
 
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError &e)
         {
-            e->raise();
+            e.raise();
         }
 
         break;
@@ -236,27 +235,26 @@ void HSSEvent::addDAction(HSSParserNode::p value)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction>(value)->clone();
         switch (fnct->getFunctionType())
         {
         case HSSFunctionTypeRef:
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSParserNode::p>())
             {
-                HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p > (remoteValue);
-                this->addDAction(theVal);
-                valid = true;
-            }
-            catch (const AXRError::p &e)
-            {
-                e->raise();
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
+                try
+                {
+                    HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                    this->addDAction(theVal);
+                    valid = true;
+                }
+                catch (const AXRError &e)
+                {
+                    e.raise();
+                }
             }
 
             break;
@@ -266,7 +264,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            HSSFlagFunction::p flagFnct = boost::static_pointer_cast<HSSFlagFunction > (fnct);
+            HSSFlagFunction::p flagFnct = qSharedPointerCast<HSSFlagFunction>(fnct);
             HSSFlagAction::p flagAction = HSSFlagAction::p(new HSSFlagAction());
             flagAction->setFlagFunction(flagFnct);
             flagAction->setController(this->getController());
@@ -281,7 +279,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            HSSFunction::p theFnct = boost::static_pointer_cast<HSSFunction > (fnct);
+            HSSFunction::p theFnct = qSharedPointerCast<HSSFunction>(fnct);
             HSSFunctionAction::p fnctAction = HSSFunctionAction::p(new HSSFunctionAction());
             fnctAction->setFunction(theFnct);
             fnctAction->setController(this->getController());
@@ -307,7 +305,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
     {
     case HSSStatementTypeObjectDefinition:
     {
-        HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (value)->clone();
+        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition>(value)->clone();
         if (objdef->getObject()->isA(HSSObjectTypeAction))
         {
             objdef->setScope(this->scope);
@@ -315,7 +313,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             objdef->apply();
             HSSObject::p theObj = objdef->getObject();
             theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyAction, this, new HSSValueChangedCallback<HSSEvent > (this, &HSSEvent::actionChanged));
-            this->action.push_back(boost::static_pointer_cast<HSSAction > (theObj));
+            this->action.push_back(qSharedPointerCast<HSSAction>(theObj));
             valid = true;
         }
         break;
@@ -326,7 +324,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
     }
 
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for action of @event " + this->name));
+        throw AXRWarning("HSSDisplayObject", "Invalid value for action of @event " + this->name);
 
     this->notifyObservers(HSSObservablePropertyAction, &this->action);
 }

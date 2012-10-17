@@ -195,7 +195,7 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
         //        }
 
     default:
-        throw AXRError::p(new AXRError("HSSFilter", "Unknown filter type."));
+        throw AXRError("HSSFilter", "Unknown filter type.");
     }
 
     return ret;

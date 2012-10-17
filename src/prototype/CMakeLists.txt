@@ -23,6 +23,7 @@ set(prototype_SOURCES
     PrototypeWindow.h
     PrototypeWindow.ui
     Resources.qrc
+    resources.rc
 
     # These need to be included so they can be copied to the bundle
     ${axr_icon_SOURCES}

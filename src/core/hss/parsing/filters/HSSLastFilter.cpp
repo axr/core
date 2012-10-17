@@ -53,7 +53,7 @@ HSSLastFilter::HSSLastFilter()
 
 HSSLastFilter::p HSSLastFilter::clone() const
 {
-    return boost::static_pointer_cast<HSSLastFilter, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSLastFilter, HSSClonable > (this->cloneImpl());
 }
 
 HSSLastFilter::~HSSLastFilter()

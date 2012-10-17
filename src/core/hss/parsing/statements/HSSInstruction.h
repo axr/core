@@ -44,7 +44,7 @@
 #ifndef HSSINSTRUCTION_H
 #define HSSINSTRUCTION_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "AXRString.h"
 #include "HSSStatement.h"
 
@@ -60,7 +60,7 @@ namespace AXR
     class AXR_API HSSInstruction : public HSSStatement
     {
     public:
-        typedef boost::shared_ptr<HSSInstruction> p;
+        typedef QSharedPointer<HSSInstruction> p;
 
         /**
          *  Creates a new instance of an instruction node with the given type. To be used when

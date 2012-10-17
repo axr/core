@@ -83,6 +83,8 @@ if(AXR_BUILD_PROTOTYPE)
         add_definitions(-DAXR_NO_DEPRECATED_ENUMS)
     endif()
 
+    add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
+
     # Required to avoid "Symbol not found: __objc_empty_cache" from dyld
     if(APPLE)
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lobjc")
@@ -98,6 +100,7 @@ if(AXR_BUILD_PROTOTYPE)
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_REL .)
         set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_REL .)
         set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_REL .)
+        set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION .)
     endif()
 
     set(CPACK_OUTPUT_FILE_PREFIX dist)

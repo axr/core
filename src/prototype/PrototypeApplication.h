@@ -46,6 +46,7 @@
 
 #include <QApplication>
 
+class QIODevice;
 class PrototypeSettings;
 
 class PrototypeApplication : public QApplication
@@ -57,10 +58,13 @@ public:
     virtual ~PrototypeApplication();
     inline static PrototypeApplication* instance() { return qobject_cast<PrototypeApplication*>(QApplication::instance()); }
     PrototypeSettings* settings() const;
+    QIODevice* loggingDevice() const;
     void showPreferencesDialog();
+    void showLogWindow();
 
 protected:
     bool event(QEvent *e);
+    bool notify(QObject *receiver, QEvent *event);
 
 private:
     class Private;

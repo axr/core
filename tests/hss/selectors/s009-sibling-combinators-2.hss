@@ -1,0 +1,13 @@
+test
+{
+    child
+    {
+        background: #FF0;
+    }
+
+    //this should select all except "child" elements
+    child = *
+    {
+        background: #0F0;
+    }
+}

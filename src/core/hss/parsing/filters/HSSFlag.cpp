@@ -56,7 +56,7 @@ HSSFlag::HSSFlag()
 
 HSSFilter::p HSSFlag::clone() const
 {
-    return boost::static_pointer_cast<HSSFlag, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFlag, HSSClonable > (this->cloneImpl());
 }
 
 HSSFlag::~HSSFlag()
@@ -85,10 +85,10 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
     HSSParserNode::p ruleNode = selectorChainNode->getParentNode();
     if (ruleNode->isA(HSSParserNodeTypeStatement))
     {
-        HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement > (ruleNode);
+        HSSStatement::p ruleStatement = qSharedPointerCast<HSSStatement > (ruleNode);
         if (ruleStatement->isA(HSSStatementTypeRule))
         {
-            HSSRule::p theRule = boost::static_pointer_cast<HSSRule > (ruleStatement);
+            HSSRule::p theRule = qSharedPointerCast<HSSRule > (ruleStatement);
             std::vector<HSSDisplayObject::p> scope = theRule->getOriginalScope();
             AXRController::p controller = AXRCore::getInstance()->getController();
             this->setPurging(newStatus);
@@ -118,10 +118,10 @@ const std::vector<HSSDisplayObject::p> HSSFlag::apply(const std::vector<HSSDispl
             HSSParserNode::p ruleNode = this->getParentNode()->getParentNode()->getParentNode();
             if (ruleNode->isA(HSSParserNodeTypeStatement))
             {
-                HSSStatement::p ruleStatement = boost::static_pointer_cast<HSSStatement > (ruleNode);
+                HSSStatement::p ruleStatement = qSharedPointerCast<HSSStatement > (ruleNode);
                 if (ruleStatement->isA(HSSStatementTypeRule))
                 {
-                    HSSRule::p theRule = boost::static_pointer_cast<HSSRule > (ruleStatement);
+                    HSSRule::p theRule = qSharedPointerCast<HSSRule > (ruleStatement);
 
                     theRule->setActiveByDefault(this->getNegating());
                     theDO->createFlag(this->shared_from_this(), (this->getNegating() ? HSSRuleStateOn : HSSRuleStateOff));
@@ -185,5 +185,5 @@ HSSClonable::p HSSFlag::cloneImpl() const
 
 HSSFlag::p HSSFlag::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSFlag > (HSSParserNode::shared_from_this());
+    return qSharedPointerCast<HSSFlag > (HSSParserNode::shared_from_this());
 }

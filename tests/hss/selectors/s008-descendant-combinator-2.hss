@@ -1,0 +1,27 @@
+//this should match root too
+.. *
+{
+    background: #0F0;
+    padding: 10;
+}
+
+//this matches all except root
+* .. *
+{
+    border: @{ 1; #0 };
+}
+
+//so does this
+*
+{
+    .. *
+    {
+        height: 50%;
+    }
+}
+
+//this matches only root
+.. *:first
+{
+    background: #FF0;
+}

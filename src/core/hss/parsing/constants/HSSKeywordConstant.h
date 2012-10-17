@@ -44,7 +44,7 @@
 #ifndef HSSKEYWORDCONSTANT_H
 #define HSSKEYWORDCONSTANT_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "AXRString.h"
 #include "HSSParserNode.h"
 
@@ -56,7 +56,7 @@ namespace AXR
     class AXR_API HSSKeywordConstant : public HSSParserNode
     {
     public:
-        typedef boost::shared_ptr<HSSKeywordConstant> p;
+        typedef QSharedPointer<HSSKeywordConstant> p;
 
         /**
          *  Creates a new instance of a keyword constant, with given content.
@@ -101,5 +101,7 @@ namespace AXR
         virtual HSSClonable::p cloneImpl() const;
     };
 }
+
+Q_DECLARE_METATYPE(AXR::HSSKeywordConstant::p);
 
 #endif

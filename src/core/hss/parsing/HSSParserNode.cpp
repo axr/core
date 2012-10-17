@@ -92,7 +92,7 @@ HSSParserNode::HSSParserNode(const HSSParserNode &orig)
 
 HSSParserNode::p HSSParserNode::clone() const
 {
-    return boost::static_pointer_cast<HSSParserNode, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSParserNode, HSSClonable > (this->cloneImpl());
 }
 
 AXRString HSSParserNode::toString()
@@ -112,9 +112,9 @@ HSSParserNodeType HSSParserNode::getType()
 
 HSSParserNode::p HSSParserNode::getParentNode()
 {
-    if (!this->_parentNode.expired())
+    if (!this->_parentNode.isNull())
     {
-        HSSParserNode::p parent = this->_parentNode.lock();
+        HSSParserNode::p parent = this->_parentNode.toStrongRef();
         return parent;
     }
     else
@@ -246,4 +246,12 @@ bool HSSParserNode::isA(HSSFlagFunctionType otherType)
 HSSFlagFunctionType HSSParserNode::getFlagFunctionType()
 {
     return HSSFlagFunctionTypeNone;
+}
+
+HSSParserNode::p HSSParserNode::shared_from_this()
+{
+    if (!ptr)
+        ptr = QWeakPointer<HSSParserNode>(this);
+
+    return HSSParserNode::p(ptr);
 }

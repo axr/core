@@ -45,8 +45,7 @@
 #define HSSOBJECT_H
 
 #include <vector>
-#include <boost/any.hpp>
-#include <boost/shared_ptr.hpp>
+#include <QVariant>
 #include <QMap>
 #include "AXRDebugging.h"
 #include "HSSObservable.h"
@@ -64,13 +63,13 @@ namespace AXR
      *  isA.
      *  @see HSSObjectType
      */
-    class AXR_API HSSObject : public HSSObservable, public HSSClonable, public boost::enable_shared_from_this<HSSObject>
+    class AXR_API HSSObject : public HSSObservable, public HSSClonable, public QObject
     {
     public:
         /**
          *  The shared pointer to this kind of object.
          */
-        typedef boost::shared_ptr<HSSObject> p;
+        typedef QSharedPointer<HSSObject> p;
         /**
          *  Convenience iterator for vectors of shared pointers to this kind of object.
          */
@@ -247,35 +246,35 @@ namespace AXR
         /**
          *  @todo remove this if not used
          */
-        virtual void setProperty(HSSObservableProperty name, boost::any);
+        virtual void setProperty(HSSObservableProperty name, QVariant);
         /**
          *  When a subclass registers a observable property name with a pointer, it can be
          *  retrieved with this method.
          *  @param name     The observable property name.
          *  @return The parser node defining the value for the given property.
          */
-        virtual boost::any getProperty(HSSObservableProperty name);
+        virtual QVariant getProperty(HSSObservableProperty name);
         /**
          *  Each subclass must register each property name it uses with the pointer to the data,
          *  so that it can easily be accessed later.
          *  @param name     The observable property name.
-         *  @param property A boost any wrapping the pointer to the data holding the actual value of the property.
+         *  @param property A variant type wrapping the pointer to the data holding the actual value of the property.
          */
-        virtual void registerProperty(HSSObservableProperty name, boost::any property);
+        virtual void registerProperty(HSSObservableProperty name, QVariant property);
         /**
          *  Getter for the current scope this object is operating on.
          *  @return A pointer to the vector of shared pointers to display objects
          *
          *  @todo this is probably a memory management nightmare
          */
-        const std::vector<boost::shared_ptr<HSSDisplayObject> > * getScope() const;
+        const std::vector<QSharedPointer<HSSDisplayObject> > * getScope() const;
         /**
          *  Setter for the current scope this object is operating on.
          *  @param newScope     A pointer to a vector of shared pointers to display objects
          *
          *  @todo this is probably a memory management nightmare.
          */
-        void setScope(const std::vector<boost::shared_ptr<HSSDisplayObject> > * newScope);
+        void setScope(const std::vector<QSharedPointer<HSSDisplayObject> > * newScope);
         /**
          *  Setter for the controller. The controller needs to be propagated across all
          *  HSSObject subclasses, so they get access to the DOM and such.
@@ -292,13 +291,13 @@ namespace AXR
          *  (including itself).
          *  @param value        A shared pointer to the nearest display object.
          */
-        void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        void setThisObj(QSharedPointer<HSSDisplayObject> value);
         /**
          *  Getter for the "this object", which is a shared pointer to the nearest display object
          *  (including itself).
          *  @return A shared pointer to the nearest display object.
          */
-        boost::shared_ptr<HSSDisplayObject> getThisObj();
+        QSharedPointer<HSSDisplayObject> getThisObj();
 
 
         /**
@@ -324,16 +323,18 @@ namespace AXR
         virtual bool isA(HSSActionType otherType);
         virtual HSSActionType getActionType();
 
+        HSSObject::p shared_from_this();
+
     protected:
-        QMap<HSSObservableProperty, boost::any> properties;
+        QMap<HSSObservableProperty, QVariant> properties;
         std::vector<AXRString> shorthandProperties;
         QMap<AXRString, bool> skipShorthand;
         unsigned shorthandIndex;
 
         HSSParserNode::p dIsA;
 
-        const std::vector<boost::shared_ptr<HSSDisplayObject> > * scope;
-        boost::shared_ptr<HSSDisplayObject> thisObj;
+        const std::vector<QSharedPointer<HSSDisplayObject> > * scope;
+        QSharedPointer<HSSDisplayObject> thisObj;
         AXRController * axrController;
 
     private:
@@ -342,7 +343,19 @@ namespace AXR
 
         virtual HSSClonable::p cloneImpl() const;
 
+        QWeakPointer<HSSObject> ptr;
     };
 }
+
+Q_DECLARE_METATYPE(AXR::HSSObject::p);
+Q_DECLARE_METATYPE(std::vector<AXR::HSSObject::p>);
+Q_DECLARE_METATYPE(std::vector<AXR::HSSObject::p>*);
+Q_DECLARE_METATYPE(AXR::HSSEventType);
+
+// Necessary because the comma in the type name would cause it to
+// be passed to the below macro as two parameters instead of one
+typedef QMap<AXR::HSSEventType, std::vector<AXR::HSSObject::p> > QMapHSSEventTypeVectorHSSObjectp;
+Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp);
+Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp*);
 
 #endif

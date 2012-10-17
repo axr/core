@@ -75,7 +75,7 @@ HSSObjectDefinition::HSSObjectDefinition(const HSSObjectDefinition & orig)
 
 HSSObjectDefinition::p HSSObjectDefinition::clone() const
 {
-    return boost::static_pointer_cast<HSSObjectDefinition, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSObjectDefinition, HSSClonable > (this->cloneImpl());
 }
 
 HSSObjectDefinition::~HSSObjectDefinition()
@@ -237,7 +237,7 @@ HSSDisplayObject::p HSSObjectDefinition::getThisObj()
 
 HSSObjectDefinition::p HSSObjectDefinition::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSObjectDefinition > (HSSStatement::shared_from_this());
+    return qSharedPointerCast<HSSObjectDefinition > (HSSStatement::shared_from_this());
 }
 
 void HSSObjectDefinition::setRules(std::deque<HSSRule::p> newRules)

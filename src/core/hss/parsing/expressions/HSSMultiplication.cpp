@@ -59,7 +59,7 @@ HSSMultiplication::HSSMultiplication(const HSSMultiplication &orig)
 
 HSSMultiplication::p HSSMultiplication::clone() const
 {
-    return boost::static_pointer_cast<HSSMultiplication, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSMultiplication, HSSClonable > (this->cloneImpl());
 }
 
 HSSMultiplication::~HSSMultiplication()

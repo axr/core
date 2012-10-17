@@ -5,3 +5,6 @@ CMakeFiles
 
 # In-source doxygen builds
 src/core/docs
+
+# Visual Studio creates these as part of the resource build process
+*.aps

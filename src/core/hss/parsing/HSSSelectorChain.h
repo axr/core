@@ -45,8 +45,8 @@
 #define HSSSELECTORCHAIN_H
 
 #include <deque>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
+#include <QSharedPointer>
+#include <QWeakPointer>
 #include "HSSParserNode.h"
 
 namespace AXR
@@ -65,7 +65,7 @@ namespace AXR
     class AXR_API HSSSelectorChain : public HSSParserNode
     {
     public:
-        typedef boost::shared_ptr<HSSSelectorChain> p;
+        typedef QSharedPointer<HSSSelectorChain> p;
 
         /**
          *  Iterator for vectors of shared pointers to selector chains
@@ -81,7 +81,7 @@ namespace AXR
          *  A "parent pointer", used to hold weak references to the rule that owns the selector
          *  chain, in order to break reference cycles.
          */
-        typedef boost::weak_ptr<HSSRule> pp;
+        typedef QWeakPointer<HSSRule> pp;
 
         /**
          *  Creates a new instance of a selector chain.
@@ -148,10 +148,10 @@ namespace AXR
          *  be changed with the subject selector "$" (currently unimplemented).
          *  @return A shared pointer to the subject of the selector chain.
          */
-        boost::shared_ptr<HSSSimpleSelector> subject();
+        QSharedPointer<HSSSimpleSelector> subject();
 
         //see HSSParserNode.h for documentation of this method
-        virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
     protected:
         HSSSelectorChain::p shared_from_this();

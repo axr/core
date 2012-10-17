@@ -59,7 +59,7 @@ HSSValue::HSSValue()
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyValue, & this->dValue);
+    this->registerProperty(HSSObservablePropertyValue, QVariant::fromValue(&this->dValue));
 }
 
 HSSValue::HSSValue(const HSSValue & orig)
@@ -69,13 +69,13 @@ HSSValue::HSSValue(const HSSValue & orig)
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyValue, & this->dValue);
+    this->registerProperty(HSSObservablePropertyValue, QVariant::fromValue(&this->dValue));
 }
 
 HSSValue::p HSSValue::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: cloning value object");
-    return boost::static_pointer_cast<HSSValue, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSValue>(this->cloneImpl());
 }
 
 HSSClonable::p HSSValue::cloneImpl() const
@@ -139,7 +139,7 @@ void HSSValue::addDValue(HSSParserNode::p value)
 {
     bool valid = true;
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for value of @value " + this->name));
+        throw AXRWarning("HSSDisplayObject", "Invalid value for value of @value " + this->name);
 
     this->notifyObservers(HSSObservablePropertyValue, &this->dValue);
 }

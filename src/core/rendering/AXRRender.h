@@ -44,7 +44,7 @@
 #ifndef AXRRENDER_H
 #define AXRRENDER_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "AXRGlobal.h"
 #include "HSSNumberConstant.h"
 #include "HSSUnits.h"
@@ -64,7 +64,7 @@ namespace AXR
         /**
          *  The shared pointer to this class
          */
-        typedef boost::shared_ptr<AXRRender> p;
+        typedef QSharedPointer<AXRRender> p;
         /**
          *  Creates a new instance of the render object.
          *  @param  controller  A regular pointer to the controller object that is associated with this renderer.

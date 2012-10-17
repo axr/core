@@ -42,7 +42,6 @@
  ********************************************************************/
 
 #include <iostream>
-#include <boost/lexical_cast.hpp>
 #include <QImage>
 #include "AXRController.h"
 #include "AXRDebugging.h"
@@ -103,9 +102,10 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
         if (_globalAntialiasingEnabled)
             painter.setRenderHint(QPainter::Antialiasing);
 
-        this->rootSurface->fill(Qt::transparent);
+        this->rootSurface->fill(Qt::white);
         root->recursiveDraw(painter);
-        this->rootSurfaceFinal = this->rootSurface->convertToFormat(QImage::Format_ARGB32);
+        //this->rootSurfaceFinal = this->rootSurface->convertToFormat(QImage::Format_ARGB32);
+        this->rootSurfaceFinal = *this->rootSurface;
 
         if (wrapper->showLayoutSteps())
         {
@@ -115,7 +115,7 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
     }
     else
     {
-        AXRError::p(new AXRError("AXRRender", "Fatal error: No root"))->raise();
+        AXRError("AXRRender", "Fatal error: No root").raise();
     }
 }
 
@@ -166,9 +166,9 @@ void AXRRender::mouseUp(HSSUnit x, HSSUnit y)
         {
             root->handleEvent(HSSEventTypeMouseUp, (void*) &thePoint);
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError &e)
         {
-            e->raise();
+            e.raise();
         }
     }
 }

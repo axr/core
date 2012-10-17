@@ -58,7 +58,7 @@ namespace AXR
     public:
         friend class HSSParser;
 
-        typedef boost::shared_ptr<HSSFont> p;
+        typedef QSharedPointer<HSSFont> p;
 
         static const HSSUnit DEFAULT_SIZE;
 
@@ -208,5 +208,8 @@ namespace AXR
         HSSClonable::p cloneImpl() const;
     };
 }
+
+Q_DECLARE_METATYPE(std::vector<AXR::HSSFont::p>);
+Q_DECLARE_METATYPE(std::vector<AXR::HSSFont::p>*);
 
 #endif

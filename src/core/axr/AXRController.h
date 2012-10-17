@@ -46,8 +46,7 @@
 
 #include <stack>
 #include <vector>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSContainer.h"
 #include "HSSObject.h"
 #include "HSSParser.h"
@@ -67,7 +66,7 @@ namespace AXR
         /**
          *  The shared pointer to the controller.
          */
-        typedef boost::shared_ptr<AXRController> p;
+        typedef QSharedPointer<AXRController> p;
 
         /**
          *  Creates a new instance of a controller.
@@ -186,7 +185,7 @@ namespace AXR
          *
          *  @param sheet    A string containing the file name of the stylesheet
          */
-        void loadSheetsAdd(AXRString sheet);
+        void loadSheetsAdd(QUrl url);
 
         /**
          *  Removes an entry in the list of sheets to be loaded.
@@ -201,14 +200,14 @@ namespace AXR
          *  @param index    An unsigned int containing the index of the sheet to be removed.
          *  @return         The sheet at that index.
          */
-        AXRString loadSheetsGet(unsigned index);
+        QUrl loadSheetsGet(unsigned index);
 
         /**
          *  Returns all entries from the list of sheets to be loaded.
          *
          *  @return         The list of sheets to be loaded.
          */
-        const std::vector<AXRString> loadSheetsGet() const;
+        const std::vector<QUrl> loadSheetsGet() const;
 
         /**
          *  Replaces the whole parser tree with what you give.
@@ -390,11 +389,6 @@ namespace AXR
         std::vector< std::vector<HSSDisplayObject::p> > selectSimple(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
 
         /**
-         *  @todo make private and provide accessors.
-         */
-        AXRString basepath;
-
-        /**
          *  After reading the XML and HSS documents, this method is used to match the rules to the
          *  display objects in the content tree. You give the rule and the scope where to apply it,
          *  and it will select the elements from the scope according to the selector chain that is
@@ -414,7 +408,7 @@ namespace AXR
         HSSContainer::p root;
 
         std::vector<HSSObjectDefinition::p>objectTree;
-        std::vector<AXRString>loadSheets;
+        std::vector<QUrl>loadSheets;
         std::vector<HSSParserNode::p>parserTree;
         std::vector<HSSRule::p>rules;
 
@@ -424,6 +418,9 @@ namespace AXR
         unsigned currentChainSize;
         void readNextSelectorNode();
         bool isAtEndOfSelector();
+
+    private:
+        void _recursiveGetDescendants(std::vector<HSSDisplayObject::p> &ret, const std::vector<HSSDisplayObject::p> & scope);
     };
 }
 

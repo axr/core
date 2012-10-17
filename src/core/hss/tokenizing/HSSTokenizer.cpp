@@ -65,7 +65,7 @@ HSSTokenizer::~HSSTokenizer()
 void HSSTokenizer::reset()
 {
     if (this->file)
-        this->file.reset();
+        this->file.clear();
 
     // This starts out empty
     this->currentChar = '\0';
@@ -449,7 +449,7 @@ HSSToken::p HSSTokenizer::readString()
         {
             if (this->atEndOfSource())
             {
-                throw AXRError::p(new AXRError("HSSTokenizer", "Unexpected end of source"));
+                throw AXRError("HSSTokenizer", "Unexpected end of source");
             }
             this->storeCurrentCharAndReadNext();
         }
@@ -462,7 +462,7 @@ HSSToken::p HSSTokenizer::readString()
         {
             if (this->atEndOfSource())
             {
-                throw AXRError::p(new AXRError("HSSTokenizer", "Unexpected end of source"));
+                throw AXRError("HSSTokenizer", "Unexpected end of source");
             }
             this->storeCurrentCharAndReadNext();
         }

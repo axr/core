@@ -54,7 +54,7 @@ HSSEmptyFilter::HSSEmptyFilter()
 
 HSSEmptyFilter::p HSSEmptyFilter::clone() const
 {
-    return boost::static_pointer_cast<HSSEmptyFilter, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSEmptyFilter, HSSClonable > (this->cloneImpl());
 }
 
 HSSEmptyFilter::~HSSEmptyFilter()

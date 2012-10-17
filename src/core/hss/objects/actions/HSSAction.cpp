@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <boost/pointer_cast.hpp>
 #include <QMap>
 #include "AXRController.h"
 #include "HSSAction.h"
@@ -82,7 +81,7 @@ HSSAction::HSSAction(const HSSAction & orig)
 
 HSSAction::p HSSAction::clone() const
 {
-    return boost::static_pointer_cast<HSSAction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSAction>(this->cloneImpl());
 }
 
 HSSClonable::p HSSAction::cloneImpl() const

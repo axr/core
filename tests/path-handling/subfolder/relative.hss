@@ -1,0 +1,10 @@
+#import "./dot.hss";
+#import "../dotdot.hss";
+
+root
+{
+    #new file
+    {
+        content: 'This file is subfolder/relative.hss';
+    }
+}

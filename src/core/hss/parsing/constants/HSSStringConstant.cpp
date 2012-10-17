@@ -53,7 +53,7 @@ HSSStringConstant::HSSStringConstant(AXRString value)
 
 HSSStringConstant::p HSSStringConstant::clone() const
 {
-    return boost::static_pointer_cast<HSSStringConstant, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSStringConstant, HSSClonable > (this->cloneImpl());
 }
 
 HSSStringConstant::~HSSStringConstant()

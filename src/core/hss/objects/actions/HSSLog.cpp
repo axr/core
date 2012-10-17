@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <boost/pointer_cast.hpp>
 #include "AXRController.h"
 #include "AXRWarning.h"
 #include "HSSFunction.h"
@@ -75,7 +74,7 @@ HSSLog::HSSLog(const HSSLog & orig)
 HSSLog::p HSSLog::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: cloning log object");
-    return boost::static_pointer_cast<HSSLog, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSLog, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSLog::cloneImpl() const
@@ -119,46 +118,37 @@ void HSSLog::fire()
     {
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (this->dValue)->clone();
+            HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (this->dValue)->clone();
             if (fnct->isA(HSSFunctionTypeRef))
             {
-                HSSRefFunction::p refFnct = boost::static_pointer_cast<HSSRefFunction > (fnct);
+                HSSRefFunction::p refFnct = qSharedPointerCast<HSSRefFunction > (fnct);
                 refFnct->setScope(this->scope);
                 refFnct->setThisObj(this->getThisObj());
-                boost::any remoteValue = refFnct->evaluate();
-                try
+                QVariant remoteValue = refFnct->evaluate();
+                if (remoteValue.canConvert<AXRString>())
                 {
-                    AXRString theVal = boost::any_cast<AXRString > (remoteValue);
+                    AXRString theVal = remoteValue.value<AXRString>();
                     std_log(theVal);
                     done = true;
                 }
-                catch (boost::bad_any_cast &)
+
+                if (remoteValue.canConvert<HSSUnit>())
                 {
-                    //do nothing
-                }
-                try
-                {
-                    HSSUnit theVal = boost::any_cast<HSSUnit > (remoteValue);
+                    HSSUnit theVal = remoteValue.value<HSSUnit>();
                     std_log(AXRString::number(theVal));
                     done = true;
                 }
-                catch (boost::bad_any_cast &)
+
+                if (remoteValue.canConvert<HSSObject::p>())
                 {
-                    //do nothing
-                }
-                try
-                {
-                    HSSObject::p theVal = boost::any_cast<HSSObject::p > (remoteValue);
+                    HSSObject::p theVal = remoteValue.value<HSSObject::p>();
                     std_log(theVal->toString());
                     done = true;
                 }
-                catch (boost::bad_any_cast &)
+
+                if (remoteValue.canConvert< std::vector<HSSObject::p> >())
                 {
-                    //do nothing
-                }
-                try
-                {
-                    std::vector<HSSObject::p> v_data = boost::any_cast< std::vector<HSSObject::p> >(remoteValue);
+                    std::vector<HSSObject::p> v_data = remoteValue.value< std::vector<HSSObject::p> >();
                     if (v_data.empty())
                     {
                         std_log("empty");
@@ -173,13 +163,10 @@ void HSSLog::fire()
 
                     done = true;
                 }
-                catch (boost::bad_any_cast &)
+
+                if (remoteValue.canConvert< QMap<HSSEventType, std::vector<HSSObject::p> > >())
                 {
-                    //do nothing
-                }
-                try
-                {
-                    QMap<HSSEventType, std::vector<HSSObject::p> > m_data = boost::any_cast< QMap<HSSEventType, std::vector<HSSObject::p> > >(remoteValue);
+                    QMap<HSSEventType, std::vector<HSSObject::p> > m_data = remoteValue.value< QMap<HSSEventType, std::vector<HSSObject::p> > >();
                     if (m_data.empty())
                     {
                         std_log("empty");
@@ -198,17 +185,13 @@ void HSSLog::fire()
 
                     done = true;
                 }
-                catch (boost::bad_any_cast &)
-                {
-                    //do nothing
-                }
             }
             break;
         }
 
         case HSSParserNodeTypeStringConstant:
         {
-            HSSStringConstant::p str = boost::static_pointer_cast<HSSStringConstant > (this->dValue);
+            HSSStringConstant::p str = qSharedPointerCast<HSSStringConstant > (this->dValue);
             std_log(str->getValue());
             done = true;
             break;
@@ -218,7 +201,7 @@ void HSSLog::fire()
         {
             try
             {
-                HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (this->dValue);
+                HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (this->dValue);
                 HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
                 objdef->setThisObj(this->getThisObj());
                 objdef->setScope(this->scope);
@@ -227,14 +210,14 @@ void HSSLog::fire()
                 std_log(theObject->toString());
                 done = true;
             }
-            catch (const AXRError::p &e)
+            catch (const AXRError &e)
             {
-                e->raise();
+                e.raise();
 
             }
-            catch (const AXRWarning::p &e)
+            catch (const AXRWarning &e)
             {
-                e->raise();
+                e.raise();
             }
 
             break;

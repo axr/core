@@ -149,7 +149,7 @@ namespace AXR
 
 
     private:
-        AXRString src;
+        QUrl src;
         HSSParserNode::p dSrc;
         HSSObservable * observedSrc;
         HSSObservableProperty observedSrcProperty;

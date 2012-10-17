@@ -53,7 +53,7 @@ HSSEvenFilter::HSSEvenFilter()
 
 HSSEvenFilter::p HSSEvenFilter::clone() const
 {
-    return boost::static_pointer_cast<HSSEvenFilter, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSEvenFilter, HSSClonable > (this->cloneImpl());
 }
 
 HSSEvenFilter::~HSSEvenFilter()

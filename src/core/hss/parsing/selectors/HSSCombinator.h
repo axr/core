@@ -44,7 +44,7 @@
 #ifndef HSSCOMBINATOR_H
 #define HSSCOMBINATOR_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSSelector.h"
 
 namespace AXR
@@ -59,7 +59,7 @@ namespace AXR
     class AXR_API HSSCombinator : public HSSSelector
     {
     public:
-        typedef boost::shared_ptr<HSSCombinator> p;
+        typedef QSharedPointer<HSSCombinator> p;
 
         /**
          *  Creates a new instance of a combinator node, of the type you give. All types of combinators

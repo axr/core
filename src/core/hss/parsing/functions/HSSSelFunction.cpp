@@ -65,7 +65,7 @@ HSSSelFunction::HSSSelFunction(const HSSSelFunction & orig)
 
 HSSFunction::p HSSSelFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 AXRString HSSSelFunction::toString()
@@ -120,10 +120,10 @@ int HSSSelFunction::selectorChainsSize()
     return this->selectorChains.size();
 }
 
-boost::any HSSSelFunction::_evaluate()
+QVariant HSSSelFunction::_evaluate()
 {
     this->selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj());
-    this->_value = this->selection;
+    this->_value = QVariant::fromValue(this->selection);
     return this->_value;
 }
 

@@ -85,7 +85,7 @@ AXRString HSSStatement::statementStringRepresentation(HSSStatementType type)
 
 HSSStatement::p HSSStatement::shared_from_this()
 {
-    return boost::static_pointer_cast<HSSStatement > (HSSParserNode::shared_from_this());
+    return qSharedPointerCast<HSSStatement>(HSSParserNode::shared_from_this());
 }
 
 bool HSSStatement::isA(HSSInstructionType type)

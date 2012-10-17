@@ -41,18 +41,20 @@
  *
  ********************************************************************/
 
+#include <QDir>
 #include "AXRInitializer.h"
 
 using namespace AXR;
 
-AXRCore::tp & AXRCore::getInstance()
+AXRCore* AXRCore::getInstance()
 {
-    static AXRCore::tp theInstance;
-    if (!theInstance.get())
+    static QThreadStorage<AXRCore*> theInstance;
+    if (!theInstance.localData())
     {
-        theInstance.reset(new AXRCore());
+        theInstance.setLocalData(new AXRCore());
     }
-    return theInstance;
+
+    return theInstance.localData();
 }
 
 AXRCore::AXRCore()
@@ -65,12 +67,12 @@ void AXRCore::initialize(AXRWrapper * wrpr)
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: initializing core for thread");
 
     AXRController::p ctrlr = AXRController::p(new AXRController());
-    AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.get()));
+    AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.data()));
     this->setWrapper(wrpr);
     this->setController(ctrlr);
     this->setRender(rndr);
-    this->setParserXML(XMLParser::p(new XMLParser(ctrlr.get())));
-    this->setParserHSS(HSSParser::p(new HSSParser(ctrlr.get(), wrpr)));
+    this->setParserXML(XMLParser::p(new XMLParser(ctrlr.data())));
+    this->setParserHSS(HSSParser::p(new HSSParser(ctrlr.data(), wrpr)));
     this->_hasLoadedFile = false;
 }
 
@@ -93,66 +95,46 @@ void AXRCore::run()
     //check for wrapper
     if (!this->getWrapper())
     {
-        AXRError::p(new AXRError("AXRCore", "The wrapper was not defined"))->raise();
+        AXRError("AXRCore", "The wrapper was not defined").raise();
         return;
     }
     bool loadingSuccess = this->parserXML->loadFile(this->file);
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished parsing " + this->file->getFileName());
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath() + "/" + this->file->getFileName());
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished parsing " + this->file->sourceUrl().toString());
+    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->sourceUrl().toString());
 
     if (!loadingSuccess)
     {
-        AXRError::p(new AXRError("AXRCore", "Could not load the XML file"))->raise();
+        AXRError("AXRCore", "Could not load the XML file").raise();
     }
     else
     {
         //needs reset on next load
         this->_hasLoadedFile = true;
 
-        HSSContainer::p root = boost::static_pointer_cast<HSSContainer > (this->controller->getRoot());
-        AXRString hssfilename, hssfilepath;
+        HSSContainer::p root = qSharedPointerCast<HSSContainer>(this->controller->getRoot());
 
-        std::vector<AXRString> loadSheets = this->controller->loadSheetsGet();
+        std::vector<QUrl> loadSheets = this->controller->loadSheetsGet();
         for (unsigned i = 0, size = loadSheets.size(); i < size; ++i)
         {
-
-            hssfilename = loadSheets[i];
-            if (hssfilename.startsWith("file://"))
-            {
-                hssfilepath = hssfilename;
-            }
-            else if (hssfilename.startsWith("http://"))
-            {
-                AXRError::p(new AXRError("AXRCore", "HTTP has not been implemented yet"))->raise();
-            }
-            else if (hssfilename.startsWith("/"))
-            {
-                hssfilepath = this->file->getBasePath() + hssfilename;
-            }
-            else
-            {
-                hssfilepath = "file://" + this->file->getBasePath() + "/" + hssfilename;
-            }
             AXRBuffer::p hssfile;
             try
             {
-                hssfile = this->wrapper->getFile(hssfilepath);
+                hssfile = this->wrapper->getFile(loadSheets[i]);
             }
-            catch (const AXRError::p &e)
+            catch (const AXRError &e)
             {
-                e->raise();
+                e.raise();
                 continue;
             }
 
-            this->parserHSS->setBasePath(this->file->getBasePath());
             if (!this->parserHSS->loadFile(hssfile))
             {
-                AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
+                AXRError("AXRCore", "Could not load the HSS file").raise();
             }
         }
-        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished loading stylesheets for " + this->file->getFileName());
-        axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->getBasePath() + "/" + this->file->getFileName());
+        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished loading stylesheets for " + this->file->sourceUrl().toString());
+        axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->sourceUrl().toString());
 
         axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: matching rules to the content tree");
         //assign the rules to the objects
@@ -174,10 +156,10 @@ void AXRCore::reset()
     this->controller->reset();
     this->parserHSS->reset();
     this->render->reset();
-    this->parserXML.reset();
-    this->parserXML = XMLParser::p(new XMLParser(this->controller.get()));
+    this->parserXML.clear();
+    this->parserXML = XMLParser::p(new XMLParser(this->controller.data()));
     this->_hasLoadedFile = false;
-    this->file.reset();
+    this->file.clear();
 }
 
 //has loaded file

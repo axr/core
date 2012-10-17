@@ -46,8 +46,8 @@
 
 #include <deque>
 #include <vector>
-#include <boost/any.hpp>
-#include <boost/shared_ptr.hpp>
+#include <QVariant>
+#include <QSharedPointer>
 #include "HSSDisplayObject.h"
 #include "HSSKeywordConstant.h"
 #include "HSSObject.h"
@@ -64,7 +64,7 @@ namespace AXR
     public:
         friend class HSSParser;
 
-        typedef boost::shared_ptr<HSSFunction> p;
+        typedef QSharedPointer<HSSFunction> p;
 
         /**
          *  Clones an instance of HSSFunction and gives a shared pointer of the
@@ -85,18 +85,18 @@ namespace AXR
          *  @return A void pointer to some data. It's up to the caller to know what type of
          *  data is expected.
          */
-        boost::any evaluate();
+        QVariant evaluate();
 
         /**
          *  @todo I think this one is not used
          */
-        boost::any evaluate(std::deque<HSSParserNode::p> arguments);
+        QVariant evaluate(std::deque<HSSParserNode::p> arguments);
 
         /**
          *  @todo make protected or private
          */
-        virtual boost::any _evaluate();
-        virtual boost::any _evaluate(std::deque<HSSParserNode::p> arguments);
+        virtual QVariant _evaluate();
+        virtual QVariant _evaluate(std::deque<HSSParserNode::p> arguments);
 
         /**
          *  Method to be passed as callback when observing changes.
@@ -144,7 +144,7 @@ namespace AXR
          *  @return A void pointer to the value returned by the function. It's up to the caller to
          *  know what kind of data is expected.
          */
-        boost::any getValue();
+        QVariant getValue();
 
         /**
          *  Allows you to check if this function is of the given type.
@@ -190,7 +190,7 @@ namespace AXR
         HSSFunction(const HSSFunction & orig);
 
         bool _isDirty;
-        boost::any _value;
+        QVariant _value;
 
         HSSUnit percentageBase;
         HSSObservableProperty percentageObservedProperty;

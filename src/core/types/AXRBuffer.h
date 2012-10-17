@@ -44,7 +44,7 @@
 #ifndef AXRBUFFER_H
 #define AXRBUFFER_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include <QByteArray>
 #include <QFileInfo>
 #include <QUrl>
@@ -63,7 +63,7 @@ namespace AXR
         /**
          *  The shared pointer to a file.
          */
-        typedef boost::shared_ptr<AXRBuffer> p;
+        typedef QSharedPointer<AXRBuffer> p;
 
         /**
          *  Creates a new instance of an in-memory buffer.
@@ -78,20 +78,17 @@ namespace AXR
          */
         virtual ~AXRBuffer();
 
-        QUrl url() const;
+        /**
+         * Returns the URL from which this buffer was loaded.
+         * If this buffer was created in-memory, this will be a null URL.
+         */
+        QUrl sourceUrl() const;
 
         /**
          *  Getter for fileName
          *  @return A string containing the file name, including extension.
          */
         AXRString getFileName() const;
-
-        /**
-         *  Getter for the base path. This + / + the filename form the full path to
-         *  the file.
-         *  @return A string containing the base path of the file.
-         */
-        AXRString getBasePath() const;
 
         /**
          *  Getter for the buffer where the contents of the file will be stored.
@@ -109,7 +106,7 @@ namespace AXR
     private:
         bool valid;
         QByteArray buffer;
-        QUrl sourceUrl;
+        QUrl sourceUrl_;
     };
 }
 

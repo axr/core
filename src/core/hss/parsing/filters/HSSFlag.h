@@ -44,8 +44,7 @@
 #ifndef HSSFLAG_H
 #define HSSFLAG_H
 
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSFilter.h"
 #include "HSSRule.h"
 
@@ -62,7 +61,7 @@ namespace AXR
     class AXR_API HSSFlag : public HSSFilter
     {
     public:
-        typedef boost::shared_ptr<HSSFlag> p;
+        typedef QSharedPointer<HSSFlag> p;
 
         /**
          *  Creates a new instance of a flag node.

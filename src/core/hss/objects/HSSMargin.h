@@ -44,7 +44,7 @@
 #ifndef HSSMARGIN_H
 #define HSSMARGIN_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSMultipleValue.h"
 #include "HSSObject.h"
 #include "HSSValue.h"
@@ -62,7 +62,7 @@ namespace AXR
     class AXR_API HSSMargin : public HSSObject
     {
     public:
-        typedef boost::shared_ptr<HSSMargin> p;
+        typedef QSharedPointer<HSSMargin> p;
 
         /**
          *  Creates a new instance of a margin object. Don't use directly, this is only for
@@ -237,7 +237,7 @@ namespace AXR
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty,
-                                   const std::vector< boost::shared_ptr<HSSDisplayObject> > * scope
+                                   const std::vector< QSharedPointer<HSSDisplayObject> > * scope
                                    );
 
     };

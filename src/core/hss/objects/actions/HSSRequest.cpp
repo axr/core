@@ -80,7 +80,7 @@ HSSRequest::HSSRequest(const HSSRequest & orig)
 HSSRequest::p HSSRequest::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRequest: cloning request object");
-    return boost::static_pointer_cast<HSSRequest, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSRequest, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSRequest::cloneImpl() const
@@ -133,9 +133,9 @@ void HSSRequest::fire()
     //if there is no target
     if (this->target.empty())
     {
-        AXRCore::tp & core = AXRCore::getInstance();
+        AXRCore* core = AXRCore::getInstance();
         AXRWrapper * wrapper = core->getWrapper();
-        wrapper->loadXMLFile(core->getFile()->getBasePath() + "/" + this->src);
+        wrapper->loadXMLFile(this->src);
     }
     else
     {
@@ -143,20 +143,20 @@ void HSSRequest::fire()
         {
         default:
         {
-            AXRCore::tp & core = AXRCore::getInstance();
+            AXRCore* core = AXRCore::getInstance();
             AXRWrapper * wrapper = core->getWrapper();
             AXRController::p controller = AXRController::p(new AXRController());
-            XMLParser::p xmlParser(new XMLParser(controller.get()));
-            HSSParser::p hssParser(new HSSParser(controller.get(), wrapper));
+            XMLParser::p xmlParser(new XMLParser(controller.data()));
+            HSSParser::p hssParser(new HSSParser(controller.data(), wrapper));
             AXRBuffer::p baseFile = core->getFile();
             AXRBuffer::p newFile;
             try
             {
-                newFile = wrapper->getFile("file://" + baseFile->getBasePath() + "/" + this->src);
+                newFile = wrapper->getFile(this->src);
             }
-            catch (const AXRError::p &e)
+            catch (const AXRError &e)
             {
-                e->raise();
+                e.raise();
             }
 
             if (newFile)
@@ -164,51 +164,31 @@ void HSSRequest::fire()
                 bool loadingSuccess = xmlParser->loadFile(newFile);
                 if (!loadingSuccess)
                 {
-                    AXRError::p(new AXRError("AXRCore", "Could not load the XML file"))->raise();
+                    AXRError("AXRCore", "Could not load the XML file").raise();
                 }
                 else
                 {
-                    HSSContainer::p root = boost::static_pointer_cast<HSSContainer > (controller->getRoot());
+                    HSSContainer::p root = qSharedPointerCast<HSSContainer > (controller->getRoot());
 
                     if (root)
                     {
-                        std::vector<AXRString> loadSheets = controller->loadSheetsGet();
-                        std::vector<AXRString>::iterator sheetsIt;
-                        for (sheetsIt = loadSheets.begin(); sheetsIt != loadSheets.end(); ++sheetsIt)
+                        std::vector<QUrl> loadSheets = controller->loadSheetsGet();
+                        for (std::vector<QUrl>::iterator sheetsIt = loadSheets.begin(); sheetsIt != loadSheets.end(); ++sheetsIt)
                         {
-                            AXRString hssfilepath;
-                            AXRString hssfilename = *sheetsIt;
-                            if (hssfilename.startsWith("file://"))
-                            {
-                                hssfilepath = hssfilename;
-                            }
-                            else if (hssfilename.startsWith("http://"))
-                            {
-                                AXRError::p(new AXRError("AXRCore", "HTTP has not been implemented yet"))->raise();
-                            }
-                            else if (hssfilename.startsWith("/"))
-                            {
-                                hssfilepath = newFile->getBasePath() + hssfilename;
-                            }
-                            else
-                            {
-                                hssfilepath = "file://" + newFile->getBasePath() + "/" + hssfilename;
-                            }
                             AXRBuffer::p hssfile;
                             try
                             {
-                                hssfile = wrapper->getFile(hssfilepath);
+                                hssfile = wrapper->getFile(*sheetsIt);
                             }
-                            catch (const AXRError::p &e)
+                            catch (const AXRError &e)
                             {
-                                e->raise();
+                                e.raise();
                                 continue;
                             }
 
-                            hssParser->setBasePath(newFile->getBasePath());
                             if (!hssParser->loadFile(hssfile))
                             {
-                                AXRError::p(new AXRError("AXRCore", "Could not load the HSS file"))->raise();
+                                AXRError("AXRCore", "Could not load the HSS file").raise();
                             }
                         }
 
@@ -249,7 +229,7 @@ void HSSRequest::fire()
             //                        std_log1("Adding loaded file to target");
             //
             //                        if(this->target[i]->isA(HSSObjectTypeContainer)){
-            //                            const HSSContainer::p & theCont = boost::static_pointer_cast<HSSContainer>(this->target[i]);
+            //                            const HSSContainer::p & theCont = qSharedPointerCast<HSSContainer>(this->target[i]);
             //                            const HSSContainer::p & loadedRoot = fileController.getRoot();
             //                            theCont->add(loadedRoot);
             //
@@ -307,24 +287,20 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
 
         case HSSParserNodeTypeStringConstant:
         {
-            HSSStringConstant::p theString = boost::static_pointer_cast<HSSStringConstant > (value);
-            this->src = theString->getValue();
+            HSSStringConstant::p theString = qSharedPointerCast<HSSStringConstant > (value);
+            this->src = QUrl(theString->getValue());
             break;
         }
 
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+            HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<AXRString>())
             {
-                this->src = boost::any_cast<AXRString > (remoteValue);
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
+                this->src = QUrl(remoteValue.value<AXRString>());
             }
 
             break;
@@ -340,13 +316,13 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSRequest", "Invalid value for src of " + this->name));
+        throw AXRWarning("HSSRequest", "Invalid value for src of " + this->name);
     }
 }
 
 void HSSRequest::srcChanged(AXR::HSSObservableProperty source, void *data)
 {
-    AXRWarning::p(new AXRWarning("HSSRequest", "unimplemented"))->raise();
+    AXRWarning("HSSRequest", "unimplemented").raise();
 }
 
 HSSParserNode::p HSSRequest::getDTarget()
@@ -377,34 +353,28 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
 
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+            HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
             if (fnct)
             {
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                boost::any remoteValue = fnct->evaluate();
-                try
+                QVariant remoteValue = fnct->evaluate();
+                if (remoteValue.canConvert< std::vector< std::vector<HSSDisplayObject::p> > >())
                 {
-                    std::vector< std::vector<HSSDisplayObject::p> > selection = boost::any_cast< std::vector< std::vector<HSSDisplayObject::p> > >(remoteValue);
-                    unsigned i, size;
+                    std::vector< std::vector<HSSDisplayObject::p> > selection = remoteValue.value< std::vector< std::vector<HSSDisplayObject::p> > >();
                     this->target.clear();
-                    for (i = 0, size = selection.size(); i < size; ++i)
+                    for (unsigned i = 0, size = selection.size(); i < size; ++i)
                     {
                         std::vector<HSSDisplayObject::p> inner = selection[i];
                         this->target.insert(this->target.end(), inner.begin(), inner.end());
                     }
                 }
-                catch (boost::bad_any_cast &)
-                {
-                    //do nothing
-                }
-
 
                 /**
                  *  @todo potentially leaking
                  */
                 fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSRequest > (this, &HSSRequest::targetChanged));
-                this->observedTarget = fnct.get();
+                this->observedTarget = fnct.data();
                 this->observedTargetProperty = HSSObservablePropertyValue;
             }
 
@@ -421,11 +391,11 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
     }
 
     default:
-        throw AXRWarning::p(new AXRWarning("HSSRequest", "Invalid value for src of " + this->name));
+        throw AXRWarning("HSSRequest", "Invalid value for src of " + this->name);
     }
 }
 
 void HSSRequest::targetChanged(AXR::HSSObservableProperty source, void *data)
 {
-    AXRWarning::p(new AXRWarning("HSSRequest", "unimplemented"))->raise();
+    AXRWarning("HSSRequest", "unimplemented").raise();
 }

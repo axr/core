@@ -88,7 +88,7 @@ HSSFont::HSSFont(const HSSFont & orig)
 
 HSSFont::p HSSFont::clone() const
 {
-    return boost::static_pointer_cast<HSSFont, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFont, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSFont::cloneImpl() const
@@ -193,7 +193,7 @@ void HSSFont::setDSize(HSSParserNode::p value)
     case HSSParserNodeTypeExpression:
         break;
     default:
-        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for size of @font object " + this->name));
+        throw AXRWarning("HSSDisplayObject", "Invalid value for size of @font object " + this->name);
     }
 
     this->dSize = value;
@@ -225,12 +225,12 @@ void HSSFont::setDFace(HSSParserNode::p value)
     if (value->isA(HSSParserNodeTypeStringConstant))
     {
         this->dFace = value;
-        HSSStringConstant::p theString = boost::static_pointer_cast<HSSStringConstant > (value);
+        HSSStringConstant::p theString = qSharedPointerCast<HSSStringConstant > (value);
         this->face = theString->getValue();
     }
     else
     {
-        throw AXRWarning::p(new AXRWarning("HSSDisplayObject", "Invalid value for face of @font object " + this->name));
+        throw AXRWarning("HSSDisplayObject", "Invalid value for face of @font object " + this->name);
     }
 }
 
@@ -260,19 +260,19 @@ void HSSFont::setDColor(HSSParserNode::p value)
         this->dColor = value;
         try
         {
-            HSSObjectNameConstant::p objname = boost::static_pointer_cast<HSSObjectNameConstant > (value);
+            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
             this->setDColor(objdef);
             valid = true;
 
         }
-        catch (const AXRError::p &e)
+        catch (const AXRError &e)
         {
-            e->raise();
+            e.raise();
         }
-        catch (const AXRWarning::p &e)
+        catch (const AXRWarning &e)
         {
-            e->raise();
+            e.raise();
         }
 
         break;
@@ -282,19 +282,18 @@ void HSSFont::setDColor(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dColor = value;
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
 
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSRgb::p>())
             {
-                this->color = boost::any_cast<HSSRgb::p > (remoteValue);
-
+                this->color = remoteValue.value<HSSRgb::p>();
             }
-            catch (boost::bad_any_cast &)
+            else
             {
                 this->color = HSSRgb::p(new HSSRgb());
             }
@@ -315,14 +314,14 @@ void HSSFont::setDColor(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dColor = value;
-        HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (value);
+        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setScope(this->scope);
         objdef->setThisObj(this->getThisObj());
         objdef->apply();
         HSSObject::p theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeRgb))
         {
-            this->color = boost::static_pointer_cast<HSSRgb > (theobj);
+            this->color = qSharedPointerCast<HSSRgb>(theobj);
             valid = true;
         }
 
@@ -334,7 +333,7 @@ void HSSFont::setDColor(HSSParserNode::p value)
     }
 
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSDGradient", "Invalid value for color of " + this->name));
+        throw AXRWarning("HSSDGradient", "Invalid value for color of " + this->name);
 
     this->notifyObservers(HSSObservablePropertyColor, &this->color);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
@@ -361,20 +360,16 @@ void HSSFont::setDWeight(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dWeight = value;
-        HSSFunction::p fnct = boost::static_pointer_cast<HSSFunction > (value)->clone();
+        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSKeywordConstant::p>())
             {
-                this->weight = boost::any_cast<HSSKeywordConstant::p > (remoteValue);
+                this->weight = remoteValue.value<HSSKeywordConstant::p>();
                 valid = true;
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyWeight, this, new HSSValueChangedCallback<HSSFont > (this, &HSSFont::weightChanged));
@@ -385,7 +380,7 @@ void HSSFont::setDWeight(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p keywordValue = boost::static_pointer_cast<HSSKeywordConstant > (value);
+        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         this->weight = keywordValue;
         valid = true;
         break;
@@ -396,7 +391,7 @@ void HSSFont::setDWeight(HSSParserNode::p value)
     }
 
     if (!valid)
-        throw AXRWarning::p(new AXRWarning("HSSFont", "Invalid value for weight of " + this->name));
+        throw AXRWarning("HSSFont", "Invalid value for weight of " + this->name);
 
     this->notifyObservers(HSSObservablePropertyWeight, &this->weight);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
@@ -423,28 +418,28 @@ HSSUnit HSSFont::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = boost::static_pointer_cast<HSSNumberConstant > (value);
+        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = boost::static_pointer_cast<HSSPercentageConstant > (value);
+        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = boost::static_pointer_cast<HSSExpression > (value);
+        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         //expressionValue->setScope(scope);
         ret = expressionValue->evaluate();
         if (callback)
         {
             expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSFont > (this, callback));
-            observedStore = expressionValue.get();
+            observedStore = expressionValue.data();
             observedStoreProperty = HSSObservablePropertyValue;
         }
 
@@ -456,7 +451,7 @@ HSSUnit HSSFont::_evaluatePropertyValue(
         break;
 
     default:
-        AXRWarning::p(new AXRWarning("HSSFont", "Unknown parser node type while setting value for HSSFont property"))->raise();
+        AXRWarning("HSSFont", "Unknown parser node type while setting value for HSSFont property").raise();
         break;
     }
 

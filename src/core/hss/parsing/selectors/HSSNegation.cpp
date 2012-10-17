@@ -53,7 +53,7 @@ HSSNegation::HSSNegation()
 
 HSSNegation::p HSSNegation::clone() const
 {
-    return boost::static_pointer_cast<HSSNegation, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSNegation, HSSClonable > (this->cloneImpl());
 }
 
 HSSNegation::~HSSNegation()

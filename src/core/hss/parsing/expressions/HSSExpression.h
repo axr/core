@@ -45,7 +45,7 @@
 #define HSSEXPRESSION_H
 
 #include <vector>
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSDisplayObject.h"
 #include "HSSObservable.h"
 #include "HSSParserNode.h"
@@ -58,7 +58,7 @@ namespace AXR
     class AXR_API HSSExpression : public HSSParserNode
     {
     public:
-        typedef boost::shared_ptr<HSSExpression> p;
+        typedef QSharedPointer<HSSExpression> p;
 
         /**
          *  Destructor for this class.
@@ -159,7 +159,7 @@ namespace AXR
          *  Setter for the "\@this object" which to pass to members like references or selections.
          *  @param value    A shared pointer to a display object representing the \@this object.
          */
-        virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
         /**
          *  Whenever an expression needs to recalculate its value, it should be set to true.

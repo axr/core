@@ -55,7 +55,7 @@ HSSFunction::HSSFunction(HSSFunctionType type)
     this->scope = NULL;
     this->percentageObserved = NULL;
     this->_isDirty = true;
-    this->_value = NULL;
+    this->_value = QVariant();
 }
 
 HSSFunction::HSSFunction(const HSSFunction & orig)
@@ -72,7 +72,7 @@ HSSFunction::HSSFunction(const HSSFunction & orig)
 
 HSSFunction::p HSSFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSFunction::cloneImpl() const
@@ -102,7 +102,7 @@ AXRString HSSFunction::toString()
     return tempstr;
 }
 
-boost::any HSSFunction::evaluate()
+QVariant HSSFunction::evaluate()
 {
     if (this->_isDirty)
     {
@@ -114,7 +114,7 @@ boost::any HSSFunction::evaluate()
     return this->_value;
 }
 
-boost::any HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
+QVariant HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
 {
     if (this->_isDirty)
     {
@@ -126,16 +126,16 @@ boost::any HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
     return this->_value;
 }
 
-boost::any HSSFunction::_evaluate()
+QVariant HSSFunction::_evaluate()
 {
     return this->_evaluate(std::deque<HSSParserNode::p > ());
 }
 
-boost::any HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+QVariant HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
 {
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     core->evaluateCustomFunction(this->getName(), (void*) &arguments);
-    return NULL;
+    return QVariant();
 }
 
 void HSSFunction::propertyChanged(HSSObservableProperty property, void* data)
@@ -171,14 +171,14 @@ void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
         {
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p func = boost::static_pointer_cast<HSSFunction > (node);
+            HSSFunction::p func = qSharedPointerCast<HSSFunction > (node);
             func->setScope(newScope);
             break;
         }
 
         case HSSParserNodeTypeExpression:
         {
-            HSSExpression::p exp = boost::static_pointer_cast<HSSExpression > (node);
+            HSSExpression::p exp = qSharedPointerCast<HSSExpression > (node);
             exp->setScope(newScope);
             break;
         }
@@ -191,7 +191,7 @@ void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
         {
         case HSSStatementTypeObjectDefinition:
         {
-            HSSObjectDefinition::p objdef = boost::static_pointer_cast<HSSObjectDefinition > (node);
+            HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (node);
             objdef->setScope(newScope);
             break;
         }
@@ -212,7 +212,7 @@ bool HSSFunction::isDirty()
     return this->_isDirty;
 }
 
-boost::any HSSFunction::getValue()
+QVariant HSSFunction::getValue()
 {
     return this->_value;
 }

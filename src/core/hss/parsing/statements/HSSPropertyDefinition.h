@@ -44,7 +44,7 @@
 #ifndef HSSPROPERTYDEFINITION_H
 #define HSSPROPERTYDEFINITION_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSObject.h"
 #include "HSSStatement.h"
 
@@ -59,7 +59,7 @@ namespace AXR
     class AXR_API HSSPropertyDefinition : public HSSStatement
     {
     public:
-        typedef boost::shared_ptr<HSSPropertyDefinition> p;
+        typedef QSharedPointer<HSSPropertyDefinition> p;
 
         /**
          *  Iterator for vectors of shared pointers to property definitions
@@ -144,7 +144,7 @@ namespace AXR
          */
         HSSParserNode::p getValue();
 
-        virtual void setThisObj(boost::shared_ptr<HSSDisplayObject> value);
+        virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
     protected:
         HSSPropertyDefinition::p shared_from_this();

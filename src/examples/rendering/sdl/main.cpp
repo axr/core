@@ -41,10 +41,10 @@
  *
  ********************************************************************/
 
-#include <boost/program_options.hpp>
 #include <SDL/SDL.h>
 #include <QApplication>
 #include <QFileDialog>
+#include <QUrl>
 #include "AXRInitializer.h"
 #include "AXRWrapper.h"
 
@@ -53,7 +53,6 @@
 #include <windows.h>
 #endif
 
-namespace po = boost::program_options;
 using namespace AXR;
 
 const int WINDOW_WIDTH = 640;
@@ -100,7 +99,7 @@ void render()
 {
     if (wrapper->needsDisplay())
     {
-        AXRCore::tp &core = AXRCore::getInstance();
+        AXRCore*core = AXRCore::getInstance();
         HSSRect bounds(0, 0, screen->w, screen->h);
         core->drawInRectWithBounds(bounds, bounds);
 
@@ -116,39 +115,17 @@ void render()
 
 void loadFile(AXRWrapper *wrapper)
 {
-    AXRString filepath = QFileDialog::getOpenFileName(NULL, QObject::tr("Open File"), AXRString(), QObject::tr("AXR Files (*.xml *.hss)"));
-    wrapper->loadFileByPath(filepath);
+    QString filepath = QFileDialog::getOpenFileName(NULL, QObject::tr("Open File"), QString(), QObject::tr("AXR Files (*.xml *.hss)"));
+    wrapper->loadFileByPath(QUrl::fromLocalFile(filepath));
 }
 
 int main(int argc, char **argv)
 {
     QApplication a(argc, argv);
 
-    // Declare the supported options.
-    po::options_description desc("Allowed options");
-    desc.add_options()
-            ("help", "show this message")
-            ("file", po::value<std::string > (), "path to file to open")
-            ("layout-tests", po::value<std::string > (), "run layout tests")
-            ;
-
-    po::variables_map varmap;
-    std::vector<std::string> additionalArgs;
-
-    // Parse arguments
-    po::parsed_options parsed = po::command_line_parser(argc, argv)
-            .options(desc).allow_unregistered().run();
-    po::store(parsed, varmap);
-    additionalArgs = po::collect_unrecognized(parsed.options,
-                                              po::include_positional);
-    po::notify(varmap);
-
-    // Display help message
-    if (varmap.count("help"))
-    {
-        std::cout << desc << "\n";
-        return 0;
-    }
+    // Get command-line arguments
+    QStringList args = a.arguments();
+    args.removeFirst();
 
     SDL_Init(SDL_INIT_VIDEO);
     screen = SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
@@ -168,32 +145,34 @@ int main(int argc, char **argv)
     SDL_EnableUNICODE(1);
 
     wrapper = new AXRWrapper();
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
 
-    if (varmap.count("layout-tests"))
+    if (!args.empty())
     {
-        wrapper->_layoutTestsFilePath = AXR::fromStdString(varmap["layout-tests"].as<std::string>());
-
-        core->registerCustomFunction("AXRLayoutTestsExecute",
-                                     new AXR::HSSValueChangedCallback<AXRWrapper>(wrapper, &AXRWrapper::executeLayoutTests));
-
-        wrapper->loadFileByPath(wrapper->getPathToResources() +
-                                "/views/layoutTests.hss");
-    }
-    else if (varmap.count("file") || additionalArgs.empty() == 0)
-    {
-        std::string filepath;
-
-        if (additionalArgs.empty())
+        if (args.contains("--layout-tests"))
         {
-            filepath = varmap["file"].as<std::string>();
+            QDir dir(wrapper->getPathToResources());
+            dir.cd("views");
+
+            wrapper->_layoutTestsFilePath = dir.absolutePath();
+
+            core->registerCustomFunction("AXRLayoutTestsExecute",
+                                         new AXR::HSSValueChangedCallback<AXRWrapper>(wrapper, &AXRWrapper::executeLayoutTests));
+
+            wrapper->loadFileByPath(QUrl::fromLocalFile(dir.absoluteFilePath("layoutTests.hss")));
         }
         else
         {
-            filepath = additionalArgs[0];
+            QFileInfo fi(args.last());
+            if (fi.exists())
+            {
+                wrapper->loadFileByPath(QUrl::fromLocalFile(AXR::fromQString(args.first())));
+            }
+            else
+            {
+                loadFile(wrapper);
+            }
         }
-
-        wrapper->loadFileByPath(AXR::fromStdString(filepath));
     }
     else
     {
@@ -214,7 +193,7 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                AXRCore::tp & core = AXRCore::getInstance();
+                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)
@@ -227,7 +206,7 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEBUTTONUP)
             {
-                AXRCore::tp & core = AXRCore::getInstance();
+                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)
@@ -241,7 +220,7 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEMOTION)
             {
-                AXRCore::tp & core = AXRCore::getInstance();
+                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)
@@ -274,7 +253,7 @@ int main(int argc, char **argv)
             }
             else if (event.active.state & SDL_APPMOUSEFOCUS && event.active.gain == 0)
             {
-                AXRCore::tp & core = AXRCore::getInstance();
+                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)

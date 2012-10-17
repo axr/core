@@ -44,8 +44,7 @@
 #ifndef HSSFILTER_H
 #define HSSFILTER_H
 
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSDisplayObject.h"
 #include "HSSParserNode.h"
 
@@ -61,7 +60,7 @@ namespace AXR
     class AXR_API HSSFilter : public HSSParserNode
     {
     public:
-        typedef boost::shared_ptr<HSSFilter> p;
+        typedef QSharedPointer<HSSFilter> p;
 
         /**
          *  When logging, you often need a string representation of the filter type.

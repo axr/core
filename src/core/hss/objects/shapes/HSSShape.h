@@ -44,7 +44,7 @@
 #ifndef HSSSHAPE_H
 #define HSSSHAPE_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSObject.h"
 #include "HSSUnits.h"
 #include <QPainter>
@@ -57,7 +57,7 @@ namespace AXR
     class AXR_API HSSShape : public HSSObject
     {
     public:
-        typedef boost::shared_ptr<HSSShape> p;
+        typedef QSharedPointer<HSSShape> p;
 
         /**
          *  Destructor for this class.
@@ -111,5 +111,8 @@ namespace AXR
         HSSShapeType shapeType;
     };
 }
+
+Q_DECLARE_METATYPE(AXR::HSSShape::p);
+Q_DECLARE_METATYPE(AXR::HSSShape::p*);
 
 #endif

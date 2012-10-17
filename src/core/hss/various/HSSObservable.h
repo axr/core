@@ -45,7 +45,7 @@
 #define HSSOBSERVABLE_H
 
 #include <map>
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include <QMap>
 #include "AXRGlobal.h"
 #include "HSSCallback.h"
@@ -63,7 +63,7 @@ namespace AXR
     class AXR_API HSSObservable
     {
     public:
-        typedef boost::shared_ptr<HSSObservable> p;
+        typedef QSharedPointer<HSSObservable> p;
 
         /**
          *  When logging, for example, it is useful to be able to show a string representation of a

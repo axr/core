@@ -66,7 +66,7 @@
     <property name="title">
      <string>&amp;Window</string>
     </property>
-    <addaction name="errorLogAction"/>
+    <addaction name="logAction"/>
    </widget>
    <widget class="QMenu" name="helpMenu">
     <property name="title">
@@ -146,9 +146,9 @@
     <string>Run Layout Tests</string>
    </property>
   </action>
-  <action name="errorLogAction">
+  <action name="logAction">
    <property name="text">
-    <string>Error Log</string>
+    <string>Log</string>
    </property>
   </action>
   <action name="aboutAction">
@@ -331,7 +331,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>errorLogAction</sender>
+   <sender>logAction</sender>
    <signal>triggered()</signal>
    <receiver>PrototypeWindow</receiver>
    <slot>showErrorLog()</slot>

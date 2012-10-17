@@ -44,7 +44,7 @@
 #ifndef HSSNUMBERCONSTANT_H
 #define HSSNUMBERCONSTANT_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "AXRString.h"
 #include "HSSParserNode.h"
 #include "HSSUnits.h"
@@ -60,7 +60,7 @@ namespace AXR
     class AXR_API HSSNumberConstant : public HSSParserNode
     {
     public:
-        typedef boost::shared_ptr<HSSNumberConstant> p;
+        typedef QSharedPointer<HSSNumberConstant> p;
 
         /**
          *  Creates a new instance of a number constant node which holds the given value.

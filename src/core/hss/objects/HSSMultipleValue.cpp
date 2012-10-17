@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include <iostream>
+#include <QSharedPointer>
 #include "AXRDebugging.h"
 #include "HSSMultipleValue.h"
 
@@ -65,7 +66,7 @@ HSSMultipleValue::HSSMultipleValue(const HSSMultipleValue & orig)
 
 HSSMultipleValue::p HSSMultipleValue::clone() const
 {
-    return boost::static_pointer_cast<HSSMultipleValue, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSMultipleValue, HSSClonable > (this->cloneImpl());
 }
 
 HSSClonable::p HSSMultipleValue::cloneImpl() const

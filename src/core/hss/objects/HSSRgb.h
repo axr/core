@@ -44,7 +44,7 @@
 #ifndef HSSRGB_H
 #define HSSRGB_H
 
-#include <boost/shared_ptr.hpp>
+#include <QSharedPointer>
 #include "HSSObject.h"
 #include "HSSUnits.h"
 
@@ -60,7 +60,7 @@ namespace AXR
     class AXR_API HSSRgb : public HSSObject
     {
     public:
-        typedef boost::shared_ptr<HSSRgb> p;
+        typedef QSharedPointer<HSSRgb> p;
 
         //virtual bool isKeyword(AXRString value, AXRString property);
 
@@ -219,5 +219,8 @@ namespace AXR
         HSSClonable::p cloneImpl() const;
     };
 }
+
+Q_DECLARE_METATYPE(AXR::HSSRgb::p);
+Q_DECLARE_METATYPE(AXR::HSSRgb::p*);
 
 #endif

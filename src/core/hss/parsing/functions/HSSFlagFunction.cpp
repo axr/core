@@ -80,7 +80,7 @@ HSSFlagFunction::HSSFlagFunction(const HSSFlagFunction & orig)
 
 HSSFunction::p HSSFlagFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 HSSFlagFunction::~HSSFlagFunction()
@@ -145,12 +145,12 @@ int HSSFlagFunction::selectorChainsSize()
     return this->selectorChains.size();
 }
 
-boost::any HSSFlagFunction::_evaluate()
+QVariant HSSFlagFunction::_evaluate()
 {
-    return NULL;
+    return QVariant();
 }
 
-boost::any HSSFlagFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+QVariant HSSFlagFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
 {
     return this->_evaluate();
 }
@@ -158,8 +158,8 @@ boost::any HSSFlagFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
 void HSSFlagFunction::valueChanged(HSSObservableProperty source, void*data)
 {
     this->setDirty(true);
-    this->_value = data;
-    this->notifyObservers(HSSObservablePropertyValue, (void *) & this->_value);
+    this->_value = QVariant::fromValue(data);
+    this->notifyObservers(HSSObservablePropertyValue, this->_value.value<void*>());
 }
 
 HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType()

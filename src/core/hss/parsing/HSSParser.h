@@ -46,16 +46,13 @@
 
 #include <stack>
 #include <vector>
-#include <boost/shared_ptr.hpp>
-#include <boost/unordered_set.hpp>
+#include <QSharedPointer>
+#include <QList>
 #include "AXRBuffer.h"
 #include "HSSCombinator.h"
 #include "HSSObjectDefinition.h"
 #include "HSSSimpleSelector.h"
 #include "HSSTokenizer.h"
-
-#define HSSFRAMEWORK_PROTOCOL "axr://"
-#define HSSFRAMEWORK_PROTOCOL_LEN 6
 
 namespace AXR
 {
@@ -101,7 +98,7 @@ namespace AXR
         /**
          *  The shared pointer to instances of this class.
          */
-        typedef boost::shared_ptr<HSSParser> p;
+        typedef QSharedPointer<HSSParser> p;
 
         /**
          *  Creates a new instance of a parser object, linking it to the given controller and wrapper.
@@ -439,20 +436,6 @@ namespace AXR
          */
         void currentObjectContextAdd(HSSObject::p theObject);
 
-        /**
-         *  Setter for the base path. When reading a file, we store the path to the folder that contains it, to be
-         *  able to resolve relative paths.
-         *  @param value    A string containing the base path.
-         */
-        void setBasePath(AXRString value);
-
-        /**
-         *  Getter for the base path. When reading a file, we store the path to the folder that contains it, to be
-         *  able to resolve relative paths.
-         *  @return A string containing the base path.
-         */
-        AXRString getBasePath();
-
         HSSParserNode::p readValue(AXRString propertyName, bool &valid);
 
     private:
@@ -471,7 +454,7 @@ namespace AXR
         AXRString basepath;
         AXRBuffer::p currentFile;
 
-        boost::unordered_set<AXRBuffer::p> loadedFiles;
+        QList<AXRBuffer::p> loadedFiles;
 
         HSSObject::p _genericContext;
         AXRString _lastObjectType;

@@ -59,7 +59,7 @@ HSSSum::HSSSum(const HSSSum &orig)
 
 HSSSum::p HSSSum::clone() const
 {
-    return boost::static_pointer_cast<HSSSum, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSSum, HSSClonable > (this->cloneImpl());
 }
 
 HSSSum::~HSSSum()

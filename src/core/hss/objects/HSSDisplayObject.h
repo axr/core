@@ -46,9 +46,8 @@
 
 #include <map>
 #include <vector>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
+#include <QSharedPointer>
+#include <QWeakPointer>
 #include <QPainter>
 #include <QPainterPath>
 #include "AXRGlobal.h"
@@ -79,12 +78,12 @@ namespace AXR
     public:
         friend class HSSContainer;
 
-        typedef boost::shared_ptr<HSSDisplayObject> p;
+        typedef QSharedPointer<HSSDisplayObject> p;
 
         /**
          *  The "parent pointer", a weak variant of a shared pointer, to break reference cycles.
          */
-        typedef boost::weak_ptr<HSSContainer> pp;
+        typedef QWeakPointer<HSSContainer> pp;
         typedef std::vector<HSSDisplayObject::p> c;
         typedef std::vector<HSSDisplayObject::p>::iterator it;
         typedef std::vector<HSSDisplayObject::p>::const_iterator const_it;
@@ -114,18 +113,24 @@ namespace AXR
          *  Gives access to the parent element in the content tree.
          *  @return A shared pointer to the parent element in the content tree.
          */
-        boost::shared_ptr<HSSContainer> getParent();
+        QSharedPointer<HSSContainer> getParent();
 
         /**
          *  Sets the given container to be the parent of this display object.
          *  @param parent   A shared pointer to the container that is the parent of this display object.
          */
-        void setParent(boost::shared_ptr<HSSContainer> parent);
+        void setParent(QSharedPointer<HSSContainer> parent);
 
         /**
          *  Removes itself from the parent in the content tree.
          */
         void removeFromParent();
+
+        /**
+         *  Gives the sibling elements.
+         *  @return A vector containing shared pointers to the siblings of this display object.
+         */
+        const std::vector<HSSDisplayObject::p> getSiblings();
 
         /**
          *  Stores the given index.
@@ -314,7 +319,7 @@ namespace AXR
 
         void ruleChanged(HSSObservableProperty source, void*data);
 
-        void createFlag(boost::shared_ptr<HSSFlag> flag, HSSRuleState defaultValue);
+        void createFlag(QSharedPointer<HSSFlag> flag, HSSRuleState defaultValue);
         bool hasFlag(AXRString name);
         HSSRuleState flagState(AXRString name);
         void flagsActivate(AXRString name);
@@ -346,7 +351,7 @@ namespace AXR
 
         //flags
         QMap<AXRString, HSSRuleState> _flagsStatus;
-        QMap<AXRString, std::vector< boost::shared_ptr<HSSFlag> > > _flags;
+        QMap<AXRString, std::vector< QSharedPointer<HSSFlag> > > _flags;
 
         //if it needs to redraw
         bool _isDirty;
@@ -520,5 +525,7 @@ namespace AXR
         HSSUnit _layoutLockBottomPosition;
     };
 }
+
+Q_DECLARE_METATYPE(std::vector< std::vector<AXR::HSSDisplayObject::p> >);
 
 #endif

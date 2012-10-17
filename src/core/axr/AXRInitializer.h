@@ -153,8 +153,8 @@
 #ifndef AXR_H
 #define AXR_H
 
-#include <boost/shared_ptr.hpp>
-#include <boost/thread/tss.hpp>
+#include <QSharedPointer>
+#include <QThreadStorage>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRRender.h"
@@ -175,21 +175,16 @@ namespace AXR
     {
     public:
         /**
-         *  The thread specific pointer to AXRCore objects
-         */
-        typedef boost::thread_specific_ptr<AXRCore> tp;
-
-        /**
          *  Whenever you need to access the core object use this method,
          *  as AXRCore is a per-thread-singleton, where 1 instance is created for each thread that uses AXRCore.
          *  @return A thread specific pointer to core for this thread
          */
-        static AXRCore::tp &getInstance();
+        static AXRCore* getInstance();
 
         /**
          *  Initializes all default values.
          *  @param  wrpr    The platform-specific wrapper that is embedding the core library.
-         *  This is a c++ pointer, not a shared (boost) one. Since the embedder owns the core,
+         *  This is a c++ pointer, not a shared one. Since the embedder owns the core,
          *  no memory management is done whatsoever.
          *  @warning Needs to be called before the first time the core is used.
          *  @see AXRWrapper

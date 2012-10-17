@@ -64,7 +64,7 @@ HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
 
 HSSFunction::p HSSRefFunction::clone() const
 {
-    return boost::static_pointer_cast<HSSFunction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunction, HSSClonable > (this->cloneImpl());
 }
 
 HSSRefFunction::~HSSRefFunction()
@@ -143,7 +143,7 @@ int HSSRefFunction::selectorChainsSize()
     return this->selectorChains.size();
 }
 
-boost::any HSSRefFunction::_evaluate()
+QVariant HSSRefFunction::_evaluate()
 {
     /**
      *  @todo this works only on numeric values, with other kind of data I don't know what will happen
@@ -162,7 +162,7 @@ boost::any HSSRefFunction::_evaluate()
 
         container->observe(this->propertyName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
 
-        this->observed = container.get();
+        this->observed = container.data();
     }
     else
     {
@@ -190,7 +190,7 @@ boost::any HSSRefFunction::_evaluate()
 
         }
          */
-        throw AXRError::p(new AXRError("HSSRefFunciton", "Using modifiers in ref functions is not implemented yet"));
+        throw AXRError("HSSRefFunciton", "Using modifiers in ref functions is not implemented yet");
     }
     return this->_value;
 }
@@ -198,8 +198,8 @@ boost::any HSSRefFunction::_evaluate()
 void HSSRefFunction::valueChanged(HSSObservableProperty source, void*data)
 {
     this->setDirty(true);
-    this->_value = data;
-    this->notifyObservers(HSSObservablePropertyValue, data);
+    this->_value = QVariant::fromValue(data);
+    this->notifyObservers(HSSObservablePropertyValue, this->_value.value<void*>());
 }
 
 HSSClonable::p HSSRefFunction::cloneImpl() const

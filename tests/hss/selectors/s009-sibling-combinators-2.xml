@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type="application/x-hss" href="s009-sibling-combinators-2.hss" version="0.4.8" ?>
+<test>
+    <child>(Child) This should be yellow</child>
+    <child2>(Child2) This should be green</child2>
+    <child>(Child) This should be yellow</child>
+    <child3>(Child3) This should be green</child3>
+</test>
