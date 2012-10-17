@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 
     if (!args.empty())
     {
-        if (args.first() == "--layout-tests")
+        if (args.contains("--layout-tests"))
         {
             QDir dir(wrapper->getPathToResources());
             dir.cd("views");
@@ -163,7 +163,15 @@ int main(int argc, char **argv)
         }
         else
         {
-            wrapper->loadFileByPath(QUrl::fromLocalFile(AXR::fromQString(args.first())));
+            QFileInfo fi(args.last());
+            if (fi.exists())
+            {
+                wrapper->loadFileByPath(QUrl::fromLocalFile(AXR::fromQString(args.first())));
+            }
+            else
+            {
+                loadFile(wrapper);
+            }
         }
     }
     else
