@@ -42,9 +42,11 @@
  ********************************************************************/
 
 #include <QFileOpenEvent>
+#include <QMessageBox>
 #include <QUrl>
 #include "config.h"
 #include "AXRDebugging.h"
+#include "AXRWarning.h"
 #include "LogWindow.h"
 #include "PreferencesDialog.h"
 #include "PrototypeApplication.h"
@@ -130,6 +132,26 @@ bool PrototypeApplication::event(QEvent *e)
         default:
             return QApplication::event(e);
     }
+}
+
+// TODO: Remove this method once exceptions are eliminated from the core library
+bool PrototypeApplication::notify(QObject *receiver, QEvent *event)
+{
+    try
+    {
+        return QApplication::notify(receiver, event);
+    }
+    catch (AXR::AXRError &e)
+    {
+        QMessageBox::critical(d->mainWindow, "Fatal error",
+                              "The application has encountered a critical error and will terminate.\n\n"
+                              "This is the developers' fault.\n\n"
+                              "Complain here https://github.com/AXR/Prototype/issues/168 until they fix it!\n\n"
+                              + e.toString());
+        QApplication::exit(-1);
+    }
+
+    return false;
 }
 
 PrototypeSettings* PrototypeApplication::settings() const

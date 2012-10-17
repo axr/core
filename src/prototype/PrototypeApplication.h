@@ -64,6 +64,7 @@ public:
 
 protected:
     bool event(QEvent *e);
+    bool notify(QObject *receiver, QEvent *event);
 
 private:
     class Private;
