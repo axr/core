@@ -137,3 +137,9 @@ AXRString AXRError::getMessage() const
 {
     return d->message;
 }
+
+AXRError& AXRError::operator=(const AXRError &other)
+{
+    d = other.d;
+    return *this;
+}

@@ -89,6 +89,8 @@ namespace AXR
          */
         AXRString getMessage() const;
 
+        AXRError& operator=(const AXRError &other);
+
     protected:
         virtual AXRString toProblemString(const AXRString &label) const;
 
