@@ -370,8 +370,8 @@ void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
         }
     }
 
-    boost::thread thrd(AXRTestThread(this, QUrl::fromLocalFile(this->getPathToTestsFile()), status));
-    //        thrd.join();
+    AXRTestThread thrd(this, QUrl::fromLocalFile(this->getPathToTestsFile()), status);
+    thrd.start();
 }
 
 AXRTestThread::AXRTestThread(AXRWrapper * wrapper, QUrl url, HSSContainer::p status)
@@ -381,6 +381,11 @@ AXRTestThread::AXRTestThread(AXRWrapper * wrapper, QUrl url, HSSContainer::p sta
     this->totalPassed = 0;
     this->totalTests = 0;
     this->status = status;
+}
+
+void AXRTestThread::run()
+{
+    operator()();
 }
 
 void AXRTestThread::operator () ()
@@ -418,16 +423,16 @@ void AXRTestThread::operator () ()
                 }
             }
             //execute all the tests
-            boost::thread_group producers;
+            QThreadPool producers;
 
             for (std::vector<std::vector<QUrl> >::iterator it2 = tests.begin(); it2 != tests.end(); ++it2)
             {
                 AXRTestProducer prdcr(this->wrapper, *it2, &this->totalTests, &this->totalPassed, status);
-                producers.create_thread(prdcr);
-                boost::this_thread::yield();
+                producers.start(&prdcr);
+                QThread::yieldCurrentThread();
             }
 
-            producers.join_all();
+            producers.waitForDone();
 
             std_log("\n\nTEST RESULTS SUMMARY");
             std_log("===============================");
@@ -459,7 +464,12 @@ AXRTestProducer::AXRTestProducer(AXRWrapper * wrapper, std::vector<QUrl> test, u
 }
 
 // The thread function fills the queue with data
-boost::mutex AXRTestProducer::statusMutex;
+QMutex AXRTestProducer::statusMutex;
+
+void AXRTestProducer::run()
+{
+    operator()();
+}
 
 void AXRTestProducer::operator () ()
 {

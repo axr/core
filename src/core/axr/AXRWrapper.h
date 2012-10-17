@@ -44,11 +44,12 @@
 #ifndef AXRWRAPPER_H
 #define AXRWRAPPER_H
 
-#include <cstdio>
 #include <queue>
-#include <QSharedPointer>
-#include <boost/thread/thread.hpp>
 #include <QMap>
+#include <QMutex>
+#include <QSharedPointer>
+#include <QThread>
+#include <QThreadPool>
 #include "AXRError.h"
 #include "AXRBuffer.h"
 #include "HSSContainer.h"
@@ -179,7 +180,7 @@ namespace AXR
         AXRString _layoutTestsFilePath;
     };
 
-    class AXR_API AXRTestThread
+    class AXR_API AXRTestThread : public QThread
     {
     private:
         AXRWrapper * wrapper;
@@ -191,9 +192,10 @@ namespace AXR
     public:
         AXRTestThread(AXRWrapper * wrapper, QUrl url, HSSContainer::p status);
         void operator () ();
+        void run();
     };
 
-    class AXR_API AXRTestProducer
+    class AXR_API AXRTestProducer : public QRunnable
     {
     private:
         AXRWrapper * wrapper;
@@ -201,13 +203,14 @@ namespace AXR
         unsigned * totalTests;
         unsigned * totalPassed;
         HSSContainer::p status;
-        static boost::mutex totalTestsMutex;
-        static boost::mutex totalPassedMutex;
-        static boost::mutex statusMutex;
+        static QMutex totalTestsMutex;
+        static QMutex totalPassedMutex;
+        static QMutex statusMutex;
 
     public:
         AXRTestProducer(AXRWrapper * wrapper, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
         void operator () ();
+        void run();
     };
 }
 
