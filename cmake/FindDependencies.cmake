@@ -4,6 +4,14 @@ if(AXR_BUILD_PROTOTYPE)
     include(${QT_USE_FILE})
     add_definitions(${QT_DEFINITIONS} -DNOMINMAX)
 
+    ### GTK ###
+    find_package(GTK)
+    if(GTK_FOUND)
+        include_directories(${GTK_INCLUDE_DIR})
+    else()
+        message(STATUS "Could not find GTK; will not build browser plugin on Linux")
+    endif()
+
     ### DPKG ###
     find_program(DPKG NAMES "dpkg-deb" PATHS "/usr/bin")
     if(DPKG)
