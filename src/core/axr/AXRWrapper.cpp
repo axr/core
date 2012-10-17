@@ -63,7 +63,7 @@ AXRWrapper::AXRWrapper()
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
     this->_needsDisplay = true;
-    AXRCore::tp & axr = AXRCore::getInstance();
+    AXRCore* axr = AXRCore::getInstance();
     axr->initialize(this);
 }
 
@@ -170,7 +170,7 @@ bool AXRWrapper::loadXMLFile(QUrl url)
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
 
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     if (core->getFile())
     {
         core->reset();
@@ -208,7 +208,7 @@ bool AXRWrapper::reload()
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
 
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     if (!this->_isHSSOnly)
     {
         if (core->getFile())
@@ -237,7 +237,7 @@ bool AXRWrapper::loadHSSFile(QUrl url)
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
 
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     if (core->getFile())
     {
         core->reset();
@@ -254,7 +254,7 @@ bool AXRWrapper::loadHSSFile(QUrl url)
 
 bool AXRWrapper::hasLoadedFile()
 {
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     return core->hasLoadedFile();
 }
 
@@ -350,7 +350,7 @@ AXRString AXRWrapper::getPathToTestsFile()
 void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
 {
     HSSContainer::p status;
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     HSSContainer::p root = core->getController()->getRoot();
     std::deque<HSSParserNode::p> arguments = *(std::deque<HSSParserNode::p>*)data;
 
@@ -394,7 +394,7 @@ void AXRTestThread::operator () ()
     {
         //load the XML file
         AXRWrapper * wrapper = this->wrapper;
-        AXRCore::tp & core = AXRCore::getInstance();
+        AXRCore* core = AXRCore::getInstance();
         XMLParser::p parser = core->getParserXML();
         HSSContainer::p status = this->status;
         AXRBuffer::p testsFile = wrapper->getFile(this->url);
@@ -489,7 +489,7 @@ void AXRTestProducer::operator () ()
 
     if (testLoaded)
     {
-        AXRCore::tp & core = AXRCore::getInstance();
+        AXRCore* core = AXRCore::getInstance();
         AXRController::p controller = core->getController();
         HSSContainer::p root = controller->getRoot();
         core->getRender()->windowWidth = 400.;

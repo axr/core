@@ -133,7 +133,7 @@ void HSSRequest::fire()
     //if there is no target
     if (this->target.empty())
     {
-        AXRCore::tp & core = AXRCore::getInstance();
+        AXRCore* core = AXRCore::getInstance();
         AXRWrapper * wrapper = core->getWrapper();
         wrapper->loadXMLFile(this->src);
     }
@@ -143,7 +143,7 @@ void HSSRequest::fire()
         {
         default:
         {
-            AXRCore::tp & core = AXRCore::getInstance();
+            AXRCore* core = AXRCore::getInstance();
             AXRWrapper * wrapper = core->getWrapper();
             AXRController::p controller = AXRController::p(new AXRController());
             XMLParser::p xmlParser(new XMLParser(controller.data()));

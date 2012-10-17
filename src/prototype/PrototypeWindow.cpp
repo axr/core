@@ -85,7 +85,7 @@ PrototypeWindow::PrototypeWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
     ui->enableAntialiasingAction->setChecked(core->getRender()->globalAntialiasingEnabled());
 
     // The subview needs to accept drops as well even though the main window handles it
@@ -319,7 +319,7 @@ void PrototypeWindow::runLayoutTests()
     dir.cd("Resources");
     dir.cd("views");
 
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
     core->registerCustomFunction("AXRLayoutTestsExecute", new HSSValueChangedCallback<AXRWrapper>(d->wrapper, &AXRWrapper::executeLayoutTests));
     this->openFile(dir.filePath("layoutTests.hss"));
 }
@@ -340,7 +340,7 @@ void PrototypeWindow::showAbout()
 
 void PrototypeWindow::toggleAntialiasing(bool on)
 {
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
     core->getRender()->setGlobalAntialiasingEnabled(on);
     update();
 }

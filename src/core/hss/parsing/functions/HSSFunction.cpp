@@ -133,7 +133,7 @@ QVariant HSSFunction::_evaluate()
 
 QVariant HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
 {
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     core->evaluateCustomFunction(this->getName(), (void*) &arguments);
     return QVariant();
 }

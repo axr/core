@@ -69,14 +69,14 @@ HSSClonable::p HSSRootSelector::cloneImpl() const
 
 AXRString HSSRootSelector::getElementName()
 {
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     return core->getController()->getRoot()->getElementName();
 }
 
 std::vector<HSSDisplayObject::p> HSSRootSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     std::vector<HSSDisplayObject::p> ret;
-    AXRCore::tp & core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     ret.push_back(core->getController()->getRoot());
     return ret;
 }

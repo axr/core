@@ -46,14 +46,15 @@
 
 using namespace AXR;
 
-AXRCore::tp & AXRCore::getInstance()
+AXRCore* AXRCore::getInstance()
 {
-    static AXRCore::tp theInstance;
-    if (!theInstance.get())
+    static QThreadStorage<AXRCore*> theInstance;
+    if (!theInstance.localData())
     {
-        theInstance.reset(new AXRCore());
+        theInstance.setLocalData(new AXRCore());
     }
-    return theInstance;
+
+    return theInstance.localData();
 }
 
 AXRCore::AXRCore()

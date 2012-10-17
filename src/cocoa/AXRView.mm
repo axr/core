@@ -82,7 +82,7 @@
 
 -(void) drawRect : (NSRect) dirtyRect
 {
-    AXR::AXRCore::tp & core = AXR::AXRCore::getInstance();
+    AXR::AXRCore* core = AXR::AXRCore::getInstance();
     AXR::AXRRender::p renderer = core->getRender();
     if (renderer && core->getController()->getRoot())
     {

@@ -99,7 +99,7 @@ void render()
 {
     if (wrapper->needsDisplay())
     {
-        AXRCore::tp &core = AXRCore::getInstance();
+        AXRCore*core = AXRCore::getInstance();
         HSSRect bounds(0, 0, screen->w, screen->h);
         core->drawInRectWithBounds(bounds, bounds);
 
@@ -145,7 +145,7 @@ int main(int argc, char **argv)
     SDL_EnableUNICODE(1);
 
     wrapper = new AXRWrapper();
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
 
     if (!args.empty())
     {
@@ -185,7 +185,7 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                AXRCore::tp & core = AXRCore::getInstance();
+                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)
@@ -198,7 +198,7 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEBUTTONUP)
             {
-                AXRCore::tp & core = AXRCore::getInstance();
+                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)
@@ -212,7 +212,7 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEMOTION)
             {
-                AXRCore::tp & core = AXRCore::getInstance();
+                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)
@@ -245,7 +245,7 @@ int main(int argc, char **argv)
             }
             else if (event.active.state & SDL_APPMOUSEFOCUS && event.active.gain == 0)
             {
-                AXRCore::tp & core = AXRCore::getInstance();
+                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)

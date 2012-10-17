@@ -78,7 +78,7 @@ void AXRWidget::setBackgroundFillColor(const QColor &color)
 
 void AXRWidget::paintEvent(QPaintEvent *e)
 {
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
     AXRRender::p renderer = core->getRender();
     if (renderer && core->getController()->getRoot())
     {
@@ -100,7 +100,7 @@ void AXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
 
 void AXRWidget::mouseMoveEvent(QMouseEvent *e)
 {
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
     HSSContainer::p root = core->getController()->getRoot();
     if (root)
     {
@@ -116,7 +116,7 @@ void AXRWidget::mouseMoveEvent(QMouseEvent *e)
 
 void AXRWidget::mousePressEvent(QMouseEvent *e)
 {
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
     HSSContainer::p root = core->getController()->getRoot();
     if (root)
     {
@@ -132,7 +132,7 @@ void AXRWidget::mousePressEvent(QMouseEvent *e)
 
 void AXRWidget::mouseReleaseEvent(QMouseEvent *e)
 {
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore*core = AXRCore::getInstance();
     HSSContainer::p root = core->getController()->getRoot();
     if (root)
     {

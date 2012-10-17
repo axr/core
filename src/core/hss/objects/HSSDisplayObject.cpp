@@ -579,7 +579,7 @@ void HSSDisplayObject::readDefinitionObjects()
         //if this is root, we use the window width and height of the render
         if (this->isRoot())
         {
-            AXRCore::tp & core = AXRCore::getInstance();
+            AXRCore* core = AXRCore::getInstance();
             //width
             HSSNumberConstant::p newDWidth(new HSSNumberConstant(core->getRender()->getWindowWidth()));
             this->setDWidth(newDWidth);

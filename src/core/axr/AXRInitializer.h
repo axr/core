@@ -154,7 +154,7 @@
 #define AXR_H
 
 #include <QSharedPointer>
-#include <boost/thread/tss.hpp>
+#include <QThreadStorage>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRRender.h"
@@ -175,16 +175,11 @@ namespace AXR
     {
     public:
         /**
-         *  The thread specific pointer to AXRCore objects
-         */
-        typedef boost::thread_specific_ptr<AXRCore> tp;
-
-        /**
          *  Whenever you need to access the core object use this method,
          *  as AXRCore is a per-thread-singleton, where 1 instance is created for each thread that uses AXRCore.
          *  @return A thread specific pointer to core for this thread
          */
-        static AXRCore::tp &getInstance();
+        static AXRCore* getInstance();
 
         /**
          *  Initializes all default values.
