@@ -258,7 +258,7 @@ namespace AXR
          *  Each subclass must register each property name it uses with the pointer to the data,
          *  so that it can easily be accessed later.
          *  @param name     The observable property name.
-         *  @param property A boost any wrapping the pointer to the data holding the actual value of the property.
+         *  @param property A variant type wrapping the pointer to the data holding the actual value of the property.
          */
         virtual void registerProperty(HSSObservableProperty name, QVariant property);
         /**

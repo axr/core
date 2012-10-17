@@ -189,7 +189,7 @@ namespace AXR
         /**
          *  Initializes all default values.
          *  @param  wrpr    The platform-specific wrapper that is embedding the core library.
-         *  This is a c++ pointer, not a shared (boost) one. Since the embedder owns the core,
+         *  This is a c++ pointer, not a shared one. Since the embedder owns the core,
          *  no memory management is done whatsoever.
          *  @warning Needs to be called before the first time the core is used.
          *  @see AXRWrapper
