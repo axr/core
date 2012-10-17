@@ -102,4 +102,6 @@ namespace AXR
     };
 }
 
+Q_DECLARE_METATYPE(AXR::HSSKeywordConstant::p);
+
 #endif

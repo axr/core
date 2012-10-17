@@ -45,6 +45,10 @@
 #define AXRGLOBAL_H
 
 #include <QtGlobal>
+#include <QMetaType>
+
+Q_DECLARE_METATYPE(bool*);
+Q_DECLARE_METATYPE(unsigned int*);
 
 #if defined(AXR_EXPORTS)
 #define AXR_API Q_DECL_EXPORT

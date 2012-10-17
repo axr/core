@@ -61,7 +61,7 @@ HSSLineBorder::HSSLineBorder()
     shorthandProperties.push_back("color");
 
     this->setShorthandProperties(shorthandProperties);
-    this->registerProperty(HSSObservablePropertyColor, & this->color);
+    this->registerProperty(HSSObservablePropertyColor, QVariant::fromValue(&this->color));
 }
 
 HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
@@ -73,7 +73,7 @@ HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
     shorthandProperties.push_back("color");
 
     this->setShorthandProperties(shorthandProperties);
-    this->registerProperty(HSSObservablePropertyColor, & this->color);
+    this->registerProperty(HSSObservablePropertyColor, QVariant::fromValue(&this->color));
 }
 
 HSSLineBorder::p HSSLineBorder::clone() const
@@ -202,12 +202,12 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSRgb::p>())
             {
-                this->color = boost::any_cast<HSSRgb::p > (remoteValue);
+                this->color = remoteValue.value<HSSRgb::p>();
             }
-            catch (boost::bad_any_cast &)
+            else
             {
                 this->color = HSSRgb::p(new HSSRgb());
             }

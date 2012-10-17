@@ -143,7 +143,7 @@ int HSSRefFunction::selectorChainsSize()
     return this->selectorChains.size();
 }
 
-boost::any HSSRefFunction::_evaluate()
+QVariant HSSRefFunction::_evaluate()
 {
     /**
      *  @todo this works only on numeric values, with other kind of data I don't know what will happen
@@ -198,8 +198,8 @@ boost::any HSSRefFunction::_evaluate()
 void HSSRefFunction::valueChanged(HSSObservableProperty source, void*data)
 {
     this->setDirty(true);
-    this->_value = data;
-    this->notifyObservers(HSSObservablePropertyValue, data);
+    this->_value = QVariant::fromValue(data);
+    this->notifyObservers(HSSObservablePropertyValue, this->_value.value<void*>());
 }
 
 HSSClonable::p HSSRefFunction::cloneImpl() const

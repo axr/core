@@ -55,7 +55,7 @@ HSSFunction::HSSFunction(HSSFunctionType type)
     this->scope = NULL;
     this->percentageObserved = NULL;
     this->_isDirty = true;
-    this->_value = NULL;
+    this->_value = QVariant();
 }
 
 HSSFunction::HSSFunction(const HSSFunction & orig)
@@ -102,7 +102,7 @@ AXRString HSSFunction::toString()
     return tempstr;
 }
 
-boost::any HSSFunction::evaluate()
+QVariant HSSFunction::evaluate()
 {
     if (this->_isDirty)
     {
@@ -114,7 +114,7 @@ boost::any HSSFunction::evaluate()
     return this->_value;
 }
 
-boost::any HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
+QVariant HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
 {
     if (this->_isDirty)
     {
@@ -126,16 +126,16 @@ boost::any HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
     return this->_value;
 }
 
-boost::any HSSFunction::_evaluate()
+QVariant HSSFunction::_evaluate()
 {
     return this->_evaluate(std::deque<HSSParserNode::p > ());
 }
 
-boost::any HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+QVariant HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
 {
     AXRCore::tp & core = AXRCore::getInstance();
     core->evaluateCustomFunction(this->getName(), (void*) &arguments);
-    return NULL;
+    return QVariant();
 }
 
 void HSSFunction::propertyChanged(HSSObservableProperty property, void* data)
@@ -212,7 +212,7 @@ bool HSSFunction::isDirty()
     return this->_isDirty;
 }
 
-boost::any HSSFunction::getValue()
+QVariant HSSFunction::getValue()
 {
     return this->_value;
 }

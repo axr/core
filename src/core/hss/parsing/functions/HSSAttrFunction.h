@@ -148,7 +148,7 @@ namespace AXR
          *  This is the actual implementation of what the function does. It selects from the elements
          *  in the scope and then observes the property, storing  its value.
          */
-        virtual boost::any _evaluate();
+        virtual QVariant _evaluate();
 
         /**
          *  Callback that will update the value when the observed property changes.

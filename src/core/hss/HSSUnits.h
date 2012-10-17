@@ -44,6 +44,7 @@
 #ifndef AXR_HSSUNITS_H
 #define AXR_HSSUNITS_H
 
+#include <QMetaType>
 #include <QPoint>
 #include <QRect>
 #include "AXRGlobal.h"
@@ -222,5 +223,8 @@ namespace AXR
         HSSSize size; /**< The dimensions of the rectangle. */
     };
 }
+
+Q_DECLARE_METATYPE(AXR::HSSUnit);
+Q_DECLARE_METATYPE(AXR::HSSUnit*);
 
 #endif

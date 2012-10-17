@@ -115,12 +115,12 @@ void HSSContainer::initialize()
 
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyContentAlignX, & this->contentAlignX);
-    this->registerProperty(HSSObservablePropertyContentAlignY, & this->contentAlignY);
-    this->registerProperty(HSSObservablePropertyDirectionPrimary, & this->directionPrimary);
-    this->registerProperty(HSSObservablePropertyDirectionSecondary, & this->directionSecondary);
-    this->registerProperty(HSSObservablePropertyShape, & this->shape);
-    this->registerProperty(HSSObservablePropertyTextAlign, & this->textAlign);
+    this->registerProperty(HSSObservablePropertyContentAlignX, QVariant::fromValue(&this->contentAlignX));
+    this->registerProperty(HSSObservablePropertyContentAlignY, QVariant::fromValue(&this->contentAlignY));
+    this->registerProperty(HSSObservablePropertyDirectionPrimary, QVariant::fromValue(&this->directionPrimary));
+    this->registerProperty(HSSObservablePropertyDirectionSecondary, QVariant::fromValue(&this->directionSecondary));
+    this->registerProperty(HSSObservablePropertyShape, QVariant::fromValue(&this->shape));
+    this->registerProperty(HSSObservablePropertyTextAlign, QVariant::fromValue(&this->textAlign));
 }
 
 HSSContainer::HSSContainer(const HSSContainer & orig)
@@ -2843,15 +2843,11 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
                 fnct->setScope(&(this->getChildren()));
             }
             fnct->setThisObj(this->shared_from_this());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSTextAlignType>())
             {
-                this->textAlign = boost::any_cast<HSSTextAlignType > (remoteValue);
+                this->textAlign = remoteValue.value<HSSTextAlignType>();
                 valid = true;
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSContainer > (this, &HSSContainer::textAlignChanged));
@@ -3025,12 +3021,12 @@ HSSUnit HSSContainer::_evaluatePropertyValue(
         fnct->setPercentageObserved(observedProperty, observedObject);
         fnct->setScope(scope);
         fnct->setThisObj(this->shared_from_this());
-        boost::any remoteValue = fnct->evaluate();
-        try
+        QVariant remoteValue = fnct->evaluate();
+        if (remoteValue.canConvert<HSSUnit>())
         {
-            ret = boost::any_cast<HSSUnit>(remoteValue);
+            ret = remoteValue.value<HSSUnit>();
         }
-        catch (boost::bad_any_cast &)
+        else
         {
             ret = 0.;
         }

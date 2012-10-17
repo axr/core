@@ -65,9 +65,9 @@ HSSColorStop::HSSColorStop()
     shorthandProperties.push_back("balance");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyColor, & this->color);
-    this->registerProperty(HSSObservablePropertyPosition, & this->position);
-    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
+    this->registerProperty(HSSObservablePropertyColor, QVariant::fromValue(&this->color));
+    this->registerProperty(HSSObservablePropertyPosition, QVariant::fromValue(&this->position));
+    this->registerProperty(HSSObservablePropertyBalance, QVariant::fromValue(&this->balance));
     this->position = this->balance = 0.5;
 }
 
@@ -80,9 +80,9 @@ HSSColorStop::HSSColorStop(const HSSColorStop & orig)
     shorthandProperties.push_back("balance");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyColor, & this->color);
-    this->registerProperty(HSSObservablePropertyPosition, & this->position);
-    this->registerProperty(HSSObservablePropertyBalance, & this->balance);
+    this->registerProperty(HSSObservablePropertyColor, QVariant::fromValue(&this->color));
+    this->registerProperty(HSSObservablePropertyPosition, QVariant::fromValue(&this->position));
+    this->registerProperty(HSSObservablePropertyBalance, QVariant::fromValue(&this->balance));
     this->position = this->balance = 0.5;
 }
 
@@ -217,15 +217,11 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSRgb::p>())
             {
-                this->color = boost::any_cast<HSSRgb::p > (remoteValue);
+                this->color = remoteValue.value<HSSRgb::p>();
                 valid = true;
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSColorStop > (this, &HSSColorStop::colorChanged));
@@ -345,14 +341,10 @@ void HSSColorStop::setDPosition(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSUnit>())
             {
-                this->position = boost::any_cast<HSSUnit>(remoteValue);
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
+                this->position = remoteValue.value<HSSUnit>();
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyPosition, this, new HSSValueChangedCallback<HSSColorStop > (this, &HSSColorStop::positionChanged));
@@ -435,14 +427,10 @@ void HSSColorStop::setDBalance(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSUnit>())
             {
-                this->balance = boost::any_cast<HSSUnit>(remoteValue);
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
+                this->balance = remoteValue.value<HSSUnit>();
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyBalance, this, new HSSValueChangedCallback<HSSColorStop > (this, &HSSColorStop::balanceChanged));

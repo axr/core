@@ -44,6 +44,7 @@
 #ifndef AXRSTRING_H
 #define AXRSTRING_H
 
+#include <QMetaType>
 #include <QString>
 #include <string>
 
@@ -116,5 +117,8 @@ namespace AXR
 #endif
 #endif
 }
+
+Q_DECLARE_METATYPE(AXR::AXRString);
+Q_DECLARE_METATYPE(AXR::AXRString*);
 
 #endif

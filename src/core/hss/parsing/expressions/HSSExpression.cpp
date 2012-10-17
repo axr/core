@@ -162,10 +162,10 @@ HSSUnit HSSExpression::evaluate()
         case HSSParserNodeTypeFunctionCall:
         {
             HSSFunction::p leftFunction = qSharedPointerCast<HSSFunction > (this->getLeft());
-            boost::any remoteValue = leftFunction->evaluate();
-            try
+            QVariant remoteValue = leftFunction->evaluate();
+            if (remoteValue.canConvert<HSSUnit*>())
             {
-                this->leftval = * boost::any_cast<HSSUnit *>(remoteValue);
+                this->leftval = *remoteValue.value<HSSUnit*>();
                 if (this->leftObserved)
                 {
                     this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
@@ -175,7 +175,7 @@ HSSUnit HSSExpression::evaluate()
                 this->leftObservedProperty = HSSObservablePropertyValue;
 
             }
-            catch (boost::bad_any_cast &)
+            else
             {
                 this->rightval = 0.;
             }
@@ -230,10 +230,10 @@ HSSUnit HSSExpression::evaluate()
         case HSSParserNodeTypeFunctionCall:
         {
             HSSFunction::p rightFunction = qSharedPointerCast<HSSFunction > (this->getRight());
-            boost::any remoteValue = rightFunction->evaluate();
-            try
+            QVariant remoteValue = rightFunction->evaluate();
+            if (remoteValue.canConvert<HSSUnit*>())
             {
-                this->rightval = * boost::any_cast<HSSUnit *>(remoteValue);
+                this->rightval = *remoteValue.value<HSSUnit*>();
                 if (this->rightObserved)
                 {
                     this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
@@ -241,9 +241,8 @@ HSSUnit HSSExpression::evaluate()
                 rightFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
                 this->rightObserved = rightFunction.data();
                 this->rightObservedProperty = HSSObservablePropertyValue;
-
             }
-            catch (boost::bad_any_cast &)
+            else
             {
                 this->rightval = 0.;
             }

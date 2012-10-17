@@ -124,40 +124,31 @@ void HSSLog::fire()
                 HSSRefFunction::p refFnct = qSharedPointerCast<HSSRefFunction > (fnct);
                 refFnct->setScope(this->scope);
                 refFnct->setThisObj(this->getThisObj());
-                boost::any remoteValue = refFnct->evaluate();
-                try
+                QVariant remoteValue = refFnct->evaluate();
+                if (remoteValue.canConvert<AXRString>())
                 {
-                    AXRString theVal = boost::any_cast<AXRString > (remoteValue);
+                    AXRString theVal = remoteValue.value<AXRString>();
                     std_log(theVal);
                     done = true;
                 }
-                catch (boost::bad_any_cast &)
+
+                if (remoteValue.canConvert<HSSUnit>())
                 {
-                    //do nothing
-                }
-                try
-                {
-                    HSSUnit theVal = boost::any_cast<HSSUnit > (remoteValue);
+                    HSSUnit theVal = remoteValue.value<HSSUnit>();
                     std_log(AXRString::number(theVal));
                     done = true;
                 }
-                catch (boost::bad_any_cast &)
+
+                if (remoteValue.canConvert<HSSObject::p>())
                 {
-                    //do nothing
-                }
-                try
-                {
-                    HSSObject::p theVal = boost::any_cast<HSSObject::p > (remoteValue);
+                    HSSObject::p theVal = remoteValue.value<HSSObject::p>();
                     std_log(theVal->toString());
                     done = true;
                 }
-                catch (boost::bad_any_cast &)
+
+                if (remoteValue.canConvert< std::vector<HSSObject::p> >())
                 {
-                    //do nothing
-                }
-                try
-                {
-                    std::vector<HSSObject::p> v_data = boost::any_cast< std::vector<HSSObject::p> >(remoteValue);
+                    std::vector<HSSObject::p> v_data = remoteValue.value< std::vector<HSSObject::p> >();
                     if (v_data.empty())
                     {
                         std_log("empty");
@@ -172,13 +163,10 @@ void HSSLog::fire()
 
                     done = true;
                 }
-                catch (boost::bad_any_cast &)
+
+                if (remoteValue.canConvert< QMap<HSSEventType, std::vector<HSSObject::p> > >())
                 {
-                    //do nothing
-                }
-                try
-                {
-                    QMap<HSSEventType, std::vector<HSSObject::p> > m_data = boost::any_cast< QMap<HSSEventType, std::vector<HSSObject::p> > >(remoteValue);
+                    QMap<HSSEventType, std::vector<HSSObject::p> > m_data = remoteValue.value< QMap<HSSEventType, std::vector<HSSObject::p> > >();
                     if (m_data.empty())
                     {
                         std_log("empty");
@@ -196,10 +184,6 @@ void HSSLog::fire()
                     }
 
                     done = true;
-                }
-                catch (boost::bad_any_cast &)
-                {
-                    //do nothing
                 }
             }
             break;

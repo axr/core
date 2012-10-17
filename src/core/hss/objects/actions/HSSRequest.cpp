@@ -297,14 +297,10 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
             HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<AXRString>())
             {
-                this->src = QUrl(boost::any_cast<AXRString>(remoteValue));
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
+                this->src = QUrl(remoteValue.value<AXRString>());
             }
 
             break;
@@ -362,23 +358,17 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
             {
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
-                boost::any remoteValue = fnct->evaluate();
-                try
+                QVariant remoteValue = fnct->evaluate();
+                if (remoteValue.canConvert< std::vector< std::vector<HSSDisplayObject::p> > >())
                 {
-                    std::vector< std::vector<HSSDisplayObject::p> > selection = boost::any_cast< std::vector< std::vector<HSSDisplayObject::p> > >(remoteValue);
-                    unsigned i, size;
+                    std::vector< std::vector<HSSDisplayObject::p> > selection = remoteValue.value< std::vector< std::vector<HSSDisplayObject::p> > >();
                     this->target.clear();
-                    for (i = 0, size = selection.size(); i < size; ++i)
+                    for (unsigned i = 0, size = selection.size(); i < size; ++i)
                     {
                         std::vector<HSSDisplayObject::p> inner = selection[i];
                         this->target.insert(this->target.end(), inner.begin(), inner.end());
                     }
                 }
-                catch (boost::bad_any_cast &)
-                {
-                    //do nothing
-                }
-
 
                 /**
                  *  @todo potentially leaking

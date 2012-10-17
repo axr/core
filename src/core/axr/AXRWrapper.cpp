@@ -360,16 +360,12 @@ void AXRWrapper::executeLayoutTests(HSSObservableProperty passnull, void*data)
         if (argument->isA(HSSFunctionTypeSel))
         {
             HSSSelFunction::p selFunction = qSharedPointerCast<HSSSelFunction>(argument);
-            boost::any remoteValue = selFunction->evaluate();
-            try
+            QVariant remoteValue = selFunction->evaluate();
+            if (remoteValue.canConvert<std::vector< std::vector<HSSDisplayObject::p> > >())
             {
-                std::vector< std::vector<HSSDisplayObject::p> > selection = boost::any_cast< std::vector< std::vector<HSSDisplayObject::p> > >(remoteValue);
+                std::vector< std::vector<HSSDisplayObject::p> > selection = remoteValue.value<std::vector< std::vector<HSSDisplayObject::p> > >();
                 std::vector<HSSDisplayObject::p> innerSelection = selection[0];
                 status = HSSContainer::asContainer(innerSelection[0]);
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
             }
         }
     }

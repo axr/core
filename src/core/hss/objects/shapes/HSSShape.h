@@ -112,4 +112,7 @@ namespace AXR
     };
 }
 
+Q_DECLARE_METATYPE(AXR::HSSShape::p);
+Q_DECLARE_METATYPE(AXR::HSSShape::p*);
+
 #endif

@@ -669,16 +669,12 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
         fnct->setScope(scope);
         fnct->setThisObj(this->getThisObj());
 
-        boost::any remoteValue = fnct->evaluate();
-        try
+        QVariant remoteValue = fnct->evaluate();
+        if (remoteValue.canConvert<HSSUnit>())
         {
-            ret = boost::any_cast<HSSUnit>(remoteValue);
+            ret = remoteValue.value<HSSUnit>();
+        }
 
-        }
-        catch (boost::bad_any_cast &)
-        {
-            //do nothing
-        }
         if (callback)
         {
             fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect > (this, callback));

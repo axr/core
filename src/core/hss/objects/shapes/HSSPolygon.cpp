@@ -64,8 +64,8 @@ HSSPolygon::HSSPolygon()
     shorthandProperties.push_back("angle");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertySides, & this->sides);
-    this->registerProperty(HSSObservablePropertyAngle, & this->angle);
+    this->registerProperty(HSSObservablePropertySides, QVariant::fromValue(&this->sides));
+    this->registerProperty(HSSObservablePropertyAngle, QVariant::fromValue(&this->angle));
     this->sides = 3;
     this->angle = 0;
 
@@ -81,8 +81,8 @@ HSSPolygon::HSSPolygon(const HSSPolygon & orig)
     shorthandProperties.push_back("angle");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertySides, & this->sides);
-    this->registerProperty(HSSObservablePropertyAngle, & this->angle);
+    this->registerProperty(HSSObservablePropertySides, QVariant::fromValue(&this->sides));
+    this->registerProperty(HSSObservablePropertyAngle, QVariant::fromValue(&this->angle));
     this->sides = 3;
     this->angle = 0;
 
@@ -220,26 +220,18 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->thisObj);
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSUnit>())
             {
-                this->sides = floor(boost::any_cast<HSSUnit>(remoteValue));
+                this->sides = floor(remoteValue.value<HSSUnit>());
             }
-            catch (boost::bad_any_cast &)
+
+            if (remoteValue.type() == QVariant::UInt)
             {
-                //do nothing
-            }
-            try
-            {
-                this->sides = boost::any_cast<unsigned int>(remoteValue);
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
+                this->sides = remoteValue.toUInt();
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertySides, this, new HSSValueChangedCallback<HSSPolygon > (this, &HSSPolygon::sidesChanged));
-
         }
         else
         {
@@ -318,18 +310,13 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->thisObj);
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSUnit>())
             {
-                this->angle = boost::any_cast<HSSUnit>(remoteValue);
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
+                this->angle = remoteValue.value<HSSUnit>();
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyAngle, this, new HSSValueChangedCallback<HSSPolygon > (this, &HSSPolygon::angleChanged));
-
         }
         else
         {

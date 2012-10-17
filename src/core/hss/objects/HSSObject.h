@@ -45,7 +45,7 @@
 #define HSSOBJECT_H
 
 #include <vector>
-#include <boost/any.hpp>
+#include <QVariant>
 #include <QMap>
 #include "AXRDebugging.h"
 #include "HSSObservable.h"
@@ -246,21 +246,21 @@ namespace AXR
         /**
          *  @todo remove this if not used
          */
-        virtual void setProperty(HSSObservableProperty name, boost::any);
+        virtual void setProperty(HSSObservableProperty name, QVariant);
         /**
          *  When a subclass registers a observable property name with a pointer, it can be
          *  retrieved with this method.
          *  @param name     The observable property name.
          *  @return The parser node defining the value for the given property.
          */
-        virtual boost::any getProperty(HSSObservableProperty name);
+        virtual QVariant getProperty(HSSObservableProperty name);
         /**
          *  Each subclass must register each property name it uses with the pointer to the data,
          *  so that it can easily be accessed later.
          *  @param name     The observable property name.
          *  @param property A boost any wrapping the pointer to the data holding the actual value of the property.
          */
-        virtual void registerProperty(HSSObservableProperty name, boost::any property);
+        virtual void registerProperty(HSSObservableProperty name, QVariant property);
         /**
          *  Getter for the current scope this object is operating on.
          *  @return A pointer to the vector of shared pointers to display objects
@@ -326,7 +326,7 @@ namespace AXR
         HSSObject::p shared_from_this();
 
     protected:
-        QMap<HSSObservableProperty, boost::any> properties;
+        QMap<HSSObservableProperty, QVariant> properties;
         std::vector<AXRString> shorthandProperties;
         QMap<AXRString, bool> skipShorthand;
         unsigned shorthandIndex;
@@ -346,5 +346,16 @@ namespace AXR
         QWeakPointer<HSSObject> ptr;
     };
 }
+
+Q_DECLARE_METATYPE(AXR::HSSObject::p);
+Q_DECLARE_METATYPE(std::vector<AXR::HSSObject::p>);
+Q_DECLARE_METATYPE(std::vector<AXR::HSSObject::p>*);
+Q_DECLARE_METATYPE(AXR::HSSEventType);
+
+// Necessary because the comma in the type name would cause it to
+// be passed to the below macro as two parameters instead of one
+typedef QMap<AXR::HSSEventType, std::vector<AXR::HSSObject::p> > QMapHSSEventTypeVectorHSSObjectp;
+Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp);
+Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp*);
 
 #endif

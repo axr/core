@@ -45,6 +45,7 @@
 #define HSSPARSERNODE_H
 
 #include <vector>
+#include <QMetaType>
 #include "HSSClonable.h"
 #include "HSSObservable.h"
 #include "HSSTypeEnums.h"
@@ -218,5 +219,8 @@ namespace AXR
         QWeakPointer<HSSParserNode> ptr;
     };
 }
+
+Q_DECLARE_METATYPE(AXR::HSSParserNode::p);
+Q_DECLARE_METATYPE(AXR::HSSParserNode::p*);
 
 #endif

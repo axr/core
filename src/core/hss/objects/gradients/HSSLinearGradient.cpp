@@ -66,10 +66,10 @@ HSSLinearGradient::HSSLinearGradient()
     shorthandProperties.push_back("endY");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyStartX, & this->startX);
-    this->registerProperty(HSSObservablePropertyStartY, & this->startY);
-    this->registerProperty(HSSObservablePropertyEndX, & this->startY);
-    this->registerProperty(HSSObservablePropertyEndY, & this->startY);
+    this->registerProperty(HSSObservablePropertyStartX, QVariant::fromValue(&this->startX));
+    this->registerProperty(HSSObservablePropertyStartY, QVariant::fromValue(&this->startY));
+    this->registerProperty(HSSObservablePropertyEndX, QVariant::fromValue(&this->startY));
+    this->registerProperty(HSSObservablePropertyEndY, QVariant::fromValue(&this->startY));
 
     this->startX = this->startY = this->endX = endY = 0.;
 
@@ -87,10 +87,10 @@ HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
     shorthandProperties.push_back("endY");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyStartX, & this->startX);
-    this->registerProperty(HSSObservablePropertyStartY, & this->startY);
-    this->registerProperty(HSSObservablePropertyEndX, & this->startY);
-    this->registerProperty(HSSObservablePropertyEndY, & this->startY);
+    this->registerProperty(HSSObservablePropertyStartX, QVariant::fromValue(&this->startX));
+    this->registerProperty(HSSObservablePropertyStartY, QVariant::fromValue(&this->startY));
+    this->registerProperty(HSSObservablePropertyEndX, QVariant::fromValue(&this->startY));
+    this->registerProperty(HSSObservablePropertyEndY, QVariant::fromValue(&this->startY));
 
     this->startX = this->startY = this->endX = endY = 0.;
 

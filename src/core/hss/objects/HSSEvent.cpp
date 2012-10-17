@@ -89,7 +89,7 @@ HSSEvent::HSSEvent(HSSEventType type)
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyAction, & this->action);
+    this->registerProperty(HSSObservablePropertyAction, QVariant::fromValue(&this->action));
 }
 
 HSSEvent::HSSEvent(const HSSEvent & orig)
@@ -101,7 +101,7 @@ HSSEvent::HSSEvent(const HSSEvent & orig)
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
 
-    this->registerProperty(HSSObservablePropertyAction, & this->action);
+    this->registerProperty(HSSObservablePropertyAction, QVariant::fromValue(&this->action));
 }
 
 HSSEvent::p HSSEvent::clone() const
@@ -242,20 +242,19 @@ void HSSEvent::addDAction(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSParserNode::p>())
             {
-                HSSParserNode::p theVal = boost::any_cast<HSSParserNode::p > (remoteValue);
-                this->addDAction(theVal);
-                valid = true;
-            }
-            catch (const AXRError &e)
-            {
-                e.raise();
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
+                try
+                {
+                    HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                    this->addDAction(theVal);
+                    valid = true;
+                }
+                catch (const AXRError &e)
+                {
+                    e.raise();
+                }
             }
 
             break;

@@ -151,11 +151,11 @@ HSSTextBlock::HSSTextBlock()
     this->observedTextAlign = this->observedTransform = this->observedText
             = NULL;
 
-    this->registerProperty(HSSObservablePropertyText, & this->text);
-    this->registerProperty(HSSObservablePropertyTransform, & this->transform);
-    this->registerProperty(HSSObservablePropertyTextAlign, & this->textAlign);
-    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, &this->directionPrimary);
-    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
+    this->registerProperty(HSSObservablePropertyText, QVariant::fromValue(&this->text));
+    this->registerProperty(HSSObservablePropertyTransform, QVariant::fromValue(&this->transform));
+    this->registerProperty(HSSObservablePropertyTextAlign, QVariant::fromValue(&this->textAlign));
+    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, QVariant::fromValue(&this->directionPrimary));
+    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, QVariant::fromValue(&this->directionSecondary));
 
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("text");
@@ -172,11 +172,11 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
     this->observedTextAlign = this->observedTransform = this->observedText
             = NULL;
 
-    this->registerProperty(HSSObservablePropertyText, & this->text);
-    this->registerProperty(HSSObservablePropertyTransform, & this->transform);
-    this->registerProperty(HSSObservablePropertyTextAlign, & this->textAlign);
-    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, &this->directionPrimary);
-    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
+    this->registerProperty(HSSObservablePropertyText, QVariant::fromValue(&this->text));
+    this->registerProperty(HSSObservablePropertyTransform, QVariant::fromValue(&this->transform));
+    this->registerProperty(HSSObservablePropertyTextAlign, QVariant::fromValue(&this->textAlign));
+    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, QVariant::fromValue(&this->directionPrimary));
+    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, QVariant::fromValue(&this->directionSecondary));
 
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("text");
@@ -440,15 +440,11 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSTextTransformType>())
             {
-                this->transform = boost::any_cast<HSSTextTransformType > (remoteValue);
+                this->transform = remoteValue.value<HSSTextTransformType>();
                 valid = true;
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTransform, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::transformChanged));
@@ -566,15 +562,11 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSTextAlignType>())
             {
-                this->textAlign = boost::any_cast<HSSTextAlignType > (remoteValue);
+                this->textAlign = remoteValue.value<HSSTextAlignType>();
                 valid = true;
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::textAlignChanged));
@@ -594,13 +586,12 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
                 this->observedTextAlign->removeObserver(this->observedTextAlignProperty, HSSObservablePropertyTextAlign, this);
             }
             HSSContainer::p parent = this->getParent();
-            boost::any remoteValue = parent->getProperty(HSSObservablePropertyTextAlign);
-            try {
-                this->textAlign = * boost::any_cast<HSSTextAlignType *>(remoteValue);
+            QVariant remoteValue = parent->getProperty(HSSObservablePropertyTextAlign);
+            if (remoteValue.canConvert<HSSTextAlignType*>())
+            {
+                this->textAlign = *remoteValue.value<HSSTextAlignType*>();
                 parent->observe(HSSObservablePropertyTextAlign, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::textAlignChanged));
                 valid = true;
-            } catch (boost::bad_any_cast &) {
-                //do nothing
             }
         }
         else
@@ -723,15 +714,11 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            boost::any remoteValue = fnct->evaluate();
-            try
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<AXRString>())
             {
-                this->text = boost::any_cast<AXRString > (remoteValue);
+                this->text = remoteValue.value<AXRString>();
                 valid = true;
-            }
-            catch (boost::bad_any_cast &)
-            {
-                //do nothing
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyText, this, new HSSValueChangedCallback<HSSTextBlock > (this, &HSSTextBlock::textChanged));
