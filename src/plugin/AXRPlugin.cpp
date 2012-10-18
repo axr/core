@@ -249,4 +249,9 @@ bool AXRPlugin::onDrawCoreGraphics(FB::CoreGraphicsDraw *evt, FB::PluginWindowMa
 
     return true;
 }
+#elif FB_X11
+bool AXRPlugin::onDrawX11(FB::RefreshEvent *evt, FB::PluginWindowX11 *)
+{
+    // TODO: Implement drawing for X11 platforms
+}
 #endif

@@ -122,7 +122,7 @@ public:
 #elif FB_MACOSX
     virtual bool onDrawCoreGraphics(FB::CoreGraphicsDraw *evt, FB::PluginWindowMacCG *);
 #elif FB_X11
-    virtual bool onDrawX11(FB::RefreshEvent *evt, FB::PluginWindowX11 *)
+    virtual bool onDrawX11(FB::RefreshEvent *evt, FB::PluginWindowX11 *);
 #endif
 
 private:
