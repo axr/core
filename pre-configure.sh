@@ -12,6 +12,8 @@ UNAME=$(uname)
 deps()
 {
     echo "- Qt 4"
+    echo "- CMake"
+    echo "- GTK+ 2 (optional on Windows and OS X - required on X11)"
     echo "- SDL (optional)"
     echo "- Doxygen (optional)"
 }
@@ -81,7 +83,7 @@ if [ "$UNAME" = "Darwin" ] ; then
             depof:cmake +universal
 
         set_mp_target $osx_current
-        port install doxygen +universal
+        port install doxygen gtk2 +universal
 
         # earliest OS X that Qt 4.8.x Cocoa will build on
         # NOTE: for some reason MacPorts' Qt won't work with
@@ -109,9 +111,10 @@ if [ "$UNAME" = "Darwin" ] ; then
 elif [ "$UNAME" = "Linux" ] ; then
     if [ $(which apt-get 2>/dev/null) ] ; then
         # Debian, Ubuntu
-        apt-get -y install build-essential qt-sdk libsdl1.2-dev doxygen
+        apt-get -y install build-essential qt-sdk cmake libsdl1.2-dev libgtk2.0-dev doxygen
     elif [ $(which yum 2>/dev/null) ] ; then
         # Fedora, RHEL, Yellow Dog Linux
+        # yum install cmake gtk2-devel git ...
         echo "ERROR: yum support is not yet implemented"
         exit 1
     elif [ $(which zypper 2>/dev/null) ] ; then
@@ -124,7 +127,7 @@ elif [ "$UNAME" = "Linux" ] ; then
         exit 1
     elif [ $(which pacman 2>/dev/null) ] ; then
         # Arch Linux
-        pacman -S qt sdl doxygen
+        pacman -S qt cmake sdl gtk2 doxygen
     elif [ $(which emerge 2>/dev/null) ] ; then
         # Gentoo
         echo "ERROR: portage support is not yet implemented"
