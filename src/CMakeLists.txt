@@ -37,5 +37,6 @@ endif()
 
 if(AXR_BUILD_PLUGIN)
     set(FB_PROJECTS_DIR "${CMAKE_SOURCE_DIR}/src")
+    add_definitions(-DQT_NO_KEYWORDS)
     add_subdirectory(firebreath)
 endif()
