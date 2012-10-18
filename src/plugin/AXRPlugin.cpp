@@ -184,7 +184,7 @@ bool AXRPlugin::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
 
 QImage AXRPlugin::composite(int width, int height)
 {
-    AXRCore::tp &core = AXRCore::getInstance();
+    AXRCore* core = AXRCore::getInstance();
     AXRRender::p renderer = core->getRender();
     if (renderer && core->getController()->getRoot())
     {
@@ -210,12 +210,11 @@ bool AXRPlugin::onDrawGDIWindowed(FB::RefreshEvent *evt, FB::PluginWindowWin *wi
     HDC context = BeginPaint(win->getHWND(), &ps);
 
     {
-        ::SetTextAlign(context, TA_CENTERITA_BASELINE);
         LPCTSTR text = _T("FireBreath Plugin!");
         ::TextOut(context, pos.left + (pos.right - pos.left) / 2, pos.top + (pos.bottom - pos.top) / 2, text, lstrlen(text));
     }
 
-    EndPaint(windowed->getHWND());
+    EndPaint(win->getHWND(), &ps);
 
     return true;
 }
@@ -227,7 +226,6 @@ bool AXRPlugin::onDrawGDIWindowless(FB::RefreshEvent *evt, FB::PluginWindowlessW
     HDC context = win->getHDC();
 
     {
-        ::SetTextAlign(context, TA_CENTERITA_BASELINE);
         LPCTSTR text = _T("FireBreath Plugin!");
         ::TextOut(context, pos.left + (pos.right - pos.left) / 2, pos.top + (pos.bottom - pos.top) / 2, text, lstrlen(text));
     }
