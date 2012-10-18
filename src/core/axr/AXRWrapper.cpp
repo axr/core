@@ -45,6 +45,7 @@
 #include <QDir>
 #include <QFile>
 #include <QUrl>
+#include "AXRDebugging.h"
 #include "AXRInitializer.h"
 #include "AXRWarning.h"
 #include "AXRWrapper.h"

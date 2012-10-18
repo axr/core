@@ -46,6 +46,7 @@
  */
 
 #include <cmath>
+#include "AXRDebugging.h"
 #include "AXRWarning.h"
 #include "HSSColorStop.h"
 #include "HSSExpression.h"

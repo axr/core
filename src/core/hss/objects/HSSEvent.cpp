@@ -43,6 +43,7 @@
 
 #include <QMap>
 #include "AXRController.h"
+#include "AXRDebugging.h"
 #include "AXRWarning.h"
 #include "HSSAction.h"
 #include "HSSEvent.h"

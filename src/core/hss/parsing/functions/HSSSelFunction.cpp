@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include "AXRController.h"
+#include "AXRDebugging.h"
 #include "HSSSelFunction.h"
 
 using namespace AXR;

@@ -156,7 +156,6 @@
 #include <QSharedPointer>
 #include <QThreadStorage>
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRRender.h"
 #include "AXRWrapper.h"
 #include "HSSCallback.h"

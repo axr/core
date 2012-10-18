@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRDebugging.h"
 #include "HSSCircle.h"
 
 using namespace AXR;

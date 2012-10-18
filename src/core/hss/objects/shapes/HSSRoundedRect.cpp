@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRDebugging.h"
 #include "AXRWarning.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"

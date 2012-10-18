@@ -48,6 +48,7 @@
 #include <QUrl>
 
 #include "AXRController.h"
+#include "AXRDebugging.h"
 #include "AXRInitializer.h"
 #include "AXRWrapper.h"
 #include "XMLParser.h"

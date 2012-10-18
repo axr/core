@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include <QDir>
+#include "AXRDebugging.h"
 #include "AXRInitializer.h"
 
 using namespace AXR;

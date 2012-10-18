@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRDebugging.h"
 #include "HSSRectangle.h"
 
 using namespace AXR;

@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include "AXRController.h"
+#include "AXRDebugging.h"
 #include "AXRInitializer.h"
 #include "AXRWarning.h"
 #include "HSSRequest.h"

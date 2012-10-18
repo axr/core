@@ -48,6 +48,7 @@
 #include <QSharedPointer>
 #include <QMap>
 #include "AXRGlobal.h"
+#include "AXRString.h"
 #include "HSSCallback.h"
 #include "HSSObservableProperties.h"
 

@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include <iostream>
 #include <SDL.h>
 #include <QApplication>
 #include <QFileDialog>
