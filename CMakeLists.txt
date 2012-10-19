@@ -69,7 +69,7 @@ if(AXR_BUILD_PROTOTYPE)
             add_definitions(-Wall -pedantic)
 
             # Treat all external dependency headers as system headers so we don't see warnings for them
-            foreach(dir ${SDL_INCLUDE_DIR} ${QT_INCLUDES})
+            foreach(dir ${SDL_INCLUDE_DIR} ${GTK2_INCLUDE_DIRS} ${QT_INCLUDES} ${CMAKE_SOURCE_DIR}/src/firebreath)
                 add_definitions(-isystem ${dir})
             endforeach()
         endif()
