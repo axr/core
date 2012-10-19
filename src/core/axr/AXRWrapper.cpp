@@ -292,8 +292,6 @@ bool AXRWrapper::loadHSSFile(QUrl url)
     return true;
 }
 
-//has loaded file
-
 bool AXRWrapper::hasLoadedFile()
 {
     AXRCore* core = AXRCore::getInstance();
