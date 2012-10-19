@@ -179,39 +179,6 @@ namespace AXR
     public:
         AXRString _layoutTestsFilePath;
     };
-
-    class AXR_API AXRTestThread : public QThread
-    {
-    private:
-        AXRWrapper * wrapper;
-        QUrl url;
-        unsigned totalTests;
-        unsigned totalPassed;
-        HSSContainer::p status;
-
-    public:
-        AXRTestThread(AXRWrapper * wrapper, QUrl url, HSSContainer::p status);
-        void operator () ();
-        void run();
-    };
-
-    class AXR_API AXRTestProducer : public QRunnable
-    {
-    private:
-        AXRWrapper * wrapper;
-        std::vector<QUrl> test; // the filename of the test
-        unsigned * totalTests;
-        unsigned * totalPassed;
-        HSSContainer::p status;
-        static QMutex totalTestsMutex;
-        static QMutex totalPassedMutex;
-        static QMutex statusMutex;
-
-    public:
-        AXRTestProducer(AXRWrapper * wrapper, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
-        void operator () ();
-        void run();
-    };
 }
 
 #endif
