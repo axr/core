@@ -43,7 +43,6 @@
 
 #include <cstdio>
 #include <cstdlib>
-#include <iostream>
 #include <QUrl>
 #include "AXRController.h"
 #include "AXRDebugging.h"

@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <iostream>
 #include <QSharedPointer>
 #include "AXRDebugging.h"
 #include "HSSMultipleValue.h"

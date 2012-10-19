@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <sstream>
 #include "HSSContainer.h"
 #include "HSSPercentageConstant.h"
 

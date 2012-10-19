@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <sstream>
 #include "AXRDebugging.h"
 #include "AXRError.h"
 #include "HSSExpression.h"

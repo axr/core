@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <iostream>
 #include <QMap>
 #include "HSSToken.h"
 

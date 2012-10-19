@@ -44,7 +44,6 @@
 #ifndef HSSDISPLAYOBJECT_H
 #define HSSDISPLAYOBJECT_H
 
-#include <map>
 #include <vector>
 #include <QSharedPointer>
 #include <QWeakPointer>

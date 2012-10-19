@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <sstream>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRInitializer.h"

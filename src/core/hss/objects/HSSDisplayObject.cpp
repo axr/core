@@ -42,7 +42,6 @@
  ********************************************************************/
 
 #include <cmath>
-#include <sstream>
 #include <QVariant>
 #include <QImage>
 #include <QPainterPath>

@@ -44,7 +44,6 @@
 #ifndef HSSCONTAINER_H
 #define HSSCONTAINER_H
 
-#include <list>
 #include "HSSDisplayObject.h"
 #include "HSSEvent.h"
 #include "HSSShape.h"

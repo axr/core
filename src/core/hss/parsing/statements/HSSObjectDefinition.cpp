@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <iostream>
 #include "AXRDebugging.h"
 #include "HSSObjectDefinition.h"
 

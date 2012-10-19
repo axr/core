@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <iostream>
 #include <QHash>
 #include <QMap>
 #include "AXRDebugging.h"

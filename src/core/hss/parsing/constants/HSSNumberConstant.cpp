@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <sstream>
 #include "HSSNumberConstant.h"
 
 using namespace AXR;

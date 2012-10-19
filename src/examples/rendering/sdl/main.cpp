@@ -41,11 +41,11 @@
  *
  ********************************************************************/
 
-#include <iostream>
 #include <SDL.h>
 #include <QApplication>
 #include <QFileDialog>
 #include <QUrl>
+#include "AXRDebugging.h"
 #include "AXRInitializer.h"
 #include "AXRWrapper.h"
 
@@ -239,7 +239,7 @@ int main(int argc, char **argv)
             {
                 if (event.key.keysym.sym == SDLK_F5)
                 {
-                    std::cout << "Reloading file\n";
+                    std_log("Reloading file");
                     wrapper->reload();
                 }
                 else if (event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))

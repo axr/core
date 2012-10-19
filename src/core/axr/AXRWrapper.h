@@ -44,7 +44,6 @@
 #ifndef AXRWRAPPER_H
 #define AXRWRAPPER_H
 
-#include <queue>
 #include <QMap>
 #include <QMutex>
 #include <QSharedPointer>

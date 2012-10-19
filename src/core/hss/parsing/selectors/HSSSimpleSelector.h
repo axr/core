@@ -44,7 +44,6 @@
 #ifndef HSSSIMPLESELECTOR_H
 #define HSSSIMPLESELECTOR_H
 
-#include <list>
 #include <QSharedPointer>
 #include "HSSDisplayObject.h"
 #include "HSSFilter.h"

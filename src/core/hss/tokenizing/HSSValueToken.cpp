@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <sstream>
 #include "AXRString.h"
 #include "HSSValueToken.h"
 

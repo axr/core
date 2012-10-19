@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <iostream>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "HSSContainer.h"

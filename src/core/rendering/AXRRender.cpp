@@ -41,7 +41,6 @@
  *
  ********************************************************************/
 
-#include <iostream>
 #include <QImage>
 #include "AXRController.h"
 #include "AXRDebugging.h"

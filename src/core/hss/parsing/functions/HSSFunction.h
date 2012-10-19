@@ -44,7 +44,6 @@
 #ifndef HSSFUNCTION_H
 #define HSSFUNCTION_H
 
-#include <deque>
 #include <vector>
 #include <QVariant>
 #include <QSharedPointer>

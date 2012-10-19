@@ -44,7 +44,6 @@
 #ifndef AXRCONTROLLER_H
 #define AXRCONTROLLER_H
 
-#include <stack>
 #include <vector>
 #include <QSharedPointer>
 #include "HSSContainer.h"
