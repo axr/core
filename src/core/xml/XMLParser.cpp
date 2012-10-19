@@ -45,6 +45,7 @@
 #include <QtXml>
 #include "AXRController.h"
 #include "AXRDebugging.h"
+#include "AXRError.h"
 #include "AXRInitializer.h"
 #include "XMLParser.h"
 

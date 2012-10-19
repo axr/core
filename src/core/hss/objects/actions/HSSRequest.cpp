@@ -135,8 +135,7 @@ void HSSRequest::fire()
     if (this->target.empty())
     {
         AXRCore* core = AXRCore::getInstance();
-        AXRWrapper * wrapper = core->getWrapper();
-        wrapper->loadXMLFile(this->src);
+        core->loadXMLFile(this->src);
     }
     else
     {
@@ -145,15 +144,14 @@ void HSSRequest::fire()
         default:
         {
             AXRCore* core = AXRCore::getInstance();
-            AXRWrapper * wrapper = core->getWrapper();
             AXRController::p controller = AXRController::p(new AXRController());
             XMLParser::p xmlParser(new XMLParser(controller.data()));
-            HSSParser::p hssParser(new HSSParser(controller.data(), wrapper));
+            HSSParser::p hssParser(new HSSParser(controller.data()));
             AXRBuffer::p baseFile = core->getFile();
             AXRBuffer::p newFile;
             try
             {
-                newFile = wrapper->getFile(this->src);
+                newFile = core->getFile(this->src);
             }
             catch (const AXRError &e)
             {
@@ -179,7 +177,7 @@ void HSSRequest::fire()
                             AXRBuffer::p hssfile;
                             try
                             {
-                                hssfile = wrapper->getFile(*sheetsIt);
+                                hssfile = core->getFile(*sheetsIt);
                             }
                             catch (const AXRError &e)
                             {
@@ -214,7 +212,7 @@ void HSSRequest::fire()
                         root->setNeedsRereadRules(true);
                         root->recursiveReadDefinitionObjects();
                         root->handleEvent(HSSEventTypeLoad, NULL);
-                        wrapper->setNeedsDisplay(true);
+                        core->setNeedsDisplay(true);
                     }
                 }
             }

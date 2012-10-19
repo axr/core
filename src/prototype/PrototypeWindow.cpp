@@ -50,7 +50,7 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRInitializer.h"
-#include "AXRWrapper.h"
+#include "AXRTestRunner.h"
 #include "XMLParser.h"
 
 #include "LogWindow.h"
@@ -66,8 +66,10 @@ using namespace AXR;
 class PrototypeWindow::Private
 {
 public:
-    Private() : wrapper(new AXRWrapper())
+    Private()
     {
+        wrapper = AXRCore::getInstance();
+        testRunner = new AXRTestRunner();
         axr_debug_device = qApp->loggingDevice();
     }
 
@@ -75,10 +77,13 @@ public:
     {
         axr_debug_device = NULL;
 
-        delete wrapper;
+        // TODO: don't delete until thread pointer is eliminated
+        //delete wrapper;
+        delete testRunner;
     }
 
-    AXRWrapper *wrapper;
+    AXRCore *wrapper;
+    AXRTestRunner *testRunner;
 };
 
 PrototypeWindow::PrototypeWindow(QWidget *parent)
@@ -86,8 +91,7 @@ PrototypeWindow::PrototypeWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    AXRCore*core = AXRCore::getInstance();
-    ui->enableAntialiasingAction->setChecked(core->getRender()->globalAntialiasingEnabled());
+    ui->enableAntialiasingAction->setChecked(d->wrapper->getRender()->globalAntialiasingEnabled());
 
     // The subview needs to accept drops as well even though the main window handles it
     ui->renderingView->setAcceptDrops(true);
@@ -257,7 +261,7 @@ void PrototypeWindow::listHssStatements()
         AXRBuffer::p f(new AXRBuffer(fi));
 
         AXRController controller;
-        HSSParser hssparser(&controller, d->wrapper);
+        HSSParser hssparser(&controller);
 
         if (hssparser.loadFile(f))
         {
@@ -313,16 +317,9 @@ void PrototypeWindow::listHssTokens()
 
 void PrototypeWindow::runLayoutTests()
 {
-    QDir dir = QDir(QCoreApplication::applicationDirPath());
-#ifdef Q_WS_MACX
-    dir.cdUp();
-#endif
-    dir.cd("Resources");
-    dir.cd("views");
-
-    AXRCore*core = AXRCore::getInstance();
-    core->registerCustomFunction("AXRLayoutTestsExecute", new HSSValueChangedCallback<AXRWrapper>(d->wrapper, &AXRWrapper::executeLayoutTests));
-    this->openFile(dir.filePath("layoutTests.hss"));
+    AXRCore *core = AXRCore::getInstance();
+    core->registerCustomFunction("AXRLayoutTestsExecute", new HSSValueChangedCallback<AXRTestRunner>(d->testRunner, &AXRTestRunner::executeLayoutTests));
+    this->openFile(d->testRunner->getPathToTestsFile());
 }
 
 void PrototypeWindow::showErrorLog()

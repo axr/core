@@ -157,7 +157,6 @@
 #include <QThreadStorage>
 #include "AXRController.h"
 #include "AXRRender.h"
-#include "AXRWrapper.h"
 #include "HSSCallback.h"
 #include "HSSUnits.h"
 #include "XMLParser.h"
@@ -181,15 +180,6 @@ namespace AXR
         static AXRCore* getInstance();
 
         /**
-         *  Initializes all default values.
-         *  @param  wrpr    The platform-specific wrapper that is embedding the core library.
-         *  This is a c++ pointer, not a shared one. Since the embedder owns the core,
-         *  no memory management is done whatsoever.
-         *  @warning Needs to be called before the first time the core is used.
-         *  @see AXRWrapper
-         */
-        void initialize(AXRWrapper * wrpr);
-        /**
          *  Destroys the object
          */
         virtual ~AXRCore();
@@ -202,6 +192,12 @@ namespace AXR
          *  the rect parameter is actually ignored. This will be fixed in the near future.
          */
         virtual void drawInRectWithBounds(HSSRect rect, HSSRect bounds);
+
+        /**
+         * Gets the path to where the HSS framework resource files are stored.
+         */
+        virtual AXRString getPathToResources() const;
+
         /**
          *  After everything is set up, this puts everything in motion:
          *  loads xml, loads hss, applies rules, etc
@@ -227,17 +223,6 @@ namespace AXR
          *  @param file     The AXRBuffer to store for later use.
          */
         void setFile(AXRBuffer::p file);
-        /**
-         *  @return a c++ pointer to the AXRWrapper
-         */
-        AXRWrapper * getWrapper();
-        /**
-         *  Sets the AXRWrapper that is embedding the core library.
-         *  @param wrapper  A c++ pointer to the AXRWrapper subclass instance. Since
-         *  the embedder owns the core, no memory management is done whatsoever.
-
-         */
-        void setWrapper(AXRWrapper * wrapper);
         /**
          *  Getter for shared pointer to the AXRController that is managing the
          *  object tree.
@@ -299,8 +284,79 @@ namespace AXR
         void registerCustomFunction(AXRString name, HSSCallback* fn);
         void evaluateCustomFunction(AXRString name, void* data);
 
+        // From AXRWrapper
+    public:
+        /**
+         *  Creates a AXRBuffer representation from the url you provide.
+         *  Subclasses should override this method with the OS specific implementation.
+         *  @param url  A string containing the url to the file
+         */
+        virtual AXRBuffer::p getFile(QUrl url);
+        virtual bool needsDisplay() const;
+        /**
+         *  This is to be called when something happens that needs to trigger a redraw.
+         *  Subclasses should override this method with the OS specific implementation.
+         *  @param  newValue    A boolean containing the new state.
+         */
+        virtual void setNeedsDisplay(bool newValue);
+
+        /**
+         *  This creates a string containing a basic XML document with 1 element called "root".
+         *  It is used when a HSS file is loaded directly.
+         *  @return A shared pointer to the AXRBuffer representation of the basic XML document.
+         */
+        AXRBuffer::p createDummyXML(QUrl hssUrl);
+        /**
+         *  Loads the XML file at the path you provide.
+         *  @param  xmlfilepath A string containing the path to the file on the local system.
+         *  @return Wether it has been loaded successfully or not.
+         */
+        bool loadXMLFile(QUrl url);
+        bool loadXMLFile(AXRBuffer::p buffer);
+        /**
+         *  Loads the file you provide, and then handles it according to its file extension.
+         *  @param  filepath    A string containing the path to the file on the local system, can be
+         *                      either an XML or an HSS file.
+         *
+         *  @return Wether it has been loaded successfully or not.
+         */
+        bool loadFileByPath(QUrl url);
+        /**
+         *  Loads the HSS file at the path you provide.
+         *  @param  hssfilepath A string containing the path to the file on the local system.
+         *  @return Wether it has been loaded successfully or not.
+         */
+        bool loadHSSFile(QUrl url);
+        /**
+         *  Reloads the file that is currently loaded.
+         *  @return Wether it has been reloaded successfully or not.
+         */
+        bool reload();
+
+        // Layout stuff from AXRWrapper
+    public:
+        bool showLayoutSteps();
+        void setShowLayoutSteps(bool value);
+        void previousLayoutStep();
+        void nextLayoutStep();
+        void nextLayoutTick();
+        void resetLayoutTicks();
+        bool layoutStepDone();
+        void nextLayoutChild();
+        void resetLayoutChild();
+        bool layoutChildDone();
+        void breakIfNeeded();
+
+    private:
+        bool _isHSSOnly;
+        bool _hasLoadedFile;
+        bool _showLayoutSteps;
+        unsigned int _currentLayoutStep;
+        unsigned int _currentLayoutTick;
+        unsigned int _currentLayoutChild;
+        bool _needsDisplay;
+
     protected:
-        AXRWrapper * wrapper;
         AXRRender::p render;
         AXRController::p controller;
         AXRBuffer::p file;
@@ -308,7 +364,6 @@ namespace AXR
         XMLParser::p parserXML;
         HSSParser::p parserHSS;
 
-        bool _hasLoadedFile;
         QMap<AXRString, HSSCallback*> _customFunctions;
 
     private:

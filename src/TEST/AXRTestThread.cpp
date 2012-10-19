@@ -44,11 +44,13 @@
 #include "AXRDebugging.h"
 #include "AXRInitializer.h"
 #include "AXRTestProducer.h"
+#include "AXRTestRunner.h"
 #include "AXRTestThread.h"
+#include "HSSContainer.h"
 
 using namespace AXR;
 
-AXRTestThread::AXRTestThread(AXRWrapper * wrapper, QUrl url, HSSContainer::p status)
+AXRTestThread::AXRTestThread(AXRTestRunner * wrapper, QUrl url, HSSContainer::p status)
 {
     this->wrapper = wrapper;
     this->url = url;
@@ -67,11 +69,10 @@ void AXRTestThread::operator () ()
     try
     {
         //load the XML file
-        AXRWrapper * wrapper = this->wrapper;
         AXRCore* core = AXRCore::getInstance();
         XMLParser::p parser = core->getParserXML();
         HSSContainer::p status = this->status;
-        AXRBuffer::p testsFile = wrapper->getFile(this->url);
+        AXRBuffer::p testsFile = core->getFile(this->url);
         bool loadingSuccess = parser->loadFile(testsFile);
         if (loadingSuccess)
         {

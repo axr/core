@@ -44,6 +44,7 @@
 #include <QImage>
 #include "AXRController.h"
 #include "AXRDebugging.h"
+#include "AXRError.h"
 #include "AXRInitializer.h"
 #include "AXRRender.h"
 #include "AXRString.h"
@@ -64,7 +65,7 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
     //prepare values
     HSSContainer::p root = this->controller->getRoot();
-    AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
+    AXRCore * wrapper = AXRCore::getInstance();
 
     if (root)
     {

@@ -41,30 +41,44 @@
  *
  ********************************************************************/
 
-#ifndef __AXR__AXRTestThread__
-#define __AXR__AXRTestThread__
+#ifndef AXRWRAPPER_H
+#define AXRWRAPPER_H
 
+#include <QMap>
+#include <QMutex>
+#include <QSharedPointer>
 #include <QThread>
-#include <QUrl>
+#include <QThreadPool>
+#include "AXRError.h"
+#include "AXRBuffer.h"
 #include "HSSContainer.h"
+#include "HSSObservableProperties.h"
 
 namespace AXR
 {
-    class AXRWrapper;
-
-    class AXR_API AXRTestThread : public QThread
+    /**
+     *  @brief This is the abstract superclass from with all OS-specific wrappers
+     *  should inherit from.
+     */
+    class AXR_API AXRTestRunner
     {
-    private:
-        AXRWrapper * wrapper;
-        QUrl url;
-        unsigned totalTests;
-        unsigned totalPassed;
-        HSSContainer::p status;
-
     public:
-        AXRTestThread(AXRWrapper * wrapper, QUrl url, HSSContainer::p status);
-        void operator () ();
-        void run();
+        /**
+         *  Creates a new instance of the wrapper. It will obtain the singleton instance of
+         *  the AXRCore and initialize it.
+         */
+        AXRTestRunner();
+
+        /**
+         *  Destructs the wrapper
+         */
+        virtual ~AXRTestRunner();
+
+        virtual AXRString getPathToTestsFile();
+
+        void executeLayoutTests(HSSObservableProperty passnull, void*data);
+
+        QMap<unsigned, AXRBuffer::p> files;
     };
 }
 

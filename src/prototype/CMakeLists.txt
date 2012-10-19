@@ -37,6 +37,9 @@ qt_transform_sources(prototype_SOURCES "${prototype_SOURCES}")
 add_executable(${TARGET_NAME_APP_PROTOTYPE} WIN32 MACOSX_BUNDLE ${prototype_SOURCES})
 target_link_libraries(${TARGET_NAME_APP_PROTOTYPE} ${TARGET_NAME_LIB_CORE} ${QT_QTMAIN_LIBRARY})
 
+# TODO: Temporary until TEST target is removed
+target_link_libraries(${TARGET_NAME_APP_PROTOTYPE} TEST)
+
 set(MACOSX_BUNDLE_ICON_FILE prototype.icns)
 
 set_source_files_properties(${axr_icon_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)

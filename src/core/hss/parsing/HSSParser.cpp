@@ -48,7 +48,6 @@
 #include "AXRDebugging.h"
 #include "AXRInitializer.h"
 #include "AXRWarning.h"
-#include "AXRWrapper.h"
 #include "HSSAttrFunction.h"
 #include "HSSComment.h"
 #include "HSSDivision.h"
@@ -73,12 +72,11 @@
 
 using namespace AXR;
 
-HSSParser::HSSParser(AXRController * theController, AXRWrapper * wrapper)
+HSSParser::HSSParser(AXRController * theController)
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSParser: creating HSS parser");
 
     this->controller = theController;
-    this->wrapper = wrapper;
     this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
 
     this->currentContext.push_back(HSSParserContextRoot);
@@ -280,14 +278,14 @@ bool HSSParser::readNextStatement()
                 QUrl url(theInstr->getValue());
                 if (url.scheme() == HSSFRAMEWORK_PROTOCOL)
                 {
-                    theFile = this->wrapper->getFile(QUrl::fromLocalFile(this->wrapper->getPathToResources()).resolved(url));
+                    theFile = AXRCore::getInstance()->getFile(QUrl::fromLocalFile(AXRCore::getInstance()->getPathToResources()).resolved(url));
                 }
                 else
                 {
                     if (url.isRelative())
-                        theFile = this->wrapper->getFile(currentFile->sourceUrl().resolved(url));
+                        theFile = AXRCore::getInstance()->getFile(currentFile->sourceUrl().resolved(url));
                     else
-                        theFile = this->wrapper->getFile(url);
+                        theFile = AXRCore::getInstance()->getFile(url);
                 }
 
                 if (theFile)

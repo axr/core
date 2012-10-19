@@ -105,9 +105,8 @@ namespace AXR
          *  It will create a new instance of a HSSTokenizer automatically, and set the current context to root.
          *
          *  @param theController    A regular pointer to the controller associated to this parser.
-         *  @param wrapper          A regular pointer to the wrapper associated to this parser.
          */
-        HSSParser(AXRController * theController, AXRWrapper * wrapper);
+        HSSParser(AXRController * theController);
 
         /**
          *  Destructor for this class. Clears the currentObjectContext stack and the loaded files.
@@ -442,7 +441,6 @@ namespace AXR
         HSSTokenizer::p tokenizer;
         //weak pointer
         AXRController * controller;
-        AXRWrapper * wrapper;
 
         HSSToken::p currentToken;
         std::vector<HSSParserContext> currentContext;

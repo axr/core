@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #import "AXRDebugging.h"
+#import "AXRInitializer.h"
 #import "HSSDisplayObject.h"
 #import "CocoaAppDelegate.h"
 
@@ -53,8 +54,7 @@
 
 -(id) init
 {
-    wrapper = new AXR::AXRWrapper();
-
+    wrapper = AXR::AXRCore::getInstance();
     [self setNeedsFile : YES];
     //    axr_debug_activate_channel(AXR_DEBUG_CH_ON);
     //    axr_debug_activate_channel(AXR_DEBUG_CH_OVERVIEW);
@@ -72,7 +72,8 @@
 
 -(void) dealloc
 {
-    delete wrapper;
+    // TODO: don't delete until thread pointer is eliminated
+    //delete wrapper;
     [super dealloc];
 }
 

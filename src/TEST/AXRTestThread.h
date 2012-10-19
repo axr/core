@@ -41,32 +41,28 @@
  *
  ********************************************************************/
 
-#ifndef __AXR__AXRTestProducer__
-#define __AXR__AXRTestProducer__
+#ifndef __AXR__AXRTestThread__
+#define __AXR__AXRTestThread__
 
-#include <QMutex>
-#include <QRunnable>
+#include <QThread>
 #include <QUrl>
 #include "HSSContainer.h"
 
 namespace AXR
 {
-    class AXRWrapper;
+    class AXRTestRunner;
 
-    class AXR_API AXRTestProducer : public QRunnable
+    class AXR_API AXRTestThread : public QThread
     {
     private:
-        AXRWrapper * wrapper;
-        std::vector<QUrl> test; // the filename of the test
-        unsigned * totalTests;
-        unsigned * totalPassed;
+        AXRTestRunner *wrapper;
+        QUrl url;
+        unsigned totalTests;
+        unsigned totalPassed;
         HSSContainer::p status;
-        static QMutex totalTestsMutex;
-        static QMutex totalPassedMutex;
-        static QMutex statusMutex;
 
     public:
-        AXRTestProducer(AXRWrapper * wrapper, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
+        AXRTestThread(AXRTestRunner *testRunner, QUrl url, HSSContainer::p status);
         void operator () ();
         void run();
     };

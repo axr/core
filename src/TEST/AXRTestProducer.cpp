@@ -44,11 +44,12 @@
 #include "AXRDebugging.h"
 #include "AXRInitializer.h"
 #include "AXRTestProducer.h"
+#include "AXRTestRunner.h"
 
 using namespace AXR;
 
 // Constructor with name and the queue to use
-AXRTestProducer::AXRTestProducer(AXRWrapper * wrapper, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status)
+AXRTestProducer::AXRTestProducer(AXRTestRunner * wrapper, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status)
 {
     this->wrapper = wrapper;
     this->test = test;
@@ -75,15 +76,12 @@ void AXRTestProducer::operator () ()
     AXRString expectedRep;
 
     //load the XML
-    AXRCore core = *AXRCore::getInstance();
-    AXRWrapper * wrapper = this->wrapper;
-    core = *AXRCore::getInstance();
+    AXRCore *core = AXRCore::getInstance();
 
-    testLoaded = wrapper->loadXMLFile(this->test[0]);
+    testLoaded = core->loadXMLFile(this->test[0]);
 
     if (testLoaded)
     {
-        AXRCore* core = AXRCore::getInstance();
         AXRController::p controller = core->getController();
         HSSContainer::p root = controller->getRoot();
         core->getRender()->windowWidth = 400.;
@@ -101,7 +99,7 @@ void AXRTestProducer::operator () ()
     //load the "expected" file
     if (testLoaded)
     {
-        AXRBuffer::p expectedFile = this->wrapper->getFile(test[1]);
+        AXRBuffer::p expectedFile = core->getFile(test[1]);
         if (!expectedFile->isValid())
         {
             std_log("could not load file with expected results");
@@ -127,7 +125,7 @@ void AXRTestProducer::operator () ()
         this->statusMutex.lock();
         this->status->setContentText(AXRString("Passed %1 out of %2").arg(*this->totalPassed).arg(*this->totalTests));
         this->statusMutex.unlock();
-        this->wrapper->setNeedsDisplay(true);
+        core->setNeedsDisplay(true);
     }
     else
     {

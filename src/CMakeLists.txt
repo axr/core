@@ -29,6 +29,10 @@ if(APPLE)
     add_subdirectory(cocoa)
 endif()
 
+# TODO: Remove this and integrate these files' functionality into unit tests
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/TEST")
+add_subdirectory(TEST)
+
 add_subdirectory(prototype)
 
 if(AXR_BUILD_EXAMPLES)

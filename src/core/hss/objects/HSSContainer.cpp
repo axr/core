@@ -506,7 +506,7 @@ void HSSContainer::layout()
             unsigned i, size, j, k;
             //HSSUnit acc2 = 0;
             security_brake_init();
-            AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
+            AXRCore * wrapper = AXRCore::getInstance();
 
             //bool secondaryIsHorizontal = (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft);
 
@@ -1609,7 +1609,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
         return true;
     }
 
-    AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
+    AXRCore * wrapper = AXRCore::getInstance();
 
     switch (direction)
     {

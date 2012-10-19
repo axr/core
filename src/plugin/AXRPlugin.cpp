@@ -48,19 +48,13 @@
 
 #include "AXRInitializer.h"
 #include "AXRRender.h"
-#include "AXRWrapper.h"
 
 #include "DOM/Window.h"
 
-#ifdef FB_WIN
+#if FB_WIN
 #include <windows.h>
-#include "PluginWindowWin.h"
-#include "PluginWindowlessWin.h"
-#endif
-
-#ifdef FB_MACOSX
+#elif FB_MACOSX
 #include <ApplicationServices/ApplicationServices.h>
-#include "PluginWindowMacCG.h"
 #endif
 
 using namespace AXR;
@@ -99,8 +93,8 @@ void AXRPlugin::StaticDeinitialize()
  *        the JSAPI object until the onPluginReady method is called
  */
 AXRPlugin::AXRPlugin()
-: wrapper(new AXRWrapper())
 {
+    wrapper = AXRCore::getInstance();
 }
 
 /*!
@@ -114,7 +108,9 @@ AXRPlugin::~AXRPlugin()
     // they will be released here.
     releaseRootJSAPI();
     m_host->freeRetainedObjects();
-    delete wrapper;
+
+    // TODO: don't delete until thread pointer is eliminated
+    //delete wrapper;
 }
 
 void AXRPlugin::onPluginReady()

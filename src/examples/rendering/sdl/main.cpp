@@ -47,7 +47,6 @@
 #include <QUrl>
 #include "AXRDebugging.h"
 #include "AXRInitializer.h"
-#include "AXRWrapper.h"
 
 #if defined(_WIN32)
 #include <SDL_syswm.h>
@@ -60,7 +59,7 @@ const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 const char* WINDOW_TITLE = "AXR SDL Demo";
 
-AXRWrapper *wrapper;
+AXRCore *core;
 SDL_Surface* screen = NULL;
 
 #ifdef _WIN32
@@ -98,9 +97,8 @@ SDL_Surface* QImage_toSDLSurface(const QImage &sourceImage)
 
 void render()
 {
-    if (wrapper->needsDisplay())
+    if (core->needsDisplay())
     {
-        AXRCore*core = AXRCore::getInstance();
         HSSRect bounds(0, 0, screen->w, screen->h);
         core->drawInRectWithBounds(bounds, bounds);
 
@@ -110,14 +108,14 @@ void render()
         SDL_FreeSurface(surf);
         SDL_Flip(screen);
 
-        wrapper->setNeedsDisplay(false);
+        core->setNeedsDisplay(false);
     }
 }
 
-void loadFile(AXRWrapper *wrapper)
+void loadFile()
 {
     QString filepath = QFileDialog::getOpenFileName(NULL, QObject::tr("Open File"), QString(), QObject::tr("AXR Files (*.xml *.hss)"));
-    wrapper->loadFileByPath(QUrl::fromLocalFile(filepath));
+    core->loadFileByPath(QUrl::fromLocalFile(filepath));
 }
 
 int main(int argc, char **argv)
@@ -145,39 +143,23 @@ int main(int argc, char **argv)
     SDL_EnableKeyRepeat(300, 50);
     SDL_EnableUNICODE(1);
 
-    wrapper = new AXRWrapper();
-    AXRCore*core = AXRCore::getInstance();
+    core = AXRCore::getInstance();
 
     if (!args.empty())
     {
-        if (args.contains("--layout-tests"))
+        QFileInfo fi(args.last());
+        if (fi.exists())
         {
-            QDir dir(wrapper->getPathToResources());
-            dir.cd("views");
-
-            wrapper->_layoutTestsFilePath = dir.absolutePath();
-
-            core->registerCustomFunction("AXRLayoutTestsExecute",
-                                         new AXR::HSSValueChangedCallback<AXRWrapper>(wrapper, &AXRWrapper::executeLayoutTests));
-
-            wrapper->loadFileByPath(QUrl::fromLocalFile(dir.absoluteFilePath("layoutTests.hss")));
+            core->loadFileByPath(QUrl::fromLocalFile(AXR::fromQString(args.first())));
         }
         else
         {
-            QFileInfo fi(args.last());
-            if (fi.exists())
-            {
-                wrapper->loadFileByPath(QUrl::fromLocalFile(AXR::fromQString(args.first())));
-            }
-            else
-            {
-                loadFile(wrapper);
-            }
+            loadFile();
         }
     }
     else
     {
-        loadFile(wrapper);
+        loadFile();
     }
 
     int done = 0;
@@ -240,17 +222,17 @@ int main(int argc, char **argv)
                 if (event.key.keysym.sym == SDLK_F5)
                 {
                     std_log("Reloading file");
-                    wrapper->reload();
+                    core->reload();
                 }
                 else if (event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))
                 {
-                    loadFile(wrapper);
+                    loadFile();
                 }
             }
             else if (event.type == SDL_VIDEORESIZE)
             {
                 screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
-                wrapper->setNeedsDisplay(true);
+                core->setNeedsDisplay(true);
             }
             else if (event.active.state & SDL_APPMOUSEFOCUS && event.active.gain == 0)
             {
@@ -275,7 +257,8 @@ int main(int argc, char **argv)
     ::DestroyIcon(mainicon);
 #endif
 
-    delete wrapper;
+    // TODO: don't delete until thread pointer is eliminated
+    //delete core;
 
     return 0;
 }

@@ -548,7 +548,7 @@ void HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)
     if (changed)
     {
         this->setNeedsRereadRules(true);
-        AXRCore::getInstance()->getWrapper()->setNeedsDisplay(true);
+        AXRCore::getInstance()->setNeedsDisplay(true);
     }
 }
 
@@ -772,7 +772,7 @@ bool HSSDisplayObject::isDirty()
 
 void HSSDisplayObject::draw(QPainter &painter)
 {
-    AXRWrapper * wrapper = AXRCore::getInstance()->getWrapper();
+    AXRCore * wrapper = AXRCore::getInstance();
     if (wrapper->showLayoutSteps())
     {
         wrapper->nextLayoutTick();
@@ -3897,7 +3897,7 @@ void HSSDisplayObject::ruleChanged(HSSObservableProperty source, void*data)
 {
     //HSSRule * theRule = (HSSRule*)data;
     this->setNeedsRereadRules(true);
-    AXRCore::getInstance()->getWrapper()->setNeedsDisplay(true);
+    AXRCore::getInstance()->setNeedsDisplay(true);
 }
 
 void HSSDisplayObject::createFlag(HSSFlag::p flag, HSSRuleState defaultValue)

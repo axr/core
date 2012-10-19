@@ -41,33 +41,35 @@
  *
  ********************************************************************/
 
-#import <Cocoa/Cocoa.h>
-#import "AXRInitializer.h"
-#import "AXRView.h"
+#ifndef __AXR__AXRTestProducer__
+#define __AXR__AXRTestProducer__
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
-#define Superclass <NSApplicationDelegate>
-#endif
+#include <QMutex>
+#include <QRunnable>
+#include <QUrl>
+#include "HSSContainer.h"
 
-@interface CocoaAppDelegate : NSObject Superclass
+namespace AXR
 {
-    NSWindow *window;
-    NSWindow *axrWindow;
-    AXRView *axrView;
-    AXR::AXRCore *wrapper;
-    BOOL needsFile;
+    class AXRTestRunner;
+
+    class AXR_API AXRTestProducer : public QRunnable
+    {
+    private:
+        AXRTestRunner * wrapper;
+        std::vector<QUrl> test; // the filename of the test
+        unsigned * totalTests;
+        unsigned * totalPassed;
+        HSSContainer::p status;
+        static QMutex totalTestsMutex;
+        static QMutex totalPassedMutex;
+        static QMutex statusMutex;
+
+    public:
+        AXRTestProducer(AXRTestRunner *testRunner, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
+        void operator () ();
+        void run();
+    };
 }
 
-@property(assign) IBOutlet NSWindow *axrWindow;
-@property(assign) IBOutlet AXRView *axrView;
-@property(assign) BOOL needsFile;
-
--(id) init;
--(void) dealloc;
--(void) applicationDidFinishLaunching : (NSNotification *) aNotification;
--(BOOL) application : (NSApplication *) theApplication openFile : (NSString *) filename;
-
--(IBAction) openDocument : (id) sender;
--(IBAction) reload : (id) sender;
-
-@end
+#endif
