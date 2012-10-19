@@ -163,8 +163,6 @@ void AXRCore::reset()
     this->file.clear();
 }
 
-//has loaded file
-
 bool AXRCore::hasLoadedFile()
 {
     return _hasLoadedFile;
