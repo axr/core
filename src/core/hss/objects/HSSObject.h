@@ -346,15 +346,15 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(AXR::HSSObject::p);
-Q_DECLARE_METATYPE(std::vector<AXR::HSSObject::p>);
-Q_DECLARE_METATYPE(std::vector<AXR::HSSObject::p>*);
-Q_DECLARE_METATYPE(AXR::HSSEventType);
+Q_DECLARE_METATYPE(AXR::HSSObject::p)
+Q_DECLARE_METATYPE(std::vector<AXR::HSSObject::p>)
+Q_DECLARE_METATYPE(std::vector<AXR::HSSObject::p>*)
+Q_DECLARE_METATYPE(AXR::HSSEventType)
 
 // Necessary because the comma in the type name would cause it to
 // be passed to the below macro as two parameters instead of one
 typedef QMap<AXR::HSSEventType, std::vector<AXR::HSSObject::p> > QMapHSSEventTypeVectorHSSObjectp;
-Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp);
-Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp*);
+Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp)
+Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp*)
 
 #endif

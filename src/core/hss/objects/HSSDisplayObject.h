@@ -526,6 +526,6 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(std::vector< std::vector<AXR::HSSDisplayObject::p> >);
+Q_DECLARE_METATYPE(std::vector< std::vector<AXR::HSSDisplayObject::p> >)
 
 #endif

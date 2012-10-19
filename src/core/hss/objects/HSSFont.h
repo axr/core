@@ -209,7 +209,7 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(std::vector<AXR::HSSFont::p>);
-Q_DECLARE_METATYPE(std::vector<AXR::HSSFont::p>*);
+Q_DECLARE_METATYPE(std::vector<AXR::HSSFont::p>)
+Q_DECLARE_METATYPE(std::vector<AXR::HSSFont::p>*)
 
 #endif

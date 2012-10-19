@@ -119,7 +119,7 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(std::vector<AXR::HSSAction::p>);
-Q_DECLARE_METATYPE(std::vector<AXR::HSSAction::p>*);
+Q_DECLARE_METATYPE(std::vector<AXR::HSSAction::p>)
+Q_DECLARE_METATYPE(std::vector<AXR::HSSAction::p>*)
 
 #endif

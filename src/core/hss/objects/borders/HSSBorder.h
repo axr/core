@@ -127,7 +127,7 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(std::vector<AXR::HSSBorder::p>);
-Q_DECLARE_METATYPE(std::vector<AXR::HSSBorder::p>*);
+Q_DECLARE_METATYPE(std::vector<AXR::HSSBorder::p>)
+Q_DECLARE_METATYPE(std::vector<AXR::HSSBorder::p>*)
 
 #endif

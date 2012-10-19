@@ -492,7 +492,7 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(AXR::HSSDirectionValue);
-Q_DECLARE_METATYPE(AXR::HSSDirectionValue*);
+Q_DECLARE_METATYPE(AXR::HSSDirectionValue)
+Q_DECLARE_METATYPE(AXR::HSSDirectionValue*)
 
 #endif

@@ -220,7 +220,7 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(AXR::HSSParserNode::p);
-Q_DECLARE_METATYPE(AXR::HSSParserNode::p*);
+Q_DECLARE_METATYPE(AXR::HSSParserNode::p)
+Q_DECLARE_METATYPE(AXR::HSSParserNode::p*)
 
 #endif

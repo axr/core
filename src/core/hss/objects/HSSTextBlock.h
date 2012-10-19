@@ -146,9 +146,9 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(AXR::HSSTextTransformType);
-Q_DECLARE_METATYPE(AXR::HSSTextTransformType*);
-Q_DECLARE_METATYPE(AXR::HSSTextAlignType);
-Q_DECLARE_METATYPE(AXR::HSSTextAlignType*);
+Q_DECLARE_METATYPE(AXR::HSSTextTransformType)
+Q_DECLARE_METATYPE(AXR::HSSTextTransformType*)
+Q_DECLARE_METATYPE(AXR::HSSTextAlignType)
+Q_DECLARE_METATYPE(AXR::HSSTextAlignType*)
 
 #endif
