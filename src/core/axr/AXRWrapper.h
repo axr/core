@@ -116,6 +116,7 @@ namespace AXR
          *  @return Wether it has been loaded successfully or not.
          */
         bool loadXMLFile(QUrl url);
+        bool loadXMLFile(AXRBuffer::p buffer);
         /**
          *  Loads the file you provide, and then handles it according to its file extension.
          *  @param  filepath    A string containing the path to the file on the local system, can be

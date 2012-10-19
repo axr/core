@@ -202,6 +202,46 @@ bool AXRWrapper::loadXMLFile(QUrl url)
     return true;
 }
 
+bool AXRWrapper::loadXMLFile(AXRBuffer::p buffer)
+{
+    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening XML document from buffer"));
+
+    this->_isHSSOnly = false;
+    this->_showLayoutSteps = false;
+    this->_currentLayoutStep = 0;
+    this->_currentLayoutTick = 0;
+    this->_currentLayoutChild = 0;
+
+    AXRCore* core = AXRCore::getInstance();
+    if (core->getFile())
+    {
+        core->reset();
+    }
+
+    try
+    {
+        core->setFile(buffer);
+    }
+    catch (const AXRError &e)
+    {
+        e.raise();
+        return false;
+    }
+
+    try
+    {
+        core->run();
+    }
+    catch (const AXRError &e)
+    {
+        e.raise();
+    }
+
+    this->setNeedsDisplay(true);
+
+    return true;
+}
+
 bool AXRWrapper::reload()
 {
     this->_showLayoutSteps = false;
