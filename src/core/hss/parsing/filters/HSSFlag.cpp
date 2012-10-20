@@ -90,7 +90,7 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
         {
             HSSRule::p theRule = qSharedPointerCast<HSSRule > (ruleStatement);
             std::vector<HSSDisplayObject::p> scope = theRule->getOriginalScope();
-            AXRController::p controller = AXRDocument::getInstance()->getController();
+            AXRController * controller = this->getController();
             this->setPurging(newStatus);
             std::vector<std::vector<HSSDisplayObject::p> > selection = controller->select(theRule->getSelectorChains(), scope, this->getThisObj(), false);
             this->setPurging(HSSRuleStateOff);

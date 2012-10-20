@@ -69,14 +69,12 @@ HSSClonable::p HSSRootSelector::cloneImpl() const
 
 AXRString HSSRootSelector::getElementName()
 {
-    AXRDocument* document = AXRDocument::getInstance();
-    return document->getController()->getRoot()->getElementName();
+    return this->getController()->getRoot()->getElementName();
 }
 
 std::vector<HSSDisplayObject::p> HSSRootSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     std::vector<HSSDisplayObject::p> ret;
-    AXRDocument* document = AXRDocument::getInstance();
-    ret.push_back(document->getController()->getRoot());
+    ret.push_back(this->getController()->getRoot());
     return ret;
 }

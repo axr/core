@@ -132,7 +132,7 @@ QVariant HSSFunction::_evaluate()
 
 QVariant HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
 {
-    AXRDocument* document = AXRDocument::getInstance();
+    AXRDocument* document = this->getController()->document();
     document->evaluateCustomFunction(this->getName(), (void*) &arguments);
     return QVariant();
 }
