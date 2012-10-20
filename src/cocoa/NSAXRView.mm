@@ -46,12 +46,12 @@
 #import "AXRController.h"
 #import "AXRDebugging.h"
 #import "AXRDocument.h"
-#import "AXRView.h"
 #import "HSSContainer.h"
 #import "HSSEvent.h"
 #import "HSSTypeEnums.h"
+#import "NSAXRView.h"
 
-@implementation AXRView
+@implementation NSAXRView
 
 @synthesize document;
 

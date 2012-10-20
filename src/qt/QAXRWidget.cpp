@@ -43,11 +43,11 @@
 
 #include <QPaintEvent>
 #include "AXRDocument.h"
-#include "AXRWidget.h"
+#include "QAXRWidget.h"
 
 using namespace AXR;
 
-class AXRWidget::Private
+class QAXRWidget::Private
 {
 public:
     Private(AXRDocument *doc = NULL) : document(doc), backgroundFillColor(QColor(Qt::white)) { }
@@ -56,44 +56,44 @@ public:
     QColor backgroundFillColor;
 };
 
-AXRWidget::AXRWidget(AXRDocument *document, QWidget *parent)
+QAXRWidget::QAXRWidget(AXRDocument *document, QWidget *parent)
 : QWidget(parent), d(new Private(document))
 {
     this->setMouseTracking(true);
 }
 
-AXRWidget::AXRWidget(QWidget *parent)
+QAXRWidget::QAXRWidget(QWidget *parent)
 : QWidget(parent), d(new Private)
 {
     this->setMouseTracking(true);
 }
 
-AXRWidget::~AXRWidget()
+QAXRWidget::~QAXRWidget()
 {
     delete d;
 }
 
-AXRDocument* AXRWidget::document() const
+AXRDocument* QAXRWidget::document() const
 {
     return d->document;
 }
 
-void AXRWidget::setDocument(AXRDocument *document)
+void QAXRWidget::setDocument(AXRDocument *document)
 {
     d->document = document;
 }
 
-QColor AXRWidget::backgroundFillColor() const
+QColor QAXRWidget::backgroundFillColor() const
 {
     return d->backgroundFillColor;
 }
 
-void AXRWidget::setBackgroundFillColor(const QColor &color)
+void QAXRWidget::setBackgroundFillColor(const QColor &color)
 {
     d->backgroundFillColor = color;
 }
 
-void AXRWidget::paintEvent(QPaintEvent *e)
+void QAXRWidget::paintEvent(QPaintEvent *e)
 {
     QRect paintRect = rect();
 
@@ -114,7 +114,7 @@ void AXRWidget::paintEvent(QPaintEvent *e)
     }
 }
 
-void AXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
+void QAXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
     if (!d->document)
         return;
@@ -132,7 +132,7 @@ void AXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
     }
 }
 
-void AXRWidget::mouseMoveEvent(QMouseEvent *e)
+void QAXRWidget::mouseMoveEvent(QMouseEvent *e)
 {
     if (!d->document)
         return;
@@ -150,7 +150,7 @@ void AXRWidget::mouseMoveEvent(QMouseEvent *e)
     }
 }
 
-void AXRWidget::mousePressEvent(QMouseEvent *e)
+void QAXRWidget::mousePressEvent(QMouseEvent *e)
 {
     if (!d->document)
         return;
@@ -168,7 +168,7 @@ void AXRWidget::mousePressEvent(QMouseEvent *e)
     }
 }
 
-void AXRWidget::mouseReleaseEvent(QMouseEvent *e)
+void QAXRWidget::mouseReleaseEvent(QMouseEvent *e)
 {
     if (!d->document)
         return;

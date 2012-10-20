@@ -24,6 +24,9 @@ include_directories(
 
 add_subdirectory(core)
 
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/qt")
+add_subdirectory(qt)
+
 if(APPLE)
     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/cocoa")
     add_subdirectory(cocoa)

@@ -5,8 +5,6 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 
 set(prototype_SOURCES
-    AXRWidget.cpp
-    AXRWidget.h
     Info.plist
     LogWindow.cpp
     LogWindow.h
@@ -35,7 +33,7 @@ source_group("Resources\\HSS Framework" FILES ${hss_SOURCES})
 qt_transform_sources(prototype_SOURCES "${prototype_SOURCES}")
 
 add_executable(${TARGET_NAME_APP_PROTOTYPE} WIN32 MACOSX_BUNDLE ${prototype_SOURCES})
-target_link_libraries(${TARGET_NAME_APP_PROTOTYPE} ${TARGET_NAME_LIB_CORE} ${QT_QTMAIN_LIBRARY})
+target_link_libraries(${TARGET_NAME_APP_PROTOTYPE} ${TARGET_NAME_LIB_CORE} ${TARGET_NAME_LIB_QT} ${QT_QTMAIN_LIBRARY})
 
 # TODO: Temporary until TEST target is removed
 target_link_libraries(${TARGET_NAME_APP_PROTOTYPE} TEST)

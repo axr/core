@@ -43,7 +43,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "AXRDocument.h"
-#import "AXRView.h"
+#import "NSAXRView.h"
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_5
 #define Superclass <NSApplicationDelegate>
@@ -53,12 +53,12 @@
 {
     NSWindow *window;
     NSWindow *axrWindow;
-    AXRView *axrView;
+    NSAXRView *axrView;
     AXR::AXRDocument *document;
 }
 
 @property(assign) IBOutlet NSWindow *axrWindow;
-@property(assign) IBOutlet AXRView *axrView;
+@property(assign) IBOutlet NSAXRView *axrView;
 
 -(id) init;
 -(void) dealloc;

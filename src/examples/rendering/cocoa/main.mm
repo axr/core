@@ -43,7 +43,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <QApplication>
-#import "AXRView.h"
+#import "NSAXRView.h"
 
 int main(int argc, char *argv[])
 {

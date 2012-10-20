@@ -119,6 +119,7 @@ if(AXR_BUILD_PROTOTYPE)
     set(TARGET_NAME_APP_SDL SDL)
     set(TARGET_NAME_APP_PROTOTYPE Prototype)
     set(TARGET_NAME_LIB_CORE Core)
+    set(TARGET_NAME_LIB_QT Qt)
     set(TARGET_NAME_LIB_COCOA CoreCocoa)
 
     configure_file("${CMAKE_SOURCE_DIR}/config.in.h" "${CMAKE_BINARY_DIR}/config.h")

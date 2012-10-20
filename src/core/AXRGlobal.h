@@ -72,7 +72,7 @@
  *  - src/app: prototype application used to test AXE's functionality
  *  - tests: this is a bunch of XML and HSS files that were used when developing the library
  *
- *  In Xcode you can use Interface Builder and make a custom view to be of the AXRView class
+ *  In Xcode you can use Interface Builder and make a custom view to be of the NSAXRView class
  *  and interact with it directly.
  *
  *  Now let's focus on the core. In it we find the AXR.h file that contains the AXRDocument class,

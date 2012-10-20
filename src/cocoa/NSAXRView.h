@@ -41,41 +41,42 @@
  *
  ********************************************************************/
 
-#ifndef AXR_PROTOTYPE_AXRWIDGET
-#define AXR_PROTOTYPE_AXRWIDGET
-
-#include <QWidget>
+#import <Cocoa/Cocoa.h>
 
 namespace AXR
 {
     class AXRDocument;
-
-    class AXRWidget : public QWidget
-    {
-        Q_OBJECT
-
-    public:
-        AXRWidget(AXRDocument *document, QWidget *parent = NULL);
-        AXRWidget(QWidget *parent = NULL);
-        virtual ~AXRWidget();
-
-        AXRDocument* document() const;
-        void setDocument(AXRDocument *document);
-
-        QColor backgroundFillColor() const;
-        void setBackgroundFillColor(const QColor &color);
-
-    protected:
-        void paintEvent(QPaintEvent *e);
-        void mouseDoubleClickEvent(QMouseEvent *e);
-        void mouseMoveEvent(QMouseEvent *e);
-        void mousePressEvent(QMouseEvent *e);
-        void mouseReleaseEvent(QMouseEvent *e);
-
-    private:
-        class Private;
-        Private *d;
-    };
 }
 
-#endif
+/**
+ *  @brief (OS X only) This is a NSView subclass, for using inside a window in
+ *  Apple's Cocoa framework.
+ */
+@interface NSAXRView : NSView
+{
+@private
+    AXR::AXRDocument *document;
+}
+
+/**
+ * The AXR document being rendered by the view.
+ */
+@property(assign) AXR::AXRDocument* document;
+
+/**
+ *  @return YES. This is for optimizing the drawing.
+ */
+-(BOOL) isOpaque;
+
+/**
+ *  Method that is called to draw on OS X. From within this, we can get access to the current
+ *  AXR compositor output graphics port, which is then blitted onto the NSView.
+ */
+-(void) drawRect : (NSRect) dirtyRect;
+
+/**
+ *  @return YES. This allows the view to recieve events from the system.
+ */
+-(BOOL) acceptsFirstResponder;
+
+@end
