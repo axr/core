@@ -66,7 +66,6 @@ HSSFunction::HSSFunction(const HSSFunction & orig)
     this->percentageObserved = NULL;
     this->_isDirty = orig._isDirty;
     this->_value = orig._value;
-    this->axrController = orig.axrController;
     this->_name = orig._name;
 }
 
@@ -225,16 +224,6 @@ bool HSSFunction::isA(HSSFunctionType type)
 HSSFunctionType HSSFunction::getFunctionType()
 {
     return this->functionType;
-}
-
-void HSSFunction::setController(AXRController * controller)
-{
-    this->axrController = controller;
-}
-
-AXRController * HSSFunction::getController()
-{
-    return this->axrController;
 }
 
 void HSSFunction::setArguments(std::deque<HSSParserNode::p> arguments)

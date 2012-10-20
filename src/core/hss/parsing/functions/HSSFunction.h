@@ -53,8 +53,6 @@
 
 namespace AXR
 {
-    class AXRController;
-
     /**
      *  @brief Abstract base class for all function objects.
      */
@@ -157,18 +155,6 @@ namespace AXR
          */
         HSSFunctionType getFunctionType();
 
-        /**
-         *  Setter for the controller. The controller needs to be propagated across all
-         *  HSSObject subclasses, so they get access to the DOM and such.
-         *  @param controller       A pointer to the AXRController that owns this object
-         */
-        virtual void setController(AXRController * controller);
-        /**
-         *  Getter for the controller.
-         *  @return A pointer to the AXRController that owns this object
-         */
-        virtual AXRController * getController();
-
         std::deque<HSSParserNode::p> getArguments();
         void setArguments(std::deque<HSSParserNode::p> arguments);
         AXRString getName();
@@ -195,8 +181,6 @@ namespace AXR
         HSSObservableProperty percentageObservedProperty;
         HSSObservable * percentageObserved;
         const std::vector<HSSDisplayObject::p> * scope;
-
-        AXRController * axrController;
 
     private:
         HSSFunctionType functionType;
