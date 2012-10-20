@@ -421,9 +421,10 @@ HSSRule::p HSSParser::readRule()
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading rule");
     security_brake_init()
 
-            //throw error if at end of source
-            this->checkForUnexpectedEndOfSource();
     AXRController * controller = this->getController();
+
+    //throw error if at end of source
+    this->checkForUnexpectedEndOfSource();
 
     //initialize the rule
     std::vector<HSSSelectorChain::p> selectorChains;
