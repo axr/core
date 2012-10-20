@@ -71,6 +71,13 @@
 
 -(void) applicationDidFinishLaunching : (NSNotification *) aNotification
 {
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_7
+    if (QSysInfo::QSysInfo::MacintoshVersion >= QSysInfo::MV_10_7)
+    {
+        [window setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+    }
+#endif
+
     renderingView.document = document;
     [self openDocument : self];
 }
