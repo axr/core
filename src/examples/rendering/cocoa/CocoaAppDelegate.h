@@ -52,13 +52,12 @@
 @interface CocoaAppDelegate : NSObject Superclass
 {
     NSWindow *window;
-    NSWindow *axrWindow;
-    NSAXRView *axrView;
+    NSAXRView *renderingView;
     AXR::AXRDocument *document;
 }
 
-@property(assign) IBOutlet NSWindow *axrWindow;
-@property(assign) IBOutlet NSAXRView *axrView;
+@property(assign) IBOutlet NSWindow *window;
+@property(assign) IBOutlet NSAXRView *renderingView;
 
 -(id) init;
 -(void) dealloc;

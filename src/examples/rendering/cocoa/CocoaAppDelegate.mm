@@ -48,8 +48,8 @@
 
 @implementation CocoaAppDelegate
 
-@synthesize axrWindow;
-@synthesize axrView;
+@synthesize window;
+@synthesize renderingView;
 
 -(id) init
 {
@@ -71,17 +71,17 @@
 
 -(void) applicationDidFinishLaunching : (NSNotification *) aNotification
 {
-    axrView.document = document;
+    renderingView.document = document;
     [self openDocument : self];
 }
 
 -(BOOL) application : (NSApplication *) theApplication openFile : (NSString *) filename
 {
-    [[self axrWindow] makeKeyAndOrderFront : self];
+    [[self window] makeKeyAndOrderFront : self];
 
     if (document && document->loadFileByPath(QUrl::fromLocalFile(AXR::fromNSString(filename))))
     {
-        [[self axrView] setNeedsDisplay : YES];
+        [[self renderingView] setNeedsDisplay : YES];
         return YES;
     }
 
@@ -90,7 +90,7 @@
 
 -(IBAction) openDocument : (id) sender
 {
-    [[self axrWindow] makeKeyAndOrderFront : self];
+    [[self window] makeKeyAndOrderFront : self];
 
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
     [openPanel setCanChooseFiles: TRUE];
@@ -101,7 +101,7 @@
         // TODO: Should create a new document if NULL...
         if (document && document->loadFileByPath(QUrl::fromLocalFile(AXR::fromNSString([[openPanel filenames] objectAtIndex: 0]))))
         {
-            [[self axrView] setNeedsDisplay : YES];
+            [[self renderingView] setNeedsDisplay : YES];
         }
     }
 }
@@ -112,7 +112,7 @@
         return;
 
     document->reload();
-    [[self axrView] setNeedsDisplay : YES];
+    [[self renderingView] setNeedsDisplay : YES];
 }
 
 @end
