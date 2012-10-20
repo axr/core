@@ -44,7 +44,7 @@
 #include <cmath>
 #include "AXRController.h"
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRWarning.h"
 #include "HSSContainer.h"
 #include "HSSExpression.h"
@@ -506,7 +506,7 @@ void HSSContainer::layout()
             unsigned i, size, j, k;
             //HSSUnit acc2 = 0;
             security_brake_init();
-            AXRCore * wrapper = axrController->document();
+            AXRDocument * document = axrController->document();
 
             //bool secondaryIsHorizontal = (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft);
 
@@ -546,12 +546,12 @@ void HSSContainer::layout()
                         if (child->y < child->topMargin + this->topPadding) child->y = child->topMargin + this->topPadding;
                     }
 
-                    if (wrapper->showLayoutSteps())
+                    if (document->showLayoutSteps())
                     {
-                        wrapper->nextLayoutTick();
-                        wrapper->nextLayoutChild();
-                        wrapper->breakIfNeeded();
-                        if (wrapper->layoutStepDone())
+                        document->nextLayoutTick();
+                        document->nextLayoutChild();
+                        document->breakIfNeeded();
+                        if (document->layoutStepDone())
                         {
                             done = true;
                             break;
@@ -624,11 +624,11 @@ void HSSContainer::layout()
                                             }
                                         }
 
-                                        if (wrapper->showLayoutSteps())
+                                        if (document->showLayoutSteps())
                                         {
-                                            wrapper->nextLayoutTick();
-                                            wrapper->breakIfNeeded();
-                                            if (wrapper->layoutStepDone())
+                                            document->nextLayoutTick();
+                                            document->breakIfNeeded();
+                                            if (document->layoutStepDone())
                                             {
                                                 done = true;
                                                 break;
@@ -681,11 +681,11 @@ void HSSContainer::layout()
                                             }
                                         }
 
-                                        if (wrapper->showLayoutSteps())
+                                        if (document->showLayoutSteps())
                                         {
-                                            wrapper->nextLayoutTick();
-                                            wrapper->breakIfNeeded();
-                                            if (wrapper->layoutStepDone())
+                                            document->nextLayoutTick();
+                                            document->breakIfNeeded();
+                                            if (document->layoutStepDone())
                                             {
                                                 done = true;
                                                 break;
@@ -732,11 +732,11 @@ void HSSContainer::layout()
                         if (pgGrp->lines.empty())
                         {
                             this->_distribute(pgGrp, this->directionPrimary);
-                            if (wrapper->showLayoutSteps())
+                            if (document->showLayoutSteps())
                             {
-                                wrapper->nextLayoutTick();
-                                wrapper->breakIfNeeded();
-                                if (wrapper->layoutStepDone())
+                                document->nextLayoutTick();
+                                document->breakIfNeeded();
+                                if (document->layoutStepDone())
                                 {
                                     done = true;
                                     break;
@@ -748,11 +748,11 @@ void HSSContainer::layout()
                             for (std::vector<displayGroup::p>::iterator pgLineIt = pgGrp->lines.begin(); pgLineIt != pgGrp->lines.end(); ++pgLineIt)
                             {
                                 this->_distribute(*pgLineIt, this->directionPrimary);
-                                if (wrapper->showLayoutSteps())
+                                if (document->showLayoutSteps())
                                 {
-                                    wrapper->nextLayoutTick();
-                                    wrapper->breakIfNeeded();
-                                    if (wrapper->layoutStepDone())
+                                    document->nextLayoutTick();
+                                    document->breakIfNeeded();
+                                    if (document->layoutStepDone())
                                     {
                                         done = true;
                                         break;
@@ -1609,7 +1609,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
         return true;
     }
 
-    AXRCore * wrapper = axrController->document();
+    AXRDocument * document = axrController->document();
 
     switch (direction)
     {
@@ -1761,11 +1761,11 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
 
                 accHeight += otherChild2->outerHeight;
 
-                if (wrapper->showLayoutSteps())
+                if (document->showLayoutSteps())
                 {
-                    wrapper->nextLayoutTick();
-                    wrapper->breakIfNeeded();
-                    if (wrapper->layoutStepDone())
+                    document->nextLayoutTick();
+                    document->breakIfNeeded();
+                    if (document->layoutStepDone())
                     {
                         return false;
                     }
@@ -1824,11 +1824,11 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
                         {
                             currentChild->y = constraintBottom - currentChild->bottomMargin - currentChild->height;
                             currentChild->_layoutFlagLockBottom = true;
-                            if (wrapper->showLayoutSteps())
+                            if (document->showLayoutSteps())
                             {
-                                wrapper->nextLayoutTick();
-                                wrapper->breakIfNeeded();
-                                if (wrapper->layoutStepDone())
+                                document->nextLayoutTick();
+                                document->breakIfNeeded();
+                                if (document->layoutStepDone())
                                 {
                                     return false;
                                 }
@@ -1862,11 +1862,11 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
                         {
                             currentChild->y = constraintTop + currentChild->topMargin;
                             currentChild->_layoutFlagLockTop = true;
-                            if (wrapper->showLayoutSteps())
+                            if (document->showLayoutSteps())
                             {
-                                wrapper->nextLayoutTick();
-                                wrapper->breakIfNeeded();
-                                if (wrapper->layoutStepDone())
+                                document->nextLayoutTick();
+                                document->breakIfNeeded();
+                                if (document->layoutStepDone())
                                 {
                                     return false;
                                 }

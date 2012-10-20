@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "HSSRootSelector.h"
 
 using namespace AXR;
@@ -69,14 +69,14 @@ HSSClonable::p HSSRootSelector::cloneImpl() const
 
 AXRString HSSRootSelector::getElementName()
 {
-    AXRCore* core = AXRCore::getInstance();
-    return core->getController()->getRoot()->getElementName();
+    AXRDocument* document = AXRDocument::getInstance();
+    return document->getController()->getRoot()->getElementName();
 }
 
 std::vector<HSSDisplayObject::p> HSSRootSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
 {
     std::vector<HSSDisplayObject::p> ret;
-    AXRCore* core = AXRCore::getInstance();
-    ret.push_back(core->getController()->getRoot());
+    AXRDocument* document = AXRDocument::getInstance();
+    ret.push_back(document->getController()->getRoot());
     return ret;
 }

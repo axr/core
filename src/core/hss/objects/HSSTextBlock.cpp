@@ -44,7 +44,7 @@
 #include <limits>
 #include "AXRController.h"
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRWarning.h"
 #include "HSSFunction.h"
 #include "HSSObjectDefinition.h"

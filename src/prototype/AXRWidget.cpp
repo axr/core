@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include <QPaintEvent>
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRWidget.h"
 
 using namespace AXR;
@@ -50,13 +50,13 @@ using namespace AXR;
 class AXRWidget::Private
 {
 public:
-    Private(AXRCore *doc = NULL) : document(doc), backgroundFillColor(QColor(Qt::white)) { }
+    Private(AXRDocument *doc = NULL) : document(doc), backgroundFillColor(QColor(Qt::white)) { }
 
-    AXRCore *document;
+    AXRDocument *document;
     QColor backgroundFillColor;
 };
 
-AXRWidget::AXRWidget(AXRCore *document, QWidget *parent)
+AXRWidget::AXRWidget(AXRDocument *document, QWidget *parent)
 : QWidget(parent), d(new Private(document))
 {
     this->setMouseTracking(true);
@@ -73,12 +73,12 @@ AXRWidget::~AXRWidget()
     delete d;
 }
 
-AXRCore* AXRWidget::document() const
+AXRDocument* AXRWidget::document() const
 {
     return d->document;
 }
 
-void AXRWidget::setDocument(AXRCore *document)
+void AXRWidget::setDocument(AXRDocument *document)
 {
     d->document = document;
 }

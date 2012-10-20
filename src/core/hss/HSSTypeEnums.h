@@ -395,7 +395,7 @@ namespace AXR
         HSSActionTypeJavascript, /**< HSS object representation of a piece of JS code. */
         HSSActionTypeJsFunction, /**< This will probably not be used, it's based on an old idea. */
         HSSActionTypeAlert, /**< Shows an alert box (not implemented yet). */
-        HSSActionTypeLog, /**< Logs a value (where it appears is specific to the wrapper. */
+        HSSActionTypeLog, /**< Logs a value (where it appears is specific to the client application. */
         HSSActionTypeFlag, /**< All flagging functions have their corresponding HSS object representation. */
         HSSActionTypeFunction /**< Custom functions registered on the core use this type.. */
     };

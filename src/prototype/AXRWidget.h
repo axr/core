@@ -48,19 +48,19 @@
 
 namespace AXR
 {
-    class AXRCore;
+    class AXRDocument;
 
     class AXRWidget : public QWidget
     {
         Q_OBJECT
 
     public:
-        AXRWidget(AXRCore *document, QWidget *parent = NULL);
+        AXRWidget(AXRDocument *document, QWidget *parent = NULL);
         AXRWidget(QWidget *parent = NULL);
         virtual ~AXRWidget();
 
-        AXRCore* document() const;
-        void setDocument(AXRCore *document);
+        AXRDocument* document() const;
+        void setDocument(AXRDocument *document);
 
         QColor backgroundFillColor() const;
         void setBackgroundFillColor(const QColor &color);

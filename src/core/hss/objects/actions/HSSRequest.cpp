@@ -43,7 +43,7 @@
 
 #include "AXRController.h"
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRWarning.h"
 #include "HSSRequest.h"
 #include "HSSSelFunction.h"
@@ -131,12 +131,12 @@ void HSSRequest::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 
 void HSSRequest::fire()
 {
-    AXRCore* core = axrController->document();
+    AXRDocument* document = axrController->document();
 
     //if there is no target
     if (this->target.empty())
     {
-        core->loadXMLFile(this->src);
+        document->loadXMLFile(this->src);
     }
     else
     {
@@ -144,14 +144,14 @@ void HSSRequest::fire()
         {
         default:
         {
-            AXRController::p controller = AXRController::p(new AXRController(core));
+            AXRController::p controller = AXRController::p(new AXRController(document));
             XMLParser::p xmlParser(new XMLParser(controller.data()));
             HSSParser::p hssParser(new HSSParser(controller.data()));
-            AXRBuffer::p baseFile = core->getFile();
+            AXRBuffer::p baseFile = document->getFile();
             AXRBuffer::p newFile;
             try
             {
-                newFile = core->getFile(this->src);
+                newFile = document->getFile(this->src);
             }
             catch (const AXRError &e)
             {
@@ -163,7 +163,7 @@ void HSSRequest::fire()
                 bool loadingSuccess = xmlParser->loadFile(newFile);
                 if (!loadingSuccess)
                 {
-                    AXRError("AXRCore", "Could not load the XML file").raise();
+                    AXRError("AXRDocument", "Could not load the XML file").raise();
                 }
                 else
                 {
@@ -177,7 +177,7 @@ void HSSRequest::fire()
                             AXRBuffer::p hssfile;
                             try
                             {
-                                hssfile = core->getFile(*sheetsIt);
+                                hssfile = document->getFile(*sheetsIt);
                             }
                             catch (const AXRError &e)
                             {
@@ -187,7 +187,7 @@ void HSSRequest::fire()
 
                             if (!hssParser->loadFile(hssfile))
                             {
-                                AXRError("AXRCore", "Could not load the HSS file").raise();
+                                AXRError("AXRDocument", "Could not load the HSS file").raise();
                             }
                         }
 
@@ -212,16 +212,16 @@ void HSSRequest::fire()
                         root->setNeedsRereadRules(true);
                         root->recursiveReadDefinitionObjects();
                         root->handleEvent(HSSEventTypeLoad, NULL);
-                        core->setNeedsDisplay(true);
+                        document->setNeedsDisplay(true);
                     }
                 }
             }
 
-            //                AXRCore::tp core = AXRCore::getInstance();
-            //                AXRWrapper * wrapper = core->getWrapper();
-            //                AXRBuffer::p baseFile = core->getFile();
+            //                AXRDocument::tp document = AXRDocument::getInstance();
+            //                AXRWrapper * document = document->getWrapper();
+            //                AXRBuffer::p baseFile = document->getFile();
             //
-            //                bool loadingSuccess = wrapper->loadFile(baseFile->basePath+this->src, this->src);
+            //                bool loadingSuccess = document->loadFile(baseFile->basePath+this->src, this->src);
             //                if(loadingSuccess){
             //                    unsigned i, size;
             //                    for (i=0, size=this->target.size(); i<size; ++i) {

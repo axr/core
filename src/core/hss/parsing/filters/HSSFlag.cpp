@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include "AXRController.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "HSSDisplayObject.h"
 #include "HSSFlag.h"
 
@@ -90,7 +90,7 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
         {
             HSSRule::p theRule = qSharedPointerCast<HSSRule > (ruleStatement);
             std::vector<HSSDisplayObject::p> scope = theRule->getOriginalScope();
-            AXRController::p controller = AXRCore::getInstance()->getController();
+            AXRController::p controller = AXRDocument::getInstance()->getController();
             this->setPurging(newStatus);
             std::vector<std::vector<HSSDisplayObject::p> > selection = controller->select(theRule->getSelectorChains(), scope, this->getThisObj(), false);
             this->setPurging(HSSRuleStateOff);

@@ -44,23 +44,23 @@
 #include <QCoreApplication>
 #include <QDir>
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRWarning.h"
 
 using namespace AXR;
 
-AXRCore* AXRCore::getInstance()
+AXRDocument* AXRDocument::getInstance()
 {
-    static QThreadStorage<AXRCore*> theInstance;
+    static QThreadStorage<AXRDocument*> theInstance;
     if (!theInstance.localData())
     {
-        theInstance.setLocalData(new AXRCore());
+        theInstance.setLocalData(new AXRDocument());
     }
 
     return theInstance.localData();
 }
 
-AXRCore::AXRCore()
+AXRDocument::AXRDocument()
 {
     this->_isHSSOnly = false;
     this->_hasLoadedFile = false;
@@ -70,7 +70,7 @@ AXRCore::AXRCore()
     this->_currentLayoutChild = 0;
     this->_needsDisplay = true;
 
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: initializing core for thread");
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRDocument: initializing core for thread");
 
     AXRController::p ctrlr = AXRController::p(new AXRController(this));
     this->setController(ctrlr);
@@ -80,12 +80,12 @@ AXRCore::AXRCore()
     this->_hasLoadedFile = false;
 }
 
-AXRCore::~AXRCore()
+AXRDocument::~AXRDocument()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: destructing core");
+    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRDocument: destructing core");
 }
 
-void AXRCore::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
+void AXRDocument::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
     if (this->render)
     {
@@ -93,7 +93,7 @@ void AXRCore::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
     }
 }
 
-AXRString AXRCore::getPathToResources() const
+AXRString AXRDocument::getPathToResources() const
 {
     // TODO: it's best to do this in a different way entirely... the library
     // shouldn't be using the client process's directory to determine where
@@ -110,18 +110,18 @@ AXRString AXRCore::getPathToResources() const
     return dir.canonicalPath();
 }
 
-void AXRCore::run()
+void AXRDocument::run()
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: running");
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: running");
 
     bool loadingSuccess = this->parserXML->loadFile(this->file);
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished parsing " + this->file->sourceUrl().toString());
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: finished parsing " + this->file->sourceUrl().toString());
     axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->sourceUrl().toString());
 
     if (!loadingSuccess)
     {
-        AXRError("AXRCore", "Could not load the XML file").raise();
+        AXRError("AXRDocument", "Could not load the XML file").raise();
     }
     else
     {
@@ -146,13 +146,13 @@ void AXRCore::run()
 
             if (!this->parserHSS->loadFile(hssfile))
             {
-                AXRError("AXRCore", "Could not load the HSS file").raise();
+                AXRError("AXRDocument", "Could not load the HSS file").raise();
             }
         }
-        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: finished loading stylesheets for " + this->file->sourceUrl().toString());
+        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: finished loading stylesheets for " + this->file->sourceUrl().toString());
         axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->sourceUrl().toString());
 
-        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: matching rules to the content tree");
+        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: matching rules to the content tree");
         //assign the rules to the objects
         this->controller->matchRulesToContentTree();
         root->setNeedsRereadRules(true);
@@ -164,10 +164,10 @@ void AXRCore::run()
         }
     }
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRCore: run complete, entering event loop\n\n\n");
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: run complete, entering event loop\n\n\n");
 }
 
-void AXRCore::reset()
+void AXRDocument::reset()
 {
     this->controller->reset();
     this->parserHSS->reset();
@@ -178,73 +178,73 @@ void AXRCore::reset()
     this->file.clear();
 }
 
-bool AXRCore::hasLoadedFile()
+bool AXRDocument::hasLoadedFile()
 {
     return _hasLoadedFile;
 }
 
-AXRController::p AXRCore::getController()
+AXRController::p AXRDocument::getController()
 {
     return this->controller;
 }
 
-void AXRCore::setController(AXRController::p controller)
+void AXRDocument::setController(AXRController::p controller)
 {
     this->controller = controller;
 }
 
-AXRRender::p AXRCore::getRender()
+AXRRender::p AXRDocument::getRender()
 {
     return this->render;
 }
 
-void AXRCore::setRender(AXRRender::p render)
+void AXRDocument::setRender(AXRRender::p render)
 {
     this->render = render;
 }
 
-AXRBuffer::p AXRCore::getFile()
+AXRBuffer::p AXRDocument::getFile()
 {
     return this->file;
 }
 
-void AXRCore::setFile(AXRBuffer::p file)
+void AXRDocument::setFile(AXRBuffer::p file)
 {
     this->file = file;
 }
 
-XMLParser::p AXRCore::getParserXML()
+XMLParser::p AXRDocument::getParserXML()
 {
     return this->parserXML;
 }
 
-void AXRCore::setParserXML(XMLParser::p parser)
+void AXRDocument::setParserXML(XMLParser::p parser)
 {
     this->parserXML = parser;
 }
 
-HSSParser::p AXRCore::getParserHSS()
+HSSParser::p AXRDocument::getParserHSS()
 {
     return this->parserHSS;
 }
 
-void AXRCore::setParserHSS(HSSParser::p parser)
+void AXRDocument::setParserHSS(HSSParser::p parser)
 {
     this->parserHSS = parser;
 }
 
-bool AXRCore::isCustomFunction(AXRString name)
+bool AXRDocument::isCustomFunction(AXRString name)
 {
     bool ret = this->_customFunctions.find(name) != this->_customFunctions.end();
     return ret;
 }
 
-void AXRCore::registerCustomFunction(AXRString name, HSSCallback* fn)
+void AXRDocument::registerCustomFunction(AXRString name, HSSCallback* fn)
 {
     this->_customFunctions[name] = fn;
 }
 
-void AXRCore::evaluateCustomFunction(AXRString name, void* data)
+void AXRDocument::evaluateCustomFunction(AXRString name, void* data)
 {
     if (this->isCustomFunction(name))
     {
@@ -252,7 +252,7 @@ void AXRCore::evaluateCustomFunction(AXRString name, void* data)
     }
 }
 
-AXRBuffer::p AXRCore::getFile(QUrl u)
+AXRBuffer::p AXRDocument::getFile(QUrl u)
 {
     if (u.isValid())
     {
@@ -262,11 +262,11 @@ AXRBuffer::p AXRCore::getFile(QUrl u)
             AXRBuffer::p ret = AXRBuffer::p(new AXRBuffer(fi));
             if (!fi.exists())
             {
-                throw AXRError("AXRWrapper", "the file " + u.toLocalFile() + " doesn't exist");
+                throw AXRError("AXRDocument", "the file " + u.toLocalFile() + " doesn't exist");
             }
             else if (!ret->isValid())
             {
-                throw AXRError("AXRWrapper", "the file " + u.toLocalFile() + " couldn't be read");
+                throw AXRError("AXRDocument", "the file " + u.toLocalFile() + " couldn't be read");
             }
 
             return ret;
@@ -280,19 +280,19 @@ AXRBuffer::p AXRCore::getFile(QUrl u)
     return AXRBuffer::p(new AXRBuffer());
 }
 
-bool AXRCore::needsDisplay() const
+bool AXRDocument::needsDisplay() const
 {
     return this->_needsDisplay;
 }
 
-void AXRCore::setNeedsDisplay(bool newValue)
+void AXRDocument::setNeedsDisplay(bool newValue)
 {
     this->_needsDisplay = newValue;
 }
 
-AXRBuffer::p AXRCore::createDummyXML(QUrl hssUrl)
+AXRBuffer::p AXRDocument::createDummyXML(QUrl hssUrl)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: creating dummy XML file for HSS file " + hssUrl.toString());
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: creating dummy XML file for HSS file " + hssUrl.toString());
 
     if (hssUrl.isValid())
     {
@@ -301,12 +301,12 @@ AXRBuffer::p AXRCore::createDummyXML(QUrl hssUrl)
     }
     else
     {
-        AXRError("AXRWrapper", "Could not create dummy XML for invalid HSS file URL").raise();
+        AXRError("AXRDocument", "Could not create dummy XML for invalid HSS file URL").raise();
         return AXRBuffer::p(new AXRBuffer());
     }
 }
 
-bool AXRCore::loadFileByPath(QUrl url)
+bool AXRDocument::loadFileByPath(QUrl url)
 {
     if (url.isRelative())
     {
@@ -316,12 +316,12 @@ bool AXRCore::loadFileByPath(QUrl url)
         }
         else
         {
-            AXRError("AXRWrapper", "Could not load relative URL as main file", url).raise();
+            AXRError("AXRDocument", "Could not load relative URL as main file", url).raise();
             return false;
         }
     }
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRWrapper: loading file " + url.toString());
+    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: loading file " + url.toString());
     axr_log(AXR_DEBUG_CH_FULL_FILENAMES, url.toString());
 
     QFileInfo pathInfo(url.path());
@@ -341,9 +341,9 @@ bool AXRCore::loadFileByPath(QUrl url)
     }
 }
 
-bool AXRCore::loadXMLFile(QUrl url)
+bool AXRDocument::loadXMLFile(QUrl url)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening XML document: %1").arg(url.toString()));
+    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRDocument: opening XML document: %1").arg(url.toString()));
 
     this->_isHSSOnly = false;
     this->_showLayoutSteps = false;
@@ -381,9 +381,9 @@ bool AXRCore::loadXMLFile(QUrl url)
     return true;
 }
 
-bool AXRCore::loadXMLFile(AXRBuffer::p buffer)
+bool AXRDocument::loadXMLFile(AXRBuffer::p buffer)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening XML document from buffer"));
+    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRDocument: opening XML document from buffer"));
 
     this->_isHSSOnly = false;
     this->_showLayoutSteps = false;
@@ -420,7 +420,7 @@ bool AXRCore::loadXMLFile(AXRBuffer::p buffer)
     return true;
 }
 
-bool AXRCore::reload()
+bool AXRDocument::reload()
 {
     this->_showLayoutSteps = false;
     this->_currentLayoutStep = 0;
@@ -435,7 +435,7 @@ bool AXRCore::reload()
         }
         else
         {
-            AXRWarning("AXRWrapper", "no file loaded").raise();
+            AXRWarning("AXRDocument", "no file loaded").raise();
             return false;
         }
     }
@@ -445,9 +445,9 @@ bool AXRCore::reload()
     }
 }
 
-bool AXRCore::loadHSSFile(QUrl url)
+bool AXRDocument::loadHSSFile(QUrl url)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRWrapper: opening HSS document: %1").arg(url.toString()));
+    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRDocument: opening HSS document: %1").arg(url.toString()));
 
     this->_isHSSOnly = true;
     this->_showLayoutSteps = false;
@@ -467,17 +467,17 @@ bool AXRCore::loadHSSFile(QUrl url)
     return true;
 }
 
-void AXRCore::setShowLayoutSteps(bool value)
+void AXRDocument::setShowLayoutSteps(bool value)
 {
     this->_showLayoutSteps = value;
 }
 
-bool AXRCore::showLayoutSteps()
+bool AXRDocument::showLayoutSteps()
 {
     return this->_showLayoutSteps;
 }
 
-void AXRCore::previousLayoutStep()
+void AXRDocument::previousLayoutStep()
 {
     if (this->_currentLayoutStep > 0)
     {
@@ -489,7 +489,7 @@ void AXRCore::previousLayoutStep()
     this->setNeedsDisplay(true);
 }
 
-void AXRCore::nextLayoutStep()
+void AXRDocument::nextLayoutStep()
 {
     this->_currentLayoutStep += 1;
     this->_currentLayoutTick = 0;
@@ -497,39 +497,39 @@ void AXRCore::nextLayoutStep()
     this->setNeedsDisplay(true);
 }
 
-void AXRCore::nextLayoutTick()
+void AXRDocument::nextLayoutTick()
 {
     this->_currentLayoutTick += 1;
 }
 
-void AXRCore::resetLayoutTicks()
+void AXRDocument::resetLayoutTicks()
 {
     this->_currentLayoutTick = 0;
 }
 
-bool AXRCore::layoutStepDone()
+bool AXRDocument::layoutStepDone()
 {
     return this->_currentLayoutTick >= this->_currentLayoutStep;
 }
 
-void AXRCore::breakIfNeeded()
+void AXRDocument::breakIfNeeded()
 {
     bool breakvar = _currentLayoutTick >= (_currentLayoutStep - 1);
 
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("currentLayoutTick = %1, currentLayoutStep = %2, %3").arg(_currentLayoutTick).arg(_currentLayoutStep).arg(breakvar));
 }
 
-void AXRCore::nextLayoutChild()
+void AXRDocument::nextLayoutChild()
 {
     this->_currentLayoutChild += 1;
 }
 
-void AXRCore::resetLayoutChild()
+void AXRDocument::resetLayoutChild()
 {
     this->_currentLayoutChild = 0;
 }
 
-bool AXRCore::layoutChildDone()
+bool AXRDocument::layoutChildDone()
 {
     return this->_currentLayoutTick >= this->_currentLayoutChild + 1;
 }

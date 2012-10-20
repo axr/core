@@ -46,7 +46,7 @@
 #include <QUrl>
 #include "AXRController.h"
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRWarning.h"
 #include "HSSAttrFunction.h"
 #include "HSSComment.h"

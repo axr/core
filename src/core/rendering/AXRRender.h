@@ -52,7 +52,7 @@
 namespace AXR
 {
     class AXRController;
-    class AXRCore;
+    class AXRDocument;
 
     /**
      *  @brief This is the main control hub for rendering. Calls for drawing and handling

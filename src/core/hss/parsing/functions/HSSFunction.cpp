@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
 
@@ -133,8 +133,8 @@ QVariant HSSFunction::_evaluate()
 
 QVariant HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
 {
-    AXRCore* core = AXRCore::getInstance();
-    core->evaluateCustomFunction(this->getName(), (void*) &arguments);
+    AXRDocument* document = AXRDocument::getInstance();
+    document->evaluateCustomFunction(this->getName(), (void*) &arguments);
     return QVariant();
 }
 

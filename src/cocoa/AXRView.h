@@ -45,7 +45,7 @@
 
 namespace AXR
 {
-    class AXRCore;
+    class AXRDocument;
 }
 
 /**
@@ -55,13 +55,13 @@ namespace AXR
 @interface AXRView : NSView
 {
 @private
-    AXR::AXRCore *document;
+    AXR::AXRDocument *document;
 }
 
 /**
  * The AXR document being rendered by the view.
  */
-@property(assign) AXR::AXRCore* document;
+@property(assign) AXR::AXRDocument* document;
 
 /**
  *  @return YES. This is for optimizing the drawing.

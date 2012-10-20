@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRTestProducer.h"
 #include "AXRTestRunner.h"
 #include "AXRTestThread.h"
@@ -50,9 +50,9 @@
 
 using namespace AXR;
 
-AXRTestThread::AXRTestThread(AXRTestRunner * wrapper, QUrl url, HSSContainer::p status)
+AXRTestThread::AXRTestThread(AXRTestRunner *runner, QUrl url, HSSContainer::p status)
 {
-    this->wrapper = wrapper;
+    this->runner = runner;
     this->url = url;
     this->totalPassed = 0;
     this->totalTests = 0;
@@ -69,16 +69,16 @@ void AXRTestThread::operator () ()
     try
     {
         //load the XML file
-        AXRCore* core = AXRCore::getInstance();
-        XMLParser::p parser = core->getParserXML();
+        AXRDocument* document = AXRDocument::getInstance();
+        XMLParser::p parser = document->getParserXML();
         HSSContainer::p status = this->status;
-        AXRBuffer::p testsFile = core->getFile(this->url);
+        AXRBuffer::p testsFile = document->getFile(this->url);
         bool loadingSuccess = parser->loadFile(testsFile);
         if (loadingSuccess)
         {
             //find all the tests that need to be executed
             std::vector<std::vector<QUrl> > tests;
-            AXRController::p controller = core->getController();
+            AXRController::p controller = document->getController();
             HSSContainer::p root = controller->getRoot();
             const std::vector<HSSDisplayObject::p> & children = root->getChildren(true);
 
@@ -102,7 +102,7 @@ void AXRTestThread::operator () ()
 
             for (std::vector<std::vector<QUrl> >::iterator it2 = tests.begin(); it2 != tests.end(); ++it2)
             {
-                AXRTestProducer prdcr(this->wrapper, *it2, &this->totalTests, &this->totalPassed, status);
+                AXRTestProducer prdcr(this->runner, *it2, &this->totalTests, &this->totalPassed, status);
                 producers.start(&prdcr);
                 QThread::yieldCurrentThread();
             }

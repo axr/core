@@ -46,7 +46,7 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRError.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "XMLParser.h"
 
 using namespace AXR;

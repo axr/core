@@ -46,7 +46,7 @@
 #include <QFile>
 #include <QUrl>
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRTestThread.h"
 #include "AXRTestRunner.h"
 #include "AXRWarning.h"
@@ -77,8 +77,8 @@ AXRString AXRTestRunner::getPathToTestsFile()
 void AXRTestRunner::executeLayoutTests(HSSObservableProperty passnull, void*data)
 {
     HSSContainer::p status;
-    AXRCore* core = AXRCore::getInstance();
-    HSSContainer::p root = core->getController()->getRoot();
+    AXRDocument* document = AXRDocument::getInstance();
+    HSSContainer::p root = document->getController()->getRoot();
     std::deque<HSSParserNode::p> arguments = *(std::deque<HSSParserNode::p>*)data;
 
     for (std::deque<HSSParserNode::p>::iterator it = arguments.begin(); it != arguments.end(); ++it)

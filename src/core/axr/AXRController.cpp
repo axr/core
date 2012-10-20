@@ -43,7 +43,7 @@
 
 #include "AXRController.h"
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRWarning.h"
 #include "HSSDisplayObject.h"
 #include "HSSFlag.h"
@@ -53,8 +53,8 @@
 
 using namespace AXR;
 
-AXRController::AXRController(AXRCore *core)
-: core(core)
+AXRController::AXRController(AXRDocument *document)
+: document_(document)
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRController: creating controller");
     this->currentContext = std::stack<HSSContainer::p > ();
@@ -70,9 +70,9 @@ AXRController::~AXRController()
     this->parserTree.clear();
 }
 
-AXRCore* AXRController::document() const
+AXRDocument* AXRController::document() const
 {
-    return core;
+    return document_;
 }
 
 void AXRController::matchRulesToContentTree()
@@ -691,7 +691,7 @@ HSSContainer::p & AXRController::getRoot()
 void AXRController::setRoot(HSSContainer::p newRoot)
 {
     this->root = newRoot;
-    HSSParser::p hssparser = this->core->getParserHSS();
+    HSSParser::p hssparser = this->document()->getParserHSS();
     if (hssparser->currentObjectContextSize() == 0)
     {
         hssparser->currentObjectContextAdd(newRoot);

@@ -46,7 +46,7 @@
 #include <QFileDialog>
 #include <QUrl>
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 
 #if defined(_WIN32)
 #include <SDL_syswm.h>
@@ -59,7 +59,7 @@ const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 const char* WINDOW_TITLE = "AXR SDL Demo";
 
-AXRCore *core;
+AXRDocument *document;
 SDL_Surface* screen = NULL;
 
 #ifdef _WIN32
@@ -97,25 +97,25 @@ SDL_Surface* QImage_toSDLSurface(const QImage &sourceImage)
 
 void render()
 {
-    if (core->needsDisplay())
+    if (document->needsDisplay())
     {
         HSSRect bounds(0, 0, screen->w, screen->h);
-        core->drawInRectWithBounds(bounds, bounds);
+        document->drawInRectWithBounds(bounds, bounds);
 
         SDL_FillRect(screen, NULL, SDL_MapRGBA(screen->format, 255, 255, 255, 255));
-        SDL_Surface *surf = QImage_toSDLSurface(core->getRender()->surface());
+        SDL_Surface *surf = QImage_toSDLSurface(document->getRender()->surface());
         SDL_BlitSurface(surf, NULL, screen, NULL);
         SDL_FreeSurface(surf);
         SDL_Flip(screen);
 
-        core->setNeedsDisplay(false);
+        document->setNeedsDisplay(false);
     }
 }
 
 void loadFile()
 {
     QString filepath = QFileDialog::getOpenFileName(NULL, QObject::tr("Open File"), QString(), QObject::tr("AXR Files (*.xml *.hss)"));
-    core->loadFileByPath(QUrl::fromLocalFile(filepath));
+    document->loadFileByPath(QUrl::fromLocalFile(filepath));
 }
 
 int main(int argc, char **argv)
@@ -143,14 +143,14 @@ int main(int argc, char **argv)
     SDL_EnableKeyRepeat(300, 50);
     SDL_EnableUNICODE(1);
 
-    core = AXRCore::getInstance();
+    document = AXRDocument::getInstance();
 
     if (!args.empty())
     {
         QFileInfo fi(args.last());
         if (fi.exists())
         {
-            core->loadFileByPath(QUrl::fromLocalFile(AXR::fromQString(args.first())));
+            document->loadFileByPath(QUrl::fromLocalFile(AXR::fromQString(args.first())));
         }
         else
         {
@@ -176,7 +176,7 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                HSSContainer::p root = core->getController()->getRoot();
+                HSSContainer::p root = document->getController()->getRoot();
 
                 if (root)
                 {
@@ -188,7 +188,7 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEBUTTONUP)
             {
-                HSSContainer::p root = core->getController()->getRoot();
+                HSSContainer::p root = document->getController()->getRoot();
 
                 if (root)
                 {
@@ -201,7 +201,7 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEMOTION)
             {
-                HSSContainer::p root = core->getController()->getRoot();
+                HSSContainer::p root = document->getController()->getRoot();
 
                 if (root)
                 {
@@ -219,7 +219,7 @@ int main(int argc, char **argv)
                 if (event.key.keysym.sym == SDLK_F5)
                 {
                     std_log("Reloading file");
-                    core->reload();
+                    document->reload();
                 }
                 else if (event.key.keysym.sym == SDLK_o && (event.key.keysym.mod & KMOD_CTRL))
                 {
@@ -229,11 +229,11 @@ int main(int argc, char **argv)
             else if (event.type == SDL_VIDEORESIZE)
             {
                 screen = SDL_SetVideoMode(event.resize.w, event.resize.h, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
-                core->setNeedsDisplay(true);
+                document->setNeedsDisplay(true);
             }
             else if (event.active.state & SDL_APPMOUSEFOCUS && event.active.gain == 0)
             {
-                HSSContainer::p root = core->getController()->getRoot();
+                HSSContainer::p root = document->getController()->getRoot();
 
                 if (root)
                 {
@@ -254,7 +254,7 @@ int main(int argc, char **argv)
 #endif
 
     // TODO: don't delete until thread pointer is eliminated
-    //delete core;
+    //delete document;
 
     return 0;
 }

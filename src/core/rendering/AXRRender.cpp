@@ -45,7 +45,7 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRError.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRRender.h"
 #include "AXRString.h"
 #include "HSSDisplayObject.h"
@@ -65,7 +65,7 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
     //prepare values
     HSSContainer::p root = this->controller->getRoot();
-    AXRCore * wrapper = this->controller->document();
+    AXRDocument * document = this->controller->document();
 
     if (root)
     {
@@ -88,15 +88,15 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
         root->recursiveReadDefinitionObjects();
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: laying out elements on page");
         root->recursiveLayout();
-        if (wrapper->showLayoutSteps())
+        if (document->showLayoutSteps())
         {
-            wrapper->resetLayoutTicks();
+            document->resetLayoutTicks();
         }
 
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: regenerating surfaces");
         regenerateRootSurface();
         axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRRender: drawing tree");
-        wrapper->nextLayoutChild();
+        document->nextLayoutChild();
 
         QPainter painter(this->rootSurface);
         if (_globalAntialiasingEnabled)
@@ -107,10 +107,10 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
         //this->rootSurfaceFinal = this->rootSurface->convertToFormat(QImage::Format_ARGB32);
         this->rootSurfaceFinal = *this->rootSurface;
 
-        if (wrapper->showLayoutSteps())
+        if (document->showLayoutSteps())
         {
-            wrapper->resetLayoutTicks();
-            wrapper->resetLayoutChild();
+            document->resetLayoutTicks();
+            document->resetLayoutChild();
         }
     }
     else

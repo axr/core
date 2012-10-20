@@ -87,7 +87,7 @@ namespace AXR
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
 
         /**
-         *  Currently only causes the wrapper to load another XML file.
+         *  Currently only causes the document to load another XML file.
          *
          *  @todo Fix the implementation of loading of content into the document.
          */

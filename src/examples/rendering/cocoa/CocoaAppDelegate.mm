@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #import "AXRDebugging.h"
-#import "AXRInitializer.h"
+#import "AXRDocument.h"
 #import "HSSDisplayObject.h"
 #import "CocoaAppDelegate.h"
 
@@ -56,7 +56,7 @@
     self = [super init];
     if (self)
     {
-        document = AXR::AXRCore::getInstance();
+        document = AXR::AXRDocument::getInstance();
     }
 
     return self;
@@ -65,7 +65,7 @@
 -(void) dealloc
 {
     // TODO: don't delete until thread pointer is eliminated
-    //delete wrapper;
+    //delete document;
     [super dealloc];
 }
 

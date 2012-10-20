@@ -75,7 +75,6 @@ namespace AXR
     /** @} */
 
     class AXRController;
-    class AXRWrapper;
 
     /**
      *  @brief This class reads an HSS file and, with the help of HSSTokenizer, converts
@@ -101,7 +100,7 @@ namespace AXR
         typedef QSharedPointer<HSSParser> p;
 
         /**
-         *  Creates a new instance of a parser object, linking it to the given controller and wrapper.
+         *  Creates a new instance of a parser object, linking it to the given controller.
          *  It will create a new instance of a HSSTokenizer automatically, and set the current context to root.
          *
          *  @param theController    A regular pointer to the controller associated to this parser.

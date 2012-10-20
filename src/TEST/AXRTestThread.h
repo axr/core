@@ -55,14 +55,14 @@ namespace AXR
     class AXR_API AXRTestThread : public QThread
     {
     private:
-        AXRTestRunner *wrapper;
+        AXRTestRunner *runner;
         QUrl url;
         unsigned totalTests;
         unsigned totalPassed;
         HSSContainer::p status;
 
     public:
-        AXRTestThread(AXRTestRunner *testRunner, QUrl url, HSSContainer::p status);
+        AXRTestThread(AXRTestRunner *runner, QUrl url, HSSContainer::p status);
         void operator () ();
         void run();
     };

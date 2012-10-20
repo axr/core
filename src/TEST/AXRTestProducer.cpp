@@ -42,16 +42,16 @@
  ********************************************************************/
 
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRTestProducer.h"
 #include "AXRTestRunner.h"
 
 using namespace AXR;
 
 // Constructor with name and the queue to use
-AXRTestProducer::AXRTestProducer(AXRTestRunner * wrapper, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status)
+AXRTestProducer::AXRTestProducer(AXRTestRunner *runner, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status)
 {
-    this->wrapper = wrapper;
+    this->runner = runner;
     this->test = test;
     this->totalPassed = totalPassed;
     this->totalTests = totalTests;
@@ -76,16 +76,16 @@ void AXRTestProducer::operator () ()
     AXRString expectedRep;
 
     //load the XML
-    AXRCore *core = AXRCore::getInstance();
+    AXRDocument *document = AXRDocument::getInstance();
 
-    testLoaded = core->loadXMLFile(this->test[0]);
+    testLoaded = document->loadXMLFile(this->test[0]);
 
     if (testLoaded)
     {
-        AXRController::p controller = core->getController();
+        AXRController::p controller = document->getController();
         HSSContainer::p root = controller->getRoot();
-        core->getRender()->windowWidth = 400.;
-        core->getRender()->windowHeight = 400.;
+        document->getRender()->windowWidth = 400.;
+        document->getRender()->windowHeight = 400.;
         root->recursiveReadDefinitionObjects();
         root->recursiveLayout();
         testRep = root->toString();
@@ -99,7 +99,7 @@ void AXRTestProducer::operator () ()
     //load the "expected" file
     if (testLoaded)
     {
-        AXRBuffer::p expectedFile = core->getFile(test[1]);
+        AXRBuffer::p expectedFile = document->getFile(test[1]);
         if (!expectedFile->isValid())
         {
             std_log("could not load file with expected results");
@@ -125,7 +125,7 @@ void AXRTestProducer::operator () ()
         this->statusMutex.lock();
         this->status->setContentText(AXRString("Passed %1 out of %2").arg(*this->totalPassed).arg(*this->totalTests));
         this->statusMutex.unlock();
-        core->setNeedsDisplay(true);
+        document->setNeedsDisplay(true);
     }
     else
     {

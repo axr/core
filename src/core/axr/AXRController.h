@@ -53,7 +53,7 @@
 namespace AXR
 {
     class AXRRender;
-    class AXRCore;
+    class AXRDocument;
 
     /**
      *  @brief  This class holds trees of objects, sheets, rules and the parser tree. Also,
@@ -71,14 +71,14 @@ namespace AXR
          *  Creates a new instance of a controller.
          *
          */
-        AXRController(AXRCore *core);
+        AXRController(AXRDocument *document);
 
         /**
          *  Destructs the controller and clears all the trees.
          */
         virtual ~AXRController();
 
-        AXRCore* document() const;
+        AXRDocument* document() const;
 
         void matchRulesToContentTree();
 
@@ -421,7 +421,7 @@ namespace AXR
         bool isAtEndOfSelector();
 
     private:
-        AXRCore *core;
+        AXRDocument *document_;
         void _recursiveGetDescendants(std::vector<HSSDisplayObject::p> &ret, const std::vector<HSSDisplayObject::p> & scope);
     };
 }

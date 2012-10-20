@@ -56,7 +56,7 @@ namespace AXR
     class AXR_API AXRTestProducer : public QRunnable
     {
     private:
-        AXRTestRunner * wrapper;
+        AXRTestRunner *runner;
         std::vector<QUrl> test; // the filename of the test
         unsigned * totalTests;
         unsigned * totalPassed;
@@ -66,7 +66,7 @@ namespace AXR
         static QMutex statusMutex;
 
     public:
-        AXRTestProducer(AXRTestRunner *testRunner, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
+        AXRTestProducer(AXRTestRunner *runner, std::vector<QUrl> test, unsigned * totalTests, unsigned * totalPassed, HSSContainer::p status);
         void operator () ();
         void run();
     };

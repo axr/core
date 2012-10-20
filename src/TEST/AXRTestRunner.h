@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
-#ifndef AXRWRAPPER_H
-#define AXRWRAPPER_H
+#ifndef AXRTESTRUNNER_H
+#define AXRTESTRUNNER_H
 
 #include <QMap>
 #include <QMutex>
@@ -56,22 +56,11 @@
 
 namespace AXR
 {
-    /**
-     *  @brief This is the abstract superclass from with all OS-specific wrappers
-     *  should inherit from.
-     */
     class AXR_API AXRTestRunner
     {
     public:
-        /**
-         *  Creates a new instance of the wrapper. It will obtain the singleton instance of
-         *  the AXRCore and initialize it.
-         */
         AXRTestRunner();
 
-        /**
-         *  Destructs the wrapper
-         */
         virtual ~AXRTestRunner();
 
         virtual AXRString getPathToTestsFile();

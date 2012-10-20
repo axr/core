@@ -72,8 +72,7 @@ namespace AXR
         virtual ~AXRError();
 
         /**
-         *  Call this if you want the message to be displayed. The actual implementation is
-         *  handled by the OS-specific wrapper.
+         *  Call this if you want the message to be displayed.
          */
         void raise() const;
 

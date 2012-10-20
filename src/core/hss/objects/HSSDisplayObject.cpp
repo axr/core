@@ -47,7 +47,7 @@
 #include <QPainterPath>
 #include "AXRController.h"
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRWarning.h"
 #include "HSSContainer.h"
 #include "HSSDisplayObject.h"
@@ -771,11 +771,11 @@ bool HSSDisplayObject::isDirty()
 
 void HSSDisplayObject::draw(QPainter &painter)
 {
-    AXRCore *wrapper = axrController->document();
-    if (wrapper->showLayoutSteps())
+    AXRDocument *document = axrController->document();
+    if (document->showLayoutSteps())
     {
-        wrapper->nextLayoutTick();
-        if (wrapper->layoutChildDone()) return;
+        document->nextLayoutTick();
+        if (document->layoutChildDone()) return;
     }
 
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: drawing " + this->elementName);

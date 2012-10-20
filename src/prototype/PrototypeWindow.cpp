@@ -49,7 +49,7 @@
 
 #include "AXRController.h"
 #include "AXRDebugging.h"
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRTestRunner.h"
 #include "XMLParser.h"
 
@@ -68,7 +68,7 @@ class PrototypeWindow::Private
 public:
     Private()
     {
-        wrapper = AXRCore::getInstance();
+        document = AXRDocument::getInstance();
         testRunner = new AXRTestRunner();
         axr_debug_device = qApp->loggingDevice();
     }
@@ -78,11 +78,11 @@ public:
         axr_debug_device = NULL;
 
         // TODO: don't delete until thread pointer is eliminated
-        //delete wrapper;
+        //delete document;
         delete testRunner;
     }
 
-    AXRCore *wrapper;
+    AXRDocument *document;
     AXRTestRunner *testRunner;
 };
 
@@ -91,10 +91,10 @@ PrototypeWindow::PrototypeWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->enableAntialiasingAction->setChecked(d->wrapper->getRender()->globalAntialiasingEnabled());
+    ui->enableAntialiasingAction->setChecked(d->document->getRender()->globalAntialiasingEnabled());
 
     // Tell the widget to render this window's document
-    ui->renderingView->setDocument(d->wrapper);
+    ui->renderingView->setDocument(d->document);
 
     // The subview needs to accept drops as well even though the main window handles it
     ui->renderingView->setAcceptDrops(true);
@@ -185,7 +185,7 @@ void PrototypeWindow::openFile(const QString &filePath)
     setWindowTitle(QString());
     setWindowFilePath(filePath);
 
-    d->wrapper->loadFileByPath(QUrl::fromLocalFile(filePath));
+    d->document->loadFileByPath(QUrl::fromLocalFile(filePath));
     qApp->settings()->setLastFileOpened(filePath);
     update();
 }
@@ -214,15 +214,15 @@ void PrototypeWindow::closeFile()
 
 void PrototypeWindow::previousLayoutStep()
 {
-    d->wrapper->setShowLayoutSteps(true);
-    d->wrapper->previousLayoutStep();
+    d->document->setShowLayoutSteps(true);
+    d->document->previousLayoutStep();
     update();
 }
 
 void PrototypeWindow::nextLayoutStep()
 {
-    d->wrapper->setShowLayoutSteps(true);
-    d->wrapper->nextLayoutStep();
+    d->document->setShowLayoutSteps(true);
+    d->document->nextLayoutStep();
     update();
 }
 
@@ -237,7 +237,7 @@ void PrototypeWindow::listXmlElements()
 
         AXRBuffer::p f(new AXRBuffer(fi));
 
-        AXRController *controller = new AXRController(d->wrapper);
+        AXRController *controller = new AXRController(d->document);
         XMLParser parser(controller);
 
         if (!parser.loadFile(f))
@@ -263,7 +263,7 @@ void PrototypeWindow::listHssStatements()
 
         AXRBuffer::p f(new AXRBuffer(fi));
 
-        AXRController controller(d->wrapper);
+        AXRController controller(d->document);
         HSSParser hssparser(&controller);
 
         if (hssparser.loadFile(f))
@@ -320,7 +320,7 @@ void PrototypeWindow::listHssTokens()
 
 void PrototypeWindow::runLayoutTests()
 {
-    d->wrapper->registerCustomFunction("AXRLayoutTestsExecute", new HSSValueChangedCallback<AXRTestRunner>(d->testRunner, &AXRTestRunner::executeLayoutTests));
+    d->document->registerCustomFunction("AXRLayoutTestsExecute", new HSSValueChangedCallback<AXRTestRunner>(d->testRunner, &AXRTestRunner::executeLayoutTests));
     this->openFile(d->testRunner->getPathToTestsFile());
 }
 
@@ -340,6 +340,6 @@ void PrototypeWindow::showAbout()
 
 void PrototypeWindow::toggleAntialiasing(bool on)
 {
-    d->wrapper->getRender()->setGlobalAntialiasingEnabled(on);
+    d->document->getRender()->setGlobalAntialiasingEnabled(on);
     update();
 }
