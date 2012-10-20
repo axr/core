@@ -1441,7 +1441,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
                 obj = HSSObject::newObjectWithType(objtype, this->controller);
             }
         }
-        obj->setController(this->controller);
+
         this->_lastObjectType = objtype;
 
     }
@@ -1449,7 +1449,6 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
     {
         this->skipExpected(HSSAmpersand, true);
         obj = HSSObject::newObjectWithType(this->_lastObjectType, this->controller);
-        obj->setController(this->controller);
         objtype = this->_lastObjectType;
 
         if (this->currentToken->isA(HSSObjectSign))
@@ -2656,7 +2655,6 @@ HSSParserNode::p HSSParser::readFunction()
         if (name == "ref")
         {
             HSSRefFunction::p refFunction = HSSRefFunction::p(new HSSRefFunction(controller));
-            refFunction->setController(this->controller);
 
             this->readNextToken(true);
             this->skip(HSSWhitespace, true);
@@ -2768,7 +2766,6 @@ HSSParserNode::p HSSParser::readFunction()
             }
 
             HSSSelFunction::p selFunction = HSSSelFunction::p(new HSSSelFunction(controller));
-            selFunction->setController(this->controller);
             selFunction->setSelectorChains(selectorChains);
 
             ret = selFunction;
@@ -2782,7 +2779,6 @@ HSSParserNode::p HSSParser::readFunction()
         {
 
             HSSFlagFunction::p flagFunction = HSSFlagFunction::p(new HSSFlagFunction(HSSFlagFunction::flagFunctionTypeFromString(name), controller));
-            flagFunction->setController(this->controller);
 
             this->readNextToken(true);
             this->skip(HSSWhitespace, true);
@@ -2845,7 +2841,6 @@ HSSParserNode::p HSSParser::readFunction()
         else if (name == "attr")
         {
             HSSAttrFunction::p attrFunction = HSSAttrFunction::p(new HSSAttrFunction(controller));
-            attrFunction->setController(this->controller);
 
             this->readNextToken(true);
             this->skip(HSSWhitespace, true);

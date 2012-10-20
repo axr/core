@@ -168,7 +168,6 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                     newContainer->setName(elementName);
                     newContainer->setElementName(elementName);
                     rule->setThisObj(newContainer);
-                    newContainer->setController(this);
                     newContainer->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff));
                     axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: created " + newContainer->getElementName());
                     this->add(newContainer);

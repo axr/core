@@ -268,7 +268,6 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             HSSFlagFunction::p flagFnct = qSharedPointerCast<HSSFlagFunction>(fnct);
             HSSFlagAction::p flagAction = HSSFlagAction::p(new HSSFlagAction(this->getController()));
             flagAction->setFlagFunction(flagFnct);
-            flagAction->setController(this->getController());
             flagAction->setScope(this->scope);
             flagAction->setThisObj(this->getThisObj());
             this->action.push_back(flagAction);
@@ -283,7 +282,6 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             HSSFunction::p theFnct = qSharedPointerCast<HSSFunction>(fnct);
             HSSFunctionAction::p fnctAction = HSSFunctionAction::p(new HSSFunctionAction(this->getController()));
             fnctAction->setFunction(theFnct);
-            fnctAction->setController(this->getController());
             fnctAction->setScope(this->scope);
             fnctAction->setThisObj(this->getThisObj());
             this->action.push_back(fnctAction);
