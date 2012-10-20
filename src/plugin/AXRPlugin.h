@@ -65,7 +65,7 @@
 
 namespace AXR
 {
-    class AXRCore;
+    class AXRDocument;
 }
 
 FB_FORWARD_PTR(AXRPlugin)
@@ -126,7 +126,7 @@ public:
 #endif
 
 private:
-    AXR::AXRCore *wrapper;
+    AXR::AXRDocument *document;
 };
 
 #endif

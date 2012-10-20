@@ -44,8 +44,6 @@
 #ifndef AXRDOCUMENT_H
 #define AXRDOCUMENT_H
 
-#include <QSharedPointer>
-#include <QThreadStorage>
 #include "AXRController.h"
 #include "AXRRender.h"
 #include "HSSCallback.h"
@@ -55,20 +53,16 @@
 namespace AXR
 {
     /**
-     *  @brief This is the object that encapsulates the core library.
-     *
-     *  This class cannot be instantiated directly. Instead, call the getInstance() method
-     *  to retrieve a thread-specific shared pointer to a singleton instance.
+     * @brief Represents a single AXR document that can be rendered. A document
+     * may be composed of one or more files.
      */
     class AXR_API AXRDocument
     {
     public:
         /**
-         *  Whenever you need to access the core object use this method,
-         *  as AXRDocument is a per-thread-singleton, where 1 instance is created for each thread that uses AXRDocument.
-         *  @return A thread specific pointer to core for this thread
+         *  Creates a new AXRDocument object.
          */
-        static AXRDocument* getInstance();
+        AXRDocument();
 
         /**
          *  Destroys the object
@@ -256,12 +250,6 @@ namespace AXR
         HSSParser::p parserHSS;
 
         QMap<AXRString, HSSCallback*> _customFunctions;
-
-    private:
-        /**
-         *  Creates a new AXRDocument object.
-         */
-        AXRDocument();
     };
 }
 

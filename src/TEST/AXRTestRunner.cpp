@@ -57,10 +57,17 @@ using namespace AXR;
 
 AXRTestRunner::AXRTestRunner()
 {
+    document_ = new AXRDocument();
 }
 
 AXRTestRunner::~AXRTestRunner()
 {
+    delete document_;
+}
+
+AXRDocument* AXRTestRunner::document() const
+{
+    return document_;
 }
 
 AXRString AXRTestRunner::getPathToTestsFile()
@@ -77,8 +84,7 @@ AXRString AXRTestRunner::getPathToTestsFile()
 void AXRTestRunner::executeLayoutTests(HSSObservableProperty passnull, void*data)
 {
     HSSContainer::p status;
-    AXRDocument* document = AXRDocument::getInstance();
-    HSSContainer::p root = document->getController()->getRoot();
+    HSSContainer::p root = document_->getController()->getRoot();
     std::deque<HSSParserNode::p> arguments = *(std::deque<HSSParserNode::p>*)data;
 
     for (std::deque<HSSParserNode::p>::iterator it = arguments.begin(); it != arguments.end(); ++it)

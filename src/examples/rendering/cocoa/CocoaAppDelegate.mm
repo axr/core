@@ -56,7 +56,7 @@
     self = [super init];
     if (self)
     {
-        document = AXR::AXRDocument::getInstance();
+        document = new AXR::AXRDocument();
     }
 
     return self;
@@ -64,8 +64,7 @@
 
 -(void) dealloc
 {
-    // TODO: don't delete until thread pointer is eliminated
-    //delete document;
+    delete document;
     [super dealloc];
 }
 

@@ -76,7 +76,7 @@ void AXRTestProducer::operator () ()
     AXRString expectedRep;
 
     //load the XML
-    AXRDocument *document = AXRDocument::getInstance();
+    AXRDocument *document = runner->document();
 
     testLoaded = document->loadXMLFile(this->test[0]);
 

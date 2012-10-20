@@ -46,7 +46,7 @@
 #include "AXRAPI.h"
 #include "AXRPlugin.h"
 
-#include "AXRInitializer.h"
+#include "AXRDocument.h"
 #include "AXRRender.h"
 
 #include "DOM/Window.h"
@@ -94,7 +94,7 @@ void AXRPlugin::StaticDeinitialize()
  */
 AXRPlugin::AXRPlugin()
 {
-    wrapper = AXRCore::getInstance();
+    document = new AXRDocument();
 }
 
 /*!
@@ -108,9 +108,7 @@ AXRPlugin::~AXRPlugin()
     // they will be released here.
     releaseRootJSAPI();
     m_host->freeRetainedObjects();
-
-    // TODO: don't delete until thread pointer is eliminated
-    //delete wrapper;
+    delete document;
 }
 
 void AXRPlugin::onPluginReady()
@@ -120,7 +118,7 @@ void AXRPlugin::onPluginReady()
     // PluginWindow may or may not have already fire the AttachedEvent at
     // this point.
 
-    wrapper->loadFileByPath(QUrl(fromStdString(m_host->getDOMWindow()->getLocation())));
+    document->loadFileByPath(QUrl(fromStdString(m_host->getDOMWindow()->getLocation())));
 }
 
 void AXRPlugin::shutdown()
@@ -180,13 +178,12 @@ bool AXRPlugin::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
 
 QImage AXRPlugin::composite(int width, int height)
 {
-    AXRCore* core = AXRCore::getInstance();
-    AXRRender::p renderer = core->getRender();
-    if (renderer && core->getController()->getRoot())
+    AXRRender::p renderer = document->getRender();
+    if (renderer && document->getController()->getRoot())
     {
         QRect paintRect = QRect(0, 0, width, height);
 
-        core->drawInRectWithBounds(paintRect, paintRect);
+        document->drawInRectWithBounds(paintRect, paintRect);
         return renderer->surface();
     }
 

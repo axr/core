@@ -143,7 +143,7 @@ int main(int argc, char **argv)
     SDL_EnableKeyRepeat(300, 50);
     SDL_EnableUNICODE(1);
 
-    document = AXRDocument::getInstance();
+    document = new AXRDocument();
 
     if (!args.empty())
     {
@@ -253,8 +253,7 @@ int main(int argc, char **argv)
     ::DestroyIcon(mainicon);
 #endif
 
-    // TODO: don't delete until thread pointer is eliminated
-    //delete document;
+    delete document;
 
     return 0;
 }

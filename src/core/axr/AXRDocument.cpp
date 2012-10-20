@@ -49,17 +49,6 @@
 
 using namespace AXR;
 
-AXRDocument* AXRDocument::getInstance()
-{
-    static QThreadStorage<AXRDocument*> theInstance;
-    if (!theInstance.localData())
-    {
-        theInstance.setLocalData(new AXRDocument());
-    }
-
-    return theInstance.localData();
-}
-
 AXRDocument::AXRDocument()
 {
     this->_isHSSOnly = false;

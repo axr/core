@@ -69,7 +69,7 @@ void AXRTestThread::operator () ()
     try
     {
         //load the XML file
-        AXRDocument* document = AXRDocument::getInstance();
+        AXRDocument* document = runner->document();
         XMLParser::p parser = document->getParserXML();
         HSSContainer::p status = this->status;
         AXRBuffer::p testsFile = document->getFile(this->url);

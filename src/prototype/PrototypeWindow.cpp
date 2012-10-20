@@ -68,7 +68,7 @@ class PrototypeWindow::Private
 public:
     Private()
     {
-        document = AXRDocument::getInstance();
+        document = new AXRDocument();
         testRunner = new AXRTestRunner();
         axr_debug_device = qApp->loggingDevice();
     }
@@ -77,8 +77,7 @@ public:
     {
         axr_debug_device = NULL;
 
-        // TODO: don't delete until thread pointer is eliminated
-        //delete document;
+        delete document;
         delete testRunner;
     }
 

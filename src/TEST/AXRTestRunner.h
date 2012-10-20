@@ -56,6 +56,8 @@
 
 namespace AXR
 {
+    class AXRDocument;
+
     class AXR_API AXRTestRunner
     {
     public:
@@ -63,10 +65,14 @@ namespace AXR
 
         virtual ~AXRTestRunner();
 
+        AXRDocument* document() const;
+
         virtual AXRString getPathToTestsFile();
 
         void executeLayoutTests(HSSObservableProperty passnull, void*data);
 
+    private:
+        AXRDocument *document_;
         QMap<unsigned, AXRBuffer::p> files;
     };
 }
