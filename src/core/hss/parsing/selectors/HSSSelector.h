@@ -77,7 +77,7 @@ namespace AXR
          *  Creates a new instance of a simple selector, for use of the subclasses.
          *  @param type     The type of the selector node.
          */
-        HSSSelector(HSSSelectorType type);
+        HSSSelector(HSSSelectorType type, AXRController * controller);
 
     private:
         HSSSelectorType _selectorType;

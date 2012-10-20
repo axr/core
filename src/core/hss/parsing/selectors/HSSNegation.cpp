@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSNegation::HSSNegation()
-: HSSParserNode(HSSParserNodeTypeNegation)
+HSSNegation::HSSNegation(AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeNegation, controller)
 {
 
 }

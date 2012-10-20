@@ -94,7 +94,7 @@ namespace AXR
          *  but by the subclasses.
          *  @param type The type of this statement subclass for identification purposes.
          */
-        HSSStatement(HSSStatementType type);
+        HSSStatement(HSSStatementType type, AXRController * controller);
 
         /**
          *  Copy constructor for HSSStatement nodes. Do not call directly, use clone() on one of the

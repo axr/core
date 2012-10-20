@@ -59,7 +59,7 @@ namespace AXR
         /**
          *  Creates a new instance of a log action object.
          */
-        HSSLog();
+        HSSLog(AXRController * controller);
 
         /**
          *  Copy constructor for HSSLog objects. Don't call directly, use clone() instead.

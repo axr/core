@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSSum::HSSSum(HSSParserNode::p _left, HSSParserNode::p _right)
-: HSSExpression(HSSExpressionTypeSum, _left, _right)
+HSSSum::HSSSum(HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller)
+: HSSExpression(HSSExpressionTypeSum, _left, _right, controller)
 {
 
 }

@@ -62,7 +62,7 @@ namespace AXR
         /**
          *  Creates a new instance of a request action.
          */
-        HSSRequest();
+        HSSRequest(AXRController * controller);
 
         /**
          *  Copy constructor for HSSRequest objects. Do not call directly,

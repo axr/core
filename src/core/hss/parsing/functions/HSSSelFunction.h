@@ -63,7 +63,7 @@ namespace AXR
         /**
          *  Creates a new instance of a sel function.
          */
-        HSSSelFunction();
+        HSSSelFunction(AXRController * controller);
 
         /**
          *  Copy constructor for HSSSelFunction objects. Do not call directly, use clone() instead.

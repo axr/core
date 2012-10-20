@@ -54,8 +54,8 @@
 
 using namespace AXR;
 
-HSSColorStop::HSSColorStop()
-: HSSObject(HSSObjectTypeColorStop)
+HSSColorStop::HSSColorStop(AXRController * controller)
+: HSSObject(HSSObjectTypeColorStop, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: creating color stop object");
 
@@ -191,7 +191,7 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDColor(objdef);
             valid = true;
 
@@ -236,12 +236,12 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
 
         if (kwValue == "black")
         {
-            this->color = HSSRgb::blackColor();
+            this->color = HSSRgb::blackColor(this->getController());
             valid = true;
         }
         else if (kwValue == "white")
         {
-            this->color = HSSRgb::whiteColor();
+            this->color = HSSRgb::whiteColor(this->getController());
             valid = true;
         }
         else if (kwValue == "transparent")

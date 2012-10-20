@@ -57,7 +57,7 @@ namespace AXR
         /**
          *  @brief Creates a new instance of a :empty filter.
          */
-        HSSEmptyFilter();
+        HSSEmptyFilter(AXRController * controller);
 
         /**
          *  Clones an instance of HSSEmptyFilter and gives a shared pointer of the

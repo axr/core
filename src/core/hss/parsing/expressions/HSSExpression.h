@@ -193,7 +193,7 @@ namespace AXR
          *  @param _right   The value on the right hand side of the operator.
          *  @param type     The type of this expression subclass for identification purposes.
          */
-        HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right);
+        HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller);
 
         /**
          *  Copy constructor for HSSExpression objects. Do not call directly, use clone() instead.

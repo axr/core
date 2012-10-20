@@ -51,8 +51,8 @@
 
 using namespace AXR;
 
-HSSValue::HSSValue()
-: HSSObject(HSSObjectTypeValue)
+HSSValue::HSSValue(AXRController * controller)
+: HSSObject(HSSObjectTypeValue, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
 

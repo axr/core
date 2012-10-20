@@ -65,7 +65,7 @@ namespace AXR
          *  Creates a new instance of a combinator node, of the type you give. All types of combinators
          *  can be encapsulated with this class.
          */
-        HSSCombinator(HSSCombinatorType type);
+        HSSCombinator(HSSCombinatorType type, AXRController * controller);
 
         /**
          *  Clones an instance of HSSCombinator and gives a shared pointer of the

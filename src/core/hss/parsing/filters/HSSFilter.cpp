@@ -122,74 +122,74 @@ HSSFilterType HSSFilter::filterTypeFromString(AXRString name)
     return filterTypes[name];
 }
 
-HSSFilter::p HSSFilter::newFilterWithStringType(AXRString stringType)
+HSSFilter::p HSSFilter::newFilterWithStringType(AXRString stringType, AXRController * controller)
 {
-    return HSSFilter::newFilterWithType(HSSFilter::filterTypeFromString(stringType));
+    return HSSFilter::newFilterWithType(HSSFilter::filterTypeFromString(stringType), controller);
 }
 
-HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
+HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType, AXRController * controller)
 {
     HSSFilter::p ret;
     switch (filterType)
     {
     case HSSFilterTypeFirst:
     {
-        ret = HSSFirstFilter::p(new HSSFirstFilter());
+        ret = HSSFirstFilter::p(new HSSFirstFilter(controller));
         break;
     }
 
     case HSSFilterTypeFirstChild:
     {
-        ret = HSSFirstChildFilter::p(new HSSFirstChildFilter());
+        ret = HSSFirstChildFilter::p(new HSSFirstChildFilter(controller));
         break;
     }
 
     case HSSFilterTypeLastChild:
     {
-        ret = HSSLastChildFilter::p(new HSSLastChildFilter());
+        ret = HSSLastChildFilter::p(new HSSLastChildFilter(controller));
         break;
     }
 
     case HSSFilterTypeLast:
     {
-        ret = HSSLastFilter::p(new HSSLastFilter());
+        ret = HSSLastFilter::p(new HSSLastFilter(controller));
         break;
     }
 
     case HSSFilterTypeEven:
     {
-        ret = HSSEvenFilter::p(new HSSEvenFilter());
+        ret = HSSEvenFilter::p(new HSSEvenFilter(controller));
         break;
     }
 
     case HSSFilterTypeEvenChild:
     {
-        ret = HSSEvenChildFilter::p(new HSSEvenChildFilter());
+        ret = HSSEvenChildFilter::p(new HSSEvenChildFilter(controller));
         break;
     }
 
     case HSSFilterTypeOdd:
     {
-        ret = HSSOddFilter::p(new HSSOddFilter());
+        ret = HSSOddFilter::p(new HSSOddFilter(controller));
         break;
     }
 
     case HSSFilterTypeOddChild:
     {
-        ret = HSSOddChildFilter::p(new HSSOddChildFilter());
+        ret = HSSOddChildFilter::p(new HSSOddChildFilter(controller));
         break;
     }
 
     case HSSFilterTypeEmpty:
     {
-        ret = HSSEmptyFilter::p(new HSSEmptyFilter());
+        ret = HSSEmptyFilter::p(new HSSEmptyFilter(controller));
         break;
     }
 
 
         //        case HSSFilterTypeEach:
         //        {
-        //            ret = HSSFilter::p(new HSSEachFilter());
+        //            ret = HSSFilter::p(new HSSEachFilter(controller));
         //            ret->filterType = filterType;
         //            break;
         //        }
@@ -201,8 +201,8 @@ HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType)
     return ret;
 }
 
-HSSFilter::HSSFilter(HSSFilterType type)
-: HSSParserNode(HSSParserNodeTypeFilter)
+HSSFilter::HSSFilter(HSSFilterType type, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeFilter, controller)
 {
     this->filterType = type;
     this->_negating = false;

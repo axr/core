@@ -214,7 +214,7 @@ namespace AXR
          *
          *  @todo There is no destructor on this class.
          */
-        HSSParserNode(HSSParserNodeType type);
+        HSSParserNode(HSSParserNodeType type, AXRController * controller);
 
         /**
          *  Copy constructor for HSSParserNode objects. Do not call directly, use clone() instead.

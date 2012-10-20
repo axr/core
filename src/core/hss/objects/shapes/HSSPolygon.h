@@ -60,7 +60,7 @@ namespace AXR
         /**
          *  Creates a new instance of a polygon shape.
          */
-        HSSPolygon();
+        HSSPolygon(AXRController * controller);
 
         /**
          *  Copy constructor for HSSPolygon objects. Do not call directly, use clone() instead.

@@ -50,8 +50,8 @@
 
 using namespace AXR;
 
-HSSExpression::HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right)
-: HSSParserNode(HSSParserNodeTypeExpression)
+HSSExpression::HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeExpression, controller)
 {
     this->expressionType = type;
     this->setLeft(_left);

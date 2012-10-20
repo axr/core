@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSShape::HSSShape(HSSShapeType type)
-: HSSObject(HSSObjectTypeShape)
+HSSShape::HSSShape(HSSShapeType type, AXRController * controller)
+: HSSObject(HSSObjectTypeShape, controller)
 {
     this->shapeType = type;
 }

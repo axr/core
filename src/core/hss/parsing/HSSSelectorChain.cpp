@@ -48,8 +48,8 @@
 
 using namespace AXR;
 
-HSSSelectorChain::HSSSelectorChain()
-: HSSParserNode(HSSParserNodeTypeSelectorChain)
+HSSSelectorChain::HSSSelectorChain(AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeSelectorChain, controller)
 {
 
 }

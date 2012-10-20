@@ -47,8 +47,8 @@
 
 using namespace AXR;
 
-HSSAttrFunction::HSSAttrFunction()
-: HSSFunction(HSSFunctionTypeAttr)
+HSSAttrFunction::HSSAttrFunction(AXRController * controller)
+: HSSFunction(HSSFunctionTypeAttr, controller)
 {
     this->observed = NULL;
 }
@@ -132,7 +132,7 @@ int HSSAttrFunction::selectorChainsSize()
 
 QVariant HSSAttrFunction::_evaluate()
 {
-    std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj());
+    std::vector< std::vector<HSSDisplayObject::p> > selection = this->getController()->select(this->selectorChains, *this->scope, this->getThisObj());
     if (selection.empty())
     {
         // ignore

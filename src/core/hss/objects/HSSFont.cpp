@@ -57,8 +57,8 @@ using namespace AXR;
 
 const HSSUnit HSSFont::DEFAULT_SIZE = 18;
 
-HSSFont::HSSFont()
-: HSSObject(HSSObjectTypeFont)
+HSSFont::HSSFont(AXRController * controller)
+: HSSObject(HSSObjectTypeFont, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFont: creating font object");
 
@@ -261,7 +261,7 @@ void HSSFont::setDColor(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDColor(objdef);
             valid = true;
 
@@ -295,7 +295,7 @@ void HSSFont::setDColor(HSSParserNode::p value)
             }
             else
             {
-                this->color = HSSRgb::p(new HSSRgb());
+                this->color = HSSRgb::p(new HSSRgb(this->getController()));
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSFont > (this, &HSSFont::colorChanged));

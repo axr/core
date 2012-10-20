@@ -64,7 +64,7 @@ namespace AXR
          *  @param left     The value on the left hand side of the operator.
          *  @param right    The value on the right hand side of the operator.
          */
-        HSSDivision(HSSParserNode::p left, HSSParserNode::p right);
+        HSSDivision(HSSParserNode::p left, HSSParserNode::p right, AXRController * controller);
 
         /**
          *  Copy constructor. Do not use directly, but use clone() instead.

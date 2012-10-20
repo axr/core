@@ -70,18 +70,18 @@ namespace AXR
          *  Creates a new instance of a black color.
          *  @return A shared pointer to the new color object.
          */
-        static HSSRgb::p blackColor();
+        static HSSRgb::p blackColor(AXRController * controller);
 
         /**
          *  Creates a new instance of a white color.
          *  @return A shared pointer to the new color object.
          */
-        static HSSRgb::p whiteColor();
+        static HSSRgb::p whiteColor(AXRController * controller);
 
         /**
          *  Constructor for HSSRgb objects
          */
-        HSSRgb(HSSUnit red = 0, HSSUnit green = 0, HSSUnit blue = 0, HSSUnit alpha = 255);
+        HSSRgb(AXRController * controller, HSSUnit red = 0, HSSUnit green = 0, HSSUnit blue = 0, HSSUnit alpha = 255);
 
         /**
          *  Copy constructor for HSSRgb objects
@@ -100,8 +100,8 @@ namespace AXR
          */
         virtual ~HSSRgb();
 
-        inline static p transparentColor() { return p(new HSSRgb(0, 0, 0, 0)); }
-        inline static p defaultColor() { return p(new HSSRgb()); }
+        inline static p transparentColor(AXRController * controller) { return p(new HSSRgb(controller, 0, 0, 0, 0)); }
+        inline static p defaultColor(AXRController * controller) { return p(new HSSRgb(controller)); }
 
         virtual AXRString toString();
         virtual AXRString defaultObjectType();

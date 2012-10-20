@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSMultiplication::HSSMultiplication(HSSParserNode::p _left, HSSParserNode::p _right)
-: HSSExpression(HSSExpressionTypeMultiplication, _left, _right)
+HSSMultiplication::HSSMultiplication(HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller)
+: HSSExpression(HSSExpressionTypeMultiplication, _left, _right, controller)
 {
 
 }

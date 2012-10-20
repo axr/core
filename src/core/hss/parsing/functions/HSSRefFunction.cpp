@@ -48,8 +48,8 @@
 
 using namespace AXR;
 
-HSSRefFunction::HSSRefFunction()
-: HSSFunction(HSSFunctionTypeRef)
+HSSRefFunction::HSSRefFunction(AXRController * controller)
+: HSSFunction(HSSFunctionTypeRef, controller)
 {
     this->observed = NULL;
 }
@@ -150,7 +150,7 @@ QVariant HSSRefFunction::_evaluate()
      *  we need to figure out how to deal with non-numeric values here
      */
 
-    std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->select(this->selectorChains, *this->scope, this->getThisObj(), false);
+    std::vector< std::vector<HSSDisplayObject::p> > selection = this->getController()->select(this->selectorChains, *this->scope, this->getThisObj(), false);
     if (selection.empty() || (selection.size() == 1 && selection[0].empty()))
     {
         // ignore

@@ -51,8 +51,8 @@
 
 using namespace AXR;
 
-HSSRoundedRect::HSSRoundedRect()
-: HSSShape(HSSShapeTypeRoundedRect)
+HSSRoundedRect::HSSRoundedRect(AXRController * controller)
+: HSSShape(HSSShapeTypeRoundedRect, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: creating rounded rectangle object");
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
@@ -226,7 +226,7 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value)
     }
 
     this->dCorners = value;
-    HSSMultipleValue::p newCorners(new HSSMultipleValue());
+    HSSMultipleValue::p newCorners(new HSSMultipleValue(this->getController()));
     newCorners->add(value);
     this->corners = newCorners;
 

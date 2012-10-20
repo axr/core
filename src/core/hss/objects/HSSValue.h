@@ -60,7 +60,7 @@ namespace AXR
         /**
          *  Constructor for HSSValue objects.
          */
-        HSSValue();
+        HSSValue(AXRController * controller);
         /**
          *  Copy constructor for HSSValue objects. Do not use directly, use clone() instead.
          */

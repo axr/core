@@ -64,8 +64,8 @@
 
 using namespace AXR;
 
-HSSDisplayObject::HSSDisplayObject(HSSObjectType type)
-: HSSObject(type)
+HSSDisplayObject::HSSDisplayObject(HSSObjectType type, AXRController * controller)
+: HSSObject(type, controller)
 {
     this->initialize();
 }
@@ -454,20 +454,20 @@ void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSS
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
 
             if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer::p thisCont = qSharedPointerCast<HSSContainer > (this->shared_from_this());
-                this->axrController->currentContext.push(thisCont);
+                this->getController()->currentContext.push(thisCont);
                 HSSRule::const_it it;
                 const std::deque<HSSRule::p> rules = objdef->getRules();
                 for (it = rules.begin(); it != rules.end(); ++it)
                 {
                     HSSRule::p clonedRule = (*it)->clone();
-                    this->axrController->recursiveMatchRulesToDisplayObjects(clonedRule, thisCont->getChildren(), thisCont, true);
+                    this->getController()->recursiveMatchRulesToDisplayObjects(clonedRule, thisCont->getChildren(), thisCont, true);
                 }
-                this->axrController->currentContext.pop();
+                this->getController()->currentContext.pop();
             }
         }
         catch (const AXRError &e)
@@ -548,7 +548,7 @@ void HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)
     if (changed)
     {
         this->setNeedsRereadRules(true);
-        axrController->document()->setNeedsDisplay(true);
+        this->getController()->document()->setNeedsDisplay(true);
     }
 }
 
@@ -578,11 +578,13 @@ void HSSDisplayObject::readDefinitionObjects()
         //if this is root, we use the window width and height of the render
         if (this->isRoot())
         {
+            AXRController * controller = this->getController();
+            AXRRender::p render = controller->document()->getRender();
             //width
-            HSSNumberConstant::p newDWidth(new HSSNumberConstant(axrController->document()->getRender()->getWindowWidth()));
+            HSSNumberConstant::p newDWidth(new HSSNumberConstant(render->getWindowWidth(), controller));
             this->setDWidth(newDWidth);
             //height
-            HSSNumberConstant::p newDHeight(new HSSNumberConstant(axrController->document()->getRender()->getWindowHeight()));
+            HSSNumberConstant::p newDHeight(new HSSNumberConstant(render->getWindowHeight(), controller));
             this->setDHeight(newDHeight);
         }
 
@@ -771,7 +773,7 @@ bool HSSDisplayObject::isDirty()
 
 void HSSDisplayObject::draw(QPainter &painter)
 {
-    AXRDocument *document = axrController->document();
+    AXRDocument *document = this->getController()->document();
     if (document->showLayoutSteps())
     {
         document->nextLayoutTick();
@@ -809,7 +811,7 @@ void HSSDisplayObject::drawBackground()
     this->backgroundSurface->fill(Qt::transparent);
 
     QPainter painter(this->backgroundSurface);
-    if (axrController->document()->getRender()->globalAntialiasingEnabled())
+    if (this->getController()->document()->getRender()->globalAntialiasingEnabled())
         painter.setRenderHint(QPainter::Antialiasing);
 
     QPainterPath path;
@@ -921,7 +923,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDWidth(objdef);
             valid = true;
             needsPostProcess = false;
@@ -1148,7 +1150,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDHeight(objdef);
             valid = true;
             needsPostProcess = false;
@@ -1631,7 +1633,7 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDFlow(objdef);
             valid = true;
 
@@ -1785,7 +1787,7 @@ void HSSDisplayObject::setDContained(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDContained(objdef);
             valid = true;
 
@@ -1969,15 +1971,15 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
         }
         else if (keywordValue->getValue() == "left")
         {
-            this->setDAlignX(HSSParserNode::p(new HSSNumberConstant(0)));
+            this->setDAlignX(HSSParserNode::p(new HSSNumberConstant(0, this->getController())));
         }
         else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center")
         {
-            this->setDAlignX(HSSParserNode::p(new HSSPercentageConstant(50)));
+            this->setDAlignX(HSSParserNode::p(new HSSPercentageConstant(50, this->getController())));
         }
         else if (keywordValue->getValue() == "right")
         {
-            this->setDAlignX(HSSParserNode::p(new HSSPercentageConstant(100)));
+            this->setDAlignX(HSSParserNode::p(new HSSPercentageConstant(100, this->getController())));
         }
         else
         {
@@ -2112,15 +2114,15 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
         }
         else if (keywordValue->getValue() == "top")
         {
-            this->setDAlignY(HSSParserNode::p(new HSSNumberConstant(0)));
+            this->setDAlignY(HSSParserNode::p(new HSSNumberConstant(0, this->getController())));
         }
         else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center")
         {
-            this->setDAlignY(HSSParserNode::p(new HSSPercentageConstant(50)));
+            this->setDAlignY(HSSParserNode::p(new HSSPercentageConstant(50, this->getController())));
         }
         else if (keywordValue->getValue() == "bottom")
         {
-            this->setDAlignY(HSSParserNode::p(new HSSPercentageConstant(100)));
+            this->setDAlignY(HSSParserNode::p(new HSSPercentageConstant(100, this->getController())));
         }
         else
         {
@@ -2241,7 +2243,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            this->addDBackground(this->axrController->objectTreeGet(objname->getValue()));
+            this->addDBackground(this->getController()->objectTreeGet(objname->getValue()));
             valid = true;
         }
         catch (const AXRError &e)
@@ -2299,17 +2301,17 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
         }
         else if (kwValue == "black")
         {
-            this->background.push_back(HSSRgb::blackColor());
+            this->background.push_back(HSSRgb::blackColor(this->getController()));
             valid = true;
         }
         else if (kwValue == "white")
         {
-            this->background.push_back(HSSRgb::whiteColor());
+            this->background.push_back(HSSRgb::whiteColor(this->getController()));
             valid = true;
         }
         else if (kwValue == "transparent")
         {
-            this->background.push_back(HSSRgb::transparentColor());
+            this->background.push_back(HSSRgb::transparentColor(this->getController()));
             valid = true;
         }
         break;
@@ -2403,7 +2405,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            this->addDContent(this->axrController->objectTreeGet(objname->getValue()));
+            this->addDContent(this->getController()->objectTreeGet(objname->getValue()));
             valid = true;
 
         }
@@ -2589,7 +2591,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
@@ -2789,7 +2791,7 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            this->addDOn(this->axrController->objectTreeGet(objname->getValue()));
+            this->addDOn(this->getController()->objectTreeGet(objname->getValue()));
             valid = true;
 
         }
@@ -2969,7 +2971,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
@@ -3057,7 +3059,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
 
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSMargin::p theMargin = HSSMargin::p(new HSSMargin());
+        HSSMargin::p theMargin = HSSMargin::p(new HSSMargin(this->getController()));
         theMargin->setDSize(value);
         this->margin.push_back(theMargin);
         this->_setOuterWidth();
@@ -3154,7 +3156,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
@@ -3242,7 +3244,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
 
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSMargin::p thePadding = HSSMargin::p(new HSSMargin());
+        HSSMargin::p thePadding = HSSMargin::p(new HSSMargin(this->getController()));
         thePadding->setDSize(value);
         this->padding.push_back(thePadding);
         this->_setInnerWidth();
@@ -3337,7 +3339,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
@@ -3601,41 +3603,43 @@ void HSSDisplayObject::visibleChanged(HSSObservableProperty source, void*data)
 
 void HSSDisplayObject::setDefaults()
 {
+    AXRController * controller = this->getController();
+
     //width
-    HSSPercentageConstant::p newDWidth(new HSSPercentageConstant(100.));
+    HSSPercentageConstant::p newDWidth(new HSSPercentageConstant(100., controller));
     this->setDWidth(newDWidth);
     //height
-    HSSKeywordConstant::p newDHeight(new HSSKeywordConstant("content"));
+    HSSKeywordConstant::p newDHeight(new HSSKeywordConstant("content", controller));
     this->setDHeight(newDHeight);
     //anchorX
-    HSSKeywordConstant::p newDAnchorX(new HSSKeywordConstant("no"));
+    HSSKeywordConstant::p newDAnchorX(new HSSKeywordConstant("no", controller));
     this->setDAnchorX(newDAnchorX);
     //anchorY
-    HSSKeywordConstant::p newDAnchorY(new HSSKeywordConstant("no"));
+    HSSKeywordConstant::p newDAnchorY(new HSSKeywordConstant("no", controller));
     this->setDAnchorY(newDAnchorY);
     //flow
-    HSSKeywordConstant::p newDFlow(new HSSKeywordConstant("yes"));
+    HSSKeywordConstant::p newDFlow(new HSSKeywordConstant("yes", controller));
     this->setDFlow(newDFlow);
     //alignX
-    HSSKeywordConstant::p newDAlignX(new HSSKeywordConstant("auto"));
+    HSSKeywordConstant::p newDAlignX(new HSSKeywordConstant("auto", controller));
     this->setDAlignX(newDAlignX);
     //alignY
-    HSSKeywordConstant::p newDAlignY(new HSSKeywordConstant("auto"));
+    HSSKeywordConstant::p newDAlignY(new HSSKeywordConstant("auto", controller));
     this->setDAlignY(newDAlignY);
     //background
-    HSSKeywordConstant::p newDBackground(new HSSKeywordConstant("no"));
+    HSSKeywordConstant::p newDBackground(new HSSKeywordConstant("no", controller));
     this->setDBackground(newDBackground);
     //content
-    HSSKeywordConstant::p newDContent(new HSSKeywordConstant("no"));
+    HSSKeywordConstant::p newDContent(new HSSKeywordConstant("no", controller));
     this->setDContent(newDContent);
     //on
-    HSSKeywordConstant::p newDOn(new HSSKeywordConstant("no"));
+    HSSKeywordConstant::p newDOn(new HSSKeywordConstant("no", controller));
     this->setDOn(newDOn);
     //border
-    HSSKeywordConstant::p newDBorder(new HSSKeywordConstant("no"));
+    HSSKeywordConstant::p newDBorder(new HSSKeywordConstant("no", controller));
     this->setDBorder(newDBorder);
     //visible
-    HSSKeywordConstant::p newDVisible(new HSSKeywordConstant("inherit"));
+    HSSKeywordConstant::p newDVisible(new HSSKeywordConstant("inherit", controller));
     this->setDVisible(newDVisible);
 }
 
@@ -3896,7 +3900,7 @@ void HSSDisplayObject::ruleChanged(HSSObservableProperty source, void*data)
 {
     //HSSRule * theRule = (HSSRule*)data;
     this->setNeedsRereadRules(true);
-    axrController->document()->setNeedsDisplay(true);
+    this->getController()->document()->setNeedsDisplay(true);
 }
 
 void HSSDisplayObject::createFlag(HSSFlag::p flag, HSSRuleState defaultValue)

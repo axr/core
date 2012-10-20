@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSMultipleValueDefinition::HSSMultipleValueDefinition()
-: HSSParserNode(HSSParserNodeTypeMultipleValueDefinition)
+HSSMultipleValueDefinition::HSSMultipleValueDefinition(AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeMultipleValueDefinition, controller)
 {
 
 }

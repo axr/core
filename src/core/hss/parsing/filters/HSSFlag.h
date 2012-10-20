@@ -66,7 +66,7 @@ namespace AXR
         /**
          *  Creates a new instance of a flag node.
          */
-        HSSFlag();
+        HSSFlag(AXRController * controller);
 
         /**
          *  Clones an instance of HSSFlag and gives a shared pointer of the

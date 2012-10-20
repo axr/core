@@ -55,8 +55,8 @@
 
 using namespace AXR;
 
-HSSGradient::HSSGradient()
-: HSSObject(HSSObjectTypeGradient)
+HSSGradient::HSSGradient(AXRController * controller)
+: HSSObject(HSSObjectTypeGradient, controller)
 {
     this->registerProperty(HSSObservablePropertyStartColor, QVariant::fromValue(&this->startColor));
     this->registerProperty(HSSObservablePropertyEndColor, QVariant::fromValue(&this->endColor));
@@ -177,7 +177,7 @@ HSSRgb::p HSSGradient::getColorAfterFirst()
 
     //not even that? use transparent black
     if (!ret){
-        ret = HSSRgb::transparentColor();
+        ret = HSSRgb::transparentColor(this->getController());
     }
 
     return ret;
@@ -209,7 +209,7 @@ HSSRgb::p HSSGradient::getColorBeforeLast()
 
     //not even that? use transparent black
     if (!ret){
-        ret = HSSRgb::transparentColor();
+        ret = HSSRgb::transparentColor(this->getController());
     }
 
     return ret;
@@ -243,7 +243,7 @@ HSSRgb::p HSSGradient::getNextColorFromStops(std::vector<HSSObject::p>::iterator
 
     //not even that? use transparent black
     if (!ret){
-        ret = HSSRgb::transparentColor();
+        ret = HSSRgb::transparentColor(this->getController());
     }
 
     return ret;
@@ -271,7 +271,7 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDStartColor(objdef);
             valid = true;
 
@@ -315,12 +315,12 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
         HSSKeywordConstant::p theKW = qSharedPointerCast<HSSKeywordConstant>(value);
         if (theKW->getValue() == "black")
         {
-            this->startColor = HSSRgb::blackColor();
+            this->startColor = HSSRgb::blackColor(this->getController());
             valid = true;
         }
         else if (theKW->getValue() == "white")
         {
-            this->startColor = HSSRgb::whiteColor();
+            this->startColor = HSSRgb::whiteColor(this->getController());
             valid = true;
         }
         else if (theKW->getValue() == "transparent")
@@ -393,7 +393,7 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDEndColor(objdef);
             valid = true;
 
@@ -436,12 +436,12 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
         HSSKeywordConstant::p theKW = qSharedPointerCast<HSSKeywordConstant>(value);
         if (theKW->getValue() == "black")
         {
-            this->endColor = HSSRgb::blackColor();
+            this->endColor = HSSRgb::blackColor(this->getController());
             valid = true;
         }
         else if (theKW->getValue() == "white")
         {
-            this->endColor = HSSRgb::whiteColor();
+            this->endColor = HSSRgb::whiteColor(this->getController());
             valid = true;
         }
         else if (theKW->getValue() == "transparent")
@@ -616,7 +616,7 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            this->addDColorStops(this->axrController->objectTreeGet(objname->getValue()));
+            this->addDColorStops(this->getController()->objectTreeGet(objname->getValue()));
             valid = true;
         }
         catch (const AXRError &e)
@@ -657,19 +657,19 @@ void HSSGradient::addDColorStops(HSSParserNode::p value)
         HSSKeywordConstant::p theKW = qSharedPointerCast<HSSKeywordConstant > (value);
         if (theKW->getValue() == "white")
         {
-            this->colorStops.push_back(HSSRgb::whiteColor());
+            this->colorStops.push_back(HSSRgb::whiteColor(this->getController()));
             valid = true;
         }
         else if (theKW->getValue() == "black")
         {
-            this->colorStops.push_back(HSSRgb::blackColor());
+            this->colorStops.push_back(HSSRgb::blackColor(this->getController()));
             valid = true;
         }
         else if (theKW->getValue() == "transparent")
         {
             //the stop's color will remain empty, we just define the position
-            HSSColorStop::p theStop(new HSSColorStop());
-            theStop->setDPosition(HSSPercentageConstant::p(new HSSPercentageConstant(50.)));
+            HSSColorStop::p theStop(new HSSColorStop(this->getController()));
+            theStop->setDPosition(HSSPercentageConstant::p(new HSSPercentageConstant(50., this->getController())));
             this->colorStops.push_back(theStop);
             valid = true;
         }

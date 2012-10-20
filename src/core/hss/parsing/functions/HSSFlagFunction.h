@@ -70,7 +70,7 @@ namespace AXR
          *  @param flagFunctionType     The HSSFlagFunctionType that corresponds with the desired
          *                              behavior of the function.
          */
-        HSSFlagFunction(HSSFlagFunctionType flagFunctionType);
+        HSSFlagFunction(HSSFlagFunctionType flagFunctionType, AXRController * controller);
 
         /**
          *  Copy constructor for HSSAction objects. Do not call directly, use clone() instead.

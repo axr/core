@@ -63,7 +63,7 @@
 
 using namespace AXR;
 
-HSSObject::p HSSObject::newObjectWithType(AXRString type)
+HSSObject::p HSSObject::newObjectWithType(AXRString type, AXRController * controller)
 {
     static QMap<AXRString, HSSObjectType> types;
     if (types.empty())
@@ -108,7 +108,7 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type)
     {
     case HSSObjectTypeContainer:
     {
-        return HSSContainer::p(new HSSContainer());
+        return HSSContainer::p(new HSSContainer(controller));
     }
 
     case HSSObjectTypeBorder:
@@ -116,7 +116,7 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type)
         /**
          *  @todo border tyes?
          */
-        return HSSLineBorder::p(new HSSLineBorder());
+        return HSSLineBorder::p(new HSSLineBorder(controller));
     }
 
     case HSSObjectTypeGradient:
@@ -124,51 +124,51 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type)
         /**
          *  @todo gradient tyes?
          */
-        return HSSLinearGradient::p(new HSSLinearGradient());
+        return HSSLinearGradient::p(new HSSLinearGradient(controller));
     }
 
     case HSSObjectTypeColorStop:
     {
-        return HSSColorStop::p(new HSSColorStop());
+        return HSSColorStop::p(new HSSColorStop(controller));
     }
 
     case HSSObjectTypeValue:
     {
-        return HSSValue::p(new HSSValue());
+        return HSSValue::p(new HSSValue(controller));
     }
 
     case HSSObjectTypeMargin:
     {
-        return HSSMargin::p(new HSSMargin());
+        return HSSMargin::p(new HSSMargin(controller));
     }
 
     case HSSObjectTypeRgb:
     {
-        return HSSRgb::p(new HSSRgb());
+        return HSSRgb::p(new HSSRgb(controller));
     }
 
     case HSSObjectTypeFont:
     {
-        return HSSFont::p(new HSSFont());
+        return HSSFont::p(new HSSFont(controller));
     }
 
     case HSSObjectTypeShape:
     {
         if (type == "rectangle")
         {
-            return HSSRectangle::p(new HSSRectangle());
+            return HSSRectangle::p(new HSSRectangle(controller));
         }
         else if (type == "roundedRect")
         {
-            return HSSRoundedRect::p(new HSSRoundedRect());
+            return HSSRoundedRect::p(new HSSRoundedRect(controller));
         }
         else if (type == "circle")
         {
-            return HSSCircle::p(new HSSCircle());
+            return HSSCircle::p(new HSSCircle(controller));
         }
         else if (type == "polygon")
         {
-            return HSSPolygon::p(new HSSPolygon());
+            return HSSPolygon::p(new HSSPolygon(controller));
         }
     }
 
@@ -194,7 +194,7 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type)
 
         if (eventTypes.contains(type))
         {
-            return HSSEvent::p(new HSSEvent(eventTypes[type]));
+            return HSSEvent::p(new HSSEvent(eventTypes[type], controller));
         }
 
         //fall through
@@ -204,11 +204,11 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type)
     {
         if (type == "request")
         {
-            return HSSRequest::p(new HSSRequest());
+            return HSSRequest::p(new HSSRequest(controller));
         }
         else if (type == "log")
         {
-            return HSSLog::p(new HSSLog());
+            return HSSLog::p(new HSSLog(controller));
         }
     }
 
@@ -219,12 +219,13 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type)
     return HSSObject::p();
 }
 
-HSSObject::HSSObject(HSSObjectType type)
+HSSObject::HSSObject(HSSObjectType type, AXRController * controller)
 {
     this->_isNamed = false;
     this->name = "";
     this->type = type;
     this->shorthandIndex = 0;
+    this->axrController = controller;
 }
 
 HSSObject::HSSObject(const HSSObject & orig)
@@ -278,7 +279,7 @@ bool HSSObject::isFunction(AXRString value, AXRString property)
     }
     else
     {
-        return axrController->document()->isCustomFunction(value);
+        return this->getController()->document()->isCustomFunction(value);
     }
 }
 
@@ -430,7 +431,7 @@ void HSSObject::addDIsA(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             //objdef->apply();
             std::deque<HSSPropertyDefinition::p> properties = objdef->getProperties();
 

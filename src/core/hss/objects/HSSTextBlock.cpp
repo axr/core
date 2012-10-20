@@ -143,8 +143,8 @@ HSSTextAlignType HSSTextBlock::textAlignTypeFromString(AXRString value)
     return type;
 }
 
-HSSTextBlock::HSSTextBlock()
-: HSSDisplayObject(HSSObjectTypeTextBlock)
+HSSTextBlock::HSSTextBlock(AXRController * controller)
+: HSSDisplayObject(HSSObjectTypeTextBlock, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: creating text block object");
 
@@ -250,18 +250,19 @@ AXRString HSSTextBlock::toString()
 void HSSTextBlock::setDefaults()
 {
     HSSDisplayObject::setDefaults();
+    AXRController * controller = this->getController();
 
     //transform
-    HSSKeywordConstant::p newDTransform(new HSSKeywordConstant("no"));
+    HSSKeywordConstant::p newDTransform(new HSSKeywordConstant("no", controller));
     this->setDTransform(newDTransform);
     //textAlign
-    HSSKeywordConstant::p newDTextAlign(new HSSKeywordConstant("inherit"));
+    HSSKeywordConstant::p newDTextAlign(new HSSKeywordConstant("inherit", controller));
     this->setDTextAlign(newDTextAlign);
     //font
-    HSSKeywordConstant::p newDFont(new HSSKeywordConstant("inherit"));
+    HSSKeywordConstant::p newDFont(new HSSKeywordConstant("inherit", controller));
     this->setDFont(newDFont);
     //height
-    this->setDHeight(HSSKeywordConstant::p(new HSSKeywordConstant("content")));
+    this->setDHeight(HSSKeywordConstant::p(new HSSKeywordConstant("content", controller)));
 }
 
 void HSSTextBlock::setProperty(HSSObservableProperty name, HSSParserNode::p value)
@@ -319,7 +320,7 @@ void HSSTextBlock::drawForeground()
     this->foregroundSurface->fill(Qt::transparent);
 
     QPainter painter(this->foregroundSurface);
-    if (axrController->document()->getRender()->globalAntialiasingEnabled())
+    if (this->getController()->document()->getRender()->globalAntialiasingEnabled())
         painter.setRenderHint(QPainter::Antialiasing);
 
     HSSFont::p theFont;
@@ -418,7 +419,7 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDTransform(objdef);
             valid = true;
 
@@ -541,7 +542,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDTextAlign(objdef);
             valid = true;
         }
@@ -692,7 +693,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDText(objdef);
             valid = true;
 

@@ -64,7 +64,7 @@ namespace AXR
         /**
          *  Creates a new instance of a line border object.
          */
-        HSSLineBorder();
+        HSSLineBorder(AXRController * controller);
 
         /**
          *  Copy constructor for HSSLineBorder objects. Don't use directly, use clone() instead.

@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSStatement::HSSStatement(HSSStatementType type)
-: HSSParserNode(HSSParserNodeTypeStatement)
+HSSStatement::HSSStatement(HSSStatementType type, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeStatement, controller)
 {
     this->type = type;
 }

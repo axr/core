@@ -60,7 +60,7 @@ namespace AXR
         /**
          *  Constructor for HSSFunctionAction objects
          */
-        HSSFunctionAction();
+        HSSFunctionAction(AXRController * controller);
 
         /**
          *  Copy constructor for HSSFunctionAction objects. Do not call directly,

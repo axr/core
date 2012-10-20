@@ -48,8 +48,8 @@
 
 using namespace AXR;
 
-HSSFunction::HSSFunction(HSSFunctionType type)
-: HSSParserNode(HSSParserNodeTypeFunctionCall)
+HSSFunction::HSSFunction(HSSFunctionType type, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeFunctionCall, controller)
 {
     this->functionType = type;
     this->scope = NULL;

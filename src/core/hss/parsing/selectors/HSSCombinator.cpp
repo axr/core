@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSCombinator::HSSCombinator(HSSCombinatorType type)
-: HSSSelector(HSSSelectorTypeCombinator)
+HSSCombinator::HSSCombinator(HSSCombinatorType type, AXRController * controller)
+: HSSSelector(HSSSelectorTypeCombinator, controller)
 {
     this->combinatorType = type;
 }

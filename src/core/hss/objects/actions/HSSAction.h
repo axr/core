@@ -106,7 +106,7 @@ namespace AXR
          *  @param  type    The HSSActionType that this action corresponds to. Usually set
          *                  from withing a subclass' constructor method.
          */
-        HSSAction(HSSActionType type);
+        HSSAction(HSSActionType type, AXRController * controller);
 
         /**
          *  Copy constructor for HSSAction objects. Do not call directly, use clone() instead.

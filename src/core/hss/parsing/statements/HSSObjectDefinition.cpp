@@ -46,8 +46,8 @@
 
 using namespace AXR;
 
-HSSObjectDefinition::HSSObjectDefinition(HSSObject::p prototype)
-: HSSStatement(HSSStatementTypeObjectDefinition)
+HSSObjectDefinition::HSSObjectDefinition(HSSObject::p prototype, AXRController * controller)
+: HSSStatement(HSSStatementTypeObjectDefinition, controller)
 {
     this->prototype = prototype;
     this->scope = NULL;

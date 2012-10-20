@@ -50,8 +50,8 @@
 
 using namespace AXR;
 
-HSSRule::HSSRule()
-: HSSStatement(HSSStatementTypeRule)
+HSSRule::HSSRule(AXRController * controller)
+: HSSStatement(HSSStatementTypeRule, controller)
 {
     this->_activeByDefault = true;
     this->observedTreeChanger = NULL;

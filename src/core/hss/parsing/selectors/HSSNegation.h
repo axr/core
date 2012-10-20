@@ -60,7 +60,7 @@ namespace AXR
         /**
          *  Creates a new instance of a negation.
          */
-        HSSNegation();
+        HSSNegation(AXRController * controller);
 
         /**
          *  Clones an instance of HSSNegation and gives a shared pointer of the

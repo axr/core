@@ -66,7 +66,7 @@ namespace AXR
          *  Creates a new instance of a number constant node which holds the given value.
          *  @param value    A HSSUnit containing the value for the constant.
          */
-        HSSNumberConstant(HSSUnit value);
+        HSSNumberConstant(HSSUnit value, AXRController * controller);
 
         /**
          *  Clones an instance of HSSNumberConstant and gives a shared pointer of the

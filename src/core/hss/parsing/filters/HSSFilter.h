@@ -84,14 +84,14 @@ namespace AXR
          *  @param stringType   The textual representation of the filter.
          *  @return A shared pointer to a new instance of a filter of the given type.
          */
-        static HSSFilter::p newFilterWithStringType(AXRString stringType);
+        static HSSFilter::p newFilterWithStringType(AXRString stringType, AXRController * controller);
 
         /**
          *  Instantiates a specific subclass for the given HSSFilterType.
          *  @param filterType   The filter type for the new instance.
          *  @return A shared pointer to a new instance of a filter of the given type.
          */
-        static HSSFilter::p newFilterWithType(HSSFilterType filterType);
+        static HSSFilter::p newFilterWithType(HSSFilterType filterType, AXRController * controller);
 
         /**
          *  Destructor for this class.
@@ -135,7 +135,7 @@ namespace AXR
          *  Creates a new instance of a filter. Do not use directly.
          *  @param type     The type of the filter, to uniquely identify each subclass.
          */
-        HSSFilter(HSSFilterType type);
+        HSSFilter(HSSFilterType type, AXRController * controller);
 
     private:
         HSSFilterType filterType;

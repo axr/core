@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSSubtraction::HSSSubtraction(HSSParserNode::p _left, HSSParserNode::p _right)
-: HSSExpression(HSSExpressionTypeSubtraction, _left, _right)
+HSSSubtraction::HSSSubtraction(HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller)
+: HSSExpression(HSSExpressionTypeSubtraction, _left, _right, controller)
 {
 
 }

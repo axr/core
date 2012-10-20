@@ -60,7 +60,7 @@ namespace AXR
         /**
          *  Constructor for HSSRectangle objects
          */
-        HSSRectangle();
+        HSSRectangle(AXRController * controller);
 
         /**
          *  Copy constructor for HSSRectangle objects

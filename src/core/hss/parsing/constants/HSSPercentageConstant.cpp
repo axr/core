@@ -46,8 +46,8 @@
 
 using namespace AXR;
 
-HSSPercentageConstant::HSSPercentageConstant(HSSUnit value)
-: HSSParserNode(HSSParserNodeTypePercentageConstant)
+HSSPercentageConstant::HSSPercentageConstant(HSSUnit value, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypePercentageConstant, controller)
 {
     this->value = value / 100.;
 }

@@ -55,8 +55,8 @@
 
 using namespace AXR;
 
-HSSPolygon::HSSPolygon()
-: HSSShape(HSSShapeTypePolygon)
+HSSPolygon::HSSPolygon(AXRController * controller)
+: HSSShape(HSSShapeTypePolygon, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: creating polygon object");
     std::vector<AXRString> shorthandProperties;

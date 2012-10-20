@@ -74,14 +74,14 @@ namespace AXR
         /**
          *  Creates a new instance of a property definition, with an empty name and value.
          */
-        HSSPropertyDefinition();
+        HSSPropertyDefinition(AXRController * controller);
 
         /**
          *  Creates a new instance of a property definition, with the given name, but empty
          *  value.
          *  @param name     A string containing the name of the property.
          */
-        HSSPropertyDefinition(AXRString name);
+        HSSPropertyDefinition(AXRString name, AXRController * controller);
 
         /**
          *  Creates a new instance of a property definition, with the given name and value.
@@ -89,7 +89,7 @@ namespace AXR
          *  @param value    A shared pointer to the parser node that holds the value of this
          *                  property definition.
          */
-        HSSPropertyDefinition(AXRString name, HSSParserNode::p value);
+        HSSPropertyDefinition(AXRString name, HSSParserNode::p value, AXRController * controller);
 
         /**
          *  Copy constructor for HSSPropertyDefinition objects. Do not call directly, use clone() instead.

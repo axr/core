@@ -62,7 +62,7 @@ namespace AXR
          *  Creates a new instance of a keyword constant, with given content.
          *  @param  value   A string containing the name of the keyword.
          */
-        HSSKeywordConstant(AXRString value);
+        HSSKeywordConstant(AXRString value, AXRController * controller);
 
         /**
          *  Clones an instance of HSSKeywordConstant and gives a shared pointer of the

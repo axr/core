@@ -100,7 +100,7 @@ namespace AXR
          *  Creates a new instance of a shape object. Do call directly, use one of the sublcasses instead.
          *  @param type     The type of this shape subclass for identification purposes.
          */
-        HSSShape(HSSShapeType type);
+        HSSShape(HSSShapeType type, AXRController * controller);
 
         /**
          *  Copy constructor for HSSShape objects. Do not call directly, use clone() instead.

@@ -65,7 +65,7 @@ namespace AXR
         /**
          *  Creates a new instance of a HSSFont object.
          */
-        HSSFont();
+        HSSFont(AXRController * controller);
 
         /**
          *  Copy constructor for HSSFont objects. Do not call directly, use clone() instead.

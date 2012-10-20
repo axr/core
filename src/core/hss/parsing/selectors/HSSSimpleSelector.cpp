@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSSimpleSelector::HSSSimpleSelector()
-: HSSSelector(HSSSelectorTypeSimpleSelector)
+HSSSimpleSelector::HSSSimpleSelector(AXRController * controller)
+: HSSSelector(HSSSelectorTypeSimpleSelector, controller)
 {
 
 }

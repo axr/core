@@ -74,8 +74,8 @@ HSSContainer::p HSSContainer::asContainer(HSSDisplayObject::p theDisplayObject)
     return ret;
 }
 
-HSSContainer::HSSContainer()
-: HSSDisplayObject(HSSObjectTypeContainer)
+HSSContainer::HSSContainer(AXRController * controller)
+: HSSDisplayObject(HSSObjectTypeContainer, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: creating container");
     this->initialize();
@@ -317,12 +317,14 @@ void HSSContainer::setContentText(const AXRString &contextText)
 {
     AXRString text = contextText.trimmed();
 
+    AXRController * controller = this->getController();
+
     if (!text.isEmpty())
     {
         if (this->allChildren.empty())
         {
-            HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
-            txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+            HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock(controller));
+            txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text, controller)));
             this->add(txtBlck);
         }
         else
@@ -331,12 +333,12 @@ void HSSContainer::setContentText(const AXRString &contextText)
             if (lastChild->isA(HSSObjectTypeTextBlock))
             {
                 HSSTextBlock::p textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
-                textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+                textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(text, controller)));
             }
             else
             {
-                HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
-                txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+                HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock(controller));
+                txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text, controller)));
                 this->add(txtBlck);
             }
         }
@@ -349,10 +351,12 @@ void HSSContainer::appendContentText(const AXRString &contextText)
 
     if (!text.isEmpty())
     {
+        AXRController * controller = this->getController();
+
         if (this->allChildren.empty())
         {
-            HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
-            txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+            HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock(controller));
+            txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text, controller)));
             this->add(txtBlck);
         }
         else
@@ -361,12 +365,12 @@ void HSSContainer::appendContentText(const AXRString &contextText)
             if (lastChild->isA(HSSObjectTypeTextBlock))
             {
                 HSSTextBlock::p textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
-                textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(textBlock->getText() + " " + text)));
+                textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(textBlock->getText() + " " + text, controller)));
             }
             else
             {
-                HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock());
-                txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text)));
+                HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock(controller));
+                txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text, controller)));
                 this->add(txtBlck);
             }
         }
@@ -444,7 +448,7 @@ void HSSContainer::drawBackground()
     this->backgroundSurface->fill(Qt::transparent);
 
     QPainter painter(this->backgroundSurface);
-    if (axrController->document()->getRender()->globalAntialiasingEnabled())
+    if (this->getController()->document()->getRender()->globalAntialiasingEnabled())
         painter.setRenderHint(QPainter::Antialiasing);
 
     QPainterPath path;
@@ -457,7 +461,7 @@ void HSSContainer::drawBorders()
     this->bordersSurface->fill(Qt::transparent);
 
     QPainter painter(this->bordersSurface);
-    if (axrController->document()->getRender()->globalAntialiasingEnabled())
+    if (this->getController()->document()->getRender()->globalAntialiasingEnabled())
         painter.setRenderHint(QPainter::Antialiasing);
 
     // Calculate the combined thickness of all borders
@@ -506,7 +510,7 @@ void HSSContainer::layout()
             unsigned i, size, j, k;
             //HSSUnit acc2 = 0;
             security_brake_init();
-            AXRDocument * document = axrController->document();
+            AXRDocument * document = this->getController()->document();
 
             //bool secondaryIsHorizontal = (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft);
 
@@ -1609,7 +1613,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
         return true;
     }
 
-    AXRDocument * document = axrController->document();
+    AXRDocument * document = this->getController()->document();
 
     switch (direction)
     {
@@ -2347,15 +2351,15 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
         HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "left")
         {
-            this->setDContentAlignX(HSSParserNode::p(new HSSNumberConstant(0)));
+            this->setDContentAlignX(HSSParserNode::p(new HSSNumberConstant(0, this->getController())));
         }
         else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center")
         {
-            this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(50)));
+            this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(50, this->getController())));
         }
         else if (keywordValue->getValue() == "right")
         {
-            this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(100)));
+            this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(100, this->getController())));
         }
         else if (keywordValue->getValue() == "even")
         {
@@ -2460,15 +2464,15 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
         HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "top")
         {
-            this->setDContentAlignY(HSSParserNode::p(new HSSNumberConstant(0)));
+            this->setDContentAlignY(HSSParserNode::p(new HSSNumberConstant(0, this->getController())));
         }
         else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center")
         {
-            this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(50)));
+            this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(50, this->getController())));
         }
         else if (keywordValue->getValue() == "bottom")
         {
-            this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(100)));
+            this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(100, this->getController())));
         }
         else if (keywordValue->getValue() == "even")
         {
@@ -2697,7 +2701,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
         AXRString stringValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
         if (stringValue == "default")
         {
-            this->shape = HSSRectangle::p(new HSSRectangle());
+            this->shape = HSSRectangle::p(new HSSRectangle(this->getController()));
             valid = true;
         }
         break;
@@ -2708,7 +2712,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             objdef->setThisObj(this->shared_from_this());
             HSSContainer::p parent = this->getParent();
             if (parent)
@@ -2810,7 +2814,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDTextAlign(objdef);
             valid = true;
         }
@@ -2933,24 +2937,25 @@ void HSSContainer::textAlignChanged(HSSObservableProperty source, void *data)
 void HSSContainer::setDefaults()
 {
     HSSDisplayObject::setDefaults();
+    AXRController * controller = this->getController();
 
     //contentAlignX
-    HSSKeywordConstant::p newDContentAlignX(new HSSKeywordConstant("left"));
+    HSSKeywordConstant::p newDContentAlignX(new HSSKeywordConstant("left", controller));
     this->setDContentAlignX(newDContentAlignX);
     //contentAlignY
-    HSSKeywordConstant::p newDContentAlignY(new HSSKeywordConstant("top"));
+    HSSKeywordConstant::p newDContentAlignY(new HSSKeywordConstant("top", controller));
     this->setDContentAlignY(newDContentAlignY);
     //directionPrimary
-    HSSKeywordConstant::p newDDirectionPrimary(new HSSKeywordConstant("ltr"));
+    HSSKeywordConstant::p newDDirectionPrimary(new HSSKeywordConstant("ltr", controller));
     this->setDDirectionPrimary(newDDirectionPrimary);
     //directionSecondary
-    HSSKeywordConstant::p newDDirectionSecondary(new HSSKeywordConstant("ttb"));
+    HSSKeywordConstant::p newDDirectionSecondary(new HSSKeywordConstant("ttb", controller));
     this->setDDirectionSecondary(newDDirectionSecondary);
     //shape
-    HSSKeywordConstant::p newDShape(new HSSKeywordConstant("default"));
+    HSSKeywordConstant::p newDShape(new HSSKeywordConstant("default", controller));
     this->setDShape(newDShape);
     //textAlign
-    this->setDTextAlign(HSSKeywordConstant::p(new HSSKeywordConstant("left")));
+    this->setDTextAlign(HSSKeywordConstant::p(new HSSKeywordConstant("left", controller)));
 }
 
 HSSUnit HSSContainer::_evaluatePropertyValue(

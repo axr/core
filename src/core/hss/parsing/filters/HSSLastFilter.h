@@ -57,7 +57,7 @@ namespace AXR
         /**
          *  Creates a new instance of a last filter
          */
-        HSSLastFilter();
+        HSSLastFilter(AXRController * controller);
 
         /**
          *  Clones an instance of HSSLastFilter and gives a shared pointer of the

@@ -83,7 +83,7 @@ namespace AXR
          *  @param type A string identifying the type for the new object
          *  @return A shared pointer to the new HSSObject
          */
-        static HSSObject::p newObjectWithType(AXRString type);
+        static HSSObject::p newObjectWithType(AXRString type, AXRController * controller);
 
         /**
          *  This stores the name of the object.
@@ -96,7 +96,7 @@ namespace AXR
          *  Constructor for HSSObject.
          *  @param type     The type of this object subclass for identification purposes.
          */
-        HSSObject(HSSObjectType type);
+        HSSObject(HSSObjectType type, AXRController * controller);
         /**
          *  Copy constructor for HSSObject. Doesn't copy registered properties or shorhand positions. If your
          *  subclass needs that, you have to copy them yourself after the construction.

@@ -67,7 +67,7 @@ namespace AXR
          *  Creates a new instance of an object definition, storing the given object, to which
          *   the properties will be applied by calling the apply() method.
          */
-        HSSObjectDefinition(HSSObject::p prototype);
+        HSSObjectDefinition(HSSObject::p prototype, AXRController * controller);
 
         /**
          *  Copy constructor for HSSObjectDefinition. Do not call directly, use clone() instead.

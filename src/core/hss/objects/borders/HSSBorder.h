@@ -104,7 +104,7 @@ namespace AXR
         /**
          *  Creates a new HSSBorder object.
          */
-        HSSBorder();
+        HSSBorder(AXRController * controller);
 
         /**
          *  Copy constructor for HSSBorder objects.

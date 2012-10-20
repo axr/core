@@ -86,7 +86,7 @@ namespace AXR
         /**
          *  Creates a new instance of a selector chain.
          */
-        HSSSelectorChain();
+        HSSSelectorChain(AXRController * controller);
 
         /**
          *  Copy constructor for HSSSelectorChain objects. Do not call directly,

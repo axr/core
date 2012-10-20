@@ -63,7 +63,7 @@ namespace AXR
         /**
          *  Creates a new instance of a simple selector.
          */
-        HSSSimpleSelector();
+        HSSSimpleSelector(AXRController * controller);
 
         /**
          *  Copy constructor for HSSSimpleSelector objects. Do not call directly, use clone() instead.

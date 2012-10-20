@@ -80,8 +80,8 @@ AXRString HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
     return types[eventType];
 }
 
-HSSEvent::HSSEvent(HSSEventType type)
-: HSSObject(HSSObjectTypeEvent)
+HSSEvent::HSSEvent(HSSEventType type, AXRController * controller)
+: HSSObject(HSSObjectTypeEvent, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: creating event object");
     this->eventType = type;
@@ -208,7 +208,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant>(value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue())->clone();
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue())->clone();
             objdef->setScope(this->scope);
             objdef->setThisObj(this->getThisObj());
             objdef->apply();
@@ -266,7 +266,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
             HSSFlagFunction::p flagFnct = qSharedPointerCast<HSSFlagFunction>(fnct);
-            HSSFlagAction::p flagAction = HSSFlagAction::p(new HSSFlagAction());
+            HSSFlagAction::p flagAction = HSSFlagAction::p(new HSSFlagAction(this->getController()));
             flagAction->setFlagFunction(flagFnct);
             flagAction->setController(this->getController());
             flagAction->setScope(this->scope);
@@ -281,7 +281,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
             HSSFunction::p theFnct = qSharedPointerCast<HSSFunction>(fnct);
-            HSSFunctionAction::p fnctAction = HSSFunctionAction::p(new HSSFunctionAction());
+            HSSFunctionAction::p fnctAction = HSSFunctionAction::p(new HSSFunctionAction(this->getController()));
             fnctAction->setFunction(theFnct);
             fnctAction->setController(this->getController());
             fnctAction->setScope(this->scope);

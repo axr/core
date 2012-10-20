@@ -66,7 +66,7 @@ namespace AXR
         /**
          *  Creates a new instance of a multiple value definition node.
          */
-        HSSMultipleValueDefinition();
+        HSSMultipleValueDefinition(AXRController * controller);
 
         /**
          *  Clones an instance of HSSMultipleValueDefinition and gives a shared pointer of the

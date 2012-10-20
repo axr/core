@@ -77,9 +77,10 @@ AXRString HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type)
     return ret;
 }
 
-HSSParserNode::HSSParserNode(HSSParserNodeType type)
+HSSParserNode::HSSParserNode(HSSParserNodeType type, AXRController * controller)
 {
     this->nodeType = type;
+    this->controller = controller;
 }
 
 //doesn't clone any part of the node tree, nor the observers array

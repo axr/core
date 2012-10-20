@@ -57,7 +57,7 @@ namespace AXR
         /**
          *  @brief Creates a new instance of a \@first filter.
          */
-        HSSLastChildFilter();
+        HSSLastChildFilter(AXRController * controller);
 
         /**
          *  Clones an instance of HSSFirstChildFilter and gives a shared pointer of the

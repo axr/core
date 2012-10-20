@@ -67,7 +67,7 @@ namespace AXR
         /**
          *  Creates a new instance of a rounded  rect object.
          */
-        HSSRoundedRect();
+        HSSRoundedRect(AXRController * controller);
 
         /**
          *  Copy constructor for HSSRoundedRect objects. Do not call directly, use clone() instead.

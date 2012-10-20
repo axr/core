@@ -65,7 +65,7 @@ namespace AXR
         /**
          *  Creates a new instance of a this selector.
          */
-        HSSThisSelector();
+        HSSThisSelector(AXRController * controller);
 
         /**
          *  Clones an instance of HSSThisSelector and gives a shared pointer of the

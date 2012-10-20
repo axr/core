@@ -118,7 +118,7 @@ namespace AXR
         /**
          *  Creates a newly allocated and initialized instance of a container.
          */
-        HSSContainer();
+        HSSContainer(AXRController * controller);
 
         /**
          *  Initializes all ivars to default values.

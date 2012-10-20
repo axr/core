@@ -64,7 +64,7 @@ namespace AXR
          *  Creates a new instance of a string constant node which holds the given value.
          *  @param value    A string containing the value for the constant.
          */
-        HSSStringConstant(AXRString value);
+        HSSStringConstant(AXRString value, AXRController * controller);
 
         /**
          *  Clones an instance of HSSStringConstant and gives a shared pointer of the

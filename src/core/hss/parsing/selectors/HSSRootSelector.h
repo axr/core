@@ -62,7 +62,7 @@ namespace AXR
         /**
          *  Creates a new instance of a root selector.
          */
-        HSSRootSelector();
+        HSSRootSelector(AXRController * controller);
 
         /**
          *  Clones an instance of HSSRootSelector and gives a shared pointer of the

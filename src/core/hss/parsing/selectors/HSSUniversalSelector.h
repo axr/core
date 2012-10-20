@@ -63,7 +63,7 @@ namespace AXR
         /**
          *  Creates a new instance of a universal selector.
          */
-        HSSUniversalSelector();
+        HSSUniversalSelector(AXRController * controller);
 
         /**
          *  Clones an instance of HSSRootSelector and gives a shared pointer of the

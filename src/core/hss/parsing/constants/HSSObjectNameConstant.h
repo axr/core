@@ -64,7 +64,7 @@ namespace AXR
          *  Creates a new instance of a object name constant, with given name.
          *  @param  value   A string containing the object name.
          */
-        HSSObjectNameConstant(AXRString value);
+        HSSObjectNameConstant(AXRString value, AXRController * controller);
 
         /**
          *  Clones an instance of HSSObjectNameConstant and gives a shared pointer of the

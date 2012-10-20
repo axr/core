@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSObjectNameConstant::HSSObjectNameConstant(AXRString value)
-: HSSParserNode(HSSParserNodeTypeObjectNameConstant)
+HSSObjectNameConstant::HSSObjectNameConstant(AXRString value, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeObjectNameConstant, controller)
 {
     this->value = value;
 }

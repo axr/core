@@ -436,6 +436,18 @@ namespace AXR
 
         HSSParserNode::p readValue(AXRString propertyName, bool &valid);
 
+        /**
+         *  Setter for the controller. The controller needs to be propagated across all
+         *  HSSParserNode subclasses, so they get access to the DOM and such.
+         *  @param controller       A pointer to the AXRController that owns this object
+         */
+        virtual void setController(AXRController *controller);
+        /**
+         *  Getter for the controller.
+         *  @return A pointer to the AXRController that owns this object
+         */
+        virtual AXRController* getController();
+
     private:
         HSSTokenizer::p tokenizer;
         //weak pointer

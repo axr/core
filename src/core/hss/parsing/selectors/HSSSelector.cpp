@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSSelector::HSSSelector(HSSSelectorType type)
-: HSSParserNode(HSSParserNodeTypeSelector)
+HSSSelector::HSSSelector(HSSSelectorType type, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeSelector, controller)
 {
     this->_selectorType = type;
     this->_negating = false;

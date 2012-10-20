@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSUniversalSelector::HSSUniversalSelector()
-: HSSNameSelector("*")
+HSSUniversalSelector::HSSUniversalSelector(AXRController * controller)
+: HSSNameSelector("*", controller)
 {
 
 }

@@ -46,8 +46,8 @@
 
 using namespace AXR;
 
-HSSCircle::HSSCircle()
-: HSSShape(HSSShapeTypeCircle)
+HSSCircle::HSSCircle(AXRController * controller)
+: HSSShape(HSSShapeTypeCircle, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSCircle: creating circle object");
 }

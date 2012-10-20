@@ -57,8 +57,8 @@
 
 using namespace AXR;
 
-HSSLinearGradient::HSSLinearGradient()
-: HSSGradient()
+HSSLinearGradient::HSSLinearGradient(AXRController * controller)
+: HSSGradient(controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: creating linear gradient object");
     std::vector<AXRString> shorthandProperties;

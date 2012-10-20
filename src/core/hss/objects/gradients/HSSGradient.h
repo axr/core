@@ -215,7 +215,7 @@ namespace AXR
         /**
          *  Constructor for HSSGradient objects
          */
-        HSSGradient();
+        HSSGradient(AXRController * controller);
 
         /**
          *  Copy constructor for HSSGradient objects

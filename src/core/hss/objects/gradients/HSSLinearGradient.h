@@ -64,7 +64,7 @@ namespace AXR
         /**
          *  Creates a new instance of a
          */
-        HSSLinearGradient();
+        HSSLinearGradient(AXRController * controller);
         /**
          *  Copy constructor for HSSLinearGradient objects
          */

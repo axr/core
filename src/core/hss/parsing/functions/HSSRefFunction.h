@@ -67,7 +67,7 @@ namespace AXR
         /**
          *  Creates a new instance of a ref function.
          */
-        HSSRefFunction();
+        HSSRefFunction(AXRController * controller);
 
         /**
          *  Copy constructor for HSSRefFunction objects. Do not call directly, use clone() instead.

@@ -80,7 +80,7 @@ HSSParser::HSSParser(AXRController * theController)
     this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
 
     this->currentContext.push_back(HSSParserContextRoot);
-    this->_genericContext = HSSValue::p(new HSSValue());
+    this->_genericContext = HSSValue::p(new HSSValue(this->controller));
     this->currentObjectContextAdd(this->_genericContext);
     this->_lastObjectType = "value";
 
@@ -218,6 +218,7 @@ bool HSSParser::readNextStatement()
     if (this->atEndOfSource())
         return false;
 
+    AXRController * controller = this->getController();
 
     switch (this->currentToken->getType())
     {
@@ -246,7 +247,7 @@ bool HSSParser::readNextStatement()
 
             axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding object definition to object tree");
             this->recursiveAddObjectDefinition(theObj);
-            this->controller->parserTreeAdd(theObj);
+            controller->parserTreeAdd(theObj);
             ret = true;
 
             this->skipExpected(HSSEndOfStatement);
@@ -319,7 +320,7 @@ bool HSSParser::readNextStatement()
             this->currentContext = currentCurrentContext;
             this->currentObjectContext = currentCurrentObjectContext;
 
-            this->controller->parserTreeAdd(theInstr);
+            controller->parserTreeAdd(theInstr);
             ret = true;
 
             break;
@@ -346,7 +347,7 @@ bool HSSParser::readNextStatement()
             {
                 axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding object definition to object tree");
                 this->recursiveAddObjectDefinition(theObj);
-                this->controller->parserTreeAdd(theObj);
+                controller->parserTreeAdd(theObj);
             }
 
             if (!this->atEndOfSource() && this->currentToken->isA(HSSAmpersand))
@@ -365,8 +366,8 @@ bool HSSParser::readNextStatement()
         if (theRule)
         {
             axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
-            this->controller->rulesAdd(theRule);
-            this->controller->parserTreeAdd(theRule);
+            controller->rulesAdd(theRule);
+            controller->parserTreeAdd(theRule);
         }
         break;
     }
@@ -378,8 +379,8 @@ bool HSSParser::readNextStatement()
             if (theRule)
             {
                 axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
-                this->controller->rulesAdd(theRule);
-                this->controller->parserTreeAdd(theRule);
+                controller->rulesAdd(theRule);
+                controller->parserTreeAdd(theRule);
             }
             break;
         }
@@ -392,12 +393,12 @@ bool HSSParser::readNextStatement()
     case HSSBlockComment:
     case HSSLineComment:
     {
-        HSSComment::p theComment = HSSComment::p(new HSSComment(VALUE_TOKEN(this->currentToken)->getString()));
+        HSSComment::p theComment = HSSComment::p(new HSSComment(VALUE_TOKEN(this->currentToken)->getString(), controller));
         this->readNextToken();
         if (!this->atEndOfSource())
             this->skip(HSSWhitespace);
         axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding comment to parser tree");
-        this->controller->parserTreeAdd(theComment);
+        controller->parserTreeAdd(theComment);
         ret = true;
         break;
     }
@@ -422,6 +423,7 @@ HSSRule::p HSSParser::readRule()
 
             //throw error if at end of source
             this->checkForUnexpectedEndOfSource();
+    AXRController * controller = this->getController();
 
     //initialize the rule
     std::vector<HSSSelectorChain::p> selectorChains;
@@ -434,7 +436,7 @@ HSSRule::p HSSParser::readRule()
             this->readNextToken(true);
             //skip any whitespace
             this->skip(HSSWhitespace, true);
-            HSSRule::p ret = HSSRule::p(new HSSRule());
+            HSSRule::p ret = HSSRule::p(new HSSRule(controller));
             ret->setSelectorChains(selectorChains);
             return ret;
         }
@@ -453,7 +455,7 @@ HSSRule::p HSSParser::readRule()
         return ret;
     }
 
-    HSSRule::p ret = HSSRule::p(new HSSRule());
+    HSSRule::p ret = HSSRule::p(new HSSRule(controller));
     ret->setSelectorChains(selectorChains);
 
     //we expect a block to open
@@ -462,7 +464,7 @@ HSSRule::p HSSParser::readRule()
     this->skip(HSSWhitespace, true);
 
     //now we're inside the block
-    this->currentObjectContextAdd(HSSContainer::p(new HSSContainer()));
+    this->currentObjectContextAdd(HSSContainer::p(new HSSContainer(controller)));
     this->currentContext.push_back(HSSParserContextBlock);
 
     //read the inner part of the block
@@ -578,8 +580,10 @@ std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stop
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading selector chains");
     security_brake_init();
 
+    AXRController * controller = this->getController();
+
     std::vector<HSSSelectorChain::p> retvect;
-    HSSSelectorChain::p ret = HSSSelectorChain::p(new HSSSelectorChain());
+    HSSSelectorChain::p ret = HSSSelectorChain::p(new HSSSelectorChain(controller));
     bool done = false;
     bool rootContext = false;
 
@@ -594,8 +598,8 @@ std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stop
         HSSCombinator::p beginning_combinator = this->readCombinator();
         if (beginning_combinator)
         {
-            HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector());
-            newSs->setName(HSSThisSelector::p(new HSSThisSelector()));
+            HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
+            newSs->setName(HSSThisSelector::p(new HSSThisSelector(controller)));
             ret->add(newSs);
             ret->add(beginning_combinator);
         }
@@ -628,7 +632,7 @@ std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stop
             this->skip(HSSWhitespace);
             if (!this->currentToken->isA(stopOn))
             {
-                ret = HSSSelectorChain::p(new HSSSelectorChain());
+                ret = HSSSelectorChain::p(new HSSSelectorChain(controller));
             }
             else
             {
@@ -660,6 +664,8 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading simple selector");
     security_brake_init();
 
+    AXRController * controller = getController();
+
     HSSSimpleSelector::p ret;
     bool isNegating = false;
     isNegating = this->isNegator();
@@ -667,7 +673,7 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
     {
     case HSSIdentifier:
     {
-        ret = HSSSimpleSelector::p(new HSSSimpleSelector());
+        ret = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
         ret->setName(this->readNameSelector(isNegating));
 
         //we're done negating for now
@@ -682,8 +688,8 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
         {
         case '*':
         {
-            ret = HSSSimpleSelector::p(new HSSSimpleSelector());
-            ret->setName(HSSUniversalSelector::p(new HSSUniversalSelector()));
+            ret = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
+            ret->setName(HSSUniversalSelector::p(new HSSUniversalSelector(controller)));
             this->readNextToken();
             break;
         }
@@ -694,14 +700,14 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
 
     case HSSColon:
     {
-        ret = HSSSimpleSelector::p(new HSSSimpleSelector());
-        ret->setName(HSSUniversalSelector::p(new HSSUniversalSelector()));
+        ret = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
+        ret->setName(HSSUniversalSelector::p(new HSSUniversalSelector(controller)));
         break;
     }
 
     case HSSObjectSign:
     {
-        ret = HSSSimpleSelector::p(new HSSSimpleSelector());
+        ret = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
         ret->setName(this->readObjectSelector());
     }
 
@@ -733,111 +739,12 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
     }
     security_brake_reset();
     return ret;
-
-    //    switch (this->currentToken->getType()) {
-    //        case HSSIdentifier:
-    //        {
-    //            //if it's an identifier, it's a simple selector
-    //
-    //            break;
-    //        }
-    //
-    //        case '*':
-    //        {
-    //            ret->add(HSSUniversalSelector::p(new HSSUniversalSelector()));
-    //            this->readNextToken();
-    //            break;
-    //        }
-    //
-    //        case '!':
-    //        {
-    //            //it's a negation
-    //            ret->add(HSSNegation::p(new HSSNegation()));
-    //            this->readNextToken();
-    //            break;
-    //        }
-    //
-    //        case HSSColon:
-    //        {
-    //            //if there is another colon, it is a flag
-    //            this->readNextToken(true);
-    //            if(this->currentToken->isA(HSSColon)){
-    //                this->readNextToken(true);
-    //                HSSParserNode::p theFlag = this->readFlag();
-    //                if(theFlag){
-    //                    ret->add(theFlag);
-    //                }
-    //
-    //            } else {
-    //                //it is a filter
-    //                HSSParserNode::p theFilter = this->readFilter();
-    //                if(theFilter){
-    //                    ret->add(theFilter);
-    //                }
-    //            }
-    //            //adds only if needed
-    //            ret->add(this->readChildrenCombinatorOrSkip());
-    //            break;
-    //        }
-    //
-    //        case HSSObjectSign:
-    //        {
-    //            this->readNextToken(true);
-    //            if(this->currentToken->isA(HSSIdentifier)){
-    //                AXRString objtype = VALUE_TOKEN(this->currentToken)->getString();
-    //                if (objtype == "this") {
-    //                    ret->add(HSSThisSelector::p(new HSSThisSelector()));
-    //                    this->readNextToken(true);
-    //                    //adds only if needed
-    //                    HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
-    //                    if(childrenCombinator){
-    //                        ret->add(childrenCombinator);
-    //                    }
-    //                    break;
-    //                } else if (objtype == "super"){
-    //                    /**
-    //                     *  @todo implement \@super
-    //                     */
-    //                    std_log("@super not implemented yet");
-    //                } else if (objtype == "parent"){
-    //                    /**
-    //                     *  @todo implement \@parent
-    //                     */
-    //                    std_log("@parent not implemented yet");
-    //                } else if (objtype == "root"){
-    //                    ret->add(HSSRootSelector::p(new HSSRootSelector()));
-    //                    this->readNextToken(true);
-    //                    //adds only if needed
-    //                    HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
-    //                    if(childrenCombinator){
-    //                        ret->add(childrenCombinator);
-    //                    }
-    //                    break;
-    //                } else {
-    //                    throw AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->currentFile->getFileName(), this->line, this->column));
-    //                }
-    //            } else if(this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) || this->currentToken->isA(HSSColon)){
-    //                ret->add(HSSThisSelector::p(new HSSThisSelector()));
-    //                this->skip(HSSWhitespace, true);
-    //                break;
-    //            }
-    //
-    //            //fall through
-    //        }
-    //
-    //        default:
-    //        {
-    //            //we didn't expect any other type of token
-    //            throw AXRError::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
-    //        }
-    //    }
-    //
-    //    return ret;
 }
 
 HSSNameSelector::p HSSParser::readObjectSelector()
 {
     HSSNameSelector::p ret;
+    AXRController * controller = this->getController();
     switch (this->currentToken->getType())
     {
     case HSSObjectSign:
@@ -848,7 +755,7 @@ HSSNameSelector::p HSSParser::readObjectSelector()
             AXRString objtype = VALUE_TOKEN(this->currentToken)->getString();
             if (objtype == "this")
             {
-                ret = HSSThisSelector::p(new HSSThisSelector());
+                ret = HSSThisSelector::p(new HSSThisSelector(controller));
                 this->readNextToken(true);
             }
             else if (objtype == "super")
@@ -863,13 +770,13 @@ HSSNameSelector::p HSSParser::readObjectSelector()
                 /**
                  *  @todo implement \@parent
                  */
-                ret = HSSParentSelector::p(new HSSParentSelector());
+                ret = HSSParentSelector::p(new HSSParentSelector(controller));
                 this->readNextToken(true);
 
             }
             else if (objtype == "root")
             {
-                ret = HSSRootSelector::p(new HSSRootSelector());
+                ret = HSSRootSelector::p(new HSSRootSelector(controller));
                 this->readNextToken(true);
                 break;
             }
@@ -881,7 +788,7 @@ HSSNameSelector::p HSSParser::readObjectSelector()
         }
         else if (this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) || this->currentToken->isA(HSSColon))
         {
-            ret = HSSThisSelector::p(new HSSThisSelector());
+            ret = HSSThisSelector::p(new HSSThisSelector(controller));
             this->skip(HSSWhitespace, true);
             break;
         }
@@ -917,7 +824,7 @@ HSSFilter::p HSSParser::readFilter()
         {
             this->readNextToken();
             AXRString flagName = VALUE_TOKEN(this->currentToken)->getString();
-            HSSFlag::p theFlag = HSSFlag::p(new HSSFlag());
+            HSSFlag::p theFlag = HSSFlag::p(new HSSFlag(this->getController()));
             theFlag->setName(flagName);
             ret = theFlag;
             this->readNextToken();
@@ -929,7 +836,7 @@ HSSFilter::p HSSParser::readFilter()
             this->expect(HSSIdentifier);
 
             AXRString filterName = VALUE_TOKEN(this->currentToken)->getString();
-            ret = HSSFilter::newFilterWithStringType(filterName);
+            ret = HSSFilter::newFilterWithStringType(filterName, this->getController());
 
             this->readNextToken();
             this->checkForUnexpectedEndOfSource();
@@ -1376,7 +1283,7 @@ HSSCombinator::p HSSParser::readChildrenCombinatorOrSkip()
     {
         if (this->isChildrenCombinator())
         {
-            HSSCombinator::p newCombinator = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeChildren));
+            HSSCombinator::p newCombinator = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeChildren, this->getController()));
             this->readNextToken();
             return newCombinator;
         }
@@ -1408,18 +1315,18 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
     switch (currentTokenChar)
     {
     case '=':
-        ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeSiblings));
+        ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeSiblings, this->getController()));
         break;
     case '-':
-        ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypePreviousSiblings));
+        ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypePreviousSiblings, this->getController()));
         break;
     case '+':
-        ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeNextSiblings));
+        ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeNextSiblings, this->getController()));
         break;
     case '.':
         if (VALUE_TOKEN(this->currentToken)->getString() == "..")
         {
-            ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeDescendants));
+            ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeDescendants, this->getController()));
         }
 
         break;
@@ -1440,7 +1347,7 @@ HSSNameSelector::p HSSParser::readNameSelector(bool isNegating)
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading name selector");
 
     AXRString theValue = VALUE_TOKEN(this->currentToken)->getString();
-    HSSNameSelector::p ret = HSSNameSelector::p(new HSSNameSelector(theValue));
+    HSSNameSelector::p ret = HSSNameSelector::p(new HSSNameSelector(theValue, this->getController()));
     ret->setNegating(isNegating);
     this->readNextToken();
 
@@ -1502,7 +1409,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
         //try to create an object of that type
         try
         {
-            obj = HSSObject::newObjectWithType(objtype);
+            obj = HSSObject::newObjectWithType(objtype, this->controller);
         }
         catch (const AXRError &e)
         {
@@ -1525,12 +1432,12 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
 
             try
             {
-                obj = HSSObject::newObjectWithType(objtype);
+                obj = HSSObject::newObjectWithType(objtype, this->controller);
             }
             catch (const AXRError &)
             {
                 objtype = "value";
-                obj = HSSObject::newObjectWithType(objtype);
+                obj = HSSObject::newObjectWithType(objtype, this->controller);
             }
         }
         obj->setController(this->controller);
@@ -1540,7 +1447,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
     else
     {
         this->skipExpected(HSSAmpersand, true);
-        obj = HSSObject::newObjectWithType(this->_lastObjectType);
+        obj = HSSObject::newObjectWithType(this->_lastObjectType, this->controller);
         obj->setController(this->controller);
         objtype = this->_lastObjectType;
 
@@ -1556,6 +1463,8 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
     {
         this->skip(HSSWhitespace);
     }
+
+    AXRController * controller = this->getController();
 
     switch (this->currentToken->getType())
     {
@@ -1573,7 +1482,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
     case HSSParenthesisClose:
     {
         //the property definition ends here
-        ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
+        ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj, controller));
         return ret;
     }
 
@@ -1582,7 +1491,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
         break;
     }
 
-    ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
+    ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj, controller));
     this->skip(HSSWhitespace);
     this->skipExpected(HSSBlockOpen);
     this->skip(HSSWhitespace);
@@ -1835,7 +1744,8 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
     }
 
     bool done = false;
-    ret = HSSPropertyDefinition::p(new HSSPropertyDefinition(propertyName));
+    AXRController * controller = this->getController();
+    ret = HSSPropertyDefinition::p(new HSSPropertyDefinition(propertyName, controller));
 
     while (!done && valid)
     {
@@ -1877,7 +1787,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             }
             else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString))
             {
-                ret->addValue(HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString())));
+                ret->addValue(HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString(), controller)));
                 this->checkForUnexpectedEndOfSource();
                 this->readNextToken();
                 this->skip(HSSWhitespace);
@@ -1925,13 +1835,13 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 }
                 else if (objectContext->isKeyword(valuestr, propertyName))
                 {
-                    ret->addValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr)));
+                    ret->addValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr, controller)));
                     this->readNextToken();
                     //we assume it is an object name at this point
                 }
                 else
                 {
-                    ret->addValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr)));
+                    ret->addValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr, controller)));
                     this->readNextToken();
                 }
                 /*
@@ -2042,7 +1952,7 @@ HSSParserNode::p HSSParser::readValue(AXRString propertyName, bool &valid)
         }
         else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString))
         {
-            ret = HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString()));
+            ret = HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString(), this->getController()));
             this->checkForUnexpectedEndOfSource();
             this->readNextToken();
             this->skip(HSSWhitespace);
@@ -2090,13 +2000,13 @@ HSSParserNode::p HSSParser::readValue(AXRString propertyName, bool &valid)
             }
             else if (objectContext->isKeyword(valuestr, propertyName))
             {
-                ret = HSSKeywordConstant::p(new HSSKeywordConstant(valuestr));
+                ret = HSSKeywordConstant::p(new HSSKeywordConstant(valuestr, this->getController()));
                 this->readNextToken();
                 //we assume it is an object name at this point
             }
             else
             {
-                ret = HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr));
+                ret = HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr, this->getController()));
                 this->readNextToken();
             }
 
@@ -2156,41 +2066,42 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
     this->checkForUnexpectedEndOfSource();
     //we are looking at
     //if it starts with a number, we are looking at a color instruction
+    AXRController * controller = this->getController();
     if (this->currentToken->isA(HSSHexNumber))
     {
         currentval = VALUE_TOKEN(this->currentToken)->getString();
         switch (currentval.length())
         {
         case 1:
-            ret = HSSInstruction::p(new HSSInstruction(HSSGrayscale1Instruction, currentval));
+            ret = HSSInstruction::p(new HSSInstruction(HSSGrayscale1Instruction, currentval, controller));
             this->readNextToken();
             break;
         case 2:
-            ret = HSSInstruction::p(new HSSInstruction(HSSGrayscale2Instruction, currentval));
+            ret = HSSInstruction::p(new HSSInstruction(HSSGrayscale2Instruction, currentval, controller));
             this->readNextToken();
             break;
         case 3:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRGBInstruction, currentval));
+            ret = HSSInstruction::p(new HSSInstruction(HSSRGBInstruction, currentval, controller));
             this->readNextToken();
             break;
         case 4:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRGBAInstruction, currentval));
+            ret = HSSInstruction::p(new HSSInstruction(HSSRGBAInstruction, currentval, controller));
             this->readNextToken();
             break;
         case 5:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRGBAAInstruction, currentval));
+            ret = HSSInstruction::p(new HSSInstruction(HSSRGBAAInstruction, currentval, controller));
             this->readNextToken();
             break;
         case 6:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBInstruction, currentval));
+            ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBInstruction, currentval, controller));
             this->readNextToken();
             break;
         case 7:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBAInstruction, currentval));
+            ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBAInstruction, currentval, controller));
             this->readNextToken();
             break;
         case 8:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBAAInstruction, currentval));
+            ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBAAInstruction, currentval, controller));
             this->readNextToken();
             break;
 
@@ -2204,10 +2115,11 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
     }
     else if (this->currentToken->isA(HSSIdentifier))
     {
+        AXRController * controller = this->getController();
         currentval = VALUE_TOKEN(this->currentToken)->getString();
         if (currentval == "new")
         {
-            ret = HSSInstruction::p(new HSSInstruction(HSSNewInstruction));
+            ret = HSSInstruction::p(new HSSInstruction(HSSNewInstruction, controller));
             this->readNextToken(true);
             if (this->currentToken->isA(HSSParenthesisOpen))
             {
@@ -2216,7 +2128,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
                 if (this->currentToken->isA(HSSNumber))
                 {
                     HSSUnit number = VALUE_TOKEN(this->currentToken)->getLong();
-                    ret->setArgument(HSSNumberConstant::p(new HSSNumberConstant(number)));
+                    ret->setArgument(HSSNumberConstant::p(new HSSNumberConstant(number, controller)));
                     this->readNextToken(true);
                     this->skip(HSSWhitespace);
                     this->skipExpected(HSSParenthesisClose);
@@ -2230,7 +2142,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
         }
         else if (currentval == "ensure")
         {
-            ret = HSSInstruction::p(new HSSInstruction(HSSEnsureInstruction));
+            ret = HSSInstruction::p(new HSSInstruction(HSSEnsureInstruction, controller));
             this->readNextToken();
         }
         else if (currentval == "import")
@@ -2243,7 +2155,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
             if (this->currentToken->isA(HSSDoubleQuoteString) || this->currentToken->isA(HSSSingleQuoteString))
             {
                 AXRString theString = VALUE_TOKEN(this->currentToken)->getString();
-                ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, theString));
+                ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, theString, controller));
             }
             else if (this->currentToken->isA(HSSIdentifier))
             {
@@ -2253,7 +2165,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
                     QUrl url;
                     url.setScheme(HSSFRAMEWORK_PROTOCOL);
                     url.setPath("/framework/UIFramework.hss");
-                    ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, url.toString()));
+                    ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, url.toString(), controller));
                 }
                 else
                 {
@@ -2278,7 +2190,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
         }
         else if (currentval == "move")
         {
-            ret = HSSInstruction::p(new HSSInstruction(HSSMoveInstruction));
+            ret = HSSInstruction::p(new HSSInstruction(HSSMoveInstruction, controller));
             this->readNextToken();
         }
         else if (currentval == "delete")
@@ -2287,7 +2199,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
             this->readNextToken();
             this->checkForUnexpectedEndOfSource();
             this->skip(HSSWhitespace);
-            ret = HSSInstruction::p(new HSSInstruction(HSSDeleteInstruction));
+            ret = HSSInstruction::p(new HSSInstruction(HSSDeleteInstruction, controller));
 
         }
         else
@@ -2315,13 +2227,14 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
 {
     HSSObjectDefinition::p ret;
     HSSInstructionType instructionType = instruction->getInstructionType();
+    AXRController * controller = this->getController();
     switch (instructionType)
     {
     case HSSGrayscale1Instruction:
     case HSSGrayscale2Instruction:
     {
         //try to create an object of that type
-        HSSRgb::p obj = HSSRgb::p(new HSSRgb());
+        HSSRgb::p obj = HSSRgb::p(new HSSRgb(this->controller));
 
         unsigned int hexValue;
         AXRString tempstr = instruction->getValue();
@@ -2332,21 +2245,23 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
 
         hexValue = tempstr.toUInt(NULL, 16);
 
-        ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
+        ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj, controller));
 
-        HSSPropertyDefinition::p newRed = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+        AXRController * controller = this->getController();
+
+        HSSPropertyDefinition::p newRed = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
         newRed->setName("red");
-        newRed->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+        newRed->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newRed);
 
-        HSSPropertyDefinition::p newGreen = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+        HSSPropertyDefinition::p newGreen = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
         newGreen->setName("green");
-        newGreen->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+        newGreen->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newGreen);
 
-        HSSPropertyDefinition::p newBlue = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+        HSSPropertyDefinition::p newBlue = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
         newBlue->setName("blue");
-        newBlue->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue)));
+        newBlue->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newBlue);
 
         break;
@@ -2360,7 +2275,7 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
     case HSSRRGGBBAAInstruction:
     {
         //try to create an object of that type
-        HSSRgb::p obj = HSSRgb::p(new HSSRgb());
+        HSSRgb::p obj = HSSRgb::p(new HSSRgb(this->controller));
 
         AXRString red;
         unsigned int redHex;
@@ -2430,26 +2345,26 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
         blueHex = blue.toUInt(NULL, 16);
         alphaHex = alpha.toUInt(NULL, 16);
 
-        ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj));
+        ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj, controller));
 
-        HSSPropertyDefinition::p newRed = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+        HSSPropertyDefinition::p newRed = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
         newRed->setName("red");
-        newRed->setValue(HSSNumberConstant::p(new HSSNumberConstant(redHex)));
+        newRed->setValue(HSSNumberConstant::p(new HSSNumberConstant(redHex, controller)));
         ret->propertiesAdd(newRed);
 
-        HSSPropertyDefinition::p newGreen = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+        HSSPropertyDefinition::p newGreen = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
         newGreen->setName("green");
-        newGreen->setValue(HSSNumberConstant::p(new HSSNumberConstant(greenHex)));
+        newGreen->setValue(HSSNumberConstant::p(new HSSNumberConstant(greenHex, controller)));
         ret->propertiesAdd(newGreen);
 
-        HSSPropertyDefinition::p newBlue = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+        HSSPropertyDefinition::p newBlue = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
         newBlue->setName("blue");
-        newBlue->setValue(HSSNumberConstant::p(new HSSNumberConstant(blueHex)));
+        newBlue->setValue(HSSNumberConstant::p(new HSSNumberConstant(blueHex, controller)));
         ret->propertiesAdd(newBlue);
 
-        HSSPropertyDefinition::p newAlpha = HSSPropertyDefinition::p(new HSSPropertyDefinition());
+        HSSPropertyDefinition::p newAlpha = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
         newAlpha->setName("alpha");
-        newAlpha->setValue(HSSNumberConstant::p(new HSSNumberConstant(alphaHex)));
+        newAlpha->setValue(HSSNumberConstant::p(new HSSNumberConstant(alphaHex, controller)));
         ret->propertiesAdd(newAlpha);
 
         break;
@@ -2510,7 +2425,7 @@ HSSRule::p HSSParser::readInstructionRule()
             return ret;
         }
 
-        ret = HSSRule::p(new HSSRule());
+        ret = HSSRule::p(new HSSRule(this->getController()));
         ret->setSelectorChains(selectorChains);
         ret->setInstruction(instruction);
         break;
@@ -2549,6 +2464,7 @@ HSSParserNode::p HSSParser::readAdditiveExpression()
 
     this->checkForUnexpectedEndOfSource();
     HSSParserNode::p left = this->readMultiplicativeExpression();
+    AXRController * controller = this->getController();
     while (!this->atEndOfSource() && this->currentToken->isA(HSSSymbol))
     {
         const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).toStdString().c_str();
@@ -2558,7 +2474,7 @@ HSSParserNode::p HSSParser::readAdditiveExpression()
         {
             this->readNextToken();
             this->skip(HSSWhitespace);
-            left = HSSSum::p(new HSSSum(left, this->readMultiplicativeExpression()));
+            left = HSSSum::p(new HSSSum(left, this->readMultiplicativeExpression(), controller));
             break;
         }
 
@@ -2566,7 +2482,7 @@ HSSParserNode::p HSSParser::readAdditiveExpression()
         {
             this->readNextToken();
             this->skip(HSSWhitespace);
-            left = HSSSubtraction::p(new HSSSubtraction(left, this->readMultiplicativeExpression()));
+            left = HSSSubtraction::p(new HSSSubtraction(left, this->readMultiplicativeExpression(), controller));
             break;
         }
 
@@ -2587,6 +2503,7 @@ HSSParserNode::p HSSParser::readMultiplicativeExpression()
 
     this->checkForUnexpectedEndOfSource();
     HSSParserNode::p left = this->readBaseExpression();
+    AXRController * controller = this->getController();
     while (!this->atEndOfSource() && this->currentToken->isA(HSSSymbol))
     {
 
@@ -2597,7 +2514,7 @@ HSSParserNode::p HSSParser::readMultiplicativeExpression()
         {
             this->readNextToken();
             this->skip(HSSWhitespace);
-            left = HSSMultiplication::p(new HSSMultiplication(left, this->readBaseExpression()));
+            left = HSSMultiplication::p(new HSSMultiplication(left, this->readBaseExpression(), controller));
             break;
         }
 
@@ -2605,7 +2522,7 @@ HSSParserNode::p HSSParser::readMultiplicativeExpression()
         {
             this->readNextToken();
             this->skip(HSSWhitespace);
-            left = HSSDivision::p(new HSSDivision(left, this->readBaseExpression()));
+            left = HSSDivision::p(new HSSDivision(left, this->readBaseExpression(), controller));
             break;
         }
 
@@ -2629,7 +2546,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
     {
     case HSSNumber:
     {
-        left = HSSNumberConstant::p(new HSSNumberConstant(VALUE_TOKEN(this->currentToken)->getLong()));
+        left = HSSNumberConstant::p(new HSSNumberConstant(VALUE_TOKEN(this->currentToken)->getLong(), this->getController()));
         this->readNextToken();
         this->skip(HSSWhitespace);
         break;
@@ -2637,7 +2554,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
 
     case HSSPercentageNumber:
     {
-        left = HSSPercentageConstant::p(new HSSPercentageConstant(VALUE_TOKEN(this->currentToken)->getLong()));
+        left = HSSPercentageConstant::p(new HSSPercentageConstant(VALUE_TOKEN(this->currentToken)->getLong(), this->getController()));
         this->readNextToken();
         this->skip(HSSWhitespace);
         break;
@@ -2714,7 +2631,7 @@ HSSParserNode::p HSSParser::readFlag()
     this->expect(HSSIdentifier);
 
     AXRString flagName = VALUE_TOKEN(this->currentToken)->getString();
-    ret = HSSFlag::p(new HSSFlag());
+    ret = HSSFlag::p(new HSSFlag(this->getController()));
     ret->setName(flagName);
 
     this->readNextToken();
@@ -2730,13 +2647,14 @@ HSSParserNode::p HSSParser::readFunction()
     HSSParserNode::p ret;
 
     this->checkForUnexpectedEndOfSource();
+    AXRController * controller = this->getController();
     if (this->currentToken->isA(HSSIdentifier))
     {
         //create new function
         AXRString name = VALUE_TOKEN(this->currentToken)->getString();
         if (name == "ref")
         {
-            HSSRefFunction::p refFunction = HSSRefFunction::p(new HSSRefFunction());
+            HSSRefFunction::p refFunction = HSSRefFunction::p(new HSSRefFunction(controller));
             refFunction->setController(this->controller);
 
             this->readNextToken(true);
@@ -2789,9 +2707,9 @@ HSSParserNode::p HSSParser::readFunction()
             if (this->currentToken->isA(HSSParenthesisClose))
             {
                 HSSSelectorChain::p selectorChain;
-                selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
-                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector());
-                newSs->setName(HSSThisSelector::p(new HSSThisSelector()));
+                selectorChain = HSSSelectorChain::p(new HSSSelectorChain(controller));
+                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
+                newSs->setName(HSSThisSelector::p(new HSSThisSelector(controller)));
                 selectorChain->add(newSs);
                 selectorChains.push_back(selectorChain);
                 this->readNextToken(true);
@@ -2848,7 +2766,7 @@ HSSParserNode::p HSSParser::readFunction()
                 return ret;
             }
 
-            HSSSelFunction::p selFunction = HSSSelFunction::p(new HSSSelFunction());
+            HSSSelFunction::p selFunction = HSSSelFunction::p(new HSSSelFunction(controller));
             selFunction->setController(this->controller);
             selFunction->setSelectorChains(selectorChains);
 
@@ -2862,7 +2780,7 @@ HSSParserNode::p HSSParser::readFunction()
                 )
         {
 
-            HSSFlagFunction::p flagFunction = HSSFlagFunction::p(new HSSFlagFunction(HSSFlagFunction::flagFunctionTypeFromString(name)));
+            HSSFlagFunction::p flagFunction = HSSFlagFunction::p(new HSSFlagFunction(HSSFlagFunction::flagFunctionTypeFromString(name), controller));
             flagFunction->setController(this->controller);
 
             this->readNextToken(true);
@@ -2892,9 +2810,9 @@ HSSParserNode::p HSSParser::readFunction()
             if (this->currentToken->isA(HSSParenthesisClose))
             {
                 HSSSelectorChain::p selectorChain;
-                selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
-                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector());
-                newSs->setName(HSSThisSelector::p(new HSSThisSelector()));
+                selectorChain = HSSSelectorChain::p(new HSSSelectorChain(controller));
+                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
+                newSs->setName(HSSThisSelector::p(new HSSThisSelector(controller)));
                 selectorChain->add(newSs);
                 selectorChains.push_back(selectorChain);
                 this->readNextToken(true);
@@ -2925,7 +2843,7 @@ HSSParserNode::p HSSParser::readFunction()
         }
         else if (name == "attr")
         {
-            HSSAttrFunction::p attrFunction = HSSAttrFunction::p(new HSSAttrFunction());
+            HSSAttrFunction::p attrFunction = HSSAttrFunction::p(new HSSAttrFunction(controller));
             attrFunction->setController(this->controller);
 
             this->readNextToken(true);
@@ -2950,10 +2868,11 @@ HSSParserNode::p HSSParser::readFunction()
             std::vector<HSSSelectorChain::p> selectorChains;
             if (this->currentToken->isA(HSSParenthesisClose))
             {
+                AXRController * controller = this->getController();
                 HSSSelectorChain::p selectorChain;
-                selectorChain = HSSSelectorChain::p(new HSSSelectorChain());
-                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector());
-                newSs->setName(HSSThisSelector::p(new HSSThisSelector()));
+                selectorChain = HSSSelectorChain::p(new HSSSelectorChain(controller));
+                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
+                newSs->setName(HSSThisSelector::p(new HSSThisSelector(controller)));
                 selectorChain->add(newSs);
                 selectorChains.push_back(selectorChain);
                 this->readNextToken(true);
@@ -3019,7 +2938,7 @@ HSSParserNode::p HSSParser::readFunction()
                     this->readNextToken(true);
                 }
             }
-            HSSFunction::p theFunction = HSSFunction::p(new HSSFunction(HSSFunctionTypeCustom));
+            HSSFunction::p theFunction = HSSFunction::p(new HSSFunction(HSSFunctionTypeCustom, controller));
             theFunction->setArguments(arguments);
             theFunction->setName(name);
             ret = theFunction;
@@ -3196,4 +3115,15 @@ unsigned int HSSParser::currentObjectContextSize()
 void HSSParser::currentObjectContextAdd(HSSObject::p theObject)
 {
     this->currentObjectContext.push(theObject);
+}
+
+
+AXRController* HSSParser::getController()
+{
+    return controller;
+}
+
+void HSSParser::setController(AXRController *controller)
+{
+    this->controller = controller;
 }

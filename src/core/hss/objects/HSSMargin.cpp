@@ -51,8 +51,8 @@
 
 using namespace AXR;
 
-HSSMargin::HSSMargin()
-: HSSObject(HSSObjectTypeMargin)
+HSSMargin::HSSMargin(AXRController * controller)
+: HSSObject(HSSObjectTypeMargin, controller)
 {
     this->top = this->right = this->bottom = this->left = 0.0;
     this->observedTop = this->observedRight = this->observedBottom = this->observedLeft = NULL;

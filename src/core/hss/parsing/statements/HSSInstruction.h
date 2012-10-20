@@ -68,7 +68,7 @@ namespace AXR
          *
          *  @param type     The HSSInstructionType that corresponds to the wanted type of instruction.
          */
-        HSSInstruction(HSSInstructionType type);
+        HSSInstruction(HSSInstructionType type, AXRController * controller);
 
         /**
          *  Creates a new instance of an instruction node with the given type and value.
@@ -76,7 +76,7 @@ namespace AXR
          *  @param type     The HSSInstructionType that corresponds to the wanted type of instruction.
          *  @param value    A string containing the value of the instruction.
          */
-        HSSInstruction(HSSInstructionType type, AXRString value);
+        HSSInstruction(HSSInstructionType type, AXRString value, AXRController * controller);
 
         /**
          *  Copy constructor for HSSInstructions objects. Do not call directly, use clone() instead.

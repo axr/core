@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSNameSelector::HSSNameSelector(AXRString elementName)
-: HSSSelector(HSSSelectorTypeNameSelector)
+HSSNameSelector::HSSNameSelector(AXRString elementName, AXRController * controller)
+: HSSSelector(HSSSelectorTypeNameSelector, controller)
 {
     this->elementName = elementName;
 }

@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSThisSelector::HSSThisSelector()
-: HSSNameSelector("@this")
+HSSThisSelector::HSSThisSelector(AXRController * controller)
+: HSSNameSelector("@this", controller)
 {
 
 }

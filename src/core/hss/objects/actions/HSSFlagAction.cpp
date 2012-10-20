@@ -48,8 +48,8 @@
 
 using namespace AXR;
 
-HSSFlagAction::HSSFlagAction()
-: HSSAction(HSSActionTypeFlag)
+HSSFlagAction::HSSFlagAction(AXRController * controller)
+: HSSAction(HSSActionTypeFlag, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFlagAction: creating flag action object");
 }
@@ -90,7 +90,7 @@ AXRString HSSFlagAction::defaultObjectType()
 void HSSFlagAction::fire()
 {
     HSSFlagFunction::p flagFunction = this->getFlagFunction();
-    std::vector< std::vector<HSSDisplayObject::p> > selection = this->axrController->select(flagFunction->getSelectorChains(), *this->scope, this->getThisObj(), false);
+    std::vector< std::vector<HSSDisplayObject::p> > selection = this->getController()->select(flagFunction->getSelectorChains(), *this->scope, this->getThisObj(), false);
     if (selection.empty())
     {
         // ignore

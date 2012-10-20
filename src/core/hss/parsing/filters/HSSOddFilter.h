@@ -57,7 +57,7 @@ namespace AXR
         /**
          *  @brief Creates a new instance of a \@odd filter.
          */
-        HSSOddFilter();
+        HSSOddFilter(AXRController * controller);
 
         /**
          *  Clones an instance of HSSOddFilter and gives a shared pointer of the

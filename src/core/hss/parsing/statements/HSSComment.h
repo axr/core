@@ -65,7 +65,7 @@ namespace AXR
          *  Creates a new instance of a comment, containing the given text.
          *  @param value    A string containing the text of the comment.
          */
-        HSSComment(AXRString value);
+        HSSComment(AXRString value, AXRController * controller);
 
         /**
          *  Clones an instance of HSSComment and gives a shared pointer of the

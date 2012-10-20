@@ -65,8 +65,8 @@ HSSFlagFunctionType HSSFlagFunction::flagFunctionTypeFromString(AXRString name)
     return HSSFlagFunctionTypeNone;
 }
 
-HSSFlagFunction::HSSFlagFunction(HSSFlagFunctionType flagFunctionType)
-: HSSFunction(HSSFunctionTypeFlag)
+HSSFlagFunction::HSSFlagFunction(HSSFlagFunctionType flagFunctionType, AXRController * controller)
+: HSSFunction(HSSFunctionTypeFlag, controller)
 {
     this->_flagFunctionType = flagFunctionType;
 }

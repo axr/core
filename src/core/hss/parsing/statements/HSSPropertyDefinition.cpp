@@ -46,20 +46,20 @@
 
 using namespace AXR;
 
-HSSPropertyDefinition::HSSPropertyDefinition()
-: HSSStatement(HSSStatementTypePropertyDefinition)
+HSSPropertyDefinition::HSSPropertyDefinition(AXRController * controller)
+: HSSStatement(HSSStatementTypePropertyDefinition, controller)
 {
     this->name = "";
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(AXRString name)
-: HSSStatement(HSSStatementTypePropertyDefinition)
+HSSPropertyDefinition::HSSPropertyDefinition(AXRString name, AXRController * controller)
+: HSSStatement(HSSStatementTypePropertyDefinition, controller)
 {
     this->name = name;
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(AXRString name, HSSParserNode::p value)
-: HSSStatement(HSSStatementTypePropertyDefinition)
+HSSPropertyDefinition::HSSPropertyDefinition(AXRString name, HSSParserNode::p value, AXRController * controller)
+: HSSStatement(HSSStatementTypePropertyDefinition, controller)
 {
     this->name = name;
     this->setValue(value);
@@ -119,7 +119,7 @@ void HSSPropertyDefinition::addValue(HSSParserNode::p value)
         }
         else
         {
-            HSSMultipleValueDefinition::p mvDef = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition());
+            HSSMultipleValueDefinition::p mvDef = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition(this->getController()));
             mvDef->setParentNode(this->shared_from_this());
             mvDef->add(this->value);
             value->setParentNode(this->shared_from_this());

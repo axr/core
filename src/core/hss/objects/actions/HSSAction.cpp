@@ -67,8 +67,8 @@ AXRString HSSAction::actionTypeStringRepresentation(HSSActionType actionType)
     return types[actionType];
 }
 
-HSSAction::HSSAction(HSSActionType type)
-: HSSObject(HSSObjectTypeAction)
+HSSAction::HSSAction(HSSActionType type, AXRController * controller)
+: HSSObject(HSSObjectTypeAction, controller)
 {
     this->actionType = type;
 }

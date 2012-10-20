@@ -47,8 +47,8 @@
 
 using namespace AXR;
 
-HSSParentSelector::HSSParentSelector()
-: HSSNameSelector("@parent")
+HSSParentSelector::HSSParentSelector(AXRController * controller)
+: HSSNameSelector("@parent", controller)
 {
 
 }

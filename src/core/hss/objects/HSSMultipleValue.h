@@ -63,7 +63,7 @@ namespace AXR
         /**
          *  Constructor for MultipleValue objects
          */
-        HSSMultipleValue();
+        HSSMultipleValue(AXRController * controller);
         /**
          *  Copy constructor for HSSMultipleValue objects
          */

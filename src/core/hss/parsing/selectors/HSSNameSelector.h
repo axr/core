@@ -62,7 +62,7 @@ namespace AXR
         /**
          *  Creates a new instance of a selector.
          */
-        HSSNameSelector(AXRString elementName);
+        HSSNameSelector(AXRString elementName, AXRController * controller);
 
         /**
          *  Copy constructor for HSSNameSelector objects. Do not call directly, use clone() instead.

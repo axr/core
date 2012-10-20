@@ -50,26 +50,26 @@
 
 using namespace AXR;
 
-HSSRgb::p HSSRgb::blackColor()
+HSSRgb::p HSSRgb::blackColor(AXRController * controller)
 {
     //create a new color object, it will have all its color channels set to
     //0 and the alpha to 255 by default in the constructor
-    return HSSRgb::p(new HSSRgb());
+    return HSSRgb::p(new HSSRgb(controller));
 }
 
-HSSRgb::p HSSRgb::whiteColor()
+HSSRgb::p HSSRgb::whiteColor(AXRController * controller)
 {
     //create a new color object with default value
-    HSSRgb::p whiteColor = HSSRgb::p(new HSSRgb());
+    HSSRgb::p whiteColor = HSSRgb::p(new HSSRgb(controller));
     //set all the color channels to the maximum value
-    whiteColor->setDRed(HSSNumberConstant::p(new HSSNumberConstant(255.0)));
-    whiteColor->setDGreen(HSSNumberConstant::p(new HSSNumberConstant(255.0)));
-    whiteColor->setDBlue(HSSNumberConstant::p(new HSSNumberConstant(255.0)));
+    whiteColor->setDRed(HSSNumberConstant::p(new HSSNumberConstant(255.0, controller)));
+    whiteColor->setDGreen(HSSNumberConstant::p(new HSSNumberConstant(255.0, controller)));
+    whiteColor->setDBlue(HSSNumberConstant::p(new HSSNumberConstant(255.0, controller)));
     return whiteColor;
 }
 
-HSSRgb::HSSRgb(HSSUnit red, HSSUnit green, HSSUnit blue, HSSUnit alpha)
-: HSSObject(HSSObjectTypeRgb), red(red), green(green), blue(blue), alpha(alpha)
+HSSRgb::HSSRgb(AXRController * controller, HSSUnit red, HSSUnit green, HSSUnit blue, HSSUnit alpha)
+: HSSObject(HSSObjectTypeRgb, controller), red(red), green(green), blue(blue), alpha(alpha)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: creating rgb object");
 

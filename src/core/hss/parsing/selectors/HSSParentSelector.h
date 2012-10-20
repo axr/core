@@ -62,7 +62,7 @@ namespace AXR
         /**
          *  Creates a new instance of a Parent selector.
          */
-        HSSParentSelector();
+        HSSParentSelector(AXRController * controller);
 
         /**
          *  Clones an instance of HSSParentSelector and gives a shared pointer of the

@@ -180,7 +180,7 @@ namespace AXR
          *  will be HSSFunctionTypeCustom.
          *  @param type The type of the function subclass for identification purposes.
          */
-        HSSFunction(HSSFunctionType type);
+        HSSFunction(HSSFunctionType type, AXRController * controller);
 
         /**
          *  Copy constructor for HSSFunction objects. Do not call directly, use clone() on

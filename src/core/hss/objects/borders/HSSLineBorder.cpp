@@ -53,8 +53,8 @@
 
 using namespace AXR;
 
-HSSLineBorder::HSSLineBorder()
-: HSSBorder()
+HSSLineBorder::HSSLineBorder(AXRController * controller)
+: HSSBorder(controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLineBorder: creating line border object");
     std::vector<AXRString> shorthandProperties;
@@ -178,7 +178,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
         try
         {
             HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDColor(objdef);
             valid = true;
         }
@@ -210,7 +210,7 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
             }
             else
             {
-                this->color = HSSRgb::p(new HSSRgb());
+                this->color = HSSRgb::p(new HSSRgb(this->getController()));
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSLineBorder > (this, &HSSLineBorder::colorChanged));
@@ -230,18 +230,18 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
         }
         else if (theKW->getValue() == "black")
         {
-            this->color = HSSRgb::blackColor();
+            this->color = HSSRgb::blackColor(this->getController());
             valid = true;
         }
         else if (theKW->getValue() == "white")
         {
-            this->color = HSSRgb::whiteColor();
+            this->color = HSSRgb::whiteColor(this->getController());
             valid = true;
         }
         else if (theKW->getValue() == "transparent")
         {
-            HSSRgb::p transColor = HSSRgb::blackColor();
-            transColor->setDAlpha(HSSNumberConstant::p(new HSSNumberConstant(0.0)));
+            HSSRgb::p transColor = HSSRgb::blackColor(this->getController());
+            transColor->setDAlpha(HSSNumberConstant::p(new HSSNumberConstant(0.0, this->getController())));
             this->color = transColor;
             valid = true;
         }

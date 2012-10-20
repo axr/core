@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSComment::HSSComment(AXRString value)
-: HSSStatement(HSSStatementTypeComment)
+HSSComment::HSSComment(AXRString value, AXRController * controller)
+: HSSStatement(HSSStatementTypeComment, controller)
 {
     this->value = value;
 }

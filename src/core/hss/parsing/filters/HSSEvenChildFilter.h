@@ -57,7 +57,7 @@ namespace AXR
         /**
          *  @brief Creates a new instance of a \@evenChild filter.
          */
-        HSSEvenChildFilter();
+        HSSEvenChildFilter(AXRController * controller);
 
         /**
          *  Clones an instance of HSSEvenChildFilter and gives a shared pointer of the

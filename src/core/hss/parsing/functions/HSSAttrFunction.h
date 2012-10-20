@@ -67,7 +67,7 @@ namespace AXR
         /**
          *  Creates a new instance of a ref function.
          */
-        HSSAttrFunction();
+        HSSAttrFunction(AXRController * controller);
 
         /**
          *  Copy constructor for HSSAttrFunction objects. Do not call directly, use clone() instead.

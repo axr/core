@@ -48,8 +48,8 @@
 
 using namespace AXR;
 
-HSSFlag::HSSFlag()
-: HSSFilter(HSSFilterTypeFlag)
+HSSFlag::HSSFlag(AXRController * controller)
+: HSSFilter(HSSFilterTypeFlag, controller)
 {
     this->_purging = HSSRuleStateOff;
 }

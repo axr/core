@@ -47,8 +47,8 @@
 
 using namespace AXR;
 
-HSSFunctionAction::HSSFunctionAction()
-: HSSAction(HSSActionTypeFunction)
+HSSFunctionAction::HSSFunctionAction(AXRController * controller)
+: HSSAction(HSSActionTypeFunction, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFunctionAction: creating function action object");
 }

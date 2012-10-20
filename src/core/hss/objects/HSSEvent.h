@@ -71,7 +71,7 @@ namespace AXR
          *  Constructor for HSSEvent objects.
          *  @param  type    The event type that this event will respond to.
          */
-        HSSEvent(HSSEventType type);
+        HSSEvent(HSSEventType type, AXRController * controller);
         /**
          *  Copy constructor for HSSEvent objects. Do not use directly, use clone() instead.
          */

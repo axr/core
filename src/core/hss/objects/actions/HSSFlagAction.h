@@ -61,7 +61,7 @@ namespace AXR
         /**
          *  Constructor for HSSFlagAction objects
          */
-        HSSFlagAction();
+        HSSFlagAction(AXRController * controller);
 
         /**
          *  Copy constructor for HSSFlagAction objects. Do not call directly,

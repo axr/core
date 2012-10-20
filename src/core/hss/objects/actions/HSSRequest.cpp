@@ -51,8 +51,8 @@
 
 using namespace AXR;
 
-HSSRequest::HSSRequest()
-: HSSAction(HSSActionTypeRequest)
+HSSRequest::HSSRequest(AXRController * controller)
+: HSSAction(HSSActionTypeRequest, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRequest: creating request object");
     this->observedSrc
@@ -131,7 +131,7 @@ void HSSRequest::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 
 void HSSRequest::fire()
 {
-    AXRDocument* document = axrController->document();
+    AXRDocument* document = this->getController()->document();
 
     //if there is no target
     if (this->target.empty())
@@ -242,7 +242,7 @@ void HSSRequest::fire()
             //                                HSSRule::p theRule = theCont->rulesGet(j);
             //                                for (k=0, size3=theRule->childrenSize(); k<size3; ++k) {
             //                                    HSSRule::p childRule = theRule->childrenGet(k);
-            //                                    this->axrController->recursiveMatchRulesToDisplayObjects(childRule, scope, theCont);
+            //                                    this->getController()->recursiveMatchRulesToDisplayObjects(childRule, scope, theCont);
             //                                }
             //                            }
             //

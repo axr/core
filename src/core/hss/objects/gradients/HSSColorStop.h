@@ -62,7 +62,7 @@ namespace AXR
         /**
          *  Creates a new instace of a color stop object.
          */
-        HSSColorStop();
+        HSSColorStop(AXRController * controller);
         /**
          *  Copy constructor for HSSColorStop objects
          */

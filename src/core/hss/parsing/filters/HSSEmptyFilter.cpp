@@ -46,8 +46,8 @@
 
 using namespace AXR;
 
-HSSEmptyFilter::HSSEmptyFilter()
-: HSSFilter(HSSFilterTypeLast)
+HSSEmptyFilter::HSSEmptyFilter(AXRController * controller)
+: HSSFilter(HSSFilterTypeLast, controller)
 {
 
 }

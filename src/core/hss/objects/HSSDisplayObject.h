@@ -493,7 +493,7 @@ namespace AXR
          *  Constructor for HSSDisplayObject objects.
          *  @param type     Subclasses pass their own type here.
          */
-        HSSDisplayObject(HSSObjectType type);
+        HSSDisplayObject(HSSObjectType type, AXRController * controller);
 
         void _setInnerWidth();
         void _setInnerHeight();

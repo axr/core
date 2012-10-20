@@ -79,7 +79,7 @@ namespace AXR
         /**
          *  Constructor for HSSTextBlock objects
          */
-        HSSTextBlock();
+        HSSTextBlock(AXRController * controller);
         /**
          *  Copy constructor for HSSTextBlock objects
          */

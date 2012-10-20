@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSKeywordConstant::HSSKeywordConstant(AXRString value)
-: HSSParserNode(HSSParserNodeTypeKeywordConstant)
+HSSKeywordConstant::HSSKeywordConstant(AXRString value, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeKeywordConstant, controller)
 {
     this->value = value;
 }

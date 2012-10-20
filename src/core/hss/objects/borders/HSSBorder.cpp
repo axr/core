@@ -51,8 +51,8 @@
 
 using namespace AXR;
 
-HSSBorder::HSSBorder()
-: HSSObject(HSSObjectTypeBorder)
+HSSBorder::HSSBorder(AXRController * controller)
+: HSSObject(HSSObjectTypeBorder, controller)
 {
     this->observedSize = NULL;
     this->registerProperty(HSSObservablePropertySize, QVariant::fromValue(&this->size));

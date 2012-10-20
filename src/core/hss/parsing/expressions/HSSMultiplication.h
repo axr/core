@@ -64,7 +64,7 @@ namespace AXR
          *  @param left     A shared parser node to the left member of the expression.
          *  @param right    A shared parser node to the right member of the expression.
          */
-        HSSMultiplication(HSSParserNode::p left, HSSParserNode::p right);
+        HSSMultiplication(HSSParserNode::p left, HSSParserNode::p right, AXRController * controller);
 
         /**
          *  Copy constructor for HSSContainer objects. Do not call directly, use clone() instead.

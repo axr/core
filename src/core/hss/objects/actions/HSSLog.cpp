@@ -53,8 +53,8 @@
 
 using namespace AXR;
 
-HSSLog::HSSLog()
-: HSSAction(HSSActionTypeLog)
+HSSLog::HSSLog(AXRController * controller)
+: HSSAction(HSSActionTypeLog, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: creating log object");
     this->observedValue = NULL;
@@ -203,7 +203,7 @@ void HSSLog::fire()
             try
             {
                 HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (this->dValue);
-                HSSObjectDefinition::p objdef = this->axrController->objectTreeGet(objname->getValue());
+                HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
                 objdef->setThisObj(this->getThisObj());
                 objdef->setScope(this->scope);
                 objdef->apply();

@@ -46,8 +46,8 @@
 
 using namespace AXR;
 
-HSSRectangle::HSSRectangle()
-: HSSShape(HSSShapeTypeRectangle)
+HSSRectangle::HSSRectangle(AXRController * controller)
+: HSSShape(HSSShapeTypeRectangle, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: creating rectangle object");
 }

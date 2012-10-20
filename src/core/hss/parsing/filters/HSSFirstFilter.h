@@ -57,7 +57,7 @@ namespace AXR
         /**
          *  @brief Creates a new instance of a \@first filter.
          */
-        HSSFirstFilter();
+        HSSFirstFilter(AXRController * controller);
 
         /**
          *  Clones an instance of HSSFirstFilter and gives a shared pointer of the

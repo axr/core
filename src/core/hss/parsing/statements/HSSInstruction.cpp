@@ -45,14 +45,14 @@
 
 using namespace AXR;
 
-HSSInstruction::HSSInstruction(HSSInstructionType type)
-: HSSStatement(HSSStatementTypeInstruction)
+HSSInstruction::HSSInstruction(HSSInstructionType type, AXRController * controller)
+: HSSStatement(HSSStatementTypeInstruction, controller)
 {
     this->instructionType = type;
 }
 
-HSSInstruction::HSSInstruction(HSSInstructionType type, AXRString value)
-: HSSStatement(HSSStatementTypeInstruction)
+HSSInstruction::HSSInstruction(HSSInstructionType type, AXRString value, AXRController * controller)
+: HSSStatement(HSSStatementTypeInstruction, controller)
 {
     this->instructionType = type;
     this->value = value;

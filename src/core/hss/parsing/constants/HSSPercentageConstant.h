@@ -61,7 +61,7 @@ namespace AXR
          *  Creates a new instance of a percentage constant, with given value.
          *  @param  value   A string containing the name of the keyword.
          */
-        HSSPercentageConstant(HSSUnit value);
+        HSSPercentageConstant(HSSUnit value, AXRController * controller);
 
         /**
          *  Clones an instance of HSSParserNode and gives a shared pointer of the

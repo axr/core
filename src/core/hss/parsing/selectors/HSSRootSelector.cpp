@@ -46,8 +46,8 @@
 
 using namespace AXR;
 
-HSSRootSelector::HSSRootSelector()
-: HSSNameSelector("@root")
+HSSRootSelector::HSSRootSelector(AXRController * controller)
+: HSSNameSelector("@root", controller)
 {
 
 }

@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSDivision::HSSDivision(HSSParserNode::p _left, HSSParserNode::p _right)
-: HSSExpression(HSSExpressionTypeDivision, _left, _right)
+HSSDivision::HSSDivision(HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller)
+: HSSExpression(HSSExpressionTypeDivision, _left, _right, controller)
 {
 
 }

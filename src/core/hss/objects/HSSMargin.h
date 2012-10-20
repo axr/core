@@ -68,7 +68,7 @@ namespace AXR
          *  Creates a new instance of a margin object. Don't use directly, this is only for
          *  subclasses.
          */
-        HSSMargin();
+        HSSMargin(AXRController * controller);
 
         /**
          *  Copy constructor for HSSMargin objects. Don't call directly, but use clone() instead.

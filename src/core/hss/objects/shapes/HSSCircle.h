@@ -60,7 +60,7 @@ namespace AXR
         /**
          *  Constructor for HSSCircle objects. Do not call directly, use clone() instead.
          */
-        HSSCircle();
+        HSSCircle(AXRController * controller);
 
         /**
          *  Copy constructor for HSSCircle objects

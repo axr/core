@@ -45,8 +45,8 @@
 
 using namespace AXR;
 
-HSSNumberConstant::HSSNumberConstant(HSSUnit value)
-: HSSParserNode(HSSParserNodeTypeNumberConstant)
+HSSNumberConstant::HSSNumberConstant(HSSUnit value, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeNumberConstant, controller)
 {
     this->value = value;
 }
