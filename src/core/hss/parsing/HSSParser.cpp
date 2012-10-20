@@ -278,14 +278,14 @@ bool HSSParser::readNextStatement()
                 QUrl url(theInstr->getValue());
                 if (url.scheme() == HSSFRAMEWORK_PROTOCOL)
                 {
-                    theFile = AXRCore::getInstance()->getFile(QUrl::fromLocalFile(AXRCore::getInstance()->getPathToResources()).resolved(url));
+                    theFile = controller->document()->getFile(QUrl::fromLocalFile(controller->document()->getPathToResources()).resolved(url));
                 }
                 else
                 {
                     if (url.isRelative())
-                        theFile = AXRCore::getInstance()->getFile(currentFile->sourceUrl().resolved(url));
+                        theFile = controller->document()->getFile(currentFile->sourceUrl().resolved(url));
                     else
-                        theFile = AXRCore::getInstance()->getFile(url);
+                        theFile = controller->document()->getFile(url);
                 }
 
                 if (theFile)
@@ -3003,7 +3003,7 @@ HSSParserNode::p HSSParser::readFunction()
         {
 
         }
-        else if (AXRCore::getInstance()->isCustomFunction(name))
+        else if (controller->document()->isCustomFunction(name))
         {
             this->readNextToken(true);
             this->skip(HSSWhitespace, true);

@@ -71,12 +71,14 @@ namespace AXR
          *  Creates a new instance of a controller.
          *
          */
-        AXRController();
+        AXRController(AXRCore *core);
 
         /**
          *  Destructs the controller and clears all the trees.
          */
         virtual ~AXRController();
+
+        AXRCore* document() const;
 
         void matchRulesToContentTree();
 
@@ -419,6 +421,7 @@ namespace AXR
         bool isAtEndOfSelector();
 
     private:
+        AXRCore *core;
         void _recursiveGetDescendants(std::vector<HSSDisplayObject::p> &ret, const std::vector<HSSDisplayObject::p> & scope);
     };
 }

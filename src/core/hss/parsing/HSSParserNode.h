@@ -52,6 +52,7 @@
 
 namespace AXR
 {
+    class AXRController;
     class HSSDisplayObject;
 
     /**
@@ -192,6 +193,18 @@ namespace AXR
 
         HSSParserNode::p shared_from_this();
 
+        /**
+         *  Setter for the controller. The controller needs to be propagated across all
+         *  HSSParserNode subclasses, so they get access to the DOM and such.
+         *  @param controller       A pointer to the AXRController that owns this object
+         */
+        virtual void setController(AXRController *controller);
+        /**
+         *  Getter for the controller.
+         *  @return A pointer to the AXRController that owns this object
+         */
+        virtual AXRController* getController();
+
     protected:
         /**
          *  Creates a new instance of a parser node. This class shouldn't be called directly,
@@ -211,6 +224,7 @@ namespace AXR
         QSharedPointer<HSSDisplayObject> thisObj;
 
     private:
+        AXRController *controller;
         HSSParserNodeType nodeType;
         pp _parentNode;
         std::vector<p> _childNodes;

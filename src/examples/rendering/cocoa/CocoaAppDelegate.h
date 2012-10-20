@@ -54,13 +54,11 @@
     NSWindow *window;
     NSWindow *axrWindow;
     AXRView *axrView;
-    AXR::AXRCore *wrapper;
-    BOOL needsFile;
+    AXR::AXRCore *document;
 }
 
 @property(assign) IBOutlet NSWindow *axrWindow;
 @property(assign) IBOutlet AXRView *axrView;
-@property(assign) BOOL needsFile;
 
 -(id) init;
 -(void) dealloc;

@@ -43,17 +43,25 @@
 
 #import <Cocoa/Cocoa.h>
 
+namespace AXR
+{
+    class AXRCore;
+}
+
 /**
- *  @brief (OSX only) This is a NSView subclass, for using inside a window in
+ *  @brief (OS X only) This is a NSView subclass, for using inside a window in
  *  Apple's Cocoa framework.
  */
 @interface AXRView : NSView
 {
 @private
-    BOOL needsFile;
+    AXR::AXRCore *document;
 }
 
-@property(assign) BOOL needsFile;
+/**
+ * The AXR document being rendered by the view.
+ */
+@property(assign) AXR::AXRCore* document;
 
 /**
  *  @return YES. This is for optimizing the drawing.
@@ -61,7 +69,7 @@
 -(BOOL) isOpaque;
 
 /**
- *  Method that is called to draw on OSX. From within this, we can get access to the current
+ *  Method that is called to draw on OS X. From within this, we can get access to the current
  *  AXR compositor output graphics port, which is then blitted onto the NSView.
  */
 -(void) drawRect : (NSRect) dirtyRect;

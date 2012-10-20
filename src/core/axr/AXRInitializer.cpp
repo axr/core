@@ -72,10 +72,9 @@ AXRCore::AXRCore()
 
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRCore: initializing core for thread");
 
-    AXRController::p ctrlr = AXRController::p(new AXRController());
-    AXRRender::p rndr = AXRRender::p(new AXRRender(ctrlr.data()));
+    AXRController::p ctrlr = AXRController::p(new AXRController(this));
     this->setController(ctrlr);
-    this->setRender(rndr);
+    this->setRender(AXRRender::p(new AXRRender(ctrlr.data())));
     this->setParserXML(XMLParser::p(new XMLParser(ctrlr.data())));
     this->setParserHSS(HSSParser::p(new HSSParser(ctrlr.data())));
     this->_hasLoadedFile = false;
@@ -352,16 +351,15 @@ bool AXRCore::loadXMLFile(QUrl url)
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
 
-    AXRCore* core = AXRCore::getInstance();
-    if (core->getFile())
+    if (this->getFile())
     {
-        core->reset();
+        this->reset();
     }
 
     try
     {
         AXRBuffer::p theFile = this->getFile(url);
-        core->setFile(theFile);
+        this->setFile(theFile);
     }
     catch (const AXRError &e)
     {
@@ -371,7 +369,7 @@ bool AXRCore::loadXMLFile(QUrl url)
 
     try
     {
-        core->run();
+        this->run();
     }
     catch (const AXRError &e)
     {
@@ -393,15 +391,14 @@ bool AXRCore::loadXMLFile(AXRBuffer::p buffer)
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
 
-    AXRCore* core = AXRCore::getInstance();
-    if (core->getFile())
+    if (this->getFile())
     {
-        core->reset();
+        this->reset();
     }
 
     try
     {
-        core->setFile(buffer);
+        this->setFile(buffer);
     }
     catch (const AXRError &e)
     {
@@ -411,7 +408,7 @@ bool AXRCore::loadXMLFile(AXRBuffer::p buffer)
 
     try
     {
-        core->run();
+        this->run();
     }
     catch (const AXRError &e)
     {
@@ -430,12 +427,11 @@ bool AXRCore::reload()
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
 
-    AXRCore* core = AXRCore::getInstance();
     if (!this->_isHSSOnly)
     {
-        if (core->getFile())
+        if (this->getFile())
         {
-            return this->loadXMLFile(core->getFile()->sourceUrl());
+            return this->loadXMLFile(this->getFile()->sourceUrl());
         }
         else
         {
@@ -445,7 +441,7 @@ bool AXRCore::reload()
     }
     else
     {
-        return this->loadHSSFile(core->getController()->loadSheetsGet(0));
+        return this->loadHSSFile(this->getController()->loadSheetsGet(0));
     }
 }
 
@@ -459,14 +455,13 @@ bool AXRCore::loadHSSFile(QUrl url)
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
 
-    AXRCore* core = AXRCore::getInstance();
-    if (core->getFile())
+    if (this->getFile())
     {
-        core->reset();
+        this->reset();
     }
 
-    core->setFile(this->createDummyXML(url));
-    core->run();
+    this->setFile(this->createDummyXML(url));
+    this->run();
     this->setNeedsDisplay(true);
 
     return true;

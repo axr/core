@@ -50,22 +50,14 @@
 
 @synthesize axrWindow;
 @synthesize axrView;
-@synthesize needsFile;
 
 -(id) init
 {
-    wrapper = AXR::AXRCore::getInstance();
-    [self setNeedsFile : YES];
-    //    axr_debug_activate_channel(AXR_DEBUG_CH_ON);
-    //    axr_debug_activate_channel(AXR_DEBUG_CH_OVERVIEW);
-    //    axr_debug_activate_channel(AXR_DEBUG_CH_GENERAL);
-    //    axr_debug_activate_channel(AXR_DEBUG_CH_GENERAL_SPECIFIC);
-    //    axr_debug_activate_channel(AXR_DEBUG_CH_XML);
-    //    axr_debug_activate_channel(AXR_DEBUG_CH_HSS);
-    //    axr_debug_activate_channel(AXR_DEBUG_CH_FULL_FILENAMES);
-    //    axr_debug_activate_channel(AXR_DEBUG_CH_EVENTS);
-    //    axr_debug_activate_channel(AXR_DEBUG_CH_EVENTS_SPECIFIC);
-    //    axr_debug_activate_channel(AXR_DEBUG_CH_TOKENIZING);
+    self = [super init];
+    if (self)
+    {
+        document = AXR::AXRCore::getInstance();
+    }
 
     return self;
 }
@@ -79,24 +71,17 @@
 
 -(void) applicationDidFinishLaunching : (NSNotification *) aNotification
 {
-    //NSString * filepath = [[NSBundle mainBundle] pathForResource:@"blank" ofType:@"xml" inDirectory:@"views"];
-    //[[self axrView] loadFile:filepath];
-
-    if ([self needsFile])
-    {
-        [self openDocument : self];
-        [self setNeedsFile : NO];
-    }
+    axrView.document = document;
+    [self openDocument : self];
 }
 
 -(BOOL) application : (NSApplication *) theApplication openFile : (NSString *) filename
 {
     [[self axrWindow] makeKeyAndOrderFront : self];
 
-    if (wrapper->loadFileByPath(QUrl::fromLocalFile(AXR::fromNSString(filename))))
+    if (document && document->loadFileByPath(QUrl::fromLocalFile(AXR::fromNSString(filename))))
     {
         [[self axrView] setNeedsDisplay : YES];
-        [self setNeedsFile : NO];
         return YES;
     }
 
@@ -113,20 +98,20 @@
 
     if ([openPanel runModalForTypes: [NSArray arrayWithObjects: @"xml", @"hss", nil]] == NSOKButton)
     {
-        AXR::AXRString filePath = AXR::fromNSString([[openPanel filenames] objectAtIndex: 0]);
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "CocoaAXRWrapper: User selected file " + filePath);
-
-        if (wrapper->loadFileByPath(QUrl::fromLocalFile(filePath)))
+        // TODO: Should create a new document if NULL...
+        if (document && document->loadFileByPath(QUrl::fromLocalFile(AXR::fromNSString([[openPanel filenames] objectAtIndex: 0]))))
         {
             [[self axrView] setNeedsDisplay : YES];
-            [self setNeedsFile : NO];
         }
     }
 }
 
 -(IBAction) reload : (id) sender
 {
-    wrapper->reload();
+    if (!document)
+        return;
+
+    document->reload();
     [[self axrView] setNeedsDisplay : YES];
 }
 

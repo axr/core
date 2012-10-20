@@ -444,7 +444,7 @@ void HSSContainer::drawBackground()
     this->backgroundSurface->fill(Qt::transparent);
 
     QPainter painter(this->backgroundSurface);
-    if (AXRCore::getInstance()->getRender()->globalAntialiasingEnabled())
+    if (axrController->document()->getRender()->globalAntialiasingEnabled())
         painter.setRenderHint(QPainter::Antialiasing);
 
     QPainterPath path;
@@ -457,7 +457,7 @@ void HSSContainer::drawBorders()
     this->bordersSurface->fill(Qt::transparent);
 
     QPainter painter(this->bordersSurface);
-    if (AXRCore::getInstance()->getRender()->globalAntialiasingEnabled())
+    if (axrController->document()->getRender()->globalAntialiasingEnabled())
         painter.setRenderHint(QPainter::Antialiasing);
 
     // Calculate the combined thickness of all borders
@@ -506,7 +506,7 @@ void HSSContainer::layout()
             unsigned i, size, j, k;
             //HSSUnit acc2 = 0;
             security_brake_init();
-            AXRCore * wrapper = AXRCore::getInstance();
+            AXRCore * wrapper = axrController->document();
 
             //bool secondaryIsHorizontal = (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft);
 
@@ -1609,7 +1609,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
         return true;
     }
 
-    AXRCore * wrapper = AXRCore::getInstance();
+    AXRCore * wrapper = axrController->document();
 
     switch (direction)
     {

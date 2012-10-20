@@ -53,7 +53,8 @@
 
 using namespace AXR;
 
-AXRController::AXRController()
+AXRController::AXRController(AXRCore *core)
+: core(core)
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRController: creating controller");
     this->currentContext = std::stack<HSSContainer::p > ();
@@ -67,6 +68,11 @@ AXRController::~AXRController()
     this->loadSheets.clear();
     this->rules.clear();
     this->parserTree.clear();
+}
+
+AXRCore* AXRController::document() const
+{
+    return core;
 }
 
 void AXRController::matchRulesToContentTree()
@@ -685,7 +691,7 @@ HSSContainer::p & AXRController::getRoot()
 void AXRController::setRoot(HSSContainer::p newRoot)
 {
     this->root = newRoot;
-    HSSParser::p hssparser = AXRCore::getInstance()->getParserHSS();
+    HSSParser::p hssparser = this->core->getParserHSS();
     if (hssparser->currentObjectContextSize() == 0)
     {
         hssparser->currentObjectContextAdd(newRoot);

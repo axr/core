@@ -65,7 +65,7 @@ void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
     //prepare values
     HSSContainer::p root = this->controller->getRoot();
-    AXRCore * wrapper = AXRCore::getInstance();
+    AXRCore * wrapper = this->controller->document();
 
     if (root)
     {

@@ -319,7 +319,7 @@ void HSSTextBlock::drawForeground()
     this->foregroundSurface->fill(Qt::transparent);
 
     QPainter painter(this->foregroundSurface);
-    if (AXRCore::getInstance()->getRender()->globalAntialiasingEnabled())
+    if (axrController->document()->getRender()->globalAntialiasingEnabled())
         painter.setRenderHint(QPainter::Antialiasing);
 
     HSSFont::p theFont;

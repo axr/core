@@ -278,7 +278,7 @@ bool HSSObject::isFunction(AXRString value, AXRString property)
     }
     else
     {
-        return AXRCore::getInstance()->isCustomFunction(value);
+        return axrController->document()->isCustomFunction(value);
     }
 }
 

@@ -131,10 +131,11 @@ void HSSRequest::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 
 void HSSRequest::fire()
 {
+    AXRCore* core = axrController->document();
+
     //if there is no target
     if (this->target.empty())
     {
-        AXRCore* core = AXRCore::getInstance();
         core->loadXMLFile(this->src);
     }
     else
@@ -143,8 +144,7 @@ void HSSRequest::fire()
         {
         default:
         {
-            AXRCore* core = AXRCore::getInstance();
-            AXRController::p controller = AXRController::p(new AXRController());
+            AXRController::p controller = AXRController::p(new AXRController(core));
             XMLParser::p xmlParser(new XMLParser(controller.data()));
             HSSParser::p hssParser(new HSSParser(controller.data()));
             AXRBuffer::p baseFile = core->getFile();

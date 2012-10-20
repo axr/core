@@ -93,6 +93,9 @@ PrototypeWindow::PrototypeWindow(QWidget *parent)
 
     ui->enableAntialiasingAction->setChecked(d->wrapper->getRender()->globalAntialiasingEnabled());
 
+    // Tell the widget to render this window's document
+    ui->renderingView->setDocument(d->wrapper);
+
     // The subview needs to accept drops as well even though the main window handles it
     ui->renderingView->setAcceptDrops(true);
 
@@ -234,7 +237,7 @@ void PrototypeWindow::listXmlElements()
 
         AXRBuffer::p f(new AXRBuffer(fi));
 
-        AXRController *controller = new AXRController();
+        AXRController *controller = new AXRController(d->wrapper);
         XMLParser parser(controller);
 
         if (!parser.loadFile(f))
@@ -260,7 +263,7 @@ void PrototypeWindow::listHssStatements()
 
         AXRBuffer::p f(new AXRBuffer(fi));
 
-        AXRController controller;
+        AXRController controller(d->wrapper);
         HSSParser hssparser(&controller);
 
         if (hssparser.loadFile(f))
@@ -317,8 +320,7 @@ void PrototypeWindow::listHssTokens()
 
 void PrototypeWindow::runLayoutTests()
 {
-    AXRCore *core = AXRCore::getInstance();
-    core->registerCustomFunction("AXRLayoutTestsExecute", new HSSValueChangedCallback<AXRTestRunner>(d->testRunner, &AXRTestRunner::executeLayoutTests));
+    d->wrapper->registerCustomFunction("AXRLayoutTestsExecute", new HSSValueChangedCallback<AXRTestRunner>(d->testRunner, &AXRTestRunner::executeLayoutTests));
     this->openFile(d->testRunner->getPathToTestsFile());
 }
 
@@ -338,7 +340,6 @@ void PrototypeWindow::showAbout()
 
 void PrototypeWindow::toggleAntialiasing(bool on)
 {
-    AXRCore*core = AXRCore::getInstance();
-    core->getRender()->setGlobalAntialiasingEnabled(on);
+    d->wrapper->getRender()->setGlobalAntialiasingEnabled(on);
     update();
 }

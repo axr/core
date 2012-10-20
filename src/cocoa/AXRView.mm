@@ -52,22 +52,18 @@
 #import "HSSTypeEnums.h"
 
 @implementation AXRView
-@synthesize needsFile;
+
+@synthesize document;
 
 -(id) initWithFrame : (NSRect) frame
 {
     self = [super initWithFrame : frame];
     if (self)
     {
+        document = NULL;
     }
 
     return self;
-}
-
--(void) awakeFromNib
-{
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRView: awaking from NIB");
-    [self setNeedsFile : YES];
 }
 
 -(void) dealloc
@@ -82,18 +78,20 @@
 
 -(void) drawRect : (NSRect) dirtyRect
 {
-    AXR::AXRCore* core = AXR::AXRCore::getInstance();
-    AXR::AXRRender::p renderer = core->getRender();
-    if (renderer && core->getController()->getRoot())
+    NSRect paintRect = [self bounds];
+
+    // Fill the view with our background color...
+    [[NSColor whiteColor] set];
+    NSRectFill(paintRect);
+
+    if (!document)
+        return;
+
+    AXR::AXRRender::p renderer = document->getRender();
+    if (renderer && document->getController()->getRoot())
     {
-        NSRect paintRect = [self bounds];
-
-        // Fill the view with our background color...
-        [[NSColor whiteColor] set];
-        NSRectFill(paintRect);
-
         // Render the final composite on to the screen
-        core->drawInRectWithBounds(dirtyRect, paintRect);
+        document->drawInRectWithBounds(dirtyRect, paintRect);
         CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, QPixmap::fromImage(renderer->surface()).toMacCGImageRef());
     }
 }
@@ -113,8 +111,10 @@
 
 -(void) mouseDown : (NSEvent *) theEvent
 {
-    axr_log(AXR_DEBUG_CH_EVENTS | AXR_DEBUG_CH_EVENTS_SPECIFIC, "AXRView: mouse down");
-    AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
+    if (!document)
+        return;
+
+    AXR::HSSContainer::p root = document->getController()->getRoot();
     if (root)
     {
         AXR::HSSPoint thePoint;
@@ -128,8 +128,10 @@
 
 -(void) mouseUp : (NSEvent *) theEvent
 {
-    axr_log(AXR_DEBUG_CH_EVENTS | AXR_DEBUG_CH_EVENTS_SPECIFIC, "AXRView: mouse up");
-    AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
+    if (!document)
+        return;
+
+    AXR::HSSContainer::p root = document->getController()->getRoot();
     if (root)
     {
         AXR::HSSPoint thePoint;
@@ -144,8 +146,10 @@
 
 -(void) mouseMoved : (NSEvent *) theEvent
 {
-    axr_log_inline(AXR_DEBUG_CH_EVENTS_SPECIFIC, ".");
-    AXR::HSSContainer::p root = AXR::AXRCore::getInstance()->getController()->getRoot();
+    if (!document)
+        return;
+
+    AXR::HSSContainer::p root = document->getController()->getRoot();
     if (root)
     {
         AXR::HSSPoint thePoint;

@@ -50,10 +50,17 @@ using namespace AXR;
 class AXRWidget::Private
 {
 public:
-    Private() : backgroundFillColor(QColor(Qt::white)) { }
+    Private(AXRCore *doc = NULL) : document(doc), backgroundFillColor(QColor(Qt::white)) { }
 
+    AXRCore *document;
     QColor backgroundFillColor;
 };
+
+AXRWidget::AXRWidget(AXRCore *document, QWidget *parent)
+: QWidget(parent), d(new Private(document))
+{
+    this->setMouseTracking(true);
+}
 
 AXRWidget::AXRWidget(QWidget *parent)
 : QWidget(parent), d(new Private)
@@ -64,6 +71,16 @@ AXRWidget::AXRWidget(QWidget *parent)
 AXRWidget::~AXRWidget()
 {
     delete d;
+}
+
+AXRCore* AXRWidget::document() const
+{
+    return d->document;
+}
+
+void AXRWidget::setDocument(AXRCore *document)
+{
+    d->document = document;
 }
 
 QColor AXRWidget::backgroundFillColor() const
@@ -78,71 +95,94 @@ void AXRWidget::setBackgroundFillColor(const QColor &color)
 
 void AXRWidget::paintEvent(QPaintEvent *e)
 {
-    AXRCore*core = AXRCore::getInstance();
-    AXRRender::p renderer = core->getRender();
-    if (renderer && core->getController()->getRoot())
+    QRect paintRect = rect();
+
+    // Fill the view with our background color...
+    QPainter painter(this);
+    painter.fillRect(paintRect, d->backgroundFillColor);
+
+    if (!d->document)
+        return;
+
+    // Render the AXR document
+    AXRRender::p renderer = d->document->getRender();
+    if (renderer && d->document->getController()->getRoot())
     {
-        QRect paintRect = rect();
-
-        // Fill the view with our background color...
-        QPainter painter(this);
-        painter.fillRect(paintRect, d->backgroundFillColor);
-
         // Render the final composite on to the screen
-        core->drawInRectWithBounds(e->rect(), paintRect);
+        d->document->drawInRectWithBounds(e->rect(), paintRect);
         painter.drawImage(paintRect.topLeft(), renderer->surface());
     }
 }
 
 void AXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
+    if (!d->document)
+        return;
+
+    HSSContainer::p root = d->document->getController()->getRoot();
+    if (root)
+    {
+        HSSPoint thePoint(e->pos());
+        root->handleEvent(AXR::HSSEventTypeDoubleClick, (void*)&thePoint);
+        if (d->document->needsDisplay())
+        {
+            this->update();
+            d->document->setNeedsDisplay(false);
+        }
+    }
 }
 
 void AXRWidget::mouseMoveEvent(QMouseEvent *e)
 {
-    AXRCore*core = AXRCore::getInstance();
-    HSSContainer::p root = core->getController()->getRoot();
+    if (!d->document)
+        return;
+
+    HSSContainer::p root = d->document->getController()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
         root->handleEvent(AXR::HSSEventTypeMouseMove, (void*)&thePoint);
-        if (core->needsDisplay())
+        if (d->document->needsDisplay())
         {
             this->update();
-            core->setNeedsDisplay(false);
+            d->document->setNeedsDisplay(false);
         }
     }
 }
 
 void AXRWidget::mousePressEvent(QMouseEvent *e)
 {
-    AXRCore*core = AXRCore::getInstance();
-    HSSContainer::p root = core->getController()->getRoot();
+    if (!d->document)
+        return;
+
+    HSSContainer::p root = d->document->getController()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
         root->handleEvent(AXR::HSSEventTypeMouseDown, (void*)&thePoint);
-        if (core->needsDisplay())
+        if (d->document->needsDisplay())
         {
             this->update();
-            core->setNeedsDisplay(false);
+            d->document->setNeedsDisplay(false);
         }
     }
 }
 
 void AXRWidget::mouseReleaseEvent(QMouseEvent *e)
 {
-    AXRCore*core = AXRCore::getInstance();
-    HSSContainer::p root = core->getController()->getRoot();
+    if (!d->document)
+        return;
+
+    HSSContainer::p root = d->document->getController()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
         root->handleEvent(AXR::HSSEventTypeMouseUp, (void*)&thePoint);
         root->handleEvent(AXR::HSSEventTypeClick, (void*)&thePoint);
-        if (core->needsDisplay())
+        if (d->document->needsDisplay())
         {
             this->update();
-            core->setNeedsDisplay(false);
+            d->document->setNeedsDisplay(false);
         }
     }
 }

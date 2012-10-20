@@ -548,7 +548,7 @@ void HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)
     if (changed)
     {
         this->setNeedsRereadRules(true);
-        AXRCore::getInstance()->setNeedsDisplay(true);
+        axrController->document()->setNeedsDisplay(true);
     }
 }
 
@@ -578,12 +578,11 @@ void HSSDisplayObject::readDefinitionObjects()
         //if this is root, we use the window width and height of the render
         if (this->isRoot())
         {
-            AXRCore* core = AXRCore::getInstance();
             //width
-            HSSNumberConstant::p newDWidth(new HSSNumberConstant(core->getRender()->getWindowWidth()));
+            HSSNumberConstant::p newDWidth(new HSSNumberConstant(axrController->document()->getRender()->getWindowWidth()));
             this->setDWidth(newDWidth);
             //height
-            HSSNumberConstant::p newDHeight(new HSSNumberConstant(core->getRender()->getWindowHeight()));
+            HSSNumberConstant::p newDHeight(new HSSNumberConstant(axrController->document()->getRender()->getWindowHeight()));
             this->setDHeight(newDHeight);
         }
 
@@ -772,7 +771,7 @@ bool HSSDisplayObject::isDirty()
 
 void HSSDisplayObject::draw(QPainter &painter)
 {
-    AXRCore * wrapper = AXRCore::getInstance();
+    AXRCore *wrapper = axrController->document();
     if (wrapper->showLayoutSteps())
     {
         wrapper->nextLayoutTick();
@@ -810,7 +809,7 @@ void HSSDisplayObject::drawBackground()
     this->backgroundSurface->fill(Qt::transparent);
 
     QPainter painter(this->backgroundSurface);
-    if (AXRCore::getInstance()->getRender()->globalAntialiasingEnabled())
+    if (axrController->document()->getRender()->globalAntialiasingEnabled())
         painter.setRenderHint(QPainter::Antialiasing);
 
     QPainterPath path;
@@ -3897,7 +3896,7 @@ void HSSDisplayObject::ruleChanged(HSSObservableProperty source, void*data)
 {
     //HSSRule * theRule = (HSSRule*)data;
     this->setNeedsRereadRules(true);
-    AXRCore::getInstance()->setNeedsDisplay(true);
+    axrController->document()->setNeedsDisplay(true);
 }
 
 void HSSDisplayObject::createFlag(HSSFlag::p flag, HSSRuleState defaultValue)

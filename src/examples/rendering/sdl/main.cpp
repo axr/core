@@ -176,7 +176,6 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)
@@ -189,7 +188,6 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEBUTTONUP)
             {
-                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)
@@ -203,7 +201,6 @@ int main(int argc, char **argv)
             }
             else if (event.type == SDL_MOUSEMOTION)
             {
-                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)
@@ -236,7 +233,6 @@ int main(int argc, char **argv)
             }
             else if (event.active.state & SDL_APPMOUSEFOCUS && event.active.gain == 0)
             {
-                AXRCore* core = AXRCore::getInstance();
                 HSSContainer::p root = core->getController()->getRoot();
 
                 if (root)

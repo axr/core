@@ -255,3 +255,13 @@ HSSParserNode::p HSSParserNode::shared_from_this()
 
     return HSSParserNode::p(ptr);
 }
+
+AXRController* HSSParserNode::getController()
+{
+    return controller;
+}
+
+void HSSParserNode::setController(AXRController *controller)
+{
+    this->controller = controller;
+}
