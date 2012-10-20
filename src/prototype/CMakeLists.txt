@@ -33,7 +33,7 @@ source_group("Resources\\HSS Framework" FILES ${hss_SOURCES})
 qt_transform_sources(prototype_SOURCES "${prototype_SOURCES}")
 
 add_executable(${TARGET_NAME_APP_PROTOTYPE} WIN32 MACOSX_BUNDLE ${prototype_SOURCES})
-target_link_libraries(${TARGET_NAME_APP_PROTOTYPE} ${TARGET_NAME_LIB_CORE} ${TARGET_NAME_LIB_QT} ${QT_QTMAIN_LIBRARY})
+target_link_libraries(${TARGET_NAME_APP_PROTOTYPE} ${TARGET_NAME_LIB_CORE} "${TARGET_NAME_LIB_QT}" ${QT_QTMAIN_LIBRARY})
 
 # TODO: Temporary until TEST target is removed
 target_link_libraries(${TARGET_NAME_APP_PROTOTYPE} TEST)
@@ -43,7 +43,16 @@ set(MACOSX_BUNDLE_ICON_FILE prototype.icns)
 set_source_files_properties(${axr_icon_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 set_source_files_properties(${hss_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/framework)
 
-set_target_properties(${TARGET_NAME_APP_PROTOTYPE} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
+if(APPLE AND AXR_BUILD_FRAMEWORKS)
+    set(TARGET_NAME_APP_PROTOTYPE_OUTPUT_NAME "AXR Prototype")
+else()
+    set(TARGET_NAME_APP_PROTOTYPE_OUTPUT_NAME axrprototype)
+endif()
+
+set_target_properties(${TARGET_NAME_APP_PROTOTYPE} PROPERTIES
+    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist
+    OUTPUT_NAME "${TARGET_NAME_APP_PROTOTYPE_OUTPUT_NAME}"
+)
 
 if(IS_RELEASE_BUILD)
     install(TARGETS ${TARGET_NAME_APP_PROTOTYPE}
@@ -52,7 +61,7 @@ if(IS_RELEASE_BUILD)
     )
 
     if(WIN32 OR APPLE)
-        install_qt4_executable("${TARGET_NAME_APP_PROTOTYPE}${CMAKE_USER_EXECUTABLE_SUFFIX}" "qtaccessiblewidgets qcncodecs qjpcodecs qkrcodecs qtwcodecs qsvgicon qgif qico qjpeg qmng qsvg qtiff" "" "${ALL_LIBRARY_DIRS}" "" "" prototype)
-        empty_lproj(${TARGET_NAME_APP_PROTOTYPE})
+        install_qt4_executable("${TARGET_NAME_APP_PROTOTYPE_OUTPUT_NAME}${CMAKE_USER_EXECUTABLE_SUFFIX}" "qtaccessiblewidgets qcncodecs qjpcodecs qkrcodecs qtwcodecs qsvgicon qgif qico qjpeg qmng qsvg qtiff" "" "${ALL_LIBRARY_DIRS}" "" "" prototype)
+        empty_lproj(${TARGET_NAME_APP_PROTOTYPE_OUTPUT_NAME})
     endif()
 endif()

@@ -29,8 +29,15 @@ if(SDL_FOUND)
     set_source_files_properties(${axr_icon_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     set_source_files_properties(${hss_SOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/framework)
 
+    if(APPLE)
+        set(TARGET_NAME_APP_SDL_OUTPUT_NAME "SDL Example")
+    else()
+        set(TARGET_NAME_APP_SDL_OUTPUT_NAME sdlexample)
+    endif()
+
     set_target_properties(${TARGET_NAME_APP_SDL} PROPERTIES
         MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist
+        OUTPUT_NAME "${TARGET_NAME_APP_SDL_OUTPUT_NAME}"
         FOLDER Examples
     )
 
@@ -47,8 +54,8 @@ if(SDL_FOUND)
         endif()
 
         if(WIN32 OR APPLE)
-            install_qt4_executable("${app_path}/${TARGET_NAME_APP_SDL}${CMAKE_USER_EXECUTABLE_SUFFIX}" "qtaccessiblewidgets qcncodecs qjpcodecs qkrcodecs qtwcodecs qsvgicon qgif qico qjpeg qmng qsvg qtiff" "" "${ALL_LIBRARY_DIRS}" "" "" examples)
-            empty_lproj(${app_path}/${TARGET_NAME_APP_SDL})
+            install_qt4_executable("${app_path}/${TARGET_NAME_APP_SDL_OUTPUT_NAME}${CMAKE_USER_EXECUTABLE_SUFFIX}" "qtaccessiblewidgets qcncodecs qjpcodecs qkrcodecs qtwcodecs qsvgicon qgif qico qjpeg qmng qsvg qtiff" "" "${ALL_LIBRARY_DIRS}" "" "" examples)
+            empty_lproj(${app_path}/${TARGET_NAME_APP_SDL_OUTPUT_NAME})
         endif()
     endif()
 else()

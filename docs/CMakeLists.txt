@@ -2,13 +2,7 @@ find_package(Doxygen)
 if(DOXYGEN_FOUND)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile ${CMAKE_BINARY_DIR}/Doxyfile)
 
-    if(FANCY_TARGET_NAMES)
-        set(doxygen_target Documentation)
-    else()
-        set(doxygen_target docs)
-    endif()
-
-    add_custom_target(${doxygen_target} ALL
+    add_custom_target(${TARGET_NAME_DOCUMENTATION} ALL
         COMMAND ${DOXYGEN_EXECUTABLE}
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         COMMENT "Building AXR documentation using Doxygen..."

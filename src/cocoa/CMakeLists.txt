@@ -5,15 +5,25 @@ set(cocoa_SOURCES
 
 qt_transform_sources(cocoa_SOURCES "${cocoa_SOURCES}")
 
-add_library(${TARGET_NAME_LIB_COCOA} ${cocoa_SOURCES})
-set_target_properties(${TARGET_NAME_LIB_COCOA} PROPERTIES FOLDER Libraries)
+add_library("${TARGET_NAME_LIB_COCOA}" ${cocoa_SOURCES})
+set_target_properties("${TARGET_NAME_LIB_COCOA}" PROPERTIES FOLDER Libraries)
 
 find_library(COCOA_LIBRARY Cocoa)
 mark_as_advanced(COCOA_LIBRARY)
-target_link_libraries(${TARGET_NAME_LIB_COCOA} ${COCOA_LIBRARY} ${TARGET_NAME_LIB_CORE})
+target_link_libraries("${TARGET_NAME_LIB_COCOA}" ${COCOA_LIBRARY} ${TARGET_NAME_LIB_CORE})
+
+if(APPLE AND BUILD_SHARED_LIBS AND AXR_BUILD_FRAMEWORKS)
+    set_target_properties(${TARGET_NAME_LIB_COCOA} PROPERTIES FRAMEWORK TRUE)
+endif()
+
+if(APPLE AND AXR_BUILD_FRAMEWORKS)
+    set_target_properties(${TARGET_NAME_LIB_COCOA} PROPERTIES OUTPUT_NAME AXRCocoa)
+else()
+    set_target_properties(${TARGET_NAME_LIB_COCOA} PROPERTIES OUTPUT_NAME axrcocoa)
+endif()
 
 if(IS_RELEASE_BUILD)
-    install(TARGETS ${TARGET_NAME_LIB_COCOA}
+    install(TARGETS "${TARGET_NAME_LIB_COCOA}"
         LIBRARY DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_REL} COMPONENT libraries
         ARCHIVE DESTINATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_REL} COMPONENT libraries
         FRAMEWORK DESTINATION Frameworks COMPONENT frameworks
