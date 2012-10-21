@@ -131,6 +131,8 @@ namespace AXR
         bool getNegating() const;
         void setNegating(bool value);
 
+        HSSFilter::p shared_from_this();
+
     protected:
         /**
          *  Creates a new instance of a filter. Do not use directly.

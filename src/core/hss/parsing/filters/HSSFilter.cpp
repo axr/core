@@ -244,3 +244,8 @@ void HSSFilter::setNegating(bool value)
 {
     this->_negating = value;
 }
+
+HSSFilter::p HSSFilter::shared_from_this()
+{
+    return qSharedPointerCast<HSSFilter > (HSSParserNode::shared_from_this());
+}
