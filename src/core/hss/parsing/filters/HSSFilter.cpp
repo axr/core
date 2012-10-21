@@ -208,6 +208,13 @@ HSSFilter::HSSFilter(HSSFilterType type, AXRController * controller)
     this->_negating = false;
 }
 
+HSSFilter::HSSFilter(const HSSFilter &orig)
+: HSSParserNode(orig)
+{
+    this->filterType = orig.filterType;
+    this->_negating = orig._negating;
+}
+
 HSSFilter::~HSSFilter()
 {
 

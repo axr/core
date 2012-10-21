@@ -59,6 +59,12 @@ HSSFilter::p HSSFlag::clone() const
     return qSharedPointerCast<HSSFlag> (this->cloneImpl());
 }
 
+HSSFlag::HSSFlag(const HSSFlag &orig)
+: HSSFilter(orig)
+{
+    this->_name = orig._name;
+}
+
 HSSFlag::~HSSFlag()
 {
 }

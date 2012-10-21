@@ -68,6 +68,8 @@ namespace AXR
          */
         HSSFlag(AXRController * controller);
 
+        HSSFlag(const HSSFlag &orig);
+
         /**
          *  Clones an instance of HSSFlag and gives a shared pointer of the
          *  newly instanciated object.

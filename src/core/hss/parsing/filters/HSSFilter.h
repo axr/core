@@ -93,6 +93,7 @@ namespace AXR
          */
         static HSSFilter::p newFilterWithType(HSSFilterType filterType, AXRController * controller);
 
+        HSSFilter(const HSSFilter &orig);
         /**
          *  Destructor for this class.
          */
