@@ -98,6 +98,7 @@
         {
             width: 50%;
             height: 100% - ref(height of triangle) / 2;
+            alignX: center;
             alignY: top;
         }
 
@@ -142,6 +143,7 @@
 *
 {
     background: #C;
+    contentAlignX: center;
     contentAlignY: middle;
 
     #new diagram
@@ -155,7 +157,7 @@
         #new wrapper
         {
             isA: hollowBox;
-            content: "Wrapper";
+            content: "Client Application";
             width: 100% - 20;
             contentAlignY: 45;
 
@@ -173,7 +175,7 @@
                 {
                     isA: boxLabel;
                     font: fontRed;
-                    content: "File Loading";
+                    content: "Document Loading";
                 }
             }
 
@@ -241,7 +243,7 @@
                                 {
                                     isA: boxLabel;
                                     font: fontBlue;
-                                    content: "XML Parser (Expat)";
+                                    content: "XML Parser";
                                 }
                             }
 
@@ -257,7 +259,7 @@
                                 {
                                     isA: boxLabel;
                                     font: fontGreen;
-                                    content: "HSS Parser (+ tokenizer)";
+                                    content: "HSS Parser/Tokenizer";
                                 }
                             }
                         }
@@ -306,10 +308,10 @@
                             {
                                 isA: boxGreen;
                                 width: 100% - 20;
-                                height: ((50% - 10) / 2) - 10;
+                                height: 25% - 10;
                                 alignX: center;
                                 anchorY: top;
-                                alignY: 50% + 10;
+                                alignY: 50% + 30;
 
                                 #new label
                                 {
@@ -323,7 +325,7 @@
                             {
                                 isA: boxGreen;
                                 width: 100% - 20;
-                                height: ((50% - 10) / 2) - 10;
+                                height: 25% - 10;
                                 alignX: center;
                                 alignY: bottom;
 
@@ -364,29 +366,21 @@
                             {
                                 isA: boxBlue;
                                 width: 100% - 20;
-                                height: 25%;
+                                height: 50% - 10;
+                                alignX: center;
                                 alignY: top;
                                 content: "Display Object / Container";
                                 contentAlignY: middle;
                             }
 
-                            #new cairo
+                            #new qt
                             {
                                 isA: boxBlue;
                                 width: 100% - 20;
-                                height: 25%;
-                                alignY: 50%;
-                                content: "Cairo";
-                                contentAlignY: middle;
-                            }
-
-                            #new pango
-                            {
-                                isA: boxBlue;
-                                width: 100% - 20;
-                                height: 25%;
+                                height: 50% - 10;
+                                alignX: center;
                                 alignY: bottom;
-                                content: "Pango";
+                                content: "Compositor";
                                 contentAlignY: middle;
                             }
                         }
