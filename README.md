@@ -13,10 +13,10 @@ references (bindings between objects), and a very long etc.
 
 Prototype
 =========
-The Prototype is an application written in C++. It uses Qt for parsing XML and
-rendering the graphics, as well as other functionality. It serves as a testing
-ground and for developing the initial draft of the core library that will power
-the AXR platform.
+The prototype of the AXR library and applications is written in C++. It uses Qt
+for parsing XML and rendering the graphics, as well as other functionality.
+It serves as a testing ground and for developing the initial draft of the core
+library that will power the AXR platform.
 
 Repository manager
 ===================
@@ -39,4 +39,4 @@ make sure to include the following points in your bug report:
  - What you expected to happen
  - How to reproduce the issue
  - Your operating system and version
- - The version of the prototype that is affected
+ - The version of AXR that is affected

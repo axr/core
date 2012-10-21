@@ -49,20 +49,20 @@
 #include "AXRWarning.h"
 #include "LogWindow.h"
 #include "PreferencesDialog.h"
-#include "PrototypeApplication.h"
-#include "PrototypeSettings.h"
-#include "PrototypeWindow.h"
+#include "BrowserApplication.h"
+#include "BrowserSettings.h"
+#include "BrowserWindow.h"
 
-class PrototypeApplication::Private
+class BrowserApplication::Private
 {
 public:
-    PrototypeSettings *settings;
+    BrowserSettings *settings;
     PreferencesDialog *preferencesDialog;
     LogWindow *logWindow;
-    PrototypeWindow *mainWindow;
+    BrowserWindow *mainWindow;
 };
 
-PrototypeApplication::PrototypeApplication(int &argc, char **argv)
+BrowserApplication::BrowserApplication(int &argc, char **argv)
 : QApplication(argc, argv), d(new Private)
 {
     Q_INIT_RESOURCE(Resources);
@@ -70,12 +70,12 @@ PrototypeApplication::PrototypeApplication(int &argc, char **argv)
     setOrganizationName(AXR_VENDOR);
     setOrganizationDomain(AXR_DOMAIN);
     setApplicationVersion(AXR_VERSION_STRING);
-    setApplicationName("AXR Prototype");
+    setApplicationName("AXR Browser");
 
-    d->settings = new PrototypeSettings();
+    d->settings = new BrowserSettings();
     d->preferencesDialog = new PreferencesDialog();
     d->logWindow = new LogWindow();
-    d->mainWindow = new PrototypeWindow();
+    d->mainWindow = new BrowserWindow();
     d->mainWindow->show();
 
     // Check if the user wanted to load a file by command line
@@ -90,10 +90,10 @@ PrototypeApplication::PrototypeApplication(int &argc, char **argv)
         // Otherwise use the default action according to preferences
         switch (d->settings->fileLaunchAction())
         {
-            case PrototypeSettings::FileLaunchActionOpenLastFile:
+            case BrowserSettings::FileLaunchActionOpenLastFile:
                 d->mainWindow->openFile(d->settings->lastFileOpened());
                 break;
-            case PrototypeSettings::FileLaunchActionShowOpenFileDialog:
+            case BrowserSettings::FileLaunchActionShowOpenFileDialog:
                 d->mainWindow->openFile();
                 break;
             default:
@@ -104,7 +104,7 @@ PrototypeApplication::PrototypeApplication(int &argc, char **argv)
     axr_debug_activate_channel(d->settings->debuggingChannelsMask());
 }
 
-PrototypeApplication::~PrototypeApplication()
+BrowserApplication::~BrowserApplication()
 {
     delete d->mainWindow;
     delete d->logWindow;
@@ -113,7 +113,7 @@ PrototypeApplication::~PrototypeApplication()
     delete d;
 }
 
-bool PrototypeApplication::event(QEvent *e)
+bool BrowserApplication::event(QEvent *e)
 {
     switch (e->type())
     {
@@ -135,7 +135,7 @@ bool PrototypeApplication::event(QEvent *e)
 }
 
 // TODO: Remove this method once exceptions are eliminated from the core library
-bool PrototypeApplication::notify(QObject *receiver, QEvent *event)
+bool BrowserApplication::notify(QObject *receiver, QEvent *event)
 {
     try
     {
@@ -154,22 +154,22 @@ bool PrototypeApplication::notify(QObject *receiver, QEvent *event)
     return false;
 }
 
-PrototypeSettings* PrototypeApplication::settings() const
+BrowserSettings* BrowserApplication::settings() const
 {
     return d->settings;
 }
 
-QIODevice* PrototypeApplication::loggingDevice() const
+QIODevice* BrowserApplication::loggingDevice() const
 {
     return d->logWindow->logBuffer();
 }
 
-void PrototypeApplication::showPreferencesDialog()
+void BrowserApplication::showPreferencesDialog()
 {
     d->preferencesDialog->show();
 }
 
-void PrototypeApplication::showLogWindow()
+void BrowserApplication::showLogWindow()
 {
     d->logWindow->show();
 }

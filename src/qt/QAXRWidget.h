@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
-#ifndef AXR_PROTOTYPE_AXRWIDGET
-#define AXR_PROTOTYPE_AXRWIDGET
+#ifndef AXR_QAXRWIDGET
+#define AXR_QAXRWIDGET
 
 #include <QWidget>
 

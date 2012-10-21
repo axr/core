@@ -41,63 +41,39 @@
  *
  ********************************************************************/
 
-#include "PrototypeSettings.h"
-#include <QtGlobal>
-#include <QSettings>
+#ifndef __AXR__BrowserApplication__
+#define __AXR__BrowserApplication__
 
-#define key_fileLaunchAction "general/fileLaunchAction"
-#define key_lastFileOpened "general/lastFileOpened"
-#define key_debuggingChannelsMask "debug/channelsMask"
+#include <QApplication>
 
-class PrototypeSettings::Private
+class QIODevice;
+class BrowserSettings;
+
+class BrowserApplication : public QApplication
 {
+    Q_OBJECT
+
 public:
-    QSettings *settings;
+    BrowserApplication(int &argc, char **argv);
+    virtual ~BrowserApplication();
+    inline static BrowserApplication* instance() { return qobject_cast<BrowserApplication*>(QApplication::instance()); }
+    BrowserSettings* settings() const;
+    QIODevice* loggingDevice() const;
+    void showPreferencesDialog();
+    void showLogWindow();
+
+protected:
+    bool event(QEvent *e);
+    bool notify(QObject *receiver, QEvent *event);
+
+private:
+    class Private;
+    Private *d;
 };
 
-PrototypeSettings::PrototypeSettings()
-: d(new Private)
-{
-    d->settings = new QSettings();
-}
+#ifdef qApp
+#undef qApp
+#endif
+#define qApp BrowserApplication::instance()
 
-PrototypeSettings::~PrototypeSettings()
-{
-    delete d->settings;
-    delete d;
-}
-
-QSettings* PrototypeSettings::settings() const
-{
-    return d->settings;
-}
-
-PrototypeSettings::FileLaunchAction PrototypeSettings::fileLaunchAction() const
-{
-    return static_cast<FileLaunchAction>(qBound(0, d->settings->value(key_fileLaunchAction, 0).toInt(), static_cast<int>(FileLaunchActionMax) - 1));
-}
-
-void PrototypeSettings::setFileLaunchAction(FileLaunchAction action)
-{
-    d->settings->setValue(key_fileLaunchAction, static_cast<int>(action));
-}
-
-QString PrototypeSettings::lastFileOpened() const
-{
-    return d->settings->value(key_lastFileOpened).toString();
-}
-
-void PrototypeSettings::setLastFileOpened(const QString &filePath)
-{
-    d->settings->setValue(key_lastFileOpened, filePath);
-}
-
-quint32 PrototypeSettings::debuggingChannelsMask() const
-{
-    return static_cast<quint32>(d->settings->value(key_debuggingChannelsMask, 0).toULongLong());
-}
-
-void PrototypeSettings::setDebuggingChannelsMask(quint32 mask)
-{
-    d->settings->setValue(key_debuggingChannelsMask, static_cast<qulonglong>(mask));
-}
+#endif

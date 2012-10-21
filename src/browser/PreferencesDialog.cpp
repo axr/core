@@ -48,8 +48,8 @@
 #include <QToolBar>
 #include "AXRDebugging.h"
 #include "PreferencesDialog.h"
-#include "PrototypeApplication.h"
-#include "PrototypeSettings.h"
+#include "BrowserApplication.h"
+#include "BrowserSettings.h"
 #include "ui_PreferencesDialog.h"
 
 class PreferencesDialog::Private
@@ -118,7 +118,7 @@ void PreferencesDialog::accept()
     if (!d->finishedLoading)
         return;
 
-    qApp->settings()->setFileLaunchAction(static_cast<PrototypeSettings::FileLaunchAction>(ui->fileLaunchActionComboBox->currentIndex()));
+    qApp->settings()->setFileLaunchAction(static_cast<BrowserSettings::FileLaunchAction>(ui->fileLaunchActionComboBox->currentIndex()));
 
     quint32 mask = 0;
     mask |= ui->onChannelCheckBox->isChecked() ? AXR_DEBUG_CH_ON : 0;

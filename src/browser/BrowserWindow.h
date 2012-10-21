@@ -41,10 +41,50 @@
  *
  ********************************************************************/
 
-#include "PrototypeApplication.h"
+#ifndef AXR_BROWSER_BROWSERWINDOW
+#define AXR_BROWSER_BROWSERWINDOW
 
-int main(int argc, char *argv[])
+#include <QMainWindow>
+#include "AXRString.h"
+
+namespace Ui
 {
-    PrototypeApplication a(argc, argv);
-    return a.exec();
+    class BrowserWindow;
 }
+
+class BrowserWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    BrowserWindow(QWidget *parent = NULL);
+    virtual ~BrowserWindow();
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+
+public slots:
+    void openFile();
+    void openFile(const QString &filePath);
+    void openFiles(const QStringList &filePaths);
+    void reloadFile();
+    void closeFile();
+    void previousLayoutStep();
+    void nextLayoutStep();
+    void listXmlElements();
+    void listHssStatements();
+    void listHssTokens();
+    void runLayoutTests();
+    void showErrorLog();
+    void showPreferences();
+    void showAbout();
+    void toggleAntialiasing(bool on);
+
+private:
+    class Private;
+    Private *d;
+    Ui::BrowserWindow *ui;
+};
+
+#endif

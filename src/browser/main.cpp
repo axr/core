@@ -41,39 +41,10 @@
  *
  ********************************************************************/
 
-#ifndef __AXR__PrototypeApplication__
-#define __AXR__PrototypeApplication__
+#include "BrowserApplication.h"
 
-#include <QApplication>
-
-class QIODevice;
-class PrototypeSettings;
-
-class PrototypeApplication : public QApplication
+int main(int argc, char *argv[])
 {
-    Q_OBJECT
-
-public:
-    PrototypeApplication(int &argc, char **argv);
-    virtual ~PrototypeApplication();
-    inline static PrototypeApplication* instance() { return qobject_cast<PrototypeApplication*>(QApplication::instance()); }
-    PrototypeSettings* settings() const;
-    QIODevice* loggingDevice() const;
-    void showPreferencesDialog();
-    void showLogWindow();
-
-protected:
-    bool event(QEvent *e);
-    bool notify(QObject *receiver, QEvent *event);
-
-private:
-    class Private;
-    Private *d;
-};
-
-#ifdef qApp
-#undef qApp
-#endif
-#define qApp PrototypeApplication::instance()
-
-#endif
+    BrowserApplication a(argc, argv);
+    return a.exec();
+}

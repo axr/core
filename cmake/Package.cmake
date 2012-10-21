@@ -28,11 +28,11 @@ set(CPACK_RESOURCE_FILE_LICENSE "${AXR_LICENSE_FILE_TXT}")
 set(CPACK_ALL_INSTALL_TYPES Full Developer)
 
 # Friendly names, descriptions and groups for components
-set(CPACK_COMPONENT_PROTOTYPE_DISPLAY_NAME "Prototype Application")
-set(CPACK_COMPONENT_PROTOTYPE_DESCRIPTION "An pseudo-browser that can be used to test the AXR rendering engine and HSS language")
-set(CPACK_COMPONENT_PROTOTYPE_GROUP "Runtime")
-set(CPACK_COMPONENT_PROTOTYPE_INSTALL_TYPES Full Developer)
-set(CPACK_COMPONENT_PROTOTYPE_REQUIRED TRUE)
+set(CPACK_COMPONENT_BROWSER_DISPLAY_NAME "Browser Application")
+set(CPACK_COMPONENT_BROWSER_DESCRIPTION "An browser-like application that can be used to test the AXR rendering engine and HSS language")
+set(CPACK_COMPONENT_BROWSER_GROUP "Runtime")
+set(CPACK_COMPONENT_BROWSER_INSTALL_TYPES Full Developer)
+set(CPACK_COMPONENT_BROWSER_REQUIRED TRUE)
 
 set(CPACK_COMPONENT_LIBRARIES_GROUP "Runtime")
 set(CPACK_COMPONENT_LIBRARIES_REQUIRED TRUE)
@@ -73,14 +73,14 @@ set(CPACK_SOURCE_IGNORE_FILES ".git" ".DS_Store" "thumbs.db" "CMakeLists.txt.use
 list(APPEND CPACK_SOURCE_GENERATOR ZIP TGZ STGZ TZ TBZ2)
 
 # for NSIS to create Start Menu shortcuts
-set(CPACK_PACKAGE_EXECUTABLES "Prototype;Prototype")
+set(CPACK_PACKAGE_EXECUTABLES "Browser;Browser")
 
 if(WIN32)
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_NSIS_MUI_ICON "${AXR_PACKAGE_ICON}")
     set(CPACK_NSIS_MUI_UNIICON "${AXR_PACKAGE_ICON}")
 #    set(CPACK_PACKAGE_ICON "<something>.bmp")
-    set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\prototype.exe")
+    set(CPACK_NSIS_INSTALLED_ICON_NAME "browser.exe")
     set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\axr.vg")
     set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\axr.vg")
     set(CPACK_NSIS_CONTACT "${AXR_CONTACT}")

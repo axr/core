@@ -47,15 +47,15 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>${TARGET_NAME_APP_PROTOTYPE_OUTPUT_NAME}</string>
+	<string>${TARGET_NAME_APP_BROWSER_OUTPUT_NAME}</string>
 	<key>CFBundleIconFile</key>
 	<string>${MACOSX_BUNDLE_ICON_FILE}</string>
 	<key>CFBundleIdentifier</key>
-	<string>vg.axr.prototype.browser</string>
+	<string>vg.axr.browser</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>${TARGET_NAME_APP_PROTOTYPE_OUTPUT_NAME}</string>
+	<string>${TARGET_NAME_APP_BROWSER_OUTPUT_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

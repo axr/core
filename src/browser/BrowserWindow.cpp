@@ -55,15 +55,15 @@
 
 #include "LogWindow.h"
 #include "PreferencesDialog.h"
-#include "PrototypeApplication.h"
-#include "PrototypeSettings.h"
-#include "PrototypeWindow.h"
+#include "BrowserApplication.h"
+#include "BrowserSettings.h"
+#include "BrowserWindow.h"
 
 using namespace AXR;
 
-#include "ui_PrototypeWindow.h"
+#include "ui_BrowserWindow.h"
 
-class PrototypeWindow::Private
+class BrowserWindow::Private
 {
 public:
     Private()
@@ -85,8 +85,8 @@ public:
     AXRTestRunner *testRunner;
 };
 
-PrototypeWindow::PrototypeWindow(QWidget *parent)
-: QMainWindow(parent), d(new Private), ui(new Ui::PrototypeWindow)
+BrowserWindow::BrowserWindow(QWidget *parent)
+: QMainWindow(parent), d(new Private), ui(new Ui::BrowserWindow)
 {
     ui->setupUi(this);
 
@@ -119,13 +119,13 @@ PrototypeWindow::PrototypeWindow(QWidget *parent)
     this->closeFile();
 }
 
-PrototypeWindow::~PrototypeWindow()
+BrowserWindow::~BrowserWindow()
 {
     delete ui;
     delete d;
 }
 
-void PrototypeWindow::dragEnterEvent(QDragEnterEvent *event)
+void BrowserWindow::dragEnterEvent(QDragEnterEvent *event)
 {
     const QMimeData *mimeData = event->mimeData();
     if (mimeData->hasUrls())
@@ -148,7 +148,7 @@ void PrototypeWindow::dragEnterEvent(QDragEnterEvent *event)
     }
 }
 
-void PrototypeWindow::dropEvent(QDropEvent *event)
+void BrowserWindow::dropEvent(QDropEvent *event)
 {
     const QMimeData *mimeData = event->mimeData();
     if (mimeData->hasUrls())
@@ -170,7 +170,7 @@ void PrototypeWindow::dropEvent(QDropEvent *event)
     }
 }
 
-void PrototypeWindow::openFile()
+void BrowserWindow::openFile()
 {
     QString file = QFileDialog::getOpenFileName(this, tr("Open XML/HSS File"), QString(), "AXR Files (*.xml *.hss)");
     if (!file.isEmpty())
@@ -179,7 +179,7 @@ void PrototypeWindow::openFile()
     }
 }
 
-void PrototypeWindow::openFile(const QString &filePath)
+void BrowserWindow::openFile(const QString &filePath)
 {
     setWindowTitle(QString());
     setWindowFilePath(filePath);
@@ -189,7 +189,7 @@ void PrototypeWindow::openFile(const QString &filePath)
     update();
 }
 
-void PrototypeWindow::openFiles(const QStringList &filePaths)
+void BrowserWindow::openFiles(const QStringList &filePaths)
 {
     // TODO: This actually needs to open new windows or tabs
     Q_FOREACH (QString path, filePaths)
@@ -198,13 +198,13 @@ void PrototypeWindow::openFiles(const QStringList &filePaths)
     }
 }
 
-void PrototypeWindow::reloadFile()
+void BrowserWindow::reloadFile()
 {
     d->document->reload();
     update();
 }
 
-void PrototypeWindow::closeFile()
+void BrowserWindow::closeFile()
 {
     setWindowTitle(QCoreApplication::applicationName());
     setWindowFilePath(QString());
@@ -212,21 +212,21 @@ void PrototypeWindow::closeFile()
     // TODO: Actually close the file...
 }
 
-void PrototypeWindow::previousLayoutStep()
+void BrowserWindow::previousLayoutStep()
 {
     d->document->setShowLayoutSteps(true);
     d->document->previousLayoutStep();
     update();
 }
 
-void PrototypeWindow::nextLayoutStep()
+void BrowserWindow::nextLayoutStep()
 {
     d->document->setShowLayoutSteps(true);
     d->document->nextLayoutStep();
     update();
 }
 
-void PrototypeWindow::listXmlElements()
+void BrowserWindow::listXmlElements()
 {
     AXRString file = QFileDialog::getOpenFileName(this, tr("Open XML File"), AXRString(), "XML Files (*.xml)");
     if (!file.isEmpty())
@@ -252,7 +252,7 @@ void PrototypeWindow::listXmlElements()
     }
 }
 
-void PrototypeWindow::listHssStatements()
+void BrowserWindow::listHssStatements()
 {
     AXRString file = QFileDialog::getOpenFileName(this, tr("Open HSS File"), AXRString(), "HSS Files (*.hss)");
     if (!file.isEmpty())
@@ -282,7 +282,7 @@ void PrototypeWindow::listHssStatements()
     }
 }
 
-void PrototypeWindow::listHssTokens()
+void BrowserWindow::listHssTokens()
 {
     AXRString file = QFileDialog::getOpenFileName(this, tr("Open HSS File"), AXRString(), "HSS Files (*.hss)");
     if (!file.isEmpty())
@@ -318,27 +318,27 @@ void PrototypeWindow::listHssTokens()
     }
 }
 
-void PrototypeWindow::runLayoutTests()
+void BrowserWindow::runLayoutTests()
 {
     d->document->registerCustomFunction("AXRLayoutTestsExecute", new HSSValueChangedCallback<AXRTestRunner>(d->testRunner, &AXRTestRunner::executeLayoutTests));
     this->openFile(d->testRunner->getPathToTestsFile());
 }
 
-void PrototypeWindow::showErrorLog()
+void BrowserWindow::showErrorLog()
 {
     qApp->showLogWindow();
 }
 
-void PrototypeWindow::showPreferences()
+void BrowserWindow::showPreferences()
 {
     qApp->showPreferencesDialog();
 }
 
-void PrototypeWindow::showAbout()
+void BrowserWindow::showAbout()
 {
 }
 
-void PrototypeWindow::toggleAntialiasing(bool on)
+void BrowserWindow::toggleAntialiasing(bool on)
 {
     d->document->getRender()->setGlobalAntialiasingEnabled(on);
     update();

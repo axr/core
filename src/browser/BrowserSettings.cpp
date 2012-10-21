@@ -41,41 +41,63 @@
  *
  ********************************************************************/
 
-#ifndef __AXR__PrototypeSettings__
-#define __AXR__PrototypeSettings__
-
+#include "BrowserSettings.h"
 #include <QtGlobal>
-#include <QString>
+#include <QSettings>
 
-class QSettings;
+#define key_fileLaunchAction "general/fileLaunchAction"
+#define key_lastFileOpened "general/lastFileOpened"
+#define key_debuggingChannelsMask "debug/channelsMask"
 
-class PrototypeSettings
+class BrowserSettings::Private
 {
 public:
-    enum FileLaunchAction
-    {
-        FileLaunchActionNone = 0,
-        FileLaunchActionOpenLastFile = 1,
-        FileLaunchActionShowOpenFileDialog = 2,
-        FileLaunchActionMax
-    };
-
-    PrototypeSettings();
-    virtual ~PrototypeSettings();
-    QSettings* settings() const;
-
-    FileLaunchAction fileLaunchAction() const;
-    void setFileLaunchAction(FileLaunchAction action);
-
-    QString lastFileOpened() const;
-    void setLastFileOpened(const QString &filePath);
-
-    quint32 debuggingChannelsMask() const;
-    void setDebuggingChannelsMask(quint32 mask);
-
-private:
-    class Private;
-    Private *d;
+    QSettings *settings;
 };
 
-#endif
+BrowserSettings::BrowserSettings()
+: d(new Private)
+{
+    d->settings = new QSettings();
+}
+
+BrowserSettings::~BrowserSettings()
+{
+    delete d->settings;
+    delete d;
+}
+
+QSettings* BrowserSettings::settings() const
+{
+    return d->settings;
+}
+
+BrowserSettings::FileLaunchAction BrowserSettings::fileLaunchAction() const
+{
+    return static_cast<FileLaunchAction>(qBound(0, d->settings->value(key_fileLaunchAction, 0).toInt(), static_cast<int>(FileLaunchActionMax) - 1));
+}
+
+void BrowserSettings::setFileLaunchAction(FileLaunchAction action)
+{
+    d->settings->setValue(key_fileLaunchAction, static_cast<int>(action));
+}
+
+QString BrowserSettings::lastFileOpened() const
+{
+    return d->settings->value(key_lastFileOpened).toString();
+}
+
+void BrowserSettings::setLastFileOpened(const QString &filePath)
+{
+    d->settings->setValue(key_lastFileOpened, filePath);
+}
+
+quint32 BrowserSettings::debuggingChannelsMask() const
+{
+    return static_cast<quint32>(d->settings->value(key_debuggingChannelsMask, 0).toULongLong());
+}
+
+void BrowserSettings::setDebuggingChannelsMask(quint32 mask)
+{
+    d->settings->setValue(key_debuggingChannelsMask, static_cast<qulonglong>(mask));
+}

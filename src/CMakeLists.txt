@@ -36,7 +36,7 @@ endif()
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/TEST")
 add_subdirectory(TEST)
 
-add_subdirectory(prototype)
+add_subdirectory(browser)
 
 if(AXR_BUILD_EXAMPLES)
     add_subdirectory(examples)

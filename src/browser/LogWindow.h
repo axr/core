@@ -41,50 +41,37 @@
  *
  ********************************************************************/
 
-#ifndef AXR_PROTOTYPE_PROTOTYPEWINDOW
-#define AXR_PROTOTYPE_PROTOTYPEWINDOW
+#ifndef AXR_BROWSER_LOGWINDOW
+#define AXR_BROWSER_LOGWINDOW
 
-#include <QMainWindow>
+#include <QDialog>
 #include "AXRString.h"
 
 namespace Ui
 {
-    class PrototypeWindow;
+    class LogWindow;
 }
 
-class PrototypeWindow : public QMainWindow
+class LogWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    PrototypeWindow(QWidget *parent = NULL);
-    virtual ~PrototypeWindow();
-
-protected:
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dropEvent(QDropEvent *event);
+    LogWindow(QWidget *parent = NULL);
+    virtual ~LogWindow();
+    AXR::AXRString logText() const;
+    QIODevice* logBuffer() const;
 
 public slots:
-    void openFile();
-    void openFile(const QString &filePath);
-    void openFiles(const QStringList &filePaths);
-    void reloadFile();
-    void closeFile();
-    void previousLayoutStep();
-    void nextLayoutStep();
-    void listXmlElements();
-    void listHssStatements();
-    void listHssTokens();
-    void runLayoutTests();
-    void showErrorLog();
-    void showPreferences();
-    void showAbout();
-    void toggleAntialiasing(bool on);
+    void setLogText(const AXR::AXRString &text);
+    void appendLogText(const AXR::AXRString &text);
+    void clearLogText();
+    void dataLogged(qint64 bytes);
 
 private:
     class Private;
     Private *d;
-    Ui::PrototypeWindow *ui;
+    Ui::LogWindow *ui;
 };
 
 #endif

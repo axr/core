@@ -41,37 +41,41 @@
  *
  ********************************************************************/
 
-#ifndef AXR_PROTOTYPE_LOGWINDOW
-#define AXR_PROTOTYPE_LOGWINDOW
+#ifndef __AXR__BrowserSettings__
+#define __AXR__BrowserSettings__
 
-#include <QDialog>
-#include "AXRString.h"
+#include <QtGlobal>
+#include <QString>
 
-namespace Ui
+class QSettings;
+
+class BrowserSettings
 {
-    class LogWindow;
-}
-
-class LogWindow : public QDialog
-{
-    Q_OBJECT
-
 public:
-    LogWindow(QWidget *parent = NULL);
-    virtual ~LogWindow();
-    AXR::AXRString logText() const;
-    QIODevice* logBuffer() const;
+    enum FileLaunchAction
+    {
+        FileLaunchActionNone = 0,
+        FileLaunchActionOpenLastFile = 1,
+        FileLaunchActionShowOpenFileDialog = 2,
+        FileLaunchActionMax
+    };
 
-public slots:
-    void setLogText(const AXR::AXRString &text);
-    void appendLogText(const AXR::AXRString &text);
-    void clearLogText();
-    void dataLogged(qint64 bytes);
+    BrowserSettings();
+    virtual ~BrowserSettings();
+    QSettings* settings() const;
+
+    FileLaunchAction fileLaunchAction() const;
+    void setFileLaunchAction(FileLaunchAction action);
+
+    QString lastFileOpened() const;
+    void setLastFileOpened(const QString &filePath);
+
+    quint32 debuggingChannelsMask() const;
+    void setDebuggingChannelsMask(quint32 mask);
 
 private:
     class Private;
     Private *d;
-    Ui::LogWindow *ui;
 };
 
 #endif

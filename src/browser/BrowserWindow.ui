@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PrototypeWindow</class>
- <widget class="QMainWindow" name="PrototypeWindow">
+ <class>BrowserWindow</class>
+ <widget class="QMainWindow" name="BrowserWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,7 +14,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>AXR Prototype</string>
+   <string>AXR Browser</string>
   </property>
   <property name="unifiedTitleAndToolBarOnMac">
    <bool>true</bool>
@@ -153,7 +153,7 @@
   </action>
   <action name="aboutAction">
    <property name="text">
-    <string>About AXR Prototype</string>
+    <string>About AXR Browser</string>
    </property>
    <property name="menuRole">
     <enum>QAction::AboutRole</enum>
@@ -189,7 +189,7 @@
   <connection>
    <sender>openAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>openFile()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -205,7 +205,7 @@
   <connection>
    <sender>reloadAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>reloadFile()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -221,7 +221,7 @@
   <connection>
    <sender>closeAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>closeFile()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -237,7 +237,7 @@
   <connection>
    <sender>previousLayoutStepAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>previousLayoutStep()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -253,7 +253,7 @@
   <connection>
    <sender>nextLayoutStepAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>nextLayoutStep()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -269,7 +269,7 @@
   <connection>
    <sender>listXmlElementsAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>listXmlElements()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -285,7 +285,7 @@
   <connection>
    <sender>listHssStatementsAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>listHssStatements()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -301,7 +301,7 @@
   <connection>
    <sender>listHssTokensAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>listHssTokens()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -317,7 +317,7 @@
   <connection>
    <sender>runLayoutTestsAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>runLayoutTests()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -333,7 +333,7 @@
   <connection>
    <sender>logAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>showErrorLog()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -349,7 +349,7 @@
   <connection>
    <sender>aboutAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>showAbout()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -365,7 +365,7 @@
   <connection>
    <sender>enableAntialiasingAction</sender>
    <signal>toggled(bool)</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>toggleAntialiasing(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -381,7 +381,7 @@
   <connection>
    <sender>exitAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -397,7 +397,7 @@
   <connection>
    <sender>preferencesAction</sender>
    <signal>triggered()</signal>
-   <receiver>PrototypeWindow</receiver>
+   <receiver>BrowserWindow</receiver>
    <slot>showPreferences()</slot>
    <hints>
     <hint type="sourcelabel">

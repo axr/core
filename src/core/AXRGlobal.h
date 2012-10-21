@@ -42,9 +42,9 @@
  ********************************************************************/
 
 /**
- *  @mainpage AXR Prototype Documentation Overview
+ *  @mainpage AXR Documentation Overview
  *
- *  Welcome to the documentation of the AXR prototype! It was automatically generated from the
+ *  Welcome to the AXR documentation! It was automatically generated from the
  *  JavaDoc-style comment blocks that are in the header (.h) files, with a tool called Doxygen.
  *
  *  The goal of this document is to provide an overview of how the code is structured, how the
@@ -69,7 +69,7 @@
  *  Let's have a look at what's inside the repository folder:
  *
  *  - src/core: this is the core library of the rendering engine
- *  - src/app: prototype application used to test AXE's functionality
+ *  - src/browser: browser application used to test AXR's functionality
  *  - tests: this is a bunch of XML and HSS files that were used when developing the library
  *
  *  In Xcode you can use Interface Builder and make a custom view to be of the NSAXRView class
