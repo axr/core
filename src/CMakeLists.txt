@@ -42,6 +42,10 @@ if(AXR_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
+if(AXR_BUILD_TOOLS)
+    add_subdirectory(tools)
+endif()
+
 if(AXR_BUILD_PLUGIN)
     set(FB_PROJECTS_DIR "${CMAKE_SOURCE_DIR}/src")
     add_definitions(-DQT_NO_KEYWORDS)
