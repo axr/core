@@ -73,7 +73,7 @@ HSSPropertyDefinition::HSSPropertyDefinition(const HSSPropertyDefinition &orig)
 
 HSSPropertyDefinition::p HSSPropertyDefinition::clone() const
 {
-    return qSharedPointerCast<HSSPropertyDefinition, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSPropertyDefinition> (this->cloneImpl());
 }
 
 HSSPropertyDefinition::~HSSPropertyDefinition()

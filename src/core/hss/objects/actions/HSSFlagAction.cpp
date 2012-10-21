@@ -63,7 +63,7 @@ HSSFlagAction::HSSFlagAction(const HSSFlagAction & orig)
 HSSFlagAction::p HSSFlagAction::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFlagAction: cloning flag action object");
-    return qSharedPointerCast<HSSFlagAction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFlagAction> (this->cloneImpl());
 }
 
 HSSClonable::p HSSFlagAction::cloneImpl() const

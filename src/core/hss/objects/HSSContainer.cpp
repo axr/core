@@ -129,12 +129,12 @@ HSSContainer::HSSContainer(const HSSContainer & orig)
 HSSContainer::p HSSContainer::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: cloning container");
-    return qSharedPointerCast<HSSContainer, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSContainer> (this->cloneImpl());
 }
 
 HSSClonable::p HSSContainer::cloneImpl() const
 {
-    return HSSClonable::p(new HSSContainer(*this));
+    return HSSContainer::p(new HSSContainer(*this));
 }
 
 HSSContainer::~HSSContainer()

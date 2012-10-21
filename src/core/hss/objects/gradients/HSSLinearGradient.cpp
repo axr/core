@@ -104,12 +104,12 @@ HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
 HSSLinearGradient::p HSSLinearGradient::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: cloning linear gradient object");
-    return qSharedPointerCast<HSSLinearGradient, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSLinearGradient> (this->cloneImpl());
 }
 
 HSSClonable::p HSSLinearGradient::cloneImpl() const
 {
-    return HSSClonable::p(new HSSLinearGradient(*this));
+    return HSSLinearGradient::p(new HSSLinearGradient(*this));
 }
 
 HSSLinearGradient::~HSSLinearGradient()

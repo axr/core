@@ -68,7 +68,7 @@ HSSInstruction::HSSInstruction(const HSSInstruction &orig)
 
 HSSInstruction::p HSSInstruction::clone() const
 {
-    return qSharedPointerCast<HSSInstruction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSInstruction>(this->cloneImpl());
 }
 
 HSSInstruction::~HSSInstruction()
@@ -128,7 +128,7 @@ AXRString HSSInstruction::instructionStringRepresentation(HSSInstructionType typ
 
 HSSClonable::p HSSInstruction::cloneImpl() const
 {
-    return HSSClonable::p(new HSSInstruction(*this));
+    return HSSInstruction::p(new HSSInstruction(*this));
 }
 
 HSSParserNode::p HSSInstruction::getArgument()

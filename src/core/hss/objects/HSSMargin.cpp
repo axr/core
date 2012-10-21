@@ -73,12 +73,12 @@ HSSMargin::HSSMargin(const HSSMargin & orig)
 
 HSSMargin::p HSSMargin::clone() const
 {
-    return qSharedPointerCast<HSSMargin, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSMargin> (this->cloneImpl());
 }
 
 HSSClonable::p HSSMargin::cloneImpl() const
 {
-    return HSSClonable::p(new HSSMargin(*this));
+    return HSSMargin::p(new HSSMargin(*this));
 }
 
 HSSMargin::~HSSMargin()

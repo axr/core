@@ -88,12 +88,12 @@ HSSFont::HSSFont(const HSSFont & orig)
 
 HSSFont::p HSSFont::clone() const
 {
-    return qSharedPointerCast<HSSFont, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFont> (this->cloneImpl());
 }
 
 HSSClonable::p HSSFont::cloneImpl() const
 {
-    return HSSClonable::p(new HSSFont(*this));
+    return HSSFont::p(new HSSFont(*this));
 }
 
 HSSFont::~HSSFont()

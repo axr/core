@@ -190,12 +190,12 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
 HSSTextBlock::p HSSTextBlock::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: cloning text block object");
-    return qSharedPointerCast<HSSTextBlock, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSTextBlock> (this->cloneImpl());
 }
 
 HSSClonable::p HSSTextBlock::cloneImpl() const
 {
-    return HSSClonable::p(new HSSTextBlock(*this));
+    return HSSTextBlock::p(new HSSTextBlock(*this));
 }
 
 HSSTextBlock::~HSSTextBlock()

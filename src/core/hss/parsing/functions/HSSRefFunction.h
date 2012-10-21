@@ -180,7 +180,7 @@ namespace AXR
 
         HSSObservable * observed;
 
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

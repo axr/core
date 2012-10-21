@@ -65,12 +65,12 @@ HSSMultipleValue::HSSMultipleValue(const HSSMultipleValue & orig)
 
 HSSMultipleValue::p HSSMultipleValue::clone() const
 {
-    return qSharedPointerCast<HSSMultipleValue, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSMultipleValue> (this->cloneImpl());
 }
 
 HSSClonable::p HSSMultipleValue::cloneImpl() const
 {
-    return HSSClonable::p(new HSSMultipleValue(*this));
+    return HSSMultipleValue::p(new HSSMultipleValue(*this));
 }
 
 HSSMultipleValue::~HSSMultipleValue()

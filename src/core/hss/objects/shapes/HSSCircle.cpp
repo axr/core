@@ -60,12 +60,12 @@ HSSCircle::HSSCircle(const HSSCircle & orig)
 HSSCircle::p HSSCircle::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSCircle: cloning circle object");
-    return qSharedPointerCast<HSSCircle, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSCircle> (this->cloneImpl());
 }
 
 HSSClonable::p HSSCircle::cloneImpl() const
 {
-    return HSSClonable::p(new HSSCircle(*this));
+    return HSSCircle::p(new HSSCircle(*this));
 }
 
 HSSCircle::~HSSCircle()

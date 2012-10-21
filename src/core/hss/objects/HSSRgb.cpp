@@ -104,12 +104,12 @@ HSSRgb::HSSRgb(const HSSRgb & orig)
 HSSRgb::p HSSRgb::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: cloning rgb object");
-    return qSharedPointerCast<HSSRgb, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSRgb> (this->cloneImpl());
 }
 
 HSSClonable::p HSSRgb::cloneImpl() const
 {
-    return HSSClonable::p(new HSSRgb(*this));
+    return HSSRgb::p(new HSSRgb(*this));
 }
 
 HSSRgb::~HSSRgb()

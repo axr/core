@@ -81,7 +81,7 @@ HSSValue::p HSSValue::clone() const
 
 HSSClonable::p HSSValue::cloneImpl() const
 {
-    return HSSClonable::p(new HSSValue(*this));
+    return HSSValue::p(new HSSValue(*this));
 }
 
 HSSValue::~HSSValue()

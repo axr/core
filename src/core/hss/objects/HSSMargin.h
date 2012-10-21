@@ -214,7 +214,7 @@ namespace AXR
         void leftChanged(HSSObservableProperty source, void*data);
 
     private:
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
         //size
         HSSParserNode::p dSize;
 

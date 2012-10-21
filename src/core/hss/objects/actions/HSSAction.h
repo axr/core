@@ -115,7 +115,7 @@ namespace AXR
 
     private:
         HSSActionType actionType;
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

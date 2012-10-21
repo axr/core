@@ -53,7 +53,7 @@ HSSThisSelector::HSSThisSelector(AXRController * controller)
 
 HSSThisSelector::p HSSThisSelector::clone() const
 {
-    return qSharedPointerCast<HSSThisSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSThisSelector> (this->cloneImpl());
 }
 
 AXRString HSSThisSelector::toString()
@@ -63,7 +63,7 @@ AXRString HSSThisSelector::toString()
 
 HSSClonable::p HSSThisSelector::cloneImpl() const
 {
-    return HSSClonable::p(new HSSThisSelector(*this));
+    return HSSThisSelector::p(new HSSThisSelector(*this));
 }
 
 std::vector<HSSDisplayObject::p> HSSThisSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)

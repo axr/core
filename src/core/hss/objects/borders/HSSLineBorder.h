@@ -117,7 +117,7 @@ namespace AXR
         HSSObservable * observedColor;
         HSSObservableProperty observedColorProperty;
     private:
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

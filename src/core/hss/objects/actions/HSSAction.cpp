@@ -86,7 +86,7 @@ HSSAction::p HSSAction::clone() const
 
 HSSClonable::p HSSAction::cloneImpl() const
 {
-    return HSSClonable::p(new HSSAction(*this));
+    return HSSAction::p(new HSSAction(*this));
 }
 
 HSSAction::~HSSAction()

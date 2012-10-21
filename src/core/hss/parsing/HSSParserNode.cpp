@@ -94,7 +94,7 @@ HSSParserNode::HSSParserNode(const HSSParserNode &orig)
 
 HSSParserNode::p HSSParserNode::clone() const
 {
-    return qSharedPointerCast<HSSParserNode, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSParserNode> (this->cloneImpl());
 }
 
 AXRString HSSParserNode::toString()
@@ -157,7 +157,7 @@ const std::vector<HSSParserNode::p> HSSParserNode::getChildNodes() const
 
 HSSClonable::p HSSParserNode::cloneImpl() const
 {
-    return HSSClonable::p(new HSSParserNode(*this));
+    return HSSParserNode::p(new HSSParserNode(*this));
 }
 
 void HSSParserNode::setThisObj(HSSDisplayObject::p value)

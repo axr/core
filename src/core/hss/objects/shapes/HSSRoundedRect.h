@@ -172,7 +172,7 @@ namespace AXR
                                    HSSObservableProperty &observedStoreProperty,
                                    const std::vector<HSSDisplayObject::p> * scope
                                    );
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

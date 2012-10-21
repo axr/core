@@ -111,7 +111,7 @@ namespace AXR
         std::vector<HSSParserNode::p>valueList;
 
     private:
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

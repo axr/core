@@ -59,7 +59,7 @@ HSSSum::HSSSum(const HSSSum &orig)
 
 HSSSum::p HSSSum::clone() const
 {
-    return qSharedPointerCast<HSSSum, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSSum> (this->cloneImpl());
 }
 
 HSSSum::~HSSSum()
@@ -74,5 +74,5 @@ HSSUnit HSSSum::calculate(HSSUnit leftval, HSSUnit rightval)
 
 HSSClonable::p HSSSum::cloneImpl() const
 {
-    return HSSClonable::p(new HSSSum(*this));
+    return HSSSum::p(new HSSSum(*this));
 }

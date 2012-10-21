@@ -53,7 +53,7 @@ HSSNegation::HSSNegation(AXRController * controller)
 
 HSSNegation::p HSSNegation::clone() const
 {
-    return qSharedPointerCast<HSSNegation, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSNegation> (this->cloneImpl());
 }
 
 HSSNegation::~HSSNegation()
@@ -68,5 +68,5 @@ AXRString HSSNegation::toString()
 
 HSSClonable::p HSSNegation::cloneImpl() const
 {
-    return HSSClonable::p(new HSSNegation(*this));
+    return HSSNegation::p(new HSSNegation(*this));
 }

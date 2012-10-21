@@ -66,7 +66,7 @@ HSSSelFunction::HSSSelFunction(const HSSSelFunction & orig)
 
 HSSFunction::p HSSSelFunction::clone() const
 {
-    return qSharedPointerCast<HSSFunction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunction> (this->cloneImpl());
 }
 
 AXRString HSSSelFunction::toString()

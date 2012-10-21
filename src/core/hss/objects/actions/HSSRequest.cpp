@@ -81,12 +81,12 @@ HSSRequest::HSSRequest(const HSSRequest & orig)
 HSSRequest::p HSSRequest::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRequest: cloning request object");
-    return qSharedPointerCast<HSSRequest, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSRequest> (this->cloneImpl());
 }
 
 HSSClonable::p HSSRequest::cloneImpl() const
 {
-    return HSSClonable::p(new HSSRequest(*this));
+    return HSSRequest::p(new HSSRequest(*this));
 }
 
 HSSRequest::~HSSRequest()

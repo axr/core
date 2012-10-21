@@ -53,7 +53,7 @@ HSSStringConstant::HSSStringConstant(AXRString value, AXRController * controller
 
 HSSStringConstant::p HSSStringConstant::clone() const
 {
-    return qSharedPointerCast<HSSStringConstant, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSStringConstant> (this->cloneImpl());
 }
 
 HSSStringConstant::~HSSStringConstant()
@@ -78,5 +78,5 @@ AXRString HSSStringConstant::toString()
 
 HSSClonable::p HSSStringConstant::cloneImpl() const
 {
-    return HSSClonable::p(new HSSStringConstant(*this));
+    return HSSStringConstant::p(new HSSStringConstant(*this));
 }

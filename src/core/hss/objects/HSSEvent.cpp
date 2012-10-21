@@ -113,7 +113,7 @@ HSSEvent::p HSSEvent::clone() const
 
 HSSClonable::p HSSEvent::cloneImpl() const
 {
-    return HSSClonable::p(new HSSEvent(*this));
+    return HSSEvent::p(new HSSEvent(*this));
 }
 
 HSSEvent::~HSSEvent()

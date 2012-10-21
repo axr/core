@@ -486,7 +486,7 @@ namespace AXR
         void _distribute(displayGroup::p &groups, HSSDirectionValue direction);
         bool _recursiveFindTopConstraint(HSSUnit & constraint, displayGroup::p group, unsigned int i, HSSDisplayObject::p child);
         bool _recursiveFindBottomConstraint(HSSUnit & constraint, displayGroup::p group, int i, HSSDisplayObject::p child);
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
 
     };
 }

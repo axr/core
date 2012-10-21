@@ -93,12 +93,12 @@ HSSPolygon::HSSPolygon(const HSSPolygon & orig)
 HSSPolygon::p HSSPolygon::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: cloning polygon object");
-    return qSharedPointerCast<HSSPolygon, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSPolygon> (this->cloneImpl());
 }
 
 HSSClonable::p HSSPolygon::cloneImpl() const
 {
-    return HSSClonable::p(new HSSPolygon(*this));
+    return HSSPolygon::p(new HSSPolygon(*this));
 }
 
 HSSPolygon::~HSSPolygon()

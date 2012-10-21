@@ -53,7 +53,7 @@ HSSUniversalSelector::HSSUniversalSelector(AXRController * controller)
 
 HSSUniversalSelector::p HSSUniversalSelector::clone() const
 {
-    return qSharedPointerCast<HSSUniversalSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSUniversalSelector> (this->cloneImpl());
 }
 
 AXRString HSSUniversalSelector::toString()
@@ -63,7 +63,7 @@ AXRString HSSUniversalSelector::toString()
 
 HSSClonable::p HSSUniversalSelector::cloneImpl() const
 {
-    return HSSClonable::p(new HSSUniversalSelector(*this));
+    return HSSUniversalSelector::p(new HSSUniversalSelector(*this));
 }
 
 std::vector<HSSDisplayObject::p> HSSUniversalSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)

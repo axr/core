@@ -64,7 +64,7 @@ HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
 
 HSSFunction::p HSSRefFunction::clone() const
 {
-    return qSharedPointerCast<HSSFunction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunction> (this->cloneImpl());
 }
 
 HSSRefFunction::~HSSRefFunction()

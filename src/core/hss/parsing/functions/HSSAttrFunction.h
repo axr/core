@@ -164,7 +164,7 @@ namespace AXR
         HSSObservable * observed;
         HSSObservableProperty observedProperty;
 
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

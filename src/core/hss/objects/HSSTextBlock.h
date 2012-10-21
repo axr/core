@@ -142,7 +142,7 @@ namespace AXR
     private:
         QFont getFont() const;
 
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

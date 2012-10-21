@@ -56,7 +56,7 @@ HSSFlag::HSSFlag(AXRController * controller)
 
 HSSFilter::p HSSFlag::clone() const
 {
-    return qSharedPointerCast<HSSFlag, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFlag> (this->cloneImpl());
 }
 
 HSSFlag::~HSSFlag()
@@ -180,7 +180,7 @@ void HSSFlag::setPurging(HSSRuleState newValue)
 
 HSSClonable::p HSSFlag::cloneImpl() const
 {
-    return HSSClonable::p(new HSSFlag(*this));
+    return HSSFlag::p(new HSSFlag(*this));
 }
 
 HSSFlag::p HSSFlag::shared_from_this()

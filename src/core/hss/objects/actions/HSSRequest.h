@@ -162,7 +162,7 @@ namespace AXR
         HSSRequestModeType mode;
 
     private:
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

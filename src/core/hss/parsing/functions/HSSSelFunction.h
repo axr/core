@@ -145,7 +145,7 @@ namespace AXR
         std::vector< std::vector<HSSDisplayObject::p> > selection;
 
     private:
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

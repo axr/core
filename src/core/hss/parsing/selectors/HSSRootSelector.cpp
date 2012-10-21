@@ -54,7 +54,7 @@ HSSRootSelector::HSSRootSelector(AXRController * controller)
 
 HSSRootSelector::p HSSRootSelector::clone() const
 {
-    return qSharedPointerCast<HSSRootSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSRootSelector> (this->cloneImpl());
 }
 
 AXRString HSSRootSelector::toString()
@@ -64,7 +64,7 @@ AXRString HSSRootSelector::toString()
 
 HSSClonable::p HSSRootSelector::cloneImpl() const
 {
-    return HSSClonable::p(new HSSRootSelector(*this));
+    return HSSRootSelector::p(new HSSRootSelector(*this));
 }
 
 AXRString HSSRootSelector::getElementName()

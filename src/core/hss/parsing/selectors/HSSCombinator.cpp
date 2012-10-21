@@ -53,7 +53,7 @@ HSSCombinator::HSSCombinator(HSSCombinatorType type, AXRController * controller)
 
 HSSCombinator::p HSSCombinator::clone() const
 {
-    return qSharedPointerCast<HSSCombinator, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSCombinator > (this->cloneImpl());
 }
 
 bool HSSCombinator::isA(HSSCombinatorType otherType)
@@ -85,7 +85,7 @@ AXRString HSSCombinator::combinatorStringRepresentation(HSSCombinatorType type)
 
 HSSClonable::p HSSCombinator::cloneImpl() const
 {
-    return HSSClonable::p(new HSSCombinator(*this));
+    return HSSCombinator::p(new HSSCombinator(*this));
 }
 
 //does nothing yet

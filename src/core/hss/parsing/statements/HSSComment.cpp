@@ -53,7 +53,7 @@ HSSComment::HSSComment(AXRString value, AXRController * controller)
 
 HSSComment::p HSSComment::clone() const
 {
-    return qSharedPointerCast<HSSComment, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSComment> (this->cloneImpl());
 }
 
 AXRString HSSComment::getValue()
@@ -73,5 +73,5 @@ AXRString HSSComment::toString()
 
 HSSClonable::p HSSComment::cloneImpl() const
 {
-    return HSSClonable::p(new HSSComment(*this));
+    return HSSComment::p(new HSSComment(*this));
 }

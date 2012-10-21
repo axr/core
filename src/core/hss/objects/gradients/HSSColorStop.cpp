@@ -89,12 +89,12 @@ HSSColorStop::HSSColorStop(const HSSColorStop & orig)
 HSSColorStop::p HSSColorStop::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: cloning color stop object");
-    return qSharedPointerCast<HSSColorStop, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSColorStop> (this->cloneImpl());
 }
 
 HSSClonable::p HSSColorStop::cloneImpl() const
 {
-    return HSSClonable::p(new HSSColorStop(*this));
+    return HSSColorStop::p(new HSSColorStop(*this));
 }
 
 HSSColorStop::~HSSColorStop()

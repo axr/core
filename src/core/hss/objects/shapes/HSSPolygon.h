@@ -149,7 +149,7 @@ namespace AXR
         HSSObservableProperty observedAngleProperty;
 
     private:
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
         HSSUnit _evaluatePropertyValue(
                                    void(HSSPolygon::*callback)(HSSObservableProperty property, void* data),
                                    HSSParserNode::p value,

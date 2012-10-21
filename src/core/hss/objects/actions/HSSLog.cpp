@@ -75,12 +75,12 @@ HSSLog::HSSLog(const HSSLog & orig)
 HSSLog::p HSSLog::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: cloning log object");
-    return qSharedPointerCast<HSSLog, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSLog> (this->cloneImpl());
 }
 
 HSSClonable::p HSSLog::cloneImpl() const
 {
-    return HSSClonable::p(new HSSLog(*this));
+    return HSSLog::p(new HSSLog(*this));
 }
 
 HSSLog::~HSSLog()

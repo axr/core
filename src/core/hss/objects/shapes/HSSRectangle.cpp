@@ -61,12 +61,12 @@ HSSRectangle::HSSRectangle(const HSSRectangle & orig)
 HSSRectangle::p HSSRectangle::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: cloning rectangle object");
-    return qSharedPointerCast<HSSRectangle, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSRectangle> (this->cloneImpl());
 }
 
 HSSClonable::p HSSRectangle::cloneImpl() const
 {
-    return HSSClonable::p(new HSSRectangle(*this));
+    return HSSRectangle::p(new HSSRectangle(*this));
 }
 
 HSSRectangle::~HSSRectangle()

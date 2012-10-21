@@ -59,7 +59,7 @@ HSSSubtraction::HSSSubtraction(const HSSSubtraction &orig)
 
 HSSSubtraction::p HSSSubtraction::clone() const
 {
-    return qSharedPointerCast<HSSSubtraction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSSubtraction> (this->cloneImpl());
 }
 
 HSSSubtraction::~HSSSubtraction()
@@ -74,5 +74,5 @@ HSSUnit HSSSubtraction::calculate(HSSUnit leftval, HSSUnit rightval)
 
 HSSClonable::p HSSSubtraction::cloneImpl() const
 {
-    return HSSClonable::p(new HSSSubtraction(*this));
+    return HSSSubtraction::p(new HSSSubtraction(*this));
 }

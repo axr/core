@@ -187,7 +187,7 @@ namespace AXR
         std::deque<HSSParserNode::p> _arguments;
         AXRString _name;
 
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

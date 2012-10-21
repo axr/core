@@ -175,7 +175,7 @@ namespace AXR
         HSSFlagFunctionType _flagFunctionType;
 
     private:
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

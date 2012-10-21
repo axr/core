@@ -62,7 +62,7 @@ HSSFunctionAction::HSSFunctionAction(const HSSFunctionAction & orig)
 HSSFunctionAction::p HSSFunctionAction::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFunctionAction: cloning function action object");
-    return qSharedPointerCast<HSSFunctionAction, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFunctionAction> (this->cloneImpl());
 }
 
 HSSClonable::p HSSFunctionAction::cloneImpl() const

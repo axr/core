@@ -53,7 +53,7 @@ HSSLastFilter::HSSLastFilter(AXRController * controller)
 
 HSSLastFilter::p HSSLastFilter::clone() const
 {
-    return qSharedPointerCast<HSSLastFilter, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSLastFilter> (this->cloneImpl());
 }
 
 HSSLastFilter::~HSSLastFilter()
@@ -91,5 +91,5 @@ const std::vector<HSSDisplayObject::p> HSSLastFilter::apply(const std::vector<HS
 
 HSSClonable::p HSSLastFilter::cloneImpl() const
 {
-    return HSSClonable::p(new HSSLastFilter(*this));
+    return HSSLastFilter::p(new HSSLastFilter(*this));
 }

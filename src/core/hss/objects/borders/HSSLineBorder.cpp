@@ -80,12 +80,12 @@ HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
 HSSLineBorder::p HSSLineBorder::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLineBorder: cloning line border object");
-    return qSharedPointerCast<HSSLineBorder, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSLineBorder> (this->cloneImpl());
 }
 
 HSSClonable::p HSSLineBorder::cloneImpl() const
 {
-    return HSSClonable::p(new HSSLineBorder(*this));
+    return HSSLineBorder::p(new HSSLineBorder(*this));
 }
 
 HSSLineBorder::~HSSLineBorder()

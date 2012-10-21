@@ -53,7 +53,7 @@ HSSFirstChildFilter::HSSFirstChildFilter(AXRController * controller)
 
 HSSFirstChildFilter::p HSSFirstChildFilter::clone() const
 {
-    return qSharedPointerCast<HSSFirstChildFilter, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSFirstChildFilter> (this->cloneImpl());
 }
 
 HSSFirstChildFilter::~HSSFirstChildFilter()
@@ -93,5 +93,5 @@ const std::vector<HSSDisplayObject::p> HSSFirstChildFilter::apply(const std::vec
 
 HSSClonable::p HSSFirstChildFilter::cloneImpl() const
 {
-    return HSSClonable::p(new HSSFirstChildFilter(*this));
+    return HSSFirstChildFilter::p(new HSSFirstChildFilter(*this));
 }

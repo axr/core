@@ -53,7 +53,7 @@ HSSObjectNameConstant::HSSObjectNameConstant(AXRString value, AXRController * co
 
 HSSObjectNameConstant::p HSSObjectNameConstant::clone() const
 {
-    return qSharedPointerCast<HSSObjectNameConstant, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSObjectNameConstant> (this->cloneImpl());
 }
 
 HSSObjectNameConstant::~HSSObjectNameConstant()
@@ -78,5 +78,5 @@ AXRString HSSObjectNameConstant::toString()
 
 HSSClonable::p HSSObjectNameConstant::cloneImpl() const
 {
-    return HSSClonable::p(new HSSObjectNameConstant(*this));
+    return HSSObjectNameConstant::p(new HSSObjectNameConstant(*this));
 }

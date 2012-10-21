@@ -59,7 +59,7 @@ HSSDivision::HSSDivision(const HSSDivision &orig)
 
 HSSDivision::p HSSDivision::clone() const
 {
-    return qSharedPointerCast<HSSDivision, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSDivision> (this->cloneImpl());
 }
 
 HSSDivision::~HSSDivision()
@@ -74,5 +74,5 @@ HSSUnit HSSDivision::calculate(HSSUnit leftval, HSSUnit rightval)
 
 HSSClonable::p HSSDivision::cloneImpl() const
 {
-    return HSSClonable::p(new HSSDivision(*this));
+    return HSSDivision::p(new HSSDivision(*this));
 }

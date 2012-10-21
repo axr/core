@@ -153,7 +153,7 @@ namespace AXR
         std::vector<HSSAction::p> action;
 
     private:
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

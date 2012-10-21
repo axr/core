@@ -74,7 +74,7 @@ HSSObjectDefinition::HSSObjectDefinition(const HSSObjectDefinition & orig)
 
 HSSObjectDefinition::p HSSObjectDefinition::clone() const
 {
-    return qSharedPointerCast<HSSObjectDefinition, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSObjectDefinition> (this->cloneImpl());
 }
 
 HSSObjectDefinition::~HSSObjectDefinition()
@@ -270,5 +270,5 @@ void HSSObjectDefinition::rulesRemove(HSSRule::p rule)
 
 HSSClonable::p HSSObjectDefinition::cloneImpl() const
 {
-    return HSSClonable::p(new HSSObjectDefinition(*this));
+    return HSSObjectDefinition::p(new HSSObjectDefinition(*this));
 }

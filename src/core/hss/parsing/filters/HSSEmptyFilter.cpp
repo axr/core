@@ -54,7 +54,7 @@ HSSEmptyFilter::HSSEmptyFilter(AXRController * controller)
 
 HSSEmptyFilter::p HSSEmptyFilter::clone() const
 {
-    return qSharedPointerCast<HSSEmptyFilter, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSEmptyFilter> (this->cloneImpl());
 }
 
 HSSEmptyFilter::~HSSEmptyFilter()
@@ -86,5 +86,5 @@ const std::vector<HSSDisplayObject::p> HSSEmptyFilter::apply(const std::vector<H
 
 HSSClonable::p HSSEmptyFilter::cloneImpl() const
 {
-    return HSSClonable::p(new HSSEmptyFilter(*this));
+    return HSSEmptyFilter::p(new HSSEmptyFilter(*this));
 }

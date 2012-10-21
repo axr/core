@@ -53,7 +53,7 @@ HSSMultipleValueDefinition::HSSMultipleValueDefinition(AXRController * controlle
 
 HSSMultipleValueDefinition::p HSSMultipleValueDefinition::clone() const
 {
-    return qSharedPointerCast<HSSMultipleValueDefinition, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSMultipleValueDefinition> (this->cloneImpl());
 }
 
 HSSMultipleValueDefinition::~HSSMultipleValueDefinition()
@@ -91,5 +91,5 @@ void HSSMultipleValueDefinition::add(HSSParserNode::p newValue)
 
 HSSClonable::p HSSMultipleValueDefinition::cloneImpl() const
 {
-    return HSSClonable::p(new HSSMultipleValueDefinition(*this));
+    return HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition(*this));
 }

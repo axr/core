@@ -82,7 +82,7 @@ HSSRoundedRect::p HSSRoundedRect::clone() const
 
 HSSClonable::p HSSRoundedRect::cloneImpl() const
 {
-    return HSSClonable::p(new HSSRoundedRect(*this));
+    return HSSRoundedRect::p(new HSSRoundedRect(*this));
 }
 
 HSSRoundedRect::~HSSRoundedRect()

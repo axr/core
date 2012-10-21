@@ -59,7 +59,7 @@ HSSMultiplication::HSSMultiplication(const HSSMultiplication &orig)
 
 HSSMultiplication::p HSSMultiplication::clone() const
 {
-    return qSharedPointerCast<HSSMultiplication, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSMultiplication> (this->cloneImpl());
 }
 
 HSSMultiplication::~HSSMultiplication()
@@ -74,5 +74,5 @@ HSSUnit HSSMultiplication::calculate(HSSUnit leftval, HSSUnit rightval)
 
 HSSClonable::p HSSMultiplication::cloneImpl() const
 {
-    return HSSClonable::p(new HSSMultiplication(*this));
+    return HSSMultiplication::p(new HSSMultiplication(*this));
 }

@@ -54,7 +54,7 @@ HSSPercentageConstant::HSSPercentageConstant(HSSUnit value, AXRController * cont
 
 HSSPercentageConstant::p HSSPercentageConstant::clone() const
 {
-    return qSharedPointerCast<HSSPercentageConstant, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSPercentageConstant> (this->cloneImpl());
 }
 
 HSSPercentageConstant::~HSSPercentageConstant()
@@ -79,5 +79,5 @@ HSSUnit HSSPercentageConstant::getValue(HSSUnit baseValue)
 
 HSSClonable::p HSSPercentageConstant::cloneImpl() const
 {
-    return HSSClonable::p(new HSSPercentageConstant(*this));
+    return HSSPercentageConstant::p(new HSSPercentageConstant(*this));
 }

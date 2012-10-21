@@ -59,7 +59,7 @@ HSSSimpleSelector::HSSSimpleSelector(const HSSSimpleSelector &orig)
 
 HSSSimpleSelector::p HSSSimpleSelector::clone() const
 {
-    return qSharedPointerCast<HSSSimpleSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSSimpleSelector> (this->cloneImpl());
 }
 
 AXRString HSSSimpleSelector::toString()

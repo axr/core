@@ -55,7 +55,7 @@ HSSParentSelector::HSSParentSelector(AXRController * controller)
 
 HSSParentSelector::p HSSParentSelector::clone() const
 {
-    return qSharedPointerCast<HSSParentSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSParentSelector> (this->cloneImpl());
 }
 
 AXRString HSSParentSelector::toString()
@@ -65,7 +65,7 @@ AXRString HSSParentSelector::toString()
 
 HSSClonable::p HSSParentSelector::cloneImpl() const
 {
-    return HSSClonable::p(new HSSParentSelector(*this));
+    return HSSParentSelector::p(new HSSParentSelector(*this));
 }
 
 AXRString HSSParentSelector::getElementName()

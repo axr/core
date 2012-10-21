@@ -59,7 +59,7 @@ HSSNameSelector::HSSNameSelector(const HSSNameSelector &orig)
 
 HSSNameSelector::p HSSNameSelector::clone() const
 {
-    return qSharedPointerCast<HSSNameSelector, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSNameSelector> (this->cloneImpl());
 }
 
 AXRString HSSNameSelector::getElementName()
@@ -74,7 +74,7 @@ AXRString HSSNameSelector::toString()
 
 HSSClonable::p HSSNameSelector::cloneImpl() const
 {
-    return HSSClonable::p(new HSSNameSelector(*this));
+    return HSSNameSelector::p(new HSSNameSelector(*this));
 }
 
 std::vector<HSSDisplayObject::p> HSSNameSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)

@@ -242,12 +242,12 @@ HSSObject::HSSObject(const HSSObject & orig)
 
 HSSObject::p HSSObject::clone() const
 {
-    return qSharedPointerCast<HSSObject, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSObject> (this->cloneImpl());
 }
 
 HSSClonable::p HSSObject::cloneImpl() const
 {
-    return HSSClonable::p(new HSSObject(*this));
+    return HSSObject::p(new HSSObject(*this));
 }
 
 HSSObject::~HSSObject()

@@ -205,7 +205,7 @@ namespace AXR
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty
                                    );
-        HSSClonable::p cloneImpl() const;
+        virtual HSSClonable::p cloneImpl() const;
     };
 }
 

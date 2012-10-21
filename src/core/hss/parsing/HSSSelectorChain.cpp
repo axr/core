@@ -62,7 +62,7 @@ HSSSelectorChain::HSSSelectorChain(const HSSSelectorChain &orig)
 
 HSSSelectorChain::p HSSSelectorChain::clone() const
 {
-    return qSharedPointerCast<HSSSelectorChain, HSSClonable > (this->cloneImpl());
+    return qSharedPointerCast<HSSSelectorChain> (this->cloneImpl());
 }
 
 HSSSelectorChain::~HSSSelectorChain()
