@@ -768,12 +768,8 @@ HSSNameSelector::p HSSParser::readObjectSelector()
             }
             else if (objtype == "parent")
             {
-                /**
-                 *  @todo implement \@parent
-                 */
                 ret = HSSParentSelector::p(new HSSParentSelector(controller));
                 this->readNextToken(true);
-
             }
             else if (objtype == "root")
             {
