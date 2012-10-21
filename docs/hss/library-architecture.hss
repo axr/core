@@ -74,12 +74,12 @@
     width: 100% - 20;
     height: 100% - 20;
     alignY: middle;
-    contentAlignX: distribute;
+    contentAlignX: even;
 }
 
 & arrow
 {
-    height: ref(width);
+    height: ref(width); // where's the width?
 
     #new square
     {
@@ -150,7 +150,7 @@
         height: 400;
         background: #F;
         border: @{ 10; #F };
-        contentAlignX: distribute;
+        contentAlignX: even;
 
         #new wrapper
         {
@@ -203,7 +203,7 @@
                 alignY: 100% - 10;
                 anchorY: 100%;
                 content: "Core";
-                contentAlignX: distribute;
+                contentAlignX: even;
                 contentAlignY: 18;
 
                 #new parsingWrapper
@@ -403,7 +403,7 @@
                 width: 40;
                 alignX: 140;
                 alignY: 105;
-                overflow: yes;
+                contained: no;
             }
 
             #new arrow
@@ -413,7 +413,7 @@
                 width: 40;
                 alignX: 100% - 140;
                 alignY: 105;
-                overflow: yes;
+                contained: no;
             }
 
             #new arrow
@@ -423,7 +423,7 @@
                 width: 40;
                 alignX: 260;
                 alignY: 215;
-                overflow: yes;
+                contained: no;
             }
 
             #new arrow
@@ -433,7 +433,7 @@
                 width: 40;
                 alignX: 260;
                 alignY: 310;
-                overflow: yes;
+                contained: no;
             }
 
             #new arrow
@@ -443,7 +443,7 @@
                 width: 40;
                 alignX: 497;
                 alignY: 262;
-                overflow: yes;
+                contained: no;
             }
         }
     }
