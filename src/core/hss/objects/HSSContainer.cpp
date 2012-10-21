@@ -264,7 +264,6 @@ void HSSContainer::add(HSSDisplayObject::p child)
     child->setParent(sharedThis);
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: added child " + child->getElementName() + " to " + this->getElementName());
     child->setIndex(this->allChildren.size());
-    child->setController(this->getController());
     if (!child->isA(HSSObjectTypeTextBlock))
     {
         this->children.push_back(child);

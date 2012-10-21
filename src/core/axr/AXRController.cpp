@@ -217,7 +217,6 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                             {
                                 theDO->removeFromParent();
                                 rule->setThisObj(theDO);
-                                theDO->setController(this);
                                 theDO->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff));
                                 axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: moved " + theDO->getElementName());
                                 this->add(theDO);
@@ -731,8 +730,6 @@ void AXRController::exitElement()
 
 void AXRController::add(HSSDisplayObject::p newElement)
 {
-    newElement->setController(this);
-
     if (!this->root)
     {
         HSSContainer::p cont = HSSContainer::asContainer(newElement);
