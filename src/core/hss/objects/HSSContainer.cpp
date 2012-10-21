@@ -53,6 +53,7 @@
 #include "HSSObjectNameConstant.h"
 #include "HSSPercentageConstant.h"
 #include "HSSRectangle.h"
+#include "HSSRoundedRect.h"
 #include "HSSStringConstant.h"
 
 using namespace AXR;
@@ -470,8 +471,18 @@ void HSSContainer::drawBorders()
         combinedThickness += (*it)->getSize();
     }
 
+    // Correction if needed
+    HSSUnit correction;
+    if ((int) combinedThickness % 2)
+    {
+        correction = 0.5;
+    }
+
     // Cumulative combined thickness
     HSSUnit cumulativeThickness = 0;
+
+    // Use a temporary trick for not having path offsets yet (will be fixed in the future)
+    bool isRoundedRect = this->shape->isA(HSSShapeTypeRoundedRect);
 
     // Draw all borders
     for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
@@ -479,10 +490,15 @@ void HSSContainer::drawBorders()
         HSSBorder::p theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
-        HSSUnit offset = cumulativeThickness - (theSize / 2);
+        HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
 
         QPainterPath path;
-        this->shape->createPath(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2);
+        if(isRoundedRect){
+            HSSRoundedRect::p roundedRect = qSharedPointerCast<HSSRoundedRect>(this->shape);
+            roundedRect->createRoundedRect(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2, -offset*2);
+        } else {
+            this->shape->createPath(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2);
+        }
         theBorder->draw(painter, path);
 
         cumulativeThickness += theSize;

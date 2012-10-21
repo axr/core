@@ -96,6 +96,8 @@ namespace AXR
         //see HSSShape.h for documentation of these
         virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
 
+        void createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, HSSUnit offset);
+
         /**
          *  Getter for the actual value of corners. Always stored inside a multiple value.
          */

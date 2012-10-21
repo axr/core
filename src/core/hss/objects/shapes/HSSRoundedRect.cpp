@@ -583,11 +583,16 @@ void HSSRoundedRect::cornerBLChanged(AXR::HSSObservableProperty source, void *da
 
 void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
+    this->createRoundedRect(path, x, y, width, height, 0.);
+}
+
+void HSSRoundedRect::createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, HSSUnit offset)
+{
     // Draw top-left corner
-    QRectF topLeftBounds(x, y, cornerTL*2, cornerTL*2);
-    QRectF bottomLeftBounds(x, y + height - cornerBL*2, cornerBL*2, cornerBL*2);
-    QRectF bottomRightBounds(x + width - cornerBR*2, y + height - cornerBR*2, cornerBR*2, cornerBR*2);
-    QRectF topRightBounds(x + width - cornerTR*2, y, cornerTR*2, cornerTR*2);
+    QRectF topLeftBounds(x, y, (cornerTL*2+offset), (cornerTL*2+offset));
+    QRectF bottomLeftBounds(x, y + height - (cornerBL*2+offset), (cornerBL*2+offset), (cornerBL*2+offset));
+    QRectF bottomRightBounds(x + width - (cornerBR*2+offset), y + height - (cornerBR*2+offset), (cornerBR*2+offset), (cornerBR*2+offset));
+    QRectF topRightBounds(x + width - (cornerTR*2+offset), y, (cornerTR*2+offset), (cornerTR*2+offset));
 
     QVector<QRectF> corners;
     corners << topLeftBounds << bottomLeftBounds << bottomRightBounds << topRightBounds;
