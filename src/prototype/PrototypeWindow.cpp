@@ -200,7 +200,8 @@ void PrototypeWindow::openFiles(const QStringList &filePaths)
 
 void PrototypeWindow::reloadFile()
 {
-    openFile(windowFilePath());
+    d->document->reload();
+    update();
 }
 
 void PrototypeWindow::closeFile()
