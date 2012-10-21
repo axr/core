@@ -1,0 +1,450 @@
+@font baseFont
+{
+    face: "Myriad Pro";
+    color: #9;
+    size: 14;
+
+    & bigFont
+    {
+        size: 23;
+    }
+
+    & fontGreen { color: #6A6; }
+    & fontBlue { color: #66A; }
+    & fontRed { color: #A66; }
+}
+
+@container box
+{
+    background: #E;
+    border: @{ 1; #FFF6 }, @{ 1; #C };
+    shape: @{ 5 };
+    font: bigFont;
+    textAlign: center;
+    contentAlignY: middle;
+
+    & boxGreen
+    {
+        background: #AEA;
+        border: @{ 1; #FFF6 }, @{ 1; #8C8 };
+        font: fontGreen;
+    }
+
+    & boxBlue
+    {
+        background: #AAE;
+        border: @{ 1; #FFF6 }, @{ 1; #99D };
+        font: fontBlue;
+    }
+
+    & boxRed
+    {
+        background: #EAA;
+        border: @{ 1; #FFF6 }, @{ 1; #D99 };
+        font: fontRed;
+    }
+}
+
+& sectionWrapper
+{
+    width: 200;
+    alignX: left;
+    anchorY: 100%;
+    alignY: 100% - 10;
+    height: 100% - 50;
+}
+
+& boxLabel
+{
+    flow: no;
+    alignX: 100% - 10;
+    anchorX: 100%;
+    textAlign: center;
+    font: bigFont;
+}
+
+& hollowBox
+{
+    border: @{ 2; #D };
+    shape: @{ 5 };
+    font: bigFont;
+    textAlign: center;
+    contentAlignY: 18;
+    background: #00000005;
+    width: 100% - 20;
+    height: 100% - 20;
+    alignY: middle;
+    contentAlignX: distribute;
+}
+
+& arrow
+{
+    height: ref(width);
+
+    #new square
+    {
+        background: #C;
+    }
+
+    #new triangle
+    {
+        background: #C;
+        flow: no;
+    }
+
+    & arrowDown
+    {
+        square
+        {
+            width: 50%;
+            height: 100% - ref(height of triangle) / 2;
+            alignY: top;
+        }
+
+        triangle
+        {
+            width: 100%;
+            height: ref(width) / 1.2;
+            shape: @polygon {
+                sides: 3;
+                angle: 90;
+            };
+            alignY: bottom;
+        }
+    }
+
+
+
+    & arrowRight
+    {
+
+        square
+        {
+            width: 100% - ref(width of triangle) / 2;
+            height: 50%;
+            alignX: left;
+            alignY: middle;
+        }
+
+        triangle
+        {
+            width: ref(height) / 1.2;
+            height: 100%;
+            shape: @polygon {
+                sides: 3;
+                angle: 0;
+            };
+            alignX: right;
+        }
+    }
+}
+
+*
+{
+    background: #C;
+    contentAlignY: middle;
+
+    #new diagram
+    {
+        width: 775;
+        height: 400;
+        background: #F;
+        border: @{ 10; #F };
+        contentAlignX: distribute;
+
+        #new wrapper
+        {
+            isA: hollowBox;
+            content: "Wrapper";
+            width: 100% - 20;
+            contentAlignY: 45;
+
+            #new fileLoading
+            {
+                isA: boxRed;
+                width: 100;
+                height: 60;
+                flow: no;
+                alignX: 140;
+                alignY: 45;
+                contentAlignY: middle;
+
+                #new label
+                {
+                    isA: boxLabel;
+                    font: fontRed;
+                    content: "File Loading";
+                }
+            }
+
+            #new events
+            {
+                isA: boxRed;
+                width: 100;
+                height: 60;
+                flow: no;
+                alignX: 100% - 140;
+                alignY: 45;
+                contentAlignY: middle;
+
+                #new label
+                {
+                    isA: boxLabel;
+                    font: fontRed;
+                    content: "Events";
+                }
+            }
+
+            #new core
+            {
+                isA: box;
+                width: 100% - 20;
+                height: 100% - 100;
+                alignY: 100% - 10;
+                anchorY: 100%;
+                content: "Core";
+                contentAlignX: distribute;
+                contentAlignY: 18;
+
+                #new parsingWrapper
+                {
+                    isA: sectionWrapper;
+
+                    #new parsing
+                    {
+                        isA: hollowBox;
+                        width: 100% - 20;
+                        height: 100%;
+                        contentAlignY: 18;
+
+                        #new label
+                        {
+                            isA: boxLabel;
+                            content: "Parsing";
+                        }
+
+                        #new wrapper
+                        {
+                            height: 100% - 50;
+                            alignY: 100% - 10;
+                            anchorY: 100%;
+
+                            #new parserXML
+                            {
+                                isA: boxBlue;
+                                width: 100% - 20;
+                                height: 50% - 10;
+                                alignY: top;
+                                alignX: center;
+
+                                #new label
+                                {
+                                    isA: boxLabel;
+                                    font: fontBlue;
+                                    content: "XML Parser (Expat)";
+                                }
+                            }
+
+                            #new parserHSS
+                            {
+                                isA: boxGreen;
+                                width: 100% - 20;
+                                height: 50% - 10;
+                                alignX: center;
+                                alignY: bottom;
+
+                                #new label
+                                {
+                                    isA: boxLabel;
+                                    font: fontGreen;
+                                    content: "HSS Parser (+ tokenizer)";
+                                }
+                            }
+                        }
+                    }
+                }
+
+                #new controllerWrapper
+                {
+                    isA: sectionWrapper;
+
+                    #new controller
+                    {
+                        isA: hollowBox;
+                        height: 100%;
+                        contentAlignY: 18;
+
+                        #new label
+                        {
+                            isA: boxLabel;
+                            content: "Controller";
+                        }
+
+                        #new wrapper
+                        {
+                            height: 100% - 50;
+                            alignY: 100% - 10;
+                            anchorY: 100%;
+
+                            #new contentTree
+                            {
+                                isA: boxBlue;
+                                width: 100% - 20;
+                                height: 50% - 10;
+                                alignY: top;
+                                alignX: center;
+
+                                #new label
+                                {
+                                    isA: boxLabel;
+                                    font: fontBlue;
+                                    content: "Content tree";
+                                }
+                            }
+
+                            #new objectTree
+                            {
+                                isA: boxGreen;
+                                width: 100% - 20;
+                                height: ((50% - 10) / 2) - 10;
+                                alignX: center;
+                                anchorY: top;
+                                alignY: 50% + 10;
+
+                                #new label
+                                {
+                                    isA: boxLabel;
+                                    font: fontGreen;
+                                    content: "Object tree";
+                                }
+                            }
+
+                            #new ruleTree
+                            {
+                                isA: boxGreen;
+                                width: 100% - 20;
+                                height: ((50% - 10) / 2) - 10;
+                                alignX: center;
+                                alignY: bottom;
+
+                                #new label
+                                {
+                                    isA: boxLabel;
+                                    font: fontGreen;
+                                    content: "Rule tree";
+                                }
+                            }
+                        }
+                    }
+                }
+
+                #new renderingWrapper
+                {
+                    isA: sectionWrapper;
+
+                    #new rendering
+                    {
+                        isA: hollowBox;
+                        height: 100%;
+                        contentAlignY: 18;
+
+                        #new label
+                        {
+                            isA: boxLabel;
+                            content: "Rendering";
+                        }
+
+                        #new wrapper
+                        {
+                            height: 100% - 50;
+                            alignY: 100% - 10;
+                            anchorY: 100%;
+
+                            #new displayObject
+                            {
+                                isA: boxBlue;
+                                width: 100% - 20;
+                                height: 25%;
+                                alignY: top;
+                                content: "Display Object / Container";
+                                contentAlignY: middle;
+                            }
+
+                            #new cairo
+                            {
+                                isA: boxBlue;
+                                width: 100% - 20;
+                                height: 25%;
+                                alignY: 50%;
+                                content: "Cairo";
+                                contentAlignY: middle;
+                            }
+
+                            #new pango
+                            {
+                                isA: boxBlue;
+                                width: 100% - 20;
+                                height: 25%;
+                                alignY: bottom;
+                                content: "Pango";
+                                contentAlignY: middle;
+                            }
+                        }
+                    }
+                }
+
+            }//core
+
+
+            #new arrow
+            {
+                isA: arrowDown;
+                flow: no;
+                width: 40;
+                alignX: 140;
+                alignY: 105;
+                overflow: yes;
+            }
+
+            #new arrow
+            {
+                isA: arrowDown;
+                flow: no;
+                width: 40;
+                alignX: 100% - 140;
+                alignY: 105;
+                overflow: yes;
+            }
+
+            #new arrow
+            {
+                isA: arrowRight;
+                flow: no;
+                width: 40;
+                alignX: 260;
+                alignY: 215;
+                overflow: yes;
+            }
+
+            #new arrow
+            {
+                isA: arrowRight;
+                flow: no;
+                width: 40;
+                alignX: 260;
+                alignY: 310;
+                overflow: yes;
+            }
+
+            #new arrow
+            {
+                isA: arrowRight;
+                flow: no;
+                width: 40;
+                alignX: 497;
+                alignY: 262;
+                overflow: yes;
+            }
+        }
+    }
+}
