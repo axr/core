@@ -89,6 +89,7 @@ HSSParserNode::HSSParserNode(const HSSParserNode &orig)
 {
     this->nodeType = orig.nodeType;
     this->thisObj = orig.thisObj;
+    this->controller = orig.controller;
 }
 
 HSSParserNode::p HSSParserNode::clone() const
