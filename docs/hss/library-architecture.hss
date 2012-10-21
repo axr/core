@@ -79,7 +79,7 @@
 
 & arrow
 {
-    height: ref(width); // where's the width?
+    height: ref(width);
 
     #new square
     {
