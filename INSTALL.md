@@ -4,17 +4,18 @@
 
 ### Common for all of the platforms :
 
-1.   Set up Git and configure GitHub [https://help.github.com/articles/set-up-git]
-2.   Clone the repository:
- 1.   Open the terminal and execute the following commands:
- 2.   Go to the folder where you want the prototype folder to be created
-    cd /path/to/directory'
- 3.   Clone the repo:
-    git clone git://github.com/AXR/Prototype.git'
- 4. Initialise git submodules
-    git submodule update --init --recursive'
- 4. Download and install all required libraries:
-  * Qt: [http://qt-project.org/downloads]
+1. Set up Git and configure GitHub [https://help.github.com/articles/set-up-git]
+2. Clone the repository:
+ 1. Open the terminal and execute the following commands:  
+    `mkdir /path/to/directory`  
+ 2. Go to the folder where you want the prototype folder to be created:  
+    `cd /path/to/directory'`  
+ 3. Clone the repo:  
+    `git clone git://github.com/AXR/Prototype.git'`  
+ 4. Initialise git submodules  
+    `git submodule update --init --recursive'`  
+ 5. Download and install all required libraries:  
+   \-[Qt](http://qt-project.org/downloads)
 
 ### OS X
 
