@@ -215,7 +215,8 @@ bool HSSTextBlock::isKeyword(AXRString value, AXRString property)
         if (value == "lowercase"
                 || value == "uppercase"
                 || value == "capitalize"
-                || value == "humanize")
+                || value == "humanize"
+                || value == "no")
         {
             return true;
         }
