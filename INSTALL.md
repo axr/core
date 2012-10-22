@@ -1,4 +1,4 @@
-# WARNING!!! these instructions have not been completed, don't complain if they don't work for you
+##### WARNING!!! these instructions have not been completed, don't complain if they don't work for you
 
 ## Build instructions:
 
@@ -36,5 +36,3 @@ Make sure you have Xcode installed, you can get it from Apple: http://itunes.app
     `cmake ../nameofinitialdirectory`  
   4. Make it!:  
     `make`  
-
-### Windows: coming soon...
