@@ -224,10 +224,6 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         HSSKeywordConstant::p theKW = qSharedPointerCast<HSSKeywordConstant>(value);
-        if (theKW->getValue() == "no")
-        {
-            valid = true;
-        }
         else if (theKW->getValue() == "black")
         {
             this->color = HSSRgb::blackColor(this->getController());
