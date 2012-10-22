@@ -135,7 +135,7 @@ bool HSSLineBorder::isKeyword(AXRString value, AXRString property)
     {
         return true;
     }
-    else if ( value == "black" || value == "white" || value == "transparent")
+    else if ( value == "black" || value == "white" || value == "transparent" || value == "no" )
     {
         if (property == "color")
         {

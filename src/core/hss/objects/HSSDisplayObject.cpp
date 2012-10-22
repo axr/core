@@ -300,6 +300,7 @@ bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
                 || value == "bottom"
                 || value == "left"
                 || value == "right"
+                || value == "no"
                 )
         {
             return true;
@@ -307,7 +308,7 @@ bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
     }
     else if (property == "background")
     {
-        if (value == "black" || value == "white" || value == "transparent" )
+        if (value == "black" || value == "white" || value == "transparent" || value == "no")
         {
             return true;
         }
