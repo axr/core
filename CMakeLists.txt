@@ -65,14 +65,12 @@ if (found_vs GREATER -1 OR found_blocks GREATER -1 OR "${CMAKE_GENERATOR}" STREQ
 endif()
 
 if(AXR_BUILD_PROTOTYPE)
+    # Treat all external dependency headers as system headers so we don't see warnings for them
+    include_directories(SYSTEM ${SDL_INCLUDE_DIR} ${GTK2_INCLUDE_DIRS} ${QT_INCLUDES} ${CMAKE_SOURCE_DIR}/src/firebreath)
+
     if(AXR_ALL_WARNINGS)
         if(CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCXX)
             add_definitions(-Wall -pedantic)
-
-            # Treat all external dependency headers as system headers so we don't see warnings for them
-            foreach(dir ${SDL_INCLUDE_DIR} ${GTK2_INCLUDE_DIRS} ${QT_INCLUDES} ${CMAKE_SOURCE_DIR}/src/firebreath)
-                add_definitions(-isystem ${dir})
-            endforeach()
         endif()
 
         if(CMAKE_COMPILER_IS_CLANGXX)
