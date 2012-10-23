@@ -1,0 +1,15 @@
+@container crasher
+{
+    @::hover
+    {
+
+    }
+}
+
+*
+{
+    #new content
+    {
+        isA: crasher;
+    }
+}
