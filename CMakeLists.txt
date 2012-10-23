@@ -143,7 +143,7 @@ endif()
 
 if(FANCY_TARGET_NAMES)
     # All of the metadata-type files in the repository root directory
-    add_custom_target("Meta" SOURCES AUTHORS CHANGELOG.md COPYING INSTALL LICENSE README.md)
+    add_custom_target("Meta" SOURCES AUTHORS CHANGELOG.md COPYING LICENSE README.md)
     set_target_properties(Meta PROPERTIES FOLDER Auxiliary)
 
     # Configuration and utility scripts
