@@ -701,7 +701,7 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
     {
         HSSNameSelector::p selector = this->readObjectSelector();
 
-        if (!NULL)
+        if (!selector)
         {
             break;
         }
