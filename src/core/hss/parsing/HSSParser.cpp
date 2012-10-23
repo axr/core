@@ -181,16 +181,7 @@ bool HSSParser::loadFile(AXRBuffer::p file)
 
             done = !this->readNextStatement();
         }
-        catch (const AXR::AXRError &e)
-        {
-            e.raise();
-            this->readNextToken();
-            if (!this->atEndOfSource())
-            {
-                this->skip(HSSWhitespace);
-            }
-        }
-        catch (const AXR::AXRWarning &e)
+        catch (const AXRError &e)
         {
             e.raise();
             this->readNextToken();
