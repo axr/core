@@ -280,10 +280,6 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
         {
             e.raise();
         }
-        catch (const AXRWarning &e)
-        {
-            e.raise();
-        }
 
         break;
     }
@@ -402,11 +398,6 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
         {
             e.raise();
         }
-        catch (const AXRWarning &e)
-        {
-            e.raise();
-        }
-
 
         break;
     }

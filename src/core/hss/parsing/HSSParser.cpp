@@ -1767,10 +1767,6 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                     {
                         e.raise();
                     }
-                    catch (const AXRWarning &e)
-                    {
-                        e.raise();
-                    }
 
                     if (this->currentToken->isA(HSSAmpersand))
                     {

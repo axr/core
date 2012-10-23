@@ -216,10 +216,6 @@ void HSSLog::fire()
                 e.raise();
 
             }
-            catch (const AXRWarning &e)
-            {
-                e.raise();
-            }
 
             break;
         }

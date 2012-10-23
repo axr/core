@@ -617,10 +617,6 @@ void HSSDisplayObject::readDefinitionObjects()
                     {
                         e.raise();
                     }
-                    catch (const AXRWarning &e)
-                    {
-                        e.raise();
-                    }
                 }
                 break;
             }
@@ -936,10 +932,6 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
             e.raise();
 
         }
-        catch (const AXRWarning &e)
-        {
-            e.raise();
-        }
 
         break;
     }
@@ -1062,10 +1054,6 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
             {
                 e.raise();
             }
-            catch (const AXRWarning &e)
-            {
-                e.raise();
-            }
         }
         break;
     }
@@ -1162,10 +1150,6 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         {
             e.raise();
 
-        }
-        catch (const AXRWarning &e)
-        {
-            e.raise();
         }
 
         break;
@@ -1286,10 +1270,6 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
                 needsPostProcess = false;
             }
             catch (const AXRError &e)
-            {
-                e.raise();
-            }
-            catch (const AXRWarning &e)
             {
                 e.raise();
             }
@@ -1645,10 +1625,6 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
             e.raise();
 
         }
-        catch (const AXRWarning &e)
-        {
-            e.raise();
-        }
 
         break;
     }
@@ -1798,10 +1774,6 @@ void HSSDisplayObject::setDContained(HSSParserNode::p value)
         {
             e.raise();
 
-        }
-        catch (const AXRWarning &e)
-        {
-            e.raise();
         }
 
         break;

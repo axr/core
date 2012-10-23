@@ -448,10 +448,6 @@ void HSSObject::addDIsA(HSSParserNode::p value)
                     {
                         e.raise();
                     }
-                    catch (const AXRWarning &e)
-                    {
-                        e.raise();
-                    }
                 }
 
                 //else store as value
@@ -460,10 +456,6 @@ void HSSObject::addDIsA(HSSParserNode::p value)
             valid = true;
         }
         catch (const AXRError &e)
-        {
-            e.raise();
-        }
-        catch (const AXRWarning &e)
         {
             e.raise();
         }

@@ -2752,10 +2752,6 @@ void HSSContainer::setDShape(HSSParserNode::p value)
             e.raise();
 
         }
-        catch (const AXRWarning &e)
-        {
-            e.raise();
-        }
 
         break;
     }

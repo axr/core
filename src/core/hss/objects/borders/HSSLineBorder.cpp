@@ -186,10 +186,6 @@ void HSSLineBorder::setDColor(HSSParserNode::p value)
         {
             e.raise();
         }
-        catch (const AXRWarning &e)
-        {
-            e.raise();
-        }
 
         break;
     }
