@@ -38,14 +38,14 @@ function(set_gcc_warning_level level)
         string(REGEX REPLACE "-pedantic" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     endif()
 
-    if(CMAKE_CXX_FLAGS MATCHES "-Wnone")
-        string(REGEX REPLACE "-Wnone" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    if(CMAKE_CXX_FLAGS MATCHES "-w")
+        string(REGEX REPLACE "-w" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     endif()
 
     if("${level}" STREQUAL "max")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic" PARENT_SCOPE)
     elseif("${level}" STREQUAL "none")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnone" PARENT_SCOPE)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w" PARENT_SCOPE)
     endif()
 endfunction()
 
