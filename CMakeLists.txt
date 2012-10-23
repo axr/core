@@ -69,12 +69,16 @@ if(AXR_BUILD_PROTOTYPE)
     include_directories(SYSTEM ${SDL_INCLUDE_DIR} ${GTK2_INCLUDE_DIRS} ${QT_INCLUDES} ${CMAKE_SOURCE_DIR}/src/firebreath)
 
     if(AXR_ALL_WARNINGS)
+        if(MSVC)
+            set_msvc_warning_level(4)
+        endif()
+
         if(CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCXX)
-            add_definitions(-Wall -pedantic)
+            set_gcc_warning_level("max")
         endif()
 
         if(CMAKE_COMPILER_IS_CLANGXX)
-            add_definitions(-Weverything)
+            set_clang_warning_level("max")
         endif()
     endif()
 
