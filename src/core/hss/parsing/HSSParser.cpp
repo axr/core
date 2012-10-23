@@ -699,8 +699,15 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
 
     case HSSObjectSign:
     {
+        HSSNameSelector::p selector = this->readObjectSelector();
+
+        if (!NULL)
+        {
+            break;
+        }
+
         ret = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
-        ret->setName(this->readObjectSelector());
+        ret->setName(selector);
     }
 
     default:
