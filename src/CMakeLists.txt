@@ -24,10 +24,12 @@ include_directories(
 
 add_subdirectory(core)
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/qt")
-add_subdirectory(qt)
+if(AXR_BUILD_EXTENSIONS MATCHES "QT")
+    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/qt")
+    add_subdirectory(qt)
+endif()
 
-if(APPLE)
+if(APPLE AND AXR_BUILD_EXTENSIONS MATCHES "COCOA")
     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/cocoa")
     add_subdirectory(cocoa)
 endif()
@@ -35,32 +37,3 @@ endif()
 # TODO: Remove this and integrate these files' functionality into unit tests
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/TEST")
 add_subdirectory(TEST)
-
-add_subdirectory(browser)
-
-if(AXR_BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()
-
-if(AXR_BUILD_TOOLS)
-    add_subdirectory(tools)
-endif()
-
-if(AXR_BUILD_PLUGIN)
-    set(FB_PROJECTS_DIR "${CMAKE_SOURCE_DIR}/src")
-    add_definitions(-DQT_NO_KEYWORDS)
-
-    if(MSVC)
-        set_msvc_warning_level(0)
-    endif()
-
-    if(CMAKE_COMPILER_IS_CLANGXX OR CMAKE_COMPILER_IS_GNUCXX)
-        set_gcc_warning_level("none")
-    endif()
-
-    if(CMAKE_COMPILER_IS_CLANGXX)
-        set_clang_warning_level("none")
-    endif()
-
-    add_subdirectory(firebreath)
-endif()

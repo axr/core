@@ -1,6 +1,15 @@
 Find something to do
 ====================
-You can find work on the GitHub issue tracker: https://github.com/axr/prototoype/issues
+You can find work on the GitHub issue trackers:
+
+ * https://github.com/axr/browser/issues
+ * https://github.com/axr/core/issues
+ * https://github.com/axr/examples/issues
+ * https://github.com/axr/extras/issues
+ * https://github.com/axr/framework/issues
+ * https://github.com/axr/plugin/issues
+ * https://github.com/axr/specification/issues
+ * https://github.com/axr/website/issues
 
 If there is an unassigned or old task, post a comment asking for assignment.
 Make sure you follow the coding standards and our workflow, which you can find
@@ -15,8 +24,8 @@ Also relevant to our workflow:
  * http://help.github.com/fork-a-repo/
  * http://help.github.com/send-pull-requests/
 
-1. Go ahead and fork the AXR/Prototype repo. You will use that repository as
-your working repo.
+1. Go ahead and fork the AXR repository you'd like to work on (browser, core,
+examples, etc.). You will use that repository as your working repo.
 2. You can make any changes you like to it.
 3. When you finish, go to your fork and send a pull request. We'll review it as
 soon as possible. After it has been reviewed and accepted, we will merge it into
@@ -30,6 +39,8 @@ follow the same style as the code that is already present, but here are some
 guidelines:
 
 **Please note: these are somewhat out of date and will be updated soon**
+
+### For C, C++, and Objective-C:
 
 - Variable and method names: in camelCase starting with a lowercase letter.
 - Class names: in CamelCase starting with a capital letter.

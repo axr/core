@@ -4,6 +4,6 @@
 [submodule "cmake/solar"]
 	path = cmake/solar
 	url = https://github.com/petroules/solar-cmake.git
-[submodule "src/firebreath"]
-	path = src/firebreath
-	url = https://github.com/firebreath/FireBreath.git
+[submodule "common"]
+	path = common
+	url = https://github.com/axr/common.git

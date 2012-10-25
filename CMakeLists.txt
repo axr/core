@@ -8,7 +8,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_SOURCE_D
 include(ForceOutBuild)
 include(ForceLatinPaths)
 
-project(AXR)
+project(AXRCore)
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL Release)
     set(IS_RELEASE_BUILD TRUE)
@@ -28,11 +28,9 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
 # Options
 option(AXR_NO_DEPRECATED_ENUMS "Disallow use of deprecated enum members" OFF)
 option(AXR_ALL_WARNINGS "Display as many warnings as possible" OFF)
-option(AXR_BUILD_PROTOTYPE "Builds the browser and libraries" ON)
-option(AXR_BUILD_PLUGIN "Builds the AXR browser plugin (using FireBreath)" OFF)
+option(AXR_BUILD_CORE "Builds the core library" ON)
 option(AXR_BUILD_DOCS "Build documentation using doxygen" ON)
-option(AXR_BUILD_EXAMPLES "Builds example programs showing usage of the AXR library" OFF)
-option(AXR_BUILD_TOOLS "Builds various utility programs" OFF)
+option(AXR_BUILD_EXTENSIONS "Builds extension libraries for toolkit integration" OFF)
 option(AXR_BUILD_FRAMEWORKS "Build AXR libraries as frameworks on OS X" ON)
 option(BUILD_UNIVERSAL_BINS "Build OS X universal binaries (i386 + x86_64)" ${IS_RELEASE_BUILD})
 option(BUILD_SHARED_LIBS "Builds shared instead of static libraries" ON)
@@ -64,7 +62,7 @@ if (found_vs GREATER -1 OR found_blocks GREATER -1 OR "${CMAKE_GENERATOR}" STREQ
     set(FANCY_TARGET_NAMES ON)
 endif()
 
-if(AXR_BUILD_PROTOTYPE)
+if(AXR_BUILD_CORE)
     # Treat all external dependency headers as system headers so we don't see warnings for them
     include_directories(SYSTEM ${SDL_INCLUDE_DIR} ${GTK2_INCLUDE_DIRS} ${QT_INCLUDES} ${CMAKE_SOURCE_DIR}/src/firebreath)
 
@@ -185,7 +183,7 @@ if(FANCY_TARGET_NAMES)
 endif()
 
 if(IS_RELEASE_BUILD)
-    if(AXR_BUILD_PROTOTYPE)
+    if(AXR_BUILD_CORE)
         include(InstallRequiredSystemLibraries)
         include(CPack)
     endif()
