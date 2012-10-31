@@ -41,6 +41,9 @@
  *
  ********************************************************************/
 
+#ifndef AXR_CONFIG_H
+#define AXR_CONFIG_H
+
 #define AXR_VERSION_MAJOR @AXR_VERSION_MAJOR@
 #define AXR_VERSION_MINOR @AXR_VERSION_MINOR@
 #define AXR_VERSION_PATCH @AXR_VERSION_PATCH@
@@ -50,3 +53,5 @@
 #define AXR_VENDOR "@AXR_VENDOR@"
 #define AXR_DOMAIN "@AXR_DOMAIN@"
 #define AXR_CONTACT "@AXR_CONTACT@"
+
+#endif

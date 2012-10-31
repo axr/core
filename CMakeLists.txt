@@ -132,7 +132,7 @@ if(AXR_BUILD_CORE)
         set(TARGET_NAME_APP_SDL sdl_example)
     endif()
 
-    configure_file("${CMAKE_SOURCE_DIR}/config.in.h" "${CMAKE_BINARY_DIR}/config.h")
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.in.h" "${CMAKE_BINARY_DIR}/axr-config.h")
 
     add_subdirectory(src)
 endif()
