@@ -13,6 +13,18 @@ function(join_path output_variable components)
     set(${output_variable} "${final_path}" PARENT_SCOPE)
 endfunction()
 
+# Adds a tree of directories to include_directories, recursively
+macro(include_directories_recursive root_header_dir)
+    file(GLOB_RECURSE new_list "${root_header_dir}/*.h")
+    set(dir_list "")
+    foreach(file_path ${new_list})
+        get_filename_component(dir_path ${file_path} PATH)
+        set(dir_list ${dir_list} ${dir_path})
+    endforeach()
+    list(REMOVE_DUPLICATES dir_list)
+    include_directories(${dir_list})
+endmacro()
+
 # The empty.lproj file is needed to translate the strings in native OS X dialogs according to the selected system locale
 macro(empty_lproj target)
     if(APPLE)
