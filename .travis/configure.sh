@@ -12,16 +12,12 @@ cd ../build-shared
 cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DAXR_ALL_WARNINGS=ON \
-    -DAXR_BUILD_EXAMPLES=ON \
-    -DAXR_BUILD_PLUGIN=ON \
     -DBUILD_SHARED_LIBS=ON \
-    ../Prototype
+    ../core
 
 # Configure using CMake (static)
 cd ../build-static
 cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DAXR_ALL_WARNINGS=ON \
-    -DAXR_BUILD_EXAMPLES=ON \
-    -DAXR_BUILD_PLUGIN=ON \
-    ../Prototype
+    ../core
