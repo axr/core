@@ -48,11 +48,11 @@ include(Package)
 include(DeployQt4)
 
 # This list is for OS X application bundles to copy in all necessary icons
-file(GLOB axr_icon_SOURCES ${CMAKE_SOURCE_DIR}/share/icons/*.icns)
+file(GLOB axr_icon_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/share/icons/*.icns)
 
 # The HSS framework, to be copied into application bundles
-file(GLOB hss_SOURCES ${CMAKE_SOURCE_DIR}/share/hss-framework/*)
-list(REMOVE_ITEM hss_SOURCES ${CMAKE_SOURCE_DIR}/share/hss-framework/.git)
+file(GLOB hss_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/share/hss-framework/*)
+list(REMOVE_ITEM hss_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/share/hss-framework/.git)
 
 # If we're using an IDE build system such as Visual Studio or Xcode,
 # use fancier target names such as "Documentation" vs "docs"
@@ -64,7 +64,7 @@ endif()
 
 if(AXR_BUILD_CORE)
     # Treat all external dependency headers as system headers so we don't see warnings for them
-    include_directories(SYSTEM ${SDL_INCLUDE_DIR} ${GTK2_INCLUDE_DIRS} ${QT_INCLUDES} ${CMAKE_SOURCE_DIR}/src/firebreath)
+    include_directories(SYSTEM ${QT_INCLUDES})
 
     if(AXR_ALL_WARNINGS)
         if(MSVC)
@@ -159,7 +159,7 @@ if(FANCY_TARGET_NAMES)
     set_target_properties(Scripts PROPERTIES FOLDER Auxiliary)
 
     # All CMake scripts since some IDEs don't show the hierarchy
-    file(GLOB_RECURSE cmake_SOURCES ${CMAKE_SOURCE_DIR}/*/CMakeLists.txt ${CMAKE_SOURCE_DIR}/*.cmake)
+    file(GLOB_RECURSE cmake_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*/CMakeLists.txt ${CMAKE_CURRENT_SOURCE_DIR}/*.cmake)
     group_by_folder(${CMAKE_CURRENT_SOURCE_DIR} "${cmake_SOURCES}")
     add_custom_target("CMake" SOURCES ${cmake_SOURCES} config.in.h cmake/PackageOverrides.cmake.in)
 
@@ -168,15 +168,15 @@ if(FANCY_TARGET_NAMES)
     set_target_properties(HSS PROPERTIES FOLDER Auxiliary)
 
     # Other shared resources (i.e. to be distributed in $prefix/share or elsewhere)
-    set(d ${CMAKE_SOURCE_DIR}/share)
+    set(d ${CMAKE_CURRENT_SOURCE_DIR}/share)
     file(GLOB_RECURSE shared_SOURCES ${d}/*.txt ${d}/*.ico ${d}/*.icns ${d}/*.png)
-    list(REMOVE_ITEM shared_SOURCES ${CMAKE_SOURCE_DIR}/share/hss-framework)
+    list(REMOVE_ITEM shared_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/share/hss-framework)
     group_by_folder(${d} "${shared_SOURCES}")
     add_custom_target("Shared" SOURCES ${shared_SOURCES})
     set_target_properties(Shared PROPERTIES FOLDER Auxiliary)
 
     # Test files for the renderer
-    set(d ${CMAKE_SOURCE_DIR}/tests)
+    set(d ${CMAKE_CURRENT_SOURCE_DIR}/tests)
     file(GLOB_RECURSE tests_SOURCES ${d}/*.hss ${d}/*.xml ${d}/*.txt ${d}/*/README)
     group_by_folder(${d} "${tests_SOURCES}")
     add_custom_target("Tests" SOURCES ${tests_SOURCES})
