@@ -1,3 +1,14 @@
+set(AXR_PACKAGE_NAME "AXR")
+set(AXR_PACKAGE_PREFIX "axr")
+
+if(WIN32)
+    set(AXR_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\share\\\\icons\\\\prototype.ico")
+elseif(APPLE)
+    set(AXR_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/share/icons/prototype.icns")
+else()
+    set(AXR_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/share/icons/prototype.png")
+endif()
+
 # Per-generator overrides
 set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_BINARY_DIR}/PackageOverrides.cmake")
 

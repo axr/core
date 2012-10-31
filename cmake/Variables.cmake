@@ -1,6 +1,3 @@
-set(AXR_PACKAGE_NAME "AXR")
-set(AXR_PACKAGE_PREFIX "axr")
-
 set(AXR_VERSION_MAJOR 0)
 set(AXR_VERSION_MINOR 4)
 set(AXR_VERSION_PATCH 7)
@@ -24,11 +21,3 @@ set(AXR_LICENSE_FILE "${CMAKE_SOURCE_DIR}/LICENSE")
 
 set(AXR_README_FILE_TXT "${CMAKE_BINARY_DIR}/README.txt")
 set(AXR_LICENSE_FILE_TXT "${CMAKE_BINARY_DIR}/LICENSE.txt")
-
-if(WIN32)
-    set(AXR_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\share\\\\icons\\\\prototype.ico")
-elseif(APPLE)
-    set(AXR_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/share/icons/prototype.icns")
-else()
-    set(AXR_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/share/icons/prototype.png")
-endif()
