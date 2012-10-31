@@ -11,8 +11,8 @@ args="-D CMAKE_BUILD_TYPE=Release -D AXR_ALL_WARNINGS=ON -D AXR_BUILD_CORE=ON -D
 
 # Configure using CMake (shared)
 cd ../build-shared
-cmake $args -DBUILD_SHARED_LIBS=ON ../core
+cmake $args -D BUILD_SHARED_LIBS=ON ../core
 
 # Configure using CMake (static)
 cd ../build-static
-cmake $args ../core
+cmake $args -D BUILD_SHARED_LIBS=OFF ../core
