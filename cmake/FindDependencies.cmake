@@ -1,16 +1,8 @@
-if(AXR_BUILD_PROTOTYPE)
+if(AXR_BUILD_CORE)
     ### Qt ###
     find_package(Qt4 4.8 COMPONENTS QtCore QtGui QtXml REQUIRED)
     include(${QT_USE_FILE})
     add_definitions(${QT_DEFINITIONS} -DNOMINMAX)
-
-    ### GTK ###
-    find_package(GTK2)
-    if(GTK2_FOUND)
-        include_directories(${GTK2_INCLUDE_DIRS})
-    else()
-        message(STATUS "Could not find GTK2; will not build browser plugin on Linux")
-    endif()
 
     ### DPKG ###
     find_program(DPKG NAMES "dpkg-deb" PATHS "/usr/bin")
