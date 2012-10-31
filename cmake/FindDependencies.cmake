@@ -26,3 +26,7 @@ if(AXR_BUILD_CORE)
         set(RPMBUILD_FOUND FALSE)
     endif()
 endif()
+
+if(AXR_BUILD_DOCS)
+    find_package(Doxygen REQUIRED)
+endif()
