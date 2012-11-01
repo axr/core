@@ -30,10 +30,14 @@ option(AXR_NO_DEPRECATED_ENUMS "Disallow use of deprecated enum members" OFF)
 option(AXR_ALL_WARNINGS "Display as many warnings as possible" OFF)
 option(AXR_BUILD_CORE "Builds the core library" ON)
 option(AXR_BUILD_DOCS "Build documentation using doxygen" OFF)
-option(AXR_BUILD_EXTENSIONS "Builds extension libraries for toolkit integration" OFF)
 option(AXR_BUILD_FRAMEWORKS "Build AXR libraries as frameworks on OS X" ON)
 option(BUILD_UNIVERSAL_BINS "Build OS X universal binaries (i386 + x86_64)" ${IS_RELEASE_BUILD})
 option(BUILD_SHARED_LIBS "Builds shared instead of static libraries" ON)
+
+# Only if this is the root project
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    option(AXR_BUILD_EXTENSIONS "Builds extension libraries for toolkit integration" OFF)
+endif()
 
 if(BUILD_UNIVERSAL_BINS)
     set(CMAKE_OSX_ARCHITECTURES "i386;x86_64")
