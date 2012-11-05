@@ -13,7 +13,7 @@ endif()
 set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_BINARY_DIR}/PackageOverrides.cmake")
 
 # PackageMaker only allows .rtf, .rtfd, .html and .txt
-configure_file("${CMAKE_SOURCE_DIR}/cmake/PackageOverrides.cmake.in" "${CPACK_PROJECT_CONFIG_FILE}")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/PackageOverrides.cmake.in" "${CPACK_PROJECT_CONFIG_FILE}")
 configure_file("${AXR_README_FILE}" "${AXR_README_FILE_TXT}")
 configure_file("${AXR_LICENSE_FILE}" "${AXR_LICENSE_FILE_TXT}")
 
