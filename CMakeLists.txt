@@ -34,10 +34,7 @@ option(AXR_BUILD_FRAMEWORKS "Build AXR libraries as frameworks on OS X" ON)
 option(BUILD_UNIVERSAL_BINS "Build OS X universal binaries (i386 + x86_64)" ${IS_RELEASE_BUILD})
 option(BUILD_SHARED_LIBS "Builds shared instead of static libraries" ON)
 
-# Only if this is the root project
-if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-    option(AXR_BUILD_EXTENSIONS "Builds extension libraries for toolkit integration" OFF)
-endif()
+set(AXR_BUILD_EXTENSIONS "" CACHE STRING "Builds extension libraries for toolkit integration")
 
 if(BUILD_UNIVERSAL_BINS)
     set(CMAKE_OSX_ARCHITECTURES "i386;x86_64")
