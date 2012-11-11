@@ -111,6 +111,7 @@ if [ "$UNAME" = "Darwin" ] ; then
 elif [ "$UNAME" = "Linux" ] ; then
     if [ $(which apt-get 2>/dev/null) ] ; then
         # Debian, Ubuntu
+        apt-get update
         apt-get -y install build-essential qt-sdk cmake libsdl1.2-dev libgtk2.0-dev doxygen
     elif [ $(which yum 2>/dev/null) ] ; then
         # Fedora, RHEL, Yellow Dog Linux
