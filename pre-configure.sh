@@ -130,8 +130,11 @@ elif [ "$UNAME" = "Linux" ] ; then
         # Arch Linux
         pacman -S qt cmake sdl gtk2 doxygen
     elif [ $(which emerge 2>/dev/null) ] ; then
-        # Gentoo
-        echo "ERROR: portage support is not yet implemented"
+        # Gentoo with portage
+        emerge -n qt-gui cmake sdl doxygen gtk+
+    elif [ $(which cave 2>/dev/null) ] ; then
+        #Exherbo or Gentoo with paludis
+        echo "ERROR: Paludis support is not yet implemented"
         exit 1
     else
         echo "ERROR: Unknown package manager!"
