@@ -67,30 +67,44 @@ AXRString HSSLastChildFilter::toString()
     return "Last Child Filter";
 }
 
-const std::vector<HSSDisplayObject::p> HSSLastChildFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
+HSSSelection::p HSSLastChildFilter::apply(HSSSelection::p scope, bool processing)
 {
-    std::vector<HSSDisplayObject::p> ret;
-    HSSDisplayObject::const_it it;
-    for (it = scope.begin(); it != scope.end(); ++it)
+    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    if (scope->isA(HSSSelectionTypeMultipleSelection))
+    {
+        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        for (HSSMultipleSelection::iterator it=multiSel->begin(); it!=multiSel->end(); ++it) {
+            this->_apply(ret, *it);
+        }
+    }
+    else if (scope->isA(HSSSelectionTypeSimpleSelection))
+    {
+        this->_apply(ret, qSharedPointerCast<HSSSimpleSelection>(scope));
+    }
+    return ret;
+}
+
+inline void HSSLastChildFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+{
+    for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
     {
         const HSSDisplayObject::p & theDO = *it;
-        unsigned int lastIndex = theDO->getParent()->getChildren().size() - 1;
+        unsigned int lastIndex = theDO->getParent()->getChildren()->size() - 1;
         if (this->getNegating())
         {
             if (theDO->getIndex() != lastIndex)
             {
-                ret.push_back(theDO);
+                ret->add(theDO);
             }
         }
         else
         {
             if (theDO->getIndex() == lastIndex)
             {
-                ret.push_back(theDO);
+                ret->add(theDO);
             }
         }
     }
-    return ret;
 }
 
 HSSClonable::p HSSLastChildFilter::cloneImpl() const

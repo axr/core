@@ -42,9 +42,9 @@
  ********************************************************************/
 
 #include "AXRDebugging.h"
+#include "HSSSimpleSelector.h" //this needs to go before HSSRule to avoid problems with circular header inclusions
 #include "HSSRule.h"
 #include "HSSSelectorChain.h"
-#include "HSSSimpleSelector.h"
 
 using namespace AXR;
 

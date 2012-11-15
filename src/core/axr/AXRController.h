@@ -47,8 +47,10 @@
 #include <vector>
 #include <QSharedPointer>
 #include "HSSContainer.h"
+#include "HSSMultipleSelection.h"
 #include "HSSObject.h"
 #include "HSSParser.h"
+#include "HSSSimpleSelection.h"
 
 namespace AXR
 {
@@ -284,10 +286,10 @@ namespace AXR
         /**
          *  Shorthand for selecting elements. Calls select(selectorChains, scope, thisObj, processing) with
          *  processing set to to true.
-         *  See select(std::vector<HSSSelectorChain::p>, const std::vector<HSSDisplayObject::p> &, HSSDisplayObject::p, bool)
+         *  See select(std::vector<HSSSelectorChain::p>, HSSSelection::p, HSSDisplayObject::p, bool)
          *  for documentation on how to use it.
          */
-        std::vector< std::vector<HSSDisplayObject::p> > select(std::vector<HSSSelectorChain::p> selectorChains, const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
+        HSSSelection::p select(std::vector<HSSSelectorChain::p> selectorChains, HSSSelection::p scope, HSSDisplayObject::p thisObj);
 
         /**
          *  This is the method that should be called when creating a new selection. It will use the other types
@@ -304,11 +306,11 @@ namespace AXR
          *  @return         A vector of selections of the elements that were selected, each of these
          *                  is a vector containing shared pointers to display objects.
          */
-        std::vector< std::vector<HSSDisplayObject::p> > select(std::vector<HSSSelectorChain::p> selectorChains, const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
+        HSSSelection::p select(std::vector<HSSSelectorChain::p> selectorChains, HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
 
         /**
          *  Shortand for selecting elements hierarchically from the content tree. See
-         *  selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj) for
+         *  selectHierarchical(HSSSelection::p scope, HSSDisplayObject::p thisObj) for
          *  documentation on how to use it.
          *
          *  Do not call directly, use select() instead.
@@ -320,7 +322,7 @@ namespace AXR
          *  @return         A vector of selections of the elements that were selected, each of these
          *                  is a vector containing shared pointers to display objects.
          */
-        std::vector< std::vector<HSSDisplayObject::p> > selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj);
+        HSSSelection::p selectHierarchical(HSSSelection::p scope, HSSDisplayObject::p thisObj);
 
         /**
          *  Selects elements hierarchically from the content tree.
@@ -336,7 +338,7 @@ namespace AXR
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        std::vector< std::vector<HSSDisplayObject::p> > selectHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
+        HSSSelection::p selectHierarchical(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
 
         /**
          *  Selects descendants according to the current selector chain. It will call selectOnLevel()
@@ -353,7 +355,7 @@ namespace AXR
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        std::vector< std::vector<HSSDisplayObject::p> > selectAllHierarchical(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
+        HSSSelection::p selectAllHierarchical(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
 
         /**
          *  Selects siblings according to the current selector chain. It will call selectSimple()
@@ -370,7 +372,7 @@ namespace AXR
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        std::vector< std::vector<HSSDisplayObject::p> > selectOnLevel(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
+        HSSSelection::p selectOnLevel(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
 
         /**
          *  Selects elements according to the current selector chain. It will automatically call
@@ -387,7 +389,7 @@ namespace AXR
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        std::vector< std::vector<HSSDisplayObject::p> > selectSimple(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
+        HSSSelection::p selectSimple(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
 
         /**
          *  After reading the XML and HSS documents, this method is used to match the rules to the
@@ -401,7 +403,7 @@ namespace AXR
          *  @param scope        The list of display objects to which the rule should be matched.
          *  @param applyingInstructions   Wether to apply instruction rules
          */
-        void recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule, const std::vector<HSSDisplayObject::p> & scope, HSSContainer::p container, bool applyingInstructions);
+        void recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule, HSSSelection::p scope, HSSContainer::p container, bool applyingInstructions);
 
         std::stack<HSSContainer::p>currentContext;
 
@@ -422,7 +424,10 @@ namespace AXR
 
     private:
         AXRDocument *document_;
-        void _recursiveGetDescendants(std::vector<HSSDisplayObject::p> &ret, const std::vector<HSSDisplayObject::p> & scope);
+        inline void _matchRuleToSelection(HSSRule::p rule, HSSSimpleSelection::p selection);
+        inline void _recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule, HSSSimpleSelection::p scope, HSSContainer::p container, bool applyingInstructions);
+        inline void _selectOnLevelSimple(HSSSimpleSelection::p & ret, HSSCombinatorType combinatorType, HSSSimpleSelection::p simpleSel, HSSDisplayObject::p thisObj, bool processing);
+        void _recursiveGetDescendants(HSSSimpleSelection::p & ret, HSSSimpleSelection::p scope);
     };
 }
 

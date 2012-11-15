@@ -429,7 +429,7 @@ void HSSExpression::setPercentageObserved(HSSObservableProperty property, HSSObs
     this->setDirty(true);
 }
 
-void HSSExpression::setScope(const std::vector<HSSDisplayObject::p> * newScope)
+void HSSExpression::setScope(HSSSimpleSelection::p newScope)
 {
     this->scope = newScope;
     //propagate values

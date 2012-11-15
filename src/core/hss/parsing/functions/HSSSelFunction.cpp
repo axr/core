@@ -123,7 +123,7 @@ int HSSSelFunction::selectorChainsSize()
 
 QVariant HSSSelFunction::_evaluate()
 {
-    this->selection = this->getController()->select(this->selectorChains, *this->scope, this->getThisObj());
+    this->selection = this->getController()->select(this->selectorChains, this->scope, this->getThisObj());
     this->_value = QVariant::fromValue(this->selection);
     return this->_value;
 }

@@ -44,10 +44,13 @@
 #ifndef HSSNAMESELECTOR_H
 #define HSSNAMESELECTOR_H
 
+#include "HSSSelection.h"
 #include "HSSSelector.h"
 
 namespace AXR
 {
+    class HSSSimpleSelector;
+
     /**
      *  @brief Selects elements by tag name.
      *
@@ -85,13 +88,14 @@ namespace AXR
         //see HSSObject.h for documentation of this method
         virtual AXRString toString();
 
-        virtual std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
+        virtual HSSSelection::p filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
 
     protected:
         AXRString elementName;
 
     private:
         virtual HSSClonable::p cloneImpl() const;
+        inline void _filterSimpleSelection(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection);
     };
 }
 

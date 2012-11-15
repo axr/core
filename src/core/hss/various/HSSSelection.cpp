@@ -41,34 +41,45 @@
  *
  ********************************************************************/
 
-#include "HSSThisSelector.h"
+#include "HSSMultipleSelection.h"
+#include "HSSSelection.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
-HSSThisSelector::HSSThisSelector(AXRController * controller)
-: HSSNameSelector("@this", controller)
+AXRString HSSSelection::selectionTypeStringRepresentation(HSSSelectionType selectionType)
 {
-
+    static QMap<HSSSelectionType, AXRString> types;
+    if (types.isEmpty())
+    {
+        types[HSSSelectionTypeSimpleSelection] = "HSSSelectionTypeSimpleSelection";
+        types[HSSSelectionTypeMultipleSelection] = "HSSSelectionTypeMultipleSelection";
+    }
+    
+    return types[selectionType];
 }
 
-HSSThisSelector::p HSSThisSelector::clone() const
+HSSSelection::HSSSelection(HSSSelectionType type)
 {
-    return qSharedPointerCast<HSSThisSelector> (this->cloneImpl());
+    this->selectionType = type;
 }
 
-AXRString HSSThisSelector::toString()
+HSSSelection::HSSSelection(const HSSSelection &other)
 {
-    return "@this selector";
+    this->selectionType = other.selectionType;
 }
 
-HSSClonable::p HSSThisSelector::cloneImpl() const
+HSSSelection::~HSSSelection()
 {
-    return HSSThisSelector::p(new HSSThisSelector(*this));
+    
 }
 
-HSSSelection::p HSSThisSelector::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
+bool HSSSelection::isA(HSSSelectionType type)
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
-    ret->add(thisObj);
-    return ret;
+    return type == this->selectionType;
+}
+
+HSSSelectionType HSSSelection::getSelectionType()
+{
+    return this->selectionType;
 }

@@ -48,6 +48,7 @@
 #include "HSSMargin.h"
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
+#include "HSSSimpleSelection.h";
 
 using namespace AXR;
 
@@ -159,7 +160,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
                                          HSSObservablePropertyValue,
                                          this->observedTop,
                                          this->observedTopProperty,
-                                         NULL);
+                                         HSSSimpleSelection::null());
         if (this->observedRight)
         {
             this->observedRight->removeObserver(this->observedRightProperty, HSSObservablePropertySize, this);
@@ -173,7 +174,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
                                            HSSObservablePropertyValue,
                                            this->observedRight,
                                            this->observedRightProperty,
-                                           NULL);
+                                           HSSSimpleSelection::null());
         if (this->observedBottom)
         {
             this->observedBottom->removeObserver(this->observedBottomProperty, HSSObservablePropertySize, this);
@@ -187,7 +188,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
                                             HSSObservablePropertyValue,
                                             this->observedBottom,
                                             this->observedBottomProperty,
-                                            NULL);
+                                            HSSSimpleSelection::null());
         if (this->observedLeft)
         {
             this->observedLeft->removeObserver(this->observedLeftProperty, HSSObservablePropertySize, this);
@@ -201,7 +202,7 @@ void HSSMargin::setDSize(HSSParserNode::p value)
                                           HSSObservablePropertyValue,
                                           this->observedLeft,
                                           this->observedLeftProperty,
-                                          NULL);
+                                          HSSSimpleSelection::null());
         break;
     }
 
@@ -239,7 +240,7 @@ void HSSMargin::setDTop(HSSParserNode::p value)
                                          HSSObservablePropertyValue,
                                          this->observedTop,
                                          this->observedTopProperty,
-                                         NULL);
+                                         HSSSimpleSelection::null());
         break;
     }
 
@@ -283,7 +284,7 @@ void HSSMargin::setDRight(HSSParserNode::p value)
                                            HSSObservablePropertyValue,
                                            this->observedRight,
                                            this->observedRightProperty,
-                                           NULL);
+                                           HSSSimpleSelection::null());
         break;
     }
 
@@ -327,7 +328,7 @@ void HSSMargin::setDBottom(HSSParserNode::p value)
                                             HSSObservablePropertyValue,
                                             this->observedBottom,
                                             this->observedBottomProperty,
-                                            NULL);
+                                            HSSSimpleSelection::null());
         break;
     }
 
@@ -371,7 +372,7 @@ void HSSMargin::setDLeft(HSSParserNode::p value)
                                           HSSObservablePropertyValue,
                                           this->observedLeft,
                                           this->observedLeftProperty,
-                                          NULL);
+                                          HSSSimpleSelection::null());
         break;
     }
 
@@ -397,7 +398,7 @@ HSSUnit HSSMargin::_evaluatePropertyValue(
                                       HSSObservableProperty observedSourceProperty,
                                       HSSObservable * &observedStore,
                                       HSSObservableProperty &observedStoreProperty,
-                                      const std::vector<HSSDisplayObject::p> * scope
+                                      HSSSimpleSelection::p scope
                                       )
 {
     HSSUnit ret;

@@ -65,6 +65,7 @@ namespace AXR
 {
     class HSSContainer;
     class HSSFlag;
+    class HSSSimpleSelection;
 
     /**
      *  @brief Abstract superclass for any object that should be rendered on the screen.
@@ -83,9 +84,6 @@ namespace AXR
          *  The "parent pointer", a weak variant of a shared pointer, to break reference cycles.
          */
         typedef QWeakPointer<HSSContainer> pp;
-        typedef std::vector<HSSDisplayObject::p> c;
-        typedef std::vector<HSSDisplayObject::p>::iterator it;
-        typedef std::vector<HSSDisplayObject::p>::const_iterator const_it;
 
         /**
          *  Initializes all ivars to default values.
@@ -129,7 +127,20 @@ namespace AXR
          *  Gives the sibling elements.
          *  @return A vector containing shared pointers to the siblings of this display object.
          */
-        const std::vector<HSSDisplayObject::p> getSiblings();
+        QSharedPointer<HSSSimpleSelection> getSiblings();
+        
+        /**
+         *  Gives the sibling elements after the current one.
+         *  @return A vector containing shared pointers to the next siblings of this display object.
+         */
+        QSharedPointer<HSSSimpleSelection> getNextSiblings();
+        
+        
+        /**
+         *  Gives the sibling elements before the current one.
+         *  @return A vector containing shared pointers to the previous siblings of this display object.
+         */
+        QSharedPointer<HSSSimpleSelection> getPreviousSiblings();
 
         /**
          *  Stores the given index.
@@ -357,7 +368,7 @@ namespace AXR
 
         //if it needs to layout
         bool _needsLayout;
-        std::vector<std::vector<HSSDisplayObject::p> >layoutLines;
+        std::vector<HSSSimpleSelection >layoutLines;
 
         //here go the final computed values
         HSSUnit x, y, globalX, globalY,
@@ -510,7 +521,7 @@ namespace AXR
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable::p &observedStore,
                                    HSSObservableProperty &observedStoreProperty,
-                                   const std::vector<HSSDisplayObject::p> * scope
+                                   QSharedPointer<HSSSimpleSelection> scope
                                    );
         bool _isHover;
         bool _isRoot;
@@ -524,7 +535,5 @@ namespace AXR
         HSSUnit _layoutLockBottomPosition;
     };
 }
-
-Q_DECLARE_METATYPE(std::vector< std::vector<AXR::HSSDisplayObject::p> >)
 
 #endif

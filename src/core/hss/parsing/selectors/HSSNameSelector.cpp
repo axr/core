@@ -42,6 +42,8 @@
  ********************************************************************/
 
 #include "HSSNameSelector.h"
+#include "HSSSimpleSelector.h"
+#include "HSSMultipleSelection.h"
 
 using namespace AXR;
 
@@ -77,18 +79,36 @@ HSSClonable::p HSSNameSelector::cloneImpl() const
     return HSSNameSelector::p(new HSSNameSelector(*this));
 }
 
-std::vector<HSSDisplayObject::p> HSSNameSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
+HSSSelection::p HSSNameSelector::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
 {
-    std::vector< HSSDisplayObject::p> ret;
-    unsigned i, size;
-    //select only elements with matching element name
-    for (i = 0, size = scope.size(); i < size; ++i)
+    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    if (scope->isA(HSSSelectionTypeMultipleSelection))
     {
-        bool match = scope[i]->getElementName() == this->getElementName();
-        if ((match && !this->getNegating()) || (!match && this->getNegating()))
+        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        for (HSSMultipleSelection::const_iterator it = multiSel->begin(); it!=multiSel->end(); ++it)
         {
-            ret.push_back(scope[i]);
+            this->_filterSimpleSelection(ret, *it);
         }
     }
+    else if (scope->isA(HSSSelectionTypeSimpleSelection))
+    {
+        HSSSimpleSelection::p simpleSel = qSharedPointerCast<HSSSimpleSelection>(scope);
+        this->_filterSimpleSelection(ret, simpleSel);
+    }
+    
     return ret;
+}
+
+inline void HSSNameSelector::_filterSimpleSelection(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+{
+    //select only elements with matching element name
+    for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
+    {
+        HSSDisplayObject::p theDO = *it;
+        bool match = theDO->getElementName() == this->getElementName();
+        if ((match && !this->getNegating()) || (!match && this->getNegating()))
+        {
+            ret->add(theDO);
+        }
+    }
 }

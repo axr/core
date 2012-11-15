@@ -52,6 +52,7 @@
 namespace AXR
 {
     class HSSDisplayObject;
+    class HSSSimpleSelection;
 
     /**
      *  @brief Abstract base class to provide common functionality for margin object types.
@@ -237,7 +238,7 @@ namespace AXR
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty,
-                                   const std::vector< QSharedPointer<HSSDisplayObject> > * scope
+                                   QSharedPointer<HSSSimpleSelection> scope
                                    );
 
     };

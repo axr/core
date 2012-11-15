@@ -56,6 +56,7 @@ namespace AXR
     class AXRController;
     class HSSMultipleValueDefinition;
     class HSSDisplayObject;
+    class HSSSimpleSelection;
 
     /**
      *  @brief The class from which all HSS objects inherit from. Handles general properties such as
@@ -263,17 +264,13 @@ namespace AXR
         /**
          *  Getter for the current scope this object is operating on.
          *  @return A pointer to the vector of shared pointers to display objects
-         *
-         *  @todo this is probably a memory management nightmare
          */
-        const std::vector<QSharedPointer<HSSDisplayObject> > * getScope() const;
+        QSharedPointer<HSSSimpleSelection> getScope() const;
         /**
          *  Setter for the current scope this object is operating on.
          *  @param newScope     A pointer to a vector of shared pointers to display objects
-         *
-         *  @todo this is probably a memory management nightmare.
          */
-        void setScope(const std::vector<QSharedPointer<HSSDisplayObject> > * newScope);
+        void setScope(QSharedPointer<HSSSimpleSelection> newScope);
         /**
          *  Setter for the controller. The controller needs to be propagated across all
          *  HSSObject subclasses, so they get access to the DOM and such.
@@ -332,7 +329,7 @@ namespace AXR
 
         HSSParserNode::p dIsA;
 
-        const std::vector<QSharedPointer<HSSDisplayObject> > * scope;
+        QSharedPointer<HSSSimpleSelection> scope;
         QSharedPointer<HSSDisplayObject> thisObj;
         AXRController * axrController;
 

@@ -66,28 +66,44 @@ AXRString HSSEvenFilter::toString()
     return "Even Filter";
 }
 
-const std::vector<HSSDisplayObject::p> HSSEvenFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
+HSSSelection::p HSSEvenFilter::apply(HSSSelection::p scope, bool processing)
 {
-    std::vector<HSSDisplayObject::p> ret;
-    unsigned i, size;
-    for (i = 0, size = scope.size(); i < size; ++i)
+    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    if (scope->isA(HSSSelectionTypeMultipleSelection))
+    {
+        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        for (HSSMultipleSelection::iterator it=multiSel->begin(); it!=multiSel->end(); ++it) {
+            this->_apply(ret, *it);
+        }
+    }
+    else if (scope->isA(HSSSelectionTypeSimpleSelection))
+    {
+        this->_apply(ret, qSharedPointerCast<HSSSimpleSelection>(scope));
+    }
+    return ret;
+}
+
+inline void HSSEvenFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+{
+    unsigned i = 0;
+    for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
     {
         if (this->getNegating())
         {
             if (i % 2 == 0)
             {
-                ret.push_back(scope[i]);
+                ret->add(*it);
             }
         }
         else
         {
             if (i % 2 != 0)
             {
-                ret.push_back(scope[i]);
+                ret->add(*it);
             }
         }
+        i++;
     }
-    return ret;
 }
 
 HSSClonable::p HSSEvenFilter::cloneImpl() const

@@ -50,7 +50,6 @@ HSSObjectDefinition::HSSObjectDefinition(HSSObject::p prototype, AXRController *
 : HSSStatement(HSSStatementTypeObjectDefinition, controller)
 {
     this->prototype = prototype;
-    this->scope = NULL;
 }
 
 HSSObjectDefinition::HSSObjectDefinition(const HSSObjectDefinition & orig)
@@ -67,9 +66,6 @@ HSSObjectDefinition::HSSObjectDefinition(const HSSObjectDefinition & orig)
     {
         this->children.push_back((*c_it)->clone());
     }
-
-    //shallow copy
-    this->scope = NULL;
 }
 
 HSSObjectDefinition::p HSSObjectDefinition::clone() const
@@ -215,7 +211,7 @@ HSSObject::p HSSObjectDefinition::getObject()
     return this->prototype;
 }
 
-void HSSObjectDefinition::setScope(const std::vector<HSSDisplayObject::p> * newScope)
+void HSSObjectDefinition::setScope(HSSSimpleSelection::p newScope)
 {
     this->scope = newScope;
     //propagate values

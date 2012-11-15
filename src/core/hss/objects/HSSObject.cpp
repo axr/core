@@ -59,6 +59,7 @@
 #include "HSSRectangle.h"
 #include "HSSRequest.h"
 #include "HSSRoundedRect.h"
+#include "HSSSimpleSelection.h"
 #include "HSSTypeEnums.h"
 
 using namespace AXR;
@@ -542,12 +543,12 @@ void HSSObject::registerProperty(HSSObservableProperty name, QVariant property)
     this->properties[name] = property;
 }
 
-const std::vector<HSSDisplayObject::p> * HSSObject::getScope() const
+HSSSimpleSelection::p HSSObject::getScope() const
 {
     return this->scope;
 }
 
-void HSSObject::setScope(const std::vector<HSSDisplayObject::p> * newScope)
+void HSSObject::setScope(HSSSimpleSelection::p newScope)
 {
     this->scope = newScope;
 }

@@ -73,30 +73,47 @@ AXRString HSSParentSelector::getElementName()
     return "@parent";
 }
 
-std::vector<HSSDisplayObject::p> HSSParentSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
+HSSSelection::p HSSParentSelector::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
 {
-    std::vector<HSSDisplayObject::p> ret;
-    std::vector<HSSDisplayObject::p>::const_iterator scopeIt;
-    std::vector<HSSDisplayObject::p>::iterator readIt, writeIt;
-    std::set<HSSDisplayObject::p> tmpset;
+    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    if (scope->isA(HSSSelectionTypeMultipleSelection))
+    {
+        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        for (HSSMultipleSelection::const_iterator it = multiSel->begin(); it != multiSel->end(); ++it)
+        {
+            this->_filterSimpleSelection(ret, *it);
+        }
+    }
+    else if (scope->isA(HSSSelectionTypeSimpleSelection))
+    {
+        HSSSimpleSelection::p simpleSel = qSharedPointerCast<HSSSimpleSelection>(scope);
+        this->_filterSimpleSelection(ret, simpleSel);
+    }
 
-    for (scopeIt = scope.begin(); scopeIt != scope.end(); ++scopeIt)
+    return ret;
+}
+
+inline void HSSParentSelector::_filterSimpleSelection(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+{
+    HSSSimpleSelection::const_iterator scopeIt;
+    HSSSimpleSelection::iterator readIt, writeIt;
+    std::set<HSSDisplayObject::p> tmpset;
+    
+    for (scopeIt = selection->begin(); scopeIt != selection->end(); ++scopeIt)
     {
         const HSSDisplayObject::p & theDO = *scopeIt;
         const HSSDisplayObject::p & parent = theDO->getParent();
         if (parent)
-            ret.push_back(parent);
+            ret->add(parent);
     }
-
-    for (readIt = ret.begin(), writeIt = ret.begin(); readIt != ret.end(); ++readIt)
+    
+    for (readIt = ret->begin(), writeIt = ret->begin(); readIt != ret->end(); ++readIt)
     {
         if (tmpset.insert(*readIt).second)
         {
             *writeIt++ = *readIt;
         }
     }
-
-    ret.erase(writeIt, ret.end());
-
-    return ret;
+    
+    ret->erase(writeIt, ret->end());
 }

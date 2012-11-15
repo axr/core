@@ -95,29 +95,26 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
         if (ruleStatement->isA(HSSStatementTypeRule))
         {
             HSSRule::p theRule = qSharedPointerCast<HSSRule > (ruleStatement);
-            std::vector<HSSDisplayObject::p> scope = theRule->getOriginalScope();
+            HSSSimpleSelection::p scope = theRule->getOriginalScope();
             AXRController * controller = this->getController();
             this->setPurging(newStatus);
-            std::vector<std::vector<HSSDisplayObject::p> > selection = controller->select(theRule->getSelectorChains(), scope, this->getThisObj(), false);
+            HSSSimpleSelection::p selection = controller->select(theRule->getSelectorChains(), scope, this->getThisObj(), false)->joinAll();
             this->setPurging(HSSRuleStateOff);
 
-            for (std::vector<std::vector<HSSDisplayObject::p> >::const_iterator outer = selection.begin(); outer != selection.end(); ++outer)
+            for (HSSSimpleSelection::const_iterator it=selection->begin(); it!=selection->end(); ++it)
             {
-                const std::vector<HSSDisplayObject::p> & innerv = *outer;
-                for (std::vector<HSSDisplayObject::p>::const_iterator inner = innerv.begin(); inner != innerv.end(); ++inner)
-                {
-                    (*inner)->setRuleStatus(theRule, newStatus);
-                }
+                (*it)->setRuleStatus(theRule, newStatus);
             }
         }
     }
 }
 
-const std::vector<HSSDisplayObject::p> HSSFlag::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
+HSSSelection::p HSSFlag::apply(HSSSelection::p scope, bool processing)
 {
     if (processing)
     {
-        for (HSSDisplayObject::const_it it = scope.begin(); it != scope.end(); ++it)
+        HSSSimpleSelection::p inner = scope->joinAll();
+        for (HSSSimpleSelection::const_iterator it = inner->begin(); it != inner->end(); ++it)
         {
             const HSSDisplayObject::p & theDO = *it;
             //parent is simple selector, grandparent is selector chain, grandgrandparent is the rule
@@ -135,43 +132,38 @@ const std::vector<HSSDisplayObject::p> HSSFlag::apply(const std::vector<HSSDispl
             }
         }
 
-        return scope;
+        return scope->splitAll();
     }
     else
     {
-        if (scope.size() > 0)
+        HSSSimpleSelection::p ret(new HSSSimpleSelection());
+        HSSSimpleSelection::p inner = scope->joinAll();
+        for (HSSSimpleSelection::const_iterator it = inner->begin(); it != inner->end(); ++it)
         {
-            std::vector<HSSDisplayObject::p> ret;
-            for (HSSDisplayObject::const_it it = scope.begin(); it != scope.end(); ++it)
+            const HSSDisplayObject::p & theDO = *it;
+            HSSRuleState purgingState = this->getPurging();
+            if (purgingState)
             {
-                const HSSDisplayObject::p & theDO = *it;
-                HSSRuleState purgingState = this->getPurging();
-                if (purgingState)
+                HSSRuleState state = theDO->flagState(this->getName());
+                if (state == purgingState)
                 {
-                    HSSRuleState state = theDO->flagState(this->getName());
-                    if (state == purgingState)
-                    {
-                        ret.push_back(theDO);
-                    }
-
+                    ret->add(theDO);
                 }
-                else
+                
+            }
+            else
+            {
+                bool firstMatch = (theDO->flagState(this->getName()) == HSSRuleStateOn) && !this->getNegating();
+                bool secondMatch = (theDO->flagState(this->getName()) == HSSRuleStateOff) && this->getNegating();
+                if (firstMatch || secondMatch)
                 {
-                    bool firstMatch = (theDO->flagState(this->getName()) == HSSRuleStateOn) && !this->getNegating();
-                    bool secondMatch = (theDO->flagState(this->getName()) == HSSRuleStateOff) && this->getNegating();
-                    if (firstMatch || secondMatch)
-                    {
-                        ret.push_back(theDO);
-                    }
+                    ret->add(theDO);
                 }
             }
-            return ret;
         }
-        else
-        {
-            return scope;
-        }
+        return ret;
     }
+    return scope;
 }
 
 HSSRuleState HSSFlag::getPurging()

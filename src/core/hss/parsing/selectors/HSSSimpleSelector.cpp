@@ -92,9 +92,9 @@ void HSSSimpleSelector::filtersAdd(HSSFilter::p filter)
     filter->setParentNode(this->shared_from_this());
 }
 
-std::vector<HSSDisplayObject::p> HSSSimpleSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
+HSSSelection::p HSSSimpleSelector::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
 {
-    std::vector<HSSDisplayObject::p> selection;
+    HSSSelection::p selection;
     if (this->name)
     {
         selection = this->name->filterSelection(scope, thisObj, processing);
@@ -104,7 +104,7 @@ std::vector<HSSDisplayObject::p> HSSSimpleSelector::filterSelection(const std::v
     return _recursiveFilterSelection(selection, it, this->filters.end(), processing);
 }
 
-std::vector<HSSDisplayObject::p> HSSSimpleSelector::_recursiveFilterSelection(const std::vector<HSSDisplayObject::p> & selection, std::list<HSSFilter::p>::const_iterator it, std::list<HSSFilter::p>::const_iterator end_it, bool processing)
+HSSSelection::p HSSSimpleSelector::_recursiveFilterSelection(HSSSelection::p selection, std::list<HSSFilter::p>::const_iterator it, std::list<HSSFilter::p>::const_iterator end_it, bool processing)
 {
     if (it == end_it)
     {
@@ -112,7 +112,7 @@ std::vector<HSSDisplayObject::p> HSSSimpleSelector::_recursiveFilterSelection(co
     }
     else
     {
-        std::vector<HSSDisplayObject::p> tempSel = (*it)->apply(selection, processing);
+        HSSSelection::p tempSel = (*it)->apply(selection, processing);
         ++it;
         return this->_recursiveFilterSelection(tempSel, it, end_it, processing);
     }

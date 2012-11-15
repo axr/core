@@ -72,9 +72,10 @@ namespace AXR
         virtual ~HSSOddChildFilter();
         virtual AXRString toString();
 
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
+        virtual HSSSelection::p apply(HSSSelection::p scope, bool processing);
 
     private:
+        inline void _apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection);
         virtual HSSClonable::p cloneImpl() const;
     };
 }

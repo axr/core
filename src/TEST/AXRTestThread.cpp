@@ -80,9 +80,9 @@ void AXRTestThread::operator () ()
             std::vector<std::vector<QUrl> > tests;
             AXRController::p controller = document->getController();
             HSSContainer::p root = controller->getRoot();
-            const std::vector<HSSDisplayObject::p> & children = root->getChildren(true);
+            HSSSimpleSelection::p children = root->getChildren(true);
 
-            for (std::vector<HSSDisplayObject::p>::const_iterator it = children.begin(); it != children.end(); ++it)
+            for (HSSSimpleSelection::const_iterator it = children->begin(); it != children->end(); ++it)
             {
                 const HSSDisplayObject::p & child = *it;
                 if (child->attributes.find("href") != child->attributes.end() && child->attributes.find("expect") != child->attributes.end())

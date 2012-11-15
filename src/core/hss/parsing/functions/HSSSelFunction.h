@@ -132,8 +132,7 @@ namespace AXR
 
         /**
          *  This is the actual implementation of what the function does. It selects from the elements
-         *  in the scope and then returns a selection: a pointer to a vector of vectors to shared pointers
-         *  to display objects std::vector< std::vector<HSSDisplayObject::p> >.
+         *  in the scope and then returns a selection.
          *  @return A pointer to a selection casted to void*.
          */
         virtual QVariant _evaluate();
@@ -142,7 +141,7 @@ namespace AXR
 
     protected:
         std::vector<HSSSelectorChain::p> selectorChains;
-        std::vector< std::vector<HSSDisplayObject::p> > selection;
+        HSSSelection::p selection;
 
     private:
         virtual HSSClonable::p cloneImpl() const;

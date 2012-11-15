@@ -400,6 +400,19 @@ namespace AXR
         HSSActionTypeFunction /**< Custom functions registered on the core use this type.. */
     };
     /** @} */
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSSelectionType
+     *  The type of selection, wether simple or multiple
+     */
+    enum AXR_API HSSSelectionType
+    {
+        HSSSelectionTypeNone = 0, /**< Error state. */
+        HSSSelectionTypeSimpleSelection, /**< A collection of display objects. */
+        HSSSelectionTypeMultipleSelection, /**< A colloection of simple selections. */
+    };
+    /** @} */
 }
 
 #endif

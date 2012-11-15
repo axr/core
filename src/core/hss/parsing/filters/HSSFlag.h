@@ -118,7 +118,7 @@ namespace AXR
          *  @param processing   Wether we are processing the filter or not.
          *  @return A vector of shared pointers to the display objects in the resulting selection.
          */
-        const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing);
+        HSSSelection::p apply(HSSSelection::p scope, bool processing);
 
         /**
          *  Getter for the purging state.
