@@ -157,7 +157,7 @@ namespace AXR
         HSSParserNode::p dTarget;
         HSSObservable * observedTarget;
         HSSObservableProperty observedTargetProperty;
-        std::vector<HSSDisplayObject::p> target;
+        HSSSimpleSelection::p target;
 
         HSSRequestModeType mode;
 

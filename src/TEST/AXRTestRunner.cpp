@@ -94,11 +94,11 @@ void AXRTestRunner::executeLayoutTests(HSSObservableProperty passnull, void*data
         {
             HSSSelFunction::p selFunction = qSharedPointerCast<HSSSelFunction>(argument);
             QVariant remoteValue = selFunction->evaluate();
-            if (remoteValue.canConvert<std::vector< std::vector<HSSDisplayObject::p> > >())
+            if (remoteValue.canConvert<HSSSelection::p >())
             {
-                std::vector< std::vector<HSSDisplayObject::p> > selection = remoteValue.value<std::vector< std::vector<HSSDisplayObject::p> > >();
-                std::vector<HSSDisplayObject::p> innerSelection = selection[0];
-                status = HSSContainer::asContainer(innerSelection[0]);
+                HSSSelection::p selection = remoteValue.value<HSSSelection::p >();
+                HSSSimpleSelection::p innerSelection = selection->joinAll();
+                status = HSSContainer::asContainer(innerSelection->front());
             }
         }
     }

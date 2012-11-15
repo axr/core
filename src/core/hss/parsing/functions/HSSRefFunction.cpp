@@ -145,19 +145,14 @@ int HSSRefFunction::selectorChainsSize()
 
 QVariant HSSRefFunction::_evaluate()
 {
-    /**
-     *  @todo this works only on numeric values, with other kind of data I don't know what will happen
-     *  we need to figure out how to deal with non-numeric values here
-     */
-
-    std::vector< std::vector<HSSDisplayObject::p> > selection = this->getController()->select(this->selectorChains, *this->scope, this->getThisObj(), false);
-    if (selection.empty() || (selection.size() == 1 && selection[0].empty()))
+    HSSSimpleSelection::p selection = this->getController()->select(this->selectorChains, this->scope, this->getThisObj(), false)->joinAll();
+    if (selection->empty())
     {
         // ignore
     }
-    else if (selection.size() == 1 && selection[0].size() == 1)
+    else if (selection->size() == 1)
     {
-        HSSDisplayObject::p container = selection[0][0];
+        HSSDisplayObject::p container = selection->front();
         this->_value = container->getProperty(this->propertyName);
 
         container->observe(this->propertyName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));

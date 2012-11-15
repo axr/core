@@ -90,7 +90,7 @@ HSSClonable::p HSSCombinator::cloneImpl() const
 
 //does nothing yet
 
-std::vector<HSSDisplayObject::p> HSSCombinator::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
+HSSSelection::p HSSCombinator::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
 {
     return scope;
 }

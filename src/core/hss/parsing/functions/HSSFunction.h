@@ -117,12 +117,9 @@ namespace AXR
 
         /**
          *  Setter for the scope which to pass to members like references or selections.
-         *  @param newScope     The new scope, a regular pointer to a vector of shared poninters
-         *  to display obects.
-         *
-         *  @todo how is memory handled for the scopes?
+         *  @param newScope     The new scope, a shared pointer to a simple selection.
          */
-        virtual void setScope(const std::vector<HSSDisplayObject::p> * newScope);
+        virtual void setScope(HSSSimpleSelection::p newScope);
 
         /**
          *  Whenever a function needs to recalculate its value, it should be set to true.
@@ -180,7 +177,7 @@ namespace AXR
         HSSUnit percentageBase;
         HSSObservableProperty percentageObservedProperty;
         HSSObservable * percentageObserved;
-        const std::vector<HSSDisplayObject::p> * scope;
+        HSSSimpleSelection::p scope;
 
     private:
         HSSFunctionType functionType;

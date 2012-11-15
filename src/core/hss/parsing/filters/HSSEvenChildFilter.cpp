@@ -66,29 +66,44 @@ AXRString HSSEvenChildFilter::toString()
     return "Even Child Filter";
 }
 
-const std::vector<HSSDisplayObject::p> HSSEvenChildFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
+HSSSelection::p HSSEvenChildFilter::apply(HSSSelection::p scope, bool processing)
 {
-    std::vector<HSSDisplayObject::p> ret;
-    HSSDisplayObject::const_it it;
-    for (it = scope.begin(); it != scope.end(); ++it)
+    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    if (scope->isA(HSSSelectionTypeMultipleSelection))
+    {
+        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        for (HSSMultipleSelection::iterator it=multiSel->begin(); it!=multiSel->end(); ++it) {
+            this->_apply(ret, *it);
+        }
+    }
+    else if (scope->isA(HSSSelectionTypeSimpleSelection))
+    {
+        this->_apply(ret, qSharedPointerCast<HSSSimpleSelection>(scope));
+    }
+    return ret;
+}
+
+inline void HSSEvenChildFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+{
+    HSSSimpleSelection::const_iterator it;
+    for (it = selection->begin(); it != selection->end(); ++it)
     {
         const HSSDisplayObject::p & theDO = *it;
         if (this->getNegating())
         {
             if (theDO->getIndex() % 2 == 0)
             {
-                ret.push_back(theDO);
+                ret->add(theDO);
             }
         }
         else
         {
             if (theDO->getIndex() % 2 != 0)
             {
-                ret.push_back(theDO);
+                ret->add(theDO);
             }
         }
     }
-    return ret;
 }
 
 HSSClonable::p HSSEvenChildFilter::cloneImpl() const

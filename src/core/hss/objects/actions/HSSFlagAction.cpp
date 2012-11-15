@@ -90,38 +90,27 @@ AXRString HSSFlagAction::defaultObjectType()
 void HSSFlagAction::fire()
 {
     HSSFlagFunction::p flagFunction = this->getFlagFunction();
-    std::vector< std::vector<HSSDisplayObject::p> > selection = this->getController()->select(flagFunction->getSelectorChains(), *this->scope, this->getThisObj(), false);
-    if (selection.empty())
+    HSSSelection::p selection = this->getController()->select(flagFunction->getSelectorChains(), this->scope, this->getThisObj(), false);
+    HSSSimpleSelection::p inner = selection->joinAll();
+    for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
     {
-        // ignore
-    }
-    else
-    {
-        for (std::vector< std::vector<HSSDisplayObject::p> >::iterator outerIt = selection.begin(); outerIt != selection.end(); ++outerIt)
+        HSSDisplayObject::p container = *innerIt;
+        switch (flagFunction->getFlagFunctionType())
         {
-            std::vector<HSSDisplayObject::p> & inner = *outerIt;
-            for (std::vector<HSSDisplayObject::p>::iterator innerIt = inner.begin(); innerIt != inner.end(); ++innerIt)
-            {
-                HSSDisplayObject::p container = *innerIt;
-                switch (flagFunction->getFlagFunctionType())
-                {
-                case HSSFlagFunctionTypeFlag:
-                    container->flagsActivate(flagFunction->getName());
-                    break;
-                case HSSFlagFunctionTypeUnflag:
-                    container->flagsDeactivate(flagFunction->getName());
-                    break;
-                case HSSFlagFunctionTypeToggleFlag:
-                    container->flagsToggle(flagFunction->getName());
-                    break;
+            case HSSFlagFunctionTypeFlag:
+                container->flagsActivate(flagFunction->getName());
+                break;
+            case HSSFlagFunctionTypeUnflag:
+                container->flagsDeactivate(flagFunction->getName());
+                break;
+            case HSSFlagFunctionTypeToggleFlag:
+                container->flagsToggle(flagFunction->getName());
+                break;
 
-                default:
-                    throw AXRWarning("HSSFlagAction", "Invalid flag function type for flag action");
-                    break;
-                }
-            }
+            default:
+                throw AXRWarning("HSSFlagAction", "Invalid flag function type for flag action");
+                break;
         }
-
     }
 }
 

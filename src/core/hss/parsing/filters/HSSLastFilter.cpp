@@ -66,26 +66,39 @@ AXRString HSSLastFilter::toString()
     return "Last Filter";
 }
 
-const std::vector<HSSDisplayObject::p> HSSLastFilter::apply(const std::vector<HSSDisplayObject::p> &scope, bool processing)
+HSSSelection::p HSSLastFilter::apply(HSSSelection::p scope, bool processing)
 {
-    if (scope.size() > 0)
+    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    if (scope->isA(HSSSelectionTypeMultipleSelection))
+    {
+        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        for (HSSMultipleSelection::iterator it=multiSel->begin(); it!=multiSel->end(); ++it) {
+            this->_apply(ret, *it);
+        }
+    }
+    else if (scope->isA(HSSSelectionTypeSimpleSelection))
+    {
+        this->_apply(ret, qSharedPointerCast<HSSSimpleSelection>(scope));
+    }
+    return ret;
+}
+
+inline void HSSLastFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+{
+    if (selection->size() > 0)
     {
         if (this->getNegating())
         {
-            std::vector<HSSDisplayObject::p> ret;
-            ret.insert(ret.begin(), scope.begin(), scope.end() - 1);
-            return ret;
+            for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end()-1; ++it) {
+                ret->add(*it);
+            }
         }
         else
         {
-            std::vector<HSSDisplayObject::p> ret;
-            ret.push_back(scope[scope.size() - 1]);
-            return ret;
+            for (HSSSimpleSelection::const_iterator it = selection->end()-1; it != selection->end(); ++it) {
+                ret->add(*it);
+            }
         }
-    }
-    else
-    {
-        return scope;
     }
 }
 

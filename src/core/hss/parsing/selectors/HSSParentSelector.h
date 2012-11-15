@@ -77,10 +77,11 @@ namespace AXR
         //see HSSParserNode.h for the documentation of this method
         virtual AXRString toString();
 
-        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
+        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, HSSDisplayObject::p thisObj, bool processing);
 
     private:
         virtual HSSClonable::p cloneImpl() const;
+        inline void _filterSimpleSelection(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection);
     };
 }
 

@@ -52,7 +52,6 @@ HSSFunction::HSSFunction(HSSFunctionType type, AXRController * controller)
 : HSSParserNode(HSSParserNodeTypeFunctionCall, controller)
 {
     this->functionType = type;
-    this->scope = NULL;
     this->percentageObserved = NULL;
     this->_isDirty = true;
     this->_value = QVariant();
@@ -62,7 +61,6 @@ HSSFunction::HSSFunction(const HSSFunction & orig)
 : HSSParserNode(orig)
 {
     this->functionType = orig.functionType;
-    this->scope = NULL;
     this->percentageObserved = NULL;
     this->_isDirty = orig._isDirty;
     this->_value = orig._value;
@@ -159,7 +157,7 @@ void HSSFunction::setPercentageObserved(HSSObservableProperty property, HSSObser
     //observed->observe(property, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSFunction>(this, &HSSFunction::propertyChanged));
 }
 
-void HSSFunction::setScope(const std::vector<HSSDisplayObject::p> * newScope)
+void HSSFunction::setScope(HSSSimpleSelection::p newScope)
 {
     this->scope = newScope;
     std::deque<HSSParserNode::p>::const_iterator it;

@@ -60,6 +60,7 @@
 #include "HSSParserNode.h"
 #include "HSSPercentageConstant.h"
 #include "HSSRgb.h"
+#include "HSSSimpleSelection.h";
 #include "HSSStringConstant.h"
 
 using namespace AXR;
@@ -354,18 +355,36 @@ void HSSDisplayObject::removeFromParent()
     this->getParent()->remove(this->getIndex());
 }
 
-const std::vector<HSSDisplayObject::p> HSSDisplayObject::getSiblings()
+HSSSimpleSelection::p HSSDisplayObject::getSiblings()
 {
-    std::vector<HSSDisplayObject::p> ret;
-    const std::vector<HSSDisplayObject::p> children = this->getParent()->getChildren();
-    for (HSSDisplayObject::const_it it = children.begin(); it != children.end(); ++it)
+    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    HSSSimpleSelection::p children = this->getParent()->getChildren();
+    for (HSSSimpleSelection::const_iterator it = children->begin(); it != children->end(); ++it)
     {
         const HSSDisplayObject::p theDO = *it;
         if(theDO.data() != this)
         {
-            ret.push_back(theDO);
+            ret->add(theDO);
         }
     }
+    return ret;
+}
+
+HSSSimpleSelection::p HSSDisplayObject::getNextSiblings()
+{
+    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    HSSSimpleSelection::p children = this->getParent()->getChildren();
+    HSSSimpleSelection::iterator thisPos = std::find(children->begin(), children->end(), this->shared_from_this());
+    ret->insert(ret->end(), thisPos+1, children->end());
+    return ret;
+}
+
+HSSSimpleSelection::p HSSDisplayObject::getPreviousSiblings()
+{
+    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    HSSSimpleSelection::p children = this->getParent()->getChildren();
+    HSSSimpleSelection::iterator thisPos = std::find(children->begin(), children->end(), this->shared_from_this());
+    ret->insert(ret->end(), children->begin(), thisPos);
     return ret;
 }
 
@@ -958,7 +977,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
                                                      HSSObservablePropertyWidth,
                                                      this->observedWidth,
                                                      this->observedWidthProperty,
-                                                     &(parentContainer->getChildren())
+                                                     parentContainer->getChildren()
                                                      ));
             this->widthByContent = false;
         }
@@ -973,7 +992,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
                                                      HSSObservablePropertyWidth,
                                                      this->observedWidth,
                                                      this->observedWidthProperty,
-                                                     NULL
+                                                     HSSSimpleSelection::null()
                                                      ));
             this->widthByContent = false;
         }
@@ -1031,12 +1050,12 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
         HSSContainer::p parent = this->getParent();
         if (parent)
         {
-            objdef->setScope(&(parent->getChildren()));
+            objdef->setScope(parent->getChildren());
         }
         else if (this->isA(HSSObjectTypeContainer))
         {
             HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-            objdef->setScope(&(thisCont->getChildren()));
+            objdef->setScope(thisCont->getChildren());
         }
         objdef->setThisObj(this->shared_from_this());
         objdef->apply();
@@ -1177,7 +1196,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
                                                       HSSObservablePropertyHeight,
                                                       this->observedHeight,
                                                       this->observedHeightProperty,
-                                                      &(parentContainer->getChildren())
+                                                      parentContainer->getChildren()
                                                       ));
             this->heightByContent = false;
         }
@@ -1192,7 +1211,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
                                                       HSSObservablePropertyHeight,
                                                       this->observedHeight,
                                                       this->observedHeightProperty,
-                                                      NULL
+                                                      HSSSimpleSelection::null()
                                                       ));
             this->heightByContent = false;
         }
@@ -1250,12 +1269,12 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         HSSContainer::p parent = this->getParent();
         if (parent)
         {
-            objdef->setScope(&(parent->getChildren()));
+            objdef->setScope(parent->getChildren());
         }
         else if (this->isA(HSSObjectTypeContainer))
         {
             HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-            objdef->setScope(&(thisCont->getChildren()));
+            objdef->setScope(thisCont->getChildren());
         }
         objdef->setThisObj(this->shared_from_this());
         objdef->apply();
@@ -1372,14 +1391,10 @@ void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
             this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
         }
         HSSContainer::p parentContainer = this->getParent();
-        const std::vector<HSSDisplayObject::p> * scope;
+        HSSSimpleSelection::p scope;
         if (parentContainer)
         {
-            scope = &(parentContainer->getChildren());
-        }
-        else
-        {
-            scope = NULL;
+            scope = parentContainer->getChildren();
         }
         this->anchorX = this->_evaluatePropertyValue(
                                              &HSSDisplayObject::anchorXChanged,
@@ -1496,14 +1511,10 @@ void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
             this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
         }
         HSSContainer::p parentContainer = this->getParent();
-        const std::vector<HSSDisplayObject::p> * scope;
+        HSSSimpleSelection::p scope;
         if (parentContainer)
         {
-            scope = &(parentContainer->getChildren());
-        }
-        else
-        {
-            scope = NULL;
+            scope = parentContainer->getChildren();
         }
         this->anchorY = this->_evaluatePropertyValue(
                                              &HSSDisplayObject::anchorYChanged,
@@ -1639,12 +1650,12 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                fnct->setScope(&(parent->getChildren()));
+                fnct->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                fnct->setScope(&(thisCont->getChildren()));
+                fnct->setScope(thisCont->getChildren());
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
@@ -1694,12 +1705,12 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
         HSSContainer::p parent = this->getParent();
         if (parent)
         {
-            objdef->setScope(&(parent->getChildren()));
+            objdef->setScope(parent->getChildren());
         }
         else if (this->isA(HSSObjectTypeContainer))
         {
             HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-            objdef->setScope(&(thisCont->getChildren()));
+            objdef->setScope(thisCont->getChildren());
         }
         objdef->setThisObj(this->shared_from_this());
         objdef->apply();
@@ -1789,12 +1800,12 @@ void HSSDisplayObject::setDContained(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                fnct->setScope(&(parent->getChildren()));
+                fnct->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                fnct->setScope(&(thisCont->getChildren()));
+                fnct->setScope(thisCont->getChildren());
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
@@ -1844,12 +1855,12 @@ void HSSDisplayObject::setDContained(HSSParserNode::p value)
         HSSContainer::p parent = this->getParent();
         if (parent)
         {
-            objdef->setScope(&(parent->getChildren()));
+            objdef->setScope(parent->getChildren());
         }
         else if (this->isA(HSSObjectTypeContainer))
         {
             HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-            objdef->setScope(&(thisCont->getChildren()));
+            objdef->setScope(thisCont->getChildren());
         }
         objdef->setThisObj(this->shared_from_this());
         objdef->apply();
@@ -1976,7 +1987,7 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
                                                 HSSObservablePropertyAlignX,
                                                 this->observedAlignX,
                                                 this->observedAlignXProperty,
-                                                &(parentContainer->getChildren())
+                                                parentContainer->getChildren()
                                                 );
             parentContainer->setNeedsLayout(true);
         }
@@ -1991,7 +2002,7 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
                                                 HSSObservablePropertyAlignX,
                                                 this->observedAlignX,
                                                 this->observedAlignXProperty,
-                                                NULL
+                                                HSSSimpleSelection::null()
                                                 );
         }
     }
@@ -2119,7 +2130,7 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
                                                 HSSObservablePropertyAlignY,
                                                 this->observedAlignY,
                                                 this->observedAlignYProperty,
-                                                &(parentContainer->getChildren())
+                                                parentContainer->getChildren()
                                                 );
             parentContainer->setNeedsLayout(true);
         }
@@ -2134,7 +2145,7 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
                                                 HSSObservablePropertyAlignY,
                                                 this->observedAlignY,
                                                 this->observedAlignYProperty,
-                                                NULL
+                                                HSSSimpleSelection::null()
                                                 );
         }
     }
@@ -2236,12 +2247,12 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                fnct->setScope(&(parent->getChildren()));
+                fnct->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                fnct->setScope(&(thisCont->getChildren()));
+                fnct->setScope(thisCont->getChildren());
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
@@ -2306,12 +2317,12 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                objdef->setScope(&(parent->getChildren()));
+                objdef->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                objdef->setScope(&(thisCont->getChildren()));
+                objdef->setScope(thisCont->getChildren());
             }
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
@@ -2402,12 +2413,12 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                 HSSContainer::p parent = this->getParent();
                 if (parent)
                 {
-                    fnct->setScope(&(parent->getChildren()));
+                    fnct->setScope(parent->getChildren());
                 }
                 else if (this->isA(HSSObjectTypeContainer))
                 {
                     HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                    fnct->setScope(&(thisCont->getChildren()));
+                    fnct->setScope(thisCont->getChildren());
                 }
                 fnct->setThisObj(this->shared_from_this());
                 QVariant remoteValue = fnct->evaluate();
@@ -2433,12 +2444,12 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                 HSSContainer::p parent = this->getParent();
                 if (parent)
                 {
-                    fnct->setScope(&(parent->getChildren()));
+                    fnct->setScope(parent->getChildren());
                 }
                 else if (this->isA(HSSObjectTypeContainer))
                 {
                     HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                    fnct->setScope(&(thisCont->getChildren()));
+                    fnct->setScope(thisCont->getChildren());
                 }
                 fnct->setThisObj(this->shared_from_this());
                 QVariant remoteValue = fnct->evaluate();
@@ -2495,12 +2506,12 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                objdef->setScope(&(parent->getChildren()));
+                objdef->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                objdef->setScope(&(thisCont->getChildren()));
+                objdef->setScope(thisCont->getChildren());
             }
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
@@ -2569,12 +2580,12 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                objdef->setScope(&(parent->getChildren()));
+                objdef->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                objdef->setScope(&(thisCont->getChildren()));
+                objdef->setScope(thisCont->getChildren());
             }
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
@@ -2608,12 +2619,12 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                fnct->setScope(&(parent->getChildren()));
+                fnct->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                fnct->setScope(&(thisCont->getChildren()));
+                fnct->setScope(thisCont->getChildren());
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
@@ -2665,12 +2676,12 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                objdef->setScope(&(parent->getChildren()));
+                objdef->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                objdef->setScope(&(thisCont->getChildren()));
+                objdef->setScope(thisCont->getChildren());
             }
 
             objdef->setThisObj(this->shared_from_this());
@@ -2784,12 +2795,12 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                fnct->setScope(&(parent->getChildren()));
+                fnct->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                fnct->setScope(&(thisCont->getChildren()));
+                fnct->setScope(thisCont->getChildren());
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
@@ -2835,12 +2846,12 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                objdef->setScope(&(parent->getChildren()));
+                objdef->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                objdef->setScope(&(thisCont->getChildren()));
+                objdef->setScope(thisCont->getChildren());
             }
 
             objdef->setThisObj(this->shared_from_this());
@@ -2949,12 +2960,12 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                objdef->setScope(&(parent->getChildren()));
+                objdef->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                objdef->setScope(&(thisCont->getChildren()));
+                objdef->setScope(thisCont->getChildren());
             }
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
@@ -2990,12 +3001,12 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                fnct->setScope(&(parent->getChildren()));
+                fnct->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                fnct->setScope(&(thisCont->getChildren()));
+                fnct->setScope(thisCont->getChildren());
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
@@ -3057,12 +3068,12 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                objdef->setScope(&(parent->getChildren()));
+                objdef->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                objdef->setScope(&(thisCont->getChildren()));
+                objdef->setScope(thisCont->getChildren());
             }
 
             objdef->setThisObj(this->shared_from_this());
@@ -3134,12 +3145,12 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                objdef->setScope(&(parent->getChildren()));
+                objdef->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                objdef->setScope(&(thisCont->getChildren()));
+                objdef->setScope(thisCont->getChildren());
             }
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
@@ -3175,12 +3186,12 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                fnct->setScope(&(parent->getChildren()));
+                fnct->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                fnct->setScope(&(thisCont->getChildren()));
+                fnct->setScope(thisCont->getChildren());
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
@@ -3242,12 +3253,12 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                objdef->setScope(&(parent->getChildren()));
+                objdef->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                objdef->setScope(&(thisCont->getChildren()));
+                objdef->setScope(thisCont->getChildren());
             }
 
             objdef->setThisObj(this->shared_from_this());
@@ -3317,12 +3328,12 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                objdef->setScope(&(parent->getChildren()));
+                objdef->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                objdef->setScope(&(thisCont->getChildren()));
+                objdef->setScope(thisCont->getChildren());
             }
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
@@ -3356,12 +3367,12 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                fnct->setScope(&(parent->getChildren()));
+                fnct->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                fnct->setScope(&(thisCont->getChildren()));
+                fnct->setScope(thisCont->getChildren());
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
@@ -3408,12 +3419,12 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                objdef->setScope(&(parent->getChildren()));
+                objdef->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                objdef->setScope(&(thisCont->getChildren()));
+                objdef->setScope(thisCont->getChildren());
             }
 
             objdef->setThisObj(this->shared_from_this());
@@ -3466,12 +3477,12 @@ void HSSDisplayObject::setDVisible(HSSParserNode::p value)
             HSSContainer::p parent = this->getParent();
             if (parent)
             {
-                fnct->setScope(&(parent->getChildren()));
+                fnct->setScope(parent->getChildren());
             }
             else if (this->isA(HSSObjectTypeContainer))
             {
                 HSSContainer * thisCont = static_cast<HSSContainer *> (this);
-                fnct->setScope(&(thisCont->getChildren()));
+                fnct->setScope(thisCont->getChildren());
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
@@ -3626,7 +3637,7 @@ HSSUnit HSSDisplayObject::_evaluatePropertyValue(
                                              HSSObservableProperty observedSourceProperty,
                                              HSSObservable::p &observedStore,
                                              HSSObservableProperty &observedStoreProperty,
-                                             const std::vector<HSSDisplayObject::p> * scope
+                                             HSSSimpleSelection::p scope
                                              )
 {
     HSSUnit ret = 0.;

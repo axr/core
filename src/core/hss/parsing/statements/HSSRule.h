@@ -262,9 +262,9 @@ namespace AXR
 
         void appliedToAdd(QSharedPointer<HSSDisplayObject> displayObject);
 
-        const std::vector<QSharedPointer<HSSDisplayObject> > getOriginalScope() const;
+        QSharedPointer<HSSSimpleSelection> getOriginalScope() const;
 
-        void setOriginalScope(const std::vector<QSharedPointer<HSSDisplayObject> > & scope);
+        void setOriginalScope(QSharedPointer<HSSSimpleSelection> scope);
 
         void setObservedTreeChanger(HSSObservable * newValue);
 
@@ -281,7 +281,7 @@ namespace AXR
 
         std::vector<QWeakPointer<HSSDisplayObject> > appliedTo;
 
-        std::vector<QSharedPointer<HSSDisplayObject> > _originalScope;
+        QSharedPointer<HSSSimpleSelection> _originalScope;
 
     private:
         virtual HSSClonable::p cloneImpl() const;

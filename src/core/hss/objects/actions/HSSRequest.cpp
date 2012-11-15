@@ -134,7 +134,7 @@ void HSSRequest::fire()
     AXRDocument* document = this->getController()->document();
 
     //if there is no target
-    if (this->target.empty())
+    if (this->target->empty())
     {
         document->loadXMLFile(this->src);
     }
@@ -193,15 +193,15 @@ void HSSRequest::fire()
 
                         controller->matchRulesToContentTree();
 
-                        std::vector<HSSDisplayObject::p>::const_iterator targetIt, childIt;
-                        for (targetIt = this->target.begin(); targetIt != this->target.end(); ++targetIt)
+                        HSSSimpleSelection::const_iterator targetIt, childIt;
+                        for (targetIt = this->target->begin(); targetIt != this->target->end(); ++targetIt)
                         {
                             const HSSDisplayObject::p & theDO = *targetIt;
                             HSSContainer::p theContainer = HSSContainer::asContainer(theDO);
                             if (theContainer)
                             {
                                 theContainer->clear();
-                                for (childIt = root->getChildren().begin(); childIt != root->getChildren().end(); ++childIt)
+                                for (childIt = root->getChildren()->begin(); childIt != root->getChildren()->end(); ++childIt)
                                 {
                                     const HSSDisplayObject::p & theChild = *childIt;
                                     theContainer->add(theChild);
@@ -233,7 +233,7 @@ void HSSRequest::fire()
             //                            theCont->add(loadedRoot);
             //
             //                            unsigned j, k, size2, size3;
-            //                            const std::vector<HSSDisplayObject::p> &scope = theCont->getChildren();
+            //                            HSSSimpleSelection::p scope = theCont->getChildren();
             //                            for (j=0, size2=fileController.rulesSize(); j<size2; ++j) {
             //                                HSSRule::p & theRule = fileController.rulesGet(j);
             //                                theRule->childrenAdd(theRule);
@@ -358,15 +358,11 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
                 QVariant remoteValue = fnct->evaluate();
-                if (remoteValue.canConvert< std::vector< std::vector<HSSDisplayObject::p> > >())
+                if (remoteValue.canConvert< HSSSelection::p >())
                 {
-                    std::vector< std::vector<HSSDisplayObject::p> > selection = remoteValue.value< std::vector< std::vector<HSSDisplayObject::p> > >();
-                    this->target.clear();
-                    for (unsigned i = 0, size = selection.size(); i < size; ++i)
-                    {
-                        std::vector<HSSDisplayObject::p> inner = selection[i];
-                        this->target.insert(this->target.end(), inner.begin(), inner.end());
-                    }
+                    HSSSimpleSelection::p selection = remoteValue.value< HSSSelection::p >()->joinAll();
+                    this->target->clear();
+                    this->target->insert(this->target->end(), selection->begin(), selection->end());
                 }
 
                 /**

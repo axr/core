@@ -47,6 +47,7 @@
 #include "HSSDisplayObject.h"
 #include "HSSFilter.h"
 #include "HSSRule.h"
+#include "HSSSimpleSelection.h";
 
 using namespace AXR;
 
@@ -62,6 +63,7 @@ HSSRule::HSSRule(const HSSRule & orig)
 {
     this->_activeByDefault = orig._activeByDefault;
     this->observedTreeChanger = NULL;
+    this->_originalScope = orig._originalScope;
 }
 
 HSSRule::p HSSRule::clone() const
@@ -340,12 +342,12 @@ HSSClonable::p HSSRule::cloneImpl() const
     return clone;
 }
 
-const std::vector<QSharedPointer<HSSDisplayObject> > HSSRule::getOriginalScope() const
+HSSSimpleSelection::p HSSRule::getOriginalScope() const
 {
     return this->_originalScope;
 }
 
-void HSSRule::setOriginalScope(const std::vector<QSharedPointer<HSSDisplayObject> > & scope)
+void HSSRule::setOriginalScope(HSSSimpleSelection::p scope)
 {
     this->_originalScope = scope;
 }

@@ -46,7 +46,9 @@
 
 #include <QSharedPointer>
 #include "HSSDisplayObject.h"
+#include "HSSMultipleSelection.h"
 #include "HSSParserNode.h"
+#include "HSSSimpleSelection.h"
 
 namespace AXR
 {
@@ -106,13 +108,13 @@ namespace AXR
          *  This base implementation is (I think) what gets called when you use
          *  an unknown filter name in the source code, which currently returns the entire scope.
          *
-         *  @param scope        The original selection: A vector of shared pointers to display objects.
+         *  @param scope        The original selection.
          *  @param processing   Wether we are processing the filter or not.
-         *  @return A vector of shared pointers to the display objects in the resulting selection.
+         *  @return The resulting selection.
          *
          *  @todo should this return an empty selection?
          */
-        virtual const std::vector<HSSDisplayObject::p> apply(const std::vector<HSSDisplayObject::p> &scope, bool processing) = 0;
+        virtual HSSSelection::p apply(HSSSelection::p scope, bool processing) = 0;
 
         virtual HSSFilter::p clone() const = 0;
 

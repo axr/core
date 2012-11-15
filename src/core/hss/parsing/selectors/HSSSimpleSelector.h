@@ -48,6 +48,7 @@
 #include "HSSDisplayObject.h"
 #include "HSSFilter.h"
 #include "HSSNameSelector.h"
+#include "HSSSelection.h"
 #include "HSSSelector.h"
 
 namespace AXR
@@ -89,7 +90,7 @@ namespace AXR
         /**
          * Reduces the selection according to the selector nodes it has stored.
          */
-        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
+        HSSSelection::p filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
 
         //see HSSParserNode.h for documentation of this method
         virtual void setThisObj(HSSDisplayObject::p value);
@@ -100,7 +101,7 @@ namespace AXR
 
         virtual HSSClonable::p cloneImpl() const;
 
-        std::vector<HSSDisplayObject::p> _recursiveFilterSelection(const std::vector<HSSDisplayObject::p> & selection, std::list<HSSFilter::p>::const_iterator it, std::list<HSSFilter::p>::const_iterator end_it, bool processing);
+        HSSSelection::p _recursiveFilterSelection(HSSSelection::p selection, std::list<HSSFilter::p>::const_iterator it, std::list<HSSFilter::p>::const_iterator end_it, bool processing);
     };
 }
 

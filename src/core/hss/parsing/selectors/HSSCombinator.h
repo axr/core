@@ -45,6 +45,7 @@
 #define HSSCOMBINATOR_H
 
 #include <QSharedPointer>
+#include "HSSSelection.h"
 #include "HSSSelector.h"
 
 namespace AXR
@@ -95,7 +96,7 @@ namespace AXR
 
         virtual AXRString toString();
 
-        std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing);
+        HSSSelection::p filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
 
     protected:
         HSSCombinatorType combinatorType;

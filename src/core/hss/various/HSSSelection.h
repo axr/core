@@ -41,43 +41,64 @@
  *
  ********************************************************************/
 
-#ifndef HSSEVENCHILDFILTER_H
-#define HSSEVENCHILDFILTER_H
+#ifndef HSSSELECTION_H
+#define HSSSELECTION_H
 
-#include "HSSFilter.h"
+#include <QSharedPointer>
+#include "AXRString.h"
+#include "HSSTypeEnums.h"
 
 namespace AXR
 {
+    class HSSSimpleSelection;
+    class HSSMultipleSelection;
+
     /**
-     *  @brief Selects the first element of the selection.
+     *  @brief 
      */
-    class AXR_API HSSEvenChildFilter : public HSSFilter
+    class HSSSelection
     {
     public:
         /**
-         *  @brief Creates a new instance of a \@evenChild filter.
+         *  The shared pointer to this kind of object.
          */
-        HSSEvenChildFilter(AXRController * controller);
+        typedef QSharedPointer<HSSSelection> p;
+
+        virtual ~HSSSelection();
 
         /**
-         *  Clones an instance of HSSEvenChildFilter and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSEvenChildFilter
+         *  When logging, you often need a string representation of the selection type.
+         *  @param selectionType   The selection type to represent as a string.
+         *  @return A string representation of the given type.
          */
-        HSSFilter::p clone() const;
+        static AXRString selectionTypeStringRepresentation(HSSSelectionType selectionType);
 
         /**
-         *  Destructor for this class.
+         *  Allows you to check if this selection is of the given type.
+         *  @param  type    The selection type to which to check against.
+         *  @return Wether it is of the given type or not.
          */
-        virtual ~HSSEvenChildFilter();
-        virtual AXRString toString();
+        bool isA(HSSSelectionType type);
 
-        virtual HSSSelection::p apply(HSSSelection::p scope, bool processing);
+        /**
+         *  @return The selection type of this instance.
+         */
+        HSSSelectionType getSelectionType();
+
+        virtual void addSelection(p item) =0;
+        virtual QSharedPointer<HSSSimpleSelection> joinAll() =0;
+        virtual QSharedPointer<HSSMultipleSelection> splitAll() =0;
+
+    protected:
+        HSSSelection(HSSSelectionType type);
+        HSSSelection(const HSSSelection &other);
 
     private:
-        inline void _apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection);
-        virtual HSSClonable::p cloneImpl() const;
+        HSSSelectionType selectionType;
     };
 }
+
+Q_DECLARE_METATYPE(AXR::HSSSelection::p)
+Q_DECLARE_METATYPE(AXR::HSSSelection::p*)
 
 #endif

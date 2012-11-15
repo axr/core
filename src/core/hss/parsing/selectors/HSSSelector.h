@@ -46,9 +46,13 @@
 
 #include "HSSDisplayObject.h"
 #include "HSSParserNode.h"
+#include "HSSSimpleSelection.h"
 
 namespace AXR
 {
+    class HSSSelection;
+    class HSSSimpleSelection;
+
     /**
      *  @brief Abstract base class for a common interface for all selector nodes
      */
@@ -62,7 +66,7 @@ namespace AXR
         /**
          * Reduces the selection according its selector type
          */
-        virtual std::vector<HSSDisplayObject::p> filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing) = 0;
+        virtual QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, HSSDisplayObject::p thisObj, bool processing) = 0;
 
         bool getNegating() const;
         void setNegating(bool value);

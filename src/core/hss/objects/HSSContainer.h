@@ -47,6 +47,7 @@
 #include "HSSDisplayObject.h"
 #include "HSSEvent.h"
 #include "HSSShape.h"
+#include "HSSSimpleSelector.h"
 #include "HSSTextBlock.h"
 
 namespace AXR
@@ -91,7 +92,7 @@ namespace AXR
             AXRString name;
             bool complete;
             std::vector<HSSContainer::displayGroup::p>lines;
-            std::vector<HSSDisplayObject::p>objects;
+            HSSSimpleSelection objects;
 
             static bool heightGreater(const displayGroup::p& x, const displayGroup::p& y)
             {
@@ -253,18 +254,18 @@ namespace AXR
          *  Replaces the whole list of children with a new one.
          *  @param newChildren  A vector of shared pointers to display objects.
          */
-        void setChildren(std::vector<HSSDisplayObject::p> newChildren);
+        void setChildren(HSSSimpleSelection::p newChildren);
 
         /**
          *  @return The list of children, excluding text blocks.
          */
-        const std::vector<HSSDisplayObject::p>& getChildren() const;
+        HSSSimpleSelection::p getChildren() const;
 
         /**
          *  @param includeTextBlocks    Wether to include the text blocks or just actual children.
          *  @return The list of children.
          */
-        const std::vector<HSSDisplayObject::p>& getChildren(bool includeTextBlocks) const;
+        HSSSimpleSelection::p getChildren(bool includeTextBlocks) const;
 
         /**
          *  Getter for the definition object of contentAlignX.
@@ -409,8 +410,8 @@ namespace AXR
         virtual void setController(AXRController * controller);
 
     protected:
-        std::vector<HSSDisplayObject::p>children;
-        std::vector<HSSDisplayObject::p>allChildren;
+        HSSSimpleSelection::p children;
+        HSSSimpleSelection::p allChildren;
 
         HSSParserNode::p dContentAlignX;
         HSSUnit contentAlignX;
@@ -456,14 +457,14 @@ namespace AXR
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty,
-                                   const std::vector<HSSDisplayObject::p> * scope
+                                   HSSSimpleSelection::p scope
                                    );
 
         void _recursiveCreateSecondaryGroups(
-                                             std::vector<HSSDisplayObject::p>::iterator lineAIt,
-                                             std::vector<HSSDisplayObject::p>::iterator lineAStopIt,
-                                             std::vector<HSSDisplayObject::p>::iterator lineBIt,
-                                             std::vector<HSSDisplayObject::p>::iterator lineBStopIt,
+                                             HSSSimpleSelection::iterator lineAIt,
+                                             HSSSimpleSelection::iterator lineAStopIt,
+                                             HSSSimpleSelection::iterator lineBIt,
+                                             HSSSimpleSelection::iterator lineBStopIt,
                                              displayGroup::p &targetA, displayGroup::p &targetB,
                                              displayGroup::p &newGroup,
                                              std::vector<displayGroup::p>::iterator pglIt,
@@ -477,7 +478,7 @@ namespace AXR
         bool _overlaps(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
         bool _overlaps_horizontal(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
         bool _overlaps_vertical(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
-        bool _addChildToGroupIfNeeded(HSSDisplayObject::p &child, displayGroup::p &group, HSSDirectionValue direction, bool contained);
+        bool _addChildToGroupIfNeeded(const HSSDisplayObject::p &child, displayGroup::p &group, HSSDirectionValue direction, bool contained);
         //std::vector<HSSContainer::displayGroup::p> _getGroupsOverlapping(HSSDisplayObject::p &child, std::vector<HSSContainer::displayGroup::p> &group, HSSDirectionValue direction);
         bool _mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p &otherGroup, HSSDirectionValue direction);
         void _arrange(displayGroup::p &groups, HSSDirectionValue direction);

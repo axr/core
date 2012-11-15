@@ -72,9 +72,9 @@ AXRString HSSRootSelector::getElementName()
     return this->getController()->getRoot()->getElementName();
 }
 
-std::vector<HSSDisplayObject::p> HSSRootSelector::filterSelection(const std::vector<HSSDisplayObject::p> & scope, HSSDisplayObject::p thisObj, bool processing)
+HSSSelection::p HSSRootSelector::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
 {
-    std::vector<HSSDisplayObject::p> ret;
-    ret.push_back(this->getController()->getRoot());
+    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    ret->add(this->getController()->getRoot());
     return ret;
 }

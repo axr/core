@@ -50,6 +50,7 @@
 #include "HSSObject.h"
 #include "HSSRule.h"
 #include "HSSStatement.h"
+#include "HSSSimpleSelection.h"
 
 namespace AXR
 {
@@ -183,12 +184,9 @@ namespace AXR
 
         /**
          *  Setter for the scope which to pass to members like references or selections.
-         *  @param newScope     The new scope, a regular pointer to a vector of shared poninters
-         *  to display obects.
-         *
-         *  @todo how is memory handled for the scopes?
+         *  @param newScope     The new scope, a shared pointer to a simple selection.
          */
-        void setScope(const std::vector<HSSDisplayObject::p> * newScope);
+        void setScope(HSSSimpleSelection::p newScope);
 
         /**
          *  Setter for the "\@this object" which to pass to members like references or selections.
@@ -240,7 +238,7 @@ namespace AXR
         std::vector<HSSObjectDefinition::p> children;
 
         HSSDisplayObject::p thisObj;
-        const std::vector<HSSDisplayObject::p> * scope;
+        HSSSimpleSelection::p scope;
 
     private:
         virtual HSSClonable::p cloneImpl() const;
