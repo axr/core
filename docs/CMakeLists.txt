@@ -11,9 +11,7 @@ add_custom_target(${TARGET_NAME_DOCUMENTATION} ALL
     SOURCES ${docs_SOURCES}
 )
 
-if(IS_RELEASE_BUILD)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/docs/html"
-        COMPONENT doc
-        DESTINATION "share/doc/axr"
-    )
-endif()
+install(DIRECTORY "${CMAKE_BINARY_DIR}/docs/html"
+    COMPONENT doc
+    DESTINATION "share/doc/axr"
+)

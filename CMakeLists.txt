@@ -10,19 +10,6 @@ include(ForceLatinPaths)
 
 project(AXRCore)
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL Release)
-    set(IS_RELEASE_BUILD TRUE)
-    set(IS_DEBUG_BUILD FALSE)
-else()
-    # Default to debug builds
-    if(NOT CMAKE_BUILD_TYPE)
-        set(CMAKE_BUILD_TYPE Debug)
-    endif()
-
-    set(IS_RELEASE_BUILD FALSE)
-    set(IS_DEBUG_BUILD TRUE)
-endif()
-
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
 
 # Options
@@ -31,7 +18,7 @@ option(AXR_ALL_WARNINGS "Display as many warnings as possible" OFF)
 option(AXR_BUILD_CORE "Builds the core library" ON)
 option(AXR_BUILD_DOCS "Build documentation using doxygen" OFF)
 option(AXR_BUILD_FRAMEWORKS "Build AXR libraries as frameworks on OS X" ON)
-option(BUILD_UNIVERSAL_BINS "Build OS X universal binaries (i386 + x86_64)" ${IS_RELEASE_BUILD})
+option(BUILD_UNIVERSAL_BINS "Build OS X universal binaries (i386 + x86_64)" OFF)
 option(BUILD_SHARED_LIBS "Builds shared instead of static libraries" ON)
 
 set(AXR_BUILD_EXTENSIONS "" CACHE STRING "Builds extension libraries for toolkit integration")
@@ -186,13 +173,7 @@ if(FANCY_TARGET_NAMES)
     add_custom_target("Tests" SOURCES ${tests_SOURCES})
 endif()
 
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    if(IS_RELEASE_BUILD)
-        if(AXR_BUILD_CORE)
-            include(InstallRequiredSystemLibraries)
-            include(CPack)
-        endif()
-    else()
-        install(CODE "message(FATAL_ERROR \"You cannot install or package debug builds\")")
-    endif()
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR AND AXR_BUILD_CORE)
+    include(InstallRequiredSystemLibraries)
+    include(CPack)
 endif()
