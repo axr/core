@@ -8,13 +8,11 @@ list(SORT test_SOURCES)
 
 group_by_folder(${CMAKE_CURRENT_SOURCE_DIR} "${test_SOURCES}")
 
-add_library(TEST ${test_SOURCES})
+# Static-only build to ease Windows development
+# since this shouldn't really even be here anyways
+add_library(TEST STATIC ${test_SOURCES})
 target_link_libraries(TEST ${TARGET_NAME_LIB_CORE})
 set_target_properties(TEST PROPERTIES FOLDER Libraries)
-
-if(APPLE AND BUILD_SHARED_LIBS AND AXR_BUILD_FRAMEWORKS)
-    set_target_properties(TEST PROPERTIES FRAMEWORK TRUE)
-endif()
 
 install(TARGETS TEST
     LIBRARY DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_REL} COMPONENT libraries
