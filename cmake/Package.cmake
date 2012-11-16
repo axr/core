@@ -69,15 +69,8 @@ set(CPACK_COMPONENT_DOC_INSTALL_TYPES Developer)
 set(CPACK_COMPONENT_GROUP_RUNTIME_DESCRIPTION "")
 set(CPACK_COMPONENT_GROUP_DEVELOPMENT_DESCRIPTION "All of the tools required to develop applications using AXR.\n\nNote that the Qt SDK and any other external dependencies must be installed separately, as well as a compiler environment (such as Visual Studio or Xcode).")
 
-# Platform name
-string(TOLOWER "${CMAKE_SYSTEM_NAME}" OS_CODE)
-if(APPLE)
-    set(OS_CODE "osx")
-endif()
-
 # Filenames
-set(CPACK_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}-${AXR_VERSION_STRING}-${OS_CODE}-${CMAKE_TARGET_ARCHITECTURE_CODE}")
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}-${AXR_VERSION_STRING}-src")
+include(PackageFilenames)
 set(CPACK_SOURCE_IGNORE_FILES ".git" ".DS_Store" "thumbs.db" "CMakeLists.txt.user")
 
 # Source package
