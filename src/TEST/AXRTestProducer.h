@@ -53,7 +53,7 @@ namespace AXR
 {
     class AXRTestRunner;
 
-    class AXR_API AXRTestProducer : public QRunnable
+    class AXRTestProducer : public QRunnable
     {
     private:
         AXRTestRunner *runner;
