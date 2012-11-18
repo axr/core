@@ -319,6 +319,13 @@ bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
             return true;
         }
     }
+    else if (property == "flow" || property == "visible")
+    {
+        if (value == "yes" || value == "no")
+        {
+            return true;
+        }
+    }
 
     //    else if (property == "font") {
     //        if (   value == "thin"
