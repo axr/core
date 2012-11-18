@@ -1137,6 +1137,7 @@ void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
     case HSSParserNodeTypeExpression:
     {
         HSSExpression::p widthExpression = qSharedPointerCast<HSSExpression > (this->dWidth);
+        widthExpression->setPercentageBase(*(HSSUnit*) data);
         this->width = floor(widthExpression->evaluate());
         break;
     }
@@ -1356,6 +1357,7 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
     case HSSParserNodeTypeExpression:
     {
         HSSExpression::p heightExpression = qSharedPointerCast<HSSExpression > (this->dHeight);
+        heightExpression->setPercentageBase(*(HSSUnit*) data);
         this->height = floor(heightExpression->evaluate());
         break;
     }
@@ -3697,9 +3699,9 @@ HSSUnit HSSDisplayObject::_evaluatePropertyValue(
         ret = expressionValue->evaluate();
         if (callback)
         {
-            expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject > (this, callback));
-            observedStore = expressionValue;
-            observedStoreProperty = HSSObservablePropertyValue;
+            observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject > (this, callback));
+            observedStore = observedObject;
+            observedStoreProperty = observedProperty;
         }
         else
         {
