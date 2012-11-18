@@ -237,6 +237,11 @@ namespace AXR
         void recursiveLayout();
 
         /**
+         *  Recursively resets the layout of all the children.
+         */
+        void recursiveResetLayout();
+
+        /**
          *  Sets the global horizontal position, which will be used to determine where in the
          *  window the container will be placed. It will also adjust the position of the children.
          *  @param newValue     An HSSUnit containing the new horizontal position.

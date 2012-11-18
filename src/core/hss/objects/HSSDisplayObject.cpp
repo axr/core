@@ -909,6 +909,11 @@ void HSSDisplayObject::recursiveLayout()
     this->layout();
 }
 
+void HSSDisplayObject::recursiveResetLayout()
+{
+    this->setNeedsLayout(true);
+}
+
 void HSSDisplayObject::setGlobalX(HSSUnit newValue)
 {
     this->globalX = newValue;

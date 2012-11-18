@@ -221,6 +221,7 @@ namespace AXR
         bool needsLayout() const;
         virtual void layout();
         virtual void recursiveLayout();
+        virtual void recursiveResetLayout();
         virtual void setGlobalX(HSSUnit newValue);
         virtual void setGlobalY(HSSUnit newValue);
 
