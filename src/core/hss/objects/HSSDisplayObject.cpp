@@ -80,6 +80,7 @@ void HSSDisplayObject::initialize()
     this->backgroundSurface = new QImage();
     this->foregroundSurface = new QImage();
     this->bordersSurface = new QImage();
+    this->_debugName = "unnamed";
 
     this->x = this->y
             = this->globalX = this->globalY
@@ -431,6 +432,7 @@ AXRString HSSDisplayObject::getElementName()
 void HSSDisplayObject::setElementName(AXRString newName)
 {
     this->elementName = newName;
+    this->_debugName = newName.toStdString();
 }
 
 //rules

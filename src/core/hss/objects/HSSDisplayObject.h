@@ -534,6 +534,7 @@ namespace AXR
         HSSUnit _layoutLockTopPosition;
         bool _layoutFlagLockBottom;
         HSSUnit _layoutLockBottomPosition;
+        std::string _debugName;
     };
 }
 
