@@ -506,7 +506,10 @@ bool AXRDocument::layoutStepDone()
 
 void AXRDocument::breakIfNeeded()
 {
-    bool breakvar = _currentLayoutTick >= (_currentLayoutStep - 1);
+    int breakvar = 0;
+    if(this->_currentLayoutTick >= this->_currentLayoutStep-1){
+        breakvar = 1; //we need something to break on
+    }
 
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("currentLayoutTick = %1, currentLayoutStep = %2, %3").arg(_currentLayoutTick).arg(_currentLayoutStep).arg(breakvar));
 }
