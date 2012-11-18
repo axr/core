@@ -43,6 +43,7 @@
 
 #include <QIODevice>
 #include <QTextStream>
+#include <iostream>
 #include "AXRDebugging.h"
 
 using namespace AXR;
@@ -54,18 +55,7 @@ void std_log_level(const AXRString &message, unsigned int debugLevel, bool newli
 {
     if (debugLevel <= axr_debug_level)
     {
-        QTextStream *out = NULL;
-        if (axr_debug_device)
-            out = new QTextStream(axr_debug_device);
-        else
-            out = new QTextStream(stderr);
-
-        *out << message;
-        if (newline)
-            endl(*out);
-
-        out->flush();
-        delete out;
+        std::cout << message.toStdString() << std::endl;
     }
 }
 
@@ -96,16 +86,32 @@ void std_log4(const AXRString &message, bool newline)
 
 quint32 axr_debug_active_channels = 0;
 
+void axr_log(const AXRString & message, bool newline)
+{
+    QTextStream *out = NULL;
+    if (axr_debug_device)
+        out = new QTextStream(axr_debug_device);
+    else
+        out = new QTextStream(stderr);
+    
+    *out << message;
+    if (newline)
+        endl(*out);
+    
+    out->flush();
+    delete out;
+}
+
 void axr_log(quint32 channels, const AXRString &message)
 {
     if (axr_debug_channels_active(AXR_DEBUG_CH_ON) && axr_debug_channels_active(channels))
-        std_log(message);
+        axr_log(message);
 }
 
 void axr_log_inline(quint32 channels, const AXRString &message)
 {
     if (axr_debug_channels_active(AXR_DEBUG_CH_ON) && axr_debug_channels_active(channels))
-        std_log(message, false);
+        axr_log(message, false);
 }
 
 bool axr_debug_channels_active(quint32 channels)

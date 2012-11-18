@@ -151,6 +151,7 @@ enum AXR_API axr_debug_ch
     AXR_DEBUG_CH_FULL_FILENAMES = 1 << 28 //c
 };
 
+void axr_log(const AXR::AXRString & message, bool newline = true);
 void axr_log(quint32 channels, const AXR::AXRString &message);
 void axr_log_inline(quint32 channels, const AXR::AXRString &message);
 bool axr_debug_channels_active(quint32 channels);
