@@ -96,21 +96,25 @@ void QAXRWidget::setBackgroundFillColor(const QColor &color)
 void QAXRWidget::paintEvent(QPaintEvent *e)
 {
     QRect paintRect = rect();
-
+    
     // Fill the view with our background color...
     QPainter painter(this);
     painter.fillRect(paintRect, d->backgroundFillColor);
-
+    
     if (!d->document)
         return;
-
+    
     // Render the AXR document
     AXRRender::p renderer = d->document->getRender();
     if (renderer && d->document->getController()->getRoot())
     {
         // Render the final composite on to the screen
-        d->document->drawInRectWithBounds(e->rect(), paintRect);
+        if (d->document->needsDisplay())
+        {
+            d->document->drawInRectWithBounds(e->rect(), paintRect);
+        }
         painter.drawImage(paintRect.topLeft(), renderer->surface());
+        d->document->setNeedsDisplay(false);
     }
 }
 
@@ -127,7 +131,6 @@ void QAXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
         if (d->document->needsDisplay())
         {
             this->update();
-            d->document->setNeedsDisplay(false);
         }
     }
 }
@@ -145,7 +148,6 @@ void QAXRWidget::mouseMoveEvent(QMouseEvent *e)
         if (d->document->needsDisplay())
         {
             this->update();
-            d->document->setNeedsDisplay(false);
         }
     }
 }
@@ -163,7 +165,6 @@ void QAXRWidget::mousePressEvent(QMouseEvent *e)
         if (d->document->needsDisplay())
         {
             this->update();
-            d->document->setNeedsDisplay(false);
         }
     }
 }
@@ -182,7 +183,13 @@ void QAXRWidget::mouseReleaseEvent(QMouseEvent *e)
         if (d->document->needsDisplay())
         {
             this->update();
-            d->document->setNeedsDisplay(false);
         }
     }
+}
+
+void QAXRWidget::resizeEvent(QResizeEvent *e)
+{
+    if (!d->document)
+        return;
+    d->document->setNeedsDisplay(true);
 }
