@@ -60,7 +60,7 @@ extern AXR_API QIODevice* axr_debug_device;
 extern unsigned int axr_debug_level;
 
 void std_log_level(const AXR::AXRString &message, unsigned int debugLevel = 0, bool newline = true);
-void std_log(const AXR::AXRString &message, bool newline = true);
+void AXR_API std_log(const AXR::AXRString &message, bool newline = true);
 void std_log1(const AXR::AXRString &message, bool newline = true);
 void std_log2(const AXR::AXRString &message, bool newline = true);
 void std_log3(const AXR::AXRString &message, bool newline = true);

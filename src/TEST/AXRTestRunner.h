@@ -58,7 +58,7 @@ namespace AXR
 {
     class AXRDocument;
 
-    class AXR_API AXRTestRunner
+    class AXRTestRunner
     {
     public:
         AXRTestRunner();

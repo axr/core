@@ -55,7 +55,8 @@ namespace AXR
     class AXR_API HSSCallback
     {
     public:
-        virtual ~HSSCallback() { }
+        HSSCallback();
+        virtual ~HSSCallback();
 
         /**
          *  Execute the callback, calling the stored method on the stored object.

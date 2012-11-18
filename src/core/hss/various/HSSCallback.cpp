@@ -42,3 +42,13 @@
  ********************************************************************/
 
 #include "HSSCallback.h"
+
+using namespace AXR;
+
+HSSCallback::HSSCallback()
+{
+}
+
+HSSCallback::~HSSCallback()
+{
+}

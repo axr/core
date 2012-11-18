@@ -52,7 +52,7 @@ namespace AXR
 {
     class AXRTestRunner;
 
-    class AXR_API AXRTestThread : public QThread
+    class AXRTestThread : public QThread
     {
     private:
         AXRTestRunner *runner;

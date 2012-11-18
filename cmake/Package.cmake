@@ -69,35 +69,29 @@ set(CPACK_COMPONENT_DOC_INSTALL_TYPES Developer)
 set(CPACK_COMPONENT_GROUP_RUNTIME_DESCRIPTION "")
 set(CPACK_COMPONENT_GROUP_DEVELOPMENT_DESCRIPTION "All of the tools required to develop applications using AXR.\n\nNote that the Qt SDK and any other external dependencies must be installed separately, as well as a compiler environment (such as Visual Studio or Xcode).")
 
-# Platform name
-string(TOLOWER "${CMAKE_SYSTEM_NAME}" OS_CODE)
-if(APPLE)
-    set(OS_CODE "osx")
-endif()
-
 # Filenames
-set(CPACK_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}-${AXR_VERSION_STRING}-${OS_CODE}-${CMAKE_TARGET_ARCHITECTURE_CODE}")
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}-${AXR_VERSION_STRING}-src")
+include(PackageFilenames)
 set(CPACK_SOURCE_IGNORE_FILES ".git" ".DS_Store" "thumbs.db" "CMakeLists.txt.user")
 
 # Source package
 list(APPEND CPACK_SOURCE_GENERATOR ZIP TGZ STGZ TZ TBZ2)
 
-# for NSIS to create Start Menu shortcuts
-set(CPACK_PACKAGE_EXECUTABLES "Browser;Browser")
-
 if(WIN32)
     set(CPACK_GENERATOR "NSIS")
-    set(CPACK_NSIS_MUI_ICON "${AXR_PACKAGE_ICON}")
-    set(CPACK_NSIS_MUI_UNIICON "${AXR_PACKAGE_ICON}")
-#    set(CPACK_PACKAGE_ICON "<something>.bmp")
-    set(CPACK_NSIS_INSTALLED_ICON_NAME "browser.exe")
-    set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\axr.vg")
-    set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\axr.vg")
     set(CPACK_NSIS_CONTACT "${AXR_CONTACT}")
+    set(CPACK_NSIS_DISPLAY_NAME "${AXR_PACKAGE_NAME}")
+    set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+    set(CPACK_NSIS_EXECUTABLES_DIRECTORY .) # NSIS assumes executables are in bin by default
+    set(CPACK_NSIS_HELP_LINK "http://axr.vg")
+    set(CPACK_NSIS_INSTALLED_ICON_NAME "browser.exe")
+    set(CPACK_NSIS_MODIFY_PATH ON)
+    set(CPACK_NSIS_MUI_ICON "${AXR_PACKAGE_ICON}")
+    set(CPACK_NSIS_MUI_UNIICON "${AXR_PACKAGE_ICON}") # TODO: This should probably be changed to an icon with a crossed out symbol
+    set(CPACK_NSIS_PACKAGE_NAME "${AXR_PACKAGE_NAME}")
+    set(CPACK_NSIS_URL_INFO_ABOUT "http://axr.vg")
 
-    # NSIS assumes executables are in bin by default
-    set(CPACK_NSIS_EXECUTABLES_DIRECTORY .)
+#   set(CPACK_PACKAGE_ICON "<something>.bmp")
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "AXR") # By default "<prefix> <version>"
 endif()
 
 if(APPLE)
