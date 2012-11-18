@@ -2,12 +2,20 @@ test
 {
     child
     {
-        background: #FF0;
+        background: #F00;
     }
 
-    //this should select all except "child" elements
-    child = *
+    child = :last
     {
         background: #0F0;
+    }
+    child + :first
+    {
+        background: #00F;
+    }
+    
+    child - :first
+    {
+        background: #FF0;
     }
 }

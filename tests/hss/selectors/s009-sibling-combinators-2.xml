@@ -2,7 +2,7 @@
 <?xml-stylesheet type="application/x-hss" href="s009-sibling-combinators-2.hss" version="0.4.8" ?>
 <test>
     <child>(Child) This should be yellow</child>
-    <child2>(Child2) This should be green</child2>
-    <child>(Child) This should be yellow</child>
+    <child2>(Child2) This should be blue</child2>
+    <child>(Child) This should be red</child>
     <child3>(Child3) This should be green</child3>
 </test>
