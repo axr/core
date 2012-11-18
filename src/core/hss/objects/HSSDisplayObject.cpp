@@ -127,6 +127,7 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyVisible, QVariant::fromValue(&this->visible));
 
     this->_isHover = false;
+    this->_isPress = false;
     this->_layoutFlagIsInSecondaryGroup = false;
     this->_layoutFlagIsInSecondaryLine = false;
     this->_layoutFlagVerticallyAligned = false;
@@ -151,6 +152,9 @@ HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
     this->tabIndex = orig.tabIndex;
     this->heightByContent = orig.heightByContent;
     this->widthByContent = orig.widthByContent;
+    
+    this->_isHover = orig._isHover;
+    this->_isPress = orig._isPress;
 }
 
 HSSDisplayObject::~HSSDisplayObject()
@@ -3810,7 +3814,38 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
     switch (type)
     {
     case HSSEventTypeMouseDown:
+    {
+        HSSPoint thePoint = *(HSSPoint*) data;
+
+        if (this->globalX < thePoint.x && this->globalX + this->width >= thePoint.x
+            && this->globalY < thePoint.y && this->globalY + this->height >= thePoint.y)
+        {
+            if (!this->_isPress)
+            {
+                this->setPress(true);
+            }
+
+            return this->fireEvent(type);
+        }
+        break;
+    }
     case HSSEventTypeMouseUp:
+    {
+        HSSPoint thePoint = *(HSSPoint*) data;
+
+        if (this->_isPress)
+        {
+            this->setPress(false);
+        }
+
+        if (this->globalX < thePoint.x && this->globalX + this->width >= thePoint.x
+            && this->globalY < thePoint.y && this->globalY + this->height >= thePoint.y)
+        {
+
+            return this->fireEvent(type);
+        }
+        break;
+    }
     case HSSEventTypeClick:
     {
         HSSPoint thePoint = *(HSSPoint*) data;
@@ -3889,6 +3924,27 @@ void HSSDisplayObject::setHover(bool newValue)
 bool HSSDisplayObject::isHover()
 {
     return this->_isHover;
+}
+
+void HSSDisplayObject::setPress(bool newValue)
+{
+    if (this->_isPress != newValue)
+    {
+        this->_isPress = newValue;
+        if (newValue)
+        {
+            this->flagsActivate("press");
+        }
+        else
+        {
+            this->flagsDeactivate("press");
+        }
+    }
+}
+
+bool HSSDisplayObject::isPress()
+{
+    return this->_isPress;
 }
 
 void HSSDisplayObject::ruleChanged(HSSObservableProperty source, void*data)

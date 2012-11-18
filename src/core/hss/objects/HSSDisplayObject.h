@@ -328,6 +328,9 @@ namespace AXR
         void setHover(bool newValue);
         bool isHover();
 
+        void setPress(bool newValue);
+        bool isPress();
+
         void ruleChanged(HSSObservableProperty source, void*data);
 
         void createFlag(QSharedPointer<HSSFlag> flag, HSSRuleState defaultValue);
@@ -525,6 +528,7 @@ namespace AXR
                                    QSharedPointer<HSSSimpleSelection> scope
                                    );
         bool _isHover;
+        bool _isPress;
         bool _isRoot;
 
         bool _layoutFlagIsInSecondaryGroup;
