@@ -84,7 +84,9 @@ namespace AXR
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
 
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments);
+
+        virtual void drawBorders(QPainter &painter, std::vector<HSSBorder::p> borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding);
 
     private:
         virtual HSSClonable::p cloneImpl() const;

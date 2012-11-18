@@ -83,7 +83,9 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual bool isKeyword(AXRString value, AXRString property);
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments);
+
+        virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding);
 
         /**
          *  Getter for the actual value of the sides property.

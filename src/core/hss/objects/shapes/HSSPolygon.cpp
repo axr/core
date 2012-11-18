@@ -46,6 +46,7 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
+#include "HSSBorder.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
 #include "HSSNumberConstant.h"
@@ -153,7 +154,7 @@ void HSSPolygon::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
 }
 
-void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
+void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments)
 {
     // The center point of the polygon
     const QPointF centerPoint(x + (width / 2.), y + (height / 2.));
@@ -181,6 +182,41 @@ void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit wi
 
     // Close the path
     path.closeSubpath();
+}
+
+void HSSPolygon::drawBorders(QPainter &painter, std::vector<HSSBorder::p> borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding)
+{
+    // Calculate the combined thickness of all borders
+    HSSUnit combinedThickness = 0;
+    for (HSSBorder::it it = borders.begin(); it != borders.end(); ++it)
+    {
+        combinedThickness += (*it)->getSize();
+    }
+    
+    // Correction if needed
+    HSSUnit correction;
+    if ((int) combinedThickness % 2)
+    {
+        correction = 0.5;
+    }
+    
+    // Cumulative combined thickness
+    HSSUnit cumulativeThickness = 0;
+    
+    // Draw all borders
+    for (HSSBorder::it it = borders.begin(); it != borders.end(); ++it)
+    {
+        HSSBorder::p theBorder = *it;
+        HSSUnit theSize = theBorder->getSize();
+
+        HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
+
+        QPainterPath path;
+        HSSShape::createPath(path, borderBleeding + offset, borderBleeding + offset, width - offset * 2, height - offset * 2);
+        theBorder->draw(painter, path);
+
+        cumulativeThickness += theSize;
+    }
 }
 
 unsigned int HSSPolygon::getSides()

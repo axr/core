@@ -60,6 +60,8 @@ HSSLineBorder::HSSLineBorder(AXRController * controller)
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("color");
+    shorthandProperties.push_back("segments");
+    shorthandProperties.push_back("position");
 
     this->setShorthandProperties(shorthandProperties);
     this->registerProperty(HSSObservablePropertyColor, QVariant::fromValue(&this->color));
@@ -72,6 +74,8 @@ HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("color");
+    shorthandProperties.push_back("segments");
+    shorthandProperties.push_back("position");
 
     this->setShorthandProperties(shorthandProperties);
     this->registerProperty(HSSObservablePropertyColor, QVariant::fromValue(&this->color));
@@ -294,7 +298,7 @@ void HSSLineBorder::draw(QPainter &painter, const QPainterPath &path)
     QPainterPathStroker stroker;
     stroker.setWidth(this->size);
     stroker.setJoinStyle(Qt::MiterJoin);
-    stroker.setCapStyle(Qt::RoundCap);
+    stroker.setCapStyle(Qt::FlatCap);
     QPainterPath borderPath = stroker.createStroke(path);
     painter.fillPath(borderPath, QColor(r, g, b, a));
 }

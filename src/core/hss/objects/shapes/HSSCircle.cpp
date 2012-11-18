@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include "AXRDebugging.h"
+#include "HSSBorder.h"
 #include "HSSCircle.h"
 
 using namespace AXR;
@@ -93,7 +94,42 @@ bool HSSCircle::isKeyword(AXRString value, AXRString property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSCircle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
+void HSSCircle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments)
 {
     path.addEllipse(x, y, width, height);
+}
+
+void HSSCircle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding)
+{
+    // Calculate the combined thickness of all borders
+    HSSUnit combinedThickness = 0;
+    for (HSSBorder::it it = borders.begin(); it != borders.end(); ++it)
+    {
+        combinedThickness += (*it)->getSize();
+    }
+
+    // Correction if needed
+    HSSUnit correction;
+    if ((int) combinedThickness % 2)
+    {
+        correction = 0.5;
+    }
+
+    // Cumulative combined thickness
+    HSSUnit cumulativeThickness = 0;
+
+    // Draw all borders
+    for (HSSBorder::it it = borders.begin(); it != borders.end(); ++it)
+    {
+        HSSBorder::p theBorder = *it;
+        HSSUnit theSize = theBorder->getSize();
+
+        HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
+
+        QPainterPath path;
+        HSSShape::createPath(path, borderBleeding + offset, borderBleeding + offset, width - offset * 2, height - offset * 2);
+        theBorder->draw(painter, path);
+
+        cumulativeThickness += theSize;
+    }
 }

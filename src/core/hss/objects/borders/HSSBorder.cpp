@@ -41,12 +41,15 @@
  *
  ********************************************************************/
 
+#include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
 #include "HSSBorder.h"
-#include "HSSExpression.h"
+#include "HSSContainer.h"
 #include "HSSFunction.h"
 #include "HSSNumberConstant.h"
+#include "HSSObjectDefinition.h"
+#include "HSSObjectNameConstant.h"
 #include "HSSPercentageConstant.h"
 
 using namespace AXR;
@@ -55,6 +58,9 @@ HSSBorder::HSSBorder(AXRController * controller)
 : HSSObject(HSSObjectTypeBorder, controller)
 {
     this->observedSize = NULL;
+    this->observedPosition = NULL;
+    this->observedSegments = NULL;
+    this->position = HSSBorderPositionCentered;
     this->registerProperty(HSSObservablePropertySize, QVariant::fromValue(&this->size));
 }
 
@@ -62,6 +68,11 @@ HSSBorder::HSSBorder(const HSSBorder & orig)
 : HSSObject(orig)
 {
     this->observedSize = NULL;
+    this->observedPosition = NULL;
+    this->observedSegments = NULL;
+    this->size = orig.size;
+    this->position = orig.position;
+    this->segments = orig.segments;
     this->registerProperty(HSSObservablePropertySize, QVariant::fromValue(&this->size));
 }
 
@@ -101,9 +112,16 @@ AXRString HSSBorder::defaultObjectType(AXRString property)
 
 bool HSSBorder::isKeyword(AXRString value, AXRString property)
 {
-    if (value == "inside" || value == "centered" || value == "outside")
+    if (property == "position")
     {
-        if (property == "position")
+        if (value == "inside" || value == "centered" || value == "outside")
+        {
+            return true;
+        }
+    }
+    else if (property == "segments")
+    {
+        if (value == "left" || value == "top" || value == "right" || value == "bottom" || value == "all")
         {
             return true;
         }
@@ -119,6 +137,12 @@ void HSSBorder::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     {
     case HSSObservablePropertySize:
         this->setDSize(value);
+        break;
+    case HSSObservablePropertyPosition:
+        this->setDPosition(value);
+        break;
+    case HSSObservablePropertySegments:
+        this->setDSegments(value);
         break;
     default:
         HSSObject::setProperty(name, value);
@@ -202,6 +226,279 @@ void HSSBorder::sizeChanged(AXR::HSSObservableProperty source, void *data)
 
     this->notifyObservers(HSSObservablePropertySize, data);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
+}
+
+HSSBorderPosition HSSBorder::getPosition()
+{
+    return this->position;
+}
+
+HSSParserNode::p HSSBorder::getDPosition()
+{
+    return this->dPosition;
+}
+
+void HSSBorder::setDPosition(HSSParserNode::p value)
+{
+    bool valid = false;
+    switch (value->getType())
+    {
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try
+            {
+                HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+                HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+                this->setDPosition(objdef);
+                valid = true;
+
+            }
+            catch (const AXRError &e)
+            {
+                e.raise();
+            }
+
+            break;
+        }
+
+        case HSSParserNodeTypeFunctionCall:
+        {
+            if (this->observedPosition)
+            {
+                this->observedPosition->removeObserver(this->observedPositionProperty, HSSObservablePropertyPosition, this);
+                this->observedPosition = NULL;
+            }
+            HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+            fnct->setScope(this->getScope());
+            fnct->setThisObj(this->getThisObj());
+
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<HSSBorderPosition*>())
+            {
+                this->position = *remoteValue.value<HSSBorderPosition*>();
+            }
+
+            fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyPosition, this, new HSSValueChangedCallback<HSSBorder > (this, &HSSBorder::positionChanged));
+            this->observedPosition = fnct.data();
+            this->observedPositionProperty = HSSObservablePropertyValue;
+            valid = true;
+
+            break;
+        }
+
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            AXRString kwValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
+            if (kwValue == "inside" || kwValue == "centered" || kwValue == "outside")
+            {
+                if (this->observedPosition)
+                {
+                    this->observedPosition->removeObserver(this->observedPositionProperty, HSSObservablePropertyPosition, this);
+                    this->observedPosition = NULL;
+                }
+                if(kwValue == "inside")
+                {
+                    this->position = HSSBorderPositionInside;
+                }
+                else if(kwValue == "centered"){
+                    this->position = HSSBorderPositionCentered;
+                }
+                else if(kwValue == "outside"){
+                    this->position = HSSBorderPositionOutside;
+                }
+                valid = true;
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    
+    switch (value->getStatementType())
+    {
+        case HSSStatementTypeObjectDefinition:
+        {
+            HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
+            objdef->setScope(this->getScope());
+            objdef->setThisObj(this->getThisObj());
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue))
+            {
+                HSSParserNode::p remoteValue = qSharedPointerCast<HSSValue > (theobj)->getDValue();
+                try
+                {
+                    this->setDPosition(remoteValue);
+                    valid = true;
+                }
+                catch (const AXRError &e)
+                {
+                    e.raise();
+                }
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    
+    if (!valid)
+    {
+        throw AXRWarning("HSSBorder", "Invalid value for position of " + this->getName());
+    }
+    this->notifyObservers(HSSObservablePropertyPosition, &this->position);
+}
+
+void HSSBorder::positionChanged(HSSObservableProperty source, void*data)
+{
+    HSSParserNodeType nodeType = this->dPosition->getType();
+    switch (nodeType)
+    {
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->position = *(HSSBorderPosition*) data;
+        }
+
+        default:
+            break;
+    }
+    
+    this->notifyObservers(HSSObservablePropertyPosition, &this->position);
+    this->notifyObservers(HSSObservablePropertyValue, NULL);
+}
+
+std::vector<HSSParserNode::p> HSSBorder::getSegments()
+{
+    return this->segments;
+}
+
+HSSParserNode::p HSSBorder::getDSegments()
+{
+    return this->dSegments;
+}
+
+void HSSBorder::setDSegments(HSSParserNode::p value)
+{
+    this->segments.clear();
+    this->dSegments = value;
+    this->addDSegments(value);
+}
+
+void HSSBorder::addDSegments(HSSParserNode::p value)
+{
+    bool valid = false;
+    
+    switch (value->getType())
+    {
+        case HSSParserNodeTypeMultipleValueDefinition:
+        {
+            HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
+            std::vector<HSSParserNode::p> values = multiDef->getValues();
+            for (HSSParserNode::it iterator = values.begin(); iterator != values.end(); ++iterator)
+            {
+                this->addDSegments(*iterator);
+            }
+
+            valid = true;
+            break;
+        }
+
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try
+            {
+                HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+                this->addDSegments(this->getController()->objectTreeGet(objname->getValue()));
+                valid = true;
+            }
+            catch (const AXRError &e)
+            {
+                e.raise();
+            }
+
+            break;
+        }
+
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+            if (fnct && fnct->isA(HSSFunctionTypeRef))
+            {
+                fnct->setScope(this->getScope());
+                fnct->setThisObj(this->getThisObj());
+                QVariant remoteValue = fnct->evaluate();
+                if (remoteValue.canConvert<HSSParserNode::p>())
+                {
+                    try
+                    {
+                        HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                        this->addDSegments(theVal);
+                        valid = true;
+                    }
+                    catch (const AXRError &e)
+                    {
+                        e.raise();
+                    }
+                }
+            }
+            break;
+        }
+
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypeStringConstant:
+        {
+            this->segments.push_back(value->clone());
+            valid = true;
+            break;
+        }
+
+        default:
+            valid = false;
+            break;
+    }
+    
+    switch (value->getStatementType())
+    {
+        case HSSStatementTypeObjectDefinition:
+        {
+            HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
+            objdef->setScope(this->getScope());
+            objdef->setThisObj(this->getThisObj());
+            objdef->apply();
+            HSSObject::p theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue))
+            {
+                HSSParserNode::p remoteValue = qSharedPointerCast<HSSValue > (theobj)->getDValue();
+                try
+                {
+                    this->addDSegments(remoteValue);
+                    valid = true;
+                }
+                catch (const AXRError &e)
+                {
+                    e.raise();
+                }
+            }
+
+            break;
+        }
+
+        default:
+            break;
+    }
+    
+    if (!valid)
+        throw AXRWarning("HSSBorder", "Invalid value for segments of " + this->getName());
+    
+    this->notifyObservers(HSSObservablePropertySegments, &this->segments);
+}
+
+void HSSBorder::segmentsChanged(HSSObservableProperty source, void*data)
+{
+    
 }
 
 HSSUnit HSSBorder::_evaluatePropertyValue(

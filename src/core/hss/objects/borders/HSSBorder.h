@@ -100,6 +100,64 @@ namespace AXR
          */
         void sizeChanged(HSSObservableProperty source, void*data);
 
+        /**
+         *  Getter for the value of position.
+         *  @return A HSSBorderPosition containing the value for position.
+         */
+        HSSBorderPosition getPosition();
+
+        /**
+         *  Getter for the definition object of position.
+         *  @return A shared pointer to the parser node containing the definition object of position.
+         */
+        HSSParserNode::p getDPosition();
+
+        /**
+         *  Setter for the definition object of position. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of position.
+         */
+        void setDPosition(HSSParserNode::p);
+
+        /**
+         *  Method to be passed as callback when observing changes that will affect position.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
+        void positionChanged(HSSObservableProperty source, void*data);
+
+        /**
+         *  Getter for the value of segments.
+         *  @return A vector of shared pointers to parser nodes.
+         */
+        std::vector<HSSParserNode::p> getSegments();
+
+        /**
+         *  Getter for the definition object of segments.
+         *  @return A shared pointer to the parser node containing the definition object of segments.
+         */
+        HSSParserNode::p getDSegments();
+
+        /**
+         *  Setter for the definition object of segments. It will use the value as needed.
+         *  @param value    A shared pointer to the parser node containing the definition object of segments.
+         */
+        void setDSegments(HSSParserNode::p value);
+
+        /**
+         *  Since this property accepts multiple values, this allows to append a value instead of
+         *  replacing the whole thing.
+         *  @param value    A shared pointer to the parser node containing the definition object to be added
+         *                  to segments.
+         */
+        void addDSegments(HSSParserNode::p value);
+
+        /**
+         *  Method to be passed as callback when observing changes that will affect textAlign.
+         *  @param source   The property which we are observing.
+         *  @param data     A regular pointer to the data that is sent along the notification.
+         */
+        void segmentsChanged(HSSObservableProperty source, void*data);
+
     protected:
         /**
          *  Creates a new HSSBorder object.
@@ -111,10 +169,23 @@ namespace AXR
          */
         HSSBorder(const HSSBorder & orig);
 
+        //size
         HSSUnit size;
         HSSParserNode::p dSize;
         HSSObservable * observedSize;
         HSSObservableProperty observedSizeProperty;
+
+        //position
+        HSSBorderPosition position;
+        HSSParserNode::p dPosition;
+        HSSObservable * observedPosition;
+        HSSObservableProperty observedPositionProperty;
+
+        //segments
+        HSSParserNode::p dSegments;
+        HSSObservable * observedSegments;
+        HSSObservableProperty observedSegmentsProperty;
+        std::vector<HSSParserNode::p> segments;
 
         HSSUnit _evaluatePropertyValue(
                                    void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
@@ -129,5 +200,6 @@ namespace AXR
 
 Q_DECLARE_METATYPE(std::vector<AXR::HSSBorder::p>)
 Q_DECLARE_METATYPE(std::vector<AXR::HSSBorder::p>*)
+Q_DECLARE_METATYPE(AXR::HSSBorderPosition*)
 
 #endif

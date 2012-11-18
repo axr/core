@@ -350,6 +350,12 @@ namespace AXR
         void directionSecondaryChanged(HSSObservableProperty source, void*data);
 
         /**
+         *  Getter for the value of shape.
+         *  @return A shared pointer to the shape object.
+         */
+        HSSShape::p getShape();
+
+        /**
          *  Getter for the definition object of shape.
          *  @return A shared pointer to the parser node containing the definition object of shape.
          */

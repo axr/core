@@ -147,6 +147,9 @@ AXRString HSSObservable::observablePropertyStringRepresentation(HSSObservablePro
         //HSSPolygon
         types[HSSObservablePropertySides] = "HSSObservablePropertySides";
         types[HSSObservablePropertyAngle] = "HSSObservablePropertyAngle";
+
+        //HSSBorder
+        types[HSSObservablePropertySegments] = "HSSObservablePropertySegments";
     }
 
     return types[property];
@@ -243,6 +246,9 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(AXRString name
         properties["target"] = HSSObservablePropertyTarget;
         properties["mode"] = HSSObservablePropertyMode;
         properties["contentTarget"] = HSSObservablePropertyContentTarget;
+
+        //HSSBorder
+        properties["segments"] = HSSObservablePropertySegments;
     }
 
 

@@ -478,46 +478,47 @@ void HSSContainer::drawBorders()
     QPainter painter(this->bordersSurface);
     if (this->getController()->document()->getRender()->globalAntialiasingEnabled())
         painter.setRenderHint(QPainter::Antialiasing);
+    this->getShape()->drawBorders(painter, this->border, this->width, this->height, this->borderBleeding);
 
-    // Calculate the combined thickness of all borders
-    HSSUnit combinedThickness = 0;
-    for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
-    {
-        combinedThickness += (*it)->getSize();
-    }
-
-    // Correction if needed
-    HSSUnit correction;
-    if ((int) combinedThickness % 2)
-    {
-        correction = 0.5;
-    }
-
-    // Cumulative combined thickness
-    HSSUnit cumulativeThickness = 0;
-
-    // Use a temporary trick for not having path offsets yet (will be fixed in the future)
-    bool isRoundedRect = this->shape->isA(HSSShapeTypeRoundedRect);
-
-    // Draw all borders
-    for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
-    {
-        HSSBorder::p theBorder = *it;
-        HSSUnit theSize = theBorder->getSize();
-
-        HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
-
-        QPainterPath path;
-        if(isRoundedRect){
-            HSSRoundedRect::p roundedRect = qSharedPointerCast<HSSRoundedRect>(this->shape);
-            roundedRect->createRoundedRect(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2, -offset*2);
-        } else {
-            this->shape->createPath(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2);
-        }
-        theBorder->draw(painter, path);
-
-        cumulativeThickness += theSize;
-    }
+//    // Calculate the combined thickness of all borders
+//    HSSUnit combinedThickness = 0;
+//    for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
+//    {
+//        combinedThickness += (*it)->getSize();
+//    }
+//
+//    // Correction if needed
+//    HSSUnit correction;
+//    if ((int) combinedThickness % 2)
+//    {
+//        correction = 0.5;
+//    }
+//
+//    // Cumulative combined thickness
+//    HSSUnit cumulativeThickness = 0;
+//
+//    // Use a temporary trick for not having path offsets yet (will be fixed in the future)
+//    bool isRoundedRect = this->shape->isA(HSSShapeTypeRoundedRect);
+//
+//    // Draw all borders
+//    for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
+//    {
+//        HSSBorder::p theBorder = *it;
+//        HSSUnit theSize = theBorder->getSize();
+//
+//        HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
+//
+//        QPainterPath path;
+//        if(isRoundedRect){
+//            HSSRoundedRect::p roundedRect = qSharedPointerCast<HSSRoundedRect>(this->shape);
+//            roundedRect->createRoundedRect(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2, -offset*2);
+//        } else {
+//            this->shape->createPath(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2);
+//        }
+//        theBorder->draw(painter, path);
+//
+//        cumulativeThickness += theSize;
+//    }
 }
 
 void HSSContainer::layout()
@@ -2715,7 +2716,12 @@ void HSSContainer::directionSecondaryChanged(HSSObservableProperty source, void 
 }
 
 
-//directionSecondary
+//shape
+
+HSSShape::p HSSContainer::getShape()
+{
+    return this->shape;
+}
 
 HSSParserNode::p HSSContainer::getDShape()
 {

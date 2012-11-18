@@ -94,9 +94,11 @@ namespace AXR
         virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
 
         //see HSSShape.h for documentation of these
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments);
 
         void createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, HSSUnit offset);
+
+        virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding);
 
         /**
          *  Getter for the actual value of corners. Always stored inside a multiple value.
@@ -170,7 +172,7 @@ namespace AXR
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty,
-                                   const std::vector<HSSDisplayObject::p> * scope
+                                   QSharedPointer<HSSSimpleSelection> scope
                                    );
         virtual HSSClonable::p cloneImpl() const;
     };

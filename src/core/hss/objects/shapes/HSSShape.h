@@ -51,6 +51,8 @@
 
 namespace AXR
 {
+    class HSSBorder;
+    
     /**
      *  @brief Abstract base class for all shape objects.
      */
@@ -92,8 +94,22 @@ namespace AXR
          *  @param y        The vertical coordinate for the upper left corner of the bounding box of the shape.
          *  @param width    The width of the bounding box of the shape.
          *  @param height   The height of the bounding box of the shape.
+         *  @param segments The segments that will be drawn.
          */
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height) = 0;
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments) = 0;
+
+        /**
+         *  Convenience function to create a path for all segments.
+         *
+         *  @param path     A QPainterPath to configure the shape of the object.
+         *  @param x        The horizontal coordinate for the upper left corner of the bounding box of the shape.
+         *  @param y        The vertical coordinate for the upper left corner of the bounding box of the shape.
+         *  @param width    The width of the bounding box of the shape.
+         *  @param height   The height of the bounding box of the shape.
+         */
+        void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
+
+        virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding) = 0;
 
     protected:
         /**

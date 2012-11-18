@@ -143,7 +143,10 @@ namespace AXR
 
         //HSSDisplayObject
         HSSObservablePropertyContent,
-        HSSObservablePropertyVisible
+        HSSObservablePropertyVisible,
+
+        //HSSBorder
+        HSSObservablePropertySegments,
     };
 }
 
