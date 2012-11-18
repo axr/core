@@ -3540,9 +3540,9 @@ void HSSDisplayObject::setDVisible(HSSParserNode::p value)
             if (parent)
             {
                 QVariant remoteValue = parent->getProperty(HSSObservablePropertyVisible);
-                if (remoteValue.canConvert<bool>())
+                if (remoteValue.canConvert<bool *>())
                 {
-                    this->visible = remoteValue.toBool();
+                    this->visible = *(remoteValue.value<bool *>());
                     if (this->observedVisible)
                     {
                         this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);

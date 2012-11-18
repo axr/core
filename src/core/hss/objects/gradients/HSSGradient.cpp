@@ -294,10 +294,15 @@ void HSSGradient::setDStartColor(HSSParserNode::p value)
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<HSSRgb::p>())
+            if (remoteValue.canConvert<std::vector<HSSObject::p> *>())
             {
-                this->startColor = remoteValue.value<HSSRgb::p>();
-                valid = true;
+                std::vector<HSSObject::p> theObjVec = *remoteValue.value<std::vector<HSSObject::p> *>();
+                HSSObject::p theObj = theObjVec.front();
+                if (theObj->isA(HSSObjectTypeRgb))
+                {
+                    this->startColor = qSharedPointerCast<HSSRgb>(theObj);
+                    valid = true;
+                }
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyStartColor, this, new HSSValueChangedCallback<HSSGradient > (this, &HSSGradient::startColorChanged));
@@ -411,10 +416,15 @@ void HSSGradient::setDEndColor(HSSParserNode::p value)
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<HSSRgb::p>())
+            if (remoteValue.canConvert<std::vector<HSSObject::p> *>())
             {
-                this->endColor = remoteValue.value<HSSRgb::p>();
-                valid = true;
+                std::vector<HSSObject::p> theObjVec = *remoteValue.value<std::vector<HSSObject::p> *>();
+                HSSObject::p theObj = theObjVec.front();
+                if (theObj->isA(HSSObjectTypeRgb))
+                {
+                    this->endColor = qSharedPointerCast<HSSRgb>(theObj);
+                    valid = true;
+                }
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyEndColor, this, new HSSValueChangedCallback<HSSGradient > (this, &HSSGradient::endColorChanged));
