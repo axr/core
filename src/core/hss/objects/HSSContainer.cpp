@@ -523,9 +523,6 @@ void HSSContainer::drawBorders()
 void HSSContainer::layout()
 {
     bool done = false;
-
-    //reset flag
-    this->_needsLayout = true;
     if (this->allChildren->empty()) done = true;
 
     while (this->_needsLayout)

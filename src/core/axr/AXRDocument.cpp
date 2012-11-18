@@ -416,6 +416,7 @@ bool AXRDocument::reload()
     this->_currentLayoutStep = 0;
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
+    this->getController()->getRoot()->recursiveResetLayout();
 
     if (!this->_isHSSOnly)
     {
@@ -473,9 +474,9 @@ void AXRDocument::previousLayoutStep()
     {
         this->_currentLayoutStep -= 1;
     }
-
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
+    this->getController()->getRoot()->recursiveResetLayout();
     this->setNeedsDisplay(true);
 }
 
@@ -484,6 +485,7 @@ void AXRDocument::nextLayoutStep()
     this->_currentLayoutStep += 1;
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
+    this->getController()->getRoot()->recursiveResetLayout();
     this->setNeedsDisplay(true);
 }
 
