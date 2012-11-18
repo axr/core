@@ -285,7 +285,7 @@ namespace AXR
 
         /**
          *  Shorthand for selecting elements. Calls select(selectorChains, scope, thisObj, processing) with
-         *  processing set to to true.
+         *  processing set to to false.
          *  See select(std::vector<HSSSelectorChain::p>, HSSSelection::p, HSSDisplayObject::p, bool)
          *  for documentation on how to use it.
          */

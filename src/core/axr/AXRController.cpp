@@ -93,7 +93,7 @@ void AXRController::matchRulesToContentTree()
             HSSSelection::p selection;
             try
             {
-                selection = this->select(selectorChains, rootScope, this->getRoot());
+                selection = this->select(selectorChains, rootScope, this->getRoot(), true);
             }
             catch (const AXRError &e)
             {
@@ -308,7 +308,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
 
                 try
                 {
-                    selection = this->select(selectorChains, scope, container);
+                    selection = this->select(selectorChains, scope, container, true);
                 }
                 catch (const AXRError &e)
                 {
@@ -319,7 +319,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
             {
                 try
                 {
-                    selection = this->select(selectorChains, scope, this->getRoot());
+                    selection = this->select(selectorChains, scope, this->getRoot(), true);
                 }
                 catch (const AXRError &e)
                 {
@@ -396,7 +396,7 @@ bool AXRController::isAtEndOfSelector()
 
 HSSSelection::p AXRController::select(std::vector<HSSSelectorChain::p> selectorChains, HSSSelection::p scope, HSSDisplayObject::p thisObj)
 {
-    return this->select(selectorChains, scope, thisObj, true);
+    return this->select(selectorChains, scope, thisObj, false);
 }
 
 HSSSelection::p AXRController::select(std::vector<HSSSelectorChain::p> selectorChains, HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)

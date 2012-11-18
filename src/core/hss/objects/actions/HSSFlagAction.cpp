@@ -90,7 +90,7 @@ AXRString HSSFlagAction::defaultObjectType()
 void HSSFlagAction::fire()
 {
     HSSFlagFunction::p flagFunction = this->getFlagFunction();
-    HSSSelection::p selection = this->getController()->select(flagFunction->getSelectorChains(), this->scope, this->getThisObj(), false);
+    HSSSelection::p selection = this->getController()->select(flagFunction->getSelectorChains(), this->scope, this->getThisObj());
     HSSSimpleSelection::p inner = selection->joinAll();
     for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
     {

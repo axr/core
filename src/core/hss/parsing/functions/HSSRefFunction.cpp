@@ -145,7 +145,7 @@ int HSSRefFunction::selectorChainsSize()
 
 QVariant HSSRefFunction::_evaluate()
 {
-    HSSSimpleSelection::p selection = this->getController()->select(this->selectorChains, this->scope, this->getThisObj(), false)->joinAll();
+    HSSSimpleSelection::p selection = this->getController()->select(this->selectorChains, this->scope, this->getThisObj())->joinAll();
     if (selection->empty())
     {
         // ignore
