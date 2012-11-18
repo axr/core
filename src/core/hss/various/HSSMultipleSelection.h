@@ -59,20 +59,20 @@ namespace AXR
          *  The shared pointer to this kind of object.
          */
         typedef QSharedPointer<HSSMultipleSelection> p;
-        
+
         typedef std::vector<HSSSimpleSelection::p>::iterator iterator;
         typedef std::vector<HSSSimpleSelection::p>::const_iterator const_iterator;
-        
+
         /**
          *  
          */
         HSSMultipleSelection();
-        
+
         /**
          *  
          */
         HSSMultipleSelection(iterator a, iterator b);
-        
+
         /**
          *  
          */
@@ -111,8 +111,7 @@ namespace AXR
         QSharedPointer<HSSSimpleSelection> joinAll();
         QSharedPointer<HSSMultipleSelection> splitAll();
     protected:
-        
-        
+
     private:
         class Data;
         QSharedDataPointer<Data> d;

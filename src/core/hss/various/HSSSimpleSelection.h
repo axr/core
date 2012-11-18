@@ -71,7 +71,7 @@ namespace AXR
 
         typedef std::vector< QSharedPointer<HSSDisplayObject> >::iterator iterator;
         typedef std::vector< QSharedPointer<HSSDisplayObject> >::const_iterator const_iterator;
-        
+
         /**
          *  
          */
@@ -81,7 +81,7 @@ namespace AXR
          *  
          */
         HSSSimpleSelection(iterator a, iterator b);
-        
+
         /**
          *  
          */
@@ -101,7 +101,7 @@ namespace AXR
          *  
          */
         HSSSimpleSelection& operator=(const HSSSimpleSelection &other);
-        
+
         void add( QSharedPointer<HSSDisplayObject> );
         void addSelection(HSSSelection::p item);
         std::vector< QSharedPointer<HSSDisplayObject> >::iterator begin();
@@ -120,8 +120,7 @@ namespace AXR
         p joinAll();
         QSharedPointer<HSSMultipleSelection> splitAll();
     protected:
-        
-        
+
     private:
         class Data;
         QSharedDataPointer<Data> d;

@@ -91,7 +91,7 @@ inline void HSSEmptyFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelecti
     {
         const HSSDisplayObject::p & theDO = *it;
         const HSSContainer::p & container = HSSContainer::asContainer(*it);
-        
+
         if (container->getChildren(true)->empty())
         {
             ret->add(theDO);

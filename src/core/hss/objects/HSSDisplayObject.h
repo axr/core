@@ -128,14 +128,13 @@ namespace AXR
          *  @return A vector containing shared pointers to the siblings of this display object.
          */
         QSharedPointer<HSSSimpleSelection> getSiblings();
-        
+
         /**
          *  Gives the sibling elements after the current one.
          *  @return A vector containing shared pointers to the next siblings of this display object.
          */
         QSharedPointer<HSSSimpleSelection> getNextSiblings();
-        
-        
+
         /**
          *  Gives the sibling elements before the current one.
          *  @return A vector containing shared pointers to the previous siblings of this display object.
