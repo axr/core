@@ -54,14 +54,12 @@ using namespace AXR;
 HSSRule::HSSRule(AXRController * controller)
 : HSSStatement(HSSStatementTypeRule, controller)
 {
-    this->_activeByDefault = true;
     this->observedTreeChanger = NULL;
 }
 
 HSSRule::HSSRule(const HSSRule & orig)
 : HSSStatement(orig)
 {
-    this->_activeByDefault = orig._activeByDefault;
     this->observedTreeChanger = NULL;
     this->_originalScope = orig._originalScope;
 }
@@ -287,16 +285,6 @@ void HSSRule::treeChanged(HSSObservableProperty source, void*data)
         HSSContainer::p thisContainer = HSSContainer::asContainer(thisObj);
         theController->recursiveMatchRulesToDisplayObjects(this->shared_from_this(), thisContainer->getChildren(), thisContainer, false);
     }
-}
-
-bool HSSRule::getActiveByDefault()
-{
-    return this->_activeByDefault;
-}
-
-void HSSRule::setActiveByDefault(bool newValue)
-{
-    this->_activeByDefault = newValue;
 }
 
 const std::vector<QWeakPointer<HSSDisplayObject> > HSSRule::getAppliedTo() const

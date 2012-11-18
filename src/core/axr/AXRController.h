@@ -83,6 +83,8 @@ namespace AXR
         AXRDocument* document() const;
 
         void matchRulesToContentTree();
+        void activateRules();
+        void activateRules(HSSRule::p rule, HSSSelection::p scope);
 
         /**
          *  @return A textual representation of itself, as a string.
@@ -428,6 +430,7 @@ namespace AXR
         inline void _recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule, HSSSimpleSelection::p scope, HSSContainer::p container, bool applyingInstructions);
         inline void _selectOnLevelSimple(HSSSimpleSelection::p & ret, HSSCombinatorType combinatorType, HSSSimpleSelection::p simpleSel, HSSDisplayObject::p thisObj, bool processing);
         void _recursiveGetDescendants(HSSSimpleSelection::p & ret, HSSSimpleSelection::p scope);
+        void _activateRuleOnSelection(HSSRule::p rule, HSSSimpleSelection::p selection);
     };
 }
 

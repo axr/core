@@ -483,10 +483,13 @@ void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSS
                 this->getController()->currentContext.push(thisCont);
                 HSSRule::const_it it;
                 const std::deque<HSSRule::p> rules = objdef->getRules();
+                AXRController * controller = this->getController();
                 for (it = rules.begin(); it != rules.end(); ++it)
                 {
                     HSSRule::p clonedRule = (*it)->clone();
-                    this->getController()->recursiveMatchRulesToDisplayObjects(clonedRule, thisCont->getChildren(), thisCont, true);
+                    HSSSelection::p children = thisCont->getChildren();
+                    controller->recursiveMatchRulesToDisplayObjects(clonedRule, children, thisCont, true);
+                    controller->activateRules(clonedRule, children);
                 }
                 this->getController()->currentContext.pop();
             }
@@ -541,7 +544,7 @@ void HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)
             found = true;
             if (newValue == HSSRuleStatePurge)
             {
-                if (rs->state == HSSRuleStateOn)
+                if (rs->state == HSSRuleStateOn || rs->state == HSSRuleStateActivate)
                 {
                     rs->state = newValue;
                     changed = true;

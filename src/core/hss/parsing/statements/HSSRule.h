@@ -252,10 +252,6 @@ namespace AXR
 
         void treeChanged(HSSObservableProperty source, void*data);
 
-        bool getActiveByDefault();
-
-        void setActiveByDefault(bool newValue);
-
         const std::vector<QWeakPointer<HSSDisplayObject> > getAppliedTo() const;
 
         void setAppliedTo(std::vector<QWeakPointer<HSSDisplayObject> > newObjects);
@@ -276,8 +272,6 @@ namespace AXR
         std::vector<HSSPropertyDefinition::p> properties;
         std::vector<HSSRule::p>children;
         HSSInstruction::p instruction;
-
-        bool _activeByDefault;
 
         std::vector<QWeakPointer<HSSDisplayObject> > appliedTo;
 

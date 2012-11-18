@@ -144,6 +144,7 @@ void AXRDocument::run()
         axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: matching rules to the content tree");
         //assign the rules to the objects
         this->controller->matchRulesToContentTree();
+        this->controller->activateRules();
         root->setNeedsRereadRules(true);
 
         if (root)

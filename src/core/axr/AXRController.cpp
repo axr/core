@@ -122,7 +122,7 @@ inline void AXRController::_matchRuleToSelection(HSSRule::p rule, HSSSimpleSelec
     {
         const HSSDisplayObject::p & displayObject = *it;
         axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: match " + displayObject->getElementName());
-        displayObject->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff));
+        displayObject->rulesAdd(rule, HSSRuleStateOff);
 
         displayObject->setNeedsRereadRules(true);
         displayObject->setNeedsSurface(true);
@@ -183,7 +183,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                     newContainer->setName(elementName);
                     newContainer->setElementName(elementName);
                     rule->setThisObj(newContainer);
-                    newContainer->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff));
+                    newContainer->rulesAdd(rule, HSSRuleStateOn);
                     axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: created " + newContainer->getElementName());
                     this->add(newContainer);
                     newContainer->setNeedsRereadRules(true);
@@ -229,7 +229,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                         {
                             theDO->removeFromParent();
                             rule->setThisObj(theDO);
-                            theDO->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff));
+                            theDO->rulesAdd(rule, HSSRuleStateOn);
                             axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: moved " + theDO->getElementName());
                             this->add(theDO);
                             theDO->setNeedsRereadRules(true);
@@ -350,7 +350,7 @@ inline void AXRController::_recursiveMatchRulesToDisplayObjects(const HSSRule::p
     {
         const HSSDisplayObject::p & displayObject = *it;
         axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: match " + displayObject->getElementName());
-        displayObject->rulesAdd(rule, (rule->getActiveByDefault() ? HSSRuleStateOn : HSSRuleStateOff));
+        displayObject->rulesAdd(rule, HSSRuleStateOff);
 
         displayObject->setNeedsRereadRules(true);
         displayObject->setNeedsSurface(true);
@@ -369,6 +369,76 @@ inline void AXRController::_recursiveMatchRulesToDisplayObjects(const HSSRule::p
             this->currentContext.pop();
         }
         displayObject->setNeedsRereadRules(true);
+    }
+}
+
+void AXRController::activateRules()
+{
+    const std::vector<HSSRule::p> rules = this->getRules();
+    HSSSimpleSelection::p rootScope(new HSSSimpleSelection());
+    rootScope->add(this->getRoot());
+    
+    for (unsigned i = 0, size = rules.size(); i < size; ++i)
+    {
+        const HSSRule::p& rule = rules[i];
+        this->activateRules(rule, rootScope);
+    }
+}
+
+void AXRController::activateRules(HSSRule::p rule, HSSSelection::p scope)
+{
+    if (!rule->getInstruction()) {
+        std::vector<HSSSelectorChain::p> selectorChains = rule->getSelectorChains();
+        if (!selectorChains.empty())
+        {
+            HSSSelection::p selection;
+            try
+            {
+                selection = this->select(selectorChains, scope, this->getRoot());
+            }
+            catch (const AXRError &e)
+            {
+                e.raise();
+            }
+
+            if (selection->isA(HSSSelectionTypeMultipleSelection))
+            {
+                HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(selection);
+                for (HSSMultipleSelection::iterator it = multiSel->begin(); it != multiSel->end(); ++it)
+                {
+                    this->_activateRuleOnSelection(rule, qSharedPointerCast<HSSSimpleSelection>(*it));
+                }
+            }
+            else if (selection->isA(HSSSelectionTypeSimpleSelection))
+            {
+                this->_activateRuleOnSelection(rule, qSharedPointerCast<HSSSimpleSelection>(selection));
+            }
+        }
+    }
+}
+
+void AXRController::_activateRuleOnSelection(HSSRule::p rule, HSSSimpleSelection::p selection)
+{
+    for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
+    {
+        const HSSDisplayObject::p & displayObject = *it;
+        axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: activating rule on " + displayObject->getElementName());
+        displayObject->setRuleStatus(rule, HSSRuleStateOn);
+
+        //if it is a container it may have children
+        if (displayObject->isA(HSSObjectTypeContainer))
+        {
+            HSSContainer::p selectedContainer = qSharedPointerCast<HSSContainer>(displayObject);
+            for (unsigned k = 0, size3 = rule->childrenSize(); k < size3; ++k)
+            {
+                const HSSRule::p childRule = rule->childrenGet(k);
+                HSSInstruction::p theInst = childRule->getInstruction();
+                if (!theInst) {
+                    HSSSimpleSelection::p children = this->select(childRule->getSelectorChains(), selectedContainer->getChildren(), selectedContainer)->joinAll();
+                    this->_activateRuleOnSelection(childRule, children);
+                }
+            }
+        }
     }
 }
 

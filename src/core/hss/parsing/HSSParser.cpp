@@ -1525,6 +1525,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
             case HSSIdentifier:
             case HSSColon:
             case HSSObjectSign:
+            case HSSNegator:
             {
                 bool isShorthand;
                 if (this->isPropertyDefinition(&isShorthand))

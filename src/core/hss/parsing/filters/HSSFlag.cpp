@@ -98,12 +98,25 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
             HSSSimpleSelection::p scope = theRule->getOriginalScope();
             AXRController * controller = this->getController();
             this->setPurging(newStatus);
-            HSSSimpleSelection::p selection = controller->select(theRule->getSelectorChains(), scope, this->getThisObj(), false)->joinAll();
+            std::vector<HSSSelectorChain::p> chains;
+            chains.push_back(qSharedPointerCast<HSSSelectorChain>(selectorChainNode));
+            HSSSimpleSelection::p selection = controller->select(chains, scope, this->getThisObj())->joinAll();
             this->setPurging(HSSRuleStateOff);
 
+            if (this->getNegating()) {
+                if (newStatus == HSSRuleStateActivate)
+                {
+                    newStatus = HSSRuleStatePurge;
+                }
+                else if (newStatus == HSSRuleStatePurge)
+                {
+                    newStatus = HSSRuleStateActivate;
+                }
+            }
             for (HSSSimpleSelection::const_iterator it=selection->begin(); it!=selection->end(); ++it)
             {
-                (*it)->setRuleStatus(theRule, newStatus);
+                const HSSDisplayObject::p & theDO = *it;
+                theDO->setRuleStatus(theRule, newStatus);
             }
         }
     }
@@ -126,8 +139,7 @@ HSSSelection::p HSSFlag::apply(HSSSelection::p scope, bool processing)
                 {
                     HSSRule::p theRule = qSharedPointerCast<HSSRule > (ruleStatement);
 
-                    theRule->setActiveByDefault(this->getNegating());
-                    theDO->createFlag(this->shared_from_this(), (this->getNegating() ? HSSRuleStateOn : HSSRuleStateOff));
+                    theDO->createFlag(this->shared_from_this(), HSSRuleStateOff);
                 }
             }
         }
@@ -149,7 +161,6 @@ HSSSelection::p HSSFlag::apply(HSSSelection::p scope, bool processing)
                 {
                     ret->add(theDO);
                 }
-                
             }
             else
             {
