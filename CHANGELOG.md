@@ -3,7 +3,6 @@ Unreleased
 
 * Added @parent reference object
 * Implemented attr() function
-* Implemented content property
 * Implemented visible property
 * 5 and 7 digit colors are now supported
 * Implemented color keywords (black, white, transparent)
