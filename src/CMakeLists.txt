@@ -1,3 +1,4 @@
+include_directories("${CMAKE_BINARY_DIR}")
 include_directories_recursive("${CMAKE_CURRENT_SOURCE_DIR}/core")
 add_subdirectory(core)
 

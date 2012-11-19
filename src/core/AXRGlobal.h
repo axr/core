@@ -173,4 +173,16 @@ Q_DECLARE_METATYPE(unsigned int*)
 
 #define HSSFRAMEWORK_PROTOCOL "axr"
 
+struct AXR_API axr_version
+{
+public:
+    int major;
+    int minor;
+    int patch;
+    int build;
+};
+
+extern AXR_API const axr_version axrVersion();
+extern AXR_API const char* axrVersionString();
+
 #endif
