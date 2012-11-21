@@ -25,15 +25,19 @@ elseif(CMAKE_TARGET_ARCHITECTURE_CODE STREQUAL "x86_64")
     endif()
 endif()
 
-if(DPKG_FOUND)
-    set(CPACK_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}_${AXR_VERSION_STRING}_${ARCH_CODE}")
-elseif(RPMBUILD_FOUND)
-    # Note that the "1" is the RPM package release number
-    # Due to the way we package and distribute this should probably never change
-    # but it's necessary to note its presence here since it's an awkward way of doing things...
-    set(CPACK_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}-${AXR_VERSION_STRING}-1.${ARCH_CODE}")
-else()
-    set(CPACK_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}-${AXR_VERSION_STRING}-${OS_CODE}-${ARCH_CODE}")
-endif()
+function(package_file_name output_variable pfn_package_prefix pfn_version_string)
+    if(DPKG_FOUND)
+        set(${output_variable} "${pfn_package_prefix}_${pfn_version_string}_${ARCH_CODE}" PARENT_SCOPE)
+    elseif(RPMBUILD_FOUND)
+        # Note that the "1" is the RPM package release number
+        # Due to the way we package and distribute this should probably never change
+        # but it's necessary to note its presence here since it's an awkward way of doing things...
+        set(${output_variable} "${pfn_package_prefix}-${pfn_version_string}-1.${ARCH_CODE}" PARENT_SCOPE)
+    else()
+        set(${output_variable} "${pfn_package_prefix}-${pfn_version_string}-${OS_CODE}-${ARCH_CODE}" PARENT_SCOPE)
+    endif()
+endfunction()
 
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}-${AXR_VERSION_STRING}-src")
+function(src_package_file_name output_variable spfn_package_prefix spfn_version_string)
+    set(${output_variable} "${spfn_package_prefix}-${spfn_version_string}-src" PARENT_SCOPE)
+endfunction()

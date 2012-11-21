@@ -54,6 +54,8 @@ set(CPACK_COMPONENT_DOC_DESCRIPTION "Documentation for the AXR SDK and examples"
 
 # Filenames
 include(PackageFilenames)
+package_file_name(CPACK_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}" "${AXR_VERSION_STRING}")
+src_package_file_name(CPACK_SOURCE_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}" "${AXR_VERSION_STRING}")
 set(CPACK_SOURCE_IGNORE_FILES ".git" ".DS_Store" "thumbs.db" "CMakeLists.txt.user")
 
 # Source package
