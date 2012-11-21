@@ -70,32 +70,32 @@ make sure to include the following points in your bug report:
 Continuous Integration status
 =============================
 <table>
-	<tr>
-		<th>Module</th>
-		<th>Status</th>
-	</tr>
-	<tr>
-		<td>Core</td>
-		<td><a href="http://travis-ci.org/axr/core"><img src="https://secure.travis-ci.org/axr/core.png" alt="Build Status" /></a></td>
-	</tr>
-	<tr>
-		<td>Browser</td>
-		<td><a href="http://travis-ci.org/axr/browser"><img src="https://secure.travis-ci.org/axr/browser.png" alt="Build Status" /></a></td>
-	</tr>
-	<tr>
-		<td>Plugin</td>
-		<td><a href="http://travis-ci.org/axr/plugin"><img src="https://secure.travis-ci.org/axr/plugin.png" alt="Build Status" /></a></td>
-	</tr>
-	<tr>
-		<td>Examples</td>
-		<td><a href="http://travis-ci.org/axr/examples"><img src="https://secure.travis-ci.org/axr/examples.png" alt="Build Status" /></a></td>
-	</tr>
-	<tr>
-		<td>Specification</td>
-		<td><a href="http://travis-ci.org/axr/specification"><img src="https://secure.travis-ci.org/axr/specification.png" alt="Build Status" /></a></td>
-	</tr>
-	<tr>
-		<td>Extras</td>
-		<td><a href="http://travis-ci.org/axr/extras"><img src="https://secure.travis-ci.org/axr/extras.png" alt="Build Status" /></a></td>
-	</tr>
+    <tr>
+        <th>Module</th>
+        <th>Status</th>
+    </tr>
+    <tr>
+        <td>Core</td>
+        <td><a href="http://travis-ci.org/axr/core"><img src="https://secure.travis-ci.org/axr/core.png" alt="Build Status" /></a></td>
+    </tr>
+    <tr>
+        <td>Browser</td>
+        <td><a href="http://travis-ci.org/axr/browser"><img src="https://secure.travis-ci.org/axr/browser.png" alt="Build Status" /></a></td>
+    </tr>
+    <tr>
+        <td>Plugin</td>
+        <td><a href="http://travis-ci.org/axr/plugin"><img src="https://secure.travis-ci.org/axr/plugin.png" alt="Build Status" /></a></td>
+    </tr>
+    <tr>
+        <td>Examples</td>
+        <td><a href="http://travis-ci.org/axr/examples"><img src="https://secure.travis-ci.org/axr/examples.png" alt="Build Status" /></a></td>
+    </tr>
+    <tr>
+        <td>Specification</td>
+        <td><a href="http://travis-ci.org/axr/specification"><img src="https://secure.travis-ci.org/axr/specification.png" alt="Build Status" /></a></td>
+    </tr>
+    <tr>
+        <td>Extras</td>
+        <td><a href="http://travis-ci.org/axr/extras"><img src="https://secure.travis-ci.org/axr/extras.png" alt="Build Status" /></a></td>
+    </tr>
 </table>
