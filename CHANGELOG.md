@@ -1,5 +1,4 @@
-### Version 0.4.8
-Unreleased
+### Version 0.4.8 - Unreleased
 
 * Added @parent reference object
 * Implemented attr() function
@@ -31,8 +30,7 @@ Unreleased
 * Dozens of bug fixes
 * Continuous Integration!
 
-### Version 0.4.7
-2012-06-17
+### Version 0.4.7 - 2012-06-17
 
 * Add support for @polygon
 * Improved readme to encourage participation
@@ -47,8 +45,7 @@ Unreleased
 * Add support for importing the HSS framework
 * Minor fixes
 
-### Version 0.4.6
-2012-04-08
+### Version 0.4.6 - 2012-04-08
 
 * Implement cloning on all HSS objects
 * Implement flags
