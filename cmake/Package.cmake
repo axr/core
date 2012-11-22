@@ -39,38 +39,23 @@ set(CPACK_RESOURCE_FILE_LICENSE "${AXR_LICENSE_FILE_TXT}")
 set(CPACK_ALL_INSTALL_TYPES Full Developer)
 
 # Friendly names, descriptions and groups for components
-set(CPACK_COMPONENT_BROWSER_DISPLAY_NAME "Browser Application")
-set(CPACK_COMPONENT_BROWSER_DESCRIPTION "An browser-like application that can be used to test the AXR rendering engine and HSS language")
-set(CPACK_COMPONENT_BROWSER_GROUP "Runtime")
-set(CPACK_COMPONENT_BROWSER_INSTALL_TYPES Full Developer)
-set(CPACK_COMPONENT_BROWSER_REQUIRED TRUE)
-
-set(CPACK_COMPONENT_LIBRARIES_GROUP "Runtime")
+set(CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "Libraries")
+set(CPACK_COMPONENT_LIBRARIES_DESCRIPTION "Library (.dll, .so, etc.) files")
 set(CPACK_COMPONENT_LIBRARIES_REQUIRED TRUE)
-set(CPACK_COMPONENT_LIBRARIES_INSTALL_TYPES Full Developer)
-set(CPACK_COMPONENT_LIBRARIES_HIDDEN TRUE)
 
-set(CPACK_COMPONENT_FRAMEWORKS_GROUP "Runtime")
-set(CPACK_COMPONENT_FRAMEWORKS_REQUIRED TRUE)
-set(CPACK_COMPONENT_FRAMEWORKS_INSTALL_TYPES Full Developer)
-set(CPACK_COMPONENT_FRAMEWORKS_HIDDEN TRUE)
+set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "C/C++ Header Files")
+set(CPACK_COMPONENT_HEADERS_DESCRIPTION "Header files for developing AXR C/C++ programs")
 
 set(CPACK_COMPONENT_EXAMPLES_DISPLAY_NAME "Example Applications")
 set(CPACK_COMPONENT_EXAMPLES_DESCRIPTION "Example programs demonstrating how the AXR core library can be used")
-set(CPACK_COMPONENT_EXAMPLES_GROUP "Development")
-set(CPACK_COMPONENT_EXAMPLES_INSTALL_TYPES Developer)
 
 set(CPACK_COMPONENT_DOC_DISPLAY_NAME "Documentation")
 set(CPACK_COMPONENT_DOC_DESCRIPTION "Documentation for the AXR SDK and examples")
-set(CPACK_COMPONENT_DOC_GROUP "Development")
-set(CPACK_COMPONENT_DOC_INSTALL_TYPES Developer)
-
-# Describe component groups
-set(CPACK_COMPONENT_GROUP_RUNTIME_DESCRIPTION "")
-set(CPACK_COMPONENT_GROUP_DEVELOPMENT_DESCRIPTION "All of the tools required to develop applications using AXR.\n\nNote that the Qt SDK and any other external dependencies must be installed separately, as well as a compiler environment (such as Visual Studio or Xcode).")
 
 # Filenames
 include(PackageFilenames)
+package_file_name(CPACK_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}" "${AXR_VERSION_STRING}")
+src_package_file_name(CPACK_SOURCE_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}" "${AXR_VERSION_STRING}")
 set(CPACK_SOURCE_IGNORE_FILES ".git" ".DS_Store" "thumbs.db" "CMakeLists.txt.user")
 
 # Source package
