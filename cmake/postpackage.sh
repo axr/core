@@ -83,6 +83,10 @@ if [ -d "$cpack_rpm_dir" ] ; then
 
         printf '%s\n' "g/Name:[[:blank:]]\{1,\}@AXR_PACKAGE_PREFIX@-$component.*/s//Name: $newname/" w | ed -s "$spec"
 
+	if [[ $component = 'doc' ]] ; then
+            printf '%s\n' "g/Buildarch:[[:blank:]]\{1,\}.*/s//Buildarch: noarch/" w | ed -s "$spec"
+	fi
+
         cd $builddir
         rpmbuild -bb --define "_topdir $cpack_rpm_dir" --buildroot "$builddir" "$spec"
 
