@@ -1,14 +1,6 @@
 #!/bin/bash
 set -e
 
-change-specfile-pkgname()
-{
-    component=$1
-    newname=$2
-    specfile=$3
-    printf '%s\n' "g/Name:[[:blank:]][[:blank:]]*$component/c\\" "Name: $newname" w | ex -s $specfile
-}
-
 cpack_rpm_dir=@CMAKE_BINARY_DIR@/_CPack_Packages/@CMAKE_SYSTEM_NAME@/RPM
 
 if [ -d "$cpack_rpm_dir" ] ; then
@@ -32,12 +24,12 @@ if [ -d "$cpack_rpm_dir" ] ; then
             newname="@AXR_PACKAGE_PREFIX@-$component"
         fi
 
-        change-specfile-pkgname "@AXR_PACKAGE_PREFIX@-$component" "$newname" "$specfile"
+        printf '%s\n' "g/Name:[[:blank:]]\{1,\}@AXR_PACKAGE_PREFIX@-$component.*/s//Name: $newname/" w | ed -s "$spec"
 
         cd $builddir
         rpmbuild -bb --define "_topdir $cpack_rpm_dir" --buildroot "$builddir" "$spec"
 
         real_rpmname=$(rpm -qp "$oldrpm")
-        cp "$oldrpm" "@CMAKE_BINARY_DIR@/dist/$real_rpmname"
+        cp "$oldrpm" "@CMAKE_BINARY_DIR@/dist/$real_rpmname.rpm"
     done
 fi
