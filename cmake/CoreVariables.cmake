@@ -10,6 +10,10 @@ elseif(AXR_VERSION_PATCH GREATER 0)
     set(AXR_VERSION_STRING "${AXR_VERSION_STRING}.${AXR_VERSION_PATCH}")
 endif()
 
+# Numeric-only version string; i.e. 1.0.7.3
+set(AXR_VERSION_STRING_REAL ${AXR_VERSION_STRING})
+
+# Human-readable version string; i.e. 1.0.8-beta1
 git_append_shorttag(AXR_VERSION_STRING)
 
 set(AXR_VENDOR "AXR Project Contributors")
