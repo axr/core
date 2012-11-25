@@ -1,5 +1,12 @@
 set(AXR_PACKAGE_NAME "AXR")
+
+if(WIN32 OR APPLE)
+    set(AXR_PACKAGE_PREFIX "axr-runtime")
+elseif(DPKG_FOUND)
+    set(AXR_PACKAGE_PREFIX "libaxr")
+else()
 set(AXR_PACKAGE_PREFIX "axr")
+endif()
 
 if(WIN32)
     set(AXR_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\share\\\\icons\\\\prototype.ico")
