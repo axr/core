@@ -8,7 +8,6 @@
 * Implemented :firstChild, :lastChild, :even, :odd, :oddChild, :evenChild, and
   :parent filters
 * Implemented :empty filter for elements
-* Implemented ::press flag for click events
 * Converted various platform-specific build systems to CMake
 * Utilize CPack for automatically building distribution packages for all OSs
 * Converted rendering and all other internals to use Qt
