@@ -5,7 +5,7 @@ if(WIN32 OR APPLE)
 elseif(DPKG_FOUND)
     set(AXR_PACKAGE_PREFIX "libaxr")
 else()
-set(AXR_PACKAGE_PREFIX "axr")
+    set(AXR_PACKAGE_PREFIX "axr")
 endif()
 
 if(WIN32)
@@ -42,9 +42,6 @@ set(CPACK_PACKAGE_DESCRIPTION_FILE "${AXR_README_FILE_TXT}")
 set(CPACK_RESOURCE_FILE_README "${AXR_README_FILE_TXT}")
 set(CPACK_RESOURCE_FILE_LICENSE "${AXR_LICENSE_FILE_TXT}")
 set(CPACK_STRIP_FILES ON)
-
-# Installation types...
-set(CPACK_ALL_INSTALL_TYPES Full Developer)
 
 # Friendly names, descriptions and groups for components
 set(CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "Libraries")
