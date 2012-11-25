@@ -47,9 +47,6 @@ set(CPACK_COMPONENT_LIBRARIES_REQUIRED TRUE)
 set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "C/C++ Header Files")
 set(CPACK_COMPONENT_HEADERS_DESCRIPTION "Header files for developing AXR C/C++ programs")
 
-set(CPACK_COMPONENT_EXAMPLES_DISPLAY_NAME "Example Applications")
-set(CPACK_COMPONENT_EXAMPLES_DESCRIPTION "Example programs demonstrating how the AXR core library can be used")
-
 set(CPACK_COMPONENT_DOC_DISPLAY_NAME "Documentation")
 set(CPACK_COMPONENT_DOC_DESCRIPTION "Documentation for the AXR SDK and examples")
 
