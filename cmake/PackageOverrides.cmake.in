@@ -1,0 +1,7 @@
+if(CPACK_GENERATOR STREQUAL "DEB" OR CPACK_GENERATOR STREQUAL "RPM")
+    set(CPACK_DEB_COMPONENT_INSTALL ON)
+    set(CPACK_RPM_COMPONENT_INSTALL ON)
+else()
+    # Runtime packages on NSIS/WIX/PackageMaker don't need headers and documentation
+    set(CPACK_COMPONENTS_ALL libraries)
+endif()
