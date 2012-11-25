@@ -83,10 +83,16 @@ if(WIN32)
     set(CPACK_NSIS_PACKAGE_NAME "${AXR_PACKAGE_NAME}")
     set(CPACK_NSIS_URL_INFO_ABOUT "${AXR_WEB_URL}")
 
+    # This is black magic. CPack has no way to let us place BrandingText in the
+    # main section of the .nsi file... but SetCompressor IS in the right spot,
+    # so we'll inject our own property after this one by using a newline
+    set(CPACK_NSIS_COMPRESSOR "lzma
+BrandingText '${AXR_VENDOR}'")
+
     set(CPACK_WIX_PRODUCT_GUID "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX") # Change on each release
     set(CPACK_WIX_UPGRADE_GUID "AFBAE4BB-0F7B-495D-87BE-F7CB636C24DB") # Permanent, never change this
 
-#   set(CPACK_PACKAGE_ICON "<something>.bmp")
+    set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/common\\\\nsis-header.bmp")
     set(CPACK_PACKAGE_INSTALL_DIRECTORY "${AXR_PACKAGE_NAME}")
 endif()
 
