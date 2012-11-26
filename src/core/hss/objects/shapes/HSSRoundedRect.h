@@ -170,7 +170,7 @@ namespace AXR
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty,
-                                   const std::vector<HSSDisplayObject::p> * scope
+                                   QSharedPointer<HSSSimpleSelection> scope
                                    );
         virtual HSSClonable::p cloneImpl() const;
     };

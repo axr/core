@@ -616,7 +616,7 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
                                            HSSObservableProperty observedSourceProperty,
                                            HSSObservable * &observedStore,
                                            HSSObservableProperty &observedStoreProperty,
-                                           const std::vector<HSSDisplayObject::p> * scope
+                                           HSSSimpleSelection::p scope
                                            )
 {
     HSSUnit ret;
