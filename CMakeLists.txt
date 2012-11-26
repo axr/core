@@ -175,7 +175,7 @@ endif()
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR AND AXR_BUILD_CORE)
     if(UNIX)
-        configure_file("${CMAKE_SOURCE_DIR}/cmake/postpackage.sh" "${CMAKE_BINARY_DIR}/postpackage.sh")
+        configure_file("${CMAKE_SOURCE_DIR}/cmake/postpackage.sh" "${CMAKE_BINARY_DIR}/postpackage.sh" @ONLY)
 
         # Perform post-processing on CPack-generated packages
         add_custom_target(distribution
