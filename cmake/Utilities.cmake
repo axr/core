@@ -26,9 +26,9 @@ macro(include_directories_recursive root_header_dir)
 endmacro()
 
 # The empty.lproj file is needed to translate the strings in native OS X dialogs according to the selected system locale
-macro(empty_lproj target)
+macro(empty_lproj target comp)
     if(APPLE)
-        install(CODE "file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${target}${CMAKE_USER_EXECUTABLE_SUFFIX}/Contents/Resources/empty.lproj\" \"\")")
+        install(CODE "file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${target}${CMAKE_USER_EXECUTABLE_SUFFIX}/Contents/Resources/empty.lproj\" \"\")" COMPONENT ${comp})
     endif()
 endmacro()
 

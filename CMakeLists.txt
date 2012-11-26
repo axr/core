@@ -174,6 +174,19 @@ if(FANCY_TARGET_NAMES)
 endif()
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR AND AXR_BUILD_CORE)
+    if(UNIX)
+        # Perform post-processing on CPack-generated packages
+        add_custom_target(distribution
+            COMMAND cmake --build . --target package && export pkgfilename="${CPACK_PACKAGE_FILE_NAME}" && ${CMAKE_SOURCE_DIR}/cmake/postpackage.sh
+            WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+        )
+    else()
+        add_custom_target(distribution
+            COMMAND cmake --build . --target package
+            WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+        )
+    endif()
+
     include(InstallRequiredSystemLibraries)
     include(CPack)
 endif()

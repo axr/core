@@ -438,7 +438,9 @@ void AXRController::_activateRuleOnSelection(HSSRule::p rule, HSSSimpleSelection
                     this->_activateRuleOnSelection(childRule, children);
                 }
             }
+            this->currentContext.pop();
         }
+        displayObject->setNeedsRereadRules(true);
     }
 }
 

@@ -10,7 +10,12 @@ group_by_folder(${CMAKE_CURRENT_SOURCE_DIR} "${core_SOURCES}")
 
 add_library(${TARGET_NAME_LIB_CORE} ${core_SOURCES})
 target_link_libraries(${TARGET_NAME_LIB_CORE} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTXML_LIBRARY})
-set_target_properties(${TARGET_NAME_LIB_CORE} PROPERTIES FOLDER Libraries)
+
+file(GLOB_RECURSE core_HEADERS *.h)
+set_target_properties(${TARGET_NAME_LIB_CORE} PROPERTIES
+    FOLDER Libraries
+    PUBLIC_HEADER "${core_HEADERS}"
+)
 
 if(APPLE AND BUILD_SHARED_LIBS AND AXR_BUILD_FRAMEWORKS)
     set_target_properties(${TARGET_NAME_LIB_CORE} PROPERTIES FRAMEWORK TRUE)
@@ -22,12 +27,11 @@ else()
     set_target_properties(${TARGET_NAME_LIB_CORE} PROPERTIES OUTPUT_NAME axrcore)
 endif()
 
+# Need to use ../Library trick because absolute paths won't work with CPack
 install(TARGETS ${TARGET_NAME_LIB_CORE}
     RUNTIME DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_REL} COMPONENT libraries
     LIBRARY DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_REL} COMPONENT libraries
     ARCHIVE DESTINATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_REL} COMPONENT libraries
-    FRAMEWORK DESTINATION Frameworks COMPONENT libraries
+    FRAMEWORK DESTINATION ../Library/Frameworks COMPONENT libraries
+    PUBLIC_HEADER DESTINATION include COMPONENT headers
 )
-
-file(GLOB_RECURSE core_HEADERS *.h)
-install(FILES ${core_HEADERS} DESTINATION include COMPONENT headers)
