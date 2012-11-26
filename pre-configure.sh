@@ -112,11 +112,11 @@ elif [ "$UNAME" = "Linux" ] ; then
     if [ $(which apt-get 2>/dev/null) ] ; then
         # Debian, Ubuntu
         apt-get update
-        apt-get install build-essential lintian qt-sdk cmake libsdl1.2-dev libgtk2.0-dev doxygen
+        apt-get install build-essential lintian qt-sdk cmake libsdl1.2-dev libgtk2.0-dev doxygen pandoc
     elif [ $(which yum 2>/dev/null) ] ; then
         # Fedora, RHEL, Yellow Dog Linux
         yum groupinstall 'Development Tools'
-        yum install rpm qt-devel cmake SDL-devel gtk2-devel doxygen
+        yum install rpm qt-devel cmake SDL-devel gtk2-devel doxygen pandoc
     elif [ $(which zypper 2>/dev/null) ] ; then
         # openSUSE
         echo "ERROR: zypper support is not yet implemented"
