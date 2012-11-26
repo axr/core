@@ -129,4 +129,5 @@ if(RPMBUILD_FOUND)
     set(CPACK_RPM_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
 endif()
 
+set(PACKAGE_LINUX_COMPONENT libraries)
 include(PackageLinux)
