@@ -76,7 +76,6 @@ if(WIN32)
     set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
     set(CPACK_NSIS_EXECUTABLES_DIRECTORY .) # NSIS assumes executables are in bin by default
     set(CPACK_NSIS_HELP_LINK "${AXR_WEB_URL}")
-#   set(CPACK_NSIS_INSTALLED_ICON_NAME "axrcore.dll")
     set(CPACK_NSIS_MODIFY_PATH ON)
     set(CPACK_NSIS_MUI_ICON "${AXR_PACKAGE_ICON}")
     set(CPACK_NSIS_MUI_UNIICON "${AXR_PACKAGE_ICON}") # TODO: This should probably be changed to an icon with a crossed out symbol
