@@ -13,8 +13,9 @@ endif()
 # Numeric-only version string; i.e. 1.0.7.3
 set(AXR_VERSION_STRING_REAL ${AXR_VERSION_STRING})
 
+# TODO: Re-enable git tags when this mess is sorted out
 # Human-readable version string; i.e. 1.0.8-beta1
-git_append_shorttag(AXR_VERSION_STRING)
+# git_append_shorttag(AXR_VERSION_STRING)
 
 set(AXR_VENDOR "AXR Project Contributors")
 set(AXR_DOMAIN "axr.vg")
