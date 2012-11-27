@@ -94,3 +94,13 @@ if [ -d "$cpack_rpm_dir" ] ; then
         cp "$oldrpm" "@CMAKE_BINARY_DIR@/dist/$real_rpmname.rpm"
     done
 fi
+
+cd "@CMAKE_BINARY_DIR@/dist"
+
+shopt -s nullglob
+for tgz in libaxr-*.tar.gz
+do
+    os=$(uname | awk '{print tolower($0)}')
+    mv "$tgz" "${tgz/OPERATING_SYSTEM/$os}"
+done
+
