@@ -101,6 +101,8 @@ if(APPLE)
     set(CPACK_OSX_PACKAGE_VERSION ${CMAKE_OSX_DEPLOYMENT_TARGET})
 endif()
 
+include(PackageLinux)
+
 if(DPKG_FOUND)
     file(READ "${CPACK_PACKAGE_DESCRIPTION_FILE}" CPACK_PACKAGE_DESCRIPTION)
 
@@ -118,6 +120,15 @@ if(DPKG_FOUND)
     set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
     set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
     set(CPACK_DEBIAN_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
+
+    install(FILES "${CMAKE_BINARY_DIR}/copyright" DESTINATION share/doc/libaxr RENAME copyright COMPONENT libraries)
+    install(FILES "${CMAKE_BINARY_DIR}/deb/changelog.gz" DESTINATION share/doc/libaxr COMPONENT libraries)
+
+    install(FILES "${CMAKE_BINARY_DIR}/copyright" DESTINATION share/doc/libaxr-dev RENAME copyright COMPONENT headers)
+    install(FILES "${CMAKE_BINARY_DIR}/deb/changelog.gz" DESTINATION share/doc/libaxr-dev COMPONENT headers)
+
+    install(FILES "${CMAKE_BINARY_DIR}/copyright" DESTINATION share/doc/libaxr-doc RENAME copyright COMPONENT doc)
+    install(FILES "${CMAKE_BINARY_DIR}/deb/changelog.gz" DESTINATION share/doc/libaxr-doc COMPONENT doc)
 endif()
 
 if(RPMBUILD_FOUND)
@@ -133,6 +144,3 @@ if(RPMBUILD_FOUND)
     set(CPACK_RPM_PACKAGE_VENDOR "${CPACK_PACKAGE_VENDOR}")
     set(CPACK_RPM_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
 endif()
-
-set(PACKAGE_LINUX_COMPONENT libraries)
-include(PackageLinux)
