@@ -3,6 +3,7 @@ set(AXR_PACKAGE_NAME "AXR")
 if(WIN32 OR APPLE)
     set(AXR_PACKAGE_PREFIX "axr-runtime")
 elseif(DPKG_FOUND)
+    set(AXR_PACKAGE_NAME "libaxr") # CPACK_DEBIAN_PACKAGE_NAME doesn't work
     set(AXR_PACKAGE_PREFIX "libaxr")
 else()
     set(AXR_PACKAGE_PREFIX "axr")
@@ -121,6 +122,10 @@ if(DPKG_FOUND)
     set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
     set(CPACK_DEBIAN_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
 
+    file(WRITE "${CMAKE_BINARY_DIR}/postinst" "ldconfig")
+    execute_process(COMMAND chmod 755 "${CMAKE_BINARY_DIR}/postinst")
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_BINARY_DIR}/postinst")
+
     install(FILES "${CMAKE_BINARY_DIR}/copyright" DESTINATION share/doc/libaxr RENAME copyright COMPONENT libraries)
     install(FILES "${CMAKE_BINARY_DIR}/deb/changelog.gz" DESTINATION share/doc/libaxr COMPONENT libraries)
 
@@ -143,4 +148,8 @@ if(RPMBUILD_FOUND)
     set(CPACK_RPM_PACKAGE_URL "${AXR_WEB_URL}")
     set(CPACK_RPM_PACKAGE_VENDOR "${CPACK_PACKAGE_VENDOR}")
     set(CPACK_RPM_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
+endif()
+
+if(DPKG_FOUND OR RPMBUILD_FOUND)
+    set(CMAKE_INSTALL_PREFIX /usr)
 endif()
