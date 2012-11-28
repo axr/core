@@ -3,6 +3,7 @@ set(AXR_PACKAGE_NAME "AXR")
 if(WIN32 OR APPLE)
     set(AXR_PACKAGE_PREFIX "axr-runtime")
 elseif(DPKG_FOUND)
+    set(AXR_PACKAGE_NAME "libaxr") # CPACK_DEBIAN_PACKAGE_NAME doesn't work
     set(AXR_PACKAGE_PREFIX "libaxr")
 else()
     set(AXR_PACKAGE_PREFIX "axr")
@@ -56,7 +57,7 @@ set(CPACK_COMPONENT_DOC_DESCRIPTION "Documentation for the AXR SDK and examples"
 # Filenames
 include(PackageFilenames)
 package_file_name(CPACK_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}" "${AXR_VERSION_STRING}")
-src_package_file_name(CPACK_SOURCE_PACKAGE_FILE_NAME "${AXR_PACKAGE_PREFIX}" "${AXR_VERSION_STRING}")
+src_package_file_name(CPACK_SOURCE_PACKAGE_FILE_NAME "libaxr" "${AXR_VERSION_STRING}")
 set(CPACK_SOURCE_IGNORE_FILES ".git" ".DS_Store" "thumbs.db" "CMakeLists.txt.user")
 
 # Source package
@@ -101,10 +102,21 @@ if(APPLE)
     set(CPACK_OSX_PACKAGE_VERSION ${CMAKE_OSX_DEPLOYMENT_TARGET})
 endif()
 
+if(NOT WIN32 AND NOT APPLE)
+    set(CPACK_GENERATOR "TGZ")
+endif()
+
+include(PackageLinux)
+
 if(DPKG_FOUND)
     file(READ "${CPACK_PACKAGE_DESCRIPTION_FILE}" CPACK_PACKAGE_DESCRIPTION)
 
-    set(CPACK_GENERATOR "DEB")
+    # Finicky Debian control file formatting...
+    string(REPLACE "\n\n" "\n.\n" CPACK_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
+    string(REPLACE "\n" "\n " CPACK_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION}")
+    string(STRIP "${CPACK_PACKAGE_DESCRIPTION}" CPACK_PACKAGE_DESCRIPTION)
+
+    list(APPEND CPACK_GENERATOR "DEB")
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libqtcore4 (>= 4.8), libqtgui4 (>= 4.8), libqt4-network (>= 4.8), libqt4-svg (>= 4.8), libqt4-xml (>= 4.8)")
     set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}\n ${CPACK_PACKAGE_DESCRIPTION}")
     set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "${AXR_WEB_URL}")
@@ -113,10 +125,23 @@ if(DPKG_FOUND)
     set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
     set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
     set(CPACK_DEBIAN_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
+
+    file(WRITE "${CMAKE_BINARY_DIR}/postinst" "ldconfig")
+    execute_process(COMMAND chmod 755 "${CMAKE_BINARY_DIR}/postinst")
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_BINARY_DIR}/postinst")
+
+    install(FILES "${CMAKE_BINARY_DIR}/copyright" DESTINATION share/doc/libaxr RENAME copyright COMPONENT libraries)
+    install(FILES "${CMAKE_BINARY_DIR}/deb/changelog.gz" DESTINATION share/doc/libaxr COMPONENT libraries)
+
+    install(FILES "${CMAKE_BINARY_DIR}/copyright" DESTINATION share/doc/libaxr-dev RENAME copyright COMPONENT headers)
+    install(FILES "${CMAKE_BINARY_DIR}/deb/changelog.gz" DESTINATION share/doc/libaxr-dev COMPONENT headers)
+
+    install(FILES "${CMAKE_BINARY_DIR}/copyright" DESTINATION share/doc/libaxr-doc RENAME copyright COMPONENT doc)
+    install(FILES "${CMAKE_BINARY_DIR}/deb/changelog.gz" DESTINATION share/doc/libaxr-doc COMPONENT doc)
 endif()
 
 if(RPMBUILD_FOUND)
-    set(CPACK_GENERATOR "RPM")
+    list(APPEND CPACK_GENERATOR "RPM")
     set(CPACK_RPM_CHANGELOG_FILE "${CMAKE_BINARY_DIR}/rpm/changelog")
     set(CPACK_RPM_PACKAGE_ARCHITECTURE "${ARCH_CODE}")
     set(CPACK_RPM_PACKAGE_GROUP "Development/Libraries")
@@ -129,5 +154,6 @@ if(RPMBUILD_FOUND)
     set(CPACK_RPM_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
 endif()
 
-set(PACKAGE_LINUX_COMPONENT libraries)
-include(PackageLinux)
+if(DPKG_FOUND OR RPMBUILD_FOUND)
+    set(CMAKE_INSTALL_PREFIX /usr)
+endif()

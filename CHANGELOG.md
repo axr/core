@@ -1,4 +1,4 @@
-### Version 0.4.8 - 2012-11-26
+### Version 0.4.8 - 2012-11-27
 
 * Added @parent reference object
 * Implemented attr() function
