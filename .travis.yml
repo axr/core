@@ -4,9 +4,6 @@ compiler:
   - clang
 before_script: sudo ./pre-configure.sh && .travis/configure.sh
 script: .travis/make.sh
-branches:
-  only:
-    - master
 notifications:
   recipients:
     - axr-ci@googlegroups.com
