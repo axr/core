@@ -54,7 +54,7 @@
 #include "HSSPercentageConstant.h"
 #include "HSSRectangle.h"
 #include "HSSRoundedRect.h"
-#include "HSSSimpleSelection.h";
+#include "HSSSimpleSelection.h"
 #include "HSSStringConstant.h"
 
 using namespace AXR;

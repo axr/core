@@ -52,7 +52,7 @@
 #include "HSSFunctionAction.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
-#include "HSSSimpleSelection.h";
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

@@ -52,7 +52,7 @@
 #include "HSSObjectNameConstant.h"
 #include "HSSPercentageConstant.h"
 #include "HSSStringConstant.h"
-#include "HSSSimpleSelection.h";
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

@@ -60,7 +60,7 @@
 #include "HSSParserNode.h"
 #include "HSSPercentageConstant.h"
 #include "HSSRgb.h"
-#include "HSSSimpleSelection.h";
+#include "HSSSimpleSelection.h"
 #include "HSSStringConstant.h"
 
 using namespace AXR;

@@ -48,7 +48,7 @@
 #include "HSSMargin.h"
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
-#include "HSSSimpleSelection.h";
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

@@ -47,7 +47,7 @@
 #include "HSSDisplayObject.h"
 #include "HSSFilter.h"
 #include "HSSRule.h"
-#include "HSSSimpleSelection.h";
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
