@@ -96,14 +96,14 @@ void QAXRWidget::setBackgroundFillColor(const QColor &color)
 void QAXRWidget::paintEvent(QPaintEvent *e)
 {
     QRect paintRect = rect();
-    
+
     // Fill the view with our background color...
     QPainter painter(this);
     painter.fillRect(paintRect, d->backgroundFillColor);
-    
+
     if (!d->document)
         return;
-    
+
     // Render the AXR document
     AXRRender::p renderer = d->document->getRender();
     if (renderer && d->document->getController()->getRoot())
@@ -187,7 +187,7 @@ void QAXRWidget::mouseReleaseEvent(QMouseEvent *e)
     }
 }
 
-void QAXRWidget::resizeEvent(QResizeEvent *e)
+void QAXRWidget::resizeEvent(QResizeEvent *)
 {
     if (!d->document)
         return;
