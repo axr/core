@@ -19,4 +19,9 @@ Product {
         condition: qbs.targetOS === "mac"
         cpp.frameworks: [ "Cocoa" ]
     }
+
+    ProductModule {
+        Depends { name: "cpp" }
+        cpp.includePaths: "."
+    }
 }

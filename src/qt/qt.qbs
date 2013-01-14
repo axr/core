@@ -13,4 +13,9 @@ Product {
         "QAXRWidget.h",
         "QAXRWidget.cpp"
     ]
+
+    ProductModule {
+        Depends { name: "cpp" }
+        cpp.includePaths: "."
+    }
 }
