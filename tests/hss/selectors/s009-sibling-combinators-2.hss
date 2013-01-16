@@ -13,7 +13,7 @@ test
     {
         background: #00F;
     }
-    
+
     child - :first
     {
         background: #FF0;

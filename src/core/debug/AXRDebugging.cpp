@@ -93,11 +93,11 @@ void axr_log(const AXRString & message, bool newline)
         out = new QTextStream(axr_debug_device);
     else
         out = new QTextStream(stderr);
-    
+
     *out << message;
     if (newline)
         endl(*out);
-    
+
     out->flush();
     delete out;
 }

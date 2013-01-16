@@ -192,17 +192,17 @@ void HSSPolygon::drawBorders(QPainter &painter, std::vector<HSSBorder::p> border
     {
         combinedThickness += (*it)->getSize();
     }
-    
+
     // Correction if needed
     HSSUnit correction;
     if ((int) combinedThickness % 2)
     {
         correction = 0.5;
     }
-    
+
     // Cumulative combined thickness
     HSSUnit cumulativeThickness = 0;
-    
+
     // Draw all borders
     for (HSSBorder::it it = borders.begin(); it != borders.end(); ++it)
     {

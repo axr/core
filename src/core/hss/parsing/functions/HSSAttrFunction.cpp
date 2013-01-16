@@ -135,10 +135,10 @@ QVariant HSSAttrFunction::_evaluate()
     HSSSimpleSelection::p selection = this->getController()->select(this->selectorChains, this->scope, this->getThisObj())->joinAll();
     HSSDisplayObject::p container = selection->front();
     this->_value = container->attributes[this->attributeName];
-    
+
     //todo handle this
     //container->observe(this->attributeName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSAttrFunction>(this, &HSSAttrFunction::valueChanged));
-    
+
     //this->observed = container.get();
     return this->_value;
 }

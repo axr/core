@@ -25,7 +25,7 @@ for component in "${components[@]}" ; do
         rm -rf "$newdeb.tmp"
         dpkg-deb --raw-extract "$newdeb" "$newdeb.tmp"
         rm "$newdeb"
-        
+
         cd "$newdeb.tmp"
 
         # Set permissions correctly since CPack doesn't do it...
@@ -83,9 +83,9 @@ if [ -d "$cpack_rpm_dir" ] ; then
 
         printf '%s\n' "g/Name:[[:blank:]]\{1,\}@AXR_PACKAGE_PREFIX@-$component.*/s//Name: $newname/" w | ed -s "$spec"
 
-	if [[ $component = 'doc' ]] ; then
+    if [[ $component = 'doc' ]] ; then
             printf '%s\n' "g/Buildarch:[[:blank:]]\{1,\}.*/s//Buildarch: noarch/" w | ed -s "$spec"
-	fi
+    fi
 
         cd $builddir
         rpmbuild -bb --define "_topdir $cpack_rpm_dir" --buildroot "$builddir" "$spec"
@@ -103,4 +103,3 @@ do
     os=$(uname | awk '{print tolower($0)}')
     mv "$tgz" "${tgz/OPERATING_SYSTEM/$os}"
 done
-

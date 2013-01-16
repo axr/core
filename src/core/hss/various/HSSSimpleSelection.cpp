@@ -58,7 +58,7 @@ public:
     ~Data() { }
 
     /**
-     * 
+     *
      */
     std::vector<HSSDisplayObject::p> items;
 };

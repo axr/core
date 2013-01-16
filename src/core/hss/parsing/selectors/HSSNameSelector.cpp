@@ -95,7 +95,7 @@ HSSSelection::p HSSNameSelector::filterSelection(HSSSelection::p scope, HSSDispl
         HSSSimpleSelection::p simpleSel = qSharedPointerCast<HSSSimpleSelection>(scope);
         this->_filterSimpleSelection(ret, simpleSel);
     }
-    
+
     return ret;
 }
 

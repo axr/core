@@ -52,7 +52,7 @@
 namespace AXR
 {
     class HSSBorder;
-    
+
     /**
      *  @brief Abstract base class for all shape objects.
      */

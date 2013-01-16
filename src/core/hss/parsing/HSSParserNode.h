@@ -104,7 +104,7 @@ namespace AXR
          *  @return A textual representation of the object.
          */
         virtual AXRString toString();
-        
+
         /**
          *  Prints itself as a std string representation, calling this->toString().
          *  @return A textual representation of the object, as a std string.

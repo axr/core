@@ -98,7 +98,7 @@ inline void HSSParentSelector::_filterSimpleSelection(HSSSimpleSelection::p & re
     HSSSimpleSelection::const_iterator scopeIt;
     HSSSimpleSelection::iterator readIt, writeIt;
     std::set<HSSDisplayObject::p> tmpset;
-    
+
     for (scopeIt = selection->begin(); scopeIt != selection->end(); ++scopeIt)
     {
         const HSSDisplayObject::p & theDO = *scopeIt;
@@ -106,7 +106,7 @@ inline void HSSParentSelector::_filterSimpleSelection(HSSSimpleSelection::p & re
         if (parent)
             ret->add(parent);
     }
-    
+
     for (readIt = ret->begin(), writeIt = ret->begin(); readIt != ret->end(); ++readIt)
     {
         if (tmpset.insert(*readIt).second)
@@ -114,6 +114,6 @@ inline void HSSParentSelector::_filterSimpleSelection(HSSSimpleSelection::p & re
             *writeIt++ = *readIt;
         }
     }
-    
+
     ret->erase(writeIt, ret->end());
 }

@@ -271,7 +271,7 @@ AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
         else if (resourceUrl.scheme() == "http" || resourceUrl.scheme() == "https")
         {
             std_log("http is not implemented yet");
-            
+
             // TODO: Download resource and cache at local path, then
             // localResourcePath = <path to that>;
         }

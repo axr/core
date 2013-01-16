@@ -152,7 +152,7 @@ HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
     this->tabIndex = orig.tabIndex;
     this->heightByContent = orig.heightByContent;
     this->widthByContent = orig.widthByContent;
-    
+
     this->_isHover = orig._isHover;
     this->_isPress = orig._isPress;
 }

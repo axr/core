@@ -55,7 +55,7 @@ AXRString HSSSelection::selectionTypeStringRepresentation(HSSSelectionType selec
         types[HSSSelectionTypeSimpleSelection] = "HSSSelectionTypeSimpleSelection";
         types[HSSSelectionTypeMultipleSelection] = "HSSSelectionTypeMultipleSelection";
     }
-    
+
     return types[selectionType];
 }
 
@@ -71,7 +71,7 @@ HSSSelection::HSSSelection(const HSSSelection &other)
 
 HSSSelection::~HSSSelection()
 {
-    
+
 }
 
 bool HSSSelection::isA(HSSSelectionType type)

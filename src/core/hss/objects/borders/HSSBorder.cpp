@@ -314,7 +314,7 @@ void HSSBorder::setDPosition(HSSParserNode::p value)
         default:
             break;
     }
-    
+
     switch (value->getStatementType())
     {
         case HSSStatementTypeObjectDefinition:
@@ -343,7 +343,7 @@ void HSSBorder::setDPosition(HSSParserNode::p value)
         default:
             break;
     }
-    
+
     if (!valid)
     {
         throw AXRWarning("HSSBorder", "Invalid value for position of " + this->getName());
@@ -364,7 +364,7 @@ void HSSBorder::positionChanged(HSSObservableProperty source, void*data)
         default:
             break;
     }
-    
+
     this->notifyObservers(HSSObservablePropertyPosition, &this->position);
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
@@ -389,7 +389,7 @@ void HSSBorder::setDSegments(HSSParserNode::p value)
 void HSSBorder::addDSegments(HSSParserNode::p value)
 {
     bool valid = false;
-    
+
     switch (value->getType())
     {
         case HSSParserNodeTypeMultipleValueDefinition:
@@ -459,7 +459,7 @@ void HSSBorder::addDSegments(HSSParserNode::p value)
             valid = false;
             break;
     }
-    
+
     switch (value->getStatementType())
     {
         case HSSStatementTypeObjectDefinition:
@@ -489,16 +489,16 @@ void HSSBorder::addDSegments(HSSParserNode::p value)
         default:
             break;
     }
-    
+
     if (!valid)
         throw AXRWarning("HSSBorder", "Invalid value for segments of " + this->getName());
-    
+
     this->notifyObservers(HSSObservablePropertySegments, &this->segments);
 }
 
 void HSSBorder::segmentsChanged(HSSObservableProperty source, void*data)
 {
-    
+
 }
 
 HSSUnit HSSBorder::_evaluatePropertyValue(

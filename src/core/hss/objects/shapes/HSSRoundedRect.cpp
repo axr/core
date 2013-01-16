@@ -636,7 +636,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
             outside.push_back(theBorder);
         }
     }
-    
+
     HSSUnit topThickness = 0., rightThickness = 0., bottomThickness = 0., leftThickness = 0.;
     for (HSSBorder::it it=centered.begin(); it!=centered.end(); ++it) {
         const HSSBorder::p & theBorder = *it;
@@ -685,7 +685,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
             }
         }
     }
-    
+
     HSSUnit topCorrection = 0., rightCorrection = 0., bottomCorrection = 0., leftCorrection = 0.;
     if ((int) topThickness % 2) {
         topCorrection = 0.5;
@@ -699,12 +699,12 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
     if ((int) leftThickness % 2) {
         leftCorrection = 0.5;
     }
-    
+
     // Uncomment this to see the dimensions of the borders surface
 //    QPainterPath outerPath;
 //    outerPath.addRect(0.5, 0.5, width+borderBleeding*2-1, height+borderBleeding*2-1);
 //    painter.strokePath(outerPath, QPen(Qt::red, 1, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
-    
+
     HSSUnit topCumulative = 0., rightCumulative = 0., bottomCumulative = 0., leftCumulative = 0.;
     for (HSSBorder::it it=centered.begin(); it!=centered.end(); ++it) {
         const HSSBorder::p & theBorder = *it;
@@ -825,7 +825,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
         }
         //theBorder->draw(painter, path);
     }
-    
+
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
     for (std::vector<HSSBorder::p>::reverse_iterator it=inside.rbegin(); it!=inside.rend(); ++it) {
         const HSSBorder::p & theBorder = *it;

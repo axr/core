@@ -50,7 +50,7 @@
 namespace AXR
 {
     /**
-     *  @brief 
+     *  @brief
      */
     class HSSMultipleSelection : public HSSSelection
     {
@@ -64,32 +64,32 @@ namespace AXR
         typedef std::vector<HSSSimpleSelection::p>::const_iterator const_iterator;
 
         /**
-         *  
+         *
          */
         HSSMultipleSelection();
 
         /**
-         *  
+         *
          */
         HSSMultipleSelection(iterator a, iterator b);
 
         /**
-         *  
+         *
          */
         HSSMultipleSelection(const_iterator a, const_iterator b);
 
         /**
-         *  
+         *
          */
         HSSMultipleSelection(const HSSMultipleSelection &other);
 
         /**
-         *  
+         *
          */
         virtual ~HSSMultipleSelection();
 
         /**
-         *  
+         *
          */
         HSSMultipleSelection& operator=(const HSSMultipleSelection &other);
 
@@ -110,7 +110,7 @@ namespace AXR
         std::vector< HSSSimpleSelection::p > getItems() const;
         QSharedPointer<HSSSimpleSelection> joinAll();
         QSharedPointer<HSSMultipleSelection> splitAll();
-        
+
         virtual AXRString toString();
     protected:
 

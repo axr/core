@@ -377,7 +377,7 @@ void AXRController::activateRules()
     const std::vector<HSSRule::p> rules = this->getRules();
     HSSSimpleSelection::p rootScope(new HSSSimpleSelection());
     rootScope->add(this->getRoot());
-    
+
     for (unsigned i = 0, size = rules.size(); i < size; ++i)
     {
         const HSSRule::p& rule = rules[i];
@@ -658,7 +658,7 @@ inline void AXRController::_selectOnLevelSimple(HSSSimpleSelection::p & ret, HSS
             retTemp->add(firstItem);
         }
     }
-    
+
     for (; it!=simpleSel->end(); ++it)
     {
         const HSSDisplayObject::p & item = *it;

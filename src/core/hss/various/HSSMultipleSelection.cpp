@@ -50,14 +50,14 @@ class HSSMultipleSelection::Data : public QSharedData
 {
 public:
     Data() { }
-    
+
     Data(const Data &other)
     : QSharedData(other), items(other.items) { }
-    
+
     ~Data() { }
-    
+
     /**
-     * 
+     *
      */
     std::vector<HSSSimpleSelection::p> items;
 };
