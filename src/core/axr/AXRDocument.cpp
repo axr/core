@@ -43,6 +43,7 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QFileInfo>
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
 #include "AXRWarning.h"
@@ -242,29 +243,52 @@ void AXRDocument::evaluateCustomFunction(AXRString name, void* data)
     }
 }
 
-AXRBuffer::p AXRDocument::getFile(QUrl u)
+AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
 {
-    if (u.isValid())
+    if (resourceUrl.isValid())
     {
-        if (u.scheme() == "file")
-        {
-            QFileInfo fi(u.toLocalFile());
-            AXRBuffer::p ret = AXRBuffer::p(new AXRBuffer(fi));
-            if (!fi.exists())
-            {
-                throw AXRError("AXRDocument", "the file " + u.toLocalFile() + " doesn't exist");
-            }
-            else if (!ret->isValid())
-            {
-                throw AXRError("AXRDocument", "the file " + u.toLocalFile() + " couldn't be read");
-            }
+        QString localResourcePath;
 
-            return ret;
+        if (resourceUrl.scheme() == "axr")
+        {
+            // example: /etc/axr/resources
+            QString localResourceDir = QDir(this->getPathToResources()).canonicalPath();
+
+            // example: /etc/axr/resources/foo/framework.hss
+            localResourcePath = QFileInfo(localResourceDir, resourceUrl.path()).canonicalFilePath();
+
+            if (!localResourcePath.startsWith(localResourceDir))
+            {
+                // ERROR: Attempt to access a file outside the resources directory
+                // such as through the use of a URL like: axr://foo/../../../passwords.txt
+                throw AXRError("AXRDocument", "Malformed path encountered");
+            }
         }
-        else if (u.scheme() == "http" || u.scheme() == "https")
+        else if (resourceUrl.scheme() == "file")
+        {
+            localResourcePath = resourceUrl.toLocalFile();
+        }
+        else if (resourceUrl.scheme() == "http" || resourceUrl.scheme() == "https")
         {
             std_log("http is not implemented yet");
+            
+            // TODO: Download resource and cache at local path, then
+            // localResourcePath = <path to that>;
         }
+
+        QFileInfo fi(localResourcePath);
+        if (!fi.exists())
+        {
+            throw AXRError("AXRDocument", "the file " + resourceUrl.toLocalFile() + " doesn't exist");
+        }
+
+        AXRBuffer::p ret = AXRBuffer::p(new AXRBuffer(fi));
+        if (!ret->isValid())
+        {
+            throw AXRError("AXRDocument", "the file " + resourceUrl.toLocalFile() + " couldn't be read");
+        }
+
+        return ret;
     }
 
     return AXRBuffer::p(new AXRBuffer());

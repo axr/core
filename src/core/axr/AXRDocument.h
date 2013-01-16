@@ -176,7 +176,7 @@ namespace AXR
          *  Subclasses should override this method with the OS specific implementation.
          *  @param url  A string containing the url to the file
          */
-        virtual AXRBuffer::p getFile(QUrl url);
+        virtual AXRBuffer::p getFile(const QUrl &resourceUrl);
         virtual bool needsDisplay() const;
         /**
          *  This is to be called when something happens that needs to trigger a redraw.

@@ -268,23 +268,19 @@ bool HSSParser::readNextStatement()
             try
             {
                 QUrl url(theInstr->getValue());
-                if (url.scheme() == HSSFRAMEWORK_PROTOCOL)
+                if (url.isRelative())
                 {
-                    theFile = controller->document()->getFile(QUrl::fromLocalFile(controller->document()->getPathToResources()).resolved(url));
+                    theFile = controller->document()->getFile(currentFile->sourceUrl().resolved(url));
                 }
                 else
                 {
-                    if (url.isRelative())
-                        theFile = controller->document()->getFile(currentFile->sourceUrl().resolved(url));
-                    else
-                        theFile = controller->document()->getFile(url);
+                    theFile = controller->document()->getFile(url);
                 }
 
                 if (theFile)
                 {
                     this->loadFile(theFile);
                 }
-
             }
             catch (const AXRError &e)
             {
@@ -2155,7 +2151,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
                 {
                     QUrl url;
                     url.setScheme(HSSFRAMEWORK_PROTOCOL);
-                    url.setPath("/framework/UIFramework.hss");
+                    url.setPath("framework/UIFramework.hss");
                     ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, url.toString(), controller));
                 }
                 else
