@@ -102,6 +102,12 @@ AXRString HSSParserNode::toString()
     return "Generic parser node - you forgot to override toString in your subclass or somehow using HSSParserNode directly";
 }
 
+std::string HSSParserNode::toStdString()
+{
+    AXRString tempstr = this->toString();
+    return tempstr.toStdString();
+}
+
 bool HSSParserNode::isA(HSSParserNodeType otherType)
 {
     return otherType == this->nodeType;

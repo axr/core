@@ -100,10 +100,16 @@ namespace AXR
         p clone() const;
 
         /**
-         *  Prints itself as a textual representation. Each object overrides this method to .
+         *  Prints itself as a textual representation. Each subclass should override this method.
          *  @return A textual representation of the object.
          */
         virtual AXRString toString();
+        
+        /**
+         *  Prints itself as a std string representation, calling this->toString().
+         *  @return A textual representation of the object, as a std string.
+         */
+        std::string toStdString();
 
         /**
          *  Call this to know if a parser node is of the given type.
