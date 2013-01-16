@@ -273,18 +273,21 @@ size_t hash_combine(size_t hash1, size_t hash2)
 void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object, HSSCallback *callback)
 {
     //std_log1("added observer: "+object->name);
-    std::size_t hash = hash_combine(qHash(object), qHash(source));
+
+    QVariant nulldata("");
 
     if (this->_propertyObservers.count(target) != 0)
     {
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
-        theObserved[hash] = callback;
+        HSSObservableMapping::p mapping = HSSObservableMapping::p(new HSSObservableMapping(object, callback, source, nulldata));
+        theObserved.append(mapping);
         axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for " + HSSObservable::observablePropertyStringRepresentation(target));
     }
     else
     {
         HSSObservable::observed theObserved;
-        theObserved[hash] = callback;
+        HSSObservableMapping::p mapping = HSSObservableMapping::p(new HSSObservableMapping(object, callback, source, nulldata));
+        theObserved.append(mapping);
         this->_propertyObservers[target] = theObserved;
         axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for new " + HSSObservable::observablePropertyStringRepresentation(target));
     }
@@ -294,14 +297,14 @@ void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservablePr
 {
     if (this->_propertyObservers.find(target) != this->_propertyObservers.end())
     {
-        HSSObservable::observed &theObserved = this->_propertyObservers[target];
-        std::size_t hash = hash_combine(qHash(object), qHash(source));
-        if (theObserved.count(hash) != 0)
-        {
-            delete theObserved[hash];
-            theObserved.remove(hash);
-            axr_log(AXR_DEBUG_CH_OBSERVING, "removing observer for " + HSSObservable::observablePropertyStringRepresentation(target));
-            return;
+        observed &theObserved = this->_propertyObservers[target];
+        for (observed::iterator it = theObserved.begin(); it!= theObserved.end(); ++it) {
+            const HSSObservableMapping::p & mapping = *it;
+            if(mapping->observer == object && mapping->source == source){
+                theObserved.erase(it++);
+                axr_log(AXR_DEBUG_CH_OBSERVING, "removing observer for " + HSSObservable::observablePropertyStringRepresentation(target));
+                return;
+            }
         }
     }
     std_log("####### tried to remove non existent observer for " + HSSObservable::observablePropertyStringRepresentation(target));
@@ -314,12 +317,13 @@ void HSSObservable::propertyChanged(HSSObservableProperty property, void *data)
 
 void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
 {
-    if (this->_propertyObservers.count(property) != 0)
+    if (this->_propertyObservers.contains(property))
     {
-        HSSObservable::observed &theObserved = this->_propertyObservers[property];
-        for (HSSObservable::observed::iterator it = theObserved.begin(); it != theObserved.end(); ++it)
+        observed &theObserved = this->_propertyObservers[property];
+        for (observed::iterator it = theObserved.begin(); it != theObserved.end(); ++it)
         {
-            HSSCallback *callback = it.value();
+            const HSSObservableMapping::p & mapping = *it;
+            HSSCallback *callback = mapping->callback;
             if (!data)
             {
                 axr_log(AXR_DEBUG_CH_OBSERVING, "data is null");

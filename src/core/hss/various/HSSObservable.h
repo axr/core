@@ -45,11 +45,13 @@
 #define HSSOBSERVABLE_H
 
 #include <map>
-#include <QSharedPointer>
+#include <QList>
 #include <QMap>
+#include <QSharedPointer>
 #include "AXRGlobal.h"
 #include "AXRString.h"
 #include "HSSCallback.h"
+#include "HSSObservableMapping.h"
 #include "HSSObservableProperties.h"
 
 namespace AXR
@@ -91,7 +93,7 @@ namespace AXR
          *  key inside the private _propertyObservers map.
          *  The key for this map is a hash of HSSObservable * observed and HSObservableProperty source
          */
-        typedef QMap<std::size_t, HSSCallback* > observed;
+        typedef QList<HSSObservableMapping::p> observed;
 
         /**
          *  Creates a new instance of a observable object. Don't call directly, this is for the use of subclasses.
@@ -154,7 +156,7 @@ namespace AXR
         void notifyObservers(HSSObservableProperty property, void * data);
 
     private:
-        QMap<HSSObservableProperty, HSSObservable::observed>_propertyObservers;
+        QMap<HSSObservableProperty, HSSObservable::observed> _propertyObservers;
     };
 }
 
