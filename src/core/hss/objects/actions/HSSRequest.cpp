@@ -66,6 +66,7 @@ HSSRequest::HSSRequest(AXRController * controller)
     this->setShorthandProperties(shorthandProperties);
 
     this->mode = HSSRequestModeTypeAuto;
+    this->target = HSSSimpleSelection::p(new HSSSimpleSelection);
 }
 
 HSSRequest::HSSRequest(const HSSRequest & orig)
@@ -76,6 +77,7 @@ HSSRequest::HSSRequest(const HSSRequest & orig)
             = NULL;
 
     this->mode = orig.mode;
+    this->target = orig.target;
 }
 
 HSSRequest::p HSSRequest::clone() const
@@ -131,7 +133,8 @@ void HSSRequest::setProperty(HSSObservableProperty name, HSSParserNode::p value)
 
 void HSSRequest::fire()
 {
-    AXRDocument* document = this->getController()->document();
+    AXRController * ctrlr = this->getController();
+    AXRDocument* document = ctrlr->document();
 
     //if there is no target
     if (this->target->empty())
@@ -144,14 +147,15 @@ void HSSRequest::fire()
         {
         default:
         {
-            AXRController::p controller = AXRController::p(new AXRController(document));
-            XMLParser::p xmlParser(new XMLParser(controller.data()));
-            HSSParser::p hssParser(new HSSParser(controller.data()));
             AXRBuffer::p baseFile = document->getFile();
+            QUrl newFileUrl = this->src;
+            if(newFileUrl.scheme() == ""){
+                newFileUrl = baseFile->sourceUrl().resolved(this->src);
+            }
             AXRBuffer::p newFile;
             try
             {
-                newFile = document->getFile(this->src);
+                newFile = document->getFile(newFileUrl);
             }
             catch (const AXRError &e)
             {
@@ -160,97 +164,41 @@ void HSSRequest::fire()
 
             if (newFile)
             {
-                bool loadingSuccess = xmlParser->loadFile(newFile);
+                HSSContainer::p tempNode = HSSContainer::p(new HSSContainer(ctrlr));
+                ctrlr->currentContext.push(tempNode);
+                bool loadingSuccess = document->getParserXML()->loadFile(newFile);
                 if (!loadingSuccess)
                 {
                     AXRError("AXRDocument", "Could not load the XML file").raise();
                 }
                 else
                 {
-                    HSSContainer::p root = qSharedPointerCast<HSSContainer > (controller->getRoot());
-
-                    if (root)
+                    if(this->target)
                     {
-                        std::vector<QUrl> loadSheets = controller->loadSheetsGet();
-                        for (std::vector<QUrl>::iterator sheetsIt = loadSheets.begin(); sheetsIt != loadSheets.end(); ++sheetsIt)
+                        for (HSSSimpleSelection::iterator it = tempNode->getChildren()->begin(); it != tempNode->getChildren()->end(); ++it)
                         {
-                            AXRBuffer::p hssfile;
-                            try
+                            HSSContainer::p loadedRoot = HSSContainer::asContainer(*it);
+                            if(loadedRoot)
                             {
-                                hssfile = document->getFile(*sheetsIt);
-                            }
-                            catch (const AXRError &e)
-                            {
-                                e.raise();
-                                continue;
-                            }
-
-                            if (!hssParser->loadFile(hssfile))
-                            {
-                                AXRError("AXRDocument", "Could not load the HSS file").raise();
-                            }
-                        }
-
-                        controller->matchRulesToContentTree();
-
-                        HSSSimpleSelection::const_iterator targetIt, childIt;
-                        for (targetIt = this->target->begin(); targetIt != this->target->end(); ++targetIt)
-                        {
-                            const HSSDisplayObject::p & theDO = *targetIt;
-                            HSSContainer::p theContainer = HSSContainer::asContainer(theDO);
-                            if (theContainer)
-                            {
-                                theContainer->clear();
-                                for (childIt = root->getChildren()->begin(); childIt != root->getChildren()->end(); ++childIt)
-                                {
-                                    const HSSDisplayObject::p & theChild = *childIt;
-                                    theContainer->add(theChild);
+                                for (HSSSimpleSelection::iterator it2 = this->target->begin(); it2 != this->target->end(); ++it2) {
+                                    HSSContainer::p theTarget = HSSContainer::asContainer(*it2);
+                                    if(theTarget)
+                                    {
+                                        //HSSContainer::p clonedNode = loadedRoot->clone();
+                                        theTarget->add(loadedRoot);
+                                    }
                                 }
-                            }
-                        }
 
-                        root->setNeedsRereadRules(true);
-                        root->recursiveReadDefinitionObjects();
-                        root->handleEvent(HSSEventTypeLoad, NULL);
-                        document->setNeedsDisplay(true);
+                                ctrlr->activateRules();
+                                loadedRoot->handleEvent(HSSEventTypeLoad, NULL);
+                                document->setNeedsDisplay(true);
+                            }
+                            break;
+                        }
                     }
                 }
+                ctrlr->currentContext.pop();
             }
-
-            //                AXRDocument::tp document = AXRDocument::getInstance();
-            //                AXRWrapper * document = document->getWrapper();
-            //                AXRBuffer::p baseFile = document->getFile();
-            //
-            //                bool loadingSuccess = document->loadFile(baseFile->basePath+this->src, this->src);
-            //                if(loadingSuccess){
-            //                    unsigned i, size;
-            //                    for (i=0, size=this->target.size(); i<size; ++i) {
-            //                        std_log1("Adding loaded file to target");
-            //
-            //                        if(this->target[i]->isA(HSSObjectTypeContainer)){
-            //                            const HSSContainer::p & theCont = qSharedPointerCast<HSSContainer>(this->target[i]);
-            //                            const HSSContainer::p & loadedRoot = fileController.getRoot();
-            //                            theCont->add(loadedRoot);
-            //
-            //                            unsigned j, k, size2, size3;
-            //                            HSSSimpleSelection::p scope = theCont->getChildren();
-            //                            for (j=0, size2=fileController.rulesSize(); j<size2; ++j) {
-            //                                HSSRule::p & theRule = fileController.rulesGet(j);
-            //                                theRule->childrenAdd(theRule);
-            //                            }
-            //                            for (j=0, size2=theCont->rulesSize(); j<size2; ++j) {
-            //                                HSSRule::p theRule = theCont->rulesGet(j);
-            //                                for (k=0, size3=theRule->childrenSize(); k<size3; ++k) {
-            //                                    HSSRule::p childRule = theRule->childrenGet(k);
-            //                                    this->getController()->recursiveMatchRulesToDisplayObjects(childRule, scope, theCont);
-            //                                }
-            //                            }
-            //
-            //                            theCont->recursiveReadDefinitionObjects();
-            //                            theCont->setNeedsLayout(true);
-            //                        }
-            //                    }
-            //                }
             break;
         }
         }
