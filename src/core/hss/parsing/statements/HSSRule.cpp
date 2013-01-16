@@ -210,7 +210,7 @@ HSSPropertyDefinition::p & HSSRule::propertiesLast()
     return this->properties.back();
 }
 
-unsigned int HSSRule::propertiesSize()
+unsigned int HSSRule::propertiesSize() const
 {
     return this->properties.size();
 }

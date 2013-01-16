@@ -213,7 +213,7 @@ namespace AXR
         /**
          *  @return the size of the properties vector
          */
-        unsigned int propertiesSize();
+        unsigned int propertiesSize() const;
 
         /**
          *  Add a child rule.

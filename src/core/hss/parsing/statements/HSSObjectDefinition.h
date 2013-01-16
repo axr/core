@@ -136,7 +136,7 @@ namespace AXR
         /**
          *  @return How many statements there are in the properties list.
          */
-        int propertiesSize();
+        int propertiesSize() const;
 
         /**
          *  @return All the properties in the list, contained in a double ended queue holding shared

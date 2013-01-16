@@ -158,7 +158,7 @@ HSSPropertyDefinition::p &HSSObjectDefinition::propertiesLast()
     return this->properties.back();
 }
 
-int HSSObjectDefinition::propertiesSize()
+int HSSObjectDefinition::propertiesSize() const
 {
     return this->properties.size();
 }
