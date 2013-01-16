@@ -297,7 +297,7 @@ void HSSContainer::remove(unsigned index)
     }
 
     i = 0;
-    for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it != this->children->end(); ++it)
+    for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it != this->allChildren->end(); ++it)
     {
         HSSDisplayObject::p child = *it;
         if (child->getIndex() == index)
