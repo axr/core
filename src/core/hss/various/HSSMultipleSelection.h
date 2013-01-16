@@ -110,6 +110,8 @@ namespace AXR
         std::vector< HSSSimpleSelection::p > getItems() const;
         QSharedPointer<HSSSimpleSelection> joinAll();
         QSharedPointer<HSSMultipleSelection> splitAll();
+        
+        virtual AXRString toString();
     protected:
 
     private:

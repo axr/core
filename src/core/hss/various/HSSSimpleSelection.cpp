@@ -217,3 +217,20 @@ HSSMultipleSelection::p HSSSimpleSelection::splitAll()
     }
     return ret;
 }
+
+AXRString HSSSimpleSelection::toString()
+{
+    AXRString tempstr = AXRString("HSSSimpleSelection with the following nodes: \n");
+    if (this->d->items.size() > 0)
+    {
+        for (iterator it = this->d->items.begin(); it != this->d->items.end(); ++it)
+        {
+            tempstr.append("   ").append((*it)->toString());
+        }
+    }
+    else
+    {
+        tempstr.append("WARNING: selection is empty!\n");
+    }
+    return tempstr;
+}

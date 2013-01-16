@@ -88,6 +88,18 @@ namespace AXR
         virtual void addSelection(p item) =0;
         virtual QSharedPointer<HSSSimpleSelection> joinAll() =0;
         virtual QSharedPointer<HSSMultipleSelection> splitAll() =0;
+        
+        /**
+         *  Prints itself as a textual representation. Each subclass should override this method.
+         *  @return A textual representation of the object.
+         */
+        virtual AXRString toString();
+        
+        /**
+         *  Prints itself as a std string representation, calling this->toString().
+         *  @return A textual representation of the object, as a std string.
+         */
+        std::string toStdString();
 
     protected:
         HSSSelection(HSSSelectionType type);

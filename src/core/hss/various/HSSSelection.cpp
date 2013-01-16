@@ -83,3 +83,14 @@ HSSSelectionType HSSSelection::getSelectionType()
 {
     return this->selectionType;
 }
+
+AXRString HSSSelection::toString()
+{
+    return "Generic selection - you forgot to override toString() in your subclass";
+}
+
+std::string HSSSelection::toStdString()
+{
+    AXRString tempstr = this->toString();
+    return tempstr.toStdString();
+}
