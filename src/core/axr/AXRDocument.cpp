@@ -243,48 +243,96 @@ void AXRDocument::evaluateCustomFunction(AXRString name, void* data)
     }
 }
 
+/*!
+ * \brief sanitizeUrlPath
+ * Sanitize a URL path so that it is safe for joining with a local directory
+ * path to read resources from the local file system.
+ *
+ * This forces the path to become relative if it is absolute. A leading slash
+ * will be removed and any attempt to cdup outside the root simply resolves
+ * back to root.
+ *
+ * All backslashes in the path are replaced with forward slashes. Then all
+ * multiple directory separators are removed and any "." or ".."s found in
+ * the path are resolved. Any leading "."s or ".."s are removed such that
+ * a URL path of "../foo.html" or "/../foo.html" is resolved to "foo.html"
+ * in the same manner that /../ resolves to / on a UNIX system.
+ *
+ * An example usage might be: \code QFileInfo(getPathToResources(), sanitizeRelativePath(resourceUrl.path())).canonicalFilePath() \endcode
+ * which would allow a URL with a custom protocol to refer to resources within
+ * a special directory on the local filesystem, or allow a web server to safely
+ * map HTTP URLs to the corresponding directory from which they should be served,
+ * on the local filesystem.
+ *
+ * \param path The path to sanitize.
+ */
+QString sanitizeRelativePath(const QString &path)
+{
+    // Swap backslashes for forward slashes
+    QString canonicallySlashedPath = path;
+    canonicallySlashedPath = canonicallySlashedPath.replace('\\', '/');
+
+    // Get a list of all path components after switching backslashes for slashes and resolving
+    // "."s and ".."s and removing redundant directory separators
+    QStringList pathParts = QDir::cleanPath(canonicallySlashedPath).split('/', QString::SkipEmptyParts);
+
+    // Remove any leading "."s or ".."s that were not resolved by QDir::cleanPath
+    pathParts.removeAll(".");
+    pathParts.removeAll("..");
+
+    // Rejoin the path components into a URL that is guaranteed relative and has no "."s or ".."s
+    // or redundant slashes
+    return pathParts.join(QDir::separator());
+}
+
 AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
 {
-    if (resourceUrl.isValid())
+    if (!resourceUrl.isValid())
     {
-        QString localResourcePath;
-
-        if (resourceUrl.scheme() == "axr")
-        {
-            // sanitize the path
-            QStringList pathParts = resourceUrl.path().replace('\\', '/').split('/', QString::SkipEmptyParts);
-            pathParts.removeAll(".");
-            pathParts.removeAll("..");
-            QString resourceUrlPath = pathParts.join(QDir::separator());
-            localResourcePath = QFileInfo(QDir(this->getPathToResources()).canonicalPath(), resourceUrlPath).canonicalFilePath();
-        }
-        else if (resourceUrl.scheme() == "file")
-        {
-            localResourcePath = resourceUrl.toLocalFile();
-        }
-        else if (resourceUrl.scheme() == "http" || resourceUrl.scheme() == "https")
-        {
-            std_log("http is not implemented yet");
-
-            // TODO: Download resource and cache at local path, then
-            // localResourcePath = <path to that>;
-        }
-
-        QFileInfo fi(localResourcePath);
-        if (!fi.exists())
-        {
-            throw AXRError("AXRDocument", "the file " + resourceUrl.toLocalFile() + " doesn't exist");
-        }
-
-        AXRBuffer::p ret = AXRBuffer::p(new AXRBuffer(fi));
-        if (!ret->isValid())
-        {
-            throw AXRError("AXRDocument", "the file " + resourceUrl.toLocalFile() + " couldn't be read");
-        }
-
-        return ret;
+        std_log("Cannot load invalid URL - " + resourceUrl.toString().toStdString());
+        goto ret;
     }
 
+    // Map the URL into a local file path we can load
+    QFileInfo localResource;
+    if (resourceUrl.scheme() == "axr")
+    {
+        localResource = QFileInfo(this->getPathToResources(), sanitizeRelativePath(resourceUrl.path()));
+    }
+    else if (resourceUrl.scheme() == "file")
+    {
+        // TODO: Make sure this only unconditionally loads file URLs when appropriate
+        localResource = QFileInfo(resourceUrl.toLocalFile());
+    }
+    else if (resourceUrl.scheme() == "http" || resourceUrl.scheme() == "https")
+    {
+        // TODO: Download resource and cache at local path, then localResource = QFileInfo(<path to that>);
+        std_log("http/https not implemented yet");
+        goto ret;
+    }
+    else
+    {
+        std_log("Unsupported URL scheme " + resourceUrl.scheme().toStdString());
+        goto ret;
+    }
+
+    // Make sure the file at that path actually exists
+    if (!localResource.exists())
+    {
+        throw AXRError("AXRDocument", "the file " + localResource.filePath() + " doesn't exist");
+    }
+
+    AXRBuffer::p buffer = AXRBuffer::p(new AXRBuffer(localResource));
+    if (!buffer->isValid())
+    {
+        throw AXRError("AXRDocument", "the file " + localResource.filePath() + " couldn't be read");
+    }
+
+    return buffer;
+
+    // TODO: AXRDocument should be able to return an error code from an enum stating WHY a document
+    // failed to load so that failures can be handled programmatically depending on the reason
+ret:
     return AXRBuffer::p(new AXRBuffer());
 }
 
