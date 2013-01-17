@@ -412,7 +412,7 @@ namespace AXR
         HSSBorderPositionNone = 0, /**< Error state. */
         HSSBorderPositionInside, /**< The border is drawn to the inside of the path. */
         HSSBorderPositionCentered, /**< The border is drawn on the center of the path. */
-        HSSBorderPositionOutside, /**< The border is drawn outside of the path. */
+        HSSBorderPositionOutside /**< The border is drawn outside of the path. */
     };
     /** @} */
 
@@ -426,7 +426,7 @@ namespace AXR
     {
         HSSSelectionTypeNone = 0, /**< Error state. */
         HSSSelectionTypeSimpleSelection, /**< A collection of display objects. */
-        HSSSelectionTypeMultipleSelection, /**< A colloection of simple selections. */
+        HSSSelectionTypeMultipleSelection /**< A colloection of simple selections. */
     };
     /** @} */
 }

@@ -146,7 +146,7 @@ namespace AXR
         HSSObservablePropertyVisible,
 
         //HSSBorder
-        HSSObservablePropertySegments,
+        HSSObservablePropertySegments
     };
 }
 
