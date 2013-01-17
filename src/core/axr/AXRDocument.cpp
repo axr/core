@@ -251,18 +251,12 @@ AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
 
         if (resourceUrl.scheme() == "axr")
         {
-            // example: /etc/axr/resources
-            QString localResourceDir = QDir(this->getPathToResources()).canonicalPath();
-
-            // example: /etc/axr/resources/foo/framework.hss
-            localResourcePath = QFileInfo(localResourceDir, resourceUrl.path()).canonicalFilePath();
-
-            if (!localResourcePath.startsWith(localResourceDir))
-            {
-                // ERROR: Attempt to access a file outside the resources directory
-                // such as through the use of a URL like: axr://foo/../../../passwords.txt
-                throw AXRError("AXRDocument", "Malformed path encountered");
-            }
+            // sanitize the path
+            QStringList pathParts = resourceUrl.path().replace('\\', '/').split('/', QString::SkipEmptyParts);
+            pathParts.removeAll(".");
+            pathParts.removeAll("..");
+            QString resourceUrlPath = pathParts.join(QDir::separator());
+            localResourcePath = QFileInfo(QDir(this->getPathToResources()).canonicalPath(), resourceUrlPath).canonicalFilePath();
         }
         else if (resourceUrl.scheme() == "file")
         {
