@@ -132,47 +132,6 @@ const QImage AXRRender::surface() const
     return this->rootSurfaceFinal;
 }
 
-void AXRRender::mouseDown(HSSUnit x, HSSUnit y)
-{
-    //prepare values
-    HSSContainer::p root = this->controller->getRoot();
-
-    struct point
-    {
-        HSSUnit x;
-        HSSUnit y;
-    } thePoint;
-    thePoint.x = x;
-    thePoint.y = y;
-    if (root)
-        root->handleEvent(HSSEventTypeMouseDown, (void*) &thePoint);
-}
-
-void AXRRender::mouseUp(HSSUnit x, HSSUnit y)
-{
-    //prepare values
-    HSSContainer::p root = this->controller->getRoot();
-
-    struct point
-    {
-        HSSUnit x;
-        HSSUnit y;
-    } thePoint;
-    thePoint.x = x;
-    thePoint.y = y;
-    if (root)
-    {
-        try
-        {
-            root->handleEvent(HSSEventTypeMouseUp, (void*) &thePoint);
-        }
-        catch (const AXRError &e)
-        {
-            e.raise();
-        }
-    }
-}
-
 HSSUnit AXRRender::getWindowWidth()
 {
     return this->windowWidth;

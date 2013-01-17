@@ -84,20 +84,6 @@ namespace AXR
          */
         virtual void drawInRectWithBounds(HSSRect rect, HSSRect bounds);
         /**
-         *  Creates a point from the x and y coordinates and sends the mouse down event to the root object,
-         *  which will then further handle it.
-         *  @param  x   An HSSUnit containing the horizontal position.
-         *  @param  y   An HSSUnit containing the vertical position.
-         */
-        void mouseDown(HSSUnit x, HSSUnit y);
-        /**
-         *  Creates a point from the x and y coordinates and sends the mouse up event to the root object,
-         *  which will then further handle it.
-         *  @param  x   An HSSUnit containing the horizontal position.
-         *  @param  y   An HSSUnit containing the vertical position.
-         */
-        void mouseUp(HSSUnit x, HSSUnit y);
-        /**
          *  Reset the renderer to initial values, for example when reloading a file.
          */
         void reset();
