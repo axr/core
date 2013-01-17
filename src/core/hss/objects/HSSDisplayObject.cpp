@@ -3856,6 +3856,7 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
         break;
     }
     case HSSEventTypeClick:
+    case HSSEventTypeDoubleClick:
     {
         HSSPoint thePoint = *(HSSPoint*) data;
 
