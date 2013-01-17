@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSMultipleValueDefinition.h"
 
 using namespace AXR;

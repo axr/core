@@ -41,9 +41,10 @@
  *
  ********************************************************************/
 
-#include <QSharedPointer>
 #include "AXRDebugging.h"
+#include "HSSDisplayObject.h"
 #include "HSSMultipleValue.h"
+#include <QSharedPointer>
 
 using namespace AXR;
 

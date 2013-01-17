@@ -110,7 +110,7 @@ namespace AXR
         /**
          *  Destructor for this class. Clears the currentObjectContext stack and the loaded files.
          */
-        ~HSSParser();
+        virtual ~HSSParser();
 
         /**
          *  Reset the parser to initial values, for example when reloading a file.

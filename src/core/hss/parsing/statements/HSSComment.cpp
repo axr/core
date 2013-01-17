@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include "HSSComment.h"
+#include "HSSDisplayObject.h"
 
 using namespace AXR;
 

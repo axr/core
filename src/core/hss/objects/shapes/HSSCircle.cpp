@@ -44,6 +44,7 @@
 #include "AXRDebugging.h"
 #include "HSSBorder.h"
 #include "HSSCircle.h"
+#include "HSSDisplayObject.h"
 
 using namespace AXR;
 

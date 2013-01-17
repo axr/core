@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSMultipleValueDefinition.h"
 #include "HSSPropertyDefinition.h"
 

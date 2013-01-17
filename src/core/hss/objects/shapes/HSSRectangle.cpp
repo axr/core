@@ -43,6 +43,7 @@
 
 #include "AXRDebugging.h"
 #include "HSSBorder.h"
+#include "HSSDisplayObject.h"
 #include "HSSKeywordConstant.h"
 #include "HSSRectangle.h"
 #include <QPainterPath>
