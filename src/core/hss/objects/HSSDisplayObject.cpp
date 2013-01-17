@@ -3908,7 +3908,7 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
     }
 
     default:
-        throw AXRError("HSSDisplayObject", "Unknown event type");
+        AXRError("HSSDisplayObject", "Unknown event type").raise();
     }
 
     return false;
