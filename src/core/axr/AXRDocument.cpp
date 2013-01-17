@@ -289,8 +289,8 @@ AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
 {
     if (!resourceUrl.isValid())
     {
-        std_log("Cannot load invalid URL - " + resourceUrl.toString().toStdString());
-        goto ret;
+        AXRError("AXRDocument", "Cannot load invalid URL - " + resourceUrl.toString()).raise();
+        return AXRBuffer::p(new AXRBuffer());
     }
 
     // Map the URL into a local file path we can load
@@ -307,13 +307,13 @@ AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
     else if (resourceUrl.scheme() == "http" || resourceUrl.scheme() == "https")
     {
         // TODO: Download resource and cache at local path, then localResource = QFileInfo(<path to that>);
-        std_log("http/https not implemented yet");
-        goto ret;
+        AXRError("AXRDocument", "http/https not implemented yet").raise();
+        return AXRBuffer::p(new AXRBuffer());
     }
     else
     {
-        std_log("Unsupported URL scheme " + resourceUrl.scheme().toStdString());
-        goto ret;
+        AXRError("AXRDocument", "Unsupported URL scheme " + resourceUrl.scheme()).raise();
+        return AXRBuffer::p(new AXRBuffer());
     }
 
     // Make sure the file at that path actually exists
@@ -332,8 +332,6 @@ AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
 
     // TODO: AXRDocument should be able to return an error code from an enum stating WHY a document
     // failed to load so that failures can be handled programmatically depending on the reason
-ret:
-    return AXRBuffer::p(new AXRBuffer());
 }
 
 bool AXRDocument::needsDisplay() const
