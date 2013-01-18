@@ -814,7 +814,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                             -innerTopOffset+height-innerBottomOffset,
                                             -innerLeftOffset*2);
                     path = outerPath.subtracted(innerPath);
-                    painter.fillPath(path, QColor(theColor->getRed(), theColor->getGreen(), theColor->getBlue(), theColor->getAlpha()));
+                    painter.fillPath(path, theColor->toQColor());
                 }
             //}
 
@@ -878,7 +878,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     path.arcTo(curve3, 90, -90);
                                     path.arcTo(curve4, 0, 90);
                                     path.closeSubpath();
-                                    painter.fillPath(path, QColor(theColor->getRed(), theColor->getGreen(), theColor->getBlue(), theColor->getAlpha()));
+                                    painter.fillPath(path, theColor->toQColor());
 
                                     topCumulative += theSize;
                                 }
@@ -899,7 +899,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     path.arcTo(curve3, 270, 90);
                                     path.arcTo(curve4, 0, 90);
                                     path.closeSubpath();
-                                    painter.fillPath(path, QColor(theColor->getRed(), theColor->getGreen(), theColor->getBlue(), theColor->getAlpha()));
+                                    painter.fillPath(path, theColor->toQColor());
 
                                     rightCumulative += theSize;
                                 }
@@ -920,7 +920,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     path.arcTo(curve3, 0, -90);
                                     path.arcTo(curve4, 270, -90);
                                     path.closeSubpath();
-                                    painter.fillPath(path, QColor(theColor->getRed(), theColor->getGreen(), theColor->getBlue(), theColor->getAlpha()));
+                                    painter.fillPath(path, theColor->toQColor());
 
                                     bottomCumulative += theSize;
                                 }
@@ -941,7 +941,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     path.arcTo(curve3, 270, -90);
                                     path.arcTo(curve4, 180, -90);
                                     path.closeSubpath();
-                                    painter.fillPath(path, QColor(theColor->getRed(), theColor->getGreen(), theColor->getBlue(), theColor->getAlpha()));
+                                    painter.fillPath(path, theColor->toQColor());
 
                                     leftCumulative += theSize;
                                 }
@@ -987,7 +987,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                             -innerTopOffset+height-innerBottomOffset,
                                             -innerLeftOffset*2);
                     path = outerPath.subtracted(innerPath);
-                    painter.fillPath(path, QColor(theColor->getRed(), theColor->getGreen(), theColor->getBlue(), theColor->getAlpha()));
+                    painter.fillPath(path, theColor->toQColor());
                 }
             //}
 
@@ -1096,7 +1096,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                             innerTopOffset+height+innerBottomOffset,
                                             innerLeftOffset*2);
                     path = outerPath.subtracted(innerPath);
-                    painter.fillPath(path, QColor(theColor->getRed(), theColor->getGreen(), theColor->getBlue(), theColor->getAlpha()));
+                    painter.fillPath(path, theColor->toQColor());
                 }
             //}
             leftCumulative += theSize;

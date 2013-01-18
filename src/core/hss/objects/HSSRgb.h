@@ -44,6 +44,7 @@
 #ifndef HSSRGB_H
 #define HSSRGB_H
 
+#include <QColor>
 #include <QSharedPointer>
 #include "HSSObject.h"
 #include "HSSUnits.h"
@@ -188,6 +189,9 @@ namespace AXR
          *  @param data     A pointer to the data that is sent along the notification.
          */
         void alphaChanged(HSSObservableProperty source, void*data);
+
+        QColor toQColor() const;
+        QColor toQColorWithAlpha(int alpha) const;
 
     private:
         HSSUnit red;

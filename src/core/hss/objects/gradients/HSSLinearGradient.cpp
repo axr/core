@@ -552,13 +552,13 @@ void HSSLinearGradient::draw(QPainter &painter, const QPainterPath &path)
     QLinearGradient pat(this->startX, this->startY, this->endX, this->endY);
     if (this->startColor)
     {
-        pat.setColorAt(0, QColor(this->startColor->getRed(), this->startColor->getGreen(), this->startColor->getBlue(), this->startColor->getAlpha()));
+        pat.setColorAt(0, this->startColor->toQColor());
         prevColor = this->startColor;
     }
     else
     {
         HSSRgb::p nextColor = this->getColorAfterFirst();
-        pat.setColorAt(0, QColor(nextColor->getRed(), nextColor->getGreen(), nextColor->getBlue(), 0));
+        pat.setColorAt(0, nextColor->toQColorWithAlpha(0));
         prevColor = nextColor;
     }
 
@@ -589,26 +589,26 @@ void HSSLinearGradient::draw(QPainter &painter, const QPainterPath &path)
             HSSRgb::p theColor = theStop->getColor();
             if (theColor)
             {
-                pat.setColorAt(position, QColor(theColor->getRed(), theColor->getGreen(), theColor->getBlue(), theColor->getAlpha()));
+                pat.setColorAt(position, theColor->toQColor());
                 prevColor = theColor;
             }
             else
             {
                 //create two stops:
                 //one with the previous color
-                pat.setColorAt(position, QColor(prevColor->getRed(), prevColor->getGreen(), prevColor->getBlue(), 0));
+                pat.setColorAt(position, prevColor->toQColorWithAlpha(0));
                 //and one with the next color
                 std::vector<HSSObject::p>::iterator innerIt = it;
                 ++innerIt;
                 HSSRgb::p nextColor = this->getNextColorFromStops(innerIt, this->colorStops.end());
-                pat.setColorAt(position, QColor(nextColor->getRed(), nextColor->getGreen(), nextColor->getBlue(), 0));
+                pat.setColorAt(position, nextColor->toQColorWithAlpha(0));
             }
         }
         //if it's a simple color
         else if (theStopObj->isA(HSSObjectTypeRgb))
         {
             HSSRgb::p theColor = qSharedPointerCast<HSSRgb > (theStopObj);
-            pat.setColorAt(0.5, QColor(theColor->getRed(), theColor->getGreen(), theColor->getBlue(), theColor->getAlpha()));
+            pat.setColorAt(0.5, theColor->toQColor());
         }
         else
         {
@@ -619,12 +619,12 @@ void HSSLinearGradient::draw(QPainter &painter, const QPainterPath &path)
 
     if (this->endColor)
     {
-        pat.setColorAt(1, QColor(this->endColor->getRed(), this->endColor->getGreen(), this->endColor->getBlue(), this->endColor->getAlpha()));
+        pat.setColorAt(1, this->endColor->toQColor());
     }
     else
     {
         HSSRgb::p prevColor = this->getColorBeforeLast();
-        pat.setColorAt(1, QColor(prevColor->getRed(), prevColor->getGreen(), prevColor->getBlue(), 0));
+        pat.setColorAt(1, prevColor->toQColorWithAlpha(0));
     }
 
     QBrush brush(pat);

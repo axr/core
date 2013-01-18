@@ -327,3 +327,15 @@ HSSUnit HSSRgb::_evaluatePropertyValue(
 
     return ret;
 }
+
+QColor HSSRgb::toQColor() const
+{
+    return QColor(static_cast<int>(red), static_cast<int>(green), static_cast<int>(blue), static_cast<int>(alpha));
+}
+
+QColor HSSRgb::toQColorWithAlpha(int alpha) const
+{
+    QColor color = toQColor();
+    color.setAlpha(alpha);
+    return color;
+}

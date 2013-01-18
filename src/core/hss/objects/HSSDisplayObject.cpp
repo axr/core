@@ -867,16 +867,7 @@ void HSSDisplayObject::_drawBackground(QPainter &painter, const QPainterPath &pa
         {
             HSSRgb::p color = qSharedPointerCast<HSSRgb > (theobj);
 
-            HSSUnit r = 0., g = 0., b = 0., a = 0;
-            if (color)
-            {
-                r = color->getRed();
-                g = color->getGreen();
-                b = color->getBlue();
-                a = color->getAlpha();
-            }
-
-            painter.fillPath(path, QColor(r, g, b, a));
+            painter.fillPath(path, color ? color->toQColor() : QColor(0, 0, 0, 0));
 
             break;
         }

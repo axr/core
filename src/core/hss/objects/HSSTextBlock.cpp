@@ -332,7 +332,7 @@ void HSSTextBlock::drawForeground()
     if (theFont && theFont->getColor())
     {
         HSSRgb::p textColor = qSharedPointerCast<HSSRgb>(theFont->getColor());
-        pen.setColor(QColor(textColor->getRed(), textColor->getGreen(), textColor->getBlue(), textColor->getAlpha()));
+        pen.setColor(textColor->toQColor());
     }
     else
     {

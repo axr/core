@@ -286,19 +286,10 @@ void HSSLineBorder::colorChanged(AXR::HSSObservableProperty source, void *data)
 
 void HSSLineBorder::draw(QPainter &painter, const QPainterPath &path)
 {
-    HSSUnit r = 0., g = 0., b = 0., a = 255.;
-    if (this->color)
-    {
-        r = this->color->getRed();
-        g = this->color->getGreen();
-        b = this->color->getBlue();
-        a = this->color->getAlpha();
-    }
-
     QPainterPathStroker stroker;
     stroker.setWidth(this->size);
     stroker.setJoinStyle(Qt::MiterJoin);
     stroker.setCapStyle(Qt::FlatCap);
     QPainterPath borderPath = stroker.createStroke(path);
-    painter.fillPath(borderPath, QColor(r, g, b, a));
+    painter.fillPath(borderPath, this->color ? this->color->toQColor() : QColor(Qt::black));
 }
