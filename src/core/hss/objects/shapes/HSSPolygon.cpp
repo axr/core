@@ -194,7 +194,7 @@ void HSSPolygon::drawBorders(QPainter &painter, std::vector<HSSBorder::p> border
     }
 
     // Correction if needed
-    HSSUnit correction;
+    HSSUnit correction = 0;
     if ((int) combinedThickness % 2)
     {
         correction = 0.5;
@@ -403,7 +403,7 @@ HSSUnit HSSPolygon::_evaluatePropertyValue(
                                        HSSObservableProperty &observedStoreProperty
                                        )
 {
-    HSSUnit ret;
+    HSSUnit ret = 0;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)

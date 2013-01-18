@@ -1119,7 +1119,7 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
                                            HSSSimpleSelection::p scope
                                            )
 {
-    HSSUnit ret;
+    HSSUnit ret = 0;
 
     HSSParserNodeType nodeType = value->getType();
     switch (nodeType)

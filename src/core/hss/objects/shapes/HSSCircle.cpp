@@ -110,7 +110,7 @@ void HSSCircle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBor
     }
 
     // Correction if needed
-    HSSUnit correction;
+    HSSUnit correction = 0;
     if ((int) combinedThickness % 2)
     {
         correction = 0.5;
