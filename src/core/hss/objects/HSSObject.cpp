@@ -380,12 +380,12 @@ void HSSObject::shorthandReset()
     this->shorthandIndex = 0;
 }
 
-unsigned HSSObject::getShorthandIndex()
+size_t HSSObject::getShorthandIndex() const
 {
     return this->shorthandIndex;
 }
 
-void HSSObject::setShorthandIndex(unsigned newValue)
+void HSSObject::setShorthandIndex(size_t newValue)
 {
     if (newValue < this->shorthandProperties.size())
     {
@@ -436,7 +436,7 @@ void HSSObject::addDIsA(HSSParserNode::p value)
             //objdef->apply();
             std::deque<HSSPropertyDefinition::p> properties = objdef->getProperties();
 
-            for (unsigned i = 0, size = properties.size(); i < size; ++i)
+            for (size_t i = 0; i < properties.size(); ++i)
             {
                 HSSObservableProperty propertyName = HSSObservable::observablePropertyFromString(properties[i]->getName());
                 if (propertyName != HSSObservablePropertyNone)

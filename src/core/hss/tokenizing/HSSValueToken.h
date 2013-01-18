@@ -58,9 +58,9 @@ namespace AXR
     public:
         typedef QSharedPointer<HSSValueToken> p;
 
-        HSSValueToken(HSSTokenType type, AXRString value, unsigned line, unsigned column);
-        HSSValueToken(HSSTokenType type, char value, unsigned line, unsigned column);
-        HSSValueToken(HSSTokenType type, HSSUnit value, unsigned line, unsigned column);
+        HSSValueToken(HSSTokenType type, AXRString value, qint64 line, qint64 column);
+        HSSValueToken(HSSTokenType type, char value, qint64 line, qint64 column);
+        HSSValueToken(HSSTokenType type, HSSUnit value, qint64 line, qint64 column);
         virtual ~HSSValueToken();
         AXRString getString();
         HSSUnit getLong();

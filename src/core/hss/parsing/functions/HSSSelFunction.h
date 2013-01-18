@@ -107,13 +107,13 @@ namespace AXR
          *  @param index    An unsigned integer with the index of the selector chain.
          *  @return A shared pointer to the element at that index.
          */
-        HSSSelectorChain::p &selectorChainsGet(unsigned index);
+        HSSSelectorChain::p &selectorChainsGet(size_t index);
 
         /**
          *  Removes a selector chain by index.
          *  @param index    An unsigned integer with the index of the selector chain to be deleted.
          */
-        void selectorChainsRemove(unsigned index);
+        void selectorChainsRemove(off_t index);
 
         /**
          *  Removes the last element in the selector chains vector.
@@ -128,7 +128,7 @@ namespace AXR
         /**
          *  @return the size of the selector chains vector
          */
-        int selectorChainsSize();
+        size_t selectorChainsSize() const;
 
         /**
          *  This is the actual implementation of what the function does. It selects from the elements

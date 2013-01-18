@@ -167,7 +167,7 @@ namespace AXR
          *
          *  @param index    An unsigned int containing the index of the object to be removed.
          */
-        void objectTreeRemove(unsigned index);
+        void objectTreeRemove(off_t index);
 
         /**
          *  Returns an object from the object tree by index.
@@ -175,7 +175,7 @@ namespace AXR
          *  @param index    An unsigned int containing the index of the object to be returned.
          *  @return         The object definitionat the index. May be an empty pointer if not found.
          */
-        HSSObjectDefinition::p & objectTreeGet(unsigned index);
+        HSSObjectDefinition::p & objectTreeGet(size_t index);
 
         /**
          *  Returns an object from the object tree by name.
@@ -197,7 +197,7 @@ namespace AXR
          *
          *  @param index    An unsigned int containing the index of the sheet to be removed.
          */
-        void loadSheetsRemove(unsigned index);
+        void loadSheetsRemove(off_t index);
 
         /**
          *  Returns an entry from the list of sheets to be loaded.
@@ -205,7 +205,7 @@ namespace AXR
          *  @param index    An unsigned int containing the index of the sheet to be removed.
          *  @return         The sheet at that index.
          */
-        QUrl loadSheetsGet(unsigned index);
+        QUrl loadSheetsGet(size_t index);
 
         /**
          *  Returns all entries from the list of sheets to be loaded.
@@ -261,7 +261,7 @@ namespace AXR
          *
          *  @param index    An unsigned int containing the index of the rule to be removed.
          */
-        void rulesRemove(unsigned index);
+        void rulesRemove(off_t index);
 
         /**
          *  Returns the rule at given index.
@@ -269,14 +269,14 @@ namespace AXR
          *  @param index    An unsigned int containing the index of the rule to be returned.
          *  @return         A shared pointer to the rule. May be an empty pointer if not found.
          */
-        HSSRule::p & rulesGet(unsigned index);
+        HSSRule::p & rulesGet(size_t index);
 
         /**
          *  Gives the size of the list of rules.
          *
          *  @return         The number of entries in the list of rules.
          */
-        unsigned rulesSize();
+        size_t rulesSize() const;
 
         /**
          *  Set the given selector chain as the current one. It will set the new current chain size,
@@ -419,8 +419,8 @@ namespace AXR
 
         HSSSelectorChain::p currentChain;
         HSSParserNode::p currentSelectorNode;
-        unsigned currentChainCount;
-        unsigned currentChainSize;
+        size_t currentChainCount;
+        size_t currentChainSize;
         void readNextSelectorNode();
         bool isAtEndOfSelector();
 

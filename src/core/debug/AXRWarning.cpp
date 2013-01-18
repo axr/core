@@ -45,7 +45,7 @@
 
 using namespace AXR;
 
-AXRWarning::AXRWarning(const AXRString &origin, const AXRString &message, const QUrl &url, int line, int column)
+AXRWarning::AXRWarning(const AXRString &origin, const AXRString &message, const QUrl &url, qint64 line, qint64 column)
 : AXRError(origin, message, url, line, column)
 {
 }

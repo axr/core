@@ -145,7 +145,7 @@ namespace AXR
         /**
          *  @return the size of the selector chains vector
          */
-        int selectorChainsSize();
+        size_t selectorChainsSize() const;
 
         /**
          *  @todo make private

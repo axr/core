@@ -83,12 +83,12 @@ AXRString HSSObjectDefinition::toString()
     AXRString tempstr = AXRString("HSSObjectDefinition with object of type:");
     tempstr.append(this->prototype->toString());
 
-    const unsigned int pccount = this->propertiesSize();
+    const size_t pccount = this->propertiesSize();
     if (pccount > 0)
     {
         tempstr.append(" and the following properties: \n");
 
-        for (unsigned j = 0; j < pccount; ++j)
+        for (size_t j = 0; j < pccount; ++j)
         {
             tempstr.append(this->properties[j]->toString().append("\n"));
         }
@@ -99,8 +99,7 @@ AXRString HSSObjectDefinition::toString()
 
 void HSSObjectDefinition::apply()
 {
-    unsigned i, size;
-    for (i = 0, size = this->propertiesSize(); i < size; ++i)
+    for (size_t i = 0; i < this->propertiesSize(); ++i)
     {
         HSSPropertyDefinition::p theProperty = this->properties[i];
         this->prototype->setPropertyWithName(theProperty->getName(), theProperty->getValue());
@@ -158,7 +157,7 @@ HSSPropertyDefinition::p &HSSObjectDefinition::propertiesLast()
     return this->properties.back();
 }
 
-int HSSObjectDefinition::propertiesSize() const
+size_t HSSObjectDefinition::propertiesSize() const
 {
     return this->properties.size();
 }
@@ -196,7 +195,7 @@ HSSObjectDefinition::p &HSSObjectDefinition::childrenLast()
     return this->children.back();
 }
 
-int HSSObjectDefinition::childrenSize()
+size_t HSSObjectDefinition::childrenSize() const
 {
     return this->children.size();
 }

@@ -146,13 +146,13 @@ namespace AXR
          *  @param index    An unsigned integer with the index of the selector chain.
          *  @return A shared pointer to the element at that index.
          */
-        HSSSelectorChain::p &selectorChainsGet(unsigned index);
+        HSSSelectorChain::p &selectorChainsGet(size_t index);
 
         /**
          *  Removes a selector chain by index.
          *  @param index    An unsigned integer with the index of the selector chain to be deleted.
          */
-        void selectorChainsRemove(unsigned index);
+        void selectorChainsRemove(off_t index);
 
         /**
          *  Removes the last element in the selector chains vector.
@@ -167,7 +167,7 @@ namespace AXR
         /**
          *  @return the size of the selector chains vector
          */
-        int selectorChainsSize();
+        size_t selectorChainsSize() const;
 
         /*
          *  @todo Add setter for properties vector.
@@ -192,13 +192,13 @@ namespace AXR
          *  @param index    An unsigned integer with the index of the property definition.
          *  @return A shared pointer to the element at that index.
          */
-        HSSPropertyDefinition::p &propertiesGet(unsigned index);
+        HSSPropertyDefinition::p &propertiesGet(size_t index);
 
         /**
          *  Removes a property definition by index.
          *  @param index    An unsigned integer with the index of the property definition to be deleted.
          */
-        void propertiesRemove(unsigned index);
+        void propertiesRemove(off_t index);
 
         /**
          *  Removes the last element in the properties vector.
@@ -213,7 +213,7 @@ namespace AXR
         /**
          *  @return the size of the properties vector
          */
-        unsigned int propertiesSize() const;
+        size_t propertiesSize() const;
 
         /**
          *  Add a child rule.
@@ -226,13 +226,13 @@ namespace AXR
          *  @param index    An unsigned integer with the index of the child rule.
          *  @return A shared pointer to the element at that index.
          */
-        HSSRule::p childrenGet(unsigned index);
+        HSSRule::p childrenGet(size_t index);
 
         /**
          *  Removes a child rule by index.
          *  @param index    An unsigned integer with the index of the child rule to be deleted.
          */
-        void childrenRemove(unsigned index);
+        void childrenRemove(off_t index);
 
         /**
          *  Removes the last element in the children vector.
@@ -242,7 +242,7 @@ namespace AXR
         /**
          *  @return the size of the children vector
          */
-        int childrenSize();
+        size_t childrenSize() const;
 
         void setInstruction(HSSInstruction::p newInstruction);
 

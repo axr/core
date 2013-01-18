@@ -141,7 +141,7 @@ HSSMultipleSelection::const_iterator HSSMultipleSelection::end() const
     return this->d->items.end();
 }
 
-unsigned HSSMultipleSelection::size() const
+size_t HSSMultipleSelection::size() const
 {
     return this->d->items.size();
 }

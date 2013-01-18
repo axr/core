@@ -89,7 +89,7 @@ inline void HSSLastChildFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSel
     for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
     {
         const HSSDisplayObject::p & theDO = *it;
-        unsigned int lastIndex = theDO->getParent()->getChildren()->size() - 1;
+        const size_t lastIndex = theDO->getParent()->getChildren()->size() - 1;
         if (this->getNegating())
         {
             if (theDO->getIndex() != lastIndex)

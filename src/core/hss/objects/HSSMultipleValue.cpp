@@ -84,12 +84,11 @@ AXRString HSSMultipleValue::toString()
 {
     AXRString tempstr = AXRString("HSSMultipleValue");
 
-    const unsigned int vcount = this->size();
+    const size_t vcount = this->size();
     if (vcount > 0)
     {
         tempstr.append(" with the following values: \n");
-        unsigned j;
-        for (j = 0; j < vcount; ++j)
+        for (size_t j = 0; j < vcount; ++j)
         {
             tempstr.append("   ").append(this->valueList[j]->toString()).append("\n");
         }
@@ -122,7 +121,7 @@ HSSParserNode::p HSSMultipleValue::last()
     return this->valueList.back();
 }
 
-int HSSMultipleValue::size()
+size_t HSSMultipleValue::size() const
 {
     return this->valueList.size();
 }

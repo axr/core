@@ -160,7 +160,7 @@ namespace AXR
          *  Removes a child by index.
          *  @param index    An unsigned int containing the index of the child to be removed.
          */
-        void remove(unsigned index);
+        void remove(size_t index);
 
         /**
          *  Removes all children from this container.
@@ -496,8 +496,8 @@ namespace AXR
         bool _arrangeLines(displayGroup::p &groups, HSSDirectionValue direction, bool isFirstGroup);
         void _recursiveGetPushGroup(HSSDisplayObject::p objA, HSSDisplayObject::p objB, std::vector<displayGroup::p>::iterator linesIt, std::vector<displayGroup::p>::iterator stopIt, displayGroup::p &ret);
         void _distribute(displayGroup::p &groups, HSSDirectionValue direction);
-        bool _recursiveFindTopConstraint(HSSUnit & constraint, displayGroup::p group, unsigned int i, HSSDisplayObject::p child);
-        bool _recursiveFindBottomConstraint(HSSUnit & constraint, displayGroup::p group, int i, HSSDisplayObject::p child);
+        bool _recursiveFindTopConstraint(HSSUnit & constraint, displayGroup::p group, size_t i, HSSDisplayObject::p child);
+        bool _recursiveFindBottomConstraint(HSSUnit & constraint, displayGroup::p group, size_t i, HSSDisplayObject::p child);
         virtual HSSClonable::p cloneImpl() const;
 
     };

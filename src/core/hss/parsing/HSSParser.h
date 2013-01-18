@@ -426,7 +426,7 @@ namespace AXR
         /**
          *  @return The size of the current object context stack.
          */
-        unsigned int currentObjectContextSize();
+        size_t currentObjectContextSize() const;
 
         /**
          *  Puts the given object at the top new current object context stack.
@@ -457,8 +457,8 @@ namespace AXR
         std::vector<HSSParserContext> currentContext;
         std::stack<HSSObject::p> currentObjectContext;
 
-        unsigned line;
-        unsigned column;
+        qint64 line;
+        qint64 column;
 
         AXRString basepath;
         AXRBuffer::p currentFile;

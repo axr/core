@@ -201,12 +201,12 @@ namespace AXR
          *  Getter for the shorthand index.
          *  @return The shorthand index.
          */
-        unsigned getShorthandIndex();
+        size_t getShorthandIndex() const;
         /**
          *  Setter for the shorthand index.
          *  @param newValue     The new shorthand index.
          */
-        void setShorthandIndex(unsigned newValue);
+        void setShorthandIndex(size_t newValue);
 
         /**
          *  Getter for the definition object for the isA property.
@@ -325,7 +325,7 @@ namespace AXR
         QMap<HSSObservableProperty, QVariant> properties;
         std::vector<AXRString> shorthandProperties;
         QMap<AXRString, bool> skipShorthand;
-        unsigned shorthandIndex;
+        size_t shorthandIndex;
 
         HSSParserNode::p dIsA;
 

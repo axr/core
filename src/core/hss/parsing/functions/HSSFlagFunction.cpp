@@ -140,7 +140,7 @@ HSSSelectorChain::p & HSSFlagFunction::selectorChainsLast()
     return this->selectorChains.back();
 }
 
-int HSSFlagFunction::selectorChainsSize()
+size_t HSSFlagFunction::selectorChainsSize() const
 {
     return this->selectorChains.size();
 }

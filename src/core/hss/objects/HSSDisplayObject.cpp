@@ -95,15 +95,19 @@ void HSSDisplayObject::initialize()
 
     this->_anchorXdefault = this->_anchorYdefault = true;
 
-    this->drawIndex = this->_index = 0;
-    this->tabIndex = this->zoomFactor = 1;
-    this->flow = this->visible = true;
+    this->drawIndex = 0;
+    this->_index = 0;
+    this->tabIndex = 1;
+    this->zoomFactor = 1;
+    this->flow = true;
+    this->visible = true;
     this->contained = true;
     /**
      *  @todo change to camelCase
      */
     this->does_float = false;
-    this->heightByContent = this->widthByContent = false;
+    this->heightByContent = false;
+    this->widthByContent = false;
     this->_isRoot = false;
 
     this->elementName = AXRString();
@@ -400,12 +404,12 @@ HSSSimpleSelection::p HSSDisplayObject::getPreviousSiblings()
     return ret;
 }
 
-void HSSDisplayObject::setIndex(unsigned newIndex)
+void HSSDisplayObject::setIndex(size_t newIndex)
 {
     this->_index = newIndex;
 }
 
-unsigned HSSDisplayObject::getIndex()
+size_t HSSDisplayObject::getIndex() const
 {
     return this->_index;
 }
@@ -537,7 +541,7 @@ void HSSDisplayObject::rulesRemoveLast()
     this->rules.pop_back();
 }
 
-int HSSDisplayObject::rulesSize()
+size_t HSSDisplayObject::rulesSize() const
 {
     return this->rules.size();
 }

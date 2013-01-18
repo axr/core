@@ -254,8 +254,8 @@ bool HSSParser::readNextStatement()
             //save
             HSSTokenizer::p currentTokenizer = this->tokenizer;
             AXRBuffer::p currentFile = this->currentFile;
-            unsigned currentLine = this->line;
-            unsigned currentColumn = this->column;
+            qint64 currentLine = this->line;
+            qint64 currentColumn = this->column;
             HSSToken::p currentCurrentToken = this->currentToken;
             std::vector<HSSParserContext> currentCurrentContext = this->currentContext;
             std::stack<HSSObject::p> currentCurrentObjectContext = this->currentObjectContext;
@@ -1631,24 +1631,24 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
 void HSSParser::recursiveAddObjectDefinition(HSSObjectDefinition::p objDef)
 {
     this->controller->objectTreeAdd(objDef);
-    unsigned i, size;
     const std::vector<HSSObjectDefinition::p>children = objDef->getChildren();
-    for (i = 0, size = children.size(); i < size; ++i)
+    for (size_t i = 0; i < children.size(); ++i)
     {
         HSSObjectDefinition::p child = children[i];
+
+        // prepend backwards
         std::deque<HSSPropertyDefinition::p> properties = objDef->getProperties();
-        unsigned i;
-        //prepend backwards
-        for (i = properties.size(); i > 0; i--)
+        for (size_t i = properties.size(); i > 0; i--)
         {
             child->propertiesPrepend(properties[i - 1]);
         }
-        std::deque<HSSRule::p>::const_reverse_iterator it;
+
         const std::deque<HSSRule::p> rules = objDef->getRules();
-        for (it = rules.rbegin(); it != rules.rend(); ++it)
+        for (std::deque<HSSRule::p>::const_reverse_iterator it = rules.rbegin(); it != rules.rend(); ++it)
         {
             child->rulesPrepend((*it));
         }
+        
         this->recursiveAddObjectDefinition(child);
     }
 }
@@ -3090,7 +3090,7 @@ void HSSParser::currentObjectContextRemoveLast()
     this->currentObjectContext.pop();
 }
 
-unsigned int HSSParser::currentObjectContextSize()
+size_t HSSParser::currentObjectContextSize() const
 {
     return this->currentObjectContext.size();
 }

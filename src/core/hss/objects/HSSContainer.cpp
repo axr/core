@@ -282,9 +282,8 @@ void HSSContainer::add(HSSDisplayObject::p child)
     this->notifyObservers(HSSObservablePropertyTreeChange, this);
 }
 
-void HSSContainer::remove(unsigned index)
+void HSSContainer::remove(size_t index)
 {
-    unsigned i = 0;
     for (HSSSimpleSelection::iterator it = this->children->begin(); it != this->children->end(); ++it)
     {
         HSSDisplayObject::p child = *it;
@@ -293,10 +292,8 @@ void HSSContainer::remove(unsigned index)
             HSSSimpleSelection::iterator delIt = it;
             this->children->erase(delIt);
         }
-        ++i;
     }
 
-    i = 0;
     for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it != this->allChildren->end(); ++it)
     {
         HSSDisplayObject::p child = *it;
@@ -305,7 +302,6 @@ void HSSContainer::remove(unsigned index)
             HSSSimpleSelection::iterator delIt = it;
             this->allChildren->erase(delIt);
         }
-        ++i;
     }
 
     this->resetChildrenIndexes();
@@ -535,7 +531,10 @@ void HSSContainer::layout()
         {
             std::vector<displayGroup::p>primaryGroups;
             std::vector<displayGroup::p>secondaryGroups;
-            unsigned i = 0, size, j = 0, k = 0;
+            size_t i = 0;
+            size_t size;
+            size_t j = 0;
+            size_t k = 0;
             //HSSUnit acc2 = 0;
             security_brake_init();
             AXRDocument * document = this->getController()->document();
@@ -1342,7 +1341,7 @@ bool HSSContainer::_mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p 
 
 void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
 {
-    unsigned i = 0, size = group->objects.size();
+    size_t i = 0, size = group->objects.size();
 
     switch (direction)
     {
@@ -1659,7 +1658,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
     case HSSDirectionTopToBottom:
     {
         bool byAnchors = false;
-        for (unsigned i = 0, size = group->lines.size(); i < size; ++i)
+        for (size_t i = 0; i < group->lines.size(); ++i)
         {
             displayGroup::p line = group->lines[i];
             for (HSSSimpleSelection::iterator it2 = line->objects.begin(); it2!= line->objects.end(); ++it2)
@@ -1749,7 +1748,8 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
             if (startY > (this->height - this->bottomPadding) - group->height) startY = (this->height - this->bottomPadding) - group->height;
             if (startY < this->topPadding) startY = this->topPadding;
 
-            unsigned int i = 0, size = biggestGroup->objects.size();
+            size_t i = 0;
+            size_t size = biggestGroup->objects.size();
             for (HSSSimpleSelection::iterator bobjIt = biggestGroup->objects.begin(); bobjIt != biggestGroup->objects.end(); ++bobjIt)
             {
                 HSSDisplayObject::p otherChild2 = *bobjIt;
@@ -1957,7 +1957,7 @@ void HSSContainer::_recursiveGetPushGroup(HSSDisplayObject::p objA, HSSDisplayOb
     }
 }
 
-bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup::p group, unsigned int i, HSSDisplayObject::p child)
+bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup::p group, size_t i, HSSDisplayObject::p child)
 {
     bool ret = false;
     HSSUnit constraintStore = constraint;
@@ -2002,7 +2002,7 @@ bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup
     return ret;
 }
 
-bool HSSContainer::_recursiveFindBottomConstraint(HSSUnit &constraint, displayGroup::p group, int i, HSSDisplayObject::p child)
+bool HSSContainer::_recursiveFindBottomConstraint(HSSUnit &constraint, displayGroup::p group, size_t i, HSSDisplayObject::p child)
 {
     bool ret = false;
     HSSUnit constraintStore = constraint;

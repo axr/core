@@ -108,7 +108,7 @@ namespace AXR
         const_iterator begin() const;
         std::vector< QSharedPointer<HSSDisplayObject> >::iterator end();
         const_iterator end() const;
-        unsigned size() const;
+        size_t size() const;
         void clear();
         bool empty() const;
         QSharedPointer<HSSDisplayObject> front() const;

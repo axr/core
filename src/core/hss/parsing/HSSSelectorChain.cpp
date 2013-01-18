@@ -73,10 +73,10 @@ HSSSelectorChain::~HSSSelectorChain()
 AXRString HSSSelectorChain::toString()
 {
     AXRString tempstr = "HSSSelectorChain with the following nodes:\n";
-    unsigned int sccount = this->nodeList.size();
+    size_t sccount = this->nodeList.size();
     if (sccount > 0)
     {
-        for (unsigned i = 0; i < sccount; ++i)
+        for (size_t i = 0; i < sccount; ++i)
         {
             tempstr.append("      ").append(this->nodeList[i]->toString()).append("\n");
         }
@@ -85,7 +85,7 @@ AXRString HSSSelectorChain::toString()
     return tempstr;
 }
 
-const HSSParserNode::p & HSSSelectorChain::get(const int i) const
+const HSSParserNode::p & HSSSelectorChain::get(size_t i) const
 {
     return this->nodeList[i];
 }
@@ -120,7 +120,7 @@ HSSParserNode::p HSSSelectorChain::last()
     return this->nodeList.back();
 }
 
-int HSSSelectorChain::size()
+size_t HSSSelectorChain::size() const
 {
     return this->nodeList.size();
 }

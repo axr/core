@@ -46,7 +46,7 @@
 
 using namespace AXR;
 
-HSSToken::HSSToken(HSSTokenType type, unsigned line, unsigned column)
+HSSToken::HSSToken(HSSTokenType type, qint64 line, qint64 column)
 {
     this->type = type;
     this->line = line;

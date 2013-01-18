@@ -46,7 +46,7 @@
 
 using namespace AXR;
 
-HSSValueToken::HSSValueToken(HSSTokenType type, AXRString value, unsigned line, unsigned column)
+HSSValueToken::HSSValueToken(HSSTokenType type, AXRString value, qint64 line, qint64 column)
 : HSSToken(type, line, column)
 {
     this->type = type;
@@ -60,7 +60,7 @@ HSSValueToken::HSSValueToken(HSSTokenType type, AXRString value, unsigned line, 
     }
 }
 
-HSSValueToken::HSSValueToken(HSSTokenType type, char value, unsigned line, unsigned column)
+HSSValueToken::HSSValueToken(HSSTokenType type, char value, qint64 line, qint64 column)
 : HSSToken(type, line, column)
 {
     //AXRString tempstr (1, value);
@@ -68,7 +68,7 @@ HSSValueToken::HSSValueToken(HSSTokenType type, char value, unsigned line, unsig
     this->stringValue = AXRString(1, value);
 }
 
-HSSValueToken::HSSValueToken(HSSTokenType type, HSSUnit value, unsigned line, unsigned column)
+HSSValueToken::HSSValueToken(HSSTokenType type, HSSUnit value, qint64 line, qint64 column)
 : HSSToken(type, line, column)
 {
     this->type = type;

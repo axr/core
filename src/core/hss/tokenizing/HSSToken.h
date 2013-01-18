@@ -83,14 +83,14 @@ namespace AXR
 
         static AXRString tokenStringRepresentation(HSSTokenType type);
 
-        HSSToken(HSSTokenType type, unsigned line, unsigned column);
+        HSSToken(HSSTokenType type, qint64 line, qint64 column);
         virtual ~HSSToken();
         bool isA(HSSTokenType otherType);
         HSSTokenType getType();
         virtual AXRString toString();
 
-        unsigned line;
-        unsigned column;
+        qint64 line;
+        qint64 column;
 
     protected:
         HSSTokenType type;

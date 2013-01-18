@@ -162,58 +162,58 @@ HSSToken::p HSSTokenizer::readNextToken()
 
     switch (cc)
     {
-        //if it starts with quotes, either single or double, it is a string
-    case '"':
-    case '\'':
-        return this->readString();
-    case '#':
-        ret = HSSToken::p(new HSSToken(HSSInstructionSign, this->currentLine, this->currentColumn - 1));
-        this->readNextChar();
-        return ret;
-    case '@':
-        ret = HSSToken::p(new HSSToken(HSSObjectSign, this->currentLine, this->currentColumn - 1));
-        this->readNextChar();
-        return ret;
-    case '&':
-        ret = HSSToken::p(new HSSToken(HSSAmpersand, this->currentLine, this->currentColumn - 1));
-        this->readNextChar();
-        return ret;
-    case '{':
-        ret = HSSToken::p(new HSSToken(HSSBlockOpen, this->currentLine, this->currentColumn - 1));
-        this->readNextChar();
-        return ret;
-    case '}':
-        ret = HSSToken::p(new HSSToken(HSSBlockClose, this->currentLine, this->currentColumn - 1));
-        this->readNextChar();
-        return ret;
-    case ',':
-        ret = HSSToken::p(new HSSToken(HSSComma, this->currentLine, this->currentColumn - 1));
-        this->readNextChar();
-        return ret;
-    case ':':
-        ret = HSSToken::p(new HSSToken(HSSColon, this->currentLine, this->currentColumn - 1));
-        this->readNextChar();
-        return ret;
-    case ';':
-        ret = HSSToken::p(new HSSToken(HSSEndOfStatement, this->currentLine, this->currentColumn - 1));
-        this->readNextChar();
-        return ret;
-    case '(':
-        ret = HSSToken::p(new HSSToken(HSSParenthesisOpen, this->currentLine, this->currentColumn - 1));
-        this->readNextChar();
-        return ret;
-    case ')':
-        ret = HSSToken::p(new HSSToken(HSSParenthesisClose, this->currentLine, this->currentColumn - 1));
-        this->readNextChar();
-        return ret;
-    case '/':
-        return this->readCommentOrSymbol();
-    case '!':
-        ret = HSSToken::p(new HSSToken(HSSNegator, this->currentLine, this->currentColumn - 1));
-        this->readNextChar();
-        return ret;
-    default:
-        return this->readSymbol();
+            //if it starts with quotes, either single or double, it is a string
+        case '"':
+        case '\'':
+            return this->readString();
+        case '#':
+            ret = HSSToken::p(new HSSToken(HSSInstructionSign, this->currentLine, this->currentColumn - 1));
+            this->readNextChar();
+            return ret;
+        case '@':
+            ret = HSSToken::p(new HSSToken(HSSObjectSign, this->currentLine, this->currentColumn - 1));
+            this->readNextChar();
+            return ret;
+        case '&':
+            ret = HSSToken::p(new HSSToken(HSSAmpersand, this->currentLine, this->currentColumn - 1));
+            this->readNextChar();
+            return ret;
+        case '{':
+            ret = HSSToken::p(new HSSToken(HSSBlockOpen, this->currentLine, this->currentColumn - 1));
+            this->readNextChar();
+            return ret;
+        case '}':
+            ret = HSSToken::p(new HSSToken(HSSBlockClose, this->currentLine, this->currentColumn - 1));
+            this->readNextChar();
+            return ret;
+        case ',':
+            ret = HSSToken::p(new HSSToken(HSSComma, this->currentLine, this->currentColumn - 1));
+            this->readNextChar();
+            return ret;
+        case ':':
+            ret = HSSToken::p(new HSSToken(HSSColon, this->currentLine, this->currentColumn - 1));
+            this->readNextChar();
+            return ret;
+        case ';':
+            ret = HSSToken::p(new HSSToken(HSSEndOfStatement, this->currentLine, this->currentColumn - 1));
+            this->readNextChar();
+            return ret;
+        case '(':
+            ret = HSSToken::p(new HSSToken(HSSParenthesisOpen, this->currentLine, this->currentColumn - 1));
+            this->readNextChar();
+            return ret;
+        case ')':
+            ret = HSSToken::p(new HSSToken(HSSParenthesisClose, this->currentLine, this->currentColumn - 1));
+            this->readNextChar();
+            return ret;
+        case '/':
+            return this->readCommentOrSymbol();
+        case '!':
+            ret = HSSToken::p(new HSSToken(HSSNegator, this->currentLine, this->currentColumn - 1));
+            this->readNextChar();
+            return ret;
+        default:
+            return this->readSymbol();
     }
 }
 
@@ -223,8 +223,8 @@ HSSToken::p HSSTokenizer::peekNextToken()
 
     // Store the current position in the buffer
     int curpos = this->bufpos;
-    unsigned curline = this->currentLine;
-    unsigned curcol = this->currentColumn;
+    qint64 curline = this->currentLine;
+    qint64 curcol = this->currentColumn;
     HSSToken::p ret = this->readNextToken();
 
     // Store the new offset
@@ -255,7 +255,7 @@ void HSSTokenizer::resetPeek()
     this->peekColumn = 0;
 }
 
-void HSSTokenizer::setBufferLength(unsigned length)
+void HSSTokenizer::setBufferLength(int length)
 {
     this->buflen = length;
 }
@@ -312,8 +312,8 @@ AXRString HSSTokenizer::extractCurrentTokenText()
 
 HSSToken::p HSSTokenizer::readWhitespace()
 {
-    unsigned line = this->currentLine;
-    unsigned column = this->currentColumn - 1;
+    qint64 line = this->currentLine;
+    qint64 column = this->currentColumn - 1;
 
     this->skipWhitespace();
     return HSSToken::p(new HSSToken(HSSWhitespace, line, column));
@@ -323,8 +323,8 @@ HSSToken::p HSSTokenizer::readWhitespace()
 
 HSSToken::p HSSTokenizer::readIdentifier()
 {
-    unsigned line = this->currentLine;
-    unsigned column = this->currentColumn - 1;
+    qint64 line = this->currentLine;
+    qint64 column = this->currentColumn - 1;
 
     while (isalnum(this->currentChar) || this->currentChar == '_')
     {
@@ -338,8 +338,8 @@ HSSToken::p HSSTokenizer::readIdentifier()
 
 HSSToken::p HSSTokenizer::readHexOrIdentifier()
 {
-    unsigned line = this->currentLine;
-    unsigned column = this->currentColumn - 1;
+    qint64 line = this->currentLine;
+    qint64 column = this->currentColumn - 1;
 
     security_brake_init();
     bool done = false;
@@ -399,8 +399,8 @@ HSSToken::p HSSTokenizer::readHexOrIdentifier()
 
 HSSToken::p HSSTokenizer::readNumberOrPercentage()
 {
-    unsigned line = this->currentLine;
-    unsigned column = this->currentColumn - 1;
+    qint64 line = this->currentLine;
+    qint64 column = this->currentColumn - 1;
     bool dotFound = false;
     while (isdigit(this->currentChar) || this->currentChar == '.')
     {
@@ -436,8 +436,8 @@ HSSToken::p HSSTokenizer::readNumberOrPercentage()
 
 HSSToken::p HSSTokenizer::readString()
 {
-    unsigned line = this->currentLine;
-    unsigned column = this->currentColumn - 1;
+    qint64 line = this->currentLine;
+    qint64 column = this->currentColumn - 1;
 
     HSSToken::p ret;
     if (this->currentChar == '"')
@@ -476,8 +476,8 @@ HSSToken::p HSSTokenizer::readString()
 
 HSSToken::p HSSTokenizer::readCommentOrSymbol()
 {
-    unsigned line = this->currentLine;
-    unsigned column = this->currentColumn - 1;
+    qint64 line = this->currentLine;
+    qint64 column = this->currentColumn - 1;
 
     HSSValueToken::p ret;
     this->readNextChar();
@@ -532,8 +532,8 @@ HSSToken::p HSSTokenizer::readCommentOrSymbol()
 
 HSSToken::p HSSTokenizer::readSymbol()
 {
-    unsigned line = this->currentLine;
-    unsigned column = this->currentColumn - 1;
+    qint64 line = this->currentLine;
+    qint64 column = this->currentColumn - 1;
 
     HSSToken::p ret;
 

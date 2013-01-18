@@ -67,7 +67,7 @@ namespace AXR
          *  @param line     The line index (starting at 1) in the file where the error happened.
          *  @param column   The column index (starting at 1) in the line where the error happened.
          */
-        AXRError(const AXRString &origin, const AXRString &message, const QUrl &url = QUrl(), int line = 0, int column = 0);
+        AXRError(const AXRString &origin, const AXRString &message, const QUrl &url = QUrl(), qint64 line = 0, qint64 column = 0);
         AXRError(const AXRError &other);
         virtual ~AXRError();
 

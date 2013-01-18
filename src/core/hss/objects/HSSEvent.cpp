@@ -338,7 +338,7 @@ void HSSEvent::fire()
 {
     std::vector<HSSAction::p> actions = this->getAction();
 
-    for (unsigned i = 0, size = actions.size(); i < size; ++i)
+    for (size_t i = 0; i < actions.size(); ++i)
     {
         actions[i]->fire();
     }

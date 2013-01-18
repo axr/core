@@ -153,7 +153,7 @@ HSSSimpleSelection::const_iterator HSSSimpleSelection::end() const
     return this->d->items.end();
 }
 
-unsigned HSSSimpleSelection::size() const
+size_t HSSSimpleSelection::size() const
 {
     return this->d->items.size();
 }

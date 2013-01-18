@@ -100,23 +100,23 @@ AXRString HSSRule::toString()
         tempstr.append("WARNING: this rule has no selector chain!\n");
     }
 
-    const unsigned int pccount = this->propertiesSize();
+    const size_t pccount = this->propertiesSize();
     if (pccount > 0)
     {
         tempstr.append(" and the following properties: \n");
 
-        for (unsigned j = 0; j < pccount; ++j)
+        for (size_t j = 0; j < pccount; ++j)
         {
             tempstr.append("   ").append(this->properties[j]->toString()).append("\n");
         }
     }
 
-    const unsigned int srcount = this->children.size();
+    const size_t srcount = this->children.size();
     if (srcount > 0)
     {
         tempstr.append(" with the following sub-rules: \n");
 
-        for (unsigned k = 0; k < srcount; ++k)
+        for (size_t k = 0; k < srcount; ++k)
         {
             tempstr.append("    ").append(this->children[k]->toString()).append("\n");
         }
@@ -150,7 +150,7 @@ void HSSRule::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
     }
 }
 
-void HSSRule::selectorChainsRemove(unsigned int index)
+void HSSRule::selectorChainsRemove(off_t index)
 {
     this->selectorChains.erase(this->selectorChains.begin() + index);
 }
@@ -160,7 +160,7 @@ void HSSRule::selectorChainsRemoveLast()
     this->selectorChains.pop_back();
 }
 
-HSSSelectorChain::p & HSSRule::selectorChainsGet(unsigned index)
+HSSSelectorChain::p & HSSRule::selectorChainsGet(size_t index)
 {
     return this->selectorChains[index];
 }
@@ -170,7 +170,7 @@ HSSSelectorChain::p & HSSRule::selectorChainsLast()
     return this->selectorChains.back();
 }
 
-int HSSRule::selectorChainsSize()
+size_t HSSRule::selectorChainsSize() const
 {
     return this->selectorChains.size();
 }
@@ -190,7 +190,7 @@ void HSSRule::propertiesAdd(HSSPropertyDefinition::p & newProperty)
     }
 }
 
-void HSSRule::propertiesRemove(unsigned int index)
+void HSSRule::propertiesRemove(off_t index)
 {
     this->properties.erase(this->properties.begin() + index);
 }
@@ -200,7 +200,7 @@ void HSSRule::propertiesRemoveLast()
     this->properties.pop_back();
 }
 
-HSSPropertyDefinition::p & HSSRule::propertiesGet(unsigned index)
+HSSPropertyDefinition::p & HSSRule::propertiesGet(size_t index)
 {
     return this->properties[index];
 }
@@ -210,7 +210,7 @@ HSSPropertyDefinition::p & HSSRule::propertiesLast()
     return this->properties.back();
 }
 
-unsigned int HSSRule::propertiesSize() const
+size_t HSSRule::propertiesSize() const
 {
     return this->properties.size();
 }
@@ -221,12 +221,12 @@ void HSSRule::childrenAdd(HSSRule::p newRule)
     this->children.push_back(newRule);
 }
 
-HSSRule::p HSSRule::childrenGet(unsigned index)
+HSSRule::p HSSRule::childrenGet(size_t index)
 {
     return this->children[index];
 }
 
-void HSSRule::childrenRemove(unsigned index)
+void HSSRule::childrenRemove(off_t index)
 {
     this->children.erase(this->children.begin() + index);
 }
@@ -236,7 +236,7 @@ void HSSRule::childrenRemoveLast()
     this->children.pop_back();
 }
 
-int HSSRule::childrenSize()
+size_t HSSRule::childrenSize() const
 {
     return this->children.size();
 }

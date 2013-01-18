@@ -96,7 +96,7 @@ void HSSSelFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
     }
 }
 
-void HSSSelFunction::selectorChainsRemove(unsigned int index)
+void HSSSelFunction::selectorChainsRemove(off_t index)
 {
     this->selectorChains.erase(this->selectorChains.begin() + index);
 }
@@ -106,7 +106,7 @@ void HSSSelFunction::selectorChainsRemoveLast()
     this->selectorChains.pop_back();
 }
 
-HSSSelectorChain::p & HSSSelFunction::selectorChainsGet(unsigned index)
+HSSSelectorChain::p & HSSSelFunction::selectorChainsGet(size_t index)
 {
     return this->selectorChains[index];
 }
@@ -116,7 +116,7 @@ HSSSelectorChain::p & HSSSelFunction::selectorChainsLast()
     return this->selectorChains.back();
 }
 
-int HSSSelFunction::selectorChainsSize()
+size_t HSSSelFunction::selectorChainsSize() const
 {
     return this->selectorChains.size();
 }

@@ -51,7 +51,7 @@ using namespace AXR;
 class AXRError::Data : public QSharedData
 {
 public:
-    Data(const AXRString &origin, const AXRString &message, const QUrl &url, int line, int column)
+    Data(const AXRString &origin, const AXRString &message, const QUrl &url, qint64 line, qint64 column)
     : origin(origin), message(message), url(url), line(line), column(column) { }
 
     Data(const Data &other)
@@ -78,15 +78,15 @@ public:
     /**
      * The line in the XML or HSS file on which the problem occurred.
      */
-    int line;
+    qint64 line;
 
     /**
      * The column in the XML or HSS file on which the problem occurred.
      */
-    int column;
+    qint64 column;
 };
 
-AXRError::AXRError(const AXRString &origin, const AXRString &message, const QUrl &url, int line, int column)
+AXRError::AXRError(const AXRString &origin, const AXRString &message, const QUrl &url, qint64 line, qint64 column)
 : d(new Data(origin, message, url, line, column))
 {
 }

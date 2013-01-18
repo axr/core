@@ -121,7 +121,7 @@ void AXRDocument::run()
         HSSContainer::p root = qSharedPointerCast<HSSContainer>(this->controller->getRoot());
 
         std::vector<QUrl> loadSheets = this->controller->loadSheetsGet();
-        for (unsigned i = 0, size = loadSheets.size(); i < size; ++i)
+        for (size_t i = 0; i < loadSheets.size(); ++i)
         {
             AXRBuffer::p hssfile;
             try

@@ -144,12 +144,12 @@ namespace AXR
         /**
          *  Stores the given index.
          */
-        void setIndex(unsigned newIndex);
+        void setIndex(size_t newIndex);
 
         /**
          *  @return The stored index.
          */
-        unsigned getIndex();
+        size_t getIndex() const;
 
         /**
          *  Add an entry in the list of attributes.
@@ -192,7 +192,7 @@ namespace AXR
         HSSRule::p rulesGet(unsigned index);
         void rulesRemove(unsigned index);
         void rulesRemoveLast();
-        int rulesSize();
+        size_t rulesSize() const;
         void setRuleStatus(HSSRule::p rule, HSSRuleState newValue);
         bool hasRule(HSSRule::p rule);
         virtual void readDefinitionObjects();
@@ -493,7 +493,7 @@ namespace AXR
          *  @todo add "mask" property
          */
 
-        unsigned _index;
+        size_t _index;
 
         HSSDisplayObject::p shared_from_this();
 

@@ -114,7 +114,7 @@ namespace AXR
          *  @param i    The index of the node in the node list.
          *  @return A shared pointer to the parser node at the given index in the node list.
          */
-        const HSSParserNode::p & get(const int i) const;
+        const HSSParserNode::p & get(size_t i) const;
 
         /**
          *  Adds a parser node the end of the node list.
@@ -141,7 +141,7 @@ namespace AXR
         /**
          *  @return How many nodes there are in the selector chain.
          */
-        int size();
+        size_t size() const;
 
         /**
          *  The subject of the selector chain is the last simple selector, but this can

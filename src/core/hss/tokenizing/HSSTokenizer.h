@@ -96,10 +96,10 @@ namespace AXR
         bool preferHex;
 
         //the current line and column position we're on
-        long int currentLine;
-        long int currentColumn;
+        qint64 currentLine;
+        qint64 currentColumn;
 
-        void setBufferLength(unsigned length);
+        void setBufferLength(int length);
 
     protected:
         AXRBuffer::p file;
@@ -111,9 +111,9 @@ namespace AXR
         //here's where the current token's text is stored
         AXRString currentTokenText;
         //how long is the buffer?
-        unsigned buflen;
+        int buflen;
         //the position into the buffer
-        unsigned bufpos;
+        int bufpos;
         //the position into the buffer when peeking - it is an offset from bufpos
         int peekpos;
         unsigned peekLine;

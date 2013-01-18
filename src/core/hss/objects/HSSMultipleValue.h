@@ -100,7 +100,7 @@ namespace AXR
         /**
          *  @return The amount of definition objects in the storage.
          */
-        int size();
+        size_t size() const;
         /**
          *  @return The entire storage as a STL vector containing shared pointers to definition
          *  objects. Read only.

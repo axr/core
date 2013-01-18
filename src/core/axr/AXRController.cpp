@@ -84,7 +84,7 @@ void AXRController::matchRulesToContentTree()
     HSSSimpleSelection::p rootScope(new HSSSimpleSelection());
     rootScope->add(this->getRoot());
 
-    for (unsigned i = 0, size = rules.size(); i < size; ++i)
+    for (size_t i = 0; i < rules.size(); ++i)
     {
         const HSSRule::p& rule = rules[i];
         std::vector<HSSSelectorChain::p> selectorChains = rule->getSelectorChains();
@@ -133,7 +133,7 @@ inline void AXRController::_matchRuleToSelection(HSSRule::p rule, HSSSimpleSelec
         {
             HSSContainer::p selectedContainer = qSharedPointerCast<HSSContainer>(displayObject);
             this->currentContext.push(selectedContainer);
-            for (unsigned k = 0, size3 = rule->childrenSize(); k < size3; ++k)
+            for (size_t k = 0; k < rule->childrenSize(); ++k)
             {
                 const HSSRule::p childRule = rule->childrenGet(k);
                 this->recursiveMatchRulesToDisplayObjects(childRule, selectedContainer->getChildren(), selectedContainer, true);
@@ -165,19 +165,18 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                     elementName = nameSel->getElementName();
                 }
 
-                unsigned i;
-                unsigned argssize = 1;
+                uint argssize = 1;
                 HSSParserNode::p argument = instruction->getArgument();
                 if (argument)
                 {
                     if (argument->isA(HSSParserNodeTypeNumberConstant))
                     {
                         HSSNumberConstant::p argnum = qSharedPointerCast<HSSNumberConstant>(argument);
-                        argssize = (int) argnum->getValue();
+                        argssize = static_cast<uint>(argnum->getValue());
                     }
                 }
 
-                for (i = 0; i < argssize; ++i)
+                for (uint i = 0; i < argssize; ++i)
                 {
                     HSSContainer::p newContainer = HSSContainer::p(new HSSContainer(this));
                     newContainer->setName(elementName);
@@ -189,9 +188,8 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                     newContainer->setNeedsRereadRules(true);
                     newContainer->setNeedsSurface(true);
                     newContainer->setDirty(true);
-                    unsigned i, size;
                     this->currentContext.push(newContainer);
-                    for (i = 0, size = rule->childrenSize(); i < size; ++i)
+                    for (size_t i = 0; i < rule->childrenSize(); ++i)
                     {
                         const HSSRule::p childRule = rule->childrenGet(i);
                         this->recursiveMatchRulesToDisplayObjects(childRule, newContainer->getChildren(), newContainer, applyingInstructions);
@@ -241,7 +239,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule,
                                 HSSContainer::p theContainer = qSharedPointerCast<HSSContainer>(theDO);
                                 this->currentContext.push(theContainer);
                                 //assign more rules
-                                for (unsigned i = 0, size = rule->childrenSize(); i < size; ++i)
+                                for (size_t i = 0; i < rule->childrenSize(); ++i)
                                 {
                                     const HSSRule::p childRule = rule->childrenGet(i);
                                     this->recursiveMatchRulesToDisplayObjects(childRule, theContainer->getChildren(), theContainer, applyingInstructions);
@@ -361,7 +359,7 @@ inline void AXRController::_recursiveMatchRulesToDisplayObjects(const HSSRule::p
         {
             HSSContainer::p selectedContainer = qSharedPointerCast<HSSContainer>(displayObject);
             this->currentContext.push(selectedContainer);
-            for (unsigned k = 0, size3 = rule->childrenSize(); k < size3; ++k)
+            for (size_t k = 0; k < rule->childrenSize(); ++k)
             {
                 const HSSRule::p childRule = rule->childrenGet(k);
                 this->recursiveMatchRulesToDisplayObjects(childRule, selectedContainer->getChildren(), selectedContainer, applyingInstructions);
@@ -378,7 +376,7 @@ void AXRController::activateRules()
     HSSSimpleSelection::p rootScope(new HSSSimpleSelection());
     rootScope->add(this->getRoot());
 
-    for (unsigned i = 0, size = rules.size(); i < size; ++i)
+    for (size_t i = 0; i < rules.size(); ++i)
     {
         const HSSRule::p& rule = rules[i];
         this->activateRules(rule, rootScope);
@@ -429,7 +427,7 @@ void AXRController::_activateRuleOnSelection(HSSRule::p rule, HSSSimpleSelection
         if (displayObject->isA(HSSObjectTypeContainer))
         {
             HSSContainer::p selectedContainer = qSharedPointerCast<HSSContainer>(displayObject);
-            for (unsigned k = 0, size3 = rule->childrenSize(); k < size3; ++k)
+            for (size_t k = 0; k < rule->childrenSize(); ++k)
             {
                 const HSSRule::p childRule = rule->childrenGet(k);
                 HSSInstruction::p theInst = childRule->getInstruction();
@@ -883,12 +881,12 @@ void AXRController::objectTreeAdd(HSSObjectDefinition::p & newObject)
     this->objectTree.push_back(newObject);
 }
 
-void AXRController::objectTreeRemove(unsigned index)
+void AXRController::objectTreeRemove(off_t index)
 {
     this->objectTree.erase(this->objectTree.begin() + index);
 }
 
-HSSObjectDefinition::p & AXRController::objectTreeGet(unsigned index)
+HSSObjectDefinition::p & AXRController::objectTreeGet(size_t index)
 {
     return this->objectTree[index];
 }
@@ -898,7 +896,7 @@ HSSObjectDefinition::p & AXRController::objectTreeGet(AXRString name)
     /**
      *  @todo do this with an unordered_map for better performance
      */
-    for (unsigned i = 0, size = this->objectTree.size(); i < size; ++i)
+    for (size_t i = 0; i < this->objectTree.size(); ++i)
     {
         HSSObjectDefinition::p & theObj = this->objectTreeGet(i);
         if (theObj && theObj->getObject()->name == name)
@@ -917,12 +915,12 @@ void AXRController::loadSheetsAdd(QUrl url)
     this->loadSheets.push_back(url);
 }
 
-void AXRController::loadSheetsRemove(unsigned index)
+void AXRController::loadSheetsRemove(off_t index)
 {
     this->loadSheets.erase(this->loadSheets.begin() + index);
 }
 
-QUrl AXRController::loadSheetsGet(unsigned index)
+QUrl AXRController::loadSheetsGet(size_t index)
 {
     return this->loadSheets[index];
 }
@@ -970,17 +968,17 @@ void AXRController::rulesAdd(HSSRule::p & rule)
     this->rules.push_back(rule);
 }
 
-void AXRController::rulesRemove(unsigned index)
+void AXRController::rulesRemove(off_t index)
 {
     this->rules.erase(this->rules.begin() + index);
 }
 
-HSSRule::p & AXRController::rulesGet(unsigned index)
+HSSRule::p & AXRController::rulesGet(size_t index)
 {
     return this->rules[index];
 }
 
-unsigned AXRController::rulesSize()
+size_t AXRController::rulesSize() const
 {
     return this->rules.size();
 }
