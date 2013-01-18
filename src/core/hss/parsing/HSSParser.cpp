@@ -1648,7 +1648,7 @@ void HSSParser::recursiveAddObjectDefinition(HSSObjectDefinition::p objDef)
         {
             child->rulesPrepend((*it));
         }
-        
+
         this->recursiveAddObjectDefinition(child);
     }
 }
