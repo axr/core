@@ -2762,6 +2762,7 @@ HSSParserNode::p HSSParser::readFunction()
                 name == "flag"
                 || name == "unflag"
                 || name == "toggleFlag"
+                || name == "captureFlag"
                 )
         {
 
@@ -2789,14 +2790,23 @@ HSSParserNode::p HSSParser::readFunction()
             this->checkForUnexpectedEndOfSource();
             this->readNextToken();
             this->skip(HSSWhitespace, true);
-            //if shorthand notation -- assumes 'of @this'
+            //if shorthand notation
             std::vector<HSSSelectorChain::p> selectorChains;
             if (this->currentToken->isA(HSSParenthesisClose))
             {
                 HSSSelectorChain::p selectorChain;
                 selectorChain = HSSSelectorChain::p(new HSSSelectorChain(controller));
                 HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
-                newSs->setName(HSSThisSelector::p(new HSSThisSelector(controller)));
+                if(name == "captureFlag")
+                {
+                    //assumes 'on *'
+                    newSs->setName(HSSUniversalSelector::p(new HSSUniversalSelector(controller)));
+                }
+                else
+                {
+                    //assumes 'on @this'
+                    newSs->setName(HSSThisSelector::p(new HSSThisSelector(controller)));
+                }
                 selectorChain->add(newSs);
                 selectorChains.push_back(selectorChain);
                 this->readNextToken(true);

@@ -61,6 +61,10 @@ HSSFlagFunctionType HSSFlagFunction::flagFunctionTypeFromString(AXRString name)
     {
         return HSSFlagFunctionTypeToggleFlag;
     }
+    if (name == "captureFlag")
+    {
+        return HSSFlagFunctionTypeCaptureFlag;
+    }
 
     return HSSFlagFunctionTypeNone;
 }

@@ -252,7 +252,8 @@ namespace AXR
         HSSFlagFunctionTypeNone = 0, /**< Error state. */
         HSSFlagFunctionTypeFlag, /**< Always set the flag to active. */
         HSSFlagFunctionTypeUnflag, /**< Always set the flag to inactive. */
-        HSSFlagFunctionTypeToggleFlag /**< When a flag is active, deactivate it, and viceversa. */
+        HSSFlagFunctionTypeToggleFlag, /**< When a flag is active, deactivate it, and viceversa. */
+        HSSFlagFunctionTypeCaptureFlag /**< Deactivates a flag on other elements and activates it on itself. */
     };
     /** @} */
 

@@ -90,26 +90,43 @@ AXRString HSSFlagAction::defaultObjectType()
 void HSSFlagAction::fire()
 {
     HSSFlagFunction::p flagFunction = this->getFlagFunction();
-    HSSSelection::p selection = this->getController()->select(flagFunction->getSelectorChains(), this->scope, this->getThisObj());
+    HSSDisplayObject::p thisObj = this->getThisObj();
+    HSSSelection::p selection = this->getController()->select(flagFunction->getSelectorChains(), this->scope, thisObj);
     HSSSimpleSelection::p inner = selection->joinAll();
-    for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
-    {
-        HSSDisplayObject::p container = *innerIt;
-        switch (flagFunction->getFlagFunctionType())
+    HSSFlagFunctionType type = flagFunction->getFlagFunctionType();
+    const AXRString & flagName = flagFunction->getName();
+    if(type == HSSFlagFunctionTypeCaptureFlag){
+        for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
         {
-            case HSSFlagFunctionTypeFlag:
-                container->flagsActivate(flagFunction->getName());
-                break;
-            case HSSFlagFunctionTypeUnflag:
-                container->flagsDeactivate(flagFunction->getName());
-                break;
-            case HSSFlagFunctionTypeToggleFlag:
-                container->flagsToggle(flagFunction->getName());
-                break;
+            HSSDisplayObject::p container = *innerIt;
+            if(container != thisObj)
+            {
+                container->flagsDeactivate(flagName);
+            }
+        }
+        thisObj->flagsActivate(flagName);
+    }
+    else
+    {
+        for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
+        {
+            HSSDisplayObject::p container = *innerIt;
+            switch (flagFunction->getFlagFunctionType())
+            {
+                case HSSFlagFunctionTypeFlag:
+                    container->flagsActivate(flagName);
+                    break;
+                case HSSFlagFunctionTypeUnflag:
+                    container->flagsDeactivate(flagName);
+                    break;
+                case HSSFlagFunctionTypeToggleFlag:
+                    container->flagsToggle(flagName);
+                    break;
 
-            default:
-                throw AXRWarning("HSSFlagAction", "Invalid flag function type for flag action");
-                break;
+                default:
+                    throw AXRWarning("HSSFlagAction", "Invalid flag function type for flag action");
+                    break;
+            }
         }
     }
 }
