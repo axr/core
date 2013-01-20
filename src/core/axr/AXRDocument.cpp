@@ -202,6 +202,13 @@ AXRBuffer::p AXRDocument::getFile()
 void AXRDocument::setFile(AXRBuffer::p file)
 {
     this->file = file;
+    QUrl filePath = file->sourceUrl();
+    this->directory = QDir(QFileInfo(filePath.toLocalFile()).canonicalPath());
+}
+
+const QDir & AXRDocument::getDirectory() const
+{
+    return this->directory;
 }
 
 XMLParser::p AXRDocument::getParserXML()
@@ -310,6 +317,19 @@ AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
         AXRError("AXRDocument", "http/https not implemented yet").raise();
         return AXRBuffer::p(new AXRBuffer());
     }
+    else if (resourceUrl.scheme() == "")
+    {
+        QString fileScheme = this->getFile()->sourceUrl().scheme();
+        if (fileScheme == "file")
+        {
+            localResource = QFileInfo(this->getDirectory(), resourceUrl.path());
+        }
+        else if (fileScheme == "http" || fileScheme == "https")
+        {
+            AXRError("AXRDocument", "http/https not implemented yet").raise();
+            return AXRBuffer::p(new AXRBuffer());
+        }
+    }
     else
     {
         AXRError("AXRDocument", "Unsupported URL scheme " + resourceUrl.scheme()).raise();
@@ -405,14 +425,13 @@ bool AXRDocument::loadXMLFile(QUrl url)
     this->_currentLayoutTick = 0;
     this->_currentLayoutChild = 0;
 
-    if (this->getFile())
-    {
-        this->reset();
-    }
-
     try
     {
         AXRBuffer::p theFile = this->getFile(url);
+        if (this->getFile())
+        {
+            this->reset();
+        }
         this->setFile(theFile);
     }
     catch (const AXRError &e)

@@ -49,6 +49,7 @@
 #include "HSSCallback.h"
 #include "HSSUnits.h"
 #include "XMLParser.h"
+#include <QDir>
 
 namespace AXR
 {
@@ -108,6 +109,10 @@ namespace AXR
          *  @param file     The AXRBuffer to store for later use.
          */
         void setFile(AXRBuffer::p file);
+        /**
+         *  @return the path to the directory in which 'file' is stored
+         */
+        const QDir & getDirectory() const;
         /**
          *  Getter for shared pointer to the AXRController that is managing the
          *  object tree.
@@ -245,6 +250,7 @@ namespace AXR
         AXRRender::p render;
         AXRController::p controller;
         AXRBuffer::p file;
+        QDir directory;
 
         XMLParser::p parserXML;
         HSSParser::p parserHSS;
