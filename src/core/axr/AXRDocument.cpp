@@ -322,7 +322,9 @@ AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
         QString fileScheme = this->getFile()->sourceUrl().scheme();
         if (fileScheme == "file")
         {
-            localResource = QFileInfo(this->getDirectory(), resourceUrl.path());
+            // TODO: this needs to be sanitized in another way, we can't break the usage of .. in
+            // relative paths for legal uses. We need something like a cross-origin policy or similar.
+            localResource = QFileInfo(this->getDirectory(), sanitizeRelativePath(resourceUrl.path()));
         }
         else if (fileScheme == "http" || fileScheme == "https")
         {
