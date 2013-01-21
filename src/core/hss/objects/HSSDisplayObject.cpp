@@ -498,6 +498,19 @@ void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSS
             {
                 HSSContainer::p thisCont = qSharedPointerCast<HSSContainer > (this->shared_from_this());
                 this->getController()->currentContext.push(thisCont);
+
+                //iterate over the property defs and try to find an isA property
+                const std::deque<HSSPropertyDefinition::p> & props = objdef->getProperties();
+                std::deque<HSSPropertyDefinition::p>::const_iterator pIt;
+                for (pIt = props.begin(); pIt != props.end(); ++pIt)
+                {
+                    HSSPropertyDefinition::p propdef = *pIt;
+                    if (propdef->getName() == "isA")
+                    {
+                        this->rulesAddIsAChildren(propdef, defaultState);
+                    }
+                }
+
                 HSSRule::const_it it;
                 const std::deque<HSSRule::p> rules = objdef->getRules();
                 AXRController * controller = this->getController();
