@@ -66,17 +66,17 @@ namespace AXR
 /**
  *  @return YES. This is for optimizing the drawing.
  */
--(BOOL) isOpaque;
+- (BOOL)isOpaque;
 
 /**
  *  Method that is called to draw on OS X. From within this, we can get access to the current
  *  AXR compositor output graphics port, which is then blitted onto the NSView.
  */
--(void) drawRect : (NSRect) dirtyRect;
+- (void)drawRect:(NSRect)dirtyRect;
 
 /**
  *  @return YES. This allows the view to recieve events from the system.
  */
--(BOOL) acceptsFirstResponder;
+- (BOOL)acceptsFirstResponder;
 
 @end

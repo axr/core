@@ -55,9 +55,9 @@
 
 @synthesize document;
 
--(id) initWithFrame : (NSRect) frame
+- (id)initWithFrame:(NSRect)frame
 {
-    self = [super initWithFrame : frame];
+    self = [super initWithFrame:frame];
     if (self)
     {
         document = NULL;
@@ -66,17 +66,17 @@
     return self;
 }
 
--(void) dealloc
+- (void)dealloc
 {
     [super dealloc];
 }
 
--(BOOL) isOpaque
+- (BOOL)isOpaque
 {
     return YES;
 }
 
--(void) drawRect : (NSRect) dirtyRect
+- (void)drawRect:(NSRect)dirtyRect
 {
     NSRect paintRect = [self bounds];
 
@@ -96,20 +96,20 @@
     }
 }
 
--(BOOL) acceptsFirstResponder
+- (BOOL)acceptsFirstResponder
 {
     return YES;
 }
 
--(void) viewDidMoveToWindow
+- (void)viewDidMoveToWindow
 {
     if ([self window] != nil)
     {
-        [[self window] setAcceptsMouseMovedEvents : TRUE];
+        [[self window] setAcceptsMouseMovedEvents:TRUE];
     }
 }
 
--(void) mouseDown : (NSEvent *) theEvent
+- (void)mouseDown:(NSEvent *)theEvent
 {
     if (!document)
         return;
@@ -118,15 +118,15 @@
     if (root)
     {
         AXR::HSSPoint thePoint;
-        NSPoint sysPoint = [self convertPoint : [theEvent locationInWindow] fromView : nil];
+        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         NSRect bounds = [self bounds];
         thePoint.x = sysPoint.x;
         thePoint.y = bounds.size.height - sysPoint.y;
-        root->handleEvent(AXR::HSSEventTypeMouseDown, (void*) &thePoint);
+        root->handleEvent(AXR::HSSEventTypeMouseDown, (void*)&thePoint);
     }
 }
 
--(void) mouseUp : (NSEvent *) theEvent
+- (void)mouseUp:(NSEvent *)theEvent
 {
     if (!document)
         return;
@@ -135,16 +135,16 @@
     if (root)
     {
         AXR::HSSPoint thePoint;
-        NSPoint sysPoint = [self convertPoint : [theEvent locationInWindow] fromView : nil];
+        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         NSRect bounds = [self bounds];
         thePoint.x = sysPoint.x;
         thePoint.y = bounds.size.height - sysPoint.y;
-        root->handleEvent(AXR::HSSEventTypeMouseUp, (void*) &thePoint);
-        root->handleEvent(AXR::HSSEventTypeClick, (void*) &thePoint);
+        root->handleEvent(AXR::HSSEventTypeMouseUp, (void*)&thePoint);
+        root->handleEvent(AXR::HSSEventTypeClick, (void*)&thePoint);
     }
 }
 
--(void) mouseMoved : (NSEvent *) theEvent
+- (void)mouseMoved:(NSEvent *)theEvent
 {
     if (!document)
         return;
@@ -153,11 +153,11 @@
     if (root)
     {
         AXR::HSSPoint thePoint;
-        NSPoint sysPoint = [self convertPoint : [theEvent locationInWindow] fromView : nil];
+        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
         NSRect bounds = [self bounds];
         thePoint.x = sysPoint.x;
         thePoint.y = bounds.size.height - sysPoint.y;
-        root->handleEvent(AXR::HSSEventTypeMouseMove, (void*) &thePoint);
+        root->handleEvent(AXR::HSSEventTypeMouseMove, (void*)&thePoint);
     }
 }
 
