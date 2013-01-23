@@ -43,18 +43,25 @@
 
 #define _USE_MATH_DEFINES // for M_PI when using MSVC
 #include <cmath>
+#include <QPainterPath>
+#include <QVector>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
 #include "HSSBorder.h"
+#include "HSSCallback.h"
+#include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
 #include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
 #include "HSSPercentageConstant.h"
 #include "HSSPolygon.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
+
+Q_DECLARE_METATYPE(HSSUnit*)
 
 HSSPolygon::HSSPolygon(AXRController * controller)
 : HSSShape(HSSShapeTypePolygon, controller)
@@ -91,15 +98,15 @@ HSSPolygon::HSSPolygon(const HSSPolygon & orig)
     this->observedAngle = NULL;
 }
 
-HSSPolygon::p HSSPolygon::clone() const
+QSharedPointer<HSSPolygon> HSSPolygon::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: cloning polygon object");
     return qSharedPointerCast<HSSPolygon> (this->cloneImpl());
 }
 
-HSSClonable::p HSSPolygon::cloneImpl() const
+QSharedPointer<HSSClonable> HSSPolygon::cloneImpl() const
 {
-    return HSSPolygon::p(new HSSPolygon(*this));
+    return QSharedPointer<HSSPolygon>(new HSSPolygon(*this));
 }
 
 HSSPolygon::~HSSPolygon()
@@ -138,7 +145,7 @@ bool HSSPolygon::isKeyword(AXRString value, AXRString property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSPolygon::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSPolygon::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -154,7 +161,7 @@ void HSSPolygon::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
 }
 
-void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments)
+void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments)
 {
     // The center point of the polygon
     const QPointF centerPoint(x + (width / 2.), y + (height / 2.));
@@ -184,7 +191,7 @@ void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit wi
     path.closeSubpath();
 }
 
-void HSSPolygon::drawBorders(QPainter &painter, std::vector<HSSBorder::p> borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding)
+void HSSPolygon::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding)
 {
     // Calculate the combined thickness of all borders
     HSSUnit combinedThickness = 0;
@@ -206,7 +213,7 @@ void HSSPolygon::drawBorders(QPainter &painter, std::vector<HSSBorder::p> border
     // Draw all borders
     for (HSSBorder::it it = borders.begin(); it != borders.end(); ++it)
     {
-        HSSBorder::p theBorder = *it;
+        QSharedPointer<HSSBorder> theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
         HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
@@ -224,12 +231,12 @@ unsigned int HSSPolygon::getSides()
     return this->sides;
 }
 
-HSSParserNode::p HSSPolygon::getDSides()
+QSharedPointer<HSSParserNode> HSSPolygon::getDSides()
 {
     return this->dSides;
 }
 
-void HSSPolygon::setDSides(HSSParserNode::p value)
+void HSSPolygon::setDSides(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -251,7 +258,7 @@ void HSSPolygon::setDSides(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dSides = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
@@ -296,7 +303,7 @@ void HSSPolygon::sidesChanged(HSSObservableProperty source, void*data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dSides);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dSides);
         this->sides = floor(percentageValue->getValue(*(HSSUnit*) data));
         break;
     }
@@ -314,12 +321,12 @@ HSSUnit HSSPolygon::getAngle()
     return this->angle;
 }
 
-HSSParserNode::p HSSPolygon::getDAngle()
+QSharedPointer<HSSParserNode> HSSPolygon::getDAngle()
 {
     return this->dAngle;
 }
 
-void HSSPolygon::setDAngle(HSSParserNode::p value)
+void HSSPolygon::setDAngle(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -341,7 +348,7 @@ void HSSPolygon::setDAngle(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dAngle = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
@@ -381,7 +388,7 @@ void HSSPolygon::angleChanged(HSSObservableProperty source, void*data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAngle);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAngle);
         this->angle = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
@@ -396,7 +403,7 @@ void HSSPolygon::angleChanged(HSSObservableProperty source, void*data)
 
 HSSUnit HSSPolygon::_evaluatePropertyValue(
                                        void(HSSPolygon::*callback)(HSSObservableProperty property, void* data),
-                                       HSSParserNode::p value,
+                                       QSharedPointer<HSSParserNode> value,
                                        HSSUnit percentageBase,
                                        HSSObservableProperty observedSourceProperty,
                                        HSSObservable * &observedStore,
@@ -410,21 +417,21 @@ HSSUnit HSSPolygon::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
+        QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setScope(this->scope);
         expressionValue->setThisObj(this->thisObj);

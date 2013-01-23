@@ -45,18 +45,17 @@
 #define HSSFUNCTIONACTION_H
 
 #include "HSSAction.h"
-#include "HSSFunction.h"
 
 namespace AXR
 {
+    class HSSFunction;
+
     /**
      *  @brief The action objects that represent custom functions functions.
      */
     class AXR_API HSSFunctionAction : public HSSAction
     {
     public:
-        typedef QSharedPointer<HSSFunctionAction> p;
-
         /**
          *  Constructor for HSSFunctionAction objects
          */
@@ -73,7 +72,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSFunctionAction
          */
-        p clone() const;
+        QSharedPointer<HSSFunctionAction> clone() const;
 
         /**
          *  Destructor for this class.
@@ -92,17 +91,17 @@ namespace AXR
          *  Getter for the function.
          *  @return A shared pointer to the function object.
          */
-        HSSFunction::p getFunction();
+        QSharedPointer<HSSFunction> getFunction();
 
         /**
          *  Setter for the function.
          *  @param newValue A shared pointer to the new function to be used.
          */
-        void setFunction(HSSFunction::p newValue);
+        void setFunction(QSharedPointer<HSSFunction> newValue);
 
     private:
-        HSSFunction::p _function;
-        virtual HSSClonable::p cloneImpl() const;
+        QSharedPointer<HSSFunction> _function;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

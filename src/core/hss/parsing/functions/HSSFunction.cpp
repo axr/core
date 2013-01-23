@@ -41,10 +41,14 @@
  *
  ********************************************************************/
 
+#include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
+#include "HSSObjectDefinition.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
@@ -67,18 +71,18 @@ HSSFunction::HSSFunction(const HSSFunction & orig)
     this->_name = orig._name;
 }
 
-HSSFunction::p HSSFunction::clone() const
+QSharedPointer<HSSFunction> HSSFunction::clone() const
 {
     return qSharedPointerCast<HSSFunction> (this->cloneImpl());
 }
 
-HSSClonable::p HSSFunction::cloneImpl() const
+QSharedPointer<HSSClonable> HSSFunction::cloneImpl() const
 {
-    HSSFunction::p clone = HSSFunction::p(new HSSFunction(*this));
+    QSharedPointer<HSSFunction> clone = QSharedPointer<HSSFunction>(new HSSFunction(*this));
 
-    for (std::deque<HSSParserNode::p>::const_iterator it = this->_arguments.begin(); it != this->_arguments.end(); ++it)
+    for (std::deque<QSharedPointer<HSSParserNode> >::const_iterator it = this->_arguments.begin(); it != this->_arguments.end(); ++it)
     {
-        HSSParserNode::p clonedArgument = (*it)->clone();
+        QSharedPointer<HSSParserNode> clonedArgument = (*it)->clone();
         clone->_arguments.push_back(clonedArgument);
     }
 
@@ -111,7 +115,7 @@ QVariant HSSFunction::evaluate()
     return this->_value;
 }
 
-QVariant HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
+QVariant HSSFunction::evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments)
 {
     if (this->_isDirty)
     {
@@ -125,10 +129,10 @@ QVariant HSSFunction::evaluate(std::deque<HSSParserNode::p> arguments)
 
 QVariant HSSFunction::_evaluate()
 {
-    return this->_evaluate(std::deque<HSSParserNode::p > ());
+    return this->_evaluate(std::deque<QSharedPointer<HSSParserNode> > ());
 }
 
-QVariant HSSFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+QVariant HSSFunction::_evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments)
 {
     AXRDocument* document = this->getController()->document();
     document->evaluateCustomFunction(this->getName(), (void*) &arguments);
@@ -154,28 +158,28 @@ void HSSFunction::setPercentageObserved(HSSObservableProperty property, HSSObser
     //    }
     this->percentageObservedProperty = property;
     this->percentageObserved = observed;
-    //observed->observe(property, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSFunction>(this, &HSSFunction::propertyChanged));
+    //observed->observe(property, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSFunction>(this, &QSharedPointer<HSSFunction>ropertyChanged));
 }
 
-void HSSFunction::setScope(HSSSimpleSelection::p newScope)
+void HSSFunction::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 {
     this->scope = newScope;
-    std::deque<HSSParserNode::p>::const_iterator it;
+    std::deque<QSharedPointer<HSSParserNode> >::const_iterator it;
     for (it = this->_arguments.begin(); it != this->_arguments.end(); ++it)
     {
-        const HSSParserNode::p node = (*it);
+        const QSharedPointer<HSSParserNode> node = (*it);
         switch (node->getType())
         {
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p func = qSharedPointerCast<HSSFunction > (node);
+            QSharedPointer<HSSFunction> func = qSharedPointerCast<HSSFunction > (node);
             func->setScope(newScope);
             break;
         }
 
         case HSSParserNodeTypeExpression:
         {
-            HSSExpression::p exp = qSharedPointerCast<HSSExpression > (node);
+            QSharedPointer<HSSExpression> exp = qSharedPointerCast<HSSExpression > (node);
             exp->setScope(newScope);
             break;
         }
@@ -188,7 +192,7 @@ void HSSFunction::setScope(HSSSimpleSelection::p newScope)
         {
         case HSSStatementTypeObjectDefinition:
         {
-            HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (node);
+            QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (node);
             objdef->setScope(newScope);
             break;
         }
@@ -224,12 +228,12 @@ HSSFunctionType HSSFunction::getFunctionType()
     return this->functionType;
 }
 
-void HSSFunction::setArguments(std::deque<HSSParserNode::p> arguments)
+void HSSFunction::setArguments(std::deque<QSharedPointer<HSSParserNode> > arguments)
 {
     this->_arguments = arguments;
 }
 
-std::deque<HSSParserNode::p> HSSFunction::getArguments()
+std::deque<QSharedPointer<HSSParserNode> > HSSFunction::getArguments()
 {
     return this->_arguments;
 }

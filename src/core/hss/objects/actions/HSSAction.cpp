@@ -44,6 +44,7 @@
 #include <QMap>
 #include "AXRController.h"
 #include "HSSAction.h"
+#include "HSSDisplayObject.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 
@@ -79,14 +80,14 @@ HSSAction::HSSAction(const HSSAction & orig)
     this->actionType = orig.actionType;
 }
 
-HSSAction::p HSSAction::clone() const
+QSharedPointer<HSSAction> HSSAction::clone() const
 {
     return qSharedPointerCast<HSSAction>(this->cloneImpl());
 }
 
-HSSClonable::p HSSAction::cloneImpl() const
+QSharedPointer<HSSClonable> HSSAction::cloneImpl() const
 {
-    return HSSAction::p(new HSSAction(*this));
+    return QSharedPointer<HSSAction>(new HSSAction(*this));
 }
 
 HSSAction::~HSSAction()
@@ -109,7 +110,7 @@ AXRString HSSAction::defaultObjectType(AXRString property)
     return HSSObject::defaultObjectType(property);
 }
 
-void HSSAction::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSAction::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {

@@ -42,6 +42,8 @@
  ********************************************************************/
 
 #include "HSSCombinator.h"
+#include "HSSDisplayObject.h"
+#include "HSSSelection.h"
 
 using namespace AXR;
 
@@ -51,7 +53,7 @@ HSSCombinator::HSSCombinator(HSSCombinatorType type, AXRController * controller)
     this->combinatorType = type;
 }
 
-HSSCombinator::p HSSCombinator::clone() const
+QSharedPointer<HSSCombinator> HSSCombinator::clone() const
 {
     return qSharedPointerCast<HSSCombinator > (this->cloneImpl());
 }
@@ -83,14 +85,14 @@ AXRString HSSCombinator::combinatorStringRepresentation(HSSCombinatorType type)
     return types[type];
 }
 
-HSSClonable::p HSSCombinator::cloneImpl() const
+QSharedPointer<HSSClonable> HSSCombinator::cloneImpl() const
 {
-    return HSSCombinator::p(new HSSCombinator(*this));
+    return QSharedPointer<HSSCombinator>(new HSSCombinator(*this));
 }
 
 //does nothing yet
 
-HSSSelection::p HSSCombinator::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
+QSharedPointer<HSSSelection> HSSCombinator::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
 {
     return scope;
 }

@@ -48,6 +48,8 @@
 
 namespace AXR
 {
+    class HSSSimpleSelection;
+
     /**
      *  @brief Selects the first element of the selection.
      */
@@ -64,7 +66,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSEvenChildFilter
          */
-        HSSFilter::p clone() const;
+        QSharedPointer<HSSFilter> clone() const;
 
         /**
          *  Destructor for this class.
@@ -72,11 +74,11 @@ namespace AXR
         virtual ~HSSEvenChildFilter();
         virtual AXRString toString();
 
-        virtual HSSSelection::p apply(HSSSelection::p scope, bool processing);
+        virtual QSharedPointer<HSSSelection> apply(QSharedPointer<HSSSelection> scope, bool processing);
 
     private:
-        inline void _apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection);
-        virtual HSSClonable::p cloneImpl() const;
+        inline void _apply(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> selection);
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

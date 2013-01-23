@@ -45,7 +45,6 @@
 #define HSSREQUEST_H
 
 #include "HSSAction.h"
-#include "HSSContainer.h"
 
 namespace AXR
 {
@@ -75,7 +74,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSRequest
          */
-        p clone() const;
+        QSharedPointer<HSSRequest> clone() const;
 
         /**
          *  Destructor for this class.
@@ -84,7 +83,7 @@ namespace AXR
 
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Currently only causes the document to load another XML file.
@@ -97,13 +96,13 @@ namespace AXR
          *  Getter for the definition object of src.
          *  @return A shared pointer to the parser node containing the definition object of src.
          */
-        HSSParserNode::p getDSrc();
+        QSharedPointer<HSSParserNode> getDSrc();
 
         /**
          *  Setter for the definition object of src. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of src.
          */
-        void setDSrc(HSSParserNode::p);
+        void setDSrc(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect src.
@@ -116,13 +115,13 @@ namespace AXR
          *  Getter for the definition object of target.
          *  @return A shared pointer to the parser node containing the definition object of target.
          */
-        HSSParserNode::p getDTarget();
+        QSharedPointer<HSSParserNode> getDTarget();
 
         /**
          *  Setter for the definition object of target. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of target.
          */
-        void setDTarget(HSSParserNode::p);
+        void setDTarget(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect target.
@@ -135,34 +134,34 @@ namespace AXR
          *  @todo Implement mode property.
          */
         //        //mode
-        //        HSSParserNode::p getDMode();
-        //        void setDMode(HSSParserNode::p);
+        //        QSharedPointer<HSSParserNode> getDMode();
+        //        void setDMode(QSharedPointer<HSSParserNode>);
         //        void modeChanged(HSSObservableProperty source, void*data);
 
         /**
          *  @todo Implement target property.
          */
         //        //contentTarget
-        //        HSSParserNode::p getDContentTarget();
-        //        void setDContentTarget(HSSParserNode::p);
+        //        QSharedPointer<HSSParserNode> getDContentTarget();
+        //        void setDContentTarget(QSharedPointer<HSSParserNode>);
         //        void contentTargetChanged(HSSObservableProperty source, void*data);
 
 
     private:
         QUrl src;
-        HSSParserNode::p dSrc;
+        QSharedPointer<HSSParserNode> dSrc;
         HSSObservable * observedSrc;
         HSSObservableProperty observedSrcProperty;
 
-        HSSParserNode::p dTarget;
+        QSharedPointer<HSSParserNode> dTarget;
         HSSObservable * observedTarget;
         HSSObservableProperty observedTargetProperty;
-        HSSSimpleSelection::p target;
+        QSharedPointer<HSSSimpleSelection> target;
 
         HSSRequestModeType mode;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

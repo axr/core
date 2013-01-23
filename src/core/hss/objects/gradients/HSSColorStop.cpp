@@ -44,15 +44,22 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
+#include "HSSCallback.h"
 #include "HSSColorStop.h"
+#include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
+#include "HSSKeywordConstant.h"
 #include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSPercentageConstant.h"
+#include "HSSRgb.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
+
+Q_DECLARE_METATYPE(HSSUnit*)
 
 HSSColorStop::HSSColorStop(AXRController * controller)
 : HSSObject(HSSObjectTypeColorStop, controller)
@@ -86,15 +93,15 @@ HSSColorStop::HSSColorStop(const HSSColorStop & orig)
     this->position = this->balance = 0.5;
 }
 
-HSSColorStop::p HSSColorStop::clone() const
+QSharedPointer<HSSColorStop> HSSColorStop::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: cloning color stop object");
     return qSharedPointerCast<HSSColorStop> (this->cloneImpl());
 }
 
-HSSClonable::p HSSColorStop::cloneImpl() const
+QSharedPointer<HSSClonable> HSSColorStop::cloneImpl() const
 {
-    return HSSColorStop::p(new HSSColorStop(*this));
+    return QSharedPointer<HSSColorStop>(new HSSColorStop(*this));
 }
 
 HSSColorStop::~HSSColorStop()
@@ -150,7 +157,7 @@ bool HSSColorStop::isKeyword(AXRString value, AXRString property)
     return HSSObject::isKeyword(value, property);
 }
 
-void HSSColorStop::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSColorStop::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -169,17 +176,17 @@ void HSSColorStop::setProperty(HSSObservableProperty name, HSSParserNode::p valu
     }
 }
 
-HSSRgb::p HSSColorStop::getColor()
+QSharedPointer<HSSRgb> HSSColorStop::getColor()
 {
     return this->color;
 }
 
-HSSParserNode::p HSSColorStop::getDColor()
+QSharedPointer<HSSParserNode> HSSColorStop::getDColor()
 {
     return this->dColor;
 }
 
-void HSSColorStop::setDColor(HSSParserNode::p value)
+void HSSColorStop::setDColor(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -190,8 +197,8 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
         this->dColor = value;
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDColor(objdef);
             valid = true;
 
@@ -208,15 +215,15 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dColor = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<HSSRgb::p>())
+            if (remoteValue.canConvert<QSharedPointer<HSSRgb> >())
             {
-                this->color = remoteValue.value<HSSRgb::p>();
+                this->color = remoteValue.value<QSharedPointer<HSSRgb> >();
                 valid = true;
             }
 
@@ -227,7 +234,7 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p theKW = qSharedPointerCast<HSSKeywordConstant>(value);
+        QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(value);
         AXRString kwValue = theKW->getValue();
 
         if (kwValue == "black")
@@ -259,11 +266,11 @@ void HSSColorStop::setDColor(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dColor = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setScope(this->scope);
         objdef->setThisObj(this->getThisObj());
         objdef->apply();
-        HSSObject::p theobj = objdef->getObject();
+        QSharedPointer<HSSObject> theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeRgb))
         {
             this->color = qSharedPointerCast<HSSRgb > (theobj);
@@ -289,7 +296,7 @@ void HSSColorStop::colorChanged(HSSObservableProperty source, void*data)
     switch (this->dColor->getType())
     {
     case HSSParserNodeTypeFunctionCall:
-        this->color = *(HSSRgb::p*)data;
+        this->color = *(QSharedPointer<HSSRgb>*)data;
         break;
 
     default:
@@ -305,12 +312,12 @@ HSSUnit HSSColorStop::getPosition()
     return this->position;
 }
 
-HSSParserNode::p HSSColorStop::getDPosition()
+QSharedPointer<HSSParserNode> HSSColorStop::getDPosition()
 {
     return this->dPosition;
 }
 
-void HSSColorStop::setDPosition(HSSParserNode::p value)
+void HSSColorStop::setDPosition(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -332,7 +339,7 @@ void HSSColorStop::setDPosition(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dPosition = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
@@ -373,7 +380,7 @@ void HSSColorStop::positionChanged(HSSObservableProperty source, void*data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dPosition);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dPosition);
         this->position = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
@@ -391,12 +398,12 @@ HSSUnit HSSColorStop::getBalance()
     return this->balance;
 }
 
-HSSParserNode::p HSSColorStop::getDBalance()
+QSharedPointer<HSSParserNode> HSSColorStop::getDBalance()
 {
     return this->dBalance;
 }
 
-void HSSColorStop::setDBalance(HSSParserNode::p value)
+void HSSColorStop::setDBalance(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -418,7 +425,7 @@ void HSSColorStop::setDBalance(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dBalance = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
@@ -459,7 +466,7 @@ void HSSColorStop::balanceChanged(AXR::HSSObservableProperty source, void *data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dBalance);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dBalance);
         this->balance = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
@@ -474,7 +481,7 @@ void HSSColorStop::balanceChanged(AXR::HSSObservableProperty source, void *data)
 
 HSSUnit HSSColorStop::_evaluatePropertyValue(
                                          void(HSSColorStop::*callback)(HSSObservableProperty property, void* data),
-                                         HSSParserNode::p value,
+                                         QSharedPointer<HSSParserNode> value,
                                          HSSUnit percentageBase,
                                          HSSObservableProperty observedSourceProperty,
                                          HSSObservable * &observedStore,
@@ -488,21 +495,21 @@ HSSUnit HSSColorStop::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
+        QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setScope(this->scope);
         expressionValue->setThisObj(this->getThisObj());

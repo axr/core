@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include "HSSDisplayObject.h"
+#include "HSSParserNode.h"
 #include "HSSShape.h"
 
 using namespace AXR;
@@ -95,6 +96,6 @@ bool HSSShape::isKeyword(AXRString value, AXRString property)
 
 void HSSShape::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
-    std::vector<HSSParserNode::p> segments;
+    std::vector<QSharedPointer<HSSParserNode> > segments;
     this->createPath(path, x, y, width, height, segments);
 }

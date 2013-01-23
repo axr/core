@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include "AXRWarning.h"
+#include "HSSCallback.h"
 #include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
@@ -72,14 +73,14 @@ HSSMargin::HSSMargin(const HSSMargin & orig)
     this->observedLeft = NULL;
 }
 
-HSSMargin::p HSSMargin::clone() const
+QSharedPointer<HSSMargin> HSSMargin::clone() const
 {
     return qSharedPointerCast<HSSMargin> (this->cloneImpl());
 }
 
-HSSClonable::p HSSMargin::cloneImpl() const
+QSharedPointer<HSSClonable> HSSMargin::cloneImpl() const
 {
-    return HSSMargin::p(new HSSMargin(*this));
+    return QSharedPointer<HSSMargin>(new HSSMargin(*this));
 }
 
 HSSMargin::~HSSMargin()
@@ -107,7 +108,7 @@ bool HSSMargin::isKeyword(AXRString value, AXRString property)
     return false;
 }
 
-void HSSMargin::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSMargin::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -133,12 +134,12 @@ void HSSMargin::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
 }
 
-const HSSParserNode::p HSSMargin::getDSize() const
+const QSharedPointer<HSSParserNode> HSSMargin::getDSize() const
 {
     return this->dSize;
 }
 
-void HSSMargin::setDSize(HSSParserNode::p value)
+void HSSMargin::setDSize(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -218,7 +219,7 @@ HSSUnit HSSMargin::getTop() const
     return this->top;
 }
 
-void HSSMargin::setDTop(HSSParserNode::p value)
+void HSSMargin::setDTop(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -262,7 +263,7 @@ HSSUnit HSSMargin::getRight() const
     return this->right;
 }
 
-void HSSMargin::setDRight(HSSParserNode::p value)
+void HSSMargin::setDRight(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -306,7 +307,7 @@ HSSUnit HSSMargin::getBottom() const
     return this->bottom;
 }
 
-void HSSMargin::setDBottom(HSSParserNode::p value)
+void HSSMargin::setDBottom(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -350,7 +351,7 @@ HSSUnit HSSMargin::getLeft() const
     return this->left;
 }
 
-void HSSMargin::setDLeft(HSSParserNode::p value)
+void HSSMargin::setDLeft(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -391,14 +392,14 @@ void HSSMargin::leftChanged(AXR::HSSObservableProperty source, void *data)
 
 HSSUnit HSSMargin::_evaluatePropertyValue(
                                       void(HSSMargin::*callback)(HSSObservableProperty property, void* data),
-                                      HSSParserNode::p value,
+                                      QSharedPointer<HSSParserNode> value,
                                       HSSUnit percentageBase,
                                       HSSObservableProperty observedProperty,
                                       HSSObservable * observedObject,
                                       HSSObservableProperty observedSourceProperty,
                                       HSSObservable * &observedStore,
                                       HSSObservableProperty &observedStoreProperty,
-                                      HSSSimpleSelection::p scope
+                                      QSharedPointer<HSSSimpleSelection> scope
                                       )
 {
     HSSUnit ret = 0;
@@ -408,7 +409,7 @@ HSSUnit HSSMargin::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
+        QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         observedStore = NULL;
         break;
@@ -416,7 +417,7 @@ HSSUnit HSSMargin::_evaluatePropertyValue(
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         if (callback)
         {
@@ -429,7 +430,7 @@ HSSUnit HSSMargin::_evaluatePropertyValue(
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setPercentageObserved(observedProperty, observedObject);
         expressionValue->setScope(scope);
@@ -451,7 +452,7 @@ HSSUnit HSSMargin::_evaluatePropertyValue(
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         fnct->setPercentageBase(percentageBase);
         fnct->setPercentageObserved(observedProperty, observedObject);
         fnct->setScope(scope);

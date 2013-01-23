@@ -41,47 +41,37 @@
  *
  ********************************************************************/
 
-#ifndef HSSSELECTOR_H
-#define HSSSELECTOR_H
+#ifndef AXRBrowser_HSSTokenType_h
+#define AXRBrowser_HSSTokenType_h
 
-#include "HSSParserNode.h"
+#include "AXRGlobal.h"
 
 namespace AXR
 {
-    class HSSSelection;
-    class HSSSimpleSelection;
-
-    /**
-     *  @brief Abstract base class for a common interface for all selector nodes
-     */
-    class AXR_API HSSSelector : public HSSParserNode
+    enum AXR_API HSSTokenType
     {
-    public:
-        ~HSSSelector();
-
-        /**
-         * Reduces the selection according its selector type
-         */
-        virtual QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing) = 0;
-
-        bool getNegating() const;
-        void setNegating(bool value);
-
-        bool isA(HSSSelectorType otherType);
-        HSSSelectorType getSelectorType();
-
-        bool isA(HSSCombinatorType otherType);
-
-    protected:
-        /**
-         *  Creates a new instance of a simple selector, for use of the subclasses.
-         *  @param type     The type of the selector node.
-         */
-        HSSSelector(HSSSelectorType type, AXRController * controller);
-
-    private:
-        HSSSelectorType _selectorType;
-        bool _negating;
+        HSSNone = 0,
+        HSSIdentifier,
+        HSSNumber,
+        HSSPercentageNumber,
+        HSSHexNumber,
+        HSSDoubleQuoteString,
+        HSSSingleQuoteString,
+        HSSSymbol,
+        HSSWhitespace,
+        HSSInstructionSign,
+        HSSObjectSign,
+        HSSBlockOpen,
+        HSSBlockClose,
+        HSSComma,
+        HSSColon,
+        HSSEndOfStatement,
+        HSSParenthesisOpen,
+        HSSParenthesisClose,
+        HSSLineComment,
+        HSSBlockComment,
+        HSSNegator,
+        HSSAmpersand
     };
 }
 

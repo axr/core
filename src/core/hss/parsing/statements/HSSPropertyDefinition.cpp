@@ -59,7 +59,7 @@ HSSPropertyDefinition::HSSPropertyDefinition(AXRString name, AXRController * con
     this->name = name;
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(AXRString name, HSSParserNode::p value, AXRController * controller)
+HSSPropertyDefinition::HSSPropertyDefinition(AXRString name, QSharedPointer<HSSParserNode> value, AXRController * controller)
 : HSSStatement(HSSStatementTypePropertyDefinition, controller)
 {
     this->name = name;
@@ -72,7 +72,7 @@ HSSPropertyDefinition::HSSPropertyDefinition(const HSSPropertyDefinition &orig)
     this->name = orig.name;
 }
 
-HSSPropertyDefinition::p HSSPropertyDefinition::clone() const
+QSharedPointer<HSSPropertyDefinition> HSSPropertyDefinition::clone() const
 {
     return qSharedPointerCast<HSSPropertyDefinition> (this->cloneImpl());
 }
@@ -102,25 +102,25 @@ AXRString HSSPropertyDefinition::getName()
     return this->name;
 }
 
-void HSSPropertyDefinition::setValue(HSSParserNode::p value)
+void HSSPropertyDefinition::setValue(QSharedPointer<HSSParserNode> value)
 {
     this->value = value;
     this->value->setParentNode(this->shared_from_this());
 }
 
-void HSSPropertyDefinition::addValue(HSSParserNode::p value)
+void HSSPropertyDefinition::addValue(QSharedPointer<HSSParserNode> value)
 {
     if (this->value)
     {
         if (this->value->isA(HSSParserNodeTypeMultipleValueDefinition))
         {
-            HSSMultipleValueDefinition::p mvDef = qSharedPointerCast<HSSMultipleValueDefinition > (this->value);
+            QSharedPointer<HSSMultipleValueDefinition> mvDef = qSharedPointerCast<HSSMultipleValueDefinition > (this->value);
             value->setParentNode(this->shared_from_this());
             mvDef->add(value);
         }
         else
         {
-            HSSMultipleValueDefinition::p mvDef = HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition(this->getController()));
+            QSharedPointer<HSSMultipleValueDefinition> mvDef = QSharedPointer<HSSMultipleValueDefinition>(new HSSMultipleValueDefinition(this->getController()));
             mvDef->setParentNode(this->shared_from_this());
             mvDef->add(this->value);
             value->setParentNode(this->shared_from_this());
@@ -134,7 +134,7 @@ void HSSPropertyDefinition::addValue(HSSParserNode::p value)
     }
 }
 
-HSSParserNode::p HSSPropertyDefinition::getValue()
+QSharedPointer<HSSParserNode> HSSPropertyDefinition::getValue()
 {
     return this->value;
 }
@@ -145,14 +145,14 @@ void HSSPropertyDefinition::setThisObj(QSharedPointer<HSSDisplayObject> value)
     HSSStatement::setThisObj(value);
 }
 
-HSSPropertyDefinition::p HSSPropertyDefinition::shared_from_this()
+QSharedPointer<HSSPropertyDefinition> HSSPropertyDefinition::shared_from_this()
 {
     return qSharedPointerCast<HSSPropertyDefinition > (HSSStatement::shared_from_this());
 }
 
-HSSClonable::p HSSPropertyDefinition::cloneImpl() const
+QSharedPointer<HSSClonable> HSSPropertyDefinition::cloneImpl() const
 {
-    HSSPropertyDefinition::p clone = HSSPropertyDefinition::p(new HSSPropertyDefinition(*this));
+    QSharedPointer<HSSPropertyDefinition> clone = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(*this));
     clone->setValue(this->value->clone());
     return clone;
 }

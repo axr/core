@@ -43,6 +43,7 @@
 
 #include "HSSContainer.h"
 #include "HSSLastChildFilter.h"
+#include "HSSMultipleSelection.h"
 
 using namespace AXR;
 
@@ -52,7 +53,7 @@ HSSLastChildFilter::HSSLastChildFilter(AXRController * controller)
 
 }
 
-HSSLastChildFilter::p HSSLastChildFilter::clone() const
+QSharedPointer<HSSFilter> HSSLastChildFilter::clone() const
 {
     return qSharedPointerCast<HSSLastChildFilter> (this->cloneImpl());
 }
@@ -67,12 +68,12 @@ AXRString HSSLastChildFilter::toString()
     return "Last Child Filter";
 }
 
-HSSSelection::p HSSLastChildFilter::apply(HSSSelection::p scope, bool processing)
+QSharedPointer<HSSSelection> HSSLastChildFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     if (scope->isA(HSSSelectionTypeMultipleSelection))
     {
-        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
         for (HSSMultipleSelection::iterator it=multiSel->begin(); it!=multiSel->end(); ++it) {
             this->_apply(ret, *it);
         }
@@ -84,11 +85,11 @@ HSSSelection::p HSSLastChildFilter::apply(HSSSelection::p scope, bool processing
     return ret;
 }
 
-inline void HSSLastChildFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+inline void HSSLastChildFilter::_apply(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> selection)
 {
     for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
     {
-        const HSSDisplayObject::p & theDO = *it;
+        const QSharedPointer<HSSDisplayObject> & theDO = *it;
         const size_t lastIndex = theDO->getParent()->getChildren()->size() - 1;
         if (this->getNegating())
         {
@@ -107,7 +108,7 @@ inline void HSSLastChildFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSel
     }
 }
 
-HSSClonable::p HSSLastChildFilter::cloneImpl() const
+QSharedPointer<HSSClonable> HSSLastChildFilter::cloneImpl() const
 {
-    return HSSLastChildFilter::p(new HSSLastChildFilter(*this));
+    return QSharedPointer<HSSLastChildFilter>(new HSSLastChildFilter(*this));
 }

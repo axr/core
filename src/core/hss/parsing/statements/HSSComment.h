@@ -44,8 +44,6 @@
 #ifndef HSSCOMMENT_H
 #define HSSCOMMENT_H
 
-#include <QSharedPointer>
-#include "AXRString.h"
 #include "HSSStatement.h"
 
 namespace AXR
@@ -59,8 +57,6 @@ namespace AXR
         AXRString value;
 
     public:
-        typedef QSharedPointer<HSSComment> p;
-
         /**
          *  Creates a new instance of a comment, containing the given text.
          *  @param value    A string containing the text of the comment.
@@ -72,7 +68,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSComment.
          */
-        p clone() const;
+        QSharedPointer<HSSComment> clone() const;
 
         /**
          *  Getter for the value.
@@ -87,7 +83,7 @@ namespace AXR
         void setValue(AXRString newValue);
         virtual AXRString toString();
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

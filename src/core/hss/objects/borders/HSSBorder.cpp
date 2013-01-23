@@ -45,14 +45,21 @@
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
 #include "HSSBorder.h"
+#include "HSSCallback.h"
 #include "HSSContainer.h"
+#include "HSSExpression.h"
 #include "HSSFunction.h"
+#include "HSSKeywordConstant.h"
+#include "HSSMultipleValueDefinition.h"
 #include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSPercentageConstant.h"
+#include "HSSValue.h"
 
 using namespace AXR;
+
+Q_DECLARE_METATYPE(HSSUnit*)
 
 HSSBorder::HSSBorder(AXRController * controller)
 : HSSObject(HSSObjectTypeBorder, controller)
@@ -131,7 +138,7 @@ bool HSSBorder::isKeyword(AXRString value, AXRString property)
     return HSSObject::isKeyword(value, property);
 }
 
-void HSSBorder::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSBorder::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -155,7 +162,7 @@ HSSUnit HSSBorder::getSize()
     return this->size;
 }
 
-void HSSBorder::setDSize(HSSParserNode::p value)
+void HSSBorder::setDSize(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -177,7 +184,7 @@ void HSSBorder::setDSize(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dSize = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
@@ -233,12 +240,12 @@ HSSBorderPosition HSSBorder::getPosition()
     return this->position;
 }
 
-HSSParserNode::p HSSBorder::getDPosition()
+QSharedPointer<HSSParserNode> HSSBorder::getDPosition()
 {
     return this->dPosition;
 }
 
-void HSSBorder::setDPosition(HSSParserNode::p value)
+void HSSBorder::setDPosition(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
     switch (value->getType())
@@ -247,8 +254,8 @@ void HSSBorder::setDPosition(HSSParserNode::p value)
         {
             try
             {
-                HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-                HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+                QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+                QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
                 this->setDPosition(objdef);
                 valid = true;
 
@@ -268,7 +275,7 @@ void HSSBorder::setDPosition(HSSParserNode::p value)
                 this->observedPosition->removeObserver(this->observedPositionProperty, HSSObservablePropertyPosition, this);
                 this->observedPosition = NULL;
             }
-            HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+            QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
             fnct->setScope(this->getScope());
             fnct->setThisObj(this->getThisObj());
 
@@ -319,14 +326,14 @@ void HSSBorder::setDPosition(HSSParserNode::p value)
     {
         case HSSStatementTypeObjectDefinition:
         {
-            HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
+            QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
             objdef->setScope(this->getScope());
             objdef->setThisObj(this->getThisObj());
             objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
+            QSharedPointer<HSSObject> theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue))
             {
-                HSSParserNode::p remoteValue = qSharedPointerCast<HSSValue > (theobj)->getDValue();
+                QSharedPointer<HSSParserNode> remoteValue = qSharedPointerCast<HSSValue > (theobj)->getDValue();
                 try
                 {
                     this->setDPosition(remoteValue);
@@ -369,24 +376,24 @@ void HSSBorder::positionChanged(HSSObservableProperty source, void*data)
     this->notifyObservers(HSSObservablePropertyValue, NULL);
 }
 
-std::vector<HSSParserNode::p> HSSBorder::getSegments()
+std::vector<QSharedPointer<HSSParserNode> > HSSBorder::getSegments()
 {
     return this->segments;
 }
 
-HSSParserNode::p HSSBorder::getDSegments()
+QSharedPointer<HSSParserNode> HSSBorder::getDSegments()
 {
     return this->dSegments;
 }
 
-void HSSBorder::setDSegments(HSSParserNode::p value)
+void HSSBorder::setDSegments(QSharedPointer<HSSParserNode> value)
 {
     this->segments.clear();
     this->dSegments = value;
     this->addDSegments(value);
 }
 
-void HSSBorder::addDSegments(HSSParserNode::p value)
+void HSSBorder::addDSegments(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -394,8 +401,8 @@ void HSSBorder::addDSegments(HSSParserNode::p value)
     {
         case HSSParserNodeTypeMultipleValueDefinition:
         {
-            HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
-            std::vector<HSSParserNode::p> values = multiDef->getValues();
+            QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
+            std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
             for (HSSParserNode::it iterator = values.begin(); iterator != values.end(); ++iterator)
             {
                 this->addDSegments(*iterator);
@@ -409,7 +416,7 @@ void HSSBorder::addDSegments(HSSParserNode::p value)
         {
             try
             {
-                HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+                QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
                 this->addDSegments(this->getController()->objectTreeGet(objname->getValue()));
                 valid = true;
             }
@@ -423,17 +430,17 @@ void HSSBorder::addDSegments(HSSParserNode::p value)
 
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+            QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
             if (fnct && fnct->isA(HSSFunctionTypeRef))
             {
                 fnct->setScope(this->getScope());
                 fnct->setThisObj(this->getThisObj());
                 QVariant remoteValue = fnct->evaluate();
-                if (remoteValue.canConvert<HSSParserNode::p>())
+                if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
                 {
                     try
                     {
-                        HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                        QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
                         this->addDSegments(theVal);
                         valid = true;
                     }
@@ -464,14 +471,14 @@ void HSSBorder::addDSegments(HSSParserNode::p value)
     {
         case HSSStatementTypeObjectDefinition:
         {
-            HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
+            QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
             objdef->setScope(this->getScope());
             objdef->setThisObj(this->getThisObj());
             objdef->apply();
-            HSSObject::p theobj = objdef->getObject();
+            QSharedPointer<HSSObject> theobj = objdef->getObject();
             if (theobj && theobj->isA(HSSObjectTypeValue))
             {
-                HSSParserNode::p remoteValue = qSharedPointerCast<HSSValue > (theobj)->getDValue();
+                QSharedPointer<HSSParserNode> remoteValue = qSharedPointerCast<HSSValue > (theobj)->getDValue();
                 try
                 {
                     this->addDSegments(remoteValue);
@@ -503,7 +510,7 @@ void HSSBorder::segmentsChanged(HSSObservableProperty source, void*data)
 
 HSSUnit HSSBorder::_evaluatePropertyValue(
                                       void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
-                                      HSSParserNode::p value,
+                                      QSharedPointer<HSSParserNode> value,
                                       HSSUnit percentageBase,
                                       HSSObservableProperty observedSourceProperty,
                                       HSSObservable * &observedStore,
@@ -517,21 +524,21 @@ HSSUnit HSSBorder::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
+        QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setScope(this->scope);
         expressionValue->setThisObj(this->getThisObj());

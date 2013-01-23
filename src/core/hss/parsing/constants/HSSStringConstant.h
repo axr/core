@@ -44,8 +44,7 @@
 #ifndef HSSSTRINGCONSTANT_H
 #define HSSSTRINGCONSTANT_H
 
-#include <QSharedPointer>
-#include "HSSExpression.h"
+#include "HSSParserNode.h"
 
 namespace AXR
 {
@@ -58,8 +57,6 @@ namespace AXR
     class AXR_API HSSStringConstant : public HSSParserNode
     {
     public:
-        typedef QSharedPointer<HSSStringConstant> p;
-
         /**
          *  Creates a new instance of a string constant node which holds the given value.
          *  @param value    A string containing the value for the constant.
@@ -71,7 +68,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSStringConstant
          */
-        p clone() const;
+        QSharedPointer<HSSStringConstant> clone() const;
 
         /**
          *  Destructor for this class.
@@ -95,7 +92,7 @@ namespace AXR
         AXRString value;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

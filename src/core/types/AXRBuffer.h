@@ -44,12 +44,11 @@
 #ifndef AXRBUFFER_H
 #define AXRBUFFER_H
 
-#include <QSharedPointer>
 #include <QByteArray>
-#include <QFileInfo>
 #include <QUrl>
-#include "AXRString.h"
 #include "AXRGlobal.h"
+
+class QFileInfo;
 
 namespace AXR
 {
@@ -60,11 +59,6 @@ namespace AXR
     class AXR_API AXRBuffer
     {
     public:
-        /**
-         *  The shared pointer to a file.
-         */
-        typedef QSharedPointer<AXRBuffer> p;
-
         /**
          *  Creates a new instance of an in-memory buffer.
          */

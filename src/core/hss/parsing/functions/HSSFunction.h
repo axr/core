@@ -44,12 +44,10 @@
 #ifndef HSSFUNCTION_H
 #define HSSFUNCTION_H
 
-#include <vector>
+#include <deque>
 #include <QVariant>
 #include <QSharedPointer>
-#include "HSSDisplayObject.h"
-#include "HSSKeywordConstant.h"
-#include "HSSObject.h"
+#include "HSSParserNode.h"
 
 namespace AXR
 {
@@ -61,14 +59,12 @@ namespace AXR
     public:
         friend class HSSParser;
 
-        typedef QSharedPointer<HSSFunction> p;
-
         /**
          *  Clones an instance of HSSFunction and gives a shared pointer of the
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSFunction
          */
-        virtual p clone() const;
+        virtual QSharedPointer<HSSFunction> clone() const;
 
         /**
          *  Destructor for this class.
@@ -87,13 +83,13 @@ namespace AXR
         /**
          *  @todo I think this one is not used
          */
-        QVariant evaluate(std::deque<HSSParserNode::p> arguments);
+        QVariant evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments);
 
         /**
          *  @todo make protected or private
          */
         virtual QVariant _evaluate();
-        virtual QVariant _evaluate(std::deque<HSSParserNode::p> arguments);
+        virtual QVariant _evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments);
 
         /**
          *  Method to be passed as callback when observing changes.
@@ -119,7 +115,7 @@ namespace AXR
          *  Setter for the scope which to pass to members like references or selections.
          *  @param newScope     The new scope, a shared pointer to a simple selection.
          */
-        virtual void setScope(HSSSimpleSelection::p newScope);
+        virtual void setScope(QSharedPointer<HSSSimpleSelection> newScope);
 
         /**
          *  Whenever a function needs to recalculate its value, it should be set to true.
@@ -152,8 +148,8 @@ namespace AXR
          */
         HSSFunctionType getFunctionType();
 
-        std::deque<HSSParserNode::p> getArguments();
-        void setArguments(std::deque<HSSParserNode::p> arguments);
+        std::deque<QSharedPointer<HSSParserNode> > getArguments();
+        void setArguments(std::deque<QSharedPointer<HSSParserNode> > arguments);
         AXRString getName();
         void setName(AXRString newName);
 
@@ -177,14 +173,14 @@ namespace AXR
         HSSUnit percentageBase;
         HSSObservableProperty percentageObservedProperty;
         HSSObservable * percentageObserved;
-        HSSSimpleSelection::p scope;
+        QSharedPointer<HSSSimpleSelection> scope;
 
     private:
         HSSFunctionType functionType;
-        std::deque<HSSParserNode::p> _arguments;
+        std::deque<QSharedPointer<HSSParserNode> > _arguments;
         AXRString _name;
 
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

@@ -44,7 +44,6 @@
 #ifndef HSSPERCENTAGECONSTANT_H
 #define HSSPERCENTAGECONSTANT_H
 
-#include <QSharedPointer>
 #include "HSSParserNode.h"
 
 namespace AXR
@@ -55,8 +54,6 @@ namespace AXR
     class AXR_API HSSPercentageConstant : public HSSParserNode
     {
     public:
-        typedef QSharedPointer<HSSPercentageConstant> p;
-
         /**
          *  Creates a new instance of a percentage constant, with given value.
          *  @param  value   A string containing the name of the keyword.
@@ -68,7 +65,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSParserNode.
          */
-        p clone() const;
+        QSharedPointer<HSSPercentageConstant> clone() const;
 
         /**
          *  Destructor for this class.
@@ -95,7 +92,7 @@ namespace AXR
         HSSUnit value;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

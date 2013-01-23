@@ -45,7 +45,6 @@
 #define HSSPROPERTYDEFINITION_H
 
 #include <QSharedPointer>
-#include "HSSObject.h"
 #include "HSSStatement.h"
 
 namespace AXR
@@ -59,17 +58,15 @@ namespace AXR
     class AXR_API HSSPropertyDefinition : public HSSStatement
     {
     public:
-        typedef QSharedPointer<HSSPropertyDefinition> p;
-
         /**
          *  Iterator for vectors of shared pointers to property definitions
          */
-        typedef std::vector<p>::iterator it;
+        typedef std::vector<QSharedPointer<HSSPropertyDefinition> >::iterator it;
 
         /**
          *  Iterator for vectors of shared pointers to property definitions, const version.
          */
-        typedef std::vector<p>::const_iterator const_it;
+        typedef std::vector<QSharedPointer<HSSPropertyDefinition> >::const_iterator const_it;
 
         /**
          *  Creates a new instance of a property definition, with an empty name and value.
@@ -89,7 +86,7 @@ namespace AXR
          *  @param value    A shared pointer to the parser node that holds the value of this
          *                  property definition.
          */
-        HSSPropertyDefinition(AXRString name, HSSParserNode::p value, AXRController * controller);
+        HSSPropertyDefinition(AXRString name, QSharedPointer<HSSParserNode> value, AXRController * controller);
 
         /**
          *  Copy constructor for HSSPropertyDefinition objects. Do not call directly, use clone() instead.
@@ -101,7 +98,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSPropertyDefinition
          */
-        p clone() const;
+        QSharedPointer<HSSPropertyDefinition> clone() const;
 
         /**
          *  Destructor for this class.
@@ -128,7 +125,7 @@ namespace AXR
          *  Setter for the value of the property.
          *  @param value    A shared pointer to the parser node that represents the value of the property.
          */
-        void setValue(HSSParserNode::p value);
+        void setValue(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Adds a value to the property definition. If the value is not already a multiple value definition,
@@ -136,24 +133,24 @@ namespace AXR
          *  @param value    A shared pointer to the parser node that represents the value to add to the property
          *                  definition.
          */
-        void addValue(HSSParserNode::p value);
+        void addValue(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Getter for the value of the property.
          *  @return A shared pointer to the parser node that represents the value of the property definition.
          */
-        HSSParserNode::p getValue();
+        QSharedPointer<HSSParserNode> getValue();
 
         virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
     protected:
-        HSSPropertyDefinition::p shared_from_this();
+        QSharedPointer<HSSPropertyDefinition> shared_from_this();
 
         AXRString name;
-        HSSParserNode::p value;
+        QSharedPointer<HSSParserNode> value;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

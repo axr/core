@@ -44,8 +44,9 @@
 #ifndef HSSMULTIPLESELECTION_H
 #define HSSMULTIPLESELECTION_H
 
+#include <vector>
+#include <QSharedDataPointer>
 #include "HSSSelection.h"
-#include "HSSSimpleSelection.h"
 
 namespace AXR
 {
@@ -55,13 +56,8 @@ namespace AXR
     class HSSMultipleSelection : public HSSSelection
     {
     public:
-        /**
-         *  The shared pointer to this kind of object.
-         */
-        typedef QSharedPointer<HSSMultipleSelection> p;
-
-        typedef std::vector<HSSSimpleSelection::p>::iterator iterator;
-        typedef std::vector<HSSSimpleSelection::p>::const_iterator const_iterator;
+        typedef std::vector<QSharedPointer<HSSSimpleSelection> >::iterator iterator;
+        typedef std::vector<QSharedPointer<HSSSimpleSelection> >::const_iterator const_iterator;
 
         /**
          *
@@ -93,8 +89,8 @@ namespace AXR
          */
         HSSMultipleSelection& operator=(const HSSMultipleSelection &other);
 
-        void add(HSSSimpleSelection::p item);
-        void addSelection(HSSSelection::p item);
+        void add(QSharedPointer<HSSSimpleSelection> item);
+        void addSelection(QSharedPointer<HSSSelection> item);
         iterator begin();
         const_iterator begin() const;
         iterator end();
@@ -102,12 +98,12 @@ namespace AXR
         size_t size() const;
         void clear();
         bool empty() const;
-        HSSSimpleSelection::p front() const;
-        HSSSimpleSelection::p back() const;
+        QSharedPointer<HSSSimpleSelection> front() const;
+        QSharedPointer<HSSSimpleSelection> back() const;
         void insert(iterator position, iterator first, iterator last);
         iterator erase(iterator position);
         iterator erase(iterator first, iterator last);
-        std::vector< HSSSimpleSelection::p > getItems() const;
+        std::vector< QSharedPointer<HSSSimpleSelection> > getItems() const;
         QSharedPointer<HSSSimpleSelection> joinAll();
         QSharedPointer<HSSMultipleSelection> splitAll();
 
@@ -120,7 +116,7 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(AXR::HSSMultipleSelection::p)
-Q_DECLARE_METATYPE(AXR::HSSMultipleSelection::p*)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSMultipleSelection>)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSMultipleSelection>*)
 
 #endif

@@ -41,6 +41,8 @@
  *
  ********************************************************************/
 
+#include <QFile>
+#include <QFileInfo>
 #include "AXRBuffer.h"
 #include "AXRDebugging.h"
 

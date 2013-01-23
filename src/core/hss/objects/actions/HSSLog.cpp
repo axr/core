@@ -44,11 +44,13 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
+#include "HSSDisplayObject.h"
 #include "HSSFunction.h"
 #include "HSSLog.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSRefFunction.h"
+#include "HSSSimpleSelection.h"
 #include "HSSStringConstant.h"
 
 using namespace AXR;
@@ -72,15 +74,15 @@ HSSLog::HSSLog(const HSSLog & orig)
     this->setShorthandProperties(shorthandProperties);
 }
 
-HSSLog::p HSSLog::clone() const
+QSharedPointer<HSSLog> HSSLog::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: cloning log object");
     return qSharedPointerCast<HSSLog> (this->cloneImpl());
 }
 
-HSSClonable::p HSSLog::cloneImpl() const
+QSharedPointer<HSSClonable> HSSLog::cloneImpl() const
 {
-    return HSSLog::p(new HSSLog(*this));
+    return QSharedPointer<HSSLog>(new HSSLog(*this));
 }
 
 HSSLog::~HSSLog()
@@ -98,7 +100,7 @@ AXRString HSSLog::defaultObjectType()
     return "log";
 }
 
-void HSSLog::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSLog::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -119,10 +121,10 @@ void HSSLog::fire()
     {
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (this->dValue)->clone();
+            QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (this->dValue)->clone();
             if (fnct->isA(HSSFunctionTypeRef))
             {
-                HSSRefFunction::p refFnct = qSharedPointerCast<HSSRefFunction > (fnct);
+                QSharedPointer<HSSRefFunction> refFnct = qSharedPointerCast<HSSRefFunction > (fnct);
                 refFnct->setScope(this->scope);
                 refFnct->setThisObj(this->getThisObj());
                 QVariant remoteValue = refFnct->evaluate();
@@ -140,23 +142,23 @@ void HSSLog::fire()
                     done = true;
                 }
 
-                if (remoteValue.canConvert<HSSObject::p>())
+                if (remoteValue.canConvert<QSharedPointer<HSSObject> >())
                 {
-                    HSSObject::p theVal = remoteValue.value<HSSObject::p>();
+                    QSharedPointer<HSSObject> theVal = remoteValue.value<QSharedPointer<HSSObject> >();
                     std_log(theVal->toString());
                     done = true;
                 }
 
-                if (remoteValue.canConvert< std::vector<HSSObject::p> >())
+                if (remoteValue.canConvert< std::vector<QSharedPointer<HSSObject> >  >())
                 {
-                    std::vector<HSSObject::p> v_data = remoteValue.value< std::vector<HSSObject::p> >();
+                    std::vector<QSharedPointer<HSSObject> > v_data = remoteValue.value< std::vector<QSharedPointer<HSSObject> >  >();
                     if (v_data.empty())
                     {
                         std_log("empty");
                     }
                     else
                     {
-                        for (std::vector<HSSObject::p>::iterator it = v_data.begin(); it != v_data.end(); ++it)
+                        for (std::vector<QSharedPointer<HSSObject> >::iterator it = v_data.begin(); it != v_data.end(); ++it)
                         {
                             std_log((*it)->toString());
                         }
@@ -165,19 +167,19 @@ void HSSLog::fire()
                     done = true;
                 }
 
-                if (remoteValue.canConvert< QMap<HSSEventType, std::vector<HSSObject::p> > >())
+                if (remoteValue.canConvert< QMap<HSSEventType, std::vector<QSharedPointer<HSSObject> >  > >())
                 {
-                    QMap<HSSEventType, std::vector<HSSObject::p> > m_data = remoteValue.value< QMap<HSSEventType, std::vector<HSSObject::p> > >();
+                    QMap<HSSEventType, std::vector<QSharedPointer<HSSObject> >  > m_data = remoteValue.value< QMap<HSSEventType, std::vector<QSharedPointer<HSSObject> >  > >();
                     if (m_data.empty())
                     {
                         std_log("empty");
                     }
                     else
                     {
-                        for (QMap<HSSEventType, std::vector<HSSObject::p> >::iterator it = m_data.begin(); it != m_data.end(); ++it)
+                        for (QMap<HSSEventType, std::vector<QSharedPointer<HSSObject> >  >::iterator it = m_data.begin(); it != m_data.end(); ++it)
                         {
-                            std::vector<HSSObject::p> v_data = it.value();
-                            for (std::vector<HSSObject::p>::iterator it2 = v_data.begin(); it2 != v_data.end(); ++it2)
+                            std::vector<QSharedPointer<HSSObject> > v_data = it.value();
+                            for (std::vector<QSharedPointer<HSSObject> >::iterator it2 = v_data.begin(); it2 != v_data.end(); ++it2)
                             {
                                 std_log((*it2)->toString());
                             }
@@ -192,7 +194,7 @@ void HSSLog::fire()
 
         case HSSParserNodeTypeStringConstant:
         {
-            HSSStringConstant::p str = qSharedPointerCast<HSSStringConstant > (this->dValue);
+            QSharedPointer<HSSStringConstant> str = qSharedPointerCast<HSSStringConstant > (this->dValue);
             std_log(str->getValue());
             done = true;
             break;
@@ -202,12 +204,12 @@ void HSSLog::fire()
         {
             try
             {
-                HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (this->dValue);
-                HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+                QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (this->dValue);
+                QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
                 objdef->setThisObj(this->getThisObj());
                 objdef->setScope(this->scope);
                 objdef->apply();
-                HSSObject::p theObject = objdef->getObject();
+                QSharedPointer<HSSObject> theObject = objdef->getObject();
                 std_log(theObject->toString());
                 done = true;
             }
@@ -232,12 +234,12 @@ void HSSLog::fire()
     }
 }
 
-HSSParserNode::p HSSLog::getDValue()
+QSharedPointer<HSSParserNode> HSSLog::getDValue()
 {
     return this->dValue;
 }
 
-void HSSLog::setDValue(HSSParserNode::p value)
+void HSSLog::setDValue(QSharedPointer<HSSParserNode> value)
 {
     this->dValue = value;
     this->dValue->setThisObj(this->getThisObj());
@@ -251,7 +253,7 @@ void HSSLog::setDValue(HSSParserNode::p value)
 
 void HSSLog::valueChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->dValue = *(HSSParserNode::p *)data;
+    this->dValue = *(QSharedPointer<HSSParserNode> *)data;
 
     this->notifyObservers(HSSObservablePropertyValue, &this->dValue);
 }

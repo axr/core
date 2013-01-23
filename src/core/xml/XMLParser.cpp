@@ -43,6 +43,7 @@
 
 #include <QtCore>
 #include <QtXml>
+#include "AXRBuffer.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRError.h"
@@ -62,7 +63,7 @@ XMLParser::~XMLParser()
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "XMLParser: destroying XML parser");
 }
 
-bool XMLParser::loadFile(AXRBuffer::p file)
+bool XMLParser::loadFile(QSharedPointer<AXRBuffer> file)
 {
     if (!controller)
     {

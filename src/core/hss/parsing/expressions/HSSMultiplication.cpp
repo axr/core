@@ -41,11 +41,12 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSMultiplication.h"
 
 using namespace AXR;
 
-HSSMultiplication::HSSMultiplication(HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller)
+HSSMultiplication::HSSMultiplication(QSharedPointer<HSSParserNode> _left, QSharedPointer<HSSParserNode> _right, AXRController * controller)
 : HSSExpression(HSSExpressionTypeMultiplication, _left, _right, controller)
 {
 
@@ -57,7 +58,7 @@ HSSMultiplication::HSSMultiplication(const HSSMultiplication &orig)
 
 }
 
-HSSMultiplication::p HSSMultiplication::clone() const
+QSharedPointer<HSSMultiplication> HSSMultiplication::clone() const
 {
     return qSharedPointerCast<HSSMultiplication> (this->cloneImpl());
 }
@@ -72,7 +73,7 @@ HSSUnit HSSMultiplication::calculate(HSSUnit leftval, HSSUnit rightval)
     return leftval * rightval;
 }
 
-HSSClonable::p HSSMultiplication::cloneImpl() const
+QSharedPointer<HSSClonable> HSSMultiplication::cloneImpl() const
 {
-    return HSSMultiplication::p(new HSSMultiplication(*this));
+    return QSharedPointer<HSSMultiplication>(new HSSMultiplication(*this));
 }

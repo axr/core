@@ -41,6 +41,8 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
+#include "HSSSimpleSelection.h"
 #include "HSSThisSelector.h"
 
 using namespace AXR;
@@ -51,7 +53,7 @@ HSSThisSelector::HSSThisSelector(AXRController * controller)
 
 }
 
-HSSThisSelector::p HSSThisSelector::clone() const
+QSharedPointer<HSSThisSelector> HSSThisSelector::clone() const
 {
     return qSharedPointerCast<HSSThisSelector> (this->cloneImpl());
 }
@@ -61,14 +63,14 @@ AXRString HSSThisSelector::toString()
     return "@this selector";
 }
 
-HSSClonable::p HSSThisSelector::cloneImpl() const
+QSharedPointer<HSSClonable> HSSThisSelector::cloneImpl() const
 {
-    return HSSThisSelector::p(new HSSThisSelector(*this));
+    return QSharedPointer<HSSThisSelector>(new HSSThisSelector(*this));
 }
 
-HSSSelection::p HSSThisSelector::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
+QSharedPointer<HSSSelection> HSSThisSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     ret->add(thisObj);
     return ret;
 }

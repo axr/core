@@ -44,18 +44,23 @@
 #ifndef AXRCONTROLLER_H
 #define AXRCONTROLLER_H
 
+#include <stack>
 #include <vector>
 #include <QSharedPointer>
-#include "HSSContainer.h"
-#include "HSSMultipleSelection.h"
-#include "HSSObject.h"
-#include "HSSParser.h"
-#include "HSSSimpleSelection.h"
+#include "AXRGlobal.h"
+#include "HSSTypeEnums.h"
 
 namespace AXR
 {
-    class AXRRender;
     class AXRDocument;
+    class HSSContainer;
+    class HSSDisplayObject;
+    class HSSObjectDefinition;
+    class HSSParserNode;
+    class HSSRule;
+    class HSSSelection;
+    class HSSSelectorChain;
+    class HSSSimpleSelection;
 
     /**
      *  @brief  This class holds trees of objects, sheets, rules and the parser tree. Also,
@@ -64,11 +69,6 @@ namespace AXR
     class AXR_API AXRController
     {
     public:
-        /**
-         *  The shared pointer to the controller.
-         */
-        typedef QSharedPointer<AXRController> p;
-
         /**
          *  Creates a new instance of a controller.
          *
@@ -84,7 +84,7 @@ namespace AXR
 
         void matchRulesToContentTree();
         void activateRules();
-        void activateRules(HSSRule::p rule, HSSSelection::p scope);
+        void activateRules(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSelection> scope);
 
         /**
          *  @return A textual representation of itself, as a string.
@@ -99,7 +99,7 @@ namespace AXR
         /**
          *  @return A shared pointer to the root element.
          */
-        HSSContainer::p & getRoot();
+        QSharedPointer<HSSContainer> & getRoot();
 
         /**
          *  Sets the element you pass in as the new root element.
@@ -107,7 +107,7 @@ namespace AXR
          *
          *  @param newRoot A shared pointer to the new element
          */
-        void setRoot(HSSContainer::p newRoot);
+        void setRoot(QSharedPointer<HSSContainer> newRoot);
 
         /**
          *  This method is called by the XML parser when it reads an opening tag.
@@ -153,14 +153,14 @@ namespace AXR
          *
          *  @todo change name to better reflect the type of the object
          */
-        void add(HSSDisplayObject::p newContainer);
+        void add(QSharedPointer<HSSDisplayObject> newContainer);
 
         /**
          *  Append an object definition to the object tree.
          *
          *  @param newObject A shared pointer to an object definition.
          */
-        void objectTreeAdd(HSSObjectDefinition::p & newObject);
+        void objectTreeAdd(QSharedPointer<HSSObjectDefinition> & newObject);
 
         /**
          *  Remove the object at given index from the object tree.
@@ -175,7 +175,7 @@ namespace AXR
          *  @param index    An unsigned int containing the index of the object to be returned.
          *  @return         The object definitionat the index. May be an empty pointer if not found.
          */
-        HSSObjectDefinition::p & objectTreeGet(size_t index);
+        QSharedPointer<HSSObjectDefinition> & objectTreeGet(size_t index);
 
         /**
          *  Returns an object from the object tree by name.
@@ -183,7 +183,7 @@ namespace AXR
          *  @param name     A string containing the name of the object to be returned.
          *  @return         The object definitionat with that name. May be an empty pointer if not found.
          */
-        HSSObjectDefinition::p & objectTreeGet(AXRString name);
+        QSharedPointer<HSSObjectDefinition> & objectTreeGet(AXRString name);
 
         /**
          *  Adds an entry in the list of sheets to be loaded.
@@ -219,42 +219,42 @@ namespace AXR
          *
          *  @param newTree  A vector of shared pointers to parser nodes, representing the new tree.
          */
-        void setParserTree(std::vector<HSSParserNode::p> newTree);
+        void setParserTree(std::vector<QSharedPointer<HSSParserNode> > newTree);
 
         /**
          *  Returns the whole parser tree.
          *
          *  @return         A vector of shared pointers to parser nodes, representing the tree.
          */
-        const std::vector<HSSParserNode::p> getParserTree() const;
+        const std::vector<QSharedPointer<HSSParserNode> > getParserTree() const;
 
         /**
          *  Appends the parser node to the parser tree.
          *
          *  @param node     A shared pointer to node to be added.
          */
-        void parserTreeAdd(HSSParserNode::p node);
+        void parserTreeAdd(QSharedPointer<HSSParserNode> node);
 
         /**
          *  Finds the node in the parser tree and removes it.
          *
          *  @param node     A shared pointer to node to be removed.
          */
-        void parserTreeRemove(HSSParserNode::p node);
+        void parserTreeRemove(QSharedPointer<HSSParserNode> node);
 
         /**
          *  Returns the list of rules.
          *
          *  @return         A vector of shared pointers to rules.
          */
-        const std::vector<HSSRule::p>& getRules() const;
+        const std::vector<QSharedPointer<HSSRule> >& getRules() const;
 
         /**
          *  Adds an entry to the list of rules.
          *
          *  @param rule     A shared pointer to the rule.
          */
-        void rulesAdd(HSSRule::p & rule);
+        void rulesAdd(QSharedPointer<HSSRule> & rule);
 
         /**
          *  Removes an entry from the list of rules.
@@ -269,7 +269,7 @@ namespace AXR
          *  @param index    An unsigned int containing the index of the rule to be returned.
          *  @return         A shared pointer to the rule. May be an empty pointer if not found.
          */
-        HSSRule::p & rulesGet(size_t index);
+        QSharedPointer<HSSRule> & rulesGet(size_t index);
 
         /**
          *  Gives the size of the list of rules.
@@ -283,15 +283,15 @@ namespace AXR
          *  reset the current chain count to 0 and make the current selector node the first node in the chain.
          *  @param selectorChain    A shared pointer to the selector chain to make the current one.
          */
-        void initializeSelectorChain(HSSSelectorChain::p selectorChain);
+        void initializeSelectorChain(QSharedPointer<HSSSelectorChain> selectorChain);
 
         /**
          *  Shorthand for selecting elements. Calls select(selectorChains, scope, thisObj, processing) with
          *  processing set to to false.
-         *  See select(std::vector<HSSSelectorChain::p>, HSSSelection::p, HSSDisplayObject::p, bool)
+         *  See select(std::vector<QSharedPointer<HSSSelectorChain>>, QSharedPointer<HSSSelection>, QSharedPointer<HSSDisplayObject>, bool)
          *  for documentation on how to use it.
          */
-        HSSSelection::p select(std::vector<HSSSelectorChain::p> selectorChains, HSSSelection::p scope, HSSDisplayObject::p thisObj);
+        QSharedPointer<HSSSelection> select(std::vector<QSharedPointer<HSSSelectorChain> > selectorChains, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj);
 
         /**
          *  This is the method that should be called when creating a new selection. It will use the other types
@@ -308,11 +308,11 @@ namespace AXR
          *  @return         A vector of selections of the elements that were selected, each of these
          *                  is a vector containing shared pointers to display objects.
          */
-        HSSSelection::p select(std::vector<HSSSelectorChain::p> selectorChains, HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
+        QSharedPointer<HSSSelection> select(std::vector<QSharedPointer<HSSSelectorChain> > selectorChains, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
 
         /**
          *  Shortand for selecting elements hierarchically from the content tree. See
-         *  selectHierarchical(HSSSelection::p scope, HSSDisplayObject::p thisObj) for
+         *  selectHierarchical(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj) for
          *  documentation on how to use it.
          *
          *  Do not call directly, use select() instead.
@@ -324,7 +324,7 @@ namespace AXR
          *  @return         A vector of selections of the elements that were selected, each of these
          *                  is a vector containing shared pointers to display objects.
          */
-        HSSSelection::p selectHierarchical(HSSSelection::p scope, HSSDisplayObject::p thisObj);
+        QSharedPointer<HSSSelection> selectHierarchical(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj);
 
         /**
          *  Selects elements hierarchically from the content tree.
@@ -340,7 +340,7 @@ namespace AXR
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        HSSSelection::p selectHierarchical(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
+        QSharedPointer<HSSSelection> selectHierarchical(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
 
         /**
          *  Selects descendants according to the current selector chain. It will call selectOnLevel()
@@ -357,7 +357,7 @@ namespace AXR
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        HSSSelection::p selectAllHierarchical(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
+        QSharedPointer<HSSSelection> selectAllHierarchical(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
 
         /**
          *  Selects siblings according to the current selector chain. It will call selectSimple()
@@ -374,7 +374,7 @@ namespace AXR
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        HSSSelection::p selectOnLevel(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
+        QSharedPointer<HSSSelection> selectOnLevel(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
 
         /**
          *  Selects elements according to the current selector chain. It will automatically call
@@ -391,7 +391,7 @@ namespace AXR
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        HSSSelection::p selectSimple(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
+        QSharedPointer<HSSSelection> selectSimple(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
 
         /**
          *  After reading the XML and HSS documents, this method is used to match the rules to the
@@ -405,20 +405,20 @@ namespace AXR
          *  @param scope        The list of display objects to which the rule should be matched.
          *  @param applyingInstructions   Wether to apply instruction rules
          */
-        void recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule, HSSSelection::p scope, HSSContainer::p container, bool applyingInstructions);
+        void recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions);
 
-        std::stack<HSSContainer::p>currentContext;
+        std::stack<QSharedPointer<HSSContainer> > currentContext;
 
     protected:
-        HSSContainer::p root;
+        QSharedPointer<HSSContainer> root;
 
-        std::vector<HSSObjectDefinition::p>objectTree;
+        std::vector<QSharedPointer<HSSObjectDefinition> > objectTree;
         std::vector<QUrl>loadSheets;
-        std::vector<HSSParserNode::p>parserTree;
-        std::vector<HSSRule::p>rules;
+        std::vector<QSharedPointer<HSSParserNode> > parserTree;
+        std::vector<QSharedPointer<HSSRule> > rules;
 
-        HSSSelectorChain::p currentChain;
-        HSSParserNode::p currentSelectorNode;
+        QSharedPointer<HSSSelectorChain> currentChain;
+        QSharedPointer<HSSParserNode> currentSelectorNode;
         size_t currentChainCount;
         size_t currentChainSize;
         void readNextSelectorNode();
@@ -426,11 +426,11 @@ namespace AXR
 
     private:
         AXRDocument *document_;
-        inline void _matchRuleToSelection(HSSRule::p rule, HSSSimpleSelection::p selection);
-        inline void _recursiveMatchRulesToDisplayObjects(const HSSRule::p & rule, HSSSimpleSelection::p scope, HSSContainer::p container, bool applyingInstructions);
-        inline void _selectOnLevelSimple(HSSSimpleSelection::p & ret, HSSCombinatorType combinatorType, HSSSimpleSelection::p simpleSel, HSSDisplayObject::p thisObj, bool processing);
-        void _recursiveGetDescendants(HSSSimpleSelection::p & ret, HSSSimpleSelection::p scope);
-        void _activateRuleOnSelection(HSSRule::p rule, HSSSimpleSelection::p selection);
+        inline void _matchRuleToSelection(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSimpleSelection> selection);
+        inline void _recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSimpleSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions);
+        inline void _selectOnLevelSimple(QSharedPointer<HSSSimpleSelection> & ret, HSSCombinatorType combinatorType, QSharedPointer<HSSSimpleSelection> simpleSel, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
+        void _recursiveGetDescendants(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> scope);
+        void _activateRuleOnSelection(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSimpleSelection> selection);
     };
 }
 

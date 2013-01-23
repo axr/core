@@ -44,13 +44,12 @@
 #ifndef HSSROUNDEDRECT_H
 #define HSSROUNDEDRECT_H
 
-#include "HSSDisplayObject.h"
-#include "HSSMultipleValue.h"
 #include "HSSShape.h"
-#include "HSSUnits.h"
 
 namespace AXR
 {
+    class HSSMultipleValue;
+
     /**
      *  @brief A shape object type that allows to create rectangles with rounded corners.
      *
@@ -62,8 +61,6 @@ namespace AXR
     class AXR_API HSSRoundedRect : public HSSShape
     {
     public:
-        typedef QSharedPointer<HSSRoundedRect> p;
-
         /**
          *  Creates a new instance of a rounded  rect object.
          */
@@ -79,7 +76,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSRoundedRect
          */
-        p clone() const;
+        QSharedPointer<HSSRoundedRect> clone() const;
 
         /**
          *  Destructor for this class.
@@ -91,10 +88,10 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         //see HSSShape.h for documentation of these
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments);
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments);
 
         void createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, HSSUnit offset);
 
@@ -103,22 +100,22 @@ namespace AXR
         /**
          *  Getter for the actual value of corners. Always stored inside a multiple value.
          */
-        HSSMultipleValue::p getCorners();
+        QSharedPointer<HSSMultipleValue> getCorners();
 
         /**
          *  Setter for the definition object of corners. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of corners.
          */
-        void setDCorners(HSSParserNode::p);
+        void setDCorners(QSharedPointer<HSSParserNode>);
 
-        void setDLeft(HSSParserNode::p);
-        void setDLeftTop(HSSParserNode::p);
-        void setDTop(HSSParserNode::p);
-        void setDRightTop(HSSParserNode::p);
-        void setDRight(HSSParserNode::p);
-        void setDRightBottom(HSSParserNode::p);
-        void setDBottom(HSSParserNode::p);
-        void setDLeftBottom(HSSParserNode::p);
+        void setDLeft(QSharedPointer<HSSParserNode>);
+        void setDLeftTop(QSharedPointer<HSSParserNode>);
+        void setDTop(QSharedPointer<HSSParserNode>);
+        void setDRightTop(QSharedPointer<HSSParserNode>);
+        void setDRight(QSharedPointer<HSSParserNode>);
+        void setDRightBottom(QSharedPointer<HSSParserNode>);
+        void setDBottom(QSharedPointer<HSSParserNode>);
+        void setDLeftBottom(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect the top left corner.
@@ -150,8 +147,8 @@ namespace AXR
 
 
     protected:
-        HSSMultipleValue::p corners;
-        HSSParserNode::p dCorners;
+        QSharedPointer<HSSMultipleValue> corners;
+        QSharedPointer<HSSParserNode> dCorners;
         HSSObservable * observedTLCorner;
         HSSObservableProperty observedTLCornerProperty;
         HSSObservable * observedTRCorner;
@@ -165,7 +162,7 @@ namespace AXR
     private:
         HSSUnit _evaluatePropertyValue(
                                    void(HSSRoundedRect::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedProperty,
                                    HSSObservable * observedObject,
@@ -174,7 +171,7 @@ namespace AXR
                                    HSSObservableProperty &observedStoreProperty,
                                    QSharedPointer<HSSSimpleSelection> scope
                                    );
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

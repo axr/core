@@ -44,10 +44,8 @@
 #ifndef HSSRGB_H
 #define HSSRGB_H
 
-#include <QColor>
 #include <QSharedPointer>
 #include "HSSObject.h"
-#include "HSSUnits.h"
 
 namespace AXR
 {
@@ -61,8 +59,6 @@ namespace AXR
     class AXR_API HSSRgb : public HSSObject
     {
     public:
-        typedef QSharedPointer<HSSRgb> p;
-
         //virtual bool isKeyword(AXRString value, AXRString property);
 
         friend class HSSParser;
@@ -71,13 +67,13 @@ namespace AXR
          *  Creates a new instance of a black color.
          *  @return A shared pointer to the new color object.
          */
-        static HSSRgb::p blackColor(AXRController * controller);
+        static QSharedPointer<HSSRgb> blackColor(AXRController * controller);
 
         /**
          *  Creates a new instance of a white color.
          *  @return A shared pointer to the new color object.
          */
-        static HSSRgb::p whiteColor(AXRController * controller);
+        static QSharedPointer<HSSRgb> whiteColor(AXRController * controller);
 
         /**
          *  Constructor for HSSRgb objects
@@ -94,20 +90,20 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSRgb
          */
-        p clone() const;
+        QSharedPointer<HSSRgb> clone() const;
 
         /**
          *  Destructor for this class.
          */
         virtual ~HSSRgb();
 
-        inline static p transparentColor(AXRController * controller) { return p(new HSSRgb(controller, 0, 0, 0, 0)); }
-        inline static p defaultColor(AXRController * controller) { return p(new HSSRgb(controller)); }
+        inline static QSharedPointer<HSSRgb> transparentColor(AXRController * controller) { return QSharedPointer<HSSRgb>(new HSSRgb(controller, 0, 0, 0, 0)); }
+        inline static QSharedPointer<HSSRgb> defaultColor(AXRController * controller) { return QSharedPointer<HSSRgb>(new HSSRgb(controller)); }
 
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
 
         /**
@@ -121,7 +117,7 @@ namespace AXR
          *  Setter for the definition object of red. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of red.
          */
-        void setDRed(HSSParserNode::p);
+        void setDRed(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect the red channel.
@@ -141,7 +137,7 @@ namespace AXR
          *  Setter for the definition object of green. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of green.
          */
-        void setDGreen(HSSParserNode::p);
+        void setDGreen(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect the green channel.
@@ -161,7 +157,7 @@ namespace AXR
          *  Setter for the definition object of blue. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of blue.
          */
-        void setDBlue(HSSParserNode::p);
+        void setDBlue(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect the blue channel.
@@ -181,7 +177,7 @@ namespace AXR
          *  Setter for the definition object of alpha. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of alpha.
          */
-        void setDAlpha(HSSParserNode::p);
+        void setDAlpha(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect the alpha channel.
@@ -199,32 +195,32 @@ namespace AXR
         HSSUnit blue;
         HSSUnit alpha;
 
-        HSSParserNode::p dRed;
+        QSharedPointer<HSSParserNode> dRed;
         HSSObservable * observedRed;
         HSSObservableProperty observedRedProperty;
-        HSSParserNode::p dGreen;
+        QSharedPointer<HSSParserNode> dGreen;
         HSSObservable * observedGreen;
         HSSObservableProperty observedGreenProperty;
-        HSSParserNode::p dBlue;
+        QSharedPointer<HSSParserNode> dBlue;
         HSSObservable * observedBlue;
         HSSObservableProperty observedBlueProperty;
-        HSSParserNode::p dAlpha;
+        QSharedPointer<HSSParserNode> dAlpha;
         HSSObservable * observedAlpha;
         HSSObservableProperty observedAlphaProperty;
 
         HSSUnit _evaluatePropertyValue(
                                    void(HSSRgb::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty
                                    );
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 
-Q_DECLARE_METATYPE(AXR::HSSRgb::p)
-Q_DECLARE_METATYPE(AXR::HSSRgb::p*)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSRgb>)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSRgb>*)
 
 #endif

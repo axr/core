@@ -44,9 +44,7 @@
 #ifndef HSSFLAG_H
 #define HSSFLAG_H
 
-#include <QSharedPointer>
 #include "HSSFilter.h"
-#include "HSSRule.h"
 
 namespace AXR
 {
@@ -61,8 +59,6 @@ namespace AXR
     class AXR_API HSSFlag : public HSSFilter
     {
     public:
-        typedef QSharedPointer<HSSFlag> p;
-
         /**
          *  Creates a new instance of a flag node.
          */
@@ -75,7 +71,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSFlag
          */
-        HSSFilter::p clone() const;
+        QSharedPointer<HSSFilter> clone() const;
 
         /**
          *  Destructor for this class.
@@ -109,7 +105,7 @@ namespace AXR
          *  @return A shared pointer to the instance on which it is called. A shared pointer to this
          *  instance must already exist before calling this.
          */
-        HSSFlag::p shared_from_this();
+        QSharedPointer<HSSFlag> shared_from_this();
 
         /**
          *  When selecting (not connecting, which is different) elements based on the flag,
@@ -118,7 +114,7 @@ namespace AXR
          *  @param processing   Wether we are processing the filter or not.
          *  @return A vector of shared pointers to the display objects in the resulting selection.
          */
-        HSSSelection::p apply(HSSSelection::p scope, bool processing);
+        QSharedPointer<HSSSelection> apply(QSharedPointer<HSSSelection> scope, bool processing);
 
         /**
          *  Getter for the purging state.
@@ -136,7 +132,7 @@ namespace AXR
         AXRString _name;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
         HSSRuleState _purging;
     };
 }

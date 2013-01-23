@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSStringConstant.h"
 
 using namespace AXR;
@@ -51,7 +52,7 @@ HSSStringConstant::HSSStringConstant(AXRString value, AXRController * controller
     this->value = value;
 }
 
-HSSStringConstant::p HSSStringConstant::clone() const
+QSharedPointer<HSSStringConstant> HSSStringConstant::clone() const
 {
     return qSharedPointerCast<HSSStringConstant> (this->cloneImpl());
 }
@@ -76,7 +77,7 @@ AXRString HSSStringConstant::toString()
     return "HSSStringConstant with value " + this->value;
 }
 
-HSSClonable::p HSSStringConstant::cloneImpl() const
+QSharedPointer<HSSClonable> HSSStringConstant::cloneImpl() const
 {
-    return HSSStringConstant::p(new HSSStringConstant(*this));
+    return QSharedPointer<HSSStringConstant>(new HSSStringConstant(*this));
 }

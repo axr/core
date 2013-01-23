@@ -44,7 +44,6 @@
 #ifndef HSSDIVISION_H
 #define HSSDIVISION_H
 
-#include <QSharedPointer>
 #include "HSSExpression.h"
 
 namespace AXR
@@ -55,8 +54,6 @@ namespace AXR
     class AXR_API HSSDivision : public HSSExpression
     {
     public:
-        typedef QSharedPointer<HSSDivision> p;
-
         /**
          *  Creates a new instance of a division expression, with two
          *  parser nodes as left and right terms.
@@ -64,7 +61,7 @@ namespace AXR
          *  @param left     The value on the left hand side of the operator.
          *  @param right    The value on the right hand side of the operator.
          */
-        HSSDivision(HSSParserNode::p left, HSSParserNode::p right, AXRController * controller);
+        HSSDivision(QSharedPointer<HSSParserNode> left, QSharedPointer<HSSParserNode> right, AXRController * controller);
 
         /**
          *  Copy constructor. Do not use directly, but use clone() instead.
@@ -77,7 +74,7 @@ namespace AXR
          *  Creates new clone of the current instance.
          *  @return A shared pointer to the new division expression.
          */
-        p clone() const;
+        QSharedPointer<HSSDivision> clone() const;
 
         /**
          *  Destructor for this class.
@@ -93,7 +90,7 @@ namespace AXR
          */
         HSSUnit calculate(HSSUnit leftval, HSSUnit rightval);
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

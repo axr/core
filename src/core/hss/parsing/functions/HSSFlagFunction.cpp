@@ -43,7 +43,9 @@
 
 #include "AXRController.h"
 #include "AXRDebugging.h"
+#include "HSSDisplayObject.h"
 #include "HSSFlagFunction.h"
+#include "HSSSelectorChain.h"
 
 using namespace AXR;
 
@@ -82,7 +84,7 @@ HSSFlagFunction::HSSFlagFunction(const HSSFlagFunction & orig)
     this->_flagFunctionType = orig._flagFunctionType;
 }
 
-HSSFunction::p HSSFlagFunction::clone() const
+QSharedPointer<HSSFunction> HSSFlagFunction::clone() const
 {
     return qSharedPointerCast<HSSFunction> (this->cloneImpl());
 }
@@ -103,18 +105,18 @@ void HSSFlagFunction::setName(AXRString newValue)
     this->setDirty(true);
 }
 
-const std::vector<HSSSelectorChain::p> & HSSFlagFunction::getSelectorChains() const
+const std::vector<QSharedPointer<HSSSelectorChain> > & HSSFlagFunction::getSelectorChains() const
 {
     return this->selectorChains;
 }
 
-void HSSFlagFunction::setSelectorChains(std::vector<HSSSelectorChain::p> newValues)
+void HSSFlagFunction::setSelectorChains(std::vector<QSharedPointer<HSSSelectorChain> > newValues)
 {
     this->selectorChains = newValues;
     this->setDirty(true);
 }
 
-void HSSFlagFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
+void HSSFlagFunction::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSelectorChain)
 {
     if (newSelectorChain)
     {
@@ -134,12 +136,12 @@ void HSSFlagFunction::selectorChainsRemoveLast()
     this->selectorChains.pop_back();
 }
 
-HSSSelectorChain::p & HSSFlagFunction::selectorChainsGet(unsigned index)
+QSharedPointer<HSSSelectorChain> & HSSFlagFunction::selectorChainsGet(unsigned index)
 {
     return this->selectorChains[index];
 }
 
-HSSSelectorChain::p & HSSFlagFunction::selectorChainsLast()
+QSharedPointer<HSSSelectorChain> & HSSFlagFunction::selectorChainsLast()
 {
     return this->selectorChains.back();
 }
@@ -154,7 +156,7 @@ QVariant HSSFlagFunction::_evaluate()
     return QVariant();
 }
 
-QVariant HSSFlagFunction::_evaluate(std::deque<HSSParserNode::p> arguments)
+QVariant HSSFlagFunction::_evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments)
 {
     return this->_evaluate();
 }
@@ -171,13 +173,13 @@ HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType()
     return this->_flagFunctionType;
 }
 
-HSSClonable::p HSSFlagFunction::cloneImpl() const
+QSharedPointer<HSSClonable> HSSFlagFunction::cloneImpl() const
 {
-    HSSFlagFunction::p clone = HSSFlagFunction::p(new HSSFlagFunction(*this));
+    QSharedPointer<HSSFlagFunction> clone = QSharedPointer<HSSFlagFunction>(new HSSFlagFunction(*this));
 
     for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)
     {
-        HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
+        QSharedPointer<HSSSelectorChain> clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }
 

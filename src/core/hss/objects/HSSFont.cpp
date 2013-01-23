@@ -44,13 +44,18 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
+#include "HSSCallback.h"
+#include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSFont.h"
 #include "HSSFunction.h"
+#include "HSSKeywordConstant.h"
 #include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
+#include "HSSParserNode.h"
 #include "HSSPercentageConstant.h"
+#include "HSSRgb.h"
 #include "HSSStringConstant.h"
 #include "HSSSimpleSelection.h"
 
@@ -87,14 +92,14 @@ HSSFont::HSSFont(const HSSFont & orig)
     this->setShorthandProperties(shorthandProperties);
 }
 
-HSSFont::p HSSFont::clone() const
+QSharedPointer<HSSFont> HSSFont::clone() const
 {
     return qSharedPointerCast<HSSFont> (this->cloneImpl());
 }
 
-HSSClonable::p HSSFont::cloneImpl() const
+QSharedPointer<HSSClonable> HSSFont::cloneImpl() const
 {
-    return HSSFont::p(new HSSFont(*this));
+    return QSharedPointer<HSSFont>(new HSSFont(*this));
 }
 
 HSSFont::~HSSFont()
@@ -157,7 +162,7 @@ bool HSSFont::isKeyword(AXRString value, AXRString property)
     return HSSObject::isKeyword(value, property);
 }
 
-void HSSFont::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSFont::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -185,7 +190,7 @@ HSSUnit HSSFont::getSize()
     return this->size;
 }
 
-void HSSFont::setDSize(HSSParserNode::p value)
+void HSSFont::setDSize(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -220,13 +225,13 @@ AXRString HSSFont::getFace()
     return this->face;
 }
 
-void HSSFont::setDFace(HSSParserNode::p value)
+void HSSFont::setDFace(QSharedPointer<HSSParserNode> value)
 {
 
     if (value->isA(HSSParserNodeTypeStringConstant))
     {
         this->dFace = value;
-        HSSStringConstant::p theString = qSharedPointerCast<HSSStringConstant > (value);
+        QSharedPointer<HSSStringConstant> theString = qSharedPointerCast<HSSStringConstant > (value);
         this->face = theString->getValue();
     }
     else
@@ -240,17 +245,17 @@ void HSSFont::faceChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** faceChanged unimplemented ****************************");
 }
 
-HSSRgb::p HSSFont::getColor()
+QSharedPointer<HSSRgb> HSSFont::getColor()
 {
     return this->color;
 }
 
-HSSParserNode::p HSSFont::getDColor()
+QSharedPointer<HSSParserNode> HSSFont::getDColor()
 {
     return this->dColor;
 }
 
-void HSSFont::setDColor(HSSParserNode::p value)
+void HSSFont::setDColor(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -261,8 +266,8 @@ void HSSFont::setDColor(HSSParserNode::p value)
         this->dColor = value;
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDColor(objdef);
             valid = true;
 
@@ -279,20 +284,20 @@ void HSSFont::setDColor(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dColor = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
 
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<HSSRgb::p>())
+            if (remoteValue.canConvert<QSharedPointer<HSSRgb> >())
             {
-                this->color = remoteValue.value<HSSRgb::p>();
+                this->color = remoteValue.value<QSharedPointer<HSSRgb> >();
             }
             else
             {
-                this->color = HSSRgb::p(new HSSRgb(this->getController()));
+                this->color = QSharedPointer<HSSRgb>(new HSSRgb(this->getController()));
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSFont > (this, &HSSFont::colorChanged));
@@ -311,11 +316,11 @@ void HSSFont::setDColor(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dColor = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setScope(this->scope);
         objdef->setThisObj(this->getThisObj());
         objdef->apply();
-        HSSObject::p theobj = objdef->getObject();
+        QSharedPointer<HSSObject> theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeRgb))
         {
             this->color = qSharedPointerCast<HSSRgb>(theobj);
@@ -341,12 +346,12 @@ void HSSFont::colorChanged(AXR::HSSObservableProperty source, void *data)
     std_log1("********************** colorChanged unimplemented ****************************");
 }
 
-HSSKeywordConstant::p HSSFont::getWeight()
+QSharedPointer<HSSKeywordConstant> HSSFont::getWeight()
 {
     return this->weight;
 }
 
-void HSSFont::setDWeight(HSSParserNode::p value)
+void HSSFont::setDWeight(QSharedPointer<HSSParserNode> value)
 {
 
     bool valid = false;
@@ -357,15 +362,15 @@ void HSSFont::setDWeight(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dWeight = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<HSSKeywordConstant::p>())
+            if (remoteValue.canConvert<QSharedPointer<HSSKeywordConstant> >())
             {
-                this->weight = remoteValue.value<HSSKeywordConstant::p>();
+                this->weight = remoteValue.value<QSharedPointer<HSSKeywordConstant> >();
                 valid = true;
             }
 
@@ -377,7 +382,7 @@ void HSSFont::setDWeight(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         this->weight = keywordValue;
         valid = true;
         break;
@@ -401,7 +406,7 @@ void HSSFont::weightChanged(AXR::HSSObservableProperty source, void *data)
 
 HSSUnit HSSFont::_evaluatePropertyValue(
                                     void(HSSFont::*callback)(HSSObservableProperty property, void* data),
-                                    HSSParserNode::p value,
+                                    QSharedPointer<HSSParserNode> value,
                                     HSSUnit percentageBase,
                                     HSSObservableProperty observedSourceProperty,
                                     HSSObservable * &observedStore,
@@ -415,21 +420,21 @@ HSSUnit HSSFont::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
+        QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         //expressionValue->setScope(scope);
         ret = expressionValue->evaluate();

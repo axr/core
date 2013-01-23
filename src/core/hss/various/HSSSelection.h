@@ -45,7 +45,6 @@
 #define HSSSELECTION_H
 
 #include <QSharedPointer>
-#include "AXRString.h"
 #include "HSSTypeEnums.h"
 
 namespace AXR
@@ -59,11 +58,6 @@ namespace AXR
     class HSSSelection
     {
     public:
-        /**
-         *  The shared pointer to this kind of object.
-         */
-        typedef QSharedPointer<HSSSelection> p;
-
         virtual ~HSSSelection();
 
         /**
@@ -85,7 +79,7 @@ namespace AXR
          */
         HSSSelectionType getSelectionType();
 
-        virtual void addSelection(p item) =0;
+        virtual void addSelection(QSharedPointer<HSSSelection> item) =0;
         virtual QSharedPointer<HSSSimpleSelection> joinAll() =0;
         virtual QSharedPointer<HSSMultipleSelection> splitAll() =0;
 
@@ -110,7 +104,7 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(AXR::HSSSelection::p)
-Q_DECLARE_METATYPE(AXR::HSSSelection::p*)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSSelection>)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSSelection>*)
 
 #endif

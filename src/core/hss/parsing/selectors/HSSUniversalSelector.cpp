@@ -41,6 +41,8 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
+#include "HSSSelection.h"
 #include "HSSUniversalSelector.h"
 
 using namespace AXR;
@@ -51,7 +53,7 @@ HSSUniversalSelector::HSSUniversalSelector(AXRController * controller)
 
 }
 
-HSSUniversalSelector::p HSSUniversalSelector::clone() const
+QSharedPointer<HSSUniversalSelector> HSSUniversalSelector::clone() const
 {
     return qSharedPointerCast<HSSUniversalSelector> (this->cloneImpl());
 }
@@ -61,12 +63,12 @@ AXRString HSSUniversalSelector::toString()
     return "Universal selector";
 }
 
-HSSClonable::p HSSUniversalSelector::cloneImpl() const
+QSharedPointer<HSSClonable> HSSUniversalSelector::cloneImpl() const
 {
-    return HSSUniversalSelector::p(new HSSUniversalSelector(*this));
+    return QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector(*this));
 }
 
-HSSSelection::p HSSUniversalSelector::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
+QSharedPointer<HSSSelection> HSSUniversalSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
 {
     return scope;
 }

@@ -45,6 +45,13 @@
 #include "AXRDocument.h"
 #include "HSSDisplayObject.h"
 #include "HSSFlag.h"
+#include "HSSMultipleSelection.h"
+#include "HSSParserNode.h"
+#include "HSSRule.h"
+#include "HSSSelection.h"
+#include "HSSSelectorChain.h"
+#include "HSSSimpleSelection.h"
+#include "HSSStatement.h"
 
 using namespace AXR;
 
@@ -54,7 +61,7 @@ HSSFlag::HSSFlag(AXRController * controller)
     this->_purging = HSSRuleStateOff;
 }
 
-HSSFilter::p HSSFlag::clone() const
+QSharedPointer<HSSFilter> HSSFlag::clone() const
 {
     return qSharedPointerCast<HSSFlag> (this->cloneImpl());
 }
@@ -87,20 +94,20 @@ void HSSFlag::setName(AXRString newValue)
 void HSSFlag::flagChanged(HSSRuleState newStatus)
 {
     //parent is simple selector, grandparent is selector chain, grandgrandparent is the rule
-    HSSParserNode::p selectorChainNode = this->getParentNode()->getParentNode();
-    HSSParserNode::p ruleNode = selectorChainNode->getParentNode();
+    QSharedPointer<HSSParserNode> selectorChainNode = this->getParentNode()->getParentNode();
+    QSharedPointer<HSSParserNode> ruleNode = selectorChainNode->getParentNode();
     if (ruleNode->isA(HSSParserNodeTypeStatement))
     {
-        HSSStatement::p ruleStatement = qSharedPointerCast<HSSStatement > (ruleNode);
+        QSharedPointer<HSSStatement> ruleStatement = qSharedPointerCast<HSSStatement > (ruleNode);
         if (ruleStatement->isA(HSSStatementTypeRule))
         {
-            HSSRule::p theRule = qSharedPointerCast<HSSRule > (ruleStatement);
-            HSSSimpleSelection::p scope = theRule->getOriginalScope();
+            QSharedPointer<HSSRule> theRule = qSharedPointerCast<HSSRule > (ruleStatement);
+            QSharedPointer<HSSSimpleSelection> scope = theRule->getOriginalScope();
             AXRController * controller = this->getController();
             this->setPurging(newStatus);
-            std::vector<HSSSelectorChain::p> chains;
+            std::vector<QSharedPointer<HSSSelectorChain> > chains;
             chains.push_back(qSharedPointerCast<HSSSelectorChain>(selectorChainNode));
-            HSSSimpleSelection::p selection = controller->select(chains, scope, this->getThisObj())->joinAll();
+            QSharedPointer<HSSSimpleSelection> selection = controller->select(chains, scope, this->getThisObj())->joinAll();
             this->setPurging(HSSRuleStateOff);
 
             if (this->getNegating()) {
@@ -115,29 +122,29 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
             }
             for (HSSSimpleSelection::const_iterator it=selection->begin(); it!=selection->end(); ++it)
             {
-                const HSSDisplayObject::p & theDO = *it;
+                const QSharedPointer<HSSDisplayObject> & theDO = *it;
                 theDO->setRuleStatus(theRule, newStatus);
             }
         }
     }
 }
 
-HSSSelection::p HSSFlag::apply(HSSSelection::p scope, bool processing)
+QSharedPointer<HSSSelection> HSSFlag::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
     if (processing)
     {
-        HSSSimpleSelection::p inner = scope->joinAll();
+        QSharedPointer<HSSSimpleSelection> inner = scope->joinAll();
         for (HSSSimpleSelection::const_iterator it = inner->begin(); it != inner->end(); ++it)
         {
-            const HSSDisplayObject::p & theDO = *it;
+            const QSharedPointer<HSSDisplayObject> & theDO = *it;
             //parent is simple selector, grandparent is selector chain, grandgrandparent is the rule
-            HSSParserNode::p ruleNode = this->getParentNode()->getParentNode()->getParentNode();
+            QSharedPointer<HSSParserNode> ruleNode = this->getParentNode()->getParentNode()->getParentNode();
             if (ruleNode->isA(HSSParserNodeTypeStatement))
             {
-                HSSStatement::p ruleStatement = qSharedPointerCast<HSSStatement > (ruleNode);
+                QSharedPointer<HSSStatement> ruleStatement = qSharedPointerCast<HSSStatement > (ruleNode);
                 if (ruleStatement->isA(HSSStatementTypeRule))
                 {
-                    HSSRule::p theRule = qSharedPointerCast<HSSRule > (ruleStatement);
+                    QSharedPointer<HSSRule> theRule = qSharedPointerCast<HSSRule > (ruleStatement);
 
                     theDO->createFlag(this->shared_from_this(), HSSRuleStateOff);
                 }
@@ -148,11 +155,11 @@ HSSSelection::p HSSFlag::apply(HSSSelection::p scope, bool processing)
     }
     else
     {
-        HSSSimpleSelection::p ret(new HSSSimpleSelection());
-        HSSSimpleSelection::p inner = scope->joinAll();
+        QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
+        QSharedPointer<HSSSimpleSelection> inner = scope->joinAll();
         for (HSSSimpleSelection::const_iterator it = inner->begin(); it != inner->end(); ++it)
         {
-            const HSSDisplayObject::p & theDO = *it;
+            const QSharedPointer<HSSDisplayObject> & theDO = *it;
             HSSRuleState purgingState = this->getPurging();
             if (purgingState)
             {
@@ -187,12 +194,12 @@ void HSSFlag::setPurging(HSSRuleState newValue)
     this->_purging = newValue;
 }
 
-HSSClonable::p HSSFlag::cloneImpl() const
+QSharedPointer<HSSClonable> HSSFlag::cloneImpl() const
 {
-    return HSSFlag::p(new HSSFlag(*this));
+    return QSharedPointer<HSSFlag>(new HSSFlag(*this));
 }
 
-HSSFlag::p HSSFlag::shared_from_this()
+QSharedPointer<HSSFlag> HSSFlag::shared_from_this()
 {
     return qSharedPointerCast<HSSFlag > (HSSParserNode::shared_from_this());
 }

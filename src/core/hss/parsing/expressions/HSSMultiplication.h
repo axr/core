@@ -44,7 +44,6 @@
 #ifndef HSSMULTIPLICATION_H
 #define HSSMULTIPLICATION_H
 
-#include <QSharedPointer>
 #include "HSSExpression.h"
 
 namespace AXR
@@ -55,8 +54,6 @@ namespace AXR
     class AXR_API HSSMultiplication : public HSSExpression
     {
     public:
-        typedef QSharedPointer<HSSMultiplication> p;
-
         /**
          *  Creates a new instance of a multiplication expression with the two
          *  members you give.
@@ -64,7 +61,7 @@ namespace AXR
          *  @param left     A shared parser node to the left member of the expression.
          *  @param right    A shared parser node to the right member of the expression.
          */
-        HSSMultiplication(HSSParserNode::p left, HSSParserNode::p right, AXRController * controller);
+        HSSMultiplication(QSharedPointer<HSSParserNode> left, QSharedPointer<HSSParserNode> right, AXRController * controller);
 
         /**
          *  Copy constructor for HSSContainer objects. Do not call directly, use clone() instead.
@@ -77,7 +74,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSMultiplication
          */
-        p clone() const;
+        QSharedPointer<HSSMultiplication> clone() const;
 
         /**
          *  Destructor for this class.
@@ -87,7 +84,7 @@ namespace AXR
         HSSUnit calculate(HSSUnit leftval, HSSUnit rightval);
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

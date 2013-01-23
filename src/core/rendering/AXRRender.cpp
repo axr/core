@@ -42,13 +42,16 @@
  ********************************************************************/
 
 #include <QImage>
+#include <QPainter>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRError.h"
 #include "AXRDocument.h"
 #include "AXRRender.h"
 #include "AXRString.h"
+#include "HSSContainer.h"
 #include "HSSDisplayObject.h"
+#include "HSSUnits.h"
 
 using namespace AXR;
 
@@ -64,7 +67,7 @@ AXRRender::~AXRRender()
 void AXRRender::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
 {
     //prepare values
-    HSSContainer::p root = this->controller->getRoot();
+    QSharedPointer<HSSContainer> root = this->controller->getRoot();
     AXRDocument * document = this->controller->document();
 
     if (root)

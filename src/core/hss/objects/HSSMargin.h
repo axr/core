@@ -45,9 +45,7 @@
 #define HSSMARGIN_H
 
 #include <QSharedPointer>
-#include "HSSMultipleValue.h"
 #include "HSSObject.h"
-#include "HSSValue.h"
 
 namespace AXR
 {
@@ -63,8 +61,6 @@ namespace AXR
     class AXR_API HSSMargin : public HSSObject
     {
     public:
-        typedef QSharedPointer<HSSMargin> p;
-
         /**
          *  Creates a new instance of a margin object. Don't use directly, this is only for
          *  subclasses.
@@ -81,7 +77,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSMargin
          */
-        p clone() const;
+        QSharedPointer<HSSMargin> clone() const;
 
         /**
          *  Destructor for this class.
@@ -93,19 +89,19 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Getter for the definition object of size.
          *  @return A shared pointer to the parser node containing the definition object of value.
          */
-        const HSSParserNode::p getDSize() const;
+        const QSharedPointer<HSSParserNode> getDSize() const;
 
         /**
          *  Setter for the definition object of size. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of value.
          */
-        void setDSize(HSSParserNode::p value);
+        void setDSize(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect size.
@@ -124,13 +120,13 @@ namespace AXR
          *  Getter for the definition object of top.
          *  @return A shared pointer to the parser node containing the definition object of value.
          */
-        const HSSParserNode::p getDTop() const;
+        const QSharedPointer<HSSParserNode> getDTop() const;
 
         /**
          *  Setter for the definition object of top. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of value.
          */
-        void setDTop(HSSParserNode::p value);
+        void setDTop(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect top.
@@ -149,13 +145,13 @@ namespace AXR
          *  Getter for the definition object of right.
          *  @return A shared pointer to the parser node containing the definition object of value.
          */
-        const HSSParserNode::p getDRight() const;
+        const QSharedPointer<HSSParserNode> getDRight() const;
 
         /**
          *  Setter for the definition object of right. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of value.
          */
-        void setDRight(HSSParserNode::p value);
+        void setDRight(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect right.
@@ -174,13 +170,13 @@ namespace AXR
          *  Getter for the definition object of bottom.
          *  @return A shared pointer to the parser node containing the definition object of value.
          */
-        const HSSParserNode::p getDBottom() const;
+        const QSharedPointer<HSSParserNode> getDBottom() const;
 
         /**
          *  Setter for the definition object of bottom. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of value.
          */
-        void setDBottom(HSSParserNode::p value);
+        void setDBottom(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect bottom.
@@ -199,13 +195,13 @@ namespace AXR
          *  Getter for the definition object of left.
          *  @return A shared pointer to the parser node containing the definition object of value.
          */
-        const HSSParserNode::p getDLeft() const;
+        const QSharedPointer<HSSParserNode> getDLeft() const;
 
         /**
          *  Setter for the definition object of left. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of value.
          */
-        void setDLeft(HSSParserNode::p value);
+        void setDLeft(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect left.
@@ -215,9 +211,9 @@ namespace AXR
         void leftChanged(HSSObservableProperty source, void*data);
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
         //size
-        HSSParserNode::p dSize;
+        QSharedPointer<HSSParserNode> dSize;
 
         HSSObservable * observedTop;
         HSSObservableProperty observedTopProperty;
@@ -231,7 +227,7 @@ namespace AXR
 
         HSSUnit _evaluatePropertyValue(
                                    void(HSSMargin::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedProperty,
                                    HSSObservable * observedObject,

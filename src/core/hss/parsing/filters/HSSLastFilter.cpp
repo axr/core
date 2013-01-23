@@ -41,7 +41,10 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSLastFilter.h"
+#include "HSSMultipleSelection.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
@@ -51,7 +54,7 @@ HSSLastFilter::HSSLastFilter(AXRController * controller)
 
 }
 
-HSSLastFilter::p HSSLastFilter::clone() const
+QSharedPointer<HSSFilter> HSSLastFilter::clone() const
 {
     return qSharedPointerCast<HSSLastFilter> (this->cloneImpl());
 }
@@ -66,12 +69,12 @@ AXRString HSSLastFilter::toString()
     return "Last Filter";
 }
 
-HSSSelection::p HSSLastFilter::apply(HSSSelection::p scope, bool processing)
+QSharedPointer<HSSSelection> HSSLastFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     if (scope->isA(HSSSelectionTypeMultipleSelection))
     {
-        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
         for (HSSMultipleSelection::iterator it=multiSel->begin(); it!=multiSel->end(); ++it) {
             this->_apply(ret, *it);
         }
@@ -83,7 +86,7 @@ HSSSelection::p HSSLastFilter::apply(HSSSelection::p scope, bool processing)
     return ret;
 }
 
-inline void HSSLastFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+inline void HSSLastFilter::_apply(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> selection)
 {
     if (selection->size() > 0)
     {
@@ -102,7 +105,7 @@ inline void HSSLastFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelectio
     }
 }
 
-HSSClonable::p HSSLastFilter::cloneImpl() const
+QSharedPointer<HSSClonable> HSSLastFilter::cloneImpl() const
 {
-    return HSSLastFilter::p(new HSSLastFilter(*this));
+    return QSharedPointer<HSSLastFilter>(new HSSLastFilter(*this));
 }

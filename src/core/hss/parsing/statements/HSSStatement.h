@@ -44,8 +44,6 @@
 #ifndef HSSSTATEMENT_H
 #define HSSSTATEMENT_H
 
-#include <QSharedPointer>
-#include "AXRString.h"
 #include "HSSParserNode.h"
 
 namespace AXR
@@ -60,11 +58,6 @@ namespace AXR
     class AXR_API HSSStatement : public HSSParserNode
     {
     public:
-        /**
-         *  The shared pointer to instances of this class.
-         */
-        typedef QSharedPointer<HSSStatement> p;
-
         virtual AXRString toString() = 0;
 
         /**
@@ -102,7 +95,7 @@ namespace AXR
          */
         HSSStatement(const HSSStatement & orig);
 
-        HSSStatement::p shared_from_this();
+        QSharedPointer<HSSStatement> shared_from_this();
 
     private:
         HSSStatementType type;

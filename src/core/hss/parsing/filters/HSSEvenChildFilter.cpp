@@ -41,7 +41,10 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSEvenChildFilter.h"
+#include "HSSMultipleSelection.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
@@ -51,7 +54,7 @@ HSSEvenChildFilter::HSSEvenChildFilter(AXRController * controller)
 
 }
 
-HSSEvenChildFilter::p HSSEvenChildFilter::clone() const
+QSharedPointer<HSSFilter> HSSEvenChildFilter::clone() const
 {
     return qSharedPointerCast<HSSEvenChildFilter> (this->cloneImpl());
 }
@@ -66,13 +69,13 @@ AXRString HSSEvenChildFilter::toString()
     return "Even Child Filter";
 }
 
-HSSSelection::p HSSEvenChildFilter::apply(HSSSelection::p scope, bool processing)
+QSharedPointer<HSSSelection> HSSEvenChildFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     if (scope->isA(HSSSelectionTypeMultipleSelection))
     {
-        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
-        for (HSSMultipleSelection::iterator it=multiSel->begin(); it!=multiSel->end(); ++it) {
+        QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        for (HSSMultipleSelection::iterator it = multiSel->begin(); it != multiSel->end(); ++it) {
             this->_apply(ret, *it);
         }
     }
@@ -83,12 +86,11 @@ HSSSelection::p HSSEvenChildFilter::apply(HSSSelection::p scope, bool processing
     return ret;
 }
 
-inline void HSSEvenChildFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+inline void HSSEvenChildFilter::_apply(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> selection)
 {
-    HSSSimpleSelection::const_iterator it;
-    for (it = selection->begin(); it != selection->end(); ++it)
+    for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
     {
-        const HSSDisplayObject::p & theDO = *it;
+        const QSharedPointer<HSSDisplayObject> & theDO = *it;
         if (this->getNegating())
         {
             if (theDO->getIndex() % 2 == 0)
@@ -106,7 +108,7 @@ inline void HSSEvenChildFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSel
     }
 }
 
-HSSClonable::p HSSEvenChildFilter::cloneImpl() const
+QSharedPointer<HSSClonable> HSSEvenChildFilter::cloneImpl() const
 {
-    return HSSEvenChildFilter::p(new HSSEvenChildFilter(*this));
+    return QSharedPointer<HSSEvenChildFilter>(new HSSEvenChildFilter(*this));
 }

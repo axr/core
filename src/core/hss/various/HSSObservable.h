@@ -44,18 +44,16 @@
 #ifndef HSSOBSERVABLE_H
 #define HSSOBSERVABLE_H
 
-#include <map>
-#include <QList>
 #include <QMap>
-#include <QSharedPointer>
-#include "AXRGlobal.h"
-#include "AXRString.h"
-#include "HSSCallback.h"
-#include "HSSObservableMapping.h"
 #include "HSSObservableProperties.h"
+
+template <class T> class QSharedPointer;
 
 namespace AXR
 {
+    class HSSCallback;
+    class HSSObservableMapping;
+
     /**
      *  @brief This class provides base functionality for property observing.
      *
@@ -66,8 +64,6 @@ namespace AXR
     class AXR_API HSSObservable
     {
     public:
-        typedef QSharedPointer<HSSObservable> p;
-
         /**
          *  When logging, for example, it is useful to be able to show a string representation of a
          *  HSSObservableProperty representation.
@@ -93,7 +89,7 @@ namespace AXR
          *  key inside the private _propertyObservers map.
          *  The key for this map is a hash of HSSObservable * observed and HSObservableProperty source
          */
-        typedef QList<HSSObservableMapping::p> observed;
+        typedef QList<QSharedPointer<HSSObservableMapping> > observed;
 
         /**
          *  Creates a new instance of a observable object. Don't call directly, this is for the use of subclasses.

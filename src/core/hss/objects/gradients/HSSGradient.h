@@ -45,13 +45,15 @@
 #define HSSGRADIENT_H
 
 #include <QSharedPointer>
-#include <QPainter>
-#include <QPainterPath>
 #include "HSSObject.h"
-#include "HSSRgb.h"
+
+class QPainter;
+class QPainterPath;
 
 namespace AXR
 {
+    class HSSRgb;
+
     /**
      *  @brief Abstract base class for gradient objects.
      *
@@ -61,8 +63,7 @@ namespace AXR
     class AXR_API HSSGradient : public HSSObject
     {
     public:
-        typedef QSharedPointer<HSSGradient> p;
-        typedef std::vector<HSSGradient::p>::iterator it;
+        typedef std::vector<QSharedPointer<HSSGradient> >::iterator it;
 
         /**
          *  Destructor for this class.
@@ -80,7 +81,7 @@ namespace AXR
          */
         virtual void draw(QPainter &painter, const QPainterPath &path) = 0;
 
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  If the start color is transparent, we need to be able to find the next color that is not
@@ -88,7 +89,7 @@ namespace AXR
          *  @return A shared pointer to the next suitable color from the color stops, the end color, or
          *          transparent black.
          */
-        HSSRgb::p getColorAfterFirst();
+        QSharedPointer<HSSRgb> getColorAfterFirst();
 
         /**
          *  If the end color is transparent, we need to be able to find the previous color that is not
@@ -96,7 +97,7 @@ namespace AXR
          *  @return A shared pointer to the previous suitable color from the color stops, the start color, or
          *          transparent black.
          */
-        HSSRgb::p getColorBeforeLast();
+        QSharedPointer<HSSRgb> getColorBeforeLast();
 
         /**
          *  When a transparent color stop is found, this method allows to continue iterating through the
@@ -106,25 +107,25 @@ namespace AXR
          *  @return A shared pointer to the next suitable color from the color stops, starting at the given
          *          iterator, the end color, or transparent black.
          */
-        HSSRgb::p getNextColorFromStops(std::vector<HSSObject::p>::iterator it, std::vector<HSSObject::p>::iterator endIt);
+        QSharedPointer<HSSRgb> getNextColorFromStops(std::vector<QSharedPointer<HSSObject> >::iterator it, std::vector<QSharedPointer<HSSObject> >::iterator endIt);
 
         /**
          *  Getter for the actual value of startColor.
          *  @return A shared pointer to the HSSRgb object that holds the start color information.
          */
-        HSSRgb::p getStartColor();
+        QSharedPointer<HSSRgb> getStartColor();
 
         /**
          *  Getter for the definition object of startColor.
          *  @return A shared pointer to the parser node containing the definition object of startColor.
          */
-        HSSParserNode::p getDStartColor();
+        QSharedPointer<HSSParserNode> getDStartColor();
 
         /**
          *  Setter for the definition object of startColor. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of startColor.
          */
-        void setDStartColor(HSSParserNode::p);
+        void setDStartColor(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect startColor.
@@ -137,19 +138,19 @@ namespace AXR
          *  Getter for the definition object of endColor.
          *  @return A shared pointer to the parser node containing the definition object of endColor.
          */
-        HSSRgb::p getEndColor();
+        QSharedPointer<HSSRgb> getEndColor();
 
         /**
          *  Getter for the definition object of endColor.
          *  @return A shared pointer to the parser node containing the definition object of endColor.
          */
-        HSSParserNode::p getDEndColor();
+        QSharedPointer<HSSParserNode> getDEndColor();
 
         /**
          *  Setter for the definition object of endColor. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of endColor.
          */
-        void setDEndColor(HSSParserNode::p);
+        void setDEndColor(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect endColor.
@@ -169,13 +170,13 @@ namespace AXR
          *  Getter for the definition object of balance.
          *  @return A shared pointer to the parser node containing the definition object of balance.
          */
-        HSSParserNode::p getDBalance();
+        QSharedPointer<HSSParserNode> getDBalance();
 
         /**
          *  Setter for the definition object of balance. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of balance.
          */
-        void setDBalance(HSSParserNode::p);
+        void setDBalance(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect balance.
@@ -188,13 +189,13 @@ namespace AXR
          *  Getter for the definition object of colorStops.
          *  @return A shared pointer to the parser node containing the definition object of colorStops.
          */
-        HSSParserNode::p getDColorStops();
+        QSharedPointer<HSSParserNode> getDColorStops();
 
         /**
          *  Setter for the definition object of colorStops. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of colorStops.
          */
-        void setDColorStops(HSSParserNode::p value);
+        void setDColorStops(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Since this property accepts multiple values, this allows to append a value instead of
@@ -202,7 +203,7 @@ namespace AXR
          *  @param value    A shared pointer to the parser node containing the definition object to be added
          *                  to colorStops.
          */
-        void addDColorStops(HSSParserNode::p value);
+        void addDColorStops(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect textAlign.
@@ -223,32 +224,32 @@ namespace AXR
         HSSGradient(const HSSGradient & orig);
 
         //startColor
-        HSSRgb::p startColor;
-        HSSParserNode::p dStartColor;
+        QSharedPointer<HSSRgb> startColor;
+        QSharedPointer<HSSParserNode> dStartColor;
         HSSObservable * observedStartColor;
         HSSObservableProperty observedStartColorProperty;
 
         //endColor
-        HSSRgb::p endColor;
-        HSSParserNode::p dEndColor;
+        QSharedPointer<HSSRgb> endColor;
+        QSharedPointer<HSSParserNode> dEndColor;
         HSSObservable * observedEndColor;
         HSSObservableProperty observedEndColorProperty;
 
         //balance
         HSSUnit balance;
-        HSSParserNode::p dBalance;
+        QSharedPointer<HSSParserNode> dBalance;
         HSSObservable * observedBalance;
         HSSObservableProperty observedBalanceProperty;
 
         //colorStops
-        HSSParserNode::p dColorStops;
+        QSharedPointer<HSSParserNode> dColorStops;
         HSSObservable * observedColorStops;
         HSSObservableProperty observedColorStopsProperty;
-        std::vector<HSSObject::p> colorStops;
+        std::vector<QSharedPointer<HSSObject> > colorStops;
 
         HSSUnit _evaluatePropertyValue(
                                    void(HSSGradient::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,

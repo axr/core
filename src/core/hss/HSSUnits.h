@@ -62,11 +62,6 @@
 namespace AXR
 {
     /**
-     * @brief Represents an HSS unit.
-     */
-    typedef double HSSUnit;
-
-    /**
      * @brief   A resolution independent point.
      */
     class AXR_API HSSPoint
@@ -223,8 +218,5 @@ namespace AXR
         HSSSize size; /**< The dimensions of the rectangle. */
     };
 }
-
-Q_DECLARE_METATYPE(AXR::HSSUnit)
-Q_DECLARE_METATYPE(AXR::HSSUnit*)
 
 #endif

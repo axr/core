@@ -41,15 +41,23 @@
  *
  ********************************************************************/
 
+#include <QPainter>
+#include <QPainterPath>
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
 #include "HSSBorder.h"
+#include "HSSCallback.h"
+#include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
+#include "HSSKeywordConstant.h"
 #include "HSSLineBorder.h"
+#include "HSSMultipleValue.h"
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
+#include "HSSRgb.h"
 #include "HSSRoundedRect.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
@@ -76,15 +84,15 @@ HSSRoundedRect::HSSRoundedRect(const HSSRoundedRect & orig)
     this->setShorthandProperties(shorthandProperties);
 }
 
-HSSRoundedRect::p HSSRoundedRect::clone() const
+QSharedPointer<HSSRoundedRect> HSSRoundedRect::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: cloning rounded rectangle object");
     return qSharedPointerCast<HSSRoundedRect>(this->cloneImpl());
 }
 
-HSSClonable::p HSSRoundedRect::cloneImpl() const
+QSharedPointer<HSSClonable> HSSRoundedRect::cloneImpl() const
 {
-    return HSSRoundedRect::p(new HSSRoundedRect(*this));
+    return QSharedPointer<HSSRoundedRect>(new HSSRoundedRect(*this));
 }
 
 HSSRoundedRect::~HSSRoundedRect()
@@ -112,7 +120,7 @@ bool HSSRoundedRect::isKeyword(AXRString value, AXRString property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSRoundedRect::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSRoundedRect::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -150,12 +158,12 @@ void HSSRoundedRect::setProperty(HSSObservableProperty name, HSSParserNode::p va
     }
 }
 
-HSSMultipleValue::p HSSRoundedRect::getCorners()
+QSharedPointer<HSSMultipleValue> HSSRoundedRect::getCorners()
 {
     return this->corners;
 }
 
-void HSSRoundedRect::setDCorners(HSSParserNode::p value)
+void HSSRoundedRect::setDCorners(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -228,14 +236,14 @@ void HSSRoundedRect::setDCorners(HSSParserNode::p value)
     }
 
     this->dCorners = value;
-    HSSMultipleValue::p newCorners(new HSSMultipleValue(this->getController()));
+    QSharedPointer<HSSMultipleValue> newCorners(new HSSMultipleValue(this->getController()));
     newCorners->add(value);
     this->corners = newCorners;
 
     this->notifyObservers(HSSObservablePropertyCorners, &this->corners);
 }
 
-void HSSRoundedRect::setDLeft(HSSParserNode::p value)
+void HSSRoundedRect::setDLeft(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -283,7 +291,7 @@ void HSSRoundedRect::setDLeft(HSSParserNode::p value)
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBL);
 }
 
-void HSSRoundedRect::setDLeftTop(HSSParserNode::p value)
+void HSSRoundedRect::setDLeftTop(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -316,7 +324,7 @@ void HSSRoundedRect::setDLeftTop(HSSParserNode::p value)
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTL);
 }
 
-void HSSRoundedRect::setDTop(HSSParserNode::p value)
+void HSSRoundedRect::setDTop(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -364,7 +372,7 @@ void HSSRoundedRect::setDTop(HSSParserNode::p value)
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTR);
 }
 
-void HSSRoundedRect::setDRightTop(HSSParserNode::p value)
+void HSSRoundedRect::setDRightTop(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -397,7 +405,7 @@ void HSSRoundedRect::setDRightTop(HSSParserNode::p value)
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerTR);
 }
 
-void HSSRoundedRect::setDRight(HSSParserNode::p value)
+void HSSRoundedRect::setDRight(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -445,7 +453,7 @@ void HSSRoundedRect::setDRight(HSSParserNode::p value)
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBR);
 }
 
-void HSSRoundedRect::setDRightBottom(HSSParserNode::p value)
+void HSSRoundedRect::setDRightBottom(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -478,7 +486,7 @@ void HSSRoundedRect::setDRightBottom(HSSParserNode::p value)
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBR);
 }
 
-void HSSRoundedRect::setDBottom(HSSParserNode::p value)
+void HSSRoundedRect::setDBottom(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -526,7 +534,7 @@ void HSSRoundedRect::setDBottom(HSSParserNode::p value)
     this->notifyObservers(HSSObservablePropertyCorners, &this->cornerBR);
 }
 
-void HSSRoundedRect::setDLeftBottom(HSSParserNode::p value)
+void HSSRoundedRect::setDLeftBottom(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -583,7 +591,7 @@ void HSSRoundedRect::cornerBLChanged(AXR::HSSObservableProperty source, void *da
     this->notifyObservers(HSSObservablePropertyCorners, &this->corners);
 }
 
-void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments)
+void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments)
 {
     this->createRoundedRect(path, x, y, width, height, 0.);
 }
@@ -619,9 +627,9 @@ void HSSRoundedRect::createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y,
 void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding)
 {
     //sort borders in three groups
-    std::vector<HSSBorder::p> centered, inside, outside;
+    std::vector<QSharedPointer<HSSBorder> > centered, inside, outside;
     for (HSSBorder::it it=borders.begin(); it!=borders.end(); ++it) {
-        const HSSBorder::p & theBorder = *it;
+        const QSharedPointer<HSSBorder> & theBorder = *it;
         HSSBorderPosition thePos = theBorder->getPosition();
         if (thePos == HSSBorderPositionCentered)
         {
@@ -639,14 +647,14 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
 
     HSSUnit topThickness = 0., rightThickness = 0., bottomThickness = 0., leftThickness = 0.;
     for (HSSBorder::it it=centered.begin(); it!=centered.end(); ++it) {
-        const HSSBorder::p & theBorder = *it;
-        const std::vector<HSSParserNode::p> & segments = theBorder->getSegments();
+        const QSharedPointer<HSSBorder> & theBorder = *it;
+        const std::vector<QSharedPointer<HSSParserNode> > & segments = theBorder->getSegments();
         bool hasAll = false;
-        for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const HSSParserNode::p & segment = *it;
+        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            const QSharedPointer<HSSParserNode> & segment = *it;
             if(segment->isA(HSSParserNodeTypeKeywordConstant))
             {
-                HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                 if (theKw->getValue() == "all")
                 {
                     hasAll = true;
@@ -663,7 +671,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
         else
         {
             for (HSSParserNode::const_it it2=segments.begin(); it2!=segments.end(); ++it2) {
-                const HSSParserNode::p & theSeg = *it2;
+                const QSharedPointer<HSSParserNode> & theSeg = *it2;
                 if (theSeg->isA(HSSParserNodeTypeKeywordConstant)) {
                     AXRString segment = qSharedPointerCast<HSSKeywordConstant>(theSeg)->getValue();
                     if(segment == "top"){
@@ -707,17 +715,17 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
 
     HSSUnit topCumulative = 0., rightCumulative = 0., bottomCumulative = 0., leftCumulative = 0.;
     for (HSSBorder::it it=centered.begin(); it!=centered.end(); ++it) {
-        const HSSBorder::p & theBorder = *it;
+        const QSharedPointer<HSSBorder> & theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
-        std::vector<HSSParserNode::p> segments = theBorder->getSegments();
+        std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
 
         bool hasAll = false;
-        for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const HSSParserNode::p & segment = *it;
+        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            const QSharedPointer<HSSParserNode> & segment = *it;
             if(segment->isA(HSSParserNodeTypeKeywordConstant))
             {
-                HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                 if (theKw->getValue() == "all")
                 {
                     hasAll = true;
@@ -726,13 +734,13 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
             }
         }
         if(segments.size() > 0 && !hasAll){
-            for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
                 QPainterPath path;
-                const HSSParserNode::p & segment = *it;
+                const QSharedPointer<HSSParserNode> & segment = *it;
                 switch (segment->getType()) {
                     case HSSParserNodeTypeKeywordConstant:
                     {
-                        HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                        QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                         AXRString theValue = theKw->getValue();
                         if (theValue == "top")
                         {
@@ -785,10 +793,10 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
             ///@todo uncomment this once there are border types
             //if(theBorder->isA(HSSBorderTypeLineBorder){
                 QPainterPath path;
-                HSSLineBorder::p theLineBorder = qSharedPointerCast<HSSLineBorder>(theBorder);
-                HSSObject::p theColorObj = theLineBorder->getColor();
+                QSharedPointer<HSSLineBorder> theLineBorder = qSharedPointerCast<HSSLineBorder>(theBorder);
+                QSharedPointer<HSSObject> theColorObj = theLineBorder->getColor();
                 if(theColorObj && theColorObj->isA(HSSObjectTypeRgb)){
-                    HSSRgb::p theColor = qSharedPointerCast<HSSRgb>(theColorObj);
+                    QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb>(theColorObj);
                     QPainterPath outerPath, innerPath;
                     HSSUnit outerLeftOffset = (leftThickness/2)-leftCumulative-theSize+leftCorrection;
                     HSSUnit outerTopOffset = (topThickness/2)-topCumulative-theSize+topCorrection;
@@ -827,18 +835,18 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    for (std::vector<HSSBorder::p>::reverse_iterator it=inside.rbegin(); it!=inside.rend(); ++it) {
-        const HSSBorder::p & theBorder = *it;
+    for (std::vector<QSharedPointer<HSSBorder> >::reverse_iterator it=inside.rbegin(); it!=inside.rend(); ++it) {
+        const QSharedPointer<HSSBorder> & theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
-        std::vector<HSSParserNode::p> segments = theBorder->getSegments();
+        std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
 
         bool hasAll = false;
-        for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const HSSParserNode::p & segment = *it;
+        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            const QSharedPointer<HSSParserNode> & segment = *it;
             if(segment->isA(HSSParserNodeTypeKeywordConstant))
             {
-                HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                 if (theKw->getValue() == "all")
                 {
                     hasAll = true;
@@ -847,19 +855,19 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
             }
         }
         if(segments.size() > 0 && !hasAll){
-            for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
                 QPainterPath path;
-                const HSSParserNode::p & segment = *it;
+                const QSharedPointer<HSSParserNode> & segment = *it;
                 switch (segment->getType()) {
                     case HSSParserNodeTypeKeywordConstant:
                     {
                         ///@todo uncomment this once there are border types
                         //if(theBorder->isA(HSSBorderTypeLineBorder){
-                            HSSLineBorder::p theLineBorder = qSharedPointerCast<HSSLineBorder>(theBorder);
-                            HSSObject::p theColorObj = theLineBorder->getColor();
+                            QSharedPointer<HSSLineBorder> theLineBorder = qSharedPointerCast<HSSLineBorder>(theBorder);
+                            QSharedPointer<HSSObject> theColorObj = theLineBorder->getColor();
                             if(theColorObj && theColorObj->isA(HSSObjectTypeRgb)){
-                                HSSRgb::p theColor = qSharedPointerCast<HSSRgb>(theColorObj);
-                                HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                                QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb>(theColorObj);
+                                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                                 AXRString theValue = theKw->getValue();
                                 if (theValue == "top")
                                 {
@@ -958,10 +966,10 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
             ///@todo uncomment this once there are border types
             //if(theBorder->isA(HSSBorderTypeLineBorder){
                 QPainterPath path;
-                HSSLineBorder::p theLineBorder = qSharedPointerCast<HSSLineBorder>(theBorder);
-                HSSObject::p theColorObj = theLineBorder->getColor();
+                QSharedPointer<HSSLineBorder> theLineBorder = qSharedPointerCast<HSSLineBorder>(theBorder);
+                QSharedPointer<HSSObject> theColorObj = theLineBorder->getColor();
                 if(theColorObj && theColorObj->isA(HSSObjectTypeRgb)){
-                    HSSRgb::p theColor = qSharedPointerCast<HSSRgb>(theColorObj);
+                    QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb>(theColorObj);
                     QPainterPath outerPath, innerPath;
                     HSSUnit outerLeftOffset = leftCumulative+leftCorrection;
                     HSSUnit outerTopOffset = topCumulative+topCorrection;
@@ -999,18 +1007,18 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    for (std::vector<HSSBorder::p>::iterator it=outside.begin(); it!=outside.end(); ++it) {
-        const HSSBorder::p & theBorder = *it;
+    for (std::vector<QSharedPointer<HSSBorder> >::iterator it=outside.begin(); it!=outside.end(); ++it) {
+        const QSharedPointer<HSSBorder> & theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
-        std::vector<HSSParserNode::p> segments = theBorder->getSegments();
+        std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
 
         bool hasAll = false;
-        for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const HSSParserNode::p & segment = *it;
+        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            const QSharedPointer<HSSParserNode> & segment = *it;
             if(segment->isA(HSSParserNodeTypeKeywordConstant))
             {
-                HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                 if (theKw->getValue() == "all")
                 {
                     hasAll = true;
@@ -1019,9 +1027,9 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
             }
         }
         if(segments.size() > 0 && !hasAll){
-            for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
                 QPainterPath path;
-                const HSSParserNode::p & segment = *it;
+                const QSharedPointer<HSSParserNode> & segment = *it;
                 switch (segment->getType()) {
                     case HSSParserNodeTypeKeywordConstant:
                     {
@@ -1030,7 +1038,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                         HSSUnit rightOffset = (rightThickness / 2) + rightCumulative + rightCorrection;
                         HSSUnit bottomOffset = (bottomThickness / 2) + bottomCumulative + bottomCorrection;
 
-                        HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                        QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                         AXRString theValue = theKw->getValue();
                         if (theValue == "top")
                         {
@@ -1067,10 +1075,10 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
             ///@todo uncomment this once there are border types
             //if(theBorder->isA(HSSBorderTypeLineBorder){
                 QPainterPath path;
-                HSSLineBorder::p theLineBorder = qSharedPointerCast<HSSLineBorder>(theBorder);
-                HSSObject::p theColorObj = theLineBorder->getColor();
+                QSharedPointer<HSSLineBorder> theLineBorder = qSharedPointerCast<HSSLineBorder>(theBorder);
+                QSharedPointer<HSSObject> theColorObj = theLineBorder->getColor();
                 if(theColorObj && theColorObj->isA(HSSObjectTypeRgb)){
-                    HSSRgb::p theColor = qSharedPointerCast<HSSRgb>(theColorObj);
+                    QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb>(theColorObj);
                     QPainterPath outerPath, innerPath;
                     HSSUnit outerLeftOffset = theSize+leftCumulative+leftCorrection;
                     HSSUnit outerTopOffset = theSize+topCumulative+topCorrection;
@@ -1109,14 +1117,14 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
 
 HSSUnit HSSRoundedRect::_evaluatePropertyValue(
                                            void(HSSRoundedRect::*callback)(HSSObservableProperty property, void* data),
-                                           HSSParserNode::p value,
+                                           QSharedPointer<HSSParserNode> value,
                                            HSSUnit percentageBase,
                                            HSSObservableProperty observedProperty,
                                            HSSObservable * observedObject,
                                            HSSObservableProperty observedSourceProperty,
                                            HSSObservable * &observedStore,
                                            HSSObservableProperty &observedStoreProperty,
-                                           HSSSimpleSelection::p scope
+                                           QSharedPointer<HSSSimpleSelection> scope
                                            )
 {
     HSSUnit ret = 0;
@@ -1126,7 +1134,7 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant>(value);
+        QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant>(value);
         ret = numberValue->getValue();
         observedStore = NULL;
         break;
@@ -1134,7 +1142,7 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant>(value);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant>(value);
         ret = percentageValue->getValue(percentageBase);
         if (callback)
         {
@@ -1147,7 +1155,7 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression>(value);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression>(value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setPercentageObserved(observedProperty, observedObject);
         expressionValue->setScope(scope);
@@ -1169,7 +1177,7 @@ HSSUnit HSSRoundedRect::_evaluatePropertyValue(
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction>(value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction>(value)->clone();
         fnct->setPercentageBase(percentageBase);
         fnct->setPercentageObserved(observedProperty, observedObject);
         fnct->setScope(scope);

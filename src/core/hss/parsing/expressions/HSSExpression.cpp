@@ -42,15 +42,19 @@
  ********************************************************************/
 
 #include "AXRDebugging.h"
+#include "HSSCallback.h"
 #include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
-HSSExpression::HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller)
+Q_DECLARE_METATYPE(HSSUnit*)
+
+HSSExpression::HSSExpression(HSSExpressionType type, QSharedPointer<HSSParserNode> _left, QSharedPointer<HSSParserNode> _right, AXRController * controller)
 : HSSParserNode(HSSParserNodeTypeExpression, controller)
 {
     this->expressionType = type;
@@ -125,7 +129,7 @@ HSSUnit HSSExpression::evaluate()
         {
         case HSSParserNodeTypeExpression:
         {
-            HSSExpression::p leftExpression = qSharedPointerCast<HSSExpression > (this->getLeft());
+            QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->getLeft());
             this->leftval = leftExpression->evaluate();
             if (this->leftObserved)
             {
@@ -139,14 +143,14 @@ HSSUnit HSSExpression::evaluate()
 
         case HSSParserNodeTypeNumberConstant:
         {
-            HSSNumberConstant::p leftNumber = qSharedPointerCast<HSSNumberConstant > (this->getLeft());
+            QSharedPointer<HSSNumberConstant> leftNumber = qSharedPointerCast<HSSNumberConstant > (this->getLeft());
             this->leftval = leftNumber->getValue();
             break;
         }
 
         case HSSParserNodeTypePercentageConstant:
         {
-            HSSPercentageConstant::p leftPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getLeft());
+            QSharedPointer<HSSPercentageConstant> leftPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getLeft());
             this->leftval = leftPercentage->getValue(this->percentageBase);
             if (this->leftObserved)
             {
@@ -160,7 +164,7 @@ HSSUnit HSSExpression::evaluate()
 
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p leftFunction = qSharedPointerCast<HSSFunction > (this->getLeft());
+            QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->getLeft());
             QVariant remoteValue = leftFunction->evaluate();
             if (remoteValue.canConvert<HSSUnit*>())
             {
@@ -193,7 +197,7 @@ HSSUnit HSSExpression::evaluate()
         {
         case HSSParserNodeTypeExpression:
         {
-            HSSExpression::p rightExpression = qSharedPointerCast<HSSExpression > (this->getRight());
+            QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->getRight());
             this->rightval = rightExpression->evaluate();
             if (this->rightObserved)
             {
@@ -207,14 +211,14 @@ HSSUnit HSSExpression::evaluate()
 
         case HSSParserNodeTypeNumberConstant:
         {
-            HSSNumberConstant::p rightNumber = qSharedPointerCast<HSSNumberConstant > (this->getRight());
+            QSharedPointer<HSSNumberConstant> rightNumber = qSharedPointerCast<HSSNumberConstant > (this->getRight());
             this->rightval = rightNumber->getValue();
             break;
         }
 
         case HSSParserNodeTypePercentageConstant:
         {
-            HSSPercentageConstant::p rightPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getRight());
+            QSharedPointer<HSSPercentageConstant> rightPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getRight());
             this->rightval = rightPercentage->getValue(this->percentageBase);
             if (this->rightObserved)
             {
@@ -228,7 +232,7 @@ HSSUnit HSSExpression::evaluate()
 
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p rightFunction = qSharedPointerCast<HSSFunction > (this->getRight());
+            QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->getRight());
             QVariant remoteValue = rightFunction->evaluate();
             if (remoteValue.canConvert<HSSUnit*>())
             {
@@ -260,22 +264,22 @@ HSSUnit HSSExpression::evaluate()
     return this->getValue();
 }
 
-void HSSExpression::setLeft(HSSParserNode::p newLeft)
+void HSSExpression::setLeft(QSharedPointer<HSSParserNode> newLeft)
 {
     this->left = newLeft;
 }
 
-HSSParserNode::p HSSExpression::getLeft()
+QSharedPointer<HSSParserNode> HSSExpression::getLeft()
 {
     return this->left;
 }
 
-void HSSExpression::setRight(HSSParserNode::p newRight)
+void HSSExpression::setRight(QSharedPointer<HSSParserNode> newRight)
 {
     this->right = newRight;
 }
 
-HSSParserNode::p HSSExpression::getRight()
+QSharedPointer<HSSParserNode> HSSExpression::getRight()
 {
     return this->right;
 }
@@ -309,7 +313,7 @@ void HSSExpression::leftChanged(HSSObservableProperty property, void* data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p leftPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getLeft());
+        QSharedPointer<HSSPercentageConstant> leftPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getLeft());
         this->leftval = leftPercentage->getValue(*(HSSUnit*) data);
         break;
     }
@@ -337,7 +341,7 @@ void HSSExpression::rightChanged(HSSObservableProperty property, void* data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p rightPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getRight());
+        QSharedPointer<HSSPercentageConstant> rightPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getRight());
         this->rightval = rightPercentage->getValue(*(HSSUnit*) data);
         break;
     }
@@ -377,22 +381,22 @@ void HSSExpression::setPercentageBase(HSSUnit value)
     //propagate values
     if (this->left && this->left->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p leftExpression = qSharedPointerCast<HSSExpression > (this->left);
+        QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->left);
         leftExpression->setPercentageBase(value);
     }
     else if (this->left && this->left->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p leftFunction = qSharedPointerCast<HSSFunction > (this->left);
+        QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->left);
         leftFunction->setPercentageBase(value);
     }
     if (this->right && this->right->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p rightExpression = qSharedPointerCast<HSSExpression > (this->right);
+        QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->right);
         rightExpression->setPercentageBase(value);
     }
     else if (this->right && this->right->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p rightFunction = qSharedPointerCast<HSSFunction > (this->right);
+        QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->right);
         rightFunction->setPercentageBase(value);
     }
 
@@ -407,57 +411,57 @@ void HSSExpression::setPercentageObserved(HSSObservableProperty property, HSSObs
     //propagate values
     if (this->left && this->left->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p leftExpression = qSharedPointerCast<HSSExpression > (this->left);
+        QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->left);
         leftExpression->setPercentageObserved(property, observed);
     }
     else if (this->left && this->left->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p leftFunction = qSharedPointerCast<HSSFunction > (this->left);
+        QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->left);
         leftFunction->setPercentageObserved(property, observed);
     }
     if (this->right && this->right->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p rightExpression = qSharedPointerCast<HSSExpression > (this->right);
+        QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->right);
         rightExpression->setPercentageObserved(property, observed);
     }
     else if (this->right && this->right->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p rightFunction = qSharedPointerCast<HSSFunction > (this->right);
+        QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->right);
         rightFunction->setPercentageObserved(property, observed);
     }
 
     this->setDirty(true);
 }
 
-void HSSExpression::setScope(HSSSimpleSelection::p newScope)
+void HSSExpression::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 {
     this->scope = newScope;
     //propagate values
     if (this->left && this->left->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p leftExpression = qSharedPointerCast<HSSExpression > (this->left);
+        QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->left);
         leftExpression->setScope(newScope);
     }
     else if (this->left && this->left->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p leftFunction = qSharedPointerCast<HSSFunction > (this->left);
+        QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->left);
         leftFunction->setScope(newScope);
     }
     if (this->right && this->right->isA(HSSParserNodeTypeExpression))
     {
-        HSSExpression::p rightExpression = qSharedPointerCast<HSSExpression > (this->right);
+        QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->right);
         rightExpression->setScope(newScope);
     }
     else if (this->right && this->right->isA(HSSParserNodeTypeFunctionCall))
     {
-        HSSFunction::p rightFunction = qSharedPointerCast<HSSFunction > (this->right);
+        QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->right);
         rightFunction->setScope(newScope);
     }
 
     this->setDirty(true);
 }
 
-void HSSExpression::setThisObj(HSSDisplayObject::p value)
+void HSSExpression::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     //propagate values
     if (this->left) this->left->setThisObj(value);

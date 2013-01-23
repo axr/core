@@ -41,13 +41,18 @@
  *
  ********************************************************************/
 
+#include "AXRBuffer.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
 #include "AXRWarning.h"
+#include "HSSCallback.h"
+#include "HSSContainer.h"
 #include "HSSRequest.h"
 #include "HSSSelFunction.h"
+#include "HSSSimpleSelection.h"
 #include "HSSStringConstant.h"
+#include "XMLParser.h"
 
 using namespace AXR;
 
@@ -66,7 +71,7 @@ HSSRequest::HSSRequest(AXRController * controller)
     this->setShorthandProperties(shorthandProperties);
 
     this->mode = HSSRequestModeTypeAuto;
-    this->target = HSSSimpleSelection::p(new HSSSimpleSelection);
+    this->target = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection);
 }
 
 HSSRequest::HSSRequest(const HSSRequest & orig)
@@ -80,15 +85,15 @@ HSSRequest::HSSRequest(const HSSRequest & orig)
     this->target = orig.target;
 }
 
-HSSRequest::p HSSRequest::clone() const
+QSharedPointer<HSSRequest> HSSRequest::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRequest: cloning request object");
     return qSharedPointerCast<HSSRequest> (this->cloneImpl());
 }
 
-HSSClonable::p HSSRequest::cloneImpl() const
+QSharedPointer<HSSClonable> HSSRequest::cloneImpl() const
 {
-    return HSSRequest::p(new HSSRequest(*this));
+    return QSharedPointer<HSSRequest>(new HSSRequest(*this));
 }
 
 HSSRequest::~HSSRequest()
@@ -106,7 +111,7 @@ AXRString HSSRequest::defaultObjectType()
     return "request";
 }
 
-void HSSRequest::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSRequest::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -147,12 +152,12 @@ void HSSRequest::fire()
         {
         default:
         {
-            AXRBuffer::p baseFile = document->getFile();
+            QSharedPointer<AXRBuffer> baseFile = document->getFile();
             QUrl newFileUrl = this->src;
             if(newFileUrl.scheme() == ""){
                 newFileUrl = baseFile->sourceUrl().resolved(this->src);
             }
-            AXRBuffer::p newFile;
+            QSharedPointer<AXRBuffer> newFile;
             try
             {
                 newFile = document->getFile(newFileUrl);
@@ -164,7 +169,7 @@ void HSSRequest::fire()
 
             if (newFile)
             {
-                HSSContainer::p tempNode = HSSContainer::p(new HSSContainer(ctrlr));
+                QSharedPointer<HSSContainer> tempNode = QSharedPointer<HSSContainer>(new HSSContainer(ctrlr));
                 ctrlr->currentContext.push(tempNode);
                 bool loadingSuccess = document->getParserXML()->loadFile(newFile);
                 if (!loadingSuccess)
@@ -177,14 +182,14 @@ void HSSRequest::fire()
                     {
                         for (HSSSimpleSelection::iterator it = tempNode->getChildren()->begin(); it != tempNode->getChildren()->end(); ++it)
                         {
-                            HSSContainer::p loadedRoot = HSSContainer::asContainer(*it);
+                            QSharedPointer<HSSContainer> loadedRoot = HSSContainer::asContainer(*it);
                             if(loadedRoot)
                             {
                                 for (HSSSimpleSelection::iterator it2 = this->target->begin(); it2 != this->target->end(); ++it2) {
-                                    HSSContainer::p theTarget = HSSContainer::asContainer(*it2);
+                                    QSharedPointer<HSSContainer> theTarget = HSSContainer::asContainer(*it2);
                                     if(theTarget)
                                     {
-                                        //HSSContainer::p clonedNode = loadedRoot->clone();
+                                        //QSharedPointer<HSSContainer> clonedNode = loadedRoot->clone();
                                         theTarget->add(loadedRoot);
                                     }
                                 }
@@ -205,12 +210,12 @@ void HSSRequest::fire()
     }
 }
 
-HSSParserNode::p HSSRequest::getDSrc()
+QSharedPointer<HSSParserNode> HSSRequest::getDSrc()
 {
     return this->dSrc;
 }
 
-void HSSRequest::setDSrc(HSSParserNode::p value)
+void HSSRequest::setDSrc(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -234,14 +239,14 @@ void HSSRequest::setDSrc(HSSParserNode::p value)
 
         case HSSParserNodeTypeStringConstant:
         {
-            HSSStringConstant::p theString = qSharedPointerCast<HSSStringConstant > (value);
+            QSharedPointer<HSSStringConstant> theString = qSharedPointerCast<HSSStringConstant > (value);
             this->src = QUrl(theString->getValue());
             break;
         }
 
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+            QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
             QVariant remoteValue = fnct->evaluate();
@@ -272,12 +277,12 @@ void HSSRequest::srcChanged(AXR::HSSObservableProperty source, void *data)
     AXRWarning("HSSRequest", "unimplemented").raise();
 }
 
-HSSParserNode::p HSSRequest::getDTarget()
+QSharedPointer<HSSParserNode> HSSRequest::getDTarget()
 {
     return this->dTarget;
 }
 
-void HSSRequest::setDTarget(HSSParserNode::p value)
+void HSSRequest::setDTarget(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -300,15 +305,15 @@ void HSSRequest::setDTarget(HSSParserNode::p value)
 
         case HSSParserNodeTypeFunctionCall:
         {
-            HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+            QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
             if (fnct)
             {
                 fnct->setScope(this->scope);
                 fnct->setThisObj(this->getThisObj());
                 QVariant remoteValue = fnct->evaluate();
-                if (remoteValue.canConvert< HSSSelection::p >())
+                if (remoteValue.canConvert< QSharedPointer<HSSSelection> >())
                 {
-                    HSSSimpleSelection::p selection = remoteValue.value< HSSSelection::p >()->joinAll();
+                    QSharedPointer<HSSSimpleSelection> selection = remoteValue.value< QSharedPointer<HSSSelection> >()->joinAll();
                     this->target->clear();
                     this->target->insert(this->target->end(), selection->begin(), selection->end());
                 }

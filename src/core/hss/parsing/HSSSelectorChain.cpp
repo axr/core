@@ -42,9 +42,12 @@
  ********************************************************************/
 
 #include "AXRDebugging.h"
-#include "HSSSimpleSelector.h" //this needs to go before HSSRule to avoid problems with circular header inclusions
+#include "HSSDisplayObject.h"
+#include "HSSFilter.h"
+#include "HSSNameSelector.h"
 #include "HSSRule.h"
 #include "HSSSelectorChain.h"
+#include "HSSSimpleSelector.h"
 
 using namespace AXR;
 
@@ -60,7 +63,7 @@ HSSSelectorChain::HSSSelectorChain(const HSSSelectorChain &orig)
 
 }
 
-HSSSelectorChain::p HSSSelectorChain::clone() const
+QSharedPointer<HSSSelectorChain> HSSSelectorChain::clone() const
 {
     return qSharedPointerCast<HSSSelectorChain> (this->cloneImpl());
 }
@@ -85,12 +88,12 @@ AXRString HSSSelectorChain::toString()
     return tempstr;
 }
 
-const HSSParserNode::p & HSSSelectorChain::get(size_t i) const
+const QSharedPointer<HSSParserNode> & HSSSelectorChain::get(size_t i) const
 {
     return this->nodeList[i];
 }
 
-void HSSSelectorChain::add(HSSParserNode::p newNode)
+void HSSSelectorChain::add(QSharedPointer<HSSParserNode> newNode)
 {
     if (newNode)
     {
@@ -100,7 +103,7 @@ void HSSSelectorChain::add(HSSParserNode::p newNode)
     }
 }
 
-void HSSSelectorChain::prepend(HSSParserNode::p newNode)
+void HSSSelectorChain::prepend(QSharedPointer<HSSParserNode> newNode)
 {
     if (newNode)
     {
@@ -115,7 +118,7 @@ void HSSSelectorChain::removeLast()
     this->nodeList.pop_back();
 }
 
-HSSParserNode::p HSSSelectorChain::last()
+QSharedPointer<HSSParserNode> HSSSelectorChain::last()
 {
     return this->nodeList.back();
 }
@@ -125,9 +128,9 @@ size_t HSSSelectorChain::size() const
     return this->nodeList.size();
 }
 
-HSSSimpleSelector::p HSSSelectorChain::subject()
+QSharedPointer<HSSSimpleSelector> HSSSelectorChain::subject()
 {
-    HSSSimpleSelector::p ret;
+    QSharedPointer<HSSSimpleSelector> ret;
     /**
      *  @todo subject selectors need to be implemented
      */
@@ -135,7 +138,7 @@ HSSSimpleSelector::p HSSSelectorChain::subject()
     {
         if (this->nodeList.back()->isA(HSSParserNodeTypeSelector))
         {
-            HSSSelector::p selector = qSharedPointerCast<HSSSelector > (this->nodeList.back());
+            QSharedPointer<HSSSelector> selector = qSharedPointerCast<HSSSelector > (this->nodeList.back());
             if (selector->isA(HSSSelectorTypeSimpleSelector))
             {
                 ret = qSharedPointerCast<HSSSimpleSelector > (selector);
@@ -156,7 +159,7 @@ HSSSimpleSelector::p HSSSelectorChain::subject()
 
 void HSSSelectorChain::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
-    for (std::deque<HSSParserNode::p>::iterator it = this->nodeList.begin(); it != this->nodeList.end(); ++it)
+    for (std::deque<QSharedPointer<HSSParserNode> >::iterator it = this->nodeList.begin(); it != this->nodeList.end(); ++it)
     {
         (*it)->setThisObj(value);
     }
@@ -164,18 +167,18 @@ void HSSSelectorChain::setThisObj(QSharedPointer<HSSDisplayObject> value)
     HSSParserNode::setThisObj(value);
 }
 
-HSSSelectorChain::p HSSSelectorChain::shared_from_this()
+QSharedPointer<HSSSelectorChain> HSSSelectorChain::shared_from_this()
 {
     return qSharedPointerCast<HSSSelectorChain > (HSSParserNode::shared_from_this());
 }
 
-HSSClonable::p HSSSelectorChain::cloneImpl() const
+QSharedPointer<HSSClonable> HSSSelectorChain::cloneImpl() const
 {
-    HSSSelectorChain::p clone = HSSSelectorChain::p(new HSSSelectorChain(*this));
+    QSharedPointer<HSSSelectorChain> clone = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(*this));
 
-    for (std::deque<HSSParserNode::p>::const_iterator it = this->nodeList.begin(); it != this->nodeList.end(); ++it)
+    for (std::deque<QSharedPointer<HSSParserNode> >::const_iterator it = this->nodeList.begin(); it != this->nodeList.end(); ++it)
     {
-        HSSParserNode::p clonedNode = (*it)->clone();
+        QSharedPointer<HSSParserNode> clonedNode = (*it)->clone();
         clone->add(clonedNode);
     }
 

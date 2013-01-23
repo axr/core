@@ -44,8 +44,9 @@
 #ifndef AXR_XMLPARSER_H
 #define AXR_XMLPARSER_H
 
-#include <QSharedPointer>
 #include "AXRGlobal.h"
+
+template <class T> class QSharedPointer;
 
 namespace AXR
 {
@@ -54,12 +55,10 @@ namespace AXR
     class AXR_API XMLParser
     {
     public:
-        typedef QSharedPointer<XMLParser> p;
-
         XMLParser(AXRController *theController);
         virtual ~XMLParser();
 
-        bool loadFile(AXRBuffer::p file);
+        bool loadFile(QSharedPointer<AXRBuffer> file);
 
         AXRController *controller;
     };

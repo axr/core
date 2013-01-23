@@ -41,7 +41,10 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSOddFilter.h"
+#include "HSSMultipleSelection.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
@@ -51,7 +54,7 @@ HSSOddFilter::HSSOddFilter(AXRController * controller)
 
 }
 
-HSSOddFilter::p HSSOddFilter::clone() const
+QSharedPointer<HSSFilter> HSSOddFilter::clone() const
 {
     return qSharedPointerCast<HSSOddFilter> (this->cloneImpl());
 }
@@ -66,12 +69,12 @@ AXRString HSSOddFilter::toString()
     return "Odd Filter";
 }
 
-HSSSelection::p HSSOddFilter::apply(HSSSelection::p scope, bool processing)
+QSharedPointer<HSSSelection> HSSOddFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     if (scope->isA(HSSSelectionTypeMultipleSelection))
     {
-        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
         for (HSSMultipleSelection::iterator it=multiSel->begin(); it!=multiSel->end(); ++it) {
             this->_apply(ret, *it);
         }
@@ -83,7 +86,7 @@ HSSSelection::p HSSOddFilter::apply(HSSSelection::p scope, bool processing)
     return ret;
 }
 
-inline void HSSOddFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+inline void HSSOddFilter::_apply(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> selection)
 {
     unsigned i = 0;
     for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
@@ -106,7 +109,7 @@ inline void HSSOddFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelection
     }
 }
 
-HSSClonable::p HSSOddFilter::cloneImpl() const
+QSharedPointer<HSSClonable> HSSOddFilter::cloneImpl() const
 {
-    return HSSOddFilter::p(new HSSOddFilter(*this));
+    return QSharedPointer<HSSOddFilter>(new HSSOddFilter(*this));
 }

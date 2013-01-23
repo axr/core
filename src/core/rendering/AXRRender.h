@@ -44,10 +44,8 @@
 #ifndef AXRRENDER_H
 #define AXRRENDER_H
 
-#include <QSharedPointer>
+#include <QImage>
 #include "AXRGlobal.h"
-#include "HSSNumberConstant.h"
-#include "HSSUnits.h"
 
 namespace AXR
 {
@@ -61,10 +59,6 @@ namespace AXR
     class AXR_API AXRRender
     {
     public:
-        /**
-         *  The shared pointer to this class
-         */
-        typedef QSharedPointer<AXRRender> p;
         /**
          *  Creates a new instance of the render object.
          *  @param  controller  A regular pointer to the controller object that is associated with this renderer.

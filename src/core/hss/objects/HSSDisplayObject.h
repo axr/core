@@ -46,25 +46,22 @@
 
 #include <vector>
 #include <QSharedPointer>
-#include <QWeakPointer>
-#include <QPainter>
-#include <QPainterPath>
-#include "AXRGlobal.h"
-#include "HSSBorder.h"
-#include "HSSEvent.h"
-#include "HSSFont.h"
-#include "HSSMargin.h"
-#include "HSSMultipleValue.h"
 #include "HSSObject.h"
-#include "HSSRgb.h"
-#include "HSSRule.h"
 
 class QImage;
+class QPainter;
+class QPainterPath;
 
 namespace AXR
 {
+    class HSSBorder;
     class HSSContainer;
     class HSSFlag;
+    class HSSFont;
+    class HSSMargin;
+    class HSSPropertyDefinition;
+    class HSSRule;
+    class HSSRuleStatus;
     class HSSSimpleSelection;
 
     /**
@@ -77,8 +74,6 @@ namespace AXR
     {
     public:
         friend class HSSContainer;
-
-        typedef QSharedPointer<HSSDisplayObject> p;
 
         /**
          *  The "parent pointer", a weak variant of a shared pointer, to break reference cycles.
@@ -187,17 +182,17 @@ namespace AXR
          *  @param newRule      A shared pointer to the rule.
          *  @param defaultState The default state in which the rule will be in (activated or not, etc).
          */
-        void rulesAdd(HSSRule::p newRule, HSSRuleState defaultState);
-        void rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSSRuleState defaultState);
-        HSSRule::p rulesGet(unsigned index);
+        void rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState defaultState);
+        void rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition> propdef, HSSRuleState defaultState);
+        QSharedPointer<HSSRule> rulesGet(unsigned index);
         void rulesRemove(unsigned index);
         void rulesRemoveLast();
         size_t rulesSize() const;
-        void setRuleStatus(HSSRule::p rule, HSSRuleState newValue);
-        bool hasRule(HSSRule::p rule);
+        void setRuleStatus(QSharedPointer<HSSRule> rule, HSSRuleState newValue);
+        bool hasRule(QSharedPointer<HSSRule> rule);
         virtual void readDefinitionObjects();
         virtual void recursiveReadDefinitionObjects();
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
         void setNeedsRereadRules(bool value);
         bool needsRereadRules();
 
@@ -228,96 +223,96 @@ namespace AXR
         void setElementName(AXRString name);
 
         HSSUnit getAlignX();
-        HSSParserNode::p getDAlignX();
-        void setDAlignX(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDAlignX();
+        void setDAlignX(QSharedPointer<HSSParserNode> value);
         void alignXChanged(HSSObservableProperty source, void*data);
 
         HSSUnit getAlignY();
-        HSSParserNode::p getDAlignY();
-        void setDAlignY(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDAlignY();
+        void setDAlignY(QSharedPointer<HSSParserNode> value);
         void alignYChanged(HSSObservableProperty source, void*data);
 
         HSSUnit getAnchorX();
-        HSSParserNode::p getDAnchorX();
-        void setDAnchorX(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDAnchorX();
+        void setDAnchorX(QSharedPointer<HSSParserNode> value);
         void anchorXChanged(HSSObservableProperty source, void*data);
 
         HSSUnit getAnchorY();
-        HSSParserNode::p getDAnchorY();
-        void setDAnchorY(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDAnchorY();
+        void setDAnchorY(QSharedPointer<HSSParserNode> value);
         void anchorYChanged(HSSObservableProperty source, void*data);
 
         //flow
         bool getFlow();
-        HSSParserNode::p getDFlow();
-        void setDFlow(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDFlow();
+        void setDFlow(QSharedPointer<HSSParserNode> value);
         void flowChanged(HSSObservableProperty source, void*data);
 
         //contained
         bool getContained();
-        HSSParserNode::p getDContained();
-        void setDContained(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDContained();
+        void setDContained(QSharedPointer<HSSParserNode> value);
         void containedChanged(HSSObservableProperty source, void*data);
 
         //height
         HSSUnit getHeight();
-        HSSParserNode::p getDHeight();
-        void setDHeight(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDHeight();
+        void setDHeight(QSharedPointer<HSSParserNode> value);
         void heightChanged(HSSObservableProperty source, void*data);
 
         //width
         HSSUnit getWidth();
-        HSSParserNode::p getDWidth();
-        void setDWidth(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDWidth();
+        void setDWidth(QSharedPointer<HSSParserNode> value);
         void widthChanged(HSSObservableProperty source, void*data);
 
         //background
-        HSSParserNode::p getDBackground();
-        void setDBackground(HSSParserNode::p value);
-        void addDBackground(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDBackground();
+        void setDBackground(QSharedPointer<HSSParserNode> value);
+        void addDBackground(QSharedPointer<HSSParserNode> value);
         void backgroundChanged(HSSObservableProperty source, void*data);
 
         //content
-        HSSParserNode::p getDContent();
-        void setDContent(HSSParserNode::p value);
-        void addDContent(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDContent();
+        void setDContent(QSharedPointer<HSSParserNode> value);
+        void addDContent(QSharedPointer<HSSParserNode> value);
         void contentChanged(HSSObservableProperty source, void*data);
 
         //font
-        const HSSParserNode::p getDFont() const;
-        void setDFont(HSSParserNode::p value);
-        void addDFont(HSSParserNode::p value);
+        const QSharedPointer<HSSParserNode> getDFont() const;
+        void setDFont(QSharedPointer<HSSParserNode> value);
+        void addDFont(QSharedPointer<HSSParserNode> value);
         void fontChanged(HSSObservableProperty source, void*data);
 
         //on
-        HSSParserNode::p getDOn();
-        void setDOn(HSSParserNode::p value);
-        void addDOn(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDOn();
+        void setDOn(QSharedPointer<HSSParserNode> value);
+        void addDOn(QSharedPointer<HSSParserNode> value);
         void onChanged(HSSObservableProperty source, void*data);
         bool fireEvent(HSSEventType type);
 
         //margin
-        const HSSParserNode::p getDMargin() const;
-        void setDMargin(HSSParserNode::p value);
-        void addDMargin(HSSParserNode::p value);
+        const QSharedPointer<HSSParserNode> getDMargin() const;
+        void setDMargin(QSharedPointer<HSSParserNode> value);
+        void addDMargin(QSharedPointer<HSSParserNode> value);
         void marginChanged(HSSObservableProperty source, void*data);
 
         //padding
-        const HSSParserNode::p getDPadding() const;
-        void setDPadding(HSSParserNode::p value);
-        void addDPadding(HSSParserNode::p value);
+        const QSharedPointer<HSSParserNode> getDPadding() const;
+        void setDPadding(QSharedPointer<HSSParserNode> value);
+        void addDPadding(QSharedPointer<HSSParserNode> value);
         void paddingChanged(HSSObservableProperty source, void*data);
 
         //border
-        const HSSParserNode::p getDBorder() const;
-        void setDBorder(HSSParserNode::p value);
-        void addDBorder(HSSParserNode::p value);
+        const QSharedPointer<HSSParserNode> getDBorder() const;
+        void setDBorder(QSharedPointer<HSSParserNode> value);
+        void addDBorder(QSharedPointer<HSSParserNode> value);
         void borderChanged(HSSObservableProperty source, void*data);
 
         //visible
         bool getVisible() const;
-        const HSSParserNode::p getDVisible() const;
-        void setDVisible(HSSParserNode::p value);
+        const QSharedPointer<HSSParserNode> getDVisible() const;
+        void setDVisible(QSharedPointer<HSSParserNode> value);
         void visibleChanged(HSSObservableProperty source, void*data);
 
         virtual void setDefaults();
@@ -351,7 +346,7 @@ namespace AXR
         pp parent;
         AXRString elementName;
         AXRString contentText;
-        std::vector<HSSRuleStatus::p> rules;
+        std::vector<QSharedPointer<HSSRuleStatus> > rules;
 
         //if the rules have changed
         bool _needsRereadRules;
@@ -381,14 +376,14 @@ namespace AXR
         topMargin, rightMargin, bottomMargin, leftMargin
         ;
         //width
-        HSSParserNode::p dWidth;
+        QSharedPointer<HSSParserNode> dWidth;
         bool widthByContent;
-        HSSObservable::p observedWidth;
+        QSharedPointer<HSSObservable> observedWidth;
         HSSObservableProperty observedWidthProperty;
         //height
-        HSSParserNode::p dHeight;
+        QSharedPointer<HSSParserNode> dHeight;
         bool heightByContent;
-        HSSObservable::p observedHeight;
+        QSharedPointer<HSSObservable> observedHeight;
         HSSObservableProperty observedHeightProperty;
 
         /**
@@ -396,78 +391,78 @@ namespace AXR
          */
 
         //anchorX
-        HSSParserNode::p dAnchorX;
+        QSharedPointer<HSSParserNode> dAnchorX;
         HSSUnit anchorX;
         bool _anchorXdefault;
-        HSSObservable::p observedAnchorX;
+        QSharedPointer<HSSObservable> observedAnchorX;
         HSSObservableProperty observedAnchorXProperty;
         //anchorY
-        HSSParserNode::p dAnchorY;
+        QSharedPointer<HSSParserNode> dAnchorY;
         HSSUnit anchorY;
         bool _anchorYdefault;
-        HSSObservable::p observedAnchorY;
+        QSharedPointer<HSSObservable> observedAnchorY;
         HSSObservableProperty observedAnchorYProperty;
         //flow
-        HSSParserNode::p dFlow;
+        QSharedPointer<HSSParserNode> dFlow;
         bool flow;
         bool does_float;
         //contained
-        HSSParserNode::p dContained;
+        QSharedPointer<HSSParserNode> dContained;
         bool contained;
         //alignX
-        HSSParserNode::p dAlignX;
+        QSharedPointer<HSSParserNode> dAlignX;
         HSSUnit alignX;
-        HSSObservable::p observedAlignX;
+        QSharedPointer<HSSObservable> observedAlignX;
         HSSObservableProperty observedAlignXProperty;
         //alignY
-        HSSParserNode::p dAlignY;
+        QSharedPointer<HSSParserNode> dAlignY;
         HSSUnit alignY;
-        HSSObservable::p observedAlignY;
+        QSharedPointer<HSSObservable> observedAlignY;
         HSSObservableProperty observedAlignYProperty;
         //background
-        HSSParserNode::p dBackground;
-        HSSObservable::p observedBackground;
+        QSharedPointer<HSSParserNode> dBackground;
+        QSharedPointer<HSSObservable> observedBackground;
         HSSObservableProperty observedBackgroundProperty;
-        std::vector<HSSObject::p> background;
+        std::vector<QSharedPointer<HSSObject> > background;
         //content
-        HSSParserNode::p dContent;
-        HSSObservable::p observedContent;
+        QSharedPointer<HSSParserNode> dContent;
+        QSharedPointer<HSSObservable> observedContent;
         HSSObservableProperty observedContentProperty;
-        std::vector<HSSObject::p> content;
+        std::vector<QSharedPointer<HSSObject> > content;
         //font
-        HSSParserNode::p dFont;
-        HSSObservable::p observedFont;
+        QSharedPointer<HSSParserNode> dFont;
+        QSharedPointer<HSSObservable> observedFont;
         HSSObservableProperty observedFontProperty;
-        std::vector<HSSFont::p> font;
+        std::vector<QSharedPointer<HSSFont> > font;
 
         //on
-        HSSParserNode::p dOn;
-        HSSObservable::p observedOn;
+        QSharedPointer<HSSParserNode> dOn;
+        QSharedPointer<HSSObservable> observedOn;
         HSSObservableProperty observedOnProperty;
-        QMap<HSSEventType, std::vector<HSSObject::p> > on;
+        QMap<HSSEventType, std::vector<QSharedPointer<HSSObject> > > on;
 
         //margin
-        HSSParserNode::p dMargin;
-        HSSObservable::p observedMargin;
+        QSharedPointer<HSSParserNode> dMargin;
+        QSharedPointer<HSSObservable> observedMargin;
         HSSObservableProperty observedMarginProperty;
-        std::vector<HSSMargin::p> margin;
+        std::vector<QSharedPointer<HSSMargin> > margin;
 
         //padding
-        HSSParserNode::p dPadding;
-        HSSObservable::p observedPadding;
+        QSharedPointer<HSSParserNode> dPadding;
+        QSharedPointer<HSSObservable> observedPadding;
         HSSObservableProperty observedPaddingProperty;
-        std::vector<HSSMargin::p> padding;
+        std::vector<QSharedPointer<HSSMargin> > padding;
 
         //border
-        HSSParserNode::p dBorder;
-        HSSObservable::p observedBorder;
+        QSharedPointer<HSSParserNode> dBorder;
+        QSharedPointer<HSSObservable> observedBorder;
         HSSObservableProperty observedBorderProperty;
-        std::vector<HSSBorder::p> border;
+        std::vector<QSharedPointer<HSSBorder> > border;
         HSSUnit borderBleeding;
 
         //visible
-        HSSParserNode::p dVisible;
-        HSSObservable::p observedVisible;
+        QSharedPointer<HSSParserNode> dVisible;
+        QSharedPointer<HSSObservable> observedVisible;
         HSSObservableProperty observedVisibleProperty;
         bool visible;
 
@@ -495,7 +490,7 @@ namespace AXR
 
         size_t _index;
 
-        HSSDisplayObject::p shared_from_this();
+        QSharedPointer<HSSDisplayObject> shared_from_this();
 
     protected:
         /**
@@ -517,12 +512,12 @@ namespace AXR
     private:
         HSSUnit _evaluatePropertyValue(
                                    void(HSSDisplayObject::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedProperty,
-                                   HSSObservable::p observedObject,
+                                   QSharedPointer<HSSObservable> observedObject,
                                    HSSObservableProperty observedSourceProperty,
-                                   HSSObservable::p &observedStore,
+                                   QSharedPointer<HSSObservable> &observedStore,
                                    HSSObservableProperty &observedStoreProperty,
                                    QSharedPointer<HSSSimpleSelection> scope
                                    );

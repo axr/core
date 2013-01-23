@@ -44,9 +44,8 @@
 #ifndef AXRERROR_H
 #define AXRERROR_H
 
-#include <QSharedData>
+#include <QSharedDataPointer>
 #include <QUrl>
-#include "AXRString.h"
 #include "AXRGlobal.h"
 
 namespace AXR

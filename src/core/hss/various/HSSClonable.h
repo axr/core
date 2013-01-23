@@ -44,8 +44,9 @@
 #ifndef HSSCLONABLE_H
 #define HSSCLONABLE_H
 
-#include <QSharedPointer>
 #include "AXRGlobal.h"
+
+template <class T> class QSharedPointer;
 
 namespace AXR
 {
@@ -55,28 +56,15 @@ namespace AXR
     class AXR_API HSSClonable
     {
     public:
-        /**
-         *  The shared pointer for this class.
-         */
-        typedef QSharedPointer<HSSClonable> p;
-
-        virtual ~HSSClonable()
-        {
-        }
+        virtual ~HSSClonable();
 
         /**
          *  Call this method to clone an instance of a subclass of HSSClonable.
          */
-        p clone() const
-        {
-            return this->cloneImpl();
-        }
+        QSharedPointer<HSSClonable> clone() const;
 
     private:
-        virtual p cloneImpl() const
-        {
-            return p(new HSSClonable(*this));
-        }
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

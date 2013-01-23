@@ -45,12 +45,12 @@
 #define HSSLINEBORDER_H
 
 #include <QSharedPointer>
-#include <QPainterPath>
 #include "HSSBorder.h"
-#include "HSSRgb.h"
 
 namespace AXR
 {
+    class HSSRgb;
+
     /**
      *  @brief The object type representing line borders in HSS.
      *
@@ -59,8 +59,6 @@ namespace AXR
     class AXR_API HSSLineBorder : public HSSBorder
     {
     public:
-        typedef QSharedPointer<HSSLineBorder> p;
-
         /**
          *  Creates a new instance of a line border object.
          */
@@ -76,7 +74,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSLineBorder
          */
-        p clone() const;
+        QSharedPointer<HSSLineBorder> clone() const;
 
         /**
          *  Destructs the container, clearing the children and allChildren.
@@ -87,19 +85,19 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Getter for the actual value of color.
          *  @return A shared pointer to the object that encapsulates the color information for this border.
          */
-        HSSObject::p getColor();
+        QSharedPointer<HSSObject> getColor();
 
         /**
          *  Setter for the definition object of color. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of color.
          */
-        void setDColor(HSSParserNode::p);
+        void setDColor(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect color.
@@ -112,12 +110,12 @@ namespace AXR
 
     protected:
         //color
-        HSSRgb::p color;
-        HSSParserNode::p dColor;
+        QSharedPointer<HSSRgb> color;
+        QSharedPointer<HSSParserNode> dColor;
         HSSObservable * observedColor;
         HSSObservableProperty observedColorProperty;
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

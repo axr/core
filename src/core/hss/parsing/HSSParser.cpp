@@ -44,30 +44,44 @@
 #include <cstdio>
 #include <cstdlib>
 #include <QUrl>
+#include "AXRBuffer.h"
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
 #include "AXRWarning.h"
 #include "HSSAttrFunction.h"
+#include "HSSCombinator.h"
 #include "HSSComment.h"
+#include "HSSContainer.h"
 #include "HSSDivision.h"
 #include "HSSFilter.h"
 #include "HSSFlag.h"
 #include "HSSFlagFunction.h"
+#include "HSSInstruction.h"
+#include "HSSKeywordConstant.h"
 #include "HSSMultiplication.h"
 #include "HSSNegation.h"
+#include "HSSNumberConstant.h"
+#include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSParentSelector.h"
+#include "HSSParser.h"
 #include "HSSPercentageConstant.h"
+#include "HSSPropertyDefinition.h"
 #include "HSSRefFunction.h"
 #include "HSSRgb.h"
 #include "HSSRootSelector.h"
+#include "HSSRule.h"
+#include "HSSSelectorChain.h"
 #include "HSSSelFunction.h"
+#include "HSSSimpleSelector.h"
 #include "HSSStringConstant.h"
 #include "HSSSubtraction.h"
 #include "HSSSum.h"
 #include "HSSThisSelector.h"
+#include "HSSTokenizer.h"
 #include "HSSUniversalSelector.h"
+#include "HSSValue.h"
 #include "HSSValueToken.h"
 
 using namespace AXR;
@@ -77,10 +91,10 @@ HSSParser::HSSParser(AXRController * theController)
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSParser: creating HSS parser");
 
     this->controller = theController;
-    this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
+    this->tokenizer = QSharedPointer<HSSTokenizer>(new HSSTokenizer());
 
     this->currentContext.push_back(HSSParserContextRoot);
-    this->_genericContext = HSSValue::p(new HSSValue(this->controller));
+    this->_genericContext = QSharedPointer<HSSValue>(new HSSValue(this->controller));
     this->currentObjectContextAdd(this->_genericContext);
     this->_lastObjectType = "value";
 
@@ -90,12 +104,12 @@ HSSParser::HSSParser(AXRController * theController)
 
 //HSSParser::HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, AXRString filename)
 //{
-//    this->tokenizer = HSSTokenizer::p(new HSSTokenizer(buffer, buflen));
+//    this->tokenizer = QSharedPointer<HSSTokenizer>(new HSSTokenizer(buffer, buflen));
 //    this->filename = filename;
 //
 //    this->currentContext.push_back(HSSParserContextRoot);
 //    //FIXME: will there be a root object? Now defaults to container
-//    this->currentObjectContext.push(HSSContainer::p(new HSSContainer()));
+//    this->currentObjectContext.push(QSharedPointer<HSSContainer>(new HSSContainer()));
 //
 //    this->readNextToken();
 //}
@@ -135,7 +149,7 @@ void HSSParser::reset()
 
 }
 
-bool HSSParser::loadFile(AXRBuffer::p file)
+bool HSSParser::loadFile(QSharedPointer<AXRBuffer> file)
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, "HSSParser: loading file " + file->sourceUrl().toString());
     axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->sourceUrl().toString());
@@ -163,7 +177,7 @@ bool HSSParser::loadFile(AXRBuffer::p file)
 
     this->readNextToken();
 
-    HSSStatement::p statement;
+    QSharedPointer<HSSStatement> statement;
 
     bool done = this->atEndOfSource();
 
@@ -215,7 +229,7 @@ bool HSSParser::readNextStatement()
     {
     case HSSInstructionSign:
     {
-        HSSInstruction::p theInstr = this->readInstruction();
+        QSharedPointer<HSSInstruction> theInstr = this->readInstruction();
 
         switch (theInstr->getInstructionType())
         {
@@ -228,7 +242,7 @@ bool HSSParser::readNextStatement()
         case HSSRRGGBBAInstruction:
         case HSSRRGGBBAAInstruction:
         {
-            HSSObjectDefinition::p theObj = this->getObjectFromInstruction(theInstr);
+            QSharedPointer<HSSObjectDefinition> theObj = this->getObjectFromInstruction(theInstr);
             this->skip(HSSWhitespace);
             if (this->currentToken->isA(HSSIdentifier))
             {
@@ -252,19 +266,19 @@ bool HSSParser::readNextStatement()
         case HSSImportInstruction:
         {
             //save
-            HSSTokenizer::p currentTokenizer = this->tokenizer;
-            AXRBuffer::p currentFile = this->currentFile;
+            QSharedPointer<HSSTokenizer> currentTokenizer = this->tokenizer;
+            QSharedPointer<AXRBuffer> currentFile = this->currentFile;
             qint64 currentLine = this->line;
             qint64 currentColumn = this->column;
-            HSSToken::p currentCurrentToken = this->currentToken;
+            QSharedPointer<HSSToken> currentCurrentToken = this->currentToken;
             std::vector<HSSParserContext> currentCurrentContext = this->currentContext;
-            std::stack<HSSObject::p> currentCurrentObjectContext = this->currentObjectContext;
+            std::stack<QSharedPointer<HSSObject> > currentCurrentObjectContext = this->currentObjectContext;
 
             //load
-            this->tokenizer = HSSTokenizer::p(new HSSTokenizer());
+            this->tokenizer = QSharedPointer<HSSTokenizer>(new HSSTokenizer());
             this->line = 1;
             this->column = 1;
-            AXRBuffer::p theFile;
+            QSharedPointer<AXRBuffer> theFile;
             try
             {
                 QUrl url(theInstr->getValue());
@@ -329,7 +343,7 @@ bool HSSParser::readNextStatement()
         while (!done)
         {
             done = true;
-            HSSObjectDefinition::p theObj = this->readObjectDefinition("");
+            QSharedPointer<HSSObjectDefinition> theObj = this->readObjectDefinition("");
             if (theObj)
             {
                 axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding object definition to object tree");
@@ -349,7 +363,7 @@ bool HSSParser::readNextStatement()
         //if the statement starts with an identifier, universal selector or combinator it is a rule
     case HSSIdentifier:
     {
-        HSSRule::p theRule = this->readRule();
+        QSharedPointer<HSSRule> theRule = this->readRule();
         if (theRule)
         {
             axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
@@ -362,7 +376,7 @@ bool HSSParser::readNextStatement()
     {
         if (VALUE_TOKEN(this->currentToken)->equals(HSSSymbol, "*") || this->isCombinator())
         {
-            HSSRule::p theRule = this->readRule();
+            QSharedPointer<HSSRule> theRule = this->readRule();
             if (theRule)
             {
                 axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
@@ -380,7 +394,7 @@ bool HSSParser::readNextStatement()
     case HSSBlockComment:
     case HSSLineComment:
     {
-        HSSComment::p theComment = HSSComment::p(new HSSComment(VALUE_TOKEN(this->currentToken)->getString(), controller));
+        QSharedPointer<HSSComment> theComment = QSharedPointer<HSSComment>(new HSSComment(VALUE_TOKEN(this->currentToken)->getString(), controller));
         this->readNextToken();
         if (!this->atEndOfSource())
             this->skip(HSSWhitespace);
@@ -403,7 +417,7 @@ bool HSSParser::readNextStatement()
     //    }
 }
 
-HSSRule::p HSSParser::readRule()
+QSharedPointer<HSSRule> HSSParser::readRule()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading rule");
     security_brake_init()
@@ -414,7 +428,7 @@ HSSRule::p HSSParser::readRule()
     this->checkForUnexpectedEndOfSource();
 
     //initialize the rule
-    std::vector<HSSSelectorChain::p> selectorChains;
+    std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
     try
     {
         selectorChains = this->readSelectorChains(HSSBlockOpen);
@@ -424,7 +438,7 @@ HSSRule::p HSSParser::readRule()
             this->readNextToken(true);
             //skip any whitespace
             this->skip(HSSWhitespace, true);
-            HSSRule::p ret = HSSRule::p(new HSSRule(controller));
+            QSharedPointer<HSSRule> ret = QSharedPointer<HSSRule>(new HSSRule(controller));
             ret->setSelectorChains(selectorChains);
             return ret;
         }
@@ -439,11 +453,11 @@ HSSRule::p HSSParser::readRule()
         e.raise();
 
         //return an empty rule
-        HSSRule::p ret;
+        QSharedPointer<HSSRule> ret;
         return ret;
     }
 
-    HSSRule::p ret = HSSRule::p(new HSSRule(controller));
+    QSharedPointer<HSSRule> ret = QSharedPointer<HSSRule>(new HSSRule(controller));
     ret->setSelectorChains(selectorChains);
 
     //we expect a block to open
@@ -452,7 +466,7 @@ HSSRule::p HSSParser::readRule()
     this->skip(HSSWhitespace, true);
 
     //now we're inside the block
-    this->currentObjectContextAdd(HSSContainer::p(new HSSContainer(controller)));
+    this->currentObjectContextAdd(QSharedPointer<HSSContainer>(new HSSContainer(controller)));
     this->currentContext.push_back(HSSParserContextBlock);
 
     //read the inner part of the block
@@ -468,7 +482,7 @@ HSSRule::p HSSParser::readRule()
                 bool isShorthand;
                 if (this->isPropertyDefinition(&isShorthand))
                 {
-                    HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition(true, isShorthand);
+                    QSharedPointer<HSSPropertyDefinition> propertyDefinition = this->readPropertyDefinition(true, isShorthand);
                     if (propertyDefinition)
                     {
                         ret->propertiesAdd(propertyDefinition);
@@ -476,7 +490,7 @@ HSSRule::p HSSParser::readRule()
                 }
                 else
                 {
-                    HSSRule::p theRule = this->readRule();
+                    QSharedPointer<HSSRule> theRule = this->readRule();
                     if (theRule)
                         ret->childrenAdd(theRule);
                 }
@@ -487,7 +501,7 @@ HSSRule::p HSSParser::readRule()
             case HSSNegator:
             case HSSColon:
             {
-                HSSRule::p theRule = this->readRule();
+                QSharedPointer<HSSRule> theRule = this->readRule();
                 if (theRule)
                     ret->childrenAdd(theRule);
                 break;
@@ -495,7 +509,7 @@ HSSRule::p HSSParser::readRule()
 
             case HSSInstructionSign:
             {
-                HSSRule::p childRule = this->readInstructionRule();
+                QSharedPointer<HSSRule> childRule = this->readInstructionRule();
                 if (childRule)
                     ret->childrenAdd(childRule);
                 break;
@@ -525,7 +539,7 @@ HSSRule::p HSSParser::readRule()
 
         if (this->atEndOfSource())
         {
-            HSSNameSelector::p sbjct = selectorChains.back()->subject()->getName();
+            QSharedPointer<HSSNameSelector> sbjct = selectorChains.back()->subject()->getName();
             AXRString lmntnm;
             if (sbjct)
             {
@@ -563,15 +577,15 @@ HSSRule::p HSSParser::readRule()
     return ret;
 }
 
-std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stopOn)
+std::vector<QSharedPointer<HSSSelectorChain> > HSSParser::readSelectorChains(HSSTokenType stopOn)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading selector chains");
     security_brake_init();
 
     AXRController * controller = this->getController();
 
-    std::vector<HSSSelectorChain::p> retvect;
-    HSSSelectorChain::p ret = HSSSelectorChain::p(new HSSSelectorChain(controller));
+    std::vector<QSharedPointer<HSSSelectorChain> > retvect;
+    QSharedPointer<HSSSelectorChain> ret = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
     bool done = false;
     bool rootContext = false;
 
@@ -583,11 +597,11 @@ std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stop
     //set the current context
     this->currentContext.push_back(HSSParserContextSelectorChain);
     if(!rootContext){
-        HSSCombinator::p beginning_combinator = this->readCombinator();
+        QSharedPointer<HSSCombinator> beginning_combinator = this->readCombinator();
         if (beginning_combinator)
         {
-            HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
-            newSs->setName(HSSThisSelector::p(new HSSThisSelector(controller)));
+            QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
+            newSs->setName(QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller)));
             ret->add(newSs);
             ret->add(beginning_combinator);
         }
@@ -595,18 +609,18 @@ std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stop
 
     while (!done)
     {
-        HSSSimpleSelector::p ss = this->readSimpleSelector();
+        QSharedPointer<HSSSimpleSelector> ss = this->readSimpleSelector();
         if (ss)
         {
             ret->add(ss);
         }
 
-        HSSCombinator::p cc = this->readChildrenCombinatorOrSkip();
+        QSharedPointer<HSSCombinator> cc = this->readChildrenCombinatorOrSkip();
         if (cc)
         {
             ret->add(cc);
         }
-        HSSCombinator::p combinator = this->readCombinator();
+        QSharedPointer<HSSCombinator> combinator = this->readCombinator();
         if (combinator)
         {
             ret->add(combinator);
@@ -620,11 +634,11 @@ std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stop
             this->skip(HSSWhitespace);
             if (!this->currentToken->isA(stopOn))
             {
-                ret = HSSSelectorChain::p(new HSSSelectorChain(controller));
+                ret = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
             }
             else
             {
-                ret = HSSSelectorChain::p();
+                ret = QSharedPointer<HSSSelectorChain>();
             }
         }
         if (this->currentToken->isA(stopOn) || this->currentToken->isA(HSSEndOfStatement))
@@ -647,21 +661,21 @@ std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stop
     return retvect;
 }
 
-HSSSimpleSelector::p HSSParser::readSimpleSelector()
+QSharedPointer<HSSSimpleSelector> HSSParser::readSimpleSelector()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading simple selector");
     security_brake_init();
 
     AXRController * controller = getController();
 
-    HSSSimpleSelector::p ret;
+    QSharedPointer<HSSSimpleSelector> ret;
     bool isNegating = false;
     isNegating = this->isNegator();
     switch (this->currentToken->getType())
     {
     case HSSIdentifier:
     {
-        ret = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
+        ret = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
         ret->setName(this->readNameSelector(isNegating));
 
         //we're done negating for now
@@ -676,8 +690,8 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
         {
         case '*':
         {
-            ret = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
-            ret->setName(HSSUniversalSelector::p(new HSSUniversalSelector(controller)));
+            ret = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
+            ret->setName(QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector(controller)));
             this->readNextToken();
             break;
         }
@@ -688,21 +702,21 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
 
     case HSSColon:
     {
-        ret = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
-        ret->setName(HSSUniversalSelector::p(new HSSUniversalSelector(controller)));
+        ret = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
+        ret->setName(QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector(controller)));
         break;
     }
 
     case HSSObjectSign:
     {
-        HSSNameSelector::p selector = this->readObjectSelector();
+        QSharedPointer<HSSNameSelector> selector = this->readObjectSelector();
 
         if (!selector)
         {
             break;
         }
 
-        ret = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
+        ret = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
         ret->setName(selector);
     }
 
@@ -718,7 +732,7 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
             isNegating = this->isNegator();
         }
 
-        HSSFilter::p filter = this->readFilter();
+        QSharedPointer<HSSFilter> filter = this->readFilter();
         if (filter)
         {
             filter->setNegating(isNegating);
@@ -736,9 +750,9 @@ HSSSimpleSelector::p HSSParser::readSimpleSelector()
     return ret;
 }
 
-HSSNameSelector::p HSSParser::readObjectSelector()
+QSharedPointer<HSSNameSelector> HSSParser::readObjectSelector()
 {
-    HSSNameSelector::p ret;
+    QSharedPointer<HSSNameSelector> ret;
     AXRController * controller = this->getController();
     switch (this->currentToken->getType())
     {
@@ -750,7 +764,7 @@ HSSNameSelector::p HSSParser::readObjectSelector()
             AXRString objtype = VALUE_TOKEN(this->currentToken)->getString();
             if (objtype == "this")
             {
-                ret = HSSThisSelector::p(new HSSThisSelector(controller));
+                ret = QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller));
                 this->readNextToken(true);
             }
             else if (objtype == "super")
@@ -762,24 +776,24 @@ HSSNameSelector::p HSSParser::readObjectSelector()
             }
             else if (objtype == "parent")
             {
-                ret = HSSParentSelector::p(new HSSParentSelector(controller));
+                ret = QSharedPointer<HSSParentSelector>(new HSSParentSelector(controller));
                 this->readNextToken(true);
             }
             else if (objtype == "root")
             {
-                ret = HSSRootSelector::p(new HSSRootSelector(controller));
+                ret = QSharedPointer<HSSRootSelector>(new HSSRootSelector(controller));
                 this->readNextToken(true);
                 break;
             }
             else
             {
                 AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->currentFile->sourceUrl(), this->line, this->column).raise();
-                return HSSNameSelector::p();
+                return QSharedPointer<HSSNameSelector>();
             }
         }
         else if (this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) || this->currentToken->isA(HSSColon))
         {
-            ret = HSSThisSelector::p(new HSSThisSelector(controller));
+            ret = QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller));
             this->skip(HSSWhitespace, true);
             break;
         }
@@ -802,11 +816,11 @@ bool HSSParser::isNegator()
     return false;
 }
 
-HSSFilter::p HSSParser::readFilter()
+QSharedPointer<HSSFilter> HSSParser::readFilter()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading filter");
 
-    HSSFilter::p ret;
+    QSharedPointer<HSSFilter> ret;
     if (this->currentToken->isA(HSSColon))
     {
         this->readNextToken();
@@ -815,7 +829,7 @@ HSSFilter::p HSSParser::readFilter()
         {
             this->readNextToken();
             AXRString flagName = VALUE_TOKEN(this->currentToken)->getString();
-            HSSFlag::p theFlag = HSSFlag::p(new HSSFlag(this->getController()));
+            QSharedPointer<HSSFlag> theFlag = QSharedPointer<HSSFlag>(new HSSFlag(this->getController()));
             theFlag->setName(flagName);
             ret = theFlag;
             this->readNextToken();
@@ -837,10 +851,10 @@ HSSFilter::p HSSParser::readFilter()
     return ret;
 }
 
-HSSCombinator::p HSSParser::readCombinator()
+QSharedPointer<HSSCombinator> HSSParser::readCombinator()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading combinator");
-    HSSCombinator::p ret;
+    QSharedPointer<HSSCombinator> ret;
 
     if (this->currentToken->isA(HSSSymbol))
     {
@@ -875,14 +889,14 @@ HSSCombinator::p HSSParser::readCombinator()
 
 }
 
-//std::vector<HSSSelectorChain::p> HSSParser::readSelectorChains(HSSTokenType stopOn)
+//std::vector<QSharedPointer<HSSSelectorChain>> HSSParser::readSelectorChains(HSSTokenType stopOn)
 //{
 //    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading selector chain");
 //    inc_output_indent();
 //    security_brake_init();
 //
-//    std::vector<HSSSelectorChain::p> retvect;
-//    HSSSelectorChain::p ret = HSSSelectorChain::p(new HSSSelectorChain());
+//    std::vector<QSharedPointer<HSSSelectorChain>> retvect;
+//    QSharedPointer<HSSSelectorChain> ret = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain());
 //
 //    //first we need to look at the selector chain
 //    //set the current context
@@ -897,7 +911,7 @@ HSSCombinator::p HSSParser::readCombinator()
 //                //if it's an identifier, it's a simple selector
 //                ret->add(this->readSelector());
 //                //adds only if needed
-//                HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+//                QSharedPointer<HSSCombinator> childrenCombinator(this->readChildrenCombinatorOrSkip());
 //                if(childrenCombinator){
 //                    ret->add(childrenCombinator);
 //                }
@@ -919,7 +933,7 @@ HSSCombinator::p HSSParser::readCombinator()
 //                        ret->add(this->readSymbolCombinator());
 //                        break;
 //                    case '*':
-//                        ret->add(HSSUniversalSelector::p(new HSSUniversalSelector()));
+//                        ret->add(QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector()));
 //                        this->readNextToken();
 //                        //adds only if needed
 //                        ret->add(this->readChildrenCombinatorOrSkip());
@@ -935,7 +949,7 @@ HSSCombinator::p HSSParser::readCombinator()
 //                    case '!':
 //                    {
 //                        //it's a negation
-//                        ret->add(HSSNegation::p(new HSSNegation()));
+//                        ret->add(QSharedPointer<HSSNegation>(new HSSNegation()));
 //                        this->readNextToken();
 //                        break;
 //                    }
@@ -953,14 +967,14 @@ HSSCombinator::p HSSParser::readCombinator()
 //                this->readNextToken(true);
 //                if(this->currentToken->isA(HSSColon)){
 //                    this->readNextToken(true);
-//                    HSSParserNode::p theFlag = this->readFlag();
+//                    QSharedPointer<HSSParserNode> theFlag = this->readFlag();
 //                    if(theFlag){
 //                        ret->add(theFlag);
 //                    }
 //
 //                } else {
 //                    //it is a filter
-//                    HSSParserNode::p theFilter = this->readFilter();
+//                    QSharedPointer<HSSParserNode> theFilter = this->readFilter();
 //                    if(theFilter){
 //                        ret->add(theFilter);
 //                    }
@@ -977,9 +991,9 @@ HSSCombinator::p HSSParser::readCombinator()
 //                this->readNextToken(true);
 //                this->skip(HSSWhitespace);
 //                if(!this->currentToken->isA(stopOn)){
-//                    ret = HSSSelectorChain::p(new HSSSelectorChain());
+//                    ret = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain());
 //                } else {
-//                    ret = HSSSelectorChain::p();
+//                    ret = QSharedPointer<HSSSelectorChain>();
 //                }
 //                break;
 //            }
@@ -990,10 +1004,10 @@ HSSCombinator::p HSSParser::readCombinator()
 //                if(this->currentToken->isA(HSSIdentifier)){
 //                    AXRString objtype = VALUE_TOKEN(this->currentToken)->getString();
 //                    if (objtype == "this") {
-//                        ret->add(HSSThisSelector::p(new HSSThisSelector()));
+//                        ret->add(QSharedPointer<HSSThisSelector>(new HSSThisSelector()));
 //                        this->readNextToken(true);
 //                        //adds only if needed
-//                        HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+//                        QSharedPointer<HSSCombinator> childrenCombinator(this->readChildrenCombinatorOrSkip());
 //                        if(childrenCombinator){
 //                            ret->add(childrenCombinator);
 //                        }
@@ -1009,10 +1023,10 @@ HSSCombinator::p HSSParser::readCombinator()
 //                         */
 //                        std_log("@parent not implemented yet");
 //                    } else if (objtype == "root"){
-//                        ret->add(HSSRootSelector::p(new HSSRootSelector()));
+//                        ret->add(QSharedPointer<HSSRootSelector>(new HSSRootSelector()));
 //                        this->readNextToken(true);
 //                        //adds only if needed
-//                        HSSCombinator::p childrenCombinator(this->readChildrenCombinatorOrSkip());
+//                        QSharedPointer<HSSCombinator> childrenCombinator(this->readChildrenCombinatorOrSkip());
 //                        if(childrenCombinator){
 //                            ret->add(childrenCombinator);
 //                        }
@@ -1021,7 +1035,7 @@ HSSCombinator::p HSSParser::readCombinator()
 //                        throw AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->currentFile->getFileName(), this->line, this->column));
 //                    }
 //                } else if(this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) || this->currentToken->isA(HSSColon)){
-//                    ret->add(HSSThisSelector::p(new HSSThisSelector()));
+//                    ret->add(QSharedPointer<HSSThisSelector>(new HSSThisSelector()));
 //                    this->skip(HSSWhitespace, true);
 //                    break;
 //                }
@@ -1065,7 +1079,7 @@ bool HSSParser::isCombinator()
     return this->isCombinator(this->currentToken);
 }
 
-bool HSSParser::isCombinator(HSSToken::p token)
+bool HSSParser::isCombinator(QSharedPointer<HSSToken> token)
 {
     //are we in a context that accepts combinators?
     HSSParserContext context = this->currentContext.back();
@@ -1103,7 +1117,7 @@ bool HSSParser::isChildrenCombinator()
 {
     std_log4("----- peeking ------ ");
     //if the next token is anything other than a combinator, an open block or an object sign the whitespace means children combinator
-    HSSToken::p peekToken = this->tokenizer->peekNextToken();
+    QSharedPointer<HSSToken> peekToken = this->tokenizer->peekNextToken();
     std_log4(peekToken->toString());
     bool ret = !this->isCombinator(peekToken) && !peekToken->isA(HSSBlockOpen) && !peekToken->isA(HSSObjectSign);
     this->tokenizer->resetPeek();
@@ -1125,7 +1139,7 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
     //    }
 
     std_log4("----- peeking ------ ");
-    HSSToken::p peekToken;
+    QSharedPointer<HSSToken> peekToken;
     if (this->currentToken->isA(HSSInstructionSign))
     {
         bool currentPref = this->tokenizer->preferHex;
@@ -1266,15 +1280,15 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
     return ret;
 }
 
-HSSCombinator::p HSSParser::readChildrenCombinatorOrSkip()
+QSharedPointer<HSSCombinator> HSSParser::readChildrenCombinatorOrSkip()
 {
-    HSSCombinator::p ret;
+    QSharedPointer<HSSCombinator> ret;
     //are we dealing with whitespace?
     if (this->currentToken->isA(HSSWhitespace))
     {
         if (this->isChildrenCombinator())
         {
-            HSSCombinator::p newCombinator = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeChildren, this->getController()));
+            QSharedPointer<HSSCombinator> newCombinator = QSharedPointer<HSSCombinator>(new HSSCombinator(HSSCombinatorTypeChildren, this->getController()));
             this->readNextToken();
             return newCombinator;
         }
@@ -1294,30 +1308,30 @@ HSSCombinator::p HSSParser::readChildrenCombinatorOrSkip()
 
 //this expects the current token to be a symbol
 
-HSSCombinator::p HSSParser::readSymbolCombinator()
+QSharedPointer<HSSCombinator> HSSParser::readSymbolCombinator()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading symbol combinator");
 
     /**
      *  @todo check the context
      */
-    HSSCombinator::p ret;
+    QSharedPointer<HSSCombinator> ret;
     const char currentTokenChar = *(VALUE_TOKEN(this->currentToken)->getString()).toStdString().c_str();
     switch (currentTokenChar)
     {
     case '=':
-        ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeSiblings, this->getController()));
+        ret = QSharedPointer<HSSCombinator>(new HSSCombinator(HSSCombinatorTypeSiblings, this->getController()));
         break;
     case '-':
-        ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypePreviousSiblings, this->getController()));
+        ret = QSharedPointer<HSSCombinator>(new HSSCombinator(HSSCombinatorTypePreviousSiblings, this->getController()));
         break;
     case '+':
-        ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeNextSiblings, this->getController()));
+        ret = QSharedPointer<HSSCombinator>(new HSSCombinator(HSSCombinatorTypeNextSiblings, this->getController()));
         break;
     case '.':
         if (VALUE_TOKEN(this->currentToken)->getString() == "..")
         {
-            ret = HSSCombinator::p(new HSSCombinator(HSSCombinatorTypeDescendants, this->getController()));
+            ret = QSharedPointer<HSSCombinator>(new HSSCombinator(HSSCombinatorTypeDescendants, this->getController()));
         }
 
         break;
@@ -1333,12 +1347,12 @@ HSSCombinator::p HSSParser::readSymbolCombinator()
 
 //this assumes that the currentToken is an identifier
 
-HSSNameSelector::p HSSParser::readNameSelector(bool isNegating)
+QSharedPointer<HSSNameSelector> HSSParser::readNameSelector(bool isNegating)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading name selector");
 
     AXRString theValue = VALUE_TOKEN(this->currentToken)->getString();
-    HSSNameSelector::p ret = HSSNameSelector::p(new HSSNameSelector(theValue, this->getController()));
+    QSharedPointer<HSSNameSelector> ret = QSharedPointer<HSSNameSelector>(new HSSNameSelector(theValue, this->getController()));
     ret->setNegating(isNegating);
     this->readNextToken();
 
@@ -1348,13 +1362,13 @@ HSSNameSelector::p HSSParser::readNameSelector(bool isNegating)
 
 //this assumes currentToken is an object sign or an ampersand
 
-HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
+QSharedPointer<HSSObjectDefinition> HSSParser::readObjectDefinition(AXRString propertyName)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading object definition");
 
-    HSSObjectDefinition::p ret;
+    QSharedPointer<HSSObjectDefinition> ret;
     AXRString objtype;
-    HSSObject::p obj;
+    QSharedPointer<HSSObject> obj;
 
     //set the current context
     this->currentContext.push_back(HSSParserContextObjectDefinition);
@@ -1472,7 +1486,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
     case HSSParenthesisClose:
     {
         //the property definition ends here
-        ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj, controller));
+        ret = QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(obj, controller));
         return ret;
     }
 
@@ -1481,7 +1495,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
         break;
     }
 
-    ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj, controller));
+    ret = QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(obj, controller));
     this->skip(HSSWhitespace);
     this->skipExpected(HSSBlockOpen);
     this->skip(HSSWhitespace);
@@ -1504,7 +1518,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
             {
             case HSSSymbol:
             {
-                HSSRule::p theRule = this->readRule();
+                QSharedPointer<HSSRule> theRule = this->readRule();
                 if (theRule)
                     ret->rulesAdd(theRule);
                 break;
@@ -1512,7 +1526,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
 
             case HSSAmpersand:
             {
-                HSSObjectDefinition::p childDef = this->readObjectDefinition(propertyName);
+                QSharedPointer<HSSObjectDefinition> childDef = this->readObjectDefinition(propertyName);
                 childDef->setParentNode(ret);
                 ret->childrenAdd(childDef);
                 break;
@@ -1526,7 +1540,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
                 bool isShorthand;
                 if (this->isPropertyDefinition(&isShorthand))
                 {
-                    HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition(true, isShorthand);
+                    QSharedPointer<HSSPropertyDefinition> propertyDefinition = this->readPropertyDefinition(true, isShorthand);
                     if (propertyDefinition)
                     {
                         ret->propertiesAdd(propertyDefinition);
@@ -1534,7 +1548,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
                 }
                 else
                 {
-                    HSSRule::p theRule = this->readRule();
+                    QSharedPointer<HSSRule> theRule = this->readRule();
                     if (theRule)
                         ret->rulesAdd(theRule);
                 }
@@ -1546,7 +1560,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
                 bool isShorthand;
                 if (this->isPropertyDefinition(&isShorthand))
                 {
-                    HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition(true, isShorthand);
+                    QSharedPointer<HSSPropertyDefinition> propertyDefinition = this->readPropertyDefinition(true, isShorthand);
                     if (propertyDefinition)
                     {
                         ret->propertiesAdd(propertyDefinition);
@@ -1554,7 +1568,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
                 }
                 else
                 {
-                    HSSRule::p childRule = this->readInstructionRule();
+                    QSharedPointer<HSSRule> childRule = this->readInstructionRule();
                     if (childRule)
                         ret->rulesAdd(childRule);
                 }
@@ -1566,7 +1580,7 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
                 bool isShorthand;
                 if (this->isPropertyDefinition(&isShorthand))
                 {
-                    HSSPropertyDefinition::p propertyDefinition = this->readPropertyDefinition(true, isShorthand);
+                    QSharedPointer<HSSPropertyDefinition> propertyDefinition = this->readPropertyDefinition(true, isShorthand);
                     if (propertyDefinition)
                     {
                         ret->propertiesAdd(propertyDefinition);
@@ -1628,23 +1642,23 @@ HSSObjectDefinition::p HSSParser::readObjectDefinition(AXRString propertyName)
     return ret;
 }
 
-void HSSParser::recursiveAddObjectDefinition(HSSObjectDefinition::p objDef)
+void HSSParser::recursiveAddObjectDefinition(QSharedPointer<HSSObjectDefinition> objDef)
 {
     this->controller->objectTreeAdd(objDef);
-    const std::vector<HSSObjectDefinition::p>children = objDef->getChildren();
+    const std::vector<QSharedPointer<HSSObjectDefinition> >children = objDef->getChildren();
     for (size_t i = 0; i < children.size(); ++i)
     {
-        HSSObjectDefinition::p child = children[i];
+        QSharedPointer<HSSObjectDefinition> child = children[i];
 
         // prepend backwards
-        std::deque<HSSPropertyDefinition::p> properties = objDef->getProperties();
+        std::deque<QSharedPointer<HSSPropertyDefinition> > properties = objDef->getProperties();
         for (size_t i = properties.size(); i > 0; i--)
         {
             child->propertiesPrepend(properties[i - 1]);
         }
 
-        const std::deque<HSSRule::p> rules = objDef->getRules();
-        for (std::deque<HSSRule::p>::const_reverse_iterator it = rules.rbegin(); it != rules.rend(); ++it)
+        const std::deque<QSharedPointer<HSSRule> > rules = objDef->getRules();
+        for (std::deque<QSharedPointer<HSSRule> >::const_reverse_iterator it = rules.rbegin(); it != rules.rend(); ++it)
         {
             child->rulesPrepend((*it));
         }
@@ -1653,12 +1667,12 @@ void HSSParser::recursiveAddObjectDefinition(HSSObjectDefinition::p objDef)
     }
 }
 
-HSSPropertyDefinition::p HSSParser::readPropertyDefinition()
+QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition()
 {
     return this->readPropertyDefinition(false, false);
 }
 
-HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked, bool isShorthand)
+QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool shorthandChecked, bool isShorthand)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading property definition");
 
@@ -1667,7 +1681,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
     //end of source is no good
     this->checkForUnexpectedEndOfSource();
 
-    HSSPropertyDefinition::p ret;
+    QSharedPointer<HSSPropertyDefinition> ret;
     bool valid = true;
 
     switch (this->currentToken->getType())
@@ -1736,7 +1750,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
 
     bool done = false;
     AXRController * controller = this->getController();
-    ret = HSSPropertyDefinition::p(new HSSPropertyDefinition(propertyName, controller));
+    ret = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(propertyName, controller));
 
     while (!done && valid)
     {
@@ -1752,7 +1766,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                     objdefDone = true;
                     try
                     {
-                        HSSObjectDefinition::p objdef = this->readObjectDefinition(propertyName);
+                        QSharedPointer<HSSObjectDefinition> objdef = this->readObjectDefinition(propertyName);
                         if (objdef)
                         {
                             ret->addValue(objdef);
@@ -1774,7 +1788,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             }
             else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString))
             {
-                ret->addValue(HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString(), controller)));
+                ret->addValue(QSharedPointer<HSSStringConstant>(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString(), controller)));
                 this->checkForUnexpectedEndOfSource();
                 this->readNextToken();
                 this->skip(HSSWhitespace);
@@ -1786,7 +1800,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 /**
                  *  @todo parse the number and see if it is an int or a float
                  */
-                HSSParserNode::p exp = this->readExpression();
+                QSharedPointer<HSSParserNode> exp = this->readExpression();
                 if (exp)
                 {
                     ret->addValue(exp);
@@ -1804,11 +1818,11 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
 
                 AXRString valuestr = VALUE_TOKEN(this->currentToken)->getString();
                 //check if it is a function
-                HSSObject::p objectContext = this->currentObjectContext.top();
+                QSharedPointer<HSSObject> objectContext = this->currentObjectContext.top();
 
                 if (objectContext->isFunction(valuestr, propertyName))
                 {
-                    HSSParserNode::p exp = this->readExpression();
+                    QSharedPointer<HSSParserNode> exp = this->readExpression();
                     if (exp)
                     {
                         ret->addValue(exp);
@@ -1822,19 +1836,19 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
                 }
                 else if (objectContext->isKeyword(valuestr, propertyName))
                 {
-                    ret->addValue(HSSKeywordConstant::p(new HSSKeywordConstant(valuestr, controller)));
+                    ret->addValue(QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(valuestr, controller)));
                     this->readNextToken();
                     //we assume it is an object name at this point
                 }
                 else
                 {
-                    ret->addValue(HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr, controller)));
+                    ret->addValue(QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(valuestr, controller)));
                     this->readNextToken();
                 }
                 /*
                 //this is either a function, a keyword or an object name, all of which can be
                 //part of an expression
-                HSSParserNode::p exp = this->readExpression();
+                QSharedPointer<HSSParserNode> exp = this->readExpression();
                 if (exp){
                     ret->addValue(exp);
                 } else {
@@ -1845,7 +1859,7 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
             }
             else if (this->currentToken->isA(HSSInstructionSign))
             {
-                HSSInstruction::p theInstruction;
+                QSharedPointer<HSSInstruction> theInstruction;
 
                 theInstruction = this->readInstruction();
 
@@ -1913,19 +1927,19 @@ HSSPropertyDefinition::p HSSParser::readPropertyDefinition(bool shorthandChecked
     return ret;
 }
 
-HSSParserNode::p HSSParser::readValue(AXRString propertyName, bool &valid)
+QSharedPointer<HSSParserNode> HSSParser::readValue(AXRString propertyName, bool &valid)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading value");
 
     bool isValid = true;
-    HSSParserNode::p ret;
+    QSharedPointer<HSSParserNode> ret;
     try
     {
         //now comes either an object definition, a literal value or an expression
         //object
         if (this->currentToken->isA(HSSObjectSign))
         {
-            HSSObjectDefinition::p objdef = this->readObjectDefinition(propertyName);
+            QSharedPointer<HSSObjectDefinition> objdef = this->readObjectDefinition(propertyName);
             if (objdef)
             {
                 ret = objdef;
@@ -1939,7 +1953,7 @@ HSSParserNode::p HSSParser::readValue(AXRString propertyName, bool &valid)
         }
         else if (this->currentToken->isA(HSSSingleQuoteString) || this->currentToken->isA(HSSDoubleQuoteString))
         {
-            ret = HSSStringConstant::p(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString(), this->getController()));
+            ret = QSharedPointer<HSSStringConstant>(new HSSStringConstant(VALUE_TOKEN(this->currentToken)->getString(), this->getController()));
             this->checkForUnexpectedEndOfSource();
             this->readNextToken();
             this->skip(HSSWhitespace);
@@ -1951,7 +1965,7 @@ HSSParserNode::p HSSParser::readValue(AXRString propertyName, bool &valid)
             /**
              *  @todo parse the number and see if it is an int or a float
              */
-            HSSParserNode::p exp = this->readExpression();
+            QSharedPointer<HSSParserNode> exp = this->readExpression();
             if (exp)
             {
                 ret = exp;
@@ -1969,11 +1983,11 @@ HSSParserNode::p HSSParser::readValue(AXRString propertyName, bool &valid)
 
             AXRString valuestr = VALUE_TOKEN(this->currentToken)->getString();
             //check if it is a function
-            HSSObject::p objectContext = this->currentObjectContext.top();
+            QSharedPointer<HSSObject> objectContext = this->currentObjectContext.top();
 
             if (objectContext->isFunction(valuestr, propertyName))
             {
-                HSSParserNode::p exp = this->readExpression();
+                QSharedPointer<HSSParserNode> exp = this->readExpression();
                 if (exp)
                 {
                     ret = exp;
@@ -1987,13 +2001,13 @@ HSSParserNode::p HSSParser::readValue(AXRString propertyName, bool &valid)
             }
             else if (objectContext->isKeyword(valuestr, propertyName))
             {
-                ret = HSSKeywordConstant::p(new HSSKeywordConstant(valuestr, this->getController()));
+                ret = QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(valuestr, this->getController()));
                 this->readNextToken();
                 //we assume it is an object name at this point
             }
             else
             {
-                ret = HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr, this->getController()));
+                ret = QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(valuestr, this->getController()));
                 this->readNextToken();
             }
 
@@ -2001,7 +2015,7 @@ HSSParserNode::p HSSParser::readValue(AXRString propertyName, bool &valid)
         }
         else if (this->currentToken->isA(HSSInstructionSign))
         {
-            HSSInstruction::p theInstruction;
+            QSharedPointer<HSSInstruction> theInstruction;
 
             theInstruction = this->readInstruction();
 
@@ -2031,16 +2045,16 @@ HSSParserNode::p HSSParser::readValue(AXRString propertyName, bool &valid)
     return ret;
 }
 
-HSSInstruction::p HSSParser::readInstruction()
+QSharedPointer<HSSInstruction> HSSParser::readInstruction()
 {
     return this->readInstruction(true);
 }
 
-HSSInstruction::p HSSParser::readInstruction(bool preferHex)
+QSharedPointer<HSSInstruction> HSSParser::readInstruction(bool preferHex)
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading instruction");
 
-    HSSInstruction::p ret;
+    QSharedPointer<HSSInstruction> ret;
     AXRString currentval;
 
     //set preference
@@ -2060,35 +2074,35 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
         switch (currentval.length())
         {
         case 1:
-            ret = HSSInstruction::p(new HSSInstruction(HSSGrayscale1Instruction, currentval, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSGrayscale1Instruction, currentval, controller));
             this->readNextToken();
             break;
         case 2:
-            ret = HSSInstruction::p(new HSSInstruction(HSSGrayscale2Instruction, currentval, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSGrayscale2Instruction, currentval, controller));
             this->readNextToken();
             break;
         case 3:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRGBInstruction, currentval, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSRGBInstruction, currentval, controller));
             this->readNextToken();
             break;
         case 4:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRGBAInstruction, currentval, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSRGBAInstruction, currentval, controller));
             this->readNextToken();
             break;
         case 5:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRGBAAInstruction, currentval, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSRGBAAInstruction, currentval, controller));
             this->readNextToken();
             break;
         case 6:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBInstruction, currentval, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSRRGGBBInstruction, currentval, controller));
             this->readNextToken();
             break;
         case 7:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBAInstruction, currentval, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSRRGGBBAInstruction, currentval, controller));
             this->readNextToken();
             break;
         case 8:
-            ret = HSSInstruction::p(new HSSInstruction(HSSRRGGBBAAInstruction, currentval, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSRRGGBBAAInstruction, currentval, controller));
             this->readNextToken();
             break;
 
@@ -2106,7 +2120,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
         currentval = VALUE_TOKEN(this->currentToken)->getString();
         if (currentval == "new")
         {
-            ret = HSSInstruction::p(new HSSInstruction(HSSNewInstruction, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSNewInstruction, controller));
             this->readNextToken(true);
             if (this->currentToken->isA(HSSParenthesisOpen))
             {
@@ -2115,7 +2129,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
                 if (this->currentToken->isA(HSSNumber))
                 {
                     HSSUnit number = VALUE_TOKEN(this->currentToken)->getLong();
-                    ret->setArgument(HSSNumberConstant::p(new HSSNumberConstant(number, controller)));
+                    ret->setArgument(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(number, controller)));
                     this->readNextToken(true);
                     this->skip(HSSWhitespace);
                     this->skipExpected(HSSParenthesisClose);
@@ -2129,7 +2143,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
         }
         else if (currentval == "ensure")
         {
-            ret = HSSInstruction::p(new HSSInstruction(HSSEnsureInstruction, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSEnsureInstruction, controller));
             this->readNextToken();
         }
         else if (currentval == "import")
@@ -2142,7 +2156,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
             if (this->currentToken->isA(HSSDoubleQuoteString) || this->currentToken->isA(HSSSingleQuoteString))
             {
                 AXRString theString = VALUE_TOKEN(this->currentToken)->getString();
-                ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, theString, controller));
+                ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSImportInstruction, theString, controller));
             }
             else if (this->currentToken->isA(HSSIdentifier))
             {
@@ -2152,7 +2166,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
                     QUrl url;
                     url.setScheme(HSSFRAMEWORK_PROTOCOL);
                     url.setPath("framework/UIFramework.hss");
-                    ret = HSSInstruction::p(new HSSInstruction(HSSImportInstruction, url.toString(), controller));
+                    ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSImportInstruction, url.toString(), controller));
                 }
                 else
                 {
@@ -2177,7 +2191,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
         }
         else if (currentval == "move")
         {
-            ret = HSSInstruction::p(new HSSInstruction(HSSMoveInstruction, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSMoveInstruction, controller));
             this->readNextToken();
         }
         else if (currentval == "delete")
@@ -2186,7 +2200,7 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
             this->readNextToken();
             this->checkForUnexpectedEndOfSource();
             this->skip(HSSWhitespace);
-            ret = HSSInstruction::p(new HSSInstruction(HSSDeleteInstruction, controller));
+            ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSDeleteInstruction, controller));
 
         }
         else
@@ -2210,9 +2224,9 @@ HSSInstruction::p HSSParser::readInstruction(bool preferHex)
     return ret;
 }
 
-HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p instruction)
+QSharedPointer<HSSObjectDefinition> HSSParser::getObjectFromInstruction(QSharedPointer<HSSInstruction> instruction)
 {
-    HSSObjectDefinition::p ret;
+    QSharedPointer<HSSObjectDefinition> ret;
     HSSInstructionType instructionType = instruction->getInstructionType();
     AXRController * controller = this->getController();
     switch (instructionType)
@@ -2221,7 +2235,7 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
     case HSSGrayscale2Instruction:
     {
         //try to create an object of that type
-        HSSRgb::p obj = HSSRgb::p(new HSSRgb(this->controller));
+        QSharedPointer<HSSRgb> obj = QSharedPointer<HSSRgb>(new HSSRgb(this->controller));
 
         unsigned int hexValue;
         AXRString tempstr = instruction->getValue();
@@ -2232,23 +2246,23 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
 
         hexValue = tempstr.toUInt(NULL, 16);
 
-        ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj, controller));
+        ret = QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(obj, controller));
 
         AXRController * controller = this->getController();
 
-        HSSPropertyDefinition::p newRed = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
+        QSharedPointer<HSSPropertyDefinition> newRed = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
         newRed->setName("red");
-        newRed->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue, controller)));
+        newRed->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newRed);
 
-        HSSPropertyDefinition::p newGreen = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
+        QSharedPointer<HSSPropertyDefinition> newGreen = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
         newGreen->setName("green");
-        newGreen->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue, controller)));
+        newGreen->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newGreen);
 
-        HSSPropertyDefinition::p newBlue = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
+        QSharedPointer<HSSPropertyDefinition> newBlue = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
         newBlue->setName("blue");
-        newBlue->setValue(HSSNumberConstant::p(new HSSNumberConstant(hexValue, controller)));
+        newBlue->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newBlue);
 
         break;
@@ -2262,7 +2276,7 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
     case HSSRRGGBBAAInstruction:
     {
         //try to create an object of that type
-        HSSRgb::p obj = HSSRgb::p(new HSSRgb(this->controller));
+        QSharedPointer<HSSRgb> obj = QSharedPointer<HSSRgb>(new HSSRgb(this->controller));
 
         AXRString red;
         unsigned int redHex;
@@ -2332,26 +2346,26 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
         blueHex = blue.toUInt(NULL, 16);
         alphaHex = alpha.toUInt(NULL, 16);
 
-        ret = HSSObjectDefinition::p(new HSSObjectDefinition(obj, controller));
+        ret = QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(obj, controller));
 
-        HSSPropertyDefinition::p newRed = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
+        QSharedPointer<HSSPropertyDefinition> newRed = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
         newRed->setName("red");
-        newRed->setValue(HSSNumberConstant::p(new HSSNumberConstant(redHex, controller)));
+        newRed->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(redHex, controller)));
         ret->propertiesAdd(newRed);
 
-        HSSPropertyDefinition::p newGreen = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
+        QSharedPointer<HSSPropertyDefinition> newGreen = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
         newGreen->setName("green");
-        newGreen->setValue(HSSNumberConstant::p(new HSSNumberConstant(greenHex, controller)));
+        newGreen->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(greenHex, controller)));
         ret->propertiesAdd(newGreen);
 
-        HSSPropertyDefinition::p newBlue = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
+        QSharedPointer<HSSPropertyDefinition> newBlue = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
         newBlue->setName("blue");
-        newBlue->setValue(HSSNumberConstant::p(new HSSNumberConstant(blueHex, controller)));
+        newBlue->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(blueHex, controller)));
         ret->propertiesAdd(newBlue);
 
-        HSSPropertyDefinition::p newAlpha = HSSPropertyDefinition::p(new HSSPropertyDefinition(controller));
+        QSharedPointer<HSSPropertyDefinition> newAlpha = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
         newAlpha->setName("alpha");
-        newAlpha->setValue(HSSNumberConstant::p(new HSSNumberConstant(alphaHex, controller)));
+        newAlpha->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(alphaHex, controller)));
         ret->propertiesAdd(newAlpha);
 
         break;
@@ -2366,12 +2380,12 @@ HSSObjectDefinition::p HSSParser::getObjectFromInstruction(HSSInstruction::p ins
 
 //this function assumes currentToken is a instruction sign
 
-HSSRule::p HSSParser::readInstructionRule()
+QSharedPointer<HSSRule> HSSParser::readInstructionRule()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading instruction rule");
 
-    HSSInstruction::p instruction = this->readInstruction(false);
-    HSSRule::p ret;
+    QSharedPointer<HSSInstruction> instruction = this->readInstruction(false);
+    QSharedPointer<HSSRule> ret;
     switch (instruction->getInstructionType())
     {
     case HSSNewInstruction:
@@ -2390,7 +2404,7 @@ HSSRule::p HSSParser::readInstructionRule()
     case HSSDeleteInstruction:
     {
         //initialize the rule
-        std::vector<HSSSelectorChain::p> selectorChains;
+        std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
         try
         {
             selectorChains = this->readSelectorChains(HSSEndOfStatement);
@@ -2408,11 +2422,11 @@ HSSRule::p HSSParser::readInstructionRule()
             e.raise();
 
             //return an empty rule
-            HSSRule::p ret;
+            QSharedPointer<HSSRule> ret;
             return ret;
         }
 
-        ret = HSSRule::p(new HSSRule(this->getController()));
+        ret = QSharedPointer<HSSRule>(new HSSRule(this->getController()));
         ret->setSelectorChains(selectorChains);
         ret->setInstruction(instruction);
         break;
@@ -2436,21 +2450,21 @@ HSSRule::p HSSParser::readInstructionRule()
     return ret;
 }
 
-HSSParserNode::p HSSParser::readExpression()
+QSharedPointer<HSSParserNode> HSSParser::readExpression()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading expression");
 
-    HSSParserNode::p ret = this->readAdditiveExpression();
+    QSharedPointer<HSSParserNode> ret = this->readAdditiveExpression();
 
     return ret;
 }
 
-HSSParserNode::p HSSParser::readAdditiveExpression()
+QSharedPointer<HSSParserNode> HSSParser::readAdditiveExpression()
 {
     security_brake_init();
 
     this->checkForUnexpectedEndOfSource();
-    HSSParserNode::p left = this->readMultiplicativeExpression();
+    QSharedPointer<HSSParserNode> left = this->readMultiplicativeExpression();
     AXRController * controller = this->getController();
     while (!this->atEndOfSource() && this->currentToken->isA(HSSSymbol))
     {
@@ -2461,7 +2475,7 @@ HSSParserNode::p HSSParser::readAdditiveExpression()
         {
             this->readNextToken();
             this->skip(HSSWhitespace);
-            left = HSSSum::p(new HSSSum(left, this->readMultiplicativeExpression(), controller));
+            left = QSharedPointer<HSSSum>(new HSSSum(left, this->readMultiplicativeExpression(), controller));
             break;
         }
 
@@ -2469,7 +2483,7 @@ HSSParserNode::p HSSParser::readAdditiveExpression()
         {
             this->readNextToken();
             this->skip(HSSWhitespace);
-            left = HSSSubtraction::p(new HSSSubtraction(left, this->readMultiplicativeExpression(), controller));
+            left = QSharedPointer<HSSSubtraction>(new HSSSubtraction(left, this->readMultiplicativeExpression(), controller));
             break;
         }
 
@@ -2484,12 +2498,12 @@ HSSParserNode::p HSSParser::readAdditiveExpression()
     return left;
 }
 
-HSSParserNode::p HSSParser::readMultiplicativeExpression()
+QSharedPointer<HSSParserNode> HSSParser::readMultiplicativeExpression()
 {
     security_brake_init();
 
     this->checkForUnexpectedEndOfSource();
-    HSSParserNode::p left = this->readBaseExpression();
+    QSharedPointer<HSSParserNode> left = this->readBaseExpression();
     AXRController * controller = this->getController();
     while (!this->atEndOfSource() && this->currentToken->isA(HSSSymbol))
     {
@@ -2501,7 +2515,7 @@ HSSParserNode::p HSSParser::readMultiplicativeExpression()
         {
             this->readNextToken();
             this->skip(HSSWhitespace);
-            left = HSSMultiplication::p(new HSSMultiplication(left, this->readBaseExpression(), controller));
+            left = QSharedPointer<HSSMultiplication>(new HSSMultiplication(left, this->readBaseExpression(), controller));
             break;
         }
 
@@ -2509,7 +2523,7 @@ HSSParserNode::p HSSParser::readMultiplicativeExpression()
         {
             this->readNextToken();
             this->skip(HSSWhitespace);
-            left = HSSDivision::p(new HSSDivision(left, this->readBaseExpression(), controller));
+            left = QSharedPointer<HSSDivision>(new HSSDivision(left, this->readBaseExpression(), controller));
             break;
         }
 
@@ -2524,16 +2538,16 @@ HSSParserNode::p HSSParser::readMultiplicativeExpression()
     return left;
 }
 
-HSSParserNode::p HSSParser::readBaseExpression()
+QSharedPointer<HSSParserNode> HSSParser::readBaseExpression()
 {
     this->checkForUnexpectedEndOfSource();
-    HSSParserNode::p left;
+    QSharedPointer<HSSParserNode> left;
 
     switch (this->currentToken->getType())
     {
     case HSSNumber:
     {
-        left = HSSNumberConstant::p(new HSSNumberConstant(VALUE_TOKEN(this->currentToken)->getLong(), this->getController()));
+        left = QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(VALUE_TOKEN(this->currentToken)->getLong(), this->getController()));
         this->readNextToken();
         this->skip(HSSWhitespace);
         break;
@@ -2541,7 +2555,7 @@ HSSParserNode::p HSSParser::readBaseExpression()
 
     case HSSPercentageNumber:
     {
-        left = HSSPercentageConstant::p(new HSSPercentageConstant(VALUE_TOKEN(this->currentToken)->getLong(), this->getController()));
+        left = QSharedPointer<HSSPercentageConstant>(new HSSPercentageConstant(VALUE_TOKEN(this->currentToken)->getLong(), this->getController()));
         this->readNextToken();
         this->skip(HSSWhitespace);
         break;
@@ -2562,18 +2576,18 @@ HSSParserNode::p HSSParser::readBaseExpression()
         /*
         AXRString valuestr = VALUE_TOKEN(this->currentToken)->getString();
         //check if it is a function
-        HSSObject::p objectContext = this->currentObjectContext.top();
+        QSharedPointer<HSSObject> objectContext = this->currentObjectContext.top();
         if (objectContext->isFunction(valuestr, propertyName)){*/
         left = this->readFunction();
         /*
        //check if it is a keyword
        } else if (objectContext->isKeyword(valuestr, propertyName)){
-           left = HSSKeywordConstant::p(new HSSKeywordConstant(valuestr));
+           left = QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(valuestr));
            this->readNextToken();
            this->skip(HSSWhitespace);
            //we assume it is an object name at this point
        } else {
-           left = HSSObjectNameConstant::p(new HSSObjectNameConstant(valuestr));
+           left = QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(valuestr));
            this->readNextToken();
            this->skip(HSSWhitespace);
        }*/
@@ -2589,12 +2603,12 @@ HSSParserNode::p HSSParser::readBaseExpression()
 }
 
 ////this method expects the currentToken to be an identifier
-//HSSParserNode::p HSSParser::readFilter()
+//QSharedPointer<HSSParserNode> HSSParser::readFilter()
 //{
 //    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading filter");
 //    inc_output_indent();
 //
-//    HSSFilter::p ret;
+//    QSharedPointer<HSSFilter> ret;
 //    this->expect(HSSIdentifier);
 //
 //    AXRString filterName = VALUE_TOKEN(this->currentToken)->getString();
@@ -2610,15 +2624,15 @@ HSSParserNode::p HSSParser::readBaseExpression()
 
 //this method expects the currentToken to be an identifier
 
-HSSParserNode::p HSSParser::readFlag()
+QSharedPointer<HSSParserNode> HSSParser::readFlag()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading flag");
 
-    HSSFlag::p ret;
+    QSharedPointer<HSSFlag> ret;
     this->expect(HSSIdentifier);
 
     AXRString flagName = VALUE_TOKEN(this->currentToken)->getString();
-    ret = HSSFlag::p(new HSSFlag(this->getController()));
+    ret = QSharedPointer<HSSFlag>(new HSSFlag(this->getController()));
     ret->setName(flagName);
 
     this->readNextToken();
@@ -2627,11 +2641,11 @@ HSSParserNode::p HSSParser::readFlag()
     return ret;
 }
 
-HSSParserNode::p HSSParser::readFunction()
+QSharedPointer<HSSParserNode> HSSParser::readFunction()
 {
     axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading function");
 
-    HSSParserNode::p ret;
+    QSharedPointer<HSSParserNode> ret;
 
     this->checkForUnexpectedEndOfSource();
     AXRController * controller = this->getController();
@@ -2641,7 +2655,7 @@ HSSParserNode::p HSSParser::readFunction()
         AXRString name = VALUE_TOKEN(this->currentToken)->getString();
         if (name == "ref")
         {
-            HSSRefFunction::p refFunction = HSSRefFunction::p(new HSSRefFunction(controller));
+            QSharedPointer<HSSRefFunction> refFunction = QSharedPointer<HSSRefFunction>(new HSSRefFunction(controller));
 
             this->readNextToken(true);
             this->skip(HSSWhitespace, true);
@@ -2689,13 +2703,13 @@ HSSParserNode::p HSSParser::readFunction()
             this->readNextToken();
             this->skip(HSSWhitespace, true);
             //if shorthand notation -- assumes 'of @this'
-            std::vector<HSSSelectorChain::p> selectorChains;
+            std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
             if (this->currentToken->isA(HSSParenthesisClose))
             {
-                HSSSelectorChain::p selectorChain;
-                selectorChain = HSSSelectorChain::p(new HSSSelectorChain(controller));
-                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
-                newSs->setName(HSSThisSelector::p(new HSSThisSelector(controller)));
+                QSharedPointer<HSSSelectorChain> selectorChain;
+                selectorChain = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
+                QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
+                newSs->setName(QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller)));
                 selectorChain->add(newSs);
                 selectorChains.push_back(selectorChain);
                 this->readNextToken(true);
@@ -2732,7 +2746,7 @@ HSSParserNode::p HSSParser::readFunction()
             this->skipExpected(HSSParenthesisOpen, true);
             this->skip(HSSWhitespace, true);
             //read the selector chain
-            std::vector<HSSSelectorChain::p> selectorChains;
+            std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
             try
             {
                 selectorChains = this->readSelectorChains(HSSParenthesisClose);
@@ -2752,7 +2766,7 @@ HSSParserNode::p HSSParser::readFunction()
                 return ret;
             }
 
-            HSSSelFunction::p selFunction = HSSSelFunction::p(new HSSSelFunction(controller));
+            QSharedPointer<HSSSelFunction> selFunction = QSharedPointer<HSSSelFunction>(new HSSSelFunction(controller));
             selFunction->setSelectorChains(selectorChains);
 
             ret = selFunction;
@@ -2766,7 +2780,7 @@ HSSParserNode::p HSSParser::readFunction()
                 )
         {
 
-            HSSFlagFunction::p flagFunction = HSSFlagFunction::p(new HSSFlagFunction(HSSFlagFunction::flagFunctionTypeFromString(name), controller));
+            QSharedPointer<HSSFlagFunction> flagFunction = QSharedPointer<HSSFlagFunction>(new HSSFlagFunction(HSSFlagFunction::flagFunctionTypeFromString(name), controller));
 
             this->readNextToken(true);
             this->skip(HSSWhitespace, true);
@@ -2791,21 +2805,21 @@ HSSParserNode::p HSSParser::readFunction()
             this->readNextToken();
             this->skip(HSSWhitespace, true);
             //if shorthand notation
-            std::vector<HSSSelectorChain::p> selectorChains;
+            std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
             if (this->currentToken->isA(HSSParenthesisClose))
             {
-                HSSSelectorChain::p selectorChain;
-                selectorChain = HSSSelectorChain::p(new HSSSelectorChain(controller));
-                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
+                QSharedPointer<HSSSelectorChain> selectorChain;
+                selectorChain = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
+                QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
                 if(name == "captureFlag")
                 {
                     //assumes 'on *'
-                    newSs->setName(HSSUniversalSelector::p(new HSSUniversalSelector(controller)));
+                    newSs->setName(QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector(controller)));
                 }
                 else
                 {
                     //assumes 'on @this'
-                    newSs->setName(HSSThisSelector::p(new HSSThisSelector(controller)));
+                    newSs->setName(QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller)));
                 }
                 selectorChain->add(newSs);
                 selectorChains.push_back(selectorChain);
@@ -2837,7 +2851,7 @@ HSSParserNode::p HSSParser::readFunction()
         }
         else if (name == "attr")
         {
-            HSSAttrFunction::p attrFunction = HSSAttrFunction::p(new HSSAttrFunction(controller));
+            QSharedPointer<HSSAttrFunction> attrFunction = QSharedPointer<HSSAttrFunction>(new HSSAttrFunction(controller));
 
             this->readNextToken(true);
             this->skip(HSSWhitespace, true);
@@ -2858,14 +2872,14 @@ HSSParserNode::p HSSParser::readFunction()
             this->readNextToken();
             this->skip(HSSWhitespace, true);
             //if shorthand notation -- assumes 'of @this'
-            std::vector<HSSSelectorChain::p> selectorChains;
+            std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
             if (this->currentToken->isA(HSSParenthesisClose))
             {
                 AXRController * controller = this->getController();
-                HSSSelectorChain::p selectorChain;
-                selectorChain = HSSSelectorChain::p(new HSSSelectorChain(controller));
-                HSSSimpleSelector::p newSs = HSSSimpleSelector::p(new HSSSimpleSelector(controller));
-                newSs->setName(HSSThisSelector::p(new HSSThisSelector(controller)));
+                QSharedPointer<HSSSelectorChain> selectorChain;
+                selectorChain = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
+                QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
+                newSs->setName(QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller)));
                 selectorChain->add(newSs);
                 selectorChains.push_back(selectorChain);
                 this->readNextToken(true);
@@ -2921,7 +2935,7 @@ HSSParserNode::p HSSParser::readFunction()
             this->skip(HSSWhitespace, true);
             this->skipExpected(HSSParenthesisOpen, true);
             this->skip(HSSWhitespace, true);
-            std::deque<HSSParserNode::p> arguments;
+            std::deque<QSharedPointer<HSSParserNode> > arguments;
             while (!this->currentToken->isA(HSSParenthesisClose) && !this->atEndOfSource())
             {
                 bool valid;
@@ -2931,7 +2945,7 @@ HSSParserNode::p HSSParser::readFunction()
                     this->readNextToken(true);
                 }
             }
-            HSSFunction::p theFunction = HSSFunction::p(new HSSFunction(HSSFunctionTypeCustom, controller));
+            QSharedPointer<HSSFunction> theFunction = QSharedPointer<HSSFunction>(new HSSFunction(HSSFunctionTypeCustom, controller));
             theFunction->setArguments(arguments);
             theFunction->setName(name);
             ret = theFunction;
@@ -2963,7 +2977,7 @@ void HSSParser::readNextToken(bool checkForUnexpectedEndOfSource)
     //read next one
     try
     {
-        HSSToken::p theToken = this->tokenizer->readNextToken();
+        QSharedPointer<HSSToken> theToken = this->tokenizer->readNextToken();
         if (theToken && (theToken->isA(HSSBlockComment) || theToken->isA(HSSLineComment)))
         {
             this->readNextToken();
@@ -2976,7 +2990,7 @@ void HSSParser::readNextToken(bool checkForUnexpectedEndOfSource)
     }
     catch (const AXRError &)
     {
-        this->currentToken = HSSToken::p();
+        this->currentToken = QSharedPointer<HSSToken>();
         throw;
     }
 
@@ -3040,7 +3054,7 @@ void HSSParser::skipExpected(HSSTokenType type, AXRString value, bool checkForUn
     /**
      *  @todo I'm not sure if this works as expected
      */
-    HSSValueToken::p currentToken = HSSValueToken::p(VALUE_TOKEN(this->currentToken));
+    QSharedPointer<HSSValueToken> currentToken = QSharedPointer<HSSValueToken>(VALUE_TOKEN(this->currentToken));
     if (!currentToken->equals(type, value))
     {
         throw AXRError("HSSParser", "Expected token of type " + HSSToken::tokenStringRepresentation(type) + " and value " + value, this->currentFile->sourceUrl(), this->line, this->column);
@@ -3105,7 +3119,7 @@ size_t HSSParser::currentObjectContextSize() const
     return this->currentObjectContext.size();
 }
 
-void HSSParser::currentObjectContextAdd(HSSObject::p theObject)
+void HSSParser::currentObjectContextAdd(QSharedPointer<HSSObject> theObject)
 {
     this->currentObjectContext.push(theObject);
 }

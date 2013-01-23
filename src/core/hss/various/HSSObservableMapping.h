@@ -44,8 +44,6 @@
 #ifndef HSSOBSERVABLEMAPPING_H
 #define HSSOBSERVABLEMAPPING_H
 
-#include "HSSCallback.h"
-
 #include <QVariant>
 
 namespace AXR
@@ -58,11 +56,6 @@ namespace AXR
     class AXR_API HSSObservableMapping
     {
     public:
-        /**
-         *  The shared pointer to this kind of object.
-         */
-        typedef QSharedPointer<HSSObservableMapping> p;
-
         HSSObservableMapping(HSSObservable* obs, HSSCallback* cbk, HSSObservableProperty src, QVariant d);
         virtual ~HSSObservableMapping();
 

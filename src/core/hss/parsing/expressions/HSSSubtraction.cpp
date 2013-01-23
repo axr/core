@@ -41,11 +41,12 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSSubtraction.h"
 
 using namespace AXR;
 
-HSSSubtraction::HSSSubtraction(HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller)
+HSSSubtraction::HSSSubtraction(QSharedPointer<HSSParserNode> _left, QSharedPointer<HSSParserNode> _right, AXRController * controller)
 : HSSExpression(HSSExpressionTypeSubtraction, _left, _right, controller)
 {
 
@@ -57,7 +58,7 @@ HSSSubtraction::HSSSubtraction(const HSSSubtraction &orig)
 
 }
 
-HSSSubtraction::p HSSSubtraction::clone() const
+QSharedPointer<HSSSubtraction> HSSSubtraction::clone() const
 {
     return qSharedPointerCast<HSSSubtraction> (this->cloneImpl());
 }
@@ -72,7 +73,7 @@ HSSUnit HSSSubtraction::calculate(HSSUnit leftval, HSSUnit rightval)
     return leftval - rightval;
 }
 
-HSSClonable::p HSSSubtraction::cloneImpl() const
+QSharedPointer<HSSClonable> HSSSubtraction::cloneImpl() const
 {
-    return HSSSubtraction::p(new HSSSubtraction(*this));
+    return QSharedPointer<HSSSubtraction>(new HSSSubtraction(*this));
 }

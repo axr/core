@@ -41,8 +41,13 @@
  *
  ********************************************************************/
 
+#include <QPainter>
 #include <QPaintEvent>
+#include "AXRController.h"
 #include "AXRDocument.h"
+#include "AXRRender.h"
+#include "HSSContainer.h"
+#include "HSSUnits.h"
 #include "QAXRWidget.h"
 
 using namespace AXR;
@@ -105,7 +110,7 @@ void QAXRWidget::paintEvent(QPaintEvent *e)
         return;
 
     // Render the AXR document
-    AXRRender::p renderer = d->document->getRender();
+    QSharedPointer<AXRRender> renderer = d->document->getRender();
     if (renderer && d->document->getController()->getRoot())
     {
         // Render the final composite on to the screen
@@ -123,7 +128,7 @@ void QAXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    HSSContainer::p root = d->document->getController()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->getController()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
@@ -140,7 +145,7 @@ void QAXRWidget::mouseMoveEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    HSSContainer::p root = d->document->getController()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->getController()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
@@ -157,7 +162,7 @@ void QAXRWidget::mousePressEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    HSSContainer::p root = d->document->getController()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->getController()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
@@ -174,7 +179,7 @@ void QAXRWidget::mouseReleaseEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    HSSContainer::p root = d->document->getController()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->getController()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());

@@ -43,6 +43,8 @@
 
 #include "AXRController.h"
 #include "AXRDebugging.h"
+#include "HSSDisplayObject.h"
+#include "HSSFunction.h"
 #include "HSSFunctionAction.h"
 
 using namespace AXR;
@@ -59,15 +61,15 @@ HSSFunctionAction::HSSFunctionAction(const HSSFunctionAction & orig)
     //this->_function = orig._function->clone();
 }
 
-HSSFunctionAction::p HSSFunctionAction::clone() const
+QSharedPointer<HSSFunctionAction> HSSFunctionAction::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFunctionAction: cloning function action object");
     return qSharedPointerCast<HSSFunctionAction> (this->cloneImpl());
 }
 
-HSSClonable::p HSSFunctionAction::cloneImpl() const
+QSharedPointer<HSSClonable> HSSFunctionAction::cloneImpl() const
 {
-    HSSFunctionAction::p clone = HSSFunctionAction::p(new HSSFunctionAction(*this));
+    QSharedPointer<HSSFunctionAction> clone = QSharedPointer<HSSFunctionAction>(new HSSFunctionAction(*this));
     return clone;
 }
 
@@ -88,16 +90,16 @@ AXRString HSSFunctionAction::defaultObjectType()
 
 void HSSFunctionAction::fire()
 {
-    HSSFunction::p function = this->getFunction();
+    QSharedPointer<HSSFunction> function = this->getFunction();
     function->_evaluate(function->getArguments());
 }
 
-HSSFunction::p HSSFunctionAction::getFunction()
+QSharedPointer<HSSFunction> HSSFunctionAction::getFunction()
 {
     return this->_function;
 }
 
-void HSSFunctionAction::setFunction(HSSFunction::p newValue)
+void HSSFunctionAction::setFunction(QSharedPointer<HSSFunction> newValue)
 {
     this->_function = newValue;
 }

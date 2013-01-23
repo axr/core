@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include <QMap>
 #include "HSSMultipleSelection.h"
 #include "HSSSelection.h"
 #include "HSSSimpleSelection.h"

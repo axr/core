@@ -46,18 +46,18 @@
 
 #include <QSharedPointer>
 #include "HSSObject.h"
-#include "HSSRgb.h"
 
 namespace AXR
 {
+    class HSSRgb;
+
     /**
      *  @brief This class represents HSS objects of type \@colorStop.
      */
     class AXR_API HSSColorStop : public HSSObject
     {
     public:
-        typedef QSharedPointer<HSSColorStop> p;
-        typedef std::vector<HSSColorStop::p>::iterator it;
+        typedef std::vector<QSharedPointer<HSSColorStop> >::iterator it;
 
         /**
          *  Creates a new instace of a color stop object.
@@ -72,7 +72,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSColorStop
          */
-        p clone() const;
+        QSharedPointer<HSSColorStop> clone() const;
         virtual ~HSSColorStop();
 
         virtual AXRString toString();
@@ -80,25 +80,25 @@ namespace AXR
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
 
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Getter for the actual value of color
          *  @return A shared pointer to a HSSRgb object that is currently used.
          */
-        HSSRgb::p getColor();
+        QSharedPointer<HSSRgb> getColor();
 
         /**
          *  Getter for the definition object of color.
          *  @return A shared pointer to the parser node containing the definition object of color.
          */
-        HSSParserNode::p getDColor();
+        QSharedPointer<HSSParserNode> getDColor();
 
         /**
          *  Setter for the definition object of color. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of color.
          */
-        void setDColor(HSSParserNode::p);
+        void setDColor(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect color.
@@ -117,13 +117,13 @@ namespace AXR
          *  Getter for the definition object of position.
          *  @return A shared pointer to the parser node containing the definition object of position.
          */
-        HSSParserNode::p getDPosition();
+        QSharedPointer<HSSParserNode> getDPosition();
 
         /**
          *  Setter for the definition object of position. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of position.
          */
-        void setDPosition(HSSParserNode::p);
+        void setDPosition(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect position.
@@ -142,13 +142,13 @@ namespace AXR
          *  Getter for the definition object of balance.
          *  @return A shared pointer to the parser node containing the definition object of balance.
          */
-        HSSParserNode::p getDBalance();
+        QSharedPointer<HSSParserNode> getDBalance();
 
         /**
          *  Setter for the definition object of balance. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of balance.
          */
-        void setDBalance(HSSParserNode::p);
+        void setDBalance(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect balance.
@@ -159,33 +159,33 @@ namespace AXR
 
     protected:
         //color
-        HSSRgb::p color;
-        HSSParserNode::p dColor;
+        QSharedPointer<HSSRgb> color;
+        QSharedPointer<HSSParserNode> dColor;
         HSSObservable * observedColor;
         HSSObservableProperty observedColorProperty;
 
         //position
         HSSUnit position;
-        HSSParserNode::p dPosition;
+        QSharedPointer<HSSParserNode> dPosition;
         HSSObservable * observedPosition;
         HSSObservableProperty observedPositionProperty;
 
         //balance
         HSSUnit balance;
-        HSSParserNode::p dBalance;
+        QSharedPointer<HSSParserNode> dBalance;
         HSSObservable * observedBalance;
         HSSObservableProperty observedBalanceProperty;
 
         HSSUnit _evaluatePropertyValue(
                                    void(HSSColorStop::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty
                                    );
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

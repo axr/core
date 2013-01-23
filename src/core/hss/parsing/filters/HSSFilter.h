@@ -44,14 +44,11 @@
 #ifndef HSSFILTER_H
 #define HSSFILTER_H
 
-#include <QSharedPointer>
-#include "HSSDisplayObject.h"
-#include "HSSMultipleSelection.h"
 #include "HSSParserNode.h"
-#include "HSSSimpleSelection.h"
 
 namespace AXR
 {
+    class HSSSelection;
     class HSSSelectorChain;
 
     /**
@@ -62,8 +59,6 @@ namespace AXR
     class AXR_API HSSFilter : public HSSParserNode
     {
     public:
-        typedef QSharedPointer<HSSFilter> p;
-
         /**
          *  When logging, you often need a string representation of the filter type.
          *  @param filterType   The action type to represent as a string.
@@ -86,14 +81,14 @@ namespace AXR
          *  @param stringType   The textual representation of the filter.
          *  @return A shared pointer to a new instance of a filter of the given type.
          */
-        static HSSFilter::p newFilterWithStringType(AXRString stringType, AXRController * controller);
+        static QSharedPointer<HSSFilter> newFilterWithStringType(AXRString stringType, AXRController * controller);
 
         /**
          *  Instantiates a specific subclass for the given HSSFilterType.
          *  @param filterType   The filter type for the new instance.
          *  @return A shared pointer to a new instance of a filter of the given type.
          */
-        static HSSFilter::p newFilterWithType(HSSFilterType filterType, AXRController * controller);
+        static QSharedPointer<HSSFilter> newFilterWithType(HSSFilterType filterType, AXRController * controller);
 
         HSSFilter(const HSSFilter &orig);
         /**
@@ -114,9 +109,9 @@ namespace AXR
          *
          *  @todo should this return an empty selection?
          */
-        virtual HSSSelection::p apply(HSSSelection::p scope, bool processing) = 0;
+        virtual QSharedPointer<HSSSelection> apply(QSharedPointer<HSSSelection> scope, bool processing) = 0;
 
-        virtual HSSFilter::p clone() const = 0;
+        virtual QSharedPointer<HSSFilter> clone() const = 0;
 
         /**
          *  Allows you to check if this filter is of the given type.
@@ -133,7 +128,7 @@ namespace AXR
         bool getNegating() const;
         void setNegating(bool value);
 
-        HSSFilter::p shared_from_this();
+        QSharedPointer<HSSFilter> shared_from_this();
 
     protected:
         /**

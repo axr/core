@@ -42,11 +42,16 @@
  ********************************************************************/
 
 #include "AXRDebugging.h"
+#include "HSSDisplayObject.h"
+#include "HSSObject.h"
 #include "HSSObjectDefinition.h"
+#include "HSSPropertyDefinition.h"
+#include "HSSRule.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
-HSSObjectDefinition::HSSObjectDefinition(HSSObject::p prototype, AXRController * controller)
+HSSObjectDefinition::HSSObjectDefinition(QSharedPointer<HSSObject> prototype, AXRController * controller)
 : HSSStatement(HSSStatementTypeObjectDefinition, controller)
 {
     this->prototype = prototype;
@@ -57,18 +62,18 @@ HSSObjectDefinition::HSSObjectDefinition(const HSSObjectDefinition & orig)
 {
     this->prototype = orig.prototype->clone();
 
-    for (std::deque<HSSPropertyDefinition::p>::const_iterator p_it = orig.properties.begin(); p_it != orig.properties.end(); ++p_it)
+    for (std::deque<QSharedPointer<HSSPropertyDefinition> >::const_iterator p_it = orig.properties.begin(); p_it != orig.properties.end(); ++p_it)
     {
         this->properties.push_back((*p_it)->clone());
     }
 
-    for (std::vector<HSSObjectDefinition::p>::const_iterator c_it = orig.children.begin(); c_it != orig.children.end(); ++c_it)
+    for (std::vector<QSharedPointer<HSSObjectDefinition> >::const_iterator c_it = orig.children.begin(); c_it != orig.children.end(); ++c_it)
     {
         this->children.push_back((*c_it)->clone());
     }
 }
 
-HSSObjectDefinition::p HSSObjectDefinition::clone() const
+QSharedPointer<HSSObjectDefinition> HSSObjectDefinition::clone() const
 {
     return qSharedPointerCast<HSSObjectDefinition> (this->cloneImpl());
 }
@@ -101,12 +106,12 @@ void HSSObjectDefinition::apply()
 {
     for (size_t i = 0; i < this->propertiesSize(); ++i)
     {
-        HSSPropertyDefinition::p theProperty = this->properties[i];
+        QSharedPointer<HSSPropertyDefinition> theProperty = this->properties[i];
         this->prototype->setPropertyWithName(theProperty->getName(), theProperty->getValue());
     }
 }
 
-void HSSObjectDefinition::propertiesAdd(HSSPropertyDefinition::p &newProperty)
+void HSSObjectDefinition::propertiesAdd(QSharedPointer<HSSPropertyDefinition> &newProperty)
 {
     if (newProperty)
     {
@@ -116,7 +121,7 @@ void HSSObjectDefinition::propertiesAdd(HSSPropertyDefinition::p &newProperty)
     }
 }
 
-void HSSObjectDefinition::propertiesAdd(const HSSPropertyDefinition::p &newProperty)
+void HSSObjectDefinition::propertiesAdd(const QSharedPointer<HSSPropertyDefinition> &newProperty)
 {
     if (newProperty)
     {
@@ -127,7 +132,7 @@ void HSSObjectDefinition::propertiesAdd(const HSSPropertyDefinition::p &newPrope
     }
 }
 
-void HSSObjectDefinition::propertiesPrepend(HSSPropertyDefinition::p &newProperty)
+void HSSObjectDefinition::propertiesPrepend(QSharedPointer<HSSPropertyDefinition> &newProperty)
 {
     if (newProperty)
     {
@@ -137,7 +142,7 @@ void HSSObjectDefinition::propertiesPrepend(HSSPropertyDefinition::p &newPropert
     }
 }
 
-void HSSObjectDefinition::propertiesPrepend(const HSSPropertyDefinition::p &newProperty)
+void HSSObjectDefinition::propertiesPrepend(const QSharedPointer<HSSPropertyDefinition> &newProperty)
 {
     if (newProperty)
     {
@@ -152,7 +157,7 @@ void HSSObjectDefinition::propertiesRemoveLast()
     this->properties.pop_back();
 }
 
-HSSPropertyDefinition::p &HSSObjectDefinition::propertiesLast()
+QSharedPointer<HSSPropertyDefinition> &HSSObjectDefinition::propertiesLast()
 {
     return this->properties.back();
 }
@@ -162,12 +167,12 @@ size_t HSSObjectDefinition::propertiesSize() const
     return this->properties.size();
 }
 
-std::deque<HSSPropertyDefinition::p> HSSObjectDefinition::getProperties()
+std::deque<QSharedPointer<HSSPropertyDefinition> > HSSObjectDefinition::getProperties()
 {
     return this->properties;
 }
 
-void HSSObjectDefinition::childrenAdd(HSSObjectDefinition::p &child)
+void HSSObjectDefinition::childrenAdd(QSharedPointer<HSSObjectDefinition> &child)
 {
     if (child)
     {
@@ -176,7 +181,7 @@ void HSSObjectDefinition::childrenAdd(HSSObjectDefinition::p &child)
     }
 }
 
-void HSSObjectDefinition::childrenAdd(const HSSObjectDefinition::p &child)
+void HSSObjectDefinition::childrenAdd(const QSharedPointer<HSSObjectDefinition> &child)
 {
     if (child)
     {
@@ -190,7 +195,7 @@ void HSSObjectDefinition::childrenRemoveLast()
     this->children.pop_back();
 }
 
-HSSObjectDefinition::p &HSSObjectDefinition::childrenLast()
+QSharedPointer<HSSObjectDefinition> &HSSObjectDefinition::childrenLast()
 {
     return this->children.back();
 }
@@ -200,70 +205,70 @@ size_t HSSObjectDefinition::childrenSize() const
     return this->children.size();
 }
 
-const std::vector<HSSObjectDefinition::p> HSSObjectDefinition::getChildren() const
+const std::vector<QSharedPointer<HSSObjectDefinition> > HSSObjectDefinition::getChildren() const
 {
     return this->children;
 }
 
-HSSObject::p HSSObjectDefinition::getObject()
+QSharedPointer<HSSObject> HSSObjectDefinition::getObject()
 {
     return this->prototype;
 }
 
-void HSSObjectDefinition::setScope(HSSSimpleSelection::p newScope)
+void HSSObjectDefinition::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 {
     this->scope = newScope;
     //propagate values
     this->prototype->setScope(newScope);
 }
 
-void HSSObjectDefinition::setThisObj(HSSDisplayObject::p value)
+void HSSObjectDefinition::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     this->thisObj = value;
     //propagate values
     this->prototype->setThisObj(value);
 }
 
-HSSDisplayObject::p HSSObjectDefinition::getThisObj()
+QSharedPointer<HSSDisplayObject> HSSObjectDefinition::getThisObj()
 {
     return thisObj;
 }
 
-HSSObjectDefinition::p HSSObjectDefinition::shared_from_this()
+QSharedPointer<HSSObjectDefinition> HSSObjectDefinition::shared_from_this()
 {
     return qSharedPointerCast<HSSObjectDefinition > (HSSStatement::shared_from_this());
 }
 
-void HSSObjectDefinition::setRules(std::deque<HSSRule::p> newRules)
+void HSSObjectDefinition::setRules(std::deque<QSharedPointer<HSSRule> > newRules)
 {
     this->_rules = newRules;
 }
 
-const std::deque<HSSRule::p> HSSObjectDefinition::getRules() const
+const std::deque<QSharedPointer<HSSRule> > HSSObjectDefinition::getRules() const
 {
     return this->_rules;
 }
 
-void HSSObjectDefinition::rulesAdd(HSSRule::p rule)
+void HSSObjectDefinition::rulesAdd(QSharedPointer<HSSRule> rule)
 {
     this->_rules.push_back(rule);
 }
 
-void HSSObjectDefinition::rulesPrepend(HSSRule::p rule)
+void HSSObjectDefinition::rulesPrepend(QSharedPointer<HSSRule> rule)
 {
     this->_rules.push_front(rule);
 }
 
-void HSSObjectDefinition::rulesRemove(HSSRule::p rule)
+void HSSObjectDefinition::rulesRemove(QSharedPointer<HSSRule> rule)
 {
-    std::deque<HSSRule::p>::iterator it = find(this->_rules.begin(), this->_rules.end(), rule);
+    std::deque<QSharedPointer<HSSRule> >::iterator it = find(this->_rules.begin(), this->_rules.end(), rule);
     if (it != this->_rules.end())
     {
         this->_rules.erase(it);
     }
 }
 
-HSSClonable::p HSSObjectDefinition::cloneImpl() const
+QSharedPointer<HSSClonable> HSSObjectDefinition::cloneImpl() const
 {
-    return HSSObjectDefinition::p(new HSSObjectDefinition(*this));
+    return QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(*this));
 }

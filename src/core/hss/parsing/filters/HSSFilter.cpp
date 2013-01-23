@@ -122,74 +122,74 @@ HSSFilterType HSSFilter::filterTypeFromString(AXRString name)
     return filterTypes[name];
 }
 
-HSSFilter::p HSSFilter::newFilterWithStringType(AXRString stringType, AXRController * controller)
+QSharedPointer<HSSFilter> HSSFilter::newFilterWithStringType(AXRString stringType, AXRController * controller)
 {
     return HSSFilter::newFilterWithType(HSSFilter::filterTypeFromString(stringType), controller);
 }
 
-HSSFilter::p HSSFilter::newFilterWithType(HSSFilterType filterType, AXRController * controller)
+QSharedPointer<HSSFilter> HSSFilter::newFilterWithType(HSSFilterType filterType, AXRController * controller)
 {
-    HSSFilter::p ret;
+    QSharedPointer<HSSFilter> ret;
     switch (filterType)
     {
     case HSSFilterTypeFirst:
     {
-        ret = HSSFirstFilter::p(new HSSFirstFilter(controller));
+        ret = QSharedPointer<HSSFirstFilter>(new HSSFirstFilter(controller));
         break;
     }
 
     case HSSFilterTypeFirstChild:
     {
-        ret = HSSFirstChildFilter::p(new HSSFirstChildFilter(controller));
+        ret = QSharedPointer<HSSFirstChildFilter>(new HSSFirstChildFilter(controller));
         break;
     }
 
     case HSSFilterTypeLastChild:
     {
-        ret = HSSLastChildFilter::p(new HSSLastChildFilter(controller));
+        ret = QSharedPointer<HSSLastChildFilter>(new HSSLastChildFilter(controller));
         break;
     }
 
     case HSSFilterTypeLast:
     {
-        ret = HSSLastFilter::p(new HSSLastFilter(controller));
+        ret = QSharedPointer<HSSLastFilter>(new HSSLastFilter(controller));
         break;
     }
 
     case HSSFilterTypeEven:
     {
-        ret = HSSEvenFilter::p(new HSSEvenFilter(controller));
+        ret = QSharedPointer<HSSEvenFilter>(new HSSEvenFilter(controller));
         break;
     }
 
     case HSSFilterTypeEvenChild:
     {
-        ret = HSSEvenChildFilter::p(new HSSEvenChildFilter(controller));
+        ret = QSharedPointer<HSSEvenChildFilter>(new HSSEvenChildFilter(controller));
         break;
     }
 
     case HSSFilterTypeOdd:
     {
-        ret = HSSOddFilter::p(new HSSOddFilter(controller));
+        ret = QSharedPointer<HSSOddFilter>(new HSSOddFilter(controller));
         break;
     }
 
     case HSSFilterTypeOddChild:
     {
-        ret = HSSOddChildFilter::p(new HSSOddChildFilter(controller));
+        ret = QSharedPointer<HSSOddChildFilter>(new HSSOddChildFilter(controller));
         break;
     }
 
     case HSSFilterTypeEmpty:
     {
-        ret = HSSEmptyFilter::p(new HSSEmptyFilter(controller));
+        ret = QSharedPointer<HSSEmptyFilter>(new HSSEmptyFilter(controller));
         break;
     }
 
 
         //        case HSSFilterTypeEach:
         //        {
-        //            ret = HSSFilter::p(new HSSEachFilter(controller));
+        //            ret = QSharedPointer<HSSFilter>(new HSSEachFilter(controller));
         //            ret->filterType = filterType;
         //            break;
         //        }
@@ -245,7 +245,7 @@ void HSSFilter::setNegating(bool value)
     this->_negating = value;
 }
 
-HSSFilter::p HSSFilter::shared_from_this()
+QSharedPointer<HSSFilter> HSSFilter::shared_from_this()
 {
     return qSharedPointerCast<HSSFilter > (HSSParserNode::shared_from_this());
 }

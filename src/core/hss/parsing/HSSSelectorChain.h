@@ -46,7 +46,6 @@
 
 #include <deque>
 #include <QSharedPointer>
-#include <QWeakPointer>
 #include "HSSParserNode.h"
 
 namespace AXR
@@ -65,17 +64,15 @@ namespace AXR
     class AXR_API HSSSelectorChain : public HSSParserNode
     {
     public:
-        typedef QSharedPointer<HSSSelectorChain> p;
-
         /**
          *  Iterator for vectors of shared pointers to selector chains
          */
-        typedef std::vector<p>::iterator it;
+        typedef std::vector<QSharedPointer<HSSSelectorChain> >::iterator it;
 
         /**
          *  Iterator for vectors of shared pointers to selector chains, const version.
          */
-        typedef std::vector<p>::const_iterator const_it;
+        typedef std::vector<QSharedPointer<HSSSelectorChain> >::const_iterator const_it;
 
         /**
          *  A "parent pointer", used to hold weak references to the rule that owns the selector
@@ -99,7 +96,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSSelectorChain
          */
-        p clone() const;
+        QSharedPointer<HSSSelectorChain> clone() const;
 
         /**
          *  Destructor for this class.
@@ -114,19 +111,19 @@ namespace AXR
          *  @param i    The index of the node in the node list.
          *  @return A shared pointer to the parser node at the given index in the node list.
          */
-        const HSSParserNode::p & get(size_t i) const;
+        const QSharedPointer<HSSParserNode> & get(size_t i) const;
 
         /**
          *  Adds a parser node the end of the node list.
          *  @param newNode      A shared pointer to the new parser node to be added.
          */
-        void add(HSSParserNode::p newNode);
+        void add(QSharedPointer<HSSParserNode> newNode);
 
         /**
          *  Adds a parser node at the beginning of the node list.
          *  @param newNode      A shared pointer to the new parser node to be added.
          */
-        void prepend(HSSParserNode::p newNode);
+        void prepend(QSharedPointer<HSSParserNode> newNode);
 
         /**
          *  Removes the last parser node in the node list.
@@ -136,7 +133,7 @@ namespace AXR
         /**
          *  @return A shared pointer to the last node in the chain.
          */
-        HSSParserNode::p last();
+        QSharedPointer<HSSParserNode> last();
 
         /**
          *  @return How many nodes there are in the selector chain.
@@ -154,13 +151,13 @@ namespace AXR
         virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
     protected:
-        HSSSelectorChain::p shared_from_this();
+        QSharedPointer<HSSSelectorChain> shared_from_this();
 
 
-        std::deque<HSSParserNode::p> nodeList;
+        std::deque<QSharedPointer<HSSParserNode> > nodeList;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
 
         pp rule;
     };

@@ -46,7 +46,6 @@
 
 #include <QSharedPointer>
 #include "HSSGradient.h"
-#include "HSSRgb.h"
 
 namespace AXR
 {
@@ -59,8 +58,6 @@ namespace AXR
     class AXR_API HSSLinearGradient : public HSSGradient
     {
     public:
-        typedef QSharedPointer<HSSLinearGradient> p;
-
         /**
          *  Creates a new instance of a
          */
@@ -74,7 +71,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSLinearGradient
          */
-        p clone() const;
+        QSharedPointer<HSSLinearGradient> clone() const;
 
         /**
          *  Destructs the gradient after removing itself from its observers.
@@ -85,7 +82,7 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Getter for the actual value object of startX.
@@ -97,13 +94,13 @@ namespace AXR
          *  Getter for the definition object of startX.
          *  @return A shared pointer to the parser node containing the definition object of startX.
          */
-        HSSParserNode::p getDStartX();
+        QSharedPointer<HSSParserNode> getDStartX();
 
         /**
          *  Setter for the definition object of startX. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of startX.
          */
-        void setDStartX(HSSParserNode::p value);
+        void setDStartX(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect startX.
@@ -122,13 +119,13 @@ namespace AXR
          *  Getter for the definition object of startY.
          *  @return A shared pointer to the parser node containing the definition object of startY.
          */
-        HSSParserNode::p getDStartY();
+        QSharedPointer<HSSParserNode> getDStartY();
 
         /**
          *  Setter for the definition object of startY. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of startY.
          */
-        void setDStartY(HSSParserNode::p value);
+        void setDStartY(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect startY.
@@ -147,13 +144,13 @@ namespace AXR
          *  Getter for the definition object of endX.
          *  @return A shared pointer to the parser node containing the definition object of endX.
          */
-        HSSParserNode::p getDEndX();
+        QSharedPointer<HSSParserNode> getDEndX();
 
         /**
          *  Setter for the definition object of endX. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of endX.
          */
-        void setDEndX(HSSParserNode::p value);
+        void setDEndX(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect endX.
@@ -172,13 +169,13 @@ namespace AXR
          *  Getter for the definition object of endY.
          *  @return A shared pointer to the parser node containing the definition object of endY.
          */
-        HSSParserNode::p getDEndY();
+        QSharedPointer<HSSParserNode> getDEndY();
 
         /**
          *  Setter for the definition object of endY. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of endY.
          */
-        void setDEndY(HSSParserNode::p value);
+        void setDEndY(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect endY.
@@ -192,31 +189,31 @@ namespace AXR
     protected:
         //startX
         HSSUnit startX;
-        HSSParserNode::p dStartX;
+        QSharedPointer<HSSParserNode> dStartX;
         HSSObservable * observedStartX;
         HSSObservableProperty observedStartXProperty;
 
         //startY
         HSSUnit startY;
-        HSSParserNode::p dStartY;
+        QSharedPointer<HSSParserNode> dStartY;
         HSSObservable * observedStartY;
         HSSObservableProperty observedStartYProperty;
 
         //endX
         HSSUnit endX;
-        HSSParserNode::p dEndX;
+        QSharedPointer<HSSParserNode> dEndX;
         HSSObservable * observedEndX;
         HSSObservableProperty observedEndXProperty;
 
         //endY
         HSSUnit endY;
-        HSSParserNode::p dEndY;
+        QSharedPointer<HSSParserNode> dEndY;
         HSSObservable * observedEndY;
         HSSObservableProperty observedEndYProperty;
 
         HSSUnit _evaluatePropertyValue(
                                    void(HSSLinearGradient::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedProperty,
                                    HSSObservable * observedObject,
@@ -225,7 +222,7 @@ namespace AXR
                                    HSSObservableProperty &observedStoreProperty
                                    );
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
 
     };
 }

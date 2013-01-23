@@ -46,10 +46,14 @@
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
 #include "HSSAction.h"
+#include "HSSCallback.h"
+#include "HSSDisplayObject.h"
 #include "HSSEvent.h"
 #include "HSSFlagAction.h"
+#include "HSSFlagFunction.h"
 #include "HSSFunction.h"
 #include "HSSFunctionAction.h"
+#include "HSSMultipleValueDefinition.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSSimpleSelection.h"
@@ -106,15 +110,15 @@ HSSEvent::HSSEvent(const HSSEvent & orig)
     this->registerProperty(HSSObservablePropertyAction, QVariant::fromValue(&this->action));
 }
 
-HSSEvent::p HSSEvent::clone() const
+QSharedPointer<HSSEvent> HSSEvent::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: cloning event object");
     return qSharedPointerCast<HSSEvent>(this->cloneImpl());
 }
 
-HSSClonable::p HSSEvent::cloneImpl() const
+QSharedPointer<HSSClonable> HSSEvent::cloneImpl() const
 {
-    return HSSEvent::p(new HSSEvent(*this));
+    return QSharedPointer<HSSEvent>(new HSSEvent(*this));
 }
 
 HSSEvent::~HSSEvent()
@@ -144,7 +148,7 @@ AXRString HSSEvent::defaultObjectType(AXRString property)
     }
 }
 
-void HSSEvent::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSEvent::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -168,24 +172,24 @@ HSSEventType HSSEvent::getEventType()
     return this->eventType;
 }
 
-std::vector<HSSAction::p> HSSEvent::getAction()
+std::vector<QSharedPointer<HSSAction> > HSSEvent::getAction()
 {
     return this->action;
 }
 
-const HSSParserNode::p HSSEvent::getDAction() const
+const QSharedPointer<HSSParserNode> HSSEvent::getDAction() const
 {
     return this->dAction;
 }
 
-void HSSEvent::setDAction(HSSParserNode::p value)
+void HSSEvent::setDAction(QSharedPointer<HSSParserNode> value)
 {
     this->action.clear();
     this->dAction = value;
     this->addDAction(value);
 }
 
-void HSSEvent::addDAction(HSSParserNode::p value)
+void HSSEvent::addDAction(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -193,8 +197,8 @@ void HSSEvent::addDAction(HSSParserNode::p value)
     {
     case HSSParserNodeTypeMultipleValueDefinition:
     {
-        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition>(value);
-        std::vector<HSSParserNode::p> values = multiDef->getValues();
+        QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition>(value);
+        std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
         for (HSSParserNode::it iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDAction(*iterator);
@@ -208,13 +212,13 @@ void HSSEvent::addDAction(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant>(value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue())->clone();
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant>(value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue())->clone();
             objdef->setScope(this->scope);
             objdef->setThisObj(this->getThisObj());
             objdef->apply();
 
-            HSSObject::p obj = objdef->getObject();
+            QSharedPointer<HSSObject> obj = objdef->getObject();
             switch (obj->getObjectType())
             {
             case HSSObjectTypeAction:
@@ -237,7 +241,7 @@ void HSSEvent::addDAction(HSSParserNode::p value)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction>(value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction>(value)->clone();
         switch (fnct->getFunctionType())
         {
         case HSSFunctionTypeRef:
@@ -245,11 +249,11 @@ void HSSEvent::addDAction(HSSParserNode::p value)
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<HSSParserNode::p>())
+            if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
             {
                 try
                 {
-                    HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                    QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
                     this->addDAction(theVal);
                     valid = true;
                 }
@@ -266,8 +270,8 @@ void HSSEvent::addDAction(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            HSSFlagFunction::p flagFnct = qSharedPointerCast<HSSFlagFunction>(fnct);
-            HSSFlagAction::p flagAction = HSSFlagAction::p(new HSSFlagAction(this->getController()));
+            QSharedPointer<HSSFlagFunction> flagFnct = qSharedPointerCast<HSSFlagFunction>(fnct);
+            QSharedPointer<HSSFlagAction> flagAction = QSharedPointer<HSSFlagAction>(new HSSFlagAction(this->getController()));
             flagAction->setFlagFunction(flagFnct);
             flagAction->setScope(this->scope);
             flagAction->setThisObj(this->getThisObj());
@@ -280,8 +284,8 @@ void HSSEvent::addDAction(HSSParserNode::p value)
         {
             fnct->setScope(this->scope);
             fnct->setThisObj(this->getThisObj());
-            HSSFunction::p theFnct = qSharedPointerCast<HSSFunction>(fnct);
-            HSSFunctionAction::p fnctAction = HSSFunctionAction::p(new HSSFunctionAction(this->getController()));
+            QSharedPointer<HSSFunction> theFnct = qSharedPointerCast<HSSFunction>(fnct);
+            QSharedPointer<HSSFunctionAction> fnctAction = QSharedPointer<HSSFunctionAction>(new HSSFunctionAction(this->getController()));
             fnctAction->setFunction(theFnct);
             fnctAction->setScope(this->scope);
             fnctAction->setThisObj(this->getThisObj());
@@ -305,13 +309,13 @@ void HSSEvent::addDAction(HSSParserNode::p value)
     {
     case HSSStatementTypeObjectDefinition:
     {
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition>(value)->clone();
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition>(value)->clone();
         if (objdef->getObject()->isA(HSSObjectTypeAction))
         {
             objdef->setScope(this->scope);
             objdef->setThisObj(this->getThisObj());
             objdef->apply();
-            HSSObject::p theObj = objdef->getObject();
+            QSharedPointer<HSSObject> theObj = objdef->getObject();
             theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyAction, this, new HSSValueChangedCallback<HSSEvent > (this, &HSSEvent::actionChanged));
             this->action.push_back(qSharedPointerCast<HSSAction>(theObj));
             valid = true;
@@ -336,7 +340,7 @@ void HSSEvent::actionChanged(HSSObservableProperty source, void*data)
 
 void HSSEvent::fire()
 {
-    std::vector<HSSAction::p> actions = this->getAction();
+    std::vector<QSharedPointer<HSSAction> > actions = this->getAction();
 
     for (size_t i = 0; i < actions.size(); ++i)
     {

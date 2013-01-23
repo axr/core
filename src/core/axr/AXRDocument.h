@@ -44,15 +44,21 @@
 #ifndef AXRDOCUMENT_H
 #define AXRDOCUMENT_H
 
-#include "AXRController.h"
-#include "AXRRender.h"
-#include "HSSCallback.h"
-#include "HSSUnits.h"
-#include "XMLParser.h"
 #include <QDir>
+#include <QMap>
+#include <QSharedPointer>
+#include "AXRGlobal.h"
 
 namespace AXR
 {
+    class AXRBuffer;
+    class AXRController;
+    class AXRRender;
+    class HSSCallback;
+    class HSSParser;
+    class HSSRect;
+    class XMLParser;
+
     /**
      * @brief Represents a single AXR document that can be rendered. A document
      * may be composed of one or more files.
@@ -103,12 +109,12 @@ namespace AXR
          *  @return returns the current AXRBuffer that is opened. This can be either
          *  an XML or an HSS file.
          */
-        AXRBuffer::p getFile();
+        QSharedPointer<AXRBuffer> getFile();
         /**
          *  Sets the current AXRBuffer to be used as the base document.
          *  @param file     The AXRBuffer to store for later use.
          */
-        void setFile(AXRBuffer::p file);
+        void setFile(QSharedPointer<AXRBuffer> file);
         /**
          *  @return the path to the directory in which 'file' is stored
          */
@@ -118,44 +124,44 @@ namespace AXR
          *  object tree.
          *  @return Shared pointer to the AXRController
          */
-        AXRController::p getController();
+        QSharedPointer<AXRController> getController();
         /**
          *  Setter for the AXRController that is managing the object tree.
          *  @param controller   A shared pointer to the controller.
          */
-        void setController(AXRController::p controller);
+        void setController(QSharedPointer<AXRController> controller);
         /**
          *  Getter for shared pointer to the AXRRender object, which is an abstract interface
          *  to the computer's rendering system.
          *  @return A shared pointer to the AXRRender
          */
-        AXRRender::p getRender();
+        QSharedPointer<AXRRender> getRender();
         /**
          *  Setter for the AXRRender that will be used.
          *  @param render   A shared pointer to the render.
          */
-        void setRender(AXRRender::p render);
+        void setRender(QSharedPointer<AXRRender> render);
         /**
          *  Getter for the shared pointer to the XML parser.
          *  @return A shared pointer to the XML parser.
          */
-        XMLParser::p getParserXML();
+        QSharedPointer<XMLParser> getParserXML();
         /**
          *  Setter for the XMLParser that will be used to parse XML files.
          *  @param parser   A shared pointer to the XML parser.
          */
-        void setParserXML(XMLParser::p parser);
+        void setParserXML(QSharedPointer<XMLParser> parser);
 
         /**
          *  Getter for the shared pointer to the HSS parser.
          *  @return A shared pointer to the HSS parser.
          */
-        HSSParser::p getParserHSS();
+        QSharedPointer<HSSParser> getParserHSS();
         /**
          *  Setter for the XMLParser that will be used to parse HSS files.
          *  @param parser   A shared pointer to the HSS parser.
          */
-        void setParserHSS(HSSParser::p parser);
+        void setParserHSS(QSharedPointer<HSSParser> parser);
 
         /**
          *  When a function name in HSS is checked for existence, this tells wether
@@ -181,7 +187,7 @@ namespace AXR
          *  Subclasses should override this method with the OS specific implementation.
          *  @param url  A string containing the url to the file
          */
-        virtual AXRBuffer::p getFile(const QUrl &resourceUrl);
+        virtual QSharedPointer<AXRBuffer> getFile(const QUrl &resourceUrl);
         virtual bool needsDisplay() const;
         /**
          *  This is to be called when something happens that needs to trigger a redraw.
@@ -195,14 +201,14 @@ namespace AXR
          *  It is used when a HSS file is loaded directly.
          *  @return A shared pointer to the AXRBuffer representation of the basic XML document.
          */
-        AXRBuffer::p createDummyXML(QUrl hssUrl);
+        QSharedPointer<AXRBuffer> createDummyXML(QUrl hssUrl);
         /**
          *  Loads the XML file at the path you provide.
          *  @param  xmlfilepath A string containing the path to the file on the local system.
          *  @return Wether it has been loaded successfully or not.
          */
         bool loadXMLFile(QUrl url);
-        bool loadXMLFile(AXRBuffer::p buffer);
+        bool loadXMLFile(QSharedPointer<AXRBuffer> buffer);
         /**
          *  Loads the file you provide, and then handles it according to its file extension.
          *  @param  filepath    A string containing the path to the file on the local system, can be
@@ -247,13 +253,13 @@ namespace AXR
         bool _needsDisplay;
 
     protected:
-        AXRRender::p render;
-        AXRController::p controller;
-        AXRBuffer::p file;
+        QSharedPointer<AXRRender> render;
+        QSharedPointer<AXRController> controller;
+        QSharedPointer<AXRBuffer> file;
         QDir directory;
 
-        XMLParser::p parserXML;
-        HSSParser::p parserHSS;
+        QSharedPointer<XMLParser> parserXML;
+        QSharedPointer<HSSParser> parserHSS;
 
         QMap<AXRString, HSSCallback*> _customFunctions;
     };

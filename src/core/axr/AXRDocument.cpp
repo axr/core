@@ -44,9 +44,17 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFileInfo>
+#include "AXRBuffer.h"
+#include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRRender.h"
 #include "AXRWarning.h"
+#include "HSSCallback.h"
+#include "HSSContainer.h"
+#include "HSSParser.h"
+#include "HSSUnits.h"
+#include "XMLParser.h"
 
 using namespace AXR;
 
@@ -62,11 +70,11 @@ AXRDocument::AXRDocument()
 
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRDocument: initializing core for thread");
 
-    AXRController::p ctrlr = AXRController::p(new AXRController(this));
+    QSharedPointer<AXRController> ctrlr = QSharedPointer<AXRController>(new AXRController(this));
     this->setController(ctrlr);
-    this->setRender(AXRRender::p(new AXRRender(ctrlr.data())));
-    this->setParserXML(XMLParser::p(new XMLParser(ctrlr.data())));
-    this->setParserHSS(HSSParser::p(new HSSParser(ctrlr.data())));
+    this->setRender(QSharedPointer<AXRRender>(new AXRRender(ctrlr.data())));
+    this->setParserXML(QSharedPointer<XMLParser>(new XMLParser(ctrlr.data())));
+    this->setParserHSS(QSharedPointer<HSSParser>(new HSSParser(ctrlr.data())));
     this->_hasLoadedFile = false;
 }
 
@@ -118,12 +126,12 @@ void AXRDocument::run()
         //needs reset on next load
         this->_hasLoadedFile = true;
 
-        HSSContainer::p root = qSharedPointerCast<HSSContainer>(this->controller->getRoot());
+        QSharedPointer<HSSContainer> root = qSharedPointerCast<HSSContainer>(this->controller->getRoot());
 
         std::vector<QUrl> loadSheets = this->controller->loadSheetsGet();
         for (size_t i = 0; i < loadSheets.size(); ++i)
         {
-            AXRBuffer::p hssfile;
+            QSharedPointer<AXRBuffer> hssfile;
             try
             {
                 hssfile = this->getFile(loadSheets[i]);
@@ -164,7 +172,7 @@ void AXRDocument::reset()
     this->parserHSS->reset();
     this->render->reset();
     this->parserXML.clear();
-    this->parserXML = XMLParser::p(new XMLParser(this->controller.data()));
+    this->parserXML = QSharedPointer<XMLParser>(new XMLParser(this->controller.data()));
     this->_hasLoadedFile = false;
     this->file.clear();
 }
@@ -174,32 +182,32 @@ bool AXRDocument::hasLoadedFile()
     return _hasLoadedFile;
 }
 
-AXRController::p AXRDocument::getController()
+QSharedPointer<AXRController> AXRDocument::getController()
 {
     return this->controller;
 }
 
-void AXRDocument::setController(AXRController::p controller)
+void AXRDocument::setController(QSharedPointer<AXRController> controller)
 {
     this->controller = controller;
 }
 
-AXRRender::p AXRDocument::getRender()
+QSharedPointer<AXRRender> AXRDocument::getRender()
 {
     return this->render;
 }
 
-void AXRDocument::setRender(AXRRender::p render)
+void AXRDocument::setRender(QSharedPointer<AXRRender> render)
 {
     this->render = render;
 }
 
-AXRBuffer::p AXRDocument::getFile()
+QSharedPointer<AXRBuffer> AXRDocument::getFile()
 {
     return this->file;
 }
 
-void AXRDocument::setFile(AXRBuffer::p file)
+void AXRDocument::setFile(QSharedPointer<AXRBuffer> file)
 {
     this->file = file;
     QUrl filePath = file->sourceUrl();
@@ -211,22 +219,22 @@ const QDir & AXRDocument::getDirectory() const
     return this->directory;
 }
 
-XMLParser::p AXRDocument::getParserXML()
+QSharedPointer<XMLParser> AXRDocument::getParserXML()
 {
     return this->parserXML;
 }
 
-void AXRDocument::setParserXML(XMLParser::p parser)
+void AXRDocument::setParserXML(QSharedPointer<XMLParser> parser)
 {
     this->parserXML = parser;
 }
 
-HSSParser::p AXRDocument::getParserHSS()
+QSharedPointer<HSSParser> AXRDocument::getParserHSS()
 {
     return this->parserHSS;
 }
 
-void AXRDocument::setParserHSS(HSSParser::p parser)
+void AXRDocument::setParserHSS(QSharedPointer<HSSParser> parser)
 {
     this->parserHSS = parser;
 }
@@ -292,12 +300,12 @@ QString sanitizeRelativePath(const QString &path)
     return pathParts.join(QDir::separator());
 }
 
-AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
+QSharedPointer<AXRBuffer> AXRDocument::getFile(const QUrl &resourceUrl)
 {
     if (!resourceUrl.isValid())
     {
         AXRError("AXRDocument", "Cannot load invalid URL - " + resourceUrl.toString()).raise();
-        return AXRBuffer::p(new AXRBuffer());
+        return QSharedPointer<AXRBuffer>(new AXRBuffer());
     }
 
     // Map the URL into a local file path we can load
@@ -315,7 +323,7 @@ AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
     {
         // TODO: Download resource and cache at local path, then localResource = QFileInfo(<path to that>);
         AXRError("AXRDocument", "http/https not implemented yet").raise();
-        return AXRBuffer::p(new AXRBuffer());
+        return QSharedPointer<AXRBuffer>(new AXRBuffer());
     }
     else if (resourceUrl.scheme() == "")
     {
@@ -329,13 +337,13 @@ AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
         else if (fileScheme == "http" || fileScheme == "https")
         {
             AXRError("AXRDocument", "http/https not implemented yet").raise();
-            return AXRBuffer::p(new AXRBuffer());
+            return QSharedPointer<AXRBuffer>(new AXRBuffer());
         }
     }
     else
     {
         AXRError("AXRDocument", "Unsupported URL scheme " + resourceUrl.scheme()).raise();
-        return AXRBuffer::p(new AXRBuffer());
+        return QSharedPointer<AXRBuffer>(new AXRBuffer());
     }
 
     // Make sure the file at that path actually exists
@@ -344,7 +352,7 @@ AXRBuffer::p AXRDocument::getFile(const QUrl &resourceUrl)
         throw AXRError("AXRDocument", "the file " + localResource.filePath() + " doesn't exist");
     }
 
-    AXRBuffer::p buffer = AXRBuffer::p(new AXRBuffer(localResource));
+    QSharedPointer<AXRBuffer> buffer = QSharedPointer<AXRBuffer>(new AXRBuffer(localResource));
     if (!buffer->isValid())
     {
         throw AXRError("AXRDocument", "the file " + localResource.filePath() + " couldn't be read");
@@ -366,19 +374,19 @@ void AXRDocument::setNeedsDisplay(bool newValue)
     this->_needsDisplay = newValue;
 }
 
-AXRBuffer::p AXRDocument::createDummyXML(QUrl hssUrl)
+QSharedPointer<AXRBuffer> AXRDocument::createDummyXML(QUrl hssUrl)
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: creating dummy XML file for HSS file " + hssUrl.toString());
 
     if (hssUrl.isValid())
     {
         AXRString dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" href=\"" + hssUrl.toString() + "\" version=\"1.0\"?><root></root>";
-        return AXRBuffer::p(new AXRBuffer(dummyXML.toUtf8()));
+        return QSharedPointer<AXRBuffer>(new AXRBuffer(dummyXML.toUtf8()));
     }
     else
     {
         AXRError("AXRDocument", "Could not create dummy XML for invalid HSS file URL").raise();
-        return AXRBuffer::p(new AXRBuffer());
+        return QSharedPointer<AXRBuffer>(new AXRBuffer());
     }
 }
 
@@ -429,7 +437,7 @@ bool AXRDocument::loadXMLFile(QUrl url)
 
     try
     {
-        AXRBuffer::p theFile = this->getFile(url);
+        QSharedPointer<AXRBuffer> theFile = this->getFile(url);
         if (this->getFile())
         {
             this->reset();
@@ -456,7 +464,7 @@ bool AXRDocument::loadXMLFile(QUrl url)
     return true;
 }
 
-bool AXRDocument::loadXMLFile(AXRBuffer::p buffer)
+bool AXRDocument::loadXMLFile(QSharedPointer<AXRBuffer> buffer)
 {
     axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRDocument: opening XML document from buffer"));
 

@@ -44,12 +44,13 @@
 #ifndef HSSFONT_H
 #define HSSFONT_H
 
-#include "HSSKeywordConstant.h"
 #include "HSSObject.h"
-#include "HSSRgb.h"
 
 namespace AXR
 {
+    class HSSKeywordConstant;
+    class HSSRgb;
+
     /**
      *  @brief This class represents the HSS object type \@font.
      */
@@ -57,8 +58,6 @@ namespace AXR
     {
     public:
         friend class HSSParser;
-
-        typedef QSharedPointer<HSSFont> p;
 
         static const HSSUnit DEFAULT_SIZE;
 
@@ -77,7 +76,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSFont
          */
-        p clone() const;
+        QSharedPointer<HSSFont> clone() const;
 
         /**
          *  Destructor for this class.
@@ -87,7 +86,7 @@ namespace AXR
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
         bool isKeyword(AXRString value, AXRString property);
 
         /**
@@ -100,7 +99,7 @@ namespace AXR
          *  Setter for the definition object of size. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of size.
          */
-        void setDSize(HSSParserNode::p);
+        void setDSize(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect size.
@@ -119,7 +118,7 @@ namespace AXR
          *  Setter for the definition object of face. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of face.
          */
-        void setDFace(HSSParserNode::p);
+        void setDFace(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect face.
@@ -134,19 +133,19 @@ namespace AXR
          *
          *  @todo what about using gradients on text?
          */
-        HSSRgb::p getColor();
+        QSharedPointer<HSSRgb> getColor();
 
         /**
          *  Getter for the definition object of color.
          *  @return A shared pointer to the parser node containing the definition object of color.
          */
-        HSSParserNode::p getDColor();
+        QSharedPointer<HSSParserNode> getDColor();
 
         /**
          *  Setter for the definition object of color. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of color.
          */
-        void setDColor(HSSParserNode::p);
+        void setDColor(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect color.
@@ -159,13 +158,13 @@ namespace AXR
          *  Getter for the actual value of weight.
          *  @return A shared pointer to a keyword constant representing the used weight.
          */
-        HSSKeywordConstant::p getWeight();
+        QSharedPointer<HSSKeywordConstant> getWeight();
 
         /**
          *  Setter for the definition object of weight. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of weight.
          */
-        void setDWeight(HSSParserNode::p);
+        void setDWeight(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect weight.
@@ -177,39 +176,39 @@ namespace AXR
     private:
         //size
         HSSUnit size;
-        HSSParserNode::p dSize;
+        QSharedPointer<HSSParserNode> dSize;
         HSSObservable * observedSize;
         HSSObservableProperty observedSizeProperty;
         //face
         AXRString face;
-        HSSParserNode::p dFace;
+        QSharedPointer<HSSParserNode> dFace;
         HSSObservable * observedFace;
         HSSObservableProperty observedFaceProperty;
         //startColor
-        HSSRgb::p color;
-        HSSParserNode::p dColor;
+        QSharedPointer<HSSRgb> color;
+        QSharedPointer<HSSParserNode> dColor;
         HSSObservable * observedColor;
         HSSObservableProperty observedColorProperty;
         //weight
-        HSSKeywordConstant::p weight;
-        HSSParserNode::p dWeight;
+        QSharedPointer<HSSKeywordConstant> weight;
+        QSharedPointer<HSSParserNode> dWeight;
         HSSObservable * observedWeight;
         HSSObservableProperty observedWeightProperty;
 
 
         HSSUnit _evaluatePropertyValue(
                                    void(HSSFont::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty
                                    );
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 
-Q_DECLARE_METATYPE(std::vector<AXR::HSSFont::p>)
-Q_DECLARE_METATYPE(std::vector<AXR::HSSFont::p>*)
+Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSFont> >)
+Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSFont> >*)
 
 #endif

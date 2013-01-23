@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include <QPainterPath>
 #include "AXRDebugging.h"
 #include "HSSBorder.h"
 #include "HSSCircle.h"
@@ -59,15 +60,15 @@ HSSCircle::HSSCircle(const HSSCircle & orig)
 {
 }
 
-HSSCircle::p HSSCircle::clone() const
+QSharedPointer<HSSCircle> HSSCircle::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSCircle: cloning circle object");
     return qSharedPointerCast<HSSCircle> (this->cloneImpl());
 }
 
-HSSClonable::p HSSCircle::cloneImpl() const
+QSharedPointer<HSSClonable> HSSCircle::cloneImpl() const
 {
-    return HSSCircle::p(new HSSCircle(*this));
+    return QSharedPointer<HSSCircle>(new HSSCircle(*this));
 }
 
 HSSCircle::~HSSCircle()
@@ -95,7 +96,7 @@ bool HSSCircle::isKeyword(AXRString value, AXRString property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSCircle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments)
+void HSSCircle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments)
 {
     path.addEllipse(x, y, width, height);
 }
@@ -122,7 +123,7 @@ void HSSCircle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBor
     // Draw all borders
     for (HSSBorder::it it = borders.begin(); it != borders.end(); ++it)
     {
-        HSSBorder::p theBorder = *it;
+        QSharedPointer<HSSBorder> theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
         HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;

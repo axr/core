@@ -44,7 +44,6 @@
 #ifndef HSSFLAGFUNCTION_H
 #define HSSFLAGFUNCTION_H
 
-#include "HSSAction.h"
 #include "HSSFunction.h"
 
 namespace AXR
@@ -56,8 +55,6 @@ namespace AXR
     class AXR_API HSSFlagFunction : public HSSFunction
     {
     public:
-        typedef QSharedPointer<HSSFlagFunction> p;
-
         /**
          *  When logging, you often need a string representation of the flag type.
          *  @param name   The action type to represent as a string.
@@ -82,7 +79,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSFlagFunction
          */
-        HSSFunction::p clone() const;
+        QSharedPointer<HSSFunction> clone() const;
 
         /**
          *  Destructor for this class.
@@ -105,26 +102,26 @@ namespace AXR
          *  Getter for the selector chain parameter.
          *  @return A shared pointer to the selector chain that should be used in the function.
          */
-        const std::vector<HSSSelectorChain::p> & getSelectorChains() const;
+        const std::vector<QSharedPointer<HSSSelectorChain> > & getSelectorChains() const;
 
         /**
          *  Setter for the selector chain parameter.
          *  @param newValues A shared pointer to the selector chain which the function should use.
          */
-        void setSelectorChains(std::vector<HSSSelectorChain::p> newValues);
+        void setSelectorChains(std::vector<QSharedPointer<HSSSelectorChain> > newValues);
 
         /**
          *  Add a selector chain to the selector chains vector.
          *  @param newSelectorChain A shared pointer to the selector chain to be added.
          */
-        void selectorChainsAdd(HSSSelectorChain::p & newSelectorChain);
+        void selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSelectorChain);
 
         /**
          *  Get a selector chain by index.
          *  @param index    An unsigned integer with the index of the selector chain.
          *  @return A shared pointer to the element at that index.
          */
-        HSSSelectorChain::p &selectorChainsGet(unsigned index);
+        QSharedPointer<HSSSelectorChain> &selectorChainsGet(unsigned index);
 
         /**
          *  Removes a selector chain by index.
@@ -140,7 +137,7 @@ namespace AXR
         /**
          *  @return the last element of the selector chains vector.
          */
-        HSSSelectorChain::p &selectorChainsLast();
+        QSharedPointer<HSSSelectorChain> &selectorChainsLast();
 
         /**
          *  @return the size of the selector chains vector
@@ -155,7 +152,7 @@ namespace AXR
         /**
          *  @todo is this one even used?
          */
-        virtual QVariant _evaluate(std::deque<HSSParserNode::p> arguments);
+        virtual QVariant _evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments);
 
         /**
          *  Method to be passed as callback when observing changes.
@@ -171,11 +168,11 @@ namespace AXR
 
     protected:
         AXRString _name;
-        std::vector<HSSSelectorChain::p> selectorChains;
+        std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
         HSSFlagFunctionType _flagFunctionType;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

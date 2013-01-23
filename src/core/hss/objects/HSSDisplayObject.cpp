@@ -44,26 +44,44 @@
 #include <cmath>
 #include <QVariant>
 #include <QImage>
+#include <QPainter>
 #include <QPainterPath>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRRender.h"
 #include "AXRWarning.h"
+#include "HSSBorder.h"
+#include "HSSCallback.h"
 #include "HSSContainer.h"
 #include "HSSDisplayObject.h"
+#include "HSSEvent.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
 #include "HSSFlag.h"
+#include "HSSFont.h"
+#include "HSSKeywordConstant.h"
 #include "HSSLinearGradient.h"
+#include "HSSMargin.h"
+#include "HSSMultipleValue.h"
+#include "HSSMultipleValueDefinition.h"
+#include "HSSNumberConstant.h"
+#include "HSSObject.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSParserNode.h"
 #include "HSSPercentageConstant.h"
+#include "HSSPropertyDefinition.h"
 #include "HSSRgb.h"
+#include "HSSRule.h"
 #include "HSSSimpleSelection.h"
 #include "HSSStringConstant.h"
+#include "HSSUnits.h"
+#include "HSSValue.h"
 
 using namespace AXR;
+
+Q_DECLARE_METATYPE(HSSUnit*)
 
 HSSDisplayObject::HSSDisplayObject(HSSObjectType type, AXRController * controller)
 : HSSObject(type, controller)
@@ -371,13 +389,13 @@ void HSSDisplayObject::removeFromParent()
     this->getParent()->remove(this->getIndex());
 }
 
-HSSSimpleSelection::p HSSDisplayObject::getSiblings()
+QSharedPointer<HSSSimpleSelection> HSSDisplayObject::getSiblings()
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
-    HSSSimpleSelection::p children = this->getParent()->getChildren();
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> children = this->getParent()->getChildren();
     for (HSSSimpleSelection::const_iterator it = children->begin(); it != children->end(); ++it)
     {
-        const HSSDisplayObject::p theDO = *it;
+        const QSharedPointer<HSSDisplayObject> theDO = *it;
         if(theDO.data() != this)
         {
             ret->add(theDO);
@@ -386,19 +404,19 @@ HSSSimpleSelection::p HSSDisplayObject::getSiblings()
     return ret;
 }
 
-HSSSimpleSelection::p HSSDisplayObject::getNextSiblings()
+QSharedPointer<HSSSimpleSelection> HSSDisplayObject::getNextSiblings()
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
-    HSSSimpleSelection::p children = this->getParent()->getChildren();
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> children = this->getParent()->getChildren();
     HSSSimpleSelection::iterator thisPos = std::find(children->begin(), children->end(), this->shared_from_this());
     ret->insert(ret->end(), thisPos+1, children->end());
     return ret;
 }
 
-HSSSimpleSelection::p HSSDisplayObject::getPreviousSiblings()
+QSharedPointer<HSSSimpleSelection> HSSDisplayObject::getPreviousSiblings()
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
-    HSSSimpleSelection::p children = this->getParent()->getChildren();
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> children = this->getParent()->getChildren();
     HSSSimpleSelection::iterator thisPos = std::find(children->begin(), children->end(), this->shared_from_this());
     ret->insert(ret->end(), children->begin(), thisPos);
     return ret;
@@ -452,7 +470,7 @@ void HSSDisplayObject::setElementName(AXRString newName)
 
 //rules
 
-void HSSDisplayObject::rulesAdd(HSSRule::p newRule, HSSRuleState defaultState)
+void HSSDisplayObject::rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState defaultState)
 {
     if (!this->hasRule(newRule))
     {
@@ -461,18 +479,17 @@ void HSSDisplayObject::rulesAdd(HSSRule::p newRule, HSSRuleState defaultState)
 
         newRule->appliedToAdd(this->shared_from_this());
 
-        HSSRuleStatus::p newRS = HSSRuleStatus::p(new HSSRuleStatus());
+        QSharedPointer<HSSRuleStatus> newRS = QSharedPointer<HSSRuleStatus>(new HSSRuleStatus());
         newRS->state = defaultState;
         newRS->rule = newRule;
 
         this->rules.push_back(newRS);
 
         //iterate over the property defs and try to find an isA property
-        const std::vector<HSSPropertyDefinition::p> & props = newRule->getProperties();
-        HSSPropertyDefinition::const_it it;
-        for (it = props.begin(); it != props.end(); ++it)
+        const std::vector<QSharedPointer<HSSPropertyDefinition> > & props = newRule->getProperties();
+        for (HSSPropertyDefinition::const_it it = props.begin(); it != props.end(); ++it)
         {
-            HSSPropertyDefinition::p propdef = *it;
+            QSharedPointer<HSSPropertyDefinition> propdef = *it;
             if (propdef->getName() == "isA")
             {
                 this->rulesAddIsAChildren(propdef, defaultState);
@@ -481,9 +498,9 @@ void HSSDisplayObject::rulesAdd(HSSRule::p newRule, HSSRuleState defaultState)
     }
 }
 
-void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSSRuleState defaultState)
+void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition> propdef, HSSRuleState defaultState)
 {
-    HSSParserNode::p value = propdef->getValue();
+    QSharedPointer<HSSParserNode> value = propdef->getValue();
 
     switch (value->getType())
     {
@@ -491,20 +508,20 @@ void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSS
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
 
             if (this->isA(HSSObjectTypeContainer))
             {
-                HSSContainer::p thisCont = qSharedPointerCast<HSSContainer > (this->shared_from_this());
+                QSharedPointer<HSSContainer> thisCont = qSharedPointerCast<HSSContainer > (this->shared_from_this());
                 this->getController()->currentContext.push(thisCont);
 
                 //iterate over the property defs and try to find an isA property
-                const std::deque<HSSPropertyDefinition::p> & props = objdef->getProperties();
-                std::deque<HSSPropertyDefinition::p>::const_iterator pIt;
+                const std::deque<QSharedPointer<HSSPropertyDefinition> > & props = objdef->getProperties();
+                std::deque<QSharedPointer<HSSPropertyDefinition> >::const_iterator pIt;
                 for (pIt = props.begin(); pIt != props.end(); ++pIt)
                 {
-                    HSSPropertyDefinition::p propdef = *pIt;
+                    QSharedPointer<HSSPropertyDefinition> propdef = *pIt;
                     if (propdef->getName() == "isA")
                     {
                         this->rulesAddIsAChildren(propdef, defaultState);
@@ -512,12 +529,12 @@ void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSS
                 }
 
                 HSSRule::const_it it;
-                const std::deque<HSSRule::p> rules = objdef->getRules();
+                const std::deque<QSharedPointer<HSSRule> > rules = objdef->getRules();
                 AXRController * controller = this->getController();
                 for (it = rules.begin(); it != rules.end(); ++it)
                 {
-                    HSSRule::p clonedRule = (*it)->clone();
-                    HSSSelection::p children = thisCont->getChildren();
+                    QSharedPointer<HSSRule> clonedRule = (*it)->clone();
+                    QSharedPointer<HSSSelection> children = thisCont->getChildren();
                     controller->recursiveMatchRulesToDisplayObjects(clonedRule, children, thisCont, true);
                     controller->activateRules(clonedRule, children);
                 }
@@ -539,7 +556,7 @@ void HSSDisplayObject::rulesAddIsAChildren(HSSPropertyDefinition::p propdef, HSS
     }
 }
 
-HSSRule::p HSSDisplayObject::rulesGet(unsigned index)
+QSharedPointer<HSSRule> HSSDisplayObject::rulesGet(unsigned index)
 {
     return this->rules[index]->rule;
 }
@@ -559,16 +576,16 @@ size_t HSSDisplayObject::rulesSize() const
     return this->rules.size();
 }
 
-void HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)
+void HSSDisplayObject::setRuleStatus(QSharedPointer<HSSRule> rule, HSSRuleState newValue)
 {
     bool changed = false;
     bool found = false;
 
-    std::vector<HSSRuleStatus::p>::iterator it;
+    std::vector<QSharedPointer<HSSRuleStatus> >::iterator it;
     for (it = this->rules.begin(); it != this->rules.end(); ++it)
     {
-        HSSRuleStatus::p rs = *it;
-        HSSRule::p existingRule = rs->rule;
+        QSharedPointer<HSSRuleStatus> rs = *it;
+        QSharedPointer<HSSRule> existingRule = rs->rule;
         if (existingRule.data() == rule.data())
         {
             found = true;
@@ -606,13 +623,13 @@ void HSSDisplayObject::setRuleStatus(HSSRule::p rule, HSSRuleState newValue)
     }
 }
 
-bool HSSDisplayObject::hasRule(HSSRule::p rule)
+bool HSSDisplayObject::hasRule(QSharedPointer<HSSRule> rule)
 {
     bool found = false;
-    std::vector<HSSRuleStatus::p>::iterator it;
+    std::vector<QSharedPointer<HSSRuleStatus> >::iterator it;
     for (it = this->rules.begin(); it != this->rules.end(); ++it)
     {
-        HSSRuleStatus::p status = *it;
+        QSharedPointer<HSSRuleStatus> status = *it;
         if (rule == status->rule)
         {
             found = true;
@@ -633,19 +650,19 @@ void HSSDisplayObject::readDefinitionObjects()
         if (this->isRoot())
         {
             AXRController * controller = this->getController();
-            AXRRender::p render = controller->document()->getRender();
+            QSharedPointer<AXRRender> render = controller->document()->getRender();
             //width
-            HSSNumberConstant::p newDWidth(new HSSNumberConstant(render->getWindowWidth(), controller));
+            QSharedPointer<HSSNumberConstant> newDWidth(new HSSNumberConstant(render->getWindowWidth(), controller));
             this->setDWidth(newDWidth);
             //height
-            HSSNumberConstant::p newDHeight(new HSSNumberConstant(render->getWindowHeight(), controller));
+            QSharedPointer<HSSNumberConstant> newDHeight(new HSSNumberConstant(render->getWindowHeight(), controller));
             this->setDHeight(newDHeight);
         }
 
         AXRString propertyName;
         for (i = 0; i<this->rules.size(); ++i)
         {
-            HSSRuleStatus::p & ruleStatus = this->rules[i];
+            QSharedPointer<HSSRuleStatus> & ruleStatus = this->rules[i];
             switch (ruleStatus->state)
             {
             case HSSRuleStateActivate:
@@ -656,12 +673,12 @@ void HSSDisplayObject::readDefinitionObjects()
 
             case HSSRuleStateOn:
             {
-                HSSRule::p & rule = ruleStatus->rule;
+                QSharedPointer<HSSRule> & rule = ruleStatus->rule;
                 for (j = 0; j < rule->propertiesSize(); ++j)
                 {
                     try
                     {
-                        HSSPropertyDefinition::p& propertyDefinition = rule->propertiesGet(j);
+                        QSharedPointer<HSSPropertyDefinition>& propertyDefinition = rule->propertiesGet(j);
                         propertyName = propertyDefinition->getName();
                         this->setPropertyWithName(propertyName, propertyDefinition->getValue());
                     }
@@ -688,7 +705,7 @@ void HSSDisplayObject::readDefinitionObjects()
     }
 }
 
-void HSSDisplayObject::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSDisplayObject::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -871,14 +888,14 @@ void HSSDisplayObject::drawBackground()
 
 void HSSDisplayObject::_drawBackground(QPainter &painter, const QPainterPath &path)
 {
-    for (std::vector<HSSObject::p>::iterator it = this->background.begin(); it != this->background.end(); ++it)
+    for (std::vector<QSharedPointer<HSSObject> >::iterator it = this->background.begin(); it != this->background.end(); ++it)
     {
-        HSSObject::p theobj = *it;
+        QSharedPointer<HSSObject> theobj = *it;
         switch (theobj->getObjectType())
         {
         case HSSObjectTypeRgb:
         {
-            HSSRgb::p color = qSharedPointerCast<HSSRgb > (theobj);
+            QSharedPointer<HSSRgb> color = qSharedPointerCast<HSSRgb > (theobj);
 
             painter.fillPath(path, color ? color->toQColor() : QColor(0, 0, 0, 0));
 
@@ -887,7 +904,7 @@ void HSSDisplayObject::_drawBackground(QPainter &painter, const QPainterPath &pa
 
         case HSSObjectTypeGradient:
         {
-            HSSLinearGradient::p grad = qSharedPointerCast<HSSLinearGradient > (theobj);
+            QSharedPointer<HSSLinearGradient> grad = qSharedPointerCast<HSSLinearGradient > (theobj);
             grad->draw(painter, path);
             break;
         }
@@ -953,12 +970,12 @@ HSSUnit HSSDisplayObject::getWidth()
     return this->width;
 }
 
-HSSParserNode::p HSSDisplayObject::getDWidth()
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDWidth()
 {
     return this->dWidth;
 }
 
-void HSSDisplayObject::setDWidth(HSSParserNode::p value)
+void HSSDisplayObject::setDWidth(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
     bool needsPostProcess = true;
@@ -968,8 +985,8 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDWidth(objdef);
             valid = true;
             needsPostProcess = false;
@@ -994,7 +1011,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
         {
             this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
         }
-        HSSContainer::p parentContainer = this->getParent();
+        QSharedPointer<HSSContainer> parentContainer = this->getParent();
         if (parentContainer)
         {
             this->width = floor(this->_evaluatePropertyValue(
@@ -1034,7 +1051,7 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
         AXRString kwValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
         if (kwValue == "inherit")
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 QVariant remoteValue = parent->getProperty(HSSObservablePropertyWidth);
@@ -1075,8 +1092,8 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
     {
     case HSSStatementTypeObjectDefinition:
     {
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
-        HSSContainer::p parent = this->getParent();
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
+        QSharedPointer<HSSContainer> parent = this->getParent();
         if (parent)
         {
             objdef->setScope(parent->getChildren());
@@ -1088,10 +1105,10 @@ void HSSDisplayObject::setDWidth(HSSParserNode::p value)
         }
         objdef->setThisObj(this->shared_from_this());
         objdef->apply();
-        HSSObject::p theobj = objdef->getObject();
+        QSharedPointer<HSSObject> theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
-            HSSParserNode::p remoteValue = qSharedPointerCast<HSSValue > (theobj)->getDValue();
+            QSharedPointer<HSSParserNode> remoteValue = qSharedPointerCast<HSSValue > (theobj)->getDValue();
             try
             {
                 this->setDWidth(remoteValue);
@@ -1137,14 +1154,14 @@ void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
     {
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p widthValue = qSharedPointerCast<HSSPercentageConstant > (this->dWidth);
+        QSharedPointer<HSSPercentageConstant> widthValue = qSharedPointerCast<HSSPercentageConstant > (this->dWidth);
         this->width = floor(widthValue->getValue(*(HSSUnit*) data));
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p widthExpression = qSharedPointerCast<HSSExpression > (this->dWidth);
+        QSharedPointer<HSSExpression> widthExpression = qSharedPointerCast<HSSExpression > (this->dWidth);
         widthExpression->setPercentageBase(*(HSSUnit*) data);
         this->width = floor(widthExpression->evaluate());
         break;
@@ -1173,12 +1190,12 @@ HSSUnit HSSDisplayObject::getHeight()
     return this->height;
 }
 
-HSSParserNode::p HSSDisplayObject::getDHeight()
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDHeight()
 {
     return this->dHeight;
 }
 
-void HSSDisplayObject::setDHeight(HSSParserNode::p value)
+void HSSDisplayObject::setDHeight(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
     bool needsPostProcess = true;
@@ -1188,8 +1205,8 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDHeight(objdef);
             valid = true;
             needsPostProcess = false;
@@ -1214,7 +1231,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         {
             this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
         }
-        HSSContainer::p parentContainer = this->getParent();
+        QSharedPointer<HSSContainer> parentContainer = this->getParent();
         if (parentContainer)
         {
             this->height = floor(this->_evaluatePropertyValue(
@@ -1254,7 +1271,7 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         AXRString kwValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
         if (kwValue == "inherit")
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 QVariant remoteValue = parent->getProperty(HSSObservablePropertyHeight);
@@ -1295,8 +1312,8 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
     {
     case HSSStatementTypeObjectDefinition:
     {
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
-        HSSContainer::p parent = this->getParent();
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
+        QSharedPointer<HSSContainer> parent = this->getParent();
         if (parent)
         {
             objdef->setScope(parent->getChildren());
@@ -1308,10 +1325,10 @@ void HSSDisplayObject::setDHeight(HSSParserNode::p value)
         }
         objdef->setThisObj(this->shared_from_this());
         objdef->apply();
-        HSSObject::p theobj = objdef->getObject();
+        QSharedPointer<HSSObject> theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
-            HSSParserNode::p remoteValue = qSharedPointerCast<HSSValue > (theobj)->getDValue();
+            QSharedPointer<HSSParserNode> remoteValue = qSharedPointerCast<HSSValue > (theobj)->getDValue();
             try
             {
                 this->setDHeight(remoteValue);
@@ -1357,14 +1374,14 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
     {
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p heightValue = qSharedPointerCast<HSSPercentageConstant > (this->dHeight);
+        QSharedPointer<HSSPercentageConstant> heightValue = qSharedPointerCast<HSSPercentageConstant > (this->dHeight);
         this->height = floor(heightValue->getValue(*(HSSUnit*) data));
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p heightExpression = qSharedPointerCast<HSSExpression > (this->dHeight);
+        QSharedPointer<HSSExpression> heightExpression = qSharedPointerCast<HSSExpression > (this->dHeight);
         heightExpression->setPercentageBase(*(HSSUnit*) data);
         this->height = floor(heightExpression->evaluate());
         break;
@@ -1400,12 +1417,12 @@ HSSUnit HSSDisplayObject::getAnchorX()
     return this->anchorX;
 }
 
-HSSParserNode::p HSSDisplayObject::getDAnchorX()
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDAnchorX()
 {
     return this->dAnchorX;
 }
 
-void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
+void HSSDisplayObject::setDAnchorX(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
     this->dAnchorX = value;
@@ -1421,8 +1438,8 @@ void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
         {
             this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
         }
-        HSSContainer::p parentContainer = this->getParent();
-        HSSSimpleSelection::p scope;
+        QSharedPointer<HSSContainer> parentContainer = this->getParent();
+        QSharedPointer<HSSSimpleSelection> scope;
         if (parentContainer)
         {
             scope = parentContainer->getChildren();
@@ -1450,7 +1467,7 @@ void HSSDisplayObject::setDAnchorX(HSSParserNode::p value)
             this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
         }
         //we don't need to observe anything here, since it will be handled by the layout algorithm
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "default" || keywordValue->getValue() == "no")
         {
             this->_anchorXdefault = true;
@@ -1476,7 +1493,7 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
     {
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAnchorX);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAnchorX);
         this->anchorX = percentageValue->getValue(*(HSSUnit*) data);
         this->_anchorXdefault = false;
         break;
@@ -1484,7 +1501,7 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (this->dAnchorX);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (this->dAnchorX);
         this->anchorX = expressionValue->evaluate();
         this->_anchorXdefault = false;
         break;
@@ -1499,7 +1516,7 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (this->dAnchorX);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (this->dAnchorX);
         if (keywordValue->getValue() == "default" || keywordValue->getValue() == "no")
         {
             this->_anchorXdefault = true;
@@ -1520,12 +1537,12 @@ HSSUnit HSSDisplayObject::getAnchorY()
     return this->anchorY;
 }
 
-HSSParserNode::p HSSDisplayObject::getDAnchorY()
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDAnchorY()
 {
     return this->dAnchorY;
 }
 
-void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
+void HSSDisplayObject::setDAnchorY(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
     this->dAnchorY = value;
@@ -1541,8 +1558,8 @@ void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
         {
             this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
         }
-        HSSContainer::p parentContainer = this->getParent();
-        HSSSimpleSelection::p scope;
+        QSharedPointer<HSSContainer> parentContainer = this->getParent();
+        QSharedPointer<HSSSimpleSelection> scope;
         if (parentContainer)
         {
             scope = parentContainer->getChildren();
@@ -1570,7 +1587,7 @@ void HSSDisplayObject::setDAnchorY(HSSParserNode::p value)
             this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
         }
         //we don't need to observe anything here, since it will be handled by the layout algorithm
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "default" || keywordValue->getValue() == "no")
         {
             this->_anchorYdefault = true;
@@ -1596,14 +1613,14 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
     {
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAnchorY);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAnchorY);
         this->anchorY = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (this->dAnchorY);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (this->dAnchorY);
         this->anchorY = expressionValue->evaluate();
         break;
     }
@@ -1616,7 +1633,7 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (this->dAnchorY);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (this->dAnchorY);
         if (keywordValue->getValue() == "default" || keywordValue->getValue() == "no")
         {
             this->_anchorYdefault = true;
@@ -1640,12 +1657,12 @@ bool HSSDisplayObject::getFlow()
     return this->flow;
 }
 
-HSSParserNode::p HSSDisplayObject::getDFlow()
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDFlow()
 {
     return this->dFlow;
 }
 
-void HSSDisplayObject::setDFlow(HSSParserNode::p value)
+void HSSDisplayObject::setDFlow(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -1656,8 +1673,8 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
         this->dFlow = value;
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDFlow(objdef);
             valid = true;
 
@@ -1675,10 +1692,10 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dFlow = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 fnct->setScope(parent->getChildren());
@@ -1708,7 +1725,7 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "yes")
         {
             this->flow = true;
@@ -1732,8 +1749,8 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dFlow = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
-        HSSContainer::p parent = this->getParent();
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSContainer> parent = this->getParent();
         if (parent)
         {
             objdef->setScope(parent->getChildren());
@@ -1745,7 +1762,7 @@ void HSSDisplayObject::setDFlow(HSSParserNode::p value)
         }
         objdef->setThisObj(this->shared_from_this());
         objdef->apply();
-        HSSObject::p theobj = objdef->getObject();
+        QSharedPointer<HSSObject> theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->flow = (bool)qSharedPointerCast<HSSValue>(theobj)->getIntValue();
@@ -1790,12 +1807,12 @@ bool HSSDisplayObject::getContained()
     return this->contained;
 }
 
-HSSParserNode::p HSSDisplayObject::getDContained()
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDContained()
 {
     return this->dContained;
 }
 
-void HSSDisplayObject::setDContained(HSSParserNode::p value)
+void HSSDisplayObject::setDContained(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -1806,8 +1823,8 @@ void HSSDisplayObject::setDContained(HSSParserNode::p value)
         this->dContained = value;
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDContained(objdef);
             valid = true;
 
@@ -1825,10 +1842,10 @@ void HSSDisplayObject::setDContained(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dContained = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 fnct->setScope(parent->getChildren());
@@ -1858,7 +1875,7 @@ void HSSDisplayObject::setDContained(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "yes")
         {
             this->contained = true;
@@ -1882,8 +1899,8 @@ void HSSDisplayObject::setDContained(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dContained = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
-        HSSContainer::p parent = this->getParent();
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSContainer> parent = this->getParent();
         if (parent)
         {
             objdef->setScope(parent->getChildren());
@@ -1895,7 +1912,7 @@ void HSSDisplayObject::setDContained(HSSParserNode::p value)
         }
         objdef->setThisObj(this->shared_from_this());
         objdef->apply();
-        HSSObject::p theobj = objdef->getObject();
+        QSharedPointer<HSSObject> theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->contained = (bool)qSharedPointerCast<HSSValue>(theobj)->getIntValue();
@@ -1938,12 +1955,12 @@ HSSUnit HSSDisplayObject::getAlignX()
     return this->alignX;
 }
 
-HSSParserNode::p HSSDisplayObject::getDAlignX()
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDAlignX()
 {
     return this->dAlignX;
 }
 
-void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
+void HSSDisplayObject::setDAlignX(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -1967,10 +1984,10 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
 
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "auto")
         {
-            HSSContainer::p parentContainer = this->getParent();
+            QSharedPointer<HSSContainer> parentContainer = this->getParent();
             if (parentContainer)
             {
                 this->alignX = parentContainer->contentAlignX;
@@ -1987,15 +2004,15 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
         }
         else if (keywordValue->getValue() == "left")
         {
-            this->setDAlignX(HSSParserNode::p(new HSSNumberConstant(0, this->getController())));
+            this->setDAlignX(QSharedPointer<HSSParserNode>(new HSSNumberConstant(0, this->getController())));
         }
         else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center")
         {
-            this->setDAlignX(HSSParserNode::p(new HSSPercentageConstant(50, this->getController())));
+            this->setDAlignX(QSharedPointer<HSSParserNode>(new HSSPercentageConstant(50, this->getController())));
         }
         else if (keywordValue->getValue() == "right")
         {
-            this->setDAlignX(HSSParserNode::p(new HSSPercentageConstant(100, this->getController())));
+            this->setDAlignX(QSharedPointer<HSSParserNode>(new HSSPercentageConstant(100, this->getController())));
         }
         else
         {
@@ -2006,7 +2023,7 @@ void HSSDisplayObject::setDAlignX(HSSParserNode::p value)
     else
     {
         HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
-        HSSContainer::p parentContainer = this->getParent();
+        QSharedPointer<HSSContainer> parentContainer = this->getParent();
         if (parentContainer)
         {
             this->alignX = this->_evaluatePropertyValue(
@@ -2048,14 +2065,14 @@ void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
     {
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAlignX);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAlignX);
         this->alignX = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (this->dAlignX);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (this->dAlignX);
         this->alignX = expressionValue->evaluate();
         break;
     }
@@ -2082,12 +2099,12 @@ HSSUnit HSSDisplayObject::getAlignY()
     return this->alignY;
 }
 
-HSSParserNode::p HSSDisplayObject::getDAlignY()
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDAlignY()
 {
     return this->dAlignX;
 }
 
-void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
+void HSSDisplayObject::setDAlignY(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -2111,10 +2128,10 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
 
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "auto")
         {
-            HSSContainer::p parentContainer = this->getParent();
+            QSharedPointer<HSSContainer> parentContainer = this->getParent();
             if (parentContainer)
             {
                 this->alignY = parentContainer->contentAlignY;
@@ -2130,15 +2147,15 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
         }
         else if (keywordValue->getValue() == "top")
         {
-            this->setDAlignY(HSSParserNode::p(new HSSNumberConstant(0, this->getController())));
+            this->setDAlignY(QSharedPointer<HSSParserNode>(new HSSNumberConstant(0, this->getController())));
         }
         else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center")
         {
-            this->setDAlignY(HSSParserNode::p(new HSSPercentageConstant(50, this->getController())));
+            this->setDAlignY(QSharedPointer<HSSParserNode>(new HSSPercentageConstant(50, this->getController())));
         }
         else if (keywordValue->getValue() == "bottom")
         {
-            this->setDAlignY(HSSParserNode::p(new HSSPercentageConstant(100, this->getController())));
+            this->setDAlignY(QSharedPointer<HSSParserNode>(new HSSPercentageConstant(100, this->getController())));
         }
         else
         {
@@ -2149,7 +2166,7 @@ void HSSDisplayObject::setDAlignY(HSSParserNode::p value)
     else
     {
         HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
-        HSSContainer::p parentContainer = this->getParent();
+        QSharedPointer<HSSContainer> parentContainer = this->getParent();
         if (parentContainer)
         {
             this->alignY = this->_evaluatePropertyValue(
@@ -2191,14 +2208,14 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
     {
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAlignY);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAlignY);
         this->alignY = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (this->dAlignY);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (this->dAlignY);
         this->alignY = expressionValue->evaluate();
         break;
     }
@@ -2223,19 +2240,19 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
 
 //background
 
-HSSParserNode::p HSSDisplayObject::getDBackground()
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDBackground()
 {
     return this->dBackground;
 }
 
-void HSSDisplayObject::setDBackground(HSSParserNode::p value)
+void HSSDisplayObject::setDBackground(QSharedPointer<HSSParserNode> value)
 {
     this->background.clear();
     this->dBackground = value;
     this->addDBackground(value);
 }
 
-void HSSDisplayObject::addDBackground(HSSParserNode::p value)
+void HSSDisplayObject::addDBackground(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -2244,8 +2261,8 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
     case HSSParserNodeTypeMultipleValueDefinition:
     {
         HSSParserNode::it iterator;
-        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
-        std::vector<HSSParserNode::p> values = multiDef->getValues();
+        QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
+        std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
         for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDBackground(*iterator);
@@ -2258,7 +2275,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             this->addDBackground(this->getController()->objectTreeGet(objname->getValue()));
             valid = true;
         }
@@ -2271,11 +2288,11 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
 
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 fnct->setScope(parent->getChildren());
@@ -2287,11 +2304,11 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<std::vector<HSSObject::p>*>())
+            if (remoteValue.canConvert<std::vector<QSharedPointer<HSSObject> >*>())
             {
-                std::vector<HSSObject::p> values = *remoteValue.value<std::vector<HSSObject::p>*>();
+                std::vector<QSharedPointer<HSSObject> > values = *remoteValue.value<std::vector<QSharedPointer<HSSObject> >*>();
 
-                for (std::vector<HSSObject::p>::const_iterator it = values.begin(); it != values.end(); ++it)
+                for (std::vector<QSharedPointer<HSSObject> >::const_iterator it = values.begin(); it != values.end(); ++it)
                 {
                     this->background.push_back(*it);
                 }
@@ -2309,7 +2326,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p theKW = qSharedPointerCast<HSSKeywordConstant>(value);
+        QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(value);
         AXRString kwValue = theKW->getValue();
         if (kwValue == "no")
         {
@@ -2342,10 +2359,10 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dBackground = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         if (objdef->getObject()->isA(HSSObjectTypeRgb) || objdef->getObject()->isA(HSSObjectTypeGradient))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -2357,7 +2374,7 @@ void HSSDisplayObject::addDBackground(HSSParserNode::p value)
             }
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
-            HSSObject::p theObj = objdef->getObject();
+            QSharedPointer<HSSObject> theObj = objdef->getObject();
             theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyBackground, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::backgroundChanged));
             this->background.push_back(theObj);
             valid = true;
@@ -2385,19 +2402,19 @@ void HSSDisplayObject::backgroundChanged(HSSObservableProperty source, void*data
 
 //content
 
-HSSParserNode::p HSSDisplayObject::getDContent()
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDContent()
 {
     return this->dContent;
 }
 
-void HSSDisplayObject::setDContent(HSSParserNode::p value)
+void HSSDisplayObject::setDContent(QSharedPointer<HSSParserNode> value)
 {
     this->content.clear();
     this->dContent = value;
     this->addDContent(value);
 }
 
-void HSSDisplayObject::addDContent(HSSParserNode::p value)
+void HSSDisplayObject::addDContent(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -2406,8 +2423,8 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
     case HSSParserNodeTypeMultipleValueDefinition:
     {
         HSSParserNode::it iterator;
-        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
-        std::vector<HSSParserNode::p> values = multiDef->getValues();
+        QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
+        std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
         for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDContent(*iterator);
@@ -2420,7 +2437,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             this->addDContent(this->getController()->objectTreeGet(objname->getValue()));
             valid = true;
 
@@ -2434,14 +2451,14 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct)
         {
             switch (fnct->getFunctionType())
             {
             case HSSFunctionTypeRef:
             {
-                HSSContainer::p parent = this->getParent();
+                QSharedPointer<HSSContainer> parent = this->getParent();
                 if (parent)
                 {
                     fnct->setScope(parent->getChildren());
@@ -2453,11 +2470,11 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
                 }
                 fnct->setThisObj(this->shared_from_this());
                 QVariant remoteValue = fnct->evaluate();
-                if (remoteValue.canConvert<HSSParserNode::p>())
+                if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
                 {
                     try
                     {
-                        HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                        QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
                         this->addDContent(theVal);
                         valid = true;
                     }
@@ -2472,7 +2489,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
 
             case HSSFunctionTypeAttr:
             {
-                HSSContainer::p parent = this->getParent();
+                QSharedPointer<HSSContainer> parent = this->getParent();
                 if (parent)
                 {
                     fnct->setScope(parent->getChildren());
@@ -2531,10 +2548,10 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dContent = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         if (objdef->getObject()->isA(HSSObjectTypeRgb) || objdef->getObject()->isA(HSSObjectTypeGradient))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -2546,7 +2563,7 @@ void HSSDisplayObject::addDContent(HSSParserNode::p value)
             }
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
-            HSSObject::p theObj = objdef->getObject();
+            QSharedPointer<HSSObject> theObj = objdef->getObject();
             theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyContent, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::contentChanged));
             this->content.push_back(theObj);
             valid = true;
@@ -2572,19 +2589,19 @@ void HSSDisplayObject::contentChanged(HSSObservableProperty source, void*data)
     std_log("unimplemented yet");
 }
 
-const HSSParserNode::p HSSDisplayObject::getDFont() const
+const QSharedPointer<HSSParserNode> HSSDisplayObject::getDFont() const
 {
     return this->dFont;
 }
 
-void HSSDisplayObject::setDFont(HSSParserNode::p value)
+void HSSDisplayObject::setDFont(QSharedPointer<HSSParserNode> value)
 {
     this->font.clear();
     this->dFont = value;
     this->addDFont(value);
 }
 
-void HSSDisplayObject::addDFont(HSSParserNode::p value)
+void HSSDisplayObject::addDFont(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
     switch (value->getType())
@@ -2592,8 +2609,8 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
     case HSSParserNodeTypeMultipleValueDefinition:
     {
         HSSParserNode::it iterator;
-        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
-        std::vector<HSSParserNode::p> values = multiDef->getValues();
+        QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
+        std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
         for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDFont(*iterator);
@@ -2606,9 +2623,9 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -2621,7 +2638,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
 
-            HSSObject::p obj = qSharedPointerCast<HSSObject > (objdef->getObject());
+            QSharedPointer<HSSObject> obj = qSharedPointerCast<HSSObject > (objdef->getObject());
             switch (obj->getObjectType())
             {
             case HSSObjectTypeFont:
@@ -2643,11 +2660,11 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
 
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 fnct->setScope(parent->getChildren());
@@ -2659,9 +2676,9 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<HSSParserNode::p>())
+            if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
             {
-                HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
                 this->addDFont(theVal);
                 valid = true;
             }
@@ -2679,11 +2696,11 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
             {
                 this->observedFont->removeObserver(this->observedFontProperty, HSSObservablePropertyFont, this);
             }
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             QVariant remoteValue = parent->getProperty(HSSObservablePropertyFont);
-            if (remoteValue.canConvert<std::vector<HSSFont::p> *>())
+            if (remoteValue.canConvert<std::vector<QSharedPointer<HSSFont> > *>())
             {
-                this->font = *remoteValue.value<std::vector<HSSFont::p> *>();
+                this->font = *remoteValue.value<std::vector<QSharedPointer<HSSFont> > *>();
                 parent->observe(HSSObservablePropertyFont, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::fontChanged));
                 valid = true;
             }
@@ -2701,10 +2718,10 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dFont = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         if (objdef->getObject()->isA(HSSObjectTypeFont))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -2717,7 +2734,7 @@ void HSSDisplayObject::addDFont(HSSParserNode::p value)
 
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
-            HSSObject::p theObj = objdef->getObject();
+            QSharedPointer<HSSObject> theObj = objdef->getObject();
             theObj->observe(HSSObservablePropertyFont, HSSObservablePropertyFont, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::fontChanged));
             this->font.push_back(qSharedPointerCast<HSSFont > (theObj));
             valid = true;
@@ -2745,7 +2762,7 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
     case HSSParserNodeTypeFunctionCall:
     case HSSParserNodeTypeKeywordConstant:
     {
-        this->font = *(std::vector<HSSFont::p> *) data;
+        this->font = *(std::vector<QSharedPointer<HSSFont> > *) data;
         this->setDirty(true);
         break;
     }
@@ -2757,7 +2774,7 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
     switch (this->dFont->getStatementType())
     {
     case HSSStatementTypeObjectDefinition:
-        this->font = *(std::vector<HSSFont::p> *) data;
+        this->font = *(std::vector<QSharedPointer<HSSFont> > *) data;
         this->setDirty(true);
         break;
 
@@ -2771,19 +2788,19 @@ void HSSDisplayObject::fontChanged(HSSObservableProperty source, void *data)
 
 //on
 
-HSSParserNode::p HSSDisplayObject::getDOn()
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDOn()
 {
     return this->dOn;
 }
 
-void HSSDisplayObject::setDOn(HSSParserNode::p value)
+void HSSDisplayObject::setDOn(QSharedPointer<HSSParserNode> value)
 {
     this->on.clear();
     this->dOn = value;
     this->addDOn(value);
 }
 
-void HSSDisplayObject::addDOn(HSSParserNode::p value)
+void HSSDisplayObject::addDOn(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -2792,8 +2809,8 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
     case HSSParserNodeTypeMultipleValueDefinition:
     {
         HSSParserNode::it iterator;
-        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
-        std::vector<HSSParserNode::p> values = multiDef->getValues();
+        QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
+        std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
         for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDOn(*iterator);
@@ -2806,7 +2823,7 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             this->addDOn(this->getController()->objectTreeGet(objname->getValue()));
             valid = true;
 
@@ -2820,10 +2837,10 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 fnct->setScope(parent->getChildren());
@@ -2835,11 +2852,11 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<HSSParserNode::p>())
+            if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
             {
                 try
                 {
-                    HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                    QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
                     this->addDOn(theVal);
                     valid = true;
                 }
@@ -2871,10 +2888,10 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dOn = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
         if (objdef->getObject()->isA(HSSObjectTypeEvent))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -2887,13 +2904,13 @@ void HSSDisplayObject::addDOn(HSSParserNode::p value)
 
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
-            HSSObject::p theObj = objdef->getObject();
+            QSharedPointer<HSSObject> theObj = objdef->getObject();
 
-            HSSEvent::p theEvent = qSharedPointerCast<HSSEvent > (objdef->getObject());
+            QSharedPointer<HSSEvent> theEvent = qSharedPointerCast<HSSEvent > (objdef->getObject());
             HSSEventType eventType = theEvent->getEventType();
             if (this->on.find(eventType) == this->on.end())
             {
-                std::vector<HSSObject::p>newVector;
+                std::vector<QSharedPointer<HSSObject> >newVector;
                 this->on[eventType] = newVector;
             }
             this->on[eventType].push_back(theEvent);
@@ -2928,13 +2945,13 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
     bool fired = false;
     if (this->on.find(type) != this->on.end())
     {
-        std::vector<HSSObject::p> events = this->on[type];
+        std::vector<QSharedPointer<HSSObject> > events = this->on[type];
         HSSObject::it it;
         for (it = events.begin(); it != events.end(); ++it)
         {
             if ((*it)->isA(HSSObjectTypeEvent))
             {
-                HSSEvent::p theEvent = qSharedPointerCast<HSSEvent > (*it);
+                QSharedPointer<HSSEvent> theEvent = qSharedPointerCast<HSSEvent > (*it);
                 axr_log(AXR_DEBUG_CH_EVENTS_SPECIFIC, "HSSDisplayObject: firing event: " + theEvent->toString());
                 theEvent->fire();
                 fired = true;
@@ -2950,19 +2967,19 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
     return fired;
 }
 
-const HSSParserNode::p HSSDisplayObject::getDMargin() const
+const QSharedPointer<HSSParserNode> HSSDisplayObject::getDMargin() const
 {
     return this->dMargin;
 }
 
-void HSSDisplayObject::setDMargin(HSSParserNode::p value)
+void HSSDisplayObject::setDMargin(QSharedPointer<HSSParserNode> value)
 {
     this->margin.clear();
     this->dMargin = value;
     this->addDMargin(value);
 }
 
-void HSSDisplayObject::addDMargin(HSSParserNode::p value)
+void HSSDisplayObject::addDMargin(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
     switch (value->getType())
@@ -2970,8 +2987,8 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
     case HSSParserNodeTypeMultipleValueDefinition:
     {
         HSSParserNode::it iterator;
-        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
-        std::vector<HSSParserNode::p> values = multiDef->getValues();
+        QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
+        std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
         for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDMargin(*iterator);
@@ -2986,9 +3003,9 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -3001,7 +3018,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
 
-            HSSObject::p obj = qSharedPointerCast<HSSObject > (objdef->getObject());
+            QSharedPointer<HSSObject> obj = qSharedPointerCast<HSSObject > (objdef->getObject());
             switch (obj->getObjectType())
             {
             case HSSObjectTypeMargin:
@@ -3025,11 +3042,11 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
 
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 fnct->setScope(parent->getChildren());
@@ -3041,11 +3058,11 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<HSSParserNode::p>())
+            if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
             {
                 try
                 {
-                    HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                    QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
                     this->addDMargin(theVal);
                     this->_setOuterWidth();
                     this->_setOuterHeight();
@@ -3063,7 +3080,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "no")
         {
             valid = true;
@@ -3075,7 +3092,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
 
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSMargin::p theMargin = HSSMargin::p(new HSSMargin(this->getController()));
+        QSharedPointer<HSSMargin> theMargin = QSharedPointer<HSSMargin>(new HSSMargin(this->getController()));
         theMargin->setDSize(value);
         this->margin.push_back(theMargin);
         this->_setOuterWidth();
@@ -3093,10 +3110,10 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dMargin = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         if (objdef->getObject()->isA(HSSObjectTypeMargin))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -3109,7 +3126,7 @@ void HSSDisplayObject::addDMargin(HSSParserNode::p value)
 
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
-            HSSObject::p theObj = objdef->getObject();
+            QSharedPointer<HSSObject> theObj = objdef->getObject();
             theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::marginChanged));
             this->margin.push_back(qSharedPointerCast<HSSMargin > (theObj));
             this->_setOuterWidth();
@@ -3135,19 +3152,19 @@ void HSSDisplayObject::marginChanged(HSSObservableProperty source, void*data)
 
 }
 
-const HSSParserNode::p HSSDisplayObject::getDPadding() const
+const QSharedPointer<HSSParserNode> HSSDisplayObject::getDPadding() const
 {
     return this->dPadding;
 }
 
-void HSSDisplayObject::setDPadding(HSSParserNode::p value)
+void HSSDisplayObject::setDPadding(QSharedPointer<HSSParserNode> value)
 {
     this->padding.clear();
     this->dPadding = value;
     this->addDPadding(value);
 }
 
-void HSSDisplayObject::addDPadding(HSSParserNode::p value)
+void HSSDisplayObject::addDPadding(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
     switch (value->getType())
@@ -3155,8 +3172,8 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
     case HSSParserNodeTypeMultipleValueDefinition:
     {
         HSSParserNode::it iterator;
-        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
-        std::vector<HSSParserNode::p> values = multiDef->getValues();
+        QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
+        std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
         for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDPadding(*iterator);
@@ -3171,9 +3188,9 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -3186,7 +3203,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
 
-            HSSObject::p obj = qSharedPointerCast<HSSObject > (objdef->getObject());
+            QSharedPointer<HSSObject> obj = qSharedPointerCast<HSSObject > (objdef->getObject());
             switch (obj->getObjectType())
             {
             case HSSObjectTypeMargin:
@@ -3210,11 +3227,11 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
 
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 fnct->setScope(parent->getChildren());
@@ -3226,11 +3243,11 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<HSSParserNode::p>())
+            if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
             {
                 try
                 {
-                    HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                    QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
                     this->addDPadding(theVal);
                     this->_setInnerWidth();
                     this->_setInnerHeight();
@@ -3248,7 +3265,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "no")
         {
             valid = true;
@@ -3260,7 +3277,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
 
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSMargin::p thePadding = HSSMargin::p(new HSSMargin(this->getController()));
+        QSharedPointer<HSSMargin> thePadding = QSharedPointer<HSSMargin>(new HSSMargin(this->getController()));
         thePadding->setDSize(value);
         this->padding.push_back(thePadding);
         this->_setInnerWidth();
@@ -3278,10 +3295,10 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dPadding = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         if (objdef->getObject()->isA(HSSObjectTypeMargin))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -3294,7 +3311,7 @@ void HSSDisplayObject::addDPadding(HSSParserNode::p value)
 
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
-            HSSObject::p theObj = objdef->getObject();
+            QSharedPointer<HSSObject> theObj = objdef->getObject();
             theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::paddingChanged));
             this->padding.push_back(qSharedPointerCast<HSSMargin > (theObj));
             this->_setInnerWidth();
@@ -3320,19 +3337,19 @@ void HSSDisplayObject::paddingChanged(HSSObservableProperty source, void*data)
 
 }
 
-const HSSParserNode::p HSSDisplayObject::getDBorder() const
+const QSharedPointer<HSSParserNode> HSSDisplayObject::getDBorder() const
 {
     return this->dBorder;
 }
 
-void HSSDisplayObject::setDBorder(HSSParserNode::p value)
+void HSSDisplayObject::setDBorder(QSharedPointer<HSSParserNode> value)
 {
     this->border.clear();
     this->dBorder = value;
     this->addDBorder(value);
 }
 
-void HSSDisplayObject::addDBorder(HSSParserNode::p value)
+void HSSDisplayObject::addDBorder(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
     switch (value->getType())
@@ -3340,8 +3357,8 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
     case HSSParserNodeTypeMultipleValueDefinition:
     {
         HSSParserNode::it iterator;
-        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
-        std::vector<HSSParserNode::p> values = multiDef->getValues();
+        QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
+        std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
         for (iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDBorder(*iterator);
@@ -3354,9 +3371,9 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -3369,7 +3386,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
 
-            HSSObject::p obj = qSharedPointerCast<HSSObject > (objdef->getObject());
+            QSharedPointer<HSSObject> obj = qSharedPointerCast<HSSObject > (objdef->getObject());
             switch (obj->getObjectType())
             {
             case HSSObjectTypeBorder:
@@ -3391,11 +3408,11 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
 
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 fnct->setScope(parent->getChildren());
@@ -3407,11 +3424,11 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<HSSParserNode::p>())
+            if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
             {
                 try
                 {
-                    HSSParserNode::p theVal = remoteValue.value<HSSParserNode::p>();
+                    QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
                     this->addDBorder(theVal);
                     valid = true;
                 }
@@ -3427,7 +3444,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
 
     case HSSParserNodeTypeKeywordConstant:
     {
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "no")
         {
             valid = true;
@@ -3444,10 +3461,10 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dBorder = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         if (objdef->getObject()->isA(HSSObjectTypeBorder))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -3460,7 +3477,7 @@ void HSSDisplayObject::addDBorder(HSSParserNode::p value)
 
             objdef->setThisObj(this->shared_from_this());
             objdef->apply();
-            HSSObject::p theObj = objdef->getObject();
+            QSharedPointer<HSSObject> theObj = objdef->getObject();
             theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::borderChanged));
             this->border.push_back(qSharedPointerCast<HSSBorder > (theObj));
             valid = true;
@@ -3489,12 +3506,12 @@ bool HSSDisplayObject::getVisible() const
     return this->visible;
 }
 
-const HSSParserNode::p HSSDisplayObject::getDVisible() const
+const QSharedPointer<HSSParserNode> HSSDisplayObject::getDVisible() const
 {
     return this->dVisible;
 }
 
-void HSSDisplayObject::setDVisible(HSSParserNode::p value)
+void HSSDisplayObject::setDVisible(QSharedPointer<HSSParserNode> value)
 {
     this->dVisible = value;
     bool valid = false;
@@ -3502,10 +3519,10 @@ void HSSDisplayObject::setDVisible(HSSParserNode::p value)
     {
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 fnct->setScope(parent->getChildren());
@@ -3544,7 +3561,7 @@ void HSSDisplayObject::setDVisible(HSSParserNode::p value)
         AXRString kwValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
         if (kwValue == "inherit")
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 QVariant remoteValue = parent->getProperty(HSSObservablePropertyVisible);
@@ -3622,53 +3639,53 @@ void HSSDisplayObject::setDefaults()
     AXRController * controller = this->getController();
 
     //width
-    HSSPercentageConstant::p newDWidth(new HSSPercentageConstant(100., controller));
+    QSharedPointer<HSSPercentageConstant> newDWidth(new HSSPercentageConstant(100., controller));
     this->setDWidth(newDWidth);
     //height
-    HSSKeywordConstant::p newDHeight(new HSSKeywordConstant("content", controller));
+    QSharedPointer<HSSKeywordConstant> newDHeight(new HSSKeywordConstant("content", controller));
     this->setDHeight(newDHeight);
     //anchorX
-    HSSKeywordConstant::p newDAnchorX(new HSSKeywordConstant("no", controller));
+    QSharedPointer<HSSKeywordConstant> newDAnchorX(new HSSKeywordConstant("no", controller));
     this->setDAnchorX(newDAnchorX);
     //anchorY
-    HSSKeywordConstant::p newDAnchorY(new HSSKeywordConstant("no", controller));
+    QSharedPointer<HSSKeywordConstant> newDAnchorY(new HSSKeywordConstant("no", controller));
     this->setDAnchorY(newDAnchorY);
     //flow
-    HSSKeywordConstant::p newDFlow(new HSSKeywordConstant("yes", controller));
+    QSharedPointer<HSSKeywordConstant> newDFlow(new HSSKeywordConstant("yes", controller));
     this->setDFlow(newDFlow);
     //alignX
-    HSSKeywordConstant::p newDAlignX(new HSSKeywordConstant("auto", controller));
+    QSharedPointer<HSSKeywordConstant> newDAlignX(new HSSKeywordConstant("auto", controller));
     this->setDAlignX(newDAlignX);
     //alignY
-    HSSKeywordConstant::p newDAlignY(new HSSKeywordConstant("auto", controller));
+    QSharedPointer<HSSKeywordConstant> newDAlignY(new HSSKeywordConstant("auto", controller));
     this->setDAlignY(newDAlignY);
     //background
-    HSSKeywordConstant::p newDBackground(new HSSKeywordConstant("no", controller));
+    QSharedPointer<HSSKeywordConstant> newDBackground(new HSSKeywordConstant("no", controller));
     this->setDBackground(newDBackground);
     //content
-    HSSKeywordConstant::p newDContent(new HSSKeywordConstant("no", controller));
+    QSharedPointer<HSSKeywordConstant> newDContent(new HSSKeywordConstant("no", controller));
     this->setDContent(newDContent);
     //on
-    HSSKeywordConstant::p newDOn(new HSSKeywordConstant("no", controller));
+    QSharedPointer<HSSKeywordConstant> newDOn(new HSSKeywordConstant("no", controller));
     this->setDOn(newDOn);
     //border
-    HSSKeywordConstant::p newDBorder(new HSSKeywordConstant("no", controller));
+    QSharedPointer<HSSKeywordConstant> newDBorder(new HSSKeywordConstant("no", controller));
     this->setDBorder(newDBorder);
     //visible
-    HSSKeywordConstant::p newDVisible(new HSSKeywordConstant("inherit", controller));
+    QSharedPointer<HSSKeywordConstant> newDVisible(new HSSKeywordConstant("inherit", controller));
     this->setDVisible(newDVisible);
 }
 
 HSSUnit HSSDisplayObject::_evaluatePropertyValue(
                                              void(HSSDisplayObject::*callback)(HSSObservableProperty property, void* data),
-                                             HSSParserNode::p value,
+                                             QSharedPointer<HSSParserNode> value,
                                              HSSUnit percentageBase,
                                              HSSObservableProperty observedProperty,
-                                             HSSObservable::p observedObject,
+                                             QSharedPointer<HSSObservable> observedObject,
                                              HSSObservableProperty observedSourceProperty,
-                                             HSSObservable::p &observedStore,
+                                             QSharedPointer<HSSObservable> &observedStore,
                                              HSSObservableProperty &observedStoreProperty,
-                                             HSSSimpleSelection::p scope
+                                             QSharedPointer<HSSSimpleSelection> scope
                                              )
 {
     HSSUnit ret = 0.;
@@ -3678,7 +3695,7 @@ HSSUnit HSSDisplayObject::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
+        QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         observedStore.clear();
         break;
@@ -3686,7 +3703,7 @@ HSSUnit HSSDisplayObject::_evaluatePropertyValue(
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         if (callback)
         {
@@ -3699,7 +3716,7 @@ HSSUnit HSSDisplayObject::_evaluatePropertyValue(
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setPercentageObserved(observedProperty, observedObject.data());
         expressionValue->setScope(scope);
@@ -3725,7 +3742,7 @@ HSSUnit HSSDisplayObject::_evaluatePropertyValue(
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         fnct->setPercentageBase(percentageBase);
         fnct->setPercentageObserved(observedProperty, observedObject.data());
         fnct->setScope(scope);
@@ -3764,12 +3781,12 @@ HSSUnit HSSDisplayObject::_evaluatePropertyValue(
 
 void HSSDisplayObject::_setInnerWidth()
 {
-    std::vector<HSSMargin::p>::const_iterator it;
+    std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
     HSSUnit innerWidth = this->width;
     this->rightPadding = this->leftPadding = 0;
     for (it = this->padding.begin(); it != this->padding.end(); ++it)
     {
-        HSSMargin::p theMargin = *it;
+        QSharedPointer<HSSMargin> theMargin = *it;
         innerWidth -= theMargin->getLeft() + theMargin->getRight();
         this->rightPadding += theMargin->getRight();
         this->leftPadding += theMargin->getLeft();
@@ -3780,12 +3797,12 @@ void HSSDisplayObject::_setInnerWidth()
 
 void HSSDisplayObject::_setInnerHeight()
 {
-    std::vector<HSSMargin::p>::const_iterator it;
+    std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
     HSSUnit innerHeight = this->height;
     this->topPadding = this->bottomPadding = 0;
     for (it = this->padding.begin(); it != this->padding.end(); ++it)
     {
-        HSSMargin::p theMargin = *it;
+        QSharedPointer<HSSMargin> theMargin = *it;
         innerHeight -= theMargin->getTop() + theMargin->getBottom();
         this->topPadding += theMargin->getTop();
         this->bottomPadding += theMargin->getBottom();
@@ -3796,12 +3813,12 @@ void HSSDisplayObject::_setInnerHeight()
 
 void HSSDisplayObject::_setOuterWidth()
 {
-    std::vector<HSSMargin::p>::const_iterator it;
+    std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
     HSSUnit outerWidth = this->width;
     this->rightMargin = this->leftMargin = 0;
     for (it = this->margin.begin(); it != this->margin.end(); ++it)
     {
-        HSSMargin::p theMargin = *it;
+        QSharedPointer<HSSMargin> theMargin = *it;
         outerWidth += theMargin->getLeft() + theMargin->getRight();
         this->rightMargin += theMargin->getRight();
         this->leftMargin += theMargin->getLeft();
@@ -3812,12 +3829,12 @@ void HSSDisplayObject::_setOuterWidth()
 
 void HSSDisplayObject::_setOuterHeight()
 {
-    std::vector<HSSMargin::p>::const_iterator it;
+    std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
     HSSUnit outerHeight = this->height;
     this->topMargin = this->bottomMargin = 0;
     for (it = this->margin.begin(); it != this->margin.end(); ++it)
     {
-        HSSMargin::p theMargin = *it;
+        QSharedPointer<HSSMargin> theMargin = *it;
         outerHeight += theMargin->getTop() + theMargin->getBottom();
         this->topMargin += theMargin->getTop();
         this->bottomMargin += theMargin->getBottom();
@@ -3972,7 +3989,7 @@ void HSSDisplayObject::ruleChanged(HSSObservableProperty source, void*data)
     this->getController()->document()->setNeedsDisplay(true);
 }
 
-void HSSDisplayObject::createFlag(HSSFlag::p flag, HSSRuleState defaultValue)
+void HSSDisplayObject::createFlag(QSharedPointer<HSSFlag> flag, HSSRuleState defaultValue)
 {
     this->_flagsStatus[flag->getName()] = defaultValue;
     this->_flags[flag->getName()].push_back(flag);
@@ -4002,12 +4019,12 @@ void HSSDisplayObject::flagsActivate(AXRString name)
     {
         //std_log("activate flag with name "+name+" on element "+this->getElementName());
         HSSRuleState newValue = HSSRuleStateActivate;
-        std::vector<HSSFlag::p> flags = this->_flags[name];
+        std::vector<QSharedPointer<HSSFlag> > flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
-        std::vector<HSSFlag::p>::iterator it;
+        std::vector<QSharedPointer<HSSFlag> >::iterator it;
         for (it = flags.begin(); it != flags.end(); ++it)
         {
-            HSSFlag::p theFlag = *it;
+            QSharedPointer<HSSFlag> theFlag = *it;
             theFlag->setThisObj(this->shared_from_this());
             theFlag->flagChanged(newValue);
         }
@@ -4024,15 +4041,15 @@ void HSSDisplayObject::flagsDeactivate(AXRString name)
     if (name == "*")
     {
         //std_log("deactivating all flags on element "+this->getElementName());
-        for (QMap<AXRString, std::vector<HSSFlag::p> >::const_iterator it = this->_flags.begin(); it != this->_flags.end(); ++it)
+        for (QMap<AXRString, std::vector<QSharedPointer<HSSFlag> >  >::const_iterator it = this->_flags.begin(); it != this->_flags.end(); ++it)
         {
             HSSRuleState newValue = HSSRuleStatePurge;
-            std::vector<HSSFlag::p> flags = it.value();
+            std::vector<QSharedPointer<HSSFlag> > flags = it.value();
             this->_flagsStatus[it.key()] = newValue;
 
-            for (std::vector<HSSFlag::p>::iterator it = flags.begin(); it != flags.end(); ++it)
+            for (std::vector<QSharedPointer<HSSFlag> >::iterator it = flags.begin(); it != flags.end(); ++it)
             {
-                HSSFlag::p theFlag = *it;
+                QSharedPointer<HSSFlag> theFlag = *it;
                 theFlag->setThisObj(this->shared_from_this());
                 theFlag->flagChanged(newValue);
             }
@@ -4042,11 +4059,11 @@ void HSSDisplayObject::flagsDeactivate(AXRString name)
     {
         //std_log("deactivate flag with name "+name+" on element "+this->getElementName());
         HSSRuleState newValue = HSSRuleStatePurge;
-        std::vector<HSSFlag::p> flags = this->_flags[name];
+        std::vector<QSharedPointer<HSSFlag> > flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
-        for (std::vector<HSSFlag::p>::iterator it = flags.begin(); it != flags.end(); ++it)
+        for (std::vector<QSharedPointer<HSSFlag> >::iterator it = flags.begin(); it != flags.end(); ++it)
         {
-            HSSFlag::p theFlag = *it;
+            QSharedPointer<HSSFlag> theFlag = *it;
             theFlag->setThisObj(this->shared_from_this());
             theFlag->flagChanged(newValue);
         }
@@ -4065,12 +4082,12 @@ void HSSDisplayObject::flagsToggle(AXRString name)
     {
         //std_log("toggle flag with name "+name+" on element "+this->getElementName());
         HSSRuleState newValue = (this->_flagsStatus[name] == HSSRuleStateOn ? HSSRuleStatePurge : HSSRuleStateActivate);
-        std::vector<HSSFlag::p> flags = this->_flags[name];
+        std::vector<QSharedPointer<HSSFlag> > flags = this->_flags[name];
         this->_flagsStatus[name] = newValue;
-        std::vector<HSSFlag::p>::iterator it;
+        std::vector<QSharedPointer<HSSFlag> >::iterator it;
         for (it = flags.begin(); it != flags.end(); ++it)
         {
-            HSSFlag::p theFlag = *it;
+            QSharedPointer<HSSFlag> theFlag = *it;
             theFlag->setThisObj(this->shared_from_this());
             theFlag->flagChanged(newValue);
         }
@@ -4092,7 +4109,7 @@ void HSSDisplayObject::setRoot(bool newValue)
     this->_isRoot = newValue;
 }
 
-HSSDisplayObject::p HSSDisplayObject::shared_from_this()
+QSharedPointer<HSSDisplayObject> HSSDisplayObject::shared_from_this()
 {
     return qSharedPointerCast<HSSDisplayObject > (HSSObject::shared_from_this());
 }

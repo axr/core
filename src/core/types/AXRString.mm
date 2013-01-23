@@ -41,48 +41,38 @@
  *
  ********************************************************************/
 
-#ifndef HSSSELECTOR_H
-#define HSSSELECTOR_H
+#include "AXRString.h"
+#import <Foundation/Foundation.h>
 
-#include "HSSParserNode.h"
+using namespace AXR;
 
-namespace AXR
+AXRString AXR::fromCFStringRef(CFStringRef string)
 {
-    class HSSSelection;
-    class HSSSimpleSelection;
+    if (!string)
+        return AXRString();
 
-    /**
-     *  @brief Abstract base class for a common interface for all selector nodes
-     */
-    class AXR_API HSSSelector : public HSSParserNode
-    {
-    public:
-        ~HSSSelector();
+    CFIndex length = CFStringGetLength(string);
+    const UniChar *chars = CFStringGetCharactersPtr(string);
+    if (chars)
+        return AXRString(reinterpret_cast<const AXRChar*>(chars), length);
 
-        /**
-         * Reduces the selection according its selector type
-         */
-        virtual QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing) = 0;
-
-        bool getNegating() const;
-        void setNegating(bool value);
-
-        bool isA(HSSSelectorType otherType);
-        HSSSelectorType getSelectorType();
-
-        bool isA(HSSCombinatorType otherType);
-
-    protected:
-        /**
-         *  Creates a new instance of a simple selector, for use of the subclasses.
-         *  @param type     The type of the selector node.
-         */
-        HSSSelector(HSSSelectorType type, AXRController * controller);
-
-    private:
-        HSSSelectorType _selectorType;
-        bool _negating;
-    };
+    UniChar buffer[length];
+    CFStringGetCharacters(string, CFRangeMake(0, length), buffer);
+    return AXRString(reinterpret_cast<const AXRChar*>(buffer), length);
 }
 
-#endif
+CFStringRef AXR::toCFStringRef(const AXRString &string)
+{
+    return CFStringCreateWithCharacters(0, reinterpret_cast<const UniChar*>(string.unicode()), string.length());
+}
+
+NSString* AXR::toNSString(const AXRString &string)
+{
+    // The const cast below is safe: CFStringRef and NSString are immutable
+    return [const_cast<NSString*>(reinterpret_cast<const NSString*>(toCFStringRef(string))) autorelease];
+}
+
+AXRString AXR::fromNSString(const NSString *string)
+{
+    return fromCFStringRef(reinterpret_cast<CFStringRef>(string));
+}

@@ -44,10 +44,8 @@
 #ifndef HSSVALUETOKEN_H
 #define HSSVALUETOKEN_H
 
-#include <QSharedPointer>
 #include "AXRGlobal.h"
 #include "HSSToken.h"
-#include "HSSUnits.h"
 
 #define VALUE_TOKEN(thetoken) (qSharedPointerCast<HSSValueToken>(thetoken))
 
@@ -56,8 +54,6 @@ namespace AXR
     class AXR_API HSSValueToken : public HSSToken
     {
     public:
-        typedef QSharedPointer<HSSValueToken> p;
-
         HSSValueToken(HSSTokenType type, AXRString value, qint64 line, qint64 column);
         HSSValueToken(HSSTokenType type, char value, qint64 line, qint64 column);
         HSSValueToken(HSSTokenType type, HSSUnit value, qint64 line, qint64 column);

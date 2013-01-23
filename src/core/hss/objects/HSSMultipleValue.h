@@ -45,9 +45,7 @@
 #define HSSMULTIPLEVALUE_H
 
 #include <vector>
-#include <QSharedPointer>
 #include "HSSObject.h"
-#include "HSSParserNode.h"
 
 namespace AXR
 {
@@ -58,8 +56,6 @@ namespace AXR
     class AXR_API HSSMultipleValue : public HSSObject
     {
     public:
-        typedef QSharedPointer<HSSMultipleValue> p;
-
         /**
          *  Constructor for MultipleValue objects
          */
@@ -73,7 +69,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSMultipleValue
          */
-        p clone() const;
+        QSharedPointer<HSSMultipleValue> clone() const;
         /**
          *  Destructor for MultipleValue objects
          */
@@ -84,7 +80,7 @@ namespace AXR
          *  @param newValue     A shared pointer to the parser node that defines the value
          *                      (definition object)
          */
-        void add(HSSParserNode::p newValue);
+        void add(QSharedPointer<HSSParserNode> newValue);
         /**
          *  Removes the last definition object from the storage
          */
@@ -92,11 +88,11 @@ namespace AXR
         /**
          *  @return The first definition object in the storage.
          */
-        HSSParserNode::p first();
+        QSharedPointer<HSSParserNode> first();
         /**
          *  @return The last definition object in the storage.
          */
-        HSSParserNode::p last();
+        QSharedPointer<HSSParserNode> last();
         /**
          *  @return The amount of definition objects in the storage.
          */
@@ -105,13 +101,13 @@ namespace AXR
          *  @return The entire storage as a STL vector containing shared pointers to definition
          *  objects. Read only.
          */
-        const std::vector<HSSParserNode::p> getValueList() const;
+        const std::vector<QSharedPointer<HSSParserNode> > getValueList() const;
 
     protected:
-        std::vector<HSSParserNode::p>valueList;
+        std::vector<QSharedPointer<HSSParserNode> >valueList;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

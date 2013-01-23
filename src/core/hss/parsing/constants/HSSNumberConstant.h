@@ -44,10 +44,7 @@
 #ifndef HSSNUMBERCONSTANT_H
 #define HSSNUMBERCONSTANT_H
 
-#include <QSharedPointer>
-#include "AXRString.h"
 #include "HSSParserNode.h"
-#include "HSSUnits.h"
 
 namespace AXR
 {
@@ -60,8 +57,6 @@ namespace AXR
     class AXR_API HSSNumberConstant : public HSSParserNode
     {
     public:
-        typedef QSharedPointer<HSSNumberConstant> p;
-
         /**
          *  Creates a new instance of a number constant node which holds the given value.
          *  @param value    A HSSUnit containing the value for the constant.
@@ -73,7 +68,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSNumberConstant
          */
-        p clone() const;
+        QSharedPointer<HSSNumberConstant> clone() const;
 
         /**
          *  Destructor for this class.
@@ -98,7 +93,7 @@ namespace AXR
         HSSUnit value;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

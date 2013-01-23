@@ -44,8 +44,6 @@
 #ifndef HSSMULTIPLEVALUEDEFINITION_H
 #define HSSMULTIPLEVALUEDEFINITION_H
 
-#include <QSharedPointer>
-#include "HSSMultipleValue.h"
 #include "HSSParserNode.h"
 
 namespace AXR
@@ -61,8 +59,6 @@ namespace AXR
     class AXR_API HSSMultipleValueDefinition : public HSSParserNode
     {
     public:
-        typedef QSharedPointer<HSSMultipleValueDefinition> p;
-
         /**
          *  Creates a new instance of a multiple value definition node.
          */
@@ -73,7 +69,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSMultipleValueDefinition
          */
-        p clone() const;
+        QSharedPointer<HSSMultipleValueDefinition> clone() const;
 
         /**
          *  Destructor for this class.
@@ -87,26 +83,26 @@ namespace AXR
          *  @return A vector of shared pointers to parser nodes that are stored inside this
          *  multiple value definition.
          */
-        std::vector<HSSParserNode::p> getValues();
+        std::vector<QSharedPointer<HSSParserNode> > getValues();
 
         /**
          *  Setter for values.
          *  @param newValues    A vector of shared pointers to parser nodes that to store them inside this
          *  multiple value definition.
          */
-        void setValues(std::vector<HSSParserNode::p> newValues);
+        void setValues(std::vector<QSharedPointer<HSSParserNode> > newValues);
 
         /**
          *  Adds a node to the values list.
          *  @param newValue    A vector of shared pointers to parser nodes that to store them inside this
          *  multiple value definition.
          */
-        void add(HSSParserNode::p newValue);
+        void add(QSharedPointer<HSSParserNode> newValue);
 
     protected:
-        std::vector<HSSParserNode::p> values;
+        std::vector<QSharedPointer<HSSParserNode> > values;
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

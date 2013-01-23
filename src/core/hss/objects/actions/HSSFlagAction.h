@@ -45,10 +45,11 @@
 #define HSSFLAGACTION_H
 
 #include "HSSAction.h"
-#include "HSSFlagFunction.h"
 
 namespace AXR
 {
+    class HSSFlagFunction;
+
     /**
      *  @brief The HSS object counterparts to flagging functions.
      *  They actually work using flagging functions internally.
@@ -56,8 +57,6 @@ namespace AXR
     class AXR_API HSSFlagAction : public HSSAction
     {
     public:
-        typedef QSharedPointer<HSSFlagAction> p;
-
         /**
          *  Constructor for HSSFlagAction objects
          */
@@ -74,7 +73,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSFlagAction
          */
-        p clone() const;
+        QSharedPointer<HSSFlagAction> clone() const;
 
         /**
          *  Destructor for this class.
@@ -93,17 +92,17 @@ namespace AXR
          *  Getter for the flagging function.
          *  @return A shared pointer to the flagging function object.
          */
-        HSSFlagFunction::p getFlagFunction();
+        QSharedPointer<HSSFlagFunction> getFlagFunction();
 
         /**
          *  Setter for the flagging function.
          *  @param newValue A shared pointer to the new flagging function to be used.
          */
-        void setFlagFunction(HSSFlagFunction::p newValue);
+        void setFlagFunction(QSharedPointer<HSSFlagFunction> newValue);
 
     private:
-        HSSFlagFunction::p _flagFunction;
-        virtual HSSClonable::p cloneImpl() const;
+        QSharedPointer<HSSFlagFunction> _flagFunction;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

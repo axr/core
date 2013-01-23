@@ -44,43 +44,13 @@
 #ifndef HSSTOKEN_H
 #define HSSTOKEN_H
 
-#include <QSharedPointer>
-#include "AXRString.h"
-#include "AXRGlobal.h"
+#include "HSSTokenType.h"
 
 namespace AXR
 {
-    enum AXR_API HSSTokenType
-    {
-        HSSNone = 0,
-        HSSIdentifier,
-        HSSNumber,
-        HSSPercentageNumber,
-        HSSHexNumber,
-        HSSDoubleQuoteString,
-        HSSSingleQuoteString,
-        HSSSymbol,
-        HSSWhitespace,
-        HSSInstructionSign,
-        HSSObjectSign,
-        HSSBlockOpen,
-        HSSBlockClose,
-        HSSComma,
-        HSSColon,
-        HSSEndOfStatement,
-        HSSParenthesisOpen,
-        HSSParenthesisClose,
-        HSSLineComment,
-        HSSBlockComment,
-        HSSNegator,
-        HSSAmpersand
-    };
-
     class AXR_API HSSToken
     {
     public:
-        typedef QSharedPointer<HSSToken> p;
-
         static AXRString tokenStringRepresentation(HSSTokenType type);
 
         HSSToken(HSSTokenType type, qint64 line, qint64 column);

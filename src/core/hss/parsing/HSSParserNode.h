@@ -45,7 +45,8 @@
 #define HSSPARSERNODE_H
 
 #include <vector>
-#include <QMetaType>
+#include <QSharedPointer>
+#include <QWeakPointer>
 #include "HSSClonable.h"
 #include "HSSObservable.h"
 #include "HSSTypeEnums.h"
@@ -66,24 +67,14 @@ namespace AXR
     {
     public:
         /**
-         *  The shared pointer to instances of this class.
-         */
-        typedef QSharedPointer<HSSParserNode> p;
-
-        /**
          *  Iterator for vectors of shared pointers to parser nodes.
          */
-        typedef std::vector<HSSParserNode::p>::iterator it;
+        typedef std::vector<QSharedPointer<HSSParserNode> >::iterator it;
 
         /**
          *  Iterator for vectors of shared pointers to parser nodes, const version.
          */
-        typedef std::vector<HSSParserNode::p>::const_iterator const_it;
-
-        /**
-         *  "Parent Pointer". A weak pointer used to break cyclic references.
-         */
-        typedef QWeakPointer<HSSParserNode> pp;
+        typedef std::vector<QSharedPointer<HSSParserNode> >::const_iterator const_it;
 
         /**
          *  When logging, you often need a string representation of the parser node type.
@@ -97,7 +88,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSParserNode
          */
-        p clone() const;
+        QSharedPointer<HSSParserNode> clone() const;
 
         /**
          *  Prints itself as a textual representation. Each subclass should override this method.
@@ -127,13 +118,13 @@ namespace AXR
          *  Traversal method of the parser tree.
          *  @return The parent parser node in the parser tree or an empty pointer if none.
          */
-        p getParentNode();
+        QSharedPointer<HSSParserNode> getParentNode();
 
         /**
          *  Saves the given shared pointer as the parent of this instance in the parser tree.
          *  @param newParent    A shared pointer to the new parent node.
          */
-        void setParentNode(p newParent);
+        void setParentNode(QSharedPointer<HSSParserNode> newParent);
 
         /**
          *  Removes itself from its parent node in the parser tree.
@@ -146,18 +137,18 @@ namespace AXR
          *  Adds the given child node to the list of children
          *  @param child    A shared pointer to the child node to add.
          */
-        void addNode(p child);
+        void addNode(QSharedPointer<HSSParserNode> child);
 
         /**
          *  Removes the given child node from the list of children.
          *  @param child    A shared pointer to the child node to remove.
          */
-        void removeNode(p child);
+        void removeNode(QSharedPointer<HSSParserNode> child);
 
         /**
          *  Traversal method of the parser tree.
          */
-        const std::vector<HSSParserNode::p> getChildNodes() const;
+        const std::vector<QSharedPointer<HSSParserNode> > getChildNodes() const;
 
         /**
          *  Setter for the "this object", which is a shared pointer to the nearest display object
@@ -197,7 +188,7 @@ namespace AXR
         virtual bool isA(HSSFlagFunctionType otherType);
         virtual HSSFlagFunctionType getFlagFunctionType();
 
-        HSSParserNode::p shared_from_this();
+        QSharedPointer<HSSParserNode> shared_from_this();
 
         /**
          *  Setter for the controller. The controller needs to be propagated across all
@@ -232,15 +223,15 @@ namespace AXR
     private:
         AXRController *controller;
         HSSParserNodeType nodeType;
-        pp _parentNode;
-        std::vector<p> _childNodes;
-        virtual HSSClonable::p cloneImpl() const;
+        QWeakPointer<HSSParserNode> _parentNode;
+        std::vector<QSharedPointer<HSSParserNode> > _childNodes;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
 
         QWeakPointer<HSSParserNode> ptr;
     };
 }
 
-Q_DECLARE_METATYPE(AXR::HSSParserNode::p)
-Q_DECLARE_METATYPE(AXR::HSSParserNode::p*)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSParserNode>)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSParserNode>*)
 
 #endif

@@ -52,7 +52,7 @@ HSSNegation::HSSNegation(AXRController * controller)
 
 }
 
-HSSNegation::p HSSNegation::clone() const
+QSharedPointer<HSSNegation> HSSNegation::clone() const
 {
     return qSharedPointerCast<HSSNegation> (this->cloneImpl());
 }
@@ -67,7 +67,7 @@ AXRString HSSNegation::toString()
     return "Negation";
 }
 
-HSSClonable::p HSSNegation::cloneImpl() const
+QSharedPointer<HSSClonable> HSSNegation::cloneImpl() const
 {
-    return HSSNegation::p(new HSSNegation(*this));
+    return QSharedPointer<HSSNegation>(new HSSNegation(*this));
 }

@@ -52,7 +52,7 @@ HSSMultipleValueDefinition::HSSMultipleValueDefinition(AXRController * controlle
 
 }
 
-HSSMultipleValueDefinition::p HSSMultipleValueDefinition::clone() const
+QSharedPointer<HSSMultipleValueDefinition> HSSMultipleValueDefinition::clone() const
 {
     return qSharedPointerCast<HSSMultipleValueDefinition> (this->cloneImpl());
 }
@@ -66,31 +66,31 @@ AXRString HSSMultipleValueDefinition::toString()
 {
     AXRString tempstr = AXRString("HSSMultipleValueDefinition with the following values:\n");
 
-    for (std::vector<HSSParserNode::p>::iterator it = this->values.begin(); it != this->values.end(); ++it)
+    for (std::vector<QSharedPointer<HSSParserNode> >::iterator it = this->values.begin(); it != this->values.end(); ++it)
     {
-        HSSParserNode::p value = *it;
+        QSharedPointer<HSSParserNode> value = *it;
         tempstr.append(value->toString().append("\n"));
     }
 
     return tempstr;
 }
 
-std::vector<HSSParserNode::p> HSSMultipleValueDefinition::getValues()
+std::vector<QSharedPointer<HSSParserNode> > HSSMultipleValueDefinition::getValues()
 {
     return this->values;
 }
 
-void HSSMultipleValueDefinition::setValues(std::vector<HSSParserNode::p> newValues)
+void HSSMultipleValueDefinition::setValues(std::vector<QSharedPointer<HSSParserNode> > newValues)
 {
     this->values = newValues;
 }
 
-void HSSMultipleValueDefinition::add(HSSParserNode::p newValue)
+void HSSMultipleValueDefinition::add(QSharedPointer<HSSParserNode> newValue)
 {
     this->values.push_back(newValue);
 }
 
-HSSClonable::p HSSMultipleValueDefinition::cloneImpl() const
+QSharedPointer<HSSClonable> HSSMultipleValueDefinition::cloneImpl() const
 {
-    return HSSMultipleValueDefinition::p(new HSSMultipleValueDefinition(*this));
+    return QSharedPointer<HSSMultipleValueDefinition>(new HSSMultipleValueDefinition(*this));
 }

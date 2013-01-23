@@ -71,7 +71,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSLog.
          */
-        p clone() const;
+        QSharedPointer<HSSLog> clone() const;
 
         /**
          *  Destructor for this class.
@@ -80,20 +80,20 @@ namespace AXR
 
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
         virtual void fire();
 
         /**
          *  Getter for the definition object of value.
          *  @return A shared pointer to the parser node containing the definition object of value.
          */
-        HSSParserNode::p getDValue();
+        QSharedPointer<HSSParserNode> getDValue();
 
         /**
          *  Setter for the definition object of value. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of value.
          */
-        void setDValue(HSSParserNode::p);
+        void setDValue(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect value.
@@ -104,11 +104,11 @@ namespace AXR
 
 
     private:
-        HSSParserNode::p dValue;
+        QSharedPointer<HSSParserNode> dValue;
         HSSObservable * observedValue;
         HSSObservableProperty observedValueProperty;
 
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

@@ -45,7 +45,6 @@
 #define HSSRECTANGLE_H
 
 #include "HSSShape.h"
-#include "HSSUnits.h"
 
 namespace AXR
 {
@@ -55,8 +54,6 @@ namespace AXR
     class AXR_API HSSRectangle : public HSSShape
     {
     public:
-        typedef QSharedPointer<HSSRectangle> p;
-
         /**
          *  Constructor for HSSRectangle objects
          */
@@ -73,7 +70,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSRectangle
          */
-        p clone() const;
+        QSharedPointer<HSSRectangle> clone() const;
 
         /**
          *  Destructor for this class.
@@ -85,12 +82,12 @@ namespace AXR
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
 
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments);
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments);
 
         virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding);
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

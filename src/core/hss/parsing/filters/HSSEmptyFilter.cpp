@@ -53,7 +53,7 @@ HSSEmptyFilter::HSSEmptyFilter(AXRController * controller)
 
 }
 
-HSSEmptyFilter::p HSSEmptyFilter::clone() const
+QSharedPointer<HSSFilter> HSSEmptyFilter::clone() const
 {
     return qSharedPointerCast<HSSEmptyFilter> (this->cloneImpl());
 }
@@ -68,12 +68,12 @@ AXRString HSSEmptyFilter::toString()
     return "Empty Filter";
 }
 
-HSSSelection::p HSSEmptyFilter::apply(HSSSelection::p scope, bool processing)
+QSharedPointer<HSSSelection> HSSEmptyFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     if (scope->isA(HSSSelectionTypeMultipleSelection))
     {
-        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
         for (HSSMultipleSelection::iterator it=multiSel->begin(); it!=multiSel->end(); ++it) {
             this->_apply(ret, *it);
         }
@@ -85,12 +85,12 @@ HSSSelection::p HSSEmptyFilter::apply(HSSSelection::p scope, bool processing)
     return ret;
 }
 
-inline void HSSEmptyFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+inline void HSSEmptyFilter::_apply(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> selection)
 {
     for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
     {
-        const HSSDisplayObject::p & theDO = *it;
-        const HSSContainer::p & container = HSSContainer::asContainer(*it);
+        const QSharedPointer<HSSDisplayObject> & theDO = *it;
+        const QSharedPointer<HSSContainer> & container = HSSContainer::asContainer(*it);
 
         if (container->getChildren(true)->empty())
         {
@@ -99,7 +99,7 @@ inline void HSSEmptyFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelecti
     }
 }
 
-HSSClonable::p HSSEmptyFilter::cloneImpl() const
+QSharedPointer<HSSClonable> HSSEmptyFilter::cloneImpl() const
 {
-    return HSSEmptyFilter::p(new HSSEmptyFilter(*this));
+    return QSharedPointer<HSSEmptyFilter>(new HSSEmptyFilter(*this));
 }

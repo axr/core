@@ -45,7 +45,6 @@
 #define HSSINSTRUCTION_H
 
 #include <QSharedPointer>
-#include "AXRString.h"
 #include "HSSStatement.h"
 
 namespace AXR
@@ -60,8 +59,6 @@ namespace AXR
     class AXR_API HSSInstruction : public HSSStatement
     {
     public:
-        typedef QSharedPointer<HSSInstruction> p;
-
         /**
          *  Creates a new instance of an instruction node with the given type. To be used when
          *  a value is not applicable, such as \#delete.
@@ -88,7 +85,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSAction
          */
-        p clone() const;
+        QSharedPointer<HSSInstruction> clone() const;
 
         /**
          *  Destructor for this class.
@@ -133,7 +130,7 @@ namespace AXR
          *
          *  @param newValue     A shared pointer to the parser node that holds the argument.
          */
-        void setArgument(HSSParserNode::p newValue);
+        void setArgument(QSharedPointer<HSSParserNode> newValue);
 
         /**
          *  Getter for argument.
@@ -142,15 +139,15 @@ namespace AXR
          *
          *  @return A shared pointer to the parser node that holds the argument.
          */
-        HSSParserNode::p getArgument();
+        QSharedPointer<HSSParserNode> getArgument();
 
     protected:
         HSSInstructionType instructionType;
         AXRString value;
-        HSSParserNode::p argument;
+        QSharedPointer<HSSParserNode> argument;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

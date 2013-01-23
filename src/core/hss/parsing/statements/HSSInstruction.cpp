@@ -67,7 +67,7 @@ HSSInstruction::HSSInstruction(const HSSInstruction &orig)
     this->argument = orig.argument;
 }
 
-HSSInstruction::p HSSInstruction::clone() const
+QSharedPointer<HSSInstruction> HSSInstruction::clone() const
 {
     return qSharedPointerCast<HSSInstruction>(this->cloneImpl());
 }
@@ -127,17 +127,17 @@ AXRString HSSInstruction::instructionStringRepresentation(HSSInstructionType typ
     return types[type];
 }
 
-HSSClonable::p HSSInstruction::cloneImpl() const
+QSharedPointer<HSSClonable> HSSInstruction::cloneImpl() const
 {
-    return HSSInstruction::p(new HSSInstruction(*this));
+    return QSharedPointer<HSSInstruction>(new HSSInstruction(*this));
 }
 
-HSSParserNode::p HSSInstruction::getArgument()
+QSharedPointer<HSSParserNode> HSSInstruction::getArgument()
 {
     return this->argument;
 }
 
-void HSSInstruction::setArgument(HSSParserNode::p newValue)
+void HSSInstruction::setArgument(QSharedPointer<HSSParserNode> newValue)
 {
     this->argument = newValue;
 }

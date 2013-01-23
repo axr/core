@@ -41,30 +41,34 @@
  *
  ********************************************************************/
 
+#include <QColor>
 #include "AXRDebugging.h"
 #include "AXRError.h"
+#include "HSSCallback.h"
+#include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
 #include "HSSRgb.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
-HSSRgb::p HSSRgb::blackColor(AXRController * controller)
+QSharedPointer<HSSRgb> HSSRgb::blackColor(AXRController * controller)
 {
     //create a new color object, it will have all its color channels set to
     //0 and the alpha to 255 by default in the constructor
-    return HSSRgb::p(new HSSRgb(controller));
+    return QSharedPointer<HSSRgb>(new HSSRgb(controller));
 }
 
-HSSRgb::p HSSRgb::whiteColor(AXRController * controller)
+QSharedPointer<HSSRgb> HSSRgb::whiteColor(AXRController * controller)
 {
     //create a new color object with default value
-    HSSRgb::p whiteColor = HSSRgb::p(new HSSRgb(controller));
+    QSharedPointer<HSSRgb> whiteColor = QSharedPointer<HSSRgb>(new HSSRgb(controller));
     //set all the color channels to the maximum value
-    whiteColor->setDRed(HSSNumberConstant::p(new HSSNumberConstant(255.0, controller)));
-    whiteColor->setDGreen(HSSNumberConstant::p(new HSSNumberConstant(255.0, controller)));
-    whiteColor->setDBlue(HSSNumberConstant::p(new HSSNumberConstant(255.0, controller)));
+    whiteColor->setDRed(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(255.0, controller)));
+    whiteColor->setDGreen(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(255.0, controller)));
+    whiteColor->setDBlue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(255.0, controller)));
     return whiteColor;
 }
 
@@ -101,15 +105,15 @@ HSSRgb::HSSRgb(const HSSRgb & orig)
     this->setShorthandProperties(shorthandProperties);
 }
 
-HSSRgb::p HSSRgb::clone() const
+QSharedPointer<HSSRgb> HSSRgb::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: cloning rgb object");
     return qSharedPointerCast<HSSRgb> (this->cloneImpl());
 }
 
-HSSClonable::p HSSRgb::cloneImpl() const
+QSharedPointer<HSSClonable> HSSRgb::cloneImpl() const
 {
-    return HSSRgb::p(new HSSRgb(*this));
+    return QSharedPointer<HSSRgb>(new HSSRgb(*this));
 }
 
 HSSRgb::~HSSRgb()
@@ -156,7 +160,7 @@ AXRString HSSRgb::defaultObjectType(AXRString property)
 //    return HSSObject::isKeyword(value, property);
 //}
 
-void HSSRgb::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSRgb::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -184,7 +188,7 @@ HSSUnit HSSRgb::getRed()
     return this->red;
 }
 
-void HSSRgb::setDRed(HSSParserNode::p value)
+void HSSRgb::setDRed(QSharedPointer<HSSParserNode> value)
 {
     this->dRed = value;
     this->red = this->_evaluatePropertyValue(
@@ -207,7 +211,7 @@ HSSUnit HSSRgb::getGreen()
     return this->green;
 }
 
-void HSSRgb::setDGreen(HSSParserNode::p value)
+void HSSRgb::setDGreen(QSharedPointer<HSSParserNode> value)
 {
     this->dGreen = value;
     this->green = this->_evaluatePropertyValue(
@@ -230,7 +234,7 @@ HSSUnit HSSRgb::getBlue()
     return this->blue;
 }
 
-void HSSRgb::setDBlue(HSSParserNode::p value)
+void HSSRgb::setDBlue(QSharedPointer<HSSParserNode> value)
 {
     this->dBlue = value;
     this->blue = this->_evaluatePropertyValue(
@@ -253,7 +257,7 @@ HSSUnit HSSRgb::getAlpha()
     return this->alpha;
 }
 
-void HSSRgb::setDAlpha(HSSParserNode::p value)
+void HSSRgb::setDAlpha(QSharedPointer<HSSParserNode> value)
 {
     this->dAlpha = value;
     this->alpha = this->_evaluatePropertyValue(
@@ -273,7 +277,7 @@ void HSSRgb::alphaChanged(AXR::HSSObservableProperty source, void *data)
 
 HSSUnit HSSRgb::_evaluatePropertyValue(
                                    void(HSSRgb::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
@@ -287,21 +291,21 @@ HSSUnit HSSRgb::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
+        QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setScope(this->getScope());
         expressionValue->setThisObj(this->getThisObj());

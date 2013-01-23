@@ -44,3 +44,23 @@
 #include "AXRString.h"
 
 using namespace AXR;
+
+std::string toStdString(const AXRString &string)
+{
+    return string.toStdString();
+}
+
+AXRString fromStdString(const std::string &string)
+{
+    return AXRString::fromStdString(string);
+}
+
+QString toQString(const AXRString &string)
+{
+    return string;
+}
+
+AXRString fromQString(const QString &string)
+{
+    return string;
+}

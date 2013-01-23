@@ -44,16 +44,18 @@
 #ifndef HSSOBJECTDEFINITION_H
 #define HSSOBJECTDEFINITION_H
 
+#include <deque>
 #include <vector>
 #include <QSharedPointer>
-#include "HSSDisplayObject.h"
-#include "HSSObject.h"
-#include "HSSRule.h"
 #include "HSSStatement.h"
-#include "HSSSimpleSelection.h"
 
 namespace AXR
 {
+    class HSSObject;
+    class HSSPropertyDefinition;
+    class HSSRule;
+    class HSSSimpleSelection;
+
     /**
      *  @brief Object definitions in HSS are represented by this class.
      *
@@ -62,13 +64,11 @@ namespace AXR
     class AXR_API HSSObjectDefinition : public HSSStatement
     {
     public:
-        typedef QSharedPointer<HSSObjectDefinition> p;
-
         /**
          *  Creates a new instance of an object definition, storing the given object, to which
          *   the properties will be applied by calling the apply() method.
          */
-        HSSObjectDefinition(HSSObject::p prototype, AXRController * controller);
+        HSSObjectDefinition(QSharedPointer<HSSObject> prototype, AXRController * controller);
 
         /**
          *  Copy constructor for HSSObjectDefinition. Do not call directly, use clone() instead.
@@ -80,7 +80,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSObjectDefinition
          */
-        p clone() const;
+        QSharedPointer<HSSObjectDefinition> clone() const;
 
         /**
          *  Destructor for this class
@@ -100,28 +100,28 @@ namespace AXR
          *  @param newProperty      A shared pointer (passed by reference [why?]) to the new
          *                          property definition to be added.
          */
-        void propertiesAdd(HSSPropertyDefinition::p &newProperty);
+        void propertiesAdd(QSharedPointer<HSSPropertyDefinition> &newProperty);
 
         /**
          *  Adds a new property definition to the end of the properties list, const version.
          *  @param newProperty      A shared pointer (passed by reference [why?]) to the new
          *                          property definition to be added.
          */
-        void propertiesAdd(const HSSPropertyDefinition::p &newProperty);
+        void propertiesAdd(const QSharedPointer<HSSPropertyDefinition> &newProperty);
 
         /**
          *  Adds a new property definition to the beginning of the properties list.
          *  @param newProperty      A shared pointer (passed by reference [why?]) to the new
          *                          property definition to be added.
          */
-        void propertiesPrepend(HSSPropertyDefinition::p &newProperty);
+        void propertiesPrepend(QSharedPointer<HSSPropertyDefinition> &newProperty);
 
         /**
          *  Adds a new property definition to the beginning of the properties list, const version.
          *  @param newProperty      A shared pointer (passed by reference [why?]) to the new
          *                          property definition to be added.
          */
-        void propertiesPrepend(const HSSPropertyDefinition::p &newProperty);
+        void propertiesPrepend(const QSharedPointer<HSSPropertyDefinition> &newProperty);
 
         /**
          *  Removes last statement from the list and then deletes it.
@@ -131,7 +131,7 @@ namespace AXR
         /**
          *  @return A shared pointer to the last statement in the list, passed by reference [why?].
          */
-        HSSPropertyDefinition::p &propertiesLast();
+        QSharedPointer<HSSPropertyDefinition> &propertiesLast();
 
         /**
          *  @return How many statements there are in the properties list.
@@ -142,19 +142,19 @@ namespace AXR
          *  @return All the properties in the list, contained in a double ended queue holding shared
          *  pointers to property definitions.
          */
-        std::deque<HSSPropertyDefinition::p> getProperties();
+        std::deque<QSharedPointer<HSSPropertyDefinition> > getProperties();
 
         /**
          *  Adds a new object definition to the end of the children list.
          *  @param child    A shared pointer (passed by reference [why?]) to an object definition.
          */
-        void childrenAdd(HSSObjectDefinition::p &child);
+        void childrenAdd(QSharedPointer<HSSObjectDefinition> &child);
 
         /**
          *  Adds a new object definition to the end of the children list, const version.
          *  @param child    A shared pointer (passed by reference [why?]) to an object definition.
          */
-        void childrenAdd(const HSSObjectDefinition::p &child);
+        void childrenAdd(const QSharedPointer<HSSObjectDefinition> &child);
 
         /**
          *  Removes last statement from the list and then deletes it.
@@ -164,7 +164,7 @@ namespace AXR
         /**
          *  @return A shared pointer (passed by reference [why?]) to the last statement in the list.
          */
-        HSSObjectDefinition::p &childrenLast();
+        QSharedPointer<HSSObjectDefinition> &childrenLast();
 
         /**
          *  @return How many statements there are in the children list.
@@ -174,76 +174,76 @@ namespace AXR
         /**
          *  @return A vector of shared pointers to object defnitions, the children.
          */
-        const std::vector<HSSObjectDefinition::p> getChildren() const;
+        const std::vector<QSharedPointer<HSSObjectDefinition> > getChildren() const;
 
         /**
          *  @return A shared pointer to the object that corresponds to the object type of the
          *  object definition. Call apply() before using.
          */
-        HSSObject::p getObject();
+        QSharedPointer<HSSObject> getObject();
 
         /**
          *  Setter for the scope which to pass to members like references or selections.
          *  @param newScope     The new scope, a shared pointer to a simple selection.
          */
-        void setScope(HSSSimpleSelection::p newScope);
+        void setScope(QSharedPointer<HSSSimpleSelection> newScope);
 
         /**
          *  Setter for the "\@this object" which to pass to members like references or selections.
          *  @param value    A shared pointer to a display object representing the \@this object.
          */
-        void setThisObj(HSSDisplayObject::p value);
+        void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
         /**
          *  Getter for the "\@this object" which to pass to members like references or selections.
          *  @return A shared pointer to a display object representing the \@this object.
          */
-        HSSDisplayObject::p getThisObj();
+        QSharedPointer<HSSDisplayObject> getThisObj();
 
         /**
          *  Setter for the list of rules. Replaces the whole list with the given one.
          *  @param newRules     A double ended queue holding shared pointers to rules.
          */
-        void setRules(std::deque<HSSRule::p> newRules);
+        void setRules(std::deque<QSharedPointer<HSSRule> > newRules);
 
         /**
          *  Getter for the list of rules.
          *  @return A double ended queue holding shared pointers to rules.
          *  @warning The returned deque is read-only.
          */
-        const std::deque<HSSRule::p> getRules() const;
+        const std::deque<QSharedPointer<HSSRule> > getRules() const;
 
         /**
          *  Add a rule to the end of the list of rules.
          *  @param rule     A shared pointer to a rule, to be added to the list of rules.
          */
-        void rulesAdd(HSSRule::p rule);
+        void rulesAdd(QSharedPointer<HSSRule> rule);
 
         /**
          *  Add a rule to the beginning of the list of rules.
          *  @param rule     A shared pointer to a rule, to be added to the list of rules.
          */
-        void rulesPrepend(HSSRule::p rule);
+        void rulesPrepend(QSharedPointer<HSSRule> rule);
 
         /**
          *  Remove a rule from the list of rules.
          *  @param rule     A shared pointer to a rule, to be removed from the list of rules.
          */
-        void rulesRemove(HSSRule::p rule);
+        void rulesRemove(QSharedPointer<HSSRule> rule);
 
     protected:
-        HSSObjectDefinition::p shared_from_this();
+        QSharedPointer<HSSObjectDefinition> shared_from_this();
 
-        std::deque<HSSPropertyDefinition::p> properties;
-        std::vector<HSSObjectDefinition::p> children;
+        std::deque<QSharedPointer<HSSPropertyDefinition> > properties;
+        std::vector<QSharedPointer<HSSObjectDefinition> > children;
 
-        HSSDisplayObject::p thisObj;
-        HSSSimpleSelection::p scope;
+        QSharedPointer<HSSDisplayObject> thisObj;
+        QSharedPointer<HSSSimpleSelection> scope;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
-        HSSObject::p prototype;
-        std::deque<HSSRule::p> _rules;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        QSharedPointer<HSSObject> prototype;
+        std::deque<QSharedPointer<HSSRule> > _rules;
     };
 }
 

@@ -41,6 +41,8 @@
  *
  ********************************************************************/
 
+#include <QSharedPointer>
+#include "HSSDisplayObject.h"
 #include "HSSMultipleSelection.h"
 #include "HSSSimpleSelection.h"
 
@@ -59,7 +61,7 @@ public:
     /**
      *
      */
-    std::vector<HSSSimpleSelection::p> items;
+    std::vector<QSharedPointer<HSSSimpleSelection> > items;
 };
 
 HSSMultipleSelection::HSSMultipleSelection()
@@ -72,7 +74,7 @@ HSSMultipleSelection::HSSMultipleSelection(iterator a, iterator b)
 : HSSSelection(HSSSelectionTypeMultipleSelection)
 , d(new Data())
 {
-    std::vector<HSSSimpleSelection::p> newItems(a, b);
+    std::vector<QSharedPointer<HSSSimpleSelection> > newItems(a, b);
     this->d->items = newItems;
 }
 
@@ -80,7 +82,7 @@ HSSMultipleSelection::HSSMultipleSelection(const_iterator a, const_iterator b)
 : HSSSelection(HSSSelectionTypeMultipleSelection)
 , d(new Data())
 {
-    std::vector<HSSSimpleSelection::p> newItems(a, b);
+    std::vector<QSharedPointer<HSSSimpleSelection> > newItems(a, b);
     this->d->items = newItems;
 }
 
@@ -100,21 +102,21 @@ HSSMultipleSelection& HSSMultipleSelection::operator=(const HSSMultipleSelection
     return *this;
 }
 
-void HSSMultipleSelection::add(HSSSimpleSelection::p item)
+void HSSMultipleSelection::add(QSharedPointer<HSSSimpleSelection> item)
 {
     this->d->items.push_back(item);
 }
 
-void HSSMultipleSelection::addSelection(HSSSelection::p item)
+void HSSMultipleSelection::addSelection(QSharedPointer<HSSSelection> item)
 {
     if (item->isA(HSSSelectionTypeSimpleSelection))
     {
-        HSSSimpleSelection::p simpleSel = qSharedPointerCast<HSSSimpleSelection>(item);
+        QSharedPointer<HSSSimpleSelection> simpleSel = qSharedPointerCast<HSSSimpleSelection>(item);
         this->add(simpleSel);
     }
     else if (item->isA(HSSSelectionTypeMultipleSelection))
     {
-        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(item);
+        QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(item);
         for (iterator it = multiSel->begin(); it != multiSel->end(); it++) {
             this->add(*it);
         }
@@ -156,13 +158,13 @@ bool HSSMultipleSelection::empty() const
     return this->d->items.empty();
 }
 
-HSSSimpleSelection::p HSSMultipleSelection::front() const
+QSharedPointer<HSSSimpleSelection> HSSMultipleSelection::front() const
 {
-    HSSSimpleSelection::p simpleSel = this->d->items.front();
+    QSharedPointer<HSSSimpleSelection> simpleSel = this->d->items.front();
     return simpleSel;
 }
 
-HSSSimpleSelection::p HSSMultipleSelection::back() const
+QSharedPointer<HSSSimpleSelection> HSSMultipleSelection::back() const
 {
     return this->d->items.back();
 }
@@ -182,16 +184,16 @@ HSSMultipleSelection::iterator HSSMultipleSelection::erase(iterator first, itera
     return this->d->items.erase(first, last);
 }
 
-std::vector< HSSSimpleSelection::p > HSSMultipleSelection::getItems() const
+std::vector< QSharedPointer<HSSSimpleSelection> > HSSMultipleSelection::getItems() const
 {
     return this->d->items;
 }
 
-HSSSimpleSelection::p HSSMultipleSelection::joinAll()
+QSharedPointer<HSSSimpleSelection> HSSMultipleSelection::joinAll()
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     for (iterator it=this->d->items.begin(); it!=this->d->items.end(); it++) {
-        HSSSimpleSelection::p inner = *it;
+        QSharedPointer<HSSSimpleSelection> inner = *it;
         for (HSSSimpleSelection::iterator it2 = inner->begin(); it2 != inner->end(); ++it2) {
             ret->add(*it2);
         }
@@ -199,13 +201,13 @@ HSSSimpleSelection::p HSSMultipleSelection::joinAll()
     return ret;
 }
 
-HSSMultipleSelection::p HSSMultipleSelection::splitAll()
+QSharedPointer<HSSMultipleSelection> HSSMultipleSelection::splitAll()
 {
-    HSSMultipleSelection::p ret(new HSSMultipleSelection());
+    QSharedPointer<HSSMultipleSelection> ret(new HSSMultipleSelection());
     for (iterator it=this->d->items.begin(); it!=this->d->items.end(); it++) {
-        const HSSSimpleSelection::p & inner = *it;
+        const QSharedPointer<HSSSimpleSelection> & inner = *it;
         for (HSSSimpleSelection::iterator it2=inner->begin(); it2!=inner->end(); it2++) {
-            HSSSimpleSelection::p newSel(new HSSSimpleSelection());
+            QSharedPointer<HSSSimpleSelection> newSel(new HSSSimpleSelection());
             newSel->add(*it2);
             ret->add(newSel);
         }

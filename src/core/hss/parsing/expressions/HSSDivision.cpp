@@ -41,11 +41,12 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSDivision.h"
 
 using namespace AXR;
 
-HSSDivision::HSSDivision(HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller)
+HSSDivision::HSSDivision(QSharedPointer<HSSParserNode> _left, QSharedPointer<HSSParserNode> _right, AXRController * controller)
 : HSSExpression(HSSExpressionTypeDivision, _left, _right, controller)
 {
 
@@ -57,7 +58,7 @@ HSSDivision::HSSDivision(const HSSDivision &orig)
 
 }
 
-HSSDivision::p HSSDivision::clone() const
+QSharedPointer<HSSDivision> HSSDivision::clone() const
 {
     return qSharedPointerCast<HSSDivision> (this->cloneImpl());
 }
@@ -72,7 +73,7 @@ HSSUnit HSSDivision::calculate(HSSUnit leftval, HSSUnit rightval)
     return leftval / rightval;
 }
 
-HSSClonable::p HSSDivision::cloneImpl() const
+QSharedPointer<HSSClonable> HSSDivision::cloneImpl() const
 {
-    return HSSDivision::p(new HSSDivision(*this));
+    return QSharedPointer<HSSDivision>(new HSSDivision(*this));
 }

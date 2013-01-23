@@ -45,36 +45,17 @@
 #define HSSTEXTBLOCK_H
 
 #include "HSSDisplayObject.h"
+#include "HSSTextEnums.h"
 
 namespace AXR
 {
-    enum AXR_API HSSTextTransformType
-    {
-        HSSTextTransformTypeNone = 0,
-        HSSTextTransformTypeLowercase,
-        HSSTextTransformTypeUppercase,
-        HSSTextTransformTypeCapitalize,
-        HSSTextTransformTypeHumanize
-    };
-
-    enum AXR_API HSSTextAlignType
-    {
-        HSSTextAlignTypeNone = 0,
-        HSSTextAlignTypeLeft,
-        HSSTextAlignTypeRight,
-        HSSTextAlignTypeCenter,
-        HSSTextAlignTypeJustify
-    };
-
     class AXR_API HSSTextBlock : public HSSDisplayObject
     {
     public:
-
         static HSSTextTransformType textTransformTypeFromString(AXRString value);
         static HSSTextAlignType textAlignTypeFromString(AXRString value);
 
-        typedef QSharedPointer<HSSTextBlock> p;
-        typedef std::vector<HSSTextBlock::p>::iterator it;
+        typedef std::vector<QSharedPointer<HSSTextBlock> >::iterator it;
 
         /**
          *  Constructor for HSSTextBlock objects
@@ -89,33 +70,33 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSTextBlock
          */
-        p clone() const;
+        QSharedPointer<HSSTextBlock> clone() const;
         virtual ~HSSTextBlock();
 
         virtual AXRString defaultObjectType();
         virtual bool isKeyword(AXRString value, AXRString property);
         virtual AXRString toString();
         virtual void setDefaults();
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
         virtual void drawForeground();
         virtual void layout();
 
         //transform
         HSSTextTransformType getTransform();
-        HSSParserNode::p getDTransform();
-        void setDTransform(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDTransform();
+        void setDTransform(QSharedPointer<HSSParserNode> value);
         void transformChanged(HSSObservableProperty source, void*data);
 
         //textAlign
         HSSTextAlignType getTextAlign();
-        HSSParserNode::p getDTextAlign();
-        void setDTextAlign(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDTextAlign();
+        void setDTextAlign(QSharedPointer<HSSParserNode> value);
         void textAlignChanged(HSSObservableProperty source, void*data);
 
         //text
         AXRString getText();
-        HSSParserNode::p getDText();
-        void setDText(HSSParserNode::p value);
+        QSharedPointer<HSSParserNode> getDText();
+        void setDText(QSharedPointer<HSSParserNode> value);
         void textChanged(HSSObservableProperty source, void*data);
 
         void trimContentText();
@@ -123,26 +104,26 @@ namespace AXR
     protected:
         //transform
         HSSTextTransformType transform;
-        HSSParserNode::p dTransform;
+        QSharedPointer<HSSParserNode> dTransform;
         HSSObservable * observedTransform;
         HSSObservableProperty observedTransformProperty;
 
         //textAlign
         HSSTextAlignType textAlign;
-        HSSParserNode::p dTextAlign;
+        QSharedPointer<HSSParserNode> dTextAlign;
         HSSObservable * observedTextAlign;
         HSSObservableProperty observedTextAlignProperty;
 
         //text
         AXRString text;
-        HSSParserNode::p dText;
+        QSharedPointer<HSSParserNode> dText;
         HSSObservable * observedText;
         HSSObservableProperty observedTextProperty;
 
     private:
         QFont getFont() const;
 
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

@@ -44,7 +44,6 @@
 #ifndef HSSPARENTSELECTOR_H
 #define HSSPARENTSELECTOR_H
 
-#include "HSSDisplayObject.h"
 #include "HSSNameSelector.h"
 
 namespace AXR
@@ -57,8 +56,6 @@ namespace AXR
     class AXR_API HSSParentSelector : public HSSNameSelector
     {
     public:
-        typedef QSharedPointer<HSSParentSelector> p;
-
         /**
          *  Creates a new instance of a Parent selector.
          */
@@ -69,7 +66,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSParentSelector
          */
-        p clone() const;
+        QSharedPointer<HSSParentSelector> clone() const;
 
         //see HSSNameSelector.h for the documentation of this method
         AXRString getElementName();
@@ -77,11 +74,11 @@ namespace AXR
         //see HSSParserNode.h for the documentation of this method
         virtual AXRString toString();
 
-        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, HSSDisplayObject::p thisObj, bool processing);
+        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
-        inline void _filterSimpleSelection(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection);
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        inline void _filterSimpleSelection(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> selection);
     };
 }
 

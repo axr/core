@@ -41,7 +41,10 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSEvenFilter.h"
+#include "HSSMultipleSelection.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
@@ -51,7 +54,7 @@ HSSEvenFilter::HSSEvenFilter(AXRController * controller)
 
 }
 
-HSSEvenFilter::p HSSEvenFilter::clone() const
+QSharedPointer<HSSFilter> HSSEvenFilter::clone() const
 {
     return qSharedPointerCast<HSSEvenFilter> (this->cloneImpl());
 }
@@ -66,12 +69,12 @@ AXRString HSSEvenFilter::toString()
     return "Even Filter";
 }
 
-HSSSelection::p HSSEvenFilter::apply(HSSSelection::p scope, bool processing)
+QSharedPointer<HSSSelection> HSSEvenFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     if (scope->isA(HSSSelectionTypeMultipleSelection))
     {
-        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
         for (HSSMultipleSelection::iterator it=multiSel->begin(); it!=multiSel->end(); ++it) {
             this->_apply(ret, *it);
         }
@@ -83,7 +86,7 @@ HSSSelection::p HSSEvenFilter::apply(HSSSelection::p scope, bool processing)
     return ret;
 }
 
-inline void HSSEvenFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+inline void HSSEvenFilter::_apply(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> selection)
 {
     unsigned i = 0;
     for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
@@ -106,7 +109,7 @@ inline void HSSEvenFilter::_apply(HSSSimpleSelection::p & ret, HSSSimpleSelectio
     }
 }
 
-HSSClonable::p HSSEvenFilter::cloneImpl() const
+QSharedPointer<HSSClonable> HSSEvenFilter::cloneImpl() const
 {
-    return HSSEvenFilter::p(new HSSEvenFilter(*this));
+    return QSharedPointer<HSSEvenFilter>(new HSSEvenFilter(*this));
 }

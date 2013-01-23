@@ -44,7 +44,12 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
+#include "HSSDisplayObject.h"
 #include "HSSFlagAction.h"
+#include "HSSFlagFunction.h"
+#include "HSSSelection.h"
+#include "HSSSelectorChain.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
@@ -60,15 +65,15 @@ HSSFlagAction::HSSFlagAction(const HSSFlagAction & orig)
     this->_flagFunction = qSharedPointerCast<HSSFlagFunction > (orig._flagFunction->clone());
 }
 
-HSSFlagAction::p HSSFlagAction::clone() const
+QSharedPointer<HSSFlagAction> HSSFlagAction::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFlagAction: cloning flag action object");
     return qSharedPointerCast<HSSFlagAction> (this->cloneImpl());
 }
 
-HSSClonable::p HSSFlagAction::cloneImpl() const
+QSharedPointer<HSSClonable> HSSFlagAction::cloneImpl() const
 {
-    HSSFlagAction::p clone = HSSFlagAction::p(new HSSFlagAction(*this));
+    QSharedPointer<HSSFlagAction> clone = QSharedPointer<HSSFlagAction>(new HSSFlagAction(*this));
     return clone;
 }
 
@@ -89,16 +94,16 @@ AXRString HSSFlagAction::defaultObjectType()
 
 void HSSFlagAction::fire()
 {
-    HSSFlagFunction::p flagFunction = this->getFlagFunction();
-    HSSDisplayObject::p thisObj = this->getThisObj();
-    HSSSelection::p selection = this->getController()->select(flagFunction->getSelectorChains(), this->scope, thisObj);
-    HSSSimpleSelection::p inner = selection->joinAll();
+    QSharedPointer<HSSFlagFunction> flagFunction = this->getFlagFunction();
+    QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
+    QSharedPointer<HSSSelection> selection = this->getController()->select(flagFunction->getSelectorChains(), this->scope, thisObj);
+    QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
     HSSFlagFunctionType type = flagFunction->getFlagFunctionType();
     const AXRString & flagName = flagFunction->getName();
     if(type == HSSFlagFunctionTypeCaptureFlag){
         for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
         {
-            HSSDisplayObject::p container = *innerIt;
+            QSharedPointer<HSSDisplayObject> container = *innerIt;
             if(container != thisObj)
             {
                 container->flagsDeactivate(flagName);
@@ -110,7 +115,7 @@ void HSSFlagAction::fire()
     {
         for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
         {
-            HSSDisplayObject::p container = *innerIt;
+            QSharedPointer<HSSDisplayObject> container = *innerIt;
             switch (flagFunction->getFlagFunctionType())
             {
                 case HSSFlagFunctionTypeFlag:
@@ -131,12 +136,12 @@ void HSSFlagAction::fire()
     }
 }
 
-HSSFlagFunction::p HSSFlagAction::getFlagFunction()
+QSharedPointer<HSSFlagFunction> HSSFlagAction::getFlagFunction()
 {
     return this->_flagFunction;
 }
 
-void HSSFlagAction::setFlagFunction(HSSFlagFunction::p newValue)
+void HSSFlagAction::setFlagFunction(QSharedPointer<HSSFlagFunction> newValue)
 {
     this->_flagFunction = newValue;
 }

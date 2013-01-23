@@ -45,10 +45,11 @@
 #define HSSOBJECT_H
 
 #include <vector>
-#include <QVariant>
 #include <QMap>
+#include <QSharedPointer>
+#include <QWeakPointer>
+#include "HSSClonable.h"
 #include "HSSObservable.h"
-#include "HSSParserNode.h"
 #include "HSSTypeEnums.h"
 
 namespace AXR
@@ -56,6 +57,7 @@ namespace AXR
     class AXRController;
     class HSSMultipleValueDefinition;
     class HSSDisplayObject;
+    class HSSParserNode;
     class HSSSimpleSelection;
 
     /**
@@ -67,24 +69,20 @@ namespace AXR
     {
     public:
         /**
-         *  The shared pointer to this kind of object.
-         */
-        typedef QSharedPointer<HSSObject> p;
-        /**
          *  Convenience iterator for vectors of shared pointers to this kind of object.
          */
-        typedef std::vector<p>::iterator it;
+        typedef std::vector<QSharedPointer<HSSObject> >::iterator it;
         /**
          *  Convenience iterator for vectors of shared pointers to this kind of object - const version
          */
-        typedef std::vector<p>::const_iterator const_it;
+        typedef std::vector<QSharedPointer<HSSObject> >::const_iterator const_it;
         /**
          *  Creates a new object based on a string identifying it's type. Check the HSS specification
          *  for the type names.
          *  @param type A string identifying the type for the new object
          *  @return A shared pointer to the new HSSObject
          */
-        static HSSObject::p newObjectWithType(AXRString type, AXRController * controller);
+        static QSharedPointer<HSSObject> newObjectWithType(AXRString type, AXRController * controller);
 
         /**
          *  This stores the name of the object.
@@ -108,7 +106,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSObject
          */
-        p clone() const;
+        QSharedPointer<HSSObject> clone() const;
         /**
          *  Destructor for HSSObject.
          */
@@ -212,13 +210,13 @@ namespace AXR
          *  Getter for the definition object for the isA property.
          *  @return A shared pointer to the parser node that defines the isA property.
          */
-        HSSParserNode::p getDIsA();
+        QSharedPointer<HSSParserNode> getDIsA();
         /**
          *  Setter for the definition object for the isA property.
          *  @param value        A shared pointer to the parser node that defines the isA property.
          */
-        void setDIsA(HSSParserNode::p value);
-        void addDIsA(HSSParserNode::p value);
+        void setDIsA(QSharedPointer<HSSParserNode> value);
+        void addDIsA(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Callback to receive notifications of when the isA property has changed.
@@ -229,20 +227,20 @@ namespace AXR
         void isAChanged(HSSObservableProperty source, void*data);
         /**
          *  Convenience method that gets the HSSObservableProperty for a property name in string
-         *  form and passes it to setProperty(HSSObservableProperty, HSSParserNode::p).
+         *  form and passes it to setProperty(HSSObservableProperty, QSharedPointer<HSSParserNode>).
          *  @param name     A string containing the property name
          *  @param value    The parser node defining the value for the property
          *
          *  @todo this might be not necessary to be virtual
          */
-        virtual void setPropertyWithName(AXRString name, HSSParserNode::p value);
+        virtual void setPropertyWithName(AXRString name, QSharedPointer<HSSParserNode> value);
         /**
          *  Sets the parser node that defines the value of the given property. Each subclass
          *  will call the specific setD\<\<property\>\>() method.
          *  @param name     The observable property name
          *  @param value    The parser node defining the value for the property
          */
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
         /**
          *  @todo remove this if not used
          */
@@ -319,7 +317,7 @@ namespace AXR
         virtual bool isA(HSSActionType otherType);
         virtual HSSActionType getActionType();
 
-        HSSObject::p shared_from_this();
+        QSharedPointer<HSSObject> shared_from_this();
 
     protected:
         QMap<HSSObservableProperty, QVariant> properties;
@@ -327,7 +325,7 @@ namespace AXR
         QMap<AXRString, bool> skipShorthand;
         size_t shorthandIndex;
 
-        HSSParserNode::p dIsA;
+        QSharedPointer<HSSParserNode> dIsA;
 
         QSharedPointer<HSSSimpleSelection> scope;
         QSharedPointer<HSSDisplayObject> thisObj;
@@ -337,20 +335,20 @@ namespace AXR
         HSSObjectType type;
         bool _isNamed;
 
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
 
         QWeakPointer<HSSObject> ptr;
     };
 }
 
-Q_DECLARE_METATYPE(AXR::HSSObject::p)
-Q_DECLARE_METATYPE(std::vector<AXR::HSSObject::p>)
-Q_DECLARE_METATYPE(std::vector<AXR::HSSObject::p>*)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSObject>)
+Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSObject> >)
+Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSObject> >*)
 Q_DECLARE_METATYPE(AXR::HSSEventType)
 
 // Necessary because the comma in the type name would cause it to
 // be passed to the below macro as two parameters instead of one
-typedef QMap<AXR::HSSEventType, std::vector<AXR::HSSObject::p> > QMapHSSEventTypeVectorHSSObjectp;
+typedef QMap<AXR::HSSEventType, std::vector<QSharedPointer<AXR::HSSObject> > > QMapHSSEventTypeVectorHSSObjectp;
 Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp)
 Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp*)
 

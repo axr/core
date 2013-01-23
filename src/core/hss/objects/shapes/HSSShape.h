@@ -44,10 +44,10 @@
 #ifndef HSSSHAPE_H
 #define HSSSHAPE_H
 
-#include <QSharedPointer>
 #include "HSSObject.h"
-#include "HSSUnits.h"
-#include <QPainter>
+
+class QPainter;
+class QPainterPath;
 
 namespace AXR
 {
@@ -59,8 +59,6 @@ namespace AXR
     class AXR_API HSSShape : public HSSObject
     {
     public:
-        typedef QSharedPointer<HSSShape> p;
-
         /**
          *  Destructor for this class.
          */
@@ -96,7 +94,7 @@ namespace AXR
          *  @param height   The height of the bounding box of the shape.
          *  @param segments The segments that will be drawn.
          */
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments) = 0;
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments) = 0;
 
         /**
          *  Convenience function to create a path for all segments.
@@ -128,7 +126,7 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(AXR::HSSShape::p)
-Q_DECLARE_METATYPE(AXR::HSSShape::p*)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSShape>)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSShape>*)
 
 #endif

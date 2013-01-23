@@ -44,8 +44,7 @@
 #ifndef HSSOBJECTNAMECONSTANT_H
 #define HSSOBJECTNAMECONSTANT_H
 
-#include <QSharedPointer>
-#include "HSSExpression.h"
+#include "HSSParserNode.h"
 
 namespace AXR
 {
@@ -58,8 +57,6 @@ namespace AXR
     class AXR_API HSSObjectNameConstant : public HSSParserNode
     {
     public:
-        typedef QSharedPointer<HSSObjectNameConstant> p;
-
         /**
          *  Creates a new instance of a object name constant, with given name.
          *  @param  value   A string containing the object name.
@@ -71,7 +68,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSObjectNameConstant.
          */
-        p clone() const;
+        QSharedPointer<HSSObjectNameConstant> clone() const;
 
         /**
          *  Destructor for this class.
@@ -100,7 +97,7 @@ namespace AXR
         AXRString value;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

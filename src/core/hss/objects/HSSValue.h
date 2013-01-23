@@ -44,7 +44,6 @@
 #ifndef HSSVALUE_H
 #define HSSVALUE_H
 
-#include "HSSMultipleValueDefinition.h"
 #include "HSSObject.h"
 
 namespace AXR
@@ -55,8 +54,6 @@ namespace AXR
     class AXR_API HSSValue : public HSSObject
     {
     public:
-        typedef QSharedPointer<HSSValue> p;
-
         /**
          *  Constructor for HSSValue objects.
          */
@@ -70,7 +67,7 @@ namespace AXR
          *  object.
          *  @return A shared pointer to the new HSSValue.
          */
-        p clone() const;
+        QSharedPointer<HSSValue> clone() const;
 
         /**
          *  Destructor for this class.
@@ -80,19 +77,19 @@ namespace AXR
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Getter for the definition object of value.
          *  @return A shared pointer to the parser node containing the definition object of value.
          */
-        const HSSParserNode::p getDValue() const;
+        const QSharedPointer<HSSParserNode> getDValue() const;
 
         /**
          *  Setter for the definition object of value. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of value.
          */
-        void setDValue(HSSParserNode::p value);
+        void setDValue(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Since this property accepts multiple values, this allows to append a value instead of replacing
@@ -100,7 +97,7 @@ namespace AXR
          *  @param value    A shared pointer to the parser node containing the definition object to be
          *                  added to value.
          */
-        void addDValue(HSSParserNode::p value);
+        void addDValue(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect value.
@@ -111,12 +108,12 @@ namespace AXR
 
     protected:
         //value
-        HSSParserNode::p dValue;
+        QSharedPointer<HSSParserNode> dValue;
         HSSObservable * observedValue;
         HSSObservableProperty observedValueProperty;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

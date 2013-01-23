@@ -41,8 +41,9 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSNameSelector.h"
-#include "HSSSimpleSelector.h"
+#include "HSSSimpleSelection.h"
 #include "HSSMultipleSelection.h"
 
 using namespace AXR;
@@ -59,7 +60,7 @@ HSSNameSelector::HSSNameSelector(const HSSNameSelector &orig)
     this->elementName = orig.elementName;
 }
 
-HSSNameSelector::p HSSNameSelector::clone() const
+QSharedPointer<HSSNameSelector> HSSNameSelector::clone() const
 {
     return qSharedPointerCast<HSSNameSelector> (this->cloneImpl());
 }
@@ -74,17 +75,17 @@ AXRString HSSNameSelector::toString()
     return "Name selector targeting an element with name " + this->elementName;
 }
 
-HSSClonable::p HSSNameSelector::cloneImpl() const
+QSharedPointer<HSSClonable> HSSNameSelector::cloneImpl() const
 {
-    return HSSNameSelector::p(new HSSNameSelector(*this));
+    return QSharedPointer<HSSNameSelector>(new HSSNameSelector(*this));
 }
 
-HSSSelection::p HSSNameSelector::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
+QSharedPointer<HSSSelection> HSSNameSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     if (scope->isA(HSSSelectionTypeMultipleSelection))
     {
-        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
         for (HSSMultipleSelection::const_iterator it = multiSel->begin(); it!=multiSel->end(); ++it)
         {
             this->_filterSimpleSelection(ret, *it);
@@ -92,19 +93,19 @@ HSSSelection::p HSSNameSelector::filterSelection(HSSSelection::p scope, HSSDispl
     }
     else if (scope->isA(HSSSelectionTypeSimpleSelection))
     {
-        HSSSimpleSelection::p simpleSel = qSharedPointerCast<HSSSimpleSelection>(scope);
+        QSharedPointer<HSSSimpleSelection> simpleSel = qSharedPointerCast<HSSSimpleSelection>(scope);
         this->_filterSimpleSelection(ret, simpleSel);
     }
 
     return ret;
 }
 
-inline void HSSNameSelector::_filterSimpleSelection(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+inline void HSSNameSelector::_filterSimpleSelection(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> selection)
 {
     //select only elements with matching element name
     for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
     {
-        HSSDisplayObject::p theDO = *it;
+        QSharedPointer<HSSDisplayObject> theDO = *it;
         bool match = theDO->getElementName() == this->getElementName();
         if ((match && !this->getNegating()) || (!match && this->getNegating()))
         {

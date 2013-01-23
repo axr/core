@@ -44,18 +44,19 @@
 #ifndef HSSRULE_H
 #define HSSRULE_H
 
+#include <deque>
 #include <vector>
 #include <QSharedPointer>
-#include "HSSInstruction.h"
-#include "HSSPropertyDefinition.h"
-#include "HSSSelectorChain.h"
 #include "HSSStatement.h"
 
 namespace AXR
 {
     class HSSDisplayObject;
     class HSSFilter;
+    class HSSInstruction;
+    class HSSPropertyDefinition;
     class HSSRule;
+    class HSSSelectorChain;
 
     /**
      *  @brief This class encapsulates a relation between a rule a its state.
@@ -92,9 +93,8 @@ namespace AXR
     class AXR_API HSSRule : public HSSStatement
     {
     public:
-        typedef QSharedPointer<HSSRule> p;
-        typedef std::deque<p>::iterator it;
-        typedef std::deque<p>::const_iterator const_it;
+        typedef std::deque<QSharedPointer<HSSRule> >::iterator it;
+        typedef std::deque<QSharedPointer<HSSRule> >::const_iterator const_it;
 
         /**
          *  Creates a new instance of a request action.
@@ -112,7 +112,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSRequest
          */
-        p clone() const;
+        QSharedPointer<HSSRule> clone() const;
 
         /**
          *  Destructor for this class.
@@ -126,27 +126,27 @@ namespace AXR
          *  content tree.
          *  @param newChains A vector of shared pointers to selector chains.
          */
-        void setSelectorChains(std::vector<HSSSelectorChain::p> newChains);
+        void setSelectorChains(std::vector<QSharedPointer<HSSSelectorChain> > newChains);
 
         /**
          *  Getter fo the selector chains, which are used to select elements from the
          *  content tree.
          *  @return A vector of shared pointers to selector chains.
          */
-        const std::vector<HSSSelectorChain::p> & getSelectorChains() const;
+        const std::vector<QSharedPointer<HSSSelectorChain> > & getSelectorChains() const;
 
         /**
          *  Add a selector chain to the selector chains vector.
          *  @param newSelectorChain A shared pointer to the selector chain to be added.
          */
-        void selectorChainsAdd(HSSSelectorChain::p & newSelectorChain);
+        void selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSelectorChain);
 
         /**
          *  Get a selector chain by index.
          *  @param index    An unsigned integer with the index of the selector chain.
          *  @return A shared pointer to the element at that index.
          */
-        HSSSelectorChain::p &selectorChainsGet(size_t index);
+        QSharedPointer<HSSSelectorChain> &selectorChainsGet(size_t index);
 
         /**
          *  Removes a selector chain by index.
@@ -162,7 +162,7 @@ namespace AXR
         /**
          *  @return the last element of the selector chains vector.
          */
-        HSSSelectorChain::p &selectorChainsLast();
+        QSharedPointer<HSSSelectorChain> &selectorChainsLast();
 
         /**
          *  @return the size of the selector chains vector
@@ -179,20 +179,20 @@ namespace AXR
          *  Getter for the property definitions vector.
          *  @return A vector of shared pointers to property definitions.
          */
-        const std::vector<HSSPropertyDefinition::p> & getProperties() const;
+        const std::vector<QSharedPointer<HSSPropertyDefinition> > & getProperties() const;
 
         /**
          *  Add a property definition to the properties vector.
          *  @param newProperty  A shared pointer to the property definition to be added.
          */
-        void propertiesAdd(HSSPropertyDefinition::p & newProperty);
+        void propertiesAdd(QSharedPointer<HSSPropertyDefinition> & newProperty);
 
         /**
          *  Get a property definition by index.
          *  @param index    An unsigned integer with the index of the property definition.
          *  @return A shared pointer to the element at that index.
          */
-        HSSPropertyDefinition::p &propertiesGet(size_t index);
+        QSharedPointer<HSSPropertyDefinition> &propertiesGet(size_t index);
 
         /**
          *  Removes a property definition by index.
@@ -208,7 +208,7 @@ namespace AXR
         /**
          *  @return the last element of the properties vector.
          */
-        HSSPropertyDefinition::p &propertiesLast();
+        QSharedPointer<HSSPropertyDefinition> &propertiesLast();
 
         /**
          *  @return the size of the properties vector
@@ -219,14 +219,14 @@ namespace AXR
          *  Add a child rule.
          *  @param newRule A shared pointer to the rule to be added.
          */
-        void childrenAdd(HSSRule::p newRule);
+        void childrenAdd(QSharedPointer<HSSRule> newRule);
 
         /**
          *  Get a child rule by index.
          *  @param index    An unsigned integer with the index of the child rule.
          *  @return A shared pointer to the element at that index.
          */
-        HSSRule::p childrenGet(size_t index);
+        QSharedPointer<HSSRule> childrenGet(size_t index);
 
         /**
          *  Removes a child rule by index.
@@ -244,9 +244,9 @@ namespace AXR
          */
         size_t childrenSize() const;
 
-        void setInstruction(HSSInstruction::p newInstruction);
+        void setInstruction(QSharedPointer<HSSInstruction> newInstruction);
 
-        HSSInstruction::p getInstruction();
+        QSharedPointer<HSSInstruction> getInstruction();
 
         virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
@@ -267,22 +267,22 @@ namespace AXR
         HSSObservable * getObservedTreeChanger();
 
     protected:
-        HSSRule::p shared_from_this();
+        QSharedPointer<HSSRule> shared_from_this();
 
-        std::vector<HSSPropertyDefinition::p> properties;
-        std::vector<HSSRule::p>children;
-        HSSInstruction::p instruction;
+        std::vector<QSharedPointer<HSSPropertyDefinition> > properties;
+        std::vector<QSharedPointer<HSSRule> >children;
+        QSharedPointer<HSSInstruction> instruction;
 
         std::vector<QWeakPointer<HSSDisplayObject> > appliedTo;
 
         QSharedPointer<HSSSimpleSelection> _originalScope;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
 
         HSSObservable * observedTreeChanger;
 
-        std::vector<HSSSelectorChain::p> selectorChains;
+        std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
     };
 }
 

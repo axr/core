@@ -44,23 +44,19 @@
 #ifndef HSSEXPRESSION_H
 #define HSSEXPRESSION_H
 
-#include <vector>
 #include <QSharedPointer>
-#include "HSSDisplayObject.h"
-#include "HSSObservable.h"
 #include "HSSParserNode.h"
-#include "HSSSimpleSelection.h"
 
 namespace AXR
 {
+    class HSSSimpleSelection;
+
     /**
      *  @brief Abstract base class for all expressions.
      */
     class AXR_API HSSExpression : public HSSParserNode
     {
     public:
-        typedef QSharedPointer<HSSExpression> p;
-
         /**
          *  Destructor for this class.
          */
@@ -91,28 +87,28 @@ namespace AXR
          *  @param  newLeft     A shared pointer to a parser node representing the left
          *                      member of the expression.
          */
-        void setLeft(HSSParserNode::p newLeft);
+        void setLeft(QSharedPointer<HSSParserNode> newLeft);
 
         /**
          *  Getter for the left hand member of the expression.
          *  @return A shared pointer to a parser node representing the left member of
          *  the expression.
          */
-        HSSParserNode::p getLeft();
+        QSharedPointer<HSSParserNode> getLeft();
 
         /**
          *  Setter for the right hand member of the expression.
          *  @param  newRight    A shared pointer to a parser node representing the right
          *                      member of the expression.
          */
-        void setRight(HSSParserNode::p newRight);
+        void setRight(QSharedPointer<HSSParserNode> newRight);
 
         /**
          *  Getter for the right hand member of the expression.
          *  @return A shared pointer to a parser node representing the right member of
          *  the expression.
          */
-        HSSParserNode::p getRight();
+        QSharedPointer<HSSParserNode> getRight();
 
         virtual void propertyChanged(HSSObservableProperty property, void* data);
 
@@ -151,7 +147,7 @@ namespace AXR
          *  Setter for the scope which to pass to members like references or selections.
          *  @param newScope     The new scope, a shared pointer to a simple selection.
          */
-        virtual void setScope(HSSSimpleSelection::p newScope);
+        virtual void setScope(QSharedPointer<HSSSimpleSelection> newScope);
 
         /**
          *  Setter for the "\@this object" which to pass to members like references or selections.
@@ -191,17 +187,17 @@ namespace AXR
          *  @param _right   The value on the right hand side of the operator.
          *  @param type     The type of this expression subclass for identification purposes.
          */
-        HSSExpression(HSSExpressionType type, HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller);
+        HSSExpression(HSSExpressionType type, QSharedPointer<HSSParserNode> _left, QSharedPointer<HSSParserNode> _right, AXRController * controller);
 
         /**
          *  Copy constructor for HSSExpression objects. Do not call directly, use clone() instead.
          */
         HSSExpression(const HSSExpression &orig);
 
-        HSSParserNode::p left;
+        QSharedPointer<HSSParserNode> left;
         HSSUnit leftval;
         HSSUnit rightval;
-        HSSParserNode::p right;
+        QSharedPointer<HSSParserNode> right;
 
         HSSUnit percentageBase;
         HSSObservableProperty percentageObservedProperty;
@@ -212,7 +208,7 @@ namespace AXR
         HSSObservableProperty rightObservedProperty;
         HSSObservable * rightObserved;
 
-        HSSSimpleSelection::p scope;
+        QSharedPointer<HSSSimpleSelection> scope;
 
         bool _isDirty;
         HSSUnit _value;

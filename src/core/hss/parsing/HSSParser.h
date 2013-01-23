@@ -48,11 +48,7 @@
 #include <vector>
 #include <QSharedPointer>
 #include <QList>
-#include "AXRBuffer.h"
-#include "HSSCombinator.h"
-#include "HSSObjectDefinition.h"
-#include "HSSSimpleSelector.h"
-#include "HSSTokenizer.h"
+#include "HSSTokenType.h"
 
 namespace AXR
 {
@@ -75,6 +71,15 @@ namespace AXR
     /** @} */
 
     class AXRController;
+    class HSSCombinator;
+    class HSSFilter;
+    class HSSInstruction;
+    class HSSNameSelector;
+    class HSSObject;
+    class HSSPropertyDefinition;
+    class HSSSimpleSelector;
+    class HSSToken;
+    class HSSTokenizer;
 
     /**
      *  @brief This class reads an HSS file and, with the help of HSSTokenizer, converts
@@ -93,11 +98,6 @@ namespace AXR
          *  @todo remove this friend and fix access control
          */
         friend class AXRController;
-
-        /**
-         *  The shared pointer to instances of this class.
-         */
-        typedef QSharedPointer<HSSParser> p;
 
         /**
          *  Creates a new instance of a parser object, linking it to the given controller.
@@ -124,7 +124,7 @@ namespace AXR
          *
          *  @param  file    A shared pointer to the AXRBuffer representing the HSS file.
          */
-        bool loadFile(AXRBuffer::p file);
+        bool loadFile(QSharedPointer<AXRBuffer> file);
 
         /**
          *  Reads the next statement in the document. This is called over and over again by loadFile().
@@ -149,7 +149,7 @@ namespace AXR
          *  Since there is syntactic overlap, for identifiers, colons and object signs, it first
          *  checks if it is a property definition and if so, reads it, else it reads the child rule.
          */
-        HSSRule::p readRule();
+        QSharedPointer<HSSRule> readRule();
 
         /**
          *  Reads a selector chain until the given token. For identifiers, it's a simple selector;
@@ -163,15 +163,15 @@ namespace AXR
          *
          *  @return A vector of shared pointers to selector chains.
          */
-        std::vector<HSSSelectorChain::p> readSelectorChains(HSSTokenType stopOn);
-        HSSSimpleSelector::p readSimpleSelector();
-        HSSNameSelector::p readObjectSelector();
+        std::vector<QSharedPointer<HSSSelectorChain> > readSelectorChains(HSSTokenType stopOn);
+        QSharedPointer<HSSSimpleSelector> readSimpleSelector();
+        QSharedPointer<HSSNameSelector> readObjectSelector();
         bool isNegator();
-        HSSFilter::p readFilter();
-        HSSCombinator::p readCombinator();
+        QSharedPointer<HSSFilter> readFilter();
+        QSharedPointer<HSSCombinator> readCombinator();
 
         /**
-         *  Shorthand for isCombinator(HSSToken::p token), passing the current token.
+         *  Shorthand for isCombinator(QSharedPointer<HSSToken> token), passing the current token.
          *  @return Wether the current token is a combinator.
          */
         bool isCombinator();
@@ -182,7 +182,7 @@ namespace AXR
          *  @param token    The token to check.
          *  @return Wether the given token is a combinator.
          */
-        bool isCombinator(HSSToken::p token);
+        bool isCombinator(QSharedPointer<HSSToken> token);
 
         /**
          *  Wether the current whitespace token is a children combinator or just regular whitespace.
@@ -203,14 +203,14 @@ namespace AXR
          *  If the current token is whitespace, it checks if it is a children combinator and if so returns it.
          *  @return A shared pointer to a children combinator or an empty pointer if not.
          */
-        HSSCombinator::p readChildrenCombinatorOrSkip();
+        QSharedPointer<HSSCombinator> readChildrenCombinatorOrSkip();
 
         /**
          *  Reads the current token and returns the corresponding combinator object.
          *  @return A shared pointer to a combinator node or an empty pointer if the symbol is not a combinator.
          *  @warning This function assumes the current token to be whitespace.
          */
-        HSSCombinator::p readSymbolCombinator();
+        QSharedPointer<HSSCombinator> readSymbolCombinator();
 
         /**
          *  Returns the name selector with the value of the current token.
@@ -218,7 +218,7 @@ namespace AXR
          *  @return A shared pointer to the name selector.
          *  @warning This function assumes the current token to be an identifier.
          */
-        HSSNameSelector::p readNameSelector(bool isNegating);
+        QSharedPointer<HSSNameSelector> readNameSelector(bool isNegating);
 
         /**
          *  Reads an object definition, getting its type or getting its name from the current object context
@@ -231,7 +231,7 @@ namespace AXR
          *  @return A shared pointer to the object definition that was read.
          *  @warning This function assumes the current token to be an object sign.
          */
-        HSSObjectDefinition::p readObjectDefinition(AXRString propertyName);
+        QSharedPointer<HSSObjectDefinition> readObjectDefinition(AXRString propertyName);
 
         /**
          *  Recursively adds the given object definition to the object tree on the controller as well as copying
@@ -239,7 +239,7 @@ namespace AXR
          *
          *  @param objDef   A shared pointer to the object definition to be added.
          */
-        void recursiveAddObjectDefinition(HSSObjectDefinition::p objDef);
+        void recursiveAddObjectDefinition(QSharedPointer<HSSObjectDefinition> objDef);
 
         /**
          *  Shorthand for readPropertyDefinition(bool shorhandChecked, bool isShorthand), passing
@@ -247,7 +247,7 @@ namespace AXR
          *
          *  @return The property definition that was read.
          */
-        HSSPropertyDefinition::p readPropertyDefinition();
+        QSharedPointer<HSSPropertyDefinition> readPropertyDefinition();
 
         /**
          *  Reads the property definition. If it is a shorthand, it gets the property name from the
@@ -258,14 +258,14 @@ namespace AXR
          *
          *  @todo should reading values go into a separate function, maybe called readValue()?
          */
-        HSSPropertyDefinition::p readPropertyDefinition(bool shorthandChecked, bool isShorthand);
+        QSharedPointer<HSSPropertyDefinition> readPropertyDefinition(bool shorthandChecked, bool isShorthand);
 
         /**
          *  Shorthand for readInstruction(bool preferHex), passing true to the parameter.
          *
          *  @return A shared pointer to the instruction that was read.
          */
-        HSSInstruction::p readInstruction();
+        QSharedPointer<HSSInstruction> readInstruction();
 
         /**
          *  Reads the instruction, passing preferHex to the tokenizer. If it is a hex number, it
@@ -275,7 +275,7 @@ namespace AXR
          *  @param preferHex    If we give preference to hexadecimal values when reading numbers.
          *  @return A shared pointer to the instruction that was read.
          */
-        HSSInstruction::p readInstruction(bool preferHex);
+        QSharedPointer<HSSInstruction> readInstruction(bool preferHex);
 
         /**
          *  Converts the given instruction to an object definition, depending on the type. Right now
@@ -283,54 +283,54 @@ namespace AXR
          *
          *  @return A shared pointer to the object definition.
          */
-        HSSObjectDefinition::p getObjectFromInstruction(HSSInstruction::p instruction);
+        QSharedPointer<HSSObjectDefinition> getObjectFromInstruction(QSharedPointer<HSSInstruction> instruction);
 
         /**
          *  Reads the instruction, then the rule and then sets the instruction on the rule.
          *
          *  @return A shared pointer to the rule that was read.
          */
-        HSSRule::p readInstructionRule();
+        QSharedPointer<HSSRule> readInstructionRule();
 
         /**
          *  Reads an expression, or the value if it isn't one. If it contains parentheses it will recursively
          *  @return A shared pointer to the parser node that was read.
          */
-        HSSParserNode::p readExpression();
+        QSharedPointer<HSSParserNode> readExpression();
 
         /**
          *  The part that reads sums and subtractions. Do not call directly, use readExpression() instead.
          *  It will call readMultiplicativeExpression() for each member.
          *  @return A shared pointer to the parser node that was read.
          */
-        HSSParserNode::p readAdditiveExpression();
+        QSharedPointer<HSSParserNode> readAdditiveExpression();
 
         /**
          *  The part that reads multiplications and divisions. Do not call directly, use readExpression() instead.
          *  It will call readBaseExpression() for each member.
          *  @return A shared pointer to the parser node that was read.
          */
-        HSSParserNode::p readMultiplicativeExpression();
+        QSharedPointer<HSSParserNode> readMultiplicativeExpression();
 
         /**
          *  The part that reads a member of an expression. Do not call directly, use readExpression() instead.
          *  @return A shared pointer to the parser node that was read.
          */
-        HSSParserNode::p readBaseExpression();
+        QSharedPointer<HSSParserNode> readBaseExpression();
 
         /**
          *  Creates a filter and sets its name with the value of the current token.
          *  @return A shared pointer to the filter that was read.
          *  @warning This method assumes the current token to be an identifier
          */
-        //HSSParserNode::p readFilter();
+        //QSharedPointer<HSSParserNode> readFilter();
 
         /**
          *  Creates a flag and sets its name with the value of the current token.
          *  @return A shared pointer to the flag that was read.
          *  @warning This method assumes the current token to be an identifier
          */
-        HSSParserNode::p readFlag();
+        QSharedPointer<HSSParserNode> readFlag();
 
         /**
          *  If an identifier is read, and depending on the name in the current token, it creates the corresponding
@@ -339,7 +339,7 @@ namespace AXR
          *
          *  @todo why does this not return a HSSFunction pointer?
          */
-        HSSParserNode::p readFunction();
+        QSharedPointer<HSSParserNode> readFunction();
 
         /**
          *  Shorthand for readNextToken(bool checkForUnexpectedEndOfSource) passing false to the parameter.
@@ -432,9 +432,9 @@ namespace AXR
          *  Puts the given object at the top new current object context stack.
          *  @param theObject        A shared pointer to the object that should be made the new object context.
          */
-        void currentObjectContextAdd(HSSObject::p theObject);
+        void currentObjectContextAdd(QSharedPointer<HSSObject> theObject);
 
-        HSSParserNode::p readValue(AXRString propertyName, bool &valid);
+        QSharedPointer<HSSParserNode> readValue(AXRString propertyName, bool &valid);
 
         /**
          *  Setter for the controller. The controller needs to be propagated across all
@@ -449,23 +449,23 @@ namespace AXR
         virtual AXRController* getController();
 
     private:
-        HSSTokenizer::p tokenizer;
+        QSharedPointer<HSSTokenizer> tokenizer;
         //weak pointer
         AXRController * controller;
 
-        HSSToken::p currentToken;
+        QSharedPointer<HSSToken> currentToken;
         std::vector<HSSParserContext> currentContext;
-        std::stack<HSSObject::p> currentObjectContext;
+        std::stack<QSharedPointer<HSSObject> > currentObjectContext;
 
         qint64 line;
         qint64 column;
 
         AXRString basepath;
-        AXRBuffer::p currentFile;
+        QSharedPointer<AXRBuffer> currentFile;
 
-        QList<AXRBuffer::p> loadedFiles;
+        QList<QSharedPointer<AXRBuffer> > loadedFiles;
 
-        HSSObject::p _genericContext;
+        QSharedPointer<HSSObject> _genericContext;
         AXRString _lastObjectType;
 
     };

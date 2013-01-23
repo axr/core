@@ -45,22 +45,19 @@
 #define HSSSIMPLESELECTOR_H
 
 #include <QSharedPointer>
-#include "HSSDisplayObject.h"
-#include "HSSFilter.h"
-#include "HSSNameSelector.h"
-#include "HSSSelection.h"
 #include "HSSSelector.h"
 
 namespace AXR
 {
+    class HSSFilter;
+    class HSSNameSelector;
+
     /**
      *  @brief Simple selectors are basic units of a selector chain.
      */
     class AXR_API HSSSimpleSelector : public HSSSelector
     {
     public:
-        typedef QSharedPointer<HSSSimpleSelector> p;
-
         /**
          *  Creates a new instance of a simple selector.
          */
@@ -76,32 +73,32 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSSimpleSelector.
          */
-        p clone() const;
+        QSharedPointer<HSSSimpleSelector> clone() const;
 
         //see HSSObject.h for documentation of this method
         virtual AXRString toString();
 
-        void setName(HSSNameSelector::p name);
-        const HSSNameSelector::p getName() const;
+        void setName(QSharedPointer<HSSNameSelector> name);
+        const QSharedPointer<HSSNameSelector> getName() const;
 
-        const std::list<HSSFilter::p> getFilters() const;
-        void filtersAdd(HSSFilter::p filter);
+        const std::list<QSharedPointer<HSSFilter> > getFilters() const;
+        void filtersAdd(QSharedPointer<HSSFilter> filter);
 
         /**
          * Reduces the selection according to the selector nodes it has stored.
          */
-        HSSSelection::p filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
+        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
 
         //see HSSParserNode.h for documentation of this method
-        virtual void setThisObj(HSSDisplayObject::p value);
+        virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
     private:
-        HSSNameSelector::p name;
-        std::list<HSSFilter::p> filters;
+        QSharedPointer<HSSNameSelector> name;
+        std::list<QSharedPointer<HSSFilter> > filters;
 
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
 
-        HSSSelection::p _recursiveFilterSelection(HSSSelection::p selection, std::list<HSSFilter::p>::const_iterator it, std::list<HSSFilter::p>::const_iterator end_it, bool processing);
+        QSharedPointer<HSSSelection> _recursiveFilterSelection(QSharedPointer<HSSSelection> selection, std::list<QSharedPointer<HSSFilter> >::const_iterator it, std::list<QSharedPointer<HSSFilter> >::const_iterator end_it, bool processing);
     };
 }
 

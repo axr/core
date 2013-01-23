@@ -45,10 +45,10 @@
 #define HSSBORDER_H
 
 #include <QSharedPointer>
-#include <QPainter>
-#include <QPainterPath>
 #include "HSSObject.h"
-#include "HSSUnits.h"
+
+class QPainter;
+class QPainterPath;
 
 namespace AXR
 {
@@ -58,8 +58,7 @@ namespace AXR
     class AXR_API HSSBorder : public HSSObject
     {
     public:
-        typedef QSharedPointer<HSSBorder> p;
-        typedef std::vector<HSSBorder::p>::iterator it;
+        typedef std::vector<QSharedPointer<HSSBorder> >::iterator it;
 
         /**
          *  Destructor for HSSBorder objects.
@@ -79,7 +78,7 @@ namespace AXR
          */
         virtual void draw(QPainter &painter, const QPainterPath &path) = 0;
 
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Getter for the value of size.
@@ -91,7 +90,7 @@ namespace AXR
          *  Setter for the definition object of size. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of size.
          */
-        void setDSize(HSSParserNode::p);
+        void setDSize(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect size.
@@ -110,13 +109,13 @@ namespace AXR
          *  Getter for the definition object of position.
          *  @return A shared pointer to the parser node containing the definition object of position.
          */
-        HSSParserNode::p getDPosition();
+        QSharedPointer<HSSParserNode> getDPosition();
 
         /**
          *  Setter for the definition object of position. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of position.
          */
-        void setDPosition(HSSParserNode::p);
+        void setDPosition(QSharedPointer<HSSParserNode>);
 
         /**
          *  Method to be passed as callback when observing changes that will affect position.
@@ -129,19 +128,19 @@ namespace AXR
          *  Getter for the value of segments.
          *  @return A vector of shared pointers to parser nodes.
          */
-        std::vector<HSSParserNode::p> getSegments();
+        std::vector<QSharedPointer<HSSParserNode> > getSegments();
 
         /**
          *  Getter for the definition object of segments.
          *  @return A shared pointer to the parser node containing the definition object of segments.
          */
-        HSSParserNode::p getDSegments();
+        QSharedPointer<HSSParserNode> getDSegments();
 
         /**
          *  Setter for the definition object of segments. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of segments.
          */
-        void setDSegments(HSSParserNode::p value);
+        void setDSegments(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Since this property accepts multiple values, this allows to append a value instead of
@@ -149,7 +148,7 @@ namespace AXR
          *  @param value    A shared pointer to the parser node containing the definition object to be added
          *                  to segments.
          */
-        void addDSegments(HSSParserNode::p value);
+        void addDSegments(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect textAlign.
@@ -171,25 +170,25 @@ namespace AXR
 
         //size
         HSSUnit size;
-        HSSParserNode::p dSize;
+        QSharedPointer<HSSParserNode> dSize;
         HSSObservable * observedSize;
         HSSObservableProperty observedSizeProperty;
 
         //position
         HSSBorderPosition position;
-        HSSParserNode::p dPosition;
+        QSharedPointer<HSSParserNode> dPosition;
         HSSObservable * observedPosition;
         HSSObservableProperty observedPositionProperty;
 
         //segments
-        HSSParserNode::p dSegments;
+        QSharedPointer<HSSParserNode> dSegments;
         HSSObservable * observedSegments;
         HSSObservableProperty observedSegmentsProperty;
-        std::vector<HSSParserNode::p> segments;
+        std::vector<QSharedPointer<HSSParserNode> > segments;
 
         HSSUnit _evaluatePropertyValue(
                                    void(HSSBorder::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
@@ -198,8 +197,8 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(std::vector<AXR::HSSBorder::p>)
-Q_DECLARE_METATYPE(std::vector<AXR::HSSBorder::p>*)
+Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSBorder> >)
+Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSBorder> >*)
 Q_DECLARE_METATYPE(AXR::HSSBorderPosition*)
 
 #endif

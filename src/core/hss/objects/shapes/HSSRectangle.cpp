@@ -62,15 +62,15 @@ HSSRectangle::HSSRectangle(const HSSRectangle & orig)
 
 }
 
-HSSRectangle::p HSSRectangle::clone() const
+QSharedPointer<HSSRectangle> HSSRectangle::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: cloning rectangle object");
     return qSharedPointerCast<HSSRectangle> (this->cloneImpl());
 }
 
-HSSClonable::p HSSRectangle::cloneImpl() const
+QSharedPointer<HSSClonable> HSSRectangle::cloneImpl() const
 {
-    return HSSRectangle::p(new HSSRectangle(*this));
+    return QSharedPointer<HSSRectangle>(new HSSRectangle(*this));
 }
 
 HSSRectangle::~HSSRectangle()
@@ -98,15 +98,15 @@ bool HSSRectangle::isKeyword(AXRString value, AXRString property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments)
+void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments)
 {
     if(segments.size() > 0){
-        for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const HSSParserNode::p & segment = *it;
+        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            const QSharedPointer<HSSParserNode> & segment = *it;
             switch (segment->getType()) {
                 case HSSParserNodeTypeKeywordConstant:
                 {
-                    HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                    QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                     AXRString theValue = theKw->getValue();
                     if(theValue == "left")
                     {
@@ -143,9 +143,9 @@ void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit 
 void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding)
 {
     //sort borders in three groups
-    std::vector<HSSBorder::p> centered, inside, outside;
+    std::vector<QSharedPointer<HSSBorder> > centered, inside, outside;
     for (HSSBorder::it it=borders.begin(); it!=borders.end(); ++it) {
-        const HSSBorder::p & theBorder = *it;
+        const QSharedPointer<HSSBorder> & theBorder = *it;
         HSSBorderPosition thePos = theBorder->getPosition();
         if (thePos == HSSBorderPositionCentered)
         {
@@ -163,14 +163,14 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
 
     HSSUnit topThickness = 0., rightThickness = 0., bottomThickness = 0., leftThickness = 0.;
     for (HSSBorder::it it=centered.begin(); it!=centered.end(); ++it) {
-        const HSSBorder::p & theBorder = *it;
-        const std::vector<HSSParserNode::p> & segments = theBorder->getSegments();
+        const QSharedPointer<HSSBorder> & theBorder = *it;
+        const std::vector<QSharedPointer<HSSParserNode> > & segments = theBorder->getSegments();
         bool hasAll = false;
-        for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const HSSParserNode::p & segment = *it;
+        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            const QSharedPointer<HSSParserNode> & segment = *it;
             if(segment->isA(HSSParserNodeTypeKeywordConstant))
             {
-                HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                 if (theKw->getValue() == "all")
                 {
                     hasAll = true;
@@ -187,7 +187,7 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
         else
         {
             for (HSSParserNode::const_it it2=segments.begin(); it2!=segments.end(); ++it2) {
-                const HSSParserNode::p & theSeg = *it2;
+                const QSharedPointer<HSSParserNode> & theSeg = *it2;
                 if (theSeg->isA(HSSParserNodeTypeKeywordConstant)) {
                     AXRString segment = qSharedPointerCast<HSSKeywordConstant>(theSeg)->getValue();
                     if(segment == "top"){
@@ -231,18 +231,18 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
 
     HSSUnit topCumulative = 0., rightCumulative = 0., bottomCumulative = 0., leftCumulative = 0.;
     for (HSSBorder::it it=centered.begin(); it!=centered.end(); ++it) {
-        const HSSBorder::p & theBorder = *it;
+        const QSharedPointer<HSSBorder> & theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
         QPainterPath path;
-        std::vector<HSSParserNode::p> segments = theBorder->getSegments();
+        std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
 
         bool hasAll = false;
-        for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const HSSParserNode::p & segment = *it;
+        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            const QSharedPointer<HSSParserNode> & segment = *it;
             if(segment->isA(HSSParserNodeTypeKeywordConstant))
             {
-                HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                 if (theKw->getValue() == "all")
                 {
                     hasAll = true;
@@ -251,12 +251,12 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
             }
         }
         if(segments.size() > 0 && !hasAll){
-            for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-                const HSSParserNode::p & segment = *it;
+            for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+                const QSharedPointer<HSSParserNode> & segment = *it;
                 switch (segment->getType()) {
                     case HSSParserNodeTypeKeywordConstant:
                     {
-                        HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                        QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                         AXRString theValue = theKw->getValue();
                         if (theValue == "top")
                         {
@@ -322,19 +322,19 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    for (std::vector<HSSBorder::p>::reverse_iterator it=inside.rbegin(); it!=inside.rend(); ++it) {
-        const HSSBorder::p & theBorder = *it;
+    for (std::vector<QSharedPointer<HSSBorder> >::reverse_iterator it=inside.rbegin(); it!=inside.rend(); ++it) {
+        const QSharedPointer<HSSBorder> & theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
         QPainterPath path;
-        std::vector<HSSParserNode::p> segments = theBorder->getSegments();
+        std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
 
         bool hasAll = false;
-        for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const HSSParserNode::p & segment = *it;
+        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            const QSharedPointer<HSSParserNode> & segment = *it;
             if(segment->isA(HSSParserNodeTypeKeywordConstant))
             {
-                HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                 if (theKw->getValue() == "all")
                 {
                     hasAll = true;
@@ -343,8 +343,8 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
             }
         }
         if(segments.size() > 0 && !hasAll){
-            for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-                const HSSParserNode::p & segment = *it;
+            for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+                const QSharedPointer<HSSParserNode> & segment = *it;
                 switch (segment->getType()) {
                     case HSSParserNodeTypeKeywordConstant:
                     {
@@ -353,7 +353,7 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
                         HSSUnit rightOffset = (rightThickness / 2) + rightCumulative + rightCorrection;
                         HSSUnit bottomOffset = (bottomThickness / 2) + bottomCumulative + bottomCorrection;
 
-                        HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                        QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                         AXRString theValue = theKw->getValue();
                         if (theValue == "top")
                         {
@@ -404,19 +404,19 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    for (std::vector<HSSBorder::p>::iterator it=outside.begin(); it!=outside.end(); ++it) {
-        const HSSBorder::p & theBorder = *it;
+    for (std::vector<QSharedPointer<HSSBorder> >::iterator it=outside.begin(); it!=outside.end(); ++it) {
+        const QSharedPointer<HSSBorder> & theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
         QPainterPath path;
-        std::vector<HSSParserNode::p> segments = theBorder->getSegments();
+        std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
 
         bool hasAll = false;
-        for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const HSSParserNode::p & segment = *it;
+        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+            const QSharedPointer<HSSParserNode> & segment = *it;
             if(segment->isA(HSSParserNodeTypeKeywordConstant))
             {
-                HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                 if (theKw->getValue() == "all")
                 {
                     hasAll = true;
@@ -425,8 +425,8 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
             }
         }
         if(segments.size() > 0 && !hasAll){
-            for (std::vector<HSSParserNode::p>::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-                const HSSParserNode::p & segment = *it;
+            for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
+                const QSharedPointer<HSSParserNode> & segment = *it;
                 switch (segment->getType()) {
                     case HSSParserNodeTypeKeywordConstant:
                     {
@@ -435,7 +435,7 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
                         HSSUnit rightOffset = (rightThickness / 2) + rightCumulative + rightCorrection;
                         HSSUnit bottomOffset = (bottomThickness / 2) + bottomCumulative + bottomCorrection;
 
-                        HSSKeywordConstant::p theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
+                        QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
                         AXRString theValue = theKw->getValue();
                         if (theValue == "top")
                         {

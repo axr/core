@@ -3,7 +3,12 @@ if(BUILD_SHARED_LIBS)
 endif()
 
 # Find all sources for core library
-file(GLOB_RECURSE core_SOURCES *.c *.cpp *.h)
+set(core_SOURCES_PATTERN *.c *.cpp *.h)
+if(APPLE)
+    set(core_SOURCES_PATTERN ${core_SOURCES_PATTERN} *.mm)
+endif()
+
+file(GLOB_RECURSE core_SOURCES ${core_SOURCES_PATTERN})
 list(SORT core_SOURCES)
 
 group_by_folder(${CMAKE_CURRENT_SOURCE_DIR} "${core_SOURCES}")

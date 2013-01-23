@@ -44,8 +44,6 @@
 #ifndef HSSCOMBINATOR_H
 #define HSSCOMBINATOR_H
 
-#include <QSharedPointer>
-#include "HSSSelection.h"
 #include "HSSSelector.h"
 
 namespace AXR
@@ -60,8 +58,6 @@ namespace AXR
     class AXR_API HSSCombinator : public HSSSelector
     {
     public:
-        typedef QSharedPointer<HSSCombinator> p;
-
         /**
          *  Creates a new instance of a combinator node, of the type you give. All types of combinators
          *  can be encapsulated with this class.
@@ -73,7 +69,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSCombinator
          */
-        p clone() const;
+        QSharedPointer<HSSCombinator> clone() const;
 
         /**
          *  When logging, you often need a string representation of the combinator type.
@@ -96,12 +92,12 @@ namespace AXR
 
         virtual AXRString toString();
 
-        HSSSelection::p filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
+        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
 
     protected:
         HSSCombinatorType combinatorType;
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

@@ -45,14 +45,14 @@
 #define HSSTOKENIZER_H
 
 #include <vector>
-#include "AXRBuffer.h"
-#include "HSSToken.h"
-#include "HSSValueToken.h"
+#include <QSharedPointer>
 
 namespace AXR
 {
-    //the return states any part of the tokenizer will report
+    class AXRBuffer;
+    class HSSToken;
 
+    //the return states any part of the tokenizer will report
     enum AXR_API HSS_TOKENIZING_STATUS
     {
         HSSTokenizerUnknownError = -1,
@@ -63,8 +63,6 @@ namespace AXR
     class AXR_API HSSTokenizer
     {
     public:
-        typedef QSharedPointer<HSSTokenizer> p;
-
         HSSTokenizer();
         //destructor
         ~HSSTokenizer();
@@ -72,8 +70,8 @@ namespace AXR
         //this will reset all the properties of the tokenizer to default
         void reset();
 
-        void setFile(AXRBuffer::p file);
-        AXRBuffer::p getFile();
+        void setFile(QSharedPointer<AXRBuffer> file);
+        QSharedPointer<AXRBuffer> getFile();
 
         //reads a the next character and stores it, also keeps track of the position in the buffer
         //it will also set the corresponding state if the end of the buffer is reached, but expects
@@ -81,14 +79,14 @@ namespace AXR
         HSS_TOKENIZING_STATUS readNextChar();
 
         //reads and returns a pointer to the next token in the buffer or NULL if the buffer was empty
-        HSSToken::p readNextToken();
+        QSharedPointer<HSSToken> readNextToken();
 
 
         //reads and returns a pointer to the next token in the buffer
         //BUT doesn't advance the current position of the normal reading flow. Call resetPeek() after
         //you finish peeking
         //the caller acquires ownership of the pointer
-        HSSToken::p peekNextToken();
+        QSharedPointer<HSSToken> peekNextToken();
         void resetPeek();
 
         //if you are expecting a hexadecimal number, set this to true
@@ -102,12 +100,12 @@ namespace AXR
         void setBufferLength(int length);
 
     protected:
-        AXRBuffer::p file;
+        QSharedPointer<AXRBuffer> file;
 
         //the current character that has been read
         char currentChar;
         //here's where the tokens are stored
-        std::vector<HSSToken::p> tokenList;
+        std::vector<QSharedPointer<HSSToken> > tokenList;
         //here's where the current token's text is stored
         AXRString currentTokenText;
         //how long is the buffer?
@@ -130,23 +128,23 @@ namespace AXR
         //returns the stored token text and clears the variable
         AXRString extractCurrentTokenText();
         //reads and returns a whitespace token
-        HSSToken::p readWhitespace();
+        QSharedPointer<HSSToken> readWhitespace();
         //reads and returns an identifier token
-        HSSToken::p readIdentifier();
+        QSharedPointer<HSSToken> readIdentifier();
         //reads and returns a hexadecimal number
-        //HSSToken::p readHex();
+        //QSharedPointer<HSSToken> readHex();
         //reads and returns a hexadecimal number or an identifier token
-        HSSToken::p readHexOrIdentifier();
+        QSharedPointer<HSSToken> readHexOrIdentifier();
         //reads and returns either a number or a percentage token
-        HSSToken::p readNumberOrPercentage();
+        QSharedPointer<HSSToken> readNumberOrPercentage();
         //reads and returns either a single quoted or double quoted string token
-        HSSToken::p readString();
+        QSharedPointer<HSSToken> readString();
         //reads and returns an object type token
-        HSSToken::p readObjectType();
+        QSharedPointer<HSSToken> readObjectType();
         //reads and returns a comment or a symbol token
-        HSSToken::p readCommentOrSymbol();
+        QSharedPointer<HSSToken> readCommentOrSymbol();
         //reads and returns a symbol token
-        HSSToken::p readSymbol();
+        QSharedPointer<HSSToken> readSymbol();
     };
 }
 

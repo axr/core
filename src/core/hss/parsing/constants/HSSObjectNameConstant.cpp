@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSObjectNameConstant.h"
 
 using namespace AXR;
@@ -51,7 +52,7 @@ HSSObjectNameConstant::HSSObjectNameConstant(AXRString value, AXRController * co
     this->value = value;
 }
 
-HSSObjectNameConstant::p HSSObjectNameConstant::clone() const
+QSharedPointer<HSSObjectNameConstant> HSSObjectNameConstant::clone() const
 {
     return qSharedPointerCast<HSSObjectNameConstant> (this->cloneImpl());
 }
@@ -76,7 +77,7 @@ AXRString HSSObjectNameConstant::toString()
     return "HSSObjectNameConstant with value " + this->value;
 }
 
-HSSClonable::p HSSObjectNameConstant::cloneImpl() const
+QSharedPointer<HSSClonable> HSSObjectNameConstant::cloneImpl() const
 {
-    return HSSObjectNameConstant::p(new HSSObjectNameConstant(*this));
+    return QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(*this));
 }

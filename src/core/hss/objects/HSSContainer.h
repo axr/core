@@ -45,10 +45,8 @@
 #define HSSCONTAINER_H
 
 #include "HSSDisplayObject.h"
-#include "HSSEvent.h"
-#include "HSSShape.h"
-#include "HSSSimpleSelector.h"
-#include "HSSTextBlock.h"
+#include "HSSSimpleSelection.h"
+#include "HSSTextEnums.h"
 
 namespace AXR
 {
@@ -59,6 +57,8 @@ namespace AXR
         HSSDirectionTopToBottom,
         HSSDirectionBottomToTop
     };
+
+    class HSSShape;
 
     /**
      *  @brief The object type representing an element in the XML content.
@@ -71,8 +71,6 @@ namespace AXR
     class AXR_API HSSContainer : public HSSDisplayObject
     {
     public:
-        typedef QSharedPointer<HSSContainer> p;
-
         friend class HSSDisplayObject;
 
         /**
@@ -105,7 +103,7 @@ namespace AXR
          *  @param theContainer A shared pointer to the container.
          *  @return A shared pointer to the container as display object type.
          */
-        static HSSDisplayObject::p asDisplayObject(HSSContainer::p theContainer);
+        static QSharedPointer<HSSDisplayObject> asDisplayObject(QSharedPointer<HSSContainer> theContainer);
 
         /**
          *  Utility function for casting a shared pointer to a display object to a container.
@@ -114,7 +112,7 @@ namespace AXR
          *  @warning Be sure to only call this on shared pointers that you know for sure
          *  to actually be containers.
          */
-        static HSSContainer::p asContainer(HSSDisplayObject::p theDisplayObject);
+        static QSharedPointer<HSSContainer> asContainer(QSharedPointer<HSSDisplayObject> theDisplayObject);
 
         /**
          *  Creates a newly allocated and initialized instance of a container.
@@ -138,7 +136,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSContainer
          */
-        p clone() const;
+        QSharedPointer<HSSContainer> clone() const;
 
         /**
          *  Destructs the container, clearing the children and allChildren.
@@ -154,7 +152,7 @@ namespace AXR
          *  Add a child to the content tree.
          *  @param child    A shared pointer to the child display object.
          */
-        void add(HSSDisplayObject::p child);
+        void add(QSharedPointer<HSSDisplayObject> child);
 
         /**
          *  Removes a child by index.
@@ -201,7 +199,7 @@ namespace AXR
          */
         void recursiveReadDefinitionObjects();
 
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Propagates the regenerateSurfaces() call to all the children.
@@ -259,30 +257,30 @@ namespace AXR
          *  Replaces the whole list of children with a new one.
          *  @param newChildren  A vector of shared pointers to display objects.
          */
-        void setChildren(HSSSimpleSelection::p newChildren);
+        void setChildren(QSharedPointer<HSSSimpleSelection> newChildren);
 
         /**
          *  @return The list of children, excluding text blocks.
          */
-        HSSSimpleSelection::p getChildren() const;
+        QSharedPointer<HSSSimpleSelection> getChildren() const;
 
         /**
          *  @param includeTextBlocks    Wether to include the text blocks or just actual children.
          *  @return The list of children.
          */
-        HSSSimpleSelection::p getChildren(bool includeTextBlocks) const;
+        QSharedPointer<HSSSimpleSelection> getChildren(bool includeTextBlocks) const;
 
         /**
          *  Getter for the definition object of contentAlignX.
          *  @return A shared pointer to the parser node containing the definition object of contentAlignX.
          */
-        HSSParserNode::p getDContentAlignX();
+        QSharedPointer<HSSParserNode> getDContentAlignX();
 
         /**
          *  Setter for the definition object of contentAlignX. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of contentAlignX.
          */
-        void setDContentAlignX(HSSParserNode::p value);
+        void setDContentAlignX(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect contentAlignX.
@@ -295,13 +293,13 @@ namespace AXR
          *  Getter for the definition object of contentAlignY.
          *  @return A shared pointer to the parser node containing the definition object of contentAlignY.
          */
-        HSSParserNode::p getDContentAlignY();
+        QSharedPointer<HSSParserNode> getDContentAlignY();
 
         /**
          *  Setter for the definition object of contentAlignY. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of contentAlignY.
          */
-        void setDContentAlignY(HSSParserNode::p value);
+        void setDContentAlignY(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect contentAlignX.
@@ -314,13 +312,13 @@ namespace AXR
          *  Getter for the definition object of directionPrimary.
          *  @return A shared pointer to the parser node containing the definition object of directionPrimary.
          */
-        HSSParserNode::p getDDirectionPrimary();
+        QSharedPointer<HSSParserNode> getDDirectionPrimary();
 
         /**
          *  Setter for the definition object of directionPrimary. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of directionPrimary.
          */
-        void setDDirectionPrimary(HSSParserNode::p value);
+        void setDDirectionPrimary(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect directionPrimary.
@@ -333,14 +331,14 @@ namespace AXR
          *  Getter for the definition object of directionSecondary.
          *  @return A shared pointer to the parser node containing the definition object of directionSecondary.
          */
-        HSSParserNode::p getDDirectionSecondary();
+        QSharedPointer<HSSParserNode> getDDirectionSecondary();
 
         /**
          *  Setter for the definition object of directionSecondary. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of
          *                  directionSecondary.
          */
-        void setDDirectionSecondary(HSSParserNode::p value);
+        void setDDirectionSecondary(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect directionSecondary.
@@ -353,19 +351,19 @@ namespace AXR
          *  Getter for the value of shape.
          *  @return A shared pointer to the shape object.
          */
-        HSSShape::p getShape();
+        QSharedPointer<HSSShape> getShape();
 
         /**
          *  Getter for the definition object of shape.
          *  @return A shared pointer to the parser node containing the definition object of shape.
          */
-        HSSParserNode::p getDShape();
+        QSharedPointer<HSSParserNode> getDShape();
 
         /**
          *  Setter for the definition object of shape. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of shape
          */
-        void setDShape(HSSParserNode::p value);
+        void setDShape(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect shape.
@@ -384,13 +382,13 @@ namespace AXR
          *  Getter for the definition object of textAlign.
          *  @return A shared pointer to the parser node containing the definition object of textAlign.
          */
-        HSSParserNode::p getDTextAlign();
+        QSharedPointer<HSSParserNode> getDTextAlign();
 
         /**
          *  Setter for the definition object of textAlign. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of textAlign.
          */
-        void setDTextAlign(HSSParserNode::p value);
+        void setDTextAlign(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect textAlign.
@@ -421,54 +419,54 @@ namespace AXR
         virtual void setController(AXRController * controller);
 
     protected:
-        HSSSimpleSelection::p children;
-        HSSSimpleSelection::p allChildren;
+        QSharedPointer<HSSSimpleSelection> children;
+        QSharedPointer<HSSSimpleSelection> allChildren;
 
-        HSSParserNode::p dContentAlignX;
+        QSharedPointer<HSSParserNode> dContentAlignX;
         HSSUnit contentAlignX;
         HSSObservable * observedContentAlignX;
         HSSObservableProperty observedContentAlignXProperty;
         bool distributeX;
         bool distributeXLinear;
-        HSSParserNode::p dContentAlignY;
+        QSharedPointer<HSSParserNode> dContentAlignY;
         HSSUnit contentAlignY;
         HSSObservable * observedContentAlignY;
         HSSObservableProperty observedContentAlignYProperty;
         bool distributeY;
         bool distributeYLinear;
 
-        HSSParserNode::p dDirectionPrimary;
+        QSharedPointer<HSSParserNode> dDirectionPrimary;
         HSSDirectionValue directionPrimary;
         HSSObservable * observedDirectionPrimary;
         HSSObservableProperty observedDirectionPrimaryProperty;
-        HSSParserNode::p dDirectionSecondary;
+        QSharedPointer<HSSParserNode> dDirectionSecondary;
         HSSDirectionValue directionSecondary;
         HSSObservable * observedDirectionSecondary;
         HSSObservableProperty observedDirectionSecondaryProperty;
-        HSSParserNode::p dShape;
-        HSSShape::p shape;
+        QSharedPointer<HSSParserNode> dShape;
+        QSharedPointer<HSSShape> shape;
         HSSObservable * observedShape;
         HSSObservableProperty observedShapeProperty;
 
         //textAlign
         HSSTextAlignType textAlign;
-        HSSParserNode::p dTextAlign;
+        QSharedPointer<HSSParserNode> dTextAlign;
         HSSObservable * observedTextAlign;
         HSSObservableProperty observedTextAlignProperty;
 
-        HSSContainer::p shared_from_this();
+        QSharedPointer<HSSContainer> shared_from_this();
 
     private:
         HSSUnit _evaluatePropertyValue(
                                    void(HSSContainer::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedProperty,
                                    HSSObservable * observedObject,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty,
-                                   HSSSimpleSelection::p scope
+                                   QSharedPointer<HSSSimpleSelection> scope
                                    );
 
         void _recursiveCreateSecondaryGroups(
@@ -486,19 +484,19 @@ namespace AXR
                                              bool onlyAddToBIfNotInGroupYet
                                              );
 
-        bool _overlaps(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
-        bool _overlaps_horizontal(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
-        bool _overlaps_vertical(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB);
-        bool _addChildToGroupIfNeeded(const HSSDisplayObject::p &child, displayGroup::p &group, HSSDirectionValue direction, bool contained);
-        //std::vector<HSSContainer::displayGroup::p> _getGroupsOverlapping(HSSDisplayObject::p &child, std::vector<HSSContainer::displayGroup::p> &group, HSSDirectionValue direction);
+        bool _overlaps(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB);
+        bool _overlaps_horizontal(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB);
+        bool _overlaps_vertical(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB);
+        bool _addChildToGroupIfNeeded(const QSharedPointer<HSSDisplayObject> &child, displayGroup::p &group, HSSDirectionValue direction, bool contained);
+        //std::vector<HSSContainer::displayGroup::p> _getGroupsOverlapping(QSharedPointer<HSSDisplayObject> &child, std::vector<HSSContainer::displayGroup::p> &group, HSSDirectionValue direction);
         bool _mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p &otherGroup, HSSDirectionValue direction);
         void _arrange(displayGroup::p &groups, HSSDirectionValue direction);
         bool _arrangeLines(displayGroup::p &groups, HSSDirectionValue direction, bool isFirstGroup);
-        void _recursiveGetPushGroup(HSSDisplayObject::p objA, HSSDisplayObject::p objB, std::vector<displayGroup::p>::iterator linesIt, std::vector<displayGroup::p>::iterator stopIt, displayGroup::p &ret);
+        void _recursiveGetPushGroup(QSharedPointer<HSSDisplayObject> objA, QSharedPointer<HSSDisplayObject> objB, std::vector<displayGroup::p>::iterator linesIt, std::vector<displayGroup::p>::iterator stopIt, displayGroup::p &ret);
         void _distribute(displayGroup::p &groups, HSSDirectionValue direction);
-        bool _recursiveFindTopConstraint(HSSUnit & constraint, displayGroup::p group, size_t i, HSSDisplayObject::p child);
-        bool _recursiveFindBottomConstraint(HSSUnit & constraint, displayGroup::p group, size_t i, HSSDisplayObject::p child);
-        virtual HSSClonable::p cloneImpl() const;
+        bool _recursiveFindTopConstraint(HSSUnit & constraint, displayGroup::p group, size_t i, QSharedPointer<HSSDisplayObject> child);
+        bool _recursiveFindBottomConstraint(HSSUnit & constraint, displayGroup::p group, size_t i, QSharedPointer<HSSDisplayObject> child);
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
 
     };
 }

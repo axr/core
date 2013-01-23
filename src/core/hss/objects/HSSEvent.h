@@ -44,12 +44,12 @@
 #ifndef HSSEVENT_H
 #define HSSEVENT_H
 
-#include "HSSAction.h"
-#include "HSSMultipleValueDefinition.h"
 #include "HSSObject.h"
 
 namespace AXR
 {
+    class HSSAction;
+
     /**
      *  @brief Represents all event objects in HSS.
      *
@@ -59,8 +59,6 @@ namespace AXR
     class AXR_API HSSEvent : public HSSObject
     {
     public:
-        typedef QSharedPointer<HSSEvent> p;
-
         /**
          *  Print the type as a string, useful for logging.
          *  @param  eventType   The event type that will be printed as a string.
@@ -81,7 +79,7 @@ namespace AXR
          *  object.
          *  @return A shared pointer to the new HSSEvent.
          */
-        p clone() const;
+        QSharedPointer<HSSEvent> clone() const;
 
         /**
          *  Destructor for this class.
@@ -91,7 +89,7 @@ namespace AXR
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Allows you to check if this event is of the given type.
@@ -109,19 +107,19 @@ namespace AXR
          *  Getter for the actual values of action, HSSAction objects.
          *  @return A vector of shared pointers to the action objects.
          */
-        std::vector<HSSAction::p> getAction();
+        std::vector<QSharedPointer<HSSAction> > getAction();
 
         /**
          *  Getter for the definition object of action.
          *  @return A shared pointer to the parser node containing the definition object of action.
          */
-        const HSSParserNode::p getDAction() const;
+        const QSharedPointer<HSSParserNode> getDAction() const;
 
         /**
          *  Setter for the definition object of action. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of action.
          */
-        void setDAction(HSSParserNode::p value);
+        void setDAction(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Since this property accepts multiple values, this allows to append a value instead of replacing
@@ -129,7 +127,7 @@ namespace AXR
          *  @param value    A shared pointer to the parser node containing the definition object to be
          *                  added to action.
          */
-        void addDAction(HSSParserNode::p value);
+        void addDAction(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect action.
@@ -147,13 +145,13 @@ namespace AXR
         HSSEventType eventType;
 
         //action
-        HSSParserNode::p dAction;
+        QSharedPointer<HSSParserNode> dAction;
         HSSObservable * observedAction;
         HSSObservableProperty observedActionProperty;
-        std::vector<HSSAction::p> action;
+        std::vector<QSharedPointer<HSSAction> > action;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

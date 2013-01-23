@@ -147,6 +147,17 @@
 #include <QtGlobal>
 #include <QMetaType>
 
+namespace AXR
+{
+    typedef QChar AXRChar;
+    typedef QString AXRString;
+
+    /**
+     * @brief Represents an HSS unit.
+     */
+    typedef double HSSUnit;
+}
+
 Q_DECLARE_METATYPE(bool*)
 Q_DECLARE_METATYPE(unsigned int*)
 

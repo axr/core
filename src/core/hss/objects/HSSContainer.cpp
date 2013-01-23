@@ -42,13 +42,19 @@
  ********************************************************************/
 
 #include <cmath>
+#include <QPainter>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRRender.h"
 #include "AXRWarning.h"
+#include "HSSBorder.h"
+#include "HSSCallback.h"
 #include "HSSContainer.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
+#include "HSSKeywordConstant.h"
+#include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSPercentageConstant.h"
@@ -56,19 +62,22 @@
 #include "HSSRoundedRect.h"
 #include "HSSSimpleSelection.h"
 #include "HSSStringConstant.h"
+#include "HSSTextBlock.h"
 
 using namespace AXR;
 
-HSSDisplayObject::p HSSContainer::asDisplayObject(HSSContainer::p theContainer)
+Q_DECLARE_METATYPE(HSSUnit*)
+
+QSharedPointer<HSSDisplayObject> HSSContainer::asDisplayObject(QSharedPointer<HSSContainer> theContainer)
 {
     return qSharedPointerCast<HSSDisplayObject > (theContainer);
 }
 
-//always test the return of this function. E.g. "HSSContainer::p cont = HSSContainer::asContainer(myDO); if(cont) { /* ... */ }
+//always test the return of this function. E.g. "QSharedPointer<HSSContainer> cont = HSSContainer::asContainer(myDO); if(cont) { /* ... */ }
 
-HSSContainer::p HSSContainer::asContainer(HSSDisplayObject::p theDisplayObject)
+QSharedPointer<HSSContainer> HSSContainer::asContainer(QSharedPointer<HSSDisplayObject> theDisplayObject)
 {
-    HSSContainer::p ret;
+    QSharedPointer<HSSContainer> ret;
     if (theDisplayObject->isA(HSSObjectTypeContainer))
     {
         ret = qSharedPointerCast<HSSContainer > (theDisplayObject);
@@ -120,8 +129,8 @@ void HSSContainer::initialize()
     this->registerProperty(HSSObservablePropertyShape, QVariant::fromValue(&this->shape));
     this->registerProperty(HSSObservablePropertyTextAlign, QVariant::fromValue(&this->textAlign));
 
-    this->children = HSSSimpleSelection::p(new HSSSimpleSelection());
-    this->allChildren = HSSSimpleSelection::p(new HSSSimpleSelection());
+    this->children = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection());
+    this->allChildren = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection());
 }
 
 HSSContainer::HSSContainer(const HSSContainer & orig)
@@ -130,15 +139,15 @@ HSSContainer::HSSContainer(const HSSContainer & orig)
     this->initialize();
 }
 
-HSSContainer::p HSSContainer::clone() const
+QSharedPointer<HSSContainer> HSSContainer::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: cloning container");
     return qSharedPointerCast<HSSContainer> (this->cloneImpl());
 }
 
-HSSClonable::p HSSContainer::cloneImpl() const
+QSharedPointer<HSSClonable> HSSContainer::cloneImpl() const
 {
-    return HSSContainer::p(new HSSContainer(*this));
+    return QSharedPointer<HSSContainer>(new HSSContainer(*this));
 }
 
 HSSContainer::~HSSContainer()
@@ -268,9 +277,9 @@ bool HSSContainer::isKeyword(AXRString value, AXRString property)
     return HSSDisplayObject::isKeyword(value, property);
 }
 
-void HSSContainer::add(HSSDisplayObject::p child)
+void HSSContainer::add(QSharedPointer<HSSDisplayObject> child)
 {
-    HSSContainer::p sharedThis = this->shared_from_this();
+    QSharedPointer<HSSContainer> sharedThis = this->shared_from_this();
     child->setParent(sharedThis);
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: added child " + child->getElementName() + " to " + this->getElementName());
     child->setIndex(this->allChildren->size());
@@ -286,7 +295,7 @@ void HSSContainer::remove(size_t index)
 {
     for (HSSSimpleSelection::iterator it = this->children->begin(); it != this->children->end(); ++it)
     {
-        HSSDisplayObject::p child = *it;
+        QSharedPointer<HSSDisplayObject> child = *it;
         if (child->getIndex() == index)
         {
             HSSSimpleSelection::iterator delIt = it;
@@ -296,7 +305,7 @@ void HSSContainer::remove(size_t index)
 
     for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it != this->allChildren->end(); ++it)
     {
-        HSSDisplayObject::p child = *it;
+        QSharedPointer<HSSDisplayObject> child = *it;
         if (child->getIndex() == index)
         {
             HSSSimpleSelection::iterator delIt = it;
@@ -334,22 +343,22 @@ void HSSContainer::setContentText(const AXRString &contextText)
     {
         if (this->allChildren->empty())
         {
-            HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock(controller));
-            txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text, controller)));
+            QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
+            txtBlck->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(text, controller)));
             this->add(txtBlck);
         }
         else
         {
-            HSSDisplayObject::p lastChild = this->allChildren->back();
+            QSharedPointer<HSSDisplayObject> lastChild = this->allChildren->back();
             if (lastChild->isA(HSSObjectTypeTextBlock))
             {
-                HSSTextBlock::p textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
-                textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(text, controller)));
+                QSharedPointer<HSSTextBlock> textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
+                textBlock->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(text, controller)));
             }
             else
             {
-                HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock(controller));
-                txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text, controller)));
+                QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
+                txtBlck->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(text, controller)));
                 this->add(txtBlck);
             }
         }
@@ -366,22 +375,22 @@ void HSSContainer::appendContentText(const AXRString &contextText)
 
         if (this->allChildren->empty())
         {
-            HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock(controller));
-            txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text, controller)));
+            QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
+            txtBlck->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(text, controller)));
             this->add(txtBlck);
         }
         else
         {
-            HSSDisplayObject::p lastChild = this->allChildren->back();
+            QSharedPointer<HSSDisplayObject> lastChild = this->allChildren->back();
             if (lastChild->isA(HSSObjectTypeTextBlock))
             {
-                HSSTextBlock::p textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
-                textBlock->setDText(HSSStringConstant::p(new HSSStringConstant(textBlock->getText() + " " + text, controller)));
+                QSharedPointer<HSSTextBlock> textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
+                textBlock->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(textBlock->getText() + " " + text, controller)));
             }
             else
             {
-                HSSTextBlock::p txtBlck = HSSTextBlock::p(new HSSTextBlock(controller));
-                txtBlck->setDText(HSSStringConstant::p(new HSSStringConstant(text, controller)));
+                QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
+                txtBlck->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(text, controller)));
                 this->add(txtBlck);
             }
         }
@@ -394,7 +403,7 @@ AXRString HSSContainer::getContentText()
     return "bla";
 }
 
-void HSSContainer::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSContainer::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -499,14 +508,14 @@ void HSSContainer::drawBorders()
 //    // Draw all borders
 //    for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
 //    {
-//        HSSBorder::p theBorder = *it;
+//        QSharedPointer<HSSBorder> theBorder = *it;
 //        HSSUnit theSize = theBorder->getSize();
 //
 //        HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
 //
 //        QPainterPath path;
 //        if(isRoundedRect){
-//            HSSRoundedRect::p roundedRect = qSharedPointerCast<HSSRoundedRect>(this->shape);
+//            QSharedPointer<HSSRoundedRect> roundedRect = qSharedPointerCast<HSSRoundedRect>(this->shape);
 //            roundedRect->createRoundedRect(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2, -offset*2);
 //        } else {
 //            this->shape->createPath(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2);
@@ -546,7 +555,7 @@ void HSSContainer::layout()
             {
                 if (!done)
                 {
-                    const HSSDisplayObject::p & child = *it;
+                    const QSharedPointer<HSSDisplayObject> & child = *it;
                     //place it on the alignment point
                     //horizontal
                     if (child->_anchorXdefault)
@@ -827,7 +836,7 @@ void HSSContainer::layout()
 
                             for (HSSSimpleSelection::iterator it = theDG->objects.begin(); it != theDG->objects.end(); ++it)
                             {
-                                HSSDisplayObject::p & theDO = *it;
+                                QSharedPointer<HSSDisplayObject> & theDO = *it;
                                 if (theDO->outerHeight > newGroup->height) newGroup->height = theDO->outerHeight;
                             }
                             secondaryGroups.push_back(newGroup);
@@ -860,7 +869,7 @@ void HSSContainer::layout()
             //assign the globalX and globalY and clean up flags
             for (HSSSimpleSelection::const_iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
             {
-                const HSSDisplayObject::p &child = *it;
+                const QSharedPointer<HSSDisplayObject> &child = *it;
                 child->setGlobalX(qRound(this->globalX + child->x));
                 child->setGlobalY(qRound(this->globalY + child->y));
                 child->_layoutFlagIsInSecondaryGroup = false;
@@ -921,7 +930,7 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
     //bool needsShoveling = true;
 
 
-    HSSDisplayObject::p objA, objB;
+    QSharedPointer<HSSDisplayObject> objA, objB;
     HSSSimpleSelection::iterator firstBIt = lineBIt;
     objA = *lineAIt;
     objB = *lineBIt;
@@ -992,7 +1001,7 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
             //try to shovel in more objects of the first line
             if (needsShoveling)
             {
-                HSSDisplayObject::p firstObj = objA;
+                QSharedPointer<HSSDisplayObject> firstObj = objA;
                 HSSSimpleSelection::iterator firstObjIt = lineAIt;
                 bool shovelDone = false;
                 while (!shovelDone)
@@ -1106,12 +1115,12 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
     } //while !lineADone || !lineBDone
 }
 
-bool HSSContainer::_overlaps(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB)
+bool HSSContainer::_overlaps(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB)
 {
     return this->_overlaps_horizontal(childA, childB) && this->_overlaps_vertical(childA, childB);
 }
 
-bool HSSContainer::_overlaps_horizontal(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB)
+bool HSSContainer::_overlaps_horizontal(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB)
 {
     if (
             (childA->x + childA->width + childA->rightMargin) > (childB->x - childB->leftMargin)
@@ -1126,7 +1135,7 @@ bool HSSContainer::_overlaps_horizontal(HSSDisplayObject::p & childA, HSSDisplay
     }
 }
 
-bool HSSContainer::_overlaps_vertical(HSSDisplayObject::p & childA, HSSDisplayObject::p & childB)
+bool HSSContainer::_overlaps_vertical(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB)
 {
     if (
             (childA->y + childA->height + childA->bottomMargin) > (childB->y - childB->topMargin)
@@ -1141,7 +1150,7 @@ bool HSSContainer::_overlaps_vertical(HSSDisplayObject::p & childA, HSSDisplayOb
     }
 }
 
-bool HSSContainer::_addChildToGroupIfNeeded(const HSSDisplayObject::p &child, AXR::HSSContainer::displayGroup::p &group, HSSDirectionValue direction, bool contained)
+bool HSSContainer::_addChildToGroupIfNeeded(const QSharedPointer<HSSDisplayObject> &child, AXR::HSSContainer::displayGroup::p &group, HSSDirectionValue direction, bool contained)
 {
     unsigned i = 0;
     bool isHorizontal = (direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft);
@@ -1155,7 +1164,7 @@ bool HSSContainer::_addChildToGroupIfNeeded(const HSSDisplayObject::p &child, AX
 
     for (HSSSimpleSelection::const_iterator it = objects.begin(); it != objects.end(); ++it)
     {
-        const HSSDisplayObject::p & otherChild = *it;
+        const QSharedPointer<HSSDisplayObject> & otherChild = *it;
         if (isHorizontal)
         {
             lineTotalPrimary += otherChild->outerWidth;
@@ -1263,7 +1272,7 @@ bool HSSContainer::_addChildToGroupIfNeeded(const HSSDisplayObject::p &child, AX
     return addedToGroup;
 }
 
-//std::vector<HSSContainer::displayGroup::p> HSSContainer::_getGroupsOverlapping(HSSDisplayObject::p &child, std::vector<HSSContainer::displayGroup::p> &groups, HSSDirectionValue direction)
+//std::vector<HSSContainer::displayGroup::p> HSSContainer::_getGroupsOverlapping(QSharedPointer<HSSDisplayObject> &child, std::vector<HSSContainer::displayGroup::p> &groups, HSSDirectionValue direction)
 //{
 //    std::vector<HSSContainer::displayGroup::p>::iterator it;
 //    std::vector<HSSContainer::displayGroup::p> ret;
@@ -1279,7 +1288,7 @@ bool HSSContainer::_addChildToGroupIfNeeded(const HSSDisplayObject::p &child, AX
 //               && ((child->y + child->outerHeight) > otherGroup->y) && ((child->y - child->leftMargin) < (otherGroup->y + otherGroup->height))
 //               ){
 //                for (i=0, size = otherGroup->objects.size(); i<size; ++i) {
-//                    const HSSDisplayObject::p & otherChild = otherGroup->objects[i];
+//                    const QSharedPointer<HSSDisplayObject> & otherChild = otherGroup->objects[i];
 //                    if(direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft){
 //                        if( ((child->y + child->outerHeight) > (otherChild->y - otherChild->topMargin)) && ((child->y - child->topMargin) < (otherChild->y + otherChild->outerHeight)) ){
 //                            overlaps = true;
@@ -1310,10 +1319,10 @@ bool HSSContainer::_mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p 
         //if the group bounds overlap, check each individual element against each other
         for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
         {
-            HSSDisplayObject::p & child = *it;
+            QSharedPointer<HSSDisplayObject> & child = *it;
             for (HSSSimpleSelection::iterator it2 = otherGroup->objects.begin(); it2!= otherGroup->objects.end(); ++it2)
             {
-                HSSDisplayObject::p &otherChild = *it2;
+                QSharedPointer<HSSDisplayObject> &otherChild = *it2;
                 if (((child->x + child->outerWidth) > (otherChild->x - otherChild->leftMargin)) && ((child->x - child->leftMargin) < (otherChild->x + otherChild->outerWidth)) && ((child->y + child->outerHeight) > (otherChild->y - otherChild->topMargin)) && ((child->y - child->topMargin) < (otherChild->y + otherChild->outerHeight)))
                 {
                     //there is an overlap, merge the groups
@@ -1359,13 +1368,13 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
         if (byAnchors)
         {
             //calculate the new alignment and anchor point for the group
-            const HSSDisplayObject::p & groupFirst = group->objects.front();
+            const QSharedPointer<HSSDisplayObject> & groupFirst = group->objects.front();
             HSSUnit alignmentTotal = 0.;
             HSSUnit accWidth = groupFirst->anchorX;
             HSSUnit anchorsTotal = 0.;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 alignmentTotal += currentChild->alignX;
                 if (i > 0)
                 {
@@ -1383,7 +1392,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             accWidth = 0.;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & otherChild2 = *it;
+                QSharedPointer<HSSDisplayObject> & otherChild2 = *it;
                 otherChild2->x = startX - otherChild2->width - accWidth;
                 accWidth += otherChild2->width;
             }
@@ -1399,7 +1408,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit widthsTotal = 0.;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 alignmentTotal += currentChild->alignX;
                 widthsTotal += currentChild->outerWidth;
             }
@@ -1409,7 +1418,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if (startX - group->width < this->leftPadding) startX = this->leftPadding + group->width;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 accWidth += currentChild->outerWidth;
                 currentChild->x = (startX - accWidth) - currentChild->rightMargin;
             }
@@ -1432,13 +1441,13 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
         if (byAnchors)
         {
             //calculate the new alignment and anchor point for the group
-            const HSSDisplayObject::p & groupFirst = group->objects.front();
+            const QSharedPointer<HSSDisplayObject> & groupFirst = group->objects.front();
             HSSUnit alignmentTotal = 0.;
             HSSUnit accHeight = groupFirst->height - groupFirst->anchorY;
             HSSUnit anchorsTotal = 0.;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 alignmentTotal += currentChild->alignY;
                 if (i > 0)
                 {
@@ -1456,7 +1465,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             accHeight = 0.;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & otherChild2 = *it;
+                QSharedPointer<HSSDisplayObject> & otherChild2 = *it;
                 otherChild2->y = startY + accHeight;
                 accHeight += otherChild2->height;
             }
@@ -1471,7 +1480,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit heightsTotal = 0.;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 alignmentTotal += currentChild->alignY;
                 heightsTotal += currentChild->outerHeight;
             }
@@ -1482,7 +1491,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             group->y = startY;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 currentChild->y = startY + accHeight + currentChild->topMargin;
                 accHeight += currentChild->outerHeight;
             }
@@ -1504,13 +1513,13 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
         if (byAnchors)
         {
             //calculate the new alignment and anchor point for the group
-            const HSSDisplayObject::p & groupFirst = group->objects.front();
+            const QSharedPointer<HSSDisplayObject> & groupFirst = group->objects.front();
             HSSUnit alignmentTotal = 0;
             HSSUnit accHeight = groupFirst->anchorY;
             HSSUnit anchorsTotal = 0;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 alignmentTotal += currentChild->alignY;
                 if (i > 0)
                 {
@@ -1528,7 +1537,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             accHeight = 0;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & otherChild2 = *it;
+                QSharedPointer<HSSDisplayObject> & otherChild2 = *it;
                 otherChild2->y = startY - otherChild2->height - accHeight;
                 accHeight += otherChild2->height;
             }
@@ -1543,7 +1552,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit heightsTotal = 0.;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 alignmentTotal += currentChild->alignY;
                 heightsTotal += currentChild->outerHeight;
             }
@@ -1553,7 +1562,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             if (startY - group->height < this->topPadding) startY = this->topPadding + group->height;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 accHeight += currentChild->outerHeight;
                 currentChild->y = (startY - accHeight) - currentChild->bottomMargin;
             }
@@ -1577,13 +1586,13 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
         if (byAnchors)
         {
             //calculate the new alignment and anchor point for the group
-            const HSSDisplayObject::p & groupFirst = group->objects.front();
+            const QSharedPointer<HSSDisplayObject> & groupFirst = group->objects.front();
             HSSUnit alignmentTotal = 0.;
             HSSUnit accWidth = groupFirst->outerWidth - groupFirst->anchorX;
             HSSUnit anchorsTotal = 0.;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 alignmentTotal += currentChild->alignX;
                 if (i > 0)
                 {
@@ -1601,7 +1610,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             accWidth = 0.;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & otherChild2 = *it;
+                QSharedPointer<HSSDisplayObject> & otherChild2 = *it;
                 otherChild2->x = startX + accWidth + otherChild2->leftMargin;
                 accWidth += otherChild2->outerWidth;
             }
@@ -1617,7 +1626,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             HSSUnit widthsTotal = 0.;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 alignmentTotal += currentChild->alignX;
                 widthsTotal += currentChild->outerWidth;
             }
@@ -1628,7 +1637,7 @@ void HSSContainer::_arrange(displayGroup::p &group, HSSDirectionValue direction)
             group->x = startX;
             for (HSSSimpleSelection::iterator it = group->objects.begin(); it!= group->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 currentChild->x = startX + accWidth + currentChild->leftMargin;
                 accWidth += currentChild->outerWidth;
             }
@@ -1687,7 +1696,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
             std::vector<displayGroup::p>::iterator pglIt = group->lines.begin();
             displayGroup::p lineA, lineB;
             HSSSimpleSelection::iterator lineAIt, lineBIt;
-            HSSDisplayObject::p objA, objB;
+            QSharedPointer<HSSDisplayObject> objA, objB;
             lineA = *pglIt;
             lineAIt = lineA->objects.begin();
             objA = *lineAIt;
@@ -1735,7 +1744,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
 
             for (HSSSimpleSelection::iterator it = biggestGroup->objects.begin(); it!= biggestGroup->objects.end(); ++it)
             {
-                HSSDisplayObject::p & currentChild = *it;
+                QSharedPointer<HSSDisplayObject> & currentChild = *it;
                 alignmentTotal += currentChild->alignY;
                 totalSize += currentChild->outerHeight;
             }
@@ -1752,7 +1761,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
             size_t size = biggestGroup->objects.size();
             for (HSSSimpleSelection::iterator bobjIt = biggestGroup->objects.begin(); bobjIt != biggestGroup->objects.end(); ++bobjIt)
             {
-                HSSDisplayObject::p otherChild2 = *bobjIt;
+                QSharedPointer<HSSDisplayObject> otherChild2 = *bobjIt;
                 HSSUnit newValue = startY + accHeight + otherChild2->topMargin;
                 if (!isFirstGroup)
                 {
@@ -1833,7 +1842,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
                 displayGroup::p & line = group->lines[i];
                 for (HSSSimpleSelection::iterator it2 = line->objects.begin(); it2!= line->objects.end(); ++it2)
                 {
-                    HSSDisplayObject::p & currentChild = *it2;
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it2;
 
                     if (!currentChild->_layoutFlagLockBottom)
                     {
@@ -1846,7 +1855,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
 
                             for (HSSSimpleSelection::iterator nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); ++nlIt)
                             {
-                                HSSDisplayObject::p nlObj = *nlIt;
+                                QSharedPointer<HSSDisplayObject> nlObj = *nlIt;
                                 if (nlObj->_layoutFlagLockTop && this->_overlaps_horizontal(nlObj, currentChild))
                                 {
                                     if (nlObj->y - nlObj->topMargin < constraintBottom)
@@ -1884,7 +1893,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
 
                             for (HSSSimpleSelection::iterator plIt = previousLine->objects.begin(); plIt != previousLine->objects.end(); ++plIt)
                             {
-                                HSSDisplayObject::p plObj = *plIt;
+                                QSharedPointer<HSSDisplayObject> plObj = *plIt;
                                 if (plObj->_layoutFlagLockBottom && this->_overlaps_horizontal(plObj, currentChild))
                                 {
                                     if (plObj->y + plObj->outerHeight > constraintTop)
@@ -1931,7 +1940,7 @@ bool HSSContainer::_arrangeLines(displayGroup::p &group, HSSDirectionValue direc
     return true;
 }
 
-void HSSContainer::_recursiveGetPushGroup(HSSDisplayObject::p objA, HSSDisplayObject::p objB, std::vector<displayGroup::p>::iterator linesIt, std::vector<displayGroup::p>::iterator stopIt, displayGroup::p &ret)
+void HSSContainer::_recursiveGetPushGroup(QSharedPointer<HSSDisplayObject> objA, QSharedPointer<HSSDisplayObject> objB, std::vector<displayGroup::p>::iterator linesIt, std::vector<displayGroup::p>::iterator stopIt, displayGroup::p &ret)
 {
     if (this->_overlaps_horizontal(objA, objB))
     {
@@ -1952,12 +1961,12 @@ void HSSContainer::_recursiveGetPushGroup(HSSDisplayObject::p objA, HSSDisplayOb
     if (linesIt != stopIt)
     {
         displayGroup::p nextLine = *linesIt;
-        HSSDisplayObject::p objC = *nextLine->objects.begin();
+        QSharedPointer<HSSDisplayObject> objC = *nextLine->objects.begin();
         this->_recursiveGetPushGroup(objB, objC, linesIt, stopIt, ret);
     }
 }
 
-bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup::p group, size_t i, HSSDisplayObject::p child)
+bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup::p group, size_t i, QSharedPointer<HSSDisplayObject> child)
 {
     bool ret = false;
     HSSUnit constraintStore = constraint;
@@ -1971,7 +1980,7 @@ bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup
 
     for (HSSSimpleSelection::iterator nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); ++nlIt)
     {
-        HSSDisplayObject::p nlObj = *nlIt;
+        QSharedPointer<HSSDisplayObject> nlObj = *nlIt;
         if (nlObj->_layoutFlagLockTop && this->_overlaps_horizontal(nlObj, child))
         {
             if (nlObj->y - nlObj->topMargin < constraint)
@@ -2002,7 +2011,7 @@ bool HSSContainer::_recursiveFindTopConstraint(HSSUnit &constraint, displayGroup
     return ret;
 }
 
-bool HSSContainer::_recursiveFindBottomConstraint(HSSUnit &constraint, displayGroup::p group, size_t i, HSSDisplayObject::p child)
+bool HSSContainer::_recursiveFindBottomConstraint(HSSUnit &constraint, displayGroup::p group, size_t i, QSharedPointer<HSSDisplayObject> child)
 {
     bool ret = false;
     HSSUnit constraintStore = constraint;
@@ -2016,7 +2025,7 @@ bool HSSContainer::_recursiveFindBottomConstraint(HSSUnit &constraint, displayGr
 
     for (HSSSimpleSelection::iterator nlIt = nextLine->objects.begin(); nlIt != nextLine->objects.end(); ++nlIt)
     {
-        HSSDisplayObject::p nlObj = *nlIt;
+        QSharedPointer<HSSDisplayObject> nlObj = *nlIt;
         if (nlObj->_layoutFlagLockBottom && this->_overlaps_horizontal(nlObj, child))
         {
             if (nlObj->y + nlObj->outerHeight > constraint)
@@ -2055,7 +2064,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
     {
         if (group->objects.size() == 1)
         {
-            const HSSDisplayObject::p &theDO = group->objects.front();
+            const QSharedPointer<HSSDisplayObject> &theDO = group->objects.front();
             HSSUnit newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
             theDO->x = this->leftPadding + newValue;
             group->x = 0.;
@@ -2081,7 +2090,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 unsigned i = 0;
                 for (HSSSimpleSelection::iterator it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
-                    HSSDisplayObject::p &theDO = *it;
+                    QSharedPointer<HSSDisplayObject> &theDO = *it;
                     theDO->x = this->width - accWidth - (spaceChunk * i) - theDO->width - theDO->rightMargin;
                     accWidth += theDO->outerWidth;
                     ++i;
@@ -2098,7 +2107,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 unsigned i = 0;
                 for (HSSSimpleSelection::iterator it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
-                    HSSDisplayObject::p &theDO = *it;
+                    QSharedPointer<HSSDisplayObject> &theDO = *it;
                     theDO->x = this->width - accWidth - spaceChunk - (spaceChunk * i) - theDO->width - theDO->leftMargin;
                     accWidth += theDO->outerWidth;
                     ++i;
@@ -2115,7 +2124,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
     {
         if (group->objects.size() == 1)
         {
-            const HSSDisplayObject::p &theDO = group->objects.front();
+            const QSharedPointer<HSSDisplayObject> &theDO = group->objects.front();
             HSSUnit newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
             theDO->y = this->topPadding + newValue;
             group->y = 0.;
@@ -2141,7 +2150,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 unsigned i = 0;
                 for (HSSSimpleSelection::iterator it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
-                    HSSDisplayObject::p &theDO = *it;
+                    QSharedPointer<HSSDisplayObject> &theDO = *it;
                     theDO->y = accHeight + (spaceChunk * i) + theDO->topMargin;
                     accHeight += theDO->outerHeight;
                     ++i;
@@ -2158,7 +2167,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 unsigned i = 0;
                 for (HSSSimpleSelection::iterator it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
-                    HSSDisplayObject::p &theDO = *it;
+                    QSharedPointer<HSSDisplayObject> &theDO = *it;
                     theDO->y = accHeight + spaceChunk + (spaceChunk * i) + theDO->topMargin;
                     accHeight += theDO->outerHeight;
                     ++i;
@@ -2174,7 +2183,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
     {
         if (group->objects.size() == 1)
         {
-            const HSSDisplayObject::p &theDO = group->objects.front();
+            const QSharedPointer<HSSDisplayObject> &theDO = group->objects.front();
             HSSUnit newValue = ((this->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
             theDO->y = this->topPadding + newValue;
             group->y = 0.;
@@ -2200,7 +2209,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 unsigned i = 0;
                 for (HSSSimpleSelection::iterator it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
-                    HSSDisplayObject::p &theDO = *it;
+                    QSharedPointer<HSSDisplayObject> &theDO = *it;
                     theDO->y = this->height - accHeight - (spaceChunk * i) - theDO->height - theDO->bottomMargin;
                     accHeight += theDO->outerHeight;
                     ++i;
@@ -2217,7 +2226,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
                 unsigned i = 0;
                 for (HSSSimpleSelection::iterator it = group->objects.begin(); it != group->objects.end(); ++it)
                 {
-                    HSSDisplayObject::p &theDO = *it;
+                    QSharedPointer<HSSDisplayObject> &theDO = *it;
                     theDO->y = this->height - accHeight - spaceChunk - (spaceChunk * i) - theDO->height - theDO->topMargin;
                     accHeight += theDO->outerHeight;
                     ++i;
@@ -2233,7 +2242,7 @@ void HSSContainer::_distribute(displayGroup::p &group, HSSDirectionValue directi
     {
         if (group->objects.size() == 1)
         {
-            const HSSDisplayObject::p &theDO = group->objects.front();
+            const QSharedPointer<HSSDisplayObject> &theDO = group->objects.front();
             HSSUnit newValue = ((this->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
             theDO->x = this->leftPadding + newValue;
             group->x = 0.;
@@ -2316,7 +2325,7 @@ void HSSContainer::setGlobalX(HSSUnit newValue)
 
     for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
     {
-        HSSDisplayObject::p theChild = *it;
+        QSharedPointer<HSSDisplayObject> theChild = *it;
         theChild->setGlobalX(theChild->globalX + delta);
     }
 }
@@ -2328,12 +2337,12 @@ void HSSContainer::setGlobalY(HSSUnit newValue)
 
     for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
     {
-        HSSDisplayObject::p theChild = *it;
+        QSharedPointer<HSSDisplayObject> theChild = *it;
         theChild->setGlobalY(theChild->globalY + delta);
     }
 }
 
-void HSSContainer::setChildren(HSSSimpleSelection::p newChildren)
+void HSSContainer::setChildren(QSharedPointer<HSSSimpleSelection> newChildren)
 {
     this->children = newChildren;
     this->allChildren = newChildren;
@@ -2344,12 +2353,12 @@ void HSSContainer::setChildren(HSSSimpleSelection::p newChildren)
     }
 }
 
-HSSSimpleSelection::p HSSContainer::getChildren() const
+QSharedPointer<HSSSimpleSelection> HSSContainer::getChildren() const
 {
     return this->getChildren(false);
 }
 
-HSSSimpleSelection::p HSSContainer::getChildren(bool includeTextBlocks) const
+QSharedPointer<HSSSimpleSelection> HSSContainer::getChildren(bool includeTextBlocks) const
 {
     if (includeTextBlocks)
     {
@@ -2363,12 +2372,12 @@ HSSSimpleSelection::p HSSContainer::getChildren(bool includeTextBlocks) const
 
 //contentAlignX
 
-HSSParserNode::p HSSContainer::getDContentAlignX()
+QSharedPointer<HSSParserNode> HSSContainer::getDContentAlignX()
 {
     return this->dContentAlignX;
 }
 
-void HSSContainer::setDContentAlignX(HSSParserNode::p value)
+void HSSContainer::setDContentAlignX(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -2391,18 +2400,18 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
 
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "left")
         {
-            this->setDContentAlignX(HSSParserNode::p(new HSSNumberConstant(0, this->getController())));
+            this->setDContentAlignX(QSharedPointer<HSSParserNode>(new HSSNumberConstant(0, this->getController())));
         }
         else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center")
         {
-            this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(50, this->getController())));
+            this->setDContentAlignX(QSharedPointer<HSSParserNode>(new HSSPercentageConstant(50, this->getController())));
         }
         else if (keywordValue->getValue() == "right")
         {
-            this->setDContentAlignX(HSSParserNode::p(new HSSPercentageConstant(100, this->getController())));
+            this->setDContentAlignX(QSharedPointer<HSSParserNode>(new HSSPercentageConstant(100, this->getController())));
         }
         else if (keywordValue->getValue() == "even")
         {
@@ -2422,8 +2431,8 @@ void HSSContainer::setDContentAlignX(HSSParserNode::p value)
     }
     else
     {
-        HSSContainer::p parentContainer = this->getParent();
-        HSSSimpleSelection::p scope;
+        QSharedPointer<HSSContainer> parentContainer = this->getParent();
+        QSharedPointer<HSSSimpleSelection> scope;
         if (parentContainer)
         {
             scope = parentContainer->getChildren();
@@ -2454,14 +2463,14 @@ void HSSContainer::contentAlignXChanged(HSSObservableProperty source, void *data
     {
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dContentAlignX);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dContentAlignX);
         this->contentAlignX = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (this->dContentAlignX);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (this->dContentAlignX);
         this->contentAlignX = expressionValue->evaluate();
         break;
     }
@@ -2475,12 +2484,12 @@ void HSSContainer::contentAlignXChanged(HSSObservableProperty source, void *data
 
 //contentAlignY
 
-HSSParserNode::p HSSContainer::getDContentAlignY()
+QSharedPointer<HSSParserNode> HSSContainer::getDContentAlignY()
 {
     return this->dContentAlignX;
 }
 
-void HSSContainer::setDContentAlignY(HSSParserNode::p value)
+void HSSContainer::setDContentAlignY(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -2504,18 +2513,18 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
 
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
-        HSSKeywordConstant::p keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
         if (keywordValue->getValue() == "top")
         {
-            this->setDContentAlignY(HSSParserNode::p(new HSSNumberConstant(0, this->getController())));
+            this->setDContentAlignY(QSharedPointer<HSSParserNode>(new HSSNumberConstant(0, this->getController())));
         }
         else if (keywordValue->getValue() == "middle" || keywordValue->getValue() == "center")
         {
-            this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(50, this->getController())));
+            this->setDContentAlignY(QSharedPointer<HSSParserNode>(new HSSPercentageConstant(50, this->getController())));
         }
         else if (keywordValue->getValue() == "bottom")
         {
-            this->setDContentAlignY(HSSParserNode::p(new HSSPercentageConstant(100, this->getController())));
+            this->setDContentAlignY(QSharedPointer<HSSParserNode>(new HSSPercentageConstant(100, this->getController())));
         }
         else if (keywordValue->getValue() == "even")
         {
@@ -2536,8 +2545,8 @@ void HSSContainer::setDContentAlignY(HSSParserNode::p value)
     {
         HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
 
-        HSSContainer::p parentContainer = this->getParent();
-        HSSSimpleSelection::p scope;
+        QSharedPointer<HSSContainer> parentContainer = this->getParent();
+        QSharedPointer<HSSSimpleSelection> scope;
         if (parentContainer)
         {
             scope = parentContainer->getChildren();
@@ -2564,14 +2573,14 @@ void HSSContainer::contentAlignYChanged(HSSObservableProperty source, void *data
     {
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dContentAlignY);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dContentAlignY);
         this->contentAlignY = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (this->dContentAlignY);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (this->dContentAlignY);
         this->contentAlignY = expressionValue->evaluate();
         break;
     }
@@ -2586,12 +2595,12 @@ void HSSContainer::contentAlignYChanged(HSSObservableProperty source, void *data
 
 //directionPrimary
 
-HSSParserNode::p HSSContainer::getDDirectionPrimary()
+QSharedPointer<HSSParserNode> HSSContainer::getDDirectionPrimary()
 {
     return this->dDirectionPrimary;
 }
 
-void HSSContainer::setDDirectionPrimary(HSSParserNode::p value)
+void HSSContainer::setDDirectionPrimary(QSharedPointer<HSSParserNode> value)
 {
     this->dDirectionPrimary = value;
     if (this->observedDirectionPrimary)
@@ -2652,12 +2661,12 @@ void HSSContainer::directionPrimaryChanged(HSSObservableProperty source, void *d
 
 //directionSecondary
 
-HSSParserNode::p HSSContainer::getDDirectionSecondary()
+QSharedPointer<HSSParserNode> HSSContainer::getDDirectionSecondary()
 {
     return this->dDirectionSecondary;
 }
 
-void HSSContainer::setDDirectionSecondary(HSSParserNode::p value)
+void HSSContainer::setDDirectionSecondary(QSharedPointer<HSSParserNode> value)
 {
     this->dDirectionSecondary = value;
     if (this->observedDirectionSecondary)
@@ -2718,17 +2727,17 @@ void HSSContainer::directionSecondaryChanged(HSSObservableProperty source, void 
 
 //shape
 
-HSSShape::p HSSContainer::getShape()
+QSharedPointer<HSSShape> HSSContainer::getShape()
 {
     return this->shape;
 }
 
-HSSParserNode::p HSSContainer::getDShape()
+QSharedPointer<HSSParserNode> HSSContainer::getDShape()
 {
     return this->dShape;
 }
 
-void HSSContainer::setDShape(HSSParserNode::p value)
+void HSSContainer::setDShape(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -2745,7 +2754,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
         AXRString stringValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
         if (stringValue == "default")
         {
-            this->shape = HSSRectangle::p(new HSSRectangle(this->getController()));
+            this->shape = QSharedPointer<HSSRectangle>(new HSSRectangle(this->getController()));
             valid = true;
         }
         break;
@@ -2755,10 +2764,10 @@ void HSSContainer::setDShape(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             objdef->setThisObj(this->shared_from_this());
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 objdef->setScope(parent->getChildren());
@@ -2768,7 +2777,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
                 objdef->setScope(this->getChildren());
             }
             objdef->apply();
-            HSSObject::p theObject = objdef->getObject();
+            QSharedPointer<HSSObject> theObject = objdef->getObject();
             if (theObject->isA(HSSObjectTypeShape))
             {
                 this->shape = qSharedPointerCast<HSSShape > (theObject);
@@ -2793,9 +2802,9 @@ void HSSContainer::setDShape(HSSParserNode::p value)
     {
     case HSSStatementTypeObjectDefinition:
     {
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setThisObj(this->shared_from_this());
-        HSSContainer::p parent = this->getParent();
+        QSharedPointer<HSSContainer> parent = this->getParent();
         if (parent)
         {
             objdef->setScope(parent->getChildren());
@@ -2805,7 +2814,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
             objdef->setScope(this->getChildren());
         }
         objdef->apply();
-        HSSObject::p objValue = objdef->getObject();
+        QSharedPointer<HSSObject> objValue = objdef->getObject();
         if (objValue->isA(HSSObjectTypeShape))
         {
             this->shape = qSharedPointerCast<HSSShape > (objValue);
@@ -2827,7 +2836,7 @@ void HSSContainer::setDShape(HSSParserNode::p value)
 void HSSContainer::shapeChanged(HSSObservableProperty source, void *data)
 {
     this->setDirty(true);
-    this->shape = *(HSSShape::p *)data;
+    this->shape = *(QSharedPointer<HSSShape> *)data;
     this->notifyObservers(HSSObservablePropertyShape, &this->shape);
 }
 
@@ -2836,12 +2845,12 @@ HSSTextAlignType HSSContainer::getTextAlign()
     return this->textAlign;
 }
 
-HSSParserNode::p HSSContainer::getDTextAlign()
+QSharedPointer<HSSParserNode> HSSContainer::getDTextAlign()
 {
     return this->dTextAlign;
 }
 
-void HSSContainer::setDTextAlign(HSSParserNode::p value)
+void HSSContainer::setDTextAlign(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -2853,8 +2862,8 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
         this->dTextAlign = value;
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDTextAlign(objdef);
             valid = true;
         }
@@ -2870,10 +2879,10 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dTextAlign = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
                 fnct->setScope(parent->getChildren());
@@ -2913,9 +2922,9 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dTextAlign = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setThisObj(this->shared_from_this());
-        HSSContainer::p parent = this->getParent();
+        QSharedPointer<HSSContainer> parent = this->getParent();
         if (parent)
         {
             objdef->setScope(parent->getChildren());
@@ -2926,7 +2935,7 @@ void HSSContainer::setDTextAlign(HSSParserNode::p value)
         }
 
         objdef->apply();
-        HSSObject::p theobj = objdef->getObject();
+        QSharedPointer<HSSObject> theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->textAlign = HSSTextBlock::textAlignTypeFromString(qSharedPointerCast<HSSValue>(theobj)->getStringValue());
@@ -2980,34 +2989,34 @@ void HSSContainer::setDefaults()
     AXRController * controller = this->getController();
 
     //contentAlignX
-    HSSKeywordConstant::p newDContentAlignX(new HSSKeywordConstant("left", controller));
+    QSharedPointer<HSSKeywordConstant> newDContentAlignX(new HSSKeywordConstant("left", controller));
     this->setDContentAlignX(newDContentAlignX);
     //contentAlignY
-    HSSKeywordConstant::p newDContentAlignY(new HSSKeywordConstant("top", controller));
+    QSharedPointer<HSSKeywordConstant> newDContentAlignY(new HSSKeywordConstant("top", controller));
     this->setDContentAlignY(newDContentAlignY);
     //directionPrimary
-    HSSKeywordConstant::p newDDirectionPrimary(new HSSKeywordConstant("ltr", controller));
+    QSharedPointer<HSSKeywordConstant> newDDirectionPrimary(new HSSKeywordConstant("ltr", controller));
     this->setDDirectionPrimary(newDDirectionPrimary);
     //directionSecondary
-    HSSKeywordConstant::p newDDirectionSecondary(new HSSKeywordConstant("ttb", controller));
+    QSharedPointer<HSSKeywordConstant> newDDirectionSecondary(new HSSKeywordConstant("ttb", controller));
     this->setDDirectionSecondary(newDDirectionSecondary);
     //shape
-    HSSKeywordConstant::p newDShape(new HSSKeywordConstant("default", controller));
+    QSharedPointer<HSSKeywordConstant> newDShape(new HSSKeywordConstant("default", controller));
     this->setDShape(newDShape);
     //textAlign
-    this->setDTextAlign(HSSKeywordConstant::p(new HSSKeywordConstant("left", controller)));
+    this->setDTextAlign(QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant("left", controller)));
 }
 
 HSSUnit HSSContainer::_evaluatePropertyValue(
                                          void(HSSContainer::*callback)(HSSObservableProperty property, void* data),
-                                         HSSParserNode::p value,
+                                         QSharedPointer<HSSParserNode> value,
                                          HSSUnit percentageBase,
                                          HSSObservableProperty observedProperty,
                                          HSSObservable * observedObject,
                                          HSSObservableProperty observedSourceProperty,
                                          HSSObservable * &observedStore,
                                          HSSObservableProperty &observedStoreProperty,
-                                         HSSSimpleSelection::p scope
+                                         QSharedPointer<HSSSimpleSelection> scope
                                          )
 {
     HSSUnit ret = 0;
@@ -3017,14 +3026,14 @@ HSSUnit HSSContainer::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
+        QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         if (callback)
         {
@@ -3037,7 +3046,7 @@ HSSUnit HSSContainer::_evaluatePropertyValue(
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setPercentageObserved(observedProperty, observedObject);
         expressionValue->setScope(scope);
@@ -3057,7 +3066,7 @@ HSSUnit HSSContainer::_evaluatePropertyValue(
 
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         fnct->setPercentageBase(percentageBase);
         fnct->setPercentageObserved(observedProperty, observedObject);
         fnct->setScope(scope);
@@ -3092,7 +3101,7 @@ bool HSSContainer::handleEvent(HSSEventType type, void* data)
     bool handled = false;
     for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it < this->allChildren->end(); ++it)
     {
-        HSSDisplayObject::p child = *it;
+        QSharedPointer<HSSDisplayObject> child = *it;
         bool childHandled = child->handleEvent(type, data);
         if (childHandled)
         {
@@ -3114,14 +3123,14 @@ void HSSContainer::setController(AXRController * controller)
     //propagate
     for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it < this->allChildren->end(); ++it)
     {
-        HSSDisplayObject::p child = *it;
+        QSharedPointer<HSSDisplayObject> child = *it;
         child->setController(controller);
     }
 
     HSSDisplayObject::setController(controller);
 }
 
-HSSContainer::p HSSContainer::shared_from_this()
+QSharedPointer<HSSContainer> HSSContainer::shared_from_this()
 {
     return qSharedPointerCast<HSSContainer > (HSSDisplayObject::shared_from_this());
 }

@@ -44,7 +44,6 @@
 #ifndef HSSCIRCLE_H
 #define HSSCIRCLE_H
 
-#include <QPainter>
 #include "HSSShape.h"
 
 namespace AXR
@@ -55,8 +54,6 @@ namespace AXR
     class AXR_API HSSCircle : public HSSShape
     {
     public:
-        typedef QSharedPointer<HSSCircle> p;
-
         /**
          *  Constructor for HSSCircle objects. Do not call directly, use clone() instead.
          */
@@ -72,7 +69,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSCircle.
          */
-        p clone() const;
+        QSharedPointer<HSSCircle> clone() const;
 
         /**
          *  Destructor for this class.
@@ -84,12 +81,12 @@ namespace AXR
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
 
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments);
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments);
 
-        virtual void drawBorders(QPainter &painter, std::vector<HSSBorder::p> borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding);
+        virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding);
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

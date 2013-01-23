@@ -44,7 +44,6 @@
 #ifndef AXRDEBUGGING_H
 #define AXRDEBUGGING_H
 
-#include "AXRString.h"
 #include "AXRGlobal.h"
 
 class QIODevice;

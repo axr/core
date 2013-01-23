@@ -45,9 +45,12 @@
  *  @todo do something meaningful with the error codes
  */
 
+#include "AXRBuffer.h"
 #include "AXRDebugging.h"
 #include "AXRError.h"
+#include "HSSToken.h"
 #include "HSSTokenizer.h"
+#include "HSSValueToken.h"
 
 using namespace AXR;
 
@@ -84,12 +87,12 @@ void HSSTokenizer::reset()
     this->preferHex = false;
 }
 
-void HSSTokenizer::setFile(AXRBuffer::p file)
+void HSSTokenizer::setFile(QSharedPointer<AXRBuffer> file)
 {
     this->file = file;
 }
 
-AXRBuffer::p HSSTokenizer::getFile()
+QSharedPointer<AXRBuffer> HSSTokenizer::getFile()
 {
     return this->file;
 }
@@ -115,9 +118,9 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
     return HSSTokenizerOK;
 }
 
-HSSToken::p HSSTokenizer::readNextToken()
+QSharedPointer<HSSToken> HSSTokenizer::readNextToken()
 {
-    HSSToken::p ret;
+    QSharedPointer<HSSToken> ret;
 
     //if we're at the end of the source
     if (this->atEndOfSource())
@@ -167,49 +170,49 @@ HSSToken::p HSSTokenizer::readNextToken()
         case '\'':
             return this->readString();
         case '#':
-            ret = HSSToken::p(new HSSToken(HSSInstructionSign, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSInstructionSign, this->currentLine, this->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '@':
-            ret = HSSToken::p(new HSSToken(HSSObjectSign, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSObjectSign, this->currentLine, this->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '&':
-            ret = HSSToken::p(new HSSToken(HSSAmpersand, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSAmpersand, this->currentLine, this->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '{':
-            ret = HSSToken::p(new HSSToken(HSSBlockOpen, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSBlockOpen, this->currentLine, this->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '}':
-            ret = HSSToken::p(new HSSToken(HSSBlockClose, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSBlockClose, this->currentLine, this->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ',':
-            ret = HSSToken::p(new HSSToken(HSSComma, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSComma, this->currentLine, this->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ':':
-            ret = HSSToken::p(new HSSToken(HSSColon, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSColon, this->currentLine, this->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ';':
-            ret = HSSToken::p(new HSSToken(HSSEndOfStatement, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSEndOfStatement, this->currentLine, this->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '(':
-            ret = HSSToken::p(new HSSToken(HSSParenthesisOpen, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSParenthesisOpen, this->currentLine, this->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ')':
-            ret = HSSToken::p(new HSSToken(HSSParenthesisClose, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSParenthesisClose, this->currentLine, this->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '/':
             return this->readCommentOrSymbol();
         case '!':
-            ret = HSSToken::p(new HSSToken(HSSNegator, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSNegator, this->currentLine, this->currentColumn - 1));
             this->readNextChar();
             return ret;
         default:
@@ -217,7 +220,7 @@ HSSToken::p HSSTokenizer::readNextToken()
     }
 }
 
-HSSToken::p HSSTokenizer::peekNextToken()
+QSharedPointer<HSSToken> HSSTokenizer::peekNextToken()
 {
     std_log4(AXRString("bufpos: %1").arg(this->bufpos));
 
@@ -225,7 +228,7 @@ HSSToken::p HSSTokenizer::peekNextToken()
     int curpos = this->bufpos;
     qint64 curline = this->currentLine;
     qint64 curcol = this->currentColumn;
-    HSSToken::p ret = this->readNextToken();
+    QSharedPointer<HSSToken> ret = this->readNextToken();
 
     // Store the new offset
     this->peekpos += (this->bufpos - curpos);
@@ -310,18 +313,18 @@ AXRString HSSTokenizer::extractCurrentTokenText()
 
 //reads and returns a whitespace token
 
-HSSToken::p HSSTokenizer::readWhitespace()
+QSharedPointer<HSSToken> HSSTokenizer::readWhitespace()
 {
     qint64 line = this->currentLine;
     qint64 column = this->currentColumn - 1;
 
     this->skipWhitespace();
-    return HSSToken::p(new HSSToken(HSSWhitespace, line, column));
+    return QSharedPointer<HSSToken>(new HSSToken(HSSWhitespace, line, column));
 }
 
 //reads and returns an identifier token
 
-HSSToken::p HSSTokenizer::readIdentifier()
+QSharedPointer<HSSToken> HSSTokenizer::readIdentifier()
 {
     qint64 line = this->currentLine;
     qint64 column = this->currentColumn - 1;
@@ -331,12 +334,12 @@ HSSToken::p HSSTokenizer::readIdentifier()
         this->storeCurrentCharAndReadNext();
     }
 
-    return HSSValueToken::p(new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText(), line, column));
+    return QSharedPointer<HSSValueToken>(new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText(), line, column));
 }
 
 //reads and returns a hexadecimal number or an identifier
 
-HSSToken::p HSSTokenizer::readHexOrIdentifier()
+QSharedPointer<HSSToken> HSSTokenizer::readHexOrIdentifier()
 {
     qint64 line = this->currentLine;
     qint64 column = this->currentColumn - 1;
@@ -378,7 +381,7 @@ HSSToken::p HSSTokenizer::readHexOrIdentifier()
                 }
                 else if (this->currentTokenText.size() > 0)
                 {
-                    return HSSValueToken::p(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText(), line, column));
+                    return QSharedPointer<HSSValueToken>(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText(), line, column));
                 }
                 else
                 {
@@ -397,7 +400,7 @@ HSSToken::p HSSTokenizer::readHexOrIdentifier()
 //reads and returns either a number or a percentage token
 //the currentChar is assumed to be a number
 
-HSSToken::p HSSTokenizer::readNumberOrPercentage()
+QSharedPointer<HSSToken> HSSTokenizer::readNumberOrPercentage()
 {
     qint64 line = this->currentLine;
     qint64 column = this->currentColumn - 1;
@@ -418,15 +421,15 @@ HSSToken::p HSSTokenizer::readNumberOrPercentage()
 
         this->storeCurrentCharAndReadNext();
     }
-    HSSToken::p ret;
+    QSharedPointer<HSSToken> ret;
     if (currentChar == '%')
     {
-        ret = HSSValueToken::p(new HSSValueToken(HSSPercentageNumber, this->extractCurrentTokenText(), line, column));
+        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSPercentageNumber, this->extractCurrentTokenText(), line, column));
         this->readNextChar();
     }
     else
     {
-        ret = HSSValueToken::p(new HSSValueToken(HSSNumber, this->extractCurrentTokenText(), line, column));
+        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSNumber, this->extractCurrentTokenText(), line, column));
     }
     return ret;
 }
@@ -434,12 +437,12 @@ HSSToken::p HSSTokenizer::readNumberOrPercentage()
 //reads and returns either a single quoted or double quoted string token
 //the currentChar is assumed to be either " or '
 
-HSSToken::p HSSTokenizer::readString()
+QSharedPointer<HSSToken> HSSTokenizer::readString()
 {
     qint64 line = this->currentLine;
     qint64 column = this->currentColumn - 1;
 
-    HSSToken::p ret;
+    QSharedPointer<HSSToken> ret;
     if (this->currentChar == '"')
     {
         this->readNextChar();
@@ -451,7 +454,7 @@ HSSToken::p HSSTokenizer::readString()
             }
             this->storeCurrentCharAndReadNext();
         }
-        ret = HSSValueToken::p(new HSSValueToken(HSSDoubleQuoteString, this->extractCurrentTokenText(), line, column));
+        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSDoubleQuoteString, this->extractCurrentTokenText(), line, column));
     }
     else if (this->currentChar == '\'')
     {
@@ -464,7 +467,7 @@ HSSToken::p HSSTokenizer::readString()
             }
             this->storeCurrentCharAndReadNext();
         }
-        ret = HSSValueToken::p(new HSSValueToken(HSSSingleQuoteString, this->extractCurrentTokenText(), line, column));
+        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSingleQuoteString, this->extractCurrentTokenText(), line, column));
     }
 
     this->readNextChar();
@@ -474,12 +477,12 @@ HSSToken::p HSSTokenizer::readString()
 //reads and returns a comment or a symbol token
 //assumes currentChar == '/'
 
-HSSToken::p HSSTokenizer::readCommentOrSymbol()
+QSharedPointer<HSSToken> HSSTokenizer::readCommentOrSymbol()
 {
     qint64 line = this->currentLine;
     qint64 column = this->currentColumn - 1;
 
-    HSSValueToken::p ret;
+    QSharedPointer<HSSValueToken> ret;
     this->readNextChar();
     if (this->currentChar == '/')
     {
@@ -489,7 +492,7 @@ HSSToken::p HSSTokenizer::readCommentOrSymbol()
         {
             this->storeCurrentCharAndReadNext();
         }
-        ret = HSSValueToken::p(new HSSValueToken(HSSLineComment, this->extractCurrentTokenText(), line, column));
+        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSLineComment, this->extractCurrentTokenText(), line, column));
     }
     else if (this->currentChar == '*')
     {
@@ -517,12 +520,12 @@ HSSToken::p HSSTokenizer::readCommentOrSymbol()
 
             this->storeCurrentCharAndReadNext();
         }
-        ret = HSSValueToken::p(new HSSValueToken(HSSBlockComment, this->extractCurrentTokenText(), line, column));
+        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSBlockComment, this->extractCurrentTokenText(), line, column));
         readNextChar();
     }
     else
     {
-        ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, '/', line, column));
+        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, '/', line, column));
     }
 
     return ret;
@@ -530,12 +533,12 @@ HSSToken::p HSSTokenizer::readCommentOrSymbol()
 
 //reads and returns a symbol token
 
-HSSToken::p HSSTokenizer::readSymbol()
+QSharedPointer<HSSToken> HSSTokenizer::readSymbol()
 {
     qint64 line = this->currentLine;
     qint64 column = this->currentColumn - 1;
 
-    HSSToken::p ret;
+    QSharedPointer<HSSToken> ret;
 
     switch (this->currentChar)
     {
@@ -549,16 +552,16 @@ HSSToken::p HSSTokenizer::readSymbol()
                 this->storeCurrentCharAndReadNext();
             }
 
-            ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText(), line, column));
+            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText(), line, column));
             return ret;
         }
 
-        ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText(), line, column));
+        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText(), line, column));
         readNextChar();
         return ret;
 
     default:
-        ret = HSSValueToken::p(new HSSValueToken(HSSSymbol, this->currentChar, line, column));
+        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, this->currentChar, line, column));
         this->readNextChar();
         return ret;
     }

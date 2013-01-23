@@ -41,10 +41,11 @@
  *
  ********************************************************************/
 
+#include <QSharedPointer>
 #include "AXRDebugging.h"
 #include "HSSDisplayObject.h"
 #include "HSSMultipleValue.h"
-#include <QSharedPointer>
+#include "HSSParserNode.h"
 
 using namespace AXR;
 
@@ -64,14 +65,14 @@ HSSMultipleValue::HSSMultipleValue(const HSSMultipleValue & orig)
     }
 }
 
-HSSMultipleValue::p HSSMultipleValue::clone() const
+QSharedPointer<HSSMultipleValue> HSSMultipleValue::clone() const
 {
     return qSharedPointerCast<HSSMultipleValue> (this->cloneImpl());
 }
 
-HSSClonable::p HSSMultipleValue::cloneImpl() const
+QSharedPointer<HSSClonable> HSSMultipleValue::cloneImpl() const
 {
-    return HSSMultipleValue::p(new HSSMultipleValue(*this));
+    return QSharedPointer<HSSMultipleValue>(new HSSMultipleValue(*this));
 }
 
 HSSMultipleValue::~HSSMultipleValue()
@@ -97,7 +98,7 @@ AXRString HSSMultipleValue::toString()
     return tempstr;
 }
 
-void HSSMultipleValue::add(HSSParserNode::p newValue)
+void HSSMultipleValue::add(QSharedPointer<HSSParserNode> newValue)
 {
     if (newValue)
     {
@@ -111,12 +112,12 @@ void HSSMultipleValue::removeLast()
     this->valueList.pop_back();
 }
 
-HSSParserNode::p HSSMultipleValue::first()
+QSharedPointer<HSSParserNode> HSSMultipleValue::first()
 {
     return this->valueList.front();
 }
 
-HSSParserNode::p HSSMultipleValue::last()
+QSharedPointer<HSSParserNode> HSSMultipleValue::last()
 {
     return this->valueList.back();
 }
@@ -126,7 +127,7 @@ size_t HSSMultipleValue::size() const
     return this->valueList.size();
 }
 
-const std::vector<HSSParserNode::p> HSSMultipleValue::getValueList() const
+const std::vector<QSharedPointer<HSSParserNode> > HSSMultipleValue::getValueList() const
 {
     return this->valueList;
 }

@@ -44,7 +44,6 @@
 #ifndef HSSACTION_H
 #define HSSACTION_H
 
-#include "HSSMultipleValueDefinition.h"
 #include "HSSObject.h"
 
 namespace AXR
@@ -55,8 +54,6 @@ namespace AXR
     class AXR_API HSSAction : public HSSObject
     {
     public:
-        typedef QSharedPointer<HSSAction> p;
-
         /**
          *  When logging, you often need a string representation of the action type.
          *  @param actionType   The action type to represent as a string.
@@ -69,7 +66,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSAction.
          */
-        p clone() const;
+        QSharedPointer<HSSAction> clone() const;
 
         /**
          *  Destructor for this class.
@@ -80,7 +77,7 @@ namespace AXR
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Allows you to check if this action is of the given type.
@@ -115,11 +112,11 @@ namespace AXR
 
     private:
         HSSActionType actionType;
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 
-Q_DECLARE_METATYPE(std::vector<AXR::HSSAction::p>)
-Q_DECLARE_METATYPE(std::vector<AXR::HSSAction::p>*)
+Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSAction> >)
+Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSAction> >*)
 
 #endif

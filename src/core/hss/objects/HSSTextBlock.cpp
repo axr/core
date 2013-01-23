@@ -42,13 +42,24 @@
  ********************************************************************/
 
 #include <limits>
+#include <QFont>
+#include <QImage>
+#include <QPainter>
+#include <QPen>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRRender.h"
+#include "AXRString.h"
 #include "AXRWarning.h"
+#include "HSSCallback.h"
+#include "HSSContainer.h"
+#include "HSSFont.h"
 #include "HSSFunction.h"
+#include "HSSKeywordConstant.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
+#include "HSSRgb.h"
 #include "HSSSelectorChain.h"
 #include "HSSStringConstant.h"
 #include "HSSTextBlock.h"
@@ -187,15 +198,15 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
     this->setShorthandProperties(shorthandProperties);
 }
 
-HSSTextBlock::p HSSTextBlock::clone() const
+QSharedPointer<HSSTextBlock> HSSTextBlock::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: cloning text block object");
     return qSharedPointerCast<HSSTextBlock> (this->cloneImpl());
 }
 
-HSSClonable::p HSSTextBlock::cloneImpl() const
+QSharedPointer<HSSClonable> HSSTextBlock::cloneImpl() const
 {
-    return HSSTextBlock::p(new HSSTextBlock(*this));
+    return QSharedPointer<HSSTextBlock>(new HSSTextBlock(*this));
 }
 
 HSSTextBlock::~HSSTextBlock()
@@ -254,19 +265,19 @@ void HSSTextBlock::setDefaults()
     AXRController * controller = this->getController();
 
     //transform
-    HSSKeywordConstant::p newDTransform(new HSSKeywordConstant("no", controller));
+    QSharedPointer<HSSKeywordConstant> newDTransform(new HSSKeywordConstant("no", controller));
     this->setDTransform(newDTransform);
     //textAlign
-    HSSKeywordConstant::p newDTextAlign(new HSSKeywordConstant("inherit", controller));
+    QSharedPointer<HSSKeywordConstant> newDTextAlign(new HSSKeywordConstant("inherit", controller));
     this->setDTextAlign(newDTextAlign);
     //font
-    HSSKeywordConstant::p newDFont(new HSSKeywordConstant("inherit", controller));
+    QSharedPointer<HSSKeywordConstant> newDFont(new HSSKeywordConstant("inherit", controller));
     this->setDFont(newDFont);
     //height
-    this->setDHeight(HSSKeywordConstant::p(new HSSKeywordConstant("content", controller)));
+    this->setDHeight(QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant("content", controller)));
 }
 
-void HSSTextBlock::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSTextBlock::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -296,7 +307,7 @@ QFont HSSTextBlock::getFont() const
     QFont font_description;
 
     // Get the first font available
-    HSSFont::p theFont;
+    QSharedPointer<HSSFont> theFont;
     if (font.size() > 0)
         theFont = *font.begin();
 
@@ -324,14 +335,14 @@ void HSSTextBlock::drawForeground()
     if (this->getController()->document()->getRender()->globalAntialiasingEnabled())
         painter.setRenderHint(QPainter::Antialiasing);
 
-    HSSFont::p theFont;
+    QSharedPointer<HSSFont> theFont;
     if (font.size() > 0)
         theFont = *font.begin();
 
     QPen pen;
     if (theFont && theFont->getColor())
     {
-        HSSRgb::p textColor = qSharedPointerCast<HSSRgb>(theFont->getColor());
+        QSharedPointer<HSSRgb> textColor = qSharedPointerCast<HSSRgb>(theFont->getColor());
         pen.setColor(textColor->toQColor());
     }
     else
@@ -403,12 +414,12 @@ HSSTextTransformType HSSTextBlock::getTransform()
     return this->transform;
 }
 
-HSSParserNode::p HSSTextBlock::getDTransform()
+QSharedPointer<HSSParserNode> HSSTextBlock::getDTransform()
 {
     return this->dTransform;
 }
 
-void HSSTextBlock::setDTransform(HSSParserNode::p value)
+void HSSTextBlock::setDTransform(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -419,8 +430,8 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
         this->dTransform = value;
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDTransform(objdef);
             valid = true;
 
@@ -437,7 +448,7 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dTransform = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
@@ -472,11 +483,11 @@ void HSSTextBlock::setDTransform(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dTransform = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setScope(this->scope);
         objdef->setThisObj(this->getParent());
         objdef->apply();
-        HSSObject::p theobj = objdef->getObject();
+        QSharedPointer<HSSObject> theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->transform = HSSTextBlock::textTransformTypeFromString(qSharedPointerCast<HSSValue>(theobj)->getStringValue());
@@ -526,12 +537,12 @@ HSSTextAlignType HSSTextBlock::getTextAlign()
     return this->textAlign;
 }
 
-HSSParserNode::p HSSTextBlock::getDTextAlign()
+QSharedPointer<HSSParserNode> HSSTextBlock::getDTextAlign()
 {
     return this->dTextAlign;
 }
 
-void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
+void HSSTextBlock::setDTextAlign(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -542,8 +553,8 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
         this->dTextAlign = value;
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDTextAlign(objdef);
             valid = true;
         }
@@ -559,7 +570,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dTextAlign = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
@@ -587,7 +598,7 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
             {
                 this->observedTextAlign->removeObserver(this->observedTextAlignProperty, HSSObservablePropertyTextAlign, this);
             }
-            HSSContainer::p parent = this->getParent();
+            QSharedPointer<HSSContainer> parent = this->getParent();
             QVariant remoteValue = parent->getProperty(HSSObservablePropertyTextAlign);
             if (remoteValue.canConvert<HSSTextAlignType*>())
             {
@@ -613,11 +624,11 @@ void HSSTextBlock::setDTextAlign(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dTextAlign = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setScope(this->scope);
         objdef->setThisObj(this->getParent());
         objdef->apply();
-        HSSObject::p theobj = objdef->getObject();
+        QSharedPointer<HSSObject> theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->textAlign = HSSTextBlock::textAlignTypeFromString(qSharedPointerCast<HSSValue>(theobj)->getStringValue());
@@ -670,12 +681,12 @@ AXRString HSSTextBlock::getText()
     return this->text;
 }
 
-HSSParserNode::p HSSTextBlock::getDText()
+QSharedPointer<HSSParserNode> HSSTextBlock::getDText()
 {
     return this->dText;
 }
 
-void HSSTextBlock::setDText(HSSParserNode::p value)
+void HSSTextBlock::setDText(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -693,8 +704,8 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             this->setDText(objdef);
             valid = true;
 
@@ -711,7 +722,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
     case HSSParserNodeTypeFunctionCall:
     {
         this->dText = value;
-        HSSFunction::p fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
         if (fnct && fnct->isA(HSSFunctionTypeRef))
         {
             fnct->setScope(this->scope);
@@ -732,7 +743,7 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
     case HSSParserNodeTypeKeywordConstant:
     {
         this->dText = value;
-        HSSKeywordConstant::p kwd = qSharedPointerCast<HSSKeywordConstant > (value);
+        QSharedPointer<HSSKeywordConstant> kwd = qSharedPointerCast<HSSKeywordConstant > (value);
         if (kwd->getValue() == "no")
         {
             this->text = "";
@@ -750,11 +761,11 @@ void HSSTextBlock::setDText(HSSParserNode::p value)
     case HSSStatementTypeObjectDefinition:
     {
         this->dText = value;
-        HSSObjectDefinition::p objdef = qSharedPointerCast<HSSObjectDefinition > (value);
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
         objdef->setScope(this->scope);
         objdef->setThisObj(this->getParent());
         objdef->apply();
-        HSSObject::p theobj = objdef->getObject();
+        QSharedPointer<HSSObject> theobj = objdef->getObject();
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->text = qSharedPointerCast<HSSValue>(theobj)->getStringValue();

@@ -42,29 +42,38 @@
  ********************************************************************/
 
 #include <QMap>
+#include <QVariant>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
 #include "AXRWarning.h"
 #include "HSSCircle.h"
 #include "HSSColorStop.h"
+#include "HSSContainer.h"
+#include "HSSEvent.h"
+#include "HSSFont.h"
 #include "HSSLineBorder.h"
 #include "HSSLinearGradient.h"
 #include "HSSLog.h"
+#include "HSSMargin.h"
 #include "HSSMultipleValue.h"
 #include "HSSMultipleValueDefinition.h"
 #include "HSSObject.h"
+#include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSPolygon.h"
+#include "HSSPropertyDefinition.h"
 #include "HSSRectangle.h"
 #include "HSSRequest.h"
+#include "HSSRgb.h"
 #include "HSSRoundedRect.h"
 #include "HSSSimpleSelection.h"
 #include "HSSTypeEnums.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
-HSSObject::p HSSObject::newObjectWithType(AXRString type, AXRController * controller)
+QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRController * controller)
 {
     static QMap<AXRString, HSSObjectType> types;
     if (types.empty())
@@ -109,7 +118,7 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type, AXRController * contro
     {
     case HSSObjectTypeContainer:
     {
-        return HSSContainer::p(new HSSContainer(controller));
+        return QSharedPointer<HSSContainer>(new HSSContainer(controller));
     }
 
     case HSSObjectTypeBorder:
@@ -117,7 +126,7 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type, AXRController * contro
         /**
          *  @todo border tyes?
          */
-        return HSSLineBorder::p(new HSSLineBorder(controller));
+        return QSharedPointer<HSSLineBorder>(new HSSLineBorder(controller));
     }
 
     case HSSObjectTypeGradient:
@@ -125,51 +134,51 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type, AXRController * contro
         /**
          *  @todo gradient tyes?
          */
-        return HSSLinearGradient::p(new HSSLinearGradient(controller));
+        return QSharedPointer<HSSLinearGradient>(new HSSLinearGradient(controller));
     }
 
     case HSSObjectTypeColorStop:
     {
-        return HSSColorStop::p(new HSSColorStop(controller));
+        return QSharedPointer<HSSColorStop>(new HSSColorStop(controller));
     }
 
     case HSSObjectTypeValue:
     {
-        return HSSValue::p(new HSSValue(controller));
+        return QSharedPointer<HSSValue>(new HSSValue(controller));
     }
 
     case HSSObjectTypeMargin:
     {
-        return HSSMargin::p(new HSSMargin(controller));
+        return QSharedPointer<HSSMargin>(new HSSMargin(controller));
     }
 
     case HSSObjectTypeRgb:
     {
-        return HSSRgb::p(new HSSRgb(controller));
+        return QSharedPointer<HSSRgb>(new HSSRgb(controller));
     }
 
     case HSSObjectTypeFont:
     {
-        return HSSFont::p(new HSSFont(controller));
+        return QSharedPointer<HSSFont>(new HSSFont(controller));
     }
 
     case HSSObjectTypeShape:
     {
         if (type == "rectangle")
         {
-            return HSSRectangle::p(new HSSRectangle(controller));
+            return QSharedPointer<HSSRectangle>(new HSSRectangle(controller));
         }
         else if (type == "roundedRect")
         {
-            return HSSRoundedRect::p(new HSSRoundedRect(controller));
+            return QSharedPointer<HSSRoundedRect>(new HSSRoundedRect(controller));
         }
         else if (type == "circle")
         {
-            return HSSCircle::p(new HSSCircle(controller));
+            return QSharedPointer<HSSCircle>(new HSSCircle(controller));
         }
         else if (type == "polygon")
         {
-            return HSSPolygon::p(new HSSPolygon(controller));
+            return QSharedPointer<HSSPolygon>(new HSSPolygon(controller));
         }
     }
 
@@ -195,7 +204,7 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type, AXRController * contro
 
         if (eventTypes.contains(type))
         {
-            return HSSEvent::p(new HSSEvent(eventTypes[type], controller));
+            return QSharedPointer<HSSEvent>(new HSSEvent(eventTypes[type], controller));
         }
 
         //fall through
@@ -205,11 +214,11 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type, AXRController * contro
     {
         if (type == "request")
         {
-            return HSSRequest::p(new HSSRequest(controller));
+            return QSharedPointer<HSSRequest>(new HSSRequest(controller));
         }
         else if (type == "log")
         {
-            return HSSLog::p(new HSSLog(controller));
+            return QSharedPointer<HSSLog>(new HSSLog(controller));
         }
     }
 
@@ -217,7 +226,7 @@ HSSObject::p HSSObject::newObjectWithType(AXRString type, AXRController * contro
         throw AXRError("HSSObject", type);
     }
 
-    return HSSObject::p();
+    return QSharedPointer<HSSObject>();
 }
 
 HSSObject::HSSObject(HSSObjectType type, AXRController * controller)
@@ -241,14 +250,14 @@ HSSObject::HSSObject(const HSSObject & orig)
 
 }
 
-HSSObject::p HSSObject::clone() const
+QSharedPointer<HSSObject> HSSObject::clone() const
 {
     return qSharedPointerCast<HSSObject> (this->cloneImpl());
 }
 
-HSSClonable::p HSSObject::cloneImpl() const
+QSharedPointer<HSSClonable> HSSObject::cloneImpl() const
 {
-    return HSSObject::p(new HSSObject(*this));
+    return QSharedPointer<HSSObject>(new HSSObject(*this));
 }
 
 HSSObject::~HSSObject()
@@ -398,18 +407,18 @@ void HSSObject::setShorthandIndex(size_t newValue)
     }
 }
 
-HSSParserNode::p HSSObject::getDIsA()
+QSharedPointer<HSSParserNode> HSSObject::getDIsA()
 {
     return this->dIsA;
 }
 
-void HSSObject::setDIsA(HSSParserNode::p value)
+void HSSObject::setDIsA(QSharedPointer<HSSParserNode> value)
 {
     this->dIsA = value;
     this->addDIsA(value);
 }
 
-void HSSObject::addDIsA(HSSParserNode::p value)
+void HSSObject::addDIsA(QSharedPointer<HSSParserNode> value)
 {
     bool valid = false;
 
@@ -417,8 +426,8 @@ void HSSObject::addDIsA(HSSParserNode::p value)
     {
     case HSSParserNodeTypeMultipleValueDefinition:
     {
-        HSSMultipleValueDefinition::p multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
-        std::vector<HSSParserNode::p> values = multiDef->getValues();
+        QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (value);
+        std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
         for (HSSParserNode::it iterator = values.begin(); iterator != values.end(); ++iterator)
         {
             this->addDIsA(*iterator);
@@ -432,10 +441,10 @@ void HSSObject::addDIsA(HSSParserNode::p value)
     {
         try
         {
-            HSSObjectNameConstant::p objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            HSSObjectDefinition::p objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
             //objdef->apply();
-            std::deque<HSSPropertyDefinition::p> properties = objdef->getProperties();
+            std::deque<QSharedPointer<HSSPropertyDefinition> > properties = objdef->getProperties();
 
             for (size_t i = 0; i < properties.size(); ++i)
             {
@@ -498,7 +507,7 @@ void HSSObject::isAChanged(AXR::HSSObservableProperty source, void *data)
 
 }
 
-void HSSObject::setPropertyWithName(AXRString name, HSSParserNode::p value)
+void HSSObject::setPropertyWithName(AXRString name, QSharedPointer<HSSParserNode> value)
 {
     HSSObservableProperty property = HSSObservable::observablePropertyFromString(name);
     if (property != HSSObservablePropertyNone)
@@ -511,7 +520,7 @@ void HSSObject::setPropertyWithName(AXRString name, HSSParserNode::p value)
     }
 }
 
-void HSSObject::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSObject::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     if (name == HSSObservablePropertyIsA)
     {
@@ -544,12 +553,12 @@ void HSSObject::registerProperty(HSSObservableProperty name, QVariant property)
     this->properties[name] = property;
 }
 
-HSSSimpleSelection::p HSSObject::getScope() const
+QSharedPointer<HSSSimpleSelection> HSSObject::getScope() const
 {
     return this->scope;
 }
 
-void HSSObject::setScope(HSSSimpleSelection::p newScope)
+void HSSObject::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 {
     this->scope = newScope;
 }
@@ -564,12 +573,12 @@ AXRController * HSSObject::getController()
     return this->axrController;
 }
 
-void HSSObject::setThisObj(HSSDisplayObject::p value)
+void HSSObject::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     this->thisObj = value;
 }
 
-HSSDisplayObject::p HSSObject::getThisObj()
+QSharedPointer<HSSDisplayObject> HSSObject::getThisObj()
 {
     return thisObj;
 }
@@ -624,10 +633,10 @@ HSSActionType HSSObject::getActionType()
     return HSSActionTypeNone;
 }
 
-HSSObject::p HSSObject::shared_from_this()
+QSharedPointer<HSSObject> HSSObject::shared_from_this()
 {
     if (!ptr)
         ptr = QWeakPointer<HSSObject>(this);
 
-    return HSSObject::p(ptr);
+    return QSharedPointer<HSSObject>(ptr);
 }

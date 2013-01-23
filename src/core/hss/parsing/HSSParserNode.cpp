@@ -92,7 +92,7 @@ HSSParserNode::HSSParserNode(const HSSParserNode &orig)
     this->controller = orig.controller;
 }
 
-HSSParserNode::p HSSParserNode::clone() const
+QSharedPointer<HSSParserNode> HSSParserNode::clone() const
 {
     return qSharedPointerCast<HSSParserNode> (this->cloneImpl());
 }
@@ -118,36 +118,36 @@ HSSParserNodeType HSSParserNode::getType()
     return this->nodeType;
 }
 
-HSSParserNode::p HSSParserNode::getParentNode()
+QSharedPointer<HSSParserNode> HSSParserNode::getParentNode()
 {
     if (!this->_parentNode.isNull())
     {
-        HSSParserNode::p parent = this->_parentNode.toStrongRef();
+        QSharedPointer<HSSParserNode> parent = this->_parentNode.toStrongRef();
         return parent;
     }
     else
     {
-        return HSSParserNode::p();
+        return QSharedPointer<HSSParserNode>();
     }
 }
 
-void HSSParserNode::setParentNode(HSSParserNode::p newParent)
+void HSSParserNode::setParentNode(QSharedPointer<HSSParserNode> newParent)
 {
-    this->_parentNode = pp(newParent);
+    this->_parentNode = QWeakPointer<HSSParserNode>(newParent);
 }
 
 void HSSParserNode::removeFromParentNode()
 {
-    HSSParserNode::p parentNode = this->getParentNode();
+    QSharedPointer<HSSParserNode> parentNode = this->getParentNode();
     if (parentNode) parentNode->removeNode(this->shared_from_this());
 }
 
-void HSSParserNode::addNode(HSSParserNode::p child)
+void HSSParserNode::addNode(QSharedPointer<HSSParserNode> child)
 {
     this->_childNodes.push_back(child);
 }
 
-void HSSParserNode::removeNode(HSSParserNode::p child)
+void HSSParserNode::removeNode(QSharedPointer<HSSParserNode> child)
 {
     HSSParserNode::it it = find(this->_childNodes.begin(), this->_childNodes.end(), child);
     if (it != this->_childNodes.end())
@@ -156,22 +156,22 @@ void HSSParserNode::removeNode(HSSParserNode::p child)
     }
 }
 
-const std::vector<HSSParserNode::p> HSSParserNode::getChildNodes() const
+const std::vector<QSharedPointer<HSSParserNode> > HSSParserNode::getChildNodes() const
 {
     return this->_childNodes;
 }
 
-HSSClonable::p HSSParserNode::cloneImpl() const
+QSharedPointer<HSSClonable> HSSParserNode::cloneImpl() const
 {
-    return HSSParserNode::p(new HSSParserNode(*this));
+    return QSharedPointer<HSSParserNode>(new HSSParserNode(*this));
 }
 
-void HSSParserNode::setThisObj(HSSDisplayObject::p value)
+void HSSParserNode::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     this->thisObj = value;
 }
 
-HSSDisplayObject::p HSSParserNode::getThisObj()
+QSharedPointer<HSSDisplayObject> HSSParserNode::getThisObj()
 {
     return thisObj;
 }
@@ -256,12 +256,12 @@ HSSFlagFunctionType HSSParserNode::getFlagFunctionType()
     return HSSFlagFunctionTypeNone;
 }
 
-HSSParserNode::p HSSParserNode::shared_from_this()
+QSharedPointer<HSSParserNode> HSSParserNode::shared_from_this()
 {
     if (!ptr)
         ptr = QWeakPointer<HSSParserNode>(this);
 
-    return HSSParserNode::p(ptr);
+    return QSharedPointer<HSSParserNode>(ptr);
 }
 
 AXRController* HSSParserNode::getController()

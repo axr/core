@@ -43,7 +43,10 @@
 
 #include "AXRController.h"
 #include "AXRDebugging.h"
+#include "HSSDisplayObject.h"
 #include "HSSSelFunction.h"
+#include "HSSSelectorChain.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
@@ -64,7 +67,7 @@ HSSSelFunction::HSSSelFunction(const HSSSelFunction & orig)
 
 }
 
-HSSFunction::p HSSSelFunction::clone() const
+QSharedPointer<HSSFunction> HSSSelFunction::clone() const
 {
     return qSharedPointerCast<HSSFunction> (this->cloneImpl());
 }
@@ -75,18 +78,18 @@ AXRString HSSSelFunction::toString()
     return tempstr;
 }
 
-const std::vector<HSSSelectorChain::p> & HSSSelFunction::getSelectorChains() const
+const std::vector<QSharedPointer<HSSSelectorChain> > & HSSSelFunction::getSelectorChains() const
 {
     return this->selectorChains;
 }
 
-void HSSSelFunction::setSelectorChains(std::vector<HSSSelectorChain::p> newValues)
+void HSSSelFunction::setSelectorChains(std::vector<QSharedPointer<HSSSelectorChain> > newValues)
 {
     this->selectorChains = newValues;
     this->setDirty(true);
 }
 
-void HSSSelFunction::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
+void HSSSelFunction::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSelectorChain)
 {
     if (newSelectorChain)
     {
@@ -106,12 +109,12 @@ void HSSSelFunction::selectorChainsRemoveLast()
     this->selectorChains.pop_back();
 }
 
-HSSSelectorChain::p & HSSSelFunction::selectorChainsGet(size_t index)
+QSharedPointer<HSSSelectorChain> & HSSSelFunction::selectorChainsGet(size_t index)
 {
     return this->selectorChains[index];
 }
 
-HSSSelectorChain::p & HSSSelFunction::selectorChainsLast()
+QSharedPointer<HSSSelectorChain> & HSSSelFunction::selectorChainsLast()
 {
     return this->selectorChains.back();
 }
@@ -136,13 +139,13 @@ QVariant HSSSelFunction::_evaluate()
 //    this->notifyObservers(HSSObservablePropertyValue, this->_value);
 //}
 
-HSSClonable::p HSSSelFunction::cloneImpl() const
+QSharedPointer<HSSClonable> HSSSelFunction::cloneImpl() const
 {
-    HSSSelFunction::p clone = HSSSelFunction::p(new HSSSelFunction(*this));
+    QSharedPointer<HSSSelFunction> clone = QSharedPointer<HSSSelFunction>(new HSSSelFunction(*this));
 
     for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)
     {
-        HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
+        QSharedPointer<HSSSelectorChain> clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }
 

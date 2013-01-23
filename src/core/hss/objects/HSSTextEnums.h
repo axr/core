@@ -41,47 +41,29 @@
  *
  ********************************************************************/
 
-#ifndef HSSSELECTOR_H
-#define HSSSELECTOR_H
+#ifndef AXRBrowser_HSSTextEnums_h
+#define AXRBrowser_HSSTextEnums_h
 
-#include "HSSParserNode.h"
+#include "AXRGlobal.h"
 
 namespace AXR
 {
-    class HSSSelection;
-    class HSSSimpleSelection;
-
-    /**
-     *  @brief Abstract base class for a common interface for all selector nodes
-     */
-    class AXR_API HSSSelector : public HSSParserNode
+    enum AXR_API HSSTextTransformType
     {
-    public:
-        ~HSSSelector();
+        HSSTextTransformTypeNone = 0,
+        HSSTextTransformTypeLowercase,
+        HSSTextTransformTypeUppercase,
+        HSSTextTransformTypeCapitalize,
+        HSSTextTransformTypeHumanize
+    };
 
-        /**
-         * Reduces the selection according its selector type
-         */
-        virtual QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing) = 0;
-
-        bool getNegating() const;
-        void setNegating(bool value);
-
-        bool isA(HSSSelectorType otherType);
-        HSSSelectorType getSelectorType();
-
-        bool isA(HSSCombinatorType otherType);
-
-    protected:
-        /**
-         *  Creates a new instance of a simple selector, for use of the subclasses.
-         *  @param type     The type of the selector node.
-         */
-        HSSSelector(HSSSelectorType type, AXRController * controller);
-
-    private:
-        HSSSelectorType _selectorType;
-        bool _negating;
+    enum AXR_API HSSTextAlignType
+    {
+        HSSTextAlignTypeNone = 0,
+        HSSTextAlignTypeLeft,
+        HSSTextAlignTypeRight,
+        HSSTextAlignTypeCenter,
+        HSSTextAlignTypeJustify
     };
 }
 

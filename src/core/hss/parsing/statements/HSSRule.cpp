@@ -46,7 +46,10 @@
 #include "HSSContainer.h"
 #include "HSSDisplayObject.h"
 #include "HSSFilter.h"
+#include "HSSInstruction.h"
+#include "HSSPropertyDefinition.h"
 #include "HSSRule.h"
+#include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
 
 using namespace AXR;
@@ -64,9 +67,9 @@ HSSRule::HSSRule(const HSSRule & orig)
     this->_originalScope = orig._originalScope;
 }
 
-HSSRule::p HSSRule::clone() const
+QSharedPointer<HSSRule> HSSRule::clone() const
 {
-    HSSRule::p clone = qSharedPointerCast<HSSRule>(this->cloneImpl());
+    QSharedPointer<HSSRule> clone = qSharedPointerCast<HSSRule>(this->cloneImpl());
     if (this->instruction)
         clone->instruction = this->instruction->clone();
     return clone;
@@ -125,7 +128,7 @@ AXRString HSSRule::toString()
     return tempstr;
 }
 
-void HSSRule::setSelectorChains(std::vector<HSSSelectorChain::p> newChains)
+void HSSRule::setSelectorChains(std::vector<QSharedPointer<HSSSelectorChain> > newChains)
 {
     this->selectorChains = newChains;
 
@@ -135,12 +138,12 @@ void HSSRule::setSelectorChains(std::vector<HSSSelectorChain::p> newChains)
     }
 }
 
-const std::vector<HSSSelectorChain::p> & HSSRule::getSelectorChains() const
+const std::vector<QSharedPointer<HSSSelectorChain> > & HSSRule::getSelectorChains() const
 {
     return this->selectorChains;
 }
 
-void HSSRule::selectorChainsAdd(HSSSelectorChain::p & newSelectorChain)
+void HSSRule::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSelectorChain)
 {
     if (newSelectorChain)
     {
@@ -160,12 +163,12 @@ void HSSRule::selectorChainsRemoveLast()
     this->selectorChains.pop_back();
 }
 
-HSSSelectorChain::p & HSSRule::selectorChainsGet(size_t index)
+QSharedPointer<HSSSelectorChain> & HSSRule::selectorChainsGet(size_t index)
 {
     return this->selectorChains[index];
 }
 
-HSSSelectorChain::p & HSSRule::selectorChainsLast()
+QSharedPointer<HSSSelectorChain> & HSSRule::selectorChainsLast()
 {
     return this->selectorChains.back();
 }
@@ -175,12 +178,12 @@ size_t HSSRule::selectorChainsSize() const
     return this->selectorChains.size();
 }
 
-const std::vector<HSSPropertyDefinition::p> & HSSRule::getProperties() const
+const std::vector<QSharedPointer<HSSPropertyDefinition> > & HSSRule::getProperties() const
 {
     return this->properties;
 }
 
-void HSSRule::propertiesAdd(HSSPropertyDefinition::p & newProperty)
+void HSSRule::propertiesAdd(QSharedPointer<HSSPropertyDefinition> & newProperty)
 {
     if (newProperty)
     {
@@ -200,12 +203,12 @@ void HSSRule::propertiesRemoveLast()
     this->properties.pop_back();
 }
 
-HSSPropertyDefinition::p & HSSRule::propertiesGet(size_t index)
+QSharedPointer<HSSPropertyDefinition> & HSSRule::propertiesGet(size_t index)
 {
     return this->properties[index];
 }
 
-HSSPropertyDefinition::p & HSSRule::propertiesLast()
+QSharedPointer<HSSPropertyDefinition> & HSSRule::propertiesLast()
 {
     return this->properties.back();
 }
@@ -215,13 +218,13 @@ size_t HSSRule::propertiesSize() const
     return this->properties.size();
 }
 
-void HSSRule::childrenAdd(HSSRule::p newRule)
+void HSSRule::childrenAdd(QSharedPointer<HSSRule> newRule)
 {
     newRule->setParentNode(this->shared_from_this()); //parent in the node tree
     this->children.push_back(newRule);
 }
 
-HSSRule::p HSSRule::childrenGet(size_t index)
+QSharedPointer<HSSRule> HSSRule::childrenGet(size_t index)
 {
     return this->children[index];
 }
@@ -241,18 +244,18 @@ size_t HSSRule::childrenSize() const
     return this->children.size();
 }
 
-void HSSRule::setInstruction(HSSInstruction::p newInstruction)
+void HSSRule::setInstruction(QSharedPointer<HSSInstruction> newInstruction)
 {
     this->instruction = newInstruction;
     this->instruction->setParentNode(this->shared_from_this());
 }
 
-HSSInstruction::p HSSRule::getInstruction()
+QSharedPointer<HSSInstruction> HSSRule::getInstruction()
 {
     return this->instruction;
 }
 
-HSSRule::p HSSRule::shared_from_this()
+QSharedPointer<HSSRule> HSSRule::shared_from_this()
 {
     return qSharedPointerCast<HSSRule > (HSSStatement::shared_from_this());
 }
@@ -264,12 +267,12 @@ void HSSRule::setThisObj(QSharedPointer<HSSDisplayObject> value)
         (*sIt)->setThisObj(value);
     }
 
-    for (std::vector<HSSPropertyDefinition::p>::iterator it = this->properties.begin(); it != this->properties.end(); ++it)
+    for (std::vector<QSharedPointer<HSSPropertyDefinition> >::iterator it = this->properties.begin(); it != this->properties.end(); ++it)
     {
         (*it)->setThisObj(value);
     }
 
-    //    for (std::vector<HSSRule::p>::iterator it2 = this->children.begin(); it2 != this->children.end(); ++it2) {
+    //    for (std::vector<QSharedPointer<HSSRule>>::iterator it2 = this->children.begin(); it2 != this->children.end(); ++it2) {
     //        (*it2)->setThisObj(value);
     //    }
 
@@ -278,11 +281,11 @@ void HSSRule::setThisObj(QSharedPointer<HSSDisplayObject> value)
 
 void HSSRule::treeChanged(HSSObservableProperty source, void*data)
 {
-    HSSDisplayObject::p thisObj = this->getThisObj();
+    QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
     AXRController * theController = thisObj->getController();
     if (thisObj->isA(HSSObjectTypeContainer))
     {
-        HSSContainer::p thisContainer = HSSContainer::asContainer(thisObj);
+        QSharedPointer<HSSContainer> thisContainer = HSSContainer::asContainer(thisObj);
         theController->recursiveMatchRulesToDisplayObjects(this->shared_from_this(), thisContainer->getChildren(), thisContainer, false);
     }
 }
@@ -297,30 +300,30 @@ void HSSRule::setAppliedTo(std::vector<QWeakPointer<HSSDisplayObject> > newObjec
     this->appliedTo = newObjects;
 }
 
-void HSSRule::appliedToAdd(HSSDisplayObject::p displayObject)
+void HSSRule::appliedToAdd(QSharedPointer<HSSDisplayObject> displayObject)
 {
     this->appliedTo.push_back(QWeakPointer<HSSDisplayObject > (displayObject));
 }
 
-HSSClonable::p HSSRule::cloneImpl() const
+QSharedPointer<HSSClonable> HSSRule::cloneImpl() const
 {
-    HSSRule::p clone = HSSRule::p(new HSSRule(*this));
+    QSharedPointer<HSSRule> clone = QSharedPointer<HSSRule>(new HSSRule(*this));
 
     for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)
     {
-        HSSSelectorChain::p clonedSelectorChain = (*sIt)->clone();
+        QSharedPointer<HSSSelectorChain> clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }
 
     for (HSSPropertyDefinition::const_it pIt = this->properties.begin(); pIt != this->properties.end(); ++pIt)
     {
-        HSSPropertyDefinition::p clonedPropDef = (*pIt)->clone();
+        QSharedPointer<HSSPropertyDefinition> clonedPropDef = (*pIt)->clone();
         clone->propertiesAdd(clonedPropDef);
     }
 
-    for (std::vector<HSSRule::p>::const_iterator rIt = this->children.begin(); rIt != this->children.end(); ++rIt)
+    for (std::vector<QSharedPointer<HSSRule> >::const_iterator rIt = this->children.begin(); rIt != this->children.end(); ++rIt)
     {
-        HSSRule::p clonedRule = (*rIt)->clone();
+        QSharedPointer<HSSRule> clonedRule = (*rIt)->clone();
         clone->childrenAdd(clonedRule);
     }
 
@@ -330,12 +333,12 @@ HSSClonable::p HSSRule::cloneImpl() const
     return clone;
 }
 
-HSSSimpleSelection::p HSSRule::getOriginalScope() const
+QSharedPointer<HSSSimpleSelection> HSSRule::getOriginalScope() const
 {
     return this->_originalScope;
 }
 
-void HSSRule::setOriginalScope(HSSSimpleSelection::p scope)
+void HSSRule::setOriginalScope(QSharedPointer<HSSSimpleSelection> scope)
 {
     this->_originalScope = scope;
 }

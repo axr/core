@@ -43,7 +43,11 @@
 
 #include <set>
 #include "AXRDocument.h"
+#include "HSSContainer.h"
+#include "HSSDisplayObject.h"
+#include "HSSMultipleSelection.h"
 #include "HSSParentSelector.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
@@ -53,7 +57,7 @@ HSSParentSelector::HSSParentSelector(AXRController * controller)
 
 }
 
-HSSParentSelector::p HSSParentSelector::clone() const
+QSharedPointer<HSSParentSelector> HSSParentSelector::clone() const
 {
     return qSharedPointerCast<HSSParentSelector> (this->cloneImpl());
 }
@@ -63,9 +67,9 @@ AXRString HSSParentSelector::toString()
     return "@parent selector";
 }
 
-HSSClonable::p HSSParentSelector::cloneImpl() const
+QSharedPointer<HSSClonable> HSSParentSelector::cloneImpl() const
 {
-    return HSSParentSelector::p(new HSSParentSelector(*this));
+    return QSharedPointer<HSSParentSelector>(new HSSParentSelector(*this));
 }
 
 AXRString HSSParentSelector::getElementName()
@@ -73,12 +77,12 @@ AXRString HSSParentSelector::getElementName()
     return "@parent";
 }
 
-HSSSelection::p HSSParentSelector::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
+QSharedPointer<HSSSelection> HSSParentSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     if (scope->isA(HSSSelectionTypeMultipleSelection))
     {
-        HSSMultipleSelection::p multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
+        QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);
         for (HSSMultipleSelection::const_iterator it = multiSel->begin(); it != multiSel->end(); ++it)
         {
             this->_filterSimpleSelection(ret, *it);
@@ -86,23 +90,23 @@ HSSSelection::p HSSParentSelector::filterSelection(HSSSelection::p scope, HSSDis
     }
     else if (scope->isA(HSSSelectionTypeSimpleSelection))
     {
-        HSSSimpleSelection::p simpleSel = qSharedPointerCast<HSSSimpleSelection>(scope);
+        QSharedPointer<HSSSimpleSelection> simpleSel = qSharedPointerCast<HSSSimpleSelection>(scope);
         this->_filterSimpleSelection(ret, simpleSel);
     }
 
     return ret;
 }
 
-inline void HSSParentSelector::_filterSimpleSelection(HSSSimpleSelection::p & ret, HSSSimpleSelection::p selection)
+inline void HSSParentSelector::_filterSimpleSelection(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> selection)
 {
     HSSSimpleSelection::const_iterator scopeIt;
     HSSSimpleSelection::iterator readIt, writeIt;
-    std::set<HSSDisplayObject::p> tmpset;
+    std::set<QSharedPointer<HSSDisplayObject> > tmpset;
 
     for (scopeIt = selection->begin(); scopeIt != selection->end(); ++scopeIt)
     {
-        const HSSDisplayObject::p & theDO = *scopeIt;
-        const HSSDisplayObject::p & parent = theDO->getParent();
+        const QSharedPointer<HSSDisplayObject> & theDO = *scopeIt;
+        const QSharedPointer<HSSDisplayObject> & parent = theDO->getParent();
         if (parent)
             ret->add(parent);
     }

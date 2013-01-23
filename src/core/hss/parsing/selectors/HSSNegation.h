@@ -44,7 +44,6 @@
 #ifndef HSSNEGATION_H
 #define HSSNEGATION_H
 
-#include "AXRString.h"
 #include "HSSParserNode.h"
 
 namespace AXR
@@ -67,7 +66,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSNegation
          */
-        p clone() const;
+        QSharedPointer<HSSNegation> clone() const;
 
         /**
          *  Destructor for this class.
@@ -77,7 +76,7 @@ namespace AXR
         virtual AXRString toString();
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

@@ -44,7 +44,6 @@
 #ifndef HSSPOLYGON_H
 #define HSSPOLYGON_H
 
-#include "HSSDisplayObject.h"
 #include "HSSShape.h"
 
 namespace AXR
@@ -55,8 +54,6 @@ namespace AXR
     class AXR_API HSSPolygon : public HSSShape
     {
     public:
-        typedef QSharedPointer<HSSPolygon> p;
-
         /**
          *  Creates a new instance of a polygon shape.
          */
@@ -72,7 +69,7 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSPolygon.
          */
-        p clone() const;
+        QSharedPointer<HSSPolygon> clone() const;
 
         /**
          *  Destructor for this class.
@@ -82,8 +79,8 @@ namespace AXR
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual bool isKeyword(AXRString value, AXRString property);
-        virtual void setProperty(HSSObservableProperty name, HSSParserNode::p value);
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<HSSParserNode::p> segments);
+        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments);
 
         virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding);
 
@@ -97,13 +94,13 @@ namespace AXR
          *  Getter for the definition object of sides.
          *  @return A shared pointer to the parser node containing the definition object of sides.
          */
-        HSSParserNode::p getDSides();
+        QSharedPointer<HSSParserNode> getDSides();
 
         /**
          *  Setter for the definition object of sides. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of sides.
          */
-        void setDSides(HSSParserNode::p value);
+        void setDSides(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect sides.
@@ -122,13 +119,13 @@ namespace AXR
          *  Getter for the definition object of angle.
          *  @return A shared pointer to the parser node containing the definition object of angle.
          */
-        HSSParserNode::p getDAngle();
+        QSharedPointer<HSSParserNode> getDAngle();
 
         /**
          *  Setter for the definition object of angle. It will use the value as needed.
          *  @param value    A shared pointer to the parser node containing the definition object of angle.
          */
-        void setDAngle(HSSParserNode::p value);
+        void setDAngle(QSharedPointer<HSSParserNode> value);
 
         /**
          *  Method to be passed as callback when observing changes that will affect angle.
@@ -139,22 +136,22 @@ namespace AXR
 
     protected:
         //sides
-        HSSParserNode::p dSides;
+        QSharedPointer<HSSParserNode> dSides;
         unsigned int sides;
         HSSObservable * observedSides;
         HSSObservableProperty observedSidesProperty;
 
         //angle
-        HSSParserNode::p dAngle;
+        QSharedPointer<HSSParserNode> dAngle;
         HSSUnit angle;
         HSSObservable * observedAngle;
         HSSObservableProperty observedAngleProperty;
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
         HSSUnit _evaluatePropertyValue(
                                    void(HSSPolygon::*callback)(HSSObservableProperty property, void* data),
-                                   HSSParserNode::p value,
+                                   QSharedPointer<HSSParserNode> value,
                                    HSSUnit percentageBase,
                                    HSSObservableProperty observedSourceProperty,
                                    HSSObservable * &observedStore,

@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSSelector.h"
 
 using namespace AXR;

@@ -41,48 +41,21 @@
  *
  ********************************************************************/
 
-#ifndef HSSSELECTOR_H
-#define HSSSELECTOR_H
+#include <QSharedPointer>
+#include "HSSClonable.h"
 
-#include "HSSParserNode.h"
+using namespace AXR;
 
-namespace AXR
+HSSClonable::~HSSClonable()
 {
-    class HSSSelection;
-    class HSSSimpleSelection;
-
-    /**
-     *  @brief Abstract base class for a common interface for all selector nodes
-     */
-    class AXR_API HSSSelector : public HSSParserNode
-    {
-    public:
-        ~HSSSelector();
-
-        /**
-         * Reduces the selection according its selector type
-         */
-        virtual QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing) = 0;
-
-        bool getNegating() const;
-        void setNegating(bool value);
-
-        bool isA(HSSSelectorType otherType);
-        HSSSelectorType getSelectorType();
-
-        bool isA(HSSCombinatorType otherType);
-
-    protected:
-        /**
-         *  Creates a new instance of a simple selector, for use of the subclasses.
-         *  @param type     The type of the selector node.
-         */
-        HSSSelector(HSSSelectorType type, AXRController * controller);
-
-    private:
-        HSSSelectorType _selectorType;
-        bool _negating;
-    };
 }
 
-#endif
+QSharedPointer<HSSClonable> HSSClonable::clone() const
+{
+    return this->cloneImpl();
+}
+
+QSharedPointer<HSSClonable> HSSClonable::cloneImpl() const
+{
+    return QSharedPointer<HSSClonable>(new HSSClonable(*this));
+}

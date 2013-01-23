@@ -52,7 +52,7 @@ HSSKeywordConstant::HSSKeywordConstant(AXRString value, AXRController * controll
     this->value = value;
 }
 
-HSSKeywordConstant::p HSSKeywordConstant::clone() const
+QSharedPointer<HSSKeywordConstant> HSSKeywordConstant::clone() const
 {
     return qSharedPointerCast<HSSKeywordConstant> (this->cloneImpl());
 }
@@ -77,7 +77,7 @@ AXRString HSSKeywordConstant::toString()
     return "HSSKeywordConstant with value " + this->value;
 }
 
-HSSClonable::p HSSKeywordConstant::cloneImpl() const
+QSharedPointer<HSSClonable> HSSKeywordConstant::cloneImpl() const
 {
-    return HSSKeywordConstant::p(new HSSKeywordConstant(*this));
+    return QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(*this));
 }

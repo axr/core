@@ -44,8 +44,6 @@
 #ifndef HSSUNIVERSALSELECTOR_H
 #define HSSUNIVERSALSELECTOR_H
 
-#include <QSharedPointer>
-#include "HSSDisplayObject.h"
 #include "HSSNameSelector.h"
 
 namespace AXR
@@ -58,8 +56,6 @@ namespace AXR
     class AXR_API HSSUniversalSelector : public HSSNameSelector
     {
     public:
-        typedef QSharedPointer<HSSUniversalSelector> p;
-
         /**
          *  Creates a new instance of a universal selector.
          */
@@ -70,15 +66,15 @@ namespace AXR
          *  newly instanciated object.
          *  @return A shared pointer to the new HSSRootSelector
          */
-        p clone() const;
+        QSharedPointer<HSSUniversalSelector> clone() const;
 
         //see HSSParserNode.h for the documentation of this method
         virtual AXRString toString();
 
-        HSSSelection::p filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing);
+        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
 
     private:
-        virtual HSSClonable::p cloneImpl() const;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

@@ -46,16 +46,25 @@
  */
 
 #include <cmath>
+#include <QLinearGradient>
+#include <QPainter>
+#include <QVariant>
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
+#include "HSSCallback.h"
 #include "HSSColorStop.h"
+#include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSLinearGradient.h"
 #include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
 #include "HSSPercentageConstant.h"
+#include "HSSRgb.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
+
+Q_DECLARE_METATYPE(HSSUnit*)
 
 HSSLinearGradient::HSSLinearGradient(AXRController * controller)
 : HSSGradient(controller)
@@ -101,15 +110,15 @@ HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
 
 }
 
-HSSLinearGradient::p HSSLinearGradient::clone() const
+QSharedPointer<HSSLinearGradient> HSSLinearGradient::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: cloning linear gradient object");
     return qSharedPointerCast<HSSLinearGradient> (this->cloneImpl());
 }
 
-HSSClonable::p HSSLinearGradient::cloneImpl() const
+QSharedPointer<HSSClonable> HSSLinearGradient::cloneImpl() const
 {
-    return HSSLinearGradient::p(new HSSLinearGradient(*this));
+    return QSharedPointer<HSSLinearGradient>(new HSSLinearGradient(*this));
 }
 
 HSSLinearGradient::~HSSLinearGradient()
@@ -180,7 +189,7 @@ bool HSSLinearGradient::isKeyword(AXRString value, AXRString property)
     return HSSGradient::isKeyword(value, property);
 }
 
-void HSSLinearGradient::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSLinearGradient::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -207,12 +216,12 @@ HSSUnit HSSLinearGradient::getStartX()
     return this->startX;
 }
 
-HSSParserNode::p HSSLinearGradient::getDStartX()
+QSharedPointer<HSSParserNode> HSSLinearGradient::getDStartX()
 {
     return this->dStartX;
 }
 
-void HSSLinearGradient::setDStartX(HSSParserNode::p value)
+void HSSLinearGradient::setDStartX(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -259,7 +268,7 @@ void HSSLinearGradient::startXChanged(HSSObservableProperty source, void *data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dStartX);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dStartX);
         this->startX = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
@@ -277,12 +286,12 @@ HSSUnit HSSLinearGradient::getStartY()
     return this->startY;
 }
 
-HSSParserNode::p HSSLinearGradient::getDStartY()
+QSharedPointer<HSSParserNode> HSSLinearGradient::getDStartY()
 {
     return this->dStartY;
 }
 
-void HSSLinearGradient::setDStartY(HSSParserNode::p value)
+void HSSLinearGradient::setDStartY(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -329,7 +338,7 @@ void HSSLinearGradient::startYChanged(HSSObservableProperty source, void *data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dStartY);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dStartY);
         this->startY = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
@@ -347,12 +356,12 @@ HSSUnit HSSLinearGradient::getEndX()
     return this->endX;
 }
 
-HSSParserNode::p HSSLinearGradient::getDEndX()
+QSharedPointer<HSSParserNode> HSSLinearGradient::getDEndX()
 {
     return this->dEndX;
 }
 
-void HSSLinearGradient::setDEndX(HSSParserNode::p value)
+void HSSLinearGradient::setDEndX(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -399,7 +408,7 @@ void HSSLinearGradient::endXChanged(HSSObservableProperty source, void *data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dEndX);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dEndX);
         this->endX = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
@@ -417,12 +426,12 @@ HSSUnit HSSLinearGradient::getEndY()
     return this->endY;
 }
 
-HSSParserNode::p HSSLinearGradient::getDEndY()
+QSharedPointer<HSSParserNode> HSSLinearGradient::getDEndY()
 {
     return this->dEndY;
 }
 
-void HSSLinearGradient::setDEndY(HSSParserNode::p value)
+void HSSLinearGradient::setDEndY(QSharedPointer<HSSParserNode> value)
 {
     switch (value->getType())
     {
@@ -469,7 +478,7 @@ void HSSLinearGradient::endYChanged(HSSObservableProperty source, void *data)
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dEndY);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dEndY);
         this->endY = percentageValue->getValue(*(HSSUnit*) data);
         break;
     }
@@ -484,7 +493,7 @@ void HSSLinearGradient::endYChanged(HSSObservableProperty source, void *data)
 
 HSSUnit HSSLinearGradient::_evaluatePropertyValue(
                                               void(HSSLinearGradient::*callback)(HSSObservableProperty property, void* data),
-                                              HSSParserNode::p value,
+                                              QSharedPointer<HSSParserNode> value,
                                               HSSUnit percentageBase,
                                               HSSObservableProperty observedProperty,
                                               HSSObservable * observedObject,
@@ -500,14 +509,14 @@ HSSUnit HSSLinearGradient::_evaluatePropertyValue(
     {
     case HSSParserNodeTypeNumberConstant:
     {
-        HSSNumberConstant::p numberValue = qSharedPointerCast<HSSNumberConstant > (value);
+        QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant > (value);
         ret = numberValue->getValue();
         break;
     }
 
     case HSSParserNodeTypePercentageConstant:
     {
-        HSSPercentageConstant::p percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
+        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (value);
         ret = percentageValue->getValue(percentageBase);
         if (callback)
         {
@@ -520,7 +529,7 @@ HSSUnit HSSLinearGradient::_evaluatePropertyValue(
 
     case HSSParserNodeTypeExpression:
     {
-        HSSExpression::p expressionValue = qSharedPointerCast<HSSExpression > (value);
+        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (value);
         expressionValue->setPercentageBase(percentageBase);
         expressionValue->setPercentageObserved(observedProperty, observedObject);
         expressionValue->setScope(this->scope);
@@ -548,7 +557,7 @@ HSSUnit HSSLinearGradient::_evaluatePropertyValue(
 
 void HSSLinearGradient::draw(QPainter &painter, const QPainterPath &path)
 {
-    HSSRgb::p prevColor;
+    QSharedPointer<HSSRgb> prevColor;
     QLinearGradient pat(this->startX, this->startY, this->endX, this->endY);
     if (this->startColor)
     {
@@ -557,19 +566,19 @@ void HSSLinearGradient::draw(QPainter &painter, const QPainterPath &path)
     }
     else
     {
-        HSSRgb::p nextColor = this->getColorAfterFirst();
+        QSharedPointer<HSSRgb> nextColor = this->getColorAfterFirst();
         pat.setColorAt(0, nextColor->toQColorWithAlpha(0));
         prevColor = nextColor;
     }
 
     //add color stops
-    for (std::vector<HSSObject::p>::iterator it = this->colorStops.begin(); it != this->colorStops.end(); ++it)
+    for (std::vector<QSharedPointer<HSSObject> >::iterator it = this->colorStops.begin(); it != this->colorStops.end(); ++it)
     {
-        HSSObject::p theStopObj = *it;
+        QSharedPointer<HSSObject> theStopObj = *it;
         //if it's a color stop
         if (theStopObj->isA(HSSObjectTypeColorStop))
         {
-            HSSColorStop::p theStop = qSharedPointerCast<HSSColorStop > (theStopObj);
+            QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop > (theStopObj);
 
             //calculate the position
             HSSUnit position;
@@ -586,7 +595,7 @@ void HSSLinearGradient::draw(QPainter &painter, const QPainterPath &path)
             }
 
             //determine the color
-            HSSRgb::p theColor = theStop->getColor();
+            QSharedPointer<HSSRgb> theColor = theStop->getColor();
             if (theColor)
             {
                 pat.setColorAt(position, theColor->toQColor());
@@ -598,16 +607,16 @@ void HSSLinearGradient::draw(QPainter &painter, const QPainterPath &path)
                 //one with the previous color
                 pat.setColorAt(position, prevColor->toQColorWithAlpha(0));
                 //and one with the next color
-                std::vector<HSSObject::p>::iterator innerIt = it;
+                std::vector<QSharedPointer<HSSObject> >::iterator innerIt = it;
                 ++innerIt;
-                HSSRgb::p nextColor = this->getNextColorFromStops(innerIt, this->colorStops.end());
+                QSharedPointer<HSSRgb> nextColor = this->getNextColorFromStops(innerIt, this->colorStops.end());
                 pat.setColorAt(position, nextColor->toQColorWithAlpha(0));
             }
         }
         //if it's a simple color
         else if (theStopObj->isA(HSSObjectTypeRgb))
         {
-            HSSRgb::p theColor = qSharedPointerCast<HSSRgb > (theStopObj);
+            QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb > (theStopObj);
             pat.setColorAt(0.5, theColor->toQColor());
         }
         else
@@ -623,7 +632,7 @@ void HSSLinearGradient::draw(QPainter &painter, const QPainterPath &path)
     }
     else
     {
-        HSSRgb::p prevColor = this->getColorBeforeLast();
+        QSharedPointer<HSSRgb> prevColor = this->getColorBeforeLast();
         pat.setColorAt(1, prevColor->toQColorWithAlpha(0));
     }
 

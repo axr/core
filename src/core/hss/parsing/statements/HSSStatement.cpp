@@ -84,7 +84,7 @@ AXRString HSSStatement::statementStringRepresentation(HSSStatementType type)
     return types[type];
 }
 
-HSSStatement::p HSSStatement::shared_from_this()
+QSharedPointer<HSSStatement> HSSStatement::shared_from_this()
 {
     return qSharedPointerCast<HSSStatement>(HSSParserNode::shared_from_this());
 }

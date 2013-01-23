@@ -43,8 +43,12 @@
 
 #include <QHash>
 #include <QMap>
+#include <QSharedPointer>
+#include <QVariant>
 #include "AXRDebugging.h"
+#include "HSSCallback.h"
 #include "HSSObservable.h"
+#include "HSSObservableMapping.h"
 
 using namespace AXR;
 
@@ -279,14 +283,14 @@ void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty 
     if (this->_propertyObservers.count(target) != 0)
     {
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
-        HSSObservableMapping::p mapping = HSSObservableMapping::p(new HSSObservableMapping(object, callback, source, nulldata));
+        QSharedPointer<HSSObservableMapping> mapping = QSharedPointer<HSSObservableMapping>(new HSSObservableMapping(object, callback, source, nulldata));
         theObserved.append(mapping);
         axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for " + HSSObservable::observablePropertyStringRepresentation(target));
     }
     else
     {
         HSSObservable::observed theObserved;
-        HSSObservableMapping::p mapping = HSSObservableMapping::p(new HSSObservableMapping(object, callback, source, nulldata));
+        QSharedPointer<HSSObservableMapping> mapping = QSharedPointer<HSSObservableMapping>(new HSSObservableMapping(object, callback, source, nulldata));
         theObserved.append(mapping);
         this->_propertyObservers[target] = theObserved;
         axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for new " + HSSObservable::observablePropertyStringRepresentation(target));
@@ -299,7 +303,7 @@ void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservablePr
     {
         observed &theObserved = this->_propertyObservers[target];
         for (observed::iterator it = theObserved.begin(); it!= theObserved.end(); ++it) {
-            const HSSObservableMapping::p & mapping = *it;
+            const QSharedPointer<HSSObservableMapping> & mapping = *it;
             if(mapping->observer == object && mapping->source == source){
                 theObserved.erase(it++);
                 axr_log(AXR_DEBUG_CH_OBSERVING, "removing observer for " + HSSObservable::observablePropertyStringRepresentation(target));
@@ -322,7 +326,7 @@ void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
         observed &theObserved = this->_propertyObservers[property];
         for (observed::iterator it = theObserved.begin(); it != theObserved.end(); ++it)
         {
-            const HSSObservableMapping::p & mapping = *it;
+            const QSharedPointer<HSSObservableMapping> & mapping = *it;
             HSSCallback *callback = mapping->callback;
             if (!data)
             {

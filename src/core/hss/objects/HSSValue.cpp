@@ -44,6 +44,7 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRWarning.h"
+#include "HSSDisplayObject.h"
 #include "HSSFunction.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
@@ -73,15 +74,15 @@ HSSValue::HSSValue(const HSSValue & orig)
     this->registerProperty(HSSObservablePropertyValue, QVariant::fromValue(&this->dValue));
 }
 
-HSSValue::p HSSValue::clone() const
+QSharedPointer<HSSValue> HSSValue::clone() const
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: cloning value object");
     return qSharedPointerCast<HSSValue>(this->cloneImpl());
 }
 
-HSSClonable::p HSSValue::cloneImpl() const
+QSharedPointer<HSSClonable> HSSValue::cloneImpl() const
 {
-    return HSSValue::p(new HSSValue(*this));
+    return QSharedPointer<HSSValue>(new HSSValue(*this));
 }
 
 HSSValue::~HSSValue()
@@ -111,7 +112,7 @@ AXRString HSSValue::defaultObjectType(AXRString property)
     }
 }
 
-void HSSValue::setProperty(HSSObservableProperty name, HSSParserNode::p value)
+void HSSValue::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
 {
     switch (name)
     {
@@ -125,18 +126,18 @@ void HSSValue::setProperty(HSSObservableProperty name, HSSParserNode::p value)
     }
 }
 
-const HSSParserNode::p HSSValue::getDValue() const
+const QSharedPointer<HSSParserNode> HSSValue::getDValue() const
 {
     return this->dValue;
 }
 
-void HSSValue::setDValue(HSSParserNode::p value)
+void HSSValue::setDValue(QSharedPointer<HSSParserNode> value)
 {
     this->dValue = value;
     this->addDValue(value);
 }
 
-void HSSValue::addDValue(HSSParserNode::p value)
+void HSSValue::addDValue(QSharedPointer<HSSParserNode> value)
 {
     bool valid = true;
     if (!valid)

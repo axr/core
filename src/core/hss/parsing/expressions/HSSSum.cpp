@@ -41,11 +41,12 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSSum.h"
 
 using namespace AXR;
 
-HSSSum::HSSSum(HSSParserNode::p _left, HSSParserNode::p _right, AXRController * controller)
+HSSSum::HSSSum(QSharedPointer<HSSParserNode> _left, QSharedPointer<HSSParserNode> _right, AXRController * controller)
 : HSSExpression(HSSExpressionTypeSum, _left, _right, controller)
 {
 
@@ -57,7 +58,7 @@ HSSSum::HSSSum(const HSSSum &orig)
 
 }
 
-HSSSum::p HSSSum::clone() const
+QSharedPointer<HSSSum> HSSSum::clone() const
 {
     return qSharedPointerCast<HSSSum> (this->cloneImpl());
 }
@@ -72,7 +73,7 @@ HSSUnit HSSSum::calculate(HSSUnit leftval, HSSUnit rightval)
     return leftval + rightval;
 }
 
-HSSClonable::p HSSSum::cloneImpl() const
+QSharedPointer<HSSClonable> HSSSum::cloneImpl() const
 {
-    return HSSSum::p(new HSSSum(*this));
+    return QSharedPointer<HSSSum>(new HSSSum(*this));
 }

@@ -41,8 +41,11 @@
  *
  ********************************************************************/
 
+#include "AXRController.h"
 #include "AXRDocument.h"
+#include "HSSContainer.h"
 #include "HSSRootSelector.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
@@ -52,7 +55,7 @@ HSSRootSelector::HSSRootSelector(AXRController * controller)
 
 }
 
-HSSRootSelector::p HSSRootSelector::clone() const
+QSharedPointer<HSSRootSelector> HSSRootSelector::clone() const
 {
     return qSharedPointerCast<HSSRootSelector> (this->cloneImpl());
 }
@@ -62,9 +65,9 @@ AXRString HSSRootSelector::toString()
     return "@root selector";
 }
 
-HSSClonable::p HSSRootSelector::cloneImpl() const
+QSharedPointer<HSSClonable> HSSRootSelector::cloneImpl() const
 {
-    return HSSRootSelector::p(new HSSRootSelector(*this));
+    return QSharedPointer<HSSRootSelector>(new HSSRootSelector(*this));
 }
 
 AXRString HSSRootSelector::getElementName()
@@ -72,9 +75,9 @@ AXRString HSSRootSelector::getElementName()
     return this->getController()->getRoot()->getElementName();
 }
 
-HSSSelection::p HSSRootSelector::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
+QSharedPointer<HSSSelection> HSSRootSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
 {
-    HSSSimpleSelection::p ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     ret->add(this->getController()->getRoot());
     return ret;
 }

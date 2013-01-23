@@ -44,12 +44,13 @@
 #ifndef HSSSIMPLESELECTION_H
 #define HSSSIMPLESELECTION_H
 
-#include "AXRGlobal.h"
+#include <vector>
+#include <QSharedDataPointer>
 #include "HSSSelection.h"
-#include "HSSDisplayObject.h"
 
 namespace AXR
 {
+    class HSSDisplayObject;
     class HSSMultipleSelection;
 
     /**
@@ -59,15 +60,10 @@ namespace AXR
     {
     public:
         /**
-         *  The shared pointer to this kind of object.
-         */
-        typedef QSharedPointer<HSSSimpleSelection> p;
-
-        /**
          *  @return An empty selection pointer, to be used when no scope is needed but the
          *  function signature requires a pointer to be passed.
          */
-        static p null();
+        static QSharedPointer<HSSSimpleSelection> null();
 
         typedef std::vector< QSharedPointer<HSSDisplayObject> >::iterator iterator;
         typedef std::vector< QSharedPointer<HSSDisplayObject> >::const_iterator const_iterator;
@@ -103,7 +99,7 @@ namespace AXR
         HSSSimpleSelection& operator=(const HSSSimpleSelection &other);
 
         void add( QSharedPointer<HSSDisplayObject> );
-        void addSelection(HSSSelection::p item);
+        void addSelection(QSharedPointer<HSSSelection> item);
         std::vector< QSharedPointer<HSSDisplayObject> >::iterator begin();
         const_iterator begin() const;
         std::vector< QSharedPointer<HSSDisplayObject> >::iterator end();
@@ -117,7 +113,7 @@ namespace AXR
         iterator erase(iterator position);
         iterator erase (iterator first, iterator last);
         std::vector< QSharedPointer<HSSDisplayObject> > getItems() const;
-        p joinAll();
+        QSharedPointer<HSSSimpleSelection> joinAll();
         QSharedPointer<HSSMultipleSelection> splitAll();
 
         virtual AXRString toString();
@@ -130,7 +126,7 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(AXR::HSSSimpleSelection::p)
-Q_DECLARE_METATYPE(AXR::HSSSimpleSelection::p*)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSSimpleSelection>)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSSimpleSelection>*)
 
 #endif

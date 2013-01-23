@@ -41,6 +41,10 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
+#include "HSSFilter.h"
+#include "HSSNameSelector.h"
+#include "HSSSelection.h"
 #include "HSSSimpleSelector.h"
 
 using namespace AXR;
@@ -57,7 +61,7 @@ HSSSimpleSelector::HSSSimpleSelector(const HSSSimpleSelector &orig)
 
 }
 
-HSSSimpleSelector::p HSSSimpleSelector::clone() const
+QSharedPointer<HSSSimpleSelector> HSSSimpleSelector::clone() const
 {
     return qSharedPointerCast<HSSSimpleSelector> (this->cloneImpl());
 }
@@ -67,44 +71,44 @@ AXRString HSSSimpleSelector::toString()
     return "Simple SimpleSelector";
 }
 
-HSSClonable::p HSSSimpleSelector::cloneImpl() const
+QSharedPointer<HSSClonable> HSSSimpleSelector::cloneImpl() const
 {
-    HSSSimpleSelector::p clone = HSSSimpleSelector::p(new HSSSimpleSelector(*this));
+    QSharedPointer<HSSSimpleSelector> clone = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(*this));
     clone->setName(this->name->clone());
 
-    for (std::list<HSSFilter::p>::const_iterator it = this->filters.begin(); it != this->filters.end(); ++it)
+    for (std::list<QSharedPointer<HSSFilter> >::const_iterator it = this->filters.begin(); it != this->filters.end(); ++it)
     {
-        const HSSFilter::p & flt = (*it);
+        const QSharedPointer<HSSFilter> & flt = (*it);
         clone->filtersAdd(flt->clone());
     }
 
     return clone;
 }
 
-const std::list<HSSFilter::p> HSSSimpleSelector::getFilters() const
+const std::list<QSharedPointer<HSSFilter> > HSSSimpleSelector::getFilters() const
 {
     return this->filters;
 }
 
-void HSSSimpleSelector::filtersAdd(HSSFilter::p filter)
+void HSSSimpleSelector::filtersAdd(QSharedPointer<HSSFilter> filter)
 {
     this->filters.push_back(filter);
     filter->setParentNode(this->shared_from_this());
 }
 
-HSSSelection::p HSSSimpleSelector::filterSelection(HSSSelection::p scope, HSSDisplayObject::p thisObj, bool processing)
+QSharedPointer<HSSSelection> HSSSimpleSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
 {
-    HSSSelection::p selection;
+    QSharedPointer<HSSSelection> selection;
     if (this->name)
     {
         selection = this->name->filterSelection(scope, thisObj, processing);
     }
 
-    std::list<HSSFilter::p>::const_iterator it = this->filters.begin();
+    std::list<QSharedPointer<HSSFilter> >::const_iterator it = this->filters.begin();
     return _recursiveFilterSelection(selection, it, this->filters.end(), processing);
 }
 
-HSSSelection::p HSSSimpleSelector::_recursiveFilterSelection(HSSSelection::p selection, std::list<HSSFilter::p>::const_iterator it, std::list<HSSFilter::p>::const_iterator end_it, bool processing)
+QSharedPointer<HSSSelection> HSSSimpleSelector::_recursiveFilterSelection(QSharedPointer<HSSSelection> selection, std::list<QSharedPointer<HSSFilter> >::const_iterator it, std::list<QSharedPointer<HSSFilter> >::const_iterator end_it, bool processing)
 {
     if (it == end_it)
     {
@@ -112,18 +116,18 @@ HSSSelection::p HSSSimpleSelector::_recursiveFilterSelection(HSSSelection::p sel
     }
     else
     {
-        HSSSelection::p tempSel = (*it)->apply(selection, processing);
+        QSharedPointer<HSSSelection> tempSel = (*it)->apply(selection, processing);
         ++it;
         return this->_recursiveFilterSelection(tempSel, it, end_it, processing);
     }
 }
 
-const HSSNameSelector::p HSSSimpleSelector::getName() const
+const QSharedPointer<HSSNameSelector> HSSSimpleSelector::getName() const
 {
     return this->name;
 }
 
-void HSSSimpleSelector::setName(HSSNameSelector::p name)
+void HSSSimpleSelector::setName(QSharedPointer<HSSNameSelector> name)
 {
     this->name = name;
     name->setParentNode(this->shared_from_this());
@@ -133,7 +137,7 @@ void HSSSimpleSelector::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     this->name->setThisObj(value);
 
-    for (std::list<HSSFilter::p>::iterator it = this->filters.begin(); it != this->filters.end(); ++it)
+    for (std::list<QSharedPointer<HSSFilter> >::iterator it = this->filters.begin(); it != this->filters.end(); ++it)
     {
         (*it)->setThisObj(value);
     }
