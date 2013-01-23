@@ -1,4 +1,6 @@
 set(cocoa_SOURCES
+    NSAXRDocument.h
+    NSAXRDocument.mm
     NSAXRView.h
     NSAXRView.mm
 )

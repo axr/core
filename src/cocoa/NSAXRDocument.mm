@@ -41,39 +41,33 @@
  *
  ********************************************************************/
 
-#import <Cocoa/Cocoa.h>
+#import "NSAXRDocument.h"
+#import "AXRDocument.h"
 
-@class NSAXRDocument;
+@implementation NSAXRDocument
 
-/**
- *  @brief (OS X only) This is a NSView subclass, for using inside a window in
- *  Apple's Cocoa framework.
- */
-@interface NSAXRView : NSView
+@synthesize documentObject;
+
+- (id)init
 {
-@private
-    NSAXRDocument *document;
+    self = [super init];
+    if (self)
+    {
+        [self setDocumentObject:new AXRDocument()];
+        [documentObject retain];
+    }
+
+    return;
 }
 
-/**
- * The AXR document being rendered by the view.
- */
-@property (retain) NSAXRDocument* document;
+- (id)initWithDocument:(AXRDocument *)document
+{
+    [self setDocumentObject:document];
+}
 
-/**
- *  @return YES. This is for optimizing the drawing.
- */
-- (BOOL)isOpaque;
-
-/**
- *  Method that is called to draw on OS X. From within this, we can get access to the current
- *  AXR compositor output graphics port, which is then blitted onto the NSView.
- */
-- (void)drawRect:(NSRect)dirtyRect;
-
-/**
- *  @return YES. This allows the view to recieve events from the system.
- */
-- (BOOL)acceptsFirstResponder;
+- (void)dealloc
+{
+    [documentObject release];
+}
 
 @end

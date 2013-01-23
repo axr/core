@@ -49,6 +49,7 @@
 #import "HSSContainer.h"
 #import "HSSEvent.h"
 #import "HSSTypeEnums.h"
+#import "NSAXRDocument.h"
 #import "NSAXRView.h"
 
 @implementation NSAXRView
@@ -87,8 +88,8 @@
     if (!document)
         return;
 
-    AXR::AXRRender::p renderer = document->getRender();
-    if (renderer && document->getController()->getRoot())
+    AXR::AXRRender::p renderer = [document documentObject]->getRender();
+    if (renderer && [document documentObject]->getController()->getRoot())
     {
         // Render the final composite on to the screen
         document->drawInRectWithBounds(dirtyRect, paintRect);
@@ -114,7 +115,7 @@
     if (!document)
         return;
 
-    AXR::HSSContainer::p root = document->getController()->getRoot();
+    AXR::HSSContainer::p root = [document documentObject]->getController()->getRoot();
     if (root)
     {
         AXR::HSSPoint thePoint;
@@ -131,7 +132,7 @@
     if (!document)
         return;
 
-    AXR::HSSContainer::p root = document->getController()->getRoot();
+    AXR::HSSContainer::p root = [document documentObject]->getController()->getRoot();
     if (root)
     {
         AXR::HSSPoint thePoint;
@@ -149,7 +150,7 @@
     if (!document)
         return;
 
-    AXR::HSSContainer::p root = document->getController()->getRoot();
+    AXR::HSSContainer::p root = [document documentObject]->getController()->getRoot();
     if (root)
     {
         AXR::HSSPoint thePoint;
