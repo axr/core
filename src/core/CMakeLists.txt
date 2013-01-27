@@ -14,7 +14,7 @@ list(SORT core_SOURCES)
 group_by_folder(${CMAKE_CURRENT_SOURCE_DIR} "${core_SOURCES}")
 
 add_library(${TARGET_NAME_LIB_CORE} ${core_SOURCES})
-target_link_libraries(${TARGET_NAME_LIB_CORE} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTXML_LIBRARY})
+target_link_libraries(${TARGET_NAME_LIB_CORE} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 file(GLOB_RECURSE core_HEADERS *.h)
 set_target_properties(${TARGET_NAME_LIB_CORE} PROPERTIES
