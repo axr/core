@@ -52,6 +52,7 @@
 
 namespace AXR
 {
+    class HSSVisitorManager;
     class AXRDocument;
     class HSSContainer;
     class HSSDisplayObject;

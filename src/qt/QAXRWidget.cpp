@@ -44,10 +44,12 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include "AXRController.h"
+#include "AXRDebugging.h"
 #include "AXRDocument.h"
-#include "AXRRender.h"
 #include "HSSContainer.h"
+#include "HSSRenderer.h"
 #include "HSSUnits.h"
+#include "HSSVisitorManager.h"
 #include "QAXRWidget.h"
 
 using namespace AXR;
@@ -59,18 +61,23 @@ public:
 
     AXRDocument *document;
     QColor backgroundFillColor;
+
+    HSSRenderer* renderVisitor;
 };
 
 QAXRWidget::QAXRWidget(AXRDocument *document, QWidget *parent)
 : QWidget(parent), d(new Private(document))
 {
     this->setMouseTracking(true);
+    d->renderVisitor = new HSSRenderer();
+    setDocument(document);
 }
 
 QAXRWidget::QAXRWidget(QWidget *parent)
 : QWidget(parent), d(new Private)
 {
     this->setMouseTracking(true);
+    d->renderVisitor = new HSSRenderer();
 }
 
 QAXRWidget::~QAXRWidget()
@@ -83,9 +90,21 @@ AXRDocument* QAXRWidget::document() const
     return d->document;
 }
 
+HSSRenderer* QAXRWidget::renderer() const
+{
+    return d->renderVisitor;
+}
+
 void QAXRWidget::setDocument(AXRDocument *document)
 {
     d->document = document;
+    if (!d->document)
+        return;
+
+    d->renderVisitor->setDocument(document);
+    d->document->getVisitorManager()->addVisitor(d->renderVisitor);
+
+    this->update();
 }
 
 QColor QAXRWidget::backgroundFillColor() const
@@ -101,6 +120,7 @@ void QAXRWidget::setBackgroundFillColor(const QColor &color)
 void QAXRWidget::paintEvent(QPaintEvent *e)
 {
     QRect paintRect = rect();
+    d->document->setWindowSize(this->width(), this->height());
 
     // Fill the view with our background color...
     QPainter painter(this);
@@ -110,16 +130,16 @@ void QAXRWidget::paintEvent(QPaintEvent *e)
         return;
 
     // Render the AXR document
-    QSharedPointer<AXRRender> renderer = d->document->getRender();
-    if (renderer && d->document->getController()->getRoot())
+    QSharedPointer<HSSVisitorManager> visitorManager = d->document->getVisitorManager();
+    if (visitorManager && d->document->getController()->getRoot())
     {
-        // Render the final composite on to the screen
-        if (d->document->needsDisplay())
-        {
-            d->document->drawInRectWithBounds(e->rect(), paintRect);
-        }
-        painter.drawImage(paintRect.topLeft(), renderer->surface());
-        d->document->setNeedsDisplay(false);
+        // Render the final image to the screen
+        d->renderVisitor->setDirtyRect(rect());
+        visitorManager->runVisitors(IHSSVisitor::FLAG_All);
+
+        QImage* finalFrame = d->renderVisitor->getFinalFrame();
+        if (finalFrame)
+            painter.drawImage(paintRect.topLeft(), *finalFrame);
     }
 }
 

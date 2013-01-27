@@ -49,9 +49,9 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
-#include "AXRRender.h"
 #include "AXRString.h"
 #include "AXRWarning.h"
+#include "IHSSVisitor.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
 #include "HSSFont.h"
@@ -327,54 +327,11 @@ QFont HSSTextBlock::getFont() const
     return font_description;
 }
 
-void HSSTextBlock::drawForeground()
+void HSSTextBlock::accept(IHSSVisitor* visitor, bool)
 {
-    this->foregroundSurface->fill(Qt::transparent);
-
-    QPainter painter(this->foregroundSurface);
-    if (this->getController()->document()->getRender()->globalAntialiasingEnabled())
-        painter.setRenderHint(QPainter::Antialiasing);
-
-    QSharedPointer<HSSFont> theFont;
-    if (font.size() > 0)
-        theFont = *font.begin();
-
-    QPen pen;
-    if (theFont && theFont->getColor())
-    {
-        QSharedPointer<HSSRgb> textColor = qSharedPointerCast<HSSRgb>(theFont->getColor());
-        pen.setColor(textColor->toQColor());
-    }
-    else
-    {
-        pen.setColor(QColor(0, 0, 0));
-    }
-
-    painter.setPen(pen);
-
-    painter.setFont(getFont());
-
-    Qt::Alignment flags = 0;
-    switch (this->textAlign)
-    {
-        case HSSTextAlignTypeLeft:
-            flags = Qt::AlignLeft;
-            break;
-        case HSSTextAlignTypeRight:
-            flags = Qt::AlignRight;
-            break;
-        case HSSTextAlignTypeCenter:
-            flags = Qt::AlignCenter;
-            break;
-        case HSSTextAlignTypeJustify:
-            flags = Qt::AlignJustify;
-            break;
-        default:
-            break;
-    }
-
-    painter.drawText(QRectF(0, 0, this->width, this->height), this->getText(), QTextOption(flags));
+    visitor->visit(*this);
 }
+
 
 void HSSTextBlock::layout()
 {

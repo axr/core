@@ -41,44 +41,54 @@
  *
  ********************************************************************/
 
-#ifndef AXR_QAXRWIDGET
-#define AXR_QAXRWIDGET
-
-#include <QWidget>
+#ifndef IHSSVISITOR_H
+#define IHSSVISITOR_H
+#include "AXRGlobal.h"
+#include <vector>
 
 namespace AXR
 {
-    class AXRDocument;
-    class HSSRenderer;
 
-    class QAXRWidget : public QWidget
+    class HSSContainer;
+    class HSSDisplayObject;
+    class HSSTextBlock;
+
+    class AXR_API IHSSVisitor
     {
-        Q_OBJECT
-
     public:
-        QAXRWidget(AXRDocument *document, QWidget *parent = NULL);
-        QAXRWidget(QWidget *parent = NULL);
-        virtual ~QAXRWidget();
+        typedef enum VisitorFilterFlags {
+            FLAG_All             = 0x01,
+            FLAG_Skip            = 0x02,
+            FLAG_Rendering       = 0x04,
+            FLAG_Diagnostic      = 0x08,
+            FLAG_Custom_1        = 0x10,
+            FLAG_Custom_2        = 0x20,
+            FLAG_Custom_3        = 0x40,
+            FLAG_Custom_4        = 0x80
+        } VisitorFilterFlags;
 
-        AXRDocument* document() const;
-        void setDocument(AXRDocument *document);
-        HSSRenderer* renderer() const;
+        IHSSVisitor() : _filterFlags(FLAG_All){};
 
-        QColor backgroundFillColor() const;
-        void setBackgroundFillColor(const QColor &color);
+        int getFilterFlags(){ return _filterFlags; }
+        void setFilterFlags(VisitorFilterFlags filterFlags)
+        {
+            _filterFlags = FLAG_All | filterFlags;
+        }
 
-    protected:
-        void paintEvent(QPaintEvent *e);
-        void mouseDoubleClickEvent(QMouseEvent *e);
-        void mouseMoveEvent(QMouseEvent *e);
-        void mousePressEvent(QMouseEvent *e);
-        void mouseReleaseEvent(QMouseEvent *e);
-        void resizeEvent(QResizeEvent *e);
+
+        virtual void initializeVisit() = 0;
+        virtual void visit(HSSContainer &container) = 0;
+        virtual void visit(HSSTextBlock &textBlock) = 0;
+        virtual void finalizeVisit() = 0;
+        virtual void reset() = 0;
+        virtual ~IHSSVisitor(){}
+
+        typedef std::vector<IHSSVisitor*>::iterator iterator;
 
     private:
-        class Private;
-        Private *d;
+        int _filterFlags;
+
     };
 }
 
-#endif
+#endif // defined(IHSSVISITOR_H)

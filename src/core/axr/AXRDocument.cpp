@@ -48,12 +48,12 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
-#include "AXRRender.h"
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
 #include "HSSParser.h"
 #include "HSSUnits.h"
+#include "HSSVisitorManager.h"
 #include "XMLParser.h"
 
 using namespace AXR;
@@ -72,23 +72,15 @@ AXRDocument::AXRDocument()
 
     QSharedPointer<AXRController> ctrlr = QSharedPointer<AXRController>(new AXRController(this));
     this->setController(ctrlr);
-    this->setRender(QSharedPointer<AXRRender>(new AXRRender(ctrlr.data())));
     this->setParserXML(QSharedPointer<XMLParser>(new XMLParser(ctrlr.data())));
     this->setParserHSS(QSharedPointer<HSSParser>(new HSSParser(ctrlr.data())));
+    this->setVisitorManager(QSharedPointer<HSSVisitorManager>(new HSSVisitorManager(ctrlr.data())));
     this->_hasLoadedFile = false;
 }
 
 AXRDocument::~AXRDocument()
 {
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRDocument: destructing core");
-}
-
-void AXRDocument::drawInRectWithBounds(HSSRect rect, HSSRect bounds)
-{
-    if (this->render)
-    {
-        this->render->drawInRectWithBounds(rect, bounds);
-    }
 }
 
 AXRString AXRDocument::getPathToResources() const
@@ -170,7 +162,7 @@ void AXRDocument::reset()
 {
     this->controller->reset();
     this->parserHSS->reset();
-    this->render->reset();
+    this->visitorManager->reset();
     this->parserXML.clear();
     this->parserXML = QSharedPointer<XMLParser>(new XMLParser(this->controller.data()));
     this->_hasLoadedFile = false;
@@ -192,14 +184,14 @@ void AXRDocument::setController(QSharedPointer<AXRController> controller)
     this->controller = controller;
 }
 
-QSharedPointer<AXRRender> AXRDocument::getRender()
+QSharedPointer<HSSVisitorManager> AXRDocument::getVisitorManager()
 {
-    return this->render;
+    return this->visitorManager;
 }
 
-void AXRDocument::setRender(QSharedPointer<AXRRender> render)
+void AXRDocument::setVisitorManager(QSharedPointer<HSSVisitorManager> visitorManager)
 {
-    this->render = render;
+    this->visitorManager = visitorManager;
 }
 
 QSharedPointer<AXRBuffer> AXRDocument::getFile()
@@ -605,6 +597,22 @@ void AXRDocument::breakIfNeeded()
     }
 
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("currentLayoutTick = %1, currentLayoutStep = %2, %3").arg(_currentLayoutTick).arg(_currentLayoutStep).arg(breakvar));
+}
+
+int AXRDocument::getWindowWidth()
+{
+    return _windowWidth;
+}
+
+int AXRDocument::getWindowHeight()
+{
+    return _windowHeight;
+}
+
+void AXRDocument::setWindowSize(int width, int height)
+{
+    _windowWidth = width;
+    _windowHeight = height;
 }
 
 void AXRDocument::nextLayoutChild()

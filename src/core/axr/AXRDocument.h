@@ -57,6 +57,7 @@ namespace AXR
     class HSSCallback;
     class HSSParser;
     class HSSRect;
+    class HSSVisitorManager;
     class XMLParser;
 
     /**
@@ -83,7 +84,6 @@ namespace AXR
          *  @warning The current implementation (0.441) always draws the entire bounds,
          *  the rect parameter is actually ignored. This will be fixed in the near future.
          */
-        virtual void drawInRectWithBounds(HSSRect rect, HSSRect bounds);
 
         /**
          * Gets the path to where the HSS framework resource files are stored.
@@ -131,16 +131,16 @@ namespace AXR
          */
         void setController(QSharedPointer<AXRController> controller);
         /**
-         *  Getter for shared pointer to the AXRRender object, which is an abstract interface
-         *  to the computer's rendering system.
-         *  @return A shared pointer to the AXRRender
+         *  Getter for shared pointer to the HSSVisitorManager which is the dispatcher for all IHSSVisitors.
+         *  @return A shared pointer to the HSSVisitorManager
          */
-        QSharedPointer<AXRRender> getRender();
+        QSharedPointer<HSSVisitorManager> getVisitorManager();
+
         /**
-         *  Setter for the AXRRender that will be used.
-         *  @param render   A shared pointer to the render.
+         *  Setter for the HSSVisitorManager that will be used.
+         *  @param visitorManager   A shared pointer to the HSSVisitorManager.
          */
-        void setRender(QSharedPointer<AXRRender> render);
+        void setVisitorManager(QSharedPointer<HSSVisitorManager> visitorManager);
         /**
          *  Getter for the shared pointer to the XML parser.
          *  @return A shared pointer to the XML parser.
@@ -243,6 +243,12 @@ namespace AXR
         bool layoutChildDone();
         void breakIfNeeded();
 
+        int getWindowWidth();
+
+        int getWindowHeight();
+
+        void setWindowSize(int width, int height);
+
     private:
         bool _isHSSOnly;
         bool _hasLoadedFile;
@@ -252,8 +258,11 @@ namespace AXR
         unsigned int _currentLayoutChild;
         bool _needsDisplay;
 
+        int _windowWidth = 0;
+        int _windowHeight = 0;
+
     protected:
-        QSharedPointer<AXRRender> render;
+        QSharedPointer<HSSVisitorManager> visitorManager;
         QSharedPointer<AXRController> controller;
         QSharedPointer<AXRBuffer> file;
         QDir directory;

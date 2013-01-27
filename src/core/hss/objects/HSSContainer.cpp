@@ -46,8 +46,8 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
-#include "AXRRender.h"
 #include "AXRWarning.h"
+#include "IHSSVisitor.h"
 #include "HSSBorder.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
@@ -455,78 +455,20 @@ void HSSContainer::recursiveRegenerateSurfaces(bool force)
     }
 }
 
-void HSSContainer::recursiveDraw(QPainter &painter)
+void HSSContainer::accept(IHSSVisitor* visitor, bool traverse)
 {
-    this->draw(painter);
+    visitor->visit(*this);
 
-    for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
+    if (!traverse)
+        return;
+
+    for (HSSSimpleSelection::iterator child = this->allChildren->begin(); child != this->allChildren->end(); ++child)
     {
-        (*it)->recursiveDraw(painter);
+        (*child)->accept(visitor, traverse);
     }
 }
 
-void HSSContainer::drawBackground()
-{
-    this->backgroundSurface->fill(Qt::transparent);
 
-    QPainter painter(this->backgroundSurface);
-    if (this->getController()->document()->getRender()->globalAntialiasingEnabled())
-        painter.setRenderHint(QPainter::Antialiasing);
-
-    QPainterPath path;
-    this->shape->createPath(path, 0, 0, this->width, this->height);
-    HSSDisplayObject::_drawBackground(painter, path);
-}
-
-void HSSContainer::drawBorders()
-{
-    this->bordersSurface->fill(Qt::transparent);
-
-    QPainter painter(this->bordersSurface);
-    if (this->getController()->document()->getRender()->globalAntialiasingEnabled())
-        painter.setRenderHint(QPainter::Antialiasing);
-    this->getShape()->drawBorders(painter, this->border, this->width, this->height, this->borderBleeding);
-
-//    // Calculate the combined thickness of all borders
-//    HSSUnit combinedThickness = 0;
-//    for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
-//    {
-//        combinedThickness += (*it)->getSize();
-//    }
-//
-//    // Correction if needed
-//    HSSUnit correction;
-//    if ((int) combinedThickness % 2)
-//    {
-//        correction = 0.5;
-//    }
-//
-//    // Cumulative combined thickness
-//    HSSUnit cumulativeThickness = 0;
-//
-//    // Use a temporary trick for not having path offsets yet (will be fixed in the future)
-//    bool isRoundedRect = this->shape->isA(HSSShapeTypeRoundedRect);
-//
-//    // Draw all borders
-//    for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
-//    {
-//        QSharedPointer<HSSBorder> theBorder = *it;
-//        HSSUnit theSize = theBorder->getSize();
-//
-//        HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
-//
-//        QPainterPath path;
-//        if(isRoundedRect){
-//            QSharedPointer<HSSRoundedRect> roundedRect = qSharedPointerCast<HSSRoundedRect>(this->shape);
-//            roundedRect->createRoundedRect(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2, -offset*2);
-//        } else {
-//            this->shape->createPath(path, this->borderBleeding + offset, this->borderBleeding + offset, this->width - offset * 2, this->height - offset * 2);
-//        }
-//        theBorder->draw(painter, path);
-//
-//        cumulativeThickness += theSize;
-//    }
-}
 
 void HSSContainer::layout()
 {

@@ -54,6 +54,7 @@ class QPainterPath;
 
 namespace AXR
 {
+    class IHSSVisitor;
     class HSSBorder;
     class HSSContainer;
     class HSSFlag;
@@ -74,6 +75,7 @@ namespace AXR
     {
     public:
         friend class HSSContainer;
+        friend class HSSRenderer;
 
         /**
          *  The "parent pointer", a weak variant of a shared pointer, to break reference cycles.
@@ -204,12 +206,7 @@ namespace AXR
 
         void setDirty(bool value);
         bool isDirty();
-        virtual void draw(QPainter &painter);
-        virtual void drawBackground();
-        virtual void _drawBackground(QPainter &painter, const QPainterPath &path);
-        virtual void drawForeground();
-        virtual void drawBorders();
-        virtual void recursiveDraw(QPainter &painter);
+        virtual void accept(IHSSVisitor* visitor, bool traverse);
 
         void setNeedsLayout(bool value);
         bool needsLayout() const;

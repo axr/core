@@ -52,6 +52,7 @@ namespace AXR
     class AXR_API HSSTextBlock : public HSSDisplayObject
     {
     public:
+        friend class HSSRenderer;
         static HSSTextTransformType textTransformTypeFromString(AXRString value);
         static HSSTextAlignType textAlignTypeFromString(AXRString value);
 
@@ -78,7 +79,7 @@ namespace AXR
         virtual AXRString toString();
         virtual void setDefaults();
         virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
-        virtual void drawForeground();
+        virtual void accept(IHSSVisitor* visitor, bool);
         virtual void layout();
 
         //transform

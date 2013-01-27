@@ -49,7 +49,6 @@
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
-#include "AXRRender.h"
 #include "AXRWarning.h"
 #include "HSSBorder.h"
 #include "HSSCallback.h"
@@ -653,12 +652,11 @@ void HSSDisplayObject::readDefinitionObjects()
         if (this->isRoot())
         {
             AXRController * controller = this->getController();
-            QSharedPointer<AXRRender> render = controller->document()->getRender();
             //width
-            QSharedPointer<HSSNumberConstant> newDWidth(new HSSNumberConstant(render->getWindowWidth(), controller));
+            QSharedPointer<HSSNumberConstant> newDWidth(new HSSNumberConstant(controller->document()->getWindowWidth(), controller));
             this->setDWidth(newDWidth);
             //height
-            QSharedPointer<HSSNumberConstant> newDHeight(new HSSNumberConstant(render->getWindowHeight(), controller));
+            QSharedPointer<HSSNumberConstant> newDHeight(new HSSNumberConstant(controller->document()->getWindowHeight(), controller));
             this->setDHeight(newDHeight);
         }
 
@@ -841,101 +839,8 @@ bool HSSDisplayObject::isDirty()
     return this->_isDirty;
 }
 
-void HSSDisplayObject::draw(QPainter &painter)
+void HSSDisplayObject::accept(IHSSVisitor* visitor, bool traverse)
 {
-    AXRDocument *document = this->getController()->document();
-    if (document->showLayoutSteps())
-    {
-        document->nextLayoutTick();
-        if (document->layoutChildDone()) return;
-    }
-
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: drawing " + this->elementName);
-    if (this->_isDirty)
-    {
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("HSSDisplayObject: redrawing contents of %1 with x: %2 and y: %3").arg(this->elementName).arg(this->x).arg(this->y));
-
-        this->_isDirty = false;
-        this->drawBackground();
-        this->drawForeground();
-        if (this->border.size() > 0)
-        {
-            this->drawBorders();
-        }
-    }
-
-    if (this->visible)
-    {
-        painter.drawImage(QPointF(this->globalX, this->globalY), *this->backgroundSurface);
-        painter.drawImage(QPointF(this->globalX, this->globalY), *this->foregroundSurface);
-
-        if (this->border.size() > 0)
-        {
-            painter.drawImage(QPointF(this->globalX - this->borderBleeding, this->globalY - this->borderBleeding), *this->bordersSurface);
-        }
-    }
-}
-
-void HSSDisplayObject::drawBackground()
-{
-    this->backgroundSurface->fill(Qt::transparent);
-
-    QPainter painter(this->backgroundSurface);
-    if (this->getController()->document()->getRender()->globalAntialiasingEnabled())
-        painter.setRenderHint(QPainter::Antialiasing);
-
-    QPainterPath path;
-    path.addRect(0, 0, this->width, this->height);
-    this->_drawBackground(painter, path);
-}
-
-void HSSDisplayObject::_drawBackground(QPainter &painter, const QPainterPath &path)
-{
-    for (std::vector<QSharedPointer<HSSObject> >::iterator it = this->background.begin(); it != this->background.end(); ++it)
-    {
-        QSharedPointer<HSSObject> theobj = *it;
-        switch (theobj->getObjectType())
-        {
-        case HSSObjectTypeRgb:
-        {
-            QSharedPointer<HSSRgb> color = qSharedPointerCast<HSSRgb > (theobj);
-
-            painter.fillPath(path, color ? color->toQColor() : QColor(0, 0, 0, 0));
-
-            break;
-        }
-
-        case HSSObjectTypeGradient:
-        {
-            if (theobj->isA(HSSGradientTypeLinear)){
-                QSharedPointer<HSSLinearGradient> grad = qSharedPointerCast<HSSLinearGradient > (theobj);
-                grad->draw(painter, path);
-            } else if (theobj->isA(HSSGradientTypeRadial)){
-                QSharedPointer<HSSRadialGradient> grad = qSharedPointerCast<HSSRadialGradient > (theobj);
-                grad->draw(painter, path);
-            } else {
-                AXRError("HSSDisplayObject", "Unknown gradient type.").raise();
-            }
-            break;
-        }
-
-        default:
-            break;
-        }
-    }
-}
-
-void HSSDisplayObject::drawForeground()
-{
-}
-
-void HSSDisplayObject::drawBorders()
-{
-}
-
-void HSSDisplayObject::recursiveDraw(QPainter &painter)
-{
-    this->draw(painter);
 }
 
 //layout

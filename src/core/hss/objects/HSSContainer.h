@@ -72,6 +72,7 @@ namespace AXR
     {
     public:
         friend class HSSDisplayObject;
+        friend class HSSRenderer;
 
         /**
          *  @brief Display groups are used by HSSContainer to lay out elements according
@@ -207,21 +208,9 @@ namespace AXR
         void recursiveRegenerateSurfaces(bool force = false);
 
         /**
-         *  Propagates the draw() call to all the children.
-         *  @param painter A QPainter context used to draw onto a surface.
+         *  Accepts a visitor to traverse and process the HSSObject tree.
          */
-        void recursiveDraw(QPainter &painter);
-
-        /**
-         *  Sets the shape of the container and then calls the base class method for actually
-         *  drawing.
-         */
-        virtual void drawBackground();
-
-        /**
-         *  Calculates the position for each border and then draws them.
-         */
-        virtual void drawBorders();
+        virtual void accept(IHSSVisitor* visitor, bool traverse);
 
         /**
          *  Lays out the children according to the layout algorithm, first in the primary direction

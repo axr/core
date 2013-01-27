@@ -41,14 +41,15 @@
  *
  ********************************************************************/
 
-#ifndef AXRRENDER_H
-#define AXRRENDER_H
+#ifndef HSSVISITORMANAGER_H
+#define HSSVISITORMANAGER_H
 
-#include <QImage>
 #include "AXRGlobal.h"
+#include "IHSSVisitor.h"
 
 namespace AXR
 {
+
     class AXRController;
     class AXRDocument;
 
@@ -56,18 +57,30 @@ namespace AXR
      *  @brief This is the main control hub for rendering. Calls for drawing and handling
      *  errors should go through this class.
      */
-    class AXR_API AXRRender
+    class AXR_API HSSVisitorManager
     {
+
     public:
+
         /**
          *  Creates a new instance of the render object.
          *  @param  controller  A regular pointer to the controller object that is associated with this renderer.
          */
-        AXRRender(AXRController * controller);
+        HSSVisitorManager(AXRController * controller);
         /**
          *  Destructs the render object.
          */
-        virtual ~AXRRender();
+        virtual ~HSSVisitorManager();
+
+        void addVisitor(IHSSVisitor *visitor);
+
+        void runVisitors();
+        void runVisitors(IHSSVisitor::VisitorFilterFlags filterFlags);
+        void runVisitors(QSharedPointer<HSSDisplayObject> root, IHSSVisitor::VisitorFilterFlags filterFlags, bool traverse);
+
+
+
+
         /**
          *  The main drawing function. Call this to redraw an area of the window.
          *  @param  rect    The rectangular section of the screen that should be redrawn
@@ -76,44 +89,19 @@ namespace AXR
          *  @warning The root surface should be created in platform specific subclass before calling
          *  this as base class' method
          */
-        virtual void drawInRectWithBounds(HSSRect rect, HSSRect bounds);
         /**
          *  Reset the renderer to initial values, for example when reloading a file.
          */
         void reset();
-        const QImage surface() const;
-        /**
-         *  @return The width of the window.
-         */
-        HSSUnit getWindowWidth();
-        /**
-         *  @return The height of the window.
-         */
-        HSSUnit getWindowHeight();
 
-        /**
-         *  @todo create getter/setter and make private
-         */
-        HSSUnit windowWidth;
 
-        /**
-         *  @todo create getter/setter and make private
-         */
-        HSSUnit windowHeight;
-
-        bool globalAntialiasingEnabled() const;
-        void setGlobalAntialiasingEnabled(bool enable);
-
-        void regenerateRootSurface();
 
     protected:
-        bool _globalAntialiasingEnabled;
-        bool _needsSurfaces;
+        void resetVisitors();
         AXRController *controller;
-        QImage *rootSurface;
-        QImage rootSurfaceFinal;
+        std::vector<IHSSVisitor*> _visitors;
     };
 }
 
 
-#endif //AXRRENDER_H
+#endif //HSSVISITORMANAGER_H
