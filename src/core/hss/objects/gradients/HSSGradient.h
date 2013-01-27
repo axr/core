@@ -63,6 +63,13 @@ namespace AXR
     class AXR_API HSSGradient : public HSSObject
     {
     public:
+        /**
+         *  When logging, you often need a string representation of the gradient type.
+         *  @param gradientType   The gradient type to represent as a string.
+         *  @return A string representation of the given type.
+         */
+        static AXRString gradientTypeStringRepresentation(HSSGradientType gradientType);
+
         typedef std::vector<QSharedPointer<HSSGradient> >::iterator it;
 
         /**
@@ -212,11 +219,23 @@ namespace AXR
          */
         void colorStopsChanged(HSSObservableProperty source, void*data);
 
+        /**
+         *  Allows you to check if this gradient is of the given type.
+         *  @param  type    The gradient type to which to check against.
+         *  @return Wether it is of the given type or not.
+         */
+        bool isA(HSSGradientType type);
+
+        /**
+         *  @return The gradient type of this instance.
+         */
+        HSSGradientType getGradientType();
+
     protected:
         /**
          *  Constructor for HSSGradient objects
          */
-        HSSGradient(AXRController * controller);
+        HSSGradient(HSSGradientType type, AXRController * controller);
 
         /**
          *  Copy constructor for HSSGradient objects
@@ -255,6 +274,9 @@ namespace AXR
                                    HSSObservable * &observedStore,
                                    HSSObservableProperty &observedStoreProperty
                                    );
+
+    private:
+        HSSGradientType gradientType;
     };
 }
 

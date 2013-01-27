@@ -430,6 +430,20 @@ namespace AXR
         HSSSelectionTypeMultipleSelection /**< A colloection of simple selections. */
     };
     /** @} */
+
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSGradientType
+     *  The type of the action object, specific for each subclass.
+     */
+    enum AXR_API HSSGradientType
+    {
+        HSSGradientTypeNone = 0, /**< Error state. */
+        HSSGradientTypeLinear, /**< Linear gradients. */
+        HSSGradientTypeRadial, /**< Radial gradients. */
+        };
+    /** @} */
 }
 
 #endif

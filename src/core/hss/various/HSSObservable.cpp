@@ -154,6 +154,13 @@ AXRString HSSObservable::observablePropertyStringRepresentation(HSSObservablePro
 
         //HSSBorder
         types[HSSObservablePropertySegments] = "HSSObservablePropertySegments";
+
+        //HSSRadialGradient
+        types[HSSObservablePropertyCenterX] = "HSSObservablePropertyCenterX";
+        types[HSSObservablePropertyCenterY] = "HSSObservablePropertyCenterY";
+        types[HSSObservablePropertyOffsetX] = "HSSObservablePropertyOffsetX";
+        types[HSSObservablePropertyOffsetY] = "HSSObservablePropertyOffsetY";
+        types[HSSObservablePropertyRoundness] = "HSSObservablePropertyRoundness";
     }
 
     return types[property];
@@ -253,6 +260,12 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(AXRString name
 
         //HSSBorder
         properties["segments"] = HSSObservablePropertySegments;
+
+        //HSSRadialGradient
+        properties["centerX"] = HSSObservablePropertyCenterX;
+        properties["centerY"] = HSSObservablePropertyCenterY;
+        properties["offsetX"] = HSSObservablePropertyOffsetX;
+        properties["offsetY"] = HSSObservablePropertyOffsetY;
     }
 
 

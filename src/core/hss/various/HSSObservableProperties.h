@@ -146,7 +146,14 @@ namespace AXR
         HSSObservablePropertyVisible,
 
         //HSSBorder
-        HSSObservablePropertySegments
+        HSSObservablePropertySegments,
+
+        //HSSRadialGradient
+        HSSObservablePropertyCenterX,
+        HSSObservablePropertyCenterY,
+        HSSObservablePropertyOffsetX,
+        HSSObservablePropertyOffsetY,
+        HSSObservablePropertyRoundness,
     };
 }
 

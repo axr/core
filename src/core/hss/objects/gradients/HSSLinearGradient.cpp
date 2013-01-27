@@ -67,7 +67,7 @@ using namespace AXR;
 Q_DECLARE_METATYPE(HSSUnit*)
 
 HSSLinearGradient::HSSLinearGradient(AXRController * controller)
-: HSSGradient(controller)
+: HSSGradient(HSSGradientTypeLinear, controller)
 {
     axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: creating linear gradient object");
     std::vector<AXRString> shorthandProperties;
@@ -78,10 +78,10 @@ HSSLinearGradient::HSSLinearGradient(AXRController * controller)
 
     this->registerProperty(HSSObservablePropertyStartX, QVariant::fromValue(&this->startX));
     this->registerProperty(HSSObservablePropertyStartY, QVariant::fromValue(&this->startY));
-    this->registerProperty(HSSObservablePropertyEndX, QVariant::fromValue(&this->startY));
-    this->registerProperty(HSSObservablePropertyEndY, QVariant::fromValue(&this->startY));
+    this->registerProperty(HSSObservablePropertyEndX, QVariant::fromValue(&this->endX));
+    this->registerProperty(HSSObservablePropertyEndY, QVariant::fromValue(&this->endY));
 
-    this->startX = this->startY = this->endX = endY = 0.;
+    this->startX = this->startY = this->endX = this->endY = 0.;
 
     this->observedStartX = this->observedStartY
             = this->observedEndX = this->observedEndY
@@ -99,8 +99,8 @@ HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
 
     this->registerProperty(HSSObservablePropertyStartX, QVariant::fromValue(&this->startX));
     this->registerProperty(HSSObservablePropertyStartY, QVariant::fromValue(&this->startY));
-    this->registerProperty(HSSObservablePropertyEndX, QVariant::fromValue(&this->startY));
-    this->registerProperty(HSSObservablePropertyEndY, QVariant::fromValue(&this->startY));
+    this->registerProperty(HSSObservablePropertyEndX, QVariant::fromValue(&this->endX));
+    this->registerProperty(HSSObservablePropertyEndY, QVariant::fromValue(&this->endY));
 
     this->startX = this->startY = this->endX = endY = 0.;
 

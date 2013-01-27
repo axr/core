@@ -63,9 +63,24 @@ using namespace AXR;
 
 Q_DECLARE_METATYPE(HSSUnit*)
 
-HSSGradient::HSSGradient(AXRController * controller)
+AXRString HSSGradient::gradientTypeStringRepresentation(HSSGradientType gradientType)
+{
+    static QMap<HSSGradientType, AXRString> types;
+    if (types.isEmpty())
+    {
+        types[HSSGradientTypeLinear] = "HSSGradientTypeLinear";
+        types[HSSGradientTypeRadial] = "HSSGradientTypeRadial";
+    }
+
+    return types[gradientType];
+}
+
+
+HSSGradient::HSSGradient(HSSGradientType type, AXRController * controller)
 : HSSObject(HSSObjectTypeGradient, controller)
 {
+    this->gradientType = type;
+
     this->registerProperty(HSSObservablePropertyStartColor, QVariant::fromValue(&this->startColor));
     this->registerProperty(HSSObservablePropertyEndColor, QVariant::fromValue(&this->endColor));
     this->registerProperty(HSSObservablePropertyBalance, QVariant::fromValue(&this->balance));
@@ -75,6 +90,7 @@ HSSGradient::HSSGradient(AXRController * controller)
 HSSGradient::HSSGradient(const HSSGradient & orig)
 : HSSObject(orig)
 {
+    this->gradientType = orig.gradientType;
     this->registerProperty(HSSObservablePropertyStartColor, QVariant::fromValue(&this->startColor));
     this->registerProperty(HSSObservablePropertyEndColor, QVariant::fromValue(&this->endColor));
     this->registerProperty(HSSObservablePropertyBalance, QVariant::fromValue(&this->balance));
@@ -728,6 +744,16 @@ void HSSGradient::addDColorStops(QSharedPointer<HSSParserNode> value)
 void HSSGradient::colorStopsChanged(HSSObservableProperty source, void*data)
 {
 
+}
+
+bool HSSGradient::isA(HSSGradientType type)
+{
+    return type == this->gradientType;
+}
+
+HSSGradientType HSSGradient::getGradientType()
+{
+    return this->gradientType;
 }
 
 HSSUnit HSSGradient::_evaluatePropertyValue(

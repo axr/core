@@ -54,6 +54,7 @@
 #include "HSSFont.h"
 #include "HSSLineBorder.h"
 #include "HSSLinearGradient.h"
+#include "HSSRadialGradient.h"
 #include "HSSLog.h"
 #include "HSSMargin.h"
 #include "HSSMultipleValue.h"
@@ -85,6 +86,7 @@ QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRContro
         types["margin"] = HSSObjectTypeMargin;
         types["rgb"] = HSSObjectTypeRgb;
         types["linearGradient"] = HSSObjectTypeGradient;
+        types["radialGradient"] = HSSObjectTypeGradient;
         types["colorStop"] = HSSObjectTypeColorStop;
         types["font"] = HSSObjectTypeFont;
         types["rectangle"] = HSSObjectTypeShape;
@@ -131,10 +133,14 @@ QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRContro
 
     case HSSObjectTypeGradient:
     {
-        /**
-         *  @todo gradient tyes?
-         */
-        return QSharedPointer<HSSLinearGradient>(new HSSLinearGradient(controller));
+        if (type == "linearGradient")
+        {
+            return QSharedPointer<HSSLinearGradient>(new HSSLinearGradient(controller));
+        }
+        else if (type == "radialGradient")
+        {
+            return QSharedPointer<HSSRadialGradient>(new HSSRadialGradient(controller));
+        }
     }
 
     case HSSObjectTypeColorStop:
@@ -631,6 +637,16 @@ bool HSSObject::isA(HSSActionType otherType)
 HSSActionType HSSObject::getActionType()
 {
     return HSSActionTypeNone;
+}
+
+bool HSSObject::isA(HSSGradientType otherType)
+{
+    return false;
+}
+
+HSSGradientType HSSObject::getGradientType()
+{
+    return HSSGradientTypeNone;
 }
 
 QSharedPointer<HSSObject> HSSObject::shared_from_this()

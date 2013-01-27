@@ -110,7 +110,7 @@ namespace AXR
         /**
          *  Destructor for HSSObject.
          */
-        ~HSSObject();
+        virtual ~HSSObject();
         /**
          *  All objects define their own keywords depending on each property, so you need
          *  to call this method if you need to know wether an identifier is a keyword or not.
@@ -316,6 +316,9 @@ namespace AXR
 
         virtual bool isA(HSSActionType otherType);
         virtual HSSActionType getActionType();
+
+        virtual bool isA(HSSGradientType otherType);
+        virtual HSSGradientType getGradientType();
 
         QSharedPointer<HSSObject> shared_from_this();
 

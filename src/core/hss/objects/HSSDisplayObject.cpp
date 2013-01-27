@@ -62,6 +62,7 @@
 #include "HSSFont.h"
 #include "HSSKeywordConstant.h"
 #include "HSSLinearGradient.h"
+#include "HSSRadialGradient.h"
 #include "HSSMargin.h"
 #include "HSSMultipleValue.h"
 #include "HSSMultipleValueDefinition.h"
@@ -904,8 +905,15 @@ void HSSDisplayObject::_drawBackground(QPainter &painter, const QPainterPath &pa
 
         case HSSObjectTypeGradient:
         {
-            QSharedPointer<HSSLinearGradient> grad = qSharedPointerCast<HSSLinearGradient > (theobj);
-            grad->draw(painter, path);
+            if (theobj->isA(HSSGradientTypeLinear)){
+                QSharedPointer<HSSLinearGradient> grad = qSharedPointerCast<HSSLinearGradient > (theobj);
+                grad->draw(painter, path);
+            } else if (theobj->isA(HSSGradientTypeRadial)){
+                QSharedPointer<HSSRadialGradient> grad = qSharedPointerCast<HSSRadialGradient > (theobj);
+                grad->draw(painter, path);
+            } else {
+                AXRError("HSSDisplayObject", "Unknown gradient type.").raise();
+            }
             break;
         }
 
