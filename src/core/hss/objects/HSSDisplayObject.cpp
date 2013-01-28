@@ -3083,12 +3083,15 @@ void HSSDisplayObject::addDMargin(QSharedPointer<HSSParserNode> value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
+            if (remoteValue.canConvert<std::vector<QSharedPointer<HSSMargin> >* >())
             {
                 try
                 {
-                    QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
-                    this->addDMargin(theVal);
+                    std::vector<QSharedPointer<HSSMargin> > values = *remoteValue.value<std::vector<QSharedPointer<HSSMargin> >* >();
+                    for (std::vector<QSharedPointer<HSSMargin> >::const_iterator it = values.begin(); it != values.end(); ++it)
+                    {
+                        this->margin.push_back(*it);
+                    }
                     this->_setOuterWidth();
                     this->_setOuterHeight();
                     valid = true;
