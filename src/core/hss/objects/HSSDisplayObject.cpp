@@ -344,7 +344,7 @@ bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
             return true;
         }
     }
-    else if (property == "flow" || property == "visible")
+    else if (property == "flow" || property == "visible" || property == "contained")
     {
         if (value == "yes" || value == "no")
         {
