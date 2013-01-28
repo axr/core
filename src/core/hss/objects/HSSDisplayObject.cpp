@@ -1867,17 +1867,13 @@ void HSSDisplayObject::setDContained(QSharedPointer<HSSParserNode> value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.type() == QVariant::Bool)
+            if (remoteValue.canConvert<bool* >())
             {
-                this->contained = remoteValue.toBool();
-            }
-            else
-            {
-                this->contained = false;
+                this->contained = *remoteValue.value<bool*>();
+                valid = true;
             }
 
             fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyContained, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::containedChanged));
-            valid = true;
         }
 
         break;
