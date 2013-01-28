@@ -2796,6 +2796,34 @@ void HSSContainer::setDShape(QSharedPointer<HSSParserNode> value)
         break;
     }
 
+    case HSSParserNodeTypeFunctionCall:
+    {
+        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
+        if (fnct && fnct->isA(HSSFunctionTypeRef))
+        {
+            QSharedPointer<HSSContainer> parent = this->getParent();
+            if (parent)
+            {
+                fnct->setScope(parent->getChildren());
+            }
+            else
+            {
+                fnct->setScope(this->getChildren());
+            }
+            fnct->setThisObj(this->shared_from_this());
+            QVariant remoteValue = fnct->evaluate();
+            if (remoteValue.canConvert<QSharedPointer<HSSShape>* >())
+            {
+                this->shape = *remoteValue.value<QSharedPointer<HSSShape>* >();
+                valid = true;
+            }
+
+            fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTextAlign, this, new HSSValueChangedCallback<HSSContainer > (this, &HSSContainer::textAlignChanged));
+        }
+
+        break;
+    }
+
     default:
         break;
     }
