@@ -3102,9 +3102,9 @@ HSSUnit HSSContainer::_evaluatePropertyValue(
         fnct->setScope(scope);
         fnct->setThisObj(this->shared_from_this());
         QVariant remoteValue = fnct->evaluate();
-        if (remoteValue.canConvert<HSSUnit>())
+        if (remoteValue.canConvert<HSSUnit*>())
         {
-            ret = remoteValue.value<HSSUnit>();
+            ret = *remoteValue.value<HSSUnit*>();
         }
         else
         {
