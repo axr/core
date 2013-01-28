@@ -146,6 +146,8 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyContent, QVariant::fromValue(&this->content));
     this->registerProperty(HSSObservablePropertyFont, QVariant::fromValue(&this->font));
     this->registerProperty(HSSObservablePropertyOn, QVariant::fromValue(&this->on));
+    this->registerProperty(HSSObservablePropertyMargin, QVariant::fromValue(&this->margin));
+    this->registerProperty(HSSObservablePropertyPadding, QVariant::fromValue(&this->padding));
     this->registerProperty(HSSObservablePropertyBorder, QVariant::fromValue(&this->border));
     this->registerProperty(HSSObservablePropertyVisible, QVariant::fromValue(&this->visible));
 
