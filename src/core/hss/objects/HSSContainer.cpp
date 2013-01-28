@@ -2488,7 +2488,7 @@ void HSSContainer::contentAlignXChanged(HSSObservableProperty source, void *data
 
 QSharedPointer<HSSParserNode> HSSContainer::getDContentAlignY()
 {
-    return this->dContentAlignX;
+    return this->dContentAlignY;
 }
 
 void HSSContainer::setDContentAlignY(QSharedPointer<HSSParserNode> value)
