@@ -3568,14 +3568,10 @@ void HSSDisplayObject::setDVisible(QSharedPointer<HSSParserNode> value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.type() == QVariant::Bool)
+            if (remoteValue.canConvert<bool* >())
             {
-                this->visible = remoteValue.toBool();
+                this->visible = *remoteValue.value<bool*>();
                 valid = true;
-            }
-            else
-            {
-                this->visible = true;
             }
 
             if (this->observedVisible)
