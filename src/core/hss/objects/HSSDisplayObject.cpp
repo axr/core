@@ -2861,12 +2861,28 @@ void HSSDisplayObject::addDOn(QSharedPointer<HSSParserNode> value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
+            if (remoteValue.canConvert<QMap<HSSEventType, std::vector<QSharedPointer<HSSObject> > >* >())
             {
                 try
                 {
-                    QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
-                    this->addDOn(theVal);
+                    QMap<HSSEventType, std::vector<QSharedPointer<HSSObject> > > values = *remoteValue.value<QMap<HSSEventType, std::vector<QSharedPointer<HSSObject> > >* >();
+                    QMap<HSSEventType, std::vector<QSharedPointer<HSSObject> > >::const_iterator it;
+                    for (it=values.begin(); it!=values.end(); ++it) {
+                        const HSSEventType & type = it.key();
+                        const std::vector<QSharedPointer<HSSObject> > events = it.value();
+
+                        if(this->on.contains(type))
+                        {
+                            std::vector<QSharedPointer<HSSObject> > existingEvents = this->on[type];
+                            for (std::vector<QSharedPointer<HSSObject> >::const_iterator it2 = events.begin(); it2 != events.end(); ++it2) {
+                                existingEvents.push_back(*it2);
+                            }
+                        }
+                        else
+                        {
+                            this->on[type] = events;
+                        }
+                    }
                     valid = true;
                 }
                 catch (const AXRError &e)
