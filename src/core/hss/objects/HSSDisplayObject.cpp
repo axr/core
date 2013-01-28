@@ -1563,7 +1563,7 @@ void HSSDisplayObject::setDAnchorY(QSharedPointer<HSSParserNode> value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        HSSObservableProperty observedProperty = HSSObservablePropertyWidth;
+        HSSObservableProperty observedProperty = HSSObservablePropertyHeight;
         if (this->observedAnchorY)
         {
             this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
@@ -1577,7 +1577,7 @@ void HSSDisplayObject::setDAnchorY(QSharedPointer<HSSParserNode> value)
         this->anchorY = this->_evaluatePropertyValue(
                                              &HSSDisplayObject::anchorYChanged,
                                              value,
-                                             this->width,
+                                             this->height,
                                              observedProperty,
                                              this->shared_from_this(),
                                              HSSObservablePropertyAnchorY,
