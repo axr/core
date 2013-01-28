@@ -2682,10 +2682,13 @@ void HSSDisplayObject::addDFont(QSharedPointer<HSSParserNode> value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
+            if (remoteValue.canConvert<std::vector<QSharedPointer<HSSFont> > *>())
             {
-                QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
-                this->addDFont(theVal);
+                std::vector<QSharedPointer<HSSFont> > values = *remoteValue.value<std::vector<QSharedPointer<HSSFont> >*>();
+                for (std::vector<QSharedPointer<HSSFont> >::const_iterator it = values.begin(); it != values.end(); ++it)
+                {
+                    this->font.push_back(*it);
+                }
                 valid = true;
             }
         }
