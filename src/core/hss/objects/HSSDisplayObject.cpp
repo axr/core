@@ -3271,12 +3271,15 @@ void HSSDisplayObject::addDPadding(QSharedPointer<HSSParserNode> value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
+            if (remoteValue.canConvert<std::vector<QSharedPointer<HSSMargin> >* >())
             {
                 try
                 {
-                    QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
-                    this->addDPadding(theVal);
+                    std::vector<QSharedPointer<HSSMargin> > values = *remoteValue.value<std::vector<QSharedPointer<HSSMargin> >* >();
+                    for (std::vector<QSharedPointer<HSSMargin> >::const_iterator it = values.begin(); it != values.end(); ++it)
+                    {
+                        this->padding.push_back(*it);
+                    }
                     this->_setInnerWidth();
                     this->_setInnerHeight();
                     valid = true;
