@@ -363,6 +363,8 @@ void HSSContainer::setContentText(const AXRString &contextText)
             }
         }
     }
+
+    this->registerProperty(HSSObservablePropertyContent, QVariant::fromValue(text));
 }
 
 void HSSContainer::appendContentText(const AXRString &contextText)

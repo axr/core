@@ -143,7 +143,6 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyHeight, QVariant::fromValue(&this->height));
     this->registerProperty(HSSObservablePropertyWidth, QVariant::fromValue(&this->width));
     this->registerProperty(HSSObservablePropertyBackground, QVariant::fromValue(&this->background));
-    this->registerProperty(HSSObservablePropertyContent, QVariant::fromValue(&this->content));
     this->registerProperty(HSSObservablePropertyFont, QVariant::fromValue(&this->font));
     this->registerProperty(HSSObservablePropertyOn, QVariant::fromValue(&this->on));
     this->registerProperty(HSSObservablePropertyMargin, QVariant::fromValue(&this->margin));
@@ -453,6 +452,7 @@ AXRString HSSDisplayObject::getContentText()
 void HSSDisplayObject::setContentText(const AXRString &text)
 {
     this->contentText = text;
+    this->registerProperty(HSSObservablePropertyContent, QVariant::fromValue(text));
 }
 
 void HSSDisplayObject::appendContentText(const AXRString &text)
@@ -2480,12 +2480,12 @@ void HSSDisplayObject::addDContent(QSharedPointer<HSSParserNode> value)
                 }
                 fnct->setThisObj(this->shared_from_this());
                 QVariant remoteValue = fnct->evaluate();
-                if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
+                if (remoteValue.canConvert<AXRString>())
                 {
                     try
                     {
-                        QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
-                        this->addDContent(theVal);
+                        AXRString theVal = remoteValue.value<AXRString>();
+                        this->setContentText(theVal);
                         valid = true;
                     }
                     catch (const AXRError &e)
