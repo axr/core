@@ -3455,12 +3455,15 @@ void HSSDisplayObject::addDBorder(QSharedPointer<HSSParserNode> value)
             }
             fnct->setThisObj(this->shared_from_this());
             QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<QSharedPointer<HSSParserNode> >())
+            if (remoteValue.canConvert<std::vector<QSharedPointer<HSSBorder> >* >())
             {
                 try
                 {
-                    QSharedPointer<HSSParserNode> theVal = remoteValue.value<QSharedPointer<HSSParserNode> >();
-                    this->addDBorder(theVal);
+                    std::vector<QSharedPointer<HSSBorder> > values = *remoteValue.value<std::vector<QSharedPointer<HSSBorder> >* >();
+                    for (std::vector<QSharedPointer<HSSBorder> >::const_iterator it = values.begin(); it != values.end(); ++it)
+                    {
+                        this->border.push_back(*it);
+                    }
                     valid = true;
                 }
                 catch (const AXRError &e)
