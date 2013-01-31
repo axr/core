@@ -51,7 +51,8 @@ template <class T> class QSharedPointer;
 namespace AXR
 {
     class AXRDocument;
-    class HSSRect;
+    class HSSLinearGradient;
+    class HSSRadialGradient;
 
     class AXR_API HSSRenderer : public HSSAbstractVisitor
     {
@@ -82,10 +83,13 @@ namespace AXR
         void performLayoutSteps(HSSDisplayObject &displayObject);
 
         void drawBackground(HSSContainer &container);
-
+        
+        void drawLinearGradient(HSSLinearGradient &gradient, const QPainterPath &path, HSSUnit posX, HSSUnit posY);
+        
+        void drawRadialGradient(HSSRadialGradient &gradient, const QPainterPath &path, HSSUnit posX, HSSUnit posY);
+        
         void drawBorders(HSSContainer &container);
 
-        void drawForeground(HSSContainer &container);
         void drawForeground(HSSTextBlock &textBlock);
 
         class Private;

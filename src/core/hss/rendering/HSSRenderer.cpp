@@ -41,10 +41,12 @@
  *
  ********************************************************************/
 
+#include <cmath>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
 #include "AXRError.h"
+#include "AXRWarning.h"
 #include "HSSBorder.h"
 #include "HSSContainer.h"
 #include "HSSFont.h"
@@ -55,7 +57,10 @@
 #include "HSSRoundedRect.h"
 #include "HSSShape.h"
 #include "HSSTextBlock.h"
+#include "HSSColorStop.h"
+#include "HSSParserNode.h"
 #include <QPainter>
+#include <QSharedPointer>
 
 using namespace AXR;
 
@@ -235,12 +240,12 @@ void HSSRenderer::drawBackground(HSSContainer &container)
                 if (theobj->isA(HSSGradientTypeLinear))
                 {
                     QSharedPointer<HSSLinearGradient> grad = qSharedPointerCast<HSSLinearGradient > (theobj);
-                    grad->draw(*d->canvasPainter, path);
+                    drawLinearGradient(*grad, path, container.globalX, container.globalY);
                 }
                 else if (theobj->isA(HSSGradientTypeRadial))
                 {
                     QSharedPointer<HSSRadialGradient> grad = qSharedPointerCast<HSSRadialGradient > (theobj);
-                    grad->draw(*d->canvasPainter, path);
+                    drawRadialGradient(*grad, path, container.globalX, container.globalY);
                 }
                 else
                 {
@@ -302,6 +307,176 @@ void HSSRenderer::drawForeground(HSSTextBlock& textBlock)
 
     if (d->globalAntialiasingEnabled)
         d->canvasPainter->setRenderHint(QPainter::Antialiasing);
+}
+
+void HSSRenderer::drawLinearGradient(HSSLinearGradient &gradient, const QPainterPath &path, HSSUnit posX, HSSUnit posY)
+{
+    QSharedPointer<HSSRgb> prevColor;
+    QLinearGradient pat(gradient.startX + posX, gradient.startY + posY, gradient.endX + posX, gradient.endY + posY);
+    if (gradient.startColor)
+    {
+        pat.setColorAt(0, gradient.startColor->toQColor());
+        prevColor = gradient.startColor;
+    }
+    else
+    {
+        QSharedPointer<HSSRgb> nextColor = gradient.getColorAfterFirst();
+        pat.setColorAt(0, nextColor->toQColorWithAlpha(0));
+        prevColor = nextColor;
+    }
+    
+    //add color stops
+    for (std::vector<QSharedPointer<HSSObject> >::iterator it = gradient.colorStops.begin(); it != gradient.colorStops.end(); ++it)
+    {
+        QSharedPointer<HSSObject> theStopObj = *it;
+        //if it's a color stop
+        if (theStopObj->isA(HSSObjectTypeColorStop))
+        {
+            QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop > (theStopObj);
+            
+            //calculate the position
+            HSSUnit position;
+            if (theStop->getDPosition()->isA(HSSParserNodeTypePercentageConstant))
+            {
+                position = theStop->getPosition();
+            }
+            else
+            {
+                HSSUnit width = (gradient.endX - gradient.startX);
+                HSSUnit height = (gradient.endY - gradient.startY);
+                HSSUnit hypotenuse = hypot(width, height);
+                position = theStop->getPosition() / hypotenuse;
+            }
+            
+            //determine the color
+            QSharedPointer<HSSRgb> theColor = theStop->getColor();
+            if (theColor)
+            {
+                pat.setColorAt(position, theColor->toQColor());
+                prevColor = theColor;
+            }
+            else
+            {
+                //create two stops:
+                //one with the previous color
+                pat.setColorAt(position, prevColor->toQColorWithAlpha(0));
+                //and one with the next color
+                std::vector<QSharedPointer<HSSObject> >::iterator innerIt = it;
+                ++innerIt;
+                QSharedPointer<HSSRgb> nextColor = gradient.getNextColorFromStops(innerIt, gradient.colorStops.end());
+                pat.setColorAt(position, nextColor->toQColorWithAlpha(0));
+            }
+        }
+        //if it's a simple color
+        else if (theStopObj->isA(HSSObjectTypeRgb))
+        {
+            QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb > (theStopObj);
+            pat.setColorAt(0.5, theColor->toQColor());
+        }
+        else
+        {
+            AXRWarning("HSSLinearGradient", "The color stop had no color defined").raise();
+        }
+        
+    }
+    
+    if (gradient.endColor)
+    {
+        pat.setColorAt(1, gradient.endColor->toQColor());
+    }
+    else
+    {
+        QSharedPointer<HSSRgb> prevColor = gradient.getColorBeforeLast();
+        pat.setColorAt(1, prevColor->toQColorWithAlpha(0));
+    }
+    
+    QBrush brush(pat);
+    d->canvasPainter->fillPath(path, brush);
+}
+
+void HSSRenderer::drawRadialGradient(HSSRadialGradient &gradient, const QPainterPath &path, HSSUnit posX, HSSUnit posY)
+{
+    QSharedPointer<HSSRgb> prevColor;
+    qreal offset = sqrt((gradient.offsetX*gradient.offsetX)+(gradient.offsetY*gradient.offsetY));
+    QRadialGradient pat(gradient.centerX + posX, gradient.centerY + posY, offset, gradient.centerX + posX, gradient.centerY + posY);
+    if (gradient.startColor)
+    {
+        pat.setColorAt(0, gradient.startColor->toQColor());
+        prevColor = gradient.startColor;
+    }
+    else
+    {
+        QSharedPointer<HSSRgb> nextColor = gradient.getColorAfterFirst();
+        pat.setColorAt(0, nextColor->toQColorWithAlpha(0));
+        prevColor = nextColor;
+    }
+    
+    //add color stops
+    for (std::vector<QSharedPointer<HSSObject> >::iterator it = gradient.colorStops.begin(); it != gradient.colorStops.end(); ++it)
+    {
+        QSharedPointer<HSSObject> theStopObj = *it;
+        //if it's a color stop
+        if (theStopObj->isA(HSSObjectTypeColorStop))
+        {
+            QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop > (theStopObj);
+            
+            //calculate the position
+            HSSUnit position;
+            if (theStop->getDPosition()->isA(HSSParserNodeTypePercentageConstant))
+            {
+                position = theStop->getPosition();
+            }
+            else
+            {
+                HSSUnit width = (gradient.offsetX - gradient.centerX);
+                HSSUnit height = (gradient.offsetY - gradient.centerY);
+                HSSUnit hypotenuse = hypot(width, height);
+                position = theStop->getPosition() / hypotenuse;
+            }
+            
+            //determine the color
+            QSharedPointer<HSSRgb> theColor = theStop->getColor();
+            if (theColor)
+            {
+                pat.setColorAt(position, theColor->toQColor());
+                prevColor = theColor;
+            }
+            else
+            {
+                //create two stops:
+                //one with the previous color
+                pat.setColorAt(position, prevColor->toQColorWithAlpha(0));
+                //and one with the next color
+                std::vector<QSharedPointer<HSSObject> >::iterator innerIt = it;
+                ++innerIt;
+                QSharedPointer<HSSRgb> nextColor = gradient.getNextColorFromStops(innerIt, gradient.colorStops.end());
+                pat.setColorAt(position, nextColor->toQColorWithAlpha(0));
+            }
+        }
+        //if it's a simple color
+        else if (theStopObj->isA(HSSObjectTypeRgb))
+        {
+            QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb > (theStopObj);
+            pat.setColorAt(0.5, theColor->toQColor());
+        }
+        else
+        {
+            AXRWarning("HSSRadialGradient", "The color stop had no color defined").raise();
+        }
+    }
+    
+    if (gradient.endColor)
+    {
+        pat.setColorAt(1, gradient.endColor->toQColor());
+    }
+    else
+    {
+        QSharedPointer<HSSRgb> prevColor = gradient.getColorBeforeLast();
+        pat.setColorAt(1, prevColor->toQColorWithAlpha(0));
+    }
+    
+    QBrush brush(pat);
+    d->canvasPainter->fillPath(path, brush);
 }
 
 void HSSRenderer::performLayoutSteps(HSSDisplayObject &displayObject)

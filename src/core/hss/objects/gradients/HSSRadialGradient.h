@@ -57,6 +57,8 @@ namespace AXR
      */
     class AXR_API HSSRadialGradient : public HSSGradient
     {
+        friend class HSSRenderer;
+        
     public:
         typedef QSharedPointer<HSSRadialGradient> p;
 
@@ -185,8 +187,6 @@ namespace AXR
          *  @param data     A pointer to the data that is sent along the notification.
          */
         void offsetYChanged(HSSObservableProperty source, void *data);
-
-        virtual void draw(QPainter &painter, const QPainterPath &path);
 
     protected:
         //centerX

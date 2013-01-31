@@ -82,12 +82,6 @@ namespace AXR
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
 
-        /**
-         *  Call this method when you need to draw the gradient. Each specific
-         *  subclass implements its own way of drawing the gradient.
-         */
-        virtual void draw(QPainter &painter, const QPainterPath &path) = 0;
-
         virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**

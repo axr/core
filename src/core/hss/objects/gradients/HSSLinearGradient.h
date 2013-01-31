@@ -57,6 +57,8 @@ namespace AXR
      */
     class AXR_API HSSLinearGradient : public HSSGradient
     {
+        friend class HSSRenderer;
+        
     public:
         /**
          *  Creates a new instance of a
@@ -183,8 +185,6 @@ namespace AXR
          *  @param data     A pointer to the data that is sent along the notification.
          */
         void endYChanged(HSSObservableProperty source, void *data);
-
-        virtual void draw(QPainter &painter, const QPainterPath &path);
 
     protected:
         //startX
