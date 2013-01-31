@@ -41,56 +41,47 @@
  *
  ********************************************************************/
 
-#ifndef HSSRENDERER_H
-#define HSSRENDERER_H
+#include "HSSPoint.h"
+#include <QPoint>
 
-#include "HSSAbstractVisitor.h"
+#ifdef Q_OS_WIN
+#include <qt_windows.h>
+#endif
 
-template <class T> class QSharedPointer;
+using namespace AXR;
 
-namespace AXR
+#ifdef Q_OS_WIN
+HSSPoint::HSSPoint(const POINT &point) : x(point.x), y(point.y)
 {
-    class AXRDocument;
-    class HSSRect;
+}
+#endif
 
-    class AXR_API HSSRenderer : public HSSAbstractVisitor
-    {
-    public:
-        HSSRenderer();
-        virtual ~HSSRenderer();
-
-        virtual void initializeVisit();
-        virtual void visit(HSSContainer &container);
-        virtual void visit(HSSTextBlock &textBlock);
-        virtual void finalizeVisit();
-        virtual void reset();
-
-        QImage* getFinalFrame();
-
-        void setDirtyRect(const HSSRect &dirtyRect);
-
-        void setDocument(AXRDocument* document);
-
-        bool isGlobalAntialiasingEnabled() const;
-        void setGlobalAntialiasingEnabled(bool enable);
-
-        void setOutputBoundsToObject(QSharedPointer<HSSDisplayObject> outputBoundsObject);
-
-    private:
-        void regeneratePainter(int width, int height);
-
-        void performLayoutSteps(HSSDisplayObject &displayObject);
-
-        void drawBackground(HSSContainer &container);
-
-        void drawBorders(HSSContainer &container);
-
-        void drawForeground(HSSContainer &container);
-        void drawForeground(HSSTextBlock &textBlock);
-
-        class Private;
-        Private *d;
-    };
+HSSPoint::HSSPoint(const QPointF &point) : x(point.x()), y(point.y())
+{
 }
 
-#endif // HSSRENDERER_H
+HSSPoint::HSSPoint(const QPoint &point) : x(point.x()), y(point.y())
+{
+}
+
+HSSPoint::HSSPoint() : x(0), y(0)
+{
+}
+
+HSSPoint::HSSPoint(HSSUnit xAndY) : x(xAndY), y(xAndY)
+{
+}
+
+HSSPoint::HSSPoint(HSSUnit pointX, HSSUnit pointY) : x(pointX), y(pointY)
+{
+}
+
+bool HSSPoint::operator==(const HSSPoint &other) const
+{
+    return qFuzzyIsNull(x - other.x) && qFuzzyIsNull(y - other.y);
+}
+
+bool HSSPoint::operator!=(const HSSPoint &other) const
+{
+    return !(*this == other);
+}

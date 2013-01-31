@@ -41,56 +41,46 @@
  *
  ********************************************************************/
 
-#ifndef HSSRENDERER_H
-#define HSSRENDERER_H
+#ifndef AXR_HSSPOINT
+#define AXR_HSSPOINT
 
-#include "HSSAbstractVisitor.h"
+#include "AXRGlobal.h"
 
-template <class T> class QSharedPointer;
+typedef struct tagPOINT POINT;
+typedef struct CGPoint CGPoint;
+
+#if __LP64__ || NS_BUILD_32_LIKE_64
+typedef CGPoint NSPoint;
+#else
+typedef struct _NSPoint NSPoint;
+#endif
 
 namespace AXR
 {
-    class AXRDocument;
-    class HSSRect;
-
-    class AXR_API HSSRenderer : public HSSAbstractVisitor
+    /**
+     * @brief A resolution independent point.
+     */
+    class AXR_API HSSPoint
     {
     public:
-        HSSRenderer();
-        virtual ~HSSRenderer();
+        HSSPoint(const POINT &point);
+#if !__LP64__ && !NS_BUILD_32_LIKE_64
+        HSSPoint(const CGPoint &point);
+#endif
+        HSSPoint(const NSPoint &point);
 
-        virtual void initializeVisit();
-        virtual void visit(HSSContainer &container);
-        virtual void visit(HSSTextBlock &textBlock);
-        virtual void finalizeVisit();
-        virtual void reset();
+        HSSPoint(const QPointF &point);
+        HSSPoint(const QPoint &point);
+        HSSPoint();
+        HSSPoint(HSSUnit xAndY);
+        HSSPoint(HSSUnit pointX, HSSUnit pointY);
 
-        QImage* getFinalFrame();
+        bool operator==(const HSSPoint &other) const;
+        bool operator!=(const HSSPoint &other) const;
 
-        void setDirtyRect(const HSSRect &dirtyRect);
-
-        void setDocument(AXRDocument* document);
-
-        bool isGlobalAntialiasingEnabled() const;
-        void setGlobalAntialiasingEnabled(bool enable);
-
-        void setOutputBoundsToObject(QSharedPointer<HSSDisplayObject> outputBoundsObject);
-
-    private:
-        void regeneratePainter(int width, int height);
-
-        void performLayoutSteps(HSSDisplayObject &displayObject);
-
-        void drawBackground(HSSContainer &container);
-
-        void drawBorders(HSSContainer &container);
-
-        void drawForeground(HSSContainer &container);
-        void drawForeground(HSSTextBlock &textBlock);
-
-        class Private;
-        Private *d;
+        HSSUnit x; /**< the location of the point in horizontal dimension. */
+        HSSUnit y; /**< the location of the point in vertical dimension. */
     };
 }
 
-#endif // HSSRENDERER_H
+#endif

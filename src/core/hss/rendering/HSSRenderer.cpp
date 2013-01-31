@@ -50,6 +50,7 @@
 #include "HSSFont.h"
 #include "HSSLinearGradient.h"
 #include "HSSRadialGradient.h"
+#include "HSSRect.h"
 #include "HSSRenderer.h"
 #include "HSSRoundedRect.h"
 #include "HSSShape.h"

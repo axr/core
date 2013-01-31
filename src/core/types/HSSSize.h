@@ -41,56 +41,44 @@
  *
  ********************************************************************/
 
-#ifndef HSSRENDERER_H
-#define HSSRENDERER_H
+#ifndef AXR_HSSSIZE
+#define AXR_HSSSIZE
 
-#include "HSSAbstractVisitor.h"
+#include "AXRGlobal.h"
 
-template <class T> class QSharedPointer;
+typedef struct CGSize CGSize;
+
+#if __LP64__ || NS_BUILD_32_LIKE_64
+typedef CGSize NSSize;
+#else
+typedef struct _NSSize NSSize;
+#endif
 
 namespace AXR
 {
-    class AXRDocument;
-    class HSSRect;
-
-    class AXR_API HSSRenderer : public HSSAbstractVisitor
+    /**
+     * @brief Represents a size measure.
+     */
+    class AXR_API HSSSize
     {
     public:
-        HSSRenderer();
-        virtual ~HSSRenderer();
+#if !__LP64__ && !NS_BUILD_32_LIKE_64
+        HSSSize(const CGSize &point);
+#endif
+        HSSSize(const NSSize &size);
 
-        virtual void initializeVisit();
-        virtual void visit(HSSContainer &container);
-        virtual void visit(HSSTextBlock &textBlock);
-        virtual void finalizeVisit();
-        virtual void reset();
+        HSSSize(const QSizeF &size);
+        HSSSize(const QSize &size);
+        HSSSize();
+        HSSSize(HSSUnit widthAndHeight);
+        HSSSize(HSSUnit sizeWidth, HSSUnit sizeHeight);
 
-        QImage* getFinalFrame();
+        bool operator==(const HSSSize &other) const;
+        bool operator!=(const HSSSize &other) const;
 
-        void setDirtyRect(const HSSRect &dirtyRect);
-
-        void setDocument(AXRDocument* document);
-
-        bool isGlobalAntialiasingEnabled() const;
-        void setGlobalAntialiasingEnabled(bool enable);
-
-        void setOutputBoundsToObject(QSharedPointer<HSSDisplayObject> outputBoundsObject);
-
-    private:
-        void regeneratePainter(int width, int height);
-
-        void performLayoutSteps(HSSDisplayObject &displayObject);
-
-        void drawBackground(HSSContainer &container);
-
-        void drawBorders(HSSContainer &container);
-
-        void drawForeground(HSSContainer &container);
-        void drawForeground(HSSTextBlock &textBlock);
-
-        class Private;
-        Private *d;
+        HSSUnit width; /**< measure in the horizontal dimension. */
+        HSSUnit height; /**< measure in the vertical dimension. */
     };
 }
 
-#endif // HSSRENDERER_H
+#endif

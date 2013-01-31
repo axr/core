@@ -41,56 +41,22 @@
  *
  ********************************************************************/
 
-#ifndef HSSRENDERER_H
-#define HSSRENDERER_H
+#include "HSSSize.h"
 
-#include "HSSAbstractVisitor.h"
+#ifdef __APPLE__
+#include <Foundation/Foundation.h>
+#endif
 
-template <class T> class QSharedPointer;
+using namespace AXR;
 
-namespace AXR
+#ifdef __APPLE__
+#if !__LP64__ && !NS_BUILD_32_LIKE_64
+HSSSize::HSSSize(const CGSize &size) : width(size.width), height(size.height)
 {
-    class AXRDocument;
-    class HSSRect;
-
-    class AXR_API HSSRenderer : public HSSAbstractVisitor
-    {
-    public:
-        HSSRenderer();
-        virtual ~HSSRenderer();
-
-        virtual void initializeVisit();
-        virtual void visit(HSSContainer &container);
-        virtual void visit(HSSTextBlock &textBlock);
-        virtual void finalizeVisit();
-        virtual void reset();
-
-        QImage* getFinalFrame();
-
-        void setDirtyRect(const HSSRect &dirtyRect);
-
-        void setDocument(AXRDocument* document);
-
-        bool isGlobalAntialiasingEnabled() const;
-        void setGlobalAntialiasingEnabled(bool enable);
-
-        void setOutputBoundsToObject(QSharedPointer<HSSDisplayObject> outputBoundsObject);
-
-    private:
-        void regeneratePainter(int width, int height);
-
-        void performLayoutSteps(HSSDisplayObject &displayObject);
-
-        void drawBackground(HSSContainer &container);
-
-        void drawBorders(HSSContainer &container);
-
-        void drawForeground(HSSContainer &container);
-        void drawForeground(HSSTextBlock &textBlock);
-
-        class Private;
-        Private *d;
-    };
 }
+#endif
 
-#endif // HSSRENDERER_H
+HSSSize::HSSSize(const NSSize &size) : width(size.width), height(size.height)
+{
+}
+#endif

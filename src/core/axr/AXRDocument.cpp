@@ -52,7 +52,6 @@
 #include "HSSCallback.h"
 #include "HSSContainer.h"
 #include "HSSParser.h"
-#include "HSSUnits.h"
 #include "HSSVisitorManager.h"
 #include "XMLParser.h"
 

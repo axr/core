@@ -41,56 +41,51 @@
  *
  ********************************************************************/
 
-#ifndef HSSRENDERER_H
-#define HSSRENDERER_H
+#include "HSSRect.h"
+#include <QRect>
 
-#include "HSSAbstractVisitor.h"
+#ifdef Q_OS_WIN
+#include <qt_windows.h>
+#endif
 
-template <class T> class QSharedPointer;
+using namespace AXR;
 
-namespace AXR
+#ifdef Q_OS_WIN
+HSSRect::HSSRect(const RECT &rect) : origin(HSSPoint(rect.left, rect.top)), size(HSSSize(rect.right - rect.left - 1, rect.bottom - rect.top - 1))
 {
-    class AXRDocument;
-    class HSSRect;
+}
+#endif
 
-    class AXR_API HSSRenderer : public HSSAbstractVisitor
-    {
-    public:
-        HSSRenderer();
-        virtual ~HSSRenderer();
-
-        virtual void initializeVisit();
-        virtual void visit(HSSContainer &container);
-        virtual void visit(HSSTextBlock &textBlock);
-        virtual void finalizeVisit();
-        virtual void reset();
-
-        QImage* getFinalFrame();
-
-        void setDirtyRect(const HSSRect &dirtyRect);
-
-        void setDocument(AXRDocument* document);
-
-        bool isGlobalAntialiasingEnabled() const;
-        void setGlobalAntialiasingEnabled(bool enable);
-
-        void setOutputBoundsToObject(QSharedPointer<HSSDisplayObject> outputBoundsObject);
-
-    private:
-        void regeneratePainter(int width, int height);
-
-        void performLayoutSteps(HSSDisplayObject &displayObject);
-
-        void drawBackground(HSSContainer &container);
-
-        void drawBorders(HSSContainer &container);
-
-        void drawForeground(HSSContainer &container);
-        void drawForeground(HSSTextBlock &textBlock);
-
-        class Private;
-        Private *d;
-    };
+HSSRect::HSSRect(const QRectF &rect) : origin(rect.topLeft()), size(rect.size())
+{
 }
 
-#endif // HSSRENDERER_H
+HSSRect::HSSRect(const QRect &rect) : origin(rect.topLeft()), size(rect.size())
+{
+}
+
+HSSRect::HSSRect()
+{
+}
+
+HSSRect::HSSRect(const HSSSize &rectSize) : origin(HSSPoint()), size(rectSize)
+{
+}
+
+HSSRect::HSSRect(const HSSPoint &rectOrigin, const HSSSize &rectSize) : origin(rectOrigin), size(rectSize)
+{
+}
+
+HSSRect::HSSRect(HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height) : origin(HSSPoint(x, y)), size(HSSSize(width, height))
+{
+}
+
+bool HSSRect::operator==(const HSSRect &other) const
+{
+    return origin == other.origin && size == other.size;
+}
+
+bool HSSRect::operator!=(const HSSRect &other) const
+{
+    return !(*this == other);
+}

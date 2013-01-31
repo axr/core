@@ -41,56 +41,49 @@
  *
  ********************************************************************/
 
-#ifndef HSSRENDERER_H
-#define HSSRENDERER_H
+#ifndef AXR_HSSRECT
+#define AXR_HSSRECT
 
-#include "HSSAbstractVisitor.h"
+#include "AXRGlobal.h"
+#include "HSSPoint.h"
+#include "HSSSize.h"
 
-template <class T> class QSharedPointer;
+typedef struct _RECT RECT;
+typedef struct CGRect CGRect;
+
+#if __LP64__ || NS_BUILD_32_LIKE_64
+typedef CGRect NSRect;
+#else
+typedef struct _NSRect NSRect;
+#endif
 
 namespace AXR
 {
-    class AXRDocument;
-    class HSSRect;
-
-    class AXR_API HSSRenderer : public HSSAbstractVisitor
+    /**
+     * @brief A basic rectangle.
+     */
+    class AXR_API HSSRect
     {
     public:
-        HSSRenderer();
-        virtual ~HSSRenderer();
+        HSSRect(const RECT &rect);
+#if !__LP64__ && !NS_BUILD_32_LIKE_64
+        HSSRect(const CGRect &rect);
+#endif
+        HSSRect(const NSRect &rect);
 
-        virtual void initializeVisit();
-        virtual void visit(HSSContainer &container);
-        virtual void visit(HSSTextBlock &textBlock);
-        virtual void finalizeVisit();
-        virtual void reset();
+        HSSRect(const QRectF &rect);
+        HSSRect(const QRect &rect);
+        HSSRect();
+        HSSRect(const HSSSize &rectSize);
+        HSSRect(const HSSPoint &rectOrigin, const HSSSize &rectSize);
+        HSSRect(HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
 
-        QImage* getFinalFrame();
+        bool operator==(const HSSRect &other) const;
+        bool operator!=(const HSSRect &other) const;
 
-        void setDirtyRect(const HSSRect &dirtyRect);
-
-        void setDocument(AXRDocument* document);
-
-        bool isGlobalAntialiasingEnabled() const;
-        void setGlobalAntialiasingEnabled(bool enable);
-
-        void setOutputBoundsToObject(QSharedPointer<HSSDisplayObject> outputBoundsObject);
-
-    private:
-        void regeneratePainter(int width, int height);
-
-        void performLayoutSteps(HSSDisplayObject &displayObject);
-
-        void drawBackground(HSSContainer &container);
-
-        void drawBorders(HSSContainer &container);
-
-        void drawForeground(HSSContainer &container);
-        void drawForeground(HSSTextBlock &textBlock);
-
-        class Private;
-        Private *d;
+        HSSPoint origin; /**< Where the rectangle starts. This point is on the top left corner of the rectangle. */
+        HSSSize size; /**< The dimensions of the rectangle. */
     };
 }
 
-#endif // HSSRENDERER_H
+#endif

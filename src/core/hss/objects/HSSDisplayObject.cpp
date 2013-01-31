@@ -61,7 +61,6 @@
 #include "HSSFont.h"
 #include "HSSKeywordConstant.h"
 #include "HSSLinearGradient.h"
-#include "HSSRadialGradient.h"
 #include "HSSMargin.h"
 #include "HSSMultipleValue.h"
 #include "HSSMultipleValueDefinition.h"
@@ -71,12 +70,13 @@
 #include "HSSObjectNameConstant.h"
 #include "HSSParserNode.h"
 #include "HSSPercentageConstant.h"
+#include "HSSPoint.h"
 #include "HSSPropertyDefinition.h"
+#include "HSSRadialGradient.h"
 #include "HSSRgb.h"
 #include "HSSRule.h"
 #include "HSSSimpleSelection.h"
 #include "HSSStringConstant.h"
-#include "HSSUnits.h"
 #include "HSSValue.h"
 
 using namespace AXR;

@@ -41,56 +41,37 @@
  *
  ********************************************************************/
 
-#ifndef HSSRENDERER_H
-#define HSSRENDERER_H
+#include "HSSSize.h"
+#include <QSize>
 
-#include "HSSAbstractVisitor.h"
+using namespace AXR;
 
-template <class T> class QSharedPointer;
-
-namespace AXR
+HSSSize::HSSSize(const QSizeF &size) : width(size.width()), height(size.height())
 {
-    class AXRDocument;
-    class HSSRect;
-
-    class AXR_API HSSRenderer : public HSSAbstractVisitor
-    {
-    public:
-        HSSRenderer();
-        virtual ~HSSRenderer();
-
-        virtual void initializeVisit();
-        virtual void visit(HSSContainer &container);
-        virtual void visit(HSSTextBlock &textBlock);
-        virtual void finalizeVisit();
-        virtual void reset();
-
-        QImage* getFinalFrame();
-
-        void setDirtyRect(const HSSRect &dirtyRect);
-
-        void setDocument(AXRDocument* document);
-
-        bool isGlobalAntialiasingEnabled() const;
-        void setGlobalAntialiasingEnabled(bool enable);
-
-        void setOutputBoundsToObject(QSharedPointer<HSSDisplayObject> outputBoundsObject);
-
-    private:
-        void regeneratePainter(int width, int height);
-
-        void performLayoutSteps(HSSDisplayObject &displayObject);
-
-        void drawBackground(HSSContainer &container);
-
-        void drawBorders(HSSContainer &container);
-
-        void drawForeground(HSSContainer &container);
-        void drawForeground(HSSTextBlock &textBlock);
-
-        class Private;
-        Private *d;
-    };
 }
 
-#endif // HSSRENDERER_H
+HSSSize::HSSSize(const QSize &size) : width(size.width()), height(size.height())
+{
+}
+
+HSSSize::HSSSize() : width(0), height(0)
+{
+}
+
+HSSSize::HSSSize(HSSUnit widthAndHeight) : width(widthAndHeight), height(widthAndHeight)
+{
+}
+
+HSSSize::HSSSize(HSSUnit sizeWidth, HSSUnit sizeHeight) : width(sizeWidth), height(sizeHeight)
+{
+}
+
+bool HSSSize::operator==(const HSSSize &other) const
+{
+    return qFuzzyIsNull(width - other.width) && qFuzzyIsNull(height - other.height);
+}
+
+bool HSSSize::operator!=(const HSSSize &other) const
+{
+    return !(*this == other);
+}

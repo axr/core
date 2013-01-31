@@ -47,8 +47,8 @@
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
 #include "HSSContainer.h"
+#include "HSSRect.h"
 #include "HSSRenderer.h"
-#include "HSSUnits.h"
 #include "HSSVisitorManager.h"
 #include "QAXRWidget.h"
 
