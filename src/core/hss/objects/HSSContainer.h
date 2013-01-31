@@ -210,7 +210,7 @@ namespace AXR
         /**
          *  Accepts a visitor to traverse and process the HSSObject tree.
          */
-        virtual void accept(IHSSVisitor* visitor, bool traverse);
+        virtual void accept(HSSAbstractVisitor* visitor, bool traverse);
 
         /**
          *  Lays out the children according to the layout algorithm, first in the primary direction

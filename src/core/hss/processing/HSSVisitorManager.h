@@ -45,11 +45,10 @@
 #define HSSVISITORMANAGER_H
 
 #include "AXRGlobal.h"
-#include "IHSSVisitor.h"
+#include "HSSAbstractVisitor.h"
 
 namespace AXR
 {
-
     class AXRController;
     class AXRDocument;
 
@@ -59,27 +58,23 @@ namespace AXR
      */
     class AXR_API HSSVisitorManager
     {
-
     public:
-
         /**
          *  Creates a new instance of the render object.
          *  @param  controller  A regular pointer to the controller object that is associated with this renderer.
          */
         HSSVisitorManager(AXRController * controller);
+
         /**
          *  Destructs the render object.
          */
         virtual ~HSSVisitorManager();
 
-        void addVisitor(IHSSVisitor *visitor);
+        void addVisitor(HSSAbstractVisitor *visitor);
 
         void runVisitors();
-        void runVisitors(IHSSVisitor::VisitorFilterFlags filterFlags);
-        void runVisitors(QSharedPointer<HSSDisplayObject> root, IHSSVisitor::VisitorFilterFlags filterFlags, bool traverse);
-
-
-
+        void runVisitors(HSSAbstractVisitor::VisitorFilterFlags filterFlags);
+        void runVisitors(QSharedPointer<HSSDisplayObject> root, HSSAbstractVisitor::VisitorFilterFlags filterFlags, bool traverse);
 
         /**
          *  The main drawing function. Call this to redraw an area of the window.
@@ -94,12 +89,12 @@ namespace AXR
          */
         void reset();
 
-
-
     protected:
         void resetVisitors();
-        AXRController *controller;
-        std::vector<IHSSVisitor*> _visitors;
+
+    private:
+        class Private;
+        Private *d;
     };
 }
 

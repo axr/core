@@ -41,55 +41,64 @@
  *
  ********************************************************************/
 
-#include <QImage>
 #include "AXRController.h"
-#include "AXRDebugging.h"
-#include "AXRDocument.h"
-#include "AXRError.h"
-#include "AXRString.h"
-#include "IHSSVisitor.h"
 #include "HSSContainer.h"
 #include "HSSDisplayObject.h"
 #include "HSSVisitorManager.h"
 
 using namespace AXR;
 
-HSSVisitorManager::HSSVisitorManager(AXRController *theController): controller(theController)
+class HSSVisitorManager::Private
 {
+public:
+    Private() : controller(), visitors()
+    {
+    }
+
+    AXRController *controller;
+    std::vector<HSSAbstractVisitor*> visitors;
+};
+
+HSSVisitorManager::HSSVisitorManager(AXRController *theController)
+: d(new Private)
+{
+    d->controller = theController;
 }
 
 HSSVisitorManager::~HSSVisitorManager()
 {
+    delete d;
 }
 
-void HSSVisitorManager::addVisitor(IHSSVisitor *visitor)
+void HSSVisitorManager::addVisitor(HSSAbstractVisitor *visitor)
 {
-    _visitors.push_back(visitor);
+    d->visitors.push_back(visitor);
 }
 
 void HSSVisitorManager::runVisitors()
 {
-    QSharedPointer<HSSDisplayObject> root = this->controller->getRoot();
-    runVisitors(root, IHSSVisitor::FLAG_All, true);
+    QSharedPointer<HSSDisplayObject> root = d->controller->getRoot();
+    runVisitors(root, HSSAbstractVisitor::VisitorFilterAll, true);
 }
 
-void HSSVisitorManager::runVisitors(IHSSVisitor::VisitorFilterFlags filterFlags)
+void HSSVisitorManager::runVisitors(HSSAbstractVisitor::VisitorFilterFlags filterFlags)
 {
-    QSharedPointer<HSSContainer> root = this->controller->getRoot();
+    QSharedPointer<HSSContainer> root = d->controller->getRoot();
     runVisitors(root, filterFlags, true);
 }
 
-void HSSVisitorManager::runVisitors(QSharedPointer<HSSDisplayObject> root, IHSSVisitor::VisitorFilterFlags filterFlags, bool traverse)
+void HSSVisitorManager::runVisitors(QSharedPointer<HSSDisplayObject> root, HSSAbstractVisitor::VisitorFilterFlags filterFlags, bool traverse)
 {
     if (root)
     {
-        for (IHSSVisitor::iterator it = _visitors.begin(); it < _visitors.end(); ++it)
+        for (std::vector<HSSAbstractVisitor*>::iterator it = d->visitors.begin(); it != d->visitors.end(); ++it)
         {
-            IHSSVisitor* visitor = (*it);
-            int visitorFlags = visitor->getFilterFlags();
-            if (IHSSVisitor::FLAG_Skip & visitorFlags)
+            HSSAbstractVisitor* visitor = (*it);
+            HSSAbstractVisitor::VisitorFilterFlags visitorFlags = visitor->getFilterFlags();
+            if (visitorFlags & HSSAbstractVisitor::VisitorFilterSkip)
                 continue;
-            if (filterFlags & visitorFlags)
+
+            if (visitorFlags & filterFlags)
             {
                 visitor->initializeVisit();
                 root->accept(visitor, traverse);
@@ -99,60 +108,19 @@ void HSSVisitorManager::runVisitors(QSharedPointer<HSSDisplayObject> root, IHSSV
     }
 }
 
-void HSSVisitorManager::reset(){
+void HSSVisitorManager::reset()
+{
     resetVisitors();
 }
 
-void HSSVisitorManager::resetVisitors(){
-    QSharedPointer<HSSContainer> root = this->controller->getRoot();
+void HSSVisitorManager::resetVisitors()
+{
+    QSharedPointer<HSSContainer> root = d->controller->getRoot();
     if (root)
     {
-        for (IHSSVisitor::iterator it = _visitors.begin(); it < _visitors.end(); ++it)
+        for (std::vector<HSSAbstractVisitor*>::iterator it = d->visitors.begin(); it != d->visitors.end(); ++it)
         {
             (*it)->reset();
         }
     }
 }
-
-
-
-//void HSSVisitorManager::mouseDown(HSSUnit x, HSSUnit y)
-//{
-//    //prepare values
-//    HSSContainer::p root = this->controller->getRoot();
-//
-//    struct point
-//    {
-//        HSSUnit x;
-//        HSSUnit y;
-//    } thePoint;
-//    thePoint.x = x;
-//    thePoint.y = y;
-//    if (root)
-//        root->handleEvent(HSSEventTypeMouseDown, (void*) &thePoint);
-//}
-//
-//void HSSVisitorManager::mouseUp(HSSUnit x, HSSUnit y)
-//{
-//    //prepare values
-//    HSSContainer::p root = this->controller->getRoot();
-//
-//    struct point
-//    {
-//        HSSUnit x;
-//        HSSUnit y;
-//    } thePoint;
-//    thePoint.x = x;
-//    thePoint.y = y;
-//    if (root)
-//    {
-//        try
-//        {
-//            root->handleEvent(HSSEventTypeMouseUp, (void*) &thePoint);
-//        }
-//        catch (const AXRError &e)
-//        {
-//            e.raise();
-//        }
-//    }
-//}

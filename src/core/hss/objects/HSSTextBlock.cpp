@@ -51,7 +51,7 @@
 #include "AXRDocument.h"
 #include "AXRString.h"
 #include "AXRWarning.h"
-#include "IHSSVisitor.h"
+#include "HSSAbstractVisitor.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
 #include "HSSFont.h"
@@ -327,7 +327,7 @@ QFont HSSTextBlock::getFont() const
     return font_description;
 }
 
-void HSSTextBlock::accept(IHSSVisitor* visitor, bool)
+void HSSTextBlock::accept(HSSAbstractVisitor* visitor, bool)
 {
     visitor->visit(*this);
 }

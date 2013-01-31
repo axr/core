@@ -51,27 +51,56 @@
 #include "HSSLinearGradient.h"
 #include "HSSRadialGradient.h"
 #include "HSSRenderer.h"
-#include "HSSRgb.h"
 #include "HSSRoundedRect.h"
+#include "HSSShape.h"
 #include "HSSTextBlock.h"
 #include <QPainter>
 
-#ifndef QT_NO_DEBUG
-#define IFAXRDEBUG(OPERATION) OPERATION
-#else
-#define IFAXRDEBUG(OPERATION)
-#endif
-
 using namespace AXR;
 
-HSSRenderer::HSSRenderer()
-: _globalAntialiasingEnabled(true), _repaintAll(true), rootSurface(NULL)
+class HSSRenderer::Private
 {
+public:
+    Private() : canvas(), canvasPainter(), globalAntialiasingEnabled(true),
+    repaintAll(true), document(), rootSurface(), rootSurfaceFinal(),
+    dirtyRect(), bounds(), hasOutputBoundsRect(), outputBoundsRect(),
+    outputBoundsObject(), hasOutputBoundsObject()
+    {
+    }
+
+    QImage *canvas;
+    QPainter *canvasPainter;
+    bool globalAntialiasingEnabled;
+    bool repaintAll;
+    AXRDocument *document;
+    QImage *rootSurface;
+    QImage rootSurfaceFinal;
+    HSSRect dirtyRect;
+    HSSRect bounds;
+    bool hasOutputBoundsRect;
+    QRect *outputBoundsRect;
+    QSharedPointer<HSSDisplayObject> outputBoundsObject;
+    bool hasOutputBoundsObject;
+};
+
+HSSRenderer::HSSRenderer()
+: d(new Private)
+{
+}
+
+HSSRenderer::~HSSRenderer()
+{
+    delete d;
+}
+
+void HSSRenderer::setDirtyRect(const HSSRect &dirtyRect)
+{
+    d->dirtyRect = dirtyRect;
 }
 
 void HSSRenderer::setDocument(AXRDocument* document)
 {
-    _document = document;
+    d->document = document;
 }
 
 void HSSRenderer::visit(HSSContainer &container)
@@ -80,7 +109,7 @@ void HSSRenderer::visit(HSSContainer &container)
     {
         performLayoutSteps(container);
 
-        if (container._isDirty || _repaintAll)
+        if (container._isDirty || d->repaintAll)
         {
             axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("HSSRenderer: redrawing contents of %1 with x: %2 and y: %3").arg(container.elementName).arg(container.x).arg(container.y));
 
@@ -105,8 +134,7 @@ void HSSRenderer::visit(HSSTextBlock &textBlock)
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRenderer: drawing " + textBlock.elementName);
         performLayoutSteps(textBlock);
 
-
-        if (textBlock._isDirty || _repaintAll)
+        if (textBlock._isDirty || d->repaintAll)
         {
             axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("HSSRenderer: redrawing contents of %1 with x: %2 and y: %3").arg(textBlock.elementName).arg(textBlock.x).arg(textBlock.y));
             textBlock._isDirty = false;
@@ -121,8 +149,8 @@ void HSSRenderer::visit(HSSTextBlock &textBlock)
 
 void HSSRenderer::drawBorders(HSSContainer &container)
 {
-    if (_globalAntialiasingEnabled)
-        _canvasPainter->setRenderHint(QPainter::Antialiasing);
+    if (d->globalAntialiasingEnabled)
+        d->canvasPainter->setRenderHint(QPainter::Antialiasing);
 
     // Calculate the combined thickness of all borders
     HSSUnit combinedThickness = 0;
@@ -153,13 +181,17 @@ void HSSRenderer::drawBorders(HSSContainer &container)
         HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
 
         QPainterPath path;
-        if(isRoundedRect){
+        if (isRoundedRect)
+        {
             QSharedPointer<HSSRoundedRect> roundedRect = qSharedPointerCast<HSSRoundedRect>(container.shape);
             roundedRect->createRoundedRect(path, container.globalX + container.borderBleeding + offset, container.globalY + container.borderBleeding + offset, container.width - offset * 2, container.height - offset * 2, -offset*2);
-        } else {
+        }
+        else
+        {
             container.shape->createPath(path, container.globalX + container.borderBleeding + offset, container.globalY + container.borderBleeding + offset, container.width - offset * 2, container.height - offset * 2);
         }
-        theBorder->draw(*_canvasPainter, path);
+
+        theBorder->draw(*d->canvasPainter, path);
 
         cumulativeThickness += theSize;
     }
@@ -167,8 +199,8 @@ void HSSRenderer::drawBorders(HSSContainer &container)
 
 void HSSRenderer::drawBackground(HSSContainer &container)
 {
-    if (_globalAntialiasingEnabled)
-        _canvasPainter->setRenderHint(QPainter::Antialiasing);
+    if (d->globalAntialiasingEnabled)
+        d->canvasPainter->setRenderHint(QPainter::Antialiasing);
 
     QPainterPath path;
 
@@ -192,22 +224,28 @@ void HSSRenderer::drawBackground(HSSContainer &container)
                     a = color->getAlpha();
                 }
 
-                _canvasPainter->fillPath(path, QColor(r, g, b, a));
+                d->canvasPainter->fillPath(path, QColor(r, g, b, a));
 
                 break;
             }
 
             case HSSObjectTypeGradient:
             {
-                if (theobj->isA(HSSGradientTypeLinear)){
+                if (theobj->isA(HSSGradientTypeLinear))
+                {
                     QSharedPointer<HSSLinearGradient> grad = qSharedPointerCast<HSSLinearGradient > (theobj);
-                    grad->draw(*_canvasPainter, path);
-                } else if (theobj->isA(HSSGradientTypeRadial)){
+                    grad->draw(*d->canvasPainter, path);
+                }
+                else if (theobj->isA(HSSGradientTypeRadial))
+                {
                     QSharedPointer<HSSRadialGradient> grad = qSharedPointerCast<HSSRadialGradient > (theobj);
-                    grad->draw(*_canvasPainter, path);
-                } else {
+                    grad->draw(*d->canvasPainter, path);
+                }
+                else
+                {
                     AXRError("HSSRenderer", "Unknown gradient type.").raise();
                 }
+
                 break;
             }
 
@@ -219,8 +257,8 @@ void HSSRenderer::drawBackground(HSSContainer &container)
 
 void HSSRenderer::drawForeground(HSSTextBlock& textBlock)
 {
-    if (_globalAntialiasingEnabled)
-        _canvasPainter->setRenderHint(QPainter::TextAntialiasing);
+    if (d->globalAntialiasingEnabled)
+        d->canvasPainter->setRenderHint(QPainter::TextAntialiasing);
 
     QSharedPointer<HSSFont> theFont;
     if (textBlock.font.size() > 0)
@@ -237,9 +275,9 @@ void HSSRenderer::drawForeground(HSSTextBlock& textBlock)
         pen.setColor(QColor(0, 0, 0));
     }
 
-    _canvasPainter->setPen(pen);
+    d->canvasPainter->setPen(pen);
 
-    _canvasPainter->setFont(textBlock.getFont());
+    d->canvasPainter->setFont(textBlock.getFont());
     Qt::Alignment flags = 0;
     switch (textBlock.textAlign)
     {
@@ -258,10 +296,11 @@ void HSSRenderer::drawForeground(HSSTextBlock& textBlock)
         default:
             break;
     }
-    _canvasPainter->drawText(QRectF(textBlock.globalX, textBlock.globalY, textBlock.width, textBlock.height), textBlock.getText(), QTextOption(flags));
 
-    if (_globalAntialiasingEnabled)
-        _canvasPainter->setRenderHint(QPainter::Antialiasing);
+    d->canvasPainter->drawText(QRectF(textBlock.globalX, textBlock.globalY, textBlock.width, textBlock.height), textBlock.getText(), QTextOption(flags));
+
+    if (d->globalAntialiasingEnabled)
+        d->canvasPainter->setRenderHint(QPainter::Antialiasing);
 }
 
 void HSSRenderer::performLayoutSteps(HSSDisplayObject &displayObject)
@@ -271,7 +310,8 @@ void HSSRenderer::performLayoutSteps(HSSDisplayObject &displayObject)
     if (document->showLayoutSteps())
     {
         document->nextLayoutTick();
-        if (document->layoutChildDone()) return;
+        if (document->layoutChildDone())
+            return;
     }
 }
 
@@ -279,43 +319,44 @@ void HSSRenderer::initializeVisit()
 {
     axr_log(AXR_DEBUG_CH_EVENTS_SPECIFIC, "INITIALIZE_RENDER");
     //prepare values
-    QSharedPointer<HSSContainer> root = _document->getController()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->getController()->getRoot();
 
     if (root)
     {
-        if (!_globalAntialiasingEnabled)
-            _canvasPainter->setRenderHint(QPainter::NonCosmeticDefaultPen);
+        if (!d->globalAntialiasingEnabled)
+            d->canvasPainter->setRenderHint(QPainter::NonCosmeticDefaultPen);
         ///@todo find out what objects lie in that rect
 
         // If the window size has changed, make new size
-        HSSUnit windowWidth = _document->getWindowWidth();
-        HSSUnit windowHeight = _document->getWindowHeight();
-        if (_bounds.size.width != windowWidth || _bounds.size.height != windowHeight)
+        HSSUnit windowWidth = d->document->getWindowWidth();
+        HSSUnit windowHeight = d->document->getWindowHeight();
+        if (d->bounds.size.width != windowWidth || d->bounds.size.height != windowHeight)
         {
-            axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("HSSVisitorManager: window size changed, setting to width: %1 and height: %2").arg((int)_bounds.size.width).arg((int)_bounds.size.height));
+            axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("HSSVisitorManager: window size changed, setting to width: %1 and height: %2").arg((int)d->bounds.size.width).arg((int)d->bounds.size.height));
 
-            _bounds.size.width = windowWidth;
-            _bounds.size.height = windowHeight;
+            d->bounds.size.width = windowWidth;
+            d->bounds.size.height = windowHeight;
             regeneratePainter(windowWidth, windowHeight);
 
-            _repaintAll = true;
+            d->repaintAll = true;
             root->setNeedsRereadRules(true);
         }
-        _canvas->fill(Qt::white);
+
+        d->canvas->fill(Qt::white);
         //draw the elements
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSVisitorManager: reading object definitions");
         root->recursiveReadDefinitionObjects();
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSVisitorManager: laying out elements on page");
         root->recursiveLayout();
-        if (_document->showLayoutSteps())
+        if (d->document->showLayoutSteps())
         {
-            _document->resetLayoutTicks();
+            d->document->resetLayoutTicks();
         }
 
         axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSVisitorManager: regenerating surfaces");
         //regenerateRootSurface();
         axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSVisitorManager: drawing tree");
-        _document->nextLayoutChild();
+        d->document->nextLayoutChild();
     }
     else
     {
@@ -325,8 +366,8 @@ void HSSRenderer::initializeVisit()
 
 void HSSRenderer::setOutputBoundsToObject(QSharedPointer<HSSDisplayObject> outputBoundsObject)
 {
-    _hasOutputBoundsObject = true;
-    _outputBoundsObject = outputBoundsObject;
+    d->hasOutputBoundsObject = true;
+    d->outputBoundsObject = outputBoundsObject;
 }
 
 void HSSRenderer::finalizeVisit()
@@ -336,41 +377,37 @@ void HSSRenderer::finalizeVisit()
 
 void HSSRenderer::reset()
 {
-    _bounds.size.width = 0;
-    _bounds.size.height = 0;
+    d->bounds.size.width = 0;
+    d->bounds.size.height = 0;
 }
 
-bool HSSRenderer::globalAntialiasingEnabled() const
+bool HSSRenderer::isGlobalAntialiasingEnabled() const
 {
-    return this->_globalAntialiasingEnabled;
-}
-
-bool HSSRenderer::getGlobalAntialiasingEnabled()
-{
-    return _globalAntialiasingEnabled;
+    return d->globalAntialiasingEnabled;
 }
 
 void HSSRenderer::setGlobalAntialiasingEnabled(bool enable)
 {
-    if (this->_globalAntialiasingEnabled != enable)
+    if (d->globalAntialiasingEnabled != enable)
     {
-        this->_globalAntialiasingEnabled = enable;
-        this->_repaintAll = true;
+        d->globalAntialiasingEnabled = enable;
+        d->repaintAll = true;
     }
 }
 
 void HSSRenderer::regeneratePainter(int width, int height)
 {
-    if (_canvasPainter)
-        delete _canvasPainter;
-    if (_canvas)
-        delete _canvas;
+    if (d->canvasPainter)
+        delete d->canvasPainter;
 
-    _canvas = new QImage(width, height, QImage::Format_ARGB32_Premultiplied);
-    _canvasPainter = new QPainter(_canvas);
+    if (d->canvas)
+        delete d->canvas;
+
+    d->canvas = new QImage(width, height, QImage::Format_ARGB32_Premultiplied);
+    d->canvasPainter = new QPainter(d->canvas);
 }
 
 QImage* HSSRenderer::getFinalFrame()
 {
-    return _canvas;
+    return d->canvas;
 }

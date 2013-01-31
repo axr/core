@@ -131,7 +131,7 @@ namespace AXR
          */
         void setController(QSharedPointer<AXRController> controller);
         /**
-         *  Getter for shared pointer to the HSSVisitorManager which is the dispatcher for all IHSSVisitors.
+         *  Getter for shared pointer to the HSSVisitorManager which is the dispatcher for all HSSAbstractVisitors.
          *  @return A shared pointer to the HSSVisitorManager
          */
         QSharedPointer<HSSVisitorManager> getVisitorManager();

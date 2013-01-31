@@ -54,7 +54,7 @@ class QPainterPath;
 
 namespace AXR
 {
-    class IHSSVisitor;
+    class HSSAbstractVisitor;
     class HSSBorder;
     class HSSContainer;
     class HSSFlag;
@@ -206,7 +206,7 @@ namespace AXR
 
         void setDirty(bool value);
         bool isDirty();
-        virtual void accept(IHSSVisitor* visitor, bool traverse);
+        virtual void accept(HSSAbstractVisitor* visitor, bool traverse);
 
         void setNeedsLayout(bool value);
         bool needsLayout() const;

@@ -41,56 +41,36 @@
  *
  ********************************************************************/
 
-#ifndef HSSRENDERER_H
-#define HSSRENDERER_H
-
 #include "HSSAbstractVisitor.h"
-#include "HSSUnits.h"
 
-template <class T> class QSharedPointer;
+using namespace AXR;
 
-namespace AXR
+class HSSAbstractVisitor::Private
 {
-    class AXRDocument;
-
-    class AXR_API HSSRenderer : public HSSAbstractVisitor
+public:
+    Private() : filterFlags(VisitorFilterAll)
     {
-    public:
-        HSSRenderer();
-        virtual ~HSSRenderer();
+    }
 
-        virtual void initializeVisit();
-        virtual void visit(HSSContainer &container);
-        virtual void visit(HSSTextBlock &textBlock);
-        virtual void finalizeVisit();
-        virtual void reset();
+    VisitorFilterFlags filterFlags;
+};
 
-        QImage* getFinalFrame();
-
-        void setDirtyRect(const HSSRect &dirtyRect);
-
-        void setDocument(AXRDocument* document);
-
-        bool isGlobalAntialiasingEnabled() const;
-        void setGlobalAntialiasingEnabled(bool enable);
-
-        void setOutputBoundsToObject(QSharedPointer<HSSDisplayObject> outputBoundsObject);
-
-    private:
-        void regeneratePainter(int width, int height);
-
-        void performLayoutSteps(HSSDisplayObject &displayObject);
-
-        void drawBackground(HSSContainer &container);
-
-        void drawBorders(HSSContainer &container);
-
-        void drawForeground(HSSContainer &container);
-        void drawForeground(HSSTextBlock &textBlock);
-
-        class Private;
-        Private *d;
-    };
+HSSAbstractVisitor::HSSAbstractVisitor()
+: d(new Private)
+{
 }
 
-#endif // HSSRENDERER_H
+HSSAbstractVisitor::~HSSAbstractVisitor()
+{
+    delete d;
+}
+
+HSSAbstractVisitor::VisitorFilterFlags HSSAbstractVisitor::getFilterFlags() const
+{
+    return d->filterFlags;
+}
+
+void HSSAbstractVisitor::setFilterFlags(VisitorFilterFlags filterFlags)
+{
+    d->filterFlags = static_cast<VisitorFilterFlags>(HSSAbstractVisitor::VisitorFilterAll | filterFlags);
+}

@@ -44,18 +44,15 @@
 #ifndef HSSRenderTreeBuilder_H
 #define HSSRenderTreeBuilder_H
 
-#include "IHSSVisitor.h"
-#include <stack>
-#include <QSharedPointer>
-#include <QXmlStreamWriter>
+#include "HSSAbstractVisitor.h"
 
 namespace AXR
 {
-    class HSSRenderTreeBuilder : public IHSSVisitor
+    class HSSRenderTreeBuilder : public HSSAbstractVisitor
     {
     public:
         HSSRenderTreeBuilder();
-        HSSRenderTreeBuilder(AXRString outputFile);
+        HSSRenderTreeBuilder(const AXRString &outputFile);
         virtual ~HSSRenderTreeBuilder();
 
         void setOutputFile(AXRString outputFile);
@@ -70,15 +67,12 @@ namespace AXR
         virtual void visit(HSSTextBlock &textBlock);
         virtual void finalizeVisit();
         virtual void reset();
+
     private:
-        AXRString _outputFile;
-        HSSDisplayObject* _previousObject = NULL;
-        std::stack<HSSDisplayObject*> _parentStack;
-        AXRString _renderTreeString = "";
-        QXmlStreamWriter* _streamWriter;
-        AXRString _depthString = "";
-        int _depth = 0;
         void addTextForObject(HSSDisplayObject &displayObject);
+
+        class Private;
+        Private *d;
     };
 }
 

@@ -40,49 +40,71 @@
  *      FITNESS FOR A PARTICULAR PURPOSE.
  *
  ********************************************************************/
-#include "HSSRenderTreeBuilder.h"
-#include "HSSDisplayObject.h"
-#include "HSSTextBlock.h"
+
 #include "HSSContainer.h"
-#include "AXRDebugging.h"
+#include "HSSRenderTreeBuilder.h"
+#include "HSSTextBlock.h"
+#include <stack>
 #include <QFile>
-#include <QTextStream>
 #include <QImage>
 #include <QPainter>
+#include <QTextStream>
 #include <QXmlStreamWriter>
 
 using namespace AXR;
 
-HSSRenderTreeBuilder::HSSRenderTreeBuilder()
+class HSSRenderTreeBuilder::Private
 {
-    _streamWriter = new QXmlStreamWriter(&_renderTreeString);
-    _streamWriter->setAutoFormatting(true);
+public:
+    Private() : outputFile(), previousObject(), parentStack(), renderTreeString(), streamWriter(), depthString(), depth()
+    {
+        streamWriter = new QXmlStreamWriter(&renderTreeString);
+        streamWriter->setAutoFormatting(true);
+    }
+
+    ~Private()
+    {
+        delete streamWriter;
+    }
+
+    AXRString outputFile;
+    HSSDisplayObject *previousObject;
+    std::stack<HSSDisplayObject*> parentStack;
+    AXRString renderTreeString;
+    QXmlStreamWriter* streamWriter;
+    AXRString depthString;
+    int depth;
+};
+
+HSSRenderTreeBuilder::HSSRenderTreeBuilder()
+: d(new Private)
+{
 }
 
-HSSRenderTreeBuilder::HSSRenderTreeBuilder(AXRString outputFile) : _outputFile(outputFile)
+HSSRenderTreeBuilder::HSSRenderTreeBuilder(const AXRString &outputFile)
+: d(new Private)
 {
-    _streamWriter = new QXmlStreamWriter(&_renderTreeString);
-    _streamWriter->setAutoFormatting(true);
+    d->outputFile = outputFile;
 }
 
 HSSRenderTreeBuilder::~HSSRenderTreeBuilder()
 {
-    delete _streamWriter;
+    delete d;
+}
+
+AXRString HSSRenderTreeBuilder::getOutputFile()
+{
+    return d->outputFile;
 }
 
 void HSSRenderTreeBuilder::setOutputFile(AXRString outputFile)
 {
-    _outputFile = outputFile;
-}
-AXRString HSSRenderTreeBuilder::getOutputFile()
-{
-    return _outputFile;
+    d->outputFile = outputFile;
 }
 
 QImage HSSRenderTreeBuilder::getResultAsImage(int width, int height)
 {
-
-    QImage image = QImage(width, height, QImage::Format_ARGB32_Premultiplied);
+    QImage image(width, height, QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::white);
     QPainter painter(&image);
     QPen pen;
@@ -91,28 +113,27 @@ QImage HSSRenderTreeBuilder::getResultAsImage(int width, int height)
 
     //painter.setFont(textBlock.getFont());
 
-    painter.drawText(QRectF(0, 0, width, height), _renderTreeString, QTextOption(Qt::AlignLeft));
+    painter.drawText(QRectF(0, 0, width, height), d->renderTreeString, QTextOption(Qt::AlignLeft));
     return image;
 }
+
 AXRString HSSRenderTreeBuilder::getResultAsString()
 {
-    return _renderTreeString;
+    return d->renderTreeString;
 }
 
 void HSSRenderTreeBuilder::initializeVisit()
 {
-    _renderTreeString = "";
-    _depthString ="";
-    _depth = 0;
-    _streamWriter->writeStartDocument();
+    d->renderTreeString = AXRString();
+    d->depthString = AXRString();
+    d->depth = 0;
+    d->streamWriter->writeStartDocument();
 }
-
 
 void HSSRenderTreeBuilder::visit(HSSContainer &container)
 {
     addTextForObject(container);
 }
-
 
 void HSSRenderTreeBuilder::visit(HSSTextBlock &textBlock)
 {
@@ -129,66 +150,69 @@ void HSSRenderTreeBuilder::addTextForObject(HSSDisplayObject &displayObject)
         else if (displayObject.isA(HSSObjectTypeTextBlock))
             name = "textblock";
     }
-    //open element
-    _streamWriter->writeStartElement(name);
+
+    // open element
+    d->streamWriter->writeStartElement(name);
 
     if (displayObject.isA(HSSObjectTypeContainer))
     {
         HSSContainer* asContainer = (HSSContainer*)&displayObject;
         if (asContainer->getChildren(true)->size() > 0)
         {
-            //keep element open
-            _parentStack.push(&displayObject);
+            // keep element open
+            d->parentStack.push(&displayObject);
         }
         else
         {
-            //otherwise close it
-            _streamWriter->writeEndElement();
+            // otherwise close it
+            d->streamWriter->writeEndElement();
         }
     }
     else
     {
-        //not a container so close the element
-        _streamWriter->writeEndElement();
+        // not a container so close the element
+        d->streamWriter->writeEndElement();
     }
 
     HSSDisplayObject* currentDisplayObject = &displayObject;
-    while (!_parentStack.empty())
+    while (!d->parentStack.empty())
     {
-        HSSContainer* topAsContainer = (HSSContainer*)_parentStack.top();
+        HSSContainer* topAsContainer = (HSSContainer*)d->parentStack.top();
         HSSDisplayObject* lastChild = &*topAsContainer->getChildren(true)->back();
 
         if (currentDisplayObject == lastChild)
         {
-            _streamWriter->writeEndElement();
-            _parentStack.pop();
+            d->streamWriter->writeEndElement();
+            d->parentStack.pop();
             currentDisplayObject = (HSSDisplayObject*)topAsContainer;
         }
-        else break;
+        else
+            break;
     }
+
     //_previousObject = &displayObject;
 }
 
-
 void HSSRenderTreeBuilder::finalizeVisit()
 {
-    _streamWriter->writeEndDocument();
-    while (!_parentStack.empty())
+    d->streamWriter->writeEndDocument();
+    while (!d->parentStack.empty())
     {
-        _parentStack.pop();
+        d->parentStack.pop();
     }
-    if (!_outputFile.isEmpty())
+
+    if (!d->outputFile.isEmpty())
     {
-        QFile file(_outputFile);
-        file.open(QIODevice::WriteOnly | QIODevice::Text);
-        QTextStream out(&file);
-        out << _renderTreeString;
-        file.close();
+        QFile file(d->outputFile);
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            QTextStream out(&file);
+            out << d->renderTreeString;
+        }
     }
 }
 
-
 void HSSRenderTreeBuilder::reset()
 {
-    _renderTreeString = "";
+    d->renderTreeString = AXRString();
 }

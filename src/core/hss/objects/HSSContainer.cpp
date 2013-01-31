@@ -47,7 +47,7 @@
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
 #include "AXRWarning.h"
-#include "IHSSVisitor.h"
+#include "HSSAbstractVisitor.h"
 #include "HSSBorder.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
@@ -455,7 +455,7 @@ void HSSContainer::recursiveRegenerateSurfaces(bool force)
     }
 }
 
-void HSSContainer::accept(IHSSVisitor* visitor, bool traverse)
+void HSSContainer::accept(HSSAbstractVisitor* visitor, bool traverse)
 {
     visitor->visit(*this);
 

@@ -135,7 +135,7 @@ void QAXRWidget::paintEvent(QPaintEvent *e)
     {
         // Render the final image to the screen
         d->renderVisitor->setDirtyRect(rect());
-        visitorManager->runVisitors(IHSSVisitor::FLAG_All);
+        visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);
 
         QImage* finalFrame = d->renderVisitor->getFinalFrame();
         if (finalFrame)

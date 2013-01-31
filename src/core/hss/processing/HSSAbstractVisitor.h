@@ -41,54 +41,54 @@
  *
  ********************************************************************/
 
-#ifndef IHSSVISITOR_H
-#define IHSSVISITOR_H
+#ifndef HSSABSTRACTVISITOR_H
+#define HSSABSTRACTVISITOR_H
+
 #include "AXRGlobal.h"
-#include <vector>
 
 namespace AXR
 {
-
     class HSSContainer;
     class HSSDisplayObject;
     class HSSTextBlock;
 
-    class AXR_API IHSSVisitor
+    class AXR_API HSSAbstractVisitor
     {
     public:
-        typedef enum VisitorFilterFlags {
-            FLAG_All             = 0x01,
-            FLAG_Skip            = 0x02,
-            FLAG_Rendering       = 0x04,
-            FLAG_Diagnostic      = 0x08,
-            FLAG_Custom_1        = 0x10,
-            FLAG_Custom_2        = 0x20,
-            FLAG_Custom_3        = 0x40,
-            FLAG_Custom_4        = 0x80
-        } VisitorFilterFlags;
-
-        IHSSVisitor() : _filterFlags(FLAG_All){};
-
-        int getFilterFlags(){ return _filterFlags; }
-        void setFilterFlags(VisitorFilterFlags filterFlags)
+        enum VisitorFilterFlags
         {
-            _filterFlags = FLAG_All | filterFlags;
-        }
+            VisitorFilterNone = 0,
+            VisitorFilterAll = 0x01,
+            VisitorFilterSkip = 0x02,
+            VisitorFilterRendering = 0x04,
+            VisitorFilterDiagnostic = 0x08,
 
+            // Custom flags use the highest bits of a 16-bit
+            // integer, the minimum size required by the C++
+            // standard for an int type; this way we can add
+            // new flags without moving custom ones
+            VisitorFilterCustom1 = 0x1000,
+            VisitorFilterCustom2 = 0x2000,
+            VisitorFilterCustom3 = 0x4000,
+            VisitorFilterCustom4 = 0x8000
+        };
+
+        HSSAbstractVisitor();
+        virtual ~HSSAbstractVisitor();
+
+        VisitorFilterFlags getFilterFlags() const;
+        void setFilterFlags(VisitorFilterFlags filterFlags);
 
         virtual void initializeVisit() = 0;
         virtual void visit(HSSContainer &container) = 0;
         virtual void visit(HSSTextBlock &textBlock) = 0;
         virtual void finalizeVisit() = 0;
         virtual void reset() = 0;
-        virtual ~IHSSVisitor(){}
-
-        typedef std::vector<IHSSVisitor*>::iterator iterator;
 
     private:
-        int _filterFlags;
-
+        class Private;
+        Private *d;
     };
 }
 
-#endif // defined(IHSSVISITOR_H)
+#endif // HSSABSTRACTVISITOR_H

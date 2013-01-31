@@ -79,7 +79,7 @@ namespace AXR
         virtual AXRString toString();
         virtual void setDefaults();
         virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
-        virtual void accept(IHSSVisitor* visitor, bool);
+        virtual void accept(HSSAbstractVisitor* visitor, bool);
         virtual void layout();
 
         //transform
