@@ -43,9 +43,6 @@
 
 #include <cmath>
 #include <QVariant>
-#include <QImage>
-#include <QPainter>
-#include <QPainterPath>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
@@ -95,9 +92,6 @@ void HSSDisplayObject::initialize()
     this->_needsRereadRules = true;
     this->_needsSurface = true;
     this->_needsLayout = true;
-    this->backgroundSurface = new QImage();
-    this->foregroundSurface = new QImage();
-    this->bordersSurface = new QImage();
     this->_debugName = "unnamed";
 
     this->x = this->y
@@ -239,10 +233,6 @@ HSSDisplayObject::~HSSDisplayObject()
     {
         this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
     }
-
-    delete this->backgroundSurface;
-    delete this->foregroundSurface;
-    delete this->bordersSurface;
 }
 
 AXRString HSSDisplayObject::toString()
@@ -778,44 +768,6 @@ bool HSSDisplayObject::needsRereadRules()
 void HSSDisplayObject::recursiveReadDefinitionObjects()
 {
     this->readDefinitionObjects();
-}
-
-void HSSDisplayObject::regenerateSurfaces(bool force)
-{
-    if (force || this->_needsSurface)
-    {
-        delete this->backgroundSurface;
-        this->backgroundSurface = new QImage(ceil(this->width), ceil(this->height), QImage::Format_ARGB32_Premultiplied);
-        this->backgroundSurface->fill(Qt::transparent);
-
-        delete this->foregroundSurface;
-        this->foregroundSurface = new QImage(ceil(this->width), ceil(this->height), QImage::Format_ARGB32_Premultiplied);
-        this->foregroundSurface->fill(Qt::transparent);
-
-        if (this->border.size() > 0)
-        {
-            // Get the sum of all sizes
-            this->borderBleeding = 0;
-            for (HSSBorder::it it = this->border.begin(); it != this->border.end(); ++it)
-            {
-                this->borderBleeding += (*it)->getSize();
-            }
-
-            delete this->bordersSurface;
-            this->bordersSurface = new QImage(ceil(this->width + this->borderBleeding + this->borderBleeding), ceil(this->height + this->borderBleeding + this->borderBleeding), QImage::Format_ARGB32_Premultiplied);
-            this->bordersSurface->fill(Qt::transparent);
-        }
-
-        this->setDirty(true);
-        this->_needsSurface = false;
-
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("HSSDisplayObject: created a new surface width:%1 height:%2").arg(this->width).arg(this->height));
-    }
-}
-
-void HSSDisplayObject::recursiveRegenerateSurfaces(bool force)
-{
-    this->regenerateSurfaces(force);
 }
 
 void HSSDisplayObject::setNeedsSurface(bool value)

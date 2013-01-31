@@ -43,9 +43,7 @@
 
 #include <limits>
 #include <QFont>
-#include <QImage>
-#include <QPainter>
-#include <QPen>
+#include <QFontMetrics>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"

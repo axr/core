@@ -203,11 +203,6 @@ namespace AXR
         virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
-         *  Propagates the regenerateSurfaces() call to all the children.
-         */
-        void recursiveRegenerateSurfaces(bool force = false);
-
-        /**
          *  Accepts a visitor to traverse and process the HSSObject tree.
          */
         virtual void accept(HSSAbstractVisitor* visitor, bool traverse);

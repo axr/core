@@ -42,7 +42,6 @@
  ********************************************************************/
 
 #include <cmath>
-#include <QPainter>
 #include "AXRController.h"
 #include "AXRDebugging.h"
 #include "AXRDocument.h"
@@ -442,16 +441,6 @@ void HSSContainer::recursiveReadDefinitionObjects()
     for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
     {
         (*it)->recursiveReadDefinitionObjects();
-    }
-}
-
-void HSSContainer::recursiveRegenerateSurfaces(bool force)
-{
-    this->regenerateSurfaces(force);
-
-    for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
-    {
-        (*it)->recursiveRegenerateSurfaces(force);
     }
 }
 

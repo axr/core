@@ -47,9 +47,6 @@
 #include <QSharedPointer>
 #include "HSSObject.h"
 
-class QPainter;
-class QPainterPath;
-
 namespace AXR
 {
     class HSSRgb;

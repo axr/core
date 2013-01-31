@@ -46,8 +46,6 @@
  */
 
 #include <cmath>
-#include <QLinearGradient>
-#include <QPainter>
 #include <QVariant>
 #include "AXRDebugging.h"
 #include "AXRWarning.h"

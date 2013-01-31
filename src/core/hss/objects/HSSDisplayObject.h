@@ -48,10 +48,6 @@
 #include <QSharedPointer>
 #include "HSSObject.h"
 
-class QImage;
-class QPainter;
-class QPainterPath;
-
 namespace AXR
 {
     class HSSAbstractVisitor;
@@ -197,9 +193,6 @@ namespace AXR
         virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
         void setNeedsRereadRules(bool value);
         bool needsRereadRules();
-
-        virtual void regenerateSurfaces(bool force = false);
-        virtual void recursiveRegenerateSurfaces(bool force = false);
 
         void setNeedsSurface(bool value);
         bool needsSurface();
