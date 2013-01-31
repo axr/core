@@ -58,7 +58,7 @@ namespace AXR
     class AXR_API HSSLinearGradient : public HSSGradient
     {
         friend class HSSRenderer;
-        
+
     public:
         /**
          *  Creates a new instance of a

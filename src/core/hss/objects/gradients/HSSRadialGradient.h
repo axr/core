@@ -58,7 +58,7 @@ namespace AXR
     class AXR_API HSSRadialGradient : public HSSGradient
     {
         friend class HSSRenderer;
-        
+
     public:
         typedef QSharedPointer<HSSRadialGradient> p;
 
