@@ -221,16 +221,7 @@ void HSSRenderer::drawBackground(HSSContainer &container)
             {
                 QSharedPointer<HSSRgb> color = qSharedPointerCast<HSSRgb > (theobj);
 
-                HSSUnit r = 0., g = 0., b = 0., a = 0;
-                if (color)
-                {
-                    r = color->getRed();
-                    g = color->getGreen();
-                    b = color->getBlue();
-                    a = color->getAlpha();
-                }
-
-                d->canvasPainter->fillPath(path, QColor(r, g, b, a));
+                d->canvasPainter->fillPath(path, color ? color->toQColor() : QColor(0, 0, 0, 0));
 
                 break;
             }
@@ -377,7 +368,7 @@ void HSSRenderer::drawLinearGradient(HSSLinearGradient &gradient, const QPainter
         {
             AXRWarning("HSSLinearGradient", "The color stop had no color defined").raise();
         }
-        
+
     }
     
     if (gradient.endColor)
