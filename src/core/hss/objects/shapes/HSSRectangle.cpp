@@ -140,7 +140,7 @@ void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit 
     }
 }
 
-void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding)
+void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     //sort borders in three groups
     std::vector<QSharedPointer<HSSBorder> > centered, inside, outside;
@@ -264,8 +264,8 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
                             HSSUnit topOffset = (topThickness / 2) - topCumulative - (theSize / 2) + topCorrection;
                             HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
 
-                            path.moveTo(borderBleeding+leftOffset, borderBleeding+topOffset);
-                            path.lineTo(borderBleeding+width-rightOffset, borderBleeding+topOffset);
+                            path.moveTo(offsetX+leftOffset, offsetY+topOffset);
+                            path.lineTo(offsetX+width-rightOffset, offsetY+topOffset);
                             topCumulative += theSize;
                         }
                         else if (theValue == "right")
@@ -274,8 +274,8 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
                             HSSUnit rightOffset = (rightThickness / 2) - rightCumulative - (theSize / 2) + rightCorrection;
                             HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
 
-                            path.moveTo(borderBleeding+width-rightOffset, borderBleeding+topOffset);
-                            path.lineTo(borderBleeding+width-rightOffset, borderBleeding+height-bottomOffset);
+                            path.moveTo(offsetX+width-rightOffset, offsetY+topOffset);
+                            path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
                             rightCumulative += theSize;
                         }
                         else if (theValue == "bottom")
@@ -284,8 +284,8 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
                             HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
                             HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative - (theSize / 2) + bottomCorrection;
 
-                            path.moveTo(borderBleeding+width-rightOffset, borderBleeding+height-bottomOffset);
-                            path.lineTo(borderBleeding+leftOffset, borderBleeding+height-bottomOffset);
+                            path.moveTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+                            path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
                             bottomCumulative += theSize;
                         }
                         else if(theValue == "left")
@@ -294,8 +294,8 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
                             HSSUnit topOffset = (topThickness / 2) - topCumulative + topCorrection;
                             HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
 
-                            path.moveTo(borderBleeding+leftOffset, borderBleeding+height-bottomOffset);
-                            path.lineTo(borderBleeding+leftOffset, borderBleeding+topOffset);
+                            path.moveTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+                            path.lineTo(offsetX+leftOffset, offsetY+topOffset);
                             leftCumulative += theSize;
                         }
                         break;
@@ -311,7 +311,7 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
             HSSUnit rightOffset = (rightThickness / 2) - rightCumulative - (theSize / 2) + rightCorrection;
             HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative - (theSize / 2) + bottomCorrection;
 
-            path.addRect(borderBleeding + leftOffset, borderBleeding + topOffset, width-rightOffset-leftOffset, height-bottomOffset-topOffset);
+            path.addRect(offsetX + leftOffset, offsetY + topOffset, width-rightOffset-leftOffset, height-bottomOffset-topOffset);
 
             leftCumulative += theSize;
             topCumulative += theSize;
@@ -357,26 +357,26 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
                         AXRString theValue = theKw->getValue();
                         if (theValue == "top")
                         {
-                            path.moveTo(borderBleeding+leftOffset, borderBleeding+topOffset+(theSize/2));
-                            path.lineTo(borderBleeding+width-rightOffset, borderBleeding+topOffset+(theSize/2));
+                            path.moveTo(offsetX+leftOffset, offsetY+topOffset+(theSize/2));
+                            path.lineTo(offsetX+width-rightOffset, offsetY+topOffset+(theSize/2));
                             topCumulative += theSize;
                         }
                         else if (theValue == "right")
                         {
-                            path.moveTo(borderBleeding+width-rightOffset+(theSize/2), borderBleeding+topOffset);
-                            path.lineTo(borderBleeding+width-rightOffset+(theSize/2), borderBleeding+height-bottomOffset);
+                            path.moveTo(offsetX+width-rightOffset+(theSize/2), offsetY+topOffset);
+                            path.lineTo(offsetX+width-rightOffset+(theSize/2), offsetY+height-bottomOffset);
                             rightCumulative += theSize;
                         }
                         else if (theValue == "bottom")
                         {
-                            path.moveTo(borderBleeding+width-rightOffset, borderBleeding+height-(bottomOffset+(theSize/2)));
-                            path.lineTo(borderBleeding+leftOffset, borderBleeding+height-(bottomOffset+(theSize/2)));
+                            path.moveTo(offsetX+width-rightOffset, offsetY+height-(bottomOffset+(theSize/2)));
+                            path.lineTo(offsetX+leftOffset, offsetY+height-(bottomOffset+(theSize/2)));
                             bottomCumulative += theSize;
                         }
                         else if(theValue == "left")
                         {
-                            path.moveTo(borderBleeding+leftOffset+(theSize/2), borderBleeding+height-bottomOffset);
-                            path.lineTo(borderBleeding+leftOffset+(theSize/2), borderBleeding+topOffset);
+                            path.moveTo(offsetX+leftOffset+(theSize/2), offsetY+height-bottomOffset);
+                            path.lineTo(offsetX+leftOffset+(theSize/2), offsetY+topOffset);
                             leftCumulative += theSize;
                         }
                         break;
@@ -392,7 +392,7 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
             HSSUnit rightOffset = (rightThickness / 2) + rightCumulative + (theSize / 2) + rightCorrection;
             HSSUnit bottomOffset = (bottomThickness / 2) + bottomCumulative + (theSize / 2) + bottomCorrection;
 
-            path.addRect(borderBleeding + leftOffset, borderBleeding + topOffset, width-rightOffset-leftOffset, height-bottomOffset-topOffset);
+            path.addRect(offsetX + leftOffset, offsetY + topOffset, width-rightOffset-leftOffset, height-bottomOffset-topOffset);
 
             leftCumulative += theSize;
             topCumulative += theSize;
@@ -439,26 +439,26 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
                         AXRString theValue = theKw->getValue();
                         if (theValue == "top")
                         {
-                            path.moveTo(borderBleeding-leftOffset, borderBleeding-(topOffset+(theSize/2)));
-                            path.lineTo(borderBleeding+width+rightOffset, borderBleeding-(topOffset+(theSize/2)));
+                            path.moveTo(offsetX-leftOffset, offsetY-(topOffset+(theSize/2)));
+                            path.lineTo(offsetX+width+rightOffset, offsetY-(topOffset+(theSize/2)));
                             topCumulative += theSize;
                         }
                         else if (theValue == "right")
                         {
-                            path.moveTo(borderBleeding+width+(rightOffset+(theSize/2)), borderBleeding-topOffset);
-                            path.lineTo(borderBleeding+width+(rightOffset+(theSize/2)), borderBleeding+height+bottomOffset);
+                            path.moveTo(offsetX+width+(rightOffset+(theSize/2)), offsetY-topOffset);
+                            path.lineTo(offsetX+width+(rightOffset+(theSize/2)), offsetY+height+bottomOffset);
                             rightCumulative += theSize;
                         }
                         else if (theValue == "bottom")
                         {
-                            path.moveTo(borderBleeding+width+rightOffset, borderBleeding+height+(bottomOffset+(theSize/2)));
-                            path.lineTo(borderBleeding-leftOffset, borderBleeding+height+(bottomOffset+(theSize/2)));
+                            path.moveTo(offsetX+width+rightOffset, offsetY+height+(bottomOffset+(theSize/2)));
+                            path.lineTo(offsetX-leftOffset, offsetY+height+(bottomOffset+(theSize/2)));
                             bottomCumulative += theSize;
                         }
                         else if(theValue == "left")
                         {
-                            path.moveTo(borderBleeding-(leftOffset+(theSize/2)), borderBleeding+height+bottomOffset);
-                            path.lineTo(borderBleeding-(leftOffset+(theSize/2)), borderBleeding-topOffset);
+                            path.moveTo(offsetX-(leftOffset+(theSize/2)), offsetY+height+bottomOffset);
+                            path.lineTo(offsetX-(leftOffset+(theSize/2)), offsetY-topOffset);
                             leftCumulative += theSize;
                         }
                         break;
@@ -474,7 +474,7 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
             HSSUnit rightOffset = (rightThickness / 2) + rightCumulative + (theSize / 2) + rightCorrection;
             HSSUnit bottomOffset = (bottomThickness / 2) + bottomCumulative + (theSize / 2) + bottomCorrection;
 
-            path.addRect(borderBleeding - leftOffset, borderBleeding - topOffset, width+rightOffset+leftOffset, height+bottomOffset+topOffset);
+            path.addRect(offsetX - leftOffset, offsetY - topOffset, width+rightOffset+leftOffset, height+bottomOffset+topOffset);
 
             leftCumulative += theSize;
             topCumulative += theSize;

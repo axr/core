@@ -624,7 +624,7 @@ void HSSRoundedRect::createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y,
     path.closeSubpath();
 }
 
-void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding)
+void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     //sort borders in three groups
     std::vector<QSharedPointer<HSSBorder> > centered, inside, outside;
@@ -748,8 +748,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                             HSSUnit topOffset = (topThickness / 2) - topCumulative - (theSize / 2) + topCorrection;
                             HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
 
-                            path.moveTo(borderBleeding+leftOffset, borderBleeding+topOffset);
-                            path.lineTo(borderBleeding+width-rightOffset, borderBleeding+topOffset);
+                            path.moveTo(offsetX+leftOffset, offsetY+topOffset);
+                            path.lineTo(offsetX+width-rightOffset, offsetY+topOffset);
                             topCumulative += theSize;
                         }
                         else if (theValue == "right")
@@ -758,8 +758,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                             HSSUnit rightOffset = (rightThickness / 2) - rightCumulative - (theSize / 2) + rightCorrection;
                             HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
 
-                            path.moveTo(borderBleeding+width-rightOffset, borderBleeding+topOffset);
-                            path.lineTo(borderBleeding+width-rightOffset, borderBleeding+height-bottomOffset);
+                            path.moveTo(offsetX+width-rightOffset, offsetY+topOffset);
+                            path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
                             rightCumulative += theSize;
                         }
                         else if (theValue == "bottom")
@@ -768,8 +768,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                             HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
                             HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative - (theSize / 2) + bottomCorrection;
 
-                            path.moveTo(borderBleeding+width-rightOffset, borderBleeding+height-bottomOffset);
-                            path.lineTo(borderBleeding+leftOffset, borderBleeding+height-bottomOffset);
+                            path.moveTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+                            path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
                             bottomCumulative += theSize;
                         }
                         else if(theValue == "left")
@@ -778,8 +778,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                             HSSUnit topOffset = (topThickness / 2) - topCumulative + topCorrection;
                             HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
 
-                            path.moveTo(borderBleeding+leftOffset, borderBleeding+height-bottomOffset);
-                            path.lineTo(borderBleeding+leftOffset, borderBleeding+topOffset);
+                            path.moveTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+                            path.lineTo(offsetX+leftOffset, offsetY+topOffset);
                             leftCumulative += theSize;
                         }
                         break;
@@ -804,8 +804,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                     HSSUnit outerBottomOffset = (bottomThickness/2)-bottomCumulative-theSize+bottomCorrection;
                     this->createRoundedRect(
                                             outerPath,
-                                            borderBleeding+outerLeftOffset,
-                                            borderBleeding+outerTopOffset,
+                                            offsetX+outerLeftOffset,
+                                            offsetY+outerTopOffset,
                                             -outerLeftOffset+width-outerRightOffset,
                                             -outerTopOffset+height-outerBottomOffset,
                                             -outerLeftOffset*2
@@ -816,8 +816,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                     HSSUnit innerBottomOffset = (bottomThickness/2)-bottomCumulative+bottomCorrection;
                     this->createRoundedRect(
                                             innerPath,
-                                            borderBleeding+innerLeftOffset,
-                                            borderBleeding+innerTopOffset,
+                                            offsetX+innerLeftOffset,
+                                            offsetY+innerTopOffset,
                                             -innerLeftOffset+width-innerRightOffset,
                                             -innerTopOffset+height-innerBottomOffset,
                                             -innerLeftOffset*2);
@@ -875,10 +875,10 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     HSSUnit topOffset = topCumulative+topCorrection;
                                     HSSUnit rightOffset = rightCumulative+rightCorrection+(this->cornerTR*2);
 
-                                    QRectF curve1(borderBleeding+leftOffset, borderBleeding+topOffset, this->cornerTL*2, this->cornerTL*2);
-                                    QRectF curve2(borderBleeding+leftOffset, borderBleeding+topOffset+theSize, this->cornerTL*2, (this->cornerTL*2)-theSize);
-                                    QRectF curve3(borderBleeding+leftOffset+width-rightOffset-leftOffset, borderBleeding+topOffset+theSize, this->cornerTR*2, (this->cornerTR*2)-theSize);
-                                    QRectF curve4(borderBleeding+leftOffset+width-rightOffset-leftOffset, borderBleeding+topOffset, this->cornerTR*2, this->cornerTR*2);
+                                    QRectF curve1(offsetX+leftOffset, offsetY+topOffset, this->cornerTL*2, this->cornerTL*2);
+                                    QRectF curve2(offsetX+leftOffset, offsetY+topOffset+theSize, this->cornerTL*2, (this->cornerTL*2)-theSize);
+                                    QRectF curve3(offsetX+leftOffset+width-rightOffset-leftOffset, offsetY+topOffset+theSize, this->cornerTR*2, (this->cornerTR*2)-theSize);
+                                    QRectF curve4(offsetX+leftOffset+width-rightOffset-leftOffset, offsetY+topOffset, this->cornerTR*2, this->cornerTR*2);
 
                                     path.arcMoveTo(curve1, 90);
                                     path.arcTo(curve1, 90, 90);
@@ -896,10 +896,10 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     HSSUnit rightOffset = rightCumulative+rightCorrection;
                                     HSSUnit bottomOffset = bottomCumulative+bottomCorrection;
 
-                                    QRectF curve1(borderBleeding+width-rightOffset-(this->cornerTR*2), borderBleeding+topOffset, this->cornerTR*2, this->cornerTR*2);
-                                    QRectF curve2(borderBleeding+width-rightOffset-(this->cornerTR*2), borderBleeding+height-(this->cornerTR*2)-bottomOffset, this->cornerTR*2, (this->cornerTR*2));
-                                    QRectF curve3(borderBleeding+width-(this->cornerBR*2)-rightOffset, borderBleeding+height-(this->cornerBR*2)-bottomOffset, (this->cornerTR*2)-theSize, (this->cornerTR*2));
-                                    QRectF curve4(borderBleeding+width-(this->cornerTR*2)-rightOffset, borderBleeding+topOffset, (this->cornerTR*2)-theSize, this->cornerTR*2);
+                                    QRectF curve1(offsetX+width-rightOffset-(this->cornerTR*2), offsetY+topOffset, this->cornerTR*2, this->cornerTR*2);
+                                    QRectF curve2(offsetX+width-rightOffset-(this->cornerTR*2), offsetY+height-(this->cornerTR*2)-bottomOffset, this->cornerTR*2, (this->cornerTR*2));
+                                    QRectF curve3(offsetX+width-(this->cornerBR*2)-rightOffset, offsetY+height-(this->cornerBR*2)-bottomOffset, (this->cornerTR*2)-theSize, (this->cornerTR*2));
+                                    QRectF curve4(offsetX+width-(this->cornerTR*2)-rightOffset, offsetY+topOffset, (this->cornerTR*2)-theSize, this->cornerTR*2);
 
                                     path.arcMoveTo(curve1, 90);
                                     path.arcTo(curve1, 90, -90);
@@ -917,10 +917,10 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     HSSUnit bottomOffset = bottomCumulative+bottomCorrection;
                                     HSSUnit leftOffset = leftCumulative+leftCorrection;
 
-                                    QRectF curve1(borderBleeding+leftOffset, borderBleeding+height-(this->cornerBL*2)-bottomOffset, this->cornerBR*2, this->cornerBR*2);
-                                    QRectF curve2(borderBleeding+leftOffset+width-(this->cornerBR*2)-leftOffset-rightOffset, borderBleeding+height+theSize-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, (this->cornerBR*2)-theSize);
-                                    QRectF curve3(borderBleeding+leftOffset+width-(this->cornerBR*2)-leftOffset-rightOffset, borderBleeding+height-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, (this->cornerBR*2)-theSize);
-                                    QRectF curve4(borderBleeding+leftOffset, borderBleeding+height-(this->cornerBL*2)-bottomOffset, cornerBL*2, (this->cornerBL*2)-theSize);
+                                    QRectF curve1(offsetX+leftOffset, offsetY+height-(this->cornerBL*2)-bottomOffset, this->cornerBR*2, this->cornerBR*2);
+                                    QRectF curve2(offsetX+leftOffset+width-(this->cornerBR*2)-leftOffset-rightOffset, offsetY+height+theSize-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, (this->cornerBR*2)-theSize);
+                                    QRectF curve3(offsetX+leftOffset+width-(this->cornerBR*2)-leftOffset-rightOffset, offsetY+height-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, (this->cornerBR*2)-theSize);
+                                    QRectF curve4(offsetX+leftOffset, offsetY+height-(this->cornerBL*2)-bottomOffset, cornerBL*2, (this->cornerBL*2)-theSize);
 
                                     path.arcMoveTo(curve1, 180);
                                     path.arcTo(curve1, 180, 90);
@@ -938,10 +938,10 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     HSSUnit leftOffset = leftCumulative+leftCorrection;
                                     HSSUnit topOffset = topCumulative+topCorrection;
 
-                                    QRectF curve1(borderBleeding+leftOffset, borderBleeding+topOffset, this->cornerTL*2, this->cornerTL*2);
-                                    QRectF curve2(borderBleeding+leftOffset, borderBleeding+height-(this->cornerTL*2)-bottomOffset, this->cornerTL*2, (this->cornerTL*2));
-                                    QRectF curve3(borderBleeding+leftOffset+theSize, borderBleeding+height-(this->cornerBL*2)-bottomOffset, (this->cornerBL*2)-theSize, (this->cornerBL*2));
-                                    QRectF curve4(borderBleeding+leftOffset+theSize, borderBleeding+topOffset, (this->cornerTL*2)-theSize, this->cornerTL*2);
+                                    QRectF curve1(offsetX+leftOffset, offsetY+topOffset, this->cornerTL*2, this->cornerTL*2);
+                                    QRectF curve2(offsetX+leftOffset, offsetY+height-(this->cornerTL*2)-bottomOffset, this->cornerTL*2, (this->cornerTL*2));
+                                    QRectF curve3(offsetX+leftOffset+theSize, offsetY+height-(this->cornerBL*2)-bottomOffset, (this->cornerBL*2)-theSize, (this->cornerBL*2));
+                                    QRectF curve4(offsetX+leftOffset+theSize, offsetY+topOffset, (this->cornerTL*2)-theSize, this->cornerTL*2);
 
                                     path.arcMoveTo(curve1, 90);
                                     path.arcTo(curve1, 90, 90);
@@ -977,8 +977,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                     HSSUnit outerBottomOffset = bottomCumulative+bottomCorrection;
                     this->createRoundedRect(
                                             outerPath,
-                                            borderBleeding+outerLeftOffset,
-                                            borderBleeding+outerTopOffset,
+                                            offsetX+outerLeftOffset,
+                                            offsetY+outerTopOffset,
                                             -outerLeftOffset+width-outerRightOffset,
                                             -outerTopOffset+height-outerBottomOffset,
                                             -outerLeftOffset*2
@@ -989,8 +989,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                     HSSUnit innerBottomOffset = theSize+bottomCumulative+bottomCorrection;
                     this->createRoundedRect(
                                             innerPath,
-                                            borderBleeding+innerLeftOffset,
-                                            borderBleeding+innerTopOffset,
+                                            offsetX+innerLeftOffset,
+                                            offsetY+innerTopOffset,
                                             -innerLeftOffset+width-innerRightOffset,
                                             -innerTopOffset+height-innerBottomOffset,
                                             -innerLeftOffset*2);
@@ -1042,26 +1042,26 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                         AXRString theValue = theKw->getValue();
                         if (theValue == "top")
                         {
-                            path.moveTo(borderBleeding-leftOffset, borderBleeding-(topOffset+(theSize/2)));
-                            path.lineTo(borderBleeding+width+rightOffset, borderBleeding-(topOffset+(theSize/2)));
+                            path.moveTo(offsetX-leftOffset, offsetY-(topOffset+(theSize/2)));
+                            path.lineTo(offsetX+width+rightOffset, offsetY-(topOffset+(theSize/2)));
                             topCumulative += theSize;
                         }
                         else if (theValue == "right")
                         {
-                            path.moveTo(borderBleeding+width+(rightOffset+(theSize/2)), borderBleeding-topOffset);
-                            path.lineTo(borderBleeding+width+(rightOffset+(theSize/2)), borderBleeding+height+bottomOffset);
+                            path.moveTo(offsetX+width+(rightOffset+(theSize/2)), offsetY-topOffset);
+                            path.lineTo(offsetX+width+(rightOffset+(theSize/2)), offsetY+height+bottomOffset);
                             rightCumulative += theSize;
                         }
                         else if (theValue == "bottom")
                         {
-                            path.moveTo(borderBleeding+width+rightOffset, borderBleeding+height+(bottomOffset+(theSize/2)));
-                            path.lineTo(borderBleeding-leftOffset, borderBleeding+height+(bottomOffset+(theSize/2)));
+                            path.moveTo(offsetX+width+rightOffset, offsetY+height+(bottomOffset+(theSize/2)));
+                            path.lineTo(offsetX-leftOffset, offsetY+height+(bottomOffset+(theSize/2)));
                             bottomCumulative += theSize;
                         }
                         else if(theValue == "left")
                         {
-                            path.moveTo(borderBleeding-(leftOffset+(theSize/2)), borderBleeding+height+bottomOffset);
-                            path.lineTo(borderBleeding-(leftOffset+(theSize/2)), borderBleeding-topOffset);
+                            path.moveTo(offsetX-(leftOffset+(theSize/2)), offsetY+height+bottomOffset);
+                            path.lineTo(offsetX-(leftOffset+(theSize/2)), offsetY-topOffset);
                             leftCumulative += theSize;
                         }
                         break;
@@ -1086,8 +1086,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                     HSSUnit outerBottomOffset = theSize+bottomCumulative+bottomCorrection;
                     this->createRoundedRect(
                                             outerPath,
-                                            borderBleeding-outerLeftOffset,
-                                            borderBleeding-outerTopOffset,
+                                            offsetX-outerLeftOffset,
+                                            offsetY-outerTopOffset,
                                             outerLeftOffset+width+outerRightOffset,
                                             outerTopOffset+height+outerBottomOffset,
                                             outerLeftOffset*2
@@ -1098,8 +1098,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                     HSSUnit innerBottomOffset = bottomCumulative+bottomCorrection;
                     this->createRoundedRect(
                                             innerPath,
-                                            borderBleeding-innerLeftOffset,
-                                            borderBleeding-innerTopOffset,
+                                            offsetX-innerLeftOffset,
+                                            offsetY-innerTopOffset,
                                             innerLeftOffset+width+innerRightOffset,
                                             innerTopOffset+height+innerBottomOffset,
                                             innerLeftOffset*2);

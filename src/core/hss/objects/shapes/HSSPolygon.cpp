@@ -191,7 +191,7 @@ void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit wi
     path.closeSubpath();
 }
 
-void HSSPolygon::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit borderBleeding)
+void HSSPolygon::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     // Calculate the combined thickness of all borders
     HSSUnit combinedThickness = 0;
@@ -219,7 +219,7 @@ void HSSPolygon::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBo
         HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
 
         QPainterPath path;
-        HSSShape::createPath(path, borderBleeding + offset, borderBleeding + offset, width - offset * 2, height - offset * 2);
+        HSSShape::createPath(path, offsetX + offset, offsetY + offset, width - offset * 2, height - offset * 2);
         theBorder->draw(painter, path);
 
         cumulativeThickness += theSize;

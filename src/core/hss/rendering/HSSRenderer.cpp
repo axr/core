@@ -158,49 +158,7 @@ void HSSRenderer::drawBorders(HSSContainer &container)
     if (d->globalAntialiasingEnabled)
         d->canvasPainter->setRenderHint(QPainter::Antialiasing);
 
-    // Calculate the combined thickness of all borders
-    HSSUnit combinedThickness = 0;
-    for (HSSBorder::it it = container.border.begin(); it != container.border.end(); ++it)
-    {
-        combinedThickness += (*it)->getSize();
-    }
-
-    // Correction if needed
-    HSSUnit correction;
-    if ((int) combinedThickness % 2)
-    {
-        correction = 0.5;
-    }
-
-    // Cumulative combined thickness
-    HSSUnit cumulativeThickness = 0;
-
-    // Use a temporary trick for not having path offsets yet (will be fixed in the future)
-    bool isRoundedRect = container.shape->isA(HSSShapeTypeRoundedRect);
-
-    // Draw all borders
-    for (HSSBorder::it it = container.border.begin(); it != container.border.end(); ++it)
-    {
-        QSharedPointer<HSSBorder> theBorder = *it;
-        HSSUnit theSize = theBorder->getSize();
-
-        HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
-
-        QPainterPath path;
-        if (isRoundedRect)
-        {
-            QSharedPointer<HSSRoundedRect> roundedRect = qSharedPointerCast<HSSRoundedRect>(container.shape);
-            roundedRect->createRoundedRect(path, container.globalX + container.borderBleeding + offset, container.globalY + container.borderBleeding + offset, container.width - offset * 2, container.height - offset * 2, -offset*2);
-        }
-        else
-        {
-            container.shape->createPath(path, container.globalX + container.borderBleeding + offset, container.globalY + container.borderBleeding + offset, container.width - offset * 2, container.height - offset * 2);
-        }
-
-        theBorder->draw(*d->canvasPainter, path);
-
-        cumulativeThickness += theSize;
-    }
+    container.getShape()->drawBorders(*d->canvasPainter, container.border, container.width, container.height, container.globalX, container.globalY);
 }
 
 void HSSRenderer::drawBackground(HSSContainer &container)
