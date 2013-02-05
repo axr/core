@@ -1,4 +1,4 @@
-[The AXR Project](http://axr.vg/)
+[The AXR Project](http://axrproject.org/)
 ===============
 The AXR Project is a revolutionary open source project that will fundamentally
 improve our tools to create web sites and apps.

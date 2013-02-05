@@ -18,8 +18,8 @@ set(AXR_VERSION_STRING_REAL ${AXR_VERSION_STRING})
 # git_append_shorttag(AXR_VERSION_STRING)
 
 set(AXR_VENDOR "AXR Project Contributors")
-set(AXR_DOMAIN "axr.vg")
-set(AXR_CONTACT "info@axr.vg")
+set(AXR_DOMAIN "axrproject.org")
+set(AXR_CONTACT "info@axrproject.org")
 set(AXR_WEB_URL "http://${AXR_DOMAIN}/")
 
 set(AXR_README_FILE "${CMAKE_SOURCE_DIR}/README.md")

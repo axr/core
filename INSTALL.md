@@ -1,1 +1,1 @@
-Read our [wiki page](http://axr.vg/wiki/Building).
+Read our [wiki page](http://wiki.axrproject.org/Building).

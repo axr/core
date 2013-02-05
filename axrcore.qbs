@@ -15,8 +15,8 @@ Project {
     property string axr_version_string_real: axr_version_major + "." + axr_version_minor + "." + axr_version_patch + "." + axr_version_build
 
     property string axr_vendor: "AXR Project Contributors"
-    property string axr_domain: "axr.vg"
-    property string axr_contact: "info@axr.vg"
+    property string axr_domain: "axrproject.org"
+    property string axr_contact: "info@axrproject.org"
     property string axr_web_url: "http://" + axr_domain + "/"
 
     Product {
