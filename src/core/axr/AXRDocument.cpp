@@ -67,6 +67,9 @@ AXRDocument::AXRDocument()
     this->_currentLayoutChild = 0;
     this->_needsDisplay = true;
 
+    this->_windowWidth = 0;
+    this->_windowHeight = 0;
+
     axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRDocument: initializing core for thread");
 
     QSharedPointer<AXRController> ctrlr = QSharedPointer<AXRController>(new AXRController(this));

@@ -258,8 +258,8 @@ namespace AXR
         unsigned int _currentLayoutChild;
         bool _needsDisplay;
 
-        int _windowWidth = 0;
-        int _windowHeight = 0;
+        int _windowWidth;
+        int _windowHeight;
 
     protected:
         QSharedPointer<HSSVisitorManager> visitorManager;

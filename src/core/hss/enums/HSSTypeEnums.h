@@ -441,8 +441,8 @@ namespace AXR
     {
         HSSGradientTypeNone = 0, /**< Error state. */
         HSSGradientTypeLinear, /**< Linear gradients. */
-        HSSGradientTypeRadial, /**< Radial gradients. */
-        };
+        HSSGradientTypeRadial /**< Radial gradients. */
+    };
     /** @} */
 }
 
