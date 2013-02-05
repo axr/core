@@ -153,7 +153,7 @@ namespace AXR
         HSSObservablePropertyCenterY,
         HSSObservablePropertyOffsetX,
         HSSObservablePropertyOffsetY,
-        HSSObservablePropertyRoundness,
+        HSSObservablePropertyRoundness
     };
 }
 
