@@ -6,7 +6,7 @@ endif()
 set(core_SOURCES_PATTERN *.c *.cpp *.h)
 if(APPLE)
     set(core_SOURCES_PATTERN ${core_SOURCES_PATTERN} *.mm)
-    
+
     find_library(FOUNDATION_LIBRARY Foundation REQUIRED)
     mark_as_advanced(FOUNDATION_LIBRARY)
 endif()
