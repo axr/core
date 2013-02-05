@@ -41,178 +41,252 @@
  *
  ********************************************************************/
 
-/**
- *  @todo do something meaningful with the error codes
- */
-
 #include "AXRBuffer.h"
 #include "AXRDebugging.h"
 #include "AXRError.h"
 #include "HSSToken.h"
 #include "HSSTokenizer.h"
 #include "HSSValueToken.h"
+#include <QSharedPointer>
+#include <QTextStream>
 
 using namespace AXR;
 
+bool isLatin1Letter(AXRChar ch)
+{
+    return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'));
+}
+
+namespace AXR
+{
+    class HSSTokenizerPrivate
+    {
+    public:
+        HSSTokenizerPrivate()
+        : file(), textStream(), currentChar(), currentTokenText(),
+          currentLine(), currentColumn(), peekPositionOffset(),
+          peekLineOffset(), peekColumnOffset(), preferHex()
+        {
+        }
+
+        // Shared pointer to the data source and stream to read from it
+        QSharedPointer<AXRBuffer> file;
+        QTextStream *textStream;
+
+        // The Unicode character that is currently being processed
+        AXRChar currentChar;
+
+        // The text of a string token that is currently being processed
+        AXRString currentTokenText;
+
+        // The line and column number of the current character
+        qint64 currentLine;
+        qint64 currentColumn;
+
+        // Offsets from the buffer position and line/column numbers used when
+        // peeking ahead in the stream
+        qint64 peekPositionOffset;
+        qint64 peekLineOffset;
+        qint64 peekColumnOffset;
+
+        // If you are expecting a hexadecimal number, set this to true
+        // don't forget to reset it afterwards
+        bool preferHex;
+    };
+}
+
 HSSTokenizer::HSSTokenizer()
+: d(new HSSTokenizerPrivate)
 {
     this->reset();
 }
 
 HSSTokenizer::~HSSTokenizer()
 {
+    if (d->textStream)
+        delete d->textStream;
+
+    delete d;
 }
 
+/*!
+ * Resets all properties of the tokenizer to their defaults,
+ * and sets the input buffer to \c NULL.
+ */
 void HSSTokenizer::reset()
 {
-    if (this->file)
-        this->file.clear();
+    if (d->textStream)
+    {
+        delete d->textStream;
+        d->textStream = NULL;
+    }
 
-    // This starts out empty
-    this->currentChar = '\0';
+    if (d->file)
+        d->file.clear();
 
-    // Initialize the currentTokenText
-    this->currentTokenText = AXRString();
+    d->currentChar = '\0';
+    d->currentTokenText = AXRString();
 
-    // We start out at the beginning of an empty buffer
-    this->buflen = this->bufpos = 0;
+    d->currentLine = 1;
+    d->currentColumn = 1;
 
-    // The peeking offset is 0
-    this->peekpos = this->peekColumn = this->peekLine = 0;
-
-    // We start at line 1 and column 1
-    this->currentLine = this->currentColumn = 1;
+    d->peekPositionOffset = 0;
+    d->peekLineOffset = 0;
+    d->peekColumnOffset = 0;
 
     // By default, numbers are read as real numbers and A-F will be an identifier
-    this->preferHex = false;
+    d->preferHex = false;
+}
+
+QSharedPointer<AXRBuffer> HSSTokenizer::getFile() const
+{
+    return d->file;
 }
 
 void HSSTokenizer::setFile(QSharedPointer<AXRBuffer> file)
 {
-    this->file = file;
+    // We must clear state when setting a new file as any of it would
+    // have no meaning from this point on
+    this->reset();
+
+    if (!file)
+        return;
+
+    d->file = file;
+    d->textStream = new QTextStream(file->getBuffer());
 }
 
-QSharedPointer<AXRBuffer> HSSTokenizer::getFile()
+bool HSSTokenizer::isHexPreferred() const
 {
-    return this->file;
+    return d->preferHex;
 }
 
+void HSSTokenizer::setHexPreferred(bool prefer)
+{
+    d->preferHex = prefer;
+}
+
+qint64 HSSTokenizer::currentLine() const
+{
+    return d->currentLine;
+}
+
+qint64 HSSTokenizer::currentColumn() const
+{
+    return d->currentColumn;
+}
+
+bool HSSTokenizer::atEndOfSource()
+{
+    return d->textStream ? d->textStream->atEnd() : true;
+}
+
+/*!
+ * Reads the next character from the buffer and stores it.
+ */
 HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
 {
-    if (this->buflen == this->bufpos)
+    if (this->atEndOfSource())
     {
-        this->currentChar = '\0';
+        d->currentChar = '\0';
     }
     else
     {
-        const char * buffer = this->file->getBuffer().constData();
-        this->currentChar = buffer[this->bufpos];
+        *d->textStream >> d->currentChar;
     }
 
-    axr_log(AXR_DEBUG_CH_TOKENIZING, AXRString("read charachter L%1C%2|%3|").arg(this->currentLine).arg(this->currentColumn).arg(this->currentChar));
+    axr_log(AXR_DEBUG_CH_TOKENIZING, AXRString("Read character %1 (line %2, col %3)").arg(d->currentChar).arg(d->currentLine).arg(d->currentColumn));
 
-    this->bufpos++;
-    this->currentColumn++;
-
+    d->currentColumn++;
 
     return HSSTokenizerOK;
 }
 
+/*!
+ * Reads and returns a pointer to the next token in the buffer, or \c NULL if the buffer was empty.
+ */
 QSharedPointer<HSSToken> HSSTokenizer::readNextToken()
 {
     QSharedPointer<HSSToken> ret;
 
-    //if we're at the end of the source
     if (this->atEndOfSource())
     {
         return ret;
     }
 
-    char cc = this->currentChar;
+    QChar cc = d->currentChar;
 
-    //identifiers can start with a letter or an underscore
-    if (isalpha(cc) || cc == '_')
+    // Identifiers can start with a letter or an underscore
+    if (isLatin1Letter(cc) || cc == '_')
     {
-        if (this->preferHex)
-        {
+        if (d->preferHex)
             return this->readHexOrIdentifier();
-        }
         else
-        {
             return this->readIdentifier();
-        }
     }
 
-    //the \302 is the character that appears when pressing
-    //alt+space in TextMate, a weird unicode space
-    if (isspace(cc) || cc == '\302')
-    {
+    if (cc.isSpace())
         return this->readWhitespace();
-    }
 
-    //if it starts with a number it is either a number or a percentage
-    if (isdigit(cc))
+    // If it starts with a number it is either a number or a percentage
+    if (cc.isDigit())
     {
-        if (this->preferHex)
-        {
+        if (d->preferHex)
             return this->readHexOrIdentifier();
-        }
         else
-        {
             return this->readNumberOrPercentage();
-        }
     }
 
-    switch (cc)
+    switch (cc.toAscii())
     {
-            //if it starts with quotes, either single or double, it is a string
+        // If it starts with quotes, either single or double, it is a string
         case '"':
         case '\'':
             return this->readString();
         case '#':
-            ret = QSharedPointer<HSSToken>(new HSSToken(HSSInstructionSign, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSInstructionSign, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '@':
-            ret = QSharedPointer<HSSToken>(new HSSToken(HSSObjectSign, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSObjectSign, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '&':
-            ret = QSharedPointer<HSSToken>(new HSSToken(HSSAmpersand, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSAmpersand, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '{':
-            ret = QSharedPointer<HSSToken>(new HSSToken(HSSBlockOpen, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSBlockOpen, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '}':
-            ret = QSharedPointer<HSSToken>(new HSSToken(HSSBlockClose, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSBlockClose, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ',':
-            ret = QSharedPointer<HSSToken>(new HSSToken(HSSComma, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSComma, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ':':
-            ret = QSharedPointer<HSSToken>(new HSSToken(HSSColon, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSColon, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ';':
-            ret = QSharedPointer<HSSToken>(new HSSToken(HSSEndOfStatement, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSEndOfStatement, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '(':
-            ret = QSharedPointer<HSSToken>(new HSSToken(HSSParenthesisOpen, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSParenthesisOpen, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ')':
-            ret = QSharedPointer<HSSToken>(new HSSToken(HSSParenthesisClose, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSParenthesisClose, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '/':
             return this->readCommentOrSymbol();
         case '!':
-            ret = QSharedPointer<HSSToken>(new HSSToken(HSSNegator, this->currentLine, this->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSNegator, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         default:
@@ -220,116 +294,131 @@ QSharedPointer<HSSToken> HSSTokenizer::readNextToken()
     }
 }
 
+/*!
+ * Reads and returns a pointer to the next token in the buffer, or \c NULL
+ * if there is no input buffer.
+ *
+ * The actual position in the file is saved and can be restored
+ * by calling \a resetPeek().
+ */
 QSharedPointer<HSSToken> HSSTokenizer::peekNextToken()
 {
-    std_log4(AXRString("bufpos: %1").arg(this->bufpos));
+    QSharedPointer<HSSToken> ret;
+    if (!d->textStream)
+        return ret;
 
     // Store the current position in the buffer
-    int curpos = this->bufpos;
-    qint64 curline = this->currentLine;
-    qint64 curcol = this->currentColumn;
-    QSharedPointer<HSSToken> ret = this->readNextToken();
+    int savedPosition = d->textStream->pos();
+    qint64 savedLine = d->currentLine;
+    qint64 savedColumn = d->currentColumn;
+
+    // Read the next token
+    ret = this->readNextToken();
 
     // Store the new offset
-    this->peekpos += (this->bufpos - curpos);
-    this->peekLine += (this->currentLine - curline);
-    this->peekColumn += (this->currentColumn - curcol);
+    d->peekPositionOffset += (d->textStream->pos() - savedPosition);
+    d->peekLineOffset += (d->currentLine - savedLine);
+    d->peekColumnOffset += (d->currentColumn - savedColumn);
 
-    axr_log(AXR_DEBUG_CH_TOKENIZING, AXRString("new peekpos: %1 because bufpos: %2 and curpos: %3").arg(this->peekpos).arg(this->bufpos).arg(curpos));
+    axr_log(AXR_DEBUG_CH_TOKENIZING, AXRString("Peeked (offset: %1, current position: %2, saved position: %3").arg(d->peekPositionOffset).arg(d->textStream->pos()).arg(savedPosition));
 
     return ret;
 }
 
+/*!
+ * Restores state after a call to \a peekNextToken().
+ *
+ * This method only needs to be called once to restore state
+ * regardless of how many times \a peekNextToken() is called.
+ */
 void HSSTokenizer::resetPeek()
 {
-    //restore the position in the buffer
-    //we start one position before we were before, since we are re-reading the char
-    this->bufpos -= this->peekpos + 1;
-    this->currentLine -= this->peekLine;
-    this->currentColumn -= this->peekColumn + 1;
+    if (!d->textStream)
+        return;
 
-    std_log4(AXRString("end bufpos: %1").arg(this->bufpos));
+    // Restore the saved position in the buffer
+    // We start one character before we were before, since we are re-reading the character
+    d->textStream->seek(d->textStream->pos() - (d->peekPositionOffset + 1));
+    d->currentLine -= d->peekLineOffset;
+    d->currentColumn -= (d->peekColumnOffset + 1);
 
     this->readNextChar();
 
-    //reset the offset to 0
-    this->peekpos = 0;
-    this->peekLine = 0;
-    this->peekColumn = 0;
+    // Reset the peek offsets
+    d->peekPositionOffset = 0;
+    d->peekLineOffset = 0;
+    d->peekColumnOffset = 0;
+
+    axr_log(AXR_DEBUG_CH_TOKENIZING, AXRString("Peek reset"));
 }
 
-void HSSTokenizer::setBufferLength(int length)
-{
-    this->buflen = length;
-}
-
+/*!
+ * Skips over any whitespace characters.
+ */
 HSS_TOKENIZING_STATUS HSSTokenizer::skipWhitespace()
 {
-    while (isspace(this->currentChar) || this->currentChar == '\302')
+    while (d->currentChar.isSpace())
     {
-        // If there is this weird space char, skip another byte
-        if (this->currentChar == '\302')
+        // We only want to consider something after \n to be a new line, as this
+        // effectively matches \n and \r\n. No modern system considers \r alone
+        // to be a new line, and checking for it here would cause most Windows
+        // files to show incorrect line numbers, as a new line would be registered
+        // for both the \r AND the \n.
+        if (d->currentChar == '\n')
         {
-            this->readNextChar();
+            d->currentLine++;
+            d->currentColumn = 1;
         }
 
-        if (this->currentChar == '\n' || this->currentChar == '\r')
-        {
-            this->currentLine++;
-            this->currentColumn = 1;
-        }
         this->readNextChar();
     }
 
     return HSSTokenizerOK;
 }
 
-bool HSSTokenizer::atEndOfSource()
-{
-    return this->currentChar == '\0';
-}
-
+/*!
+ * Stores the current character in the multi-character token buffer,
+ * then reads the next character.
+ */
 HSS_TOKENIZING_STATUS HSSTokenizer::storeCurrentCharAndReadNext()
 {
-    this->currentTokenText += this->currentChar;
+    d->currentTokenText += d->currentChar;
     this->readNextChar();
 
     return HSSTokenizerOK;
 }
 
-HSS_TOKENIZING_STATUS HSSTokenizer::storeChar(char value)
-{
-    this->currentTokenText += value;
-    return HSSTokenizerOK;
-}
-
+/*!
+ * Clears the current text token and returns its value.
+ */
 AXRString HSSTokenizer::extractCurrentTokenText()
 {
-    AXRString tempctt = this->currentTokenText;
-    this->currentTokenText.clear();
-    return tempctt;
+    AXRString text = d->currentTokenText;
+    d->currentTokenText.clear();
+    return text;
 }
 
-
-//reads and returns a whitespace token
-
+/*!
+ * Reads and returns a whitespace token.
+ */
 QSharedPointer<HSSToken> HSSTokenizer::readWhitespace()
 {
-    qint64 line = this->currentLine;
-    qint64 column = this->currentColumn - 1;
+    const qint64 line = d->currentLine;
+    const qint64 column = d->currentColumn - 1;
 
     this->skipWhitespace();
     return QSharedPointer<HSSToken>(new HSSToken(HSSWhitespace, line, column));
 }
 
-//reads and returns an identifier token
-
+/*!
+ * Reads and returns an identifier token.
+ */
 QSharedPointer<HSSToken> HSSTokenizer::readIdentifier()
 {
-    qint64 line = this->currentLine;
-    qint64 column = this->currentColumn - 1;
+    const qint64 line = d->currentLine;
+    const qint64 column = d->currentColumn - 1;
 
-    while (isalnum(this->currentChar) || this->currentChar == '_')
+    while (isLatin1Letter(d->currentChar) || d->currentChar.isDigit() || d->currentChar == '_')
     {
         this->storeCurrentCharAndReadNext();
     }
@@ -337,19 +426,20 @@ QSharedPointer<HSSToken> HSSTokenizer::readIdentifier()
     return QSharedPointer<HSSValueToken>(new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText(), line, column));
 }
 
-//reads and returns a hexadecimal number or an identifier
-
+/*!
+ * Reads and returns a hexadecimal number or identifier token.
+ */
 QSharedPointer<HSSToken> HSSTokenizer::readHexOrIdentifier()
 {
-    qint64 line = this->currentLine;
-    qint64 column = this->currentColumn - 1;
+    const qint64 line = d->currentLine;
+    const qint64 column = d->currentColumn - 1;
 
     security_brake_init();
     bool done = false;
-    this->currentTokenText.clear();
+    d->currentTokenText.clear();
     while (!done)
     {
-        switch (this->currentChar)
+        switch (d->currentChar.toAscii())
         {
         case 'a':
         case 'A':
@@ -367,19 +457,19 @@ QSharedPointer<HSSToken> HSSTokenizer::readHexOrIdentifier()
             continue;
 
         default:
-            if (isdigit(this->currentChar))
+            if (d->currentChar.isDigit())
             {
                 this->storeCurrentCharAndReadNext();
                 continue;
             }
             else
             {
-                if (isalpha(this->currentChar))
+                if (isLatin1Letter(d->currentChar))
                 {
                     done = true;
                     break;
                 }
-                else if (this->currentTokenText.size() > 0)
+                else if (d->currentTokenText.size() > 0)
                 {
                     return QSharedPointer<HSSValueToken>(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText(), line, column));
                 }
@@ -393,36 +483,37 @@ QSharedPointer<HSSToken> HSSTokenizer::readHexOrIdentifier()
         security_brake();
     }
 
-    //if we reached this far, it is an identifier - finish reading it
+    // If we reached this far, it is an identifier - finish reading it
     return this->readIdentifier();
 }
 
-//reads and returns either a number or a percentage token
-//the currentChar is assumed to be a number
-
+/*!
+ * Reads and returns either a number or a percentage token.
+ *
+ * NOTE: This function assumes that the current character is a digit
+ * (between U+0030 and U+0039, inclusive).
+ */
 QSharedPointer<HSSToken> HSSTokenizer::readNumberOrPercentage()
 {
-    qint64 line = this->currentLine;
-    qint64 column = this->currentColumn - 1;
+    const qint64 line = d->currentLine;
+    const qint64 column = d->currentColumn - 1;
+
     bool dotFound = false;
-    while (isdigit(this->currentChar) || this->currentChar == '.')
+    while (d->currentChar.isDigit() || d->currentChar == '.')
     {
-        if (this->currentChar == '.')
+        if (d->currentChar == '.')
         {
             if (dotFound)
-            {
                 break;
-            }
             else
-            {
                 dotFound = true;
-            }
         }
 
         this->storeCurrentCharAndReadNext();
     }
+
     QSharedPointer<HSSToken> ret;
-    if (currentChar == '%')
+    if (d->currentChar == '%')
     {
         ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSPercentageNumber, this->extractCurrentTokenText(), line, column));
         this->readNextChar();
@@ -431,42 +522,45 @@ QSharedPointer<HSSToken> HSSTokenizer::readNumberOrPercentage()
     {
         ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSNumber, this->extractCurrentTokenText(), line, column));
     }
+
     return ret;
 }
 
-//reads and returns either a single quoted or double quoted string token
-//the currentChar is assumed to be either " or '
-
+/*!
+ * Reads and returns either a single quoted or double quoted string token.
+ *
+ * NOTE: This function assumes that the current character is " (U+0022) or ' (U+0027).
+ */
 QSharedPointer<HSSToken> HSSTokenizer::readString()
 {
-    qint64 line = this->currentLine;
-    qint64 column = this->currentColumn - 1;
+    const qint64 line = d->currentLine;
+    const qint64 column = d->currentColumn - 1;
 
     QSharedPointer<HSSToken> ret;
-    if (this->currentChar == '"')
+    if (d->currentChar == '"')
     {
         this->readNextChar();
-        while (this->currentChar != '"')
+        while (d->currentChar != '"')
         {
             if (this->atEndOfSource())
-            {
                 throw AXRError("HSSTokenizer", "Unexpected end of source");
-            }
+
             this->storeCurrentCharAndReadNext();
         }
+
         ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSDoubleQuoteString, this->extractCurrentTokenText(), line, column));
     }
-    else if (this->currentChar == '\'')
+    else if (d->currentChar == '\'')
     {
         this->readNextChar();
-        while (this->currentChar != '\'')
+        while (d->currentChar != '\'')
         {
             if (this->atEndOfSource())
-            {
                 throw AXRError("HSSTokenizer", "Unexpected end of source");
-            }
+
             this->storeCurrentCharAndReadNext();
         }
+
         ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSingleQuoteString, this->extractCurrentTokenText(), line, column));
     }
 
@@ -474,43 +568,47 @@ QSharedPointer<HSSToken> HSSTokenizer::readString()
     return ret;
 }
 
-//reads and returns a comment or a symbol token
-//assumes currentChar == '/'
-
+/*!
+ * Reads and returns a comment or a symbol token.
+ *
+ * NOTE: This function assumes that the current character is / (U+002F).
+ */
 QSharedPointer<HSSToken> HSSTokenizer::readCommentOrSymbol()
 {
-    qint64 line = this->currentLine;
-    qint64 column = this->currentColumn - 1;
+    const qint64 line = d->currentLine;
+    const qint64 column = d->currentColumn - 1;
 
     QSharedPointer<HSSValueToken> ret;
     this->readNextChar();
-    if (this->currentChar == '/')
+    if (d->currentChar == '/')
     {
         this->readNextChar(); // skip '/'
-        //read all chars until end of line
-        while (this->currentChar != '\n' && this->currentChar != '\r' && this->currentChar != '\f' && !this->atEndOfSource())
+
+        // Read all chars until end of line
+        while (d->currentChar != '\n' && d->currentChar != '\r' && d->currentChar != '\f' && !this->atEndOfSource())
         {
             this->storeCurrentCharAndReadNext();
         }
+
         ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSLineComment, this->extractCurrentTokenText(), line, column));
     }
-    else if (this->currentChar == '*')
+    else if (d->currentChar == '*')
     {
         readNextChar(); //skip '*'
-        while (1)
+        while (true)
         {
-            if (this->currentChar == '*')
+            if (d->currentChar == '*')
             {
-                readNextChar(); //we won't know if it is the end of the comment until we seek further
-                if (this->currentChar == '/')
+                readNextChar(); // We won't know if it is the end of the comment until we seek further
+                if (d->currentChar == '/')
                 {
-                    //it is the end, break the loop
+                    // It is the end, break the loop
                     break;
                 }
                 else
                 {
-                    //it's not the end of the comment, store the char and continue reading
-                    this->storeChar('*');
+                    // It's not the end of the comment, store the char and continue reading
+                    d->currentTokenText += '*';
                 }
             }
             else if (this->atEndOfSource())
@@ -520,6 +618,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readCommentOrSymbol()
 
             this->storeCurrentCharAndReadNext();
         }
+
         ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSBlockComment, this->extractCurrentTokenText(), line, column));
         readNextChar();
     }
@@ -531,23 +630,24 @@ QSharedPointer<HSSToken> HSSTokenizer::readCommentOrSymbol()
     return ret;
 }
 
-//reads and returns a symbol token
-
+/*!
+ * Reads and returns a symbol token.
+ */
 QSharedPointer<HSSToken> HSSTokenizer::readSymbol()
 {
-    qint64 line = this->currentLine;
-    qint64 column = this->currentColumn - 1;
+    const qint64 line = d->currentLine;
+    const qint64 column = d->currentColumn - 1;
 
     QSharedPointer<HSSToken> ret;
 
-    switch (this->currentChar)
+    switch (d->currentChar.toAscii())
     {
     case '.':
         this->storeCurrentCharAndReadNext();
-        if (this->currentChar == '.')
+        if (d->currentChar == '.')
         {
             this->storeCurrentCharAndReadNext();
-            if (this->currentChar == '.')
+            if (d->currentChar == '.')
             {
                 this->storeCurrentCharAndReadNext();
             }
@@ -561,7 +661,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readSymbol()
         return ret;
 
     default:
-        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, this->currentChar, line, column));
+        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, d->currentChar, line, column));
         this->readNextChar();
         return ret;
     }

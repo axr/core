@@ -44,15 +44,19 @@
 #ifndef HSSTOKENIZER_H
 #define HSSTOKENIZER_H
 
-#include <vector>
-#include <QSharedPointer>
+#include "AXRGlobal.h"
+
+template <class T> class QSharedPointer;
 
 namespace AXR
 {
     class AXRBuffer;
     class HSSToken;
+    class HSSTokenizerPrivate;
 
-    //the return states any part of the tokenizer will report
+    /*!
+     * List of possible states that the tokenizer may be in.
+     */
     enum AXR_API HSS_TOKENIZING_STATUS
     {
         HSSTokenizerUnknownError = -1,
@@ -64,87 +68,42 @@ namespace AXR
     {
     public:
         HSSTokenizer();
-        //destructor
         ~HSSTokenizer();
 
-        //this will reset all the properties of the tokenizer to default
         void reset();
 
+        QSharedPointer<AXRBuffer> getFile() const;
         void setFile(QSharedPointer<AXRBuffer> file);
-        QSharedPointer<AXRBuffer> getFile();
 
-        //reads a the next character and stores it, also keeps track of the position in the buffer
-        //it will also set the corresponding state if the end of the buffer is reached, but expects
-        //more source
+        bool isHexPreferred() const;
+        void setHexPreferred(bool prefer);
+
+        qint64 currentLine() const;
+        qint64 currentColumn() const;
+
+        bool atEndOfSource();
+
         HSS_TOKENIZING_STATUS readNextChar();
 
-        //reads and returns a pointer to the next token in the buffer or NULL if the buffer was empty
         QSharedPointer<HSSToken> readNextToken();
-
-
-        //reads and returns a pointer to the next token in the buffer
-        //BUT doesn't advance the current position of the normal reading flow. Call resetPeek() after
-        //you finish peeking
-        //the caller acquires ownership of the pointer
         QSharedPointer<HSSToken> peekNextToken();
         void resetPeek();
 
-        //if you are expecting a hexadecimal number, set this to true
-        //don't forget to reset it afterwards
-        bool preferHex;
-
-        //the current line and column position we're on
-        qint64 currentLine;
-        qint64 currentColumn;
-
-        void setBufferLength(int length);
-
-    protected:
-        QSharedPointer<AXRBuffer> file;
-
-        //the current character that has been read
-        char currentChar;
-        //here's where the tokens are stored
-        std::vector<QSharedPointer<HSSToken> > tokenList;
-        //here's where the current token's text is stored
-        AXRString currentTokenText;
-        //how long is the buffer?
-        int buflen;
-        //the position into the buffer
-        int bufpos;
-        //the position into the buffer when peeking - it is an offset from bufpos
-        int peekpos;
-        unsigned peekLine;
-        unsigned peekColumn;
-
-        //skips over any whitespace
+    private:
         HSS_TOKENIZING_STATUS skipWhitespace();
-        //checks if we are at the end of the source
-        bool atEndOfSource();
-        //to create tokens that have more than one char, this will store it and continue reading
         HSS_TOKENIZING_STATUS storeCurrentCharAndReadNext();
-        //in some cases, storing specific chars in the currentTokenText is needed
-        HSS_TOKENIZING_STATUS storeChar(char value);
-        //returns the stored token text and clears the variable
+
         AXRString extractCurrentTokenText();
-        //reads and returns a whitespace token
+
         QSharedPointer<HSSToken> readWhitespace();
-        //reads and returns an identifier token
         QSharedPointer<HSSToken> readIdentifier();
-        //reads and returns a hexadecimal number
-        //QSharedPointer<HSSToken> readHex();
-        //reads and returns a hexadecimal number or an identifier token
         QSharedPointer<HSSToken> readHexOrIdentifier();
-        //reads and returns either a number or a percentage token
         QSharedPointer<HSSToken> readNumberOrPercentage();
-        //reads and returns either a single quoted or double quoted string token
         QSharedPointer<HSSToken> readString();
-        //reads and returns an object type token
-        QSharedPointer<HSSToken> readObjectType();
-        //reads and returns a comment or a symbol token
         QSharedPointer<HSSToken> readCommentOrSymbol();
-        //reads and returns a symbol token
         QSharedPointer<HSSToken> readSymbol();
+
+        HSSTokenizerPrivate *d;
     };
 }
 

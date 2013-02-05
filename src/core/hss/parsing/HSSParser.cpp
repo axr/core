@@ -168,11 +168,6 @@ bool HSSParser::loadFile(QSharedPointer<AXRBuffer> file)
 
     //propagate the file to the tokenizer
     this->tokenizer->setFile(file);
-    //read the file
-    int len = file->getBuffer().size();
-
-    //initialize
-    this->tokenizer->setBufferLength(len);
     this->tokenizer->readNextChar();
 
     this->readNextToken();
@@ -1142,12 +1137,12 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
     QSharedPointer<HSSToken> peekToken;
     if (this->currentToken->isA(HSSInstructionSign))
     {
-        bool currentPref = this->tokenizer->preferHex;
-        this->tokenizer->preferHex = true;
+        bool currentPref = this->tokenizer->isHexPreferred();
+        this->tokenizer->setHexPreferred(true);
 
         peekToken = this->tokenizer->peekNextToken();
         ret = peekToken->isA(HSSHexNumber);
-        this->tokenizer->preferHex = currentPref;
+        this->tokenizer->setHexPreferred(currentPref);
 
     }
     else
@@ -2058,11 +2053,11 @@ QSharedPointer<HSSInstruction> HSSParser::readInstruction(bool preferHex)
     AXRString currentval;
 
     //set preference
-    this->tokenizer->preferHex = preferHex;
+    this->tokenizer->setHexPreferred(preferHex);
     //skip the instruction sign -- this will automatically read the next token
     this->skipExpected(HSSInstructionSign);
     //restore
-    this->tokenizer->preferHex = false;
+    this->tokenizer->setHexPreferred(false);
 
     this->checkForUnexpectedEndOfSource();
     //we are looking at
@@ -3001,8 +2996,8 @@ void HSSParser::readNextToken(bool checkForUnexpectedEndOfSource)
     }
     else
     {
-        this->line = this->tokenizer->currentLine;
-        this->column = this->tokenizer->currentColumn - 1;
+        this->line = this->tokenizer->currentLine();
+        this->column = this->tokenizer->currentColumn() - 1;
     }
 
     if (checkForUnexpectedEndOfSource) this->checkForUnexpectedEndOfSource();
