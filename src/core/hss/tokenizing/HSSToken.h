@@ -31,7 +31,7 @@
  *
  *      LICENSE: see LICENSE file
  *
- *      WEB: http://axr.vg
+ *      WEB: http://axrproject.org
  *
  *      THIS CODE AND INFORMATION ARE PROVIDED "AS IS"
  *      WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED
