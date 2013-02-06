@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "HSSCallback.h"
 #include "HSSDisplayObject.h"
 #include "HSSExpression.h"
@@ -187,7 +187,7 @@ HSSUnit HSSExpression::evaluate()
         }
 
         default:
-            std_log1("############ HSSExpression::evaluate() unknwown node type in left member");
+            axr_log(LoggerChannelObsolete1, "############ HSSExpression::evaluate() unknwown node type in left member");
             break;
         }
 
@@ -254,7 +254,7 @@ HSSUnit HSSExpression::evaluate()
         }
 
         default:
-            std_log1("############ HSSExpression::evaluate() unknwown node type in right member");
+            axr_log(LoggerChannelObsolete1, "############ HSSExpression::evaluate() unknwown node type in right member");
             break;
         }
 
@@ -290,12 +290,12 @@ void HSSExpression::propertyChanged(HSSObservableProperty property, void* data)
     {
         HSSUnit newPercentageBase = *(HSSUnit *) data;
         this->setPercentageBase(newPercentageBase);
-        std_log1("property of expression changed");
+        axr_log(LoggerChannelObsolete1, "property of expression changed");
         this->notifyObservers(HSSObservablePropertyValue, NULL);
     }
     else
     {
-        std_log1("############### unknown observed property");
+        axr_log(LoggerChannelObsolete1, "############### unknown observed property");
     }
 }
 
@@ -319,7 +319,7 @@ void HSSExpression::leftChanged(HSSObservableProperty property, void* data)
     }
 
     default:
-        std_log1("############ HSSExpression::evaluate() unknwown node type in left member");
+        axr_log(LoggerChannelObsolete1, "############ HSSExpression::evaluate() unknwown node type in left member");
         break;
     }
 
@@ -347,7 +347,7 @@ void HSSExpression::rightChanged(HSSObservableProperty property, void* data)
     }
 
     default:
-        std_log1("############ HSSExpression::evaluate() unknwown node type in right member");
+        axr_log(LoggerChannelObsolete1, "############ HSSExpression::evaluate() unknwown node type in right member");
         break;
     }
     this->_value = this->calculate(this->leftval, this->rightval);

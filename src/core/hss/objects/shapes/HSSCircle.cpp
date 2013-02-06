@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include <QPainterPath>
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "HSSBorder.h"
 #include "HSSCircle.h"
 #include "HSSDisplayObject.h"
@@ -52,7 +52,7 @@ using namespace AXR;
 HSSCircle::HSSCircle(AXRController * controller)
 : HSSShape(HSSShapeTypeCircle, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSCircle: creating circle object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSCircle: creating circle object");
 }
 
 HSSCircle::HSSCircle(const HSSCircle & orig)
@@ -62,7 +62,7 @@ HSSCircle::HSSCircle(const HSSCircle & orig)
 
 QSharedPointer<HSSCircle> HSSCircle::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSCircle: cloning circle object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSCircle: cloning circle object");
     return qSharedPointerCast<HSSCircle> (this->cloneImpl());
 }
 
@@ -73,7 +73,7 @@ QSharedPointer<HSSClonable> HSSCircle::cloneImpl() const
 
 HSSCircle::~HSSCircle()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSCircle: destructing circle object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSCircle: destructing circle object");
 }
 
 AXRString HSSCircle::toString()

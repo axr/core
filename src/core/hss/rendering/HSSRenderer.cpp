@@ -43,9 +43,9 @@
 
 #include <cmath>
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRDocument.h"
 #include "AXRError.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSBorder.h"
 #include "HSSContainer.h"
@@ -117,7 +117,7 @@ void HSSRenderer::visit(HSSContainer &container)
 
         if (container._isDirty || d->repaintAll)
         {
-            axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("HSSRenderer: redrawing contents of %1 with x: %2 and y: %3").arg(container.elementName).arg(container.x).arg(container.y));
+            axr_log(LoggerChannelRendering, AXRString("HSSRenderer: redrawing contents of %1 with x: %2 and y: %3").arg(container.elementName).arg(container.x).arg(container.y));
 
             container._isDirty = false;
             drawBackground(container);
@@ -129,7 +129,7 @@ void HSSRenderer::visit(HSSContainer &container)
     }
     else
     {
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRenderer: skipping (not visible) " + container.elementName);
+        axr_log(LoggerChannelRendering, "HSSRenderer: skipping (not visible) " + container.elementName);
     }
 }
 
@@ -137,19 +137,19 @@ void HSSRenderer::visit(HSSTextBlock &textBlock)
 {
     if (textBlock.visible)
     {
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRenderer: drawing " + textBlock.elementName);
+        axr_log(LoggerChannelRendering, "HSSRenderer: drawing " + textBlock.elementName);
         performLayoutSteps(textBlock);
 
         if (textBlock._isDirty || d->repaintAll)
         {
-            axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("HSSRenderer: redrawing contents of %1 with x: %2 and y: %3").arg(textBlock.elementName).arg(textBlock.x).arg(textBlock.y));
+            axr_log(LoggerChannelRendering, AXRString("HSSRenderer: redrawing contents of %1 with x: %2 and y: %3").arg(textBlock.elementName).arg(textBlock.x).arg(textBlock.y));
             textBlock._isDirty = false;
             drawForeground(textBlock);
         }
     }
     else
     {
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRenderer: skipping (not visible) " + textBlock.elementName);
+        axr_log(LoggerChannelRendering, "HSSRenderer: skipping (not visible) " + textBlock.elementName);
     }
 }
 
@@ -430,7 +430,7 @@ void HSSRenderer::drawRadialGradient(HSSRadialGradient &gradient, const QPainter
 
 void HSSRenderer::performLayoutSteps(HSSDisplayObject &displayObject)
 {
-    axr_log(AXR_DEBUG_CH_EVENTS_SPECIFIC, "DISPLAYOBJECT: " + displayObject.name);
+    axr_log(LoggerChannelLayout, "DISPLAYOBJECT: " + displayObject.name);
     AXRDocument *document = displayObject.getController()->document();
     if (document->showLayoutSteps())
     {
@@ -442,7 +442,7 @@ void HSSRenderer::performLayoutSteps(HSSDisplayObject &displayObject)
 
 void HSSRenderer::initializeVisit()
 {
-    axr_log(AXR_DEBUG_CH_EVENTS_SPECIFIC, "INITIALIZE_RENDER");
+    axr_log(LoggerChannelRendering, "INITIALIZE_RENDER");
     //prepare values
     QSharedPointer<HSSContainer> root = d->document->getController()->getRoot();
 
@@ -457,7 +457,7 @@ void HSSRenderer::initializeVisit()
         HSSUnit windowHeight = d->document->getWindowHeight();
         if (d->bounds.size.width != windowWidth || d->bounds.size.height != windowHeight)
         {
-            axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("HSSVisitorManager: window size changed, setting to width: %1 and height: %2").arg((int)d->bounds.size.width).arg((int)d->bounds.size.height));
+            axr_log(LoggerChannelRendering, AXRString("HSSVisitorManager: window size changed, setting to width: %1 and height: %2").arg((int)d->bounds.size.width).arg((int)d->bounds.size.height));
 
             d->bounds.size.width = windowWidth;
             d->bounds.size.height = windowHeight;
@@ -469,18 +469,18 @@ void HSSRenderer::initializeVisit()
 
         d->canvas->fill(Qt::white);
         //draw the elements
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSVisitorManager: reading object definitions");
+        axr_log(LoggerChannelGeneralSpecific, "HSSVisitorManager: reading object definitions");
         root->recursiveReadDefinitionObjects();
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSVisitorManager: laying out elements on page");
+        axr_log(LoggerChannelLayout, "HSSVisitorManager: laying out elements on page");
         root->recursiveLayout();
         if (d->document->showLayoutSteps())
         {
             d->document->resetLayoutTicks();
         }
 
-        axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSVisitorManager: regenerating surfaces");
+        axr_log(LoggerChannelRendering, "HSSVisitorManager: regenerating surfaces");
         //regenerateRootSurface();
-        axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSVisitorManager: drawing tree");
+        axr_log(LoggerChannelRendering, "HSSVisitorManager: drawing tree");
         d->document->nextLayoutChild();
     }
     else
@@ -497,7 +497,7 @@ void HSSRenderer::setOutputBoundsToObject(QSharedPointer<HSSDisplayObject> outpu
 
 void HSSRenderer::finalizeVisit()
 {
-    axr_log(AXR_DEBUG_CH_EVENTS_SPECIFIC, "FINALIZE_RENDER");
+    axr_log(LoggerChannelRendering, "FINALIZE_RENDER");
 }
 
 void HSSRenderer::reset()

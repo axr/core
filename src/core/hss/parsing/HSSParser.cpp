@@ -46,8 +46,8 @@
 #include <QUrl>
 #include "AXRBuffer.h"
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSAttrFunction.h"
 #include "HSSCombinator.h"
@@ -88,7 +88,7 @@ using namespace AXR;
 
 HSSParser::HSSParser(AXRController * theController)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSParser: creating HSS parser");
+    axr_log(LoggerChannelGeneralSpecific, "HSSParser: creating HSS parser");
 
     this->controller = theController;
     this->tokenizer = QSharedPointer<HSSTokenizer>(new HSSTokenizer());
@@ -116,7 +116,7 @@ HSSParser::HSSParser(AXRController * theController)
 
 HSSParser::~HSSParser()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSParser: destructing HSS parser");
+    axr_log(LoggerChannelGeneralSpecific, "HSSParser: destructing HSS parser");
     unsigned i;
     for (i = 0; i<this->currentObjectContext.size(); ++i)
     {
@@ -151,8 +151,7 @@ void HSSParser::reset()
 
 bool HSSParser::loadFile(QSharedPointer<AXRBuffer> file)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "HSSParser: loading file " + file->sourceUrl().toString());
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->sourceUrl().toString());
+    axr_log(LoggerChannelOverview, "HSSParser: loading file " + file->sourceUrl().toString());
 
     security_brake_init();
 
@@ -186,7 +185,7 @@ bool HSSParser::loadFile(QSharedPointer<AXRBuffer> file)
         }
         try
         {
-            axr_log(AXR_DEBUG_CH_HSS, "\nHSSParser: reading next statement");
+            axr_log(LoggerChannelHSSParser, "\nHSSParser: reading next statement");
 
             done = !this->readNextStatement();
         }
@@ -203,8 +202,7 @@ bool HSSParser::loadFile(QSharedPointer<AXRBuffer> file)
         security_brake();
     }
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "HSSParser: finished parsing " + file->sourceUrl().toString());
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->sourceUrl().toString());
+    axr_log(LoggerChannelOverview, "HSSParser: finished parsing " + file->sourceUrl().toString());
 
     return true;
 }
@@ -245,7 +243,7 @@ bool HSSParser::readNextStatement()
                 this->readNextToken(true);
             }
 
-            axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding object definition to object tree");
+            axr_log(LoggerChannelHSSParser, "HSSParser: adding object definition to object tree");
             this->recursiveAddObjectDefinition(theObj);
             controller->parserTreeAdd(theObj);
             ret = true;
@@ -341,7 +339,7 @@ bool HSSParser::readNextStatement()
             QSharedPointer<HSSObjectDefinition> theObj = this->readObjectDefinition("");
             if (theObj)
             {
-                axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding object definition to object tree");
+                axr_log(LoggerChannelHSSParser, "HSSParser: adding object definition to object tree");
                 this->recursiveAddObjectDefinition(theObj);
                 controller->parserTreeAdd(theObj);
             }
@@ -361,7 +359,7 @@ bool HSSParser::readNextStatement()
         QSharedPointer<HSSRule> theRule = this->readRule();
         if (theRule)
         {
-            axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
+            axr_log(LoggerChannelHSSParser, "HSSParser: adding rule");
             controller->rulesAdd(theRule);
             controller->parserTreeAdd(theRule);
         }
@@ -374,7 +372,7 @@ bool HSSParser::readNextStatement()
             QSharedPointer<HSSRule> theRule = this->readRule();
             if (theRule)
             {
-                axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding rule");
+                axr_log(LoggerChannelHSSParser, "HSSParser: adding rule");
                 controller->rulesAdd(theRule);
                 controller->parserTreeAdd(theRule);
             }
@@ -393,7 +391,7 @@ bool HSSParser::readNextStatement()
         this->readNextToken();
         if (!this->atEndOfSource())
             this->skip(HSSWhitespace);
-        axr_log(AXR_DEBUG_CH_HSS, "HSSParser: adding comment to parser tree");
+        axr_log(LoggerChannelHSSParser, "HSSParser: adding comment to parser tree");
         controller->parserTreeAdd(theComment);
         ret = true;
         break;
@@ -407,14 +405,14 @@ bool HSSParser::readNextStatement()
 
     return ret;
     //    } else {
-    //        std_log1("reading in anything other than root context is not implemented yet");
+    //        axr_log(LoggerChannelObsolete1, "reading in anything other than root context is not implemented yet");
     //        return ret;
     //    }
 }
 
 QSharedPointer<HSSRule> HSSParser::readRule()
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading rule");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading rule");
     security_brake_init()
 
     AXRController * controller = this->getController();
@@ -574,7 +572,7 @@ QSharedPointer<HSSRule> HSSParser::readRule()
 
 std::vector<QSharedPointer<HSSSelectorChain> > HSSParser::readSelectorChains(HSSTokenType stopOn)
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading selector chains");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading selector chains");
     security_brake_init();
 
     AXRController * controller = this->getController();
@@ -658,7 +656,7 @@ std::vector<QSharedPointer<HSSSelectorChain> > HSSParser::readSelectorChains(HSS
 
 QSharedPointer<HSSSimpleSelector> HSSParser::readSimpleSelector()
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading simple selector");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading simple selector");
     security_brake_init();
 
     AXRController * controller = getController();
@@ -767,7 +765,7 @@ QSharedPointer<HSSNameSelector> HSSParser::readObjectSelector()
                 /**
                  *  @todo implement \@super
                  */
-                std_log("@super not implemented yet");
+                axr_log(LoggerChannelObsolete0, "@super not implemented yet");
             }
             else if (objtype == "parent")
             {
@@ -813,7 +811,7 @@ bool HSSParser::isNegator()
 
 QSharedPointer<HSSFilter> HSSParser::readFilter()
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading filter");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading filter");
 
     QSharedPointer<HSSFilter> ret;
     if (this->currentToken->isA(HSSColon))
@@ -848,7 +846,7 @@ QSharedPointer<HSSFilter> HSSParser::readFilter()
 
 QSharedPointer<HSSCombinator> HSSParser::readCombinator()
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading combinator");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading combinator");
     QSharedPointer<HSSCombinator> ret;
 
     if (this->currentToken->isA(HSSSymbol))
@@ -886,7 +884,7 @@ QSharedPointer<HSSCombinator> HSSParser::readCombinator()
 
 //std::vector<QSharedPointer<HSSSelectorChain>> HSSParser::readSelectorChains(HSSTokenType stopOn)
 //{
-//    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading selector chain");
+//    axr_log(LoggerChannelHSSParser, "HSSParser: reading selector chain");
 //    inc_output_indent();
 //    security_brake_init();
 //
@@ -1110,13 +1108,10 @@ bool HSSParser::isCombinator(QSharedPointer<HSSToken> token)
 
 bool HSSParser::isChildrenCombinator()
 {
-    std_log4("----- peeking ------ ");
     //if the next token is anything other than a combinator, an open block or an object sign the whitespace means children combinator
     QSharedPointer<HSSToken> peekToken = this->tokenizer->peekNextToken();
-    std_log4(peekToken->toString());
     bool ret = !this->isCombinator(peekToken) && !peekToken->isA(HSSBlockOpen) && !peekToken->isA(HSSObjectSign);
     this->tokenizer->resetPeek();
-    std_log4("----- finished peeking ------ ");
     return ret;
 }
 
@@ -1124,7 +1119,7 @@ bool HSSParser::isChildrenCombinator()
 
 bool HSSParser::isPropertyDefinition(bool * isShorthand)
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: checking if property definition");
+    axr_log(LoggerChannelHSSParser, "HSSParser: checking if property definition");
     bool ret = true;
     *isShorthand = false;
 
@@ -1133,7 +1128,6 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
     //        return false;
     //    }
 
-    std_log4("----- peeking ------ ");
     QSharedPointer<HSSToken> peekToken;
     if (this->currentToken->isA(HSSInstructionSign))
     {
@@ -1149,7 +1143,6 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
     {
         peekToken = this->tokenizer->peekNextToken();
 
-        std_log4(peekToken->toString());
         //skip all whitespace and comments
         while (peekToken && (peekToken->isA(HSSWhitespace) || peekToken->isA(HSSBlockComment) || peekToken->isA(HSSLineComment)))
         {
@@ -1169,7 +1162,6 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
             {
                 while (!peekToken->isA(HSSEndOfStatement) && !peekToken->isA(HSSBlockClose) && !peekToken->isA(HSSBlockOpen))
                 {
-                    std_log4(peekToken->toString());
                     peekToken = this->tokenizer->peekNextToken();
                     this->checkForUnexpectedEndOfSource();
                 }
@@ -1270,7 +1262,6 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
         }
     }
 
-    std_log4("----- finished peeking ------ ");
     this->tokenizer->resetPeek();
     return ret;
 }
@@ -1305,7 +1296,7 @@ QSharedPointer<HSSCombinator> HSSParser::readChildrenCombinatorOrSkip()
 
 QSharedPointer<HSSCombinator> HSSParser::readSymbolCombinator()
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading symbol combinator");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading symbol combinator");
 
     /**
      *  @todo check the context
@@ -1344,7 +1335,7 @@ QSharedPointer<HSSCombinator> HSSParser::readSymbolCombinator()
 
 QSharedPointer<HSSNameSelector> HSSParser::readNameSelector(bool isNegating)
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading name selector");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading name selector");
 
     AXRString theValue = VALUE_TOKEN(this->currentToken)->getString();
     QSharedPointer<HSSNameSelector> ret = QSharedPointer<HSSNameSelector>(new HSSNameSelector(theValue, this->getController()));
@@ -1359,7 +1350,7 @@ QSharedPointer<HSSNameSelector> HSSParser::readNameSelector(bool isNegating)
 
 QSharedPointer<HSSObjectDefinition> HSSParser::readObjectDefinition(AXRString propertyName)
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading object definition");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading object definition");
 
     QSharedPointer<HSSObjectDefinition> ret;
     AXRString objtype;
@@ -1469,7 +1460,7 @@ QSharedPointer<HSSObjectDefinition> HSSParser::readObjectDefinition(AXRString pr
     {
     case HSSIdentifier:
         obj->setName(VALUE_TOKEN(this->currentToken)->getString());
-        std_log3("setting its name to " + VALUE_TOKEN(this->currentToken)->getString());
+        axr_log(LoggerChannelObsolete3, "setting its name to " + VALUE_TOKEN(this->currentToken)->getString());
         this->readNextToken();
         break;
     case HSSBlockOpen:
@@ -1669,7 +1660,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition()
 
 QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool shorthandChecked, bool isShorthand)
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading property definition");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading property definition");
 
     AXRString propertyName;
 
@@ -1924,7 +1915,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
 
 QSharedPointer<HSSParserNode> HSSParser::readValue(AXRString propertyName, bool &valid)
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading value");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading value");
 
     bool isValid = true;
     QSharedPointer<HSSParserNode> ret;
@@ -2047,7 +2038,7 @@ QSharedPointer<HSSInstruction> HSSParser::readInstruction()
 
 QSharedPointer<HSSInstruction> HSSParser::readInstruction(bool preferHex)
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading instruction");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading instruction");
 
     QSharedPointer<HSSInstruction> ret;
     AXRString currentval;
@@ -2367,7 +2358,7 @@ QSharedPointer<HSSObjectDefinition> HSSParser::getObjectFromInstruction(QSharedP
     }
 
     default:
-        std_log1("*********** eror: unknown instruction type ****************");
+        axr_log(LoggerChannelObsolete1, "*********** eror: unknown instruction type ****************");
         break;
     }
     return ret;
@@ -2377,7 +2368,7 @@ QSharedPointer<HSSObjectDefinition> HSSParser::getObjectFromInstruction(QSharedP
 
 QSharedPointer<HSSRule> HSSParser::readInstructionRule()
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading instruction rule");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading instruction rule");
 
     QSharedPointer<HSSInstruction> instruction = this->readInstruction(false);
     QSharedPointer<HSSRule> ret;
@@ -2436,18 +2427,18 @@ QSharedPointer<HSSRule> HSSParser::readInstructionRule()
     }
 
     default:
-        std_log1("*********** eror: unknown instruction type ****************");
+        axr_log(LoggerChannelObsolete1, "*********** eror: unknown instruction type ****************");
         break;
     }
 
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading instruction rule");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading instruction rule");
 
     return ret;
 }
 
 QSharedPointer<HSSParserNode> HSSParser::readExpression()
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading expression");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading expression");
 
     QSharedPointer<HSSParserNode> ret = this->readAdditiveExpression();
 
@@ -2600,7 +2591,7 @@ QSharedPointer<HSSParserNode> HSSParser::readBaseExpression()
 ////this method expects the currentToken to be an identifier
 //QSharedPointer<HSSParserNode> HSSParser::readFilter()
 //{
-//    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading filter");
+//    axr_log(LoggerChannelHSSParser, "HSSParser: reading filter");
 //    inc_output_indent();
 //
 //    QSharedPointer<HSSFilter> ret;
@@ -2621,7 +2612,7 @@ QSharedPointer<HSSParserNode> HSSParser::readBaseExpression()
 
 QSharedPointer<HSSParserNode> HSSParser::readFlag()
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading flag");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading flag");
 
     QSharedPointer<HSSFlag> ret;
     this->expect(HSSIdentifier);
@@ -2638,7 +2629,7 @@ QSharedPointer<HSSParserNode> HSSParser::readFlag()
 
 QSharedPointer<HSSParserNode> HSSParser::readFunction()
 {
-    axr_log(AXR_DEBUG_CH_HSS, "HSSParser: reading function");
+    axr_log(LoggerChannelHSSParser, "HSSParser: reading function");
 
     QSharedPointer<HSSParserNode> ret;
 
@@ -2660,7 +2651,7 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
             //first, we expect either "min", "max", "avg" or a property name
             if (!this->currentToken->isA(HSSIdentifier))
             {
-                std_log1("HSSParser: unexpected token while reading ref function " + name);
+                axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function " + name);
             }
             else
             {
@@ -2678,7 +2669,7 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
                     this->skip(HSSWhitespace);
                     if (!this->currentToken->isA(HSSIdentifier))
                     {
-                        std_log1("HSSParser: unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+                        axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
                     }
                     else
                     {
@@ -2715,7 +2706,7 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
             {
                 if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of")
                 {
-                    std_log1("HSSParser: unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+                    axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
                 }
                 this->checkForUnexpectedEndOfSource();
                 this->readNextToken(true);
@@ -2793,7 +2784,7 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
             }
             else
             {
-                std_log("HSSParser: unexpected token while reading flagging function " + name);
+                axr_log(LoggerChannelObsolete0, "HSSParser: unexpected token while reading flagging function " + name);
             }
 
             this->checkForUnexpectedEndOfSource();
@@ -2826,7 +2817,7 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
             {
                 if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "on")
                 {
-                    std_log1("HSSParser: unexpected token while reading flagging function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+                    axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading flagging function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
                 }
                 this->checkForUnexpectedEndOfSource();
                 this->readNextToken(true);

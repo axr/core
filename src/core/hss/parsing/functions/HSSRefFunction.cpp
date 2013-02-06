@@ -42,8 +42,8 @@
  ********************************************************************/
 
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRError.h"
+#include "AXRLoggerManager.h"
 #include "HSSCallback.h"
 #include "HSSDisplayObject.h"
 #include "HSSRefFunction.h"
@@ -116,7 +116,7 @@ void HSSRefFunction::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSel
 {
     if (newSelectorChain)
     {
-        std_log3("Added selector chain to HSSRefFunction: " + newSelectorChain->toString());
+        axr_log(LoggerChannelObsolete3, "Added selector chain to HSSRefFunction: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
         this->selectorChains.push_back(newSelectorChain);
     }

@@ -47,7 +47,7 @@
 
 #include <cmath>
 #include <QVariant>
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSColorStop.h"
@@ -67,7 +67,7 @@ Q_DECLARE_METATYPE(HSSUnit*)
 HSSRadialGradient::HSSRadialGradient(AXRController * controller)
 : HSSGradient(HSSGradientTypeRadial, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRadialGradient: creating radial gradient object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRadialGradient: creating radial gradient object");
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("startColor");
     shorthandProperties.push_back("endColor");
@@ -116,7 +116,7 @@ HSSRadialGradient::HSSRadialGradient(const HSSRadialGradient & orig)
 
 QSharedPointer<HSSRadialGradient> HSSRadialGradient::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRadialGradient: cloning radial gradient object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRadialGradient: cloning radial gradient object");
     return qSharedPointerCast<HSSRadialGradient> (this->cloneImpl());
 }
 
@@ -127,7 +127,7 @@ QSharedPointer<HSSClonable> HSSRadialGradient::cloneImpl() const
 
 HSSRadialGradient::~HSSRadialGradient()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRadialGradient: destructing radial gradient object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRadialGradient: destructing radial gradient object");
     if (this->observedCenterX)
     {
         this->observedCenterX->removeObserver(this->observedCenterXProperty, HSSObservablePropertyCenterX, this);

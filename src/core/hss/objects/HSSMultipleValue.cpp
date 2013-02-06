@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include <QSharedPointer>
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "HSSDisplayObject.h"
 #include "HSSMultipleValue.h"
 #include "HSSParserNode.h"
@@ -52,7 +52,7 @@ using namespace AXR;
 HSSMultipleValue::HSSMultipleValue(AXRController * controller)
 : HSSObject(HSSObjectTypeMultipleValue, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSMultipleValue: creating multiple value object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSMultipleValue: creating multiple value object");
 }
 
 HSSMultipleValue::HSSMultipleValue(const HSSMultipleValue & orig)
@@ -77,7 +77,7 @@ QSharedPointer<HSSClonable> HSSMultipleValue::cloneImpl() const
 
 HSSMultipleValue::~HSSMultipleValue()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSMultipleValue: destructing multiple value object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSMultipleValue: destructing multiple value object");
     this->valueList.clear();
 }
 
@@ -102,7 +102,7 @@ void HSSMultipleValue::add(QSharedPointer<HSSParserNode> newValue)
 {
     if (newValue)
     {
-        std_log3("Added value to HSSMultipleValue: " + newValue->toString());
+        axr_log(LoggerChannelObsolete3, "Added value to HSSMultipleValue: " + newValue->toString());
         this->valueList.push_back(newValue);
     }
 }

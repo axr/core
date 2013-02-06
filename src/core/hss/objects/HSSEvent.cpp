@@ -43,7 +43,7 @@
 
 #include <QMap>
 #include "AXRController.h"
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSAction.h"
 #include "HSSCallback.h"
@@ -88,7 +88,7 @@ AXRString HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
 HSSEvent::HSSEvent(HSSEventType type, AXRController * controller)
 : HSSObject(HSSObjectTypeEvent, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: creating event object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSEvent: creating event object");
     this->eventType = type;
 
     std::vector<AXRString> shorthandProperties;
@@ -112,7 +112,7 @@ HSSEvent::HSSEvent(const HSSEvent & orig)
 
 QSharedPointer<HSSEvent> HSSEvent::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: cloning event object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSEvent: cloning event object");
     return qSharedPointerCast<HSSEvent>(this->cloneImpl());
 }
 
@@ -123,7 +123,7 @@ QSharedPointer<HSSClonable> HSSEvent::cloneImpl() const
 
 HSSEvent::~HSSEvent()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSEvent: destructing event object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSEvent: destructing event object");
 }
 
 AXRString HSSEvent::toString()
@@ -335,7 +335,7 @@ void HSSEvent::addDAction(QSharedPointer<HSSParserNode> value)
 
 void HSSEvent::actionChanged(HSSObservableProperty source, void*data)
 {
-    std_log("HSSEvent::actionChanged unimplemented");
+    axr_log(LoggerChannelObsolete0, "HSSEvent::actionChanged unimplemented");
 }
 
 void HSSEvent::fire()

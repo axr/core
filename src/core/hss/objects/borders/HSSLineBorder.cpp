@@ -44,7 +44,7 @@
 #include <QPainter>
 #include <QPainterPathStroker>
 #include "AXRController.h"
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSDisplayObject.h"
@@ -63,7 +63,7 @@ using namespace AXR;
 HSSLineBorder::HSSLineBorder(AXRController * controller)
 : HSSBorder(controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLineBorder: creating line border object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSLineBorder: creating line border object");
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("color");
@@ -90,7 +90,7 @@ HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
 
 QSharedPointer<HSSLineBorder> HSSLineBorder::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLineBorder: cloning line border object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSLineBorder: cloning line border object");
     return qSharedPointerCast<HSSLineBorder> (this->cloneImpl());
 }
 
@@ -101,7 +101,7 @@ QSharedPointer<HSSClonable> HSSLineBorder::cloneImpl() const
 
 HSSLineBorder::~HSSLineBorder()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLineBorder: destructing line border object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSLineBorder: destructing line border object");
 }
 
 AXRString HSSLineBorder::toString()
@@ -288,7 +288,7 @@ void HSSLineBorder::setDColor(QSharedPointer<HSSParserNode> value)
 
 void HSSLineBorder::colorChanged(AXR::HSSObservableProperty source, void *data)
 {
-    std_log1("********************** colorChanged unimplemented ****************************");
+    axr_log(LoggerChannelObsolete1, "********************** colorChanged unimplemented ****************************");
 }
 
 void HSSLineBorder::draw(QPainter &painter, const QPainterPath &path)

@@ -44,8 +44,8 @@
 #include <QMap>
 #include <QVariant>
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCircle.h"
 #include "HSSColorStop.h"
@@ -319,7 +319,7 @@ bool HSSObject::isNamed()
 
 void HSSObject::setName(AXRString newName)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSObject: setting name to " + newName);
+    axr_log(LoggerChannelGeneralSpecific, "HSSObject: setting name to " + newName);
     this->name = newName;
     this->_isNamed = true;
 }

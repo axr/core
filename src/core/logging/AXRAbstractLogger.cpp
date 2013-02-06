@@ -41,65 +41,76 @@
  *
  ********************************************************************/
 
-#include "AXRController.h"
-#include "AXRLoggerManager.h"
-#include "HSSDisplayObject.h"
-#include "HSSFunction.h"
-#include "HSSFunctionAction.h"
+#include "AXRAbstractLogger.h"
 
 using namespace AXR;
 
-HSSFunctionAction::HSSFunctionAction(AXRController * controller)
-: HSSAction(HSSActionTypeFunction, controller)
+namespace AXR
 {
-    axr_log(LoggerChannelGeneralSpecific, "HSSFunctionAction: creating function action object");
+    class AXRAbstractLoggerPrivate
+    {
+    public:
+        AXRAbstractLoggerPrivate() : activeChannels()
+        {
+        }
+
+        AXRLoggerChannels activeChannels;
+    };
 }
 
-HSSFunctionAction::HSSFunctionAction(const HSSFunctionAction & orig)
-: HSSAction(orig)
+AXRAbstractLogger::AXRAbstractLogger()
+: d(new AXRAbstractLoggerPrivate)
 {
-    //this->_function = orig._function->clone();
 }
 
-QSharedPointer<HSSFunctionAction> HSSFunctionAction::clone() const
+AXRAbstractLogger::~AXRAbstractLogger()
 {
-    axr_log(LoggerChannelGeneralSpecific, "HSSFunctionAction: cloning function action object");
-    return qSharedPointerCast<HSSFunctionAction> (this->cloneImpl());
+    delete d;
 }
 
-QSharedPointer<HSSClonable> HSSFunctionAction::cloneImpl() const
+/*!
+ * Gets the currently active logger channels.
+ * Any output written to channels that are not active will be discarded.
+ * No logging channels are active by default.
+ */
+AXRLoggerChannels AXRAbstractLogger::activeChannels() const
 {
-    QSharedPointer<HSSFunctionAction> clone = QSharedPointer<HSSFunctionAction>(new HSSFunctionAction(*this));
-    return clone;
+    return d->activeChannels;
 }
 
-HSSFunctionAction::~HSSFunctionAction()
+/*!
+ * Sets the currently active logger channels.
+ */
+void AXRAbstractLogger::setActiveChannels(AXRLoggerChannels channels)
 {
-    axr_log(LoggerChannelGeneralSpecific, "HSSFunctionAction: destructing function action object");
+    d->activeChannels = channels;
 }
 
-AXRString HSSFunctionAction::toString()
+bool AXRAbstractLogger::areChannelsActive(AXRLoggerChannels channels)
 {
-    return "HSSFunctionAction";
+    return d->activeChannels & channels;
 }
 
-AXRString HSSFunctionAction::defaultObjectType()
+void AXRAbstractLogger::activateChannels(AXRLoggerChannels channels)
 {
-    return "value";
+    d->activeChannels |= channels;
 }
 
-void HSSFunctionAction::fire()
+void AXRAbstractLogger::deactivateChannels(AXRLoggerChannels channels)
 {
-    QSharedPointer<HSSFunction> function = this->getFunction();
-    function->_evaluate(function->getArguments());
+    d->activeChannels &= ~channels;
 }
 
-QSharedPointer<HSSFunction> HSSFunctionAction::getFunction()
+void AXRAbstractLogger::log(AXRLoggerChannels channels, const AXRString &message)
 {
-    return this->_function;
+    foreach (AXRLoggerChannel channel, loggerFlagsToList(channels))
+        if (d->activeChannels.testFlag(channel))
+            log(channel, message, false);
 }
 
-void HSSFunctionAction::setFunction(QSharedPointer<HSSFunction> newValue)
+void AXRAbstractLogger::logLine(AXRLoggerChannels channels, const AXRString &message)
 {
-    this->_function = newValue;
+    foreach (AXRLoggerChannel channel, loggerFlagsToList(channels))
+        if (d->activeChannels.testFlag(channel))
+            log(channel, message, true);
 }

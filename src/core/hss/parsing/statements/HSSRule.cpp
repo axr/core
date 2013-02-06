@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include "AXRController.h"
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "HSSContainer.h"
 #include "HSSDisplayObject.h"
 #include "HSSFilter.h"
@@ -147,7 +147,7 @@ void HSSRule::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSelectorCh
 {
     if (newSelectorChain)
     {
-        std_log3("Added selector chain: " + newSelectorChain->toString());
+        axr_log(LoggerChannelObsolete3, "Added selector chain: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
         this->selectorChains.push_back(newSelectorChain);
     }
@@ -187,7 +187,7 @@ void HSSRule::propertiesAdd(QSharedPointer<HSSPropertyDefinition> & newProperty)
 {
     if (newProperty)
     {
-        std_log3("Added property: " + newProperty->toString());
+        axr_log(LoggerChannelObsolete3, "Added property: " + newProperty->toString());
         newProperty->setParentNode(this->shared_from_this());
         this->properties.push_back(newProperty);
     }

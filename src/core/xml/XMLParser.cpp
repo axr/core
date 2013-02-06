@@ -42,12 +42,11 @@
  ********************************************************************/
 
 #include <QtCore>
-#include <QtXml>
 #include "AXRBuffer.h"
 #include "AXRController.h"
-#include "AXRDebugging.h"
-#include "AXRError.h"
 #include "AXRDocument.h"
+#include "AXRError.h"
+#include "AXRLoggerManager.h"
 #include "XMLParser.h"
 
 using namespace AXR;
@@ -55,12 +54,12 @@ using namespace AXR;
 XMLParser::XMLParser(AXRController *theController)
 : controller(theController)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "XMLParser: creating XML parser");
+    axr_log(LoggerChannelGeneralSpecific, "XMLParser: creating XML parser");
 }
 
 XMLParser::~XMLParser()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "XMLParser: destroying XML parser");
+    axr_log(LoggerChannelGeneralSpecific, "XMLParser: destroying XML parser");
 }
 
 bool XMLParser::loadFile(QSharedPointer<AXRBuffer> file)
@@ -70,12 +69,11 @@ bool XMLParser::loadFile(QSharedPointer<AXRBuffer> file)
         throw AXRError("XMLParser", "The controller was not set on the XML parser");
     }
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: loading file " + file->sourceUrl().toString());
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, file->sourceUrl().toString());
+    axr_log(LoggerChannelOverview, "XMLParser: loading file " + file->sourceUrl().toString());
 
     if (!file->isValid())
     {
-        axr_log(AXR_DEBUG_CH_OVERVIEW, "XMLParser: failed to load file " + file->sourceUrl().toString());
+        axr_log(LoggerChannelOverview, "XMLParser: failed to load file " + file->sourceUrl().toString());
         return false;
     }
 
@@ -89,7 +87,7 @@ bool XMLParser::loadFile(QSharedPointer<AXRBuffer> file)
             if (xml.isStartElement())
             {
                 AXRString name = xml.name().toString();
-                axr_log(AXR_DEBUG_CH_XML, "XMLParser: found opening tag with name " + name);
+                axr_log(LoggerChannelXMLParser, "XMLParser: found opening tag with name " + name);
                 controller->enterElement(name);
 
                 Q_FOREACH (const QXmlStreamAttribute &attr, xml.attributes())
@@ -99,18 +97,18 @@ bool XMLParser::loadFile(QSharedPointer<AXRBuffer> file)
             }
             else if (xml.isEndElement())
             {
-                axr_log(AXR_DEBUG_CH_XML, "XMLParser: found closing tag with name " + xml.name().toString());
+                axr_log(LoggerChannelXMLParser, "XMLParser: found closing tag with name " + xml.name().toString());
                 controller->exitElement();
             }
             else if (xml.isCharacters())
             {
-                axr_log(AXR_DEBUG_CH_XML, AXRString("XMLParser: reading character data: \"%1\"").arg(xml.text().toString()));
+                axr_log(LoggerChannelXMLParser, AXRString("XMLParser: reading character data: \"%1\"").arg(xml.text().toString()));
                 controller->appendContentText(xml.text().toString());
             }
             else if (xml.isProcessingInstruction())
             {
                 AXRString instructionName = xml.processingInstructionTarget().toString();
-                axr_log(AXR_DEBUG_CH_XML, "XMLParser: found XML instruction with name " + instructionName);
+                axr_log(LoggerChannelXMLParser, "XMLParser: found XML instruction with name " + instructionName);
 
                 // Probable HSS stylesheet encountered, try to load it into the controller
                 if (instructionName == "xml-stylesheet")
@@ -178,7 +176,7 @@ bool XMLParser::loadFile(QSharedPointer<AXRBuffer> file)
                     }
                     else
                     {
-                        axr_log(AXR_DEBUG_CH_XML, "Ignoring stylesheet of type: " + sheetType + " in file " + file->sourceUrl().toString());
+                        axr_log(LoggerChannelXMLParser, "Ignoring stylesheet of type: " + sheetType + " in file " + file->sourceUrl().toString());
                     }
                 }
             }

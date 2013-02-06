@@ -43,8 +43,8 @@
 
 #include <QStringList>
 #include <QUrl>
-#include "AXRDebugging.h"
 #include "AXRError.h"
+#include "AXRLoggerManager.h"
 
 using namespace AXR;
 
@@ -102,7 +102,7 @@ AXRError::~AXRError()
 
 void AXRError::raise() const
 {
-    std_log(toString());
+    axr_log(LoggerChannelUserError, toString());
 }
 
 AXRString AXRError::toString() const

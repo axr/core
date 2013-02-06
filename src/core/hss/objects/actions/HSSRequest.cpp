@@ -43,8 +43,8 @@
 
 #include "AXRBuffer.h"
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
@@ -59,7 +59,7 @@ using namespace AXR;
 HSSRequest::HSSRequest(AXRController * controller)
 : HSSAction(HSSActionTypeRequest, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRequest: creating request object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRequest: creating request object");
     this->observedSrc
             = this->observedTarget
             = NULL;
@@ -87,7 +87,7 @@ HSSRequest::HSSRequest(const HSSRequest & orig)
 
 QSharedPointer<HSSRequest> HSSRequest::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRequest: cloning request object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRequest: cloning request object");
     return qSharedPointerCast<HSSRequest> (this->cloneImpl());
 }
 
@@ -98,7 +98,7 @@ QSharedPointer<HSSClonable> HSSRequest::cloneImpl() const
 
 HSSRequest::~HSSRequest()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRequest: destructing request object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRequest: destructing request object");
 }
 
 AXRString HSSRequest::toString()

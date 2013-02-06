@@ -44,7 +44,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include "AXRBuffer.h"
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 
 using namespace AXR;
 
@@ -69,8 +69,7 @@ AXRBuffer::AXRBuffer(const QFileInfo &filePath)
     }
     else
     {
-        // TODO: AXR_DEBUG_CH_IO?
-        axr_log(AXR_DEBUG_CH_ON | AXR_DEBUG_CH_GENERAL, AXRString("AXRBuffer: Could not open file '%1' - %2").arg(filePath.canonicalFilePath()).arg(file.errorString()));
+        axr_log(LoggerChannelIO, AXRString("AXRBuffer: Could not open file '%1' - %2").arg(filePath.canonicalFilePath()).arg(file.errorString()));
     }
 }
 

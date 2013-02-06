@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include "AXRController.h"
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSDisplayObject.h"
 #include "HSSFlagAction.h"
@@ -56,7 +56,7 @@ using namespace AXR;
 HSSFlagAction::HSSFlagAction(AXRController * controller)
 : HSSAction(HSSActionTypeFlag, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFlagAction: creating flag action object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSFlagAction: creating flag action object");
 }
 
 HSSFlagAction::HSSFlagAction(const HSSFlagAction & orig)
@@ -67,7 +67,7 @@ HSSFlagAction::HSSFlagAction(const HSSFlagAction & orig)
 
 QSharedPointer<HSSFlagAction> HSSFlagAction::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFlagAction: cloning flag action object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSFlagAction: cloning flag action object");
     return qSharedPointerCast<HSSFlagAction> (this->cloneImpl());
 }
 
@@ -79,7 +79,7 @@ QSharedPointer<HSSClonable> HSSFlagAction::cloneImpl() const
 
 HSSFlagAction::~HSSFlagAction()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFlagAction: destructing flag action object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSFlagAction: destructing flag action object");
 }
 
 AXRString HSSFlagAction::toString()

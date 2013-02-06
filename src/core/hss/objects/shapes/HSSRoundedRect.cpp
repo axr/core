@@ -43,7 +43,7 @@
 
 #include <QPainter>
 #include <QPainterPath>
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSBorder.h"
 #include "HSSCallback.h"
@@ -64,7 +64,7 @@ using namespace AXR;
 HSSRoundedRect::HSSRoundedRect(AXRController * controller)
 : HSSShape(HSSShapeTypeRoundedRect, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: creating rounded rectangle object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRoundedRect: creating rounded rectangle object");
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
     this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
 
@@ -86,7 +86,7 @@ HSSRoundedRect::HSSRoundedRect(const HSSRoundedRect & orig)
 
 QSharedPointer<HSSRoundedRect> HSSRoundedRect::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: cloning rounded rectangle object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRoundedRect: cloning rounded rectangle object");
     return qSharedPointerCast<HSSRoundedRect>(this->cloneImpl());
 }
 
@@ -97,7 +97,7 @@ QSharedPointer<HSSClonable> HSSRoundedRect::cloneImpl() const
 
 HSSRoundedRect::~HSSRoundedRect()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRoundedRect: destructing rounded rectangle object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRoundedRect: destructing rounded rectangle object");
 }
 
 AXRString HSSRoundedRect::toString()

@@ -71,9 +71,9 @@ namespace AXR
         virtual ~AXRError();
 
         /**
-         *  Call this if you want the message to be displayed.
+         *  Call this if you want the message to be printed to the logger.
          */
-        void raise() const;
+        virtual void raise() const;
 
         /**
          *  Print itself as a textual representation.

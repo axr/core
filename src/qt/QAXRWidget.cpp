@@ -44,7 +44,6 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRDocument.h"
 #include "HSSContainer.h"
 #include "HSSRect.h"

@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include "AXRController.h"
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSDisplayObject.h"
@@ -66,7 +66,7 @@ const HSSUnit HSSFont::DEFAULT_SIZE = 18;
 HSSFont::HSSFont(AXRController * controller)
 : HSSObject(HSSObjectTypeFont, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSFont: creating font object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSFont: creating font object");
 
     this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;
 
@@ -217,7 +217,7 @@ void HSSFont::setDSize(QSharedPointer<HSSParserNode> value)
 
 void HSSFont::sizeChanged(AXR::HSSObservableProperty source, void *data)
 {
-    std_log1("********************** sizeChanged unimplemented ****************************");
+    axr_log(LoggerChannelObsolete1, "********************** sizeChanged unimplemented ****************************");
 }
 
 AXRString HSSFont::getFace()
@@ -242,7 +242,7 @@ void HSSFont::setDFace(QSharedPointer<HSSParserNode> value)
 
 void HSSFont::faceChanged(AXR::HSSObservableProperty source, void *data)
 {
-    std_log1("********************** faceChanged unimplemented ****************************");
+    axr_log(LoggerChannelObsolete1, "********************** faceChanged unimplemented ****************************");
 }
 
 QSharedPointer<HSSRgb> HSSFont::getColor()
@@ -343,7 +343,7 @@ void HSSFont::setDColor(QSharedPointer<HSSParserNode> value)
 
 void HSSFont::colorChanged(AXR::HSSObservableProperty source, void *data)
 {
-    std_log1("********************** colorChanged unimplemented ****************************");
+    axr_log(LoggerChannelObsolete1, "********************** colorChanged unimplemented ****************************");
 }
 
 QSharedPointer<HSSKeywordConstant> HSSFont::getWeight()
@@ -401,7 +401,7 @@ void HSSFont::setDWeight(QSharedPointer<HSSParserNode> value)
 
 void HSSFont::weightChanged(AXR::HSSObservableProperty source, void *data)
 {
-    std_log1("********************** weightChanged unimplemented ****************************");
+    axr_log(LoggerChannelObsolete1, "********************** weightChanged unimplemented ****************************");
 }
 
 HSSUnit HSSFont::_evaluatePropertyValue(

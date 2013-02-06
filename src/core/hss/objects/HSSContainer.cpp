@@ -43,8 +43,8 @@
 
 #include <cmath>
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSAbstractVisitor.h"
 #include "HSSBorder.h"
@@ -87,7 +87,7 @@ QSharedPointer<HSSContainer> HSSContainer::asContainer(QSharedPointer<HSSDisplay
 HSSContainer::HSSContainer(AXRController * controller)
 : HSSDisplayObject(HSSObjectTypeContainer, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: creating container");
+    axr_log(LoggerChannelGeneralSpecific, "HSSContainer: creating container");
     this->initialize();
 }
 
@@ -140,7 +140,7 @@ HSSContainer::HSSContainer(const HSSContainer & orig)
 
 QSharedPointer<HSSContainer> HSSContainer::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: cloning container");
+    axr_log(LoggerChannelGeneralSpecific, "HSSContainer: cloning container");
     return qSharedPointerCast<HSSContainer> (this->cloneImpl());
 }
 
@@ -151,7 +151,7 @@ QSharedPointer<HSSClonable> HSSContainer::cloneImpl() const
 
 HSSContainer::~HSSContainer()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: destructing container");
+    axr_log(LoggerChannelGeneralSpecific, "HSSContainer: destructing container");
     if (this->children)
     {
         this->children->clear();
@@ -280,7 +280,7 @@ void HSSContainer::add(QSharedPointer<HSSDisplayObject> child)
 {
     QSharedPointer<HSSContainer> sharedThis = this->shared_from_this();
     child->setParent(sharedThis);
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSContainer: added child " + child->getElementName() + " to " + this->getElementName());
+    axr_log(LoggerChannelGeneralSpecific, "HSSContainer: added child " + child->getElementName() + " to " + this->getElementName());
     child->setIndex(this->allChildren->size());
     if (!child->isA(HSSObjectTypeTextBlock))
     {
@@ -400,7 +400,7 @@ void HSSContainer::appendContentText(const AXRString &contextText)
 
 AXRString HSSContainer::getContentText()
 {
-    std_log("whateva");
+    axr_log(LoggerChannelObsolete0, "whateva");
     return "bla";
 }
 
@@ -2900,7 +2900,7 @@ void HSSContainer::setDTextAlign(QSharedPointer<HSSParserNode> value)
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->textAlign = HSSTextBlock::textAlignTypeFromString(qSharedPointerCast<HSSValue>(theobj)->getStringValue());
-            std_log("######## FIXME ################");
+            axr_log(LoggerChannelObsolete0, "######## FIXME ################");
             valid = true;
         }
 

@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "HSSBorder.h"
 #include "HSSDisplayObject.h"
 #include "HSSKeywordConstant.h"
@@ -53,7 +53,7 @@ using namespace AXR;
 HSSRectangle::HSSRectangle(AXRController * controller)
 : HSSShape(HSSShapeTypeRectangle, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: creating rectangle object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRectangle: creating rectangle object");
 }
 
 HSSRectangle::HSSRectangle(const HSSRectangle & orig)
@@ -64,7 +64,7 @@ HSSRectangle::HSSRectangle(const HSSRectangle & orig)
 
 QSharedPointer<HSSRectangle> HSSRectangle::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: cloning rectangle object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRectangle: cloning rectangle object");
     return qSharedPointerCast<HSSRectangle> (this->cloneImpl());
 }
 
@@ -75,7 +75,7 @@ QSharedPointer<HSSClonable> HSSRectangle::cloneImpl() const
 
 HSSRectangle::~HSSRectangle()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRectangle: destructing rectangle object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRectangle: destructing rectangle object");
 }
 
 AXRString HSSRectangle::toString()

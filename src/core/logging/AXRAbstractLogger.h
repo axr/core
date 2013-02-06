@@ -41,65 +41,39 @@
  *
  ********************************************************************/
 
-#include "AXRController.h"
-#include "AXRLoggerManager.h"
-#include "HSSDisplayObject.h"
-#include "HSSFunction.h"
-#include "HSSFunctionAction.h"
+#ifndef AXRABSTRACTLOGGER_H
+#define AXRABSTRACTLOGGER_H
 
-using namespace AXR;
+#include "AXRLoggerEnums.h"
 
-HSSFunctionAction::HSSFunctionAction(AXRController * controller)
-: HSSAction(HSSActionTypeFunction, controller)
+namespace AXR
 {
-    axr_log(LoggerChannelGeneralSpecific, "HSSFunctionAction: creating function action object");
+    class AXRAbstractLoggerPrivate;
+
+    class AXR_API AXRAbstractLogger
+    {
+        Q_DISABLE_COPY(AXRAbstractLogger)
+
+    public:
+        virtual ~AXRAbstractLogger();
+
+        AXRLoggerChannels activeChannels() const;
+        void setActiveChannels(AXRLoggerChannels channels);
+
+        bool areChannelsActive(AXRLoggerChannels channels);
+        void activateChannels(AXRLoggerChannels channels);
+        void deactivateChannels(AXRLoggerChannels channels);
+
+        void log(AXRLoggerChannels channels, const AXRString &message);
+        void logLine(AXRLoggerChannels channels, const AXRString &message);
+
+    protected:
+        AXRAbstractLogger();
+        virtual void log(AXRLoggerChannel channel, const AXRString &message, bool newLine) = 0;
+
+    private:
+        AXRAbstractLoggerPrivate *d;
+    };
 }
 
-HSSFunctionAction::HSSFunctionAction(const HSSFunctionAction & orig)
-: HSSAction(orig)
-{
-    //this->_function = orig._function->clone();
-}
-
-QSharedPointer<HSSFunctionAction> HSSFunctionAction::clone() const
-{
-    axr_log(LoggerChannelGeneralSpecific, "HSSFunctionAction: cloning function action object");
-    return qSharedPointerCast<HSSFunctionAction> (this->cloneImpl());
-}
-
-QSharedPointer<HSSClonable> HSSFunctionAction::cloneImpl() const
-{
-    QSharedPointer<HSSFunctionAction> clone = QSharedPointer<HSSFunctionAction>(new HSSFunctionAction(*this));
-    return clone;
-}
-
-HSSFunctionAction::~HSSFunctionAction()
-{
-    axr_log(LoggerChannelGeneralSpecific, "HSSFunctionAction: destructing function action object");
-}
-
-AXRString HSSFunctionAction::toString()
-{
-    return "HSSFunctionAction";
-}
-
-AXRString HSSFunctionAction::defaultObjectType()
-{
-    return "value";
-}
-
-void HSSFunctionAction::fire()
-{
-    QSharedPointer<HSSFunction> function = this->getFunction();
-    function->_evaluate(function->getArguments());
-}
-
-QSharedPointer<HSSFunction> HSSFunctionAction::getFunction()
-{
-    return this->_function;
-}
-
-void HSSFunctionAction::setFunction(QSharedPointer<HSSFunction> newValue)
-{
-    this->_function = newValue;
-}
+#endif // AXRABSTRACTLOGGER_H

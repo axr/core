@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include "AXRController.h"
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "HSSDisplayObject.h"
 #include "HSSAttrFunction.h"
 #include "HSSSelectorChain.h"
@@ -102,7 +102,7 @@ void HSSAttrFunction::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSe
 {
     if (newSelectorChain)
     {
-        std_log3("Added selector chain to HSSAttrFunction: " + newSelectorChain->toString());
+        axr_log(LoggerChannelObsolete3, "Added selector chain to HSSAttrFunction: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
         this->selectorChains.push_back(newSelectorChain);
     }

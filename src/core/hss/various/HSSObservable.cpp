@@ -45,7 +45,7 @@
 #include <QMap>
 #include <QSharedPointer>
 #include <QVariant>
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "HSSCallback.h"
 #include "HSSObservable.h"
 #include "HSSObservableMapping.h"
@@ -289,7 +289,7 @@ size_t hash_combine(size_t hash1, size_t hash2)
 
 void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object, HSSCallback *callback)
 {
-    //std_log1("added observer: "+object->name);
+    //axr_log(LoggerChannelObsolete1, "added observer: "+object->name);
 
     QVariant nulldata("");
 
@@ -298,7 +298,7 @@ void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty 
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
         QSharedPointer<HSSObservableMapping> mapping = QSharedPointer<HSSObservableMapping>(new HSSObservableMapping(object, callback, source, nulldata));
         theObserved.append(mapping);
-        axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for " + HSSObservable::observablePropertyStringRepresentation(target));
+        axr_log(LoggerChannelObserving, "added observer for " + HSSObservable::observablePropertyStringRepresentation(target));
     }
     else
     {
@@ -306,7 +306,7 @@ void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty 
         QSharedPointer<HSSObservableMapping> mapping = QSharedPointer<HSSObservableMapping>(new HSSObservableMapping(object, callback, source, nulldata));
         theObserved.append(mapping);
         this->_propertyObservers[target] = theObserved;
-        axr_log(AXR_DEBUG_CH_OBSERVING, "added observer for new " + HSSObservable::observablePropertyStringRepresentation(target));
+        axr_log(LoggerChannelObserving, "added observer for new " + HSSObservable::observablePropertyStringRepresentation(target));
     }
 }
 
@@ -319,17 +319,17 @@ void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservablePr
             const QSharedPointer<HSSObservableMapping> & mapping = *it;
             if(mapping->observer == object && mapping->source == source){
                 theObserved.erase(it++);
-                axr_log(AXR_DEBUG_CH_OBSERVING, "removing observer for " + HSSObservable::observablePropertyStringRepresentation(target));
+                axr_log(LoggerChannelObserving, "removing observer for " + HSSObservable::observablePropertyStringRepresentation(target));
                 return;
             }
         }
     }
-    std_log("####### tried to remove non existent observer for " + HSSObservable::observablePropertyStringRepresentation(target));
+    axr_log(LoggerChannelObserving, "tried to remove non existent observer for " + HSSObservable::observablePropertyStringRepresentation(target));
 }
 
 void HSSObservable::propertyChanged(HSSObservableProperty property, void *data)
 {
-    axr_log(AXR_DEBUG_CH_OBSERVING, "property changed");
+    axr_log(LoggerChannelObserving, "property changed");
 }
 
 void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
@@ -343,7 +343,7 @@ void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
             HSSCallback *callback = mapping->callback;
             if (!data)
             {
-                axr_log(AXR_DEBUG_CH_OBSERVING, "data is null");
+                axr_log(LoggerChannelObserving, "data is null");
             }
 
             callback->call(property, data);

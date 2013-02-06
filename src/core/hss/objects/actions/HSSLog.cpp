@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include "AXRController.h"
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSDisplayObject.h"
 #include "HSSFunction.h"
@@ -58,7 +58,7 @@ using namespace AXR;
 HSSLog::HSSLog(AXRController * controller)
 : HSSAction(HSSActionTypeLog, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: creating log object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSLog: creating log object");
     this->observedValue = NULL;
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("value");
@@ -76,7 +76,7 @@ HSSLog::HSSLog(const HSSLog & orig)
 
 QSharedPointer<HSSLog> HSSLog::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: cloning log object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSLog: cloning log object");
     return qSharedPointerCast<HSSLog> (this->cloneImpl());
 }
 
@@ -87,7 +87,7 @@ QSharedPointer<HSSClonable> HSSLog::cloneImpl() const
 
 HSSLog::~HSSLog()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLog: destructing log object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSLog: destructing log object");
 }
 
 AXRString HSSLog::toString()
@@ -131,21 +131,21 @@ void HSSLog::fire()
                 if (remoteValue.canConvert<AXRString>())
                 {
                     AXRString theVal = remoteValue.value<AXRString>();
-                    std_log(theVal);
+                    axr_log(LoggerChannelObsolete0, theVal);
                     done = true;
                 }
 
                 if (remoteValue.canConvert<HSSUnit>())
                 {
                     HSSUnit theVal = remoteValue.value<HSSUnit>();
-                    std_log(AXRString::number(theVal));
+                    axr_log(LoggerChannelObsolete0, AXRString::number(theVal));
                     done = true;
                 }
 
                 if (remoteValue.canConvert<QSharedPointer<HSSObject> >())
                 {
                     QSharedPointer<HSSObject> theVal = remoteValue.value<QSharedPointer<HSSObject> >();
-                    std_log(theVal->toString());
+                    axr_log(LoggerChannelObsolete0, theVal->toString());
                     done = true;
                 }
 
@@ -154,13 +154,13 @@ void HSSLog::fire()
                     std::vector<QSharedPointer<HSSObject> > v_data = remoteValue.value< std::vector<QSharedPointer<HSSObject> >  >();
                     if (v_data.empty())
                     {
-                        std_log("empty");
+                        axr_log(LoggerChannelObsolete0, "empty");
                     }
                     else
                     {
                         for (std::vector<QSharedPointer<HSSObject> >::iterator it = v_data.begin(); it != v_data.end(); ++it)
                         {
-                            std_log((*it)->toString());
+                            axr_log(LoggerChannelObsolete0, (*it)->toString());
                         }
                     }
 
@@ -172,7 +172,7 @@ void HSSLog::fire()
                     QMap<HSSEventType, std::vector<QSharedPointer<HSSObject> >  > m_data = remoteValue.value< QMap<HSSEventType, std::vector<QSharedPointer<HSSObject> >  > >();
                     if (m_data.empty())
                     {
-                        std_log("empty");
+                        axr_log(LoggerChannelObsolete0, "empty");
                     }
                     else
                     {
@@ -181,7 +181,7 @@ void HSSLog::fire()
                             std::vector<QSharedPointer<HSSObject> > v_data = it.value();
                             for (std::vector<QSharedPointer<HSSObject> >::iterator it2 = v_data.begin(); it2 != v_data.end(); ++it2)
                             {
-                                std_log((*it2)->toString());
+                                axr_log(LoggerChannelObsolete0, (*it2)->toString());
                             }
                         }
                     }
@@ -195,7 +195,7 @@ void HSSLog::fire()
         case HSSParserNodeTypeStringConstant:
         {
             QSharedPointer<HSSStringConstant> str = qSharedPointerCast<HSSStringConstant > (this->dValue);
-            std_log(str->getValue());
+            axr_log(LoggerChannelObsolete0, str->getValue());
             done = true;
             break;
         }
@@ -210,7 +210,7 @@ void HSSLog::fire()
                 objdef->setScope(this->scope);
                 objdef->apply();
                 QSharedPointer<HSSObject> theObject = objdef->getObject();
-                std_log(theObject->toString());
+                axr_log(LoggerChannelObsolete0, theObject->toString());
                 done = true;
             }
             catch (const AXRError &e)
@@ -230,7 +230,7 @@ void HSSLog::fire()
 
     if (!done)
     {
-        std_log(this->dValue->toString());
+        axr_log(LoggerChannelObsolete0, this->dValue->toString());
     }
 }
 

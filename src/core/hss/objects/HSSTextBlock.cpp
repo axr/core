@@ -45,8 +45,8 @@
 #include <QFont>
 #include <QFontMetrics>
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRLoggerManager.h"
 #include "AXRString.h"
 #include "AXRWarning.h"
 #include "HSSAbstractVisitor.h"
@@ -155,7 +155,7 @@ HSSTextAlignType HSSTextBlock::textAlignTypeFromString(AXRString value)
 HSSTextBlock::HSSTextBlock(AXRController * controller)
 : HSSDisplayObject(HSSObjectTypeTextBlock, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: creating text block object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSTextBlock: creating text block object");
 
     this->observedTextAlign = this->observedTransform = this->observedText
             = NULL;
@@ -198,7 +198,7 @@ HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
 
 QSharedPointer<HSSTextBlock> HSSTextBlock::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: cloning text block object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSTextBlock: cloning text block object");
     return qSharedPointerCast<HSSTextBlock> (this->cloneImpl());
 }
 
@@ -209,7 +209,7 @@ QSharedPointer<HSSClonable> HSSTextBlock::cloneImpl() const
 
 HSSTextBlock::~HSSTextBlock()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSTextBlock: destructing text block object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSTextBlock: destructing text block object");
 }
 
 AXRString HSSTextBlock::defaultObjectType()
@@ -446,7 +446,7 @@ void HSSTextBlock::setDTransform(QSharedPointer<HSSParserNode> value)
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->transform = HSSTextBlock::textTransformTypeFromString(qSharedPointerCast<HSSValue>(theobj)->getStringValue());
-            std_log("######## FIXME ################");
+            axr_log(LoggerChannelObsolete0, "######## FIXME ################");
             valid = true;
         }
 
@@ -587,7 +587,7 @@ void HSSTextBlock::setDTextAlign(QSharedPointer<HSSParserNode> value)
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->textAlign = HSSTextBlock::textAlignTypeFromString(qSharedPointerCast<HSSValue>(theobj)->getStringValue());
-            std_log("######## FIXME ################");
+            axr_log(LoggerChannelObsolete0, "######## FIXME ################");
             valid = true;
         }
 
@@ -724,7 +724,7 @@ void HSSTextBlock::setDText(QSharedPointer<HSSParserNode> value)
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->text = qSharedPointerCast<HSSValue>(theobj)->getStringValue();
-            std_log("######## FIXME ################");
+            axr_log(LoggerChannelObsolete0, "######## FIXME ################");
             valid = true;
         }
 

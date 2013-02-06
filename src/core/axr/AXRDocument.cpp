@@ -46,8 +46,8 @@
 #include <QFileInfo>
 #include "AXRBuffer.h"
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
@@ -70,7 +70,7 @@ AXRDocument::AXRDocument()
     this->_windowWidth = 0;
     this->_windowHeight = 0;
 
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRDocument: initializing core for thread");
+    axr_log(LoggerChannelGeneralSpecific, "AXRDocument: initializing core for thread");
 
     QSharedPointer<AXRController> ctrlr = QSharedPointer<AXRController>(new AXRController(this));
     this->setController(ctrlr);
@@ -82,7 +82,7 @@ AXRDocument::AXRDocument()
 
 AXRDocument::~AXRDocument()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRDocument: destructing core");
+    axr_log(LoggerChannelGeneralSpecific, "AXRDocument: destructing core");
 }
 
 AXRString AXRDocument::getPathToResources() const
@@ -104,12 +104,11 @@ AXRString AXRDocument::getPathToResources() const
 
 void AXRDocument::run()
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: running");
+    axr_log(LoggerChannelOverview, "AXRDocument: running");
 
     bool loadingSuccess = this->parserXML->loadFile(this->file);
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: finished parsing " + this->file->sourceUrl().toString());
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->sourceUrl().toString());
+    axr_log(LoggerChannelOverview, "AXRDocument: finished parsing " + this->file->sourceUrl().toString());
 
     if (!loadingSuccess)
     {
@@ -141,10 +140,9 @@ void AXRDocument::run()
                 AXRError("AXRDocument", "Could not load the HSS file").raise();
             }
         }
-        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: finished loading stylesheets for " + this->file->sourceUrl().toString());
-        axr_log(AXR_DEBUG_CH_FULL_FILENAMES, this->file->sourceUrl().toString());
+        axr_log(LoggerChannelOverview, "AXRDocument: finished loading stylesheets for " + this->file->sourceUrl().toString());
 
-        axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: matching rules to the content tree");
+        axr_log(LoggerChannelOverview, "AXRDocument: matching rules to the content tree");
         //assign the rules to the objects
         this->controller->matchRulesToContentTree();
         this->controller->activateRules();
@@ -157,7 +155,7 @@ void AXRDocument::run()
         }
     }
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: run complete, entering event loop\n\n\n");
+    axr_log(LoggerChannelOverview, "AXRDocument: run complete, entering event loop\n\n\n");
 }
 
 void AXRDocument::reset()
@@ -370,7 +368,7 @@ void AXRDocument::setNeedsDisplay(bool newValue)
 
 QSharedPointer<AXRBuffer> AXRDocument::createDummyXML(QUrl hssUrl)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: creating dummy XML file for HSS file " + hssUrl.toString());
+    axr_log(LoggerChannelOverview, "AXRDocument: creating dummy XML file for HSS file " + hssUrl.toString());
 
     if (hssUrl.isValid())
     {
@@ -399,8 +397,7 @@ bool AXRDocument::loadFileByPath(QUrl url)
         }
     }
 
-    axr_log(AXR_DEBUG_CH_OVERVIEW, "AXRDocument: loading file " + url.toString());
-    axr_log(AXR_DEBUG_CH_FULL_FILENAMES, url.toString());
+    axr_log(LoggerChannelOverview, "AXRDocument: loading file " + url.toString());
 
     QFileInfo pathInfo(url.path());
     if (pathInfo.suffix() == "xml")
@@ -421,7 +418,7 @@ bool AXRDocument::loadFileByPath(QUrl url)
 
 bool AXRDocument::loadXMLFile(QUrl url)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRDocument: opening XML document: %1").arg(url.toString()));
+    axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening XML document: %1").arg(url.toString()));
 
     this->_isHSSOnly = false;
     this->_showLayoutSteps = false;
@@ -460,7 +457,7 @@ bool AXRDocument::loadXMLFile(QUrl url)
 
 bool AXRDocument::loadXMLFile(QSharedPointer<AXRBuffer> buffer)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRDocument: opening XML document from buffer"));
+    axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening XML document from buffer"));
 
     this->_isHSSOnly = false;
     this->_showLayoutSteps = false;
@@ -525,7 +522,7 @@ bool AXRDocument::reload()
 
 bool AXRDocument::loadHSSFile(QUrl url)
 {
-    axr_log(AXR_DEBUG_CH_OVERVIEW, AXRString("AXRDocument: opening HSS document: %1").arg(url.toString()));
+    axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening HSS document: %1").arg(url.toString()));
 
     this->_isHSSOnly = true;
     this->_showLayoutSteps = false;
@@ -598,7 +595,7 @@ void AXRDocument::breakIfNeeded()
         breakvar = 1; //we need something to break on
     }
 
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("currentLayoutTick = %1, currentLayoutStep = %2, %3").arg(_currentLayoutTick).arg(_currentLayoutStep).arg(breakvar));
+    axr_log(LoggerChannelLayout, AXRString("currentLayoutTick = %1, currentLayoutStep = %2, %3").arg(_currentLayoutTick).arg(_currentLayoutStep).arg(breakvar));
 }
 
 int AXRDocument::getWindowWidth()

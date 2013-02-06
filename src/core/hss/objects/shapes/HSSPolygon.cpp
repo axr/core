@@ -46,7 +46,7 @@
 #include <QPainterPath>
 #include <QVector>
 #include "AXRController.h"
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSBorder.h"
 #include "HSSCallback.h"
@@ -66,7 +66,7 @@ Q_DECLARE_METATYPE(HSSUnit*)
 HSSPolygon::HSSPolygon(AXRController * controller)
 : HSSShape(HSSShapeTypePolygon, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: creating polygon object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSPolygon: creating polygon object");
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("sides");
     shorthandProperties.push_back("angle");
@@ -100,7 +100,7 @@ HSSPolygon::HSSPolygon(const HSSPolygon & orig)
 
 QSharedPointer<HSSPolygon> HSSPolygon::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: cloning polygon object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSPolygon: cloning polygon object");
     return qSharedPointerCast<HSSPolygon> (this->cloneImpl());
 }
 
@@ -111,7 +111,7 @@ QSharedPointer<HSSClonable> HSSPolygon::cloneImpl() const
 
 HSSPolygon::~HSSPolygon()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSPolygon: destructing polygon object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSPolygon: destructing polygon object");
 }
 
 AXRString HSSPolygon::toString()

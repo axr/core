@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "HSSDisplayObject.h"
 #include "HSSFilter.h"
 #include "HSSNameSelector.h"
@@ -97,7 +97,7 @@ void HSSSelectorChain::add(QSharedPointer<HSSParserNode> newNode)
 {
     if (newNode)
     {
-        std_log3("HSSSelectorChain: Added node of type " + newNode->toString());
+        axr_log(LoggerChannelObsolete3, "HSSSelectorChain: Added node of type " + newNode->toString());
         newNode->setParentNode(this->shared_from_this());
         this->nodeList.push_back(newNode);
     }
@@ -107,7 +107,7 @@ void HSSSelectorChain::prepend(QSharedPointer<HSSParserNode> newNode)
 {
     if (newNode)
     {
-        std_log3("HSSSelectorChain: Added node of type " + newNode->toString() + " to the front of the selector");
+        axr_log(LoggerChannelObsolete3, "HSSSelectorChain: Added node of type " + newNode->toString() + " to the front of the selector");
         newNode->setParentNode(this->shared_from_this());
         this->nodeList.push_front(newNode);
     }
@@ -145,13 +145,13 @@ QSharedPointer<HSSSimpleSelector> HSSSelectorChain::subject()
             }
             else
             {
-                std_log1("########### subject in selector chain could not be determined");
+                axr_log(LoggerChannelObsolete1, "########### subject in selector chain could not be determined");
             }
 
         }
         else
         {
-            std_log1("########### subject in selector chain could not be determined");
+            axr_log(LoggerChannelObsolete1, "########### subject in selector chain could not be determined");
         }
     }
     return ret;

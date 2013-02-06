@@ -42,8 +42,8 @@
  ********************************************************************/
 
 #include <QColor>
-#include "AXRDebugging.h"
 #include "AXRError.h"
+#include "AXRLoggerManager.h"
 #include "HSSCallback.h"
 #include "HSSDisplayObject.h"
 #include "HSSExpression.h"
@@ -75,7 +75,7 @@ QSharedPointer<HSSRgb> HSSRgb::whiteColor(AXRController * controller)
 HSSRgb::HSSRgb(AXRController * controller, HSSUnit red, HSSUnit green, HSSUnit blue, HSSUnit alpha)
 : HSSObject(HSSObjectTypeRgb, controller), red(red), green(green), blue(blue), alpha(alpha)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: creating rgb object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRgb: creating rgb object");
 
     this->observedRed = this->observedGreen = this->observedBlue = this->observedAlpha = NULL;
 
@@ -107,7 +107,7 @@ HSSRgb::HSSRgb(const HSSRgb & orig)
 
 QSharedPointer<HSSRgb> HSSRgb::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: cloning rgb object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRgb: cloning rgb object");
     return qSharedPointerCast<HSSRgb> (this->cloneImpl());
 }
 
@@ -118,7 +118,7 @@ QSharedPointer<HSSClonable> HSSRgb::cloneImpl() const
 
 HSSRgb::~HSSRgb()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSRgb: destructing rgb object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSRgb: destructing rgb object");
 }
 
 AXRString HSSRgb::toString()
@@ -203,7 +203,7 @@ void HSSRgb::setDRed(QSharedPointer<HSSParserNode> value)
 
 void HSSRgb::redChanged(AXR::HSSObservableProperty source, void *data)
 {
-    std_log1("********************** redChanged unimplemented ****************************");
+    axr_log(LoggerChannelObsolete1, "********************** redChanged unimplemented ****************************");
 }
 
 HSSUnit HSSRgb::getGreen()
@@ -226,7 +226,7 @@ void HSSRgb::setDGreen(QSharedPointer<HSSParserNode> value)
 
 void HSSRgb::greenChanged(AXR::HSSObservableProperty source, void *data)
 {
-    std_log1("********************** greenChanged unimplemented ****************************");
+    axr_log(LoggerChannelObsolete1, "********************** greenChanged unimplemented ****************************");
 }
 
 HSSUnit HSSRgb::getBlue()
@@ -249,7 +249,7 @@ void HSSRgb::setDBlue(QSharedPointer<HSSParserNode> value)
 
 void HSSRgb::blueChanged(AXR::HSSObservableProperty source, void *data)
 {
-    std_log1("********************** blueChanged unimplemented ****************************");
+    axr_log(LoggerChannelObsolete1, "********************** blueChanged unimplemented ****************************");
 }
 
 HSSUnit HSSRgb::getAlpha()
@@ -272,7 +272,7 @@ void HSSRgb::setDAlpha(QSharedPointer<HSSParserNode> value)
 
 void HSSRgb::alphaChanged(AXR::HSSObservableProperty source, void *data)
 {
-    std_log1("********************** alphaChanged unimplemented ****************************");
+    axr_log(LoggerChannelObsolete1, "********************** alphaChanged unimplemented ****************************");
 }
 
 HSSUnit HSSRgb::_evaluatePropertyValue(

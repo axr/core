@@ -196,4 +196,10 @@ public:
 extern AXR_API const axr_version axrVersion();
 extern AXR_API const char* axrVersionString();
 
+// TODO: Just write code that works properly and get rid of this ASAP
+#define AXR_DEBUG_BRAKE 9999
+#define security_brake_init() int __axr_security_count = 0;
+#define security_brake_reset() __axr_security_count = 0;
+#define security_brake() if (__axr_security_count > AXR_DEBUG_BRAKE) { axr_log(LoggerChannelObsolete1, AXR::AXRString("WARNING: Loop iterated over %1 times. Broke out of possible infinite loop.").arg(AXR_DEBUG_BRAKE)); break; } else __axr_security_count++;
+
 #endif

@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include "AXRController.h"
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSDisplayObject.h"
 #include "HSSFunction.h"
@@ -55,7 +55,7 @@ using namespace AXR;
 HSSValue::HSSValue(AXRController * controller)
 : HSSObject(HSSObjectTypeValue, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: creating value object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSValue: creating value object");
 
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("value");
@@ -76,7 +76,7 @@ HSSValue::HSSValue(const HSSValue & orig)
 
 QSharedPointer<HSSValue> HSSValue::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: cloning value object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSValue: cloning value object");
     return qSharedPointerCast<HSSValue>(this->cloneImpl());
 }
 
@@ -87,7 +87,7 @@ QSharedPointer<HSSClonable> HSSValue::cloneImpl() const
 
 HSSValue::~HSSValue()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSValue: destructing value object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSValue: destructing value object");
 }
 
 AXRString HSSValue::toString()
@@ -148,5 +148,5 @@ void HSSValue::addDValue(QSharedPointer<HSSParserNode> value)
 
 void HSSValue::valueChanged(HSSObservableProperty source, void*data)
 {
-    std_log("HSSValue::valueChanged unimplemented");
+    axr_log(LoggerChannelObsolete0, "HSSValue::valueChanged unimplemented");
 }

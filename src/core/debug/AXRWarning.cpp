@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 
 using namespace AXR;
@@ -48,6 +49,11 @@ using namespace AXR;
 AXRWarning::AXRWarning(const AXRString &origin, const AXRString &message, const QUrl &url, qint64 line, qint64 column)
 : AXRError(origin, message, url, line, column)
 {
+}
+
+void AXRWarning::raise() const
+{
+    axr_log(LoggerChannelUserWarning, toString());
 }
 
 AXRString AXRWarning::toString() const

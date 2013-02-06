@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include "AXRController.h"
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSColorStop.h"
@@ -64,7 +64,7 @@ Q_DECLARE_METATYPE(HSSUnit*)
 HSSColorStop::HSSColorStop(AXRController * controller)
 : HSSObject(HSSObjectTypeColorStop, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: creating color stop object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSColorStop: creating color stop object");
 
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("color");
@@ -95,7 +95,7 @@ HSSColorStop::HSSColorStop(const HSSColorStop & orig)
 
 QSharedPointer<HSSColorStop> HSSColorStop::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: cloning color stop object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSColorStop: cloning color stop object");
     return qSharedPointerCast<HSSColorStop> (this->cloneImpl());
 }
 
@@ -106,7 +106,7 @@ QSharedPointer<HSSClonable> HSSColorStop::cloneImpl() const
 
 HSSColorStop::~HSSColorStop()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSColorStop: destructing color stop object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSColorStop: destructing color stop object");
 }
 
 AXRString HSSColorStop::toString()

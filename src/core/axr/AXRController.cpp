@@ -42,8 +42,8 @@
  ********************************************************************/
 
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
@@ -67,13 +67,13 @@ using namespace AXR;
 AXRController::AXRController(AXRDocument *document)
 : document_(document)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRController: creating controller");
+    axr_log(LoggerChannelGeneralSpecific, "AXRController: creating controller");
     this->currentContext = std::stack<QSharedPointer<HSSContainer> > ();
 }
 
 AXRController::~AXRController()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRController: destructing controller");
+    axr_log(LoggerChannelGeneralSpecific, "AXRController: destructing controller");
 
     this->objectTree.clear();
     this->loadSheets.clear();
@@ -129,7 +129,7 @@ inline void AXRController::_matchRuleToSelection(QSharedPointer<HSSRule> rule, Q
     for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
     {
         const QSharedPointer<HSSDisplayObject> & displayObject = *it;
-        axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: match " + displayObject->getElementName());
+        axr_log(LoggerChannelGeneral, "AXRController: match " + displayObject->getElementName());
         displayObject->rulesAdd(rule, HSSRuleStateOff);
 
         displayObject->setNeedsRereadRules(true);
@@ -155,7 +155,7 @@ inline void AXRController::_matchRuleToSelection(QSharedPointer<HSSRule> rule, Q
 
 void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL | AXR_DEBUG_CH_GENERAL_SPECIFIC, "AXRController: recursive matching rules to display objects");
+    axr_log(LoggerChannelGeneralSpecific, "AXRController: recursive matching rules to display objects");
     QSharedPointer<HSSInstruction> instruction = rule->getInstruction();
     if (instruction && applyingInstructions)
     {
@@ -191,7 +191,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
                     newContainer->setElementName(elementName);
                     rule->setThisObj(newContainer);
                     newContainer->rulesAdd(rule, HSSRuleStateOn);
-                    axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: created " + newContainer->getElementName());
+                    axr_log(LoggerChannelGeneral, "AXRController: created " + newContainer->getElementName());
                     this->add(newContainer);
                     newContainer->setNeedsRereadRules(true);
                     newContainer->setNeedsSurface(true);
@@ -236,7 +236,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
                             theDO->removeFromParent();
                             rule->setThisObj(theDO);
                             theDO->rulesAdd(rule, HSSRuleStateOn);
-                            axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: moved " + theDO->getElementName());
+                            axr_log(LoggerChannelGeneral, "AXRController: moved " + theDO->getElementName());
                             this->add(theDO);
                             theDO->setNeedsRereadRules(true);
                             theDO->setNeedsSurface(true);
@@ -355,7 +355,7 @@ inline void AXRController::_recursiveMatchRulesToDisplayObjects(const QSharedPoi
     for (HSSSimpleSelection::const_iterator it = scope->begin(); it != scope->end(); ++it)
     {
         const QSharedPointer<HSSDisplayObject> & displayObject = *it;
-        axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: match " + displayObject->getElementName());
+        axr_log(LoggerChannelGeneral, "AXRController: match " + displayObject->getElementName());
         displayObject->rulesAdd(rule, HSSRuleStateOff);
 
         displayObject->setNeedsRereadRules(true);
@@ -428,7 +428,7 @@ void AXRController::_activateRuleOnSelection(QSharedPointer<HSSRule> rule, QShar
     for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
     {
         const QSharedPointer<HSSDisplayObject> & displayObject = *it;
-        axr_log(AXR_DEBUG_CH_GENERAL, "AXRController: activating rule on " + displayObject->getElementName());
+        axr_log(LoggerChannelGeneral, "AXRController: activating rule on " + displayObject->getElementName());
         displayObject->setRuleStatus(rule, HSSRuleStateOn);
 
         //if it is a container it may have children
@@ -825,7 +825,7 @@ void AXRController::setRoot(QSharedPointer<HSSContainer> newRoot)
 
 void AXRController::enterElement(AXRString elementName)
 {
-    //std_log1("enter element " + elementName);
+    //axr_log(LoggerChannelObsolete1, "enter element " + elementName);
     QSharedPointer<HSSContainer> newContainer(new HSSContainer(this));
     newContainer->setName(elementName + "_source_obj");
     newContainer->setElementName(elementName);
@@ -835,7 +835,7 @@ void AXRController::enterElement(AXRString elementName)
 
 void AXRController::addAttribute(AXRString name, AXRString value)
 {
-    //std_log1(AXRString("adding attribute " + name + " and value " + value));
+    //axr_log(LoggerChannelObsolete1, AXRString("adding attribute " + name + " and value " + value));
     this->currentContext.top()->attributesAdd(name, value);
 }
 
@@ -865,7 +865,7 @@ void AXRController::add(QSharedPointer<HSSDisplayObject> newElement)
         }
         else
         {
-            std_log("############## HSSController: cannot add non-controller as root");
+            axr_log(LoggerChannelObsolete0, "############## HSSController: cannot add non-controller as root");
         }
     }
     else
@@ -877,7 +877,7 @@ void AXRController::add(QSharedPointer<HSSDisplayObject> newElement)
         }
         else
         {
-            std_log("############## HSSController: tried to add a container to nonexistent current");
+            axr_log(LoggerChannelObsolete0, "############## HSSController: tried to add a container to nonexistent current");
         }
     }
 }

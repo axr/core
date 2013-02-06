@@ -42,8 +42,8 @@
  ********************************************************************/
 
 #include "AXRBuffer.h"
-#include "AXRDebugging.h"
 #include "AXRError.h"
+#include "AXRLoggerManager.h"
 #include "HSSToken.h"
 #include "HSSTokenizer.h"
 #include "HSSValueToken.h"
@@ -195,7 +195,7 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
         *d->textStream >> d->currentChar;
     }
 
-    axr_log(AXR_DEBUG_CH_TOKENIZING, AXRString("Read character %1 (line %2, col %3)").arg(d->currentChar).arg(d->currentLine).arg(d->currentColumn));
+    axr_log(LoggerChannelHSSTokenizer, AXRString("Read character %1 (line %2, col %3)").arg(d->currentChar).arg(d->currentLine).arg(d->currentColumn));
 
     d->currentColumn++;
 
@@ -320,7 +320,10 @@ QSharedPointer<HSSToken> HSSTokenizer::peekNextToken()
     d->peekLineOffset += (d->currentLine - savedLine);
     d->peekColumnOffset += (d->currentColumn - savedColumn);
 
-    axr_log(AXR_DEBUG_CH_TOKENIZING, AXRString("Peeked (offset: %1, current position: %2, saved position: %3").arg(d->peekPositionOffset).arg(d->textStream->pos()).arg(savedPosition));
+    if (ret)
+        axr_log(LoggerChannelHSSTokenizer, AXRString("Peeked (offset: %1, current position: %2, saved position: %3), read token %4").arg(d->peekPositionOffset).arg(d->textStream->pos()).arg(savedPosition).arg(ret->toString()));
+    else
+        axr_log(LoggerChannelHSSTokenizer, AXRString("Peeked (offset: %1, current position: %2, saved position: %3), no token read").arg(d->peekPositionOffset).arg(d->textStream->pos()).arg(savedPosition));
 
     return ret;
 }
@@ -349,7 +352,7 @@ void HSSTokenizer::resetPeek()
     d->peekLineOffset = 0;
     d->peekColumnOffset = 0;
 
-    axr_log(AXR_DEBUG_CH_TOKENIZING, AXRString("Peek reset"));
+    axr_log(LoggerChannelHSSTokenizer, AXRString("Peek reset"));
 }
 
 /*!

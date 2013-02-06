@@ -44,8 +44,8 @@
 #include <cmath>
 #include <QVariant>
 #include "AXRController.h"
-#include "AXRDebugging.h"
 #include "AXRDocument.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSBorder.h"
 #include "HSSCallback.h"
@@ -176,7 +176,7 @@ HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
 
 HSSDisplayObject::~HSSDisplayObject()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, AXRString("destroying display object with name ").append(this->name));
+    axr_log(LoggerChannelGeneralSpecific, AXRString("destroying display object with name ").append(this->name));
     if (this->observedWidth)
     {
         this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
@@ -782,7 +782,7 @@ bool HSSDisplayObject::needsSurface()
 
 void HSSDisplayObject::setDirty(bool value)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSDisplayObject: setting dirty on " + this->elementName);
+    axr_log(LoggerChannelGeneralSpecific, "HSSDisplayObject: setting dirty on " + this->elementName);
     this->_isDirty = value;
 }
 
@@ -1633,7 +1633,7 @@ void HSSDisplayObject::setDFlow(QSharedPointer<HSSParserNode> value)
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->flow = (bool)qSharedPointerCast<HSSValue>(theobj)->getIntValue();
-            std_log("########### FIXME #################");
+            axr_log(LoggerChannelObsolete0, "########### FIXME #################");
             valid = true;
         }
 
@@ -1779,7 +1779,7 @@ void HSSDisplayObject::setDContained(QSharedPointer<HSSParserNode> value)
         if (theobj && theobj->isA(HSSObjectTypeValue))
         {
             //this->contained = (bool)qSharedPointerCast<HSSValue>(theobj)->getIntValue();
-            std_log("########### FIXME #################");
+            axr_log(LoggerChannelObsolete0, "########### FIXME #################");
             valid = true;
         }
 
@@ -2449,7 +2449,7 @@ void HSSDisplayObject::addDContent(QSharedPointer<HSSParserNode> value)
 
 void HSSDisplayObject::contentChanged(HSSObservableProperty source, void*data)
 {
-    std_log("unimplemented yet");
+    axr_log(LoggerChannelObsolete0, "unimplemented yet");
 }
 
 const QSharedPointer<HSSParserNode> HSSDisplayObject::getDFont() const
@@ -2834,7 +2834,7 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
             if ((*it)->isA(HSSObjectTypeEvent))
             {
                 QSharedPointer<HSSEvent> theEvent = qSharedPointerCast<HSSEvent > (*it);
-                axr_log(AXR_DEBUG_CH_EVENTS_SPECIFIC, "HSSDisplayObject: firing event: " + theEvent->toString());
+                axr_log(LoggerChannelEvents, "HSSDisplayObject: firing event: " + theEvent->toString());
                 theEvent->fire();
                 fired = true;
             }
@@ -2843,7 +2843,7 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
 
     if (fired)
     {
-        axr_log(AXR_DEBUG_CH_EVENTS | AXR_DEBUG_CH_EVENTS_SPECIFIC, "HSSDisplayObject: fired event");
+        axr_log(LoggerChannelEvents, "HSSDisplayObject: fired event");
     }
 
     return fired;

@@ -47,7 +47,7 @@
 
 #include <cmath>
 #include <QVariant>
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSColorStop.h"
@@ -67,7 +67,7 @@ Q_DECLARE_METATYPE(HSSUnit*)
 HSSLinearGradient::HSSLinearGradient(AXRController * controller)
 : HSSGradient(HSSGradientTypeLinear, controller)
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: creating linear gradient object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSLinearGradient: creating linear gradient object");
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("startColor");
     shorthandProperties.push_back("endColor");
@@ -110,7 +110,7 @@ HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
 
 QSharedPointer<HSSLinearGradient> HSSLinearGradient::clone() const
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: cloning linear gradient object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSLinearGradient: cloning linear gradient object");
     return qSharedPointerCast<HSSLinearGradient> (this->cloneImpl());
 }
 
@@ -121,7 +121,7 @@ QSharedPointer<HSSClonable> HSSLinearGradient::cloneImpl() const
 
 HSSLinearGradient::~HSSLinearGradient()
 {
-    axr_log(AXR_DEBUG_CH_GENERAL_SPECIFIC, "HSSLinearGradient: destructing linear gradient object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSLinearGradient: destructing linear gradient object");
     if (this->observedStartX)
     {
         this->observedStartX->removeObserver(this->observedStartXProperty, HSSObservablePropertyStartX, this);

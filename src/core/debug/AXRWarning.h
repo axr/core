@@ -66,7 +66,8 @@ namespace AXR
          */
         AXRWarning(const AXRString &origin, const AXRString &message, const QUrl &url = QUrl(), qint64 line = 0, qint64 column = 0);
 
-        virtual AXRString toString() const;
+        void raise() const;
+        AXRString toString() const;
     };
 }
 

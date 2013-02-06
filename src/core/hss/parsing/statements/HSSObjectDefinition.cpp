@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "AXRDebugging.h"
+#include "AXRLoggerManager.h"
 #include "HSSDisplayObject.h"
 #include "HSSObject.h"
 #include "HSSObjectDefinition.h"
@@ -115,7 +115,7 @@ void HSSObjectDefinition::propertiesAdd(QSharedPointer<HSSPropertyDefinition> &n
 {
     if (newProperty)
     {
-        std_log3("HSSObjectDefinition: Added node of type " + newProperty->toString());
+        axr_log(LoggerChannelObsolete3, "HSSObjectDefinition: Added node of type " + newProperty->toString());
         newProperty->setParentNode(this->shared_from_this());
         this->properties.push_back(newProperty);
     }
@@ -125,7 +125,7 @@ void HSSObjectDefinition::propertiesAdd(const QSharedPointer<HSSPropertyDefiniti
 {
     if (newProperty)
     {
-        std_log3("HSSObjectDefinition: Added node of type " + newProperty->toString());
+        axr_log(LoggerChannelObsolete3, "HSSObjectDefinition: Added node of type " + newProperty->toString());
         newProperty->setParentNode(this->shared_from_this());
         this->properties.push_back(newProperty);
         //this->prototype->setPropertyWithName(newProperty->getName(), newProperty->getValue());
@@ -136,7 +136,7 @@ void HSSObjectDefinition::propertiesPrepend(QSharedPointer<HSSPropertyDefinition
 {
     if (newProperty)
     {
-        std_log3("HSSObjectDefinition: Prepended node of type " + newProperty->toString());
+        axr_log(LoggerChannelObsolete3, "HSSObjectDefinition: Prepended node of type " + newProperty->toString());
         newProperty->setParentNode(this->shared_from_this());
         this->properties.push_front(newProperty);
     }
@@ -146,7 +146,7 @@ void HSSObjectDefinition::propertiesPrepend(const QSharedPointer<HSSPropertyDefi
 {
     if (newProperty)
     {
-        std_log3("HSSObjectDefinition: Prepended node of type " + newProperty->toString());
+        axr_log(LoggerChannelObsolete3, "HSSObjectDefinition: Prepended node of type " + newProperty->toString());
         newProperty->setParentNode(this->shared_from_this());
         this->properties.push_front(newProperty);
     }
