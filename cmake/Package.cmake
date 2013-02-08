@@ -61,7 +61,7 @@ src_package_file_name(CPACK_SOURCE_PACKAGE_FILE_NAME "libaxr" "${AXR_VERSION_STR
 set(CPACK_SOURCE_IGNORE_FILES ".git" ".DS_Store" "thumbs.db" "CMakeLists.txt.user")
 
 # Source package
-list(APPEND CPACK_SOURCE_GENERATOR ZIP TGZ STGZ TZ TBZ2)
+list(APPEND CPACK_SOURCE_GENERATOR ZIP TGZ)
 
 if(WIN32)
     # WiX packaging introduced in version 2.8.11... if we don't have that we'll fall back to NSIS
