@@ -312,7 +312,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
                     container->observe(HSSObservablePropertyTreeChange, HSSObservablePropertyValue, rule.data(), new HSSValueChangedCallback<HSSRule>(rule.data(), &HSSRule::treeChanged));
                     rule->setObservedTreeChanger(container.data());
                     rule->setThisObj(container);
-                    rule->setOriginalScope(scope->joinAll());
+                    rule->addOriginalScope(scope->joinAll());
                 }
 
                 try

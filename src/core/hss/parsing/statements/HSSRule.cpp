@@ -343,6 +343,17 @@ void HSSRule::setOriginalScope(QSharedPointer<HSSSimpleSelection> scope)
     this->_originalScope = scope;
 }
 
+void HSSRule::addOriginalScope(QSharedPointer<HSSSimpleSelection> scope)
+{
+    if(this->_originalScope == NULL)
+    {
+        this->_originalScope = scope;
+    } else
+    {
+        this->_originalScope->addSelection(scope);
+    }
+}
+
 void HSSRule::setObservedTreeChanger(HSSObservable * newValue)
 {
     this->observedTreeChanger = newValue;

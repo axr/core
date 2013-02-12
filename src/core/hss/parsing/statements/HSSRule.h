@@ -262,6 +262,8 @@ namespace AXR
 
         void setOriginalScope(QSharedPointer<HSSSimpleSelection> scope);
 
+        void addOriginalScope(QSharedPointer<HSSSimpleSelection> scope);
+
         void setObservedTreeChanger(HSSObservable * newValue);
 
         HSSObservable * getObservedTreeChanger();
