@@ -95,6 +95,9 @@ void AXRController::matchRulesToContentTree()
     for (size_t i = 0; i < rules.size(); ++i)
     {
         const QSharedPointer<HSSRule>& rule = rules[i];
+
+        rule->setOriginalScope(rootScope);
+
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains = rule->getSelectorChains();
         if (!selectorChains.empty())
         {
