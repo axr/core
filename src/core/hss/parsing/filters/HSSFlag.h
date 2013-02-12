@@ -134,6 +134,8 @@ namespace AXR
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
         HSSRuleState _purging;
+
+        QSharedPointer<HSSSimpleSelection>  _selectFromTop(QSharedPointer<HSSRule> theRule);
     };
 }
 

@@ -528,7 +528,7 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
                     QSharedPointer<HSSRule> clonedRule = (*it)->clone();
                     QSharedPointer<HSSSelection> children = thisCont->getChildren();
                     controller->recursiveMatchRulesToDisplayObjects(clonedRule, children, thisCont, true);
-                    controller->activateRules(clonedRule, children);
+                    controller->recursiveSetRuleState(clonedRule, children, thisCont, HSSRuleStateOn);
                 }
                 this->getController()->currentContext.pop();
             }

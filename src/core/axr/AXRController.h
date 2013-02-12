@@ -85,7 +85,7 @@ namespace AXR
 
         void matchRulesToContentTree();
         void activateRules();
-        void activateRules(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSelection> scope);
+        void recursiveSetRuleState(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, HSSRuleState state);
 
         /**
          *  @return A textual representation of itself, as a string.
@@ -431,7 +431,7 @@ namespace AXR
         inline void _recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSimpleSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions);
         inline void _selectOnLevelSimple(QSharedPointer<HSSSimpleSelection> & ret, HSSCombinatorType combinatorType, QSharedPointer<HSSSimpleSelection> simpleSel, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
         void _recursiveGetDescendants(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> scope);
-        void _activateRuleOnSelection(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSimpleSelection> selection);
+        void _setRuleStateOnSelection(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSimpleSelection> selection, HSSRuleState state);
     };
 }
 

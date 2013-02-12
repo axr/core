@@ -43,6 +43,7 @@
 
 #include "AXRController.h"
 #include "AXRDocument.h"
+#include "HSSContainer.h"
 #include "HSSDisplayObject.h"
 #include "HSSFlag.h"
 #include "HSSMultipleSelection.h"
@@ -102,14 +103,7 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
         if (ruleStatement->isA(HSSStatementTypeRule))
         {
             QSharedPointer<HSSRule> theRule = qSharedPointerCast<HSSRule > (ruleStatement);
-            QSharedPointer<HSSSimpleSelection> scope = theRule->getOriginalScope();
-            AXRController * controller = this->getController();
             this->setPurging(newStatus);
-            std::vector<QSharedPointer<HSSSelectorChain> > chains;
-            chains.push_back(qSharedPointerCast<HSSSelectorChain>(selectorChainNode));
-            QSharedPointer<HSSSimpleSelection> selection = controller->select(chains, scope, this->getThisObj())->joinAll();
-            this->setPurging(HSSRuleStateOff);
-
             if (this->getNegating()) {
                 if (newStatus == HSSRuleStateActivate)
                 {
@@ -120,13 +114,66 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
                     newStatus = HSSRuleStateActivate;
                 }
             }
-            for (HSSSimpleSelection::const_iterator it=selection->begin(); it!=selection->end(); ++it)
+            if(newStatus != HSSRuleStateActivate || !theRule->hasParent())
             {
-                const QSharedPointer<HSSDisplayObject> & theDO = *it;
-                theDO->setRuleStatus(theRule, newStatus);
+                this->getController()->recursiveSetRuleState(theRule, theRule->getOriginalScope(), this->getThisObj(), newStatus);
+            } else {
+                this->getController()->recursiveSetRuleState(theRule, this->_selectFromTop(theRule), this->getThisObj(), newStatus);
             }
+            this->setPurging(HSSRuleStateOff);
         }
     }
+}
+
+QSharedPointer<HSSSimpleSelection> HSSFlag::_selectFromTop(QSharedPointer<HSSRule> theRule)
+{
+    //climb the tree
+    QSharedPointer<HSSRule> rule = theRule;
+    std::deque<QSharedPointer<HSSRule> > rules;
+    while (rule->hasParent())
+    {
+        rules.push_front(rule);
+        rule = rule->getParent();
+    }
+    rules.push_front(rule);
+    //select from the topmost rule down to our subjects
+    std::deque<QSharedPointer<HSSRule> >::iterator it = rules.begin();
+    QSharedPointer<HSSRule> topRule = *it;
+    QSharedPointer<HSSContainer> thisObj = this->getController()->getRoot();
+    std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
+    QSharedPointer<HSSSimpleSelection> scope = topRule->getOriginalScope();
+    QSharedPointer<HSSSimpleSelection> selection;
+    for (; it != rules.end(); ++it)
+    {
+        QSharedPointer<HSSRule> itRule = *it;
+        // TODO: check @this object
+        selection = this->getController()->select(itRule->getSelectorChains(), scope, thisObj)->joinAll();
+        if(selection->size() == 0)
+        {
+            break;
+        }
+        if ((it != rules.end()) && (it+1 != rules.end()))
+        {
+            QSharedPointer<HSSSimpleSelection> nextLevel(new HSSSimpleSelection());
+            for (HSSSimpleSelection::const_iterator it2 = selection->begin(); it2 != selection->end(); ++it2)
+            {
+                const QSharedPointer<HSSDisplayObject> & displayObject = *it2;
+                //if it is a container it may have children
+                if (displayObject->isA(HSSObjectTypeContainer))
+                {
+                    QSharedPointer<HSSContainer> selectedContainer = qSharedPointerCast<HSSContainer>(displayObject);
+                    QSharedPointer<HSSSimpleSelection> children = selectedContainer->getChildren();
+                    if(children)
+                    {
+                        nextLevel->addSelection(children);
+                    }
+                }
+            }
+            scope = nextLevel;
+        }
+    }
+
+    return selection;
 }
 
 QSharedPointer<HSSSelection> HSSFlag::apply(QSharedPointer<HSSSelection> scope, bool processing)
