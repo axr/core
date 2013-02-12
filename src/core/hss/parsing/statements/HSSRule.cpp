@@ -363,3 +363,13 @@ HSSObservable * HSSRule::getObservedTreeChanger()
 {
     return this->observedTreeChanger;
 }
+
+bool HSSRule::hasParent()
+{
+    return this->getParentNode() != NULL;
+}
+
+QSharedPointer<HSSRule> HSSRule::getParent()
+{
+    return qSharedPointerCast<HSSRule>(this->getParentNode());
+}

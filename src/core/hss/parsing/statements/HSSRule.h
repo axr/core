@@ -268,6 +268,9 @@ namespace AXR
 
         HSSObservable * getObservedTreeChanger();
 
+        bool hasParent();
+        QSharedPointer<HSSRule> getParent();
+
     protected:
         QSharedPointer<HSSRule> shared_from_this();
 
