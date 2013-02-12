@@ -65,7 +65,7 @@ namespace AXR
          *  @param otherType    The statement type to compare against.
          *  @return Wether the instance is a statement of given type.
          */
-        bool isA(HSSStatementType otherType);
+        virtual bool isA(HSSStatementType otherType);
 
         /**
          *  @return The statement type of the current instance.
