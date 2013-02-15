@@ -1,9 +1,9 @@
 [submodule "share/hss-framework"]
 	path = share/hss-framework
-	url = https://github.com/axr/framework.git
+	url = ../framework.git
 [submodule "cmake/solar"]
 	path = cmake/solar
 	url = https://github.com/petroules/solar-cmake.git
 [submodule "common"]
 	path = common
-	url = https://github.com/axr/common.git
+	url = ../common.git
