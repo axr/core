@@ -2817,7 +2817,7 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
             {
                 if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of")
                 {
-                    axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading flagging function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+                    AXRError("HSSParser", "Unexpected token while reading flagging function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType())).raise();
                 }
                 this->checkForUnexpectedEndOfSource();
                 this->readNextToken(true);
