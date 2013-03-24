@@ -876,15 +876,43 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     HSSUnit rightOffset = rightCumulative+rightCorrection+(this->cornerTR*2);
 
                                     QRectF curve1(offsetX+leftOffset, offsetY+topOffset, this->cornerTL*2, this->cornerTL*2);
-                                    QRectF curve2(offsetX+leftOffset, offsetY+topOffset+theSize, this->cornerTL*2, (this->cornerTL*2)-theSize);
-                                    QRectF curve3(offsetX+leftOffset+width-rightOffset-leftOffset, offsetY+topOffset+theSize, this->cornerTR*2, (this->cornerTR*2)-theSize);
-                                    QRectF curve4(offsetX+leftOffset+width-rightOffset-leftOffset, offsetY+topOffset, this->cornerTR*2, this->cornerTR*2);
-
-                                    path.arcMoveTo(curve1, 90);
-                                    path.arcTo(curve1, 90, 90);
-                                    path.arcTo(curve2, 180, -90);
-                                    path.arcTo(curve3, 90, -90);
-                                    path.arcTo(curve4, 0, 90);
+                                    if (this->cornerTL != 0)
+                                    {
+                                        path.arcMoveTo(curve1, 90);
+                                        path.arcTo(curve1, 90, 90);
+                                    }
+                                    else
+                                    {
+                                        path.moveTo(offsetX+leftOffset, offsetY+topOffset);
+                                        path.arcTo(curve1, 90, 90);
+                                    }
+                                    if(this->cornerTL != 0)
+                                    {
+                                        QRectF curve2(offsetX+leftOffset, offsetY+topOffset+theSize, this->cornerTL*2, (this->cornerTL*2)-theSize);
+                                        path.arcTo(curve2, 180, -90);
+                                    }
+                                    else
+                                    {
+                                        path.lineTo(offsetX+leftOffset, offsetY+topOffset+theSize);
+                                    }
+                                    qreal trsize = (this->cornerTR*2)-theSize;
+                                    if(trsize > 0)
+                                    {
+                                        QRectF curve3(offsetX+width-rightOffset, offsetY+topOffset+theSize, this->cornerTR*2, (this->cornerTR*2)-theSize);
+                                        path.arcTo(curve3, 90, -90);
+                                    }
+                                    else
+                                    {
+                                        path.lineTo(offsetX+width-rightOffset, offsetY+topOffset+theSize);
+                                    }
+                                    if (this->cornerTR != 0) {
+                                        QRectF curve4(offsetX+width-rightOffset, offsetY+topOffset, this->cornerTR*2, this->cornerTR*2);
+                                        path.arcTo(curve4, 0, 90);
+                                    }
+                                    else
+                                    {
+                                        path.lineTo(offsetX+width-rightOffset, offsetY+topOffset);
+                                    }
                                     path.closeSubpath();
                                     painter.fillPath(path, theColor->toQColor());
 
@@ -896,16 +924,46 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     HSSUnit rightOffset = rightCumulative+rightCorrection;
                                     HSSUnit bottomOffset = bottomCumulative+bottomCorrection;
 
-                                    QRectF curve1(offsetX+width-rightOffset-(this->cornerTR*2), offsetY+topOffset, this->cornerTR*2, this->cornerTR*2);
-                                    QRectF curve2(offsetX+width-rightOffset-(this->cornerTR*2), offsetY+height-(this->cornerTR*2)-bottomOffset, this->cornerTR*2, (this->cornerTR*2));
-                                    QRectF curve3(offsetX+width-(this->cornerBR*2)-rightOffset, offsetY+height-(this->cornerBR*2)-bottomOffset, (this->cornerTR*2)-theSize, (this->cornerTR*2));
-                                    QRectF curve4(offsetX+width-(this->cornerTR*2)-rightOffset, offsetY+topOffset, (this->cornerTR*2)-theSize, this->cornerTR*2);
-
-                                    path.arcMoveTo(curve1, 90);
-                                    path.arcTo(curve1, 90, -90);
-                                    path.arcTo(curve2, 0, -90);
-                                    path.arcTo(curve3, 270, 90);
-                                    path.arcTo(curve4, 0, 90);
+                                    if (this->cornerTR != 0)
+                                    {
+                                        QRectF curve1(offsetX+width-rightOffset-(this->cornerTR*2), offsetY+topOffset, this->cornerTR*2, this->cornerTR*2);
+                                        path.arcMoveTo(curve1, 90);
+                                        path.arcTo(curve1, 90, -90);
+                                    }
+                                    else
+                                    {
+                                        path.moveTo(offsetX+width-rightOffset, offsetY+topOffset);
+                                        path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset-this->cornerBR);
+                                    }
+                                    if (this->cornerBR != 0)
+                                    {
+                                        QRectF curve2(offsetX+width-rightOffset-(this->cornerBR*2), offsetY+height-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, (this->cornerBR*2));
+                                        path.arcTo(curve2, 0, -90);
+                                    }
+                                    else
+                                    {
+                                        path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+                                    }
+                                    qreal brsize = (this->cornerBR*2)-theSize;
+                                    if (brsize > 0)
+                                    {
+                                        QRectF curve3(offsetX+width-(this->cornerBR*2)-rightOffset, offsetY+height-(this->cornerBR*2)-bottomOffset, brsize, this->cornerBR*2);
+                                        path.arcTo(curve3, 270, 90);
+                                    }
+                                    else
+                                    {
+                                        path.lineTo(offsetX+width-rightOffset-theSize, offsetY+height-bottomOffset);
+                                    }
+                                    qreal trsize = (this->cornerTR*2)-theSize;
+                                    if (trsize > 0)
+                                    {
+                                        QRectF curve4(offsetX+width-(this->cornerTR*2)-rightOffset, offsetY+topOffset, trsize, this->cornerTR*2);
+                                        path.arcTo(curve4, 0, 90);
+                                    }
+                                    else
+                                    {
+                                        path.lineTo(offsetX+width-rightOffset-theSize, offsetY+topOffset);
+                                    }
                                     path.closeSubpath();
                                     painter.fillPath(path, theColor->toQColor());
 
@@ -917,16 +975,46 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     HSSUnit bottomOffset = bottomCumulative+bottomCorrection;
                                     HSSUnit leftOffset = leftCumulative+leftCorrection;
 
-                                    QRectF curve1(offsetX+leftOffset, offsetY+height-(this->cornerBL*2)-bottomOffset, this->cornerBR*2, this->cornerBR*2);
-                                    QRectF curve2(offsetX+leftOffset+width-(this->cornerBR*2)-leftOffset-rightOffset, offsetY+height+theSize-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, (this->cornerBR*2)-theSize);
-                                    QRectF curve3(offsetX+leftOffset+width-(this->cornerBR*2)-leftOffset-rightOffset, offsetY+height-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, (this->cornerBR*2)-theSize);
-                                    QRectF curve4(offsetX+leftOffset, offsetY+height-(this->cornerBL*2)-bottomOffset, cornerBL*2, (this->cornerBL*2)-theSize);
-
-                                    path.arcMoveTo(curve1, 180);
-                                    path.arcTo(curve1, 180, 90);
-                                    path.arcTo(curve2, 270, 90);
-                                    path.arcTo(curve3, 0, -90);
-                                    path.arcTo(curve4, 270, -90);
+                                    if(this->cornerBL != 0)
+                                    {
+                                        QRectF curve1(offsetX+leftOffset, offsetY+height-(this->cornerBL*2)-bottomOffset, this->cornerBL*2, this->cornerBL*2);
+                                        path.arcMoveTo(curve1, 180);
+                                        path.arcTo(curve1, 180, 90);
+                                    }
+                                    else
+                                    {
+                                        path.moveTo(offsetX+leftOffset, offsetY+height-bottomOffset-theSize);
+                                        path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+                                    }
+                                    if (this->cornerBR != 0)
+                                    {
+                                        QRectF curve2(offsetX+width-(this->cornerBR*2)-rightOffset, offsetY+height-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, this->cornerBR*2);
+                                        path.arcTo(curve2, 270, 90);
+                                    }
+                                    else
+                                    {
+                                        path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+                                    }
+                                    qreal brsize = (this->cornerBR*2)-theSize;
+                                    if (brsize > 0)
+                                    {
+                                        QRectF curve3(offsetX+width-(this->cornerBR*2)-rightOffset, offsetY+height-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, brsize);
+                                        path.arcTo(curve3, 0, -90);
+                                    }
+                                    else
+                                    {
+                                        path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset-theSize);
+                                    }
+                                    qreal blsize = (this->cornerBL*2)-theSize;
+                                    if (blsize > 0)
+                                    {
+                                        QRectF curve4(offsetX+leftOffset, offsetY+height-(this->cornerBL*2)-bottomOffset, cornerBL*2, blsize);
+                                        path.arcTo(curve4, 270, -90);
+                                    }
+                                    else
+                                    {
+                                        path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset-theSize);
+                                    }
                                     path.closeSubpath();
                                     painter.fillPath(path, theColor->toQColor());
 
@@ -939,15 +1027,34 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
                                     HSSUnit topOffset = topCumulative+topCorrection;
 
                                     QRectF curve1(offsetX+leftOffset, offsetY+topOffset, this->cornerTL*2, this->cornerTL*2);
-                                    QRectF curve2(offsetX+leftOffset, offsetY+height-(this->cornerTL*2)-bottomOffset, this->cornerTL*2, (this->cornerTL*2));
-                                    QRectF curve3(offsetX+leftOffset+theSize, offsetY+height-(this->cornerBL*2)-bottomOffset, (this->cornerBL*2)-theSize, (this->cornerBL*2));
-                                    QRectF curve4(offsetX+leftOffset+theSize, offsetY+topOffset, (this->cornerTL*2)-theSize, this->cornerTL*2);
+                                    if(this->cornerTL != 0){
+                                        path.arcMoveTo(curve1, 90);
+                                        path.arcTo(curve1, 90, 90);
+                                    } else {
+                                        path.moveTo(offsetX+leftOffset, offsetY+topOffset);
+                                        path.arcTo(curve1, 90, 90);
+                                    }
+                                    if(this->cornerBL != 0){
+                                        QRectF curve2(offsetX+leftOffset, offsetY+height-(this->cornerBL*2)-bottomOffset, this->cornerBL*2, this->cornerBL*2);
+                                        path.arcTo(curve2, 180, 90);
+                                    } else {
+                                        path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+                                    }
 
-                                    path.arcMoveTo(curve1, 90);
-                                    path.arcTo(curve1, 90, 90);
-                                    path.arcTo(curve2, 180, 90);
-                                    path.arcTo(curve3, 270, -90);
-                                    path.arcTo(curve4, 180, -90);
+                                    if((this->cornerBL*2)-theSize > 0){
+                                        QRectF curve3(offsetX+leftOffset+theSize, offsetY+height-(this->cornerBL*2)-bottomOffset, (this->cornerBL*2)-theSize, (this->cornerBL*2));
+                                        path.arcTo(curve3, 270, -90);
+                                    } else {
+                                        path.lineTo(offsetX+leftOffset+theSize, offsetY+height-bottomOffset);
+                                    }
+
+                                    if(this->cornerTL != 0){
+                                        QRectF curve4(offsetX+leftOffset+theSize, offsetY+topOffset, (this->cornerTL*2)-theSize, this->cornerTL*2);
+                                        path.arcTo(curve4, 180, -90);
+                                    } else {
+                                        path.lineTo(offsetX+leftOffset+theSize, offsetY+topOffset);
+                                    }
+
                                     path.closeSubpath();
                                     painter.fillPath(path, theColor->toQColor());
 
