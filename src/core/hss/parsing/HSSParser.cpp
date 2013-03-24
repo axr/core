@@ -2799,12 +2799,12 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
                 QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
                 if(name == "captureFlag")
                 {
-                    //assumes 'on *'
+                    //assumes 'of *'
                     newSs->setName(QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector(controller)));
                 }
                 else
                 {
-                    //assumes 'on @this'
+                    //assumes 'of @this'
                     newSs->setName(QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller)));
                 }
                 selectorChain->add(newSs);
@@ -2815,7 +2815,7 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
             }
             else
             {
-                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "on")
+                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of")
                 {
                     axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading flagging function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
                 }
