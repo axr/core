@@ -1,11 +1,11 @@
-import qbs.base 1.0
+import qbs 1.0
 
 Product {
     name: "axrcore"
     type: "dynamiclibrary"
 
     Depends { name: "cpp" }
-    Depends { name: "Qt"; submodules: [ "core", "gui", "xml" ] }
+    Depends { name: "Qt"; submodules: [ "core", "gui" ] }
 
     // TODO: how can we do this in a less verbose manner?
     files: [
@@ -13,6 +13,8 @@ Product {
         "axr/*",
         "debug/*",
         "hss/*",
+        "hss/enums/*",
+        "hss/input/*",
         "hss/objects/*",
         "hss/objects/actions/*",
         "hss/objects/borders/*",
@@ -25,16 +27,23 @@ Product {
         "hss/parsing/functions/*",
         "hss/parsing/selectors/*",
         "hss/parsing/statements/*",
+        "hss/processing/*",
+        "hss/rendering/*",
         "hss/tokenizing/*",
         "hss/various/*",
-        "rendering/*",
+        "logging/*",
         "types/*",
         "xml/*"
     ]
 
     Properties {
-        condition: product.type === "dynamiclibrary"
+        condition: type === "dynamiclibrary"
         cpp.defines: [ "AXR_EXPORTS" ]
+    }
+
+    Properties {
+        condition: qbs.targetOS === "mac"
+        cpp.frameworks: [ "Foundation" ]
     }
 
     cpp.includePaths: [
@@ -42,6 +51,8 @@ Product {
         "axr",
         "debug",
         "hss",
+        "hss/enums",
+        "hss/input",
         "hss/objects",
         "hss/objects/actions",
         "hss/objects/borders",
@@ -54,9 +65,11 @@ Product {
         "hss/parsing/functions",
         "hss/parsing/selectors",
         "hss/parsing/statements",
+        "hss/processing",
+        "hss/rendering",
         "hss/tokenizing",
         "hss/various",
-        "rendering",
+        "logging",
         "types",
         "xml",
         product.buildDirectory
@@ -70,6 +83,8 @@ Product {
             "axr",
             "debug",
             "hss",
+            "hss/enums",
+            "hss/input",
             "hss/objects",
             "hss/objects/actions",
             "hss/objects/borders",
@@ -82,9 +97,11 @@ Product {
             "hss/parsing/functions",
             "hss/parsing/selectors",
             "hss/parsing/statements",
+            "hss/processing",
+            "hss/rendering",
             "hss/tokenizing",
             "hss/various",
-            "rendering",
+            "logging",
             "types",
             "xml"
         ]
