@@ -292,23 +292,31 @@ void HSSContainer::add(QSharedPointer<HSSDisplayObject> child)
 
 void HSSContainer::remove(size_t index)
 {
-    for (HSSSimpleSelection::iterator it = this->children->begin(); it != this->children->end(); ++it)
+    HSSSimpleSelection::iterator it = this->children->begin();
+    while (it != this->children->end())
     {
         QSharedPointer<HSSDisplayObject> child = *it;
         if (child->getIndex() == index)
         {
-            HSSSimpleSelection::iterator delIt = it;
-            this->children->erase(delIt);
+            it = this->children->erase(it);
+        }
+        else
+        {
+            ++it;
         }
     }
 
-    for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it != this->allChildren->end(); ++it)
+    HSSSimpleSelection::iterator it2 = this->allChildren->begin();
+    while (it2 != this->allChildren->end())
     {
-        QSharedPointer<HSSDisplayObject> child = *it;
+        QSharedPointer<HSSDisplayObject> child = *it2;
         if (child->getIndex() == index)
         {
-            HSSSimpleSelection::iterator delIt = it;
-            this->allChildren->erase(delIt);
+            it2 = this->allChildren->erase(it2);
+        }
+        else
+        {
+            ++it2;
         }
     }
 
