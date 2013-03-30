@@ -222,52 +222,43 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
         {
             if (container)
             {
-                QSharedPointer<HSSContainer> parent = container->getParent();
-                if (parent)
-                {
-                    QSharedPointer<HSSSimpleSelection> moveScope = parent->getChildren();
-                    QSharedPointer<HSSSelection> selection = this->select(rule->getSelectorChains(), moveScope, container);
+                QSharedPointer<HSSSelection> selection = this->select(rule->getSelectorChains(), scope, container);
 
-                    this->currentContext.push(container);
-                    //move the children over
-                    QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
-                    for (HSSSimpleSelection::const_iterator it=inner->begin(); it!=inner->end(); ++it)
+                this->currentContext.push(container);
+                //move the children over
+                QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
+                for (HSSSimpleSelection::const_iterator it=inner->begin(); it!=inner->end(); ++it)
+                {
+                    const QSharedPointer<HSSDisplayObject> & theDO = *it;
+                    if (theDO != container)
                     {
-                        const QSharedPointer<HSSDisplayObject> & theDO = *it;
-                        if (theDO != container)
+                        theDO->removeFromParent();
+                        rule->setThisObj(theDO);
+                        theDO->rulesAdd(rule, HSSRuleStateOn);
+                        axr_log(LoggerChannelGeneral, "AXRController: moved " + theDO->getElementName());
+                        this->add(theDO);
+                        theDO->setNeedsRereadRules(true);
+                        theDO->setNeedsSurface(true);
+                        theDO->setDirty(true);
+
+                        if (theDO->isA(HSSObjectTypeContainer))
                         {
-                            theDO->removeFromParent();
-                            rule->setThisObj(theDO);
-                            theDO->rulesAdd(rule, HSSRuleStateOn);
-                            axr_log(LoggerChannelGeneral, "AXRController: moved " + theDO->getElementName());
-                            this->add(theDO);
-                            theDO->setNeedsRereadRules(true);
-                            theDO->setNeedsSurface(true);
-                            theDO->setDirty(true);
-
-                            if (theDO->isA(HSSObjectTypeContainer))
+                            QSharedPointer<HSSContainer> theContainer = qSharedPointerCast<HSSContainer>(theDO);
+                            this->currentContext.push(theContainer);
+                            //assign more rules
+                            for (size_t i = 0; i < rule->childrenSize(); ++i)
                             {
-                                QSharedPointer<HSSContainer> theContainer = qSharedPointerCast<HSSContainer>(theDO);
-                                this->currentContext.push(theContainer);
-                                //assign more rules
-                                for (size_t i = 0; i < rule->childrenSize(); ++i)
-                                {
-                                    const QSharedPointer<HSSRule> childRule = rule->childrenGet(i);
-                                    this->recursiveMatchRulesToDisplayObjects(childRule, theContainer->getChildren(), theContainer, applyingInstructions);
-                                }
-                                this->currentContext.pop();
+                                const QSharedPointer<HSSRule> childRule = rule->childrenGet(i);
+                                this->recursiveMatchRulesToDisplayObjects(childRule, theContainer->getChildren(), theContainer, applyingInstructions);
                             }
-
-                            theDO->setNeedsRereadRules(true);
-                            //theDO->fireEvent(HSSEventTypeLoad);
+                            this->currentContext.pop();
                         }
+
+                        theDO->setNeedsRereadRules(true);
+                        //theDO->fireEvent(HSSEventTypeLoad);
                     }
-                    this->currentContext.pop();
                 }
-                else
-                {
-                    AXRWarning("AXRController", "You cannot use the #move instruction at root level").raise();
-                }
+                this->currentContext.pop();
             }
 
             break;
