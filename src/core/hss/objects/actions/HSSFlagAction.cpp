@@ -100,7 +100,7 @@ void HSSFlagAction::fire()
     QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
     HSSFlagFunctionType type = flagFunction->getFlagFunctionType();
     const AXRString & flagName = flagFunction->getName();
-    if(type == HSSFlagFunctionTypeCaptureFlag){
+    if(type == HSSFlagFunctionTypeTakeFlag){
         for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
         {
             QSharedPointer<HSSDisplayObject> container = *innerIt;

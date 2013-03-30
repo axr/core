@@ -2762,7 +2762,7 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
                 name == "flag"
                 || name == "unflag"
                 || name == "toggleFlag"
-                || name == "captureFlag"
+                || name == "takeFlag"
                 )
         {
 
@@ -2797,7 +2797,7 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
                 QSharedPointer<HSSSelectorChain> selectorChain;
                 selectorChain = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
                 QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
-                if(name == "captureFlag")
+                if(name == "takeFlag")
                 {
                     //assumes 'of *'
                     newSs->setName(QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector(controller)));

@@ -288,7 +288,7 @@ bool HSSObject::isFunction(AXRString value, AXRString property)
             || value == "flag"
             || value == "unflag"
             || value == "toggleFlag"
-            || value == "captureFlag"
+            || value == "takeFlag"
             || value == "attr"
             )
     {
