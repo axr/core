@@ -80,6 +80,8 @@ AXRString HSSParentSelector::getElementName()
 QSharedPointer<HSSSelection> HSSParentSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
-    ret->add(thisObj->getParent());
+    if(!thisObj->isRoot()){
+        ret->add(thisObj->getParent());
+    }
     return ret;
 }
