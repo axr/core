@@ -404,18 +404,18 @@ void AXRController::recursiveSetRuleState(QSharedPointer<HSSRule> rule, QSharedP
                 QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(selection);
                 for (HSSMultipleSelection::iterator it = multiSel->begin(); it != multiSel->end(); ++it)
                 {
-                    this->_setRuleStateOnSelection(rule, qSharedPointerCast<HSSSimpleSelection>(*it), state);
+                    this->setRuleStateOnSelection(rule, qSharedPointerCast<HSSSimpleSelection>(*it), state);
                 }
             }
             else if (selection->isA(HSSSelectionTypeSimpleSelection))
             {
-                this->_setRuleStateOnSelection(rule, qSharedPointerCast<HSSSimpleSelection>(selection), state);
+                this->setRuleStateOnSelection(rule, qSharedPointerCast<HSSSimpleSelection>(selection), state);
             }
         }
     }
 }
 
-void AXRController::_setRuleStateOnSelection(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSimpleSelection> selection, HSSRuleState state)
+void AXRController::setRuleStateOnSelection(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSimpleSelection> selection, HSSRuleState state)
 {
     for (HSSSimpleSelection::const_iterator it = selection->begin(); it != selection->end(); ++it)
     {
@@ -433,7 +433,7 @@ void AXRController::_setRuleStateOnSelection(QSharedPointer<HSSRule> rule, QShar
                 QSharedPointer<HSSInstruction> theInst = childRule->getInstruction();
                 if (!theInst) {
                     QSharedPointer<HSSSimpleSelection> children = this->select(childRule->getSelectorChains(), selectedContainer->getChildren(), selectedContainer)->joinAll();
-                    this->_setRuleStateOnSelection(childRule, children, state);
+                    this->setRuleStateOnSelection(childRule, children, state);
                 }
             }
         }
