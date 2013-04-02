@@ -3912,7 +3912,6 @@ void HSSDisplayObject::flagsActivate(AXRString name)
         for (it = flags.begin(); it != flags.end(); ++it)
         {
             QSharedPointer<HSSFlag> theFlag = *it;
-            theFlag->setThisObj(this->shared_from_this());
             theFlag->flagChanged(newValue);
         }
         this->_flagsStatus[name] = HSSRuleStateOn;
@@ -3937,7 +3936,6 @@ void HSSDisplayObject::flagsDeactivate(AXRString name)
             for (std::vector<QSharedPointer<HSSFlag> >::iterator it = flags.begin(); it != flags.end(); ++it)
             {
                 QSharedPointer<HSSFlag> theFlag = *it;
-                theFlag->setThisObj(this->shared_from_this());
                 theFlag->flagChanged(newValue);
             }
         }
@@ -3951,7 +3949,6 @@ void HSSDisplayObject::flagsDeactivate(AXRString name)
         for (std::vector<QSharedPointer<HSSFlag> >::iterator it = flags.begin(); it != flags.end(); ++it)
         {
             QSharedPointer<HSSFlag> theFlag = *it;
-            theFlag->setThisObj(this->shared_from_this());
             theFlag->flagChanged(newValue);
         }
 
@@ -3975,7 +3972,6 @@ void HSSDisplayObject::flagsToggle(AXRString name)
         for (it = flags.begin(); it != flags.end(); ++it)
         {
             QSharedPointer<HSSFlag> theFlag = *it;
-            theFlag->setThisObj(this->shared_from_this());
             theFlag->flagChanged(newValue);
         }
         this->_flagsStatus[name] = (newValue == HSSRuleStateActivate ? HSSRuleStateOn : HSSRuleStateOff);
