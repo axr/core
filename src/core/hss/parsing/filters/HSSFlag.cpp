@@ -118,7 +118,7 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
             {
                 this->getController()->recursiveSetRuleState(theRule, theRule->getOriginalScope(), this->getThisObj(), newStatus);
             } else {
-                this->getController()->recursiveSetRuleState(theRule, this->_selectFromTop(theRule), this->getThisObj(), newStatus);
+                this->getController()->setRuleStateOnSelection(theRule, this->_selectFromTop(theRule), newStatus);
             }
             this->setPurging(HSSRuleStateOff);
         }
@@ -147,7 +147,7 @@ QSharedPointer<HSSSimpleSelection> HSSFlag::_selectFromTop(QSharedPointer<HSSRul
     {
         QSharedPointer<HSSRule> itRule = *it;
         // TODO: check @this object
-        selection = this->getController()->select(itRule->getSelectorChains(), scope, thisObj)->joinAll();
+        selection = this->getController()->select(itRule->getSelectorChains(), scope, itRule->getThisObj())->joinAll();
         if(selection->size() == 0)
         {
             break;
