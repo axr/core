@@ -431,7 +431,17 @@ void AXRController::setRuleStateOnSelection(QSharedPointer<HSSRule> rule, QShare
             {
                 const QSharedPointer<HSSRule> childRule = rule->childrenGet(k);
                 QSharedPointer<HSSInstruction> theInst = childRule->getInstruction();
-                if (!theInst) {
+                if(theInst)
+                {
+                    std::vector<QWeakPointer<HSSDisplayObject> > appliedTo = childRule->getAppliedTo();
+                    QSharedPointer<HSSSimpleSelection> children(new HSSSimpleSelection());
+                    for (std::vector<QWeakPointer<HSSDisplayObject> >::iterator it = appliedTo.begin(); it != appliedTo.end(); ++it) {
+                        children->add((*it).toStrongRef());
+                    }
+                    this->setRuleStateOnSelection(childRule, children, state);
+                }
+                else
+                {
                     QSharedPointer<HSSSimpleSelection> children = this->select(childRule->getSelectorChains(), selectedContainer->getChildren(), selectedContainer)->joinAll();
                     this->setRuleStateOnSelection(childRule, children, state);
                 }
