@@ -160,6 +160,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
 {
     axr_log(LoggerChannelGeneralSpecific, "AXRController: recursive matching rules to display objects");
     QSharedPointer<HSSInstruction> instruction = rule->getInstruction();
+    rule->setThisObj(container);
     if (instruction && applyingInstructions)
     {
         switch (instruction->getInstructionType())
@@ -192,7 +193,6 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
                     QSharedPointer<HSSContainer> newContainer = QSharedPointer<HSSContainer>(new HSSContainer(this));
                     newContainer->setName(elementName);
                     newContainer->setElementName(elementName);
-                    rule->setThisObj(newContainer);
                     newContainer->rulesAdd(rule, HSSRuleStateOn);
                     axr_log(LoggerChannelGeneral, "AXRController: created " + newContainer->getElementName());
                     this->add(newContainer);
@@ -233,7 +233,6 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
                     if (theDO != container)
                     {
                         theDO->removeFromParent();
-                        rule->setThisObj(theDO);
                         theDO->rulesAdd(rule, HSSRuleStateOn);
                         axr_log(LoggerChannelGeneral, "AXRController: moved " + theDO->getElementName());
                         this->add(theDO);
@@ -302,7 +301,6 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
                     //we observe the parent for dom changes
                     container->observe(HSSObservablePropertyTreeChange, HSSObservablePropertyValue, rule.data(), new HSSValueChangedCallback<HSSRule>(rule.data(), &HSSRule::treeChanged));
                     rule->setObservedTreeChanger(container.data());
-                    rule->setThisObj(container);
                     rule->addOriginalScope(scope->joinAll());
                 }
 
