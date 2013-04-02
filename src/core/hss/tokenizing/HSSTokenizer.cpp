@@ -209,7 +209,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readNextToken()
 {
     QSharedPointer<HSSToken> ret;
 
-    if (this->atEndOfSource())
+    if (this->atEndOfSource() && d->currentChar == '\0')
     {
         return ret;
     }
