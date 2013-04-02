@@ -484,13 +484,13 @@ void HSSDisplayObject::rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState de
             QSharedPointer<HSSPropertyDefinition> propdef = *it;
             if (propdef->getName() == "isA")
             {
-                this->rulesAddIsAChildren(propdef, defaultState);
+                this->rulesAddIsAChildren(propdef, defaultState, newRule);
             }
         }
     }
 }
 
-void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition> propdef, HSSRuleState defaultState)
+void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition> propdef, HSSRuleState defaultState, QSharedPointer<HSSRule> & parentRule)
 {
     QSharedPointer<HSSParserNode> value = propdef->getValue();
 
@@ -516,7 +516,7 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
                     QSharedPointer<HSSPropertyDefinition> propdef = *pIt;
                     if (propdef->getName() == "isA")
                     {
-                        this->rulesAddIsAChildren(propdef, defaultState);
+                        this->rulesAddIsAChildren(propdef, defaultState, parentRule);
                     }
                 }
 
@@ -529,6 +529,8 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
                     QSharedPointer<HSSSelection> children = thisCont->getChildren();
                     controller->recursiveMatchRulesToDisplayObjects(clonedRule, children, thisCont, true);
                     controller->recursiveSetRuleState(clonedRule, children, thisCont, HSSRuleStateOn);
+                    //we attach the cloned rule to the rule that has the isA
+                    clonedRule->setParentNode(parentRule);
                 }
                 this->getController()->currentContext.pop();
             }
