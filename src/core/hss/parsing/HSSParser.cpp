@@ -3148,6 +3148,8 @@ void HSSParser::skipUntilEndOfStatement()
         }
         this->checkForUnexpectedEndOfSource();
     }
+    this->readNextToken();
+    this->skip(HSSWhitespace);
 }
 
 void HSSParser::expect(HSSTokenType type)
