@@ -404,10 +404,6 @@ bool HSSParser::readNextStatement()
     }
 
     return ret;
-    //    } else {
-    //        axr_log(LoggerChannelObsolete1, "reading in anything other than root context is not implemented yet");
-    //        return ret;
-    //    }
 }
 
 QSharedPointer<HSSRule> HSSParser::readRule()
@@ -2357,7 +2353,7 @@ QSharedPointer<HSSObjectDefinition> HSSParser::getObjectFromInstruction(QSharedP
     }
 
     default:
-        axr_log(LoggerChannelObsolete1, "*********** eror: unknown instruction type ****************");
+        AXRError("HSSParser", "Unknown instruction type", this->currentFile->sourceUrl(), this->line, this->column).raise();
         break;
     }
     return ret;
@@ -2426,7 +2422,7 @@ QSharedPointer<HSSRule> HSSParser::readInstructionRule()
     }
 
     default:
-        axr_log(LoggerChannelObsolete1, "*********** eror: unknown instruction type ****************");
+            AXRError("HSSParser", "Unknown instruction type", this->currentFile->sourceUrl(), this->line, this->column).raise();
         break;
     }
 
@@ -2710,8 +2706,8 @@ QSharedPointer<HSSParserNode> HSSParser::readRefFunction()
     //first, we expect either "min", "max", "avg" or a property name
     if (!this->currentToken->isA(HSSIdentifier))
     {
-        AXRString name = VALUE_TOKEN(this->currentToken)->getString();
-        axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function " + name);
+        AXRError("HSSParser", "Unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->sourceUrl(), this->line, this->column).raise();
+        return ret;
     }
     else
     {
@@ -2728,7 +2724,8 @@ QSharedPointer<HSSParserNode> HSSParser::readRefFunction()
             this->skip(HSSWhitespace);
             if (!this->currentToken->isA(HSSIdentifier))
             {
-                axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+                AXRError("HSSParser", "Unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->sourceUrl(), this->line, this->column).raise();
+                return ret;
             }
             else
             {
@@ -2763,7 +2760,8 @@ QSharedPointer<HSSParserNode> HSSParser::readRefFunction()
     {
         if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of")
         {
-            axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+            AXRError("HSSParser", "Unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->sourceUrl(), this->line, this->column).raise();
+            return ret;
         }
         this->checkForUnexpectedEndOfSource();
         this->readNextToken(true);
