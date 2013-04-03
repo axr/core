@@ -1900,14 +1900,13 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
         this->skip(HSSEndOfStatement);
         this->skip(HSSWhitespace);
     }
-    else if (!this->atEndOfSource())
+    else
     {
-        this->skipUntilEndOfStatement();
-    }
-
-    if (!valid)
-    {
-        throw AXRError("HSSParser", "Errors found while reading " + propertyName, this->currentFile->sourceUrl(), this->line, this->column);
+        ret.clear();
+        if (!this->atEndOfSource())
+        {
+            this->skipUntilEndOfStatement();
+        }
     }
 
     return ret;
