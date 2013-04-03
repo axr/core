@@ -342,6 +342,66 @@ namespace AXR
         QSharedPointer<HSSParserNode> readFunction();
 
         /**
+         *  Reads a function of type ref([<property> ]of <selector-chain>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readRefFunction();
+
+        /**
+         *  Reads a function of type sel(<selector-chain>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readSelFunction();
+
+        /**
+         *  Reads a function of type flag|unflag|toglleFlag|takeFlag(<flag name>[ of <selector-chain>]).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readFlagFunction();
+
+        /**
+         *  Reads a function of type attr(<attribute name>[ of <selector-chain>]).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readAttrFunction();
+
+        /**
+         *  Reads a function of type min(<minimum value>, <otherwise>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readMinFunction();
+
+        /**
+         *  Reads a function of type max(<maximum value>, <otherwise>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readMaxFunction();
+
+        /**
+         *  Reads a function of type ceil(<value>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readCeilFunction();
+
+        /**
+         *  Reads a function of type floor(<value>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readFloorFunction();
+
+        /**
+         *  Reads a function of type round(<value>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readRoundFunction();
+
+        /**
+         *  Reads a custom function.
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readCustomFunction();
+
+        /**
          *  Shorthand for readNextToken(bool checkForUnexpectedEndOfSource) passing false to the parameter.
          */
         void readNextToken();

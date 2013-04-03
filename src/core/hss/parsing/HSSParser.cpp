@@ -2641,122 +2641,12 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
         AXRString name = VALUE_TOKEN(this->currentToken)->getString();
         if (name == "ref")
         {
-            QSharedPointer<HSSRefFunction> refFunction = QSharedPointer<HSSRefFunction>(new HSSRefFunction(controller));
-
-            this->readNextToken(true);
-            this->skip(HSSWhitespace, true);
-            this->skipExpected(HSSParenthesisOpen, true);
-            this->skip(HSSWhitespace, true);
-            //read the arguments
-            //first, we expect either "min", "max", "avg" or a property name
-            if (!this->currentToken->isA(HSSIdentifier))
-            {
-                axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function " + name);
-            }
-            else
-            {
-                AXRString firstValue = VALUE_TOKEN(this->currentToken)->getString();
-                if (firstValue == "min"
-                        || firstValue == "max"
-                        || firstValue == "avg")
-                {
-
-                    refFunction->setModifier(firstValue);
-
-                    //after this there comes the property name
-                    this->checkForUnexpectedEndOfSource();
-                    this->readNextToken();
-                    this->skip(HSSWhitespace);
-                    if (!this->currentToken->isA(HSSIdentifier))
-                    {
-                        axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
-                    }
-                    else
-                    {
-                        refFunction->setPropertyName(HSSObservable::observablePropertyFromString(VALUE_TOKEN(this->currentToken)->getString()));
-                    }
-
-
-                }
-                else
-                {
-                    //just the property name
-                    refFunction->setPropertyName(HSSObservable::observablePropertyFromString(firstValue));
-                }
-            }
-
-            this->checkForUnexpectedEndOfSource();
-            this->readNextToken();
-            this->skip(HSSWhitespace, true);
-            //if shorthand notation -- assumes 'of @this'
-            std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
-            if (this->currentToken->isA(HSSParenthesisClose))
-            {
-                QSharedPointer<HSSSelectorChain> selectorChain;
-                selectorChain = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
-                QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
-                newSs->setName(QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller)));
-                selectorChain->add(newSs);
-                selectorChains.push_back(selectorChain);
-                this->readNextToken(true);
-                this->skip(HSSWhitespace, true);
-
-            }
-            else
-            {
-                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of")
-                {
-                    axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
-                }
-                this->checkForUnexpectedEndOfSource();
-                this->readNextToken(true);
-                this->skipExpected(HSSWhitespace, true);
-
-
-                //now read the selector chain
-                selectorChains = this->readSelectorChains(HSSParenthesisClose);
-                //we expect the closing parenthesis here
-                this->skipExpected(HSSParenthesisClose, true);
-                //skip any whitespace
-                this->skip(HSSWhitespace, true);
-            }
-
-            refFunction->setSelectorChains(selectorChains);
-            ret = refFunction;
+            ret = this->readRefFunction();
 
         }
         else if (name == "sel")
         {
-            this->readNextToken(true);
-            this->skip(HSSWhitespace, true);
-            this->skipExpected(HSSParenthesisOpen, true);
-            this->skip(HSSWhitespace, true);
-            //read the selector chain
-            std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
-            try
-            {
-                selectorChains = this->readSelectorChains(HSSParenthesisClose);
-                //we expect the closing parenthesis here
-                this->skipExpected(HSSParenthesisClose, true);
-                //skip any whitespace
-                this->skip(HSSWhitespace, true);
-            }
-            catch (const AXRError &e)
-            {
-                this->readNextToken(true);
-                this->skip(HSSWhitespace);
-
-                e.raise();
-
-                //return an empty function
-                return ret;
-            }
-
-            QSharedPointer<HSSSelFunction> selFunction = QSharedPointer<HSSSelFunction>(new HSSSelFunction(controller));
-            selFunction->setSelectorChains(selectorChains);
-
-            ret = selFunction;
-
+            ret = this->readSelFunction();
         }
         else if (
                 name == "flag"
@@ -2765,191 +2655,363 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
                 || name == "takeFlag"
                 )
         {
-
-            QSharedPointer<HSSFlagFunction> flagFunction = QSharedPointer<HSSFlagFunction>(new HSSFlagFunction(HSSFlagFunction::flagFunctionTypeFromString(name), controller));
-
-            this->readNextToken(true);
-            this->skip(HSSWhitespace, true);
-            this->skipExpected(HSSParenthesisOpen, true);
-            this->skip(HSSWhitespace, true);
-            //read the arguments
-            //first, we expect the name
-            if (this->currentToken->isA(HSSIdentifier))
-            {
-                flagFunction->setName(VALUE_TOKEN(this->currentToken)->getString());
-            }
-            else if (this->currentToken->isA(HSSSymbol) && VALUE_TOKEN(this->currentToken)->getString() == "*")
-            {
-                flagFunction->setName("*");
-            }
-            else
-            {
-                axr_log(LoggerChannelObsolete0, "HSSParser: unexpected token while reading flagging function " + name);
-            }
-
-            this->checkForUnexpectedEndOfSource();
-            this->readNextToken();
-            this->skip(HSSWhitespace, true);
-            //if shorthand notation
-            std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
-            if (this->currentToken->isA(HSSParenthesisClose))
-            {
-                QSharedPointer<HSSSelectorChain> selectorChain;
-                selectorChain = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
-                QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
-                if(name == "takeFlag")
-                {
-                    //assumes 'of *'
-                    newSs->setName(QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector(controller)));
-                }
-                else
-                {
-                    //assumes 'of @this'
-                    newSs->setName(QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller)));
-                }
-                selectorChain->add(newSs);
-                selectorChains.push_back(selectorChain);
-                this->readNextToken(true);
-                this->skip(HSSWhitespace, true);
-
-            }
-            else
-            {
-                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of")
-                {
-                    AXRError("HSSParser", "Unexpected token while reading flagging function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType())).raise();
-                }
-                this->checkForUnexpectedEndOfSource();
-                this->readNextToken(true);
-                this->skipExpected(HSSWhitespace, true);
-
-
-                //now read the selector chain
-                selectorChains = this->readSelectorChains(HSSParenthesisClose);
-                //we expect the closing parenthesis here
-                this->skipExpected(HSSParenthesisClose, true);
-                //skip any whitespace
-                this->skip(HSSWhitespace, true);
-            }
-
-            flagFunction->setSelectorChains(selectorChains);
-            ret = flagFunction;
+            ret = this->readFlagFunction();
         }
         else if (name == "attr")
         {
-            QSharedPointer<HSSAttrFunction> attrFunction = QSharedPointer<HSSAttrFunction>(new HSSAttrFunction(controller));
-
-            this->readNextToken(true);
-            this->skip(HSSWhitespace, true);
-            this->skipExpected(HSSParenthesisOpen, true);
-            this->skip(HSSWhitespace, true);
-            //read the arguments
-            //first, we expect an identifier
-            if (!this->currentToken->isA(HSSIdentifier))
-            {
-                AXRError("HSSParser", "Unexpected token while reading attr function " + name).raise();
-            }
-            else
-            {
-                attrFunction->setAttributeName(VALUE_TOKEN(this->currentToken)->getString());
-            }
-
-            this->checkForUnexpectedEndOfSource();
-            this->readNextToken();
-            this->skip(HSSWhitespace, true);
-            //if shorthand notation -- assumes 'of @this'
-            std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
-            if (this->currentToken->isA(HSSParenthesisClose))
-            {
-                AXRController * controller = this->getController();
-                QSharedPointer<HSSSelectorChain> selectorChain;
-                selectorChain = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
-                QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
-                newSs->setName(QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller)));
-                selectorChain->add(newSs);
-                selectorChains.push_back(selectorChain);
-                this->readNextToken(true);
-                this->skip(HSSWhitespace, true);
-
-            }
-            else
-            {
-                if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of")
-                {
-                    AXRError("HSSParser", "Unexpected token while reading attr function " + name).raise();
-                }
-                this->checkForUnexpectedEndOfSource();
-                this->readNextToken(true);
-                this->skipExpected(HSSWhitespace, true);
-
-
-                //now read the selector chain
-                selectorChains = this->readSelectorChains(HSSParenthesisClose);
-                //we expect the closing parenthesis here
-                this->skipExpected(HSSParenthesisClose, true);
-                //skip any whitespace
-                this->skip(HSSWhitespace, true);
-            }
-
-            attrFunction->setSelectorChains(selectorChains);
-            ret = attrFunction;
-
+            ret = this->readAttrFunction();
         }
         else if (name == "min")
         {
-
+            ret = this->readMinFunction();
         }
         else if (name == "max")
         {
-
+            ret = this->readMaxFunction();
         }
         else if (name == "ceil")
         {
-
+            ret = this->readCeilFunction();
         }
         else if (name == "floor")
         {
-
+            ret = this->readFloorFunction();
         }
         else if (name == "round")
         {
-
+            ret = this->readRoundFunction();
         }
         else if (controller->document()->isCustomFunction(name))
         {
-            this->readNextToken(true);
-            this->skip(HSSWhitespace, true);
-            this->skipExpected(HSSParenthesisOpen, true);
-            this->skip(HSSWhitespace, true);
-            std::deque<QSharedPointer<HSSParserNode> > arguments;
-            while (!this->currentToken->isA(HSSParenthesisClose) && !this->atEndOfSource())
-            {
-                bool valid;
-                arguments.push_back(this->readValue("", valid));
-                if (this->currentToken->isA(HSSComma))
-                {
-                    this->readNextToken(true);
-                }
-            }
-            QSharedPointer<HSSFunction> theFunction = QSharedPointer<HSSFunction>(new HSSFunction(HSSFunctionTypeCustom, controller));
-            theFunction->setArguments(arguments);
-            theFunction->setName(name);
-            ret = theFunction;
-            this->readNextToken(true);
-            this->skip(HSSWhitespace, true);
-
+            ret = this->readCustomFunction();
         }
         else
         {
             throw AXRError("HSSParser", "Unexpected function name: " + name, this->currentFile->sourceUrl(), this->line, this->column);
         }
-
     }
     else
     {
         throw AXRError("HSSParser", "Unexpected token while reading function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->sourceUrl(), this->line, this->column);
     }
 
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSParser::readRefFunction()
+{
+    QSharedPointer<HSSParserNode> ret;
+    QSharedPointer<HSSRefFunction> refFunction = QSharedPointer<HSSRefFunction>(new HSSRefFunction(controller));
+
+    this->readNextToken(true);
+    this->skip(HSSWhitespace, true);
+    this->skipExpected(HSSParenthesisOpen, true);
+    this->skip(HSSWhitespace, true);
+    //read the arguments
+    //first, we expect either "min", "max", "avg" or a property name
+    if (!this->currentToken->isA(HSSIdentifier))
+    {
+        AXRString name = VALUE_TOKEN(this->currentToken)->getString();
+        axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function " + name);
+    }
+    else
+    {
+        AXRString firstValue = VALUE_TOKEN(this->currentToken)->getString();
+        if (firstValue == "min"
+            || firstValue == "max"
+            || firstValue == "avg")
+        {
+            refFunction->setModifier(firstValue);
+
+            //after this there comes the property name
+            this->checkForUnexpectedEndOfSource();
+            this->readNextToken();
+            this->skip(HSSWhitespace);
+            if (!this->currentToken->isA(HSSIdentifier))
+            {
+                axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+            }
+            else
+            {
+                refFunction->setPropertyName(HSSObservable::observablePropertyFromString(VALUE_TOKEN(this->currentToken)->getString()));
+            }
+        }
+        else
+        {
+            //just the property name
+            refFunction->setPropertyName(HSSObservable::observablePropertyFromString(firstValue));
+        }
+    }
+
+    this->checkForUnexpectedEndOfSource();
+    this->readNextToken();
+    this->skip(HSSWhitespace, true);
+    //if shorthand notation -- assumes 'of @this'
+    std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
+    if (this->currentToken->isA(HSSParenthesisClose))
+    {
+        QSharedPointer<HSSSelectorChain> selectorChain;
+        selectorChain = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
+        QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
+        newSs->setName(QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller)));
+        selectorChain->add(newSs);
+        selectorChains.push_back(selectorChain);
+        this->readNextToken(true);
+        this->skip(HSSWhitespace, true);
+
+    }
+    else
+    {
+        if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of")
+        {
+            axr_log(LoggerChannelObsolete1, "HSSParser: unexpected token while reading ref function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType()));
+        }
+        this->checkForUnexpectedEndOfSource();
+        this->readNextToken(true);
+        this->skipExpected(HSSWhitespace, true);
+
+        //now read the selector chain
+        selectorChains = this->readSelectorChains(HSSParenthesisClose);
+        //we expect the closing parenthesis here
+        this->skipExpected(HSSParenthesisClose, true);
+        //skip any whitespace
+        this->skip(HSSWhitespace, true);
+    }
+
+    refFunction->setSelectorChains(selectorChains);
+    ret = refFunction;
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSParser::readSelFunction()
+{
+    QSharedPointer<HSSParserNode> ret;
+    this->readNextToken(true);
+    this->skip(HSSWhitespace, true);
+    this->skipExpected(HSSParenthesisOpen, true);
+    this->skip(HSSWhitespace, true);
+    //read the selector chain
+    std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
+    try
+    {
+        selectorChains = this->readSelectorChains(HSSParenthesisClose);
+        //we expect the closing parenthesis here
+        this->skipExpected(HSSParenthesisClose, true);
+        //skip any whitespace
+        this->skip(HSSWhitespace, true);
+    }
+    catch (const AXRError &e)
+    {
+        this->readNextToken(true);
+        this->skip(HSSWhitespace);
+
+        e.raise();
+
+        //return an empty function
+        return ret;
+    }
+
+    QSharedPointer<HSSSelFunction> selFunction = QSharedPointer<HSSSelFunction>(new HSSSelFunction(controller));
+    selFunction->setSelectorChains(selectorChains);
+
+    ret = selFunction;
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSParser::readFlagFunction()
+{
+    QSharedPointer<HSSParserNode> ret;
+    AXRString name = VALUE_TOKEN(this->currentToken)->getString();
+    QSharedPointer<HSSFlagFunction> flagFunction = QSharedPointer<HSSFlagFunction>(new HSSFlagFunction(HSSFlagFunction::flagFunctionTypeFromString(name), controller));
+
+    this->readNextToken(true);
+    this->skip(HSSWhitespace, true);
+    this->skipExpected(HSSParenthesisOpen, true);
+    this->skip(HSSWhitespace, true);
+    //read the arguments
+    //first, we expect the name
+    if (this->currentToken->isA(HSSIdentifier))
+    {
+        flagFunction->setName(VALUE_TOKEN(this->currentToken)->getString());
+    }
+    else if (this->currentToken->isA(HSSSymbol) && VALUE_TOKEN(this->currentToken)->getString() == "*")
+    {
+        flagFunction->setName("*");
+    }
+    else
+    {
+        axr_log(LoggerChannelObsolete0, "HSSParser: unexpected token while reading flagging function " + name);
+    }
+
+    this->checkForUnexpectedEndOfSource();
+    this->readNextToken();
+    this->skip(HSSWhitespace, true);
+    //if shorthand notation
+    std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
+    if (this->currentToken->isA(HSSParenthesisClose))
+    {
+        QSharedPointer<HSSSelectorChain> selectorChain;
+        selectorChain = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
+        QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
+        if(name == "takeFlag")
+        {
+            //assumes 'of *'
+            newSs->setName(QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector(controller)));
+        }
+        else
+        {
+            //assumes 'of @this'
+            newSs->setName(QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller)));
+        }
+        selectorChain->add(newSs);
+        selectorChains.push_back(selectorChain);
+        this->readNextToken(true);
+        this->skip(HSSWhitespace, true);
+
+    }
+    else
+    {
+        if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of")
+        {
+            AXRError("HSSParser", "Unexpected token while reading flagging function: " + HSSToken::tokenStringRepresentation(this->currentToken->getType())).raise();
+        }
+        this->checkForUnexpectedEndOfSource();
+        this->readNextToken(true);
+        this->skipExpected(HSSWhitespace, true);
+
+        //now read the selector chain
+        selectorChains = this->readSelectorChains(HSSParenthesisClose);
+        //we expect the closing parenthesis here
+        this->skipExpected(HSSParenthesisClose, true);
+        //skip any whitespace
+        this->skip(HSSWhitespace, true);
+    }
+
+    flagFunction->setSelectorChains(selectorChains);
+    ret = flagFunction;
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSParser::readAttrFunction()
+{
+    QSharedPointer<HSSParserNode> ret;
+    AXRString name = VALUE_TOKEN(this->currentToken)->getString();
+    QSharedPointer<HSSAttrFunction> attrFunction = QSharedPointer<HSSAttrFunction>(new HSSAttrFunction(controller));
+
+    this->readNextToken(true);
+    this->skip(HSSWhitespace, true);
+    this->skipExpected(HSSParenthesisOpen, true);
+    this->skip(HSSWhitespace, true);
+    //read the arguments
+    //first, we expect an identifier
+    if (!this->currentToken->isA(HSSIdentifier))
+    {
+        AXRError("HSSParser", "Unexpected token while reading attr function " + name).raise();
+    }
+    else
+    {
+        attrFunction->setAttributeName(VALUE_TOKEN(this->currentToken)->getString());
+    }
+
+    this->checkForUnexpectedEndOfSource();
+    this->readNextToken();
+    this->skip(HSSWhitespace, true);
+    //if shorthand notation -- assumes 'of @this'
+    std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
+    if (this->currentToken->isA(HSSParenthesisClose))
+    {
+        AXRController * controller = this->getController();
+        QSharedPointer<HSSSelectorChain> selectorChain;
+        selectorChain = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain(controller));
+        QSharedPointer<HSSSimpleSelector> newSs = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(controller));
+        newSs->setName(QSharedPointer<HSSThisSelector>(new HSSThisSelector(controller)));
+        selectorChain->add(newSs);
+        selectorChains.push_back(selectorChain);
+        this->readNextToken(true);
+        this->skip(HSSWhitespace, true);
+    }
+    else
+    {
+        if (!this->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(this->currentToken)->getString() != "of")
+        {
+            AXRError("HSSParser", "Unexpected token while reading attr function " + name).raise();
+        }
+        this->checkForUnexpectedEndOfSource();
+        this->readNextToken(true);
+        this->skipExpected(HSSWhitespace, true);
+
+        //now read the selector chain
+        selectorChains = this->readSelectorChains(HSSParenthesisClose);
+        //we expect the closing parenthesis here
+        this->skipExpected(HSSParenthesisClose, true);
+        //skip any whitespace
+        this->skip(HSSWhitespace, true);
+    }
+
+    attrFunction->setSelectorChains(selectorChains);
+    ret = attrFunction;
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSParser::readMinFunction()
+{
+    AXRError("HSSParser", "the min() function is still unimplemented").raise();
+    QSharedPointer<HSSParserNode> ret;
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSParser::readMaxFunction()
+{
+    AXRError("HSSParser", "the max() function is still unimplemented").raise();
+    QSharedPointer<HSSParserNode> ret;
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSParser::readCeilFunction()
+{
+    AXRError("HSSParser", "the ceil() function is still unimplemented").raise();
+    QSharedPointer<HSSParserNode> ret;
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSParser::readFloorFunction()
+{
+    AXRError("HSSParser", "the floor() function is still unimplemented").raise();
+    QSharedPointer<HSSParserNode> ret;
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSParser::readRoundFunction()
+{
+    AXRError("HSSParser", "the round() function is still unimplemented").raise();
+    QSharedPointer<HSSParserNode> ret;
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSParser::readCustomFunction()
+{
+    QSharedPointer<HSSParserNode> ret;
+    AXRString name = VALUE_TOKEN(this->currentToken)->getString();
+    this->readNextToken(true);
+    this->skip(HSSWhitespace, true);
+    this->skipExpected(HSSParenthesisOpen, true);
+    this->skip(HSSWhitespace, true);
+    std::deque<QSharedPointer<HSSParserNode> > arguments;
+    while (!this->currentToken->isA(HSSParenthesisClose) && !this->atEndOfSource())
+    {
+        bool valid;
+        arguments.push_back(this->readValue("", valid));
+        if (this->currentToken->isA(HSSComma))
+        {
+            this->readNextToken(true);
+        }
+    }
+    QSharedPointer<HSSFunction> theFunction = QSharedPointer<HSSFunction>(new HSSFunction(HSSFunctionTypeCustom, controller));
+    theFunction->setArguments(arguments);
+    theFunction->setName(name);
+    ret = theFunction;
+    this->readNextToken(true);
+    this->skip(HSSWhitespace, true);
     return ret;
 }
 
