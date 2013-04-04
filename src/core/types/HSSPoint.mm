@@ -45,6 +45,9 @@
 
 #ifdef __APPLE__
 #include <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
+#include <CoreGraphics/CoreGraphics.h>
+#endif
 #endif
 
 using namespace AXR;
@@ -56,7 +59,9 @@ HSSPoint::HSSPoint(const CGPoint &point) : x(point.x), y(point.y)
 }
 #endif
 
+#if !TARGET_OS_IPHONE
 HSSPoint::HSSPoint(const NSPoint &point) : x(point.x), y(point.y)
 {
 }
+#endif
 #endif

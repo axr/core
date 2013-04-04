@@ -45,6 +45,9 @@
 
 #ifdef __APPLE__
 #include <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
+#include <CoreGraphics/CoreGraphics.h>
+#endif
 #endif
 
 using namespace AXR;
@@ -56,7 +59,9 @@ HSSSize::HSSSize(const CGSize &size) : width(size.width), height(size.height)
 }
 #endif
 
+#if !TARGET_OS_IPHONE
 HSSSize::HSSSize(const NSSize &size) : width(size.width), height(size.height)
 {
 }
+#endif
 #endif

@@ -45,6 +45,9 @@
 
 #ifdef __APPLE__
 #include <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
+#include <CoreGraphics/CoreGraphics.h>
+#endif
 #endif
 
 using namespace AXR;
@@ -56,7 +59,9 @@ HSSRect::HSSRect(const CGRect &rect) : origin(HSSPoint(rect.origin.x, rect.origi
 }
 #endif
 
+#if !TARGET_OS_IPHONE
 HSSRect::HSSRect(const NSRect &rect) : origin(HSSPoint(rect.origin.x, rect.origin.y)), size(HSSSize(rect.size.width, rect.size.height))
 {
 }
+#endif
 #endif

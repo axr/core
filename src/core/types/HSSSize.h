@@ -46,6 +46,12 @@
 
 #include "AXRGlobal.h"
 
+#ifdef __APPLE__
+#include "TargetConditionals.h"
+#else
+#define TARGET_OS_IPHONE 0
+#endif
+
 typedef struct CGSize CGSize;
 
 #if __LP64__ || NS_BUILD_32_LIKE_64
@@ -65,7 +71,9 @@ namespace AXR
 #if !__LP64__ && !NS_BUILD_32_LIKE_64
         HSSSize(const CGSize &point);
 #endif
+#if !TARGET_OS_IPHONE
         HSSSize(const NSSize &size);
+#endif
 
         HSSSize(const QSizeF &size);
         HSSSize(const QSize &size);

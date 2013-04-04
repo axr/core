@@ -46,6 +46,12 @@
 
 #include "AXRGlobal.h"
 
+#ifdef __APPLE__
+#include "TargetConditionals.h"
+#else
+#define TARGET_OS_IPHONE 0
+#endif
+
 typedef struct tagPOINT POINT;
 typedef struct CGPoint CGPoint;
 
@@ -67,7 +73,9 @@ namespace AXR
 #if !__LP64__ && !NS_BUILD_32_LIKE_64
         HSSPoint(const CGPoint &point);
 #endif
+#if !TARGET_OS_IPHONE
         HSSPoint(const NSPoint &point);
+#endif
 
         HSSPoint(const QPointF &point);
         HSSPoint(const QPoint &point);

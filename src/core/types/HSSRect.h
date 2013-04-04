@@ -69,7 +69,9 @@ namespace AXR
 #if !__LP64__ && !NS_BUILD_32_LIKE_64
         HSSRect(const CGRect &rect);
 #endif
+#if !TARGET_OS_IPHONE
         HSSRect(const NSRect &rect);
+#endif
 
         HSSRect(const QRectF &rect);
         HSSRect(const QRect &rect);
