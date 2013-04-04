@@ -57,10 +57,14 @@ namespace AXR
     public:
         virtual ~AXRAbstractLogger();
 
+        AXRString name() const;
+        void setName(const AXRString &name);
+
         AXRLoggerChannels activeChannels() const;
         void setActiveChannels(AXRLoggerChannels channels);
 
-        bool areChannelsActive(AXRLoggerChannels channels);
+        bool allChannelsActive() const;
+        bool areChannelsActive(AXRLoggerChannels channels) const;
         void activateChannels(AXRLoggerChannels channels);
         void deactivateChannels(AXRLoggerChannels channels);
 
@@ -68,12 +72,14 @@ namespace AXR
         void logLine(AXRLoggerChannels channels, const AXRString &message);
 
     protected:
-        AXRAbstractLogger();
+        AXRAbstractLogger(const AXRString &name);
         virtual void log(AXRLoggerChannel channel, const AXRString &message, bool newLine) = 0;
 
     private:
         AXRAbstractLoggerPrivate *d;
     };
 }
+
+Q_DECLARE_METATYPE(AXR::AXRAbstractLogger*);
 
 #endif // AXRABSTRACTLOGGER_H

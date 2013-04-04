@@ -57,7 +57,7 @@ namespace AXR
         Q_DISABLE_COPY(AXRGenericLogger)
 
     public:
-        AXRGenericLogger();
+        AXRGenericLogger(const AXRString &name = "");
         ~AXRGenericLogger();
 
         bool autoFlush() const;

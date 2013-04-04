@@ -167,6 +167,8 @@ namespace AXR
     Q_DECLARE_FLAGS(AXRLoggerChannels, AXRLoggerChannel)
 
     QList<AXRLoggerChannel> loggerFlagsToList(AXRLoggerChannels channels);
+    AXRString loggerChannelToString(AXRLoggerChannel channel);
+    AXRLoggerChannel stringToLoggerChannel(const AXRString &channelName);
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(AXR::AXRLoggerChannels)

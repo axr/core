@@ -66,8 +66,8 @@ namespace AXR
     };
 }
 
-AXRGenericLogger::AXRGenericLogger()
-: d(new AXRGenericLoggerPrivate)
+AXRGenericLogger::AXRGenericLogger(const AXRString &name)
+: AXRAbstractLogger(name), d(new AXRGenericLoggerPrivate)
 {
 }
 

@@ -50,22 +50,40 @@ namespace AXR
     class AXRAbstractLoggerPrivate
     {
     public:
-        AXRAbstractLoggerPrivate() : activeChannels()
+        AXRAbstractLoggerPrivate() : name(), activeChannels()
         {
         }
 
+        AXRString name;
         AXRLoggerChannels activeChannels;
     };
 }
 
-AXRAbstractLogger::AXRAbstractLogger()
+AXRAbstractLogger::AXRAbstractLogger(const AXRString &name)
 : d(new AXRAbstractLoggerPrivate)
 {
+    setName(name);
 }
 
 AXRAbstractLogger::~AXRAbstractLogger()
 {
     delete d;
+}
+
+/*!
+ * Gets the name used to identify the logger to the user.
+ *
+ * This has no effect on the operation of the logger itself
+ * and can be set to an empty string if desired.
+ */
+AXRString AXRAbstractLogger::name() const
+{
+    return d->name;
+}
+
+void AXRAbstractLogger::setName(const AXRString &name)
+{
+    d->name = name;
 }
 
 /*!
@@ -86,7 +104,12 @@ void AXRAbstractLogger::setActiveChannels(AXRLoggerChannels channels)
     d->activeChannels = channels;
 }
 
-bool AXRAbstractLogger::areChannelsActive(AXRLoggerChannels channels)
+bool AXRAbstractLogger::allChannelsActive() const
+{
+    return d->activeChannels == LoggerChannelAll;
+}
+
+bool AXRAbstractLogger::areChannelsActive(AXRLoggerChannels channels) const
 {
     return d->activeChannels & channels;
 }

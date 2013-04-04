@@ -126,4 +126,99 @@ namespace AXR
 
         return channelList;
     }
+
+    AXRString loggerChannelToString(AXRLoggerChannel channel)
+    {
+        switch (channel)
+        {
+            case LoggerChannelAll:
+                return QLatin1String("LoggerChannelAll");
+            case LoggerChannelUserError:
+                return QLatin1String("LoggerChannelUserError");
+            case LoggerChannelUserWarning:
+                return QLatin1String("LoggerChannelUserWarning");
+            case LoggerChannelOverview:
+                return QLatin1String("LoggerChannelOverview");
+            case LoggerChannelGeneral:
+                return QLatin1String("LoggerChannelGeneral");
+            case LoggerChannelGeneralSpecific:
+                return QLatin1String("LoggerChannelGeneralSpecific");
+            case LoggerChannelIO:
+                return QLatin1String("LoggerChannelIO");
+            case LoggerChannelNetwork:
+                return QLatin1String("LoggerChannelNetwork");
+            case LoggerChannelXMLParser:
+                return QLatin1String("LoggerChannelXMLParser");
+            case LoggerChannelHSSParser:
+                return QLatin1String("LoggerChannelHSSParser");
+            case LoggerChannelHSSTokenizer:
+                return QLatin1String("LoggerChannelHSSTokenizer");
+            case LoggerChannelLayout:
+                return QLatin1String("LoggerChannelLayout");
+            case LoggerChannelRendering:
+                return QLatin1String("LoggerChannelRendering");
+            case LoggerChannelObserving:
+                return QLatin1String("LoggerChannelObserving");
+            case LoggerChannelEvents:
+                return QLatin1String("LoggerChannelEvents");
+            case LoggerChannelEventsSpecific:
+                return QLatin1String("LoggerChannelEventsSpecific");
+
+            case LoggerChannelObsolete0:
+                return QLatin1String("LoggerChannelObsolete0");
+            case LoggerChannelObsolete1:
+                return QLatin1String("LoggerChannelObsolete1");
+            case LoggerChannelObsolete3:
+                return QLatin1String("LoggerChannelObsolete3");
+
+            default:
+                return AXRString();
+        }
+    }
+
+    AXRLoggerChannel stringToLoggerChannel(const AXRString &channelName)
+    {
+        if (channelName == QLatin1String("LoggerChannelAll"))
+            return LoggerChannelAll;
+        else if (channelName == QLatin1String("LoggerChannelUserError"))
+            return LoggerChannelUserError;
+        else if (channelName == QLatin1String("LoggerChannelUserWarning"))
+            return LoggerChannelUserWarning;
+        else if (channelName == QLatin1String("LoggerChannelOverview"))
+            return LoggerChannelOverview;
+        else if (channelName == QLatin1String("LoggerChannelGeneral"))
+            return LoggerChannelGeneral;
+        else if (channelName == QLatin1String("LoggerChannelGeneralSpecific"))
+            return LoggerChannelGeneralSpecific;
+        else if (channelName == QLatin1String("LoggerChannelIO"))
+            return LoggerChannelIO;
+        else if (channelName == QLatin1String("LoggerChannelNetwork"))
+            return LoggerChannelNetwork;
+        else if (channelName == QLatin1String("LoggerChannelXMLParser"))
+            return LoggerChannelXMLParser;
+        else if (channelName == QLatin1String("LoggerChannelHSSParser"))
+            return LoggerChannelHSSParser;
+        else if (channelName == QLatin1String("LoggerChannelHSSTokenizer"))
+            return LoggerChannelHSSTokenizer;
+        else if (channelName == QLatin1String("LoggerChannelLayout"))
+            return LoggerChannelLayout;
+        else if (channelName == QLatin1String("LoggerChannelRendering"))
+            return LoggerChannelRendering;
+        else if (channelName == QLatin1String("LoggerChannelObserving"))
+            return LoggerChannelObserving;
+        else if (channelName == QLatin1String("LoggerChannelEvents"))
+            return LoggerChannelEvents;
+        else if (channelName == QLatin1String("LoggerChannelEventsSpecific"))
+            return LoggerChannelEventsSpecific;
+
+        else if (channelName == QLatin1String("LoggerChannelObsolete0"))
+            return LoggerChannelObsolete0;
+        else if (channelName == QLatin1String("LoggerChannelObsolete1"))
+            return LoggerChannelObsolete1;
+        else if (channelName == QLatin1String("LoggerChannelObsolete3"))
+            return LoggerChannelObsolete3;
+
+        else
+            return LoggerChannelNone;
+    }
 }
