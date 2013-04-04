@@ -96,12 +96,15 @@ HSSRenderer* QAXRWidget::renderer() const
 
 void QAXRWidget::setDocument(AXRDocument *document)
 {
-    d->document = document;
-    if (!d->document)
+    if (d->document == document)
         return;
 
     d->renderVisitor->setDocument(document);
-    d->document->getVisitorManager()->addVisitor(d->renderVisitor);
+
+    if ((d->document = document))
+    {
+        d->document->getVisitorManager()->addVisitor(d->renderVisitor);
+    }
 
     this->update();
 }
@@ -118,15 +121,15 @@ void QAXRWidget::setBackgroundFillColor(const QColor &color)
 
 void QAXRWidget::paintEvent(QPaintEvent *e)
 {
+    if (!d->document)
+        return;
+
     QRect paintRect = rect();
     d->document->setWindowSize(this->width(), this->height());
 
     // Fill the view with our background color...
     QPainter painter(this);
     painter.fillRect(paintRect, d->backgroundFillColor);
-
-    if (!d->document)
-        return;
 
     // Render the AXR document
     QSharedPointer<HSSVisitorManager> visitorManager = d->document->getVisitorManager();
