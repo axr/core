@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include <QString>
 #include "AXRString.h"
 #import <Foundation/Foundation.h>
 

@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include <QString>
 #include "AXRString.h"
 #include "HSSValueToken.h"
 

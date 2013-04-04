@@ -44,6 +44,7 @@
 #include "AXRAbstractLogger.h"
 #include "AXRLoggerManager.h"
 #include <QList>
+#include <QString>
 
 using namespace AXR;
 

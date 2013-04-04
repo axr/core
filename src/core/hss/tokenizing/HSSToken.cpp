@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include <QMap>
+#include <QString>
 #include "HSSToken.h"
 
 using namespace AXR;

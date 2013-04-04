@@ -237,7 +237,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readNextToken()
             return this->readNumberOrPercentage();
     }
 
-    switch (cc.toAscii())
+    switch (cc.toLatin1())
     {
         // If it starts with quotes, either single or double, it is a string
         case '"':
@@ -442,7 +442,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readHexOrIdentifier()
     d->currentTokenText.clear();
     while (!done)
     {
-        switch (d->currentChar.toAscii())
+        switch (d->currentChar.toLatin1())
         {
         case 'a':
         case 'A':
@@ -643,7 +643,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readSymbol()
 
     QSharedPointer<HSSToken> ret;
 
-    switch (d->currentChar.toAscii())
+    switch (d->currentChar.toLatin1())
     {
     case '.':
         this->storeCurrentCharAndReadNext();

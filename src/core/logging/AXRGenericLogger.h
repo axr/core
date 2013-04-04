@@ -44,6 +44,7 @@
 #ifndef AXRGENERICLOGGER_H
 #define AXRGENERICLOGGER_H
 
+#include <QString>
 #include "AXRAbstractLogger.h"
 
 class QIODevice;
@@ -57,7 +58,7 @@ namespace AXR
         Q_DISABLE_COPY(AXRGenericLogger)
 
     public:
-        AXRGenericLogger(const AXRString &name = "");
+        AXRGenericLogger(const AXRString &name = AXRString());
         ~AXRGenericLogger();
 
         bool autoFlush() const;
