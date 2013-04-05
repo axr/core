@@ -98,6 +98,17 @@ HSSSimpleSelection::HSSSimpleSelection(const HSSSimpleSelection &other)
 {
 }
 
+HSSSimpleSelection::HSSSimpleSelection(const std::vector<QWeakPointer<HSSDisplayObject> > &weakVector)
+: HSSSelection(HSSSelectionTypeSimpleSelection)
+, d(new Data())
+{
+    std::vector<QWeakPointer<HSSDisplayObject> >::const_iterator it;
+    for (it=weakVector.begin(); it!=weakVector.end(); ++it) {
+        QSharedPointer<HSSDisplayObject> theDO = (*it).toStrongRef();
+        this->d->items.push_back(theDO);
+    }
+}
+
 HSSSimpleSelection::~HSSSimpleSelection()
 {
 }

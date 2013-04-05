@@ -89,6 +89,12 @@ namespace AXR
         HSSSimpleSelection(const HSSSimpleSelection &other);
 
         /**
+         * Creates a simple selection from a vector of weak pointers to display objects
+         * @param weakVector     A std::vector holding weak pointers to HSSDisplayObject elements
+         */
+        HSSSimpleSelection(const std::vector<QWeakPointer<HSSDisplayObject> > &weakVector);
+
+        /**
          *
          */
         virtual ~HSSSimpleSelection();
