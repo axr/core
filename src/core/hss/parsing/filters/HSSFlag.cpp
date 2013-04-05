@@ -147,7 +147,12 @@ QSharedPointer<HSSSimpleSelection> HSSFlag::_selectFromTop(QSharedPointer<HSSRul
     {
         QSharedPointer<HSSRule> itRule = *it;
         // TODO: check @this object
-        selection = this->getController()->select(itRule->getSelectorChains(), scope, itRule->getThisObj())->joinAll();
+        QSharedPointer<HSSInstruction> instruction = itRule->getInstruction();
+        if (instruction) {
+            selection = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection(itRule->getAppliedTo()));
+        } else {
+            selection = this->getController()->select(itRule->getSelectorChains(), scope, itRule->getThisObj())->joinAll();
+        }
         if(selection->size() == 0)
         {
             break;
