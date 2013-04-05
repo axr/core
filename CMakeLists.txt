@@ -48,8 +48,8 @@ endif()
 file(GLOB axr_icon_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/share/icons/*.icns)
 
 # The HSS framework, to be copied into application bundles
-file(GLOB hss_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/share/hss-framework/*)
-list(REMOVE_ITEM hss_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/share/hss-framework/.git)
+file(GLOB hss_SOURCES ${AXR_FRAMEWORK_SOURCE_DIR}/*)
+list(REMOVE_ITEM hss_SOURCES ${AXR_FRAMEWORK_SOURCE_DIR}/.git)
 
 # If we're using an IDE build system such as Visual Studio or Xcode,
 # use fancier target names such as "Documentation" vs "docs"
@@ -167,7 +167,7 @@ if(FANCY_TARGET_NAMES)
     # Other shared resources (i.e. to be distributed in $prefix/share or elsewhere)
     set(d ${CMAKE_CURRENT_SOURCE_DIR}/share)
     file(GLOB_RECURSE shared_SOURCES ${d}/*.txt ${d}/*.ico ${d}/*.icns ${d}/*.png)
-    list(REMOVE_ITEM shared_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/share/hss-framework)
+    list(REMOVE_ITEM shared_SOURCES ${AXR_FRAMEWORK_SOURCE_DIR})
     group_by_folder(${d} "${shared_SOURCES}")
     add_custom_target("Shared" SOURCES ${shared_SOURCES})
     set_target_properties(Shared PROPERTIES FOLDER Auxiliary)
