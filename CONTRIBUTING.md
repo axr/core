@@ -62,4 +62,4 @@ notify you of any violations before your commit is made so you can fix them.
 To use the hook, simply copy or symlink the executable at bin/pre-commit to
 .git/hooks/, for example:
 
-    ln -s ../../common/pre-commit "$(git rev-parse --show-toplevel)/.git/hooks/pre-commit"
+    ln -s ../../../common/pre-commit "$(git rev-parse --show-toplevel)/.git/hooks/pre-commit"

@@ -4,6 +4,12 @@ else()
     cmake_minimum_required(VERSION 2.8)
 endif()
 
+set(AXR_COMMON_SOURCE_DIR_REL "../common" CACHE STRING "Path to the AXR common sources (relative)")
+set(AXR_COMMON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${AXR_COMMON_SOURCE_DIR_REL})
+if(NOT EXISTS "${AXR_COMMON_SOURCE_DIR}" OR NOT IS_DIRECTORY "${AXR_COMMON_SOURCE_DIR}")
+    message(FATAL_ERROR "Could not find common module at expected path: ${AXR_COMMON_SOURCE_DIR}")
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_SOURCE_DIR}/cmake/solar ${CMAKE_MODULE_PATH})
 include(ForceOutBuild)
 include(ForceLatinPaths)

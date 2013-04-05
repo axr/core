@@ -4,6 +4,9 @@ set -e
 # Clone all submodules
 git submodule update --init --recursive
 
+# Clone dependent repositories
+git clone https://github.com/axr/common.git ../common
+
 # Make build directories for both shared and static mode
 mkdir ../build-shared ../build-static
 

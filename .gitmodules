@@ -4,6 +4,3 @@
 [submodule "cmake/solar"]
 	path = cmake/solar
 	url = https://github.com/petroules/solar-cmake.git
-[submodule "common"]
-	path = common
-	url = ../common.git
