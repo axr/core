@@ -70,6 +70,7 @@ QAXRWidget::QAXRWidget(AXRDocument *document, QWidget *parent)
     this->setMouseTracking(true);
     d->renderVisitor = new HSSRenderer();
     setDocument(document);
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 QAXRWidget::QAXRWidget(QWidget *parent)
@@ -77,6 +78,7 @@ QAXRWidget::QAXRWidget(QWidget *parent)
 {
     this->setMouseTracking(true);
     d->renderVisitor = new HSSRenderer();
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 QAXRWidget::~QAXRWidget()
