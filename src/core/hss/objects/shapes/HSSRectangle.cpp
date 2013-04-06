@@ -363,8 +363,9 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
                         }
                         else if (theValue == "right")
                         {
-                            path.moveTo(offsetX+width-rightOffset+(theSize/2), offsetY+topOffset);
-                            path.lineTo(offsetX+width-rightOffset+(theSize/2), offsetY+height-bottomOffset);
+                            qreal rightValue = offsetX+width-rightOffset-(theSize/2);
+                            path.moveTo(rightValue, offsetY+topOffset);
+                            path.lineTo(rightValue, offsetY+height-bottomOffset);
                             rightCumulative += theSize;
                         }
                         else if (theValue == "bottom")
