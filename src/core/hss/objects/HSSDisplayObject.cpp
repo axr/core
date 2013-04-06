@@ -533,7 +533,7 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
                     children = thisCont->getChildren();
                     clonedRule->setOriginalScope(children->joinAll());
                     //we attach the cloned rule to the rule that has the isA
-                    clonedRule->setParentNode(parentRule);
+                    parentRule->childrenAdd(clonedRule);
                 }
                 this->getController()->currentContext.pop();
             }
