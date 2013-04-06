@@ -80,6 +80,6 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(AXR::AXRAbstractLogger*);
+Q_DECLARE_METATYPE(AXR::AXRAbstractLogger*)
 
 #endif // AXRABSTRACTLOGGER_H

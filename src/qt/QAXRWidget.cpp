@@ -121,7 +121,7 @@ void QAXRWidget::setBackgroundFillColor(const QColor &color)
     d->backgroundFillColor = color;
 }
 
-void QAXRWidget::paintEvent(QPaintEvent *e)
+void QAXRWidget::paintEvent(QPaintEvent *)
 {
     if (!d->document)
         return;
