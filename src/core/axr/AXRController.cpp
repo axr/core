@@ -206,7 +206,6 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
                         this->recursiveMatchRulesToDisplayObjects(childRule, newContainer->getChildren(), newContainer, applyingInstructions);
                     }
                     newContainer->setNeedsRereadRules(true);
-                    //newContainer->fireEvent(HSSEventTypeLoad);
                     this->currentContext.pop();
                 }
             }
