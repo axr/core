@@ -46,6 +46,7 @@
 #include "HSSContainer.h"
 #include "HSSDisplayObject.h"
 #include "HSSFlag.h"
+#include "HSSInstruction.h"
 #include "HSSMultipleSelection.h"
 #include "HSSParserNode.h"
 #include "HSSRule.h"
