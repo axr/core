@@ -77,12 +77,9 @@ AXRString HSSSelectorChain::toString()
 {
     AXRString tempstr = "HSSSelectorChain with the following nodes:\n";
     size_t sccount = this->nodeList.size();
-    if (sccount > 0)
+    for (size_t i = 0; i < sccount; ++i)
     {
-        for (size_t i = 0; i < sccount; ++i)
-        {
-            tempstr.append("      ").append(this->nodeList[i]->toString()).append("\n");
-        }
+        tempstr.append("      ").append(this->nodeList[i]->toString()).append("\n");
     }
 
     return tempstr;
@@ -90,14 +87,11 @@ AXRString HSSSelectorChain::toString()
 
 AXRString HSSSelectorChain::stringRep()
 {
-    AXRString tempstr = "";
+    AXRString tempstr;
     size_t sccount = this->nodeList.size();
-    if (sccount > 0)
+    for (size_t i = 0; i < sccount; ++i)
     {
-        for (size_t i = 0; i < sccount; ++i)
-        {
-            tempstr.append(this->nodeList[i]->stringRep());
-        }
+        tempstr.append(this->nodeList[i]->stringRep());
     }
 
     return tempstr;
