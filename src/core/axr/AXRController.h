@@ -46,13 +46,15 @@
 
 #include <stack>
 #include <vector>
-#include <QSharedPointer>
 #include "AXRGlobal.h"
 #include "HSSTypeEnums.h"
+
+template <class T> class QSharedPointer;
 
 namespace AXR
 {
     class HSSVisitorManager;
+    class AXRControllerPrivate;
     class AXRDocument;
     class HSSContainer;
     class HSSDisplayObject;
@@ -419,25 +421,16 @@ namespace AXR
          */
         void recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions);
 
-        std::stack<QSharedPointer<HSSContainer> > currentContext;
+        // TODO: All we ever do is push and pop things to and from this... should we provide
+        // methods for doing that rather than providing a list reference?
+        std::stack<QSharedPointer<HSSContainer> >& currentContext() const;
 
     protected:
-        QSharedPointer<HSSContainer> root;
-
-        std::vector<QSharedPointer<HSSObjectDefinition> > objectTree;
-        std::vector<QUrl>loadSheets;
-        std::vector<QSharedPointer<HSSParserNode> > parserTree;
-        std::vector<QSharedPointer<HSSRule> > rules;
-
-        QSharedPointer<HSSSelectorChain> currentChain;
-        QSharedPointer<HSSParserNode> currentSelectorNode;
-        size_t currentChainCount;
-        size_t currentChainSize;
         void readNextSelectorNode();
         bool isAtEndOfSelector();
 
     private:
-        AXRDocument *document_;
+        AXRControllerPrivate *const d;
         inline void _matchRuleToSelection(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSimpleSelection> selection);
         inline void _recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSimpleSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions);
         inline void _selectOnLevelSimple(QSharedPointer<HSSSimpleSelection> & ret, HSSCombinatorType combinatorType, QSharedPointer<HSSSimpleSelection> simpleSel, QSharedPointer<HSSDisplayObject> thisObj, bool processing);

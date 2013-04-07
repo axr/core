@@ -506,7 +506,7 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
             if (this->isA(HSSObjectTypeContainer))
             {
                 QSharedPointer<HSSContainer> thisCont = qSharedPointerCast<HSSContainer > (this->shared_from_this());
-                this->getController()->currentContext.push(thisCont);
+                this->getController()->currentContext().push(thisCont);
 
                 //iterate over the property defs and try to find an isA property
                 const std::deque<QSharedPointer<HSSPropertyDefinition> > & props = objdef->getProperties();
@@ -535,7 +535,7 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
                     //we attach the cloned rule to the rule that has the isA
                     parentRule->childrenAdd(clonedRule);
                 }
-                this->getController()->currentContext.pop();
+                this->getController()->currentContext().pop();
             }
         }
         catch (const AXRError &e)

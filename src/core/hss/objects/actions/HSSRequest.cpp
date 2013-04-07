@@ -170,7 +170,7 @@ void HSSRequest::fire()
             if (newFile)
             {
                 QSharedPointer<HSSContainer> tempNode = QSharedPointer<HSSContainer>(new HSSContainer(ctrlr));
-                ctrlr->currentContext.push(tempNode);
+                ctrlr->currentContext().push(tempNode);
                 bool loadingSuccess = document->getParserXML()->loadFile(newFile);
                 if (!loadingSuccess)
                 {
@@ -202,7 +202,7 @@ void HSSRequest::fire()
                         }
                     }
                 }
-                ctrlr->currentContext.pop();
+                ctrlr->currentContext().pop();
             }
             break;
         }
