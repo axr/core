@@ -261,8 +261,7 @@ void AXRDocument::setParserHSS(QSharedPointer<HSSParser> parser)
 
 bool AXRDocument::isCustomFunction(AXRString name)
 {
-    bool ret = d->customFunctions.find(name) != d->customFunctions.end();
-    return ret;
+    return d->customFunctions.contains(name);
 }
 
 void AXRDocument::registerCustomFunction(AXRString name, HSSCallback* fn)
