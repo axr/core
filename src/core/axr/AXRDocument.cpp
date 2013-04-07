@@ -57,19 +57,45 @@
 
 using namespace AXR;
 
-AXRDocument::AXRDocument()
+namespace AXR
 {
-    this->_isHSSOnly = false;
-    this->_hasLoadedFile = false;
-    this->_showLayoutSteps = false;
-    this->_currentLayoutStep = 0;
-    this->_currentLayoutTick = 0;
-    this->_currentLayoutChild = 0;
-    this->_needsDisplay = true;
+    class AXRDocumentPrivate
+    {
+        friend class AXRDocument;
 
-    this->_windowWidth = 0;
-    this->_windowHeight = 0;
+        AXRDocumentPrivate()
+        : isHSSOnly(), hasLoadedFile(), showLayoutSteps(), currentLayoutStep(), currentLayoutTick(),
+          currentLayoutChild(), needsDisplay(true), windowWidth(), windowHeight(), visitorManager(),
+          controller(), file(), directory(), parserXML(), parserHSS(), customFunctions()
+        {
+        }
 
+        bool isHSSOnly;
+        bool hasLoadedFile;
+        bool showLayoutSteps;
+        unsigned int currentLayoutStep;
+        unsigned int currentLayoutTick;
+        unsigned int currentLayoutChild;
+        bool needsDisplay;
+
+        int windowWidth;
+        int windowHeight;
+
+        QSharedPointer<HSSVisitorManager> visitorManager;
+        QSharedPointer<AXRController> controller;
+        QSharedPointer<AXRBuffer> file;
+        QDir directory;
+
+        QSharedPointer<XMLParser> parserXML;
+        QSharedPointer<HSSParser> parserHSS;
+
+        QMap<AXRString, HSSCallback*> customFunctions;
+    };
+}
+
+AXRDocument::AXRDocument()
+: d(new AXRDocumentPrivate)
+{
     axr_log(LoggerChannelGeneralSpecific, "AXRDocument: initializing core for thread");
 
     QSharedPointer<AXRController> ctrlr = QSharedPointer<AXRController>(new AXRController(this));
@@ -77,12 +103,12 @@ AXRDocument::AXRDocument()
     this->setParserXML(QSharedPointer<XMLParser>(new XMLParser(ctrlr.data())));
     this->setParserHSS(QSharedPointer<HSSParser>(new HSSParser(ctrlr.data())));
     this->setVisitorManager(QSharedPointer<HSSVisitorManager>(new HSSVisitorManager(ctrlr.data())));
-    this->_hasLoadedFile = false;
 }
 
 AXRDocument::~AXRDocument()
 {
     axr_log(LoggerChannelGeneralSpecific, "AXRDocument: destructing core");
+    delete d;
 }
 
 AXRString AXRDocument::getPathToResources() const
@@ -106,9 +132,9 @@ void AXRDocument::run()
 {
     axr_log(LoggerChannelOverview, "AXRDocument: running");
 
-    bool loadingSuccess = this->parserXML->loadFile(this->file);
+    bool loadingSuccess = d->parserXML->loadFile(d->file);
 
-    axr_log(LoggerChannelOverview, "AXRDocument: finished parsing " + this->file->sourceUrl().toString());
+    axr_log(LoggerChannelOverview, "AXRDocument: finished parsing " + d->file->sourceUrl().toString());
 
     if (!loadingSuccess)
     {
@@ -117,11 +143,11 @@ void AXRDocument::run()
     else
     {
         //needs reset on next load
-        this->_hasLoadedFile = true;
+        d->hasLoadedFile = true;
 
-        QSharedPointer<HSSContainer> root = qSharedPointerCast<HSSContainer>(this->controller->getRoot());
+        QSharedPointer<HSSContainer> root = qSharedPointerCast<HSSContainer>(d->controller->getRoot());
 
-        std::vector<QUrl> loadSheets = this->controller->loadSheetsGet();
+        std::vector<QUrl> loadSheets = d->controller->loadSheetsGet();
         for (size_t i = 0; i < loadSheets.size(); ++i)
         {
             QSharedPointer<AXRBuffer> hssfile;
@@ -135,17 +161,17 @@ void AXRDocument::run()
                 continue;
             }
 
-            if (!this->parserHSS->loadFile(hssfile))
+            if (!d->parserHSS->loadFile(hssfile))
             {
                 AXRError("AXRDocument", "Could not load the HSS file").raise();
             }
         }
-        axr_log(LoggerChannelOverview, "AXRDocument: finished loading stylesheets for " + this->file->sourceUrl().toString());
+        axr_log(LoggerChannelOverview, "AXRDocument: finished loading stylesheets for " + d->file->sourceUrl().toString());
 
         axr_log(LoggerChannelOverview, "AXRDocument: matching rules to the content tree");
         //assign the rules to the objects
-        this->controller->matchRulesToContentTree();
-        this->controller->activateRules();
+        d->controller->matchRulesToContentTree();
+        d->controller->activateRules();
         root->setNeedsRereadRules(true);
 
         if (root)
@@ -160,93 +186,93 @@ void AXRDocument::run()
 
 void AXRDocument::reset()
 {
-    this->controller->reset();
-    this->parserHSS->reset();
-    this->visitorManager->reset();
-    this->parserXML.clear();
-    this->parserXML = QSharedPointer<XMLParser>(new XMLParser(this->controller.data()));
-    this->_hasLoadedFile = false;
-    this->file.clear();
+    d->controller->reset();
+    d->parserHSS->reset();
+    d->visitorManager->reset();
+    d->parserXML.clear();
+    d->parserXML = QSharedPointer<XMLParser>(new XMLParser(d->controller.data()));
+    d->hasLoadedFile = false;
+    d->file.clear();
 }
 
 bool AXRDocument::hasLoadedFile()
 {
-    return _hasLoadedFile;
+    return d->hasLoadedFile;
 }
 
 QSharedPointer<AXRController> AXRDocument::getController()
 {
-    return this->controller;
+    return d->controller;
 }
 
 void AXRDocument::setController(QSharedPointer<AXRController> controller)
 {
-    this->controller = controller;
+    d->controller = controller;
 }
 
 QSharedPointer<HSSVisitorManager> AXRDocument::getVisitorManager()
 {
-    return this->visitorManager;
+    return d->visitorManager;
 }
 
 void AXRDocument::setVisitorManager(QSharedPointer<HSSVisitorManager> visitorManager)
 {
-    this->visitorManager = visitorManager;
+    d->visitorManager = visitorManager;
 }
 
 QSharedPointer<AXRBuffer> AXRDocument::getFile()
 {
-    return this->file;
+    return d->file;
 }
 
 void AXRDocument::setFile(QSharedPointer<AXRBuffer> file)
 {
-    this->file = file;
+    d->file = file;
     QUrl filePath = file->sourceUrl();
-    this->directory = QDir(QFileInfo(filePath.toLocalFile()).canonicalPath());
+    d->directory = QDir(QFileInfo(filePath.toLocalFile()).canonicalPath());
 }
 
 const QDir & AXRDocument::getDirectory() const
 {
-    return this->directory;
+    return d->directory;
 }
 
 QSharedPointer<XMLParser> AXRDocument::getParserXML()
 {
-    return this->parserXML;
+    return d->parserXML;
 }
 
 void AXRDocument::setParserXML(QSharedPointer<XMLParser> parser)
 {
-    this->parserXML = parser;
+    d->parserXML = parser;
 }
 
 QSharedPointer<HSSParser> AXRDocument::getParserHSS()
 {
-    return this->parserHSS;
+    return d->parserHSS;
 }
 
 void AXRDocument::setParserHSS(QSharedPointer<HSSParser> parser)
 {
-    this->parserHSS = parser;
+    d->parserHSS = parser;
 }
 
 bool AXRDocument::isCustomFunction(AXRString name)
 {
-    bool ret = this->_customFunctions.find(name) != this->_customFunctions.end();
+    bool ret = d->customFunctions.find(name) != d->customFunctions.end();
     return ret;
 }
 
 void AXRDocument::registerCustomFunction(AXRString name, HSSCallback* fn)
 {
-    this->_customFunctions[name] = fn;
+    d->customFunctions[name] = fn;
 }
 
 void AXRDocument::evaluateCustomFunction(AXRString name, void* data)
 {
     if (this->isCustomFunction(name))
     {
-        this->_customFunctions[name]->call(HSSObservablePropertyValue, data);
+        d->customFunctions[name]->call(HSSObservablePropertyValue, data);
     }
 }
 
@@ -358,12 +384,12 @@ QSharedPointer<AXRBuffer> AXRDocument::getFile(const QUrl &resourceUrl)
 
 bool AXRDocument::needsDisplay() const
 {
-    return this->_needsDisplay;
+    return d->needsDisplay;
 }
 
 void AXRDocument::setNeedsDisplay(bool newValue)
 {
-    this->_needsDisplay = newValue;
+    d->needsDisplay = newValue;
 }
 
 QSharedPointer<AXRBuffer> AXRDocument::createDummyXML(QUrl hssUrl)
@@ -402,7 +428,7 @@ bool AXRDocument::loadFileByPath(QUrl url)
     QFileInfo pathInfo(url.path());
     if (pathInfo.suffix() == "xml")
     {
-        this->_isHSSOnly = false;
+        d->isHSSOnly = false;
         return this->loadXMLFile(url);
     }
     else if (pathInfo.suffix() == "hss")
@@ -420,11 +446,11 @@ bool AXRDocument::loadXMLFile(QUrl url)
 {
     axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening XML document: %1").arg(url.toString()));
 
-    this->_isHSSOnly = false;
-    this->_showLayoutSteps = false;
-    this->_currentLayoutStep = 0;
-    this->_currentLayoutTick = 0;
-    this->_currentLayoutChild = 0;
+    d->isHSSOnly = false;
+    d->showLayoutSteps = false;
+    d->currentLayoutStep = 0;
+    d->currentLayoutTick = 0;
+    d->currentLayoutChild = 0;
 
     try
     {
@@ -459,11 +485,11 @@ bool AXRDocument::loadXMLFile(QSharedPointer<AXRBuffer> buffer)
 {
     axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening XML document from buffer"));
 
-    this->_isHSSOnly = false;
-    this->_showLayoutSteps = false;
-    this->_currentLayoutStep = 0;
-    this->_currentLayoutTick = 0;
-    this->_currentLayoutChild = 0;
+    d->isHSSOnly = false;
+    d->showLayoutSteps = false;
+    d->currentLayoutStep = 0;
+    d->currentLayoutTick = 0;
+    d->currentLayoutChild = 0;
 
     if (this->getFile())
     {
@@ -496,13 +522,13 @@ bool AXRDocument::loadXMLFile(QSharedPointer<AXRBuffer> buffer)
 
 bool AXRDocument::reload()
 {
-    this->_showLayoutSteps = false;
-    this->_currentLayoutStep = 0;
-    this->_currentLayoutTick = 0;
-    this->_currentLayoutChild = 0;
+    d->showLayoutSteps = false;
+    d->currentLayoutStep = 0;
+    d->currentLayoutTick = 0;
+    d->currentLayoutChild = 0;
     this->getController()->getRoot()->recursiveResetLayout();
 
-    if (!this->_isHSSOnly)
+    if (!d->isHSSOnly)
     {
         if (this->getFile())
         {
@@ -524,11 +550,11 @@ bool AXRDocument::loadHSSFile(QUrl url)
 {
     axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening HSS document: %1").arg(url.toString()));
 
-    this->_isHSSOnly = true;
-    this->_showLayoutSteps = false;
-    this->_currentLayoutStep = 0;
-    this->_currentLayoutTick = 0;
-    this->_currentLayoutChild = 0;
+    d->isHSSOnly = true;
+    d->showLayoutSteps = false;
+    d->currentLayoutStep = 0;
+    d->currentLayoutTick = 0;
+    d->currentLayoutChild = 0;
 
     if (this->getFile())
     {
@@ -544,87 +570,87 @@ bool AXRDocument::loadHSSFile(QUrl url)
 
 void AXRDocument::setShowLayoutSteps(bool value)
 {
-    this->_showLayoutSteps = value;
+    d->showLayoutSteps = value;
 }
 
 bool AXRDocument::showLayoutSteps()
 {
-    return this->_showLayoutSteps;
+    return d->showLayoutSteps;
 }
 
 void AXRDocument::previousLayoutStep()
 {
-    if (this->_currentLayoutStep > 0)
+    if (d->currentLayoutStep > 0)
     {
-        this->_currentLayoutStep -= 1;
+        d->currentLayoutStep -= 1;
     }
-    this->_currentLayoutTick = 0;
-    this->_currentLayoutChild = 0;
+    d->currentLayoutTick = 0;
+    d->currentLayoutChild = 0;
     this->getController()->getRoot()->recursiveResetLayout();
     this->setNeedsDisplay(true);
 }
 
 void AXRDocument::nextLayoutStep()
 {
-    this->_currentLayoutStep += 1;
-    this->_currentLayoutTick = 0;
-    this->_currentLayoutChild = 0;
+    d->currentLayoutStep += 1;
+    d->currentLayoutTick = 0;
+    d->currentLayoutChild = 0;
     this->getController()->getRoot()->recursiveResetLayout();
     this->setNeedsDisplay(true);
 }
 
 void AXRDocument::nextLayoutTick()
 {
-    this->_currentLayoutTick += 1;
+    d->currentLayoutTick += 1;
 }
 
 void AXRDocument::resetLayoutTicks()
 {
-    this->_currentLayoutTick = 0;
+    d->currentLayoutTick = 0;
 }
 
 bool AXRDocument::layoutStepDone()
 {
-    return this->_currentLayoutTick >= this->_currentLayoutStep;
+    return d->currentLayoutTick >= d->currentLayoutStep;
 }
 
 void AXRDocument::breakIfNeeded()
 {
     int breakvar = 0;
-    if(this->_currentLayoutTick >= this->_currentLayoutStep-1){
+    if(d->currentLayoutTick >= d->currentLayoutStep-1){
         breakvar = 1; //we need something to break on
     }
 
-    axr_log(LoggerChannelLayout, AXRString("currentLayoutTick = %1, currentLayoutStep = %2, %3").arg(_currentLayoutTick).arg(_currentLayoutStep).arg(breakvar));
+    axr_log(LoggerChannelLayout, AXRString("currentLayoutTick = %1, currentLayoutStep = %2, %3").arg(d->currentLayoutTick).arg(d->currentLayoutStep).arg(breakvar));
 }
 
 int AXRDocument::getWindowWidth()
 {
-    return _windowWidth;
+    return d->windowWidth;
 }
 
 int AXRDocument::getWindowHeight()
 {
-    return _windowHeight;
+    return d->windowHeight;
 }
 
 void AXRDocument::setWindowSize(int width, int height)
 {
-    _windowWidth = width;
-    _windowHeight = height;
+    d->windowWidth = width;
+    d->windowHeight = height;
 }
 
 void AXRDocument::nextLayoutChild()
 {
-    this->_currentLayoutChild += 1;
+    d->currentLayoutChild += 1;
 }
 
 void AXRDocument::resetLayoutChild()
 {
-    this->_currentLayoutChild = 0;
+    d->currentLayoutChild = 0;
 }
 
 bool AXRDocument::layoutChildDone()
 {
-    return this->_currentLayoutTick >= this->_currentLayoutChild + 1;
+    return d->currentLayoutTick >= d->currentLayoutChild + 1;
 }

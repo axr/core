@@ -44,15 +44,16 @@
 #ifndef AXRDOCUMENT_H
 #define AXRDOCUMENT_H
 
-#include <QDir>
-#include <QMap>
-#include <QSharedPointer>
 #include "AXRGlobal.h"
+
+class QDir;
+template <class T> class QSharedPointer;
 
 namespace AXR
 {
     class AXRBuffer;
     class AXRController;
+    class AXRDocumentPrivate;
     class AXRRender;
     class HSSCallback;
     class HSSParser;
@@ -251,27 +252,7 @@ namespace AXR
         void setWindowSize(int width, int height);
 
     private:
-        bool _isHSSOnly;
-        bool _hasLoadedFile;
-        bool _showLayoutSteps;
-        unsigned int _currentLayoutStep;
-        unsigned int _currentLayoutTick;
-        unsigned int _currentLayoutChild;
-        bool _needsDisplay;
-
-        int _windowWidth;
-        int _windowHeight;
-
-    protected:
-        QSharedPointer<HSSVisitorManager> visitorManager;
-        QSharedPointer<AXRController> controller;
-        QSharedPointer<AXRBuffer> file;
-        QDir directory;
-
-        QSharedPointer<XMLParser> parserXML;
-        QSharedPointer<HSSParser> parserHSS;
-
-        QMap<AXRString, HSSCallback*> _customFunctions;
+        AXRDocumentPrivate *const d;
     };
 }
 
