@@ -189,12 +189,12 @@ std::vector< QSharedPointer<HSSSimpleSelection> > HSSMultipleSelection::getItems
     return this->d->items;
 }
 
-QSharedPointer<HSSSimpleSelection> HSSMultipleSelection::joinAll()
+QSharedPointer<HSSSimpleSelection> HSSMultipleSelection::joinAll() const
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
-    for (iterator it=this->d->items.begin(); it!=this->d->items.end(); it++) {
+    for (const_iterator it=this->d->items.begin(); it!=this->d->items.end(); it++) {
         QSharedPointer<HSSSimpleSelection> inner = *it;
-        for (HSSSimpleSelection::iterator it2 = inner->begin(); it2 != inner->end(); ++it2) {
+        for (HSSSimpleSelection::const_iterator it2 = inner->begin(); it2 != inner->end(); ++it2) {
             ret->add(*it2);
         }
     }

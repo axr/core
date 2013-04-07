@@ -104,7 +104,7 @@ namespace AXR
         iterator erase(iterator position);
         iterator erase(iterator first, iterator last);
         std::vector< QSharedPointer<HSSSimpleSelection> > getItems() const;
-        QSharedPointer<HSSSimpleSelection> joinAll();
+        QSharedPointer<HSSSimpleSelection> joinAll() const;
         QSharedPointer<HSSMultipleSelection> splitAll();
 
         virtual AXRString toString();

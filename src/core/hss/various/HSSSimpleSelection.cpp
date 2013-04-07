@@ -210,10 +210,10 @@ std::vector< QSharedPointer<HSSDisplayObject> > HSSSimpleSelection::getItems() c
     return this->d->items;
 }
 
-QSharedPointer<HSSSimpleSelection> HSSSimpleSelection::joinAll()
+QSharedPointer<HSSSimpleSelection> HSSSimpleSelection::joinAll() const
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
-    for (iterator it=this->d->items.begin(); it!=this->d->items.end(); it++) {
+    for (const_iterator it=this->d->items.begin(); it!=this->d->items.end(); it++) {
         ret->add(*it);
     }
     return ret;

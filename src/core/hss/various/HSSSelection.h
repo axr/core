@@ -89,7 +89,7 @@ namespace AXR
         HSSSelectionType getSelectionType();
 
         virtual void addSelection(QSharedPointer<HSSSelection> item) =0;
-        virtual QSharedPointer<HSSSimpleSelection> joinAll() =0;
+        virtual QSharedPointer<HSSSimpleSelection> joinAll() const =0;
         virtual QSharedPointer<HSSMultipleSelection> splitAll() =0;
 
         /**
