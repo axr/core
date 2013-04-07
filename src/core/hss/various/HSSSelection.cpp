@@ -42,8 +42,10 @@
  ********************************************************************/
 
 #include <QMap>
+#include "HSSDisplayObject.h"
 #include "HSSMultipleSelection.h"
 #include "HSSSelection.h"
+#include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
 
 using namespace AXR;
@@ -94,4 +96,23 @@ std::string HSSSelection::toStdString()
 {
     AXRString tempstr = this->toString();
     return tempstr.toStdString();
+}
+
+AXRString HSSSelection::logSelection(const HSSSelection * selection, const std::vector<QSharedPointer<HSSSelectorChain> > & selectorChains)
+{
+    AXRString selectionStr("");
+    QSharedPointer<HSSSimpleSelection> flatSelection = selection->joinAll();
+    for (HSSSimpleSelection::iterator it = flatSelection->begin(); it != flatSelection->end(); ++it) {
+        selectionStr.append("   ").append((*it)->getName()).append("\n");
+    }
+    AXRString selectorsStr("");
+    for (std::vector<QSharedPointer<HSSSelectorChain> >::const_iterator it2 = selectorChains.begin(); it2 != selectorChains.end(); ++it2)
+    {
+        selectorsStr.append((*it2)->stringRep());
+        if(it2+1 != selectorChains.end())
+        {
+            selectorsStr.append(", ");
+        }
+    }
+    return selectorsStr.append(" { } selected ").append(AXRString::number(flatSelection->size())).append(" elements:\n").append(selectionStr);
 }

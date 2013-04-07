@@ -504,9 +504,11 @@ QSharedPointer<HSSSelection> AXRController::select(std::vector<QSharedPointer<HS
     if (ret->size() == 1){
         for (HSSMultipleSelection::iterator it = ret->begin(); it!=ret->end(); ++it) {
             QSharedPointer<HSSSimpleSelection> simpleSel = *it;
+            axr_log(LoggerChannelController, AXRString("AXRController:").append(HSSSelection::logSelection(simpleSel.data(), selectorChains)));
             return simpleSel;
         }
     }
+    axr_log(LoggerChannelController, AXRString("AXRController:").append(HSSSelection::logSelection(ret.data(), selectorChains)));
     return ret;
 }
 

@@ -51,6 +51,7 @@ namespace AXR
 {
     class HSSSimpleSelection;
     class HSSMultipleSelection;
+    class HSSSelectorChain;
 
     /**
      *  @brief
@@ -66,6 +67,14 @@ namespace AXR
          *  @return A string representation of the given type.
          */
         static AXRString selectionTypeStringRepresentation(HSSSelectionType selectionType);
+
+        /**
+         *  When logging, you often need a string representation of the result of a selection
+         *  @param selection        A pointer to the selection that should be printed
+         *  @param selectorChains   The selector chains that were used to create the selection
+         *  @return A string representation of the given type.
+         */
+        static AXRString logSelection(const HSSSelection * selection, const std::vector<QSharedPointer<HSSSelectorChain> > & selectorChains);
 
         /**
          *  Allows you to check if this selection is of the given type.
