@@ -75,7 +75,7 @@ namespace AXR
          */
         QSharedPointer<HSSSimpleSelector> clone() const;
 
-        //see HSSObject.h for documentation of this method
+        //see HSSParserNode.h for documentation of this method
         virtual AXRString toString();
 
         //see HSSParserNode.h for documentation of this method

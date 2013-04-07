@@ -73,10 +73,7 @@ namespace AXR
          */
         virtual ~HSSLastFilter();
 
-        /**
-         *  Prints itself as a textual representation, useful for loggin or introspection.
-         *  @return A string containing a textual representation of the keyword constant.
-         */
+        //see HSSParserNode.h for the documentation of this method
         virtual AXRString toString();
 
         //see HSSParserNode.h for the documentation of this method

@@ -70,6 +70,8 @@ namespace AXR
          *  Destructor for this class.
          */
         virtual ~HSSEmptyFilter();
+
+        //see HSSParserNode.h for the documentation of this method
         virtual AXRString toString();
 
         //see HSSParserNode.h for the documentation of this method

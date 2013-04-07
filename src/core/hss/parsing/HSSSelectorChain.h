@@ -103,7 +103,7 @@ namespace AXR
          */
         ~HSSSelectorChain();
 
-        //see HSSObject.h for the documentation of this method
+        //see HSSParserNode.h for the documentation of this method
         AXRString toString();
 
         //see HSSParserNode.h for the documentation of this method

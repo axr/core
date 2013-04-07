@@ -73,6 +73,7 @@ namespace AXR
          */
         virtual ~HSSNegation();
 
+        //see HSSParserNode.h for the documentation of this method
         virtual AXRString toString();
 
         //see HSSParserNode.h for the documentation of this method
