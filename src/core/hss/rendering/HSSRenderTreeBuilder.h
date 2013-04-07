@@ -50,6 +50,7 @@ namespace AXR
 {
     class HSSRenderTreeBuilder : public HSSAbstractVisitor
     {
+        Q_DISABLE_COPY(HSSRenderTreeBuilder)
     public:
         HSSRenderTreeBuilder();
         HSSRenderTreeBuilder(const AXRString &outputFile);

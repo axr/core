@@ -58,6 +58,7 @@ namespace AXR
      */
     class AXR_API HSSVisitorManager
     {
+        Q_DISABLE_COPY(HSSVisitorManager)
     public:
         /**
          *  Creates a new instance of the render object.

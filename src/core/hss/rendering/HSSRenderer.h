@@ -56,6 +56,7 @@ namespace AXR
 
     class AXR_API HSSRenderer : public HSSAbstractVisitor
     {
+        Q_DISABLE_COPY(HSSRenderer)
     public:
         HSSRenderer();
         virtual ~HSSRenderer();

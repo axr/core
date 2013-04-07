@@ -66,6 +66,7 @@ namespace AXR
      */
     class AXR_API AXRDocument
     {
+        Q_DISABLE_COPY(AXRDocument)
     public:
         /**
          *  Creates a new AXRDocument object.

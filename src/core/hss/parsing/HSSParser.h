@@ -92,6 +92,7 @@ namespace AXR
      */
     class AXR_API HSSParser
     {
+        Q_DISABLE_COPY(HSSParser)
     public:
 
         /**
