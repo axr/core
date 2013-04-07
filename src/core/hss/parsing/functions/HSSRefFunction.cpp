@@ -159,6 +159,12 @@ QVariant HSSRefFunction::_evaluate()
         QSharedPointer<HSSDisplayObject> container = selection->front();
         this->_value = container->getProperty(this->propertyName);
 
+        if (this->observed)
+        {
+            this->observed->removeObserver(this->propertyName, HSSObservablePropertyValue, this);
+            this->observed = NULL;
+        }
+
         container->observe(this->propertyName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
 
         this->observed = container.data();
