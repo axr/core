@@ -120,8 +120,10 @@ AXRString AXRDocument::getPathToResources() const
     // of either of them. Perhaps an AXR configuration file at a standard
     // location? /etc/axr.conf on Unix and %WINDIR%/axr.ini on Windows?
     QDir dir(QCoreApplication::applicationDirPath());
-#ifdef Q_WS_MACX
+#ifdef Q_OS_MAC
+#ifndef Q_OS_IOS
     dir.cdUp();
+#endif
     dir.cd("Resources");
 #endif
     dir.cd("resources");
