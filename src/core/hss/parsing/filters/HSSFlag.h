@@ -80,6 +80,9 @@ namespace AXR
 
         virtual AXRString toString();
 
+        //see HSSParserNode.h for the documentation of this method
+        AXRString stringRep();
+
         /**
          *  Getter for the name.
          *  @return The name of the flag. This is what comes after the double colon

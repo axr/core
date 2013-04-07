@@ -75,6 +75,11 @@ AXRString HSSNameSelector::toString()
     return "Name selector targeting an element with name " + this->elementName;
 }
 
+AXRString HSSNameSelector::stringRep()
+{
+    return this->elementName;
+}
+
 QSharedPointer<HSSClonable> HSSNameSelector::cloneImpl() const
 {
     return QSharedPointer<HSSNameSelector>(new HSSNameSelector(*this));

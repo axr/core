@@ -83,6 +83,11 @@ AXRString HSSFlag::toString()
     return "Flag with name " + this->_name;
 }
 
+AXRString HSSFlag::stringRep()
+{
+    return AXRString("::").append(this->_name);
+}
+
 AXRString HSSFlag::getName()
 {
     return this->_name;

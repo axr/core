@@ -79,6 +79,9 @@ namespace AXR
          */
         virtual AXRString toString();
 
+        //see HSSParserNode.h for the documentation of this method
+        AXRString stringRep();
+
         virtual QSharedPointer<HSSSelection> apply(QSharedPointer<HSSSelection> scope, bool processing);
 
     private:

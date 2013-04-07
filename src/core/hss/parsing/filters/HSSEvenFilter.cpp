@@ -69,6 +69,11 @@ AXRString HSSEvenFilter::toString()
     return "Even Filter";
 }
 
+AXRString HSSEvenFilter::stringRep()
+{
+    return ":even";
+}
+
 QSharedPointer<HSSSelection> HSSEvenFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());

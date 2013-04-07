@@ -78,6 +78,9 @@ namespace AXR
         //see HSSObject.h for documentation of this method
         virtual AXRString toString();
 
+        //see HSSParserNode.h for documentation of this method
+        AXRString stringRep();
+
         void setName(QSharedPointer<HSSNameSelector> name);
         const QSharedPointer<HSSNameSelector> getName() const;
 

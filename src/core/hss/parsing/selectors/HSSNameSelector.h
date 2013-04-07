@@ -85,6 +85,9 @@ namespace AXR
         //see HSSObject.h for documentation of this method
         virtual AXRString toString();
 
+        //see HSSParserNode.h for the documentation of this method
+        AXRString stringRep();
+
         virtual QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
 
     protected:

@@ -63,6 +63,11 @@ AXRString HSSThisSelector::toString()
     return "@this selector";
 }
 
+AXRString HSSThisSelector::stringRep()
+{
+    return "@this";
+}
+
 QSharedPointer<HSSClonable> HSSThisSelector::cloneImpl() const
 {
     return QSharedPointer<HSSThisSelector>(new HSSThisSelector(*this));

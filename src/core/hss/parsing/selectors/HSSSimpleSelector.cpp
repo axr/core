@@ -71,6 +71,17 @@ AXRString HSSSimpleSelector::toString()
     return "Simple SimpleSelector";
 }
 
+AXRString HSSSimpleSelector::stringRep()
+{
+    AXRString ret;
+    ret.append(this->name->stringRep());
+    foreach(QSharedPointer<HSSFilter> filter, this->filters)
+    {
+        ret.append(filter->stringRep());
+    }
+    return ret;
+}
+
 QSharedPointer<HSSClonable> HSSSimpleSelector::cloneImpl() const
 {
     QSharedPointer<HSSSimpleSelector> clone = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(*this));

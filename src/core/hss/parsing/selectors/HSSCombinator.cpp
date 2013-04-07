@@ -73,6 +73,32 @@ AXRString HSSCombinator::toString()
     return "HSSCombinator of type  " + this->combinatorStringRepresentation(this->combinatorType);
 }
 
+AXRString HSSCombinator::stringRep()
+{
+    switch (this->combinatorType) {
+        case HSSCombinatorTypeChildren:
+            return " ";
+            break;
+        case HSSCombinatorTypeNextSiblings:
+            return "+";
+            break;
+        case HSSCombinatorTypeDescendants:
+            return "..";
+            break;
+        case HSSCombinatorTypePreviousSiblings:
+            return "-";
+            break;
+        case HSSCombinatorTypeSiblings:
+            return "=";
+            break;
+        case HSSCombinatorTypeTextSelection:
+            return ">";
+        default:
+            return "##unknown combinator type##";
+            break;
+    }
+}
+
 AXRString HSSCombinator::combinatorStringRepresentation(HSSCombinatorType type)
 {
     AXRString types[20];

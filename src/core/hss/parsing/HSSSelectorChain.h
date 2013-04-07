@@ -106,6 +106,9 @@ namespace AXR
         //see HSSObject.h for the documentation of this method
         AXRString toString();
 
+        //see HSSParserNode.h for the documentation of this method
+        AXRString stringRep();
+
         /**
          *  Returns a node based on the index.
          *  @param i    The index of the node in the node list.

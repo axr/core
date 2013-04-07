@@ -67,6 +67,11 @@ AXRString HSSParentSelector::toString()
     return "@parent selector";
 }
 
+AXRString HSSParentSelector::stringRep()
+{
+    return "@parent";
+}
+
 QSharedPointer<HSSClonable> HSSParentSelector::cloneImpl() const
 {
     return QSharedPointer<HSSParentSelector>(new HSSParentSelector(*this));

@@ -65,6 +65,11 @@ AXRString HSSRootSelector::toString()
     return "@root selector";
 }
 
+AXRString HSSRootSelector::stringRep()
+{
+    return "@root";
+}
+
 QSharedPointer<HSSClonable> HSSRootSelector::cloneImpl() const
 {
     return QSharedPointer<HSSRootSelector>(new HSSRootSelector(*this));

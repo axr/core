@@ -67,6 +67,11 @@ AXRString HSSNegation::toString()
     return "Negation";
 }
 
+AXRString HSSNegation::stringRep()
+{
+    return "!";
+}
+
 QSharedPointer<HSSClonable> HSSNegation::cloneImpl() const
 {
     return QSharedPointer<HSSNegation>(new HSSNegation(*this));

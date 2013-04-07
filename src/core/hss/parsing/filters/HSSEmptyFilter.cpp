@@ -68,6 +68,11 @@ AXRString HSSEmptyFilter::toString()
     return "Empty Filter";
 }
 
+AXRString HSSEmptyFilter::stringRep()
+{
+    return ":empty";
+}
+
 QSharedPointer<HSSSelection> HSSEmptyFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());

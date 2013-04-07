@@ -103,6 +103,12 @@ namespace AXR
         std::string toStdString();
 
         /**
+         *  Prints itself as a textual representation, similar as how it would appear in HSS code.
+         *  @return A string representation of the object.
+         */
+        virtual AXRString stringRep();
+
+        /**
          *  Call this to know if a parser node is of the given type.
          *  @param otherType    The parser node type to compare against.
          *  @return Wether the instance is an parser node of given type.

@@ -69,6 +69,11 @@ AXRString HSSLastFilter::toString()
     return "Last Filter";
 }
 
+AXRString HSSLastFilter::stringRep()
+{
+    return ":last";
+}
+
 QSharedPointer<HSSSelection> HSSLastFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());

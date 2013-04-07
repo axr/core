@@ -63,6 +63,11 @@ AXRString HSSUniversalSelector::toString()
     return "Universal selector";
 }
 
+AXRString HSSUniversalSelector::stringRep()
+{
+    return "*";
+}
+
 QSharedPointer<HSSClonable> HSSUniversalSelector::cloneImpl() const
 {
     return QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector(*this));

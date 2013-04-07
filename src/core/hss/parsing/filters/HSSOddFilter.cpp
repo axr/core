@@ -69,6 +69,11 @@ AXRString HSSOddFilter::toString()
     return "Odd Filter";
 }
 
+AXRString HSSOddFilter::stringRep()
+{
+    return ":odd";
+}
+
 QSharedPointer<HSSSelection> HSSOddFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());

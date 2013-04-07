@@ -69,6 +69,11 @@ AXRString HSSFirstFilter::toString()
     return "First Filter";
 }
 
+AXRString HSSFirstFilter::stringRep()
+{
+    return ":first";
+}
+
 QSharedPointer<HSSSelection> HSSFirstFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());

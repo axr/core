@@ -88,6 +88,21 @@ AXRString HSSSelectorChain::toString()
     return tempstr;
 }
 
+AXRString HSSSelectorChain::stringRep()
+{
+    AXRString tempstr = "";
+    size_t sccount = this->nodeList.size();
+    if (sccount > 0)
+    {
+        for (size_t i = 0; i < sccount; ++i)
+        {
+            tempstr.append(this->nodeList[i]->stringRep());
+        }
+    }
+
+    return tempstr;
+}
+
 const QSharedPointer<HSSParserNode> & HSSSelectorChain::get(size_t i) const
 {
     return this->nodeList[i];
