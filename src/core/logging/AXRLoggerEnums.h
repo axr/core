@@ -135,6 +135,16 @@ namespace AXR
         LoggerChannelEventsSpecific = 1 << 14,
 
         /*!
+         * Messages related to the document controller.
+         */
+        LoggerChannelController = 1 << 15,
+
+        /*!
+         * Messages related to the document controller, more fine grained.
+         */
+        LoggerChannelControllerSpecific = 1 << 16,
+
+        /*!
          * \deprecated
          * This member is obsolete. Use a more suitable channel instead.
          */
