@@ -774,7 +774,6 @@ QSharedPointer<HSSSimpleSelection> AXRController::selectFromTop(QSharedPointer<H
     //select from the topmost rule down to our subjects
     std::deque<QSharedPointer<HSSRule> >::iterator it = rules.begin();
     QSharedPointer<HSSRule> topRule = *it;
-    QSharedPointer<HSSContainer> thisObj = this->getRoot();
     std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
     QSharedPointer<HSSSimpleSelection> scope = topRule->getOriginalScope();
     QSharedPointer<HSSSimpleSelection> selection;
@@ -785,8 +784,16 @@ QSharedPointer<HSSSimpleSelection> AXRController::selectFromTop(QSharedPointer<H
         QSharedPointer<HSSInstruction> instruction = itRule->getInstruction();
         if (instruction) {
             selection = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection(itRule->getAppliedTo()));
+            axr_log(LoggerChannelController, HSSSelection::logSelection(selection.data(), itRule->getSelectorChains()));
         } else {
-            selection = this->select(itRule->getSelectorChains(), scope, itRule->getThisObj())->joinAll();
+            if(it+1 == rules.end())
+            {
+                selection = this->select(itRule->getSelectorChains(), scope, finalThisObj)->joinAll();
+            }
+            else
+            {
+                selection = this->select(itRule->getSelectorChains(), scope, itRule->getThisObj())->joinAll();
+            }
         }
         if(selection->size() == 0)
         {
