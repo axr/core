@@ -396,6 +396,15 @@ namespace AXR
         QSharedPointer<HSSSelection> selectSimple(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
 
         /**
+         *  Walks up the tree until it finds the top level rule, then selects downwards.
+         *
+         *  @param theRule      The rule where the walking to the top should begin
+         *  @param finalThisObj The object that should be used as the @this object on the last selection level
+         *  @return             A simple selection of display objects.
+         */
+        QSharedPointer<HSSSimpleSelection>  selectFromTop(QSharedPointer<HSSRule> theRule, QSharedPointer<HSSDisplayObject> finalThisObj);
+
+        /**
          *  After reading the XML and HSS documents, this method is used to match the rules to the
          *  display objects in the content tree. You give the rule and the scope where to apply it,
          *  and it will select the elements from the scope according to the selector chain that is

@@ -760,6 +760,62 @@ QSharedPointer<HSSSelection> AXRController::selectSimple(QSharedPointer<HSSSelec
     return selection;
 }
 
+QSharedPointer<HSSSimpleSelection> AXRController::selectFromTop(QSharedPointer<HSSRule> theRule, QSharedPointer<HSSDisplayObject> finalThisObj)
+{
+    //climb the tree
+    QSharedPointer<HSSRule> rule = theRule;
+    std::deque<QSharedPointer<HSSRule> > rules;
+    while (rule->hasParent())
+    {
+        rules.push_front(rule);
+        rule = rule->getParent();
+    }
+    rules.push_front(rule);
+    //select from the topmost rule down to our subjects
+    std::deque<QSharedPointer<HSSRule> >::iterator it = rules.begin();
+    QSharedPointer<HSSRule> topRule = *it;
+    QSharedPointer<HSSContainer> thisObj = this->getRoot();
+    std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
+    QSharedPointer<HSSSimpleSelection> scope = topRule->getOriginalScope();
+    QSharedPointer<HSSSimpleSelection> selection;
+    for (; it != rules.end(); ++it)
+    {
+        QSharedPointer<HSSRule> itRule = *it;
+        // TODO: check @this object
+        QSharedPointer<HSSInstruction> instruction = itRule->getInstruction();
+        if (instruction) {
+            selection = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection(itRule->getAppliedTo()));
+        } else {
+            selection = this->select(itRule->getSelectorChains(), scope, itRule->getThisObj())->joinAll();
+        }
+        if(selection->size() == 0)
+        {
+            break;
+        }
+        if ((it != rules.end()) && (it+1 != rules.end()))
+        {
+            QSharedPointer<HSSSimpleSelection> nextLevel(new HSSSimpleSelection());
+            for (HSSSimpleSelection::const_iterator it2 = selection->begin(); it2 != selection->end(); ++it2)
+            {
+                const QSharedPointer<HSSDisplayObject> & displayObject = *it2;
+                //if it is a container it may have children
+                if (displayObject->isA(HSSObjectTypeContainer))
+                {
+                    QSharedPointer<HSSContainer> selectedContainer = qSharedPointerCast<HSSContainer>(displayObject);
+                    QSharedPointer<HSSSimpleSelection> children = selectedContainer->getChildren();
+                    if(children)
+                    {
+                        nextLevel->addSelection(children);
+                    }
+                }
+            }
+            scope = nextLevel;
+        }
+    }
+
+    return selection;
+}
+
 AXRString AXRController::toString()
 {
     AXRString tempstr = "AXR Controller\n";
