@@ -51,20 +51,37 @@
 
 using namespace AXR;
 
-XMLParser::XMLParser(AXRController *theController)
-: controller(theController)
+namespace AXR
+{
+    class XMLParserPrivate
+    {
+        friend class XMLParser;
+
+        XMLParserPrivate()
+        : controller()
+        {
+        }
+
+        AXRController *controller;
+    };
+}
+
+XMLParser::XMLParser(AXRController *controller)
+: d(new XMLParserPrivate)
 {
     axr_log(LoggerChannelGeneralSpecific, "XMLParser: creating XML parser");
+    d->controller = controller;
 }
 
 XMLParser::~XMLParser()
 {
     axr_log(LoggerChannelGeneralSpecific, "XMLParser: destroying XML parser");
+    delete d;
 }
 
 bool XMLParser::loadFile(QSharedPointer<AXRBuffer> file)
 {
-    if (!controller)
+    if (!d->controller)
     {
         throw AXRError("XMLParser", "The controller was not set on the XML parser");
     }
@@ -88,22 +105,22 @@ bool XMLParser::loadFile(QSharedPointer<AXRBuffer> file)
             {
                 AXRString name = xml.name().toString();
                 axr_log(LoggerChannelXMLParser, "XMLParser: found opening tag with name " + name);
-                controller->enterElement(name);
+                d->controller->enterElement(name);
 
                 Q_FOREACH (const QXmlStreamAttribute &attr, xml.attributes())
                 {
-                    controller->addAttribute(attr.name().toString(), attr.value().toString());
+                    d->controller->addAttribute(attr.name().toString(), attr.value().toString());
                 }
             }
             else if (xml.isEndElement())
             {
                 axr_log(LoggerChannelXMLParser, "XMLParser: found closing tag with name " + xml.name().toString());
-                controller->exitElement();
+                d->controller->exitElement();
             }
             else if (xml.isCharacters())
             {
                 axr_log(LoggerChannelXMLParser, AXRString("XMLParser: reading character data: \"%1\"").arg(xml.text().toString()));
-                controller->appendContentText(xml.text().toString());
+                d->controller->appendContentText(xml.text().toString());
             }
             else if (xml.isProcessingInstruction())
             {
@@ -170,9 +187,9 @@ bool XMLParser::loadFile(QSharedPointer<AXRBuffer> file)
                         }
 
                         if (sheetUrl.isRelative())
-                            controller->addStyleSheetUrl(file->sourceUrl().resolved(sheetUrl));
+                            d->controller->addStyleSheetUrl(file->sourceUrl().resolved(sheetUrl));
                         else
-                            controller->addStyleSheetUrl(sheetUrl);
+                            d->controller->addStyleSheetUrl(sheetUrl);
                     }
                     else
                     {

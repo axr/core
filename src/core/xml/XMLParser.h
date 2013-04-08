@@ -51,17 +51,19 @@ template <class T> class QSharedPointer;
 namespace AXR
 {
     class AXRController;
+    class XMLParserPrivate;
 
     class AXR_API XMLParser
     {
         Q_DISABLE_COPY(XMLParser)
     public:
-        XMLParser(AXRController *theController);
+        XMLParser(AXRController *controller);
         virtual ~XMLParser();
 
         bool loadFile(QSharedPointer<AXRBuffer> file);
 
-        AXRController *controller;
+    private:
+        XMLParserPrivate *const d;
     };
 }
 
