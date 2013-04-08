@@ -46,21 +46,23 @@
 
 using namespace AXR;
 
-class HSSMouseEvent::Private
+namespace AXR
 {
-public:
-    Private() : type(), position()
+    class HSSMouseEventPrivate
     {
-    }
+    public:
+        HSSMouseEventPrivate()
+        : position()
+        {
+        }
 
-    HSSEventType type;
-    HSSPoint position;
-};
+        HSSPoint position;
+    };
+}
 
 HSSMouseEvent::HSSMouseEvent(HSSEventType type, const HSSPoint &position)
-: d(new Private)
+: HSSInputEvent(type), d(new HSSMouseEventPrivate)
 {
-    d->type = type;
     d->position = position;
 }
 

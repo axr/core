@@ -89,3 +89,8 @@ bool HSSRect::operator!=(const HSSRect &other) const
 {
     return !(*this == other);
 }
+
+bool HSSRect::contains(const HSSPoint &point) const
+{
+    return QRect(origin.x, origin.y, size.width, size.height).contains(point.x, point.y);
+}

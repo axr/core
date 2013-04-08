@@ -56,6 +56,7 @@ namespace AXR
     class AXRDocumentPrivate;
     class AXRRender;
     class HSSCallback;
+    class HSSInputEvent;
     class HSSParser;
     class HSSRect;
     class HSSVisitorManager;
@@ -78,14 +79,6 @@ namespace AXR
          *  Destroys the object
          */
         virtual ~AXRDocument();
-
-        /**
-         *  Main drawing function.
-         *  @param rect     The rectangle that should be drawn.
-         *  @param bounds   The bounding box of the complete view.
-         *  @warning The current implementation (0.441) always draws the entire bounds,
-         *  the rect parameter is actually ignored. This will be fixed in the near future.
-         */
 
         /**
          * Gets the path to where the HSS framework resource files are stored.
@@ -230,6 +223,8 @@ namespace AXR
          *  @return Wether it has been reloaded successfully or not.
          */
         bool reload();
+
+        bool handleEvent(HSSInputEvent *event);
 
         // Layout stuff from AXRWrapper
     public:

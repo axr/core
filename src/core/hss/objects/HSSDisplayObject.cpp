@@ -60,6 +60,7 @@
 #include "HSSKeywordConstant.h"
 #include "HSSLinearGradient.h"
 #include "HSSMargin.h"
+#include "HSSMouseEvent.h"
 #include "HSSMultipleValue.h"
 #include "HSSMultipleValueDefinition.h"
 #include "HSSNumberConstant.h"
@@ -71,6 +72,7 @@
 #include "HSSPoint.h"
 #include "HSSPropertyDefinition.h"
 #include "HSSRadialGradient.h"
+#include "HSSRect.h"
 #include "HSSRgb.h"
 #include "HSSRule.h"
 #include "HSSSimpleSelection.h"
@@ -3736,84 +3738,19 @@ void HSSDisplayObject::_setOuterHeight()
     this->notifyObservers(HSSObservablePropertyOuterHeight, &this->outerHeight);
 }
 
-bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
+bool HSSDisplayObject::handleEvent(HSSInputEvent *event)
 {
-    switch (type)
+    if (!event)
+        return false;
+
+    if (handleMouseEvent(dynamic_cast<HSSMouseEvent*>(event)))
+        return true;
+    
+    switch (event->type())
     {
-    case HSSEventTypeMouseDown:
-    {
-        HSSPoint thePoint = *(HSSPoint*) data;
-
-        if (this->globalX < thePoint.x && this->globalX + this->width >= thePoint.x
-            && this->globalY < thePoint.y && this->globalY + this->height >= thePoint.y)
-        {
-            if (!this->_isPress)
-            {
-                this->setPress(true);
-            }
-
-            return this->fireEvent(type);
-        }
-        break;
-    }
-    case HSSEventTypeMouseUp:
-    {
-        HSSPoint thePoint = *(HSSPoint*) data;
-
-        if (this->_isPress)
-        {
-            this->setPress(false);
-        }
-
-        if (this->globalX < thePoint.x && this->globalX + this->width >= thePoint.x
-            && this->globalY < thePoint.y && this->globalY + this->height >= thePoint.y)
-        {
-
-            return this->fireEvent(type);
-        }
-        break;
-    }
-    case HSSEventTypeClick:
-    case HSSEventTypeDoubleClick:
-    {
-        HSSPoint thePoint = *(HSSPoint*) data;
-
-        if (this->globalX < thePoint.x && this->globalX + this->width >= thePoint.x
-                && this->globalY < thePoint.y && this->globalY + this->height >= thePoint.y)
-        {
-
-            //std_log(this->getElementName());
-            return this->fireEvent(type);
-        }
-        break;
-    }
-
     case HSSEventTypeLoad:
     {
-        return this->fireEvent(type);
-    }
-
-
-    case HSSEventTypeMouseMove:
-    {
-        HSSPoint thePoint = *(HSSPoint*) data;
-
-        if (this->globalX < thePoint.x && this->globalX + this->width >= thePoint.x
-                && this->globalY < thePoint.y && this->globalY + this->height >= thePoint.y)
-        {
-
-            if (!this->_isHover)
-            {
-                this->setHover(true);
-            }
-            //std_log(this->getElementName());
-            return this->fireEvent(type);
-        }
-        else if (this->_isHover)
-        {
-            this->setHover(false);
-        }
-        break;
+        return this->fireEvent(event->type());
     }
 
     case HSSEventTypeExitedWindow:
@@ -3823,11 +3760,74 @@ bool HSSDisplayObject::handleEvent(HSSEventType type, void* data)
             this->setHover(false);
         }
 
-        return this->fireEvent(type);
+        return this->fireEvent(event->type());
     }
 
     default:
         AXRError("HSSDisplayObject", "Unknown event type").raise();
+    }
+
+    return false;
+}
+
+bool HSSDisplayObject::handleMouseEvent(HSSMouseEvent *event)
+{
+    if (!event)
+        return false;
+
+    const HSSRect containerBounds(globalX, globalY, width, height);
+
+    switch (event->type())
+    {
+        case HSSEventTypeMouseDown:
+        {
+            if (containerBounds.contains(event->position()))
+            {
+                this->setPress(true);
+                return this->fireEvent(event->type());
+            }
+
+            break;
+        }
+        case HSSEventTypeMouseUp:
+        {
+            this->setPress(false);
+
+            if (containerBounds.contains(event->position()))
+            {
+                return this->fireEvent(event->type());
+            }
+
+            break;
+        }
+        case HSSEventTypeClick:
+        case HSSEventTypeDoubleClick:
+        {
+            if (containerBounds.contains(event->position()))
+                return this->fireEvent(event->type());
+
+            break;
+        }
+        case HSSEventTypeMouseMove:
+        {
+            if (containerBounds.contains(event->position()))
+            {
+                if (!this->_isHover)
+                {
+                    this->setHover(true);
+                }
+
+                return this->fireEvent(event->type());
+            }
+            else if (this->_isHover)
+            {
+                this->setHover(false);
+            }
+            
+            break;
+        }
+        default:
+            break;
     }
 
     return false;

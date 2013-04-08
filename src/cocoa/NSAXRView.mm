@@ -47,9 +47,19 @@
 #import "AXRDocument.h"
 #import "HSSContainer.h"
 #import "HSSEvent.h"
+#import "HSSMouseEvent.h"
+#import "HSSPoint.h"
 #import "HSSTypeEnums.h"
 #import "NSAXRDocument.h"
 #import "NSAXRView.h"
+
+using namespace AXR;
+
+@interface NSAXRView (Private)
+
+- (HSSPoint)pointFromNSEvent:(NSEvent *)theEvent;
+
+@end
 
 @implementation NSAXRView
 
@@ -114,16 +124,8 @@
     if (!document)
         return;
 
-    AXR::HSSContainer::p root = [document documentObject]->getController()->getRoot();
-    if (root)
-    {
-        AXR::HSSPoint thePoint;
-        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-        NSRect bounds = [self bounds];
-        thePoint.x = sysPoint.x;
-        thePoint.y = bounds.size.height - sysPoint.y;
-        root->handleEvent(AXR::HSSEventTypeMouseDown, (void*)&thePoint);
-    }
+    HSSMouseEvent mouseEvent(HSSEventTypeMouseDown, [self pointFromNSEvent:theEvent]);
+    [document documentObject]->handleEvent(&mouseEvent);
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
@@ -131,17 +133,11 @@
     if (!document)
         return;
 
-    AXR::HSSContainer::p root = [document documentObject]->getController()->getRoot();
-    if (root)
-    {
-        AXR::HSSPoint thePoint;
-        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-        NSRect bounds = [self bounds];
-        thePoint.x = sysPoint.x;
-        thePoint.y = bounds.size.height - sysPoint.y;
-        root->handleEvent(AXR::HSSEventTypeMouseUp, (void*)&thePoint);
-        root->handleEvent(AXR::HSSEventTypeClick, (void*)&thePoint);
-    }
+    HSSPoint thePoint = [self pointFromNSEvent:theEvent];
+    HSSMouseEvent upMouseEvent(HSSEventTypeMouseUp, thePoint);
+    HSSMouseEvent clickMouseEvent(HSSEventTypeClick, thePoint);
+    [document documentObject]->handleEvent(&upMouseEvent);
+    [document documentObject]->handleEvent(&clickMouseEvent);
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
@@ -149,16 +145,18 @@
     if (!document)
         return;
 
-    AXR::HSSContainer::p root = [document documentObject]->getController()->getRoot();
-    if (root)
-    {
-        AXR::HSSPoint thePoint;
-        NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-        NSRect bounds = [self bounds];
-        thePoint.x = sysPoint.x;
-        thePoint.y = bounds.size.height - sysPoint.y;
-        root->handleEvent(AXR::HSSEventTypeMouseMove, (void*)&thePoint);
-    }
+    HSSMouseEvent mouseEvent(HSSEventTypeMouseMove, [self pointFromNSEvent:theEvent]);
+    [document documentObject]->handleEvent(&mouseEvent);
+}
+
+- (AXR::HSSPoint)pointFromNSEvent:(NSEvent *)theEvent
+{
+    HSSPoint thePoint;
+    NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSRect bounds = [self bounds];
+    thePoint.x = sysPoint.x;
+    thePoint.y = bounds.size.height - sysPoint.y;
+    return thePoint;
 }
 
 @end

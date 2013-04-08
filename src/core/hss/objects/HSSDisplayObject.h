@@ -55,7 +55,9 @@ namespace AXR
     class HSSContainer;
     class HSSFlag;
     class HSSFont;
+    class HSSInputEvent;
     class HSSMargin;
+    class HSSMouseEvent;
     class HSSPropertyDefinition;
     class HSSRule;
     class HSSRuleStatus;
@@ -307,7 +309,8 @@ namespace AXR
 
         virtual void setDefaults();
 
-        virtual bool handleEvent(HSSEventType, void* data);
+        virtual bool handleEvent(HSSInputEvent *event);
+        virtual bool handleMouseEvent(HSSMouseEvent *event);
 
         void setHover(bool newValue);
         bool isHover();

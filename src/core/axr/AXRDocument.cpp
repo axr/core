@@ -51,6 +51,7 @@
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
+#include "HSSMouseEvent.h"
 #include "HSSParser.h"
 #include "HSSVisitorManager.h"
 #include "XMLParser.h"
@@ -179,7 +180,8 @@ void AXRDocument::run()
         if (root)
         {
             root->recursiveReadDefinitionObjects();
-            root->handleEvent(HSSEventTypeLoad, NULL);
+            HSSInputEvent event(HSSEventTypeLoad);
+            root->handleEvent(&event);
         }
     }
 
@@ -548,6 +550,15 @@ bool AXRDocument::reload()
     {
         return this->loadHssFile(this->controller()->styleSheetUrlAt(0));
     }
+}
+
+bool AXRDocument::handleEvent(HSSInputEvent *event)
+{
+    QSharedPointer<HSSContainer> root = controller()->root();
+    if (root)
+        return root->handleEvent(event);
+
+    return false;
 }
 
 bool AXRDocument::loadHssFile(const QUrl &url)

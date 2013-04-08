@@ -49,6 +49,7 @@
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
+#include "HSSInputEvent.h"
 #include "HSSRequest.h"
 #include "HSSSelFunction.h"
 #include "HSSSimpleSelection.h"
@@ -196,7 +197,8 @@ void HSSRequest::fire()
                                 }
 
                                 ctrlr->activateRules();
-                                loadedRoot->handleEvent(HSSEventTypeLoad, NULL);
+                                HSSInputEvent event(HSSEventTypeLoad);
+                                loadedRoot->handleEvent(&event);
                                 document->setNeedsDisplay(true);
                             }
                             break;

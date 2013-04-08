@@ -85,6 +85,8 @@ namespace AXR
 
         HSSPoint origin; /**< Where the rectangle starts. This point is on the top left corner of the rectangle. */
         HSSSize size; /**< The dimensions of the rectangle. */
+
+        bool contains(const HSSPoint &point) const;
     };
 }
 

@@ -42,12 +42,22 @@
  ********************************************************************/
 
 #include "AXRGlobal.h"
+#include "HSSTypeEnums.h"
 
 namespace AXR
 {
+    class HSSInputEventPrivate;
+
     class AXR_API HSSInputEvent
     {
+        Q_DISABLE_COPY(HSSInputEvent)
+
     public:
+        HSSInputEvent(HSSEventType type);
         virtual ~HSSInputEvent();
+        HSSEventType type() const;
+
+    private:
+        HSSInputEventPrivate *const d;
     };
 }

@@ -46,6 +46,7 @@
 
 namespace AXR
 {
+    class HSSMouseEventPrivate;
     class HSSPoint;
 
     class AXR_API HSSMouseEvent : public HSSInputEvent
@@ -59,7 +60,6 @@ namespace AXR
         HSSUnit y() const;
 
     private:
-        class Private;
-        Private *d;
+        HSSMouseEventPrivate *const d;
     };
 }

@@ -45,6 +45,27 @@
 
 using namespace AXR;
 
+namespace AXR
+{
+    class HSSInputEventPrivate
+    {
+        friend HSSInputEvent;
+        HSSEventType type;
+    };
+}
+
+HSSInputEvent::HSSInputEvent(HSSEventType type)
+: d(new HSSInputEventPrivate)
+{
+    d->type = type;
+}
+
 HSSInputEvent::~HSSInputEvent()
 {
+    delete d;
+}
+
+HSSEventType HSSInputEvent::type() const
+{
+    return d->type;
 }

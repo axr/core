@@ -3065,20 +3065,20 @@ HSSUnit HSSContainer::_evaluatePropertyValue(
     return ret;
 }
 
-bool HSSContainer::handleEvent(HSSEventType type, void* data)
+bool HSSContainer::handleEvent(HSSInputEvent *event)
 {
     bool handled = false;
     for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it < this->allChildren->end(); ++it)
     {
         QSharedPointer<HSSDisplayObject> child = *it;
-        bool childHandled = child->handleEvent(type, data);
+        bool childHandled = child->handleEvent(event);
         if (childHandled)
         {
             handled = true;
         }
     }
 
-    bool superHandled = HSSDisplayObject::handleEvent(type, data);
+    bool superHandled = HSSDisplayObject::handleEvent(event);
     if (superHandled)
     {
         handled = true;

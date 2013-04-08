@@ -46,6 +46,7 @@
 #include "AXRController.h"
 #include "AXRDocument.h"
 #include "HSSContainer.h"
+#include "HSSMouseEvent.h"
 #include "HSSRect.h"
 #include "HSSRenderer.h"
 #include "HSSVisitorManager.h"
@@ -152,16 +153,9 @@ void QAXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->controller()->root();
-    if (root)
-    {
-        HSSPoint thePoint(e->pos());
-        root->handleEvent(AXR::HSSEventTypeDoubleClick, (void*)&thePoint);
-        if (d->document->needsDisplay())
-        {
-            this->update();
-        }
-    }
+    HSSMouseEvent mouseEvent(HSSEventTypeDoubleClick, e->pos());
+    d->document->handleEvent(&mouseEvent);
+    update();
 }
 
 void QAXRWidget::mouseMoveEvent(QMouseEvent *e)
@@ -169,16 +163,9 @@ void QAXRWidget::mouseMoveEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->controller()->root();
-    if (root)
-    {
-        HSSPoint thePoint(e->pos());
-        root->handleEvent(AXR::HSSEventTypeMouseMove, (void*)&thePoint);
-        if (d->document->needsDisplay())
-        {
-            this->update();
-        }
-    }
+    HSSMouseEvent mouseEvent(HSSEventTypeMouseMove, e->pos());
+    d->document->handleEvent(&mouseEvent);
+    update();
 }
 
 void QAXRWidget::mousePressEvent(QMouseEvent *e)
@@ -186,16 +173,9 @@ void QAXRWidget::mousePressEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->controller()->root();
-    if (root)
-    {
-        HSSPoint thePoint(e->pos());
-        root->handleEvent(AXR::HSSEventTypeMouseDown, (void*)&thePoint);
-        if (d->document->needsDisplay())
-        {
-            this->update();
-        }
-    }
+    HSSMouseEvent mouseEvent(HSSEventTypeMouseDown, e->pos());
+    d->document->handleEvent(&mouseEvent);
+    update();
 }
 
 void QAXRWidget::mouseReleaseEvent(QMouseEvent *e)
@@ -203,22 +183,17 @@ void QAXRWidget::mouseReleaseEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->controller()->root();
-    if (root)
-    {
-        HSSPoint thePoint(e->pos());
-        root->handleEvent(AXR::HSSEventTypeMouseUp, (void*)&thePoint);
-        root->handleEvent(AXR::HSSEventTypeClick, (void*)&thePoint);
-        if (d->document->needsDisplay())
-        {
-            this->update();
-        }
-    }
+    HSSMouseEvent upMouseEvent(HSSEventTypeMouseUp, e->pos());
+    HSSMouseEvent clickMouseEvent(HSSEventTypeClick, e->pos());
+    d->document->handleEvent(&upMouseEvent);
+    d->document->handleEvent(&clickMouseEvent);
+    update();
 }
 
 void QAXRWidget::resizeEvent(QResizeEvent *)
 {
     if (!d->document)
         return;
+
     d->document->setNeedsDisplay(true);
 }

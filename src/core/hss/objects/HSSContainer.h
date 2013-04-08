@@ -389,12 +389,10 @@ namespace AXR
 
         /**
          *  Propagates the call to handleEvent() to all children and to the base class implementation.
-         *  @param type     The type of the event that is being sent.
-         *  @param data     A regular pointer to the data that is sent along with the event (coordinates,
-         *                  for example).
-         *  @return Wether it has been handled or not.
+         *  @param event    The event that is being sent.
+         *  @return Whether it has been handled or not.
          */
-        virtual bool handleEvent(HSSEventType type, void* data);
+        virtual bool handleEvent(HSSInputEvent *event);
 
         /**
          *  Stores the pointer to the controller and propagates it to all children.
