@@ -45,6 +45,7 @@
 #include <QPaintEvent>
 #include "AXRController.h"
 #include "AXRDocument.h"
+#include "AXRLoggerManager.h"
 #include "HSSContainer.h"
 #include "HSSMouseEvent.h"
 #include "HSSRect.h"
@@ -104,7 +105,7 @@ void QAXRWidget::setDocument(AXRDocument *document)
 
     d->renderVisitor->setDocument(document);
 
-    if ((d->document = document))
+    if ((d->document = document) && d->document->visitorManager())
     {
         d->document->visitorManager()->addVisitor(d->renderVisitor);
     }
@@ -124,7 +125,7 @@ void QAXRWidget::setBackgroundFillColor(const QColor &color)
 
 void QAXRWidget::paintEvent(QPaintEvent *)
 {
-    if (!d->document)
+    if (!d->document || !d->document->isFileLoaded())
         return;
 
     QRect paintRect = rect();
@@ -135,6 +136,7 @@ void QAXRWidget::paintEvent(QPaintEvent *)
     painter.fillRect(paintRect, d->backgroundFillColor);
 
     // Render the AXR document
+    QImage image;
     QSharedPointer<HSSVisitorManager> visitorManager = d->document->visitorManager();
     if (visitorManager)
     {
@@ -142,7 +144,21 @@ void QAXRWidget::paintEvent(QPaintEvent *)
         d->renderVisitor->setDirtyRect(rect());
         visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);
 
-        painter.drawImage(paintRect.topLeft(), d->renderVisitor->getFinalFrame());
+        image = d->renderVisitor->getFinalFrame();
+    }
+    else
+    {
+        axr_log(LoggerChannelRendering, "Document has no visitor manager");
+    }
+
+    if (!image.isNull() && !image.size().isEmpty())
+    {
+        painter.drawImage(paintRect.topLeft(), image);
+    }
+    else
+    {
+        painter.setFont(QFont("Helvetica Light", 36));
+        painter.drawText(0, 0, width(), height(), Qt::AlignCenter, "Internal rendering error");
     }
 }
 
@@ -194,4 +210,5 @@ void QAXRWidget::resizeEvent(QResizeEvent *)
         return;
 
     d->document->setNeedsDisplay(true);
+    update();
 }
