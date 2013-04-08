@@ -105,7 +105,7 @@ void QAXRWidget::setDocument(AXRDocument *document)
 
     if ((d->document = document))
     {
-        d->document->getVisitorManager()->addVisitor(d->renderVisitor);
+        d->document->visitorManager()->addVisitor(d->renderVisitor);
     }
 
     this->update();
@@ -134,8 +134,8 @@ void QAXRWidget::paintEvent(QPaintEvent *)
     painter.fillRect(paintRect, d->backgroundFillColor);
 
     // Render the AXR document
-    QSharedPointer<HSSVisitorManager> visitorManager = d->document->getVisitorManager();
-    if (visitorManager && d->document->getController()->getRoot())
+    QSharedPointer<HSSVisitorManager> visitorManager = d->document->visitorManager();
+    if (visitorManager && d->document->controller()->getRoot())
     {
         // Render the final image to the screen
         d->renderVisitor->setDirtyRect(rect());
@@ -152,7 +152,7 @@ void QAXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->getController()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->controller()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
@@ -169,7 +169,7 @@ void QAXRWidget::mouseMoveEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->getController()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->controller()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
@@ -186,7 +186,7 @@ void QAXRWidget::mousePressEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->getController()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->controller()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());
@@ -203,7 +203,7 @@ void QAXRWidget::mouseReleaseEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->getController()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->controller()->getRoot();
     if (root)
     {
         HSSPoint thePoint(e->pos());

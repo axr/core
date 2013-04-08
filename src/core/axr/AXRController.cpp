@@ -912,7 +912,7 @@ QSharedPointer<HSSContainer> & AXRController::getRoot()
 void AXRController::setRoot(QSharedPointer<HSSContainer> newRoot)
 {
     d->root = newRoot;
-    QSharedPointer<HSSParser> hssparser = this->document()->getParserHSS();
+    QSharedPointer<HSSParser> hssparser = this->document()->hssParser();
     if (hssparser->currentObjectContextSize() == 0)
     {
         hssparser->currentObjectContextAdd(newRoot);

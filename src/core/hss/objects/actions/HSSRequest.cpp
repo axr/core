@@ -144,7 +144,7 @@ void HSSRequest::fire()
     //if there is no target
     if (this->target->empty())
     {
-        document->loadXMLFile(this->src);
+        document->loadXmlFile(this->src);
     }
     else
     {
@@ -152,7 +152,7 @@ void HSSRequest::fire()
         {
         default:
         {
-            QSharedPointer<AXRBuffer> baseFile = document->getFile();
+            QSharedPointer<AXRBuffer> baseFile = document->file();
             QUrl newFileUrl = this->src;
             if(newFileUrl.scheme() == ""){
                 newFileUrl = baseFile->sourceUrl().resolved(this->src);
@@ -160,7 +160,7 @@ void HSSRequest::fire()
             QSharedPointer<AXRBuffer> newFile;
             try
             {
-                newFile = document->getFile(newFileUrl);
+                newFile = document->createBufferFromUrl(newFileUrl);
             }
             catch (const AXRError &e)
             {
@@ -171,7 +171,7 @@ void HSSRequest::fire()
             {
                 QSharedPointer<HSSContainer> tempNode = QSharedPointer<HSSContainer>(new HSSContainer(ctrlr));
                 ctrlr->currentContext().push(tempNode);
-                bool loadingSuccess = document->getParserXML()->loadFile(newFile);
+                bool loadingSuccess = document->xmlParser()->loadFile(newFile);
                 if (!loadingSuccess)
                 {
                     AXRError("AXRDocument", "Could not load the XML file").raise();

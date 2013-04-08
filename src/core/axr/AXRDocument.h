@@ -90,7 +90,7 @@ namespace AXR
         /**
          * Gets the path to where the HSS framework resource files are stored.
          */
-        virtual AXRString getPathToResources() const;
+        virtual AXRString resourcesPath() const;
 
         /**
          *  After everything is set up, this puts everything in motion:
@@ -105,13 +105,13 @@ namespace AXR
         /**
          *  @return tells wether a file has been loaded or not
          */
-        bool hasLoadedFile();
+        bool isFileLoaded() const;
 
         /**
          *  @return returns the current AXRBuffer that is opened. This can be either
          *  an XML or an HSS file.
          */
-        QSharedPointer<AXRBuffer> getFile();
+        QSharedPointer<AXRBuffer> file() const;
         /**
          *  Sets the current AXRBuffer to be used as the base document.
          *  @param file     The AXRBuffer to store for later use.
@@ -120,13 +120,13 @@ namespace AXR
         /**
          *  @return the path to the directory in which 'file' is stored
          */
-        const QDir & getDirectory() const;
+        QDir directory() const;
         /**
          *  Getter for shared pointer to the AXRController that is managing the
          *  object tree.
          *  @return Shared pointer to the AXRController
          */
-        QSharedPointer<AXRController> getController();
+        QSharedPointer<AXRController> controller() const;
         /**
          *  Setter for the AXRController that is managing the object tree.
          *  @param controller   A shared pointer to the controller.
@@ -136,7 +136,7 @@ namespace AXR
          *  Getter for shared pointer to the HSSVisitorManager which is the dispatcher for all HSSAbstractVisitors.
          *  @return A shared pointer to the HSSVisitorManager
          */
-        QSharedPointer<HSSVisitorManager> getVisitorManager();
+        QSharedPointer<HSSVisitorManager> visitorManager() const;
 
         /**
          *  Setter for the HSSVisitorManager that will be used.
@@ -147,23 +147,23 @@ namespace AXR
          *  Getter for the shared pointer to the XML parser.
          *  @return A shared pointer to the XML parser.
          */
-        QSharedPointer<XMLParser> getParserXML();
+        QSharedPointer<XMLParser> xmlParser() const;
         /**
          *  Setter for the XMLParser that will be used to parse XML files.
          *  @param parser   A shared pointer to the XML parser.
          */
-        void setParserXML(QSharedPointer<XMLParser> parser);
+        void setXmlParser(QSharedPointer<XMLParser> parser);
 
         /**
          *  Getter for the shared pointer to the HSS parser.
          *  @return A shared pointer to the HSS parser.
          */
-        QSharedPointer<HSSParser> getParserHSS();
+        QSharedPointer<HSSParser> hssParser() const;
         /**
          *  Setter for the XMLParser that will be used to parse HSS files.
          *  @param parser   A shared pointer to the HSS parser.
          */
-        void setParserHSS(QSharedPointer<HSSParser> parser);
+        void setHssParser(QSharedPointer<HSSParser> parser);
 
         /**
          *  When a function name in HSS is checked for existence, this tells wether
@@ -171,7 +171,7 @@ namespace AXR
          *  @param name     A string containing the function name.
          *  @return Wether the string is registered as a custom function
          */
-        bool isCustomFunction(AXRString name);
+        bool isCustomFunction(const AXRString &name) const;
 
         /**
          *  Allows for registering a custom function name. @todo explain more
@@ -179,8 +179,8 @@ namespace AXR
          *  @param fn       A pointer to the callback that encapsulates the
          *                  c++ function that will be called.
          */
-        void registerCustomFunction(AXRString name, HSSCallback* fn);
-        void evaluateCustomFunction(AXRString name, void* data);
+        void registerCustomFunction(const AXRString &name, HSSCallback* fn);
+        void evaluateCustomFunction(const AXRString &name, void* data);
 
         // From AXRWrapper
     public:
@@ -189,7 +189,7 @@ namespace AXR
          *  Subclasses should override this method with the OS specific implementation.
          *  @param url  A string containing the url to the file
          */
-        virtual QSharedPointer<AXRBuffer> getFile(const QUrl &resourceUrl);
+        virtual QSharedPointer<AXRBuffer> createBufferFromUrl(const QUrl &resourceUrl);
         virtual bool needsDisplay() const;
         /**
          *  This is to be called when something happens that needs to trigger a redraw.
@@ -203,14 +203,14 @@ namespace AXR
          *  It is used when a HSS file is loaded directly.
          *  @return A shared pointer to the AXRBuffer representation of the basic XML document.
          */
-        QSharedPointer<AXRBuffer> createDummyXML(QUrl hssUrl);
+        QSharedPointer<AXRBuffer> createDummyXml(const QUrl &hssUrl);
         /**
          *  Loads the XML file at the path you provide.
          *  @param  xmlfilepath A string containing the path to the file on the local system.
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadXMLFile(QUrl url);
-        bool loadXMLFile(QSharedPointer<AXRBuffer> buffer);
+        bool loadXmlFile(const QUrl &url);
+        bool loadXmlFile(QSharedPointer<AXRBuffer> buffer);
         /**
          *  Loads the file you provide, and then handles it according to its file extension.
          *  @param  filepath    A string containing the path to the file on the local system, can be
@@ -218,13 +218,13 @@ namespace AXR
          *
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadFileByPath(QUrl url);
+        bool loadFileByPath(const QUrl &url);
         /**
          *  Loads the HSS file at the path you provide.
          *  @param  hssfilepath A string containing the path to the file on the local system.
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadHSSFile(QUrl url);
+        bool loadHssFile(const QUrl &url);
         /**
          *  Reloads the file that is currently loaded.
          *  @return Wether it has been reloaded successfully or not.
@@ -233,21 +233,20 @@ namespace AXR
 
         // Layout stuff from AXRWrapper
     public:
-        bool showLayoutSteps();
+        bool showLayoutSteps() const;
         void setShowLayoutSteps(bool value);
         void previousLayoutStep();
         void nextLayoutStep();
         void nextLayoutTick();
         void resetLayoutTicks();
-        bool layoutStepDone();
+        bool layoutStepDone() const;
         void nextLayoutChild();
         void resetLayoutChild();
-        bool layoutChildDone();
+        bool layoutChildDone() const;
         void breakIfNeeded();
 
-        int getWindowWidth();
-
-        int getWindowHeight();
+        int windowWidth() const;
+        int windowHeight() const;
 
         void setWindowSize(int width, int height);
 

@@ -648,10 +648,10 @@ void HSSDisplayObject::readDefinitionObjects()
         {
             AXRController * controller = this->getController();
             //width
-            QSharedPointer<HSSNumberConstant> newDWidth(new HSSNumberConstant(controller->document()->getWindowWidth(), controller));
+            QSharedPointer<HSSNumberConstant> newDWidth(new HSSNumberConstant(controller->document()->windowWidth(), controller));
             this->setDWidth(newDWidth);
             //height
-            QSharedPointer<HSSNumberConstant> newDHeight(new HSSNumberConstant(controller->document()->getWindowHeight(), controller));
+            QSharedPointer<HSSNumberConstant> newDHeight(new HSSNumberConstant(controller->document()->windowHeight(), controller));
             this->setDHeight(newDHeight);
         }
 

@@ -100,8 +100,8 @@ AXRDocument::AXRDocument()
 
     QSharedPointer<AXRController> ctrlr = QSharedPointer<AXRController>(new AXRController(this));
     this->setController(ctrlr);
-    this->setParserXML(QSharedPointer<XMLParser>(new XMLParser(ctrlr.data())));
-    this->setParserHSS(QSharedPointer<HSSParser>(new HSSParser(ctrlr.data())));
+    this->setXmlParser(QSharedPointer<XMLParser>(new XMLParser(ctrlr.data())));
+    this->setHssParser(QSharedPointer<HSSParser>(new HSSParser(ctrlr.data())));
     this->setVisitorManager(QSharedPointer<HSSVisitorManager>(new HSSVisitorManager(ctrlr.data())));
 }
 
@@ -111,7 +111,7 @@ AXRDocument::~AXRDocument()
     delete d;
 }
 
-AXRString AXRDocument::getPathToResources() const
+AXRString AXRDocument::resourcesPath() const
 {
     // TODO: it's best to do this in a different way entirely... the library
     // shouldn't be using the client process's directory to determine where
@@ -155,7 +155,7 @@ void AXRDocument::run()
             QSharedPointer<AXRBuffer> hssfile;
             try
             {
-                hssfile = this->getFile(loadSheets[i]);
+                hssfile = this->createBufferFromUrl(loadSheets[i]);
             }
             catch (const AXRError &e)
             {
@@ -197,12 +197,12 @@ void AXRDocument::reset()
     d->file.clear();
 }
 
-bool AXRDocument::hasLoadedFile()
+bool AXRDocument::isFileLoaded() const
 {
     return d->hasLoadedFile;
 }
 
-QSharedPointer<AXRController> AXRDocument::getController()
+QSharedPointer<AXRController> AXRDocument::controller() const
 {
     return d->controller;
 }
@@ -212,7 +212,7 @@ void AXRDocument::setController(QSharedPointer<AXRController> controller)
     d->controller = controller;
 }
 
-QSharedPointer<HSSVisitorManager> AXRDocument::getVisitorManager()
+QSharedPointer<HSSVisitorManager> AXRDocument::visitorManager() const
 {
     return d->visitorManager;
 }
@@ -222,7 +222,7 @@ void AXRDocument::setVisitorManager(QSharedPointer<HSSVisitorManager> visitorMan
     d->visitorManager = visitorManager;
 }
 
-QSharedPointer<AXRBuffer> AXRDocument::getFile()
+QSharedPointer<AXRBuffer> AXRDocument::file() const
 {
     return d->file;
 }
@@ -234,42 +234,42 @@ void AXRDocument::setFile(QSharedPointer<AXRBuffer> file)
     d->directory = QDir(QFileInfo(filePath.toLocalFile()).canonicalPath());
 }
 
-const QDir & AXRDocument::getDirectory() const
+QDir AXRDocument::directory() const
 {
     return d->directory;
 }
 
-QSharedPointer<XMLParser> AXRDocument::getParserXML()
+QSharedPointer<XMLParser> AXRDocument::xmlParser() const
 {
     return d->parserXML;
 }
 
-void AXRDocument::setParserXML(QSharedPointer<XMLParser> parser)
+void AXRDocument::setXmlParser(QSharedPointer<XMLParser> parser)
 {
     d->parserXML = parser;
 }
 
-QSharedPointer<HSSParser> AXRDocument::getParserHSS()
+QSharedPointer<HSSParser> AXRDocument::hssParser() const
 {
     return d->parserHSS;
 }
 
-void AXRDocument::setParserHSS(QSharedPointer<HSSParser> parser)
+void AXRDocument::setHssParser(QSharedPointer<HSSParser> parser)
 {
     d->parserHSS = parser;
 }
 
-bool AXRDocument::isCustomFunction(AXRString name)
+bool AXRDocument::isCustomFunction(const AXRString &name) const
 {
     return d->customFunctions.contains(name);
 }
 
-void AXRDocument::registerCustomFunction(AXRString name, HSSCallback* fn)
+void AXRDocument::registerCustomFunction(const AXRString &name, HSSCallback* fn)
 {
     d->customFunctions[name] = fn;
 }
 
-void AXRDocument::evaluateCustomFunction(AXRString name, void* data)
+void AXRDocument::evaluateCustomFunction(const AXRString &name, void* data)
 {
     if (this->isCustomFunction(name))
     {
@@ -319,7 +319,7 @@ QString sanitizeRelativePath(const QString &path)
     return pathParts.join(QDir::separator());
 }
 
-QSharedPointer<AXRBuffer> AXRDocument::getFile(const QUrl &resourceUrl)
+QSharedPointer<AXRBuffer> AXRDocument::createBufferFromUrl(const QUrl &resourceUrl)
 {
     if (!resourceUrl.isValid())
     {
@@ -331,7 +331,7 @@ QSharedPointer<AXRBuffer> AXRDocument::getFile(const QUrl &resourceUrl)
     QFileInfo localResource;
     if (resourceUrl.scheme() == "axr")
     {
-        localResource = QFileInfo(this->getPathToResources(), sanitizeRelativePath(resourceUrl.path()));
+        localResource = QFileInfo(this->resourcesPath(), sanitizeRelativePath(resourceUrl.path()));
     }
     else if (resourceUrl.scheme() == "file")
     {
@@ -346,12 +346,12 @@ QSharedPointer<AXRBuffer> AXRDocument::getFile(const QUrl &resourceUrl)
     }
     else if (resourceUrl.scheme() == "")
     {
-        QString fileScheme = this->getFile()->sourceUrl().scheme();
+        QString fileScheme = this->file()->sourceUrl().scheme();
         if (fileScheme == "file")
         {
             // TODO: this needs to be sanitized in another way, we can't break the usage of .. in
             // relative paths for legal uses. We need something like a cross-origin policy or similar.
-            localResource = QFileInfo(this->getDirectory(), sanitizeRelativePath(resourceUrl.path()));
+            localResource = QFileInfo(this->directory(), sanitizeRelativePath(resourceUrl.path()));
         }
         else if (fileScheme == "http" || fileScheme == "https")
         {
@@ -393,7 +393,7 @@ void AXRDocument::setNeedsDisplay(bool newValue)
     d->needsDisplay = newValue;
 }
 
-QSharedPointer<AXRBuffer> AXRDocument::createDummyXML(QUrl hssUrl)
+QSharedPointer<AXRBuffer> AXRDocument::createDummyXml(const QUrl &hssUrl)
 {
     axr_log(LoggerChannelOverview, "AXRDocument: creating dummy XML file for HSS file " + hssUrl.toString());
 
@@ -409,13 +409,14 @@ QSharedPointer<AXRBuffer> AXRDocument::createDummyXML(QUrl hssUrl)
     }
 }
 
-bool AXRDocument::loadFileByPath(QUrl url)
+bool AXRDocument::loadFileByPath(const QUrl &url)
 {
+    QUrl loadUrl = url;
     if (url.isRelative())
     {
         if (url.isLocalFile())
         {
-            url = QUrl::fromLocalFile(QFileInfo(url.path()).canonicalFilePath());
+            loadUrl = QUrl::fromLocalFile(QFileInfo(url.path()).canonicalFilePath());
         }
         else
         {
@@ -430,11 +431,11 @@ bool AXRDocument::loadFileByPath(QUrl url)
     if (pathInfo.suffix() == "xml")
     {
         d->isHSSOnly = false;
-        return this->loadXMLFile(url);
+        return this->loadXmlFile(loadUrl);
     }
     else if (pathInfo.suffix() == "hss")
     {
-        return this->loadHSSFile(url);
+        return this->loadHssFile(loadUrl);
     }
     else
     {
@@ -443,7 +444,7 @@ bool AXRDocument::loadFileByPath(QUrl url)
     }
 }
 
-bool AXRDocument::loadXMLFile(QUrl url)
+bool AXRDocument::loadXmlFile(const QUrl &url)
 {
     axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening XML document: %1").arg(url.toString()));
 
@@ -455,8 +456,8 @@ bool AXRDocument::loadXMLFile(QUrl url)
 
     try
     {
-        QSharedPointer<AXRBuffer> theFile = this->getFile(url);
-        if (this->getFile())
+        QSharedPointer<AXRBuffer> theFile = this->createBufferFromUrl(url);
+        if (this->file())
         {
             this->reset();
         }
@@ -482,7 +483,7 @@ bool AXRDocument::loadXMLFile(QUrl url)
     return true;
 }
 
-bool AXRDocument::loadXMLFile(QSharedPointer<AXRBuffer> buffer)
+bool AXRDocument::loadXmlFile(QSharedPointer<AXRBuffer> buffer)
 {
     axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening XML document from buffer"));
 
@@ -492,7 +493,7 @@ bool AXRDocument::loadXMLFile(QSharedPointer<AXRBuffer> buffer)
     d->currentLayoutTick = 0;
     d->currentLayoutChild = 0;
 
-    if (this->getFile())
+    if (this->file())
     {
         this->reset();
     }
@@ -527,13 +528,13 @@ bool AXRDocument::reload()
     d->currentLayoutStep = 0;
     d->currentLayoutTick = 0;
     d->currentLayoutChild = 0;
-    this->getController()->getRoot()->recursiveResetLayout();
+    this->controller()->getRoot()->recursiveResetLayout();
 
     if (!d->isHSSOnly)
     {
-        if (this->getFile())
+        if (this->file())
         {
-            return this->loadXMLFile(this->getFile()->sourceUrl());
+            return this->loadXmlFile(this->file()->sourceUrl());
         }
         else
         {
@@ -543,11 +544,11 @@ bool AXRDocument::reload()
     }
     else
     {
-        return this->loadHSSFile(this->getController()->loadSheetsGet(0));
+        return this->loadHssFile(this->controller()->loadSheetsGet(0));
     }
 }
 
-bool AXRDocument::loadHSSFile(QUrl url)
+bool AXRDocument::loadHssFile(const QUrl &url)
 {
     axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening HSS document: %1").arg(url.toString()));
 
@@ -557,12 +558,12 @@ bool AXRDocument::loadHSSFile(QUrl url)
     d->currentLayoutTick = 0;
     d->currentLayoutChild = 0;
 
-    if (this->getFile())
+    if (this->file())
     {
         this->reset();
     }
 
-    this->setFile(this->createDummyXML(url));
+    this->setFile(this->createDummyXml(url));
     this->run();
     this->setNeedsDisplay(true);
 
@@ -574,7 +575,7 @@ void AXRDocument::setShowLayoutSteps(bool value)
     d->showLayoutSteps = value;
 }
 
-bool AXRDocument::showLayoutSteps()
+bool AXRDocument::showLayoutSteps() const
 {
     return d->showLayoutSteps;
 }
@@ -587,7 +588,7 @@ void AXRDocument::previousLayoutStep()
     }
     d->currentLayoutTick = 0;
     d->currentLayoutChild = 0;
-    this->getController()->getRoot()->recursiveResetLayout();
+    this->controller()->getRoot()->recursiveResetLayout();
     this->setNeedsDisplay(true);
 }
 
@@ -596,7 +597,7 @@ void AXRDocument::nextLayoutStep()
     d->currentLayoutStep += 1;
     d->currentLayoutTick = 0;
     d->currentLayoutChild = 0;
-    this->getController()->getRoot()->recursiveResetLayout();
+    this->controller()->getRoot()->recursiveResetLayout();
     this->setNeedsDisplay(true);
 }
 
@@ -610,7 +611,7 @@ void AXRDocument::resetLayoutTicks()
     d->currentLayoutTick = 0;
 }
 
-bool AXRDocument::layoutStepDone()
+bool AXRDocument::layoutStepDone() const
 {
     return d->currentLayoutTick >= d->currentLayoutStep;
 }
@@ -625,12 +626,12 @@ void AXRDocument::breakIfNeeded()
     axr_log(LoggerChannelLayout, AXRString("currentLayoutTick = %1, currentLayoutStep = %2, %3").arg(d->currentLayoutTick).arg(d->currentLayoutStep).arg(breakvar));
 }
 
-int AXRDocument::getWindowWidth()
+int AXRDocument::windowWidth() const
 {
     return d->windowWidth;
 }
 
-int AXRDocument::getWindowHeight()
+int AXRDocument::windowHeight() const
 {
     return d->windowHeight;
 }
@@ -651,7 +652,7 @@ void AXRDocument::resetLayoutChild()
     d->currentLayoutChild = 0;
 }
 
-bool AXRDocument::layoutChildDone()
+bool AXRDocument::layoutChildDone() const
 {
     return d->currentLayoutTick >= d->currentLayoutChild + 1;
 }

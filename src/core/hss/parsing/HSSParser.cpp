@@ -277,11 +277,11 @@ bool HSSParser::readNextStatement()
                 QUrl url(theInstr->getValue());
                 if (url.isRelative())
                 {
-                    theFile = controller->document()->getFile(currentFile->sourceUrl().resolved(url));
+                    theFile = controller->document()->createBufferFromUrl(currentFile->sourceUrl().resolved(url));
                 }
                 else
                 {
-                    theFile = controller->document()->getFile(url);
+                    theFile = controller->document()->createBufferFromUrl(url);
                 }
 
                 if (theFile)
