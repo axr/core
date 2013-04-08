@@ -335,8 +335,18 @@ QSharedPointer<AXRBuffer> AXRDocument::createBufferFromUrl(const QUrl &resourceU
     }
     else if (resourceUrl.scheme() == "file")
     {
+        // This is a workaround for a QUrl bug where QUrl::toLocalFile()
+        // for the URL file://localhost/Users/bob/example.xml => //localhost/Users/bob/example.xml,
+        // which cannot be opened directly as a file; we need to handle this centrally elsewhere
+        // If the host isn't localhost the we'll still get a non-loadable file path but at least
+        // we know that file://localhost/ is almost always going to be equal to file:///
+        // We should still perhaps look at alternative ways of handling this issue as it seems hacky
+        QUrl fixedUrl = resourceUrl;
+        if (resourceUrl.host() == "localhost")
+            fixedUrl.setHost(QString());
+
         // TODO: Make sure this only unconditionally loads file URLs when appropriate
-        localResource = QFileInfo(resourceUrl.toLocalFile());
+        localResource = QFileInfo(fixedUrl.toLocalFile());
     }
     else if (resourceUrl.scheme() == "http" || resourceUrl.scheme() == "https")
     {
@@ -411,18 +421,10 @@ QSharedPointer<AXRBuffer> AXRDocument::createDummyXml(const QUrl &hssUrl)
 
 bool AXRDocument::loadFileByPath(const QUrl &url)
 {
-    QUrl loadUrl = url;
-    if (url.isRelative())
+    if (url.isRelative() && !url.isLocalFile())
     {
-        if (url.isLocalFile())
-        {
-            loadUrl = QUrl::fromLocalFile(QFileInfo(url.path()).canonicalFilePath());
-        }
-        else
-        {
-            AXRError("AXRDocument", "Could not load relative URL as main file", url).raise();
-            return false;
-        }
+        AXRError("AXRDocument", "Could not load relative URL as main file", url).raise();
+        return false;
     }
 
     axr_log(LoggerChannelOverview, "AXRDocument: loading file " + url.toString());
@@ -431,11 +433,11 @@ bool AXRDocument::loadFileByPath(const QUrl &url)
     if (pathInfo.suffix() == "xml")
     {
         d->isHSSOnly = false;
-        return this->loadXmlFile(loadUrl);
+        return this->loadXmlFile(url);
     }
     else if (pathInfo.suffix() == "hss")
     {
-        return this->loadHssFile(loadUrl);
+        return this->loadHssFile(url);
     }
     else
     {
