@@ -136,7 +136,7 @@ void QAXRWidget::paintEvent(QPaintEvent *)
 
     // Render the AXR document
     QSharedPointer<HSSVisitorManager> visitorManager = d->document->visitorManager();
-    if (visitorManager && d->document->controller()->root())
+    if (visitorManager)
     {
         // Render the final image to the screen
         d->renderVisitor->setDirtyRect(rect());

@@ -108,7 +108,7 @@ using namespace AXR;
 
     // Render the AXR document
     QSharedPointer<HSSVisitorManager> visitorManager = [document documentObject]->visitorManager();
-    if (visitorManager && [document documentObject]->controller()->root())
+    if (visitorManager)
     {
         // Render the final image to the screen
         renderVisitor->setDirtyRect([self bounds]);
