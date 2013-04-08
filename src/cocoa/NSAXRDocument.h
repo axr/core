@@ -51,10 +51,13 @@ struct AXRDocument; typedef struct AXRDocument AXRDocument;
 #endif
 
 @interface NSAXRDocument : NSObject
-
-@property (readonly) AXRDocument *documentObject;
+{
+@private
+    AXRDocument *doc;
+}
 
 - (id)init;
 - (id)initWithDocument:(AXRDocument *)document;
+- (AXRDocument *)documentObject;
 
 @end

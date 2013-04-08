@@ -49,7 +49,10 @@
 #import "HSSEvent.h"
 #import "HSSMouseEvent.h"
 #import "HSSPoint.h"
+#import "HSSRect.h"
+#import "HSSRenderer.h"
 #import "HSSTypeEnums.h"
+#import "HSSVisitorManager.h"
 #import "NSAXRDocument.h"
 #import "NSAXRView.h"
 
@@ -71,6 +74,7 @@ using namespace AXR;
     if (self)
     {
         document = NULL;
+        renderVisitor = new HSSRenderer();
     }
 
     return self;
@@ -78,6 +82,7 @@ using namespace AXR;
 
 - (void)dealloc
 {
+    delete renderVisitor;
     [super dealloc];
 }
 
@@ -88,21 +93,28 @@ using namespace AXR;
 
 - (void)drawRect:(NSRect)dirtyRect
 {
+    if (!document)
+    {
+        [super drawRect:dirtyRect];
+        return;
+    }
+
     NSRect paintRect = [self bounds];
+    [document documentObject]->setWindowSize(self.bounds.size.width, self.bounds.size.height);
 
     // Fill the view with our background color...
     [[NSColor whiteColor] set];
     NSRectFill(paintRect);
 
-    if (!document)
-        return;
-
-    AXR::AXRRender::p renderer = [document documentObject]->getRender();
-    if (renderer && [document documentObject]->getController()->getRoot())
+    // Render the AXR document
+    QSharedPointer<HSSVisitorManager> visitorManager = [document documentObject]->visitorManager();
+    if (visitorManager && [document documentObject]->controller()->root())
     {
-        // Render the final composite on to the screen
-        document->drawInRectWithBounds(dirtyRect, paintRect);
-        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, QPixmap::fromImage(renderer->surface()).toMacCGImageRef());
+        // Render the final image to the screen
+        renderVisitor->setDirtyRect([self bounds]);
+        visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);
+
+        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, QPixmap::fromImage(*renderVisitor->getFinalFrame()).toMacCGImageRef());
     }
 }
 

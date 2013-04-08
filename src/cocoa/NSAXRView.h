@@ -45,6 +45,13 @@
 
 @class NSAXRDocument;
 
+#ifdef __cplusplus
+namespace AXR { class HSSRenderer; }
+using namespace AXR;
+#else
+struct HSSRenderer; typedef struct HSSRenderer HSSRenderer;
+#endif
+
 /**
  *  @brief (OS X only) This is a NSView subclass, for using inside a window in
  *  Apple's Cocoa framework.
@@ -53,6 +60,7 @@
 {
 @private
     NSAXRDocument *document;
+    HSSRenderer *renderVisitor;
 }
 
 /**

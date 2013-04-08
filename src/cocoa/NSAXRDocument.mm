@@ -46,28 +46,35 @@
 
 @implementation NSAXRDocument
 
-@synthesize documentObject;
-
 - (id)init
 {
-    self = [super init];
-    if (self)
+    if (self = [super init])
     {
-        [self setDocumentObject:new AXRDocument()];
-        [documentObject retain];
+        doc = new AXRDocument();
     }
 
-    return;
+    return self;
 }
 
 - (id)initWithDocument:(AXRDocument *)document
 {
-    [self setDocumentObject:document];
+    if (self = [super init])
+    {
+        doc = document;
+    }
+
+    return self;
 }
 
 - (void)dealloc
 {
-    [documentObject release];
+    delete doc;
+    [super dealloc];
+}
+
+- (AXRDocument *)documentObject
+{
+    return doc;
 }
 
 @end
