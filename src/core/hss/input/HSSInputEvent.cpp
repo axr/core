@@ -49,7 +49,7 @@ namespace AXR
 {
     class HSSInputEventPrivate
     {
-        friend HSSInputEvent;
+        friend class HSSInputEvent;
         HSSEventType type;
     };
 }
