@@ -254,7 +254,7 @@ void HSSBorder::setDPosition(QSharedPointer<HSSParserNode> value)
             try
             {
                 QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-                QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+                QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
                 this->setDPosition(objdef);
                 valid = true;
 
@@ -416,7 +416,7 @@ void HSSBorder::addDSegments(QSharedPointer<HSSParserNode> value)
             try
             {
                 QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-                this->addDSegments(this->getController()->objectTreeGet(objname->getValue()));
+                this->addDSegments(this->getController()->objectTreeNodeNamed(objname->getValue()));
                 valid = true;
             }
             catch (const AXRError &e)

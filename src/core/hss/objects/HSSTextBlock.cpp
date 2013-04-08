@@ -386,7 +386,7 @@ void HSSTextBlock::setDTransform(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             this->setDTransform(objdef);
             valid = true;
 
@@ -509,7 +509,7 @@ void HSSTextBlock::setDTextAlign(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             this->setDTextAlign(objdef);
             valid = true;
         }
@@ -660,7 +660,7 @@ void HSSTextBlock::setDText(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             this->setDText(objdef);
             valid = true;
 

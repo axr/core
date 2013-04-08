@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include <QStack>
 #include "AXRBuffer.h"
 #include "AXRController.h"
 #include "AXRDocument.h"

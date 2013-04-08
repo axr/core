@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include <cmath>
+#include <QStack>
 #include <QVariant>
 #include "AXRController.h"
 #include "AXRDocument.h"
@@ -501,7 +502,7 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
 
             if (this->isA(HSSObjectTypeContainer))
             {
@@ -858,7 +859,7 @@ void HSSDisplayObject::setDWidth(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             this->setDWidth(objdef);
             valid = true;
             needsPostProcess = false;
@@ -1078,7 +1079,7 @@ void HSSDisplayObject::setDHeight(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             this->setDHeight(objdef);
             valid = true;
             needsPostProcess = false;
@@ -1546,7 +1547,7 @@ void HSSDisplayObject::setDFlow(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             this->setDFlow(objdef);
             valid = true;
 
@@ -1696,7 +1697,7 @@ void HSSDisplayObject::setDContained(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             this->setDContained(objdef);
             valid = true;
 
@@ -2144,7 +2145,7 @@ void HSSDisplayObject::addDBackground(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            this->addDBackground(this->getController()->objectTreeGet(objname->getValue()));
+            this->addDBackground(this->getController()->objectTreeNodeNamed(objname->getValue()));
             valid = true;
         }
         catch (const AXRError &e)
@@ -2306,7 +2307,7 @@ void HSSDisplayObject::addDContent(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            this->addDContent(this->getController()->objectTreeGet(objname->getValue()));
+            this->addDContent(this->getController()->objectTreeNodeNamed(objname->getValue()));
             valid = true;
 
         }
@@ -2492,7 +2493,7 @@ void HSSDisplayObject::addDFont(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
@@ -2695,7 +2696,7 @@ void HSSDisplayObject::addDOn(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            this->addDOn(this->getController()->objectTreeGet(objname->getValue()));
+            this->addDOn(this->getController()->objectTreeNodeNamed(objname->getValue()));
             valid = true;
 
         }
@@ -2891,7 +2892,7 @@ void HSSDisplayObject::addDMargin(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
@@ -3079,7 +3080,7 @@ void HSSDisplayObject::addDPadding(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {
@@ -3265,7 +3266,7 @@ void HSSDisplayObject::addDBorder(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
             {

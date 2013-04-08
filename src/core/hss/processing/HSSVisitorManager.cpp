@@ -77,13 +77,13 @@ void HSSVisitorManager::addVisitor(HSSAbstractVisitor *visitor)
 
 void HSSVisitorManager::runVisitors()
 {
-    QSharedPointer<HSSDisplayObject> root = d->controller->getRoot();
+    QSharedPointer<HSSDisplayObject> root = d->controller->root();
     runVisitors(root, HSSAbstractVisitor::VisitorFilterAll, true);
 }
 
 void HSSVisitorManager::runVisitors(HSSAbstractVisitor::VisitorFilterFlags filterFlags)
 {
-    QSharedPointer<HSSContainer> root = d->controller->getRoot();
+    QSharedPointer<HSSContainer> root = d->controller->root();
     runVisitors(root, filterFlags, true);
 }
 
@@ -115,7 +115,7 @@ void HSSVisitorManager::reset()
 
 void HSSVisitorManager::resetVisitors()
 {
-    QSharedPointer<HSSContainer> root = d->controller->getRoot();
+    QSharedPointer<HSSContainer> root = d->controller->root();
     if (root)
     {
         for (std::vector<HSSAbstractVisitor*>::iterator it = d->visitors.begin(); it != d->visitors.end(); ++it)

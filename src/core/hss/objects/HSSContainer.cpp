@@ -2706,7 +2706,7 @@ void HSSContainer::setDShape(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             objdef->setThisObj(this->shared_from_this());
             QSharedPointer<HSSContainer> parent = this->getParent();
             if (parent)
@@ -2832,7 +2832,7 @@ void HSSContainer::setDTextAlign(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             this->setDTextAlign(objdef);
             valid = true;
         }

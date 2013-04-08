@@ -135,7 +135,7 @@ void QAXRWidget::paintEvent(QPaintEvent *)
 
     // Render the AXR document
     QSharedPointer<HSSVisitorManager> visitorManager = d->document->visitorManager();
-    if (visitorManager && d->document->controller()->getRoot())
+    if (visitorManager && d->document->controller()->root())
     {
         // Render the final image to the screen
         d->renderVisitor->setDirtyRect(rect());
@@ -152,7 +152,7 @@ void QAXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->controller()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->controller()->root();
     if (root)
     {
         HSSPoint thePoint(e->pos());
@@ -169,7 +169,7 @@ void QAXRWidget::mouseMoveEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->controller()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->controller()->root();
     if (root)
     {
         HSSPoint thePoint(e->pos());
@@ -186,7 +186,7 @@ void QAXRWidget::mousePressEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->controller()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->controller()->root();
     if (root)
     {
         HSSPoint thePoint(e->pos());
@@ -203,7 +203,7 @@ void QAXRWidget::mouseReleaseEvent(QMouseEvent *e)
     if (!d->document)
         return;
 
-    QSharedPointer<HSSContainer> root = d->document->controller()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->controller()->root();
     if (root)
     {
         HSSPoint thePoint(e->pos());

@@ -44,12 +44,12 @@
 #ifndef AXRCONTROLLER_H
 #define AXRCONTROLLER_H
 
-#include <stack>
 #include <vector>
 #include "AXRGlobal.h"
 #include "HSSTypeEnums.h"
 
 template <class T> class QSharedPointer;
+template <class T> class QStack;
 
 namespace AXR
 {
@@ -94,7 +94,7 @@ namespace AXR
         /**
          *  @return A textual representation of itself, as a string.
          */
-        virtual AXRString toString();
+        AXRString toString() const;
 
         /**
          *  Use this to clean up and start from fresh (e.g. when reloading a file).
@@ -104,7 +104,7 @@ namespace AXR
         /**
          *  @return A shared pointer to the root element.
          */
-        QSharedPointer<HSSContainer> & getRoot();
+        QSharedPointer<HSSContainer>& root() const;
 
         /**
          *  Sets the element you pass in as the new root element.
@@ -119,7 +119,7 @@ namespace AXR
          *
          *  @param elementName  A string containing the name of the element we just entered.
          */
-        void enterElement(AXRString elementName);
+        void enterElement(const AXRString &elementName);
 
         /**
          *  This method is called by the XML parser when it reads an attribute of the current element.
@@ -127,7 +127,7 @@ namespace AXR
          *  @param  name    A string containing the name of the attribute.
          *  @param  value   A string containing the value of the attribute.
          */
-        void addAttribute(AXRString name, AXRString value);
+        void addAttribute(const AXRString &name, const AXRString &value);
 
         /**
          *  This method is called by the XML parser when it reads the content text of the
@@ -135,7 +135,7 @@ namespace AXR
          *
          *  @param  text    A string containing the content text for the current element.
          */
-        void setContentText(AXRString text);
+        void setContentText(const AXRString &text);
 
         /**
          *  When content text is read in chunks, this allows to append the text to the
@@ -143,7 +143,7 @@ namespace AXR
          *
          *  @param text     A string containing content text for the current element.
          */
-        void appendContentText(AXRString text);
+        void appendContentText(const AXRString &text);
 
         /**
          *  This method is called by the XML parser when it reads a closing tag.
@@ -165,14 +165,14 @@ namespace AXR
          *
          *  @param newObject A shared pointer to an object definition.
          */
-        void objectTreeAdd(QSharedPointer<HSSObjectDefinition> & newObject);
+        void addObjectTreeNode(const QSharedPointer<HSSObjectDefinition> &newObject);
 
         /**
          *  Remove the object at given index from the object tree.
          *
          *  @param index    An unsigned int containing the index of the object to be removed.
          */
-        void objectTreeRemove(off_t index);
+        void removeObjectTreeNodeAt(int index);
 
         /**
          *  Returns an object from the object tree by index.
@@ -180,7 +180,7 @@ namespace AXR
          *  @param index    An unsigned int containing the index of the object to be returned.
          *  @return         The object definitionat the index. May be an empty pointer if not found.
          */
-        QSharedPointer<HSSObjectDefinition> & objectTreeGet(size_t index);
+        QSharedPointer<HSSObjectDefinition> objectTreeNodeAt(int index);
 
         /**
          *  Returns an object from the object tree by name.
@@ -188,21 +188,21 @@ namespace AXR
          *  @param name     A string containing the name of the object to be returned.
          *  @return         The object definitionat with that name. May be an empty pointer if not found.
          */
-        QSharedPointer<HSSObjectDefinition> & objectTreeGet(AXRString name);
+        QSharedPointer<HSSObjectDefinition> objectTreeNodeNamed(const AXRString &name);
 
         /**
          *  Adds an entry in the list of sheets to be loaded.
          *
          *  @param sheet    A string containing the file name of the stylesheet
          */
-        void loadSheetsAdd(QUrl url);
+        void addStyleSheetUrl(const QUrl &url);
 
         /**
          *  Removes an entry in the list of sheets to be loaded.
          *
          *  @param index    An unsigned int containing the index of the sheet to be removed.
          */
-        void loadSheetsRemove(off_t index);
+        void removeStyleSheetUrlAt(int index);
 
         /**
          *  Returns an entry from the list of sheets to be loaded.
@@ -210,63 +210,63 @@ namespace AXR
          *  @param index    An unsigned int containing the index of the sheet to be removed.
          *  @return         The sheet at that index.
          */
-        QUrl loadSheetsGet(size_t index);
+        QUrl styleSheetUrlAt(int index) const;
 
         /**
          *  Returns all entries from the list of sheets to be loaded.
          *
          *  @return         The list of sheets to be loaded.
          */
-        const std::vector<QUrl> loadSheetsGet() const;
-
-        /**
-         *  Replaces the whole parser tree with what you give.
-         *
-         *  @param newTree  A vector of shared pointers to parser nodes, representing the new tree.
-         */
-        void setParserTree(std::vector<QSharedPointer<HSSParserNode> > newTree);
+        const QList<QUrl>& styleSheetUrls() const;
 
         /**
          *  Returns the whole parser tree.
          *
          *  @return         A vector of shared pointers to parser nodes, representing the tree.
          */
-        const std::vector<QSharedPointer<HSSParserNode> > getParserTree() const;
+        const QList<QSharedPointer<HSSParserNode> >& parserTree() const;
 
+        /**
+         *  Replaces the whole parser tree with what you give.
+         *
+         *  @param newTree  A vector of shared pointers to parser nodes, representing the new tree.
+         */
+        void setParserTree(const QList<QSharedPointer<HSSParserNode> > &newTree);
+        
         /**
          *  Appends the parser node to the parser tree.
          *
          *  @param node     A shared pointer to node to be added.
          */
-        void parserTreeAdd(QSharedPointer<HSSParserNode> node);
+        void addParserTreeNode(QSharedPointer<HSSParserNode> node);
 
         /**
          *  Finds the node in the parser tree and removes it.
          *
          *  @param node     A shared pointer to node to be removed.
          */
-        void parserTreeRemove(QSharedPointer<HSSParserNode> node);
+        void removeParserTreeNode(QSharedPointer<HSSParserNode> node);
 
         /**
          *  Returns the list of rules.
          *
          *  @return         A vector of shared pointers to rules.
          */
-        const std::vector<QSharedPointer<HSSRule> >& getRules() const;
+        const QList<QSharedPointer<HSSRule> >& rules() const;
 
         /**
          *  Adds an entry to the list of rules.
          *
          *  @param rule     A shared pointer to the rule.
          */
-        void rulesAdd(QSharedPointer<HSSRule> & rule);
+        void addRule(QSharedPointer<HSSRule> &rule);
 
         /**
          *  Removes an entry from the list of rules.
          *
          *  @param index    An unsigned int containing the index of the rule to be removed.
          */
-        void rulesRemove(off_t index);
+        void removeRuleAt(int index);
 
         /**
          *  Returns the rule at given index.
@@ -274,14 +274,14 @@ namespace AXR
          *  @param index    An unsigned int containing the index of the rule to be returned.
          *  @return         A shared pointer to the rule. May be an empty pointer if not found.
          */
-        QSharedPointer<HSSRule> & rulesGet(size_t index);
+        QSharedPointer<HSSRule> ruleAt(int index);
 
         /**
          *  Gives the size of the list of rules.
          *
          *  @return         The number of entries in the list of rules.
          */
-        size_t rulesSize() const;
+        int ruleCount() const;
 
         /**
          *  Set the given selector chain as the current one. It will set the new current chain size,
@@ -423,11 +423,11 @@ namespace AXR
 
         // TODO: All we ever do is push and pop things to and from this... should we provide
         // methods for doing that rather than providing a list reference?
-        std::stack<QSharedPointer<HSSContainer> >& currentContext() const;
+        QStack<QSharedPointer<HSSContainer> >& currentContext() const;
 
     protected:
         void readNextSelectorNode();
-        bool isAtEndOfSelector();
+        bool isAtEndOfSelector() const;
 
     private:
         AXRControllerPrivate *const d;

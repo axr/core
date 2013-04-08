@@ -170,9 +170,9 @@ bool XMLParser::loadFile(QSharedPointer<AXRBuffer> file)
                         }
 
                         if (sheetUrl.isRelative())
-                            controller->loadSheetsAdd(file->sourceUrl().resolved(sheetUrl));
+                            controller->addStyleSheetUrl(file->sourceUrl().resolved(sheetUrl));
                         else
-                            controller->loadSheetsAdd(sheetUrl);
+                            controller->addStyleSheetUrl(sheetUrl);
                     }
                     else
                     {

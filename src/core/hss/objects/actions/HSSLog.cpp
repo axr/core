@@ -205,7 +205,7 @@ void HSSLog::fire()
             try
             {
                 QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (this->dValue);
-                QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+                QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
                 objdef->setThisObj(this->getThisObj());
                 objdef->setScope(this->scope);
                 objdef->apply();

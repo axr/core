@@ -444,7 +444,7 @@ void HSSRenderer::initializeVisit()
 {
     axr_log(LoggerChannelRendering, "INITIALIZE_RENDER");
     //prepare values
-    QSharedPointer<HSSContainer> root = d->document->controller()->getRoot();
+    QSharedPointer<HSSContainer> root = d->document->controller()->root();
 
     if (root)
     {

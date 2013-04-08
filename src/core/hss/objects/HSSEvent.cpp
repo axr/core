@@ -213,7 +213,7 @@ void HSSEvent::addDAction(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant>(value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue())->clone();
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue())->clone();
             objdef->setScope(this->scope);
             objdef->setThisObj(this->getThisObj());
             objdef->apply();

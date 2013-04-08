@@ -147,15 +147,15 @@ void AXRDocument::run()
         //needs reset on next load
         d->hasLoadedFile = true;
 
-        QSharedPointer<HSSContainer> root = qSharedPointerCast<HSSContainer>(d->controller->getRoot());
+        QSharedPointer<HSSContainer> root = qSharedPointerCast<HSSContainer>(d->controller->root());
 
-        std::vector<QUrl> loadSheets = d->controller->loadSheetsGet();
-        for (size_t i = 0; i < loadSheets.size(); ++i)
+        const QList<QUrl> &styleSheetUrls = d->controller->styleSheetUrls();
+        Q_FOREACH (const QUrl &styleSheetUrl, styleSheetUrls)
         {
             QSharedPointer<AXRBuffer> hssfile;
             try
             {
-                hssfile = this->createBufferFromUrl(loadSheets[i]);
+                hssfile = this->createBufferFromUrl(styleSheetUrl);
             }
             catch (const AXRError &e)
             {
@@ -530,7 +530,7 @@ bool AXRDocument::reload()
     d->currentLayoutStep = 0;
     d->currentLayoutTick = 0;
     d->currentLayoutChild = 0;
-    this->controller()->getRoot()->recursiveResetLayout();
+    this->controller()->root()->recursiveResetLayout();
 
     if (!d->isHSSOnly)
     {
@@ -546,7 +546,7 @@ bool AXRDocument::reload()
     }
     else
     {
-        return this->loadHssFile(this->controller()->loadSheetsGet(0));
+        return this->loadHssFile(this->controller()->styleSheetUrlAt(0));
     }
 }
 
@@ -590,7 +590,7 @@ void AXRDocument::previousLayoutStep()
     }
     d->currentLayoutTick = 0;
     d->currentLayoutChild = 0;
-    this->controller()->getRoot()->recursiveResetLayout();
+    this->controller()->root()->recursiveResetLayout();
     this->setNeedsDisplay(true);
 }
 
@@ -599,7 +599,7 @@ void AXRDocument::nextLayoutStep()
     d->currentLayoutStep += 1;
     d->currentLayoutTick = 0;
     d->currentLayoutChild = 0;
-    this->controller()->getRoot()->recursiveResetLayout();
+    this->controller()->root()->recursiveResetLayout();
     this->setNeedsDisplay(true);
 }
 

@@ -245,7 +245,7 @@ bool HSSParser::readNextStatement()
 
             axr_log(LoggerChannelHSSParser, "HSSParser: adding object definition to object tree");
             this->recursiveAddObjectDefinition(theObj);
-            controller->parserTreeAdd(theObj);
+            controller->addParserTreeNode(theObj);
             ret = true;
 
             this->skipExpected(HSSEndOfStatement);
@@ -314,7 +314,7 @@ bool HSSParser::readNextStatement()
             this->currentContext = currentCurrentContext;
             this->currentObjectContext = currentCurrentObjectContext;
 
-            controller->parserTreeAdd(theInstr);
+            controller->addParserTreeNode(theInstr);
             ret = true;
 
             break;
@@ -341,7 +341,7 @@ bool HSSParser::readNextStatement()
             {
                 axr_log(LoggerChannelHSSParser, "HSSParser: adding object definition to object tree");
                 this->recursiveAddObjectDefinition(theObj);
-                controller->parserTreeAdd(theObj);
+                controller->addParserTreeNode(theObj);
             }
 
             if (!this->atEndOfSource() && this->currentToken->isA(HSSAmpersand))
@@ -360,8 +360,8 @@ bool HSSParser::readNextStatement()
         if (theRule)
         {
             axr_log(LoggerChannelHSSParser, "HSSParser: adding rule");
-            controller->rulesAdd(theRule);
-            controller->parserTreeAdd(theRule);
+            controller->addRule(theRule);
+            controller->addParserTreeNode(theRule);
         }
         break;
     }
@@ -373,8 +373,8 @@ bool HSSParser::readNextStatement()
             if (theRule)
             {
                 axr_log(LoggerChannelHSSParser, "HSSParser: adding rule");
-                controller->rulesAdd(theRule);
-                controller->parserTreeAdd(theRule);
+                controller->addRule(theRule);
+                controller->addParserTreeNode(theRule);
             }
             break;
         }
@@ -392,7 +392,7 @@ bool HSSParser::readNextStatement()
         if (!this->atEndOfSource())
             this->skip(HSSWhitespace);
         axr_log(LoggerChannelHSSParser, "HSSParser: adding comment to parser tree");
-        controller->parserTreeAdd(theComment);
+        controller->addParserTreeNode(theComment);
         ret = true;
         break;
     }
@@ -1626,7 +1626,7 @@ QSharedPointer<HSSObjectDefinition> HSSParser::readObjectDefinition(AXRString pr
 
 void HSSParser::recursiveAddObjectDefinition(QSharedPointer<HSSObjectDefinition> objDef)
 {
-    this->controller->objectTreeAdd(objDef);
+    this->controller->addObjectTreeNode(objDef);
     const std::vector<QSharedPointer<HSSObjectDefinition> >children = objDef->getChildren();
     for (size_t i = 0; i < children.size(); ++i)
     {

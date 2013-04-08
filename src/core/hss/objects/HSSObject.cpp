@@ -448,7 +448,7 @@ void HSSObject::addDIsA(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             //objdef->apply();
             std::deque<QSharedPointer<HSSPropertyDefinition> > properties = objdef->getProperties();
 

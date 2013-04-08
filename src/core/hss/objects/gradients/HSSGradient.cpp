@@ -294,7 +294,7 @@ void HSSGradient::setDStartColor(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             this->setDStartColor(objdef);
             valid = true;
 
@@ -417,7 +417,7 @@ void HSSGradient::setDEndColor(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeGet(objname->getValue());
+            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
             this->setDEndColor(objdef);
             valid = true;
 
@@ -640,7 +640,7 @@ void HSSGradient::addDColorStops(QSharedPointer<HSSParserNode> value)
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            this->addDColorStops(this->getController()->objectTreeGet(objname->getValue()));
+            this->addDColorStops(this->getController()->objectTreeNodeNamed(objname->getValue()));
             valid = true;
         }
         catch (const AXRError &e)

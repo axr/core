@@ -77,12 +77,12 @@ QSharedPointer<HSSClonable> HSSRootSelector::cloneImpl() const
 
 AXRString HSSRootSelector::getElementName()
 {
-    return this->getController()->getRoot()->getElementName();
+    return this->getController()->root()->getElementName();
 }
 
 QSharedPointer<HSSSelection> HSSRootSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
-    ret->add(this->getController()->getRoot());
+    ret->add(this->getController()->root());
     return ret;
 }
