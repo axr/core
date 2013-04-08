@@ -142,9 +142,7 @@ void QAXRWidget::paintEvent(QPaintEvent *)
         d->renderVisitor->setDirtyRect(rect());
         visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);
 
-        QImage* finalFrame = d->renderVisitor->getFinalFrame();
-        if (finalFrame)
-            painter.drawImage(paintRect.topLeft(), *finalFrame);
+        painter.drawImage(paintRect.topLeft(), d->renderVisitor->getFinalFrame());
     }
 }
 

@@ -67,7 +67,7 @@ namespace AXR
         virtual void finalizeVisit();
         virtual void reset();
 
-        QImage* getFinalFrame();
+        QImage getFinalFrame() const;
 
         void setDirtyRect(const HSSRect &dirtyRect);
 

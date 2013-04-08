@@ -114,7 +114,7 @@ using namespace AXR;
         renderVisitor->setDirtyRect([self bounds]);
         visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);
 
-        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, QPixmap::fromImage(*renderVisitor->getFinalFrame()).toMacCGImageRef());
+        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, QPixmap::fromImage(renderVisitor->getFinalFrame()).toMacCGImageRef());
     }
 }
 

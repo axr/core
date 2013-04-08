@@ -74,7 +74,7 @@ public:
     {
     }
 
-    QImage *canvas;
+    QImage canvas;
     QPainter *canvasPainter;
     bool globalAntialiasingEnabled;
     bool repaintAll;
@@ -467,7 +467,7 @@ void HSSRenderer::initializeVisit()
             root->setNeedsRereadRules(true);
         }
 
-        d->canvas->fill(Qt::white);
+        d->canvas.fill(Qt::white);
         //draw the elements
         axr_log(LoggerChannelGeneralSpecific, "HSSVisitorManager: reading object definitions");
         root->recursiveReadDefinitionObjects();
@@ -525,14 +525,11 @@ void HSSRenderer::regeneratePainter(int width, int height)
     if (d->canvasPainter)
         delete d->canvasPainter;
 
-    if (d->canvas)
-        delete d->canvas;
-
-    d->canvas = new QImage(width, height, QImage::Format_ARGB32_Premultiplied);
-    d->canvasPainter = new QPainter(d->canvas);
+    d->canvas = QImage(width, height, QImage::Format_ARGB32_Premultiplied);
+    d->canvasPainter = new QPainter(&d->canvas);
 }
 
-QImage* HSSRenderer::getFinalFrame()
+QImage HSSRenderer::getFinalFrame() const
 {
     return d->canvas;
 }
