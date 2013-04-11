@@ -224,6 +224,12 @@ void HSSRule::childrenAdd(QSharedPointer<HSSRule> newRule)
     this->children.push_back(newRule);
 }
 
+void HSSRule::childrenPrepend(QSharedPointer<HSSRule> newRule)
+{
+    newRule->setParentNode(this->shared_from_this()); //parent in the node tree
+    this->children.push_front(newRule);
+}
+
 QSharedPointer<HSSRule> HSSRule::childrenGet(size_t index)
 {
     return this->children[index];
@@ -321,7 +327,7 @@ QSharedPointer<HSSClonable> HSSRule::cloneImpl() const
         clone->propertiesAdd(clonedPropDef);
     }
 
-    for (std::vector<QSharedPointer<HSSRule> >::const_iterator rIt = this->children.begin(); rIt != this->children.end(); ++rIt)
+    for (std::deque<QSharedPointer<HSSRule> >::const_iterator rIt = this->children.begin(); rIt != this->children.end(); ++rIt)
     {
         QSharedPointer<HSSRule> clonedRule = (*rIt)->clone();
         clone->childrenAdd(clonedRule);

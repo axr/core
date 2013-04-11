@@ -523,20 +523,13 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
                     }
                 }
 
-                HSSRule::const_it it;
+                std::deque<QSharedPointer<HSSRule> >::const_reverse_iterator it;
                 const std::deque<QSharedPointer<HSSRule> > rules = objdef->getRules();
-                AXRController * controller = this->getController();
-                for (it = rules.begin(); it != rules.end(); ++it)
+                for (it = rules.rbegin(); it != rules.rend(); ++it)
                 {
                     QSharedPointer<HSSRule> clonedRule = (*it)->clone();
-                    QSharedPointer<HSSSelection> children = thisCont->getChildren();
-                    controller->recursiveMatchRulesToDisplayObjects(clonedRule, children, thisCont, true);
-                    controller->recursiveSetRuleState(clonedRule, children, thisCont, HSSRuleStateOn);
-                    //we get the children again, which now include any newly created containers
-                    children = thisCont->getChildren();
-                    clonedRule->setOriginalScope(children->joinAll());
                     //we attach the cloned rule to the rule that has the isA
-                    parentRule->childrenAdd(clonedRule);
+                    parentRule->childrenPrepend(clonedRule);
                 }
                 this->getController()->currentContext().pop();
             }

@@ -222,6 +222,12 @@ namespace AXR
         void childrenAdd(QSharedPointer<HSSRule> newRule);
 
         /**
+         *  Add a child rule to the front of the rules list
+         *  @param newRule A shared pointer to the rule to be prepended.
+         */
+        void childrenPrepend(QSharedPointer<HSSRule> newRule);
+
+        /**
          *  Get a child rule by index.
          *  @param index    An unsigned integer with the index of the child rule.
          *  @return A shared pointer to the element at that index.
@@ -275,7 +281,7 @@ namespace AXR
         QSharedPointer<HSSRule> shared_from_this();
 
         std::vector<QSharedPointer<HSSPropertyDefinition> > properties;
-        std::vector<QSharedPointer<HSSRule> >children;
+        std::deque<QSharedPointer<HSSRule> >children;
         QSharedPointer<HSSInstruction> instruction;
 
         std::vector<QWeakPointer<HSSDisplayObject> > appliedTo;
