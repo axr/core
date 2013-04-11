@@ -72,6 +72,7 @@ HSSFlag::HSSFlag(const HSSFlag &orig)
 : HSSFilter(orig)
 {
     this->_name = orig._name;
+    this->_purging = orig._purging;
 }
 
 HSSFlag::~HSSFlag()
