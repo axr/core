@@ -43,6 +43,7 @@
 
 #include "AXRController.h"
 #include "AXRLoggerManager.h"
+#include "AXRWarning.h"
 #include "HSSDisplayObject.h"
 #include "HSSAttrFunction.h"
 #include "HSSSelectorChain.h"
@@ -136,13 +137,32 @@ size_t HSSAttrFunction::selectorChainsSize() const
 QVariant HSSAttrFunction::_evaluate()
 {
     QSharedPointer<HSSSimpleSelection> selection = this->getController()->select(this->selectorChains, this->scope, this->getThisObj())->joinAll();
-    QSharedPointer<HSSDisplayObject> container = selection->front();
-    this->_value = container->attributes[this->attributeName];
-
-    //todo handle this
-    //container->observe(this->attributeName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSAttrFunction>(this, &HSSAttrFunction::valueChanged));
-
-    //this->observed = container.get();
+    if(selection->size() > 0)
+    {
+        QSharedPointer<HSSDisplayObject> container = selection->front();
+        this->_value = container->attributes[this->attributeName];
+        
+        //todo handle this
+        //container->observe(this->attributeName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSAttrFunction>(this, &HSSAttrFunction::valueChanged));
+        
+        //this->observed = container.get();
+    }
+    else
+    {
+        AXRString selectorChainString;
+        int chainCount = 0;
+        int chainLastElem =this->selectorChains.size()-1;
+        foreach(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+        {
+            selectorChainString.append(selectorChain->stringRep());
+            if(chainCount != chainLastElem)
+            {
+                selectorChainString.append(", ");
+            }
+        }
+        AXRWarning("HSSAttrFunction", AXRString("attr(").append(this->attributeName).append(" of ").append(selectorChainString).append(") did not select any elements")).raise();
+        this->_value = AXRString("");
+    }
     return this->_value;
 }
 
