@@ -3736,28 +3736,32 @@ bool HSSDisplayObject::handleEvent(HSSInputEvent *event)
     if (!event)
         return false;
 
-    if (handleMouseEvent(dynamic_cast<HSSMouseEvent*>(event)))
-        return true;
-    
-    switch (event->type())
-    {
-    case HSSEventTypeLoad:
-    {
-        return this->fireEvent(event->type());
-    }
 
-    case HSSEventTypeExitedWindow:
-    {
-        if (this->_isHover)
+    HSSMouseEvent * mouseEvent = dynamic_cast<HSSMouseEvent*>(event);
+    if (mouseEvent) {
+        this->handleMouseEvent(mouseEvent);
+    } else {
+        switch (event->type())
         {
-            this->setHover(false);
+            case HSSEventTypeLoad:
+            {
+                return this->fireEvent(event->type());
+            }
+
+            case HSSEventTypeExitedWindow:
+            {
+                if (this->_isHover)
+                {
+                    this->setHover(false);
+                }
+                
+                return this->fireEvent(event->type());
+            }
+
+            default:
+                AXRError("HSSDisplayObject", "Unknown event type").raise();
+                break;
         }
-
-        return this->fireEvent(event->type());
-    }
-
-    default:
-        AXRError("HSSDisplayObject", "Unknown event type").raise();
     }
 
     return false;
@@ -3815,6 +3819,7 @@ bool HSSDisplayObject::handleMouseEvent(HSSMouseEvent *event)
             else if (this->_isHover)
             {
                 this->setHover(false);
+                return true;
             }
             
             break;
