@@ -3736,11 +3736,13 @@ bool HSSDisplayObject::handleEvent(HSSInputEvent *event)
     if (!event)
         return false;
 
-
-    HSSMouseEvent * mouseEvent = dynamic_cast<HSSMouseEvent*>(event);
-    if (mouseEvent) {
-        this->handleMouseEvent(mouseEvent);
-    } else {
+    HSSMouseEvent *mouseEvent = dynamic_cast<HSSMouseEvent*>(event);
+    if (mouseEvent)
+    {
+        return this->handleMouseEvent(mouseEvent);
+    }
+    else
+    {
         switch (event->type())
         {
             case HSSEventTypeLoad:
