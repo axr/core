@@ -149,19 +149,14 @@ QVariant HSSAttrFunction::_evaluate()
     }
     else
     {
-        AXRString selectorChainString;
-        int chainCount = 0;
-        int chainLastElem =this->selectorChains.size()-1;
-        foreach(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+        QStringList selectorChainStrings;
+        foreach (QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
         {
-            selectorChainString.append(selectorChain->stringRep());
-            if(chainCount != chainLastElem)
-            {
-                selectorChainString.append(", ");
-            }
+            selectorChainStrings.append(selectorChain->stringRep());
         }
-        AXRWarning("HSSAttrFunction", AXRString("attr(").append(this->attributeName).append(" of ").append(selectorChainString).append(") did not select any elements")).raise();
-        this->_value = AXRString("");
+        
+        AXRWarning("HSSAttrFunction", AXRString("attr(%1) of %2 did not select any elements").arg(this->attributeName).arg(selectorChainStrings.join(", "))).raise();
+        this->_value = AXRString();
     }
     return this->_value;
 }
