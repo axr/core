@@ -513,8 +513,8 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
 
                 //iterate over the property defs and try to find an isA property
                 const std::deque<QSharedPointer<HSSPropertyDefinition> > & props = objdef->getProperties();
-                std::deque<QSharedPointer<HSSPropertyDefinition> >::const_iterator pIt;
-                for (pIt = props.begin(); pIt != props.end(); ++pIt)
+                for (std::deque<QSharedPointer<HSSPropertyDefinition> >::const_iterator pIt =
+                     props.begin(); pIt != props.end(); ++pIt)
                 {
                     QSharedPointer<HSSPropertyDefinition> propdef = *pIt;
                     if (propdef->getName() == "isA")
@@ -523,9 +523,9 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
                     }
                 }
 
-                std::deque<QSharedPointer<HSSRule> >::const_reverse_iterator it;
                 const std::deque<QSharedPointer<HSSRule> > rules = objdef->getRules();
-                for (it = rules.rbegin(); it != rules.rend(); ++it)
+                for (std::deque<QSharedPointer<HSSRule> >::const_reverse_iterator it =
+                     rules.rbegin(); it != rules.rend(); ++it)
                 {
                     QSharedPointer<HSSRule> clonedRule = (*it)->clone();
                     //we attach the cloned rule to the rule that has the isA
