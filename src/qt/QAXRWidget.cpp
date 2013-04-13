@@ -125,14 +125,19 @@ void QAXRWidget::setBackgroundFillColor(const QColor &color)
 
 void QAXRWidget::paintEvent(QPaintEvent *)
 {
+    QPainter painter(this);
+    painter.setFont(QFont("Helvetica Light", 36));
+
     if (!d->document || !d->document->isFileLoaded())
+    {
+        painter.drawText(0, 0, width(), height(), Qt::AlignCenter, "No document loaded");
         return;
+    }
 
     QRect paintRect = rect();
     d->document->setWindowSize(this->width(), this->height());
 
     // Fill the view with our background color...
-    QPainter painter(this);
     painter.fillRect(paintRect, d->backgroundFillColor);
 
     // Render the AXR document
@@ -157,7 +162,6 @@ void QAXRWidget::paintEvent(QPaintEvent *)
     }
     else
     {
-        painter.setFont(QFont("Helvetica Light", 36));
         painter.drawText(0, 0, width(), height(), Qt::AlignCenter, "Internal rendering error");
     }
 }
