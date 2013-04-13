@@ -48,6 +48,7 @@
 #include "HSSAttrFunction.h"
 #include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
+#include <QStringList>
 
 using namespace AXR;
 
