@@ -2618,14 +2618,14 @@ void HSSContainer::setDDirectionSecondary(QSharedPointer<HSSParserNode> value)
     if (value->isA(HSSParserNodeTypeKeywordConstant))
     {
         AXRString stringValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
-        if (stringValue == "leftToRight" || stringValue == "rightToLeft")
+        if (stringValue == "ltr" || stringValue == "rtl")
         {
             if (this->directionSecondary == HSSDirectionLeftToRight || this->directionSecondary == HSSDirectionRightToLeft)
             {
                 this->directionSecondary = HSSDirectionTopToBottom;
                 this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
             }
-            if (stringValue == "leftToRight")
+            if (stringValue == "ltr")
             {
                 this->directionSecondary = HSSDirectionLeftToRight;
             }
@@ -2634,14 +2634,14 @@ void HSSContainer::setDDirectionSecondary(QSharedPointer<HSSParserNode> value)
                 this->directionSecondary = HSSDirectionRightToLeft;
             }
         }
-        else if (stringValue == "topToBottom" || stringValue == "bottomToTop")
+        else if (stringValue == "ttb" || stringValue == "btt")
         {
             if (this->directionSecondary == HSSDirectionTopToBottom || this->directionSecondary == HSSDirectionBottomToTop)
             {
                 this->directionSecondary = HSSDirectionLeftToRight;
                 this->notifyObservers(HSSObservablePropertyDirectionSecondary, &this->directionSecondary);
             }
-            if (stringValue == "topToBottom")
+            if (stringValue == "ttb")
             {
                 this->directionSecondary = HSSDirectionTopToBottom;
             }
