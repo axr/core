@@ -105,7 +105,7 @@ void HSSDisplayObject::initialize()
             = this->topPadding = this->rightPadding = this->bottomPadding = this->leftPadding
             = this->topMargin = this->rightMargin = this->bottomMargin = this->leftMargin
             = this->anchorX = this->anchorY
-            = this->alignX = this->alignY
+            = this->alignX = this->alignY = this->lineAlign
             = 0.;
 
     this->_anchorXdefault = this->_anchorYdefault = true;
@@ -132,6 +132,7 @@ void HSSDisplayObject::initialize()
 
     this->registerProperty(HSSObservablePropertyAlignX, QVariant::fromValue(&this->alignX));
     this->registerProperty(HSSObservablePropertyAlignY, QVariant::fromValue(&this->alignY));
+    this->registerProperty(HSSObservablePropertyLineAlign, QVariant::fromValue(&this->lineAlign));
     this->registerProperty(HSSObservablePropertyAnchorX, QVariant::fromValue(&this->anchorX));
     this->registerProperty(HSSObservablePropertyAnchorY, QVariant::fromValue(&this->anchorY));
     this->registerProperty(HSSObservablePropertyFlow, QVariant::fromValue(&this->flow));
@@ -203,6 +204,10 @@ HSSDisplayObject::~HSSDisplayObject()
     if (this->observedAlignY)
     {
         this->observedAlignY->removeObserver(this->observedAlignYProperty, HSSObservablePropertyAlignY, this);
+    }
+    if (this->observedLineAlign)
+    {
+        this->observedLineAlign->removeObserver(this->observedLineAlignProperty, HSSObservablePropertyLineAlign, this);
     }
     if (this->observedBackground)
     {
@@ -313,6 +318,7 @@ bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
             || property == "anchorY"
             || property == "alignX"
             || property == "alignY"
+            || property == "lineAlign"
             )
     {
         if (value == "top"
@@ -724,6 +730,9 @@ void HSSDisplayObject::setProperty(HSSObservableProperty name, QSharedPointer<HS
         break;
     case HSSObservablePropertyAlignY:
         this->setDAlignY(value);
+        break;
+    case HSSObservablePropertyLineAlign:
+        this->setDLineAlign(value);
         break;
     case HSSObservablePropertyBackground:
         this->setDBackground(value);
@@ -1483,6 +1492,7 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
     {
         QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dAnchorY);
         this->anchorY = percentageValue->getValue(*(HSSUnit*) data);
+        this->_anchorYdefault = false;
         break;
     }
 
@@ -1495,7 +1505,8 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
 
     case HSSParserNodeTypeFunctionCall:
     {
-        this->anchorY = *(HSSUnit*) data;
+        this->anchorY = floor(*(HSSUnit*) data);
+        this->_anchorYdefault = false;
         break;
     }
 
@@ -2101,6 +2112,226 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
     this->notifyObservers(HSSObservablePropertyAlignY, &this->alignY);
 }
 
+HSSUnit HSSDisplayObject::getLineAlign()
+{
+    return this->lineAlign;
+}
+
+QSharedPointer<HSSParserNode> HSSDisplayObject::getDLineAlign()
+{
+    return this->dLineAlign;
+}
+
+void HSSDisplayObject::setDLineAlign(QSharedPointer<HSSParserNode> value)
+{
+    bool valid = false;
+    switch (value->getType())
+    {
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try
+            {
+                QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
+                QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
+                this->setDLineAlign(objdef);
+                valid = true;
+
+            }
+            catch (const AXRError &e)
+            {
+                e.raise();
+
+            }
+
+            break;
+        }
+
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypePercentageConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            HSSObservableProperty observedProperty = HSSObservablePropertyNone;
+            if (this->observedLineAlign)
+            {
+                this->observedLineAlign->removeObserver(this->observedLineAlignProperty, HSSObservablePropertyLineAlign, this);
+                this->observedLineAlign.clear();
+            }
+            QSharedPointer<HSSContainer> parentContainer = this->getParent();
+            if (parentContainer)
+            {
+                this->lineAlign = this->_evaluatePropertyValue(
+                    &HSSDisplayObject::lineAlignChanged,
+                    value,
+                    1.,
+                    observedProperty,
+                    this->shared_from_this(),
+                    HSSObservablePropertyLineAlign,
+                    this->observedLineAlign,
+                    this->observedLineAlignProperty,
+                    parentContainer->getChildren()
+                );
+            }
+            else
+            {
+                this->lineAlign = this->_evaluatePropertyValue(
+                    NULL,
+                    value,
+                    0,
+                    observedProperty,
+                    this->shared_from_this(),
+                    HSSObservablePropertyLineAlign,
+                    this->observedLineAlign,
+                    this->observedLineAlignProperty,
+                    HSSSimpleSelection::null()
+                );
+            }
+            valid = true;
+            break;
+        }
+
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            AXRString kwValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
+            if (kwValue == "inherit")
+            {
+                QSharedPointer<HSSContainer> parent = this->getParent();
+                if (parent)
+                {
+                    QVariant remoteValue = parent->getProperty(HSSObservablePropertyLineAlign);
+                    if (remoteValue.canConvert<HSSUnit*>())
+                    {
+                        this->lineAlign = *remoteValue.value<HSSUnit*>();
+                        if (this->observedLineAlign)
+                        {
+                            this->observedLineAlign->removeObserver(this->observedLineAlignProperty, HSSObservablePropertyLineAlign, this);
+                        }
+                        parent->observe(HSSObservablePropertyLineAlign, HSSObservablePropertyLineAlign, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::lineAlignChanged));
+                        this->observedLineAlign = parent;
+                        this->observedLineAlignProperty = HSSObservablePropertyLineAlign;
+                        valid = true;
+                    }
+                }
+            }
+            else if (kwValue == "top")
+            {
+                QSharedPointer<HSSContainer> parentContainer = this->getParent();
+                if(parentContainer->directionPrimary == HSSDirectionLeftToRight || parentContainer->directionPrimary == HSSDirectionRightToLeft)
+                {
+                    this->lineAlign = 0.;
+                    valid = true;
+                }
+            }
+            else if (kwValue == "bottom")
+            {
+                QSharedPointer<HSSContainer> parentContainer = this->getParent();
+                if(parentContainer->directionPrimary == HSSDirectionLeftToRight || parentContainer->directionPrimary == HSSDirectionRightToLeft)
+                {
+                    this->lineAlign = 1.;
+                    valid = true;
+                }
+            }
+            else if (kwValue == "left")
+            {
+                QSharedPointer<HSSContainer> parentContainer = this->getParent();
+                if(parentContainer->directionPrimary == HSSDirectionTopToBottom || parentContainer->directionPrimary == HSSDirectionBottomToTop)
+                {
+                    this->lineAlign = 0.;
+                    valid = true;
+                }
+            }
+            else if (kwValue == "right")
+            {
+                QSharedPointer<HSSContainer> parentContainer = this->getParent();
+                if(parentContainer->directionPrimary == HSSDirectionTopToBottom || parentContainer->directionPrimary == HSSDirectionBottomToTop)
+                {
+                    this->lineAlign = 1.;
+                    valid = true;
+                }
+            }
+            else if (kwValue == "center" || kwValue == "middle")
+            {
+                QSharedPointer<HSSContainer> parentContainer = this->getParent();
+                this->lineAlign = 0.5;
+                valid = true;
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    switch (value->getStatementType())
+    {
+        case HSSStatementTypeObjectDefinition:
+        {
+            QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value)->clone();
+            QSharedPointer<HSSContainer> parent = this->getParent();
+            if (parent)
+            {
+                objdef->setScope(parent->getChildren());
+            }
+            else if (this->isA(HSSObjectTypeContainer))
+            {
+                HSSContainer * thisCont = static_cast<HSSContainer *> (this);
+                objdef->setScope(thisCont->getChildren());
+            }
+            objdef->setThisObj(this->shared_from_this());
+            objdef->apply();
+            QSharedPointer<HSSObject> theobj = objdef->getObject();
+            if (theobj && theobj->isA(HSSObjectTypeValue))
+            {
+                QSharedPointer<HSSParserNode> remoteValue = qSharedPointerCast<HSSValue > (theobj)->getDValue();
+                try
+                {
+                    this->setDLineAlign(remoteValue);
+                    valid = true;
+                }
+                catch (const AXRError &e)
+                {
+                    e.raise();
+                }
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    if (!valid)
+    {
+        throw AXRWarning("HSSDisplayObject", "Invalid value for lineAlign of " + this->getElementName());
+    }
+    this->notifyObservers(HSSObservablePropertyLineAlign, &this->lineAlign);
+}
+
+void HSSDisplayObject::lineAlignChanged(HSSObservableProperty source, void *data)
+{
+    HSSParserNodeType nodeType = this->dLineAlign->getType();
+    switch (nodeType)
+    {
+        case HSSParserNodeTypePercentageConstant:
+        {
+            QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dLineAlign);
+            this->lineAlign = percentageValue->getValue(*(HSSUnit*) data);
+            break;
+        }
+
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeKeywordConstant:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->lineAlign = *(HSSUnit*) data;
+        }
+
+        default:
+            break;
+    }
+
+    this->notifyObservers(HSSObservablePropertyLineAlign, &this->lineAlign);
+}
 
 //background
 

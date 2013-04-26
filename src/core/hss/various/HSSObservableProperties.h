@@ -71,6 +71,7 @@ namespace AXR
         HSSObservablePropertyPadding,
         HSSObservablePropertyBorder,
         HSSObservablePropertyFlagChanged,
+        HSSObservablePropertyLineAlign,
 
         //HSSContainer
         HSSObservablePropertyContentAlignX,

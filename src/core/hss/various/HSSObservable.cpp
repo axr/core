@@ -84,6 +84,7 @@ AXRString HSSObservable::observablePropertyStringRepresentation(HSSObservablePro
         types[HSSObservablePropertyBorder] = "HSSObservablePropertyBorder";
         types[HSSObservablePropertyFlagChanged] = "HSSObservablePropertyFlagChanged";
         types[HSSObservablePropertyVisible] = "HSSObservablePropertyVisible";
+        types[HSSObservablePropertyLineAlign] = "HSSObservablePropertyLineAlign";
 
         //HSSContainer
         types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
@@ -189,6 +190,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(AXRString name
         properties["content"] = HSSObservablePropertyContent;
         properties["on"] = HSSObservablePropertyOn;
         properties["visible"] = HSSObservablePropertyVisible;
+        properties["lineAlign"] = HSSObservablePropertyLineAlign;
 
         //HSSContainer
         properties["contentAlignX"] = HSSObservablePropertyContentAlignX;

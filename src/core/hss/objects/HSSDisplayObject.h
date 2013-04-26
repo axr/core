@@ -224,6 +224,12 @@ namespace AXR
         void setDAlignY(QSharedPointer<HSSParserNode> value);
         void alignYChanged(HSSObservableProperty source, void*data);
 
+        //lineAlign
+        HSSUnit getLineAlign();
+        QSharedPointer<HSSParserNode> getDLineAlign();
+        void setDLineAlign(QSharedPointer<HSSParserNode> value);
+        void lineAlignChanged(HSSObservableProperty source, void*data);
+
         HSSUnit getAnchorX();
         QSharedPointer<HSSParserNode> getDAnchorX();
         void setDAnchorX(QSharedPointer<HSSParserNode> value);
@@ -412,6 +418,11 @@ namespace AXR
         HSSUnit alignY;
         QSharedPointer<HSSObservable> observedAlignY;
         HSSObservableProperty observedAlignYProperty;
+        //lineAlign
+        QSharedPointer<HSSParserNode> dLineAlign;
+        HSSUnit lineAlign;
+        QSharedPointer<HSSObservable> observedLineAlign;
+        HSSObservableProperty observedLineAlignProperty;
         //background
         QSharedPointer<HSSParserNode> dBackground;
         QSharedPointer<HSSObservable> observedBackground;
