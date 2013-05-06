@@ -352,6 +352,13 @@ bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
             return true;
         }
     }
+    else if (property == "width")
+    {
+        if (value == "content")
+        {
+            return true;
+        }
+    }
 
     //    else if (property == "font") {
     //        if (   value == "thin"
@@ -963,7 +970,45 @@ void HSSDisplayObject::setDWidth(QSharedPointer<HSSParserNode> value)
                 this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
                 this->observedWidth.clear();
             }
-            this->width = 0;
+            QSharedPointer<HSSContainer> thisCont = HSSContainer::asContainer(this->shared_from_this());
+
+            HSSObservableProperty observedProperty = HSSObservablePropertyInnerWidth;
+            QSharedPointer<HSSPercentageConstant> fakeValue = QSharedPointer<HSSPercentageConstant>( new HSSPercentageConstant(100, this->axrController) );
+            if (this->observedWidth)
+            {
+                this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
+                this->observedWidth.clear();
+            }
+            QSharedPointer<HSSContainer> parentContainer = this->getParent();
+            if (parentContainer)
+            {
+                this->width = floor(this->_evaluatePropertyValue(
+                                                                 &HSSDisplayObject::widthChanged,
+                                                                 fakeValue,
+                                                                 parentContainer->innerWidth,
+                                                                 observedProperty,
+                                                                 parentContainer,
+                                                                 HSSObservablePropertyWidth,
+                                                                 this->observedWidth,
+                                                                 this->observedWidthProperty,
+                                                                 parentContainer->getChildren()
+                                                                 ));
+            }
+            else
+            {
+                this->width = floor(this->_evaluatePropertyValue(
+                                                                 NULL,
+                                                                 fakeValue,
+                                                                 0,
+                                                                 observedProperty,
+                                                                 this->shared_from_this(),
+                                                                 HSSObservablePropertyWidth,
+                                                                 this->observedWidth,
+                                                                 this->observedWidthProperty,
+                                                                 HSSSimpleSelection::null()
+                                                                 ));
+            }
+
             this->widthByContent = true;
             valid = true;
         }
@@ -1035,31 +1080,32 @@ void HSSDisplayObject::setDWidth(QSharedPointer<HSSParserNode> value)
 
 void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
 {
-    HSSParserNodeType nodeType = this->dWidth->getType();
-    switch (nodeType)
-    {
-    case HSSParserNodeTypePercentageConstant:
-    {
-        QSharedPointer<HSSPercentageConstant> widthValue = qSharedPointerCast<HSSPercentageConstant > (this->dWidth);
-        this->width = floor(widthValue->getValue(*(HSSUnit*) data));
-        break;
-    }
-
-    case HSSParserNodeTypeExpression:
-    {
-        QSharedPointer<HSSExpression> widthExpression = qSharedPointerCast<HSSExpression > (this->dWidth);
-        widthExpression->setPercentageBase(*(HSSUnit*) data);
-        this->width = floor(widthExpression->evaluate());
-        break;
-    }
-
-    case HSSParserNodeTypeFunctionCall:
+    if (this->widthByContent)
     {
         this->width = floor(*(HSSUnit*) data);
     }
+    else
+    {
+        HSSParserNodeType nodeType = this->dWidth->getType();
+        switch (nodeType)
+        {
+        case HSSParserNodeTypePercentageConstant:
+        {
+            QSharedPointer<HSSPercentageConstant> widthValue = qSharedPointerCast<HSSPercentageConstant > (this->dWidth);
+            this->width = floor(widthValue->getValue(*(HSSUnit*) data));
+            break;
+        }
 
-    default:
-        break;
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->width = floor(*(HSSUnit*) data);
+            break;
+        }
+
+        default:
+            break;
+        }
     }
 
     this->_setInnerWidth();

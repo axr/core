@@ -357,6 +357,9 @@ void HSSTextBlock::layout()
     QFontMetrics fontMetrics(getFont());
     QRect bounds = fontMetrics.boundingRect(0, 0, this->width, std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, this->getText());
 
+    this->width = bounds.width();
+    this->_setInnerWidth();
+    this->_setOuterWidth();
     this->height = bounds.height();
     this->_setInnerHeight();
     this->_setOuterHeight();
