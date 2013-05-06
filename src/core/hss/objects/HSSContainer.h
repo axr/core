@@ -59,6 +59,7 @@ namespace AXR
     };
 
     class HSSShape;
+    class HSSLayoutLine;
 
     /**
      *  @brief The object type representing an element in the XML content.
@@ -72,6 +73,7 @@ namespace AXR
     {
     public:
         friend class HSSDisplayObject;
+        friend class HSSLayoutLine;
         friend class HSSRenderer;
 
         /**
@@ -186,7 +188,7 @@ namespace AXR
          *  Lays out the children according to the layout algorithm, first in the primary direction
          *  and then in the secondary one.
          */
-
+        void layout();
 
         /**
          *  Propagates the layout() call to all the children.
@@ -426,7 +428,29 @@ namespace AXR
                                    QSharedPointer<HSSSimpleSelection> scope
                                    );
 
+        inline bool _overlaps(const QSharedPointer<HSSDisplayObject> & childA, const QSharedPointer<HSSDisplayObject> & childB) const;
+        inline bool _overlaps_horizontal(const QSharedPointer<HSSDisplayObject> & childA, const QSharedPointer<HSSDisplayObject> & childB) const;
+        inline bool _overlaps_vertical(const QSharedPointer<HSSDisplayObject> & childA, const QSharedPointer<HSSDisplayObject> & childB) const;
+
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+
+        inline void _placeOnAlignmentPoint(const QSharedPointer<HSSDisplayObject> & child);
+        inline bool _layoutTick() const;
+        inline void _setGlobalPosition(const QSharedPointer<HSSDisplayObject> & child) const;
+        inline const QSharedPointer<HSSLayoutLine> _getTargetGroup(const QSharedPointer<HSSDisplayObject> & child, std::vector<QSharedPointer<HSSLayoutLine> > & groups) const;
+        inline void _setPositions(const QSharedPointer<HSSLayoutLine> & group) const;
+        inline void _lineArrangeX(const QSharedPointer<HSSDisplayObject> & child, HSSUnit startX, HSSUnit lineWidth) const;
+        inline void _lineArrangeY(const QSharedPointer<HSSDisplayObject> & child, HSSUnit startY, HSSUnit lineHeight) const;
+        inline bool _arrangeLines(const QSharedPointer<HSSLayoutLine> &group, const HSSDirectionValue direction) const;
+        inline bool _distributeLines(const QSharedPointer<HSSLayoutLine> &group, const HSSDirectionValue direction) const;
+        static bool alignXSmaller(const QSharedPointer<HSSDisplayObject>& a, const QSharedPointer<HSSDisplayObject>& b)
+        {
+            return a->alignX < b->alignX;
+        }
+        static bool alignYSmaller(const QSharedPointer<HSSDisplayObject>& a, const QSharedPointer<HSSDisplayObject>& b)
+        {
+            return a->alignY < b->alignY;
+        }
     };
 }
 

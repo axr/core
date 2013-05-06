@@ -78,9 +78,15 @@ namespace AXR
         HSSLayoutLine(const HSSLayoutLine & orig);
         QSharedPointer<HSSLayoutLine> clone() const;
         virtual ~HSSLayoutLine();
-        
+        static bool heightGreater(const QSharedPointer<HSSLayoutLine> & x, const QSharedPointer<HSSLayoutLine> & y);
+        void convertObjectsIntoLines();
+        void mergeWith(const QSharedPointer<HSSLayoutLine> & groupB);
+        void add(const QSharedPointer<HSSDisplayObject> & child);
         void arrange();
         void distribute();
+        HSSUnit getAlignX();
+        HSSUnit getAlignY();
+
         inline bool overlaps(const QSharedPointer<HSSLayoutLine> & groupB)
         {
             if (this->overlapsX(groupB) && this->overlapsY(groupB))
@@ -136,6 +142,7 @@ namespace AXR
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        inline HSSUnit _clamp(const HSSUnit & value, const HSSUnit & min, const HSSUnit & max) const;
     };
 }
 #endif /* defined(HSSLAYOUTLINE_H) */

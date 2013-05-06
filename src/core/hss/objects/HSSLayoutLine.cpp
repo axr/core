@@ -103,6 +103,140 @@ HSSLayoutLine::~HSSLayoutLine()
 {
     delete this->objects;
 }
+
+bool HSSLayoutLine::heightGreater(const QSharedPointer<HSSLayoutLine>& x, const QSharedPointer<HSSLayoutLine>& y)
+{
+    return x->height > y->height;
+}
+
+void HSSLayoutLine::convertObjectsIntoLines()
+{
+    //create the line
+    QSharedPointer<HSSLayoutLine> line = QSharedPointer<HSSLayoutLine>(new HSSLayoutLine(this->x, this->y, this->width, this->height, this->direction, this->owner));
+    for (HSSSimpleSelection::const_iterator it=this->objects->begin(); it!=this->objects->end(); ++it)
+    {
+        line->objects->add(*it);
+    }
+    this->objects->clear();
+    this->lines.push_back(line);
+}
+
+void HSSLayoutLine::mergeWith(const QSharedPointer<HSSLayoutLine> & groupB)
+{
+    if(groupB->lines.size() > 0){
+        for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it=groupB->lines.begin(); it!=groupB->lines.end(); ++it)
+        {
+            const QSharedPointer<HSSLayoutLine> & line = *it;
+            for (HSSSimpleSelection::const_iterator it2=line->objects->begin(); it2!=line->objects->end(); ++it2)
+            {
+                const QSharedPointer<HSSDisplayObject> & child = *it2;
+                this->add(child);
+            }
+        }
+    }
+    else
+    {
+        for (HSSSimpleSelection::const_iterator it=groupB->objects->begin(); it!=groupB->objects->end(); ++it)
+        {
+            const QSharedPointer<HSSDisplayObject> & child = *it;
+            this->add(child);
+        }
+    }
+}
+
+void HSSLayoutLine::add(const QSharedPointer<HSSDisplayObject> & child)
+{
+    bool horizontal = (this->direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft);
+    HSSLayoutLine * measureGroup;
+    bool basicGroup = false;
+    if (this->lines.size() == 0)
+    {
+        measureGroup = this;
+        basicGroup = true;
+    }
+    else
+    {
+        measureGroup = this->lines.back().data();
+    }
+    if (measureGroup->overlapsX(child)) {
+        if (
+            (horizontal && (measureGroup->width + child->outerWidth > this->owner->innerWidth))
+            || (!horizontal && (measureGroup->height + child->outerHeight > this->owner->innerHeight))
+            )
+        {
+            if (basicGroup) {
+                measureGroup->convertObjectsIntoLines();
+            }
+
+            QSharedPointer<HSSLayoutLine> newGroup = QSharedPointer<HSSLayoutLine>(new HSSLayoutLine(child, this->direction, this->owner));
+            this->lines.push_back(newGroup);
+            if (horizontal)
+            {
+                this->height += newGroup->height;
+                if (newGroup->width > this->width)
+                {
+                    this->width = newGroup->width;
+                }
+            }
+            else
+            {
+                this->width += newGroup->width;
+                if (newGroup->height > this->height)
+                {
+                    this->height = newGroup->height;
+                }
+            }
+        }
+        else
+        {
+            measureGroup->objects->add(child);
+            if (horizontal)
+            {
+                measureGroup->width += child->outerWidth;
+                if (this->width < measureGroup->width)
+                {
+                    this->width = measureGroup->width;
+                }
+                if (measureGroup->height < child->outerHeight)
+                {
+                    measureGroup->height = child->outerHeight;
+                }
+            }
+            else
+            {
+                measureGroup->height += child->outerHeight;
+                if (this->height < measureGroup->height)
+                {
+                    this->height = measureGroup->height;
+                }
+                if (!horizontal && measureGroup->width < child->outerWidth)
+                {
+                    measureGroup->width = child->outerWidth;
+                }
+            }
+        }
+    }
+    else
+    {
+        if (basicGroup)
+        {
+            AXRError("HSSLayoutLine", "Unexpected adding of child to a basic group with no overlaps").raise();
+            return;
+        }
+        else
+        {
+            measureGroup->convertObjectsIntoLines();
+            QSharedPointer<HSSLayoutLine> newGroup = QSharedPointer<HSSLayoutLine>(new HSSLayoutLine(child, this->direction, this->owner));
+            measureGroup->lines.push_back(newGroup);
+            if (measureGroup->height < child->outerHeight)
+            {
+                measureGroup->height = child->outerHeight;
+            }
+        }
+    }
+
+}
+
 void HSSLayoutLine::arrange()
 {
     size_t i = 0, size = this->objects->size();
@@ -671,4 +805,63 @@ void HSSLayoutLine::distribute()
             break;
         }
     }
+}
+
+HSSUnit HSSLayoutLine::getAlignX()
+{
+    HSSUnit alignmentTotal = 0.;
+    HSSUnit widthsTotal = 0.;
+    HSSUnit size = this->objects->size();
+    if(size == 0){
+        return 0.;
+    }
+    for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+    {
+        QSharedPointer<HSSDisplayObject> & currentChild = *it;
+        widthsTotal += currentChild->outerWidth;
+    }
+    HSSUnit medianWidth = widthsTotal / size;
+    for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+    {
+        QSharedPointer<HSSDisplayObject> & currentChild = *it;
+        alignmentTotal += currentChild->alignX * currentChild->outerWidth / medianWidth;
+    }
+    return alignmentTotal / size;
+}
+
+HSSUnit HSSLayoutLine::getAlignY()
+{
+    HSSUnit alignmentTotal = 0.;
+    HSSUnit heightsTotal = 0.;
+    HSSUnit size = this->objects->size();
+    if(size == 0){
+        return 0.;
+    }
+
+    for (HSSSimpleSelection::reverse_iterator it = this->objects->rbegin(); it!= this->objects->rend(); ++it)
+    {
+        QSharedPointer<HSSDisplayObject> & currentChild = *it;
+        heightsTotal += currentChild->outerHeight;
+    }
+    HSSUnit medianHeight = heightsTotal / size;
+    for (HSSSimpleSelection::reverse_iterator it = this->objects->rbegin(); it!= this->objects->rend(); ++it)
+    {
+        QSharedPointer<HSSDisplayObject> & currentChild = *it;
+        alignmentTotal += currentChild->alignY * currentChild->outerHeight / medianHeight;
+    }
+    return alignmentTotal / size;
+}
+
+inline HSSUnit HSSLayoutLine::_clamp(const HSSUnit & value, const HSSUnit & min, const HSSUnit & max) const
+{
+    if (value > max)
+    {
+        return max;
+    }
+    if (value < min)
+    {
+        return min;
+    }
+
+    return value;
 }

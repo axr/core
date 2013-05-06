@@ -73,6 +73,7 @@ namespace AXR
     {
     public:
         friend class HSSContainer;
+        friend class HSSLayoutLine;
         friend class HSSRenderer;
 
         /**

@@ -52,6 +52,7 @@
 #include "HSSContainer.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
+#include "HSSLayoutLine.h"
 #include "HSSKeywordConstant.h"
 #include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
@@ -461,6 +462,961 @@ void HSSContainer::accept(HSSAbstractVisitor* visitor, bool traverse)
     for (HSSSimpleSelection::iterator child = this->allChildren->begin(); child != this->allChildren->end(); ++child)
     {
         (*child)->accept(visitor, traverse);
+    }
+}
+
+
+inline bool HSSContainer::_overlaps(const QSharedPointer<HSSDisplayObject> & childA, const QSharedPointer<HSSDisplayObject> & childB) const
+{
+    return this->_overlaps_horizontal(childA, childB) && this->_overlaps_vertical(childA, childB);
+}
+
+inline bool HSSContainer::_overlaps_horizontal(const QSharedPointer<HSSDisplayObject> & childA, const QSharedPointer<HSSDisplayObject> & childB) const
+{
+    if (
+        (childA->x + childA->width + childA->rightMargin) > (childB->x - childB->leftMargin)
+        && (childA->x - childA->leftMargin) < (childB->x + childB->width + childB->rightMargin)
+        )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+inline bool HSSContainer::_overlaps_vertical(const QSharedPointer<HSSDisplayObject> & childA, const QSharedPointer<HSSDisplayObject> & childB) const
+{
+    if (
+        (childA->y + childA->height + childA->bottomMargin) > (childB->y - childB->topMargin)
+        && (childA->y - childA->topMargin) < (childB->y + childB->height + childB->bottomMargin)
+        )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+inline void HSSContainer::_placeOnAlignmentPoint(const QSharedPointer<HSSDisplayObject> & child)
+{
+    if (child->_anchorXdefault)
+    {
+        child->x = child->alignX - (child->outerWidth / 2) + child->leftMargin;
+    }
+    else
+    {
+        child->x = child->alignX - child->anchorX;
+    }
+
+    if (child->_anchorYdefault)
+    {
+        child->y = child->alignY - (child->outerHeight / 2) + child->topMargin;
+    }
+    else
+    {
+        child->y = child->alignY - child->anchorY;
+    }
+    if (child->getContained())
+    {
+        //on the right side
+        if ((child->x + child->width + child->rightMargin) > (this->width - this->rightPadding))
+        {
+            child->x = (this->width - this->rightPadding) - (child->width + child->rightMargin);
+        }
+        //on the left side
+        if (child->x < child->leftMargin + this->leftPadding)
+        {
+            child->x = child->leftMargin + this->leftPadding;
+        }
+        //on the bottom
+        if ((child->y + child->height + child->bottomMargin) > (this->height - this->bottomPadding))
+        {
+            child->y = (this->height - this->bottomPadding) - (child->height + child->bottomMargin);
+        }
+        //on the top
+        if (child->y < child->topMargin + this->topPadding)
+        {
+            child->y = child->topMargin + this->topPadding;
+        }
+    }
+}
+
+inline bool HSSContainer::_layoutTick() const
+{
+    AXRDocument * document = this->getController()->document();
+    if (document->showLayoutSteps())
+    {
+        document->nextLayoutTick();
+        document->nextLayoutChild();
+        document->breakIfNeeded();
+        if (document->layoutStepDone())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+inline void HSSContainer::_setGlobalPosition(const QSharedPointer<HSSDisplayObject> & child) const
+{
+    child->setGlobalX(qRound(this->globalX + child->x));
+    child->setGlobalY(qRound(this->globalY + child->y));
+}
+
+inline const QSharedPointer<HSSLayoutLine> HSSContainer::_getTargetGroup(const QSharedPointer<HSSDisplayObject> & child, std::vector<QSharedPointer<HSSLayoutLine> > & groups) const
+{
+    QSharedPointer<HSSLayoutLine> ret;
+    for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it=groups.begin(); it!=groups.end(); ++it)
+    {
+        const QSharedPointer<HSSLayoutLine> & group = *it;
+        if (group->lines.size() > 0)
+        {
+            for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it2=group->lines.begin(); it2!=group->lines.end(); ++it2)
+            {
+                const QSharedPointer<HSSLayoutLine> & line = *it2;
+                for (HSSSimpleSelection::const_iterator it3=line->objects->begin(); it3!=line->objects->end(); ++it3)
+                {
+                    if (this->_overlaps(child, *it3))
+                    {
+                        return group;
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (HSSSimpleSelection::const_iterator it2=group->objects->begin(); it2!=group->objects->end(); ++it2) {
+                if (this->_overlaps(child, *it2))
+                {
+                    return group;
+                }
+            }
+        }
+    }
+
+    return ret;
+}
+
+inline void HSSContainer::_setPositions(const QSharedPointer<HSSLayoutLine> & group) const
+{
+    for (HSSSimpleSelection::const_iterator it=group->objects->begin(); it!=group->objects->end(); ++it)
+    {
+        const QSharedPointer<HSSDisplayObject> & child = *it;
+        this->_setGlobalPosition(child);
+    }
+}
+
+inline void HSSContainer::_lineArrangeX(const QSharedPointer<HSSDisplayObject> & child, HSSUnit startX, HSSUnit lineWidth) const
+{
+    child->x = (startX + ((lineWidth / 2) - (child->outerWidth / 2)) * child->lineAlign * 2) + child->leftMargin;
+}
+
+inline void HSSContainer::_lineArrangeY(const QSharedPointer<HSSDisplayObject> & child, HSSUnit startY, HSSUnit lineHeight) const
+{
+    child->y = (startY + ((lineHeight / 2) - (child->outerHeight / 2)) * child->lineAlign * 2) + child->topMargin;
+}
+
+inline bool HSSContainer::_arrangeLines(const QSharedPointer<HSSLayoutLine> &group, const HSSDirectionValue direction) const
+{
+    switch (direction)
+    {
+        case HSSDirectionLeftToRight:
+        {
+            if (group->lines.size() > 0)
+            {
+                //calculate the starting point
+                HSSUnit widthsTotal = 0.;
+                HSSUnit groupAlignmentTotal = 0.;
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = group->lines.begin(); it!= group->lines.end(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & line = *it;
+                    HSSUnit alignmentTotal = 0.;
+                    for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                    {
+                        QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                        alignmentTotal += currentChild->alignX;
+                    }
+                    groupAlignmentTotal += alignmentTotal / line->objects->size();
+                    widthsTotal += line->width;
+                }
+                HSSUnit groupAlignX = groupAlignmentTotal / group->lines.size();
+                HSSUnit startX = groupAlignX - (widthsTotal/2);
+                if (startX > (this->width - this->rightPadding) - widthsTotal) startX = (this->width - this->rightPadding) - widthsTotal;
+                if (startX < this->leftPadding) startX = this->leftPadding;
+
+                //reposition each element
+                HSSUnit accWidth = startX;
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = group->lines.begin(); it!= group->lines.end(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & line = *it;
+                    line->x = accWidth;
+                    for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                    {
+                        QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                        this->_lineArrangeX(currentChild, accWidth, line->width);
+                    }
+                    accWidth += line->width;
+                    if (this->_layoutTick()){
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                HSSUnit maxWidth = 0.;
+                QSharedPointer<HSSDisplayObject> widestChild;
+                for (HSSSimpleSelection::iterator it = group->objects->begin(); it!= group->objects->end(); ++it)
+                {
+                    const QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    if(currentChild->outerWidth > maxWidth)
+                    {
+                        maxWidth = currentChild->outerWidth;
+                        widestChild = currentChild;
+                    }
+                }
+                group->x = widestChild->x;
+                if (this->_layoutTick()){
+                    return true;
+                }
+            }
+            break;
+        }
+
+        case HSSDirectionRightToLeft:
+        {
+            if (group->lines.size() > 0)
+            {
+                //calculate the starting point
+                HSSUnit widthsTotal = 0.;
+                HSSUnit groupAlignmentTotal = 0.;
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = group->lines.begin(); it!= group->lines.end(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & line = *it;
+                    HSSUnit alignmentTotal = 0.;
+                    for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                    {
+                        QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                        alignmentTotal += currentChild->alignX;
+                    }
+                    groupAlignmentTotal += alignmentTotal / line->objects->size();
+                    widthsTotal += line->width;
+                }
+                HSSUnit groupAlignX = groupAlignmentTotal / group->lines.size();
+                HSSUnit startX = groupAlignX - (widthsTotal/2);
+                if (startX > (this->width - this->rightPadding) - widthsTotal) startX = (this->width - this->rightPadding) - widthsTotal;
+                if (startX < this->leftPadding) startX = this->leftPadding;
+
+                //reposition each element
+                HSSUnit accWidth = startX;
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_reverse_iterator it = group->lines.rbegin(); it!= group->lines.rend(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & line = *it;
+                    line->x = accWidth;
+                    for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                    {
+                        QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                        this->_lineArrangeX(currentChild, accWidth, line->width);
+                    }
+                    accWidth += line->width;
+                    if (this->_layoutTick()){
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                HSSUnit maxWidth = 0.;
+                QSharedPointer<HSSDisplayObject> widestChild;
+                for (HSSSimpleSelection::iterator it = group->objects->begin(); it!= group->objects->end(); ++it)
+                {
+                    const QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    if(currentChild->outerWidth > maxWidth)
+                    {
+                        maxWidth = currentChild->outerWidth;
+                        widestChild = currentChild;
+                    }
+                }
+                group->x = widestChild->x;
+                if (this->_layoutTick()){
+                    return true;
+                }
+            }
+            break;
+        }
+
+        case HSSDirectionBottomToTop:
+        {
+            if (group->lines.size() > 0)
+            {
+                //calculate the starting point
+                HSSUnit heightsTotal = 0.;
+                HSSUnit groupAlignmentTotal = 0.;
+                HSSUnit linesSize = group->lines.size();
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = group->lines.begin(); it!= group->lines.end(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & line = *it;
+                    heightsTotal += line->height;
+                }
+                HSSUnit medianHeight = heightsTotal / linesSize;
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = group->lines.begin(); it!= group->lines.end(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & line = *it;
+                    groupAlignmentTotal += line->getAlignY() * line->height / medianHeight;
+                }
+                HSSUnit groupAlignY = groupAlignmentTotal / linesSize;
+                HSSUnit startY = groupAlignY - (heightsTotal/2);
+                if (startY > (this->height - this->bottomPadding) - heightsTotal) startY = (this->height - this->bottomPadding) - heightsTotal;
+                if (startY < this->topPadding) startY = this->topPadding;
+
+                //reposition each element
+                HSSUnit accHeight = startY;
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_reverse_iterator it = group->lines.rbegin(); it!= group->lines.rend(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & line = *it;
+                    line->y = accHeight;
+                    for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                    {
+                        QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                        this->_lineArrangeY(currentChild, accHeight, line->height);
+                    }
+                    accHeight += line->height;
+                    if (this->_layoutTick()){
+                        return true;
+                    }
+                }
+                group->y = startY;
+            }
+            else
+            {
+                HSSUnit maxHeight = 0.;
+                QSharedPointer<HSSDisplayObject> tallestChild;
+                for (HSSSimpleSelection::iterator it = group->objects->begin(); it!= group->objects->end(); ++it)
+                {
+                    const QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    if(currentChild->outerHeight > maxHeight)
+                    {
+                        maxHeight = currentChild->outerHeight;
+                        tallestChild = currentChild;
+                    }
+                }
+                group->y = tallestChild->y;
+
+                if (this->_layoutTick()){
+                    return true;
+                }
+            }
+            break;
+        }
+
+        default:
+        {
+            if (group->lines.size() > 0)
+            {
+                //calculate the starting point
+                HSSUnit heightsTotal = 0.;
+                HSSUnit groupAlignmentTotal = 0.;
+                HSSUnit linesSize = group->lines.size();
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = group->lines.begin(); it!= group->lines.end(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & line = *it;
+                    heightsTotal += line->height;
+                }
+                HSSUnit medianHeight = heightsTotal / linesSize;
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = group->lines.begin(); it!= group->lines.end(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & line = *it;
+                    groupAlignmentTotal += line->getAlignY() * line->height / medianHeight;
+                }
+                HSSUnit groupAlignY = groupAlignmentTotal / linesSize;
+                HSSUnit startY = groupAlignY - (heightsTotal/2);
+                if (startY > (this->height - this->bottomPadding) - heightsTotal) startY = (this->height - this->bottomPadding) - heightsTotal;
+                if (startY < this->topPadding) startY = this->topPadding;
+                group->y = startY;
+
+                //reposition each element
+                HSSUnit accHeight = startY;
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = group->lines.begin(); it!= group->lines.end(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & line = *it;
+                    line->y = accHeight;
+                    if (line->lines.size() > 0)
+                    {
+                        for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it2 = line->lines.begin(); it2!= line->lines.end(); ++it2)
+                        {
+                            const QSharedPointer<HSSLayoutLine> & innerLine = *it2;
+                            for (HSSSimpleSelection::iterator it3 = innerLine->objects->begin(); it3!= innerLine->objects->end(); ++it3)
+                            {
+                                QSharedPointer<HSSDisplayObject> & currentChild = *it3;
+                                this->_lineArrangeY(currentChild, accHeight, innerLine->height);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                        {
+                            QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                            this->_lineArrangeY(currentChild, accHeight, line->height);
+                        }
+                        accHeight += line->height;
+                        if (this->_layoutTick()){
+                            return true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                HSSUnit groupHeight = group->height;
+                HSSUnit startY = group->getAlignY() - (groupHeight/2);
+                if (startY > (this->height - this->bottomPadding) - groupHeight) startY = (this->height - this->bottomPadding) - groupHeight;
+                if (startY < this->topPadding) startY = this->topPadding;
+                for (HSSSimpleSelection::iterator it = group->objects->begin(); it!= group->objects->end(); ++it)
+                {
+                    const QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    this->_lineArrangeY(currentChild, startY, group->height);
+                }
+                if (this->_layoutTick()){
+                    return true;
+                }
+            }
+            break;
+        }
+    }
+    return false;
+}
+
+inline bool HSSContainer::_distributeLines(const QSharedPointer<HSSLayoutLine> &group, const HSSDirectionValue direction) const
+{
+    switch (direction)
+    {
+        case HSSDirectionLeftToRight:
+        {
+            if (group->lines.size() == 0)
+            {
+                HSSUnit newValue = ((this->innerWidth - group->width) / 2);
+                HSSUnit startX = this->topPadding + newValue;
+
+                for (HSSSimpleSelection::iterator it2 = group->objects->begin(); it2!= group->objects->end(); ++it2)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                    this->_lineArrangeX(currentChild, startX, group->width);
+                }
+                if (this->_layoutTick()){
+                    return true;
+                }
+            }
+            else
+            {
+                HSSUnit accWidth = this->topPadding;
+                HSSUnit totalWidth = 0.;
+
+                //calculate the total width of the group
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it = group->lines.begin(); it != group->lines.end(); ++it)
+                {
+                    totalWidth += (*it)->width;
+                }
+
+                if (this->distributeXLinear)
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
+                    //divide it by the number of elements-1
+                    HSSUnit spaceChunk;
+                    if(remainingSpace < 0){
+                        spaceChunk = 0;
+                    } else {
+                        spaceChunk = remainingSpace / (group->lines.size() - 1);
+                    }
+                    unsigned i = 0;
+                    for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it = group->lines.begin(); it != group->lines.end(); ++it)
+                    {
+                        QSharedPointer<HSSLayoutLine> &line = *it;
+                        line->x = accWidth + (spaceChunk * i);
+                        for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                        {
+                            QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                            this->_lineArrangeX(currentChild, line->x, line->width);
+                        }
+                        accWidth += line->width;
+                        ++i;
+                        if (this->_layoutTick()){
+                            return true;
+                        }
+                    }
+                    group->x = group->lines.front()->x;
+                }
+                else
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
+                    //divide it by the number of elements+1
+                    HSSUnit spaceChunk;
+                    if(remainingSpace < 0){
+                        spaceChunk = 0;
+                    } else {
+                        spaceChunk = remainingSpace / (group->lines.size() + 1);
+                    }
+                    unsigned i = 0;
+                    for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it = group->lines.begin(); it != group->lines.end(); ++it)
+                    {
+                        QSharedPointer<HSSLayoutLine> &line = *it;
+                        line->y = accWidth + (spaceChunk * i) + spaceChunk;
+                        for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                        {
+                            QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                            this->_lineArrangeX(currentChild, line->y, line->width);
+                        }
+                        accWidth += line->width;
+                        ++i;
+                        if (this->_layoutTick()){
+                            return true;
+                        }
+                    }
+                    group->y = group->lines.front()->y;
+                }
+            }
+            break;
+        }
+
+        case HSSDirectionRightToLeft:
+        {
+            if (group->lines.size() == 0)
+            {
+                HSSUnit newValue = ((this->innerWidth - group->width) / 2);
+                HSSUnit startX = this->topPadding + newValue;
+
+                for (HSSSimpleSelection::reverse_iterator it2 = group->objects->rbegin(); it2!= group->objects->rend(); ++it2)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                    this->_lineArrangeX(currentChild, startX, group->width);
+                }
+                if (this->_layoutTick()){
+                    return true;
+                }
+            }
+            else
+            {
+                HSSUnit accWidth = this->topPadding;
+                HSSUnit totalWidth = 0.;
+
+                //calculate the total width of the group
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it = group->lines.begin(); it != group->lines.end(); ++it)
+                {
+                    totalWidth += (*it)->width;
+                }
+
+                if (this->distributeXLinear)
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
+                    //divide it by the number of elements-1
+                    HSSUnit spaceChunk;
+                    if(remainingSpace < 0){
+                        spaceChunk = 0;
+                    } else {
+                        spaceChunk = remainingSpace / (group->lines.size() - 1);
+                    }
+                    unsigned i = 0;
+                    for (std::vector<QSharedPointer<HSSLayoutLine> >::reverse_iterator it = group->lines.rbegin(); it != group->lines.rend(); ++it)
+                    {
+                        QSharedPointer<HSSLayoutLine> &line = *it;
+                        line->x = accWidth + (spaceChunk * i);
+                        for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                        {
+                            QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                            this->_lineArrangeX(currentChild, line->x, line->width);
+                        }
+                        accWidth += line->width;
+                        ++i;
+                        if (this->_layoutTick()){
+                            return true;
+                        }
+                    }
+                    group->x = group->lines.front()->x;
+                }
+                else
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->innerWidth - totalWidth;
+                    //divide it by the number of elements+1
+                    HSSUnit spaceChunk;
+                    if(remainingSpace < 0){
+                        spaceChunk = 0;
+                    } else {
+                        spaceChunk = remainingSpace / (group->lines.size() + 1);
+                    }
+                    unsigned i = 0;
+                    for (std::vector<QSharedPointer<HSSLayoutLine> >::reverse_iterator it = group->lines.rbegin(); it != group->lines.rend(); ++it)
+                    {
+                        QSharedPointer<HSSLayoutLine> &line = *it;
+                        line->y = accWidth + (spaceChunk * i) + spaceChunk;
+                        for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                        {
+                            QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                            this->_lineArrangeX(currentChild, line->y, line->width);
+                        }
+                        accWidth += line->width;
+                        ++i;
+                        if (this->_layoutTick()){
+                            return true;
+                        }
+                    }
+                    group->y = group->lines.front()->y;
+                }
+            }
+            break;
+        }
+
+        case HSSDirectionBottomToTop:
+        {
+            if (group->lines.size() == 0)
+            {
+                HSSUnit newValue = ((this->innerHeight - group->height) / 2);
+                HSSUnit startY = this->topPadding + newValue;
+
+                for (HSSSimpleSelection::reverse_iterator it2 = group->objects->rbegin(); it2!= group->objects->rend(); ++it2)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                    this->_lineArrangeY(currentChild, startY, group->height);
+                }
+                if (this->_layoutTick()){
+                    return true;
+                }
+            }
+            else
+            {
+                HSSUnit accHeight = this->topPadding;
+                HSSUnit totalHeight = 0.;
+
+                //calculate the total height of the group
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it = group->lines.begin(); it != group->lines.end(); ++it)
+                {
+                    totalHeight += (*it)->height;
+                }
+
+                if (this->distributeYLinear)
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
+                    //divide it by the number of elements-1
+                    HSSUnit spaceChunk;
+                    if(remainingSpace < 0){
+                        spaceChunk = 0;
+                    } else {
+                        spaceChunk = remainingSpace / (group->lines.size() - 1);
+                    }
+                    unsigned i = 0;
+                    for (std::vector<QSharedPointer<HSSLayoutLine> >::reverse_iterator it = group->lines.rbegin(); it != group->lines.rend(); ++it)
+                    {
+                        QSharedPointer<HSSLayoutLine> &line = *it;
+                        line->y = accHeight + (spaceChunk * i);
+                        for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                        {
+                            QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                            this->_lineArrangeY(currentChild, line->y, line->height);
+                        }
+                        accHeight += line->height;
+                        ++i;
+                        if (this->_layoutTick()){
+                            return true;
+                        }
+                    }
+                    group->y = group->lines.front()->y;
+                }
+                else
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
+                    //divide it by the number of elements+1
+                    HSSUnit spaceChunk;
+                    if(remainingSpace < 0){
+                        spaceChunk = 0;
+                    } else {
+                        spaceChunk = remainingSpace / (group->lines.size() + 1);
+                    }
+                    unsigned i = 0;
+                    for (std::vector<QSharedPointer<HSSLayoutLine> >::reverse_iterator it = group->lines.rbegin(); it != group->lines.rend(); ++it)
+                    {
+                        QSharedPointer<HSSLayoutLine> &line = *it;
+                        line->y = accHeight + (spaceChunk * i) + spaceChunk;
+                        for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                        {
+                            QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                            this->_lineArrangeY(currentChild, line->y, line->height);
+                        }
+                        accHeight += line->height;
+                        ++i;
+                        if (this->_layoutTick()){
+                            return true;
+                        }
+                    }
+                    group->y = group->lines.front()->y;                }
+            }
+            break;
+        }
+
+        default:
+        {
+            if (group->lines.size() == 0)
+            {
+                HSSUnit newValue = ((this->innerHeight - group->height) / 2);
+                HSSUnit startY = this->topPadding + newValue;
+
+                for (HSSSimpleSelection::iterator it2 = group->objects->begin(); it2!= group->objects->end(); ++it2)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                    this->_lineArrangeY(currentChild, startY, group->height);
+                }
+                if (this->_layoutTick()){
+                    return true;
+                }
+            }
+            else
+            {
+                HSSUnit accHeight = this->topPadding;
+                HSSUnit totalHeight = 0.;
+
+                //calculate the total height of the group
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it = group->lines.begin(); it != group->lines.end(); ++it)
+                {
+                    totalHeight += (*it)->height;
+                }
+
+                if (this->distributeYLinear)
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
+                    //divide it by the number of elements-1
+                    HSSUnit spaceChunk;
+                    if(remainingSpace < 0){
+                        spaceChunk = 0;
+                    } else {
+                        spaceChunk = remainingSpace / (group->lines.size() - 1);
+                    }
+                    unsigned i = 0;
+                    for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it = group->lines.begin(); it != group->lines.end(); ++it)
+                    {
+                        QSharedPointer<HSSLayoutLine> &line = *it;
+                        line->y = accHeight + (spaceChunk * i);
+                        for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                        {
+                            QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                            this->_lineArrangeY(currentChild, line->y, line->height);
+                        }
+                        accHeight += line->height;
+                        ++i;
+                        if (this->_layoutTick()){
+                            return true;
+                        }
+                    }
+                    group->y = group->lines.front()->y;
+                }
+                else
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->innerHeight - totalHeight;
+                    //divide it by the number of elements+1
+                    HSSUnit spaceChunk;
+                    if(remainingSpace < 0){
+                        spaceChunk = 0;
+                    } else {
+                        spaceChunk = remainingSpace / (group->lines.size() + 1);
+                    }
+
+                    unsigned i = 0;
+                    for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it = group->lines.begin(); it != group->lines.end(); ++it)
+                    {
+                        QSharedPointer<HSSLayoutLine> &line = *it;
+                        line->y = accHeight + (spaceChunk * i) + spaceChunk;
+                        for (HSSSimpleSelection::iterator it2 = line->objects->begin(); it2!= line->objects->end(); ++it2)
+                        {
+                            QSharedPointer<HSSDisplayObject> & currentChild = *it2;
+                            this->_lineArrangeY(currentChild, line->y, line->height);
+                        }
+                        accHeight += line->height;
+                        ++i;
+                        if (this->_layoutTick()){
+                            return true;
+                        }
+                    }
+                    group->y = group->lines.front()->y;
+                }
+            }
+            break;
+        }
+    }
+    return false;
+}
+
+void HSSContainer::layout()
+{
+    bool done = false;
+    if (this->allChildren->empty()) return;
+
+    bool primaryIsHorizontal = (this->directionPrimary == HSSDirectionLeftToRight || this->directionPrimary == HSSDirectionRightToLeft);
+    while (!done && this->_needsLayout)
+    {
+        //we assume we don't need to re-layout
+        this->_needsLayout = false;
+
+        for (HSSSimpleSelection::const_iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
+        {
+            const QSharedPointer<HSSDisplayObject> & child = *it;
+            child->x = 0;
+            child->y = 0;
+        }
+
+        if (this->_layoutTick()){
+            done = true;
+        }
+
+        std::vector<QSharedPointer<HSSLayoutLine> > groups;
+
+        if (!done)
+        {
+            //place them on the alignment points and try to put them into groups
+            for (HSSSimpleSelection::const_iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
+            {
+                const QSharedPointer<HSSDisplayObject> & child = *it;
+
+                this->_placeOnAlignmentPoint(child);
+
+                if (this->_layoutTick()){
+                    done = true;
+                    break;
+                }
+
+                //try to add it to a group
+                QSharedPointer<HSSLayoutLine> targetGroup = this->_getTargetGroup(child, groups);
+                if (targetGroup)
+                {
+                    //found one
+                    targetGroup->add(child);
+                }
+                else
+                {
+                    //we'll create a new one
+                    QSharedPointer<HSSLayoutLine> newGroup = QSharedPointer<HSSLayoutLine>(new HSSLayoutLine(child, this->directionPrimary, this));
+                    groups.push_back(newGroup);
+                }
+            }
+        }
+
+        bool foundOverlaps = true;
+        while (!done && foundOverlaps)
+        {
+            //reset value
+            foundOverlaps = false;
+
+            //arrange in the primary direction
+            if (!done)
+            {
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = groups.begin(); it!= groups.end(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & group = *it;
+
+                    if (group->lines.size() > 0)
+                    {
+                        for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it2=group->lines.begin(); it2!=group->lines.end(); ++it2)
+                        {
+                            const QSharedPointer<HSSLayoutLine> & line = *it2;
+                            if ((this->distributeX && primaryIsHorizontal) || (this->distributeY && !primaryIsHorizontal))
+                            {
+                                line->distribute();
+                            }
+                            else
+                            {
+                                line->arrange();
+                            }
+
+                            if (this->_layoutTick()){
+                                done = true;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ((this->distributeX && primaryIsHorizontal) || (this->distributeY && !primaryIsHorizontal))
+                        {
+                            group->distribute();
+                        }
+                        else
+                        {
+                            group->arrange();
+                        }
+                        if (this->_layoutTick()){
+                            done = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            //arrange in the secondary direction
+            if (!done) {
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = groups.begin(); it!= groups.end(); ++it)
+                {
+                    if(!done)
+                    {
+                        const QSharedPointer<HSSLayoutLine> & group = *it;
+                        bool mustBreak = false;
+                        if ((this->distributeY && primaryIsHorizontal) || (this->distributeX && !primaryIsHorizontal))
+                        {
+                            mustBreak = this->_distributeLines(group, this->directionSecondary);
+                        }
+                        else
+                        {
+                            mustBreak = this->_arrangeLines(group, this->directionSecondary);
+                        }
+
+                        if (mustBreak){
+                            done = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!done)
+            {
+                //merge groups that overlap
+                for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it = groups.begin(); it!= groups.end(); ++it)
+                {
+                    const QSharedPointer<HSSLayoutLine> & group = *it;
+                    for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it2 = groups.begin(); it2!= groups.end(); ++it2)
+                    {
+                        const QSharedPointer<HSSLayoutLine> & otherGroup = *it2;
+                        if(group != otherGroup && group->overlaps(otherGroup))
+                        {
+                            foundOverlaps = true;
+                            group->mergeWith(otherGroup);
+                            if (it2+1 == groups.end())
+                            {
+                                groups.erase(it2);
+                                break;
+                            }
+                            else
+                            {
+                                groups.erase(it2);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //assign global positions
+        for (HSSSimpleSelection::const_iterator it=this->allChildren->begin(); it!=this->allChildren->end(); ++it)
+        {
+            const QSharedPointer<HSSDisplayObject> & child = *it;
+            this->_setGlobalPosition(child);
+        }
     }
 }
 
