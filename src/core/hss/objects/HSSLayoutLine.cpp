@@ -103,3 +103,572 @@ HSSLayoutLine::~HSSLayoutLine()
 {
     delete this->objects;
 }
+void HSSLayoutLine::arrange()
+{
+    size_t i = 0, size = this->objects->size();
+
+    switch (this->direction)
+    {
+        case HSSDirectionTopToBottom:
+        {
+            bool byAnchors = false;
+            for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+            {
+                if (!(*it)->_anchorYdefault)
+                {
+                    byAnchors = true;
+                    break;
+                }
+            }
+            //sort the elements by alignment point
+            std::sort(this->objects->begin(), this->objects->end(), HSSContainer::alignYSmaller);
+            if (byAnchors)
+            {
+                //calculate the new alignment and anchor point for the group
+                const QSharedPointer<HSSDisplayObject> & groupFirst = this->objects->front();
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accHeight = groupFirst->height - groupFirst->anchorY;
+                HSSUnit anchorsTotal = 0.;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    alignmentTotal += currentChild->alignY;
+                    if (i > 0)
+                    {
+                        anchorsTotal += accHeight + currentChild->anchorY;
+                        accHeight += currentChild->outerHeight;
+                    }
+                }
+                HSSUnit groupAlignY = alignmentTotal / size;
+                HSSUnit groupAnchorY = anchorsTotal / size;
+
+                //reposition the elements in the group
+                HSSUnit startY = groupAlignY - groupAnchorY - groupFirst->anchorY;
+                startY = this->_clamp(startY, this->owner->topPadding, (this->owner->height - this->owner->bottomPadding) - this->height);
+                accHeight = 0.;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & otherChild2 = *it;
+                    otherChild2->y = startY + accHeight;
+                    accHeight += otherChild2->height;
+                }
+                this->x = this->objects->front()->x - this->objects->front()->leftMargin;
+                this->y = this->objects->front()->y - this->objects->front()->topMargin;
+            }
+            else
+            {
+                //calculate the alignment point for the group
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accHeight = 0.;
+                HSSUnit heightsTotal = 0.;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    heightsTotal += currentChild->outerHeight;
+                }
+                HSSUnit medianHeight = heightsTotal / size;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    alignmentTotal += currentChild->alignY * currentChild->outerHeight / medianHeight;
+                }
+                HSSUnit groupAlignY = alignmentTotal / size;
+
+                //reposition the elements in the group
+                HSSUnit startY = groupAlignY - heightsTotal / 2;
+                startY = this->_clamp(startY, this->owner->topPadding, (this->owner->height - this->owner->bottomPadding) - this->height);
+                this->y = startY;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    currentChild->y = startY + accHeight + currentChild->topMargin;
+                    accHeight += currentChild->outerHeight;
+                }
+            }
+            break;
+        }
+
+        case HSSDirectionBottomToTop:
+        {
+            bool byAnchors = false;
+            for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+            {
+                if (!(*it)->_anchorYdefault)
+                {
+                    byAnchors = true;
+                    break;
+                }
+            }
+            //sort the elements by alignment point
+            std::sort(this->objects->rbegin(), this->objects->rend(), HSSContainer::alignYSmaller);
+            if (byAnchors)
+            {
+                //calculate the new alignment and anchor point for the group
+                const QSharedPointer<HSSDisplayObject> & groupFirst = this->objects->front();
+                HSSUnit alignmentTotal = 0;
+                HSSUnit accHeight = groupFirst->anchorY;
+                HSSUnit anchorsTotal = 0;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    alignmentTotal += currentChild->alignY;
+                    if (i > 0)
+                    {
+                        anchorsTotal += accHeight + currentChild->anchorY;
+                        accHeight += currentChild->outerHeight;
+                    }
+                }
+                HSSUnit groupAlignY = alignmentTotal / size;
+                HSSUnit groupAnchorY = anchorsTotal / size;
+
+                //reposition the elements in the group
+                HSSUnit startY = groupAlignY + groupAnchorY + (groupFirst->height - groupFirst->anchorY);
+                startY = this->_clamp(startY, this->owner->topPadding, this->owner->height - this->owner->bottomPadding);
+                accHeight = 0;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & otherChild2 = *it;
+                    otherChild2->y = startY - otherChild2->height - accHeight;
+                    accHeight += otherChild2->height;
+                }
+                this->x = this->objects->front()->x;
+                this->y = this->objects->front()->y;
+            }
+            else
+            {
+                //calculate the alignment point for the group
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accHeight = 0.;
+                HSSUnit heightsTotal = 0.;
+                for (HSSSimpleSelection::reverse_iterator it = this->objects->rbegin(); it!= this->objects->rend(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    heightsTotal += currentChild->outerHeight;
+                }
+                HSSUnit medianHeight = heightsTotal / size;
+                for (HSSSimpleSelection::reverse_iterator it = this->objects->rbegin(); it!= this->objects->rend(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    alignmentTotal += currentChild->alignY * currentChild->outerHeight / medianHeight;
+                }
+                HSSUnit groupAlignY = alignmentTotal / size;
+
+                //reposition the elements in the group
+                HSSUnit startY = groupAlignY - heightsTotal / 2;
+                startY = this->_clamp(startY, this->owner->topPadding, (this->owner->height - this->owner->bottomPadding) - this->height);
+                this->y = startY;
+                for (HSSSimpleSelection::reverse_iterator it = this->objects->rbegin(); it!= this->objects->rend(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    currentChild->y = startY + accHeight + currentChild->topMargin;
+                    accHeight += currentChild->outerHeight;
+                }
+            }
+
+            break;
+        }
+
+        case HSSDirectionRightToLeft:
+        {
+            bool byAnchors = false;
+            for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+            {
+                if (!(*it)->_anchorXdefault)
+                {
+                    byAnchors = true;
+                    break;
+                }
+            }
+            //sort the elements by alignment point
+            std::sort(this->objects->rbegin(), this->objects->rend(), HSSContainer::alignXSmaller);
+            if (byAnchors)
+            {
+                //calculate the new alignment and anchor point for the group
+                const QSharedPointer<HSSDisplayObject> & groupFirst = this->objects->front();
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accWidth = groupFirst->anchorX;
+                HSSUnit anchorsTotal = 0.;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    alignmentTotal += currentChild->alignX;
+                    if (i > 0)
+                    {
+                        anchorsTotal += accWidth + currentChild->anchorX;
+                        accWidth += currentChild->outerWidth;
+                    }
+                }
+                HSSUnit groupAlignX = alignmentTotal / size;
+                HSSUnit groupAnchorX = anchorsTotal / size;
+
+                //reposition the elements in the group
+                HSSUnit startX = groupAlignX + groupAnchorX + (groupFirst->width - groupFirst->anchorX);
+                if (startX - this->width < 0) startX = this->width;
+                if (startX > this->width) startX = this->width;
+                accWidth = 0.;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & otherChild2 = *it;
+                    otherChild2->x = startX - otherChild2->width - accWidth;
+                    accWidth += otherChild2->width;
+                }
+                this->x = this->objects->front()->x - this->objects->front()->leftMargin;
+                this->y = this->objects->front()->y - this->objects->front()->topMargin;
+            }
+            else
+            {
+                //calculate the alignment point for the group
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accWidth = 0.;
+                HSSUnit widthsTotal = 0.;
+                for (HSSSimpleSelection::reverse_iterator it = this->objects->rbegin(); it!= this->objects->rend(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    widthsTotal += currentChild->outerWidth;
+                }
+                HSSUnit medianWidth = widthsTotal / size;
+                for (HSSSimpleSelection::reverse_iterator it = this->objects->rbegin(); it!= this->objects->rend(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    alignmentTotal += currentChild->alignX * currentChild->outerWidth / medianWidth;
+                }
+                HSSUnit groupAlignX = alignmentTotal / size;
+
+                //reposition the elements in the group
+                HSSUnit startX = groupAlignX - widthsTotal / 2;
+                startX = this->_clamp(startX, this->owner->leftPadding, (this->owner->width - this->owner->rightPadding) - this->width);
+                this->x = startX;
+                for (HSSSimpleSelection::reverse_iterator it = this->objects->rbegin(); it!= this->objects->rend(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    currentChild->x = startX + accWidth + currentChild->leftMargin;
+                    accWidth += currentChild->outerWidth;
+                }
+            }
+            break;
+        }
+
+        default:
+        {
+            bool byAnchors = false;
+            for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+            {
+                if (!(*it)->_anchorXdefault)
+                {
+                    byAnchors = true;
+                    break;
+                }
+            }
+            //sort the elements by alignment point
+            std::sort(this->objects->begin(), this->objects->end(), HSSContainer::alignXSmaller);
+            if (byAnchors)
+            {
+                //calculate the new alignment and anchor point for the group
+                const QSharedPointer<HSSDisplayObject> & groupFirst = this->objects->front();
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accWidth = groupFirst->outerWidth - groupFirst->anchorX;
+                HSSUnit anchorsTotal = 0.;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    alignmentTotal += currentChild->alignX;
+                    if (i > 0)
+                    {
+                        anchorsTotal += accWidth + currentChild->anchorX;
+                        accWidth += currentChild->outerWidth;
+                    }
+                }
+                HSSUnit groupAlignX = alignmentTotal / size;
+                HSSUnit groupAnchorX = anchorsTotal / size;
+
+                //reposition the elements in the group
+                HSSUnit startX = groupAlignX - groupAnchorX - groupFirst->anchorX;
+                startX = this->_clamp(startX, this->owner->leftPadding, (this->owner->width - this->owner->rightPadding) - this->width);
+
+                accWidth = 0.;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & otherChild2 = *it;
+                    otherChild2->x = startX + accWidth + otherChild2->leftMargin;
+                    accWidth += otherChild2->outerWidth;
+                }
+                this->x = this->objects->front()->x - this->objects->front()->leftMargin;
+                this->y = this->objects->front()->y - this->objects->front()->topMargin;
+
+            }
+            else
+            {
+                //calculate the alignment point for the group
+                HSSUnit alignmentTotal = 0.;
+                HSSUnit accWidth = 0.;
+                HSSUnit widthsTotal = 0.;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    widthsTotal += currentChild->outerWidth;
+                }
+                HSSUnit medianWidth = widthsTotal / size;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    alignmentTotal += currentChild->alignX * currentChild->outerWidth / medianWidth;
+                }
+                HSSUnit groupAlignX = alignmentTotal / size;
+
+                //reposition the elements in the group
+                HSSUnit startX = groupAlignX - widthsTotal / 2;
+                startX = this->_clamp(startX, this->owner->leftPadding, (this->owner->width - this->owner->rightPadding) - this->width);
+                this->x = startX;
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it!= this->objects->end(); ++it)
+                {
+                    QSharedPointer<HSSDisplayObject> & currentChild = *it;
+                    currentChild->x = startX + accWidth + currentChild->leftMargin;
+                    accWidth += currentChild->outerWidth;
+                }
+            }
+            break;
+        }
+    }
+}
+
+void HSSLayoutLine::distribute()
+{
+    switch (direction)
+    {
+        case HSSDirectionRightToLeft:
+        {
+            if (this->objects->size() == 1)
+            {
+                const QSharedPointer<HSSDisplayObject> &theDO = this->objects->front();
+                HSSUnit newValue = ((this->owner->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
+                theDO->x = this->owner->leftPadding + newValue;
+                this->x = 0.;
+                this->y = theDO->y;
+            }
+            else
+            {
+                HSSUnit accWidth = this->owner->rightPadding;
+                HSSUnit totalWidth = 0.;
+
+                //calculate the total width of the group
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                {
+                    totalWidth += (*it)->outerWidth;
+                }
+
+                if (this->owner->distributeXLinear)
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->owner->innerWidth - totalWidth;
+                    //divide it by the number of elements-1
+                    HSSUnit spaceChunk = remainingSpace / (this->objects->size() - 1);
+                    unsigned i = 0;
+                    for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                    {
+                        QSharedPointer<HSSDisplayObject> &theDO = *it;
+                        theDO->x = this->owner->width - accWidth - (spaceChunk * i) - theDO->width - theDO->rightMargin;
+                        accWidth += theDO->outerWidth;
+                        ++i;
+                    }
+                    this->x = 0.;
+                    this->y = this->objects->back()->y;
+                }
+                else
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->owner->innerWidth - totalWidth;
+                    //divide it by the number of elements+1
+                    HSSUnit spaceChunk = remainingSpace / (this->objects->size() + 1);
+                    unsigned i = 0;
+                    for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                    {
+                        QSharedPointer<HSSDisplayObject> &theDO = *it;
+                        theDO->x = this->owner->width - accWidth - spaceChunk - (spaceChunk * i) - theDO->width - theDO->leftMargin;
+                        accWidth += theDO->outerWidth;
+                        ++i;
+                    }
+                    this->x = 0.;
+                    this->y = this->objects->front()->y;
+                }
+            }
+
+            break;
+        }
+
+        case HSSDirectionTopToBottom:
+        {
+            if (this->objects->size() == 1)
+            {
+                const QSharedPointer<HSSDisplayObject> &theDO = this->objects->front();
+                HSSUnit newValue = ((this->owner->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
+                theDO->y = this->owner->topPadding + newValue;
+                this->y = 0.;
+                this->x = theDO->x;
+            }
+            else
+            {
+                HSSUnit accHeight = this->owner->topPadding;
+                HSSUnit totalHeight = 0.;
+
+                //calculate the total height of the group
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                {
+                    totalHeight += (*it)->outerHeight;
+                }
+
+                if (this->owner->distributeXLinear)
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->owner->innerHeight - totalHeight;
+                    //divide it by the number of elements-1
+                    HSSUnit spaceChunk = remainingSpace / (this->objects->size() - 1);
+                    unsigned i = 0;
+                    for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                    {
+                        QSharedPointer<HSSDisplayObject> &theDO = *it;
+                        theDO->y = accHeight + (spaceChunk * i) + theDO->topMargin;
+                        accHeight += theDO->outerHeight;
+                        ++i;
+                    }
+                    this->x = 0.;
+                    this->y = this->objects->front()->y;
+                }
+                else
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->owner->innerHeight - totalHeight;
+                    //divide it by the number of elements+1
+                    HSSUnit spaceChunk = remainingSpace / (this->objects->size() + 1);
+                    unsigned i = 0;
+                    for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                    {
+                        QSharedPointer<HSSDisplayObject> &theDO = *it;
+                        theDO->y = accHeight + spaceChunk + (spaceChunk * i) + theDO->topMargin;
+                        accHeight += theDO->outerHeight;
+                        ++i;
+                    }
+                    this->y = 0.;
+                    this->x = this->objects->front()->x;
+                }
+            }
+            break;
+        }
+
+        case HSSDirectionBottomToTop:
+        {
+            if (this->objects->size() == 1)
+            {
+                const QSharedPointer<HSSDisplayObject> &theDO = this->objects->front();
+                HSSUnit newValue = ((this->owner->innerHeight - theDO->outerHeight) / 2) + theDO->topMargin;
+                theDO->y = this->owner->topPadding + newValue;
+                this->y = 0.;
+                this->x = theDO->x;
+            }
+            else
+            {
+                HSSUnit accHeight = this->owner->bottomPadding;
+                HSSUnit totalHeight = 0.;
+
+                //calculate the total height of the group
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                {
+                    totalHeight += (*it)->outerHeight;
+                }
+
+                if (this->owner->distributeXLinear)
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->owner->innerHeight - totalHeight;
+                    //divide it by the number of elements-1
+                    HSSUnit spaceChunk = remainingSpace / (this->objects->size() - 1);
+                    unsigned i = 0;
+                    for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                    {
+                        QSharedPointer<HSSDisplayObject> &theDO = *it;
+                        theDO->y = this->owner->height - accHeight - (spaceChunk * i) - theDO->height - theDO->bottomMargin;
+                        accHeight += theDO->outerHeight;
+                        ++i;
+                    }
+                    this->y = 0.;
+                    this->x = this->objects->back()->x;
+                }
+                else
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->owner->innerHeight - totalHeight;
+                    //divide it by the number of elements+1
+                    HSSUnit spaceChunk = remainingSpace / (this->objects->size() + 1);
+                    unsigned i = 0;
+                    for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                    {
+                        QSharedPointer<HSSDisplayObject> &theDO = *it;
+                        theDO->y = this->owner->height - accHeight - spaceChunk - (spaceChunk * i) - theDO->height - theDO->topMargin;
+                        accHeight += theDO->outerHeight;
+                        ++i;
+                    }
+                    this->y = 0.;
+                    this->x = this->objects->front()->x;
+                }
+            }
+            break;
+        }
+
+        default:
+        {
+            if (this->objects->size() == 1)
+            {
+                const QSharedPointer<HSSDisplayObject> &theDO = this->objects->front();
+                HSSUnit newValue = ((this->owner->innerWidth - theDO->outerWidth) / 2) + theDO->leftMargin;
+                theDO->x = this->owner->leftPadding + newValue;
+                this->x = 0.;
+                this->y = theDO->y;
+            }
+            else
+            {
+                HSSUnit accWidth = this->owner->leftPadding;
+                HSSUnit totalWidth = 0.;
+
+                //calculate the total width of the group
+                for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                {
+                    totalWidth += (*it)->outerWidth;
+                }
+
+                if (this->owner->distributeXLinear)
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->owner->innerWidth - totalWidth;
+                    //divide it by the number of elements-1
+                    HSSUnit spaceChunk = remainingSpace / (this->objects->size() - 1);
+                    unsigned i = 0;
+                    for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                    {
+                        (*it)->x = accWidth + (spaceChunk * i) + (*it)->leftMargin;
+                        accWidth += (*it)->outerWidth;
+                        ++i;
+                    }
+                    this->x = 0.;
+                    this->y = this->objects->front()->y;
+                }
+                else
+                {
+                    //now get the remaining space
+                    HSSUnit remainingSpace = this->owner->innerWidth - totalWidth;
+                    //divide it by the number of elements+1
+                    HSSUnit spaceChunk = remainingSpace / (this->objects->size() + 1);
+                    unsigned i = 0;
+                    for (HSSSimpleSelection::iterator it = this->objects->begin(); it != this->objects->end(); ++it)
+                    {
+                        (*it)->x = accWidth + spaceChunk + (spaceChunk * i) + (*it)->leftMargin;
+                        accWidth += (*it)->outerWidth;
+                        ++i;
+                    }
+                    this->x = 0.;
+                    this->y = this->objects->front()->y;
+                }
+            }
+
+            break;
+        }
+    }
+}

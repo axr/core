@@ -472,10 +472,8 @@ namespace AXR
         bool _addChildToGroupIfNeeded(const QSharedPointer<HSSDisplayObject> &child, displayGroup::p &group, HSSDirectionValue direction, bool contained);
         //std::vector<HSSContainer::displayGroup::p> _getGroupsOverlapping(QSharedPointer<HSSDisplayObject> &child, std::vector<HSSContainer::displayGroup::p> &group, HSSDirectionValue direction);
         bool _mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p &otherGroup, HSSDirectionValue direction);
-        void _arrange(displayGroup::p &groups, HSSDirectionValue direction);
         bool _arrangeLines(displayGroup::p &groups, HSSDirectionValue direction, bool isFirstGroup);
         void _recursiveGetPushGroup(QSharedPointer<HSSDisplayObject> objA, QSharedPointer<HSSDisplayObject> objB, std::vector<displayGroup::p>::iterator linesIt, std::vector<displayGroup::p>::iterator stopIt, displayGroup::p &ret);
-        void _distribute(displayGroup::p &groups, HSSDirectionValue direction);
         bool _recursiveFindTopConstraint(HSSUnit & constraint, displayGroup::p group, size_t i, QSharedPointer<HSSDisplayObject> child);
         bool _recursiveFindBottomConstraint(HSSUnit & constraint, displayGroup::p group, size_t i, QSharedPointer<HSSDisplayObject> child);
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

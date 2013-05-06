@@ -79,6 +79,8 @@ namespace AXR
         QSharedPointer<HSSLayoutLine> clone() const;
         virtual ~HSSLayoutLine();
         
+        void arrange();
+        void distribute();
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
