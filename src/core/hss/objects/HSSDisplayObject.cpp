@@ -2007,7 +2007,7 @@ HSSUnit HSSDisplayObject::getAlignY()
 
 QSharedPointer<HSSParserNode> HSSDisplayObject::getDAlignY()
 {
-    return this->dAlignX;
+    return this->dAlignY;
 }
 
 void HSSDisplayObject::setDAlignY(QSharedPointer<HSSParserNode> value)
