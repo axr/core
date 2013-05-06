@@ -903,6 +903,7 @@ void HSSDisplayObject::setDWidth(QSharedPointer<HSSParserNode> value)
         if (this->observedWidth)
         {
             this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
+            this->observedWidth.clear();
         }
         QSharedPointer<HSSContainer> parentContainer = this->getParent();
         if (parentContainer)
@@ -1167,6 +1168,7 @@ void HSSDisplayObject::setDHeight(QSharedPointer<HSSParserNode> value)
         if (this->observedHeight)
         {
             this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
+            this->observedHeight.clear();
         }
         QSharedPointer<HSSContainer> parentContainer = this->getParent();
         if (parentContainer)
@@ -1374,6 +1376,7 @@ void HSSDisplayObject::setDAnchorX(QSharedPointer<HSSParserNode> value)
         if (this->observedAnchorX)
         {
             this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
+            this->observedAnchorX.clear();
         }
         QSharedPointer<HSSContainer> parentContainer = this->getParent();
         QSharedPointer<HSSSimpleSelection> scope;
@@ -1402,6 +1405,7 @@ void HSSDisplayObject::setDAnchorX(QSharedPointer<HSSParserNode> value)
         if (this->observedAnchorX)
         {
             this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
+            this->observedAnchorX.clear();
         }
         //we don't need to observe anything here, since it will be handled by the layout algorithm
         QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
@@ -1494,6 +1498,7 @@ void HSSDisplayObject::setDAnchorY(QSharedPointer<HSSParserNode> value)
         if (this->observedAnchorY)
         {
             this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
+            this->observedAnchorY.clear();
         }
         QSharedPointer<HSSContainer> parentContainer = this->getParent();
         QSharedPointer<HSSSimpleSelection> scope;
@@ -1522,6 +1527,7 @@ void HSSDisplayObject::setDAnchorY(QSharedPointer<HSSParserNode> value)
         if (this->observedAnchorY)
         {
             this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
+            this->observedAnchorY.clear();
         }
         //we don't need to observe anything here, since it will be handled by the layout algorithm
         QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant > (value);
@@ -2853,6 +2859,7 @@ void HSSDisplayObject::addDFont(QSharedPointer<HSSParserNode> value)
             if (this->observedFont)
             {
                 this->observedFont->removeObserver(this->observedFontProperty, HSSObservablePropertyFont, this);
+                this->observedFont.clear();
             }
             QSharedPointer<HSSContainer> parent = this->getParent();
             QVariant remoteValue = parent->getProperty(HSSObservablePropertyFont);
@@ -3889,6 +3896,10 @@ HSSUnit HSSDisplayObject::_evaluatePropertyValue(
             observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject > (this, callback));
             observedStore = observedObject;
             observedStoreProperty = observedProperty;
+        }
+        else
+        {
+            observedStore.clear();
         }
         break;
     }
