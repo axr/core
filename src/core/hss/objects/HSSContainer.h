@@ -75,31 +75,6 @@ namespace AXR
         friend class HSSRenderer;
 
         /**
-         *  @brief Display groups are used by HSSContainer to lay out elements according
-         *  to the layout algorithm. They represent a set of elements that are flowing
-         *  together in a direction. They also contain lines, each of whose is also a
-         *  display group. When there are lines, the objects vector should not be used.
-         */
-        class AXR_API displayGroup
-        {
-        public:
-            typedef QSharedPointer<HSSContainer::displayGroup> p;
-            HSSUnit x;
-            HSSUnit y;
-            HSSUnit width;
-            HSSUnit height;
-            AXRString name;
-            bool complete;
-            std::vector<HSSContainer::displayGroup::p>lines;
-            HSSSimpleSelection objects;
-
-            static bool heightGreater(const displayGroup::p& x, const displayGroup::p& y)
-            {
-                return x->height > y->height;
-            }
-        };
-
-        /**
          *  Utility function for casting a shared pointer to a container to a display object.
          *  @param theContainer A shared pointer to the container.
          *  @return A shared pointer to the container as display object type.
@@ -211,7 +186,7 @@ namespace AXR
          *  Lays out the children according to the layout algorithm, first in the primary direction
          *  and then in the secondary one.
          */
-        void layout();
+
 
         /**
          *  Propagates the layout() call to all the children.
@@ -451,30 +426,7 @@ namespace AXR
                                    QSharedPointer<HSSSimpleSelection> scope
                                    );
 
-        void _recursiveCreateSecondaryGroups(
-                                             HSSSimpleSelection::iterator lineAIt,
-                                             HSSSimpleSelection::iterator lineAStopIt,
-                                             HSSSimpleSelection::iterator lineBIt,
-                                             HSSSimpleSelection::iterator lineBStopIt,
-                                             displayGroup::p &targetA, displayGroup::p &targetB,
-                                             displayGroup::p &newGroup,
-                                             std::vector<displayGroup::p>::iterator pglIt,
-                                             std::vector<displayGroup::p>::iterator pglStopIt,
-                                             bool addToSecondaryGroups,
-                                             std::vector<displayGroup::p> &secondaryGroups,
-                                             bool needsShoveling,
-                                             bool onlyAddToBIfNotInGroupYet
-                                             );
-
-        bool _addChildToGroupIfNeeded(const QSharedPointer<HSSDisplayObject> &child, displayGroup::p &group, HSSDirectionValue direction, bool contained);
-        //std::vector<HSSContainer::displayGroup::p> _getGroupsOverlapping(QSharedPointer<HSSDisplayObject> &child, std::vector<HSSContainer::displayGroup::p> &group, HSSDirectionValue direction);
-        bool _mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p &otherGroup, HSSDirectionValue direction);
-        bool _arrangeLines(displayGroup::p &groups, HSSDirectionValue direction, bool isFirstGroup);
-        void _recursiveGetPushGroup(QSharedPointer<HSSDisplayObject> objA, QSharedPointer<HSSDisplayObject> objB, std::vector<displayGroup::p>::iterator linesIt, std::vector<displayGroup::p>::iterator stopIt, displayGroup::p &ret);
-        bool _recursiveFindTopConstraint(HSSUnit & constraint, displayGroup::p group, size_t i, QSharedPointer<HSSDisplayObject> child);
-        bool _recursiveFindBottomConstraint(HSSUnit & constraint, displayGroup::p group, size_t i, QSharedPointer<HSSDisplayObject> child);
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
-
     };
 }
 
