@@ -1319,19 +1319,7 @@ void HSSDisplayObject::heightChanged(HSSObservableProperty source, void *data)
     }
 
     case HSSParserNodeTypeExpression:
-    {
-        QSharedPointer<HSSExpression> heightExpression = qSharedPointerCast<HSSExpression > (this->dHeight);
-        heightExpression->setPercentageBase(*(HSSUnit*) data);
-        this->height = floor(heightExpression->evaluate());
-        break;
-    }
-
     case HSSParserNodeTypeKeywordConstant:
-    {
-        this->height = floor(*(HSSUnit*) data);
-        break;
-    }
-
     case HSSParserNodeTypeFunctionCall:
     {
         this->height = floor(*(HSSUnit*) data);
@@ -1441,13 +1429,6 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
     }
 
     case HSSParserNodeTypeExpression:
-    {
-        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (this->dAnchorX);
-        this->anchorX = expressionValue->evaluate();
-        this->_anchorXdefault = false;
-        break;
-    }
-
     case HSSParserNodeTypeFunctionCall:
     {
         this->anchorX = *(HSSUnit*) data;
@@ -1563,12 +1544,6 @@ void HSSDisplayObject::anchorYChanged(HSSObservableProperty source, void *data)
     }
 
     case HSSParserNodeTypeExpression:
-    {
-        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (this->dAnchorY);
-        this->anchorY = expressionValue->evaluate();
-        break;
-    }
-
     case HSSParserNodeTypeFunctionCall:
     {
         this->anchorY = floor(*(HSSUnit*) data);
@@ -2012,17 +1987,7 @@ void HSSDisplayObject::alignXChanged(HSSObservableProperty source, void *data)
     }
 
     case HSSParserNodeTypeExpression:
-    {
-        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (this->dAlignX);
-        this->alignX = expressionValue->evaluate();
-        break;
-    }
-
     case HSSParserNodeTypeKeywordConstant:
-    {
-        this->alignX = *(HSSUnit*) data;
-    }
-
     case HSSParserNodeTypeFunctionCall:
     {
         this->alignX = *(HSSUnit*) data;
@@ -2155,17 +2120,7 @@ void HSSDisplayObject::alignYChanged(HSSObservableProperty source, void *data)
     }
 
     case HSSParserNodeTypeExpression:
-    {
-        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression > (this->dAlignY);
-        this->alignY = expressionValue->evaluate();
-        break;
-    }
-
     case HSSParserNodeTypeKeywordConstant:
-    {
-        this->alignY = *(HSSUnit*) data;
-    }
-
     case HSSParserNodeTypeFunctionCall:
     {
         this->alignY = *(HSSUnit*) data;

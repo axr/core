@@ -133,9 +133,9 @@ HSSUnit HSSExpression::evaluate()
             this->leftval = leftExpression->evaluate();
             if (this->leftObserved)
             {
-                this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
+                this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyLeft, this);
             }
-            leftExpression->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::leftChanged));
+            leftExpression->observe(HSSObservablePropertyValue, HSSObservablePropertyLeft, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::leftChanged));
             this->leftObserved = leftExpression.data();
             this->leftObservedProperty = HSSObservablePropertyValue;
             break;
@@ -154,10 +154,10 @@ HSSUnit HSSExpression::evaluate()
             this->leftval = leftPercentage->getValue(this->percentageBase);
             if (this->leftObserved)
             {
-                this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
+                this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyLeft, this);
             }
-            leftPercentage->observe(this->percentageObservedProperty, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::leftChanged));
-            this->leftObserved = leftPercentage.data();
+            this->percentageObserved->observe(this->percentageObservedProperty, HSSObservablePropertyLeft, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::leftChanged));
+            this->leftObserved = this->percentageObserved;
             this->leftObservedProperty = this->percentageObservedProperty;
             break;
         }
@@ -171,9 +171,9 @@ HSSUnit HSSExpression::evaluate()
                 this->leftval = *remoteValue.value<HSSUnit*>();
                 if (this->leftObserved)
                 {
-                    this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
+                    this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyLeft, this);
                 }
-                leftFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::leftChanged));
+                leftFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyLeft, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::leftChanged));
                 this->leftObserved = leftFunction.data();
                 this->leftObservedProperty = HSSObservablePropertyValue;
 
@@ -201,9 +201,9 @@ HSSUnit HSSExpression::evaluate()
             this->rightval = rightExpression->evaluate();
             if (this->rightObserved)
             {
-                this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
+                this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyRight, this);
             }
-            rightExpression->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
+            rightExpression->observe(HSSObservablePropertyValue, HSSObservablePropertyRight, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
             this->rightObserved = rightExpression.data();
             this->rightObservedProperty = HSSObservablePropertyValue;
             break;
@@ -222,9 +222,9 @@ HSSUnit HSSExpression::evaluate()
             this->rightval = rightPercentage->getValue(this->percentageBase);
             if (this->rightObserved)
             {
-                this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
+                this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyRight, this);
             }
-            rightPercentage->observe(this->percentageObservedProperty, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
+            this->percentageObserved->observe(this->percentageObservedProperty, HSSObservablePropertyRight, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
             this->rightObserved = rightPercentage.data();
             this->rightObservedProperty = this->percentageObservedProperty;
             break;
@@ -239,9 +239,9 @@ HSSUnit HSSExpression::evaluate()
                 this->rightval = *remoteValue.value<HSSUnit*>();
                 if (this->rightObserved)
                 {
-                    this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
+                    this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyRight, this);
                 }
-                rightFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
+                rightFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyRight, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
                 this->rightObserved = rightFunction.data();
                 this->rightObservedProperty = HSSObservablePropertyValue;
             }
