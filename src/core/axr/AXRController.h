@@ -232,7 +232,7 @@ namespace AXR
          *  @param newTree  A vector of shared pointers to parser nodes, representing the new tree.
          */
         void setParserTree(const QList<QSharedPointer<HSSParserNode> > &newTree);
-        
+
         /**
          *  Appends the parser node to the parser tree.
          *

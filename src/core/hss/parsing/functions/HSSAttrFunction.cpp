@@ -142,10 +142,10 @@ QVariant HSSAttrFunction::_evaluate()
     {
         QSharedPointer<HSSDisplayObject> container = selection->front();
         this->_value = container->attributes[this->attributeName];
-        
+
         //todo handle this
         //container->observe(this->attributeName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSAttrFunction>(this, &HSSAttrFunction::valueChanged));
-        
+
         //this->observed = container.get();
     }
     else
@@ -155,7 +155,7 @@ QVariant HSSAttrFunction::_evaluate()
         {
             selectorChainStrings.append(selectorChain->stringRep());
         }
-        
+
         AXRWarning("HSSAttrFunction", AXRString("attr(%1) of %2 did not select any elements").arg(this->attributeName).arg(selectorChainStrings.join(", "))).raise();
         this->_value = AXRString();
     }

@@ -4001,7 +4001,7 @@ bool HSSDisplayObject::handleEvent(HSSInputEvent *event)
                 {
                     this->setHover(false);
                 }
-                
+
                 return this->fireEvent(event->type());
             }
 
@@ -4068,7 +4068,7 @@ bool HSSDisplayObject::handleMouseEvent(HSSMouseEvent *event)
                 this->setHover(false);
                 return true;
             }
-            
+
             break;
         }
         default:
