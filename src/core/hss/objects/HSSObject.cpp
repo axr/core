@@ -574,7 +574,7 @@ void HSSObject::setController(AXRController * controller)
     this->axrController = controller;
 }
 
-AXRController * HSSObject::getController()
+AXRController * HSSObject::getController() const
 {
     return this->axrController;
 }

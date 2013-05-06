@@ -279,7 +279,7 @@ namespace AXR
          *  Getter for the controller.
          *  @return A pointer to the AXRController that owns this object
          */
-        virtual AXRController * getController();
+        virtual AXRController * getController() const;
         /**
          *  Setter for the "this object", which is a shared pointer to the nearest display object
          *  (including itself).
