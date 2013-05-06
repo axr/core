@@ -254,12 +254,14 @@ namespace AXR
 
         //height
         HSSUnit getHeight();
+        HSSUnit getInnerHeight();
         QSharedPointer<HSSParserNode> getDHeight();
         void setDHeight(QSharedPointer<HSSParserNode> value);
         void heightChanged(HSSObservableProperty source, void*data);
 
         //width
         HSSUnit getWidth();
+        HSSUnit getInnerWidth();
         QSharedPointer<HSSParserNode> getDWidth();
         void setDWidth(QSharedPointer<HSSParserNode> value);
         void widthChanged(HSSObservableProperty source, void*data);

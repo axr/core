@@ -847,6 +847,11 @@ HSSUnit HSSDisplayObject::getWidth()
     return this->width;
 }
 
+HSSUnit HSSDisplayObject::getInnerWidth()
+{
+    return this->innerWidth;
+}
+
 QSharedPointer<HSSParserNode> HSSDisplayObject::getDWidth()
 {
     return this->dWidth;
@@ -1065,6 +1070,11 @@ void HSSDisplayObject::widthChanged(HSSObservableProperty source, void*data)
 HSSUnit HSSDisplayObject::getHeight()
 {
     return this->height;
+}
+
+HSSUnit HSSDisplayObject::getInnerHeight()
+{
+    return this->innerHeight;
 }
 
 QSharedPointer<HSSParserNode> HSSDisplayObject::getDHeight()
