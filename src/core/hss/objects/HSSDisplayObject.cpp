@@ -1431,7 +1431,7 @@ void HSSDisplayObject::anchorXChanged(HSSObservableProperty source, void *data)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
-        this->anchorX = *(HSSUnit*) data;
+        this->anchorX = floor(*(HSSUnit*) data);
         this->_anchorXdefault = false;
         break;
     }
