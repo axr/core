@@ -137,7 +137,11 @@ void HSSDisplayObject::initialize()
     this->registerProperty(HSSObservablePropertyAnchorY, QVariant::fromValue(&this->anchorY));
     this->registerProperty(HSSObservablePropertyFlow, QVariant::fromValue(&this->flow));
     this->registerProperty(HSSObservablePropertyContained, QVariant::fromValue(&this->contained));
+    this->registerProperty(HSSObservablePropertyInnerHeight, QVariant::fromValue(&this->innerHeight));
+    this->registerProperty(HSSObservablePropertyOuterHeight, QVariant::fromValue(&this->outerHeight));
     this->registerProperty(HSSObservablePropertyHeight, QVariant::fromValue(&this->height));
+    this->registerProperty(HSSObservablePropertyInnerWidth, QVariant::fromValue(&this->innerWidth));
+    this->registerProperty(HSSObservablePropertyOuterWidth, QVariant::fromValue(&this->outerWidth));
     this->registerProperty(HSSObservablePropertyWidth, QVariant::fromValue(&this->width));
     this->registerProperty(HSSObservablePropertyBackground, QVariant::fromValue(&this->background));
     this->registerProperty(HSSObservablePropertyFont, QVariant::fromValue(&this->font));
