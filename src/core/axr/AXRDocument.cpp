@@ -578,8 +578,6 @@ bool AXRDocument::loadHssFile(const QUrl &url)
 
     this->setFile(this->createDummyXml(url));
     this->run();
-    this->setNeedsDisplay(true);
-
     return true;
 }
 

@@ -135,25 +135,32 @@ void QAXRWidget::paintEvent(QPaintEvent *)
     }
 
     QRect paintRect = rect();
-    d->document->setWindowSize(this->width(), this->height());
-
-    // Fill the view with our background color...
-    painter.fillRect(paintRect, d->backgroundFillColor);
 
     // Render the AXR document
     QImage image;
-    QSharedPointer<HSSVisitorManager> visitorManager = d->document->visitorManager();
-    if (visitorManager)
+    if(d->document->needsDisplay())
     {
-        // Render the final image to the screen
-        d->renderVisitor->setDirtyRect(rect());
-        visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);
+        d->document->setWindowSize(this->width(), this->height());
 
+        // Fill the view with our background color...
+        painter.fillRect(paintRect, d->backgroundFillColor);
+
+        // Render the AXR document
+        QSharedPointer<HSSVisitorManager> visitorManager = d->document->visitorManager();
+        if (visitorManager)
+        {
+            // Render the final image to the screen
+            d->renderVisitor->setDirtyRect(rect());
+            visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);
+
+            image = d->renderVisitor->getFinalFrame();
+        }
+        else
+        {
+            axr_log(LoggerChannelRendering, "Document has no visitor manager");
+        }
+    } else {
         image = d->renderVisitor->getFinalFrame();
-    }
-    else
-    {
-        axr_log(LoggerChannelRendering, "Document has no visitor manager");
     }
 
     if (!image.isNull() && !image.size().isEmpty())
@@ -164,6 +171,8 @@ void QAXRWidget::paintEvent(QPaintEvent *)
     {
         painter.drawText(0, 0, width(), height(), Qt::AlignCenter, "Internal rendering error");
     }
+
+    d->document->setNeedsDisplay(false);
 }
 
 void QAXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
@@ -173,7 +182,10 @@ void QAXRWidget::mouseDoubleClickEvent(QMouseEvent *e)
 
     HSSMouseEvent mouseEvent(HSSEventTypeDoubleClick, e->pos());
     d->document->handleEvent(&mouseEvent);
-    update();
+    if (d->document->needsDisplay())
+    {
+        this->update();
+    }
 }
 
 void QAXRWidget::mouseMoveEvent(QMouseEvent *e)
@@ -183,7 +195,10 @@ void QAXRWidget::mouseMoveEvent(QMouseEvent *e)
 
     HSSMouseEvent mouseEvent(HSSEventTypeMouseMove, e->pos());
     d->document->handleEvent(&mouseEvent);
-    update();
+    if (d->document->needsDisplay())
+    {
+        this->update();
+    }
 }
 
 void QAXRWidget::mousePressEvent(QMouseEvent *e)
@@ -193,7 +208,10 @@ void QAXRWidget::mousePressEvent(QMouseEvent *e)
 
     HSSMouseEvent mouseEvent(HSSEventTypeMouseDown, e->pos());
     d->document->handleEvent(&mouseEvent);
-    update();
+    if (d->document->needsDisplay())
+    {
+        this->update();
+    }
 }
 
 void QAXRWidget::mouseReleaseEvent(QMouseEvent *e)
@@ -205,7 +223,10 @@ void QAXRWidget::mouseReleaseEvent(QMouseEvent *e)
     HSSMouseEvent clickMouseEvent(HSSEventTypeClick, e->pos());
     d->document->handleEvent(&upMouseEvent);
     d->document->handleEvent(&clickMouseEvent);
-    update();
+    if (d->document->needsDisplay())
+    {
+        this->update();
+    }
 }
 
 void QAXRWidget::resizeEvent(QResizeEvent *)
