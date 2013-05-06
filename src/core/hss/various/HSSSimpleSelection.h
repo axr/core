@@ -67,6 +67,8 @@ namespace AXR
 
         typedef std::vector< QSharedPointer<HSSDisplayObject> >::iterator iterator;
         typedef std::vector< QSharedPointer<HSSDisplayObject> >::const_iterator const_iterator;
+        typedef std::vector< QSharedPointer<HSSDisplayObject> >::reverse_iterator reverse_iterator;
+        typedef std::vector< QSharedPointer<HSSDisplayObject> >::const_reverse_iterator const_reverse_iterator;
 
         /**
          *
@@ -106,10 +108,14 @@ namespace AXR
 
         void add( QSharedPointer<HSSDisplayObject> );
         void addSelection(QSharedPointer<HSSSelection> item);
-        std::vector< QSharedPointer<HSSDisplayObject> >::iterator begin();
+        iterator begin();
         const_iterator begin() const;
-        std::vector< QSharedPointer<HSSDisplayObject> >::iterator end();
+        iterator end();
         const_iterator end() const;
+        reverse_iterator rbegin();
+        const_reverse_iterator rbegin() const;
+        reverse_iterator rend();
+        const_reverse_iterator rend() const;
         size_t size() const;
         void clear();
         bool empty() const;

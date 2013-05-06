@@ -145,7 +145,7 @@ void HSSSimpleSelection::addSelection(QSharedPointer<HSSSelection> item)
     }
 }
 
-std::vector< QSharedPointer<HSSDisplayObject> >::iterator HSSSimpleSelection::begin()
+HSSSimpleSelection::iterator HSSSimpleSelection::begin()
 {
     return this->d->items.begin();
 }
@@ -155,7 +155,7 @@ HSSSimpleSelection::const_iterator HSSSimpleSelection::begin() const
     return this->d->items.begin();
 }
 
-std::vector< QSharedPointer<HSSDisplayObject> >::iterator HSSSimpleSelection::end()
+HSSSimpleSelection::iterator HSSSimpleSelection::end()
 {
     return this->d->items.end();
 }
@@ -163,6 +163,26 @@ std::vector< QSharedPointer<HSSDisplayObject> >::iterator HSSSimpleSelection::en
 HSSSimpleSelection::const_iterator HSSSimpleSelection::end() const
 {
     return this->d->items.end();
+}
+
+HSSSimpleSelection::reverse_iterator HSSSimpleSelection::rbegin()
+{
+    return this->d->items.rbegin();
+}
+
+HSSSimpleSelection::const_reverse_iterator HSSSimpleSelection::rbegin() const
+{
+    return this->d->items.rbegin();
+}
+
+HSSSimpleSelection::reverse_iterator HSSSimpleSelection::rend()
+{
+    return this->d->items.rend();
+}
+
+HSSSimpleSelection::const_reverse_iterator HSSSimpleSelection::rend() const
+{
+    return this->d->items.rend();
 }
 
 size_t HSSSimpleSelection::size() const
