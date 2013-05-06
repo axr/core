@@ -3952,7 +3952,7 @@ HSSUnit HSSDisplayObject::_evaluatePropertyValue(
     return ret;
 }
 
-void HSSDisplayObject::_setInnerWidth()
+void HSSDisplayObject::_setInnerWidth(bool notify)
 {
     std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
     HSSUnit innerWidth = this->width;
@@ -3965,10 +3965,11 @@ void HSSDisplayObject::_setInnerWidth()
         this->leftPadding += theMargin->getLeft();
     }
     this->innerWidth = innerWidth;
-    this->notifyObservers(HSSObservablePropertyInnerWidth, &this->innerWidth);
+    if (notify)
+        this->notifyObservers(HSSObservablePropertyInnerWidth, &this->innerWidth);
 }
 
-void HSSDisplayObject::_setInnerHeight()
+void HSSDisplayObject::_setInnerHeight(bool notify)
 {
     std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
     HSSUnit innerHeight = this->height;
@@ -3981,10 +3982,11 @@ void HSSDisplayObject::_setInnerHeight()
         this->bottomPadding += theMargin->getBottom();
     }
     this->innerHeight = innerHeight;
-    this->notifyObservers(HSSObservablePropertyInnerHeight, &this->innerHeight);
+    if (notify)
+        this->notifyObservers(HSSObservablePropertyInnerHeight, &this->innerHeight);
 }
 
-void HSSDisplayObject::_setOuterWidth()
+void HSSDisplayObject::_setOuterWidth(bool notify)
 {
     std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
     HSSUnit outerWidth = this->width;
@@ -3997,10 +3999,11 @@ void HSSDisplayObject::_setOuterWidth()
         this->leftMargin += theMargin->getLeft();
     }
     this->outerWidth = outerWidth;
-    this->notifyObservers(HSSObservablePropertyOuterWidth, &this->outerWidth);
+    if (notify)
+        this->notifyObservers(HSSObservablePropertyOuterWidth, &this->outerWidth);
 }
 
-void HSSDisplayObject::_setOuterHeight()
+void HSSDisplayObject::_setOuterHeight(bool notify)
 {
     std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
     HSSUnit outerHeight = this->height;
@@ -4013,7 +4016,8 @@ void HSSDisplayObject::_setOuterHeight()
         this->bottomMargin += theMargin->getBottom();
     }
     this->outerHeight = outerHeight;
-    this->notifyObservers(HSSObservablePropertyOuterHeight, &this->outerHeight);
+    if (notify)
+        this->notifyObservers(HSSObservablePropertyOuterHeight, &this->outerHeight);
 }
 
 bool HSSDisplayObject::handleEvent(HSSInputEvent *event)

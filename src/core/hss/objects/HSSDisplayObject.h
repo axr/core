@@ -516,10 +516,10 @@ namespace AXR
          */
         HSSDisplayObject(HSSObjectType type, AXRController * controller);
 
-        void _setInnerWidth();
-        void _setInnerHeight();
-        void _setOuterWidth();
-        void _setOuterHeight();
+        void _setInnerWidth(bool notify = true);
+        void _setInnerHeight(bool notify = true);
+        void _setOuterWidth(bool notify = true);
+        void _setOuterHeight(bool notify = true);
 
     private:
         HSSUnit _evaluatePropertyValue(
