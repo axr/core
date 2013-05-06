@@ -214,13 +214,16 @@ namespace AXR
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
         //size
         QSharedPointer<HSSParserNode> dSize;
-
+        //top
         HSSObservable * observedTop;
         HSSObservableProperty observedTopProperty;
+        //right
         HSSObservable * observedRight;
         HSSObservableProperty observedRightProperty;
+        //bottom
         HSSObservable * observedBottom;
         HSSObservableProperty observedBottomProperty;
+        //left
         HSSObservable * observedLeft;
         HSSObservableProperty observedLeftProperty;
         HSSUnit top, right, bottom, left;

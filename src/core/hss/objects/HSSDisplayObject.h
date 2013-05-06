@@ -215,11 +215,13 @@ namespace AXR
         AXRString getElementName();
         void setElementName(AXRString name);
 
+        //alignX
         HSSUnit getAlignX();
         QSharedPointer<HSSParserNode> getDAlignX();
         void setDAlignX(QSharedPointer<HSSParserNode> value);
         void alignXChanged(HSSObservableProperty source, void*data);
 
+        //alignY
         HSSUnit getAlignY();
         QSharedPointer<HSSParserNode> getDAlignY();
         void setDAlignY(QSharedPointer<HSSParserNode> value);
@@ -231,11 +233,13 @@ namespace AXR
         void setDLineAlign(QSharedPointer<HSSParserNode> value);
         void lineAlignChanged(HSSObservableProperty source, void*data);
 
+        //anchorX
         HSSUnit getAnchorX();
         QSharedPointer<HSSParserNode> getDAnchorX();
         void setDAnchorX(QSharedPointer<HSSParserNode> value);
         void anchorXChanged(HSSObservableProperty source, void*data);
 
+        //anchorY
         HSSUnit getAnchorY();
         QSharedPointer<HSSParserNode> getDAnchorY();
         void setDAnchorY(QSharedPointer<HSSParserNode> value);
