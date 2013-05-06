@@ -1056,41 +1056,6 @@ void HSSContainer::_recursiveCreateSecondaryGroups(
     } //while !lineADone || !lineBDone
 }
 
-bool HSSContainer::_overlaps(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB)
-{
-    return this->_overlaps_horizontal(childA, childB) && this->_overlaps_vertical(childA, childB);
-}
-
-bool HSSContainer::_overlaps_horizontal(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB)
-{
-    if (
-            (childA->x + childA->width + childA->rightMargin) > (childB->x - childB->leftMargin)
-            && (childA->x - childA->leftMargin) < (childB->x + childB->width + childB->rightMargin)
-            )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool HSSContainer::_overlaps_vertical(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB)
-{
-    if (
-            (childA->y + childA->height + childA->bottomMargin) > (childB->y - childB->topMargin)
-            && (childA->y - childA->topMargin) < (childB->y + childB->height + childB->bottomMargin)
-            )
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
 bool HSSContainer::_addChildToGroupIfNeeded(const QSharedPointer<HSSDisplayObject> &child, AXR::HSSContainer::displayGroup::p &group, HSSDirectionValue direction, bool contained)
 {
     unsigned i = 0;

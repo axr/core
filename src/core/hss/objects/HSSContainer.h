@@ -466,9 +466,6 @@ namespace AXR
                                              bool onlyAddToBIfNotInGroupYet
                                              );
 
-        bool _overlaps(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB);
-        bool _overlaps_horizontal(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB);
-        bool _overlaps_vertical(QSharedPointer<HSSDisplayObject> & childA, QSharedPointer<HSSDisplayObject> & childB);
         bool _addChildToGroupIfNeeded(const QSharedPointer<HSSDisplayObject> &child, displayGroup::p &group, HSSDirectionValue direction, bool contained);
         //std::vector<HSSContainer::displayGroup::p> _getGroupsOverlapping(QSharedPointer<HSSDisplayObject> &child, std::vector<HSSContainer::displayGroup::p> &group, HSSDirectionValue direction);
         bool _mergeGroupsIfNeeded(displayGroup::p &group, displayGroup::p &otherGroup, HSSDirectionValue direction);

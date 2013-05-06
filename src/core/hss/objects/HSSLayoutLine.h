@@ -81,6 +81,59 @@ namespace AXR
         
         void arrange();
         void distribute();
+        inline bool overlaps(const QSharedPointer<HSSLayoutLine> & groupB)
+        {
+            if (this->overlapsX(groupB) && this->overlapsY(groupB))
+            {
+                return true;
+            }
+            return false;
+        }
+        inline bool overlapsX(const QSharedPointer<HSSLayoutLine> & groupB)
+        {
+            if (
+                (this->x + this->width) > groupB->x
+                && (this->x) < (groupB->x + groupB->width)
+                )
+            {
+                return true;
+            }
+            return false;
+        }
+        inline bool overlapsY(const QSharedPointer<HSSLayoutLine> & groupB)
+        {
+            if (
+                (this->y + this->height) > groupB->y
+                && (this->y) < (groupB->y + groupB->height)
+                )
+            {
+                return true;
+            }
+            return false;
+        }
+        inline bool overlapsX(const QSharedPointer<HSSDisplayObject> & child)
+        {
+            if (
+                (this->x + this->width) > (child->x - child->leftMargin)
+                && (this->x) < (child->x + child->outerWidth)
+                )
+            {
+                return true;
+            }
+            return false;
+        }
+        inline bool overlapsY(const QSharedPointer<HSSDisplayObject> & child)
+        {
+            if (
+                (this->y + this->height) > (child->y - child->topMargin)
+                && (this->y) < (child->y + child->outerHeight)
+                )
+            {
+                return true;
+            }
+            return false;
+        }
+
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
