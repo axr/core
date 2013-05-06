@@ -210,6 +210,36 @@ namespace AXR
          */
         void leftChanged(HSSObservableProperty source, void*data);
 
+        /**
+         *  Sets the object from which to get percentage values.
+         *  @param observed     A pointer to the observed display object.
+         */
+        void setPercentageObserved(HSSDisplayObject *observed);
+
+        /**
+         *  The percentage base is the number that corresponds to 100% in vertical.
+         *  @param value    A HSSUnit containing the base for percentage calculations.
+         */
+        void setPercentageBaseY(HSSUnit value);
+
+        /**
+         *  The percentage base is the number that corresponds to 100% in horizontal.
+         *  @param value    A HSSUnit containing the base for percentage calculations.
+         */
+        void setPercentageBaseX(HSSUnit value);
+
+        /**
+         *  Setter for the scope which to pass to members like references or selections.
+         *  @param newScope     The new scope, a shared pointer to a simple selection.
+         */
+        virtual void setScope(QSharedPointer<HSSSimpleSelection> newScope);
+
+        /**
+         *  Setter for the "\@this object" which to pass to members like references or selections.
+         *  @param value    A shared pointer to a display object representing the \@this object.
+         */
+        virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
+
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
         //size
@@ -217,16 +247,23 @@ namespace AXR
         //top
         HSSObservable * observedTop;
         HSSObservableProperty observedTopProperty;
+        QSharedPointer<HSSParserNode> dTop;
         //right
         HSSObservable * observedRight;
         HSSObservableProperty observedRightProperty;
+        QSharedPointer<HSSParserNode> dRight;
         //bottom
         HSSObservable * observedBottom;
         HSSObservableProperty observedBottomProperty;
+        QSharedPointer<HSSParserNode> dBottom;
         //left
         HSSObservable * observedLeft;
         HSSObservableProperty observedLeftProperty;
+        QSharedPointer<HSSParserNode> dLeft;
         HSSUnit top, right, bottom, left;
+        HSSUnit percentageBaseX;
+        HSSUnit percentageBaseY;
+        HSSObservable * percentageObserved;
 
         HSSUnit _evaluatePropertyValue(
                                    void(HSSMargin::*callback)(HSSObservableProperty property, void* data),

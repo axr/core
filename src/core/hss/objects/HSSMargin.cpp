@@ -58,6 +58,9 @@ HSSMargin::HSSMargin(AXRController * controller)
 {
     this->top = this->right = this->bottom = this->left = 0.0;
     this->observedTop = this->observedRight = this->observedBottom = this->observedLeft = NULL;
+    this->percentageBaseX = 0.;
+    this->percentageBaseY = 0.;
+    this->percentageObserved = NULL;
 }
 
 HSSMargin::HSSMargin(const HSSMargin & orig)
@@ -71,6 +74,9 @@ HSSMargin::HSSMargin(const HSSMargin & orig)
     this->observedRight = NULL;
     this->observedBottom = NULL;
     this->observedLeft = NULL;
+    this->percentageBaseX = orig.percentageBaseX;
+    this->percentageBaseY = orig.percentageBaseY;
+    this->percentageObserved = NULL;
 }
 
 QSharedPointer<HSSMargin> HSSMargin::clone() const
@@ -148,6 +154,8 @@ void HSSMargin::setDSize(QSharedPointer<HSSParserNode> value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
+        this->dSize = value;
+        this->dTop = value;
         if (this->observedTop)
         {
             this->observedTop->removeObserver(this->observedTopProperty, HSSObservablePropertySize, this);
@@ -155,13 +163,16 @@ void HSSMargin::setDSize(QSharedPointer<HSSParserNode> value)
         this->top = this->_evaluatePropertyValue(
                                          &HSSMargin::topChanged,
                                          value,
-                                         100.,
-                                         HSSObservablePropertySize,
-                                         this,
-                                         HSSObservablePropertyValue,
+                                         this->percentageBaseY,
+                                         HSSObservablePropertyInnerHeight,
+                                         this->percentageObserved,
+                                         HSSObservablePropertyTop,
                                          this->observedTop,
                                          this->observedTopProperty,
                                          HSSSimpleSelection::null());
+        this->notifyObservers(HSSObservablePropertyTop, &this->top);
+
+        this->dRight = value;
         if (this->observedRight)
         {
             this->observedRight->removeObserver(this->observedRightProperty, HSSObservablePropertySize, this);
@@ -169,13 +180,16 @@ void HSSMargin::setDSize(QSharedPointer<HSSParserNode> value)
         this->right = this->_evaluatePropertyValue(
                                            &HSSMargin::rightChanged,
                                            value,
-                                           100.,
-                                           HSSObservablePropertySize,
-                                           this,
-                                           HSSObservablePropertyValue,
+                                           this->percentageBaseX,
+                                           HSSObservablePropertyInnerWidth,
+                                           this->percentageObserved,
+                                           HSSObservablePropertyRight,
                                            this->observedRight,
                                            this->observedRightProperty,
                                            HSSSimpleSelection::null());
+        this->notifyObservers(HSSObservablePropertyRight, &this->right);
+
+        this->dBottom = value;
         if (this->observedBottom)
         {
             this->observedBottom->removeObserver(this->observedBottomProperty, HSSObservablePropertySize, this);
@@ -183,13 +197,16 @@ void HSSMargin::setDSize(QSharedPointer<HSSParserNode> value)
         this->bottom = this->_evaluatePropertyValue(
                                             &HSSMargin::bottomChanged,
                                             value,
-                                            100.,
-                                            HSSObservablePropertySize,
-                                            this,
-                                            HSSObservablePropertyValue,
+                                            this->percentageBaseY,
+                                            HSSObservablePropertyInnerHeight,
+                                            this->percentageObserved,
+                                            HSSObservablePropertyBottom,
                                             this->observedBottom,
                                             this->observedBottomProperty,
                                             HSSSimpleSelection::null());
+        this->notifyObservers(HSSObservablePropertyBottom, &this->bottom);
+
+        this->dLeft = value;
         if (this->observedLeft)
         {
             this->observedLeft->removeObserver(this->observedLeftProperty, HSSObservablePropertySize, this);
@@ -197,21 +214,20 @@ void HSSMargin::setDSize(QSharedPointer<HSSParserNode> value)
         this->left = this->_evaluatePropertyValue(
                                           &HSSMargin::leftChanged,
                                           value,
-                                          100.,
-                                          HSSObservablePropertySize,
-                                          this,
-                                          HSSObservablePropertyValue,
+                                          this->percentageBaseX,
+                                          HSSObservablePropertyInnerWidth,
+                                          this->percentageObserved,
+                                          HSSObservablePropertyLeft,
                                           this->observedLeft,
                                           this->observedLeftProperty,
                                           HSSSimpleSelection::null());
+        this->notifyObservers(HSSObservablePropertyLeft, &this->left);
         break;
     }
 
     default:
         throw AXRWarning("HSSMargin", "Invalid value for size of @margin object " + this->name);
     }
-
-    this->dSize = value;
 }
 
 HSSUnit HSSMargin::getTop() const
@@ -228,6 +244,7 @@ void HSSMargin::setDTop(QSharedPointer<HSSParserNode> value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
+        this->dTop = value;
         if (this->observedTop)
         {
             this->observedTop->removeObserver(this->observedTopProperty, HSSObservablePropertyTop, this);
@@ -235,10 +252,10 @@ void HSSMargin::setDTop(QSharedPointer<HSSParserNode> value)
         this->top = this->_evaluatePropertyValue(
                                          &HSSMargin::topChanged,
                                          value,
-                                         100.,
+                                         this->percentageBaseY,
+                                         HSSObservablePropertyInnerHeight,
+                                         this->percentageObserved,
                                          HSSObservablePropertyTop,
-                                         this,
-                                         HSSObservablePropertyValue,
                                          this->observedTop,
                                          this->observedTopProperty,
                                          HSSSimpleSelection::null());
@@ -254,7 +271,24 @@ void HSSMargin::setDTop(QSharedPointer<HSSParserNode> value)
 
 void HSSMargin::topChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->top = *(HSSUnit*) data;
+    switch (this->dTop->getType()) {
+        case HSSParserNodeTypePercentageConstant:
+        {
+            QSharedPointer<HSSPercentageConstant> topValue = qSharedPointerCast<HSSPercentageConstant > (this->dTop);
+            this->top = topValue->getValue(*(HSSUnit*) data);
+            break;
+        }
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->top = *(HSSUnit*) data;
+            break;
+        }
+
+        default:
+            break;
+    }
     this->notifyObservers(HSSObservablePropertyTop, &this->top);
 }
 
@@ -272,6 +306,7 @@ void HSSMargin::setDRight(QSharedPointer<HSSParserNode> value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
+        this->dRight = value;
         if (this->observedRight)
         {
             this->observedRight->removeObserver(this->observedRightProperty, HSSObservablePropertyRight, this);
@@ -279,10 +314,10 @@ void HSSMargin::setDRight(QSharedPointer<HSSParserNode> value)
         this->right = this->_evaluatePropertyValue(
                                            &HSSMargin::rightChanged,
                                            value,
-                                           100.,
+                                           this->percentageBaseX,
+                                           HSSObservablePropertyInnerWidth,
+                                           this->percentageObserved,
                                            HSSObservablePropertyRight,
-                                           this,
-                                           HSSObservablePropertyValue,
                                            this->observedRight,
                                            this->observedRightProperty,
                                            HSSSimpleSelection::null());
@@ -298,7 +333,24 @@ void HSSMargin::setDRight(QSharedPointer<HSSParserNode> value)
 
 void HSSMargin::rightChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->right = *(HSSUnit*) data;
+    switch (this->dRight->getType()) {
+        case HSSParserNodeTypePercentageConstant:
+        {
+            QSharedPointer<HSSPercentageConstant> rightValue = qSharedPointerCast<HSSPercentageConstant > (this->dRight);
+            this->right = rightValue->getValue(*(HSSUnit*) data);
+            break;
+        }
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->right = *(HSSUnit*) data;
+            break;
+        }
+
+        default:
+            break;
+    }
     this->notifyObservers(HSSObservablePropertyRight, &this->right);
 }
 
@@ -316,6 +368,7 @@ void HSSMargin::setDBottom(QSharedPointer<HSSParserNode> value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
+        this->dBottom = value;
         if (this->observedBottom)
         {
             this->observedBottom->removeObserver(this->observedBottomProperty, HSSObservablePropertyBottom, this);
@@ -323,10 +376,10 @@ void HSSMargin::setDBottom(QSharedPointer<HSSParserNode> value)
         this->bottom = this->_evaluatePropertyValue(
                                             &HSSMargin::bottomChanged,
                                             value,
-                                            100.,
+                                            this->percentageBaseY,
+                                            HSSObservablePropertyInnerHeight,
+                                            this->percentageObserved,
                                             HSSObservablePropertyBottom,
-                                            this,
-                                            HSSObservablePropertyValue,
                                             this->observedBottom,
                                             this->observedBottomProperty,
                                             HSSSimpleSelection::null());
@@ -342,8 +395,26 @@ void HSSMargin::setDBottom(QSharedPointer<HSSParserNode> value)
 
 void HSSMargin::bottomChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->bottom = *(HSSUnit*) data;
+    switch (this->dBottom->getType()) {
+        case HSSParserNodeTypePercentageConstant:
+        {
+            QSharedPointer<HSSPercentageConstant> bottomValue = qSharedPointerCast<HSSPercentageConstant > (this->dBottom);
+            this->bottom = bottomValue->getValue(*(HSSUnit*) data);
+            break;
+        }
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->bottom = *(HSSUnit*) data;
+            break;
+        }
+
+        default:
+            break;
+    }
     this->notifyObservers(HSSObservablePropertyBottom, &this->bottom);
+
 }
 
 HSSUnit HSSMargin::getLeft() const
@@ -360,6 +431,7 @@ void HSSMargin::setDLeft(QSharedPointer<HSSParserNode> value)
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
     {
+        this->dLeft = value;
         if (this->observedLeft)
         {
             this->observedLeft->removeObserver(this->observedLeftProperty, HSSObservablePropertyLeft, this);
@@ -367,10 +439,10 @@ void HSSMargin::setDLeft(QSharedPointer<HSSParserNode> value)
         this->left = this->_evaluatePropertyValue(
                                           &HSSMargin::leftChanged,
                                           value,
-                                          100.,
+                                          this->percentageBaseX,
+                                          HSSObservablePropertyInnerWidth,
+                                          this->percentageObserved,
                                           HSSObservablePropertyLeft,
-                                          this,
-                                          HSSObservablePropertyValue,
                                           this->observedLeft,
                                           this->observedLeftProperty,
                                           HSSSimpleSelection::null());
@@ -386,9 +458,390 @@ void HSSMargin::setDLeft(QSharedPointer<HSSParserNode> value)
 
 void HSSMargin::leftChanged(AXR::HSSObservableProperty source, void *data)
 {
-    this->left = *(HSSUnit*) data;
+    switch (this->dLeft->getType()) {
+        case HSSParserNodeTypePercentageConstant:
+        {
+            QSharedPointer<HSSPercentageConstant> leftValue = qSharedPointerCast<HSSPercentageConstant > (this->dLeft);
+            this->left = leftValue->getValue(*(HSSUnit*) data);
+            break;
+        }
+        case HSSParserNodeTypeNumberConstant:
+        case HSSParserNodeTypeExpression:
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->left = *(HSSUnit*) data;
+            break;
+        }
+
+        default:
+            break;
+    }
     this->notifyObservers(HSSObservablePropertyLeft, &this->left);
 }
+
+void HSSMargin::setPercentageBaseY(HSSUnit value)
+{
+    this->percentageBaseY = value;
+
+    //propagate values
+    if (this->dTop)
+    {
+        switch (this->dTop->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> topExpression = qSharedPointerCast<HSSExpression > (this->dTop);
+                topExpression->setPercentageBase(value);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> topFunction = qSharedPointerCast<HSSFunction > (this->dTop);
+                topFunction->setPercentageBase(value);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    if (this->dBottom)
+    {
+        switch (this->dBottom->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> bottomExpression = qSharedPointerCast<HSSExpression > (this->dBottom);
+                bottomExpression->setPercentageBase(value);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> bottomFunction = qSharedPointerCast<HSSFunction > (this->dBottom);
+                bottomFunction->setPercentageBase(value);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+}
+
+void HSSMargin::setPercentageBaseX(HSSUnit value)
+{
+    this->percentageBaseX = value;
+
+    if (this->dRight)
+    {
+        switch (this->dRight->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->dRight);
+                rightExpression->setPercentageBase(value);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->dRight);
+                rightFunction->setPercentageBase(value);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    if (this->dLeft)
+    {
+        switch (this->dLeft->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->dLeft);
+                leftExpression->setPercentageBase(value);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->dLeft);
+                leftFunction->setPercentageBase(value);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+}
+
+void HSSMargin::setPercentageObserved(HSSDisplayObject *observed)
+{
+    this->percentageObserved = observed;
+
+    //propagate values
+    if (this->dTop)
+    {
+        switch (this->dTop->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> topExpression = qSharedPointerCast<HSSExpression > (this->dTop);
+                topExpression->setPercentageObserved(HSSObservablePropertyInnerHeight, observed);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> topFunction = qSharedPointerCast<HSSFunction > (this->dTop);
+                topFunction->setPercentageObserved(HSSObservablePropertyInnerHeight, observed);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    if (this->dBottom)
+    {
+        switch (this->dBottom->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> bottomExpression = qSharedPointerCast<HSSExpression > (this->dBottom);
+                bottomExpression->setPercentageObserved(HSSObservablePropertyInnerHeight, observed);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> bottomFunction = qSharedPointerCast<HSSFunction > (this->dBottom);
+                bottomFunction->setPercentageObserved(HSSObservablePropertyInnerHeight, observed);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    if (this->dRight)
+    {
+        switch (this->dRight->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->dRight);
+                rightExpression->setPercentageObserved(HSSObservablePropertyInnerWidth, observed);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->dRight);
+                rightFunction->setPercentageObserved(HSSObservablePropertyInnerWidth, observed);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    if (this->dLeft)
+    {
+        switch (this->dLeft->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->dLeft);
+                leftExpression->setPercentageObserved(HSSObservablePropertyInnerWidth, observed);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->dLeft);
+                leftFunction->setPercentageObserved(HSSObservablePropertyInnerWidth, observed);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+}
+
+void HSSMargin::setScope(QSharedPointer<HSSSimpleSelection> newScope)
+{
+    HSSObject::setScope(newScope);
+    //propagate values
+    if (this->dTop)
+    {
+        switch (this->dTop->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> topExpression = qSharedPointerCast<HSSExpression > (this->dTop);
+                topExpression->setScope(newScope);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> topFunction = qSharedPointerCast<HSSFunction > (this->dTop);
+                topFunction->setScope(newScope);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    if (this->dBottom)
+    {
+        switch (this->dBottom->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> bottomExpression = qSharedPointerCast<HSSExpression > (this->dBottom);
+                bottomExpression->setScope(newScope);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> bottomFunction = qSharedPointerCast<HSSFunction > (this->dBottom);
+                bottomFunction->setScope(newScope);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    if (this->dRight)
+    {
+        switch (this->dRight->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->dRight);
+                rightExpression->setScope(newScope);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->dRight);
+                rightFunction->setScope(newScope);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    if (this->dLeft)
+    {
+        switch (this->dLeft->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->dLeft);
+                leftExpression->setScope(newScope);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->dLeft);
+                leftFunction->setScope(newScope);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+}
+
+void HSSMargin::setThisObj(QSharedPointer<HSSDisplayObject> value)
+{
+    HSSObject::setThisObj(value);
+    //propagate values
+    if (this->dTop)
+    {
+        switch (this->dTop->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> topExpression = qSharedPointerCast<HSSExpression > (this->dTop);
+                topExpression->setThisObj(value);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> topFunction = qSharedPointerCast<HSSFunction > (this->dTop);
+                topFunction->setThisObj(value);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    if (this->dBottom)
+    {
+        switch (this->dBottom->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> bottomExpression = qSharedPointerCast<HSSExpression > (this->dBottom);
+                bottomExpression->setThisObj(value);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> bottomFunction = qSharedPointerCast<HSSFunction > (this->dBottom);
+                bottomFunction->setThisObj(value);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    if (this->dRight)
+    {
+        switch (this->dRight->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->dRight);
+                rightExpression->setThisObj(value);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->dRight);
+                rightFunction->setThisObj(value);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    if (this->dLeft)
+    {
+        switch (this->dLeft->getType()) {
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->dLeft);
+                leftExpression->setThisObj(value);
+                break;
+            }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->dLeft);
+                leftFunction->setThisObj(value);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+}
+
 
 HSSUnit HSSMargin::_evaluatePropertyValue(
                                       void(HSSMargin::*callback)(HSSObservableProperty property, void* data),

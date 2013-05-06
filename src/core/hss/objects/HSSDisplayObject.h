@@ -300,7 +300,8 @@ namespace AXR
         const QSharedPointer<HSSParserNode> getDMargin() const;
         void setDMargin(QSharedPointer<HSSParserNode> value);
         void addDMargin(QSharedPointer<HSSParserNode> value);
-        void marginChanged(HSSObservableProperty source, void*data);
+        void horizontalMarginChanged(HSSObservableProperty source, void*data);
+        void verticalMarginChanged(HSSObservableProperty source, void*data);
 
         //padding
         const QSharedPointer<HSSParserNode> getDPadding() const;

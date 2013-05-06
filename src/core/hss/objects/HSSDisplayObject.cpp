@@ -3152,17 +3152,27 @@ void HSSDisplayObject::addDMargin(QSharedPointer<HSSParserNode> value)
                 objdef->setScope(thisCont->getChildren());
             }
             objdef->setThisObj(this->shared_from_this());
-            objdef->apply();
 
-            QSharedPointer<HSSObject> obj = qSharedPointerCast<HSSObject > (objdef->getObject());
+            QSharedPointer<HSSObject> obj = objdef->getObject();
             switch (obj->getObjectType())
             {
             case HSSObjectTypeMargin:
-                this->margin.push_back(qSharedPointerCast<HSSMargin > (obj));
+            {
+                QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin > (obj);
+                this->margin.push_back(theMargin);
+                theMargin->setPercentageObserved(parent.data());
+                theMargin->setPercentageBaseX(parent->innerWidth);
+                theMargin->setPercentageBaseY(parent->innerHeight);
+                objdef->apply();
+                theMargin->observe(HSSObservablePropertyLeft, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::horizontalMarginChanged));
+                theMargin->observe(HSSObservablePropertyRight, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::horizontalMarginChanged));
+                theMargin->observe(HSSObservablePropertyTop, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::verticalMarginChanged));
+                theMargin->observe(HSSObservablePropertyBottom, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::verticalMarginChanged));
                 valid = true;
                 this->_setOuterWidth();
                 this->_setOuterHeight();
                 break;
+            }
 
             default:
                 break;
@@ -3201,7 +3211,12 @@ void HSSDisplayObject::addDMargin(QSharedPointer<HSSParserNode> value)
                     std::vector<QSharedPointer<HSSMargin> > values = *remoteValue.value<std::vector<QSharedPointer<HSSMargin> >* >();
                     for (std::vector<QSharedPointer<HSSMargin> >::const_iterator it = values.begin(); it != values.end(); ++it)
                     {
-                        this->margin.push_back(*it);
+                        QSharedPointer<HSSMargin> theMargin = *it;
+                        theMargin->observe(HSSObservablePropertyLeft, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::horizontalMarginChanged));
+                        theMargin->observe(HSSObservablePropertyRight, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::horizontalMarginChanged));
+                        theMargin->observe(HSSObservablePropertyTop, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::verticalMarginChanged));
+                        theMargin->observe(HSSObservablePropertyBottom, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::verticalMarginChanged));
+                        this->margin.push_back(theMargin);
                     }
                     this->_setOuterWidth();
                     this->_setOuterHeight();
@@ -3264,10 +3279,16 @@ void HSSDisplayObject::addDMargin(QSharedPointer<HSSParserNode> value)
             }
 
             objdef->setThisObj(this->shared_from_this());
+            QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin > (objdef->getObject());
+            theMargin->setPercentageObserved(parent.data());
+            theMargin->setPercentageBaseX(parent->innerWidth);
+            theMargin->setPercentageBaseY(parent->innerHeight);
             objdef->apply();
-            QSharedPointer<HSSObject> theObj = objdef->getObject();
-            theObj->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::marginChanged));
-            this->margin.push_back(qSharedPointerCast<HSSMargin > (theObj));
+            theMargin->observe(HSSObservablePropertyLeft, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::horizontalMarginChanged));
+            theMargin->observe(HSSObservablePropertyRight, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::horizontalMarginChanged));
+            theMargin->observe(HSSObservablePropertyTop, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::verticalMarginChanged));
+            theMargin->observe(HSSObservablePropertyBottom, HSSObservablePropertyMargin, this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::verticalMarginChanged));
+            this->margin.push_back(theMargin);
             this->_setOuterWidth();
             this->_setOuterHeight();
             valid = true;
@@ -3286,9 +3307,16 @@ void HSSDisplayObject::addDMargin(QSharedPointer<HSSParserNode> value)
     this->notifyObservers(HSSObservablePropertyMargin, &this->margin);
 }
 
-void HSSDisplayObject::marginChanged(HSSObservableProperty source, void*data)
+void HSSDisplayObject::horizontalMarginChanged(HSSObservableProperty source, void*data)
 {
+    this->_setOuterWidth();
+    this->notifyObservers(HSSObservablePropertyMargin, &this->margin);
+}
 
+void HSSDisplayObject::verticalMarginChanged(HSSObservableProperty source, void*data)
+{
+    this->_setOuterHeight();
+    this->notifyObservers(HSSObservablePropertyMargin, &this->margin);
 }
 
 const QSharedPointer<HSSParserNode> HSSDisplayObject::getDPadding() const
@@ -3869,9 +3897,9 @@ HSSUnit HSSDisplayObject::_evaluatePropertyValue(
         ret = expressionValue->evaluate();
         if (callback)
         {
-            observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject > (this, callback));
-            observedStore = observedObject;
-            observedStoreProperty = observedProperty;
+            expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSDisplayObject > (this, callback));
+            observedStore = expressionValue;
+            observedStoreProperty = HSSObservablePropertyValue;
         }
         else
         {
