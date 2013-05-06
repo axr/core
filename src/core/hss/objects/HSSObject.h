@@ -268,7 +268,7 @@ namespace AXR
          *  Setter for the current scope this object is operating on.
          *  @param newScope     A pointer to a vector of shared pointers to display objects
          */
-        void setScope(QSharedPointer<HSSSimpleSelection> newScope);
+        virtual void setScope(QSharedPointer<HSSSimpleSelection> newScope);
         /**
          *  Setter for the controller. The controller needs to be propagated across all
          *  HSSObject subclasses, so they get access to the DOM and such.
