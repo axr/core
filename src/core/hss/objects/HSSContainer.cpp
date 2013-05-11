@@ -1281,6 +1281,23 @@ void HSSContainer::layout()
     if (!this->_needsLayout) return;
     bool done = false;
     if (this->allChildren->empty()) return;
+    //short path
+    if (this->allChildren->size() == 1)
+    {
+        const QSharedPointer<HSSDisplayObject> & child = this->allChildren->front();
+        if (this->heightByContent)
+        {
+            if(child->hasOwnHeight())
+            {
+                this->height = child->outerHeight + this->topPadding + this->bottomPadding;
+            }
+            this->_setInnerHeight();
+            this->_setOuterHeight();
+        }
+        this->_placeOnAlignmentPoint(child);
+        this->_setGlobalPosition(child);
+        return;
+    }
 
     bool primaryIsHorizontal = (this->directionPrimary == HSSDirectionLeftToRight || this->directionPrimary == HSSDirectionRightToLeft);
     bool needsHeightByContent = this->heightByContent;
