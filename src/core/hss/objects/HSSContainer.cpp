@@ -1301,6 +1301,11 @@ void HSSContainer::layout()
                 const QSharedPointer<HSSDisplayObject> & child = *it;
 
                 this->_placeOnAlignmentPoint(child);
+                //if the child is not in flow, we are done with it
+                if(!child->flow)
+                {
+                    continue;
+                }
 
                 if (this->_layoutTick()){
                     done = true;
