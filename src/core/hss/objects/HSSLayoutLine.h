@@ -119,23 +119,41 @@ namespace AXR
         }
         inline bool overlapsX(const QSharedPointer<HSSDisplayObject> & child)
         {
+            HSSUnit widthA = this->width;
+            if(widthA == 0) widthA = 1;
+            HSSUnit widthB = child->outerWidth;
+            if(widthB == 0) widthB = 1;
+
             if (
-                (this->x + this->width) > (child->x - child->leftMargin)
-                && (this->x) < (child->x + child->outerWidth)
+                (this->x + widthA) > (child->x - child->leftMargin)
+                && (this->x < (child->x + widthB))
                 )
             {
                 return true;
+            }
+            else
+            {
+                return false;
             }
             return false;
         }
         inline bool overlapsY(const QSharedPointer<HSSDisplayObject> & child)
         {
+            HSSUnit heightA = this->height;
+            if(heightA == 0) heightA = 1;
+            HSSUnit heightB = child->outerHeight;
+            if(heightB == 0) heightB = 1;
+
             if (
-                (this->y + this->height) > (child->y - child->topMargin)
-                && (this->y) < (child->y + child->outerHeight)
+                (this->y + heightA) > (child->y - child->topMargin)
+                && (this->y < (child->y + heightB))
                 )
             {
                 return true;
+            }
+            else
+            {
+                return false;
             }
             return false;
         }
