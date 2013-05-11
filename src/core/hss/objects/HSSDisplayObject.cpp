@@ -3976,6 +3976,10 @@ void HSSDisplayObject::_setInnerWidth(bool notify)
         this->leftPadding += theMargin->getLeft();
     }
     this->innerWidth = innerWidth;
+    if(this->innerWidth < 0)
+    {
+        this->innerWidth = 0;
+    }
     if (notify)
         this->notifyObservers(HSSObservablePropertyInnerWidth, &this->innerWidth);
 }
@@ -3993,6 +3997,10 @@ void HSSDisplayObject::_setInnerHeight(bool notify)
         this->bottomPadding += theMargin->getBottom();
     }
     this->innerHeight = innerHeight;
+    if(this->innerHeight < 0)
+    {
+        this->innerHeight = 0;
+    }
     if (notify)
         this->notifyObservers(HSSObservablePropertyInnerHeight, &this->innerHeight);
 }
