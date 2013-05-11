@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include <cmath>
+#include <QtGlobal>
 #include "AXRController.h"
 #include "AXRDocument.h"
 #include "AXRLoggerManager.h"
@@ -473,10 +474,8 @@ inline bool HSSContainer::_overlaps(const QSharedPointer<HSSDisplayObject> & chi
 
 inline bool HSSContainer::_overlaps_horizontal(const QSharedPointer<HSSDisplayObject> & childA, const QSharedPointer<HSSDisplayObject> & childB) const
 {
-    HSSUnit widthA = childA->width + childA->rightMargin;
-    if(widthA == 0) widthA = 1;
-    HSSUnit widthB = childB->width + childB->rightMargin;
-    if(widthB == 0) widthB = 1;
+    HSSUnit widthA = qMax((HSSUnit)1, childA->width + childA->rightMargin);
+    HSSUnit widthB = qMax((HSSUnit)1, childB->width + childB->rightMargin);
 
     if (
         (childA->x + widthA) > (childB->x - childB->leftMargin)
@@ -493,10 +492,8 @@ inline bool HSSContainer::_overlaps_horizontal(const QSharedPointer<HSSDisplayOb
 
 inline bool HSSContainer::_overlaps_vertical(const QSharedPointer<HSSDisplayObject> & childA, const QSharedPointer<HSSDisplayObject> & childB) const
 {
-    HSSUnit heightA = childA->height + childA->topMargin;
-    if(heightA == 0) heightA = 1;
-    HSSUnit heightB = childB->height + childB->topMargin;
-    if(heightB == 0) heightB = 1;
+    HSSUnit heightA = qMax((HSSUnit)1, childA->height + childA->topMargin);
+    HSSUnit heightB = qMax((HSSUnit)1, childB->height + childB->topMargin);
 
     if (
         (childA->y + heightA) > (childB->y - childB->topMargin)
