@@ -228,6 +228,13 @@ namespace AXR
         void childrenPrepend(QSharedPointer<HSSRule> newRule);
 
         /**
+         *  Add a child rule to the front of the rules list, but only if hasn't been
+         *  added before already.
+         *  @param newRule A shared pointer to the rule to be prepended.
+         */
+        void childrenPrependOnce(QSharedPointer<HSSRule> newRule);
+
+        /**
          *  Get a child rule by index.
          *  @param index    An unsigned integer with the index of the child rule.
          *  @return A shared pointer to the element at that index.
@@ -277,6 +284,8 @@ namespace AXR
         bool hasParent();
         QSharedPointer<HSSRule> getParent();
 
+        const bool clonedFromSameRule(const QSharedPointer<HSSRule> & otherRule) const;
+
     protected:
         QSharedPointer<HSSRule> shared_from_this();
 
@@ -294,6 +303,7 @@ namespace AXR
         HSSObservable * observedTreeChanger;
 
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
+        const HSSRule * _clonedFromRule;
     };
 }
 

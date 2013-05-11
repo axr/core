@@ -548,7 +548,7 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
                 {
                     QSharedPointer<HSSRule> clonedRule = (*it)->clone();
                     //we attach the cloned rule to the rule that has the isA
-                    parentRule->childrenPrepend(clonedRule);
+                    parentRule->childrenPrependOnce(clonedRule);
                 }
                 this->getController()->currentContext().pop();
             }

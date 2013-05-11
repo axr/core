@@ -58,6 +58,7 @@ HSSRule::HSSRule(AXRController * controller)
 : HSSStatement(HSSStatementTypeRule, controller)
 {
     this->observedTreeChanger = NULL;
+    this->_clonedFromRule = NULL;
 }
 
 HSSRule::HSSRule(const HSSRule & orig)
@@ -65,6 +66,7 @@ HSSRule::HSSRule(const HSSRule & orig)
 {
     this->observedTreeChanger = NULL;
     this->_originalScope = orig._originalScope;
+    this->_clonedFromRule = &orig;
 }
 
 QSharedPointer<HSSRule> HSSRule::clone() const
@@ -230,6 +232,23 @@ void HSSRule::childrenPrepend(QSharedPointer<HSSRule> newRule)
     this->children.push_front(newRule);
 }
 
+void HSSRule::childrenPrependOnce(QSharedPointer<HSSRule> newRule)
+{
+    bool found = false;
+    std::deque<QSharedPointer<HSSRule> >::iterator it;
+    for (it = this->children.begin(); it != this->children.end(); ++it)
+    {
+        QSharedPointer<HSSRule> existingRule = *it;
+        if (newRule == existingRule || existingRule->clonedFromSameRule(newRule))
+        {
+            found = true;
+        }
+    }
+    if(!found){
+        this->childrenPrepend(newRule);
+    }
+}
+
 QSharedPointer<HSSRule> HSSRule::childrenGet(size_t index)
 {
     return this->children[index];
@@ -378,4 +397,13 @@ bool HSSRule::hasParent()
 QSharedPointer<HSSRule> HSSRule::getParent()
 {
     return qSharedPointerCast<HSSRule>(this->getParentNode());
+}
+
+const bool HSSRule::clonedFromSameRule(const QSharedPointer<HSSRule> & otherRule) const
+{
+    if(this->_clonedFromRule != NULL)
+    {
+        return this->_clonedFromRule == otherRule->_clonedFromRule;
+    }
+    return false;
 }
