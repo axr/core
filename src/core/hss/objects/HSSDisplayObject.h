@@ -344,6 +344,11 @@ namespace AXR
         bool isRoot();
         void setRoot(bool newValue);
 
+        bool hasOwnWidth() const;
+        void setHasOwnWidth(bool newValue);
+        bool hasOwnHeight() const;
+        void setHasOwnHeight(bool newValue);
+
         /**
          *  @todo make private and add accessors
          */
@@ -536,6 +541,8 @@ namespace AXR
         bool _isHover;
         bool _isPress;
         bool _isRoot;
+        bool _hasOwnWidth;
+        bool _hasOwnHeight;
 
         bool _layoutFlagIsInSecondaryGroup;
         bool _layoutFlagIsInSecondaryLine;

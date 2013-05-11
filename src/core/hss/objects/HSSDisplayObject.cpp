@@ -124,6 +124,8 @@ void HSSDisplayObject::initialize()
     this->heightByContent = false;
     this->widthByContent = false;
     this->_isRoot = false;
+    this->_hasOwnWidth = false;
+    this->_hasOwnHeight = false;
 
     this->elementName = AXRString();
     this->contentText = AXRString();
@@ -937,6 +939,10 @@ void HSSDisplayObject::setDWidth(QSharedPointer<HSSParserNode> value)
             this->widthByContent = false;
         }
         valid = true;
+        if (value->isA(HSSParserNodeTypeNumberConstant))
+        {
+            this->_hasOwnWidth = true;
+        }
         break;
     }
 
@@ -1202,6 +1208,10 @@ void HSSDisplayObject::setDHeight(QSharedPointer<HSSParserNode> value)
             this->heightByContent = false;
         }
         valid = true;
+        if (value->isA(HSSParserNodeTypeNumberConstant))
+        {
+            this->_hasOwnHeight = true;
+        }
         break;
     }
 
@@ -1238,6 +1248,7 @@ void HSSDisplayObject::setDHeight(QSharedPointer<HSSParserNode> value)
             }
             this->height = 0;
             this->heightByContent = true;
+            this->_hasOwnHeight = true;
             valid = true;
         }
         break;
@@ -4289,6 +4300,26 @@ bool HSSDisplayObject::isRoot()
 void HSSDisplayObject::setRoot(bool newValue)
 {
     this->_isRoot = newValue;
+}
+
+bool HSSDisplayObject::hasOwnWidth() const
+{
+    return this->_hasOwnWidth;
+}
+
+void HSSDisplayObject::setHasOwnWidth(bool newValue)
+{
+    this->_hasOwnWidth = newValue;
+}
+
+bool HSSDisplayObject::hasOwnHeight() const
+{
+    return this->_hasOwnHeight;
+}
+
+void HSSDisplayObject::setHasOwnHeight(bool newValue)
+{
+    this->_hasOwnHeight = newValue;
 }
 
 QSharedPointer<HSSDisplayObject> HSSDisplayObject::shared_from_this()
