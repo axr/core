@@ -65,14 +65,36 @@ HSSLayoutLine::HSSLayoutLine(HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height
 HSSLayoutLine::HSSLayoutLine(const QSharedPointer<HSSDisplayObject> & child, HSSDirectionValue direction, HSSContainer * owner)
 : x(child->x - child->leftMargin)
 , y(child->y - child->topMargin)
-, width(child->outerWidth)
-, height(child->outerHeight)
 , direction(direction)
 , owner(owner)
 , complete(false)
 , objects(new HSSSimpleSelection())
 {
     this->objects->add(child);
+    this->width = child->outerWidth;
+    this->height = child->outerHeight;
+    if (direction == HSSDirectionLeftToRight || direction == HSSDirectionRightToLeft)
+    {
+        if (child->hasOwnHeight())
+        {
+            this->height = child->outerHeight;
+        }
+        else
+        {
+            this->height = 0;
+        }
+    }
+    else
+    {
+        if (child->hasOwnWidth())
+        {
+            this->width = child->outerWidth;
+        }
+        else
+        {
+            this->width = 0;
+        }
+    }
 }
 
 HSSLayoutLine::HSSLayoutLine(const HSSLayoutLine & orig)
@@ -197,7 +219,7 @@ void HSSLayoutLine::add(const QSharedPointer<HSSDisplayObject> & child)
                 {
                     this->width = measureGroup->width;
                 }
-                if (measureGroup->height < child->outerHeight)
+                if (child->hasOwnHeight() && measureGroup->height < child->outerHeight)
                 {
                     measureGroup->height = child->outerHeight;
                 }
@@ -209,7 +231,7 @@ void HSSLayoutLine::add(const QSharedPointer<HSSDisplayObject> & child)
                 {
                     this->height = measureGroup->height;
                 }
-                if (!horizontal && measureGroup->width < child->outerWidth)
+                if (child->hasOwnWidth() && measureGroup->width < child->outerWidth)
                 {
                     measureGroup->width = child->outerWidth;
                 }

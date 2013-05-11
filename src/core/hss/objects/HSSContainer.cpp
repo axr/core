@@ -1253,12 +1253,28 @@ inline bool HSSContainer::_distributeLines(const QSharedPointer<HSSLayoutLine> &
     return false;
 }
 
+inline HSSUnit HSSContainer::_getLineHeight(const QSharedPointer<HSSLayoutLine> & line) const
+{
+    HSSUnit ret = 0;
+    for (HSSSimpleSelection::iterator it = line->objects->begin(); it!= line->objects->end(); ++it)
+    {
+        const QSharedPointer<HSSDisplayObject> & currentChild = *it;
+        if(currentChild->hasOwnHeight() && currentChild->outerHeight > ret){
+            ret = currentChild->outerHeight;
+        }
+    }
+    return ret;
+}
+
 void HSSContainer::layout()
 {
+    if (!this->_needsLayout) return;
     bool done = false;
     if (this->allChildren->empty()) return;
 
     bool primaryIsHorizontal = (this->directionPrimary == HSSDirectionLeftToRight || this->directionPrimary == HSSDirectionRightToLeft);
+    bool needsHeightByContent = this->heightByContent;
+
     while (!done && this->_needsLayout)
     {
         //we assume we don't need to re-layout
@@ -1408,6 +1424,45 @@ void HSSContainer::layout()
                         }
                     }
                 }
+                if (foundOverlaps)
+                {
+                    continue;
+                }
+            }
+
+            if (!done)
+            {
+                //handle height by content
+                if (this->heightByContent)
+                {
+                    HSSUnit contentHeight = 0;
+                    for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it = groups.begin(); it!= groups.end(); ++it)
+                    {
+                        HSSUnit groupHeight = 0;
+                        const QSharedPointer<HSSLayoutLine> & group = *it;
+                        if (group->lines.size() > 0)
+                        {
+                            for (std::vector<QSharedPointer<HSSLayoutLine> >::iterator it2 = group->lines.begin(); it2!= group->lines.end(); ++it2)
+                            {
+                                groupHeight += this->_getLineHeight(*it2);
+                            }
+                        } else {
+                            groupHeight = this->_getLineHeight(group);
+                        }
+                        if (groupHeight > contentHeight)
+                        {
+                            contentHeight = groupHeight;
+                        }
+                    }
+                    this->height = contentHeight + this->topPadding + this->bottomPadding;
+                    this->_setInnerHeight();
+                    this->_setOuterHeight();
+                    if (needsHeightByContent)
+                    {
+                        this->_needsLayout = true;
+                        needsHeightByContent = false;
+                    }
+                }
             }
         }
 
@@ -1424,10 +1479,15 @@ void HSSContainer::recursiveLayout()
 {
     for (HSSSimpleSelection::const_iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
     {
+        const QSharedPointer<HSSDisplayObject> & currentChild = *it;
+        currentChild->recursiveLayout();
+    }
+    this->layout();
+    //iterate again, in case the height changed. Unaltered children will have _needsLayout set to false
+    for (HSSSimpleSelection::const_iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
+    {
         (*it)->recursiveLayout();
     }
-
-    this->layout();
 }
 
 void HSSContainer::recursiveResetLayout()

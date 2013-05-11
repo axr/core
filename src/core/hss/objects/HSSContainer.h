@@ -443,6 +443,7 @@ namespace AXR
         inline void _lineArrangeY(const QSharedPointer<HSSDisplayObject> & child, HSSUnit startY, HSSUnit lineHeight) const;
         inline bool _arrangeLines(const QSharedPointer<HSSLayoutLine> &group, const HSSDirectionValue direction) const;
         inline bool _distributeLines(const QSharedPointer<HSSLayoutLine> &group, const HSSDirectionValue direction) const;
+        inline HSSUnit _getLineHeight(const QSharedPointer<HSSLayoutLine> & line) const;
         static bool alignXSmaller(const QSharedPointer<HSSDisplayObject>& a, const QSharedPointer<HSSDisplayObject>& b)
         {
             return a->alignX < b->alignX;
