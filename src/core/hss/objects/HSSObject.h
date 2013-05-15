@@ -226,14 +226,14 @@ namespace AXR
          */
         void isAChanged(HSSObservableProperty source, void*data);
         /**
-         *  Convenience method that gets the HSSObservableProperty for a property name in string
-         *  form and passes it to setProperty(HSSObservableProperty, QSharedPointer<HSSParserNode>).
-         *  @param name     A string containing the property name
+         *  Takes a vector of property names in AXRString form, converts them to observable property
+         *  names and passes each to setProperty(HSSObservableProperty, QSharedPointer<HSSParserNode>).
+         *  @param name     A vector of strings containing the property names
          *  @param value    The parser node defining the value for the property
          *
          *  @todo this might be not necessary to be virtual
          */
-        virtual void setPropertyWithName(AXRString name, QSharedPointer<HSSParserNode> value);
+        virtual void setPropertiesWithNames(QVector<AXRString> names, QSharedPointer<HSSParserNode> value);
         /**
          *  Sets the parser node that defines the value of the given property. Each subclass
          *  will call the specific setD\<\<property\>\>() method.

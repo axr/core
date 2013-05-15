@@ -504,7 +504,7 @@ void HSSDisplayObject::rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState de
         for (HSSPropertyDefinition::const_it it = props.begin(); it != props.end(); ++it)
         {
             QSharedPointer<HSSPropertyDefinition> propdef = *it;
-            if (propdef->getName() == "isA")
+            if (propdef->getNames().contains("isA"))
             {
                 this->rulesAddIsAChildren(propdef, defaultState, newRule);
             }
@@ -536,7 +536,7 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
                      props.begin(); pIt != props.end(); ++pIt)
                 {
                     QSharedPointer<HSSPropertyDefinition> propdef = *pIt;
-                    if (propdef->getName() == "isA")
+                    if (propdef->getNames().contains("isA"))
                     {
                         this->rulesAddIsAChildren(propdef, defaultState, parentRule);
                     }
@@ -670,7 +670,7 @@ void HSSDisplayObject::readDefinitionObjects()
             this->setDHeight(newDHeight);
         }
 
-        AXRString propertyName;
+        QVector<AXRString> propertyNames;
         for (i = 0; i<this->rules.size(); ++i)
         {
             QSharedPointer<HSSRuleStatus> & ruleStatus = this->rules[i];
@@ -690,8 +690,8 @@ void HSSDisplayObject::readDefinitionObjects()
                     try
                     {
                         QSharedPointer<HSSPropertyDefinition>& propertyDefinition = rule->propertiesGet(j);
-                        propertyName = propertyDefinition->getName();
-                        this->setPropertyWithName(propertyName, propertyDefinition->getValue());
+                        propertyNames = propertyDefinition->getNames();
+                        this->setPropertiesWithNames(propertyNames, propertyDefinition->getValue());
                     }
                     catch (const AXRError &e)
                     {

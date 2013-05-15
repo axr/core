@@ -45,6 +45,7 @@
 #define HSSPROPERTYDEFINITION_H
 
 #include <QSharedPointer>
+#include <QVector>
 #include "HSSStatement.h"
 
 namespace AXR
@@ -74,19 +75,19 @@ namespace AXR
         HSSPropertyDefinition(AXRController * controller);
 
         /**
-         *  Creates a new instance of a property definition, with the given name, but empty
+         *  Creates a new instance of a property definition, with the given names, but empty
          *  value.
-         *  @param name     A string containing the name of the property.
+         *  @param name     A vector of strings containing the names of the property.
          */
-        HSSPropertyDefinition(AXRString name, AXRController * controller);
+        HSSPropertyDefinition(QVector<AXRString> names, AXRController * controller);
 
         /**
-         *  Creates a new instance of a property definition, with the given name and value.
-         *  @param name     A string containing the name of the property.
+         *  Creates a new instance of a property definition, with the given names and value.
+         *  @param name     A vector of strings containing the names of the property.
          *  @param value    A shared pointer to the parser node that holds the value of this
          *                  property definition.
          */
-        HSSPropertyDefinition(AXRString name, QSharedPointer<HSSParserNode> value, AXRController * controller);
+        HSSPropertyDefinition(QVector<AXRString> names, QSharedPointer<HSSParserNode> value, AXRController * controller);
 
         /**
          *  Copy constructor for HSSPropertyDefinition objects. Do not call directly, use clone() instead.
@@ -110,16 +111,16 @@ namespace AXR
         AXRString toString();
 
         /**
-         *  Setter for the name of the property.
-         *  @param name     A string containing the name of the property.
+         *  Setter for the names of the property.
+         *  @param name     A vector of strings containing the names of the property.
          */
-        void setName(AXRString name);
+        void setNames(QVector<AXRString> names);
 
         /**
-         *  Getter for the name of the property.
-         *  @return A string containing the name of the property.
+         *  Getter for the names of the property.
+         *  @return A vector of strings containing the names of the property.
          */
-        AXRString getName();
+        QVector<AXRString> getNames();
 
         /**
          *  Setter for the value of the property.
@@ -146,7 +147,7 @@ namespace AXR
     protected:
         QSharedPointer<HSSPropertyDefinition> shared_from_this();
 
-        AXRString name;
+        QVector<AXRString> names;
         QSharedPointer<HSSParserNode> value;
 
     private:

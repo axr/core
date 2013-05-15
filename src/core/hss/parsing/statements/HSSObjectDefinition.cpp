@@ -107,7 +107,7 @@ void HSSObjectDefinition::apply()
     for (size_t i = 0; i < this->propertiesSize(); ++i)
     {
         QSharedPointer<HSSPropertyDefinition> theProperty = this->properties[i];
-        this->prototype->setPropertyWithName(theProperty->getName(), theProperty->getValue());
+        this->prototype->setPropertiesWithNames(theProperty->getNames(), theProperty->getValue());
     }
 }
 

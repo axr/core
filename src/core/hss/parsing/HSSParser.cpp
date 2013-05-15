@@ -948,51 +948,77 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
     else
     {
         peekToken = this->tokenizer->peekNextToken();
-
-        //skip all whitespace and comments
-        while (peekToken && (peekToken->isA(HSSWhitespace) || peekToken->isA(HSSBlockComment) || peekToken->isA(HSSLineComment)))
-        {
-            peekToken = this->tokenizer->peekNextToken();
-        }
-        //if the next token is a colon, it is either a property definition or a filter
-        if (peekToken->isA(HSSColon))
-        {
-            //we'll peek until we find a end of statement, a closing block or an opening one
-            peekToken = this->tokenizer->peekNextToken();
-            //if we find a whitespace or an object sign here, we can be sure it's a property definition
-            if (peekToken->isA(HSSWhitespace) || peekToken->isA(HSSObjectSign))
+        bool done = false;
+        while (peekToken && !done) {
+            //we assume we are done
+            done = true;
+            //skip all whitespace and comments
+            while (peekToken && (peekToken->isA(HSSWhitespace) || peekToken->isA(HSSBlockComment) || peekToken->isA(HSSLineComment)))
             {
-                ret = true;
+                peekToken = this->tokenizer->peekNextToken();
+            }
+            //if the next token is a colon, it is either a property definition or a filter
+            if (peekToken->isA(HSSColon))
+            {
+                //we'll peek until we find a end of statement, a closing block or an opening one
+                peekToken = this->tokenizer->peekNextToken();
+                //if we find a whitespace or an object sign here, we can be sure it's a property definition
+                if (peekToken->isA(HSSWhitespace) || peekToken->isA(HSSObjectSign))
+                {
+                    ret = true;
+                }
+                else
+                {
+                    while (peekToken && !peekToken->isA(HSSEndOfStatement) && !peekToken->isA(HSSBlockClose) && !peekToken->isA(HSSBlockOpen))
+                    {
+                        peekToken = this->tokenizer->peekNextToken();
+                        this->checkForUnexpectedEndOfSource();
+                    }
+                    //if we find an opening block, we're dealing with a selector
+                    if (peekToken->isA(HSSBlockOpen))
+                    {
+                        ret = false;
+                    }
+                }
+            }
+            //either property grouping or a rule
+            else if (peekToken->isA(HSSComma))
+            {
+                peekToken = this->tokenizer->peekNextToken();
+                //skip all whitespace and comments
+                while (peekToken && (peekToken->isA(HSSWhitespace) || peekToken->isA(HSSBlockComment) || peekToken->isA(HSSLineComment)))
+                {
+                    peekToken = this->tokenizer->peekNextToken();
+                }
+                if (peekToken->isA(HSSIdentifier))
+                {
+                    peekToken = this->tokenizer->peekNextToken();
+                    done = false;
+                    continue;
+                }
             }
             else
             {
-                while (!peekToken->isA(HSSEndOfStatement) && !peekToken->isA(HSSBlockClose) && !peekToken->isA(HSSBlockOpen))
+                if (this->currentToken->isA(HSSObjectSign))
                 {
-                    peekToken = this->tokenizer->peekNextToken();
-                    this->checkForUnexpectedEndOfSource();
-                }
-                //if we find an opening block, we're dealing with a selector
-                if (peekToken->isA(HSSBlockOpen))
-                {
-                    ret = false;
-                }
-            }
-        }
-        else
-        {
-            if (this->currentToken->isA(HSSObjectSign))
-            {
-                if (peekToken->isA(HSSIdentifier))
-                {
-                    AXRString objtype = VALUE_TOKEN(peekToken)->getString();
-                    if ((objtype == "this")
-                            || (objtype == "super")
-                            || (objtype == "parent")
-                            || (objtype == "root"))
+                    if (peekToken->isA(HSSIdentifier))
                     {
-                        //it is a selector
-                        ret = false;
-                        *isShorthand = false;
+                        AXRString objtype = VALUE_TOKEN(peekToken)->getString();
+                        if ((objtype == "this")
+                                || (objtype == "super")
+                                || (objtype == "parent")
+                                || (objtype == "root"))
+                        {
+                            //it is a selector
+                            ret = false;
+                            *isShorthand = false;
+                        }
+                        else
+                        {
+                            //it is a shorthand with an object definition
+                            ret = true;
+                            *isShorthand = true;
+                        }
                     }
                     else
                     {
@@ -1000,72 +1026,66 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
                         ret = true;
                         *isShorthand = true;
                     }
+
                 }
                 else
                 {
-                    //it is a shorthand with an object definition
-                    ret = true;
-                    *isShorthand = true;
-                }
-
-            }
-            else
-            {
-                //no colon, it may be a rule -- we peek until we find the end of the statement
-                //or we can conclude it actually is a rule
-                bool done = false;
-                while (!done)
-                {
-                    switch (peekToken->getType())
+                    //no colon, it may be a rule -- we peek until we find the end of the statement
+                    //or we can conclude it actually is a rule
+                    bool done = false;
+                    while (!done)
                     {
-                    case HSSBlockClose:
-                    case HSSEndOfStatement:
-                        //it is a shorthand
-                        ret = true;
-                        done = true;
-                        *isShorthand = true;
-                        break;
-
-                    case HSSObjectSign:
-                    {
-                        this->checkForUnexpectedEndOfSource();
-                        peekToken = this->tokenizer->peekNextToken();
-                        AXRString objtype = VALUE_TOKEN(peekToken)->getString();
-                        if ((objtype == "this")
-                                || (objtype == "super")
-                                || (objtype == "parent")
-                                || (objtype == "root"))
+                        switch (peekToken->getType())
                         {
-                            //it is a selector, continue because it may be a selector inside a function
-                        }
-                        else
-                        {
-                            //this is a regular object definition, so we can conclude it is not a rule
+                        case HSSBlockClose:
+                        case HSSEndOfStatement:
+                            //it is a shorthand
                             ret = true;
-                            *isShorthand = true;
                             done = true;
+                            *isShorthand = true;
+                            break;
+
+                        case HSSObjectSign:
+                        {
+                            this->checkForUnexpectedEndOfSource();
+                            peekToken = this->tokenizer->peekNextToken();
+                            AXRString objtype = VALUE_TOKEN(peekToken)->getString();
+                            if ((objtype == "this")
+                                    || (objtype == "super")
+                                    || (objtype == "parent")
+                                    || (objtype == "root"))
+                            {
+                                //it is a selector, continue because it may be a selector inside a function
+                            }
+                            else
+                            {
+                                //this is a regular object definition, so we can conclude it is not a rule
+                                ret = true;
+                                *isShorthand = true;
+                                done = true;
+                            }
+                            break;
                         }
-                        break;
-                    }
 
-                    case HSSBlockOpen:
-                        //it is a
-                        ret = false;
-                        done = true;
-                        break;
+                        case HSSBlockOpen:
+                            //it is a
+                            ret = false;
+                            done = true;
+                            break;
 
-                    default:
-                        break;
-                    }
+                        default:
+                            break;
+                        }
 
-                    if (!done)
-                    {
-                        peekToken = this->tokenizer->peekNextToken();
-                        this->checkForUnexpectedEndOfSource();
+                        if (!done)
+                        {
+                            peekToken = this->tokenizer->peekNextToken();
+                            this->checkForUnexpectedEndOfSource();
+                        }
                     }
                 }
             }
-        }
+        } //end while !done
     }
 
     this->tokenizer->resetPeek();
@@ -1468,7 +1488,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
 {
     axr_log(LoggerChannelHSSParser, "HSSParser: reading property definition");
 
-    AXRString propertyName;
+    QVector<AXRString> propertyNames;
 
     //end of source is no good
     this->checkForUnexpectedEndOfSource();
@@ -1491,15 +1511,31 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
             {
                 try
                 {
-                    propertyName = VALUE_TOKEN(this->currentToken)->getString();
-                    this->readNextToken();
-                    //allow whitespace before colon
-                    this->skip(HSSWhitespace);
-                    //now must come a colon
-                    this->skipExpected(HSSColon);
-                    //we don't give a f$%# about whitespace
-                    this->skip(HSSWhitespace);
-                    this->currentObjectContext.top()->shorthandSkip(propertyName);
+                    bool done = false;
+                    while (!done)
+                    {
+                        done = true;
+                        AXRString propertyName = VALUE_TOKEN(this->currentToken)->getString();
+                        propertyNames.push_back(propertyName);
+                        this->readNextToken();
+                        //allow whitespace before colon
+                        this->skip(HSSWhitespace);
+                        if (this->currentToken->isA(HSSComma))
+                        {
+                            this->readNextToken(true);
+                            this->skip(HSSWhitespace, true);
+                            if (this->currentToken->isA(HSSIdentifier))
+                            {
+                                done = false;
+                                continue;
+                            }
+                        }
+                        //now must come a colon
+                        this->skipExpected(HSSColon);
+                        //we don't give a f$%# about whitespace
+                        this->skip(HSSWhitespace);
+                        this->currentObjectContext.top()->shorthandSkip(propertyName);
+                    }
                 }
                 catch (const AXRError &e)
                 {
@@ -1527,7 +1563,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
         //get the property name for the current value
         try
         {
-            propertyName = this->currentObjectContext.top()->getPropertyForCurrentValue();
+            propertyNames.push_back(this->currentObjectContext.top()->getPropertyForCurrentValue());
             //consume the property
             this->currentObjectContext.top()->shorthandNext();
         }
@@ -1542,7 +1578,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
 
     bool done = false;
     AXRController * controller = this->getController();
-    ret = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(propertyName, controller));
+    ret = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(propertyNames, controller));
 
     while (!done && valid)
     {
@@ -1558,7 +1594,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                     objdefDone = true;
                     try
                     {
-                        QSharedPointer<HSSObjectDefinition> objdef = this->readObjectDefinition(propertyName);
+                        QSharedPointer<HSSObjectDefinition> objdef = this->readObjectDefinition(propertyNames.front()); ///@todo: what to do if the property names give different default objects?
                         if (objdef)
                         {
                             ret->addValue(objdef);
@@ -1612,7 +1648,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                 //check if it is a function
                 QSharedPointer<HSSObject> objectContext = this->currentObjectContext.top();
 
-                if (objectContext->isFunction(valuestr, propertyName))
+                if (objectContext->isFunction(valuestr, propertyNames.front())) ///@todo: what to do if the property names give different functions?
                 {
                     QSharedPointer<HSSParserNode> exp = this->readExpression();
                     if (exp)
@@ -1626,7 +1662,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
 
                     //check if it is a keyword
                 }
-                else if (objectContext->isKeyword(valuestr, propertyName))
+                else if (objectContext->isKeyword(valuestr, propertyNames.front())) ///@todo: what to do if the property names give different keywords?
                 {
                     ret->addValue(QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(valuestr, controller)));
                     this->readNextToken();
@@ -2042,17 +2078,23 @@ QSharedPointer<HSSObjectDefinition> HSSParser::getObjectFromInstruction(QSharedP
         AXRController * controller = this->getController();
 
         QSharedPointer<HSSPropertyDefinition> newRed = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        newRed->setName("red");
+        QVector<AXRString> redName;
+        redName.push_back("red");
+        newRed->setNames(redName);
         newRed->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newRed);
 
         QSharedPointer<HSSPropertyDefinition> newGreen = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        newGreen->setName("green");
+        QVector<AXRString> greenName;
+        greenName.push_back("green");
+        newGreen->setNames(greenName);
         newGreen->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newGreen);
 
         QSharedPointer<HSSPropertyDefinition> newBlue = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        newBlue->setName("blue");
+        QVector<AXRString> blueName;
+        blueName.push_back("blue");
+        newBlue->setNames(blueName);
         newBlue->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newBlue);
 
@@ -2140,22 +2182,30 @@ QSharedPointer<HSSObjectDefinition> HSSParser::getObjectFromInstruction(QSharedP
         ret = QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(obj, controller));
 
         QSharedPointer<HSSPropertyDefinition> newRed = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        newRed->setName("red");
+        QVector<AXRString> redName;
+        redName.push_back("red");
+        newRed->setNames(redName);
         newRed->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(redHex, controller)));
         ret->propertiesAdd(newRed);
 
         QSharedPointer<HSSPropertyDefinition> newGreen = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        newGreen->setName("green");
+        QVector<AXRString> greenName;
+        greenName.push_back("green");
+        newGreen->setNames(greenName);
         newGreen->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(greenHex, controller)));
         ret->propertiesAdd(newGreen);
 
         QSharedPointer<HSSPropertyDefinition> newBlue = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        newBlue->setName("blue");
+        QVector<AXRString> blueName;
+        blueName.push_back("blue");
+        newBlue->setNames(blueName);
         newBlue->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(blueHex, controller)));
         ret->propertiesAdd(newBlue);
 
         QSharedPointer<HSSPropertyDefinition> newAlpha = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        newAlpha->setName("alpha");
+        QVector<AXRString> alphaName;
+        alphaName.push_back("alpha");
+        newAlpha->setNames(alphaName);
         newAlpha->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(alphaHex, controller)));
         ret->propertiesAdd(newAlpha);
 

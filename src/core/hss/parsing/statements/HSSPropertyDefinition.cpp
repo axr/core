@@ -50,26 +50,26 @@ using namespace AXR;
 HSSPropertyDefinition::HSSPropertyDefinition(AXRController * controller)
 : HSSStatement(HSSStatementTypePropertyDefinition, controller)
 {
-    this->name = "";
+
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(AXRString name, AXRController * controller)
+HSSPropertyDefinition::HSSPropertyDefinition(QVector<AXRString> names, AXRController * controller)
 : HSSStatement(HSSStatementTypePropertyDefinition, controller)
 {
-    this->name = name;
+    this->names = names;
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(AXRString name, QSharedPointer<HSSParserNode> value, AXRController * controller)
+HSSPropertyDefinition::HSSPropertyDefinition(QVector<AXRString> name, QSharedPointer<HSSParserNode> value, AXRController * controller)
 : HSSStatement(HSSStatementTypePropertyDefinition, controller)
 {
-    this->name = name;
+    this->names = names;
     this->setValue(value);
 }
 
 HSSPropertyDefinition::HSSPropertyDefinition(const HSSPropertyDefinition &orig)
 : HSSStatement(orig)
 {
-    this->name = orig.name;
+    this->names = orig.names;
 }
 
 QSharedPointer<HSSPropertyDefinition> HSSPropertyDefinition::clone() const
@@ -84,7 +84,11 @@ HSSPropertyDefinition::~HSSPropertyDefinition()
 
 AXRString HSSPropertyDefinition::toString()
 {
-    AXRString ret = "HSSPropertyDefinition: " + this->name;
+    AXRString ret = "HSSPropertyDefinition: ";
+    Q_FOREACH(AXRString name, this->names)
+    {
+        ret.append(name);
+    }
     if (this->value)
     {
         ret.append(" with value: " + this->value->toString());
@@ -92,14 +96,14 @@ AXRString HSSPropertyDefinition::toString()
     return ret;
 }
 
-void HSSPropertyDefinition::setName(AXRString name)
+void HSSPropertyDefinition::setNames(QVector<AXRString> names)
 {
-    this->name = name;
+    this->names = names;
 }
 
-AXRString HSSPropertyDefinition::getName()
+QVector<AXRString> HSSPropertyDefinition::getNames()
 {
-    return this->name;
+    return this->names;
 }
 
 void HSSPropertyDefinition::setValue(QSharedPointer<HSSParserNode> value)

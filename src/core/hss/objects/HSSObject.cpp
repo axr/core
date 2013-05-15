@@ -454,20 +454,24 @@ void HSSObject::addDIsA(QSharedPointer<HSSParserNode> value)
 
             for (size_t i = 0; i < properties.size(); ++i)
             {
-                HSSObservableProperty propertyName = HSSObservable::observablePropertyFromString(properties[i]->getName());
-                if (propertyName != HSSObservablePropertyNone)
+                QVector<AXRString> names = properties[i]->getNames();
+                Q_FOREACH(AXRString name, names)
                 {
-                    try
+                    HSSObservableProperty propertyName = HSSObservable::observablePropertyFromString(name);
+                    if (propertyName != HSSObservablePropertyNone)
                     {
-                        this->setProperty(propertyName, properties[i]->getValue()->clone());
+                        try
+                        {
+                            this->setProperty(propertyName, properties[i]->getValue()->clone());
+                        }
+                        catch (const AXRError &e)
+                        {
+                            e.raise();
+                        }
                     }
-                    catch (const AXRError &e)
-                    {
-                        e.raise();
-                    }
-                }
 
-                //else store as value
+                    //else store as value
+                }
             }
 
             valid = true;
@@ -513,16 +517,19 @@ void HSSObject::isAChanged(AXR::HSSObservableProperty source, void *data)
 
 }
 
-void HSSObject::setPropertyWithName(AXRString name, QSharedPointer<HSSParserNode> value)
+void HSSObject::setPropertiesWithNames(QVector<AXRString> names, QSharedPointer<HSSParserNode> value)
 {
-    HSSObservableProperty property = HSSObservable::observablePropertyFromString(name);
-    if (property != HSSObservablePropertyNone)
+    Q_FOREACH(AXRString name, names)
     {
-        this->setProperty(property, value);
-    }
-    else
-    {
-        AXRWarning("HSSDisplayObject", "Unknown property " + name + ", ignoring value").raise();
+        HSSObservableProperty property = HSSObservable::observablePropertyFromString(name);
+        if (property != HSSObservablePropertyNone)
+        {
+            this->setProperty(property, value);
+        }
+        else
+        {
+            AXRWarning("HSSDisplayObject", "Unknown property " + name + ", ignoring value").raise();
+        }
     }
 }
 
