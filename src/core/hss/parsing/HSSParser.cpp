@@ -878,191 +878,6 @@ QSharedPointer<HSSCombinator> HSSParser::readCombinator()
 
 }
 
-//std::vector<QSharedPointer<HSSSelectorChain>> HSSParser::readSelectorChains(HSSTokenType stopOn)
-//{
-//    axr_log(LoggerChannelHSSParser, "HSSParser: reading selector chain");
-//    inc_output_indent();
-//    security_brake_init();
-//
-//    std::vector<QSharedPointer<HSSSelectorChain>> retvect;
-//    QSharedPointer<HSSSelectorChain> ret = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain());
-//
-//    //first we need to look at the selector chain
-//    //set the current context
-//    this->currentContext.push_back(HSSParserContextSelectorChain);
-//    //parse the selector chain until we find the token to stop on
-//    while (this->currentToken && !this->currentToken->isA(stopOn)) {
-//
-//
-//        switch (this->currentToken->getType()) {
-//            case HSSIdentifier:
-//            {
-//                //if it's an identifier, it's a simple selector
-//                ret->add(this->readSelector());
-//                //adds only if needed
-//                QSharedPointer<HSSCombinator> childrenCombinator(this->readChildrenCombinatorOrSkip());
-//                if(childrenCombinator){
-//                    ret->add(childrenCombinator);
-//                }
-//                break;
-//            }
-//
-//            case HSSSymbol:
-//            {
-//                //a symbol, probably a combinator
-//                const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->getString()).c_str();
-//                switch (currentTokenValue) {
-//                    case '=':
-//                    case '-':
-//                    case '+':
-//                    case '>':
-//                        /**
-//                         *  @todo special handling for text selection combinators?
-//                         */
-//                        ret->add(this->readSymbolCombinator());
-//                        break;
-//                    case '*':
-//                        ret->add(QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector()));
-//                        this->readNextToken();
-//                        //adds only if needed
-//                        ret->add(this->readChildrenCombinatorOrSkip());
-//
-//                        break;
-//                    case '.':
-//                        //we need to check if it is really a combinator or just a syntax error
-//                        if (VALUE_TOKEN(this->currentToken)->getString() == ".."){
-//                            ret->add(this->readSymbolCombinator());
-//                            break;
-//                        }
-//
-//                    case '!':
-//                    {
-//                        //it's a negation
-//                        ret->add(QSharedPointer<HSSNegation>(new HSSNegation()));
-//                        this->readNextToken();
-//                        break;
-//                    }
-//
-//                        //huh? we didn't expect any other symbol
-//                    default:
-//                        throw AXRError::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
-//                }
-//                break;
-//            }
-//
-//            case HSSColon:
-//            {
-//                //if there is another colon, it is a flag
-//                this->readNextToken(true);
-//                if(this->currentToken->isA(HSSColon)){
-//                    this->readNextToken(true);
-//                    QSharedPointer<HSSParserNode> theFlag = this->readFlag();
-//                    if(theFlag){
-//                        ret->add(theFlag);
-//                    }
-//
-//                } else {
-//                    //it is a filter
-//                    QSharedPointer<HSSParserNode> theFilter = this->readFilter();
-//                    if(theFilter){
-//                        ret->add(theFilter);
-//                    }
-//                }
-//                //adds only if needed
-//                ret->add(this->readChildrenCombinatorOrSkip());
-//                break;
-//            }
-//
-//            case HSSComma:
-//            {
-//                retvect.push_back(ret);
-//
-//                this->readNextToken(true);
-//                this->skip(HSSWhitespace);
-//                if(!this->currentToken->isA(stopOn)){
-//                    ret = QSharedPointer<HSSSelectorChain>(new HSSSelectorChain());
-//                } else {
-//                    ret = QSharedPointer<HSSSelectorChain>();
-//                }
-//                break;
-//            }
-//
-//            case HSSObjectSign:
-//            {
-//                this->readNextToken(true);
-//                if(this->currentToken->isA(HSSIdentifier)){
-//                    AXRString objtype = VALUE_TOKEN(this->currentToken)->getString();
-//                    if (objtype == "this") {
-//                        ret->add(QSharedPointer<HSSThisSelector>(new HSSThisSelector()));
-//                        this->readNextToken(true);
-//                        //adds only if needed
-//                        QSharedPointer<HSSCombinator> childrenCombinator(this->readChildrenCombinatorOrSkip());
-//                        if(childrenCombinator){
-//                            ret->add(childrenCombinator);
-//                        }
-//                        break;
-//                    } else if (objtype == "super"){
-//                        /**
-//                         *  @todo implement \@super
-//                         */
-//                        std_log("@super not implemented yet");
-//                    } else if (objtype == "parent"){
-//                        /**
-//                         *  @todo implement \@parent
-//                         */
-//                        std_log("@parent not implemented yet");
-//                    } else if (objtype == "root"){
-//                        ret->add(QSharedPointer<HSSRootSelector>(new HSSRootSelector()));
-//                        this->readNextToken(true);
-//                        //adds only if needed
-//                        QSharedPointer<HSSCombinator> childrenCombinator(this->readChildrenCombinatorOrSkip());
-//                        if(childrenCombinator){
-//                            ret->add(childrenCombinator);
-//                        }
-//                        break;
-//                    } else {
-//                        throw AXRError::p(new AXRWarning("HSSParser", "No objects other than @this, @super, @parent or @root are supported in selectors.", this->currentFile->getFileName(), this->line, this->column));
-//                    }
-//                } else if(this->currentToken->isA(HSSWhitespace) || this->currentToken->isA(HSSBlockOpen) || this->currentToken->isA(HSSColon)){
-//                    ret->add(QSharedPointer<HSSThisSelector>(new HSSThisSelector()));
-//                    this->skip(HSSWhitespace, true);
-//                    break;
-//                }
-//
-//                //fall through
-//            }
-//
-//            default:
-//            {
-//                //we didn't expect any other type of token
-//                throw AXRError::p(new AXRWarning("HSSParser", "Unexpected token of type "+HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->getFileName(), this->line, this->column));
-//            }
-//        }
-//
-//        security_brake();
-//    }
-//    security_brake_reset();
-//
-//    if(ret) {
-//        retvect.push_back(ret);
-//    }
-//
-//    //we're not in a selector anymore
-//    this->currentContext.pop_back();
-//
-//    //we expect a block to open
-//    this->skipExpected(stopOn);
-//    //if the file ends here, fuuuuuuu[...]
-//    this->checkForUnexpectedEndOfSource();
-//    //skip any whitespace
-//    this->skip(HSSWhitespace);
-//    //if the file ends here, fuuuuuuu[...]
-//    this->checkForUnexpectedEndOfSource();
-//
-//    dec_output_indent();
-//    return retvect;
-//}
-
 bool HSSParser::isCombinator()
 {
     return this->isCombinator(this->currentToken);
@@ -1118,11 +933,6 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
     axr_log(LoggerChannelHSSParser, "HSSParser: checking if property definition");
     bool ret = true;
     *isShorthand = false;
-
-    //property definitions always start with identifiers (the property)
-    //    if(!this->currentToken->isA(HSSIdentifier)){
-    //        return false;
-    //    }
 
     QSharedPointer<HSSToken> peekToken;
     if (this->currentToken->isA(HSSInstructionSign))
@@ -2554,24 +2364,7 @@ QSharedPointer<HSSParserNode> HSSParser::readBaseExpression()
 
     case HSSIdentifier:
     {
-        /*
-        AXRString valuestr = VALUE_TOKEN(this->currentToken)->getString();
-        //check if it is a function
-        QSharedPointer<HSSObject> objectContext = this->currentObjectContext.top();
-        if (objectContext->isFunction(valuestr, propertyName)){*/
         left = this->readFunction();
-        /*
-       //check if it is a keyword
-       } else if (objectContext->isKeyword(valuestr, propertyName)){
-           left = QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(valuestr));
-           this->readNextToken();
-           this->skip(HSSWhitespace);
-           //we assume it is an object name at this point
-       } else {
-           left = QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(valuestr));
-           this->readNextToken();
-           this->skip(HSSWhitespace);
-       }*/
 
         break;
     }
@@ -2583,28 +2376,7 @@ QSharedPointer<HSSParserNode> HSSParser::readBaseExpression()
     return left;
 }
 
-////this method expects the currentToken to be an identifier
-//QSharedPointer<HSSParserNode> HSSParser::readFilter()
-//{
-//    axr_log(LoggerChannelHSSParser, "HSSParser: reading filter");
-//    inc_output_indent();
-//
-//    QSharedPointer<HSSFilter> ret;
-//    this->expect(HSSIdentifier);
-//
-//    AXRString filterName = VALUE_TOKEN(this->currentToken)->getString();
-//    ret = HSSFilter::newFilterWithStringType(filterName);
-//
-//    this->readNextToken();
-//    this->checkForUnexpectedEndOfSource();
-//
-//    dec_output_indent();
-//
-//    return ret;
-//}
-
 //this method expects the currentToken to be an identifier
-
 QSharedPointer<HSSParserNode> HSSParser::readFlag()
 {
     axr_log(LoggerChannelHSSParser, "HSSParser: reading flag");
