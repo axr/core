@@ -102,18 +102,6 @@ HSSParser::HSSParser(AXRController * theController)
     this->column = 1;
 }
 
-//HSSParser::HSSParser(HSSTokenizer::buf_p buffer, unsigned buflen, AXRString filename)
-//{
-//    this->tokenizer = QSharedPointer<HSSTokenizer>(new HSSTokenizer(buffer, buflen));
-//    this->filename = filename;
-//
-//    this->currentContext.push_back(HSSParserContextRoot);
-//    //FIXME: will there be a root object? Now defaults to container
-//    this->currentObjectContext.push(QSharedPointer<HSSContainer>(new HSSContainer()));
-//
-//    this->readNextToken();
-//}
-
 HSSParser::~HSSParser()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSParser: destructing HSS parser");
