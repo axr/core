@@ -136,6 +136,12 @@ namespace AXR
          */
         virtual AXRString toString();
         /**
+         *  Each object overrides this method to print itself to a JSON object.
+         *  @return A JSON representation of the object.
+         */
+        AXRString toJSON(AXRString whitespace);
+        virtual AXRString _toJSON(AXRString whitespace);
+        /**
          *  @return Wether the object is named or is anonymous.
          */
         bool isNamed();
@@ -175,6 +181,11 @@ namespace AXR
          *  @return The current property name.
          */
         AXRString getPropertyForCurrentValue();
+        /**
+         *  Getter for the list of computed values for all properties.
+         *  @return A map containing variants with pointers to values.
+         */
+        const QMap<HSSObservableProperty, QVariant> getProperties() const;
         /**
          *  Setter for the shorthand properties array.
          *  @param newValues        A STL vector of property names
@@ -354,5 +365,7 @@ Q_DECLARE_METATYPE(AXR::HSSEventType)
 typedef QMap<AXR::HSSEventType, std::vector<QSharedPointer<AXR::HSSObject> > > QMapHSSEventTypeVectorHSSObjectp;
 Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp)
 Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp*)
+Q_DECLARE_METATYPE(AXR::HSSUnit*)
+Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSObject>*)
 
 #endif

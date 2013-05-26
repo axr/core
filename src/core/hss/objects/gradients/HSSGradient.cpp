@@ -60,8 +60,6 @@
 
 using namespace AXR;
 
-Q_DECLARE_METATYPE(HSSUnit*)
-
 AXRString HSSGradient::gradientTypeStringRepresentation(HSSGradientType gradientType)
 {
     static QMap<HSSGradientType, AXRString> types;

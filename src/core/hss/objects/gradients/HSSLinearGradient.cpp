@@ -62,8 +62,6 @@
 
 using namespace AXR;
 
-Q_DECLARE_METATYPE(HSSUnit*)
-
 HSSLinearGradient::HSSLinearGradient(AXRController * controller)
 : HSSGradient(HSSGradientTypeLinear, controller)
 {

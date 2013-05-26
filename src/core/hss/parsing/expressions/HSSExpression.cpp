@@ -52,8 +52,6 @@
 
 using namespace AXR;
 
-Q_DECLARE_METATYPE(HSSUnit*)
-
 HSSExpression::HSSExpression(HSSExpressionType type, QSharedPointer<HSSParserNode> _left, QSharedPointer<HSSParserNode> _right, AXRController * controller)
 : HSSParserNode(HSSParserNodeTypeExpression, controller)
 {

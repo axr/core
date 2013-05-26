@@ -59,8 +59,6 @@
 
 using namespace AXR;
 
-Q_DECLARE_METATYPE(HSSUnit*)
-
 HSSColorStop::HSSColorStop(AXRController * controller)
 : HSSObject(HSSObjectTypeColorStop, controller)
 {

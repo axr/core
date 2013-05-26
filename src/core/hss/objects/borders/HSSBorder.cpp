@@ -58,8 +58,6 @@
 
 using namespace AXR;
 
-Q_DECLARE_METATYPE(HSSUnit*)
-
 HSSBorder::HSSBorder(AXRController * controller)
 : HSSObject(HSSObjectTypeBorder, controller)
 {

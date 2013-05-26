@@ -66,8 +66,6 @@
 
 using namespace AXR;
 
-Q_DECLARE_METATYPE(HSSUnit*)
-
 QSharedPointer<HSSDisplayObject> HSSContainer::asDisplayObject(QSharedPointer<HSSContainer> theContainer)
 {
     return qSharedPointerCast<HSSDisplayObject > (theContainer);
@@ -217,6 +215,31 @@ AXRString HSSContainer::toString()
     }
 
     return tempstr;
+}
+
+AXRString HSSContainer::_toJSON(AXRString whitespace)
+{
+    AXRString tmp;
+    tmp.append(whitespace).append("name: '" + (this->isNamed() ? this->name : "") + "',\n");
+    if (this->children->size() > 0)
+    {
+        tmp.append(whitespace).append("children: [\n");
+        whitespace.append("    ");
+        if (this->children->size() > 0)
+        {
+            for (HSSSimpleSelection::iterator it = this->children->begin(); it!= this->children->end(); ++it)
+            {
+                tmp.append(whitespace).append((*it)->toJSON(whitespace));
+            }
+        }
+        whitespace.remove(whitespace.length()-4, 4);
+        tmp.append("\n").append(whitespace).append("],\n");
+    }
+    else
+    {
+        tmp.append(whitespace).append("children: false,\n");
+    }
+    return tmp;
 }
 
 AXRString HSSContainer::defaultObjectType()

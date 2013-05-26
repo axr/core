@@ -81,8 +81,6 @@
 
 using namespace AXR;
 
-Q_DECLARE_METATYPE(HSSUnit*)
-
 HSSDisplayObject::HSSDisplayObject(HSSObjectType type, AXRController * controller)
 : HSSObject(type, controller)
 {

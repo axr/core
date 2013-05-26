@@ -61,8 +61,6 @@
 
 using namespace AXR;
 
-Q_DECLARE_METATYPE(HSSUnit*)
-
 HSSPolygon::HSSPolygon(AXRController * controller)
 : HSSShape(HSSShapeTypePolygon, controller)
 {

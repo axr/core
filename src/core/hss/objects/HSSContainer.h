@@ -122,6 +122,7 @@ namespace AXR
         virtual ~HSSContainer();
 
         virtual AXRString toString();
+        virtual AXRString _toJSON(AXRString whitespace);
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);

@@ -74,6 +74,8 @@
 
 using namespace AXR;
 
+Q_DECLARE_METATYPE(AXR::HSSTextAlignType *)
+
 QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRController * controller)
 {
     static QMap<AXRString, HSSObjectType> types;
@@ -310,6 +312,204 @@ AXRString HSSObject::toString()
     {
         return "Anonymous HSSObject";
     }
+}
+
+AXRString HSSObject::toJSON(AXRString whitespace)
+{
+    AXRString tmp = "{\n";
+    whitespace.append("    ");
+    tmp.append(whitespace).append("properties : {\n");
+    whitespace.append("    ");
+    QMapIterator<HSSObservableProperty, QVariant> i(this->getProperties());
+    while (i.hasNext())
+    {
+        i.next();
+        tmp.append(whitespace).append(HSSObservable::observablePropertyStringRepresentation(i.key())).append(" : ");
+        QVariant value = i.value();
+        if (value.canConvert<bool *>())
+        {
+            bool boolValue = *value.value<bool *>();
+            tmp.append(boolValue ? "true" : "false");
+        }
+        else if (value.canConvert<HSSUnit *>())
+        {
+            HSSUnit numberValue = *value.value<HSSUnit *>();
+            tmp.append("'").append(QString::number(numberValue)).append("'");
+        }
+        else if (value.canConvert<QSharedPointer<HSSObject> *>())
+        {
+            QSharedPointer<HSSObject> objectValue = *value.value<QSharedPointer<HSSObject> *>();
+            tmp.append(objectValue->toJSON(whitespace));
+        }
+        else if (value.canConvert<QSharedPointer<HSSShape> *>())
+        {
+            QSharedPointer<HSSShape> objectValue = *value.value<QSharedPointer<HSSShape> *>();
+            tmp.append(objectValue->toJSON(whitespace));
+        }
+        else if (value.canConvert<HSSDirectionValue *>())
+        {
+            HSSDirectionValue directionValue = *value.value<HSSDirectionValue *>();
+            switch (directionValue) {
+                case HSSDirectionTopToBottom:
+                    tmp.append("'ttb'");
+                    break;
+                case HSSDirectionBottomToTop:
+                    tmp.append("'btt'");
+                    break;
+                case HSSDirectionLeftToRight:
+                    tmp.append("'ltr'");
+                    break;
+                case HSSDirectionRightToLeft:
+                    tmp.append("'rtl'");
+                    break;
+
+                default:
+                    tmp.append("'error'");
+                    break;
+            }
+        }
+        else if (value.canConvert<HSSTextAlignType *>())
+        {
+            HSSTextAlignType textAlignValue = *value.value<HSSTextAlignType *>();
+            switch (textAlignValue) {
+                case HSSTextAlignTypeCenter:
+                    tmp.append("'center'");
+                    break;
+                case HSSTextAlignTypeLeft:
+                    tmp.append("'left'");
+                    break;
+                case HSSTextAlignTypeRight:
+                    tmp.append("'right'");
+                    break;
+                case HSSTextAlignTypeJustify:
+                    tmp.append("'justify'");
+                    break;
+
+                default:
+                    tmp.append("'error'");
+                    break;
+            }
+        }
+        else if (value.canConvert<std::vector<QSharedPointer<HSSObject> > *>())
+        {
+            std::vector<QSharedPointer<HSSObject> > objectValueV = *value.value<std::vector<QSharedPointer<HSSObject> > *>();
+            if (objectValueV.size() > 0)
+            {
+                tmp.append("[\n");
+                whitespace.append("    ");
+                Q_FOREACH(QSharedPointer<HSSObject> objectValue, objectValueV){
+                    tmp.append(whitespace).append(objectValue->toJSON(whitespace)).append(",\n");
+                }
+                whitespace.remove(whitespace.length()-4, 4);
+                tmp.append(whitespace).append("]");
+            }
+            else
+            {
+                tmp.append("false");
+            }
+        }
+        else if (value.canConvert<std::vector<QSharedPointer<HSSMargin> > *>())
+        {
+            std::vector<QSharedPointer<HSSMargin> > objectValueV = *value.value<std::vector<QSharedPointer<HSSMargin> > *>();
+            if (objectValueV.size() > 0)
+            {
+                tmp.append("[\n");
+                whitespace.append("    ");
+                Q_FOREACH(QSharedPointer<HSSMargin> objectValue, objectValueV){
+                    tmp.append(whitespace).append(objectValue->toJSON(whitespace)).append(",\n");
+                }
+                whitespace.remove(whitespace.length()-4, 4);
+                tmp.append(whitespace).append("]");
+            }
+            else
+            {
+                tmp.append("false");
+            }
+        }
+        else if (value.canConvert<std::vector<QSharedPointer<HSSBorder> > *>())
+        {
+            std::vector<QSharedPointer<HSSBorder> > objectValueV = *value.value<std::vector<QSharedPointer<HSSBorder> > *>();
+            if (objectValueV.size() > 0)
+            {
+                tmp.append("[\n");
+                whitespace.append("    ");
+                Q_FOREACH(QSharedPointer<HSSBorder> objectValue, objectValueV){
+                    tmp.append(whitespace).append(objectValue->toJSON(whitespace)).append(",\n");
+                }
+                whitespace.remove(whitespace.length()-4, 4);
+                tmp.append(whitespace).append("]");
+            }
+            else
+            {
+                tmp.append("false");
+            }
+        }
+        else if (value.canConvert<std::vector<QSharedPointer<HSSFont> > *>())
+        {
+            std::vector<QSharedPointer<HSSFont> > objectValueV = *value.value<std::vector<QSharedPointer<HSSFont> > *>();
+            if (objectValueV.size() > 0)
+            {
+                tmp.append("[\n");
+                whitespace.append("    ");
+                Q_FOREACH(QSharedPointer<HSSFont> objectValue, objectValueV){
+                    tmp.append(whitespace).append(objectValue->toJSON(whitespace)).append(",\n");
+                }
+                whitespace.remove(whitespace.length()-4, 4);
+                tmp.append(whitespace).append("]");
+            }
+            else
+            {
+                tmp.append("false");
+            }
+        }
+        else if (value.canConvert<QMapHSSEventTypeVectorHSSObjectp*>())
+        {
+            QMap<AXR::HSSEventType, std::vector<QSharedPointer<AXR::HSSObject> > > objectValueM = *value.value<QMapHSSEventTypeVectorHSSObjectp *>();
+            QMapIterator<AXR::HSSEventType, std::vector<QSharedPointer<AXR::HSSObject> > > i(objectValueM);
+            if (objectValueM.size() > 0)
+            {
+                tmp.append("{\n");
+                whitespace.append("    ");
+                while (i.hasNext())
+                {
+                    i.next();
+                    tmp.append(whitespace).append(HSSEvent::eventTypeStringRepresentation(i.key())).append(" : [\n");
+                    std::vector<QSharedPointer<AXR::HSSObject> > events = i.value();
+                    tmp.append("[\n");
+                    whitespace.append("    ");
+                    Q_FOREACH(QSharedPointer<HSSObject> objectValue, events){
+                        tmp.append(whitespace).append(objectValue->toJSON(whitespace)).append(",\n");
+                    }
+                    whitespace.remove(whitespace.length()-4, 4);
+                    tmp.append(whitespace).append("],\n");
+
+                }
+
+                whitespace.remove(whitespace.length()-4, 4);
+                tmp.append(whitespace).append("}");
+            }
+            else
+            {
+                tmp.append("false");
+            }
+        }
+        else
+        {
+            tmp.append("'error'");
+        }
+        tmp.append(", \n");
+    }
+    whitespace.remove(whitespace.length()-4, 4);
+    tmp.append(whitespace).append("},\n");
+    tmp.append(this->_toJSON(whitespace));
+    whitespace.remove(whitespace.length()-4, 4);
+    tmp.append(whitespace).append("}");
+    return tmp;
+}
+
+AXRString HSSObject::_toJSON(AXRString whitespace)
+{
+    return "";
 }
 
 bool HSSObject::isNamed()
@@ -549,6 +749,11 @@ void HSSObject::setProperty(HSSObservableProperty name, QSharedPointer<HSSParser
 void HSSObject::setProperty(HSSObservableProperty name, QVariant value)
 {
     AXRWarning("HSSDisplayObject", "Unknown property " + HSSObservable::observablePropertyStringRepresentation(name) + ", ignoring value").raise();
+}
+
+const QMap<HSSObservableProperty, QVariant> HSSObject::getProperties() const
+{
+    return this->properties;
 }
 
 QVariant HSSObject::getProperty(HSSObservableProperty name)
