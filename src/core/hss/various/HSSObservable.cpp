@@ -63,105 +63,105 @@ AXRString HSSObservable::observablePropertyStringRepresentation(HSSObservablePro
         types[HSSObservablePropertyIsA] = "HSSObservablePropertyIsA";
 
         //HSSDisplayObject
-        types[HSSObservablePropertyValue] = "HSSObservablePropertyValue";
-        types[HSSObservablePropertyWidth] = "HSSObservablePropertyWidth";
-        types[HSSObservablePropertyInnerWidth] = "HSSObservablePropertyInnerWidth";
-        types[HSSObservablePropertyInnerHeight] = "HSSObservablePropertyInnerHeight";
-        types[HSSObservablePropertyOuterWidth] = "HSSObservablePropertyOuterWidth";
-        types[HSSObservablePropertyOuterHeight] = "HSSObservablePropertyOuterHeight";
-        types[HSSObservablePropertyHeight] = "HSSObservablePropertyHeight";
-        types[HSSObservablePropertyAnchorX] = "HSSObservablePropertyAnchorX";
-        types[HSSObservablePropertyAnchorY] = "HSSObservablePropertyAnchorY";
-        types[HSSObservablePropertyFlow] = "HSSObservablePropertyFlow";
-        types[HSSObservablePropertyContained] = "HSSObservablePropertyContained";
-        types[HSSObservablePropertyAlignX] = "HSSObservablePropertyAlignX";
-        types[HSSObservablePropertyAlignY] = "HSSObservablePropertyAlignY";
-        types[HSSObservablePropertyBackground] = "HSSObservablePropertyBackground";
-        types[HSSObservablePropertyContent] = "HSSObservablePropertyContent";
-        types[HSSObservablePropertyOn] = "HSSObservablePropertyOn";
-        types[HSSObservablePropertyMargin] = "HSSObservablePropertyMargin";
-        types[HSSObservablePropertyPadding] = "HSSObservablePropertyPadding";
-        types[HSSObservablePropertyBorder] = "HSSObservablePropertyBorder";
-        types[HSSObservablePropertyFlagChanged] = "HSSObservablePropertyFlagChanged";
-        types[HSSObservablePropertyVisible] = "HSSObservablePropertyVisible";
-        types[HSSObservablePropertyLineAlign] = "HSSObservablePropertyLineAlign";
+        types[HSSObservablePropertyValue] = "value";
+        types[HSSObservablePropertyWidth] = "width";
+        types[HSSObservablePropertyInnerWidth] = "innerWidth";
+        types[HSSObservablePropertyInnerHeight] = "innerHeight";
+        types[HSSObservablePropertyOuterWidth] = "outerWidth";
+        types[HSSObservablePropertyOuterHeight] = "outerHeight";
+        types[HSSObservablePropertyHeight] = "height";
+        types[HSSObservablePropertyAnchorX] = "anchorX";
+        types[HSSObservablePropertyAnchorY] = "anchorY";
+        types[HSSObservablePropertyFlow] = "flow";
+        types[HSSObservablePropertyContained] = "contained";
+        types[HSSObservablePropertyAlignX] = "alignX";
+        types[HSSObservablePropertyAlignY] = "alignY";
+        types[HSSObservablePropertyBackground] = "background";
+        types[HSSObservablePropertyContent] = "content";
+        types[HSSObservablePropertyOn] = "on";
+        types[HSSObservablePropertyMargin] = "margin";
+        types[HSSObservablePropertyPadding] = "padding";
+        types[HSSObservablePropertyBorder] = "border";
+        types[HSSObservablePropertyFlagChanged] = "flagChanged";
+        types[HSSObservablePropertyVisible] = "visible";
+        types[HSSObservablePropertyLineAlign] = "lineAlign";
 
         //HSSContainer
-        types[HSSObservablePropertyContentAlignX] = "HSSObservablePropertyContentAlignX";
-        types[HSSObservablePropertyContentAlignY] = "HSSObservablePropertyContentAlignY";
-        types[HSSObservablePropertyDirectionPrimary] = "HSSObservablePropertyDirection";
-        types[HSSObservablePropertyDirectionSecondary] = "HSSObservablePropertyWrapDirection";
-        types[HSSObservablePropertyFont] = "HSSObservablePropertyFont";
-        types[HSSObservablePropertyShape] = "HSSObservablePropertyShape";
+        types[HSSObservablePropertyContentAlignX] = "contentAlignX";
+        types[HSSObservablePropertyContentAlignY] = "contentAlignY";
+        types[HSSObservablePropertyDirectionPrimary] = "direction";
+        types[HSSObservablePropertyDirectionSecondary] = "wrapDirection";
+        types[HSSObservablePropertyFont] = "font";
+        types[HSSObservablePropertyShape] = "shape";
 
         //HSSTextBlock
-        types[HSSObservablePropertyTransform] = "HSSObservablePropertyTransform";
-        types[HSSObservablePropertyTextAlign] = "HSSObservablePropertyTextAlign";
-        types[HSSObservablePropertyText] = "HSSObservablePropertyText";
+        types[HSSObservablePropertyTransform] = "transform";
+        types[HSSObservablePropertyTextAlign] = "textAlign";
+        types[HSSObservablePropertyText] = "text";
 
         //HSSRgb
-        types[HSSObservablePropertyRed] = "HSSObservablePropertyRed";
-        types[HSSObservablePropertyGreen] = "HSSObservablePropertyGreen";
-        types[HSSObservablePropertyBlue] = "HSSObservablePropertyBlue";
-        types[HSSObservablePropertyAlpha] = "HSSObservablePropertyAlpha";
+        types[HSSObservablePropertyRed] = "red";
+        types[HSSObservablePropertyGreen] = "green";
+        types[HSSObservablePropertyBlue] = "blue";
+        types[HSSObservablePropertyAlpha] = "alpha";
 
         //HSSGradient
-        types[HSSObservablePropertyStartColor] = "HSSObservablePropertyStartColor";
-        types[HSSObservablePropertyEndColor] = "HSSObservablePropertyEndColor";
-        types[HSSObservablePropertyBalance] = "HSSObservablePropertyBalance";
-        types[HSSObservablePropertyColorStops] = "HSSObservablePropertyColorStops";
+        types[HSSObservablePropertyStartColor] = "startColor";
+        types[HSSObservablePropertyEndColor] = "endColor";
+        types[HSSObservablePropertyBalance] = "balance";
+        types[HSSObservablePropertyColorStops] = "colorStops";
 
         //HSSLinearGradient
-        types[HSSObservablePropertyStartX] = "HSSObservablePropertyStartX";
-        types[HSSObservablePropertyStartY] = "HSSObservablePropertyStartY";
-        types[HSSObservablePropertyEndX] = "HSSObservablePropertyEndX";
-        types[HSSObservablePropertyEndY] = "HSSObservablePropertyEndY";
+        types[HSSObservablePropertyStartX] = "startX";
+        types[HSSObservablePropertyStartY] = "startY";
+        types[HSSObservablePropertyEndX] = "endX";
+        types[HSSObservablePropertyEndY] = "endY";
 
         //HSSColorStop
-        types[HSSObservablePropertyPosition] = "HSSObservablePropertyPosition";
+        types[HSSObservablePropertyPosition] = "position";
 
         //HSSFont
-        types[HSSObservablePropertySize] = "HSSObservablePropertySize";
-        types[HSSObservablePropertyFace] = "HSSObservablePropertyFace";
-        types[HSSObservablePropertyColor] = "HSSObservablePropertyColor";
-        types[HSSObservablePropertyWeight] = "HSSObservablePropertyWeight";
+        types[HSSObservablePropertySize] = "size";
+        types[HSSObservablePropertyFace] = "face";
+        types[HSSObservablePropertyColor] = "color";
+        types[HSSObservablePropertyWeight] = "wheight";
 
         //HSSRoundedRect
-        types[HSSObservablePropertyCorners] = "HSSObservablePropertyCorners";
-        types[HSSObservablePropertyLeft] = "HSSObservablePropertyLeft";
-        types[HSSObservablePropertyLeftTop] = "HSSObservablePropertyLeftTop";
-        types[HSSObservablePropertyTop] = "HSSObservablePropertyTop";
-        types[HSSObservablePropertyRightTop] = "HSSObservablePropertyRightTop";
-        types[HSSObservablePropertyRight] = "HSSObservablePropertyRight";
-        types[HSSObservablePropertyRightBottom] = "HSSObservablePropertyRightBottom";
-        types[HSSObservablePropertyBottom] = "HSSObservablePropertyBottom";
-        types[HSSObservablePropertyLeftBottom] = "HSSObservablePropertyLeftBottom";
+        types[HSSObservablePropertyCorners] = "corners";
+        types[HSSObservablePropertyLeft] = "left";
+        types[HSSObservablePropertyLeftTop] = "leftTop";
+        types[HSSObservablePropertyTop] = "top";
+        types[HSSObservablePropertyRightTop] = "rightTop";
+        types[HSSObservablePropertyRight] = "right";
+        types[HSSObservablePropertyRightBottom] = "rightBottom";
+        types[HSSObservablePropertyBottom] = "bottom";
+        types[HSSObservablePropertyLeftBottom] = "leftBottom";
 
         //HSSEvent
-        types[HSSObservablePropertyAction] = "HSSObservablePropertyAction";
+        types[HSSObservablePropertyAction] = "action";
 
         //HSSRequest
-        types[HSSObservablePropertySrc] = "HSSObservablePropertySrc";
-        types[HSSObservablePropertyTarget] = "HSSObservablePropertyTarget";
-        types[HSSObservablePropertyMode] = "HSSObservablePropertyMode";
-        types[HSSObservablePropertyContentTarget] = "HSSObservablePropertyContentTarget";
+        types[HSSObservablePropertySrc] = "src";
+        types[HSSObservablePropertyTarget] = "target";
+        types[HSSObservablePropertyMode] = "mode";
+        types[HSSObservablePropertyContentTarget] = "target";
 
         //various
-        types[HSSObservablePropertyTreeChange] = "HSSObservablePropertyTreeChange";
+        types[HSSObservablePropertyTreeChange] = "treeChange";
 
         //HSSPolygon
-        types[HSSObservablePropertySides] = "HSSObservablePropertySides";
-        types[HSSObservablePropertyAngle] = "HSSObservablePropertyAngle";
+        types[HSSObservablePropertySides] = "sides";
+        types[HSSObservablePropertyAngle] = "angle";
 
         //HSSBorder
-        types[HSSObservablePropertySegments] = "HSSObservablePropertySegments";
+        types[HSSObservablePropertySegments] = "segments";
 
         //HSSRadialGradient
-        types[HSSObservablePropertyCenterX] = "HSSObservablePropertyCenterX";
-        types[HSSObservablePropertyCenterY] = "HSSObservablePropertyCenterY";
-        types[HSSObservablePropertyOffsetX] = "HSSObservablePropertyOffsetX";
-        types[HSSObservablePropertyOffsetY] = "HSSObservablePropertyOffsetY";
-        types[HSSObservablePropertyRoundness] = "HSSObservablePropertyRoundness";
+        types[HSSObservablePropertyCenterX] = "centerX";
+        types[HSSObservablePropertyCenterY] = "centerY";
+        types[HSSObservablePropertyOffsetX] = "offsetX";
+        types[HSSObservablePropertyOffsetY] = "offsetY";
+        types[HSSObservablePropertyRoundness] = "roundness";
     }
 
     return types[property];
