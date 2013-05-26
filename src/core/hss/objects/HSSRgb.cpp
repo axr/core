@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include <QColor>
+#include <QVariant>
 #include "AXRError.h"
 #include "AXRLoggerManager.h"
 #include "HSSCallback.h"
@@ -85,6 +86,11 @@ HSSRgb::HSSRgb(AXRController * controller, HSSUnit red, HSSUnit green, HSSUnit b
     shorthandProperties.push_back("red");
     shorthandProperties.push_back("green");
     shorthandProperties.push_back("blue");
+
+    this->registerProperty(HSSObservablePropertyAlpha, QVariant::fromValue(&this->alpha));
+    this->registerProperty(HSSObservablePropertyRed, QVariant::fromValue(&this->red));
+    this->registerProperty(HSSObservablePropertyGreen, QVariant::fromValue(&this->green));
+    this->registerProperty(HSSObservablePropertyBlue, QVariant::fromValue(&this->blue));
 
     this->setShorthandProperties(shorthandProperties);
 }
