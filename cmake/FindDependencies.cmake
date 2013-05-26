@@ -1,6 +1,6 @@
 if(AXR_BUILD_CORE)
     ### Qt ###
-    find_package(Qt4 4.8 COMPONENTS QtCore QtGui QtXml REQUIRED)
+    find_package(Qt4 4.8 COMPONENTS QtCore QtGui QtScript REQUIRED)
     include(${QT_USE_FILE})
     add_definitions(${QT_DEFINITIONS} -DNOMINMAX)
 

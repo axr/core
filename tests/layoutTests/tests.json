@@ -1,0 +1,4 @@
+[
+	{ name: 'Simple selector', href:"1.3-selectors/1.3.1.xml", expect: "1.3-selectors/1.3.1.json" },
+	{ name: 'Hierarchy', href:"1.3-selectors/1.3.2.xml", expect: "1.3-selectors/1.3.2.json" },
+]

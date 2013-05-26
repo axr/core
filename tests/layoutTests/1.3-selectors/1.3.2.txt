@@ -1,3 +1,0 @@
-HSSContainer: test_source_obj
-    with the following children objects:
-    HSSContainer: child_source_obj

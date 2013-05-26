@@ -1,1 +1,1 @@
-test { background: #AEA; }
+test { contentAlignX: 200; }

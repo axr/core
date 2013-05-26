@@ -2,6 +2,6 @@ test
 {
     child
     {
-        background: #AEA;
+        contentAlignX: 200;
     }
 }
