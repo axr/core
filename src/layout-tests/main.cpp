@@ -54,18 +54,34 @@
 #include "AXRDocument.h"
 #include "json.h"
 
-bool executeLayoutTests(QString filePath, bool verbose);
-bool testFile(QString href, QString expect, bool verbose);
+bool executeLayoutTests(QString filePath);
+bool testFile(QString href, QString expect);
 bool recursiveCheckExpectations(QMap<QString, QVariant> resulted, QMap<QString, QVariant> expected);
+void output(QString message, bool onlyIfVerbose = false, QString newlines = "\n", bool addWhitespace = true);
+void voutput(QString message, QString newlines = "\n");
+void newline(bool onlyIfVerbose = false, int amount = 1);
+void title(QString message);
+void xmlOpen(QString styleSheet);
+void xmlClose();
+QString xmlTag(QString message, QString tagName, QString attributes = "");
+QString xmlTagOpen(QString tagName, QString attributes = "");
+QString xmlTagClose(QString tagName);
+void increaseWhitespace();
+void decreaseWhitespace();
+QString reindent(QString message);
 
 using namespace AXR;
+
+bool outputAsXML;
+bool verbose;
+QString whitespace;
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QStringList args = a.arguments();
-    bool outputAsXML = false;
-    bool verbose = false;
+    outputAsXML = false;
+    verbose = false;
     int formatPos = args.indexOf("-format");
     if (formatPos > 0 && args.length() >= formatPos+1)
     {
@@ -77,25 +93,36 @@ int main(int argc, char *argv[])
     {
         verbose = true;
     }
-
-    bool allPassed = executeLayoutTests(args.at(1), verbose);
+    
+    QString styleSheet = "";
+    int stylesheetPos = args.indexOf("-stylesheet");
+    if (stylesheetPos > 0 && args.length() >= stylesheetPos+1)
+    {
+        styleSheet = args.at(stylesheetPos+1);
+    }
+    
+    whitespace = "";
+    xmlOpen(styleSheet);
+    increaseWhitespace();
+    title("Executing layout tests:");
+    bool allPassed = executeLayoutTests(args.at(1));
 
     if (!allPassed)
     {
-        std::cout << "\nWARNING: some tests failed" << std::endl;
+        output(xmlTag("\nWARNING: some tests failed", "result"));
     }
     else
     {
-        std::cout << "\nAll tests passed" << std::endl;
+        output(xmlTag("All tests passed", "result"));
     }
+    decreaseWhitespace();
+    xmlClose();
 
     return allPassed ? 0 : -1;
 }
 
-bool executeLayoutTests(QString filePath, bool verbose)
+bool executeLayoutTests(QString filePath)
 {
-    std::cout << "Executing layout tests:\n\n";
-
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
@@ -107,46 +134,68 @@ bool executeLayoutTests(QString filePath, bool verbose)
         i.next();
         QVariant test = i.value();
         if (test.canConvert<QMap<QString, QVariant> >()) {
+            output(xmlTagOpen("test"));
+            increaseWhitespace();
             QMap<QString, QVariant> testMap = test.value<QMap<QString, QVariant> >();
             QString testName = testMap.value("name").toString();
-            std::cout << "Executing test: " << testName.toStdString() << std::endl;
+            if (!outputAsXML)
+            {
+                output(QString("Executing test: ").append(testName));
+            }
+            else
+            {
+                output(xmlTag(testName, "name"));
+            }
 
             QString href = testMap.value("href").toString();
             href = QFileInfo(QFileInfo(filePath).canonicalPath(), href).absoluteFilePath();
             QString expect = testMap.value("expect").toString();
             expect = QFileInfo(QFileInfo(filePath).canonicalPath(), expect).absoluteFilePath();
-            if (verbose) {
-                std::cout << "\nChecking file: \n    " << href.toStdString() << "\n against:\n    " << expect.toStdString() << std::endl << std::endl;
+            if (verbose)
+            {
+                if(!outputAsXML) output("Checking file:");
+                output(xmlTag(href, "results_file"));
+                if(!outputAsXML) output("against:");
+                output(xmlTag(expect, "expectations_file"), true, "\n");
+                if (!outputAsXML) output("");
             }
-            bool testPassed = testFile(href, expect, verbose);
+            bool testPassed = testFile(href, expect);
             if(!testPassed)
             {
-                std::cout << "Failed\n";
+                output(xmlTag("Failed", "result_failed"));
                 allPassed = false;
             } else {
-                std::cout << "Passed\n";
+                output(xmlTag("Passed", "result_passed"));
             }
-            if (verbose) std::cout << std::endl << "----------------------------\n\n";
+            if (!outputAsXML) voutput("----------------------------", "\n");
+            decreaseWhitespace();
+            output(xmlTagClose("test"));
         }
     }
     return allPassed;
 }
 
-bool testFile(QString href, QString expect, bool verbose)
+bool testFile(QString href, QString expect)
 {
     AXRDocument document;
     document.setWindowSize(400., 400.);
     if (!document.loadFileByPath(QUrl(QString("file://").append(href))))
     {
-        std::cout << "Failed to load URL" << href.toStdString() << std::endl;
+        output(QString("Failed to load URL ").append(href));
         return false;
     }
     QSharedPointer<HSSContainer> root = document.controller()->root();
-    AXRString jsonRep = root->toJSON("");
     if (verbose)
     {
-        std::cout << "The resulted JSON representation of the AXR document:" << std::endl;
-        std::cout << jsonRep.toStdString() << std::endl << std::endl;
+        if(!outputAsXML) output("The resulted JSON representation of the AXR document:");
+        output(xmlTagOpen("resulted_json"));
+        increaseWhitespace();
+    }
+    AXRString jsonRep = root->toJSON(whitespace);
+    if (verbose) {
+        output(jsonRep, "\n\n");
+        decreaseWhitespace();
+        output(xmlTagClose("resulted_json"));
     }
 
     QMap<QString, QVariant> resultedJson = Json::decode(jsonRep);
@@ -157,8 +206,14 @@ bool testFile(QString href, QString expect, bool verbose)
     QString expected = QString(file.readAll());
     if (verbose)
     {
-        std::cout << "The expectations:" << std::endl;
-        std::cout << expected.toStdString() << std::endl;
+        if(!outputAsXML) output("The resulted JSON representation of the AXR document:");
+        output(xmlTagOpen("expected_json"));
+        increaseWhitespace();
+    }
+    if (verbose) {
+        output(reindent(expected.trimmed()), true, "", false);
+        decreaseWhitespace();
+        output(xmlTagClose("expected_json"));
     }
 
     QMap<QString, QVariant> expectedJson = Json::decode(expected);
@@ -203,3 +258,127 @@ bool recursiveCheckExpectations(QMap<QString, QVariant> resulted, QMap<QString, 
     return true;
 }
 
+void output(QString message, bool onlyIfVerbose, QString newlines, bool addWhitespace)
+{
+    if (!onlyIfVerbose || verbose) {
+        QString whtsp = whitespace;
+        if (!addWhitespace) whtsp = "";
+        std::cout << whtsp.toStdString() << message.toStdString() << newlines.toStdString();
+    }
+}
+
+void voutput(QString message, QString newlines)
+{
+    output(message, true, newlines);
+}
+
+void newline(bool onlyIfVerbose, int amount)
+{
+    if (!outputAsXML)
+    {
+        QString newlines = "";
+        for (int i = 0; i < amount; i++)
+        {
+            newlines.append("\n");
+        }
+        output("", onlyIfVerbose, newlines);
+    }
+}
+
+void title(QString message)
+{
+    output(xmlTag(message, "title"));
+    if (!outputAsXML)
+    {
+        QString underline = "";
+        for (int i = 0, j = message.length(); i<j; i++) {
+            underline.append("=");
+        }
+        output(underline, false, "\n\n");
+    }
+}
+
+void xmlOpen(QString styleSheet)
+{
+    if (outputAsXML)
+    {
+        output("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        if (styleSheet != "") {
+            output(QString("<?xml-stylesheet type=\"application/x-hss\" href=\"").append(styleSheet).append("\" version=\"0.4.9\"?>"));
+        }
+        output("<tests>");
+    }
+}
+
+void xmlClose()
+{
+    if (outputAsXML)
+    {
+        output("</tests>");
+    }
+}
+
+QString xmlTag(QString message, QString tagName, QString attributes)
+{
+    return
+        xmlTagOpen(tagName, attributes)
+        .append(message)
+        .append(xmlTagClose(tagName))
+    ;
+}
+
+QString xmlTagOpen(QString tagName, QString attributes)
+{
+    if (outputAsXML)
+    {
+        QString spacer = "";
+        if (attributes.length() > 0)
+        {
+            spacer = " ";
+        }
+        return QString("<").append(tagName).append(spacer).append(attributes).append(">");
+    }
+    else
+    {
+        return "";
+    }
+    
+}
+
+QString xmlTagClose(QString tagName)
+{
+    if (outputAsXML)
+    {
+        return QString("</").append(tagName).append(">");
+    }
+    else
+    {
+        return "";
+    }
+}
+
+void increaseWhitespace()
+{
+    whitespace.append("    ");
+}
+
+void decreaseWhitespace()
+{
+    if (whitespace.length() >= 4)
+    {
+        whitespace.remove(whitespace.length()-4, 4);
+    } else {
+        whitespace = "";
+    }
+}
+
+QString reindent(QString message)
+{
+    QString ret = "";
+    QStringList lines = message.split("\n", QString::SkipEmptyParts);
+    Q_FOREACH(QString line, lines)
+    {
+        ret.append(whitespace).append(line).append("\n");
+    }
+    return ret;
+}
