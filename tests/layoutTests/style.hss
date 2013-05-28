@@ -1,0 +1,126 @@
+@font baseFont
+{
+	face: "Century Gothic";
+	size: 15;
+	color: #4;
+	
+	& titleFont { size: 19 }
+	& resultFont { weight: bold }
+	& smallFont { size: 11 }
+}
+& codeFont
+{
+	face: "Monaco";
+	size: 12;
+	color: #0;
+}
+
+*
+{
+	background: #E;
+	padding: 30;
+	
+	title
+	{
+		padding: 10;
+		font: titleFont;
+	}
+	
+	test
+	{
+		padding: 10;
+		margin: @{ left, right: 10; bottom: 3 };
+		shape: @{ 3 };
+		on: @click { toggleFlag(expanded of @this more_info) };
+		
+		:first
+		{
+			width: 30%;
+			font: baseFont;
+		}
+		#move result_passed, result_failed
+		{
+			width: 69% - 80;
+			contentAlignX: right;
+		}
+		#new arrow
+		{
+			width, height: 23;
+			background: white;
+			shape: @circle;
+			alignX: 100% - 30;
+			alignY: 18;
+			flow: no;
+			contained: no;
+			border: @{ 1; #0403; all; outside };
+			#new pointer
+			{
+				width, height: 9;
+				background: #040;
+				shape: @polygon {
+					sides: 3;
+					angle: 90;
+				};
+				alignX: center;
+				alignY: 11;
+			}
+		}
+		@::hover arrow
+		{
+			background: #EFE;
+		}
+		
+		#new more_info
+		{
+			visible: no;
+			flow: no;
+			
+			#move @parent results_file;
+			#move @parent expectations_file;
+			#move @parent resulted_json;
+			#move @parent expected_json;
+			
+			* {
+				font: baseFont;
+			}
+			results_file,
+			expectations_file
+			{
+				font: @{ isA: baseFont; size: 11 };
+			}
+			
+			resulted_json,
+			expected_json
+			{
+				width: 50% - 10;
+				font: codeFont;
+				padding: 20;
+				margin: @{ top: 20 };
+				
+			}
+		
+			@::expanded
+			{
+				visible: yes;
+				flow: yes;
+			}
+		}
+		
+		result_passed
+		{
+			font: @{ isA: resultFont; color: #060; };
+			@parent { background: #0F02 }
+		}
+		result_failed
+		{
+			font: @{ isA: resultFont; color: #600; };
+			@parent { background: #F002 }
+		}
+	}
+	
+	result
+	{
+		padding: 20;
+		font: @{ isA: resultFont; size: 30; };
+	}
+}
