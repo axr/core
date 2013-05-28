@@ -333,38 +333,41 @@ void HSSTextBlock::accept(HSSAbstractVisitor* visitor, bool)
 
 void HSSTextBlock::layout()
 {
-    this->_needsLayout = false;
-
-    int flags = 0;
-    switch (this->textAlign)
+    if (this->needsLayout())
     {
-    case HSSTextAlignTypeLeft:
-        flags = Qt::AlignLeft;
-        break;
-    case HSSTextAlignTypeRight:
-        flags = Qt::AlignRight;
-        break;
-    case HSSTextAlignTypeCenter:
-        flags = Qt::AlignCenter;
-        break;
-    case HSSTextAlignTypeJustify:
-        flags = Qt::AlignJustify;
-        break;
-    default:
-        break;
+        this->_needsLayout = false;
+        
+        int flags = 0;
+        switch (this->textAlign)
+        {
+            case HSSTextAlignTypeLeft:
+                flags = Qt::AlignLeft;
+                break;
+            case HSSTextAlignTypeRight:
+                flags = Qt::AlignRight;
+                break;
+            case HSSTextAlignTypeCenter:
+                flags = Qt::AlignCenter;
+                break;
+            case HSSTextAlignTypeJustify:
+                flags = Qt::AlignJustify;
+                break;
+            default:
+                break;
+        }
+        
+        QFontMetrics fontMetrics(getFont());
+        QRect bounds = fontMetrics.boundingRect(0, 0, this->width, std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, this->getText());
+        
+        this->width = bounds.width();
+        this->_setInnerWidth();
+        this->_setOuterWidth();
+        this->height = bounds.height();
+        this->_setInnerHeight();
+        this->_setOuterHeight();
+        this->notifyObservers(HSSObservablePropertyHeight, &this->height);
+        this->setNeedsSurface(true);
     }
-
-    QFontMetrics fontMetrics(getFont());
-    QRect bounds = fontMetrics.boundingRect(0, 0, this->width, std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, this->getText());
-
-    this->width = bounds.width();
-    this->_setInnerWidth();
-    this->_setOuterWidth();
-    this->height = bounds.height();
-    this->_setInnerHeight();
-    this->_setOuterHeight();
-    this->notifyObservers(HSSObservablePropertyHeight, &this->height);
-    this->setNeedsSurface(true);
 }
 
 HSSTextTransformType HSSTextBlock::getTransform()
