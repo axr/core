@@ -64,7 +64,7 @@ HSSBorder::HSSBorder(AXRController * controller)
     this->observedSize = NULL;
     this->observedPosition = NULL;
     this->observedSegments = NULL;
-    this->position = HSSBorderPositionCentered;
+    this->position = HSSBorderPositionCenter;
     this->registerProperty(HSSObservablePropertySize, QVariant::fromValue(&this->size));
 }
 
@@ -118,7 +118,7 @@ bool HSSBorder::isKeyword(AXRString value, AXRString property)
 {
     if (property == "position")
     {
-        if (value == "inside" || value == "centered" || value == "outside")
+        if (value == "inside" || value == "center" || value == "outside")
         {
             return true;
         }
@@ -293,7 +293,7 @@ void HSSBorder::setDPosition(QSharedPointer<HSSParserNode> value)
         case HSSParserNodeTypeKeywordConstant:
         {
             AXRString kwValue = qSharedPointerCast<HSSKeywordConstant > (value)->getValue();
-            if (kwValue == "inside" || kwValue == "centered" || kwValue == "outside")
+            if (kwValue == "inside" || kwValue == "center" || kwValue == "outside")
             {
                 if (this->observedPosition)
                 {
@@ -304,8 +304,8 @@ void HSSBorder::setDPosition(QSharedPointer<HSSParserNode> value)
                 {
                     this->position = HSSBorderPositionInside;
                 }
-                else if(kwValue == "centered"){
-                    this->position = HSSBorderPositionCentered;
+                else if(kwValue == "center"){
+                    this->position = HSSBorderPositionCenter;
                 }
                 else if(kwValue == "outside"){
                     this->position = HSSBorderPositionOutside;
