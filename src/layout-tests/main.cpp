@@ -82,7 +82,7 @@ void printUsage()
 {
     QTextStream stream(stderr);
     QFileInfo fi(QCoreApplication::applicationFilePath());
-    stream << QString(QLatin1String("Usage: %1 json-file [-v] [-format plain|xml] [-stylesheet style.hss]"))
+    stream << QString(QLatin1String("Usage: %1 json-file [-v|--verbose] [--format plain|xml] [--stylesheet style.hss]"))
         .arg(fi.fileName());
 }
 
@@ -104,17 +104,18 @@ int main(int argc, char *argv[])
 
     // Verbose output?
     int vPos = args.indexOf("-v");
-    if (vPos > 1)
+    int verbosePos = args.indexOf("--verbose");
+    if (vPos > 1 || verbosePos > 1)
         verbose = true;
 
     // Get the desired output format
-    int formatPos = args.indexOf("-format");
+    int formatPos = args.indexOf("--format");
     if (formatPos > 1 && args.size() >= formatPos + 1)
         outputAsXML = args.at(formatPos + 1).toLower() == "xml";
 
     // Get the path to the HSS stylesheet for the test report (only applies for XML output format)
     QString styleSheetPath;
-    int stylesheetPos = args.indexOf("-stylesheet");
+    int stylesheetPos = args.indexOf("--stylesheet");
     if (stylesheetPos > 1 && args.length() >= stylesheetPos + 1)
         styleSheetPath = args.at(stylesheetPos + 1);
     
