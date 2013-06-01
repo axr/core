@@ -143,13 +143,13 @@ void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit 
 void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     //sort borders in three groups
-    std::vector<QSharedPointer<HSSBorder> > centered, inside, outside;
+    std::vector<QSharedPointer<HSSBorder> > center, inside, outside;
     for (HSSBorder::it it=borders.begin(); it!=borders.end(); ++it) {
         const QSharedPointer<HSSBorder> & theBorder = *it;
         HSSBorderPosition thePos = theBorder->getPosition();
-        if (thePos == HSSBorderPositionCentered)
+        if (thePos == HSSBorderPositionCenter)
         {
-            centered.push_back(theBorder);
+            center.push_back(theBorder);
         }
         else if (thePos == HSSBorderPositionInside)
         {
@@ -162,7 +162,7 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
     }
 
     HSSUnit topThickness = 0., rightThickness = 0., bottomThickness = 0., leftThickness = 0.;
-    for (HSSBorder::it it=centered.begin(); it!=centered.end(); ++it) {
+    for (HSSBorder::it it=center.begin(); it!=center.end(); ++it) {
         const QSharedPointer<HSSBorder> & theBorder = *it;
         const std::vector<QSharedPointer<HSSParserNode> > & segments = theBorder->getSegments();
         bool hasAll = false;
@@ -230,7 +230,7 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
     //painter.strokePath(outerPath, QPen(Qt::red, 1, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
 
     HSSUnit topCumulative = 0., rightCumulative = 0., bottomCumulative = 0., leftCumulative = 0.;
-    for (HSSBorder::it it=centered.begin(); it!=centered.end(); ++it) {
+    for (HSSBorder::it it=center.begin(); it!=center.end(); ++it) {
         const QSharedPointer<HSSBorder> & theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
