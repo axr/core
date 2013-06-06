@@ -93,6 +93,8 @@ namespace AXR
 
         void drawForeground(HSSTextBlock &textBlock);
 
+        static HSSUnit _nextFreePosition(QList<HSSUnit> &positions, HSSUnit position);
+
         class Private;
         Private *d;
     };

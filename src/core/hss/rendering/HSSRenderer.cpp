@@ -274,6 +274,9 @@ void HSSRenderer::drawLinearGradient(HSSLinearGradient &gradient, const QPainter
         prevColor = nextColor;
     }
 
+    //workaround for https://bugreports.qt-project.org/browse/QTBUG-3793.
+    QList<HSSUnit> positions;
+
     //add color stops
     for (std::vector<QSharedPointer<HSSObject> >::iterator it = gradient.colorStops.begin(); it != gradient.colorStops.end(); ++it)
     {
@@ -301,26 +304,26 @@ void HSSRenderer::drawLinearGradient(HSSLinearGradient &gradient, const QPainter
             QSharedPointer<HSSRgb> theColor = theStop->getColor();
             if (theColor)
             {
-                pat.setColorAt(position, theColor->toQColor());
+                pat.setColorAt(this->_nextFreePosition(positions, position), theColor->toQColor());
                 prevColor = theColor;
             }
             else
             {
                 //create two stops:
                 //one with the previous color
-                pat.setColorAt(position, prevColor->toQColorWithAlpha(0));
+                pat.setColorAt(this->_nextFreePosition(positions, position), prevColor->toQColorWithAlpha(0));
                 //and one with the next color
                 std::vector<QSharedPointer<HSSObject> >::iterator innerIt = it;
                 ++innerIt;
                 QSharedPointer<HSSRgb> nextColor = gradient.getNextColorFromStops(innerIt, gradient.colorStops.end());
-                pat.setColorAt(position, nextColor->toQColorWithAlpha(0));
+                pat.setColorAt(this->_nextFreePosition(positions, position), nextColor->toQColorWithAlpha(0));
             }
         }
         //if it's a simple color
         else if (theStopObj->isA(HSSObjectTypeRgb))
         {
             QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb > (theStopObj);
-            pat.setColorAt(0.5, theColor->toQColor());
+            pat.setColorAt(this->_nextFreePosition(positions, 0.5), theColor->toQColor());
         }
         else
         {
@@ -341,6 +344,17 @@ void HSSRenderer::drawLinearGradient(HSSLinearGradient &gradient, const QPainter
 
     QBrush brush(pat);
     d->canvasPainter->fillPath(path, brush);
+}
+
+HSSUnit HSSRenderer::_nextFreePosition(QList<HSSUnit> &positions, HSSUnit position)
+{
+    HSSUnit ret = position;
+    while(positions.contains(ret))
+    {
+        ret += 0.0000000001;
+    }
+    positions.append(ret);
+    return ret;
 }
 
 void HSSRenderer::drawRadialGradient(HSSRadialGradient &gradient, const QPainterPath &path, HSSUnit posX, HSSUnit posY)
