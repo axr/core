@@ -14,7 +14,7 @@ Product {
         "QAXRWidget.cpp"
     ]
 
-    ProductModule {
+    Export {
         Depends { name: "cpp" }
         cpp.includePaths: "."
     }

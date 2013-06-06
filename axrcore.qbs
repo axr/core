@@ -1,4 +1,4 @@
-import qbs.base 1.0
+import qbs 1.0
 
 Project {
     references: [
@@ -72,7 +72,7 @@ Project {
             }
         }
 
-        ProductModule {
+        Export {
             Depends { name: "cpp" }
             cpp.includePaths: product.buildDirectory
         }

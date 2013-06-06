@@ -32,9 +32,14 @@ Product {
         "hss/tokenizing/*",
         "hss/various/*",
         "logging/*",
-        "types/*",
+        "types/*.cpp",
         "xml/*"
     ]
+
+    Group {
+        condition: qbs.targetPlatform.indexOf("darwin") !== -1
+        files: [ "types/*.mm" ]
+    }
 
     Properties {
         condition: type === "dynamiclibrary"
@@ -42,7 +47,7 @@ Product {
     }
 
     Properties {
-        condition: qbs.targetOS === "mac"
+        condition: qbs.targetPlatform.indexOf("darwin") !== -1
         cpp.frameworks: [ "Foundation" ]
     }
 
@@ -76,7 +81,7 @@ Product {
     ]
 
     // TODO: can we avoid duplicating this?
-    ProductModule {
+    Export {
         Depends { name: "cpp" }
         cpp.includePaths: [
             ".",

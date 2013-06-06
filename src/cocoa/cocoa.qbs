@@ -3,7 +3,7 @@ import qbs 1.0
 Product {
     name: "axrcocoa"
     type: "staticlibrary"
-    condition: qbs.targetOS === "mac"
+    condition: qbs.targetOS === "osx"
 
     Depends { name: "cpp" }
     Depends { name: "axrcore" }
@@ -16,11 +16,11 @@ Product {
     ]
 
     Properties {
-        condition: qbs.targetOS === "mac"
+        condition: qbs.targetOS === "osx"
         cpp.frameworks: [ "Cocoa" ]
     }
 
-    ProductModule {
+    Export {
         Depends { name: "cpp" }
         cpp.includePaths: "."
     }
