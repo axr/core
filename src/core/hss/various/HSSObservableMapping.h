@@ -44,10 +44,12 @@
 #ifndef HSSOBSERVABLEMAPPING_H
 #define HSSOBSERVABLEMAPPING_H
 
+#include "HSSObservableProperties.h"
 #include <QVariant>
 
 namespace AXR
 {
+    class HSSCallback;
     class HSSObservable;
 
     /**

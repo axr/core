@@ -48,7 +48,7 @@
 #include "HSSPoint.h"
 #include "HSSSize.h"
 
-typedef struct _RECT RECT;
+typedef struct tagRECT RECT;
 typedef struct CGRect CGRect;
 
 #if __LP64__ || NS_BUILD_32_LIKE_64
