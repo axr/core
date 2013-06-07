@@ -61,7 +61,7 @@
 
 using namespace AXR;
 
-const HSSUnit HSSFont::DEFAULT_SIZE = 18;
+const HSSUnit HSSFont::DEFAULT_SIZE = 16;
 
 HSSFont::HSSFont(AXRController * controller)
 : HSSObject(HSSObjectTypeFont, controller)
