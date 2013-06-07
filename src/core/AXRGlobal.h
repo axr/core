@@ -133,7 +133,7 @@
  *  background, borders, etc, and finally compositing it all together.
  *
  *  This is all done in a pretty straightforward an naïve way, and should receive quite a lot of facelifting
- *  and perfomance improvements in the near future.
+ *  and performance improvements in the near future.
  *
  *  @section diagram Diagram of the structure of the library
  *

@@ -213,7 +213,7 @@ namespace AXR
          *  Creates a new instance of a parser node. This class shouldn't be called directly,
          *  but by the subclasses.
          *  @param  type    The HSSActionType that this action corresponds to. Usually set
-         *                  from withing a subclass' constructor method.
+         *                  from within a subclass' constructor method.
          *
          *  @todo There is no destructor on this class.
          */

@@ -80,7 +80,7 @@ struct HSSRenderer; typedef struct HSSRenderer HSSRenderer;
 - (void)drawRect:(NSRect)dirtyRect;
 
 /**
- *  @return YES. This allows the view to recieve events from the system.
+ *  @return YES. This allows the view to receive events from the system.
  */
 - (BOOL)acceptsFirstResponder;
 

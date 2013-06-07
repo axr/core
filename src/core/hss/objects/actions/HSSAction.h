@@ -101,7 +101,7 @@ namespace AXR
         /**
          *  This class shouldn't be called directly, but by the subclasses.
          *  @param  type    The HSSActionType that this action corresponds to. Usually set
-         *                  from withing a subclass' constructor method.
+         *                  from within a subclass' constructor method.
          */
         HSSAction(HSSActionType type, AXRController * controller);
 

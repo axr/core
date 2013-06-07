@@ -196,7 +196,7 @@ namespace AXR
         /**
          *  Wether the current token marks the start of a property definition, either including the declaration
          *  of the name or as a shorthand. If the tokens match the form of a selector (e.g. with a filter), it
-         *  continues peeking forward untill we can tell for sure.
+         *  continues peeking forward until we can tell for sure.
          */
         bool isPropertyDefinition(bool * isShorthand);
 
