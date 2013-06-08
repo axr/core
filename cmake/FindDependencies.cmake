@@ -3,7 +3,7 @@ if(AXR_BUILD_CORE)
     find_package(Qt4 4.8 COMPONENTS QtCore QtGui REQUIRED)
     find_package(Qt4 4.8 COMPONENTS QtScript)
     if(QT_QTCORE_FOUND AND QT_QTGUI_FOUND)
-        set(QT4_FOUND TRUE CACHE FORCE) # Optional means optional.
+        set(QT4_FOUND TRUE) # Optional means optional.
     endif()
     include(${QT_USE_FILE})
     add_definitions(${QT_DEFINITIONS} -DNOMINMAX)
