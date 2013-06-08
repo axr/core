@@ -12,4 +12,6 @@ if(APPLE AND AXR_BUILD_EXTENSIONS MATCHES "COCOA")
     add_subdirectory(cocoa)
 endif()
 
-add_subdirectory(layout-tests)
+if(QT_QTSCRIPT_FOUND)
+    add_subdirectory(layout-tests)
+endif()
