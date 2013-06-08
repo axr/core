@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
     int stylesheetPos = args.indexOf("--stylesheet");
     if (stylesheetPos > 1 && args.length() >= stylesheetPos + 1)
         styleSheetPath = args.at(stylesheetPos + 1);
-    
+
     whitespace = "";
     xmlOpen(styleSheetPath);
     increaseWhitespace();

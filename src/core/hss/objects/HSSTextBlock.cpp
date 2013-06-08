@@ -336,7 +336,7 @@ void HSSTextBlock::layout()
     if (this->needsLayout())
     {
         this->_needsLayout = false;
-        
+
         int flags = 0;
         switch (this->textAlign)
         {
@@ -355,10 +355,10 @@ void HSSTextBlock::layout()
             default:
                 break;
         }
-        
+
         QFontMetrics fontMetrics(getFont());
         QRect bounds = fontMetrics.boundingRect(0, 0, this->width, std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, this->getText());
-        
+
         this->width = bounds.width();
         this->_setInnerWidth();
         this->_setOuterWidth();

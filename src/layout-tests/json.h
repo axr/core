@@ -47,12 +47,12 @@
 class Json
 {
 public:
-	Json();
-	virtual ~Json();
+    Json();
+    virtual ~Json();
 
-	static QString encode(const QMap<QString,QVariant> &map);
-	static QMap<QString, QVariant> decode(const QString &jsonStr);
-	static QScriptValue encodeInner(const QMap<QString,QVariant> &map, QScriptEngine* engine);
-	static QMap<QString, QVariant> decodeInner(QScriptValue object);
-	static QList<QVariant> decodeInnerToList(QScriptValue arrayValue);
+    static QString encode(const QMap<QString,QVariant> &map);
+    static QMap<QString, QVariant> decode(const QString &jsonStr);
+    static QScriptValue encodeInner(const QMap<QString,QVariant> &map, QScriptEngine* engine);
+    static QMap<QString, QVariant> decodeInner(QScriptValue object);
+    static QList<QVariant> decodeInnerToList(QScriptValue arrayValue);
 };
