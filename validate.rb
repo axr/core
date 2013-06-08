@@ -1,4 +1,5 @@
-require_relative "../common/validator/validator.rb"
+dir = File.expand_path File.dirname(__FILE__)
+require "#{dir}/../common/validator/validator.rb"
 
 validator = AXRValidator::Validator.new
 scanner = AXRValidator::FileScanner.new
