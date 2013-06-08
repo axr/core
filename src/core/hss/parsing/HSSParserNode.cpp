@@ -266,7 +266,7 @@ QSharedPointer<HSSParserNode> HSSParserNode::shared_from_this()
     if (!ptr)
         ptr = QWeakPointer<HSSParserNode>(this);
 
-    return QSharedPointer<HSSParserNode>(ptr);
+    return ptr.toStrongRef();
 }
 
 AXRController* HSSParserNode::getController()

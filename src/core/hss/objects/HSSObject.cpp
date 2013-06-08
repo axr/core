@@ -866,5 +866,5 @@ QSharedPointer<HSSObject> HSSObject::shared_from_this()
     if (!ptr)
         ptr = QWeakPointer<HSSObject>(this);
 
-    return QSharedPointer<HSSObject>(ptr);
+    return ptr.toStrongRef();
 }
