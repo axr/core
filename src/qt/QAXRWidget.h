@@ -50,6 +50,7 @@ namespace AXR
 {
     class AXRDocument;
     class HSSRenderer;
+    class QAXRWidgetPrivate;
 
     class QAXRWidget : public QWidget
     {
@@ -76,8 +77,7 @@ namespace AXR
         void resizeEvent(QResizeEvent *e);
 
     private:
-        class Private;
-        Private *d;
+        QAXRWidgetPrivate *const d;
     };
 }
 

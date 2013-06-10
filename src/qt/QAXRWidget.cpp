@@ -53,34 +53,40 @@
 #include "HSSVisitorManager.h"
 #include "QAXRWidget.h"
 
+namespace AXR
+{
+    class QAXRWidgetPrivate
+    {
+    public:
+        QAXRWidgetPrivate(QAXRWidget *);
+        QAXRWidget *q_ptr;
+        AXRDocument *document;
+        HSSRenderer *renderVisitor;
+        QColor backgroundFillColor;
+    };
+}
+
 using namespace AXR;
 
-class QAXRWidget::Private
+QAXRWidgetPrivate::QAXRWidgetPrivate(QAXRWidget *q)
+: q_ptr(q)
+, document(0)
+, renderVisitor(new HSSRenderer)
+, backgroundFillColor(QColor(Qt::white))
 {
-public:
-    Private(AXRDocument *doc = NULL) : document(doc), backgroundFillColor(QColor(Qt::white)) { }
-
-    AXRDocument *document;
-    QColor backgroundFillColor;
-
-    HSSRenderer* renderVisitor;
-};
+    q_ptr->setMouseTracking(true);
+    q_ptr->setFocusPolicy(Qt::StrongFocus);
+}
 
 QAXRWidget::QAXRWidget(AXRDocument *document, QWidget *parent)
-: QWidget(parent), d(new Private(document))
+: QWidget(parent), d(new QAXRWidgetPrivate(this))
 {
-    this->setMouseTracking(true);
-    d->renderVisitor = new HSSRenderer();
     setDocument(document);
-    setFocusPolicy(Qt::StrongFocus);
 }
 
 QAXRWidget::QAXRWidget(QWidget *parent)
-: QWidget(parent), d(new Private)
+: QWidget(parent), d(new QAXRWidgetPrivate(this))
 {
-    this->setMouseTracking(true);
-    d->renderVisitor = new HSSRenderer();
-    setFocusPolicy(Qt::StrongFocus);
 }
 
 QAXRWidget::~QAXRWidget()
@@ -123,53 +129,45 @@ void QAXRWidget::setBackgroundFillColor(const QColor &color)
     d->backgroundFillColor = color;
 }
 
-void QAXRWidget::paintEvent(QPaintEvent *)
+void QAXRWidget::paintEvent(QPaintEvent *e)
 {
-    QPainter painter(this);
-    painter.setFont(QFont("Helvetica Light", 36));
-
     if (!d->document || !d->document->isFileLoaded())
-    {
-        painter.drawText(0, 0, width(), height(), Qt::AlignCenter, "No document loaded");
         return;
-    }
 
+    QPainter painter(this);
     QRect paintRect = rect();
 
-    // Render the AXR document
-    QImage image;
-    if(d->document->needsDisplay())
+    // Fill the view with the default fill color
+    painter.fillRect(paintRect, d->backgroundFillColor);
+
+    // Resize and composite the AXR document if necessary
+    if (d->document->needsDisplay())
     {
         d->document->setWindowSize(this->width(), this->height());
-
-        // Fill the view with our background color...
-        painter.fillRect(paintRect, d->backgroundFillColor);
 
         // Render the AXR document
         QSharedPointer<HSSVisitorManager> visitorManager = d->document->visitorManager();
         if (visitorManager)
         {
             // Render the final image to the screen
-            d->renderVisitor->setDirtyRect(rect());
+            d->renderVisitor->setDirtyRect(e->rect());
             visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);
-
-            image = d->renderVisitor->getFinalFrame();
         }
         else
         {
             axr_log(LoggerChannelRendering, "Document has no visitor manager");
         }
-    } else {
-        image = d->renderVisitor->getFinalFrame();
     }
 
+    // Present the final composited surface to the screen
+    const QImage &image = d->renderVisitor->getFinalFrame();
     if (!image.isNull() && !image.size().isEmpty())
     {
         painter.drawImage(paintRect.topLeft(), image);
     }
     else
     {
-        painter.drawText(0, 0, width(), height(), Qt::AlignCenter, "Internal rendering error");
+        axr_log(LoggerChannelRendering, "Internal rendering error - display buffer null or size zero");
     }
 
     d->document->setNeedsDisplay(false);
