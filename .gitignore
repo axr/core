@@ -1,3 +1,6 @@
+*-debug/
+*-release/
+
 # CMakeLists.txt prevents in-source builds, but the process will still get far
 # enough such that a few CMake files are introduced into the source directory
 CMakeCache.txt
