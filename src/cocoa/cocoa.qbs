@@ -3,7 +3,7 @@ import qbs 1.0
 Product {
     name: "axrcocoa"
     type: "staticlibrary"
-    condition: qbs.targetOS === "osx"
+    condition: qbs.targetOS.contains("osx")
 
     Depends { name: "cpp" }
     Depends { name: "axrcore" }
@@ -15,10 +15,7 @@ Product {
         "NSAXRView.mm"
     ]
 
-    Properties {
-        condition: qbs.targetOS === "osx"
-        cpp.frameworks: [ "Cocoa" ]
-    }
+    cpp.frameworks: [ "Cocoa" ]
 
     Export {
         Depends { name: "cpp" }

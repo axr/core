@@ -37,17 +37,17 @@ Product {
     ]
 
     Group {
-        condition: qbs.targetPlatform.indexOf("darwin") !== -1
+        condition: qbs.targetOS.contains("darwin")
         files: [ "types/*.mm" ]
     }
 
     Properties {
-        condition: type === "dynamiclibrary"
+        condition: type.contains("dynamiclibrary")
         cpp.defines: [ "AXR_EXPORTS" ]
     }
 
     Properties {
-        condition: qbs.targetPlatform.indexOf("darwin") !== -1
+        condition: qbs.targetOS.contains("darwin")
         cpp.frameworks: [ "Foundation" ]
     }
 
