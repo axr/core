@@ -71,39 +71,12 @@ HSSLinearGradient::HSSLinearGradient(AXRController * controller)
     shorthandProperties.push_back("endColor");
     shorthandProperties.push_back("endY");
     this->setShorthandProperties(shorthandProperties);
-
-    this->registerProperty(HSSObservablePropertyStartX, QVariant::fromValue(&this->startX));
-    this->registerProperty(HSSObservablePropertyStartY, QVariant::fromValue(&this->startY));
-    this->registerProperty(HSSObservablePropertyEndX, QVariant::fromValue(&this->endX));
-    this->registerProperty(HSSObservablePropertyEndY, QVariant::fromValue(&this->endY));
-
-    this->startX = this->startY = this->endX = this->endY = 0.;
-
-    this->observedStartX = this->observedStartY
-            = this->observedEndX = this->observedEndY
-            = NULL;
 }
 
 HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
 : HSSGradient(orig)
 {
-    std::vector<AXRString> shorthandProperties;
-    shorthandProperties.push_back("startColor");
-    shorthandProperties.push_back("endColor");
-    shorthandProperties.push_back("endY");
-    this->setShorthandProperties(shorthandProperties);
-
-    this->registerProperty(HSSObservablePropertyStartX, QVariant::fromValue(&this->startX));
-    this->registerProperty(HSSObservablePropertyStartY, QVariant::fromValue(&this->startY));
-    this->registerProperty(HSSObservablePropertyEndX, QVariant::fromValue(&this->endX));
-    this->registerProperty(HSSObservablePropertyEndY, QVariant::fromValue(&this->endY));
-
-    this->startX = this->startY = this->endX = endY = 0.;
-
-    this->observedStartX = this->observedStartY
-            = this->observedEndX = this->observedEndY
-            = NULL;
-
+    this->_initialize();
 }
 
 QSharedPointer<HSSLinearGradient> HSSLinearGradient::clone() const
@@ -120,22 +93,6 @@ QSharedPointer<HSSClonable> HSSLinearGradient::cloneImpl() const
 HSSLinearGradient::~HSSLinearGradient()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSLinearGradient: destructing linear gradient object");
-    if (this->observedStartX)
-    {
-        this->observedStartX->removeObserver(this->observedStartXProperty, HSSObservablePropertyStartX, this);
-    }
-    if (this->observedStartY)
-    {
-        this->observedStartY->removeObserver(this->observedStartYProperty, HSSObservablePropertyStartY, this);
-    }
-    if (this->observedEndX)
-    {
-        this->observedEndX->removeObserver(this->observedEndXProperty, HSSObservablePropertyEndX, this);
-    }
-    if (this->observedEndY)
-    {
-        this->observedEndY->removeObserver(this->observedEndYProperty, HSSObservablePropertyEndY, this);
-    }
 }
 
 AXRString HSSLinearGradient::toString()

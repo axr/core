@@ -66,7 +66,6 @@ HSSRoundedRect::HSSRoundedRect(AXRController * controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSRoundedRect: creating rounded rectangle object");
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
-    this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
 
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("corners");
@@ -77,7 +76,6 @@ HSSRoundedRect::HSSRoundedRect(const HSSRoundedRect & orig)
 : HSSShape(orig)
 {
     this->cornerTL = this->cornerTR = this->cornerBR = this->cornerBL = 0.;
-    this->observedTLCorner = this->observedTRCorner = this->observedBRCorner = this->observedBLCorner = NULL;
 
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("corners");

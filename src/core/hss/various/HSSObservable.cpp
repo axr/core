@@ -282,6 +282,7 @@ HSSObservable::HSSObservable()
 
 HSSObservable::~HSSObservable()
 {
+    this->cleanTrackedObservers();
     this->_propertyObservers.clear();
 }
 
@@ -293,6 +294,14 @@ size_t hash_combine(size_t hash1, size_t hash2)
 void HSSObservable::observe(const AXRString target, const AXRString source, HSSObservable * object, HSSAbstractValueChangedCallback *callback)
 {
     //axr_log(LoggerChannelObsolete1, "added observer: "+object->name);
+    if (object->tracksObserver(source))
+    {
+        HSSObservable * to = object->_trackedObservers[source];
+        AXRString target = object->_trackedProperties[source];
+        to->removeObserver(target, source, object);
+        object->untrackObserver(source);
+    }
+    object->trackObserver(target, source, this);
 
     QVariant nulldata("");
 
@@ -345,7 +354,53 @@ void HSSObservable::notifyObservers(const AXRString property, const QSharedPoint
             const QSharedPointer<HSSObservableMapping> & mapping = *it;
             HSSAbstractValueChangedCallback *callback = mapping->callback;
             callback->call(property, theObj);
-
         }
     }
+}
+
+bool HSSObservable::tracksObserver(const AXRString source)
+{
+    HSSObservable * tracked = this->_trackedObservers[source];
+    if (tracked)
+    {
+        return true;
+    }
+    return false;
+}
+
+HSSObservable * HSSObservable::getTrackedObserver(const AXRString source)
+{
+    return this->_trackedObservers[source];
+}
+
+AXRString HSSObservable::getTrackedProperty(const AXRString source)
+{
+    return this->_trackedProperties[source];
+}
+
+void HSSObservable::trackObserver(const AXRString target, const AXRString source, HSSObservable* observable)
+{
+    this->_trackedObservers.insert(source, observable);
+    this->_trackedProperties.insert(source, target);
+}
+
+void HSSObservable::untrackObserver(const AXRString source)
+{
+    this->_trackedObservers.remove(source);
+    this->_trackedProperties.remove(source);
+}
+
+void HSSObservable::cleanTrackedObservers()
+{
+    QMapIterator<AXRString, AXRString> it(this->_trackedProperties);
+    while (it.hasNext())
+    {
+        it.next();
+        HSSObservable * to = this->_trackedObservers[it.key()];
+        if (to)
+        {
+            to->removeObserver(it.value(), it.key(), this);
+        }
+    }
+    this->_trackedProperties.clear();
 }

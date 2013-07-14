@@ -203,10 +203,6 @@ namespace AXR
         HSSObservableProperty percentageObservedProperty;
         HSSObservable * percentageObserved;
 
-        HSSObservableProperty leftObservedProperty;
-        HSSObservable * leftObserved;
-        HSSObservableProperty rightObservedProperty;
-        HSSObservable * rightObserved;
 
         QSharedPointer<HSSSimpleSelection> scope;
 

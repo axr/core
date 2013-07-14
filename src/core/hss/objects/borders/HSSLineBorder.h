@@ -112,8 +112,6 @@ namespace AXR
         //color
         QSharedPointer<HSSRgb> color;
         QSharedPointer<HSSParserNode> dColor;
-        HSSObservable * observedColor;
-        HSSObservableProperty observedColorProperty;
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };

@@ -138,14 +138,9 @@ namespace AXR
         //sides
         QSharedPointer<HSSParserNode> dSides;
         unsigned int sides;
-        HSSObservable * observedSides;
-        HSSObservableProperty observedSidesProperty;
-
         //angle
         QSharedPointer<HSSParserNode> dAngle;
         HSSUnit angle;
-        HSSObservable * observedAngle;
-        HSSObservableProperty observedAngleProperty;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

@@ -177,23 +177,15 @@ namespace AXR
         //size
         HSSUnit size;
         QSharedPointer<HSSParserNode> dSize;
-        HSSObservable * observedSize;
-        HSSObservableProperty observedSizeProperty;
         //face
         AXRString face;
         QSharedPointer<HSSParserNode> dFace;
-        HSSObservable * observedFace;
-        HSSObservableProperty observedFaceProperty;
         //startColor
         QSharedPointer<HSSRgb> color;
         QSharedPointer<HSSParserNode> dColor;
-        HSSObservable * observedColor;
-        HSSObservableProperty observedColorProperty;
         //weight
         QSharedPointer<HSSKeywordConstant> weight;
         QSharedPointer<HSSParserNode> dWeight;
-        HSSObservable * observedWeight;
-        HSSObservableProperty observedWeightProperty;
 
 
         HSSUnit _evaluatePropertyValue(

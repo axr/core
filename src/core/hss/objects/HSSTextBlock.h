@@ -106,20 +106,14 @@ namespace AXR
         //transform
         HSSTextTransformType transform;
         QSharedPointer<HSSParserNode> dTransform;
-        HSSObservable * observedTransform;
-        HSSObservableProperty observedTransformProperty;
 
         //textAlign
         HSSTextAlignType textAlign;
         QSharedPointer<HSSParserNode> dTextAlign;
-        HSSObservable * observedTextAlign;
-        HSSObservableProperty observedTextAlignProperty;
 
         //text
         AXRString text;
         QSharedPointer<HSSParserNode> dText;
-        HSSObservable * observedText;
-        HSSObservableProperty observedTextProperty;
 
     private:
         QFont getFont() const;

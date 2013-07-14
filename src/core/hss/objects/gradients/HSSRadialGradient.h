@@ -192,27 +192,15 @@ namespace AXR
         //centerX
         HSSUnit centerX;
         QSharedPointer<HSSParserNode> dCenterX;
-        HSSObservable * observedCenterX;
-        HSSObservableProperty observedCenterXProperty;
-
         //centerY
         HSSUnit centerY;
         QSharedPointer<HSSParserNode> dCenterY;
-        HSSObservable * observedCenterY;
-        HSSObservableProperty observedCenterYProperty;
-
         //offsetX
         HSSUnit offsetX;
         QSharedPointer<HSSParserNode> dOffsetX;
-        HSSObservable * observedOffsetX;
-        HSSObservableProperty observedOffsetXProperty;
-
         //offsetY
         HSSUnit offsetY;
         QSharedPointer<HSSParserNode> dOffsetY;
-        HSSObservable * observedOffsetY;
-        HSSObservableProperty observedOffsetYProperty;
-
         // TODO: roundness
 
         HSSUnit _evaluatePropertyValue(

@@ -185,64 +185,6 @@ HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
 HSSDisplayObject::~HSSDisplayObject()
 {
     axr_log(LoggerChannelGeneralSpecific, AXRString("destroying display object with name ").append(this->name));
-    if (this->observedWidth)
-    {
-        this->observedWidth->removeObserver(this->observedWidthProperty, HSSObservablePropertyWidth, this);
-    }
-    if (this->observedHeight)
-    {
-        this->observedHeight->removeObserver(this->observedHeightProperty, HSSObservablePropertyHeight, this);
-    }
-    if (this->observedAnchorX)
-    {
-        this->observedAnchorX->removeObserver(this->observedAnchorXProperty, HSSObservablePropertyAnchorX, this);
-    }
-    if (this->observedAnchorY)
-    {
-        this->observedAnchorY->removeObserver(this->observedAnchorYProperty, HSSObservablePropertyAnchorY, this);
-    }
-    if (this->observedAlignX)
-    {
-        this->observedAlignX->removeObserver(this->observedAlignXProperty, HSSObservablePropertyAlignX, this);
-    }
-    if (this->observedAlignY)
-    {
-        this->observedAlignY->removeObserver(this->observedAlignYProperty, HSSObservablePropertyAlignY, this);
-    }
-    if (this->observedLineAlign)
-    {
-        this->observedLineAlign->removeObserver(this->observedLineAlignProperty, HSSObservablePropertyLineAlign, this);
-    }
-    if (this->observedBackground)
-    {
-        this->observedBackground->removeObserver(this->observedBackgroundProperty, HSSObservablePropertyBackground, this);
-    }
-    if (this->observedContent)
-    {
-        this->observedContent->removeObserver(this->observedContentProperty, HSSObservablePropertyContent, this);
-    }
-    if (this->observedFont)
-    {
-        this->observedFont->removeObserver(this->observedFontProperty, HSSObservablePropertyFont, this);
-    }
-    if (this->observedOn)
-    {
-        this->observedOn->removeObserver(this->observedOnProperty, HSSObservablePropertyOn, this);
-    }
-    if (this->observedMargin)
-    {
-        this->observedMargin->removeObserver(this->observedMarginProperty, HSSObservablePropertyMargin, this);
-    }
-    if (this->observedPadding)
-    {
-        this->observedPadding->removeObserver(this->observedPaddingProperty, HSSObservablePropertyPadding, this);
-    }
-    if (this->observedBorder)
-    {
-    }
-    if (this->observedVisible)
-    {
-        this->observedVisible->removeObserver(this->observedVisibleProperty, HSSObservablePropertyVisible, this);
     }
 }
 

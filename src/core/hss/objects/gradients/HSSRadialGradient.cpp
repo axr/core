@@ -83,9 +83,6 @@ HSSRadialGradient::HSSRadialGradient(AXRController * controller)
 
     this->centerX = this->centerY = this->offsetX = this->offsetY = 0.;
 
-    this->observedCenterX = this->observedCenterY
-    = this->observedOffsetX = this->observedOffsetY
-    = NULL;
 }
 
 HSSRadialGradient::HSSRadialGradient(const HSSRadialGradient & orig)
@@ -107,9 +104,6 @@ HSSRadialGradient::HSSRadialGradient(const HSSRadialGradient & orig)
 
     this->centerX = this->centerY = this->offsetX = offsetY = 0.;
 
-    this->observedCenterX = this->observedCenterY
-    = this->observedOffsetX = this->observedOffsetY
-    = NULL;
 }
 
 QSharedPointer<HSSRadialGradient> HSSRadialGradient::clone() const
@@ -126,22 +120,6 @@ QSharedPointer<HSSClonable> HSSRadialGradient::cloneImpl() const
 HSSRadialGradient::~HSSRadialGradient()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSRadialGradient: destructing radial gradient object");
-    if (this->observedCenterX)
-    {
-        this->observedCenterX->removeObserver(this->observedCenterXProperty, HSSObservablePropertyCenterX, this);
-    }
-    if (this->observedCenterY)
-    {
-        this->observedCenterY->removeObserver(this->observedCenterYProperty, HSSObservablePropertyCenterY, this);
-    }
-    if (this->observedOffsetX)
-    {
-        this->observedOffsetX->removeObserver(this->observedOffsetXProperty, HSSObservablePropertyOffsetX, this);
-    }
-    if (this->observedOffsetY)
-    {
-        this->observedOffsetY->removeObserver(this->observedOffsetYProperty, HSSObservablePropertyOffsetY, this);
-    }
 }
 
 AXRString HSSRadialGradient::toString()

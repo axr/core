@@ -68,8 +68,6 @@ HSSFont::HSSFont(AXRController * controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSFont: creating font object");
 
-    this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;
-
     this->size = DEFAULT_SIZE;
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("face");
@@ -82,7 +80,6 @@ HSSFont::HSSFont(AXRController * controller)
 HSSFont::HSSFont(const HSSFont & orig)
 : HSSObject(orig)
 {
-    this->observedSize = this->observedFace = this->observedColor = this->observedWeight = NULL;
     this->size = DEFAULT_SIZE;
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("face");

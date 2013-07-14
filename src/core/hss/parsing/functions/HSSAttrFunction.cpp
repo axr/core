@@ -55,14 +55,13 @@ using namespace AXR;
 HSSAttrFunction::HSSAttrFunction(AXRController * controller)
 : HSSFunction(HSSFunctionTypeAttr, controller)
 {
-    this->observed = NULL;
+
 }
 
 HSSAttrFunction::HSSAttrFunction(const HSSAttrFunction & orig)
 : HSSFunction(orig)
 {
     this->attributeName = orig.attributeName;
-    this->observed = NULL;
 }
 
 QSharedPointer<HSSFunction> HSSAttrFunction::clone() const
@@ -72,10 +71,6 @@ QSharedPointer<HSSFunction> HSSAttrFunction::clone() const
 
 HSSAttrFunction::~HSSAttrFunction()
 {
-    if (this->observed)
-    {
-        this->observed->removeObserver(this->observedProperty, HSSObservablePropertyValue, this);
-    }
 }
 
 const AXRString & HSSAttrFunction::getAttributeName() const

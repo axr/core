@@ -149,14 +149,6 @@ namespace AXR
     protected:
         QSharedPointer<HSSMultipleValue> corners;
         QSharedPointer<HSSParserNode> dCorners;
-        HSSObservable * observedTLCorner;
-        HSSObservableProperty observedTLCornerProperty;
-        HSSObservable * observedTRCorner;
-        HSSObservableProperty observedTRCornerProperty;
-        HSSObservable * observedBRCorner;
-        HSSObservableProperty observedBRCornerProperty;
-        HSSObservable * observedBLCorner;
-        HSSObservableProperty observedBLCornerProperty;
         HSSUnit cornerTL, cornerTR, cornerBR, cornerBL;
 
     private:

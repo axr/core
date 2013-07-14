@@ -174,8 +174,6 @@ namespace AXR
         HSSObservableProperty propertyName;
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
 
-        HSSObservable * observed;
-
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

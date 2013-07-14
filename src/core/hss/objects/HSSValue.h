@@ -109,8 +109,6 @@ namespace AXR
     protected:
         //value
         QSharedPointer<HSSParserNode> dValue;
-        HSSObservable * observedValue;
-        HSSObservableProperty observedValueProperty;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

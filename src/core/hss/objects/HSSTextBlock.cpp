@@ -157,9 +157,6 @@ HSSTextBlock::HSSTextBlock(AXRController * controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSTextBlock: creating text block object");
 
-    this->observedTextAlign = this->observedTransform = this->observedText
-            = NULL;
-
     this->registerProperty(HSSObservablePropertyText, QVariant::fromValue(&this->text));
     this->registerProperty(HSSObservablePropertyTransform, QVariant::fromValue(&this->transform));
     this->registerProperty(HSSObservablePropertyTextAlign, QVariant::fromValue(&this->textAlign));
@@ -178,8 +175,6 @@ HSSTextBlock::HSSTextBlock(AXRController * controller)
 HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
 : HSSDisplayObject(orig)
 {
-    this->observedTextAlign = this->observedTransform = this->observedText
-            = NULL;
 
     this->registerProperty(HSSObservablePropertyText, QVariant::fromValue(&this->text));
     this->registerProperty(HSSObservablePropertyTransform, QVariant::fromValue(&this->transform));

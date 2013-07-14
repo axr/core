@@ -57,14 +57,12 @@ using namespace AXR;
 HSSRule::HSSRule(AXRController * controller)
 : HSSStatement(HSSStatementTypeRule, controller)
 {
-    this->observedTreeChanger = NULL;
     this->_clonedFromRule = NULL;
 }
 
 HSSRule::HSSRule(const HSSRule & orig)
 : HSSStatement(orig)
 {
-    this->observedTreeChanger = NULL;
     this->_originalScope = orig._originalScope;
     this->_clonedFromRule = &orig;
 }
@@ -82,11 +80,6 @@ HSSRule::~HSSRule()
     for (unsigned i = 0; i<this->properties.size(); ++i)
     {
         this->propertiesRemoveLast();
-    }
-
-    if (this->observedTreeChanger)
-    {
-        this->observedTreeChanger->removeObserver(HSSObservablePropertyTreeChange, HSSObservablePropertyValue, this);
     }
 }
 
@@ -377,16 +370,6 @@ void HSSRule::addOriginalScope(QSharedPointer<HSSSimpleSelection> scope)
     {
         this->_originalScope->addSelection(scope);
     }
-}
-
-void HSSRule::setObservedTreeChanger(HSSObservable * newValue)
-{
-    this->observedTreeChanger = newValue;
-}
-
-HSSObservable * HSSRule::getObservedTreeChanger()
-{
-    return this->observedTreeChanger;
 }
 
 bool HSSRule::hasParent()

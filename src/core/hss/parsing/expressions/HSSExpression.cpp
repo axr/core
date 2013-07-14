@@ -60,8 +60,6 @@ HSSExpression::HSSExpression(HSSExpressionType type, QSharedPointer<HSSParserNod
     this->setRight(_right);
 
     this->percentageObserved = NULL;
-    this->leftObserved = NULL;
-    this->rightObserved = NULL;
 }
 
 HSSExpression::HSSExpression(const HSSExpression &orig)
@@ -71,20 +69,10 @@ HSSExpression::HSSExpression(const HSSExpression &orig)
     this->setLeft(orig.left->clone());
     this->setRight(orig.right->clone());
     this->percentageObserved = NULL;
-    this->leftObserved = NULL;
-    this->rightObserved = NULL;
 }
 
 HSSExpression::~HSSExpression()
 {
-    if (this->leftObserved)
-    {
-        this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyValue, this);
-    }
-    if (this->rightObserved)
-    {
-        this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyValue, this);
-    }
 }
 
 AXRString HSSExpression::toString()

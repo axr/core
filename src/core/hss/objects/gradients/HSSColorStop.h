@@ -161,21 +161,12 @@ namespace AXR
         //color
         QSharedPointer<HSSRgb> color;
         QSharedPointer<HSSParserNode> dColor;
-        HSSObservable * observedColor;
-        HSSObservableProperty observedColorProperty;
-
         //position
         HSSUnit position;
         QSharedPointer<HSSParserNode> dPosition;
-        HSSObservable * observedPosition;
-        HSSObservableProperty observedPositionProperty;
-
         //balance
         HSSUnit balance;
         QSharedPointer<HSSParserNode> dBalance;
-        HSSObservable * observedBalance;
-        HSSObservableProperty observedBalanceProperty;
-
         HSSUnit _evaluatePropertyValue(
                                    void(HSSColorStop::*callback)(HSSObservableProperty property, void* data),
                                    QSharedPointer<HSSParserNode> value,

@@ -61,9 +61,6 @@ using namespace AXR;
 HSSBorder::HSSBorder(AXRController * controller)
 : HSSObject(HSSObjectTypeBorder, controller)
 {
-    this->observedSize = NULL;
-    this->observedPosition = NULL;
-    this->observedSegments = NULL;
     this->position = HSSBorderPositionCenter;
     this->registerProperty(HSSObservablePropertySize, QVariant::fromValue(&this->size));
 }
@@ -71,9 +68,6 @@ HSSBorder::HSSBorder(AXRController * controller)
 HSSBorder::HSSBorder(const HSSBorder & orig)
 : HSSObject(orig)
 {
-    this->observedSize = NULL;
-    this->observedPosition = NULL;
-    this->observedSegments = NULL;
     this->size = orig.size;
     this->position = orig.position;
     this->segments = orig.segments;

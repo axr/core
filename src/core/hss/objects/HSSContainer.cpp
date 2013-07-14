@@ -98,11 +98,6 @@ void HSSContainer::initialize()
     this->directionPrimary = HSSDirectionLeftToRight;
     this->directionSecondary = HSSDirectionTopToBottom;
 
-    this->observedContentAlignX = this->observedContentAlignY
-            = this->observedDirectionPrimary = this->observedDirectionSecondary
-            = this->observedShape = this->observedTextAlign
-            = NULL;
-
     this->distributeX = distributeXLinear
             = this->distributeY = distributeYLinear
             = false;
@@ -159,26 +154,6 @@ HSSContainer::~HSSContainer()
         this->allChildren->clear();
     }
 
-    if (this->observedContentAlignX)
-    {
-        this->observedContentAlignX->removeObserver(this->observedContentAlignXProperty, HSSObservablePropertyAlignX, this);
-    }
-    if (this->observedContentAlignY)
-    {
-        this->observedContentAlignY->removeObserver(this->observedContentAlignYProperty, HSSObservablePropertyAlignY, this);
-    }
-    if (this->observedDirectionPrimary)
-    {
-        this->observedDirectionPrimary->removeObserver(this->observedDirectionPrimaryProperty, HSSObservablePropertyDirectionPrimary, this);
-    }
-    if (this->observedDirectionSecondary)
-    {
-        this->observedDirectionSecondary->removeObserver(this->observedDirectionSecondaryProperty, HSSObservablePropertyDirectionSecondary, this);
-    }
-    if (this->observedShape)
-    {
-        this->observedShape->removeObserver(this->observedShapeProperty, HSSObservablePropertyShape, this);
-    }
 }
 
 AXRString HSSContainer::toString()

@@ -146,8 +146,6 @@ namespace AXR
 
         //action
         QSharedPointer<HSSParserNode> dAction;
-        HSSObservable * observedAction;
-        HSSObservableProperty observedActionProperty;
         std::vector<QSharedPointer<HSSAction> > action;
 
     private:

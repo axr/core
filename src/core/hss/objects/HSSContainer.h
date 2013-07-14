@@ -385,36 +385,22 @@ namespace AXR
 
         QSharedPointer<HSSParserNode> dContentAlignX;
         HSSUnit contentAlignX;
-        HSSObservable * observedContentAlignX;
-        HSSObservableProperty observedContentAlignXProperty;
         bool distributeX;
         bool distributeXLinear;
         QSharedPointer<HSSParserNode> dContentAlignY;
         HSSUnit contentAlignY;
-        HSSObservable * observedContentAlignY;
-        HSSObservableProperty observedContentAlignYProperty;
         bool distributeY;
         bool distributeYLinear;
 
         QSharedPointer<HSSParserNode> dDirectionPrimary;
         HSSDirectionValue directionPrimary;
-        HSSObservable * observedDirectionPrimary;
-        HSSObservableProperty observedDirectionPrimaryProperty;
         QSharedPointer<HSSParserNode> dDirectionSecondary;
         HSSDirectionValue directionSecondary;
-        HSSObservable * observedDirectionSecondary;
-        HSSObservableProperty observedDirectionSecondaryProperty;
         QSharedPointer<HSSParserNode> dShape;
         QSharedPointer<HSSShape> shape;
-        HSSObservable * observedShape;
-        HSSObservableProperty observedShapeProperty;
-
         //textAlign
         HSSTextAlignType textAlign;
         QSharedPointer<HSSParserNode> dTextAlign;
-        HSSObservable * observedTextAlign;
-        HSSObservableProperty observedTextAlignProperty;
-
         QSharedPointer<HSSContainer> shared_from_this();
 
     private:

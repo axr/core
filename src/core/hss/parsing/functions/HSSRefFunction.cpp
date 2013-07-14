@@ -55,7 +55,6 @@ using namespace AXR;
 HSSRefFunction::HSSRefFunction(AXRController * controller)
 : HSSFunction(HSSFunctionTypeRef, controller)
 {
-    this->observed = NULL;
 }
 
 HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
@@ -63,7 +62,6 @@ HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
 {
     this->modifier = orig.modifier;
     this->propertyName = orig.propertyName;
-    this->observed = NULL;
 }
 
 QSharedPointer<HSSFunction> HSSRefFunction::clone() const
@@ -73,10 +71,6 @@ QSharedPointer<HSSFunction> HSSRefFunction::clone() const
 
 HSSRefFunction::~HSSRefFunction()
 {
-    if (this->observed)
-    {
-        this->observed->removeObserver(this->propertyName, HSSObservablePropertyValue, this);
-    }
 }
 
 const AXRString & HSSRefFunction::getModifier() const

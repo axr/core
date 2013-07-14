@@ -277,10 +277,6 @@ namespace AXR
 
         void addOriginalScope(QSharedPointer<HSSSimpleSelection> scope);
 
-        void setObservedTreeChanger(HSSObservable * newValue);
-
-        HSSObservable * getObservedTreeChanger();
-
         bool hasParent();
         QSharedPointer<HSSRule> getParent();
 
@@ -299,8 +295,6 @@ namespace AXR
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
-
-        HSSObservable * observedTreeChanger;
 
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
         const HSSRule * _clonedFromRule;

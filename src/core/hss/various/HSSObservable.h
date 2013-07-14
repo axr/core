@@ -152,8 +152,17 @@ namespace AXR
          */
         void notifyObservers(const AXRString property, const QSharedPointer<HSSObject> theObj);
 
+        bool tracksObserver(const AXRString source);
+        HSSObservable * getTrackedObserver(const AXRString source);
+        AXRString getTrackedProperty(const AXRString source);
+        void trackObserver(const AXRString target, const AXRString source, HSSObservable* observable);
+        void untrackObserver(const AXRString source);
+        void cleanTrackedObservers();
+
     private:
         QMap<AXRString, HSSObservable::observed> _propertyObservers;
+        QMap<AXRString, HSSObservable* > _trackedObservers;
+        QMap<AXRString, AXRString> _trackedProperties;
     };
 }
 

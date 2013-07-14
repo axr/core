@@ -245,25 +245,16 @@ namespace AXR
         //size
         QSharedPointer<HSSParserNode> dSize;
         //top
-        HSSObservable * observedTop;
-        HSSObservableProperty observedTopProperty;
         QSharedPointer<HSSParserNode> dTop;
         //right
-        HSSObservable * observedRight;
-        HSSObservableProperty observedRightProperty;
         QSharedPointer<HSSParserNode> dRight;
         //bottom
-        HSSObservable * observedBottom;
-        HSSObservableProperty observedBottomProperty;
         QSharedPointer<HSSParserNode> dBottom;
         //left
-        HSSObservable * observedLeft;
-        HSSObservableProperty observedLeftProperty;
         QSharedPointer<HSSParserNode> dLeft;
         HSSUnit top, right, bottom, left;
         HSSUnit percentageBaseX;
         HSSUnit percentageBaseY;
-        HSSObservable * percentageObserved;
 
         HSSUnit _evaluatePropertyValue(
                                    void(HSSMargin::*callback)(HSSObservableProperty property, void* data),

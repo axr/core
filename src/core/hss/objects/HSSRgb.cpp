@@ -78,8 +78,6 @@ HSSRgb::HSSRgb(AXRController * controller, HSSUnit red, HSSUnit green, HSSUnit b
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSRgb: creating rgb object");
 
-    this->observedRed = this->observedGreen = this->observedBlue = this->observedAlpha = NULL;
-
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("isA");
     shorthandProperties.push_back("alpha");
@@ -100,7 +98,6 @@ HSSRgb::HSSRgb(const HSSRgb & orig)
 {
     this->red = this->green = this->blue = 0.;
     this->alpha = 255.;
-    this->observedRed = this->observedGreen = this->observedBlue = this->observedAlpha = NULL;
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("isA");
     shorthandProperties.push_back("alpha");

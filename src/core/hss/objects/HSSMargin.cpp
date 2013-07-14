@@ -57,10 +57,8 @@ HSSMargin::HSSMargin(AXRController * controller)
 : HSSObject(HSSObjectTypeMargin, controller)
 {
     this->top = this->right = this->bottom = this->left = 0.0;
-    this->observedTop = this->observedRight = this->observedBottom = this->observedLeft = NULL;
     this->percentageBaseX = 0.;
     this->percentageBaseY = 0.;
-    this->percentageObserved = NULL;
 }
 
 HSSMargin::HSSMargin(const HSSMargin & orig)
@@ -70,13 +68,8 @@ HSSMargin::HSSMargin(const HSSMargin & orig)
     this->right = orig.right;
     this->bottom = orig.bottom;
     this->left = orig.left;
-    this->observedTop = NULL;
-    this->observedRight = NULL;
-    this->observedBottom = NULL;
-    this->observedLeft = NULL;
     this->percentageBaseX = orig.percentageBaseX;
     this->percentageBaseY = orig.percentageBaseY;
-    this->percentageObserved = NULL;
 }
 
 QSharedPointer<HSSMargin> HSSMargin::clone() const

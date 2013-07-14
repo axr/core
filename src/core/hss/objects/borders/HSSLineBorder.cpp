@@ -77,7 +77,6 @@ HSSLineBorder::HSSLineBorder(AXRController * controller)
 HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
 : HSSBorder(orig)
 {
-    this->observedColor = NULL;
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("color");

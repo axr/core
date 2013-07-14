@@ -62,16 +62,12 @@ HSSRequest::HSSRequest(AXRController * controller)
 : HSSAction(HSSActionTypeRequest, controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSRequest: creating request object");
-    this->observedSrc
-            = this->observedTarget
-            = NULL;
 
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("src");
     shorthandProperties.push_back("target");
     //shorthandProperties.push_back("mode");
     this->setShorthandProperties(shorthandProperties);
-
     this->mode = HSSRequestModeTypeAuto;
     this->target = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection);
 }
@@ -79,10 +75,6 @@ HSSRequest::HSSRequest(AXRController * controller)
 HSSRequest::HSSRequest(const HSSRequest & orig)
 : HSSAction(orig)
 {
-    this->observedSrc
-            = this->observedTarget
-            = NULL;
-
     this->mode = orig.mode;
     this->target = orig.target;
 }

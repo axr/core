@@ -196,17 +196,9 @@ namespace AXR
         HSSUnit alpha;
 
         QSharedPointer<HSSParserNode> dRed;
-        HSSObservable * observedRed;
-        HSSObservableProperty observedRedProperty;
         QSharedPointer<HSSParserNode> dGreen;
-        HSSObservable * observedGreen;
-        HSSObservableProperty observedGreenProperty;
         QSharedPointer<HSSParserNode> dBlue;
-        HSSObservable * observedBlue;
-        HSSObservableProperty observedBlueProperty;
         QSharedPointer<HSSParserNode> dAlpha;
-        HSSObservable * observedAlpha;
-        HSSObservableProperty observedAlphaProperty;
 
         HSSUnit _evaluatePropertyValue(
                                    void(HSSRgb::*callback)(HSSObservableProperty property, void* data),

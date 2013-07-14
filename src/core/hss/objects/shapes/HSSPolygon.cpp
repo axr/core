@@ -75,8 +75,6 @@ HSSPolygon::HSSPolygon(AXRController * controller)
     this->sides = 3;
     this->angle = 0;
 
-    this->observedSides = NULL;
-    this->observedAngle = NULL;
 }
 
 HSSPolygon::HSSPolygon(const HSSPolygon & orig)
@@ -92,8 +90,6 @@ HSSPolygon::HSSPolygon(const HSSPolygon & orig)
     this->sides = 3;
     this->angle = 0;
 
-    this->observedSides = NULL;
-    this->observedAngle = NULL;
 }
 
 QSharedPointer<HSSPolygon> HSSPolygon::clone() const

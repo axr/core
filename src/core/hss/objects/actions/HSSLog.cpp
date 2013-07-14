@@ -59,7 +59,6 @@ HSSLog::HSSLog(AXRController * controller)
 : HSSAction(HSSActionTypeLog, controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSLog: creating log object");
-    this->observedValue = NULL;
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
@@ -68,10 +67,6 @@ HSSLog::HSSLog(AXRController * controller)
 HSSLog::HSSLog(const HSSLog & orig)
 : HSSAction(orig)
 {
-    this->observedValue = NULL;
-    std::vector<AXRString> shorthandProperties;
-    shorthandProperties.push_back("value");
-    this->setShorthandProperties(shorthandProperties);
 }
 
 QSharedPointer<HSSLog> HSSLog::clone() const

@@ -171,19 +171,12 @@ namespace AXR
         //size
         HSSUnit size;
         QSharedPointer<HSSParserNode> dSize;
-        HSSObservable * observedSize;
-        HSSObservableProperty observedSizeProperty;
-
         //position
         HSSBorderPosition position;
         QSharedPointer<HSSParserNode> dPosition;
-        HSSObservable * observedPosition;
-        HSSObservableProperty observedPositionProperty;
 
         //segments
         QSharedPointer<HSSParserNode> dSegments;
-        HSSObservable * observedSegments;
-        HSSObservableProperty observedSegmentsProperty;
         std::vector<QSharedPointer<HSSParserNode> > segments;
 
         HSSUnit _evaluatePropertyValue(
