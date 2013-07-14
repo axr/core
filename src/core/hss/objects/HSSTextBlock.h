@@ -52,6 +52,7 @@ namespace AXR
     class AXR_API HSSTextBlock : public HSSDisplayObject
     {
     public:
+        friend class HSSCascader;
         friend class HSSRenderer;
         static HSSTextTransformType textTransformTypeFromString(AXRString value);
         static HSSTextAlignType textAlignTypeFromString(AXRString value);

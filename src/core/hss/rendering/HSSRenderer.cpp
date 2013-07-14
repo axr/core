@@ -478,7 +478,6 @@ void HSSRenderer::initializeVisit()
             regeneratePainter(windowWidth, windowHeight);
 
             d->repaintAll = true;
-            root->setNeedsRereadRules(true);
         }
 
         d->canvas.fill(Qt::white);
@@ -491,10 +490,6 @@ void HSSRenderer::initializeVisit()
         {
             d->document->resetLayoutTicks();
         }
-
-        axr_log(LoggerChannelRendering, "HSSVisitorManager: regenerating surfaces");
-        //regenerateRootSurface();
-        axr_log(LoggerChannelRendering, "HSSVisitorManager: drawing tree");
         d->document->nextLayoutChild();
     }
     else

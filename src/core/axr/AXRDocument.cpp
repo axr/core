@@ -179,7 +179,8 @@ void AXRDocument::run()
 
         if (root)
         {
-            root->recursiveReadDefinitionObjects();
+            QSharedPointer<HSSVisitorManager> visitorManager = this->visitorManager();
+            visitorManager->runVisitors(HSSVisitorFilterCascading);
             HSSInputEvent event(HSSEventTypeLoad);
             root->handleEvent(&event);
         }

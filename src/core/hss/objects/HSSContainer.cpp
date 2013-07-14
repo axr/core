@@ -439,15 +439,6 @@ void HSSContainer::setProperty(HSSObservableProperty name, QSharedPointer<HSSPar
     }
 }
 
-void HSSContainer::recursiveReadDefinitionObjects()
-{
-    this->readDefinitionObjects();
-
-    for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
-    {
-        (*it)->recursiveReadDefinitionObjects();
-    }
-}
 
 void HSSContainer::accept(HSSAbstractVisitor* visitor, bool traverse)
 {

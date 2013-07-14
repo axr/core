@@ -75,6 +75,7 @@ namespace AXR
     public:
         friend class HSSDisplayObject;
         friend class HSSLayoutLine;
+        friend class HSSCascader;
         friend class HSSRenderer;
 
         /**

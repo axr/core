@@ -46,6 +46,7 @@
 #include "AXRController.h"
 #include "AXRDocument.h"
 #include "AXRLoggerManager.h"
+#include "HSSCascader.h"
 #include "HSSContainer.h"
 #include "HSSMouseEvent.h"
 #include "HSSRect.h"
@@ -61,7 +62,8 @@ namespace AXR
         QAXRWidgetPrivate(QAXRWidget *);
         QAXRWidget *q_ptr;
         AXRDocument *document;
-        HSSRenderer *renderVisitor;
+        HSSCascader* cascadeVisitor;
+        HSSRenderer* renderVisitor;
         QColor backgroundFillColor;
     };
 }
@@ -72,6 +74,7 @@ QAXRWidgetPrivate::QAXRWidgetPrivate(QAXRWidget *q)
 : q_ptr(q)
 , document(0)
 , renderVisitor(new HSSRenderer)
+, cascadeVisitor(new HSSCascader)
 , backgroundFillColor(QColor(Qt::white))
 {
     q_ptr->setMouseTracking(true);
@@ -109,11 +112,14 @@ void QAXRWidget::setDocument(AXRDocument *document)
     if (d->document == document)
         return;
 
+    d->cascadeVisitor->setDocument(document);
     d->renderVisitor->setDocument(document);
 
     if ((d->document = document) && d->document->visitorManager())
     {
-        d->document->visitorManager()->addVisitor(d->renderVisitor);
+        QSharedPointer<HSSVisitorManager> vm = d->document->visitorManager();
+        vm->addVisitor(d->cascadeVisitor);
+        vm->addVisitor(d->renderVisitor);
     }
 
     this->update();
