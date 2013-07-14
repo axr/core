@@ -44,36 +44,179 @@
 #ifndef HSSCALLBACK_H
 #define HSSCALLBACK_H
 
+#include <QSharedPointer>
 #include "AXRGlobal.h"
 #include "HSSObservableProperties.h"
 
 namespace AXR
 {
+    class HSSObject;
+    class HSSObservable;
+    class HSSParserNode;
+
+    /* ============================== STACK ================================= */
     /**
-     *  @brief Helper class that allows you to create callbacks.
+     *  @brief This class provides the interface for the compute callback,
+     *  regardless of template parameter
      */
-    class AXR_API HSSCallback
+    class AXR_API HSSAbstractStackCallback
     {
     public:
-        HSSCallback();
-        virtual ~HSSCallback();
+        HSSAbstractStackCallback();
+        virtual ~HSSAbstractStackCallback();
+
+        /**
+         *  Execute the callback, calling the stored method on the stored object.
+         *  @param parserNode   The new parser node to be stacked into an HSSObject
+         */
+        virtual void call(QSharedPointer<HSSParserNode> parserNode) = 0;
+    };
+
+    /**
+     *  @brief Helper class that allows you to create callbacks for computing properties.
+     */
+    template <class T> class AXR_API HSSStackCallback : public HSSAbstractStackCallback
+    {
+        void (T::*fptr)(QSharedPointer<HSSParserNode> parserNode);
+        T* ptr;
+
+    public:
+        /**
+         *  Creates a new instance of a callback, that wraps a function to be called at a later time.
+         *  @param _ptr     A regular pointer to the object that will receive the callback.
+         *  @param _fptr    The function pointer to the method that will be called.
+         */
+        HSSStackCallback(T* _ptr, void(T::*_fptr)(QSharedPointer<HSSParserNode> parserNode))
+        {
+            ptr = _ptr;
+            fptr = _fptr;
+        }
+
+        virtual ~HSSStackCallback() {}
+
+        void call(QSharedPointer<HSSParserNode> parserNode)
+        {
+            return (*ptr.*fptr)(parserNode);
+        }
+    };
+
+    /* ============================== COMPUTE ================================= */
+    /**
+     *  @brief This class provides the interface for the compute callback,
+     *  regardless of template parameter
+     */
+    class AXR_API HSSAbstractComputeCallback
+    {
+    public:
+        HSSAbstractComputeCallback();
+        virtual ~HSSAbstractComputeCallback();
+
+        /**
+         *  Execute the callback, calling the stored method on the stored object.
+         *  @param parserNode   The new parser node to be computed into an HSSObject
+         */
+        virtual QSharedPointer<HSSObject> call(QSharedPointer<HSSParserNode> parserNode) = 0;
+    };
+
+    /**
+     *  @brief Helper class that allows you to create callbacks for computing properties.
+     */
+    template <class T> class AXR_API HSSComputeCallback : public HSSAbstractComputeCallback
+    {
+        QSharedPointer<HSSObject> (T::*fptr)(QSharedPointer<HSSParserNode> parserNode);
+        T* ptr;
+
+    public:
+        /**
+         *  Creates a new instance of a callback, that wraps a function to be called at a later time.
+         *  @param _ptr     A regular pointer to the object that will receive the callback.
+         *  @param _fptr    The function pointer to the method that will be called.
+         */
+        HSSComputeCallback(T* _ptr, QSharedPointer<HSSObject>(T::*_fptr)(QSharedPointer<HSSParserNode> parserNode))
+        {
+            ptr = _ptr;
+            fptr = _fptr;
+        }
+
+        virtual ~HSSComputeCallback() {}
+
+        QSharedPointer<HSSObject> call(QSharedPointer<HSSParserNode> parserNode)
+        {
+            return (*ptr.*fptr)(parserNode);
+        }
+    };
+
+    /* ============================== OBSERVE ================================= */
+    /**
+     *  @brief This class provides the interface for the compute callback,
+     *  regardless of template parameter
+     */
+    class AXR_API HSSAbstractObserveCallback
+    {
+    public:
+        HSSAbstractObserveCallback();
+        virtual ~HSSAbstractObserveCallback();
+
+        /**
+         *  Execute the callback, calling the stored method on the stored object.
+         *  @param theObj   The object to be listened to or notified
+         */
+        virtual void call(QSharedPointer<HSSObject> theObj) = 0;
+    };
+
+    /**
+     *  @brief Helper class that allows you to create callbacks for computing properties.
+     */
+    template <class T> class AXR_API HSSObserveCallback : public HSSAbstractObserveCallback
+    {
+        void (T::*fptr)(QSharedPointer<HSSObject> theObj);
+        T* ptr;
+
+    public:
+        /**
+         *  Creates a new instance of a callback, that wraps a function to be called at a later time.
+         *  @param _ptr     A regular pointer to the object that will receive the callback.
+         *  @param _fptr    The function pointer to the method that will be called.
+         */
+        HSSObserveCallback(T* _ptr, void(T::*_fptr)(QSharedPointer<HSSObject> theObj))
+        {
+            ptr = _ptr;
+            fptr = _fptr;
+        }
+
+        virtual ~HSSObserveCallback() {}
+
+        void call(QSharedPointer<HSSObject> theObj)
+        {
+            return (*ptr.*fptr)(theObj);
+        }
+    };
+
+    /* ============================== VALUE CHANGED ================================= */
+    /**
+     *  @brief This class provides the interface for the value changed callback,
+     *  regardless of template parameter
+     */
+    class AXR_API HSSAbstractValueChangedCallback
+    {
+    public:
+        HSSAbstractValueChangedCallback();
+        virtual ~HSSAbstractValueChangedCallback();
 
         /**
          *  Execute the callback, calling the stored method on the stored object.
          *  @param property The property where the callback originated.
          *  @param data     The new value or the data that goes along with the callback.
          */
-        virtual void call(HSSObservableProperty property, void* data) = 0;
+        virtual void call(const AXRString source, const QSharedPointer<HSSObject> theObj) = 0;
     };
 
-    class HSSObservable;
-
     /**
-     *  @brief Specific helper class to call value changed callbacks.
+     *  @brief Helper class to call value changed callbacks.
      */
-    template <class T> class HSSValueChangedCallback : public HSSCallback
+    template <class T> class HSSValueChangedCallback : public HSSAbstractValueChangedCallback
     {
-        void (T::*fptr)(HSSObservableProperty property, void* data);
+        void (T::*fptr)(const AXRString source, const QSharedPointer<HSSObject> theObj);
         T* ptr;
 
     public:
@@ -84,15 +227,17 @@ namespace AXR
          *  @param _ptr     A regular pointer to the object that will receive the callback.
          *  @param _fptr    The function pointer to the method that will be called.
          */
-        HSSValueChangedCallback(T* _ptr, void(T::*_fptr)(HSSObservableProperty property, void* data))
+        HSSValueChangedCallback(T* _ptr, void(T::*_fptr)(const AXRString source, const QSharedPointer<HSSObject> theObj))
         {
             ptr = _ptr;
             fptr = _fptr;
         }
 
-        void call(HSSObservableProperty property, void* data)
+        virtual ~HSSValueChangedCallback() {}
+
+        void call(const AXRString source, const QSharedPointer<HSSObject> theObj)
         {
-            (*ptr.*fptr)(property, data);
+            (*ptr.*fptr)(source, theObj);
         }
     };
 }

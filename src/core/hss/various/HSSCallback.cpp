@@ -45,10 +45,34 @@
 
 using namespace AXR;
 
-HSSCallback::HSSCallback()
+HSSAbstractStackCallback::HSSAbstractStackCallback()
 {
 }
 
-HSSCallback::~HSSCallback()
+HSSAbstractStackCallback::~HSSAbstractStackCallback()
+{
+}
+
+HSSAbstractComputeCallback::HSSAbstractComputeCallback()
+{
+}
+
+HSSAbstractComputeCallback::~HSSAbstractComputeCallback()
+{
+}
+
+HSSAbstractObserveCallback::HSSAbstractObserveCallback()
+{
+}
+
+HSSAbstractObserveCallback::~HSSAbstractObserveCallback()
+{
+}
+
+HSSAbstractValueChangedCallback::HSSAbstractValueChangedCallback()
+{
+}
+
+HSSAbstractValueChangedCallback::~HSSAbstractValueChangedCallback()
 {
 }

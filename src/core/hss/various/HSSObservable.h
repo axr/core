@@ -51,8 +51,9 @@ template <class T> class QSharedPointer;
 
 namespace AXR
 {
-    class HSSCallback;
+    class HSSAbstractValueChangedCallback;
     class HSSObservableMapping;
+    class HSSObject;
 
     /**
      *  @brief This class provides base functionality for property observing.
@@ -117,7 +118,7 @@ namespace AXR
          *  @todo I think the requirement for the object to be a HSSObservable subclass is not really needed. Maybe
          *  a "void*" would do equally well, since we are actually only interested in the pointer itself.
          */
-        void observe(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object, HSSCallback *callback);
+        void observe(const AXRString target, const AXRString source, HSSObservable * object, HSSAbstractValueChangedCallback *callback);
 
         /**
          *  Removes an observer from the list of observers for the given combination between target and source properties
@@ -130,7 +131,7 @@ namespace AXR
          *  @todo I think the requirement for the object to be a HSSObservable subclass is not really needed. Maybe
          *  a "void*" would do equally well, since we are actually only interested in the pointer itself.
          */
-        void removeObserver(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object);
+        void removeObserver(const AXRString target, const AXRString source, HSSObservable * object);
 
         /**
          *  This is the form that the functions that will receive the notifications must have.
@@ -138,21 +139,21 @@ namespace AXR
          *  otherwise does nothing.
          *
          *  @param property The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
+         *  @param data     A shared pointer to the object that is sent along the notification.
          */
-        virtual void propertyChanged(HSSObservableProperty property, void * data);
+        virtual void propertyChanged(const AXRString property, const QSharedPointer<HSSObject> theObj);
 
         /**
          *  Subclasses should call this method on themselves to trigger the delivery of the notification.
          *  These are syncronous, which means that they won't return until the function receiving the
          *  notification have completed.
          *  @param property The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification (e.g. the new value).
+         *  @param data     A shared pointer to the object that is sent along the notification (e.g. the new value).
          */
-        void notifyObservers(HSSObservableProperty property, void * data);
+        void notifyObservers(const AXRString property, const QSharedPointer<HSSObject> theObj);
 
     private:
-        QMap<HSSObservableProperty, HSSObservable::observed> _propertyObservers;
+        QMap<AXRString, HSSObservable::observed> _propertyObservers;
     };
 }
 

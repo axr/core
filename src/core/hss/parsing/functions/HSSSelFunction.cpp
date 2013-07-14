@@ -131,7 +131,7 @@ QVariant HSSSelFunction::_evaluate()
     return this->_value;
 }
 
-//void HSSSelFunction::valueChanged(HSSObservableProperty source, void*data)
+//void HSSSelFunction::valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
 //{
 //    axr_log(LoggerChannelObsolete1, "######################### valueChanged");
 //    this->setDirty(true);

@@ -55,8 +55,9 @@ namespace AXR
     class AXRController;
     class AXRDocumentPrivate;
     class AXRRender;
-    class HSSCallback;
+    class HSSAbstractValueChangedCallback;
     class HSSInputEvent;
+    class HSSObject;
     class HSSParser;
     class HSSRect;
     class HSSVisitorManager;
@@ -172,8 +173,8 @@ namespace AXR
          *  @param fn       A pointer to the callback that encapsulates the
          *                  c++ function that will be called.
          */
-        void registerCustomFunction(const AXRString &name, HSSCallback* fn);
-        void evaluateCustomFunction(const AXRString &name, void* data);
+        void registerCustomFunction(const AXRString &name, HSSAbstractValueChangedCallback* fn);
+        void evaluateCustomFunction(const AXRString &name,  const QSharedPointer<HSSObject> theObj);
 
         // From AXRWrapper
     public:

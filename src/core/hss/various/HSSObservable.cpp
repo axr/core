@@ -47,6 +47,7 @@
 #include <QVariant>
 #include "AXRLoggerManager.h"
 #include "HSSCallback.h"
+#include "HSSObject.h"
 #include "HSSObservable.h"
 #include "HSSObservableMapping.h"
 
@@ -289,7 +290,7 @@ size_t hash_combine(size_t hash1, size_t hash2)
     return hash1 ^ (hash2 + 0x9e3779b9 + (hash1 << 6) + (hash1 >> 2));
 }
 
-void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object, HSSCallback *callback)
+void HSSObservable::observe(const AXRString target, const AXRString source, HSSObservable * object, HSSAbstractValueChangedCallback *callback)
 {
     //axr_log(LoggerChannelObsolete1, "added observer: "+object->name);
 
@@ -300,7 +301,7 @@ void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty 
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
         QSharedPointer<HSSObservableMapping> mapping = QSharedPointer<HSSObservableMapping>(new HSSObservableMapping(object, callback, source, nulldata));
         theObserved.append(mapping);
-        axr_log(LoggerChannelObserving, "added observer for " + HSSObservable::observablePropertyStringRepresentation(target));
+        axr_log(LoggerChannelObserving, AXRString("observing ").append(target).append(" from ").append(source));
     }
     else
     {
@@ -308,11 +309,11 @@ void HSSObservable::observe(HSSObservableProperty target, HSSObservableProperty 
         QSharedPointer<HSSObservableMapping> mapping = QSharedPointer<HSSObservableMapping>(new HSSObservableMapping(object, callback, source, nulldata));
         theObserved.append(mapping);
         this->_propertyObservers[target] = theObserved;
-        axr_log(LoggerChannelObserving, "added observer for new " + HSSObservable::observablePropertyStringRepresentation(target));
+        axr_log(LoggerChannelObserving, AXRString("observing ").append(target).append(" from ").append(source));
     }
 }
 
-void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservableProperty source, HSSObservable * object)
+void HSSObservable::removeObserver(const AXRString target, const AXRString source, HSSObservable * object)
 {
     if (this->_propertyObservers.find(target) != this->_propertyObservers.end())
     {
@@ -321,20 +322,20 @@ void HSSObservable::removeObserver(HSSObservableProperty target, HSSObservablePr
             const QSharedPointer<HSSObservableMapping> & mapping = *it;
             if(mapping->observer == object && mapping->source == source){
                 theObserved.erase(it++);
-                axr_log(LoggerChannelObserving, "removing observer for " + HSSObservable::observablePropertyStringRepresentation(target));
+                axr_log(LoggerChannelObserving, AXRString("stop observing ").append(target).append(" from ").append(source));
                 return;
             }
         }
     }
-    axr_log(LoggerChannelObserving, "tried to remove non existent observer for " + HSSObservable::observablePropertyStringRepresentation(target));
+    axr_log(LoggerChannelObserving, AXRString("tried to remove non existent observer for ").append(target));
 }
 
-void HSSObservable::propertyChanged(HSSObservableProperty property, void *data)
+void HSSObservable::propertyChanged(const AXRString property, const QSharedPointer<HSSObject> theObj)
 {
     axr_log(LoggerChannelObserving, "property changed");
 }
 
-void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
+void HSSObservable::notifyObservers(const AXRString property, const QSharedPointer<HSSObject> theObj)
 {
     if (this->_propertyObservers.contains(property))
     {
@@ -342,13 +343,9 @@ void HSSObservable::notifyObservers(HSSObservableProperty property, void *data)
         for (observed::iterator it = theObserved.begin(); it != theObserved.end(); ++it)
         {
             const QSharedPointer<HSSObservableMapping> & mapping = *it;
-            HSSCallback *callback = mapping->callback;
-            if (!data)
-            {
-                axr_log(LoggerChannelObserving, "data is null");
-            }
+            HSSAbstractValueChangedCallback *callback = mapping->callback;
+            callback->call(property, theObj);
 
-            callback->call(property, data);
         }
     }
 }

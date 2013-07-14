@@ -49,7 +49,7 @@
 
 namespace AXR
 {
-    class HSSCallback;
+    class HSSAbstractValueChangedCallback;
     class HSSObservable;
 
     /**
@@ -58,12 +58,12 @@ namespace AXR
     class AXR_API HSSObservableMapping
     {
     public:
-        HSSObservableMapping(HSSObservable* obs, HSSCallback* cbk, HSSObservableProperty src, QVariant d);
+        HSSObservableMapping(HSSObservable* obs, HSSAbstractValueChangedCallback* cbk, const AXRString src, QVariant d);
         virtual ~HSSObservableMapping();
 
         HSSObservable* observer;
-        HSSCallback* callback;
-        HSSObservableProperty source;
+        HSSAbstractValueChangedCallback* callback;
+        AXRString source;
         QVariant data;
     };
 }

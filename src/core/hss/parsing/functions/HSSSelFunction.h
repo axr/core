@@ -134,7 +134,7 @@ namespace AXR
          */
         virtual QVariant _evaluate();
 
-        //        void valueChanged(HSSObservableProperty source, void*data);
+        //        void valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
     protected:
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;

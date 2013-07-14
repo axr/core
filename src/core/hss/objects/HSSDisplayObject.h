@@ -332,7 +332,7 @@ namespace AXR
         void setPress(bool newValue);
         bool isPress();
 
-        void ruleChanged(HSSObservableProperty source, void*data);
+        void ruleChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         void createFlag(QSharedPointer<HSSFlag> flag, HSSRuleState defaultValue);
         bool hasFlag(AXRString name);

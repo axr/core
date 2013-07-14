@@ -47,6 +47,7 @@
 #include "AXRDocument.h"
 #include "AXRLoggerManager.h"
 #include "AXRWarning.h"
+#include "HSSCallback.h"
 #include "HSSCircle.h"
 #include "HSSColorStop.h"
 #include "HSSContainer.h"

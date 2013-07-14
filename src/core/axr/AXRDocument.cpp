@@ -90,7 +90,7 @@ namespace AXR
         QSharedPointer<XMLParser> parserXML;
         QSharedPointer<HSSParser> parserHSS;
 
-        QMap<AXRString, HSSCallback*> customFunctions;
+        QMap<AXRString, HSSAbstractValueChangedCallback*> customFunctions;
     };
 }
 
@@ -266,16 +266,16 @@ bool AXRDocument::isCustomFunction(const AXRString &name) const
     return d->customFunctions.contains(name);
 }
 
-void AXRDocument::registerCustomFunction(const AXRString &name, HSSCallback* fn)
+void AXRDocument::registerCustomFunction(const AXRString &name, HSSAbstractValueChangedCallback* fn)
 {
     d->customFunctions[name] = fn;
 }
 
-void AXRDocument::evaluateCustomFunction(const AXRString &name, void* data)
+void AXRDocument::evaluateCustomFunction(const AXRString &name, const QSharedPointer<HSSObject> theObj)
 {
     if (this->isCustomFunction(name))
     {
-        d->customFunctions[name]->call(HSSObservablePropertyValue, data);
+        d->customFunctions[name]->call("", theObj);
     }
 }
 
