@@ -74,6 +74,7 @@ namespace AXR
     public:
         friend class HSSContainer;
         friend class HSSLayoutLine;
+        friend class HSSLayout;
         friend class HSSRenderer;
 
         /**
@@ -206,8 +207,6 @@ namespace AXR
 
         void setNeedsLayout(bool value);
         bool needsLayout() const;
-        virtual void layout();
-        virtual void recursiveLayout();
         virtual void recursiveResetLayout();
         virtual void setGlobalX(HSSUnit newValue);
         virtual void setGlobalY(HSSUnit newValue);

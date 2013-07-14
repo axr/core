@@ -758,7 +758,6 @@ void HSSDisplayObject::accept(HSSAbstractVisitor* visitor, bool traverse)
 }
 
 //layout
-
 void HSSDisplayObject::setNeedsLayout(bool value)
 {
     this->_needsLayout = value;
@@ -767,16 +766,6 @@ void HSSDisplayObject::setNeedsLayout(bool value)
 bool HSSDisplayObject::needsLayout() const
 {
     return this->_needsLayout;
-}
-
-void HSSDisplayObject::layout()
-{
-    //do nothing
-}
-
-void HSSDisplayObject::recursiveLayout()
-{
-    this->layout();
 }
 
 void HSSDisplayObject::recursiveResetLayout()

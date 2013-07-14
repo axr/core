@@ -54,6 +54,7 @@ namespace AXR
     public:
         friend class HSSCascader;
         friend class HSSRenderer;
+        friend class HSSLayout;
         static HSSTextTransformType textTransformTypeFromString(AXRString value);
         static HSSTextAlignType textAlignTypeFromString(AXRString value);
 
@@ -81,7 +82,6 @@ namespace AXR
         virtual void setDefaults();
         virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
         virtual void accept(HSSAbstractVisitor* visitor, bool);
-        virtual void layout();
 
         //transform
         HSSTextTransformType getTransform();

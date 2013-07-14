@@ -481,11 +481,6 @@ void HSSRenderer::initializeVisit()
         }
 
         d->canvas.fill(Qt::white);
-        //draw the elements
-        axr_log(LoggerChannelGeneralSpecific, "HSSVisitorManager: reading object definitions");
-        root->recursiveReadDefinitionObjects();
-        axr_log(LoggerChannelLayout, "HSSVisitorManager: laying out elements on page");
-        root->recursiveLayout();
         if (d->document->showLayoutSteps())
         {
             d->document->resetLayoutTicks();

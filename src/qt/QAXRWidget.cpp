@@ -48,6 +48,7 @@
 #include "AXRLoggerManager.h"
 #include "HSSCascader.h"
 #include "HSSContainer.h"
+#include "HSSLayout.h"
 #include "HSSMouseEvent.h"
 #include "HSSRect.h"
 #include "HSSRenderer.h"
@@ -63,6 +64,7 @@ namespace AXR
         QAXRWidget *q_ptr;
         AXRDocument *document;
         HSSCascader* cascadeVisitor;
+        HSSLayout* layoutVisitor;
         HSSRenderer* renderVisitor;
         QColor backgroundFillColor;
     };
@@ -74,6 +76,7 @@ QAXRWidgetPrivate::QAXRWidgetPrivate(QAXRWidget *q)
 : q_ptr(q)
 , document(0)
 , renderVisitor(new HSSRenderer)
+, layoutVisitor(new HSSLayout)
 , cascadeVisitor(new HSSCascader)
 , backgroundFillColor(QColor(Qt::white))
 {
@@ -113,12 +116,14 @@ void QAXRWidget::setDocument(AXRDocument *document)
         return;
 
     d->cascadeVisitor->setDocument(document);
+    d->layoutVisitor->setDocument(document);
     d->renderVisitor->setDocument(document);
 
     if ((d->document = document) && d->document->visitorManager())
     {
         QSharedPointer<HSSVisitorManager> vm = d->document->visitorManager();
         vm->addVisitor(d->cascadeVisitor);
+        vm->addVisitor(d->layoutVisitor);
         vm->addVisitor(d->renderVisitor);
     }
 
