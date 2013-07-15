@@ -91,7 +91,7 @@ AXRString HSSFunctionAction::defaultObjectType()
 void HSSFunctionAction::fire()
 {
     QSharedPointer<HSSFunction> function = this->getFunction();
-    function->_evaluate(function->getArguments());
+    function->_evaluate();
 }
 
 QSharedPointer<HSSFunction> HSSFunctionAction::getFunction()
