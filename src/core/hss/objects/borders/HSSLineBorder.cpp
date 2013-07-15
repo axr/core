@@ -72,7 +72,6 @@ HSSLineBorder::HSSLineBorder(AXRController * controller)
     shorthandProperties.push_back("color");
     shorthandProperties.push_back("segments");
     shorthandProperties.push_back("position");
-
     this->setShorthandProperties(shorthandProperties);
 }
 

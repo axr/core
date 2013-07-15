@@ -99,7 +99,6 @@ HSSContainer::HSSContainer(AXRController * controller)
     shorthandProperties.push_back("background");
     shorthandProperties.push_back("shape");
     shorthandProperties.push_back("textAlign");
-
     this->setShorthandProperties(shorthandProperties);
 }
 
@@ -277,6 +276,7 @@ bool HSSContainer::isKeyword(AXRString value, AXRString property)
     return HSSDisplayObject::isKeyword(value, property);
 }
 
+//children
 void HSSContainer::add(QSharedPointer<HSSDisplayObject> child)
 {
     QSharedPointer<HSSContainer> sharedThis = this->shared_from_this();
@@ -489,7 +489,6 @@ QSharedPointer<HSSSimpleSelection> HSSContainer::getChildren(bool includeTextBlo
         return this->children;
     }
 }
-
 
 bool HSSContainer::handleEvent(HSSInputEvent *event)
 {

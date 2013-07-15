@@ -96,7 +96,6 @@ HSSEvent::HSSEvent(HSSEventType type, AXRController * controller)
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("action");
     this->setShorthandProperties(shorthandProperties);
-
 }
 
 HSSEvent::HSSEvent(const HSSEvent & orig)

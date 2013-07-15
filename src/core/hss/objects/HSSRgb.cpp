@@ -89,7 +89,6 @@ HSSRgb::HSSRgb(AXRController * controller)
     shorthandProperties.push_back("red");
     shorthandProperties.push_back("green");
     shorthandProperties.push_back("blue");
-
     this->setShorthandProperties(shorthandProperties);
 }
 
@@ -160,15 +159,6 @@ AXRString HSSRgb::defaultObjectType(AXRString property)
     }
 }
 
-//bool HSSRgb::isKeyword(AXRString value, AXRString property)
-//{
-//    if (value == "transparent"){
-//        return true;
-//    }
-//
-//    //if we reached this far, let the superclass handle it
-//    return HSSObject::isKeyword(value, property);
-//}
 QSharedPointer<HSSObject> HSSRgb::computeRed(QSharedPointer<HSSParserNode> parserNode)
 {
     return this->_computeChannelValue(parserNode);

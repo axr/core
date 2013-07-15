@@ -238,7 +238,6 @@ namespace AXR
     protected:
         QSharedPointer<HSSSimpleSelection> children;
         QSharedPointer<HSSSimpleSelection> allChildren;
-
         bool distributeX;
         bool distributeXLinear;
         bool distributeY;

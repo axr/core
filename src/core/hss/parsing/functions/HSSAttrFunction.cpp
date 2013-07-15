@@ -140,10 +140,8 @@ QSharedPointer<HSSObject> HSSAttrFunction::_evaluate()
         QSharedPointer<HSSDisplayObject> container = selection->front();
         this->_stringValue = container->attributes[this->attributeName];
 
-        //todo handle this
+        ///@todo handle this
         //container->observe(this->attributeName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSAttrFunction>(this, &HSSAttrFunction::valueChanged));
-
-        //this->observed = container.get();
     }
     else
     {

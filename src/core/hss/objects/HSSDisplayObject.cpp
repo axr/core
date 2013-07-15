@@ -400,7 +400,6 @@ void HSSDisplayObject::setElementName(AXRString newName)
 }
 
 //rules
-
 void HSSDisplayObject::rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState defaultState)
 {
     if (!this->hasRule(newRule))

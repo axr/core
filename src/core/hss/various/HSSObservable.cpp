@@ -293,7 +293,6 @@ size_t hash_combine(size_t hash1, size_t hash2)
 
 void HSSObservable::observe(const AXRString target, const AXRString source, HSSObservable * object, HSSAbstractValueChangedCallback *callback)
 {
-    //axr_log(LoggerChannelObsolete1, "added observer: "+object->name);
     if (object->tracksObserver(source))
     {
         HSSObservable * to = object->_trackedObservers[source];
