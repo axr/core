@@ -129,6 +129,7 @@ namespace AXR
         HSSGradient(const HSSGradient & orig);
 
     private:
+        void _initialize();
         HSSGradientType gradientType;
     };
 }

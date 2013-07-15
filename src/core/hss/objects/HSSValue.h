@@ -79,6 +79,7 @@ namespace AXR
         virtual AXRString defaultObjectType(AXRString property);
 
     private:
+        void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

@@ -89,6 +89,7 @@ namespace AXR
         virtual void draw(QPainter &painter, const QPainterPath &path);
 
     private:
+        void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

@@ -83,11 +83,6 @@ namespace AXR
         typedef QWeakPointer<HSSContainer> pp;
 
         /**
-         *  Initializes all ivars to default values.
-         */
-        void initialize();
-
-        /**
          *  Destructor for this class.
          */
         virtual ~HSSDisplayObject();
@@ -331,6 +326,8 @@ namespace AXR
         bool _layoutFlagLockBottom;
         HSSUnit _layoutLockBottomPosition;
         std::string _debugName;
+
+        void _initialize();
     };
 }
 

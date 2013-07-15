@@ -66,6 +66,8 @@ HSSRadialGradient::HSSRadialGradient(AXRController * controller)
 : HSSGradient(HSSGradientTypeRadial, controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSRadialGradient: creating radial gradient object");
+    this->_initialize();
+
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("startColor");
     shorthandProperties.push_back("endColor");
@@ -79,6 +81,11 @@ HSSRadialGradient::HSSRadialGradient(AXRController * controller)
 
 HSSRadialGradient::HSSRadialGradient(const HSSRadialGradient & orig)
 : HSSGradient(orig)
+{
+    this->_initialize();
+}
+
+void HSSRadialGradient::_initialize()
 {
     this->setShorthandProperties(shorthandProperties);
 }

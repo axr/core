@@ -84,10 +84,10 @@ using namespace AXR;
 HSSDisplayObject::HSSDisplayObject(HSSObjectType type, AXRController * controller)
 : HSSObject(type, controller)
 {
-    this->initialize();
+    this->_initialize();
 }
 
-void HSSDisplayObject::initialize()
+void HSSDisplayObject::_initialize()
 {
     this->_isDirty = true;
     this->_needsRereadRules = true;
@@ -130,7 +130,7 @@ void HSSDisplayObject::initialize()
 HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
 : HSSObject(orig)
 {
-    this->initialize();
+    this->_initialize();
     this->attributes = orig.attributes;
     this->elementName = orig.elementName;
     this->contentText = orig.contentText;

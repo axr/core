@@ -97,6 +97,7 @@ namespace AXR
         virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);
 
     private:
+        void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

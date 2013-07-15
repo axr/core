@@ -76,13 +76,19 @@ AXRString HSSGradient::gradientTypeStringRepresentation(HSSGradientType gradient
 HSSGradient::HSSGradient(HSSGradientType type, AXRController * controller)
 : HSSObject(HSSObjectTypeGradient, controller)
 {
+    this->_initialize();
     this->gradientType = type;
 }
 
 HSSGradient::HSSGradient(const HSSGradient & orig)
 : HSSObject(orig)
 {
+    this->_initialize();
     this->gradientType = orig.gradientType;
+}
+
+void HSSGradient::_initialize()
+{
 }
 
 HSSGradient::~HSSGradient()

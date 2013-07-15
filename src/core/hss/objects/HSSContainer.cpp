@@ -87,16 +87,7 @@ HSSContainer::HSSContainer(AXRController * controller)
 : HSSDisplayObject(HSSObjectTypeContainer, controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSContainer: creating container");
-    this->initialize();
-}
-
-void HSSContainer::initialize()
-{
-
-    this->distributeX = distributeXLinear
-            = this->distributeY = distributeYLinear
-            = false;
-
+    this->_initialize();
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("isA");
     shorthandProperties.push_back("width");
@@ -109,7 +100,14 @@ void HSSContainer::initialize()
     shorthandProperties.push_back("textAlign");
 
     this->setShorthandProperties(shorthandProperties);
+}
 
+void HSSContainer::_initialize()
+{
+    this->distributeX = false;
+    this->distributeXLinear = false;
+    this->distributeY = false;
+    this->distributeYLinear = false;
 
     this->children = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection());
     this->allChildren = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection());
@@ -118,7 +116,7 @@ void HSSContainer::initialize()
 HSSContainer::HSSContainer(const HSSContainer & orig)
 : HSSDisplayObject(orig)
 {
-    this->initialize();
+    this->_initialize();
 }
 
 QSharedPointer<HSSContainer> HSSContainer::clone() const

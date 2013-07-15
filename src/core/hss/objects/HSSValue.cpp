@@ -60,11 +60,19 @@ HSSValue::HSSValue(AXRController * controller)
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
+
+    this->_initialize();
 }
 
 HSSValue::HSSValue(const HSSValue & orig)
 : HSSObject(orig)
 {
+    this->_initialize();
+}
+
+void HSSValue::_initialize()
+{
+
 }
 
 QSharedPointer<HSSValue> HSSValue::clone() const

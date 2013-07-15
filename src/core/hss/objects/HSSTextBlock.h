@@ -82,6 +82,7 @@ namespace AXR
         virtual void accept(HSSAbstractVisitor* visitor, bool);
 
     private:
+        void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

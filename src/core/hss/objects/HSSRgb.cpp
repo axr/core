@@ -73,6 +73,8 @@ QSharedPointer<HSSRgb> HSSRgb::whiteColor(AXRController * controller)
 HSSRgb::HSSRgb(const HSSRgb & orig)
 : HSSObject(orig)
 {
+    this->_initialize();
+
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("isA");
     shorthandProperties.push_back("alpha");
@@ -81,6 +83,16 @@ HSSRgb::HSSRgb(const HSSRgb & orig)
     shorthandProperties.push_back("blue");
 
     this->setShorthandProperties(shorthandProperties);
+}
+
+HSSRgb::HSSRgb(const HSSRgb & orig)
+: HSSObject(orig)
+{
+    this->_initialize();
+}
+
+void HSSRgb::_initialize()
+{
 }
 
 QSharedPointer<HSSRgb> HSSRgb::clone() const

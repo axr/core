@@ -81,6 +81,7 @@ namespace AXR
         virtual bool isKeyword(AXRString value, AXRString property);
 
     private:
+        void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

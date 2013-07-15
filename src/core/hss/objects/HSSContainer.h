@@ -93,11 +93,6 @@ namespace AXR
         HSSContainer(AXRController * controller);
 
         /**
-         *  Initializes all ivars to default values.
-         */
-        void initialize();
-
-        /**
          *  Copy constructor for HSSContainer objects. It will initialize the new object. See
          *  HSSDisplayObject for the copy constructor of the base class. Do not call directly,
          *  use clone() instead.
@@ -234,6 +229,7 @@ namespace AXR
         QSharedPointer<HSSContainer> shared_from_this();
 
     private:
+        void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
 
         static bool alignXSmaller(const QSharedPointer<HSSDisplayObject>& a, const QSharedPointer<HSSDisplayObject>& b)

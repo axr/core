@@ -107,6 +107,7 @@ namespace AXR
         QColor toQColorWithAlpha(int alpha) const;
 
     private:
+        void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

@@ -65,14 +65,22 @@ HSSPolygon::HSSPolygon(AXRController * controller)
 : HSSShape(HSSShapeTypePolygon, controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSPolygon: creating polygon object");
+    this->_initialize();
+
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("sides");
     shorthandProperties.push_back("angle");
     this->setShorthandProperties(shorthandProperties);
+
 }
 
 HSSPolygon::HSSPolygon(const HSSPolygon & orig)
 : HSSShape(orig)
+{
+    this->_initialize();
+}
+
+void HSSPolygon::_initialize()
 {
 }
 

@@ -66,6 +66,8 @@ HSSLinearGradient::HSSLinearGradient(AXRController * controller)
 : HSSGradient(HSSGradientTypeLinear, controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSLinearGradient: creating linear gradient object");
+    this->_initialize();
+
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("startColor");
     shorthandProperties.push_back("endColor");
@@ -77,6 +79,10 @@ HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
 : HSSGradient(orig)
 {
     this->_initialize();
+}
+
+void HSSLinearGradient::_initialize()
+{
 }
 
 QSharedPointer<HSSLinearGradient> HSSLinearGradient::clone() const

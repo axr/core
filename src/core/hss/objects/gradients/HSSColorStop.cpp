@@ -63,6 +63,7 @@ HSSColorStop::HSSColorStop(AXRController * controller)
 : HSSObject(HSSObjectTypeColorStop, controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSColorStop: creating color stop object");
+    this->_initialize();
 
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("color");
@@ -73,6 +74,11 @@ HSSColorStop::HSSColorStop(AXRController * controller)
 
 HSSColorStop::HSSColorStop(const HSSColorStop & orig)
 : HSSObject(orig)
+{
+    this->_initialize();
+}
+
+void HSSColorStop::_initialize()
 {
 }
 

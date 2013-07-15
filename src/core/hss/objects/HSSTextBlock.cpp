@@ -169,6 +169,12 @@ HSSTextBlock::HSSTextBlock(AXRController * controller)
 HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
 : HSSDisplayObject(orig)
 {
+
+}
+
+void HSSTextBlock::_initialize()
+{
+
 }
 
 QSharedPointer<HSSTextBlock> HSSTextBlock::clone() const

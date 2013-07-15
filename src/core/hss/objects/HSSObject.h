@@ -280,6 +280,7 @@ namespace AXR
         AXRController * axrController;
 
     private:
+        void _initialize();
         HSSObjectType type;
         bool _isNamed;
 

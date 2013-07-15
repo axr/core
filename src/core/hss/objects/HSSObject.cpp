@@ -240,6 +240,7 @@ QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRContro
 
 HSSObject::HSSObject(HSSObjectType type, AXRController * controller)
 {
+    this->_initialize();
     this->_isNamed = false;
     this->name = "";
     this->type = type;
@@ -249,6 +250,7 @@ HSSObject::HSSObject(HSSObjectType type, AXRController * controller)
 
 HSSObject::HSSObject(const HSSObject & orig)
 {
+    this->_initialize();
     this->name = orig.name;
     this->type = orig.type;
     this->_isNamed = orig._isNamed;
@@ -262,6 +264,10 @@ HSSObject::HSSObject(const HSSObject & orig)
     {
         this->shorthandProperties.push_back(value);
     }
+}
+
+void HSSObject::_initialize()
+{
 }
 
 QSharedPointer<HSSObject> HSSObject::clone() const
