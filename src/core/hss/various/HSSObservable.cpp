@@ -329,7 +329,7 @@ void HSSObservable::removeObserver(const AXRString target, const AXRString sourc
         for (observed::iterator it = theObserved.begin(); it!= theObserved.end(); ++it) {
             const QSharedPointer<HSSObservableMapping> & mapping = *it;
             if(mapping->observer == object && mapping->source == source){
-                theObserved.erase(it++);
+                theObserved.erase(it);
                 axr_log(LoggerChannelObserving, AXRString("stop observing ").append(target).append(" from ").append(source));
                 return;
             }
