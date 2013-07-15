@@ -91,11 +91,12 @@ namespace AXR
         virtual bool isKeyword(AXRString value, AXRString property);
 
         //see HSSShape.h for documentation of these
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments);
+        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments);
 
         void createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, HSSUnit offset);
 
-        virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);
+        virtual void drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);
+
         void stackCorners(QSharedPointer<HSSParserNode> parserNode);
         void stackTop(QSharedPointer<HSSParserNode> parserNode);
         void stackRight(QSharedPointer<HSSParserNode> parserNode);

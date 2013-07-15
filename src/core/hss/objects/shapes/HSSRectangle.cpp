@@ -100,11 +100,11 @@ bool HSSRectangle::isKeyword(AXRString value, AXRString property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments)
+void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments)
 {
     if(segments.size() > 0){
-        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const QSharedPointer<HSSParserNode> & segment = *it;
+        Q_FOREACH(const QSharedPointer<HSSParserNode> & segment, segments)
+        {
             switch (segment->getType()) {
                 case HSSParserNodeTypeKeywordConstant:
                 {
@@ -142,12 +142,12 @@ void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit 
     }
 }
 
-void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
+void HSSRectangle::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     //sort borders in three groups
-    std::vector<QSharedPointer<HSSBorder> > center, inside, outside;
-    for (HSSBorder::it it=borders.begin(); it!=borders.end(); ++it) {
-        const QSharedPointer<HSSBorder> & theBorder = *it;
+    QList<QSharedPointer<HSSBorder> > center, inside, outside;
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, borders)
+    {
         HSSBorderPosition thePos = theBorder->getPosition();
         if (thePos == HSSBorderPositionCenter)
         {
@@ -164,8 +164,8 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
     }
 
     HSSUnit topThickness = 0., rightThickness = 0., bottomThickness = 0., leftThickness = 0.;
-    for (HSSBorder::it it=center.begin(); it!=center.end(); ++it) {
-        const QSharedPointer<HSSBorder> & theBorder = *it;
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, center)
+    {
         const QSharedPointer<HSSObject> & segmentsObj = theBorder->getSegments();
         bool hasAll = false;
         for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
@@ -232,8 +232,8 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
     //painter.strokePath(outerPath, QPen(Qt::red, 1, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
 
     HSSUnit topCumulative = 0., rightCumulative = 0., bottomCumulative = 0., leftCumulative = 0.;
-    for (HSSBorder::it it=center.begin(); it!=center.end(); ++it) {
-        const QSharedPointer<HSSBorder> & theBorder = *it;
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, center)
+    {
         HSSUnit theSize = theBorder->getSize();
 
         QPainterPath path;
@@ -324,8 +324,8 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    for (std::vector<QSharedPointer<HSSBorder> >::reverse_iterator it=inside.rbegin(); it!=inside.rend(); ++it) {
-        const QSharedPointer<HSSBorder> & theBorder = *it;
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, inside)
+    {
         HSSUnit theSize = theBorder->getSize();
 
         QPainterPath path;
@@ -407,8 +407,8 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    for (std::vector<QSharedPointer<HSSBorder> >::iterator it=outside.begin(); it!=outside.end(); ++it) {
-        const QSharedPointer<HSSBorder> & theBorder = *it;
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, outside)
+    {
         HSSUnit theSize = theBorder->getSize();
 
         QPainterPath path;

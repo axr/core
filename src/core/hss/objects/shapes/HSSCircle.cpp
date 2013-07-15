@@ -96,18 +96,18 @@ bool HSSCircle::isKeyword(AXRString value, AXRString property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSCircle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments)
+void HSSCircle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments)
 {
     path.addEllipse(x, y, width, height);
 }
 
-void HSSCircle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
+void HSSCircle::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     // Calculate the combined thickness of all borders
     HSSUnit combinedThickness = 0;
-    for (HSSBorder::it it = borders.begin(); it != borders.end(); ++it)
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, borders)
     {
-        combinedThickness += (*it)->getSize();
+        combinedThickness += theBorder->getSize();
     }
 
     // Correction if needed
@@ -121,9 +121,8 @@ void HSSCircle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBor
     HSSUnit cumulativeThickness = 0;
 
     // Draw all borders
-    for (HSSBorder::it it = borders.begin(); it != borders.end(); ++it)
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, borders)
     {
-        QSharedPointer<HSSBorder> theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
         HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;

@@ -140,7 +140,7 @@ bool HSSPolygon::isKeyword(AXRString value, AXRString property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments)
+void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments)
 {
     // The center point of the polygon
     const QPointF centerPoint(x + (width / 2.), y + (height / 2.));
@@ -171,13 +171,13 @@ void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit wi
     path.closeSubpath();
 }
 
-void HSSPolygon::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
+void HSSPolygon::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     // Calculate the combined thickness of all borders
     HSSUnit combinedThickness = 0;
-    for (HSSBorder::it it = borders.begin(); it != borders.end(); ++it)
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, borders)
     {
-        combinedThickness += (*it)->getSize();
+        combinedThickness += theBorder->getSize();
     }
 
     // Correction if needed
@@ -191,9 +191,8 @@ void HSSPolygon::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBo
     HSSUnit cumulativeThickness = 0;
 
     // Draw all borders
-    for (HSSBorder::it it = borders.begin(); it != borders.end(); ++it)
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, borders)
     {
-        QSharedPointer<HSSBorder> theBorder = *it;
         HSSUnit theSize = theBorder->getSize();
 
         HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;

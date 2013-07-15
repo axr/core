@@ -157,7 +157,7 @@ void HSSRoundedRect::stackLeft(QSharedPointer<HSSParserNode> parserNode)
     this->setStackValue("leftBottom", parserNode);
 }
 
-void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments)
+void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments)
 {
     this->createRoundedRect(path, x, y, width, height, 0.);
 }
@@ -215,7 +215,7 @@ void HSSRoundedRect::createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y,
     path.closeSubpath();
 }
 
-void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
+void HSSRoundedRect::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     HSSUnit cornerTL = this->getLeftTop();
     HSSUnit cornerBL = this->getLeftBottom();
@@ -223,9 +223,9 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
     HSSUnit cornerTR = this->getRightTop();
 
     //sort borders in three groups
-    std::vector<QSharedPointer<HSSBorder> > center, inside, outside;
-    for (HSSBorder::it it=borders.begin(); it!=borders.end(); ++it) {
-        const QSharedPointer<HSSBorder> & theBorder = *it;
+    QList<QSharedPointer<HSSBorder> > center, inside, outside;
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, borders)
+    {
         HSSBorderPosition thePos = theBorder->getPosition();
         if (thePos == HSSBorderPositionCenter)
         {
@@ -242,8 +242,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
     }
 
     HSSUnit topThickness = 0., rightThickness = 0., bottomThickness = 0., leftThickness = 0.;
-    for (HSSBorder::it it=center.begin(); it!=center.end(); ++it) {
-        const QSharedPointer<HSSBorder> & theBorder = *it;
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, center)
+    {
         QSharedPointer<HSSObject> segmentsObj = theBorder->getSegments();
         bool hasAll = false;
         for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
@@ -310,8 +310,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
 //    painter.strokePath(outerPath, QPen(Qt::red, 1, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
 
     HSSUnit topCumulative = 0., rightCumulative = 0., bottomCumulative = 0., leftCumulative = 0.;
-    for (HSSBorder::it it=center.begin(); it!=center.end(); ++it) {
-        const QSharedPointer<HSSBorder> & theBorder = *it;
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, center)
+    {
         HSSUnit theSize = theBorder->getSize();
 
         std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
@@ -431,8 +431,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    for (std::vector<QSharedPointer<HSSBorder> >::reverse_iterator it=inside.rbegin(); it!=inside.rend(); ++it) {
-        const QSharedPointer<HSSBorder> & theBorder = *it;
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, inside)
+    {
         HSSUnit theSize = theBorder->getSize();
 
         std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
@@ -710,8 +710,8 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    for (std::vector<QSharedPointer<HSSBorder> >::iterator it=outside.begin(); it!=outside.end(); ++it) {
-        const QSharedPointer<HSSBorder> & theBorder = *it;
+    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, outside)
+    {
         HSSUnit theSize = theBorder->getSize();
 
         std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
