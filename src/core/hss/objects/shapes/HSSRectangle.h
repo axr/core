@@ -87,6 +87,140 @@ namespace AXR
         virtual void drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);
 
     private:
+        inline void _increaseThickness(const QSharedPointer<HSSObject> & parserNode, const HSSUnit size, HSSUnit & top, HSSUnit & right, HSSUnit & bottom, HSSUnit & left) const;
+        inline void __increaseThickness(const QSharedPointer<HSSParserNode> & segmentsObj, const HSSUnit size, HSSUnit & top, HSSUnit & right, HSSUnit & bottom, HSSUnit & left) const;
+        inline void _hasAll(const QSharedPointer<HSSObject> & segmentsObj, bool & hasAll, bool & hasSegments) const;
+
+        inline void _drawCenteredBorderBySegments(
+            QPainterPath & path,
+            const QSharedPointer<HSSObject> & segmentsObj,
+            HSSUnit & theSize,
+            HSSUnit & width,
+            HSSUnit & height,
+            HSSUnit & offsetX,
+            HSSUnit & offsetY,
+            HSSUnit & topThickness,
+            HSSUnit & topCumulative,
+            HSSUnit & topCorrection,
+            HSSUnit & rightThickness,
+            HSSUnit & rightCumulative,
+            HSSUnit & rightCorrection,
+            HSSUnit & bottomThickness,
+            HSSUnit & bottomCumulative,
+            HSSUnit & bottomCorrection,
+            HSSUnit & leftThickness,
+            HSSUnit & leftCumulative,
+            HSSUnit & leftCorrection
+       ) const;
+
+        inline void __drawCenteredBorderBySegments(
+            QPainterPath & path,
+            const AXRString & segment,
+            HSSUnit & theSize,
+            HSSUnit & width,
+            HSSUnit & height,
+            HSSUnit & offsetX,
+            HSSUnit & offsetY,
+            HSSUnit & topThickness,
+            HSSUnit & topCumulative,
+            HSSUnit & topCorrection,
+            HSSUnit & rightThickness,
+            HSSUnit & rightCumulative,
+            HSSUnit & rightCorrection,
+            HSSUnit & bottomThickness,
+            HSSUnit & bottomCumulative,
+            HSSUnit & bottomCorrection,
+            HSSUnit & leftThickness,
+            HSSUnit & leftCumulative,
+            HSSUnit & leftCorrection
+        ) const;
+        inline void _drawInsideBorderBySegments(
+            QPainterPath & path,
+            const QSharedPointer<HSSObject> & segmentsObj,
+            HSSUnit & theSize,
+            HSSUnit & width,
+            HSSUnit & height,
+            HSSUnit & offsetX,
+            HSSUnit & offsetY,
+            HSSUnit & topThickness,
+            HSSUnit & topCumulative,
+            HSSUnit & topCorrection,
+            HSSUnit & rightThickness,
+            HSSUnit & rightCumulative,
+            HSSUnit & rightCorrection,
+            HSSUnit & bottomThickness,
+            HSSUnit & bottomCumulative,
+            HSSUnit & bottomCorrection,
+            HSSUnit & leftThickness,
+            HSSUnit & leftCumulative,
+            HSSUnit & leftCorrection
+        ) const;
+
+        inline void __drawInsideBorderBySegments(
+            QPainterPath & path,
+            const AXRString & segment,
+            HSSUnit & theSize,
+            HSSUnit & width,
+            HSSUnit & height,
+            HSSUnit & offsetX,
+            HSSUnit & offsetY,
+            HSSUnit & topThickness,
+            HSSUnit & topCumulative,
+            HSSUnit & topCorrection,
+            HSSUnit & rightThickness,
+            HSSUnit & rightCumulative,
+            HSSUnit & rightCorrection,
+            HSSUnit & bottomThickness,
+            HSSUnit & bottomCumulative,
+            HSSUnit & bottomCorrection,
+            HSSUnit & leftThickness,
+            HSSUnit & leftCumulative,
+            HSSUnit & leftCorrection
+        ) const;
+
+        inline void _drawOutsideBorderBySegments(
+            QPainterPath & path,
+            const QSharedPointer<HSSObject> & segmentsObj,
+            HSSUnit & theSize,
+            HSSUnit & width,
+            HSSUnit & height,
+            HSSUnit & offsetX,
+            HSSUnit & offsetY,
+            HSSUnit & topThickness,
+            HSSUnit & topCumulative,
+            HSSUnit & topCorrection,
+            HSSUnit & rightThickness,
+            HSSUnit & rightCumulative,
+            HSSUnit & rightCorrection,
+            HSSUnit & bottomThickness,
+            HSSUnit & bottomCumulative,
+            HSSUnit & bottomCorrection,
+            HSSUnit & leftThickness,
+            HSSUnit & leftCumulative,
+            HSSUnit & leftCorrection
+        ) const;
+
+        inline void __drawOutsideBorderBySegments(
+            QPainterPath & path,
+            const AXRString & segment,
+            HSSUnit & theSize,
+            HSSUnit & width,
+            HSSUnit & height,
+            HSSUnit & offsetX,
+            HSSUnit & offsetY,
+            HSSUnit & topThickness,
+            HSSUnit & topCumulative,
+            HSSUnit & topCorrection,
+            HSSUnit & rightThickness,
+            HSSUnit & rightCumulative,
+            HSSUnit & rightCorrection,
+            HSSUnit & bottomThickness,
+            HSSUnit & bottomCumulative,
+            HSSUnit & bottomCorrection,
+            HSSUnit & leftThickness,
+            HSSUnit & leftCumulative,
+            HSSUnit & leftCorrection
+        ) const;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

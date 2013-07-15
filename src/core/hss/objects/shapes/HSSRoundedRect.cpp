@@ -246,19 +246,9 @@ void HSSRoundedRect::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBord
     {
         QSharedPointer<HSSObject> segmentsObj = theBorder->getSegments();
         bool hasAll = false;
-        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const QSharedPointer<HSSParserNode> & segment = *it;
-            if(segment->isA(HSSParserNodeTypeKeywordConstant))
-            {
-                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
-                if (theKw->getValue() == "all")
-                {
-                    hasAll = true;
-                    break;
-                }
-            }
-        }
-        if(segments.size() == 0 || hasAll){
+        bool hasSegments = false;
+        this->_hasAll(segmentsObj, hasAll, hasSegments);
+        if(!hasSegments || hasAll){
             topThickness += theBorder->getSize();
             rightThickness += theBorder->getSize();
             bottomThickness += theBorder->getSize();
@@ -266,27 +256,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBord
         }
         else
         {
-            for (HSSParserNode::const_it it2=segments.begin(); it2!=segments.end(); ++it2) {
-                const QSharedPointer<HSSParserNode> & theSeg = *it2;
-                if (theSeg->isA(HSSParserNodeTypeKeywordConstant)) {
-                    AXRString segment = qSharedPointerCast<HSSKeywordConstant>(theSeg)->getValue();
-                    if(segment == "top"){
-                        topThickness += theBorder->getSize();
-                    }
-                    else if(segment == "right")
-                    {
-                        rightThickness += theBorder->getSize();
-                    }
-                    else if(segment == "bottom")
-                    {
-                        bottomThickness += theBorder->getSize();
-                    }
-                    else if(segment == "left")
-                    {
-                        leftThickness += theBorder->getSize();
-                    }
-                }
-            }
+            this->_increaseThickness(segmentsObj, theBorder->getSize(), topThickness, rightThickness, bottomThickness, leftThickness);
         }
     }
 
@@ -314,77 +284,13 @@ void HSSRoundedRect::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBord
     {
         HSSUnit theSize = theBorder->getSize();
 
-        std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
-
+        QSharedPointer<HSSObject> segmentsObj = theBorder->getSegments();
         bool hasAll = false;
-        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const QSharedPointer<HSSParserNode> & segment = *it;
-            if(segment->isA(HSSParserNodeTypeKeywordConstant))
-            {
-                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
-                if (theKw->getValue() == "all")
-                {
-                    hasAll = true;
-                    break;
-                }
-            }
-        }
-        if(segments.size() > 0 && !hasAll){
-            for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-                QPainterPath path;
-                const QSharedPointer<HSSParserNode> & segment = *it;
-                switch (segment->getType()) {
-                    case HSSParserNodeTypeKeywordConstant:
-                    {
-                        QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
-                        AXRString theValue = theKw->getValue();
-                        if (theValue == "top")
-                        {
-                            HSSUnit leftOffset = (leftThickness / 2) - leftCumulative + leftCorrection;
-                            HSSUnit topOffset = (topThickness / 2) - topCumulative - (theSize / 2) + topCorrection;
-                            HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
-
-                            path.moveTo(offsetX+leftOffset, offsetY+topOffset);
-                            path.lineTo(offsetX+width-rightOffset, offsetY+topOffset);
-                            topCumulative += theSize;
-                        }
-                        else if (theValue == "right")
-                        {
-                            HSSUnit topOffset = (topThickness / 2) - topCumulative + topCorrection;
-                            HSSUnit rightOffset = (rightThickness / 2) - rightCumulative - (theSize / 2) + rightCorrection;
-                            HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
-
-                            path.moveTo(offsetX+width-rightOffset, offsetY+topOffset);
-                            path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
-                            rightCumulative += theSize;
-                        }
-                        else if (theValue == "bottom")
-                        {
-                            HSSUnit leftOffset = (leftThickness / 2) - leftCumulative + leftCorrection;
-                            HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
-                            HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative - (theSize / 2) + bottomCorrection;
-
-                            path.moveTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
-                            path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
-                            bottomCumulative += theSize;
-                        }
-                        else if(theValue == "left")
-                        {
-                            HSSUnit leftOffset = (leftThickness / 2) - leftCumulative - (theSize / 2) + leftCorrection;
-                            HSSUnit topOffset = (topThickness / 2) - topCumulative + topCorrection;
-                            HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
-
-                            path.moveTo(offsetX+leftOffset, offsetY+height-bottomOffset);
-                            path.lineTo(offsetX+leftOffset, offsetY+topOffset);
-                            leftCumulative += theSize;
-                        }
-                        break;
-                    }
-
-                    default:
-                        break;
-                }
-            }
+        bool hasSegments = false;
+        this->_hasAll(segmentsObj, hasAll, hasSegments);
+        if(hasSegments && !hasAll){
+            QPainterPath path;
+            this->_drawCenteredBorderBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
         } else {
             ///@todo uncomment this once there are border types
             //if(theBorder->isA(HSSBorderTypeLineBorder){
@@ -434,237 +340,23 @@ void HSSRoundedRect::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBord
     Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, inside)
     {
         HSSUnit theSize = theBorder->getSize();
-
-        std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
-
+        QSharedPointer<HSSObject> segmentsObj = theBorder->getSegments();
         bool hasAll = false;
-        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const QSharedPointer<HSSParserNode> & segment = *it;
-            if(segment->isA(HSSParserNodeTypeKeywordConstant))
-            {
-                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
-                if (theKw->getValue() == "all")
-                {
-                    hasAll = true;
-                    break;
+        bool hasSegments = false;
+        this->_hasAll(segmentsObj, hasAll, hasSegments);
+        if(hasSegments && !hasAll){
+            QPainterPath path;
+            ///@todo uncomment this once there are border types
+            //if(theBorder->isA(HSSBorderTypeLineBorder){
+                QSharedPointer<HSSLineBorder> theLineBorder = qSharedPointerCast<HSSLineBorder>(theBorder);
+                QSharedPointer<HSSObject> theColorObj = theLineBorder->getColor();
+                if(theColorObj && theColorObj->isA(HSSObjectTypeRgb)){
+                    this->_drawInsideBorderBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+
+                    QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb>(theColorObj);
+                    painter.fillPath(path, theColor->toQColor());
                 }
-            }
-        }
-        if(segments.size() > 0 && !hasAll){
-            for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-                QPainterPath path;
-                const QSharedPointer<HSSParserNode> & segment = *it;
-                switch (segment->getType()) {
-                    case HSSParserNodeTypeKeywordConstant:
-                    {
-                        ///@todo uncomment this once there are border types
-                        //if(theBorder->isA(HSSBorderTypeLineBorder){
-                            QSharedPointer<HSSLineBorder> theLineBorder = qSharedPointerCast<HSSLineBorder>(theBorder);
-                            QSharedPointer<HSSObject> theColorObj = theLineBorder->getColor();
-                            if(theColorObj && theColorObj->isA(HSSObjectTypeRgb)){
-                                QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb>(theColorObj);
-                                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
-                                AXRString theValue = theKw->getValue();
-                                if (theValue == "top")
-                                {
-                                    HSSUnit leftOffset = leftCumulative+leftCorrection;
-                                    HSSUnit topOffset = topCumulative+topCorrection;
-                                    HSSUnit rightOffset = rightCumulative+rightCorrection+(this->cornerTR*2);
-
-                                    QRectF curve1(offsetX+leftOffset, offsetY+topOffset, this->cornerTL*2, this->cornerTL*2);
-                                    if (this->cornerTL != 0)
-                                    {
-                                        path.arcMoveTo(curve1, 90);
-                                        path.arcTo(curve1, 90, 90);
-                                    }
-                                    else
-                                    {
-                                        path.moveTo(offsetX+leftOffset, offsetY+topOffset);
-                                        path.arcTo(curve1, 90, 90);
-                                    }
-                                    if(this->cornerTL != 0)
-                                    {
-                                        QRectF curve2(offsetX+leftOffset, offsetY+topOffset+theSize, this->cornerTL*2, (this->cornerTL*2)-theSize);
-                                        path.arcTo(curve2, 180, -90);
-                                    }
-                                    else
-                                    {
-                                        path.lineTo(offsetX+leftOffset, offsetY+topOffset+theSize);
-                                    }
-                                    qreal trsize = (this->cornerTR*2)-theSize;
-                                    if(trsize > 0)
-                                    {
-                                        QRectF curve3(offsetX+width-rightOffset, offsetY+topOffset+theSize, this->cornerTR*2, (this->cornerTR*2)-theSize);
-                                        path.arcTo(curve3, 90, -90);
-                                    }
-                                    else
-                                    {
-                                        path.lineTo(offsetX+width-rightOffset, offsetY+topOffset+theSize);
-                                    }
-                                    if (this->cornerTR != 0) {
-                                        QRectF curve4(offsetX+width-rightOffset, offsetY+topOffset, this->cornerTR*2, this->cornerTR*2);
-                                        path.arcTo(curve4, 0, 90);
-                                    }
-                                    else
-                                    {
-                                        path.lineTo(offsetX+width-rightOffset, offsetY+topOffset);
-                                    }
-                                    path.closeSubpath();
-                                    painter.fillPath(path, theColor->toQColor());
-
-                                    topCumulative += theSize;
-                                }
-                                else if (theValue == "right")
-                                {
-                                    HSSUnit topOffset = topCumulative+topCorrection;
-                                    HSSUnit rightOffset = rightCumulative+rightCorrection;
-                                    HSSUnit bottomOffset = bottomCumulative+bottomCorrection;
-
-                                    if (this->cornerTR != 0)
-                                    {
-                                        QRectF curve1(offsetX+width-rightOffset-(this->cornerTR*2), offsetY+topOffset, this->cornerTR*2, this->cornerTR*2);
-                                        path.arcMoveTo(curve1, 90);
-                                        path.arcTo(curve1, 90, -90);
-                                    }
-                                    else
-                                    {
-                                        path.moveTo(offsetX+width-rightOffset, offsetY+topOffset);
-                                        path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset-this->cornerBR);
-                                    }
-                                    if (this->cornerBR != 0)
-                                    {
-                                        QRectF curve2(offsetX+width-rightOffset-(this->cornerBR*2), offsetY+height-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, (this->cornerBR*2));
-                                        path.arcTo(curve2, 0, -90);
-                                    }
-                                    else
-                                    {
-                                        path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
-                                    }
-                                    qreal brsize = (this->cornerBR*2)-theSize;
-                                    if (brsize > 0)
-                                    {
-                                        QRectF curve3(offsetX+width-(this->cornerBR*2)-rightOffset, offsetY+height-(this->cornerBR*2)-bottomOffset, brsize, this->cornerBR*2);
-                                        path.arcTo(curve3, 270, 90);
-                                    }
-                                    else
-                                    {
-                                        path.lineTo(offsetX+width-rightOffset-theSize, offsetY+height-bottomOffset);
-                                    }
-                                    qreal trsize = (this->cornerTR*2)-theSize;
-                                    if (trsize > 0)
-                                    {
-                                        QRectF curve4(offsetX+width-(this->cornerTR*2)-rightOffset, offsetY+topOffset, trsize, this->cornerTR*2);
-                                        path.arcTo(curve4, 0, 90);
-                                    }
-                                    else
-                                    {
-                                        path.lineTo(offsetX+width-rightOffset-theSize, offsetY+topOffset);
-                                    }
-                                    path.closeSubpath();
-                                    painter.fillPath(path, theColor->toQColor());
-
-                                    rightCumulative += theSize;
-                                }
-                                else if (theValue == "bottom")
-                                {
-                                    HSSUnit rightOffset = rightCumulative+rightCorrection;
-                                    HSSUnit bottomOffset = bottomCumulative+bottomCorrection;
-                                    HSSUnit leftOffset = leftCumulative+leftCorrection;
-
-                                    if(this->cornerBL != 0)
-                                    {
-                                        QRectF curve1(offsetX+leftOffset, offsetY+height-(this->cornerBL*2)-bottomOffset, this->cornerBL*2, this->cornerBL*2);
-                                        path.arcMoveTo(curve1, 180);
-                                        path.arcTo(curve1, 180, 90);
-                                    }
-                                    else
-                                    {
-                                        path.moveTo(offsetX+leftOffset, offsetY+height-bottomOffset-theSize);
-                                        path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
-                                    }
-                                    if (this->cornerBR != 0)
-                                    {
-                                        QRectF curve2(offsetX+width-(this->cornerBR*2)-rightOffset, offsetY+height-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, this->cornerBR*2);
-                                        path.arcTo(curve2, 270, 90);
-                                    }
-                                    else
-                                    {
-                                        path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
-                                    }
-                                    qreal brsize = (this->cornerBR*2)-theSize;
-                                    if (brsize > 0)
-                                    {
-                                        QRectF curve3(offsetX+width-(this->cornerBR*2)-rightOffset, offsetY+height-(this->cornerBR*2)-bottomOffset, this->cornerBR*2, brsize);
-                                        path.arcTo(curve3, 0, -90);
-                                    }
-                                    else
-                                    {
-                                        path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset-theSize);
-                                    }
-                                    qreal blsize = (this->cornerBL*2)-theSize;
-                                    if (blsize > 0)
-                                    {
-                                        QRectF curve4(offsetX+leftOffset, offsetY+height-(this->cornerBL*2)-bottomOffset, cornerBL*2, blsize);
-                                        path.arcTo(curve4, 270, -90);
-                                    }
-                                    else
-                                    {
-                                        path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset-theSize);
-                                    }
-                                    path.closeSubpath();
-                                    painter.fillPath(path, theColor->toQColor());
-
-                                    bottomCumulative += theSize;
-                                }
-                                else if(theValue == "left")
-                                {
-                                    HSSUnit bottomOffset = bottomCumulative+bottomCorrection;
-                                    HSSUnit leftOffset = leftCumulative+leftCorrection;
-                                    HSSUnit topOffset = topCumulative+topCorrection;
-
-                                    QRectF curve1(offsetX+leftOffset, offsetY+topOffset, this->cornerTL*2, this->cornerTL*2);
-                                    if(this->cornerTL != 0){
-                                        path.arcMoveTo(curve1, 90);
-                                        path.arcTo(curve1, 90, 90);
-                                    } else {
-                                        path.moveTo(offsetX+leftOffset, offsetY+topOffset);
-                                        path.arcTo(curve1, 90, 90);
-                                    }
-                                    if(this->cornerBL != 0){
-                                        QRectF curve2(offsetX+leftOffset, offsetY+height-(this->cornerBL*2)-bottomOffset, this->cornerBL*2, this->cornerBL*2);
-                                        path.arcTo(curve2, 180, 90);
-                                    } else {
-                                        path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
-                                    }
-
-                                    if((this->cornerBL*2)-theSize > 0){
-                                        QRectF curve3(offsetX+leftOffset+theSize, offsetY+height-(this->cornerBL*2)-bottomOffset, (this->cornerBL*2)-theSize, (this->cornerBL*2));
-                                        path.arcTo(curve3, 270, -90);
-                                    } else {
-                                        path.lineTo(offsetX+leftOffset+theSize, offsetY+height-bottomOffset);
-                                    }
-
-                                    if(this->cornerTL != 0){
-                                        QRectF curve4(offsetX+leftOffset+theSize, offsetY+topOffset, (this->cornerTL*2)-theSize, this->cornerTL*2);
-                                        path.arcTo(curve4, 180, -90);
-                                    } else {
-                                        path.lineTo(offsetX+leftOffset+theSize, offsetY+topOffset);
-                                    }
-
-                                    path.closeSubpath();
-                                    painter.fillPath(path, theColor->toQColor());
-
-                                    leftCumulative += theSize;
-                                }
-                            }
-                        //}
-                        break;
-                    }
-
-                    default:
-                        break;
-                }
-            }
+            //}
         } else {
             ///@todo uncomment this once there are border types
             //if(theBorder->isA(HSSBorderTypeLineBorder){
@@ -713,67 +405,13 @@ void HSSRoundedRect::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBord
     Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, outside)
     {
         HSSUnit theSize = theBorder->getSize();
-
-        std::vector<QSharedPointer<HSSParserNode> > segments = theBorder->getSegments();
-
+        QSharedPointer<HSSObject> segmentsObj = theBorder->getSegments();
         bool hasAll = false;
-        for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-            const QSharedPointer<HSSParserNode> & segment = *it;
-            if(segment->isA(HSSParserNodeTypeKeywordConstant))
-            {
-                QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
-                if (theKw->getValue() == "all")
-                {
-                    hasAll = true;
-                    break;
-                }
-            }
-        }
-        if(segments.size() > 0 && !hasAll){
-            for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
-                QPainterPath path;
-                const QSharedPointer<HSSParserNode> & segment = *it;
-                switch (segment->getType()) {
-                    case HSSParserNodeTypeKeywordConstant:
-                    {
-                        HSSUnit leftOffset = (leftThickness / 2) + leftCumulative + leftCorrection;
-                        HSSUnit topOffset = (topThickness / 2) + topCumulative + topCorrection;
-                        HSSUnit rightOffset = (rightThickness / 2) + rightCumulative + rightCorrection;
-                        HSSUnit bottomOffset = (bottomThickness / 2) + bottomCumulative + bottomCorrection;
-
-                        QSharedPointer<HSSKeywordConstant> theKw = qSharedPointerCast<HSSKeywordConstant>(segment);
-                        AXRString theValue = theKw->getValue();
-                        if (theValue == "top")
-                        {
-                            path.moveTo(offsetX-leftOffset, offsetY-(topOffset+(theSize/2)));
-                            path.lineTo(offsetX+width+rightOffset, offsetY-(topOffset+(theSize/2)));
-                            topCumulative += theSize;
-                        }
-                        else if (theValue == "right")
-                        {
-                            path.moveTo(offsetX+width+(rightOffset+(theSize/2)), offsetY-topOffset);
-                            path.lineTo(offsetX+width+(rightOffset+(theSize/2)), offsetY+height+bottomOffset);
-                            rightCumulative += theSize;
-                        }
-                        else if (theValue == "bottom")
-                        {
-                            path.moveTo(offsetX+width+rightOffset, offsetY+height+(bottomOffset+(theSize/2)));
-                            path.lineTo(offsetX-leftOffset, offsetY+height+(bottomOffset+(theSize/2)));
-                            bottomCumulative += theSize;
-                        }
-                        else if(theValue == "left")
-                        {
-                            path.moveTo(offsetX-(leftOffset+(theSize/2)), offsetY+height+bottomOffset);
-                            path.lineTo(offsetX-(leftOffset+(theSize/2)), offsetY-topOffset);
-                            leftCumulative += theSize;
-                        }
-                        break;
-                    }
-
-                    default:
-                        break;
-                }
-            }
+        bool hasSegments = false;
+        this->_hasAll(segmentsObj, hasAll, hasSegments);
+        if(hasSegments && !hasAll){
+            QPainterPath path;
+            this->_drawOutsideBorderBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
         } else {
             ///@todo uncomment this once there are border types
             //if(theBorder->isA(HSSBorderTypeLineBorder){
@@ -818,92 +456,560 @@ void HSSRoundedRect::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBord
     }
 }
 
-HSSUnit HSSRoundedRect::_evaluatePropertyValue(
-                                           void(HSSRoundedRect::*callback)(HSSObservableProperty property, void* data),
-                                           QSharedPointer<HSSParserNode> value,
-                                           HSSUnit percentageBase,
-                                           HSSObservableProperty observedProperty,
-                                           HSSObservable * observedObject,
-                                           HSSObservableProperty observedSourceProperty,
-                                           HSSObservable * &observedStore,
-                                           HSSObservableProperty &observedStoreProperty,
-                                           QSharedPointer<HSSSimpleSelection> scope
-                                           )
+void HSSRoundedRect::_increaseThickness(const QSharedPointer<HSSObject> & segmentsObj, const HSSUnit size, HSSUnit & top, HSSUnit & right, HSSUnit & bottom, HSSUnit & left) const
 {
-    HSSUnit ret = 0;
-
-    HSSParserNodeType nodeType = value->getType();
-    switch (nodeType)
+    if (segmentsObj->isA(HSSObjectTypeValue))
     {
-    case HSSParserNodeTypeNumberConstant:
-    {
-        QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant>(value);
-        ret = numberValue->getValue();
-        observedStore = NULL;
-        break;
+        this->__increaseThickness(qSharedPointerCast<HSSValue>(segmentsObj)->getValue(), size, top, right, bottom, left);
     }
-
-    case HSSParserNodeTypePercentageConstant:
+    else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant>(value);
-        ret = percentageValue->getValue(percentageBase);
-        if (callback)
+        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
         {
-            observedObject->observe(observedProperty, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect > (this, callback));
-            observedStore = observedObject;
-            observedStoreProperty = observedProperty;
+            if (theObj->isA(HSSObjectTypeValue))
+            {
+                this->__increaseThickness(qSharedPointerCast<HSSValue>(theObj)->getValue(), size, top, right, bottom, left);
+            }
         }
-        break;
     }
+}
 
-    case HSSParserNodeTypeExpression:
+void HSSRoundedRect::__increaseThickness(const QSharedPointer<HSSParserNode> & parserNode, const HSSUnit size, HSSUnit & top, HSSUnit & right, HSSUnit & bottom, HSSUnit & left) const
+{
+    if (parserNode->isA(HSSParserNodeTypeKeywordConstant)) {
+        AXRString segment = qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue();
+        if(segment == "top"){
+            top += size;
+        }
+        else if(segment == "right")
+        {
+            right += size;
+        }
+        else if(segment == "bottom")
+        {
+            bottom += size;
+        }
+        else if(segment == "left")
+        {
+            left += size;
+        }
+    }
+}
+
+void HSSRoundedRect::_hasAll(const QSharedPointer<HSSObject> & segmentsObj, bool & hasAll, bool & hasSegments) const
+{
+    if (segmentsObj && segmentsObj->isA(HSSObjectTypeValue))
     {
-        QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression>(value);
-        expressionValue->setPercentageBase(percentageBase);
-        expressionValue->setPercentageObserved(observedProperty, observedObject);
-        expressionValue->setScope(scope);
-        expressionValue->setThisObj(this->getThisObj());
-        ret = expressionValue->evaluate();
-        if (callback)
+        hasSegments = true;
+        QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(segmentsObj)->getValue();
+        if (parserNode && parserNode->isA(HSSParserNodeTypeKeywordConstant) && qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue() == "all")
         {
-            expressionValue->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect > (this, callback));
-            observedStore = expressionValue.data();
-            observedStoreProperty = HSSObservablePropertyValue;
+            hasAll = true;
         }
-
-        break;
     }
-
-    case HSSParserNodeTypeKeywordConstant:
-
-        break;
-
-    case HSSParserNodeTypeFunctionCall:
+    else if (segmentsObj && segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction>(value)->clone();
-        fnct->setPercentageBase(percentageBase);
-        fnct->setPercentageObserved(observedProperty, observedObject);
-        fnct->setScope(scope);
-        fnct->setThisObj(this->getThisObj());
-
-        QVariant remoteValue = fnct->evaluate();
-        if (remoteValue.canConvert<HSSUnit>())
+        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
         {
-            ret = remoteValue.value<HSSUnit>();
+            if (theObj->isA(HSSObjectTypeValue))
+            {
+                hasSegments = true;
+                QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+                if (parserNode && parserNode->isA(HSSParserNodeTypeKeywordConstant) && qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue() == "all")
+                {
+                    hasAll = true;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void HSSRoundedRect::_drawCenteredBorderBySegments(
+    QPainterPath & path,
+    const QSharedPointer<HSSObject> & segmentsObj,
+    HSSUnit & theSize,
+    HSSUnit & width,
+    HSSUnit & height,
+    HSSUnit & offsetX,
+    HSSUnit & offsetY,
+    HSSUnit & cornerTL,
+    HSSUnit & cornerBL,
+    HSSUnit & cornerBR,
+    HSSUnit & cornerTR,
+    HSSUnit & topThickness,
+    HSSUnit & topCumulative,
+    HSSUnit & topCorrection,
+    HSSUnit & rightThickness,
+    HSSUnit & rightCumulative,
+    HSSUnit & rightCorrection,
+    HSSUnit & bottomThickness,
+    HSSUnit & bottomCumulative,
+    HSSUnit & bottomCorrection,
+    HSSUnit & leftThickness,
+    HSSUnit & leftCumulative,
+    HSSUnit & leftCorrection
+) const
+{
+    if (segmentsObj->isA(HSSObjectTypeValue))
+    {
+        const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(segmentsObj)->getValue();
+        if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
+        {
+            this->__drawCenteredBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+        }
+    }
+    else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
+    {
+        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        {
+            if (theObj->isA(HSSObjectTypeValue))
+            {
+                const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+                if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
+                {
+                    this->__drawCenteredBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+                }
+            }
+        }
+    }
+}
+
+void HSSRoundedRect::__drawCenteredBorderBySegments(
+    QPainterPath & path,
+    const AXRString & segment,
+    HSSUnit & theSize,
+    HSSUnit & width,
+    HSSUnit & height,
+    HSSUnit & offsetX,
+    HSSUnit & offsetY,
+    HSSUnit & cornerTL,
+    HSSUnit & cornerBL,
+    HSSUnit & cornerBR,
+    HSSUnit & cornerTR,
+    HSSUnit & topThickness,
+    HSSUnit & topCumulative,
+    HSSUnit & topCorrection,
+    HSSUnit & rightThickness,
+    HSSUnit & rightCumulative,
+    HSSUnit & rightCorrection,
+    HSSUnit & bottomThickness,
+    HSSUnit & bottomCumulative,
+    HSSUnit & bottomCorrection,
+    HSSUnit & leftThickness,
+    HSSUnit & leftCumulative,
+    HSSUnit & leftCorrection
+) const
+{
+///@todo this doesn't seem right
+    if (segment == "top")
+    {
+        HSSUnit leftOffset = (leftThickness / 2) - leftCumulative + leftCorrection;
+        HSSUnit topOffset = (topThickness / 2) - topCumulative - (theSize / 2) + topCorrection;
+        HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
+
+        path.moveTo(offsetX+leftOffset, offsetY+topOffset);
+        path.lineTo(offsetX+width-rightOffset, offsetY+topOffset);
+        topCumulative += theSize;
+    }
+    else if (segment == "right")
+    {
+        HSSUnit topOffset = (topThickness / 2) - topCumulative + topCorrection;
+        HSSUnit rightOffset = (rightThickness / 2) - rightCumulative - (theSize / 2) + rightCorrection;
+        HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
+
+        path.moveTo(offsetX+width-rightOffset, offsetY+topOffset);
+        path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+        rightCumulative += theSize;
+    }
+    else if (segment == "bottom")
+    {
+        HSSUnit leftOffset = (leftThickness / 2) - leftCumulative + leftCorrection;
+        HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
+        HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative - (theSize / 2) + bottomCorrection;
+
+        path.moveTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+        path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+        bottomCumulative += theSize;
+    }
+    else if(segment == "left")
+    {
+        HSSUnit leftOffset = (leftThickness / 2) - leftCumulative - (theSize / 2) + leftCorrection;
+        HSSUnit topOffset = (topThickness / 2) - topCumulative + topCorrection;
+        HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
+
+        path.moveTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+        path.lineTo(offsetX+leftOffset, offsetY+topOffset);
+        leftCumulative += theSize;
+    }
+}
+
+void HSSRoundedRect::_drawInsideBorderBySegments(
+    QPainterPath & path,
+    const QSharedPointer<HSSObject> & segmentsObj,
+    HSSUnit & theSize,
+    HSSUnit & width,
+    HSSUnit & height,
+    HSSUnit & offsetX,
+    HSSUnit & offsetY,
+    HSSUnit & cornerTL,
+    HSSUnit & cornerBL,
+    HSSUnit & cornerBR,
+    HSSUnit & cornerTR,
+    HSSUnit & topThickness,
+    HSSUnit & topCumulative,
+    HSSUnit & topCorrection,
+    HSSUnit & rightThickness,
+    HSSUnit & rightCumulative,
+    HSSUnit & rightCorrection,
+    HSSUnit & bottomThickness,
+    HSSUnit & bottomCumulative,
+    HSSUnit & bottomCorrection,
+    HSSUnit & leftThickness,
+    HSSUnit & leftCumulative,
+    HSSUnit & leftCorrection
+) const
+{
+    if (segmentsObj->isA(HSSObjectTypeValue))
+    {
+        const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(segmentsObj)->getValue();
+        if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
+        {
+            this->__drawInsideBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+        }
+    }
+    else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
+    {
+        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        {
+            if (theObj->isA(HSSObjectTypeValue))
+            {
+                const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+                if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
+                {
+                    this->__drawInsideBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, cornerTL, cornerBL, cornerBR, cornerTR, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+                }
+            }
+        }
+    }
+}
+
+void HSSRoundedRect::__drawInsideBorderBySegments(
+    QPainterPath & path,
+    const AXRString & segment,
+    HSSUnit & theSize,
+    HSSUnit & width,
+    HSSUnit & height,
+    HSSUnit & offsetX,
+    HSSUnit & offsetY,
+    HSSUnit & cornerTL,
+    HSSUnit & cornerBL,
+    HSSUnit & cornerBR,
+    HSSUnit & cornerTR,
+    HSSUnit & topThickness,
+    HSSUnit & topCumulative,
+    HSSUnit & topCorrection,
+    HSSUnit & rightThickness,
+    HSSUnit & rightCumulative,
+    HSSUnit & rightCorrection,
+    HSSUnit & bottomThickness,
+    HSSUnit & bottomCumulative,
+    HSSUnit & bottomCorrection,
+    HSSUnit & leftThickness,
+    HSSUnit & leftCumulative,
+    HSSUnit & leftCorrection
+) const
+{
+    if (segment == "top")
+    {
+        HSSUnit leftOffset = leftCumulative+leftCorrection;
+        HSSUnit topOffset = topCumulative+topCorrection;
+        HSSUnit rightOffset = rightCumulative+rightCorrection+(cornerTR*2);
+
+        QRectF curve1(offsetX+leftOffset, offsetY+topOffset, cornerTL*2, cornerTL*2);
+        if (cornerTL != 0)
+        {
+            path.arcMoveTo(curve1, 90);
+            path.arcTo(curve1, 90, 90);
+        }
+        else
+        {
+            path.moveTo(offsetX+leftOffset, offsetY+topOffset);
+            path.arcTo(curve1, 90, 90);
+        }
+        if(cornerTL != 0)
+        {
+            QRectF curve2(offsetX+leftOffset, offsetY+topOffset+theSize, cornerTL*2, (cornerTL*2)-theSize);
+            path.arcTo(curve2, 180, -90);
+        }
+        else
+        {
+            path.lineTo(offsetX+leftOffset, offsetY+topOffset+theSize);
+        }
+        qreal trsize = (cornerTR*2)-theSize;
+        if(trsize > 0)
+        {
+            QRectF curve3(offsetX+width-rightOffset, offsetY+topOffset+theSize, cornerTR*2, (cornerTR*2)-theSize);
+            path.arcTo(curve3, 90, -90);
+        }
+        else
+        {
+            path.lineTo(offsetX+width-rightOffset, offsetY+topOffset+theSize);
+        }
+        if (cornerTR != 0) {
+            QRectF curve4(offsetX+width-rightOffset, offsetY+topOffset, cornerTR*2, cornerTR*2);
+            path.arcTo(curve4, 0, 90);
+        }
+        else
+        {
+            path.lineTo(offsetX+width-rightOffset, offsetY+topOffset);
+        }
+        path.closeSubpath();
+
+        topCumulative += theSize;
+    }
+    else if (segment == "right")
+    {
+        HSSUnit topOffset = topCumulative+topCorrection;
+        HSSUnit rightOffset = rightCumulative+rightCorrection;
+        HSSUnit bottomOffset = bottomCumulative+bottomCorrection;
+
+        if (cornerTR != 0)
+        {
+            QRectF curve1(offsetX+width-rightOffset-(cornerTR*2), offsetY+topOffset, cornerTR*2, cornerTR*2);
+            path.arcMoveTo(curve1, 90);
+            path.arcTo(curve1, 90, -90);
+        }
+        else
+        {
+            path.moveTo(offsetX+width-rightOffset, offsetY+topOffset);
+            path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset-cornerBR);
+        }
+        if (cornerBR != 0)
+        {
+            QRectF curve2(offsetX+width-rightOffset-(cornerBR*2), offsetY+height-(cornerBR*2)-bottomOffset, cornerBR*2, (cornerBR*2));
+            path.arcTo(curve2, 0, -90);
+        }
+        else
+        {
+            path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+        }
+        qreal brsize = (cornerBR*2)-theSize;
+        if (brsize > 0)
+        {
+            QRectF curve3(offsetX+width-(cornerBR*2)-rightOffset, offsetY+height-(cornerBR*2)-bottomOffset, brsize, cornerBR*2);
+            path.arcTo(curve3, 270, 90);
+        }
+        else
+        {
+            path.lineTo(offsetX+width-rightOffset-theSize, offsetY+height-bottomOffset);
+        }
+        qreal trsize = (cornerTR*2)-theSize;
+        if (trsize > 0)
+        {
+            QRectF curve4(offsetX+width-(cornerTR*2)-rightOffset, offsetY+topOffset, trsize, cornerTR*2);
+            path.arcTo(curve4, 0, 90);
+        }
+        else
+        {
+            path.lineTo(offsetX+width-rightOffset-theSize, offsetY+topOffset);
+        }
+        path.closeSubpath();
+        rightCumulative += theSize;
+    }
+    else if (segment == "bottom")
+    {
+        HSSUnit rightOffset = rightCumulative+rightCorrection;
+        HSSUnit bottomOffset = bottomCumulative+bottomCorrection;
+        HSSUnit leftOffset = leftCumulative+leftCorrection;
+
+        if(cornerBL != 0)
+        {
+            QRectF curve1(offsetX+leftOffset, offsetY+height-(cornerBL*2)-bottomOffset, cornerBL*2, cornerBL*2);
+            path.arcMoveTo(curve1, 180);
+            path.arcTo(curve1, 180, 90);
+        }
+        else
+        {
+            path.moveTo(offsetX+leftOffset, offsetY+height-bottomOffset-theSize);
+            path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+        }
+        if (cornerBR != 0)
+        {
+            QRectF curve2(offsetX+width-(cornerBR*2)-rightOffset, offsetY+height-(cornerBR*2)-bottomOffset, cornerBR*2, cornerBR*2);
+            path.arcTo(curve2, 270, 90);
+        }
+        else
+        {
+            path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+        }
+        qreal brsize = (cornerBR*2)-theSize;
+        if (brsize > 0)
+        {
+            QRectF curve3(offsetX+width-(cornerBR*2)-rightOffset, offsetY+height-(cornerBR*2)-bottomOffset, cornerBR*2, brsize);
+            path.arcTo(curve3, 0, -90);
+        }
+        else
+        {
+            path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset-theSize);
+        }
+        qreal blsize = (cornerBL*2)-theSize;
+        if (blsize > 0)
+        {
+            QRectF curve4(offsetX+leftOffset, offsetY+height-(cornerBL*2)-bottomOffset, cornerBL*2, blsize);
+            path.arcTo(curve4, 270, -90);
+        }
+        else
+        {
+            path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset-theSize);
+        }
+        path.closeSubpath();
+        bottomCumulative += theSize;
+    }
+    else if(segment == "left")
+    {
+        HSSUnit bottomOffset = bottomCumulative+bottomCorrection;
+        HSSUnit leftOffset = leftCumulative+leftCorrection;
+        HSSUnit topOffset = topCumulative+topCorrection;
+
+        QRectF curve1(offsetX+leftOffset, offsetY+topOffset, cornerTL*2, cornerTL*2);
+        if(cornerTL != 0){
+            path.arcMoveTo(curve1, 90);
+            path.arcTo(curve1, 90, 90);
+        } else {
+            path.moveTo(offsetX+leftOffset, offsetY+topOffset);
+            path.arcTo(curve1, 90, 90);
+        }
+        if(cornerBL != 0){
+            QRectF curve2(offsetX+leftOffset, offsetY+height-(cornerBL*2)-bottomOffset, cornerBL*2, cornerBL*2);
+            path.arcTo(curve2, 180, 90);
+        } else {
+            path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
         }
 
-        if (callback)
-        {
-            fnct->observe(HSSObservablePropertyValue, observedSourceProperty, this, new HSSValueChangedCallback<HSSRoundedRect > (this, callback));
-            observedStore = fnct.data();
-            observedStoreProperty = HSSObservablePropertyValue;
+        if((cornerBL*2)-theSize > 0){
+            QRectF curve3(offsetX+leftOffset+theSize, offsetY+height-(cornerBL*2)-bottomOffset, (cornerBL*2)-theSize, (cornerBL*2));
+            path.arcTo(curve3, 270, -90);
+        } else {
+            path.lineTo(offsetX+leftOffset+theSize, offsetY+height-bottomOffset);
         }
-        break;
-    }
 
-    default:
-        break;
-    }
+        if(cornerTL != 0){
+            QRectF curve4(offsetX+leftOffset+theSize, offsetY+topOffset, (cornerTL*2)-theSize, cornerTL*2);
+            path.arcTo(curve4, 180, -90);
+        } else {
+            path.lineTo(offsetX+leftOffset+theSize, offsetY+topOffset);
+        }
 
-    return ret;
+        path.closeSubpath();
+        leftCumulative += theSize;
+    }
+}
+
+void HSSRoundedRect::_drawOutsideBorderBySegments(
+    QPainterPath & path,
+    const QSharedPointer<HSSObject> & segmentsObj,
+    HSSUnit & theSize,
+    HSSUnit & width,
+    HSSUnit & height,
+    HSSUnit & offsetX,
+    HSSUnit & offsetY,
+    HSSUnit & cornerTL,
+    HSSUnit & cornerBL,
+    HSSUnit & cornerBR,
+    HSSUnit & cornerTR,
+    HSSUnit & topThickness,
+    HSSUnit & topCumulative,
+    HSSUnit & topCorrection,
+    HSSUnit & rightThickness,
+    HSSUnit & rightCumulative,
+    HSSUnit & rightCorrection,
+    HSSUnit & bottomThickness,
+    HSSUnit & bottomCumulative,
+    HSSUnit & bottomCorrection,
+    HSSUnit & leftThickness,
+    HSSUnit & leftCumulative,
+    HSSUnit & leftCorrection
+) const
+{
+    if (segmentsObj->isA(HSSObjectTypeValue))
+    {
+        const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(segmentsObj)->getValue();
+        if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
+        {
+            this->__drawOutsideBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+        }
+    }
+    else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
+    {
+        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        {
+            if (theObj->isA(HSSObjectTypeValue))
+            {
+                const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+                if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
+                {
+                    this->__drawOutsideBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+                }
+            }
+        }
+    }
+}
+
+void HSSRoundedRect::__drawOutsideBorderBySegments(
+    QPainterPath & path,
+    const AXRString & segment,
+    HSSUnit & theSize,
+    HSSUnit & width,
+    HSSUnit & height,
+    HSSUnit & offsetX,
+    HSSUnit & offsetY,
+    HSSUnit & cornerTL,
+    HSSUnit & cornerBL,
+    HSSUnit & cornerBR,
+    HSSUnit & cornerTR,
+    HSSUnit & topThickness,
+    HSSUnit & topCumulative,
+    HSSUnit & topCorrection,
+    HSSUnit & rightThickness,
+    HSSUnit & rightCumulative,
+    HSSUnit & rightCorrection,
+    HSSUnit & bottomThickness,
+    HSSUnit & bottomCumulative,
+    HSSUnit & bottomCorrection,
+    HSSUnit & leftThickness,
+    HSSUnit & leftCumulative,
+    HSSUnit & leftCorrection
+) const
+{
+///@todo this doesn't seem right
+    HSSUnit leftOffset = (leftThickness / 2) + leftCumulative + leftCorrection;
+    HSSUnit topOffset = (topThickness / 2) + topCumulative + topCorrection;
+    HSSUnit rightOffset = (rightThickness / 2) + rightCumulative + rightCorrection;
+    HSSUnit bottomOffset = (bottomThickness / 2) + bottomCumulative + bottomCorrection;
+
+    if (segment == "top")
+    {
+        path.moveTo(offsetX-leftOffset, offsetY-(topOffset+(theSize/2)));
+        path.lineTo(offsetX+width+rightOffset, offsetY-(topOffset+(theSize/2)));
+        topCumulative += theSize;
+    }
+    else if (segment == "right")
+    {
+        path.moveTo(offsetX+width+(rightOffset+(theSize/2)), offsetY-topOffset);
+        path.lineTo(offsetX+width+(rightOffset+(theSize/2)), offsetY+height+bottomOffset);
+        rightCumulative += theSize;
+    }
+    else if (segment == "bottom")
+    {
+        path.moveTo(offsetX+width+rightOffset, offsetY+height+(bottomOffset+(theSize/2)));
+        path.lineTo(offsetX-leftOffset, offsetY+height+(bottomOffset+(theSize/2)));
+        bottomCumulative += theSize;
+    }
+    else if(segment == "left")
+    {
+        path.moveTo(offsetX-(leftOffset+(theSize/2)), offsetY+height+bottomOffset);
+        path.lineTo(offsetX-(leftOffset+(theSize/2)), offsetY-topOffset);
+        leftCumulative += theSize;
+    }
 }
