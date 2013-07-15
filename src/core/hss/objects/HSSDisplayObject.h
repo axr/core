@@ -50,7 +50,6 @@
 
 namespace AXR
 {
-    class HSSAbstractVisitor;
     class HSSBorder;
     class HSSContainer;
     class HSSFlag;
