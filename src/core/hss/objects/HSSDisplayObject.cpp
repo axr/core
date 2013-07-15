@@ -115,7 +115,6 @@ void HSSDisplayObject::_initialize()
     this->_hasOwnHeight = false;
 
     this->elementName = AXRString();
-    this->contentText = AXRString();
 
     this->_isHover = false;
     this->_isPress = false;
@@ -141,7 +140,6 @@ HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
     this->_initialize();
     this->attributes = orig.attributes;
     this->elementName = orig.elementName;
-    this->contentText = orig.contentText;
     this->rules = orig.rules; //shallow copy
     this->_flagsStatus = orig._flagsStatus;
 
@@ -388,22 +386,6 @@ void HSSDisplayObject::attributesAdd(AXRString name, AXRString value)
 void HSSDisplayObject::attributesRemove(AXRString name)
 {
     this->attributes.erase(name);
-}
-
-AXRString HSSDisplayObject::getContentText()
-{
-    return this->contentText;
-}
-
-void HSSDisplayObject::setContentText(const AXRString &text)
-{
-    this->contentText = text;
-    this->registerProperty(HSSObservablePropertyContent, QVariant::fromValue(text));
-}
-
-void HSSDisplayObject::appendContentText(const AXRString &text)
-{
-    this->contentText.append(text);
 }
 
 AXRString HSSDisplayObject::getElementName()

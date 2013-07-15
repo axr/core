@@ -407,13 +407,6 @@ void HSSContainer::appendContentText(const AXRString &contentText)
     }
 }
 
-AXRString HSSContainer::getContentText()
-{
-    axr_log(LoggerChannelObsolete0, "whateva");
-    return "bla";
-}
-
-
 void HSSContainer::accept(HSSAbstractVisitor* visitor, bool traverse)
 {
     visitor->visit(*this);

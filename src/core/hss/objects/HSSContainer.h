@@ -158,12 +158,6 @@ namespace AXR
         virtual void appendContentText(const AXRString &text);
 
         /**
-         *  @return The content text of the element (potentially made up by various text blocks).
-         *  @warning Currently unimplemented.
-         */
-        virtual AXRString getContentText();
-
-        /**
          *  Accepts a visitor to traverse and process the HSSObject tree.
          */
         virtual void accept(HSSAbstractVisitor* visitor, bool traverse);

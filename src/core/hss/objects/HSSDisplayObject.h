@@ -158,24 +158,6 @@ namespace AXR
         void attributesRemove(AXRString name);
 
         /**
-         *  Getter for the content text.
-         *  @return A string containing the content text.
-         */
-        virtual AXRString getContentText();
-
-        /**
-         *  Setter for the content text.
-         *  @param text     A string containing the new value for content text.
-         */
-        virtual void setContentText(const AXRString &text);
-
-        /**
-         *  Append a piece of text to the content text.
-         *  @param text     A string containing the value to be appended to the content text.
-         */
-        virtual void appendContentText(const AXRString &text);
-
-        /**
          *  Add a rule to the list of rules associated with this display object.
          *  @param newRule      A shared pointer to the rule.
          *  @param defaultState The default state in which the rule will be in (activated or not, etc).
@@ -342,7 +324,6 @@ namespace AXR
     protected:
         pp parent;
         AXRString elementName;
-        AXRString contentText;
         std::vector<QSharedPointer<HSSRuleStatus> > rules;
 
         //if the rules have changed
