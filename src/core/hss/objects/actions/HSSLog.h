@@ -80,31 +80,9 @@ namespace AXR
 
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
-        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
         virtual void fire();
 
-        /**
-         *  Getter for the definition object of value.
-         *  @return A shared pointer to the parser node containing the definition object of value.
-         */
-        QSharedPointer<HSSParserNode> getDValue();
-
-        /**
-         *  Setter for the definition object of value. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of value.
-         */
-        void setDValue(QSharedPointer<HSSParserNode>);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect value.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void valueChanged(HSSObservableProperty source, void*data);
-
-
     private:
-        QSharedPointer<HSSParserNode> dValue;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

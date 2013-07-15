@@ -71,7 +71,6 @@ HSSLineBorder::HSSLineBorder(AXRController * controller)
     shorthandProperties.push_back("position");
 
     this->setShorthandProperties(shorthandProperties);
-    this->registerProperty(HSSObservablePropertyColor, QVariant::fromValue(&this->color));
 }
 
 HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
@@ -84,7 +83,6 @@ HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
     shorthandProperties.push_back("position");
 
     this->setShorthandProperties(shorthandProperties);
-    this->registerProperty(HSSObservablePropertyColor, QVariant::fromValue(&this->color));
 }
 
 QSharedPointer<HSSLineBorder> HSSLineBorder::clone() const
@@ -155,139 +153,6 @@ bool HSSLineBorder::isKeyword(AXRString value, AXRString property)
     }
 
     return HSSBorder::isKeyword(value, property);
-}
-
-void HSSLineBorder::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
-{
-    switch (name)
-    {
-    case HSSObservablePropertyColor:
-        this->setDColor(value);
-        break;
-    default:
-        HSSBorder::setProperty(name, value);
-        break;
-    }
-}
-
-QSharedPointer<HSSObject> HSSLineBorder::getColor()
-{
-    return this->color;
-}
-
-void HSSLineBorder::setDColor(QSharedPointer<HSSParserNode> value)
-{
-
-    bool valid = false;
-
-    switch (value->getType())
-    {
-    case HSSParserNodeTypeObjectNameConstant:
-    {
-        this->dColor = value;
-        try
-        {
-            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
-            QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
-            this->setDColor(objdef);
-            valid = true;
-        }
-        catch (const AXRError &e)
-        {
-            e.raise();
-        }
-
-        break;
-    }
-
-
-    case HSSParserNodeTypeFunctionCall:
-    {
-        this->dColor = value;
-        QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
-        if (fnct && fnct->isA(HSSFunctionTypeRef))
-        {
-            fnct->setScope(this->scope);
-            fnct->setThisObj(this->getThisObj());
-            QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<QSharedPointer<HSSRgb> >())
-            {
-                this->color = remoteValue.value<QSharedPointer<HSSRgb> >();
-            }
-            else
-            {
-                this->color = QSharedPointer<HSSRgb>(new HSSRgb(this->getController()));
-            }
-
-            fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyColor, this, new HSSValueChangedCallback<HSSLineBorder > (this, &HSSLineBorder::colorChanged));
-            valid = true;
-
-        }
-
-        break;
-    }
-
-    case HSSParserNodeTypeKeywordConstant:
-    {
-        QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(value);
-        if (theKW->getValue() == "black")
-        {
-            this->color = HSSRgb::blackColor(this->getController());
-            valid = true;
-        }
-        else if (theKW->getValue() == "white")
-        {
-            this->color = HSSRgb::whiteColor(this->getController());
-            valid = true;
-        }
-        else if (theKW->getValue() == "transparent")
-        {
-            QSharedPointer<HSSRgb> transColor = HSSRgb::blackColor(this->getController());
-            transColor->setDAlpha(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(0.0, this->getController())));
-            this->color = transColor;
-            valid = true;
-        }
-
-        break;
-    }
-
-    default:
-        break;
-    }
-
-    switch (value->getStatementType())
-    {
-    case HSSStatementTypeObjectDefinition:
-    {
-        this->dColor = value;
-        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (value);
-        objdef->setScope(this->scope);
-        objdef->setThisObj(this->getThisObj());
-        objdef->apply();
-        QSharedPointer<HSSObject> theobj = objdef->getObject();
-        if (theobj && theobj->isA(HSSObjectTypeRgb))
-        {
-            this->color = qSharedPointerCast<HSSRgb > (theobj);
-            valid = true;
-        }
-
-        break;
-    }
-
-    default:
-        break;
-    }
-
-    if (!valid)
-        throw AXRWarning("HSSLineBorder", "Invalid value for color of " + this->name);
-
-    this->notifyObservers(HSSObservablePropertyStartColor, &this->color);
-    this->notifyObservers(HSSObservablePropertyValue, NULL);
-}
-
-void HSSLineBorder::colorChanged(AXR::HSSObservableProperty source, void *data)
-{
-    axr_log(LoggerChannelObsolete1, "********************** colorChanged unimplemented ****************************");
 }
 
 void HSSLineBorder::draw(QPainter &painter, const QPainterPath &path)

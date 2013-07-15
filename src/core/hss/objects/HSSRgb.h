@@ -78,7 +78,6 @@ namespace AXR
         /**
          *  Constructor for HSSRgb objects
          */
-        HSSRgb(AXRController * controller, HSSUnit red = 0, HSSUnit green = 0, HSSUnit blue = 0, HSSUnit alpha = 255);
 
         /**
          *  Copy constructor for HSSRgb objects
@@ -103,111 +102,11 @@ namespace AXR
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
-        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
-
-
-        /**
-         *  Getter for the actual value of the red channel.
-         *  @return A HSSUnit containing the value for the red channel. The range of this
-         *  value is from 0.0 to 255.0.
-         */
-        HSSUnit getRed();
-
-        /**
-         *  Setter for the definition object of red. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of red.
-         */
-        void setDRed(QSharedPointer<HSSParserNode>);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect the red channel.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void redChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Getter for the actual value of the green channel.
-         *  @return A HSSUnit containing the value for the green channel. The range of this
-         *  value is from 0.0 to 255.0.
-         */
-        HSSUnit getGreen();
-
-        /**
-         *  Setter for the definition object of green. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of green.
-         */
-        void setDGreen(QSharedPointer<HSSParserNode>);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect the green channel.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void greenChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Getter for the actual value of the blue channel.
-         *  @return A HSSUnit containing the value for the blue channel. The range of this
-         *  value is from 0.0 to 255.0.
-         */
-        HSSUnit getBlue();
-
-        /**
-         *  Setter for the definition object of blue. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of blue.
-         */
-        void setDBlue(QSharedPointer<HSSParserNode>);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect the blue channel.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void blueChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Getter for the actual value of the alpha channel.
-         *  @return A HSSUnit containing the value for the alpha channel. The range of this
-         *  value is from 0.0 to 255.0.
-         */
-        HSSUnit getAlpha();
-
-        /**
-         *  Setter for the definition object of alpha. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of alpha.
-         */
-        void setDAlpha(QSharedPointer<HSSParserNode>);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect the alpha channel.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void alphaChanged(HSSObservableProperty source, void*data);
 
         QColor toQColor() const;
         QColor toQColorWithAlpha(int alpha) const;
 
     private:
-        HSSUnit red;
-        HSSUnit green;
-        HSSUnit blue;
-        HSSUnit alpha;
-
-        QSharedPointer<HSSParserNode> dRed;
-        QSharedPointer<HSSParserNode> dGreen;
-        QSharedPointer<HSSParserNode> dBlue;
-        QSharedPointer<HSSParserNode> dAlpha;
-
-        HSSUnit _evaluatePropertyValue(
-                                   void(HSSRgb::*callback)(HSSObservableProperty property, void* data),
-                                   QSharedPointer<HSSParserNode> value,
-                                   HSSUnit percentageBase,
-                                   HSSObservableProperty observedSourceProperty,
-                                   HSSObservable * &observedStore,
-                                   HSSObservableProperty &observedStoreProperty
-                                   );
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

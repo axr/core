@@ -68,15 +68,11 @@ HSSRequest::HSSRequest(AXRController * controller)
     shorthandProperties.push_back("target");
     //shorthandProperties.push_back("mode");
     this->setShorthandProperties(shorthandProperties);
-    this->mode = HSSRequestModeTypeAuto;
-    this->target = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection);
 }
 
 HSSRequest::HSSRequest(const HSSRequest & orig)
 : HSSAction(orig)
 {
-    this->mode = orig.mode;
-    this->target = orig.target;
 }
 
 QSharedPointer<HSSRequest> HSSRequest::clone() const
@@ -103,31 +99,6 @@ AXRString HSSRequest::toString()
 AXRString HSSRequest::defaultObjectType()
 {
     return "request";
-}
-
-void HSSRequest::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
-{
-    switch (name)
-    {
-    case HSSObservablePropertySrc:
-        this->setDSrc(value);
-        break;
-
-    case HSSObservablePropertyTarget:
-        this->setDTarget(value);
-        break;
-
-        //        case HSSObservablePropertyMode:
-        //            this->setDMode(value);
-        //            break;
-        //
-        //        case HSSObservablePropertyContentTarget:
-        //            this->setDContentTarget(value);
-
-    default:
-        HSSAction::setProperty(name, value);
-        break;
-    }
 }
 
 void HSSRequest::fire()
@@ -205,140 +176,3 @@ void HSSRequest::fire()
     }
 }
 
-QSharedPointer<HSSParserNode> HSSRequest::getDSrc()
-{
-    return this->dSrc;
-}
-
-void HSSRequest::setDSrc(QSharedPointer<HSSParserNode> value)
-{
-    switch (value->getType())
-    {
-    case HSSParserNodeTypeKeywordConstant:
-    case HSSParserNodeTypeFunctionCall:
-    case HSSParserNodeTypeStringConstant:
-    {
-        this->dSrc = value;
-        if (this->observedSrc)
-        {
-            this->observedSrc->removeObserver(this->observedSrcProperty, HSSObservablePropertySrc, this);
-        }
-
-        switch (value->getType())
-        {
-        case HSSParserNodeTypeKeywordConstant:
-            /**
-             *  @todo what here?
-             */
-            break;
-
-        case HSSParserNodeTypeStringConstant:
-        {
-            QSharedPointer<HSSStringConstant> theString = qSharedPointerCast<HSSStringConstant > (value);
-            this->src = QUrl(theString->getValue());
-            break;
-        }
-
-        case HSSParserNodeTypeFunctionCall:
-        {
-            QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
-            fnct->setScope(this->scope);
-            fnct->setThisObj(this->getThisObj());
-            QVariant remoteValue = fnct->evaluate();
-            if (remoteValue.canConvert<AXRString>())
-            {
-                this->src = QUrl(remoteValue.value<AXRString>());
-            }
-
-            break;
-        }
-
-        default:
-            break;
-        }
-
-        this->notifyObservers(HSSObservablePropertySrc, &this->src);
-
-        break;
-    }
-
-    default:
-        throw AXRWarning("HSSRequest", "Invalid value for src of " + this->name);
-    }
-}
-
-void HSSRequest::srcChanged(AXR::HSSObservableProperty source, void *data)
-{
-    AXRWarning("HSSRequest", "unimplemented").raise();
-}
-
-QSharedPointer<HSSParserNode> HSSRequest::getDTarget()
-{
-    return this->dTarget;
-}
-
-void HSSRequest::setDTarget(QSharedPointer<HSSParserNode> value)
-{
-    switch (value->getType())
-    {
-    case HSSParserNodeTypeKeywordConstant:
-    case HSSParserNodeTypeFunctionCall:
-    {
-        this->dTarget = value;
-        if (this->observedTarget)
-        {
-            this->observedTarget->removeObserver(this->observedTargetProperty, HSSObservablePropertyTarget, this);
-        }
-
-        switch (value->getType())
-        {
-        case HSSParserNodeTypeKeywordConstant:
-            /**
-             *  @todo what here?
-             */
-            break;
-
-        case HSSParserNodeTypeFunctionCall:
-        {
-            QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (value)->clone();
-            if (fnct)
-            {
-                fnct->setScope(this->scope);
-                fnct->setThisObj(this->getThisObj());
-                QVariant remoteValue = fnct->evaluate();
-                if (remoteValue.canConvert< QSharedPointer<HSSSelection> >())
-                {
-                    QSharedPointer<HSSSimpleSelection> selection = remoteValue.value< QSharedPointer<HSSSelection> >()->joinAll();
-                    this->target->clear();
-                    this->target->insert(this->target->end(), selection->begin(), selection->end());
-                }
-
-                /**
-                 *  @todo potentially leaking
-                 */
-                fnct->observe(HSSObservablePropertyValue, HSSObservablePropertyTarget, this, new HSSValueChangedCallback<HSSRequest > (this, &HSSRequest::targetChanged));
-                this->observedTarget = fnct.data();
-                this->observedTargetProperty = HSSObservablePropertyValue;
-            }
-
-            break;
-        }
-
-        default:
-            break;
-        }
-
-        this->notifyObservers(HSSObservablePropertySrc, &this->src);
-
-        break;
-    }
-
-    default:
-        throw AXRWarning("HSSRequest", "Invalid value for src of " + this->name);
-    }
-}
-
-void HSSRequest::targetChanged(AXR::HSSObservableProperty source, void *data)
-{
-    AXRWarning("HSSRequest", "unimplemented").raise();
-}

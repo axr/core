@@ -79,46 +79,9 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual bool isKeyword(AXRString value, AXRString property);
         virtual AXRString toString();
-        virtual void setDefaults();
-        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
         virtual void accept(HSSAbstractVisitor* visitor, bool);
 
-        //transform
-        HSSTextTransformType getTransform();
-        QSharedPointer<HSSParserNode> getDTransform();
-        void setDTransform(QSharedPointer<HSSParserNode> value);
-        void transformChanged(HSSObservableProperty source, void*data);
-
-        //textAlign
-        HSSTextAlignType getTextAlign();
-        QSharedPointer<HSSParserNode> getDTextAlign();
-        void setDTextAlign(QSharedPointer<HSSParserNode> value);
-        void textAlignChanged(HSSObservableProperty source, void*data);
-
-        //text
-        AXRString getText();
-        QSharedPointer<HSSParserNode> getDText();
-        void setDText(QSharedPointer<HSSParserNode> value);
-        void textChanged(HSSObservableProperty source, void*data);
-
-        void trimContentText();
-
-    protected:
-        //transform
-        HSSTextTransformType transform;
-        QSharedPointer<HSSParserNode> dTransform;
-
-        //textAlign
-        HSSTextAlignType textAlign;
-        QSharedPointer<HSSParserNode> dTextAlign;
-
-        //text
-        AXRString text;
-        QSharedPointer<HSSParserNode> dText;
-
     private:
-        QFont getFont() const;
-
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

@@ -110,17 +110,6 @@ AXRString HSSAction::defaultObjectType(AXRString property)
     return HSSObject::defaultObjectType(property);
 }
 
-void HSSAction::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
-{
-    switch (name)
-    {
-
-    default:
-        HSSObject::setProperty(name, value);
-        break;
-    }
-}
-
 bool HSSAction::isA(HSSActionType type)
 {
     return type == this->actionType;

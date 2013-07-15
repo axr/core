@@ -60,8 +60,6 @@ HSSValue::HSSValue(AXRController * controller)
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
-
-    this->registerProperty(HSSObservablePropertyValue, QVariant::fromValue(&this->dValue));
 }
 
 HSSValue::HSSValue(const HSSValue & orig)
@@ -70,8 +68,6 @@ HSSValue::HSSValue(const HSSValue & orig)
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
-
-    this->registerProperty(HSSObservablePropertyValue, QVariant::fromValue(&this->dValue));
 }
 
 QSharedPointer<HSSValue> HSSValue::clone() const
@@ -112,41 +108,3 @@ AXRString HSSValue::defaultObjectType(AXRString property)
     }
 }
 
-void HSSValue::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
-{
-    switch (name)
-    {
-    case HSSObservablePropertyValue:
-        this->setDValue(value);
-        break;
-
-    default:
-        HSSObject::setProperty(name, value);
-        break;
-    }
-}
-
-const QSharedPointer<HSSParserNode> HSSValue::getDValue() const
-{
-    return this->dValue;
-}
-
-void HSSValue::setDValue(QSharedPointer<HSSParserNode> value)
-{
-    this->dValue = value;
-    this->addDValue(value);
-}
-
-void HSSValue::addDValue(QSharedPointer<HSSParserNode> value)
-{
-    bool valid = true;
-    if (!valid)
-        throw AXRWarning("HSSDisplayObject", "Invalid value for value of @value " + this->name);
-
-    this->notifyObservers(HSSObservablePropertyValue, &this->dValue);
-}
-
-void HSSValue::valueChanged(HSSObservableProperty source, void*data)
-{
-    axr_log(LoggerChannelObsolete0, "HSSValue::valueChanged unimplemented");
-}

@@ -77,7 +77,6 @@ namespace AXR
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
-        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Allows you to check if this action is of the given type.

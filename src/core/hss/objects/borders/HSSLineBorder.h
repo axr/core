@@ -85,33 +85,9 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
-        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Getter for the actual value of color.
-         *  @return A shared pointer to the object that encapsulates the color information for this border.
-         */
-        QSharedPointer<HSSObject> getColor();
-
-        /**
-         *  Setter for the definition object of color. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of color.
-         */
-        void setDColor(QSharedPointer<HSSParserNode>);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect color.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void colorChanged(HSSObservableProperty source, void*data);
 
         virtual void draw(QPainter &painter, const QPainterPath &path);
 
-    protected:
-        //color
-        QSharedPointer<HSSRgb> color;
-        QSharedPointer<HSSParserNode> dColor;
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };

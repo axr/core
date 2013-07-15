@@ -177,11 +177,6 @@ namespace AXR
          */
         AXRString getPropertyForCurrentValue();
         /**
-         *  Getter for the list of computed values for all properties.
-         *  @return A map containing variants with pointers to values.
-         */
-        const QMap<HSSObservableProperty, QVariant> getProperties() const;
-        /**
          *  Setter for the shorthand properties array.
          *  @param newValues        A STL vector of property names
          */
@@ -212,59 +207,6 @@ namespace AXR
          */
         void setShorthandIndex(size_t newValue);
 
-        /**
-         *  Getter for the definition object for the isA property.
-         *  @return A shared pointer to the parser node that defines the isA property.
-         */
-        QSharedPointer<HSSParserNode> getDIsA();
-        /**
-         *  Setter for the definition object for the isA property.
-         *  @param value        A shared pointer to the parser node that defines the isA property.
-         */
-        void setDIsA(QSharedPointer<HSSParserNode> value);
-        void addDIsA(QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Callback to receive notifications of when the isA property has changed.
-         *  @warning Currently unimplemented
-         *  @param source   The property which triggers the notification
-         *  @param data     A pointer to the data that has been passed along with the notification.
-         */
-        void isAChanged(HSSObservableProperty source, void*data);
-        /**
-         *  Takes a vector of property names in AXRString form, converts them to observable property
-         *  names and passes each to setProperty(HSSObservableProperty, QSharedPointer<HSSParserNode>).
-         *  @param name     A vector of strings containing the property names
-         *  @param value    The parser node defining the value for the property
-         *
-         *  @todo this might be not necessary to be virtual
-         */
-        virtual void setPropertiesWithNames(QVector<AXRString> names, QSharedPointer<HSSParserNode> value);
-        /**
-         *  Sets the parser node that defines the value of the given property. Each subclass
-         *  will call the specific setD\<\<property\>\>() method.
-         *  @param name     The observable property name
-         *  @param value    The parser node defining the value for the property
-         */
-        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
-        /**
-         *  @todo remove this if not used
-         */
-        virtual void setProperty(HSSObservableProperty name, QVariant);
-        /**
-         *  When a subclass registers a observable property name with a pointer, it can be
-         *  retrieved with this method.
-         *  @param name     The observable property name.
-         *  @return The parser node defining the value for the given property.
-         */
-        virtual QVariant getProperty(HSSObservableProperty name);
-        /**
-         *  Each subclass must register each property name it uses with the pointer to the data,
-         *  so that it can easily be accessed later.
-         *  @param name     The observable property name.
-         *  @param property A variant type wrapping the pointer to the data holding the actual value of the property.
-         */
-        virtual void registerProperty(HSSObservableProperty name, QVariant property);
         /**
          *  Getter for the current scope this object is operating on.
          *  @return A pointer to the vector of shared pointers to display objects
@@ -329,12 +271,9 @@ namespace AXR
         QSharedPointer<HSSObject> shared_from_this();
 
     protected:
-        QMap<HSSObservableProperty, QVariant> properties;
         std::vector<AXRString> shorthandProperties;
         QMap<AXRString, bool> skipShorthand;
         size_t shorthandIndex;
-
-        QSharedPointer<HSSParserNode> dIsA;
 
         QSharedPointer<HSSSimpleSelection> scope;
         QSharedPointer<HSSDisplayObject> thisObj;

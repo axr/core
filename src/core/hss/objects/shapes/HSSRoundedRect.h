@@ -88,7 +88,6 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
-        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         //see HSSShape.h for documentation of these
         virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments);
@@ -97,72 +96,7 @@ namespace AXR
 
         virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);
 
-        /**
-         *  Getter for the actual value of corners. Always stored inside a multiple value.
-         */
-        QSharedPointer<HSSMultipleValue> getCorners();
-
-        /**
-         *  Setter for the definition object of corners. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of corners.
-         */
-        void setDCorners(QSharedPointer<HSSParserNode>);
-
-        void setDLeft(QSharedPointer<HSSParserNode>);
-        void setDLeftTop(QSharedPointer<HSSParserNode>);
-        void setDTop(QSharedPointer<HSSParserNode>);
-        void setDRightTop(QSharedPointer<HSSParserNode>);
-        void setDRight(QSharedPointer<HSSParserNode>);
-        void setDRightBottom(QSharedPointer<HSSParserNode>);
-        void setDBottom(QSharedPointer<HSSParserNode>);
-        void setDLeftBottom(QSharedPointer<HSSParserNode>);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect the top left corner.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void cornerTLChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect the top right corner.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void cornerTRChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect the bottom right corner.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void cornerBRChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect bottom left corner.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void cornerBLChanged(HSSObservableProperty source, void*data);
-
-
-    protected:
-        QSharedPointer<HSSMultipleValue> corners;
-        QSharedPointer<HSSParserNode> dCorners;
-        HSSUnit cornerTL, cornerTR, cornerBR, cornerBL;
-
     private:
-        HSSUnit _evaluatePropertyValue(
-                                   void(HSSRoundedRect::*callback)(HSSObservableProperty property, void* data),
-                                   QSharedPointer<HSSParserNode> value,
-                                   HSSUnit percentageBase,
-                                   HSSObservableProperty observedProperty,
-                                   HSSObservable * observedObject,
-                                   HSSObservableProperty observedSourceProperty,
-                                   HSSObservable * &observedStore,
-                                   HSSObservableProperty &observedStoreProperty,
-                                   QSharedPointer<HSSSimpleSelection> scope
-                                   );
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

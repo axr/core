@@ -167,14 +167,6 @@ namespace AXR
          */
         virtual AXRString getContentText();
 
-        //void readDefinitionObjects();
-        /**
-         *  Propagates the readDefinitionObjects() call to all the children.
-         */
-        void recursiveReadDefinitionObjects();
-
-        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
-
         /**
          *  Accepts a visitor to traverse and process the HSSObject tree.
          */
@@ -218,139 +210,6 @@ namespace AXR
         QSharedPointer<HSSSimpleSelection> getChildren(bool includeTextBlocks) const;
 
         /**
-         *  Getter for the definition object of contentAlignX.
-         *  @return A shared pointer to the parser node containing the definition object of contentAlignX.
-         */
-        QSharedPointer<HSSParserNode> getDContentAlignX();
-
-        /**
-         *  Setter for the definition object of contentAlignX. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of contentAlignX.
-         */
-        void setDContentAlignX(QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect contentAlignX.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void contentAlignXChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Getter for the definition object of contentAlignY.
-         *  @return A shared pointer to the parser node containing the definition object of contentAlignY.
-         */
-        QSharedPointer<HSSParserNode> getDContentAlignY();
-
-        /**
-         *  Setter for the definition object of contentAlignY. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of contentAlignY.
-         */
-        void setDContentAlignY(QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect contentAlignX.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void contentAlignYChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Getter for the definition object of directionPrimary.
-         *  @return A shared pointer to the parser node containing the definition object of directionPrimary.
-         */
-        QSharedPointer<HSSParserNode> getDDirectionPrimary();
-
-        /**
-         *  Setter for the definition object of directionPrimary. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of directionPrimary.
-         */
-        void setDDirectionPrimary(QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect directionPrimary.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void directionPrimaryChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Getter for the definition object of directionSecondary.
-         *  @return A shared pointer to the parser node containing the definition object of directionSecondary.
-         */
-        QSharedPointer<HSSParserNode> getDDirectionSecondary();
-
-        /**
-         *  Setter for the definition object of directionSecondary. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of
-         *                  directionSecondary.
-         */
-        void setDDirectionSecondary(QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect directionSecondary.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void directionSecondaryChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Getter for the value of shape.
-         *  @return A shared pointer to the shape object.
-         */
-        QSharedPointer<HSSShape> getShape();
-
-        /**
-         *  Getter for the definition object of shape.
-         *  @return A shared pointer to the parser node containing the definition object of shape.
-         */
-        QSharedPointer<HSSParserNode> getDShape();
-
-        /**
-         *  Setter for the definition object of shape. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of shape
-         */
-        void setDShape(QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect shape.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void shapeChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Getter for the actual value of tetxAlign
-         *  @return The HSSTextAlignType that is currently being used
-         */
-        HSSTextAlignType getTextAlign();
-
-        /**
-         *  Getter for the definition object of textAlign.
-         *  @return A shared pointer to the parser node containing the definition object of textAlign.
-         */
-        QSharedPointer<HSSParserNode> getDTextAlign();
-
-        /**
-         *  Setter for the definition object of textAlign. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of textAlign.
-         */
-        void setDTextAlign(QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect textAlign.
-         *  @param source   The property which we are observing.
-         *  @param data     A regular pointer to the data that is sent along the notification.
-         */
-        void textAlignChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Sets default values for this object type. Should be called before applying other property
-         *  definitions.
-         */
-        void setDefaults();
-
-        /**
          *  Propagates the call to handleEvent() to all children and to the base class implementation.
          *  @param event    The event that is being sent.
          *  @return Whether it has been handled or not.
@@ -367,39 +226,14 @@ namespace AXR
         QSharedPointer<HSSSimpleSelection> children;
         QSharedPointer<HSSSimpleSelection> allChildren;
 
-        QSharedPointer<HSSParserNode> dContentAlignX;
-        HSSUnit contentAlignX;
         bool distributeX;
         bool distributeXLinear;
-        QSharedPointer<HSSParserNode> dContentAlignY;
-        HSSUnit contentAlignY;
         bool distributeY;
         bool distributeYLinear;
 
-        QSharedPointer<HSSParserNode> dDirectionPrimary;
-        HSSDirectionValue directionPrimary;
-        QSharedPointer<HSSParserNode> dDirectionSecondary;
-        HSSDirectionValue directionSecondary;
-        QSharedPointer<HSSParserNode> dShape;
-        QSharedPointer<HSSShape> shape;
-        //textAlign
-        HSSTextAlignType textAlign;
-        QSharedPointer<HSSParserNode> dTextAlign;
         QSharedPointer<HSSContainer> shared_from_this();
 
     private:
-        HSSUnit _evaluatePropertyValue(
-                                   void(HSSContainer::*callback)(HSSObservableProperty property, void* data),
-                                   QSharedPointer<HSSParserNode> value,
-                                   HSSUnit percentageBase,
-                                   HSSObservableProperty observedProperty,
-                                   HSSObservable * observedObject,
-                                   HSSObservableProperty observedSourceProperty,
-                                   HSSObservable * &observedStore,
-                                   HSSObservableProperty &observedStoreProperty,
-                                   QSharedPointer<HSSSimpleSelection> scope
-                                   );
-
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
 
         static bool alignXSmaller(const QSharedPointer<HSSDisplayObject>& a, const QSharedPointer<HSSDisplayObject>& b)

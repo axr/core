@@ -89,7 +89,6 @@ namespace AXR
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
-        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Allows you to check if this event is of the given type.
@@ -104,49 +103,12 @@ namespace AXR
         HSSEventType getEventType();
 
         /**
-         *  Getter for the actual values of action, HSSAction objects.
-         *  @return A vector of shared pointers to the action objects.
-         */
-        std::vector<QSharedPointer<HSSAction> > getAction();
-
-        /**
-         *  Getter for the definition object of action.
-         *  @return A shared pointer to the parser node containing the definition object of action.
-         */
-        const QSharedPointer<HSSParserNode> getDAction() const;
-
-        /**
-         *  Setter for the definition object of action. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of action.
-         */
-        void setDAction(QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Since this property accepts multiple values, this allows to append a value instead of replacing
-         *  the whole thing.
-         *  @param value    A shared pointer to the parser node containing the definition object to be
-         *                  added to action.
-         */
-        void addDAction(QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect action.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void actionChanged(HSSObservableProperty source, void*data);
-
-        /**
          *  Executes the action which is stored in this event object.
          */
         virtual void fire();
 
     protected:
         HSSEventType eventType;
-
-        //action
-        QSharedPointer<HSSParserNode> dAction;
-        std::vector<QSharedPointer<HSSAction> > action;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

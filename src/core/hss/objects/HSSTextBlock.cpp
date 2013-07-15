@@ -157,12 +157,6 @@ HSSTextBlock::HSSTextBlock(AXRController * controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSTextBlock: creating text block object");
 
-    this->registerProperty(HSSObservablePropertyText, QVariant::fromValue(&this->text));
-    this->registerProperty(HSSObservablePropertyTransform, QVariant::fromValue(&this->transform));
-    this->registerProperty(HSSObservablePropertyTextAlign, QVariant::fromValue(&this->textAlign));
-    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, QVariant::fromValue(&this->directionPrimary));
-    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, QVariant::fromValue(&this->directionSecondary));
-
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("text");
     shorthandProperties.push_back("textAlign");
@@ -175,13 +169,6 @@ HSSTextBlock::HSSTextBlock(AXRController * controller)
 HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
 : HSSDisplayObject(orig)
 {
-
-    this->registerProperty(HSSObservablePropertyText, QVariant::fromValue(&this->text));
-    this->registerProperty(HSSObservablePropertyTransform, QVariant::fromValue(&this->transform));
-    this->registerProperty(HSSObservablePropertyTextAlign, QVariant::fromValue(&this->textAlign));
-    //    this->registerProperty(HSSObservablePropertyDirectionPrimary, QVariant::fromValue(&this->directionPrimary));
-    //    this->registerProperty(HSSObservablePropertyDirectionSecondary, QVariant::fromValue(&this->directionSecondary));
-
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("text");
     shorthandProperties.push_back("textAlign");
@@ -250,74 +237,6 @@ bool HSSTextBlock::isKeyword(AXRString value, AXRString property)
 AXRString HSSTextBlock::toString()
 {
     return "Text block with content:\n" + this->text;
-}
-
-void HSSTextBlock::setDefaults()
-{
-    HSSDisplayObject::setDefaults();
-    AXRController * controller = this->getController();
-
-    //transform
-    QSharedPointer<HSSKeywordConstant> newDTransform(new HSSKeywordConstant("no", controller));
-    this->setDTransform(newDTransform);
-    //textAlign
-    QSharedPointer<HSSKeywordConstant> newDTextAlign(new HSSKeywordConstant("inherit", controller));
-    this->setDTextAlign(newDTextAlign);
-    //font
-    QSharedPointer<HSSKeywordConstant> newDFont(new HSSKeywordConstant("inherit", controller));
-    this->setDFont(newDFont);
-    //height
-    this->setDHeight(QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant("content", controller)));
-}
-
-void HSSTextBlock::setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value)
-{
-    switch (name)
-    {
-    case HSSObservablePropertyTransform:
-        this->setDTransform(value);
-        break;
-    case HSSObservablePropertyTextAlign:
-        this->setDTransform(value);
-        break;
-        //        case HSSObservablePropertyDirectionPrimary:
-        //            this->setDDirectionPrimary(value);
-        //            break;
-        //        case HSSObservablePropertyDirectionSecondary:
-        //            this->setDDirectionSecondary(value);
-        //            break;
-    case HSSObservablePropertyText:
-        this->setDText(value);
-        break;
-    default:
-        HSSDisplayObject::setProperty(name, value);
-        break;
-    }
-}
-
-QFont HSSTextBlock::getFont() const
-{
-    QFont font_description;
-
-    // Get the first font available
-    QSharedPointer<HSSFont> theFont;
-    if (font.size() > 0)
-        theFont = *font.begin();
-
-    if (theFont && !theFont->getFace().isEmpty())
-        font_description.setFamily(theFont->getFace());
-    else
-        font_description.setFamily("monospace");
-
-    // Set the weight of the font (bold, italic, etc.) if available
-    if (theFont && theFont->getWeight())
-        font_description.setWeight(getQtWeight(theFont->getWeight()->getValue()));
-    else
-        font_description.setWeight(QFont::Normal);
-
-    font_description.setPointSizeF(theFont ? theFont->getSize() : HSSFont::DEFAULT_SIZE);
-
-    return font_description;
 }
 
 void HSSTextBlock::accept(HSSAbstractVisitor* visitor, bool)

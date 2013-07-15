@@ -104,11 +104,6 @@ AXRString HSSObjectDefinition::toString()
 
 void HSSObjectDefinition::apply()
 {
-    for (size_t i = 0; i < this->propertiesSize(); ++i)
-    {
-        QSharedPointer<HSSPropertyDefinition> theProperty = this->properties[i];
-        this->prototype->setPropertiesWithNames(theProperty->getNames(), theProperty->getValue());
-    }
 }
 
 void HSSObjectDefinition::propertiesAdd(QSharedPointer<HSSPropertyDefinition> &newProperty)

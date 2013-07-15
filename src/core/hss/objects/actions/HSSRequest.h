@@ -83,7 +83,6 @@ namespace AXR
 
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
-        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
 
         /**
          *  Currently only causes the document to load another XML file.
@@ -92,73 +91,11 @@ namespace AXR
          */
         virtual void fire();
 
-        /**
-         *  Getter for the definition object of src.
-         *  @return A shared pointer to the parser node containing the definition object of src.
-         */
-        QSharedPointer<HSSParserNode> getDSrc();
-
-        /**
-         *  Setter for the definition object of src. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of src.
-         */
-        void setDSrc(QSharedPointer<HSSParserNode>);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect src.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void srcChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Getter for the definition object of target.
-         *  @return A shared pointer to the parser node containing the definition object of target.
-         */
-        QSharedPointer<HSSParserNode> getDTarget();
-
-        /**
-         *  Setter for the definition object of target. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of target.
-         */
-        void setDTarget(QSharedPointer<HSSParserNode>);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect target.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void targetChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  @todo Implement mode property.
-         */
-        //        //mode
-        //        QSharedPointer<HSSParserNode> getDMode();
-        //        void setDMode(QSharedPointer<HSSParserNode>);
-        //        void modeChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  @todo Implement target property.
-         */
-        //        //contentTarget
-        //        QSharedPointer<HSSParserNode> getDContentTarget();
-        //        void setDContentTarget(QSharedPointer<HSSParserNode>);
-        //        void contentTargetChanged(HSSObservableProperty source, void*data);
-
-
-    private:
-        QUrl src;
-        QSharedPointer<HSSParserNode> dSrc;
         HSSObservable * observedSrc;
         HSSObservableProperty observedSrcProperty;
 
-        QSharedPointer<HSSParserNode> dTarget;
         HSSObservable * observedTarget;
         HSSObservableProperty observedTargetProperty;
-        QSharedPointer<HSSSimpleSelection> target;
-
-        HSSRequestModeType mode;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

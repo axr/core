@@ -79,79 +79,12 @@ namespace AXR
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual bool isKeyword(AXRString value, AXRString property);
-        virtual void setProperty(HSSObservableProperty name, QSharedPointer<HSSParserNode> value);
         virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments);
 
         virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);
 
-        /**
-         *  Getter for the actual value of the sides property.
-         *  @return A HSSUnit containing the amount of sides.
-         */
-        unsigned int getSides();
-
-        /**
-         *  Getter for the definition object of sides.
-         *  @return A shared pointer to the parser node containing the definition object of sides.
-         */
-        QSharedPointer<HSSParserNode> getDSides();
-
-        /**
-         *  Setter for the definition object of sides. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of sides.
-         */
-        void setDSides(QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect sides.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void sidesChanged(HSSObservableProperty source, void*data);
-
-        /**
-         *  Getter for the actual value of the angle property.
-         *  @return A HSSUnit containing the amount of angle.
-         */
-        HSSUnit getAngle();
-
-        /**
-         *  Getter for the definition object of angle.
-         *  @return A shared pointer to the parser node containing the definition object of angle.
-         */
-        QSharedPointer<HSSParserNode> getDAngle();
-
-        /**
-         *  Setter for the definition object of angle. It will use the value as needed.
-         *  @param value    A shared pointer to the parser node containing the definition object of angle.
-         */
-        void setDAngle(QSharedPointer<HSSParserNode> value);
-
-        /**
-         *  Method to be passed as callback when observing changes that will affect angle.
-         *  @param source   The property which we are observing.
-         *  @param data     A pointer to the data that is sent along the notification.
-         */
-        void angleChanged(HSSObservableProperty source, void*data);
-
-    protected:
-        //sides
-        QSharedPointer<HSSParserNode> dSides;
-        unsigned int sides;
-        //angle
-        QSharedPointer<HSSParserNode> dAngle;
-        HSSUnit angle;
-
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
-        HSSUnit _evaluatePropertyValue(
-                                   void(HSSPolygon::*callback)(HSSObservableProperty property, void* data),
-                                   QSharedPointer<HSSParserNode> value,
-                                   HSSUnit percentageBase,
-                                   HSSObservableProperty observedSourceProperty,
-                                   HSSObservable * &observedStore,
-                                   HSSObservableProperty &observedStoreProperty
-                                   );
     };
 }
 
