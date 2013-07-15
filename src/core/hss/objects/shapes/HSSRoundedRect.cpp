@@ -58,6 +58,7 @@
 #include "HSSRgb.h"
 #include "HSSRoundedRect.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -80,6 +81,11 @@ HSSRoundedRect::HSSRoundedRect(const HSSRoundedRect & orig)
 
 void HSSRoundedRect::_initialize()
 {
+    this->addCallback("corners", new HSSStackCallback<HSSRoundedRect>(this, &HSSRoundedRect::stackCorners));
+    this->addCallback("top", new HSSStackCallback<HSSRoundedRect>(this, &HSSRoundedRect::stackTop));
+    this->addCallback("right", new HSSStackCallback<HSSRoundedRect>(this, &HSSRoundedRect::stackRight));
+    this->addCallback("bottom", new HSSStackCallback<HSSRoundedRect>(this, &HSSRoundedRect::stackBottom));
+    this->addCallback("left", new HSSStackCallback<HSSRoundedRect>(this, &HSSRoundedRect::stackLeft));
 }
 
 QSharedPointer<HSSRoundedRect> HSSRoundedRect::clone() const
@@ -96,6 +102,14 @@ QSharedPointer<HSSClonable> HSSRoundedRect::cloneImpl() const
 HSSRoundedRect::~HSSRoundedRect()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSRoundedRect: destructing rounded rectangle object");
+}
+
+void HSSRoundedRect::setDefaults()
+{
+    this->setDefault("leftTop", 0.);
+    this->setDefault("rightTop", 0.);
+    this->setDefault("rightBottom", 0.);
+    this->setDefault("leftBottom", 0.);
 }
 
 AXRString HSSRoundedRect::toString()
@@ -117,14 +131,64 @@ bool HSSRoundedRect::isKeyword(AXRString value, AXRString property)
 {
     return HSSShape::isKeyword(value, property);
 }
+void HSSRoundedRect::stackCorners(QSharedPointer<HSSParserNode> parserNode)
+{
+    this->stackLeft(parserNode);
+    this->stackRight(parserNode);
+}
+void HSSRoundedRect::stackTop(QSharedPointer<HSSParserNode> parserNode)
+{
+    this->setStackValue("leftTop", parserNode);
+    this->setStackValue("rightTop", parserNode);
+}
+void HSSRoundedRect::stackRight(QSharedPointer<HSSParserNode> parserNode)
+{
+    this->setStackValue("rightTop", parserNode);
+    this->setStackValue("rightBottom", parserNode);
+}
+void HSSRoundedRect::stackBottom(QSharedPointer<HSSParserNode> parserNode)
+{
+    this->setStackValue("leftBottom", parserNode);
+    this->setStackValue("rightBottom", parserNode);
+}
+void HSSRoundedRect::stackLeft(QSharedPointer<HSSParserNode> parserNode)
+{
+    this->setStackValue("leftTop", parserNode);
+    this->setStackValue("leftBottom", parserNode);
+}
 
 void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments)
 {
     this->createRoundedRect(path, x, y, width, height, 0.);
 }
 
+const HSSUnit HSSRoundedRect::getLeftTop() const
+{
+    return this->getComputedNumber("leftTop");
+}
+
+const HSSUnit HSSRoundedRect::getLeftBottom() const
+{
+    return this->getComputedNumber("leftBottom");
+}
+
+const HSSUnit HSSRoundedRect::getRightTop() const
+{
+    return this->getComputedNumber("rightTop");
+}
+
+const HSSUnit HSSRoundedRect::getRightBottom() const
+{
+    return this->getComputedNumber("rightBottom");
+}
+
 void HSSRoundedRect::createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, HSSUnit offset)
 {
+    HSSUnit cornerTL = this->getLeftTop();
+    HSSUnit cornerBL = this->getLeftBottom();
+    HSSUnit cornerBR = this->getRightBottom();
+    HSSUnit cornerTR = this->getRightTop();
+
     HSSUnit topLeftOffset = (cornerTL*2+offset);
     if(topLeftOffset < 1) topLeftOffset = 1;
     HSSUnit bottomLeftOffset = (cornerBL*2+offset);
@@ -153,6 +217,11 @@ void HSSRoundedRect::createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y,
 
 void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
+    HSSUnit cornerTL = this->getLeftTop();
+    HSSUnit cornerBL = this->getLeftBottom();
+    HSSUnit cornerBR = this->getRightBottom();
+    HSSUnit cornerTR = this->getRightTop();
+
     //sort borders in three groups
     std::vector<QSharedPointer<HSSBorder> > center, inside, outside;
     for (HSSBorder::it it=borders.begin(); it!=borders.end(); ++it) {
@@ -175,7 +244,7 @@ void HSSRoundedRect::drawBorders(QPainter &painter, std::vector<QSharedPointer<H
     HSSUnit topThickness = 0., rightThickness = 0., bottomThickness = 0., leftThickness = 0.;
     for (HSSBorder::it it=center.begin(); it!=center.end(); ++it) {
         const QSharedPointer<HSSBorder> & theBorder = *it;
-        const std::vector<QSharedPointer<HSSParserNode> > & segments = theBorder->getSegments();
+        QSharedPointer<HSSObject> segmentsObj = theBorder->getSegments();
         bool hasAll = false;
         for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
             const QSharedPointer<HSSParserNode> & segment = *it;

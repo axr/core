@@ -86,6 +86,7 @@ namespace AXR
          */
         virtual ~HSSEvent();
 
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
@@ -101,6 +102,12 @@ namespace AXR
          *  @return The event type of this instance.
          */
         HSSEventType getEventType();
+
+        /**
+         *  Getter for the computed value of action.
+         *  @return A shared pointer to the object.
+         */
+        const QSharedPointer<HSSObject> getAction() const;
 
         /**
          *  Executes the action which is stored in this event object.

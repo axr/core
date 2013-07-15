@@ -85,10 +85,41 @@ namespace AXR
         virtual ~HSSMargin();
 
         //see HSSObject.h for documentation of these
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
+
+        /**
+         *  Getter for the computed value of size.
+         *  @return An HSSUnit containing the value of size;
+         */
+        const HSSUnit getSize() const;
+
+        /**
+         *  Getter for the computed value of top.
+         *  @return An HSSUnit containing the value of top.
+         */
+        const HSSUnit getTop() const;
+
+        /**
+         *  Getter for the computed value of right.
+         *  @return An HSSUnit containing the value of right.
+         */
+        const HSSUnit getRight() const;
+
+        /**
+         *  Getter for the computed value of bottom.
+         *  @return An HSSUnit containing the value of bottom.
+         */
+        const HSSUnit getBottom() const;
+
+        /**
+         *  Getter for the computed value of left.
+         *  @return An HSSUnit containing the value of left.
+         */
+        const HSSUnit getLeft() const;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

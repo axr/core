@@ -82,10 +82,35 @@ namespace AXR
          */
         virtual ~HSSRadialGradient();
 
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
+
+        /**
+         *  Getter for the actual value object of centerX.
+         *  @return A HSSUnit that contains the actual value of centerX.
+         */
+        const HSSUnit getCenterX() const;
+
+        /**
+         *  Getter for the actual value object of centerY.
+         *  @return A HSSUnit that contains the actual value of centerY.
+         */
+        const HSSUnit getCenterY() const;
+
+        /**
+         *  Getter for the computed value object of offsetX.
+         *  @return A HSSUnit that contains the actual value of offsetX.
+         */
+        const HSSUnit getOffsetX() const;
+
+        /**
+         *  Getter for the computed value object of offsetY.
+         *  @return A HSSUnit that contains the actual value of offsetY.
+         */
+        const HSSUnit getOffsetY() const;
 
     private:
         void _initialize();

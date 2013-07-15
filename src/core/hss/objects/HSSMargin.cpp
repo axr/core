@@ -50,6 +50,7 @@
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -78,6 +79,15 @@ HSSMargin::~HSSMargin()
 
 }
 
+void HSSMargin::setDefaults()
+{
+    this->setDefault("size", 0.);
+    this->setDefault("top", 0.);
+    this->setDefault("right", 0.);
+    this->setDefault("bottom", 0.);
+    this->setDefault("left", 0.);
+}
+
 AXRString HSSMargin::toString()
 {
     return "HSSMargin";
@@ -98,3 +108,27 @@ bool HSSMargin::isKeyword(AXRString value, AXRString property)
     return false;
 }
 
+const HSSUnit HSSMargin::getSize() const
+{
+    return this->getComputedNumber("size");
+}
+
+const HSSUnit HSSMargin::getTop() const
+{
+    return this->getComputedNumber("top");
+}
+
+const HSSUnit HSSMargin::getRight() const
+{
+    return this->getComputedNumber("right");
+}
+
+const HSSUnit HSSMargin::getBottom() const
+{
+    return this->getComputedNumber("bottom");
+}
+
+const HSSUnit HSSMargin::getLeft() const
+{
+    return this->getComputedNumber("left");
+}

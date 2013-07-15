@@ -81,10 +81,15 @@ namespace AXR
          */
         virtual ~HSSLineBorder();
 
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
+
+        //color
+        QSharedPointer<HSSObject> getColor();
+        QSharedPointer<HSSObject> computeColor(QSharedPointer<HSSParserNode> parserNode);
 
         virtual void draw(QPainter &painter, const QPainterPath &path);
 

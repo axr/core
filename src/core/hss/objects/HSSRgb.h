@@ -49,6 +49,8 @@
 
 namespace AXR
 {
+    class HSSValue;
+
     /**
      *  @brief The object type representing a \@rgb color in HSS.
      *
@@ -78,6 +80,7 @@ namespace AXR
         /**
          *  Constructor for HSSRgb objects
          */
+        HSSRgb(AXRController * controller);
 
         /**
          *  Copy constructor for HSSRgb objects
@@ -96,18 +99,91 @@ namespace AXR
          */
         virtual ~HSSRgb();
 
-        inline static QSharedPointer<HSSRgb> transparentColor(AXRController * controller) { return QSharedPointer<HSSRgb>(new HSSRgb(controller, 0, 0, 0, 0)); }
+        inline static QSharedPointer<HSSRgb> transparentColor(AXRController * controller)
+        {
+            QSharedPointer<HSSRgb> ret(new HSSRgb(controller));
+            ret->setAlpha(0.);
+            return ret;
+        }
         inline static QSharedPointer<HSSRgb> defaultColor(AXRController * controller) { return QSharedPointer<HSSRgb>(new HSSRgb(controller)); }
 
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
+
+        QSharedPointer<HSSObject> computeRed(QSharedPointer<HSSParserNode> parserNode);
+        void listenRed(QSharedPointer<HSSObject> theObj);
+        void notifyRed(QSharedPointer<HSSObject> theObj);
+        /**
+         *  Getter for the actual value of the red channel.
+         *  @return A HSSUnit containing the value for the red channel. The range of this
+         *  value is from 0.0 to 255.0.
+         */
+        const HSSUnit getRed() const;
+
+        /**
+         *  Setter for the definition object of red. It will use the value as needed.
+         *  @param value    The new value.
+         */
+        void setRed(HSSUnit value);
+
+        QSharedPointer<HSSObject> computeGreen(QSharedPointer<HSSParserNode> parserNode);
+        void listenGreen(QSharedPointer<HSSObject> theObj);
+        void notifyGreen(QSharedPointer<HSSObject> theObj);
+
+        /**
+         *  Getter for the actual value of the green channel.
+         *  @return A HSSUnit containing the value for the green channel. The range of this
+         *  value is from 0.0 to 255.0.
+         */
+        const HSSUnit getGreen() const;
+
+        /**
+         *  Setter for the definition object of green. It will use the value as needed.
+         *  @param value    The new value.
+         */
+        void setGreen(HSSUnit value);
+
+        QSharedPointer<HSSObject> computeBlue(QSharedPointer<HSSParserNode> parserNode);
+        void listenBlue(QSharedPointer<HSSObject> theObj);
+        void notifyBlue(QSharedPointer<HSSObject> theObj);
+        /**
+         *  Getter for the actual value of the blue channel.
+         *  @return A HSSUnit containing the value for the blue channel. The range of this
+         *  value is from 0.0 to 255.0.
+         */
+        const HSSUnit getBlue() const;
+
+        /**
+         *  Setter for the definition object of blue. It will use the value as needed.
+         *  @param value    The new value.
+         */
+        void setBlue(HSSUnit value);
+
+        QSharedPointer<HSSObject> computeAlpha(QSharedPointer<HSSParserNode> parserNode);
+        void listenAlpha(QSharedPointer<HSSObject> theObj);
+        void notifyAlpha(QSharedPointer<HSSObject> theObj);
+        /**
+         *  Getter for the actual value of the alpha channel.
+         *  @return A HSSUnit containing the value for the alpha channel. The range of this
+         *  value is from 0.0 to 255.0.
+         */
+        const HSSUnit getAlpha() const;
+
+        /**
+         *  Setter for the definition object of alpha. It will use the value as needed.
+         *  @param value    The new value.
+         */
+        void setAlpha(HSSUnit value);
 
         QColor toQColor() const;
         QColor toQColorWithAlpha(int alpha) const;
 
     private:
         void _initialize();
+        QSharedPointer<HSSValue> _computeChannelValue(QSharedPointer<HSSParserNode> parserNode) const;
+
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

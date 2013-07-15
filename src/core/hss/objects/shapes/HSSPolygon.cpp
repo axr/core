@@ -58,6 +58,7 @@
 #include "HSSPercentageConstant.h"
 #include "HSSPolygon.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -82,6 +83,8 @@ HSSPolygon::HSSPolygon(const HSSPolygon & orig)
 
 void HSSPolygon::_initialize()
 {
+    this->addCallback("sides", new HSSComputeCallback<HSSPolygon>(this, &HSSPolygon::computeSides));
+    this->addCallback("angle", new HSSComputeCallback<HSSPolygon>(this, &HSSPolygon::computeAngle));
 }
 
 QSharedPointer<HSSPolygon> HSSPolygon::clone() const
@@ -98,6 +101,12 @@ QSharedPointer<HSSClonable> HSSPolygon::cloneImpl() const
 HSSPolygon::~HSSPolygon()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSPolygon: destructing polygon object");
+}
+
+void HSSPolygon::setDefaults()
+{
+    this->setDefault("sides", 0);
+    this->setDefault("angle", 270.);
 }
 
 AXRString HSSPolygon::toString()
@@ -140,14 +149,15 @@ void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit wi
     const QSizeF radius(width / 2., height / 2.);
 
     // Number of sides in the polygon
-    const unsigned int sides = qMax(3u, this->sides);
+    const unsigned int sides = qMax(3u, (unsigned int)this->getSides());
+    HSSUnit angle = this->getAngle();
 
     // Angle of rotation of the entire polygon specified in radians
-    const HSSUnit theta = this->angle * (M_PI / 180.);
+    const HSSUnit theta = angle * (M_PI / 180.);
 
     // Build a list of points comprising the polygon vertices
     QVector<QPointF> points;
-    for (unsigned int i = 1; i <= this->sides; ++i)
+    for (unsigned int i = 1; i <= sides; ++i)
     {
         double px = radius.width() * cos(((2 * M_PI * i) / sides) + theta) + centerPoint.x();
         double py = radius.height() * sin(((2 * M_PI * i) / sides) + theta) + centerPoint.y();
@@ -194,5 +204,79 @@ void HSSPolygon::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBo
 
         cumulativeThickness += theSize;
     }
+}
+const HSSUnit HSSPolygon::getSides() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("sides");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        return qSharedPointerCast<HSSValue>(value)->getNumber();
+    }
+    return 0.;
+}
+
+QSharedPointer<HSSObject> HSSPolygon::computeSides(QSharedPointer<HSSParserNode> value)
+{
+    HSSUnit ret = 0.;
+    switch (value->getType())
+    {
+        case HSSParserNodeTypeNumberConstant:
+        {
+            QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant>(value);
+            ret = numberValue->getValue();
+            break;
+        }
+        case HSSParserNodeTypeExpression:
+        {
+            QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression>(value);
+            ret = expressionValue->evaluate();
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(ret, this->getController())));
+}
+
+const HSSUnit HSSPolygon::getAngle() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("angle");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        return qSharedPointerCast<HSSValue>(value)->getNumber();
+    }
+    return 0.;
+}
+
+QSharedPointer<HSSObject> HSSPolygon::computeAngle(QSharedPointer<HSSParserNode> value)
+{
+    HSSUnit ret = 0.;
+    switch (value->getType())
+    {
+        case HSSParserNodeTypeNumberConstant:
+        {
+            QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant>(value);
+            ret = numberValue->getValue();
+            break;
+        }
+        case HSSParserNodeTypePercentageConstant:
+        {
+            QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant>(value);
+            percentageValue->setPercentageBase(360.);
+            ret = percentageValue->evaluate();
+            break;
+        }
+        case HSSParserNodeTypeExpression:
+        {
+            QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression>(value);
+            ret = expressionValue->evaluate();
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(ret, this->getController())));
 }
 

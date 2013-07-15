@@ -111,6 +111,7 @@ namespace AXR
          */
         virtual ~HSSContainer();
 
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual QVariantMap toMap() const;
         virtual AXRString defaultObjectType();
@@ -204,6 +205,30 @@ namespace AXR
          */
         QSharedPointer<HSSSimpleSelection> getChildren(bool includeTextBlocks) const;
 
+        const HSSUnit getContentAlignX() const;
+        QSharedPointer<HSSObject> computeContentAlignX(QSharedPointer<HSSParserNode> parserNode);
+        void listenContentAlignX(QSharedPointer<HSSObject> theObj);
+        const HSSUnit getContentAlignY() const;
+        QSharedPointer<HSSObject> computeContentAlignY(QSharedPointer<HSSParserNode> parserNode);
+        void listenContentAlignY(QSharedPointer<HSSObject> theObj);
+        const HSSDirectionValue getDirection() const;
+        const HSSDirectionValue getWrapDirection() const;
+        //content
+        const AXRString getContent() const;
+
+        QSharedPointer<HSSObject> computeContent(QSharedPointer<HSSParserNode> parserNode);
+        //shape
+        QSharedPointer<HSSObject> computeShape(QSharedPointer<HSSParserNode> parserNode);
+        /**
+         *  Getter for the value of shape.
+         *  @return A shared pointer to the shape object.
+         */
+        QSharedPointer<HSSShape> getShape();
+        void listenShape(QSharedPointer<HSSObject> theObj);
+        void notifyShape(QSharedPointer<HSSObject> theObj);
+
+        void shapeChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+
         /**
          *  Propagates the call to handleEvent() to all children and to the base class implementation.
          *  @param event    The event that is being sent.
@@ -234,11 +259,11 @@ namespace AXR
 
         static bool alignXSmaller(const QSharedPointer<HSSDisplayObject>& a, const QSharedPointer<HSSDisplayObject>& b)
         {
-            return a->alignX < b->alignX;
+            return a->getAlignX() < b->getAlignX();
         }
         static bool alignYSmaller(const QSharedPointer<HSSDisplayObject>& a, const QSharedPointer<HSSDisplayObject>& b)
         {
-            return a->alignY < b->alignY;
+            return a->getAlignY() < b->getAlignY();
         }
     };
 }

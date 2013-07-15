@@ -45,7 +45,9 @@
 #define HSSLAYOUTLINE_H
 
 #include <QtGlobal>
+#include <QSharedPointer>
 #include "HSSClonable.h"
+#include "HSSDisplayObject.h"
 #include "HSSObservable.h"
 
 namespace AXR
@@ -121,10 +123,10 @@ namespace AXR
         inline bool overlapsX(const QSharedPointer<HSSDisplayObject> & child)
         {
             HSSUnit widthA = qMax((HSSUnit)1, this->width);
-            HSSUnit widthB = qMax((HSSUnit)1, child->outerWidth);
+            HSSUnit widthB = qMax((HSSUnit)1, child->getOuterWidth());
 
             if (
-                (this->x + widthA) > (child->x - child->leftMargin)
+                (this->x + widthA) > (child->x - child->getLeftMargin())
                 && (this->x < (child->x + widthB))
                 )
             {
@@ -139,10 +141,10 @@ namespace AXR
         inline bool overlapsY(const QSharedPointer<HSSDisplayObject> & child)
         {
             HSSUnit heightA = qMax((HSSUnit)1, this->height);
-            HSSUnit heightB = qMax((HSSUnit)1, child->outerHeight);
+            HSSUnit heightB = qMax((HSSUnit)1, child->getOuterHeight());
 
             if (
-                (this->y + heightA) > (child->y - child->topMargin)
+                (this->y + heightA) > (child->y - child->getTopMargin())
                 && (this->y < (child->y + heightB))
                 )
             {

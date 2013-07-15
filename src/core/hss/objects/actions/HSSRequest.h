@@ -91,11 +91,17 @@ namespace AXR
          */
         virtual void fire();
 
-        HSSObservable * observedSrc;
-        HSSObservableProperty observedSrcProperty;
+        /**
+         *  Getter for the computed value of src.
+         *  @return A string containing the computed value of src.
+         */
+        const AXRString getSrc() const;
 
-        HSSObservable * observedTarget;
-        HSSObservableProperty observedTargetProperty;
+        /**
+         *  Getter for the computed value of target.
+         *  @return A shared pointer to the object.
+         */
+        const QSharedPointer<HSSObject> getTarget() const;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

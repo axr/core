@@ -59,6 +59,7 @@
 #include "HSSPercentageConstant.h"
 #include "HSSRgb.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -104,6 +105,14 @@ QSharedPointer<HSSClonable> HSSRadialGradient::cloneImpl() const
 HSSRadialGradient::~HSSRadialGradient()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSRadialGradient: destructing radial gradient object");
+}
+
+void HSSRadialGradient::setDefaults()
+{
+    this->setDefaultPercentage("centerX", 50.);
+    this->setDefaultPercentage("centerY", 50.);
+    this->setDefaultPercentage("offsetX", 50.);
+    this->setDefault("offsetY", 0.);
 }
 
 AXRString HSSRadialGradient::toString()
@@ -153,3 +162,42 @@ bool HSSRadialGradient::isKeyword(AXRString value, AXRString property)
     return HSSGradient::isKeyword(value, property);
 }
 
+const HSSUnit HSSRadialGradient::getCenterX() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("centerX");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        return qSharedPointerCast<HSSValue>(value)->getNumber();
+    }
+    return 0.;
+}
+
+const HSSUnit HSSRadialGradient::getCenterY() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("centerY");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        return qSharedPointerCast<HSSValue>(value)->getNumber();
+    }
+    return 0.;
+}
+
+const HSSUnit HSSRadialGradient::getOffsetX() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("offsetX");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        return qSharedPointerCast<HSSValue>(value)->getNumber();
+    }
+    return 0.;
+}
+
+const HSSUnit HSSRadialGradient::getOffsetY() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("offsetY");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        return qSharedPointerCast<HSSValue>(value)->getNumber();
+    }
+    return 0.;
+}

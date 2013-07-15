@@ -53,6 +53,8 @@
 #include "HSSFlagFunction.h"
 #include "HSSFunction.h"
 #include "HSSFunctionAction.h"
+#include "HSSKeywordConstant.h"
+#include "HSSMultipleValue.h"
 #include "HSSMultipleValueDefinition.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
@@ -119,6 +121,11 @@ HSSEvent::~HSSEvent()
     axr_log(LoggerChannelGeneralSpecific, "HSSEvent: destructing event object");
 }
 
+void HSSEvent::setDefaults()
+{
+    this->setDefaultKw("action", "no");
+}
+
 AXRString HSSEvent::toString()
 {
     return "Generic HSSEvent of type" + HSSEvent::eventTypeStringRepresentation(this->eventType);
@@ -153,10 +160,27 @@ HSSEventType HSSEvent::getEventType()
 
 void HSSEvent::fire()
 {
-    std::vector<QSharedPointer<HSSAction> > actions = this->getAction();
-
-    for (size_t i = 0; i < actions.size(); ++i)
+    QSharedPointer<HSSObject> actionObj = this->getAction();
+    if (actionObj)
     {
-        actions[i]->fire();
+        if (actionObj->isA(HSSObjectTypeAction))
+        {
+            qSharedPointerCast<HSSAction>(actionObj)->fire();
+        }
+        else if (actionObj->isA(HSSObjectTypeMultipleValue))
+        {
+            Q_FOREACH(const QSharedPointer<HSSObject> & aObj, qSharedPointerCast<HSSMultipleValue>(actionObj)->getValues())
+            {
+                if (aObj->isA(HSSObjectTypeAction))
+                {
+                    qSharedPointerCast<HSSAction>(aObj)->fire();
+                }
+            }
+        }
     }
+}
+
+const QSharedPointer<HSSObject> HSSEvent::getAction() const
+{
+    return this->getComputedValue("action");
 }

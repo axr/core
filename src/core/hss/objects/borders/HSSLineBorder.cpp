@@ -103,6 +103,12 @@ HSSLineBorder::~HSSLineBorder()
     axr_log(LoggerChannelGeneralSpecific, "HSSLineBorder: destructing line border object");
 }
 
+void HSSLineBorder::setDefaults()
+{
+    HSSBorder::setDefaults();
+    this->setDefaultKw("color", "black");
+}
+
 AXRString HSSLineBorder::toString()
 {
     if (this->isNamed())
@@ -157,12 +163,57 @@ bool HSSLineBorder::isKeyword(AXRString value, AXRString property)
     return HSSBorder::isKeyword(value, property);
 }
 
+QSharedPointer<HSSObject> HSSLineBorder::getColor()
+{
+    return this->getComputedValue("color");
+}
+
+QSharedPointer<HSSObject> HSSLineBorder::computeColor(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            AXRString theKw = qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue();
+            if (theKw == "black")
+            {
+                return HSSRgb::blackColor(this->getController());
+            }
+            else if (theKw == "white")
+            {
+                return HSSRgb::whiteColor(this->getController());
+            }
+            else if (theKw == "transparent")
+            {
+                return HSSRgb::transparentColor(this->getController());
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(parserNode, "color");
+}
+
 void HSSLineBorder::draw(QPainter &painter, const QPainterPath &path)
 {
     QPainterPathStroker stroker;
-    stroker.setWidth(this->size);
+    stroker.setWidth(this->getSize());
     stroker.setJoinStyle(Qt::MiterJoin);
     stroker.setCapStyle(Qt::FlatCap);
     QPainterPath borderPath = stroker.createStroke(path);
-    painter.fillPath(borderPath, this->color ? this->color->toQColor() : QColor(Qt::black));
+
+    QSharedPointer<HSSObject> colorObj = this->getColor();
+    QColor usedColor;
+    if (colorObj && colorObj->isA(HSSObjectTypeRgb))
+    {
+        usedColor = qSharedPointerCast<HSSRgb>(colorObj)->toQColor();
+    }
+    else
+    {
+        usedColor = QColor(Qt::black);
+    }
+    painter.fillPath(borderPath, usedColor);
+
 }

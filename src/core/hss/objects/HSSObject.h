@@ -214,6 +214,9 @@ namespace AXR
          */
         void setShorthandIndex(size_t newValue);
 
+        //isA
+        void stackIsA(QSharedPointer<HSSParserNode> parserNode);
+
         /**
          *  Getter for the current scope this object is operating on.
          *  @return A pointer to the vector of shared pointers to display objects

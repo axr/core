@@ -84,6 +84,7 @@ namespace AXR
         virtual ~HSSRoundedRect();
 
         //see HSSObject.h for documentation of these
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
@@ -95,6 +96,16 @@ namespace AXR
         void createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, HSSUnit offset);
 
         virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);
+        void stackCorners(QSharedPointer<HSSParserNode> parserNode);
+        void stackTop(QSharedPointer<HSSParserNode> parserNode);
+        void stackRight(QSharedPointer<HSSParserNode> parserNode);
+        void stackBottom(QSharedPointer<HSSParserNode> parserNode);
+        void stackLeft(QSharedPointer<HSSParserNode> parserNode);
+
+        const HSSUnit getLeftTop() const;
+        const HSSUnit getLeftBottom() const;
+        const HSSUnit getRightTop() const;
+        const HSSUnit getRightBottom() const;
 
     private:
         void _initialize();

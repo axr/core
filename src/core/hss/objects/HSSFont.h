@@ -61,6 +61,8 @@ namespace AXR
 
         static const HSSUnit DEFAULT_SIZE;
 
+        static QSharedPointer<HSSFont> defaultFont(AXRController * controller);
+
         /**
          *  Creates a new instance of a HSSFont object.
          */
@@ -83,10 +85,38 @@ namespace AXR
          */
         virtual ~HSSFont();
 
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         bool isKeyword(AXRString value, AXRString property);
+
+        /**
+         *  Getter for the computed value of size.
+         *  @return A HSSUnit containing the size in points of the font.
+         */
+        const HSSUnit getSize() const;
+
+        /**
+         *  Getter for the computed value of face.
+         *  @return A string containing the name of the typeface that will be used.
+         */
+        const AXRString getFace() const;
+
+        /**
+         *  Getter for the computed value of color.
+         *  @return A shared pointer to a HSSRgb object representing the used color.
+         *
+         *  @todo what about using gradients on text?
+         */
+        const QSharedPointer<HSSRgb> getColor() const;
+        QSharedPointer<HSSObject> computeColor(QSharedPointer<HSSParserNode> parserNode);
+
+        /**
+         *  Getter for the computed value of weight.
+         *  @return A string representing the used weight.
+         */
+        const AXRString getWeight() const;
 
     private:
         void _initialize();

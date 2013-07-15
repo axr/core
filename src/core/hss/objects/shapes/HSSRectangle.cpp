@@ -44,8 +44,10 @@
 #include "AXRLoggerManager.h"
 #include "HSSBorder.h"
 #include "HSSDisplayObject.h"
+#include "HSSMultipleValue.h"
 #include "HSSKeywordConstant.h"
 #include "HSSRectangle.h"
+#include "HSSValue.h"
 #include <QPainterPath>
 
 using namespace AXR;
@@ -164,7 +166,7 @@ void HSSRectangle::drawBorders(QPainter &painter, std::vector<QSharedPointer<HSS
     HSSUnit topThickness = 0., rightThickness = 0., bottomThickness = 0., leftThickness = 0.;
     for (HSSBorder::it it=center.begin(); it!=center.end(); ++it) {
         const QSharedPointer<HSSBorder> & theBorder = *it;
-        const std::vector<QSharedPointer<HSSParserNode> > & segments = theBorder->getSegments();
+        const QSharedPointer<HSSObject> & segmentsObj = theBorder->getSegments();
         bool hasAll = false;
         for (std::vector<QSharedPointer<HSSParserNode> >::const_iterator it = segments.begin(); it!=segments.end(); ++it) {
             const QSharedPointer<HSSParserNode> & segment = *it;

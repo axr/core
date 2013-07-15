@@ -58,10 +58,19 @@
 #include "HSSRgb.h"
 #include "HSSStringConstant.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
 const HSSUnit HSSFont::DEFAULT_SIZE = 16;
+
+QSharedPointer<HSSFont> HSSFont::defaultFont(AXRController * controller)
+{
+    QSharedPointer<HSSFont> ret(new HSSFont(controller));
+    ret->setDefaults();
+    ret->fillWithDefaults();
+    return ret;
+}
 
 HSSFont::HSSFont(AXRController * controller)
 : HSSObject(HSSObjectTypeFont, controller)
@@ -85,6 +94,7 @@ HSSFont::HSSFont(const HSSFont & orig)
 
 void HSSFont::_initialize()
 {
+    this->addCallback("color", new HSSComputeCallback<HSSFont>(this, &HSSFont::computeColor));
 }
 
 QSharedPointer<HSSFont> HSSFont::clone() const
@@ -100,6 +110,14 @@ QSharedPointer<HSSClonable> HSSFont::cloneImpl() const
 HSSFont::~HSSFont()
 {
 
+}
+
+void HSSFont::setDefaults()
+{
+    this->setDefault("size", DEFAULT_SIZE);
+    this->setDefault("face", "Helvetica");
+    this->setDefaultKw("color", "black");
+    this->setDefaultKw("weight", "normal");
 }
 
 AXRString HSSFont::toString()
@@ -155,5 +173,59 @@ bool HSSFont::isKeyword(AXRString value, AXRString property)
 
     //if we reached this far, let the superclass handle it
     return HSSObject::isKeyword(value, property);
+}
+
+const HSSUnit HSSFont::getSize() const
+{
+    return this->getComputedNumber("size");
+}
+
+const AXRString HSSFont::getFace() const
+{
+    return this->getComputedString("face");
+}
+
+const QSharedPointer<HSSRgb> HSSFont::getColor() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("color");
+    if (value && value->isA(HSSObjectTypeRgb))
+    {
+        return qSharedPointerCast<HSSRgb>(value);
+    }
+    return HSSRgb::blackColor(this->getController());
+}
+
+QSharedPointer<HSSObject> HSSFont::computeColor(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            AXRString theKw = qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue();
+            if (theKw == "black")
+            {
+                return HSSRgb::blackColor(this->getController());
+            }
+            else if (theKw == "white")
+            {
+                return HSSRgb::whiteColor(this->getController());
+            }
+            else if (theKw == "transparent")
+            {
+                return this->computeValueObject(parserNode);
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(parserNode, "color");
+}
+
+
+const AXRString HSSFont::getWeight() const
+{
+    return this->getComputedString("weight");
 }
 

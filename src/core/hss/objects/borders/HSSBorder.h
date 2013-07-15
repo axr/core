@@ -65,6 +65,7 @@ namespace AXR
          */
         virtual ~HSSBorder();
 
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
@@ -77,6 +78,13 @@ namespace AXR
          *  @param path The path comprising the object shape.
          */
         virtual void draw(QPainter &painter, const QPainterPath &path) = 0;
+
+        //size
+        const HSSUnit getSize() const;
+        //position
+        const HSSBorderPosition getPosition() const;
+        //segments
+        const QSharedPointer<HSSObject> getSegments() const;
 
     protected:
         /**

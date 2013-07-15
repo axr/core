@@ -54,6 +54,7 @@
 #include "HSSSelFunction.h"
 #include "HSSSimpleSelection.h"
 #include "HSSStringConstant.h"
+#include "HSSValue.h"
 #include "XMLParser.h"
 
 using namespace AXR;
@@ -105,74 +106,82 @@ void HSSRequest::fire()
 {
     AXRController * ctrlr = this->getController();
     AXRDocument* document = ctrlr->document();
+    QUrl src = QUrl(this->getSrc());
 
     //if there is no target
-    if (this->target->empty())
+    QSharedPointer<HSSObject> target = this->getTarget();
+    if (!target)
     {
-        document->loadXmlFile(this->src);
+        document->loadXmlFile(src);
     }
     else
     {
-        switch (this->mode)
-        {
-        default:
-        {
-            QSharedPointer<AXRBuffer> baseFile = document->file();
-            QUrl newFileUrl = this->src;
-            if(newFileUrl.scheme() == ""){
-                newFileUrl = baseFile->sourceUrl().resolved(this->src);
-            }
-            QSharedPointer<AXRBuffer> newFile;
-            try
-            {
-                newFile = document->createBufferFromUrl(newFileUrl);
-            }
-            catch (const AXRError &e)
-            {
-                e.raise();
-            }
-
-            if (newFile)
-            {
-                QSharedPointer<HSSContainer> tempNode = QSharedPointer<HSSContainer>(new HSSContainer(ctrlr));
-                ctrlr->currentContext().push(tempNode);
-                bool loadingSuccess = document->xmlParser()->loadFile(newFile);
-                if (!loadingSuccess)
-                {
-                    AXRError("AXRDocument", "Could not load the XML file").raise();
-                }
-                else
-                {
-                    if(this->target)
-                    {
-                        for (HSSSimpleSelection::iterator it = tempNode->getChildren()->begin(); it != tempNode->getChildren()->end(); ++it)
-                        {
-                            QSharedPointer<HSSContainer> loadedRoot = HSSContainer::asContainer(*it);
-                            if(loadedRoot)
-                            {
-                                for (HSSSimpleSelection::iterator it2 = this->target->begin(); it2 != this->target->end(); ++it2) {
-                                    QSharedPointer<HSSContainer> theTarget = HSSContainer::asContainer(*it2);
-                                    if(theTarget)
-                                    {
-                                        //QSharedPointer<HSSContainer> clonedNode = loadedRoot->clone();
-                                        theTarget->add(loadedRoot);
-                                    }
-                                }
-
-                                ctrlr->activateRules();
-                                HSSInputEvent event(HSSEventTypeLoad);
-                                loadedRoot->handleEvent(&event);
-                                document->setNeedsDisplay(true);
-                            }
-                            break;
-                        }
-                    }
-                }
-                ctrlr->currentContext().pop();
-            }
-            break;
+        QSharedPointer<AXRBuffer> baseFile = document->file();
+        QUrl newFileUrl = src;
+        if(newFileUrl.scheme() == ""){
+            newFileUrl = baseFile->sourceUrl().resolved(src);
         }
+        QSharedPointer<AXRBuffer> newFile;
+        try
+        {
+            newFile = document->createBufferFromUrl(newFileUrl);
+        }
+        catch (const AXRError &e)
+        {
+            e.raise();
+        }
+
+        if (newFile)
+        {
+            QSharedPointer<HSSContainer> tempNode = QSharedPointer<HSSContainer>(new HSSContainer(ctrlr));
+            ctrlr->currentContext().push(tempNode);
+            bool loadingSuccess = document->xmlParser()->loadFile(newFile);
+            if (!loadingSuccess)
+            {
+                AXRError("AXRDocument", "Could not load the XML file").raise();
+            }
+            else
+            {
+                for (HSSSimpleSelection::iterator it = tempNode->getChildren()->begin(); it != tempNode->getChildren()->end(); ++it)
+                {
+                    QSharedPointer<HSSContainer> loadedRoot = HSSContainer::asContainer(*it);
+                    if(loadedRoot)
+                    {
+//                        for (HSSSimpleSelection::iterator it2 = this->target->begin(); it2 != this->target->end(); ++it2) {
+//                            QSharedPointer<HSSContainer> theTarget = HSSContainer::asContainer(*it2);
+//                            if(theTarget)
+//                            {
+//                                //QSharedPointer<HSSContainer> clonedNode = loadedRoot->clone();
+//                                theTarget->add(loadedRoot);
+//                            }
+//                        }
+//
+//                        ctrlr->activateRules();
+//                        HSSInputEvent event(HSSEventTypeLoad);
+//                        loadedRoot->handleEvent(&event);
+//                        document->setNeedsDisplay(true);
+                    }
+                    break;
+                }
+            }
+            ctrlr->currentContext().pop();
         }
     }
+}
+
+const AXRString HSSRequest::getSrc() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("src");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        return qSharedPointerCast<HSSValue>(value)->getString();
+    }
+    return "";
+}
+
+
+const QSharedPointer<HSSObject> HSSRequest::getTarget() const
+{
+    return this->getComputedValue("target");
 }
 

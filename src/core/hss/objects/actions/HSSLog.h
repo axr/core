@@ -82,7 +82,15 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual void fire();
 
+        /**
+         *  Getter for the computed value of value.
+         *  @return A shared pointer to the value.
+         */
+        const QSharedPointer<HSSObject> getValue() const;
+
     private:
+        void _logParserNode(QSharedPointer<HSSParserNode> parserNode) const;
+        void _logObject(QSharedPointer<HSSObject> theObj) const;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

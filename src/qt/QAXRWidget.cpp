@@ -160,6 +160,12 @@ void QAXRWidget::paintEvent(QPaintEvent *e)
         QSharedPointer<HSSVisitorManager> visitorManager = d->document->visitorManager();
         if (visitorManager)
         {
+            //force values
+            QSharedPointer<HSSDisplayObject> root = d->document->controller()->root();
+            root->setComputedBool("visible", true);
+            root->setComputedValue("width", d->document->windowWidth());
+            root->setComputedValue("height", d->document->windowHeight());
+
             // Render the final image to the screen
             d->renderVisitor->setDirtyRect(e->rect());
             visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);

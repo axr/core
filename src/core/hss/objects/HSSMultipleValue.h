@@ -50,8 +50,7 @@
 namespace AXR
 {
     /**
-     *  @brief MultipleValue objects contain other values, and stores them
-     *  together under the same object name.
+     *  @brief This is a proxy class to hold multiple objects
      */
     class AXR_API HSSMultipleValue : public HSSObject
     {
@@ -80,7 +79,7 @@ namespace AXR
          *  @param newValue     A shared pointer to the parser node that defines the value
          *                      (definition object)
          */
-        void add(QSharedPointer<HSSParserNode> newValue);
+        void add(QSharedPointer<HSSObject> newValue);
         /**
          *  Removes the last definition object from the storage
          */
@@ -88,11 +87,11 @@ namespace AXR
         /**
          *  @return The first definition object in the storage.
          */
-        QSharedPointer<HSSParserNode> first();
+        QSharedPointer<HSSObject> first();
         /**
          *  @return The last definition object in the storage.
          */
-        QSharedPointer<HSSParserNode> last();
+        QSharedPointer<HSSObject> last();
         /**
          *  @return The amount of definition objects in the storage.
          */
@@ -101,10 +100,10 @@ namespace AXR
          *  @return The entire storage as a STL vector containing shared pointers to definition
          *  objects. Read only.
          */
-        const std::vector<QSharedPointer<HSSParserNode> > getValueList() const;
+        const QList<QSharedPointer<HSSObject> > getValues() const;
 
     protected:
-        std::vector<QSharedPointer<HSSParserNode> >valueList;
+        QList<QSharedPointer<HSSObject> >valueList;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

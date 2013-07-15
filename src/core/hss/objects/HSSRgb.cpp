@@ -48,10 +48,12 @@
 #include "HSSCallback.h"
 #include "HSSDisplayObject.h"
 #include "HSSExpression.h"
+#include "HSSKeywordConstant.h"
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
 #include "HSSRgb.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -59,19 +61,25 @@ QSharedPointer<HSSRgb> HSSRgb::blackColor(AXRController * controller)
 {
     //create a new color object, it will have all its color channels set to
     //0 and the alpha to 255 by default in the constructor
-    return QSharedPointer<HSSRgb>(new HSSRgb(controller));
+    QSharedPointer<HSSRgb> blackColor(new HSSRgb(controller));
+    blackColor->setDefaults();
+    return blackColor;
 }
 
 QSharedPointer<HSSRgb> HSSRgb::whiteColor(AXRController * controller)
 {
     //create a new color object with default value
     QSharedPointer<HSSRgb> whiteColor = QSharedPointer<HSSRgb>(new HSSRgb(controller));
+    whiteColor->setDefaults();
     //set all the color channels to the maximum value
+    whiteColor->setRed(255.0);
+    whiteColor->setGreen(255.0);
+    whiteColor->setBlue(255.0);
     return whiteColor;
 }
 
-HSSRgb::HSSRgb(const HSSRgb & orig)
-: HSSObject(orig)
+HSSRgb::HSSRgb(AXRController * controller)
+: HSSObject(HSSObjectTypeRgb, controller)
 {
     this->_initialize();
 
@@ -93,6 +101,10 @@ HSSRgb::HSSRgb(const HSSRgb & orig)
 
 void HSSRgb::_initialize()
 {
+    this->addCallback("alpha", new HSSComputeCallback<HSSRgb>(this, &HSSRgb::computeAlpha));
+    this->addCallback("red", new HSSComputeCallback<HSSRgb>(this, &HSSRgb::computeRed));
+    this->addCallback("green", new HSSComputeCallback<HSSRgb>(this, &HSSRgb::computeGreen));
+    this->addCallback("blue", new HSSComputeCallback<HSSRgb>(this, &HSSRgb::computeBlue));
 }
 
 QSharedPointer<HSSRgb> HSSRgb::clone() const
@@ -111,6 +123,14 @@ HSSRgb::~HSSRgb()
     axr_log(LoggerChannelGeneralSpecific, "HSSRgb: destructing rgb object");
 }
 
+void HSSRgb::setDefaults()
+{
+    this->setDefault("alpha", 255.);
+    this->setDefault("red", 0.);
+    this->setDefault("green", 0.);
+    this->setDefault("blue", 0.);
+}
+
 AXRString HSSRgb::toString()
 {
     if (this->isNamed())
@@ -119,7 +139,7 @@ AXRString HSSRgb::toString()
     }
     else
     {
-        return AXRString("Annonymous HSSRgb with red: %1 green: %2 blue: %3 alpha: %4").arg(this->red).arg(this->green).arg(this->blue).arg(this->alpha);
+        return AXRString("Annonymous HSSRgb with red: %1 green: %2 blue: %3 alpha: %4").arg(this->getRed()).arg(this->getGreen()).arg(this->getBlue()).arg(this->getAlpha());
     }
 }
 
@@ -149,10 +169,69 @@ AXRString HSSRgb::defaultObjectType(AXRString property)
 //    //if we reached this far, let the superclass handle it
 //    return HSSObject::isKeyword(value, property);
 //}
+QSharedPointer<HSSObject> HSSRgb::computeRed(QSharedPointer<HSSParserNode> parserNode)
+{
+    return this->_computeChannelValue(parserNode);
+}
+
+const HSSUnit HSSRgb::getRed() const
+{
+    return this->getComputedNumber("red");
+}
+
+void HSSRgb::setRed(HSSUnit value)
+{
+    this->setComputedValue("red", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())));
+}
+
+QSharedPointer<HSSObject> HSSRgb::computeGreen(QSharedPointer<HSSParserNode> parserNode)
+{
+    return this->_computeChannelValue(parserNode);
+}
+
+const HSSUnit HSSRgb::getGreen() const
+{
+    return this->getComputedNumber("green");
+}
+
+void HSSRgb::setGreen(HSSUnit value)
+{
+    this->setComputedValue("green", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())));
+}
+
+QSharedPointer<HSSObject> HSSRgb::computeBlue(QSharedPointer<HSSParserNode> parserNode)
+{
+    return this->_computeChannelValue(parserNode);
+}
+
+const HSSUnit HSSRgb::getBlue() const
+{
+    return this->getComputedNumber("blue");
+}
+
+void HSSRgb::setBlue(HSSUnit value)
+{
+    this->setComputedValue("blue", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())));
+}
+
+QSharedPointer<HSSObject> HSSRgb::computeAlpha(QSharedPointer<HSSParserNode> parserNode)
+{
+    return this->_computeChannelValue(parserNode);
+}
+
+const HSSUnit HSSRgb::getAlpha() const
+{
+    return this->getComputedNumber("alpha");
+}
+
+void HSSRgb::setAlpha(HSSUnit value)
+{
+    this->setComputedValue("alpha", value);
+}
 
 QColor HSSRgb::toQColor() const
 {
-    return QColor(static_cast<int>(red), static_cast<int>(green), static_cast<int>(blue), static_cast<int>(alpha));
+    return QColor(static_cast<int>(this->getRed()), static_cast<int>(this->getGreen()), static_cast<int>(this->getBlue()), static_cast<int>(this->getAlpha()));
 }
 
 QColor HSSRgb::toQColorWithAlpha(int alpha) const
@@ -160,4 +239,35 @@ QColor HSSRgb::toQColorWithAlpha(int alpha) const
     QColor color = toQColor();
     color.setAlpha(alpha);
     return color;
+}
+
+QSharedPointer<HSSValue> HSSRgb::_computeChannelValue(QSharedPointer<HSSParserNode> parserNode) const
+{
+    HSSUnit ret = 0.;
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeNumberConstant:
+        {
+            QSharedPointer<HSSNumberConstant> numberValue = qSharedPointerCast<HSSNumberConstant>(parserNode);
+            ret = numberValue->getValue();
+            break;
+        }
+        case HSSParserNodeTypePercentageConstant:
+        {
+            QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant>(parserNode);
+            percentageValue->setPercentageBase(255.);
+            ret = percentageValue->evaluate();
+            break;
+        }
+        case HSSParserNodeTypeExpression:
+        {
+            QSharedPointer<HSSExpression> expressionValue = qSharedPointerCast<HSSExpression>(parserNode);
+            ret = expressionValue->evaluate();
+            break;
+        }
+        default:
+            break;
+    }
+
+    return HSSValue::valueFromParserNode(this->getController(), QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(ret, this->getController())), this->getThisObj(), this->getScope());
 }

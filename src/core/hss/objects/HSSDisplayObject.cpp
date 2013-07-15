@@ -44,6 +44,7 @@
 #include <cmath>
 #include <QStack>
 #include <QVariant>
+#include <QtGlobal>
 #include "AXRController.h"
 #include "AXRDocument.h"
 #include "AXRLoggerManager.h"
@@ -125,6 +126,13 @@ void HSSDisplayObject::_initialize()
     this->_layoutLockTopPosition = 0.;
     this->_layoutFlagLockBottom = false;
     this->_layoutLockBottomPosition = 0.;
+
+    this->addCallback("width", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenWidth), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyWidth));
+    this->addCallback("height", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenHeight), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyHeight));
+    this->addCallback("anchorX", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAnchorX), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenAnchorX), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyAnchorX));
+    this->addCallback("alignX", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAlignX), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenAlignX), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyAlignX));
+    this->addCallback("alignY", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAlignY), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenAlignY), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyAlignY));
+    this->addCallback("background", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeBackground));
 }
 
 HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
@@ -150,6 +158,29 @@ HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
 HSSDisplayObject::~HSSDisplayObject()
 {
     axr_log(LoggerChannelGeneralSpecific, AXRString("destroying display object with name ").append(this->name));
+}
+
+void HSSDisplayObject::setDefaults()
+{
+    this->setDefaultKw("background", "no");
+    this->setDefaultKw("content", "no");
+    this->setDefaultKw("on", "no");
+    this->setDefaultKw("border", "no");
+    if (this->isRoot())
+    {
+        this->setDefaultKw("visible", "yes");
+    }
+    else
+    {
+        this->setDefaultPercentage("width", 100.);
+        this->setDefaultKw("height", "content");
+        this->setDefaultKw("anchorX", "no");
+        this->setDefaultKw("anchorY", "no");
+        this->setDefaultKw("flow", "yes");
+        this->setDefaultKw("contained", "yes");
+        this->setDefaultKw("alignX", "auto");
+        this->setDefaultKw("alignY", "auto");
+        this->setDefaultKw("visible", "inherit");
     }
 }
 
@@ -615,80 +646,888 @@ void HSSDisplayObject::setGlobalY(HSSUnit newValue)
     this->globalY = newValue;
 }
 
-void HSSDisplayObject::_setInnerWidth(bool notify)
+void HSSDisplayObject::setWidth(HSSUnit value)
 {
-    std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
-    HSSUnit innerWidth = this->width;
-    this->rightPadding = this->leftPadding = 0;
-    for (it = this->padding.begin(); it != this->padding.end(); ++it)
-    {
-        QSharedPointer<HSSMargin> theMargin = *it;
-        innerWidth -= theMargin->getLeft() + theMargin->getRight();
-        this->rightPadding += theMargin->getRight();
-        this->leftPadding += theMargin->getLeft();
-    }
-    this->innerWidth = innerWidth;
-    if(this->innerWidth < 0)
-    {
-        this->innerWidth = 0;
-    }
-    if (notify)
-        this->notifyObservers(HSSObservablePropertyInnerWidth, &this->innerWidth);
+    this->setComputedValue("width", value);
 }
 
-void HSSDisplayObject::_setInnerHeight(bool notify)
+const HSSUnit HSSDisplayObject::getWidth() const
 {
-    std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
-    HSSUnit innerHeight = this->height;
-    this->topPadding = this->bottomPadding = 0;
-    for (it = this->padding.begin(); it != this->padding.end(); ++it)
-    {
-        QSharedPointer<HSSMargin> theMargin = *it;
-        innerHeight -= theMargin->getTop() + theMargin->getBottom();
-        this->topPadding += theMargin->getTop();
-        this->bottomPadding += theMargin->getBottom();
-    }
-    this->innerHeight = innerHeight;
-    if(this->innerHeight < 0)
-    {
-        this->innerHeight = 0;
-    }
-    if (notify)
-        this->notifyObservers(HSSObservablePropertyInnerHeight, &this->innerHeight);
+    return this->getComputedNumber("width");
 }
 
-void HSSDisplayObject::_setOuterWidth(bool notify)
+const HSSUnit HSSDisplayObject::getInnerWidth() const
 {
-    std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
-    HSSUnit outerWidth = this->width;
-    this->rightMargin = this->leftMargin = 0;
-    for (it = this->margin.begin(); it != this->margin.end(); ++it)
-    {
-        QSharedPointer<HSSMargin> theMargin = *it;
-        outerWidth += theMargin->getLeft() + theMargin->getRight();
-        this->rightMargin += theMargin->getRight();
-        this->leftMargin += theMargin->getLeft();
-    }
-    this->outerWidth = outerWidth;
-    if (notify)
-        this->notifyObservers(HSSObservablePropertyOuterWidth, &this->outerWidth);
+    return this->getComputedNumber("innerWidth");
 }
 
-void HSSDisplayObject::_setOuterHeight(bool notify)
+const HSSUnit HSSDisplayObject::getOuterWidth() const
+{
+    return this->getComputedNumber("outerWidth");
+}
+
+void HSSDisplayObject::listenWidth(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSContainer> parent = this->getParent();
+        if (parent)
+        {
+            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
+            valueObj->listen(parent, "innerWidth");
+            valueObj->setPercentageBase(this->getInnerWidth());
+            valueObj->observe("value", "width", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::widthChanged));
+        }
+    }
+}
+
+void HSSDisplayObject::notifyWidth(QSharedPointer<HSSObject> theObj)
+{
+    this->widthByContent = false;
+    this->_hasOwnWidth = false;
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+        if (parserNode->isA(HSSParserNodeTypeKeywordConstant) && qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue() == "content")
+        {
+            this->widthByContent = true;
+        }
+        else if (parserNode->isA(HSSParserNodeTypeNumberConstant))
+        {
+            this->_hasOwnWidth = true;
+        }
+    }
+    this->_setInnerWidth();
+    this->_setOuterWidth();
+    this->setNeedsSurface(true);
+    this->setNeedsLayout(true);
+    this->setDirty(true);
+    this->notifyObservers("width", theObj);
+}
+
+void HSSDisplayObject::widthChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    //FIXME: handle width by content
+    //    if (this->widthByContent)
+    //    {
+    //        this->width = floor(*(HSSUnit*) data);
+    //    }
+
+    this->_setInnerWidth();
+    this->_setOuterWidth();
+
+    this->setNeedsSurface(true);
+    this->setNeedsLayout(true);
+    this->setDirty(true);
+    this->notifyObservers("width", this->getComputedValue("width"));
+}
+
+void HSSDisplayObject::setHeight(HSSUnit value)
+{
+    this->setComputedValue("height", value);
+}
+
+const HSSUnit HSSDisplayObject::getHeight() const
+{
+    return this->getComputedNumber("height");
+}
+
+const HSSUnit HSSDisplayObject::getInnerHeight() const
+{
+    return this->getComputedNumber("innerHeight");
+}
+
+const HSSUnit HSSDisplayObject::getOuterHeight() const
+{
+    return this->getComputedNumber("outerHeight");
+}
+
+void HSSDisplayObject::listenHeight(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSContainer> parent = this->getParent();
+        if (parent)
+        {
+            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
+            valueObj->listen(parent, "innerHeight");
+            valueObj->setPercentageBase(this->getInnerHeight());
+            valueObj->observe("value", "height", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::heightChanged));
+        }
+    }
+}
+
+void HSSDisplayObject::notifyHeight(QSharedPointer<HSSObject> theObj)
+{
+    this->heightByContent = false;
+    this->_hasOwnHeight = false;
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+        if (parserNode->isA(HSSParserNodeTypeKeywordConstant) && qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue() == "content")
+        {
+            this->heightByContent = true;
+        }
+        else if (parserNode->isA(HSSParserNodeTypeNumberConstant))
+        {
+            this->_hasOwnHeight = true;
+        }
+    }
+    this->_setInnerHeight();
+    this->_setOuterHeight();
+    this->setNeedsSurface(true);
+    this->setNeedsLayout(true);
+    this->setDirty(true);
+    this->notifyObservers("height", theObj);
+}
+
+void HSSDisplayObject::heightChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    this->_setInnerHeight();
+    this->_setOuterHeight();
+    this->setNeedsSurface(true);
+    this->setNeedsLayout(true);
+    this->setDirty(true);
+    this->notifyObservers("height", this->getComputedValue("height"));
+}
+
+void HSSDisplayObject::setAnchorX(HSSUnit value)
+{
+    this->setComputedValue("anchorX", value);
+}
+
+const HSSUnit HSSDisplayObject::getAnchorX() const
+{
+    return this->getComputedNumber("anchorX");
+}
+
+QSharedPointer<HSSObject> HSSDisplayObject::computeAnchorX(QSharedPointer<HSSParserNode> parserNode)
+{
+    this->_anchorXdefault = false;
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(parserNode);
+            AXRString kwValue = theKW->getValue();
+            if (kwValue == "no" || kwValue == "default")
+            {
+                this->_anchorXdefault = true;
+            }
+            else if (kwValue == "left")
+            {
+                return this->computeValueObject(this->percentageToConstant(0));
+            }
+            else if (kwValue == "middle" || kwValue == "center")
+            {
+                return this->computeValueObject(this->percentageToConstant(50));
+            }
+            else if (kwValue == "right")
+            {
+                return this->computeValueObject(this->percentageToConstant(100));
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(parserNode, "anchorX");
+}
+
+void HSSDisplayObject::listenAnchorX(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
+        valueObj->listen(this->shared_from_this(), "width");
+        valueObj->setPercentageBase(this->getWidth());
+        valueObj->observe("value", "anchorX", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::anchorXChanged));
+    }
+}
+
+void HSSDisplayObject::notifyAnchorX(QSharedPointer<HSSObject> theObj)
+{
+    QSharedPointer<HSSContainer> parent = this->getParent();
+    if (parent)
+    {
+        parent->setNeedsLayout(true);
+    }
+    this->notifyObservers("anchorX", theObj);
+}
+
+void HSSDisplayObject::anchorXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    this->_anchorXdefault = false;
+    QSharedPointer<HSSObject> currentValue = this->getComputedValue("anchorX");
+    if (currentValue->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(currentValue)->getValue();
+        if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
+        {
+            QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant> (parserNode);
+            if (keywordValue->getValue() == "default" || keywordValue->getValue() == "no")
+            {
+                this->_anchorXdefault = true;
+            }
+        }
+    }
+    QSharedPointer<HSSContainer> parent = this->getParent();
+    if (parent)
+    {
+        parent->setNeedsLayout(true);
+    }
+    this->notifyObservers("anchorX", theObj);
+}
+
+void HSSDisplayObject::setAnchorY(HSSUnit value)
+{
+    this->setComputedValue("anchorY", value);
+}
+
+const HSSUnit HSSDisplayObject::getAnchorY() const
+{
+    return this->getComputedNumber("anchorY");
+}
+
+QSharedPointer<HSSObject> HSSDisplayObject::computeAnchorY(QSharedPointer<HSSParserNode> parserNode)
+{
+    this->_anchorYdefault = false;
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(parserNode);
+            AXRString kwValue = theKW->getValue();
+            if (kwValue == "no" || kwValue == "default")
+            {
+                this->_anchorYdefault = true;
+            }
+            else if (kwValue == "top")
+            {
+                return this->computeValueObject(this->percentageToConstant(0));
+            }
+            else if (kwValue == "middle" || kwValue == "center")
+            {
+                return this->computeValueObject(this->percentageToConstant(50));
+            }
+            else if (kwValue == "bottom")
+            {
+                return this->computeValueObject(this->percentageToConstant(100));
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(parserNode, "anchorY");
+}
+
+void HSSDisplayObject::listenAnchorY(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
+        valueObj->listen(this->shared_from_this(), "height");
+        valueObj->setPercentageBase(this->getHeight());
+        valueObj->observe("value", "anchorY", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::anchorYChanged));
+    }
+}
+
+void HSSDisplayObject::notifyAnchorY(QSharedPointer<HSSObject> theObj)
+{
+    QSharedPointer<HSSContainer> parent = this->getParent();
+    if (parent)
+    {
+        parent->setNeedsLayout(true);
+    }
+    this->notifyObservers("anchorY", theObj);
+}
+
+void HSSDisplayObject::anchorYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    this->_anchorYdefault = false;
+    QSharedPointer<HSSObject> currentValue = this->getComputedValue("anchorY");
+    if (currentValue->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(currentValue)->getValue();
+        if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
+        {
+            QSharedPointer<HSSKeywordConstant> keywordValue = qSharedPointerCast<HSSKeywordConstant> (parserNode);
+            if (keywordValue->getValue() == "default" || keywordValue->getValue() == "no")
+            {
+                this->_anchorYdefault = true;
+            }
+        }
+    }
+    QSharedPointer<HSSContainer> parent = this->getParent();
+    if (parent)
+    {
+        parent->setNeedsLayout(true);
+    }
+    this->notifyObservers("anchorY", theObj);
+}
+
+
+//flow
+bool HSSDisplayObject::getFlow()
+{
+    return this->getComputedBool("flow");
+}
+
+//contained
+bool HSSDisplayObject::getContained()
+{
+    return this->getComputedBool("contained");
+}
+
+void HSSDisplayObject::setAlignX(HSSUnit value)
+{
+    this->setComputedValue("alignX", value);
+}
+
+const HSSUnit HSSDisplayObject::getAlignX() const
+{
+    return this->getComputedNumber("alignX");
+}
+
+QSharedPointer<HSSObject> HSSDisplayObject::computeAlignX(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(parserNode);
+            AXRString kwValue = theKW->getValue();
+            if (kwValue == "auto")
+            {
+                return this->inheritValue("contentAlignX");
+            }
+            else if (kwValue == "left")
+            {
+                return this->computeValueObject(this->percentageToConstant(0));
+            }
+            else if (kwValue == "middle" || kwValue == "center")
+            {
+                return this->computeValueObject(this->percentageToConstant(50));
+            }
+            else if (kwValue == "right")
+            {
+                return this->computeValueObject(this->percentageToConstant(100));
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(parserNode, "alignX");
+}
+
+void HSSDisplayObject::listenAlignX(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSContainer> parent = this->getParent();
+        if (parent)
+        {
+            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
+            valueObj->listen(parent, "innerWidth");
+            valueObj->setPercentageBase(this->getInnerWidth());
+            valueObj->observe("value", "alignX", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignXChanged));
+        }
+    }
+}
+
+void HSSDisplayObject::notifyAlignX(QSharedPointer<HSSObject> theObj)
+{
+    QSharedPointer<HSSContainer> parent = this->getParent();
+    if (parent)
+    {
+        parent->setNeedsLayout(true);
+    }
+    this->notifyObservers("alignX", theObj);
+}
+
+void HSSDisplayObject::alignXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    QSharedPointer<HSSContainer> parent = this->getParent();
+    if (parent)
+    {
+        parent->setNeedsLayout(true);
+    }
+    this->notifyObservers("alignX", theObj);
+}
+
+void HSSDisplayObject::setAlignY(HSSUnit value)
+{
+    this->setComputedValue("alignY", value);
+}
+
+const HSSUnit HSSDisplayObject::getAlignY() const
+{
+    return this->getComputedNumber("alignY");
+}
+
+QSharedPointer<HSSObject> HSSDisplayObject::computeAlignY(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(parserNode);
+            AXRString kwValue = theKW->getValue();
+            if (kwValue == "auto")
+            {
+                return this->inheritValue("contentAlignY");
+            }
+            else if (kwValue == "top")
+            {
+                return this->computeValueObject(this->percentageToConstant(0));
+            }
+            else if (kwValue == "middle" || kwValue == "center")
+            {
+                return this->computeValueObject(this->percentageToConstant(50));
+            }
+            else if (kwValue == "bottom")
+            {
+                return this->computeValueObject(this->percentageToConstant(100));
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(parserNode, "alignY");
+}
+
+void HSSDisplayObject::listenAlignY(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSContainer> parent = this->getParent();
+        if (parent)
+        {
+            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
+            valueObj->listen(parent, "innerHeight");
+            valueObj->setPercentageBase(this->getInnerHeight());
+            valueObj->observe("value", "alignY", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignYChanged));
+        }
+    }
+}
+
+void HSSDisplayObject::notifyAlignY(QSharedPointer<HSSObject> theObj)
+{
+    QSharedPointer<HSSContainer> parent = this->getParent();
+    if (parent)
+    {
+        parent->setNeedsLayout(true);
+    }
+    this->notifyObservers("alignY", theObj);
+}
+
+void HSSDisplayObject::alignYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    QSharedPointer<HSSContainer> parent = this->getParent();
+    if (parent)
+    {
+        parent->setNeedsLayout(true);
+    }
+    this->notifyObservers("alignY", theObj);
+}
+
+const HSSUnit HSSDisplayObject::getLineAlign() const
+{
+    return this->getComputedNumber("lineAlign");
+}
+
+QSharedPointer<HSSObject> HSSDisplayObject::computeLineAlign(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(parserNode);
+            AXRString kwValue = theKW->getValue();
+            if (kwValue == "top" || kwValue == "left")
+            {
+                return this->computeValueObject(this->percentageToConstant(0));
+            }
+            else if (kwValue == "middle" || kwValue == "center")
+            {
+                return this->computeValueObject(this->percentageToConstant(50));
+            }
+            else if (kwValue == "bottom" || kwValue == "right")
+            {
+                return this->computeValueObject(this->percentageToConstant(100));
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(parserNode, "lineAlign");
+}
+
+const QSharedPointer<HSSObject> HSSDisplayObject::getBackground() const
+{
+    return this->getComputedValue("background");
+}
+
+QSharedPointer<HSSObject> HSSDisplayObject::computeBackground(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(parserNode);
+            AXRString kwValue = theKW->getValue();
+            if (kwValue == "no")
+            {
+                return this->computeValueObject(parserNode);
+            }
+            else if (kwValue == "black")
+            {
+                return HSSRgb::blackColor(this->getController());
+            }
+            else if (kwValue == "white")
+            {
+                return HSSRgb::whiteColor(this->getController());
+            }
+            else if (kwValue == "transparent")
+            {
+                return HSSRgb::transparentColor(this->getController());
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    switch (parserNode->getStatementType())
+    {
+        case HSSStatementTypeObjectDefinition:
+        {
+            QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (parserNode);
+            objdef->apply();
+            return objdef->getObject();
+        }
+        default:
+            break;
+    }
+
+    return this->computeValueObject(parserNode);
+}
+
+//font
+const QSharedPointer<HSSFont> HSSDisplayObject::getFont() const
+{
+    QSharedPointer<HSSObject> computed = this->getComputedValue("font");;
+    if (computed && computed->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSValue>(computed)->getObject();
+        if (remoteObj && remoteObj->isA(HSSObjectTypeFont))
+        {
+            return qSharedPointerCast<HSSFont>(remoteObj);
+        }
+    }
+    else if (computed && computed->isA(HSSObjectTypeFont)){
+        return qSharedPointerCast<HSSFont>(computed);
+    }
+    return HSSFont::defaultFont(this->getController());
+}
+
+//on
+const QSharedPointer<HSSObject> HSSDisplayObject::getOn() const
+{
+    return this->getComputedValue("on");
+}
+
+bool HSSDisplayObject::fireEvent(HSSEventType type)
+{
+    bool fired = false;
+//    if (this->on.find(type) != this->on.end())
+//    {
+//        std::vector<QSharedPointer<HSSObject> > events = this->on[type];
+//        HSSObject::it it;
+//        for (it = events.begin(); it != events.end(); ++it)
+//        {
+//            if ((*it)->isA(HSSObjectTypeEvent))
+//            {
+//                QSharedPointer<HSSEvent> theEvent = qSharedPointerCast<HSSEvent > (*it);
+//                axr_log(LoggerChannelEvents, "HSSDisplayObject: firing event: " + theEvent->toString());
+//                theEvent->fire();
+//                fired = true;
+//            }
+//        }
+//    }
+//
+//    if (fired)
+//    {
+//        axr_log(LoggerChannelEvents, "HSSDisplayObject: fired event");
+//    }
+
+    return fired;
+}
+
+//margin
+const QSharedPointer<HSSObject> HSSDisplayObject::getMargin() const
+{
+    return this->getComputedValue("margin");
+}
+
+void HSSDisplayObject::setTopMargin(HSSUnit value)
+{
+    this->setComputedValue("topMargin", value);
+}
+
+const HSSUnit HSSDisplayObject::getTopMargin() const
+{
+    return this->getComputedNumber("topMargin");
+}
+
+void HSSDisplayObject::setRightMargin(HSSUnit value)
+{
+    this->setComputedValue("rightMargin", value);
+}
+
+const HSSUnit HSSDisplayObject::getRightMargin() const
+{
+    return this->getComputedNumber("rightMargin");
+}
+
+void HSSDisplayObject::setBottomMargin(HSSUnit value)
+{
+    this->setComputedValue("bottomMargin", value);
+}
+
+const HSSUnit HSSDisplayObject::getBottomMargin() const
+{
+    return this->getComputedNumber("bottomMargin");
+}
+
+void HSSDisplayObject::setLeftMargin(HSSUnit value)
+{
+    this->setComputedValue("leftMargin", value);
+}
+
+const HSSUnit HSSDisplayObject::getLeftMargin() const
+{
+    return this->getComputedNumber("leftMargin");
+}
+
+void HSSDisplayObject::horizontalMarginChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    this->_setOuterWidth();
+    this->notifyObservers("margin", theObj);
+}
+
+void HSSDisplayObject::verticalMarginChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    this->_setOuterHeight();
+    this->notifyObservers("margin", theObj);
+}
+
+//padding
+const QSharedPointer<HSSObject> HSSDisplayObject::getPadding() const
+{
+    return this->getComputedValue("padding");
+}
+
+void HSSDisplayObject::setTopPadding(HSSUnit value)
+{
+    this->setComputedValue("topPadding", value);
+}
+
+const HSSUnit HSSDisplayObject::getTopPadding() const
+{
+    return this->getComputedNumber("topPadding");
+}
+
+void HSSDisplayObject::setRightPadding(HSSUnit value)
+{
+    this->setComputedValue("rightPadding", value);
+}
+
+const HSSUnit HSSDisplayObject::getRightPadding() const
+{
+    return this->getComputedNumber("rightPadding");
+}
+
+void HSSDisplayObject::setBottomPadding(HSSUnit value)
+{
+    this->setComputedValue("bottomPadding", value);
+}
+
+const HSSUnit HSSDisplayObject::getBottomPadding() const
+{
+    return this->getComputedNumber("bottomPadding");
+}
+
+void HSSDisplayObject::setLeftPadding(HSSUnit value)
+{
+    this->setComputedValue("leftPadding", value);
+}
+
+const HSSUnit HSSDisplayObject::getLeftPadding() const
+{
+    return this->getComputedNumber("leftPadding");
+}
+
+const QSharedPointer<HSSObject> HSSDisplayObject::getBorder() const
+{
+    return this->getComputedValue("border");
+}
+
+const bool HSSDisplayObject::getVisible() const
+{
+    return this->getComputedBool("visible");
+}
+
+void HSSDisplayObject::_setInnerWidth()
 {
     std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
-    HSSUnit outerHeight = this->height;
-    this->topMargin = this->bottomMargin = 0;
-    for (it = this->margin.begin(); it != this->margin.end(); ++it)
+    HSSUnit innerWidth = this->getWidth();
+    HSSUnit rightPadding = 0, leftPadding = 0;
+    QSharedPointer<HSSObject> paddingObj = this->getPadding();
+    if (paddingObj)
     {
-        QSharedPointer<HSSMargin> theMargin = *it;
-        outerHeight += theMargin->getTop() + theMargin->getBottom();
-        this->topMargin += theMargin->getTop();
-        this->bottomMargin += theMargin->getBottom();
+        if (paddingObj->isA(HSSObjectTypeMargin))
+        {
+            QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(paddingObj);
+            innerWidth -= theMargin->getLeft() + theMargin->getRight();
+            rightPadding += theMargin->getRight();
+            leftPadding += theMargin->getLeft();
+        }
+        else if(paddingObj->isA(HSSObjectTypeMultipleValue))
+        {
+            Q_FOREACH(QSharedPointer<HSSObject> pObj, qSharedPointerCast<HSSMultipleValue>(paddingObj)->getValues())
+            {
+                if (pObj->isA(HSSObjectTypeMargin))
+                {
+                    QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(pObj);
+                    innerWidth -= theMargin->getLeft() + theMargin->getRight();
+                    rightPadding += theMargin->getRight();
+                    leftPadding += theMargin->getLeft();
+                }
+            }
+        }
     }
-    this->outerHeight = outerHeight;
-    if (notify)
-        this->notifyObservers(HSSObservablePropertyOuterHeight, &this->outerHeight);
+    this->setRightPadding(rightPadding);
+    this->setLeftPadding(leftPadding);
+    innerWidth = qMax(0., innerWidth);
+    QSharedPointer<HSSObject> computedValue = this->computeValueObject(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(innerWidth, this->getController())));
+    this->setComputed("innerWidth", computedValue);
+}
+
+void HSSDisplayObject::_setInnerHeight()
+{
+    std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
+    HSSUnit innerHeight = this->getHeight();
+    HSSUnit topPadding = 0, bottomPadding = 0;
+    QSharedPointer<HSSObject> paddingObj = this->getPadding();
+    if (paddingObj)
+    {
+        if (paddingObj->isA(HSSObjectTypeMargin))
+        {
+            QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(paddingObj);
+            innerHeight -= theMargin->getTop() + theMargin->getBottom();
+            topPadding += theMargin->getTop();
+            bottomPadding += theMargin->getBottom();
+        }
+        else if(paddingObj->isA(HSSObjectTypeMultipleValue))
+        {
+            Q_FOREACH(QSharedPointer<HSSObject> pObj, qSharedPointerCast<HSSMultipleValue>(paddingObj)->getValues())
+            {
+                if (pObj->isA(HSSObjectTypeMargin))
+                {
+                    QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(pObj);
+                    innerHeight -= theMargin->getTop() + theMargin->getBottom();
+                    topPadding += theMargin->getTop();
+                    bottomPadding += theMargin->getBottom();
+                }
+            }
+        }
+    }
+    this->setTopPadding(topPadding);
+    this->setBottomPadding(bottomPadding);
+    innerHeight = qMax(0., innerHeight);
+    QSharedPointer<HSSObject> computedValue = this->computeValueObject(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(innerHeight, this->getController())));
+    this->setComputed("innerHeight", computedValue);
+}
+
+void HSSDisplayObject::_setOuterWidth()
+{
+    std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
+    HSSUnit outerWidth = this->getWidth();
+    HSSUnit rightMargin = 0, leftMargin = 0;
+    QSharedPointer<HSSObject> marginObj = this->getMargin();
+    if (marginObj)
+    {
+        if (marginObj->isA(HSSObjectTypeMargin))
+        {
+            QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(marginObj);
+            outerWidth += theMargin->getLeft() + theMargin->getRight();
+            rightMargin += theMargin->getRight();
+            leftMargin += theMargin->getLeft();
+        }
+        else if(marginObj->isA(HSSObjectTypeMultipleValue))
+        {
+            Q_FOREACH(QSharedPointer<HSSObject> mObj, qSharedPointerCast<HSSMultipleValue>(marginObj)->getValues())
+            {
+                if (mObj->isA(HSSObjectTypeMargin))
+                {
+                    QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(mObj);
+                    outerWidth += theMargin->getLeft() + theMargin->getRight();
+                    rightMargin += theMargin->getRight();
+                    leftMargin += theMargin->getLeft();
+                }
+            }
+        }
+    }
+    this->setRightMargin(rightMargin);
+    this->setLeftMargin(leftMargin);
+    QSharedPointer<HSSObject> computedValue = this->computeValueObject(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(outerWidth, this->getController())));
+    this->setComputed("outerWidth", computedValue);
+}
+
+void HSSDisplayObject::_setOuterHeight()
+{
+    std::vector<QSharedPointer<HSSMargin> >::const_iterator it;
+    HSSUnit outerHeight = this->getHeight();
+    HSSUnit topMargin = 0, bottomMargin = 0;
+    QSharedPointer<HSSObject> marginObj = this->getMargin();
+    if (marginObj)
+    {
+        if (marginObj->isA(HSSObjectTypeMargin))
+        {
+            QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(marginObj);
+            outerHeight += theMargin->getTop() + theMargin->getBottom();
+            topMargin += theMargin->getTop();
+            bottomMargin += theMargin->getBottom();
+        }
+        else if(marginObj->isA(HSSObjectTypeMultipleValue))
+        {
+            Q_FOREACH(QSharedPointer<HSSObject> mObj, qSharedPointerCast<HSSMultipleValue>(marginObj)->getValues())
+            {
+                if (mObj->isA(HSSObjectTypeMargin))
+                {
+                    QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(mObj);
+                    outerHeight += theMargin->getTop() + theMargin->getBottom();
+                    topMargin += theMargin->getTop();
+                    bottomMargin += theMargin->getBottom();
+                }
+            }
+        }
+    }
+    this->setTopMargin(topMargin);
+    this->setBottomMargin(bottomMargin);
+    QSharedPointer<HSSObject> computedValue = this->computeValueObject(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(outerHeight, this->getController())));
+    this->setComputed("outerHeight", computedValue);
 }
 
 bool HSSDisplayObject::handleEvent(HSSInputEvent *event)
@@ -734,7 +1573,7 @@ bool HSSDisplayObject::handleMouseEvent(HSSMouseEvent *event)
     if (!event)
         return false;
 
-    const HSSRect containerBounds(globalX, globalY, width, height);
+    const HSSRect containerBounds(this->globalX, this->globalY, this->getWidth(), this->getHeight());
 
     switch (event->type())
     {
@@ -835,7 +1674,7 @@ bool HSSDisplayObject::isPress()
     return this->_isPress;
 }
 
-void HSSDisplayObject::ruleChanged(HSSObservableProperty source, void*data)
+void HSSDisplayObject::ruleChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     //HSSRule * theRule = (HSSRule*)data;
     this->setNeedsRereadRules(true);

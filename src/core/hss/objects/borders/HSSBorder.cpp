@@ -84,6 +84,13 @@ AXRString HSSBorder::toString()
     }
 }
 
+void HSSBorder::setDefaults()
+{
+    this->setDefault("size", 1);
+    this->setDefaultKw("position", "center");
+    this->setDefaultKw("segments", "all");
+}
+
 AXRString HSSBorder::defaultObjectType()
 {
     return "border";
@@ -121,4 +128,53 @@ bool HSSBorder::isKeyword(AXRString value, AXRString property)
     //if we reached this far, let the superclass handle it
     return HSSObject::isKeyword(value, property);
 }
+
+const HSSUnit HSSBorder::getSize() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("size");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        return qSharedPointerCast<HSSValue>(value)->getNumber();
+    }
+    return 0.;
+}
+
+const HSSBorderPosition HSSBorder::getPosition() const
+{
+    QSharedPointer<HSSObject> computedValue = this->getComputedValue("position");
+    if (computedValue && computedValue->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSValue> theValue = qSharedPointerCast<HSSValue>(computedValue);
+        switch (theValue->getValue()->getType())
+        {
+            case HSSParserNodeTypeKeywordConstant:
+            {
+                AXRString kwValue = qSharedPointerCast<HSSKeywordConstant>(theValue->getValue())->getValue();
+                if (kwValue == "inside")
+                {
+                    return HSSBorderPositionInside;
+                }
+                if (kwValue == "outside")
+                {
+                    return HSSBorderPositionOutside;
+                }
+                if (kwValue == "center")
+                {
+                    return HSSBorderPositionCenter;
+                }
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+    return HSSBorderPositionInside; ///@todo set defaults and change to None
+}
+
+const QSharedPointer<HSSObject> HSSBorder::getSegments() const
+{
+    return this->getComputedValue("segments");
+}
+
 

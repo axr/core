@@ -75,10 +75,19 @@ namespace AXR
         QSharedPointer<HSSColorStop> clone() const;
         virtual ~HSSColorStop();
 
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
+
+        //color
+        const QSharedPointer<HSSObject> getColor() const;
+        QSharedPointer<HSSObject> computeColor(QSharedPointer<HSSParserNode> parserNode);
+        //position
+        const HSSUnit getPosition() const;
+        //balance
+        const HSSUnit getBalance() const;
 
     private:
         void _initialize();

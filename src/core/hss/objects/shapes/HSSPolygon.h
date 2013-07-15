@@ -76,12 +76,43 @@ namespace AXR
          */
         virtual ~HSSPolygon();
 
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual bool isKeyword(AXRString value, AXRString property);
         virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::vector<QSharedPointer<HSSParserNode> > segments);
 
         virtual void drawBorders(QPainter &painter, std::vector<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);
+
+        /**
+         *  Getter for the actual value of the sides property.
+         *  @return A HSSUnit containing the amount of sides.
+         */
+        const HSSUnit getSides() const;
+
+        QSharedPointer<HSSObject> computeSides(QSharedPointer<HSSParserNode> value);
+
+        /**
+         *  Method to be passed as callback when observing changes that will affect sides.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
+        void sidesChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+
+        /**
+         *  Getter for the actual value of the angle property.
+         *  @return A HSSUnit containing the amount of angle.
+         */
+        const HSSUnit getAngle() const;
+
+        QSharedPointer<HSSObject> computeAngle(QSharedPointer<HSSParserNode> value);
+
+        /**
+         *  Method to be passed as callback when observing changes that will affect angle.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
+        void angleChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
     private:
         void _initialize();

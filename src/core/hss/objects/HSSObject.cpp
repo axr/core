@@ -290,6 +290,7 @@ HSSObject::HSSObject(const HSSObject & orig)
 
 void HSSObject::_initialize()
 {
+    this->addCallback("isA", new HSSStackCallback<HSSObject>(this, &HSSObject::stackIsA));
 }
 
 QSharedPointer<HSSObject> HSSObject::clone() const
@@ -446,6 +447,40 @@ void HSSObject::setShorthandIndex(size_t newValue)
     else
     {
         this->shorthandIndex = this->shorthandProperties.size();
+    }
+}
+
+void HSSObject::stackIsA(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeObjectNameConstant:
+        {
+            try
+            {
+                QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (parserNode);
+                QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
+                std::deque<QSharedPointer<HSSPropertyDefinition> > properties = objdef->getProperties();
+
+                for (size_t i = 0; i < properties.size(); ++i)
+                {
+                    QVector<QVector<AXRString> > paths = properties[i]->getPaths();
+                    Q_FOREACH(QVector<AXRString> path, paths)
+                    {
+                        this->setStackValue(path.front(), properties[i]->getValue()->clone());
+                    }
+                }
+            }
+            catch (const AXRError &e)
+            {
+                e.raise();
+            }
+
+            break;
+        }
+
+        default:
+            break;
     }
 }
 

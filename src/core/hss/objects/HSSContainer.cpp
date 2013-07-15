@@ -63,6 +63,7 @@
 #include "HSSRoundedRect.h"
 #include "HSSStringConstant.h"
 #include "HSSTextBlock.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -111,6 +112,13 @@ void HSSContainer::_initialize()
 
     this->children = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection());
     this->allChildren = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection());
+
+    this->addCallback("contentAlignX", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContentAlignX));
+    this->addListenCallback("contentAlignX", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::listenContentAlignX));
+    this->addCallback("contentAlignY", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContentAlignY));
+    this->addListenCallback("contentAlignY", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::listenContentAlignY));
+    this->addCallback("content", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContent));
+    this->addCallback("shape", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeShape), new HSSObserveCallback<HSSContainer>(this, &HSSContainer::listenShape), new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyShape));
 }
 
 HSSContainer::HSSContainer(const HSSContainer & orig)
@@ -140,7 +148,16 @@ HSSContainer::~HSSContainer()
     if (this->allChildren){
         this->allChildren->clear();
     }
+}
 
+void HSSContainer::setDefaults()
+{
+    HSSDisplayObject::setDefaults();
+    this->setDefaultKw("contentAlignX", "left");
+    this->setDefaultKw("contentAlignY", "top");
+    this->setDefaultKw("direction", "ltr");
+    this->setDefaultKw("wrapDirection", "ttb");
+    this->setDefaultKw("shape", "default");
 }
 
 AXRString HSSContainer::toString()
@@ -335,7 +352,7 @@ void HSSContainer::setContentText(const AXRString &contextText)
         if (this->allChildren->empty())
         {
             QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
-            txtBlck->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(text, controller)));
+            txtBlck->setText(text);
             this->add(txtBlck);
         }
         else
@@ -344,12 +361,12 @@ void HSSContainer::setContentText(const AXRString &contextText)
             if (lastChild->isA(HSSObjectTypeTextBlock))
             {
                 QSharedPointer<HSSTextBlock> textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
-                textBlock->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(text, controller)));
+                textBlock->setText(text);
             }
             else
             {
                 QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
-                txtBlck->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(text, controller)));
+                txtBlck->setText(text);
                 this->add(txtBlck);
             }
         }
@@ -359,15 +376,14 @@ void HSSContainer::setContentText(const AXRString &contextText)
 void HSSContainer::appendContentText(const AXRString &contextText)
 {
     AXRString text = contextText.trimmed();
+    AXRController * controller = this->getController();
 
     if (!text.isEmpty())
     {
-        AXRController * controller = this->getController();
-
         if (this->allChildren->empty())
         {
             QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
-            txtBlck->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(text, controller)));
+            txtBlck->setText(text);
             this->add(txtBlck);
         }
         else
@@ -376,15 +392,17 @@ void HSSContainer::appendContentText(const AXRString &contextText)
             if (lastChild->isA(HSSObjectTypeTextBlock))
             {
                 QSharedPointer<HSSTextBlock> textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
-                textBlock->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(textBlock->getText() + " " + text, controller)));
+                text = textBlock->getText() + " " + text;
+                textBlock->setText(text);
             }
             else
             {
                 QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
-                txtBlck->setDText(QSharedPointer<HSSStringConstant>(new HSSStringConstant(text, controller)));
+                txtBlck->setText(text);
                 this->add(txtBlck);
             }
         }
+        this->setComputedValue("content", text);
     }
 }
 
@@ -509,3 +527,248 @@ QSharedPointer<HSSContainer> HSSContainer::shared_from_this()
 {
     return qSharedPointerCast<HSSContainer > (HSSDisplayObject::shared_from_this());
 }
+
+//contentAlignX
+const HSSUnit HSSContainer::getContentAlignX() const
+{
+    return this->getComputedNumber("contentAlignX");
+}
+
+QSharedPointer<HSSObject> HSSContainer::computeContentAlignX(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(parserNode);
+            AXRString kwValue = theKW->getValue();
+            if (kwValue == "left")
+            {
+                return this->computeValueObject(this->percentageToConstant(0));
+            }
+            else if (kwValue == "middle" || kwValue == "center")
+            {
+                return this->computeValueObject(this->percentageToConstant(50));
+            }
+            else if (kwValue == "right")
+            {
+                return this->computeValueObject(this->percentageToConstant(100));
+            }
+            else if (kwValue == "even")
+            {
+                this->distributeX = true;
+                this->distributeXLinear = false;
+            }
+            else if (kwValue == "justify")
+            {
+                this->distributeX = true;
+                this->distributeXLinear = true;
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(parserNode, "contentAlignX");
+}
+
+void HSSContainer::listenContentAlignX(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSContainer> parent = this->getParent();
+        if (parent)
+        {
+            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
+            valueObj->listen(parent, "innerWidth");
+            valueObj->setPercentageBase(this->getInnerWidth());
+            valueObj->observe("value", "contentAlignX", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignXChanged));
+        }
+    }
+}
+
+//contentAlignY
+const HSSUnit HSSContainer::getContentAlignY() const
+{
+    return this->getComputedNumber("contentAlignY");
+}
+
+QSharedPointer<HSSObject> HSSContainer::computeContentAlignY(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(parserNode);
+            AXRString kwValue = theKW->getValue();
+            if (kwValue == "top")
+            {
+                return this->computeValueObject(this->percentageToConstant(0));
+            }
+            else if (kwValue == "middle" || kwValue == "center")
+            {
+                return this->computeValueObject(this->percentageToConstant(50));
+            }
+            else if (kwValue == "bottom")
+            {
+                return this->computeValueObject(this->percentageToConstant(100));
+            }
+            else if (kwValue == "even")
+            {
+                this->distributeY = true;
+                this->distributeYLinear = false;
+            }
+            else if (kwValue == "justify")
+            {
+                this->distributeY = true;
+                this->distributeYLinear = true;
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(parserNode, "contentAlignY");
+}
+
+void HSSContainer::listenContentAlignY(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSContainer> parent = this->getParent();
+        if (parent)
+        {
+            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
+            valueObj->listen(parent, "innerWidth");
+            valueObj->setPercentageBase(this->getInnerWidth());
+            valueObj->observe("value", "contentAlignY", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignXChanged));
+        }
+    }
+}
+
+//direction
+const HSSDirectionValue HSSContainer::getDirection() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("direction");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(value)->getValue();
+        if (parserNode && parserNode->isA(HSSParserNodeTypeKeywordConstant))
+        {
+            AXRString kwValue = qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue();
+            if (kwValue == "ltr")
+            {
+                return HSSDirectionLeftToRight;
+            }
+            if (kwValue == "rtl")
+            {
+                return HSSDirectionRightToLeft;
+            }
+            if (kwValue == "ttb")
+            {
+                return HSSDirectionTopToBottom;
+            }
+            if (kwValue == "btt")
+            {
+                return HSSDirectionBottomToTop;
+            }
+        }
+    }
+    return HSSDirectionLeftToRight;
+}
+
+//wrapDirection
+const HSSDirectionValue HSSContainer::getWrapDirection() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("wrapDirection");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(value)->getValue();
+        if (parserNode && parserNode->isA(HSSParserNodeTypeKeywordConstant))
+        {
+            AXRString kwValue = qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue();
+            if (kwValue == "ltr")
+            {
+                return HSSDirectionLeftToRight;
+            }
+            if (kwValue == "rtl")
+            {
+                return HSSDirectionRightToLeft;
+            }
+            if (kwValue == "ttb")
+            {
+                return HSSDirectionTopToBottom;
+            }
+            if (kwValue == "btt")
+            {
+                return HSSDirectionBottomToTop;
+            }
+        }
+    }
+    return HSSDirectionLeftToRight;
+}
+
+//content
+const AXRString HSSContainer::getContent() const
+{
+    return this->getComputedString("content");
+}
+QSharedPointer<HSSObject> HSSContainer::computeContent(QSharedPointer<HSSParserNode> parserNode)
+{
+    if (parserNode->isA(HSSParserNodeTypeStringConstant))
+    {
+        AXRString text = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
+        this->setContentText(text);
+    }
+    return this->computeValueObject(parserNode, "content");
+}
+
+//shape
+QSharedPointer<HSSShape> HSSContainer::getShape()
+{
+    return qSharedPointerCast<HSSShape>(this->getComputedValue("shape"));
+}
+
+QSharedPointer<HSSObject> HSSContainer::computeShape(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(parserNode);
+            AXRString kwValue = theKW->getValue();
+            if (kwValue == "default")
+            {
+                return QSharedPointer<HSSRectangle>(new HSSRectangle(this->getController()));
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    return this->computeValueObject(parserNode);
+}
+
+void HSSContainer::listenShape(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj->isA(HSSObjectTypeShape))
+    {
+        QSharedPointer<HSSShape> shapeObj = qSharedPointerCast<HSSShape>(theObj);
+        shapeObj->observe("value", "shape", this, new HSSValueChangedCallback<HSSContainer>(this, &HSSContainer::shapeChanged));
+    }
+}
+
+void HSSContainer::notifyShape(QSharedPointer<HSSObject> theObj)
+{
+    this->setDirty(true);
+    this->notifyObservers("shape", theObj);
+}
+
+void HSSContainer::shapeChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    this->setDirty(true);
+    this->notifyObservers("shape", theObj);

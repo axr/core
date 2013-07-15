@@ -56,6 +56,7 @@
 #include "HSSPercentageConstant.h"
 #include "HSSRgb.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -80,6 +81,7 @@ HSSColorStop::HSSColorStop(const HSSColorStop & orig)
 
 void HSSColorStop::_initialize()
 {
+    this->addCallback("color", new HSSComputeCallback<HSSColorStop>(this, &HSSColorStop::computeColor));
 }
 
 QSharedPointer<HSSColorStop> HSSColorStop::clone() const
@@ -96,6 +98,14 @@ QSharedPointer<HSSClonable> HSSColorStop::cloneImpl() const
 HSSColorStop::~HSSColorStop()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSColorStop: destructing color stop object");
+}
+
+void HSSColorStop::setDefaults()
+{
+    HSSObject::setDefaults();
+    this->setDefaultKw("color", "transparent");
+    this->setDefault("position", 0.5);
+    this->setDefault("balance", 0.5);
 }
 
 AXRString HSSColorStop::toString()
@@ -146,3 +156,55 @@ bool HSSColorStop::isKeyword(AXRString value, AXRString property)
     return HSSObject::isKeyword(value, property);
 }
 
+const QSharedPointer<HSSObject> HSSColorStop::getColor() const
+{
+    return this->getComputedValue("color");
+}
+
+QSharedPointer<HSSObject> HSSColorStop::computeColor(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            AXRString theKw = qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue();
+            if (theKw == "black")
+            {
+                return HSSRgb::blackColor(this->getController());
+            }
+            else if (theKw == "white")
+            {
+                return HSSRgb::whiteColor(this->getController());
+            }
+            else if (theKw == "transparent")
+            {
+                return this->computeValueObject(parserNode);
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    return this->computeValueObject(parserNode, "color");
+}
+
+const HSSUnit HSSColorStop::getPosition() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("position");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        return qSharedPointerCast<HSSValue>(value)->getNumber();
+    }
+    return 0.;
+}
+
+const HSSUnit HSSColorStop::getBalance() const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue("position");
+    if (value && value->isA(HSSObjectTypeValue))
+    {
+        return qSharedPointerCast<HSSValue>(value)->getNumber();
+    }
+    return 0.;
+}

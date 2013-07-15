@@ -76,13 +76,27 @@ namespace AXR
         QSharedPointer<HSSTextBlock> clone() const;
         virtual ~HSSTextBlock();
 
+        virtual void setDefaults();
         virtual AXRString defaultObjectType();
         virtual bool isKeyword(AXRString value, AXRString property);
         virtual AXRString toString();
-        virtual void accept(HSSAbstractVisitor* visitor, bool);
+
+        virtual void accept(HSSAbstractVisitor* visitor, HSSVisitorFilterFlags filterFlags);
+
+        //transform
+        const HSSTextTransformType getTransform() const;
+
+        //textAlign
+        const HSSTextAlignType getTextAlign() const;
+
+        //text
+        const AXRString getText() const;
+        void setText(AXRString value);
 
     private:
         void _initialize();
+        QFont getQFont() const;
+
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

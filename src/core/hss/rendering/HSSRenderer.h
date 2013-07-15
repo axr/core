@@ -52,12 +52,15 @@ template <class T> class QSharedPointer;
 #ifdef __APPLE__
 typedef struct CGImage *CGImageRef;
 #endif
+class QLinearGradient;
 
 namespace AXR
 {
     class AXRDocument;
+    class HSSColorStop;
     class HSSLinearGradient;
     class HSSRadialGradient;
+    class HSSRgb;
 
     class AXR_API HSSRenderer : public HSSAbstractVisitor
     {
@@ -103,7 +106,9 @@ namespace AXR
 
         void drawForeground(HSSTextBlock &textBlock);
 
+        void _addColorStops(QLinearGradient & pat, HSSLinearGradient &gradient, QSharedPointer<HSSRgb> & prevColor, QList<HSSUnit> & positions, QSharedPointer<HSSObject> theStopObj, const QSharedPointer<HSSObject> &colorStops);
         static HSSUnit _nextFreePosition(QList<HSSUnit> &positions, HSSUnit position);
+        void _drawBackground(QPainterPath & path, QSharedPointer<HSSObject> theobj, HSSUnit globalX, HSSUnit globalY);
 
         class Private;
         Private *d;

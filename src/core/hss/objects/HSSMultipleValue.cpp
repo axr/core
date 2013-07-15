@@ -58,10 +58,9 @@ HSSMultipleValue::HSSMultipleValue(AXRController * controller)
 HSSMultipleValue::HSSMultipleValue(const HSSMultipleValue & orig)
 : HSSObject(orig)
 {
-    HSSParserNode::const_it it;
-    for (it = orig.valueList.begin(); it != orig.valueList.end(); ++it)
+    Q_FOREACH(QSharedPointer<HSSObject> obj, orig.valueList)
     {
-        this->valueList.push_back((*it)->clone());
+        this->valueList.push_back(obj->clone());
     }
 }
 
@@ -98,7 +97,7 @@ AXRString HSSMultipleValue::toString()
     return tempstr;
 }
 
-void HSSMultipleValue::add(QSharedPointer<HSSParserNode> newValue)
+void HSSMultipleValue::add(QSharedPointer<HSSObject> newValue)
 {
     if (newValue)
     {
@@ -112,12 +111,12 @@ void HSSMultipleValue::removeLast()
     this->valueList.pop_back();
 }
 
-QSharedPointer<HSSParserNode> HSSMultipleValue::first()
+QSharedPointer<HSSObject> HSSMultipleValue::first()
 {
     return this->valueList.front();
 }
 
-QSharedPointer<HSSParserNode> HSSMultipleValue::last()
+QSharedPointer<HSSObject> HSSMultipleValue::last()
 {
     return this->valueList.back();
 }
@@ -127,7 +126,7 @@ size_t HSSMultipleValue::size() const
     return this->valueList.size();
 }
 
-const std::vector<QSharedPointer<HSSParserNode> > HSSMultipleValue::getValueList() const
+const QList<QSharedPointer<HSSObject> > HSSMultipleValue::getValues() const
 {
     return this->valueList;
 }

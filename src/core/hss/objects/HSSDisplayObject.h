@@ -86,6 +86,7 @@ namespace AXR
          *  Destructor for this class.
          */
         virtual ~HSSDisplayObject();
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
@@ -206,6 +207,107 @@ namespace AXR
         AXRString getElementName();
         void setElementName(AXRString name);
 
+        //width
+        void setWidth(HSSUnit value);
+        const HSSUnit getWidth() const;
+        const HSSUnit getInnerWidth() const;
+        const HSSUnit getOuterWidth() const;
+        void listenWidth(QSharedPointer<HSSObject> theObj);
+        void notifyWidth(QSharedPointer<HSSObject> theObj);
+        void widthChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+
+        //height
+        void setHeight(HSSUnit value);
+        const HSSUnit getHeight() const;
+        const HSSUnit getInnerHeight() const;
+        const HSSUnit getOuterHeight() const;
+        void listenHeight(QSharedPointer<HSSObject> theObj);
+        void notifyHeight(QSharedPointer<HSSObject> theObj);
+        void heightChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+
+        //alignX
+        void setAlignX(HSSUnit value);
+        const HSSUnit getAlignX() const;
+        QSharedPointer<HSSObject> computeAlignX(QSharedPointer<HSSParserNode> parserNode);
+        void listenAlignX(QSharedPointer<HSSObject> theObj);
+        void notifyAlignX(QSharedPointer<HSSObject> theObj);
+        void alignXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+
+        //alignY
+        void setAlignY(HSSUnit value);
+        const HSSUnit getAlignY() const;
+        QSharedPointer<HSSObject> computeAlignY(QSharedPointer<HSSParserNode> parserNode);
+        void listenAlignY(QSharedPointer<HSSObject> theObj);
+        void notifyAlignY(QSharedPointer<HSSObject> theObj);
+        void alignYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+
+        //lineAlign
+        const HSSUnit getLineAlign() const;
+        QSharedPointer<HSSObject> computeLineAlign(QSharedPointer<HSSParserNode> parserNode);
+
+        //anchorX
+        void setAnchorX(HSSUnit value);
+        const HSSUnit getAnchorX() const;
+        QSharedPointer<HSSObject> computeAnchorX(QSharedPointer<HSSParserNode> parserNode);
+        void listenAnchorX(QSharedPointer<HSSObject> theObj);
+        void notifyAnchorX(QSharedPointer<HSSObject> theObj);
+        void anchorXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+
+        //anchorY
+        void setAnchorY(HSSUnit value);
+        const HSSUnit getAnchorY() const;
+        QSharedPointer<HSSObject> computeAnchorY(QSharedPointer<HSSParserNode> parserNode);
+        void listenAnchorY(QSharedPointer<HSSObject> theObj);
+        void notifyAnchorY(QSharedPointer<HSSObject> theObj);
+        void anchorYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+
+        //flow
+        bool getFlow();
+
+        //contained
+        bool getContained();
+
+        //background
+        const QSharedPointer<HSSObject> getBackground() const;
+        QSharedPointer<HSSObject> computeBackground(QSharedPointer<HSSParserNode> parserNode);
+
+        //font
+        const QSharedPointer<HSSFont> getFont() const;
+
+        //on
+        const QSharedPointer<HSSObject> getOn() const;
+        bool fireEvent(HSSEventType type);
+
+        //margin
+        const QSharedPointer<HSSObject> getMargin() const;
+        void horizontalMarginChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void verticalMarginChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void setTopMargin(HSSUnit value);
+        const HSSUnit getTopMargin() const;
+        void setRightMargin(HSSUnit value);
+        const HSSUnit getRightMargin() const;
+        void setBottomMargin(HSSUnit value);
+        const HSSUnit getBottomMargin() const;
+        void setLeftMargin(HSSUnit value);
+        const HSSUnit getLeftMargin() const;
+
+        //padding
+        const QSharedPointer<HSSObject> getPadding() const;
+        void setTopPadding(HSSUnit value);
+        const HSSUnit getTopPadding() const;
+        void setRightPadding(HSSUnit value);
+        const HSSUnit getRightPadding() const;
+        void setBottomPadding(HSSUnit value);
+        const HSSUnit getBottomPadding() const;
+        void setLeftPadding(HSSUnit value);
+        const HSSUnit getLeftPadding() const;
+
+        //border
+        const QSharedPointer<HSSObject> getBorder() const;
+
+        //visible
+        const bool getVisible() const;
+
         virtual bool handleEvent(HSSInputEvent *event);
         virtual bool handleMouseEvent(HSSMouseEvent *event);
 
@@ -264,10 +366,23 @@ namespace AXR
         std::vector<HSSSimpleSelection >layoutLines;
 
         //here go the final computed values
+        HSSUnit x, y, globalX, globalY;
+        //width
+        bool widthByContent;
+        //height
+        bool heightByContent;
+
         /**
          *  @todo add "bounds" property
          */
-        HSSUnit x, y, globalX, globalY;
+
+        //anchorX
+        bool _anchorXdefault;
+        //anchorY
+        bool _anchorYdefault;
+        //flow
+        bool does_float;
+
         HSSUnit zoomFactor;
 
         /**
@@ -306,10 +421,10 @@ namespace AXR
          */
         HSSDisplayObject(HSSObjectType type, AXRController * controller);
 
-        void _setInnerWidth(bool notify = true);
-        void _setInnerHeight(bool notify = true);
-        void _setOuterWidth(bool notify = true);
-        void _setOuterHeight(bool notify = true);
+        void _setInnerWidth();
+        void _setInnerHeight();
+        void _setOuterWidth();
+        void _setOuterHeight();
 
     private:
         bool _isHover;

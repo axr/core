@@ -74,6 +74,7 @@ namespace AXR
          */
         virtual ~HSSGradient();
 
+        virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
@@ -103,7 +104,21 @@ namespace AXR
          *  @return A shared pointer to the next suitable color from the color stops, starting at the given
          *          iterator, the end color, or transparent black.
          */
-        QSharedPointer<HSSRgb> getNextColorFromStops(std::vector<QSharedPointer<HSSObject> >::iterator it, std::vector<QSharedPointer<HSSObject> >::iterator endIt);
+        QSharedPointer<HSSRgb> getNextColorFromStops(QListIterator<QSharedPointer<HSSObject> > it);
+
+        //startColor
+        const QSharedPointer<HSSObject> getStartColor() const;
+        QSharedPointer<HSSObject> computeStartColor(QSharedPointer<HSSParserNode> parserNode);
+        //endColor
+        const QSharedPointer<HSSObject> getEndColor() const;
+        QSharedPointer<HSSObject> computeEndColor(QSharedPointer<HSSParserNode> parserNode);
+        //balance
+        const QSharedPointer<HSSObject> getBalance() const;
+        //colorStops
+        const QSharedPointer<HSSObject> getColorStops() const;
+        QSharedPointer<HSSObject> computeColorStops(QSharedPointer<HSSParserNode> parserNode);
+
+
 
         /**
          *  Allows you to check if this gradient is of the given type.
