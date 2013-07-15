@@ -97,6 +97,7 @@ public:
 HSSRenderer::HSSRenderer()
 : d(new Private)
 {
+    this->setFilterFlags(HSSVisitorFilterRendering);
 }
 
 HSSRenderer::~HSSRenderer()
