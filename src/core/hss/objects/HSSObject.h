@@ -137,10 +137,6 @@ namespace AXR
          */
         virtual AXRString toString();
         /**
-         * @return A map representing the object and it's properties
-         */
-        virtual QVariantMap toMap() const;
-        /**
          *  @return Wether the object is named or is anonymous.
          */
         bool isNamed() const;
