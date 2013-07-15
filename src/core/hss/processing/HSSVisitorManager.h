@@ -74,8 +74,8 @@ namespace AXR
         void addVisitor(HSSAbstractVisitor *visitor);
 
         void runVisitors();
-        void runVisitors(HSSAbstractVisitor::VisitorFilterFlags filterFlags);
-        void runVisitors(QSharedPointer<HSSDisplayObject> root, HSSAbstractVisitor::VisitorFilterFlags filterFlags, bool traverse);
+        void runVisitors(HSSVisitorFilterFlags filterFlags);
+        void runVisitors(QSharedPointer<HSSDisplayObject> root, HSSVisitorFilterFlags filterFlags);
 
         /**
          *  The main drawing function. Call this to redraw an area of the window.

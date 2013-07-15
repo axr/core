@@ -168,7 +168,7 @@ void QAXRWidget::paintEvent(QPaintEvent *e)
 
             // Render the final image to the screen
             d->renderVisitor->setDirtyRect(e->rect());
-            visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);
+            visitorManager->runVisitors();
         }
         else
         {

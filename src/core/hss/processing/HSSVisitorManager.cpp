@@ -77,31 +77,31 @@ void HSSVisitorManager::addVisitor(HSSAbstractVisitor *visitor)
 
 void HSSVisitorManager::runVisitors()
 {
-    QSharedPointer<HSSDisplayObject> root = d->controller->root();
-    runVisitors(root, HSSAbstractVisitor::VisitorFilterAll, true);
+    runVisitors(HSSVisitorFilterAll);
 }
 
-void HSSVisitorManager::runVisitors(HSSAbstractVisitor::VisitorFilterFlags filterFlags)
+void HSSVisitorManager::runVisitors(HSSVisitorFilterFlags filterFlags)
 {
     QSharedPointer<HSSContainer> root = d->controller->root();
-    runVisitors(root, filterFlags, true);
+    filterFlags = static_cast<HSSVisitorFilterFlags>(filterFlags | HSSVisitorFilterTraverse);
+    runVisitors(root, filterFlags);
 }
 
-void HSSVisitorManager::runVisitors(QSharedPointer<HSSDisplayObject> root, HSSAbstractVisitor::VisitorFilterFlags filterFlags, bool traverse)
+void HSSVisitorManager::runVisitors(QSharedPointer<HSSDisplayObject> root, HSSVisitorFilterFlags filterFlags)
 {
     if (root)
     {
         for (std::vector<HSSAbstractVisitor*>::iterator it = d->visitors.begin(); it != d->visitors.end(); ++it)
         {
             HSSAbstractVisitor* visitor = (*it);
-            HSSAbstractVisitor::VisitorFilterFlags visitorFlags = visitor->getFilterFlags();
-            if (visitorFlags & HSSAbstractVisitor::VisitorFilterSkip)
+            HSSVisitorFilterFlags visitorFlags = visitor->getFilterFlags();
+            if (visitorFlags & HSSVisitorFilterSkip)
                 continue;
 
             if (visitorFlags & filterFlags)
             {
                 visitor->initializeVisit();
-                root->accept(visitor, traverse);
+                root->accept(visitor,  static_cast<HSSVisitorFilterFlags>(visitorFlags | filterFlags));
                 visitor->finalizeVisit();
             }
         }
@@ -115,12 +115,8 @@ void HSSVisitorManager::reset()
 
 void HSSVisitorManager::resetVisitors()
 {
-    QSharedPointer<HSSContainer> root = d->controller->root();
-    if (root)
+    for (std::vector<HSSAbstractVisitor*>::iterator it = d->visitors.begin(); it != d->visitors.end(); ++it)
     {
-        for (std::vector<HSSAbstractVisitor*>::iterator it = d->visitors.begin(); it != d->visitors.end(); ++it)
-        {
-            (*it)->reset();
-        }
+        (*it)->reset();
     }
 }

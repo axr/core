@@ -407,11 +407,19 @@ void HSSContainer::appendContentText(const AXRString &contentText)
     }
 }
 
-void HSSContainer::accept(HSSAbstractVisitor* visitor, bool traverse)
+void HSSContainer::accept(HSSAbstractVisitor* visitor, HSSVisitorFilterFlags filterFlags)
 {
+    if ((filterFlags & HSSVisitorFilterLayout))
+    {
+        for (HSSSimpleSelection::iterator child = this->allChildren->begin(); child != this->allChildren->end(); ++child)
+        {
+            (*child)->accept(visitor, filterFlags);
+        }
+    }
+
     visitor->visit(*this);
 
-    if (!traverse)
+    if (!(filterFlags & HSSVisitorFilterTraverse))
         return;
 
     for (HSSSimpleSelection::iterator child = this->allChildren->begin(); child != this->allChildren->end(); ++child)

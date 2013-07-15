@@ -160,8 +160,7 @@ namespace AXR
         /**
          *  Accepts a visitor to traverse and process the HSSObject tree.
          */
-        virtual void accept(HSSAbstractVisitor* visitor, bool traverse);
-
+        virtual void accept(HSSAbstractVisitor* visitor, HSSVisitorFilterFlags filterFlags);
 
         /**
          *  Recursively resets the layout of all the children.

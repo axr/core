@@ -48,11 +48,11 @@ using namespace AXR;
 class HSSAbstractVisitor::Private
 {
 public:
-    Private() : filterFlags(VisitorFilterAll)
+    Private() : filterFlags(HSSVisitorFilterAll)
     {
     }
 
-    VisitorFilterFlags filterFlags;
+    HSSVisitorFilterFlags filterFlags;
 };
 
 HSSAbstractVisitor::HSSAbstractVisitor()
@@ -70,7 +70,27 @@ HSSVisitorFilterFlags HSSAbstractVisitor::getFilterFlags() const
     return d->filterFlags;
 }
 
-void HSSAbstractVisitor::setFilterFlags(VisitorFilterFlags filterFlags)
+void HSSAbstractVisitor::setFilterFlags(HSSVisitorFilterFlags filterFlags)
 {
-    d->filterFlags = static_cast<VisitorFilterFlags>(HSSAbstractVisitor::VisitorFilterAll | filterFlags);
+    d->filterFlags = static_cast<HSSVisitorFilterFlags>(HSSVisitorFilterAll | filterFlags);
+}
+
+void HSSAbstractVisitor::visit(HSSObject &object)
+{
+    //do nothing
+}
+
+void HSSAbstractVisitor::visit(HSSContainer &container)
+{
+    //do nothing
+}
+
+void HSSAbstractVisitor::visit(HSSTextBlock &textBlock)
+{
+    //do nothing
+}
+
+void HSSAbstractVisitor::reset()
+{
+    //do nothing
 }

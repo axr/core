@@ -50,41 +50,47 @@ namespace AXR
 {
     class HSSContainer;
     class HSSDisplayObject;
+    class HSSObject;
     class HSSTextBlock;
+
+    enum HSSVisitorFilterFlags
+    {
+        HSSVisitorFilterNone = 0,
+        HSSVisitorFilterAll = 0x01,
+        HSSVisitorFilterSkip = 0x02,
+        HSSVisitorFilterRendering = 0x04,
+        HSSVisitorFilterDiagnostic = 0x08,
+        HSSVisitorFilterCascading = 0x10,
+        HSSVisitorFilterLayout = 0x20,
+
+        HSSVisitorFilterTraverse = 0x100,
+
+        // Custom flags use the highest bits of a 16-bit
+        // integer, the minimum size required by the C++
+        // standard for an int type; this way we can add
+        // new flags without moving custom ones
+        HSSVisitorFilterCustom1 = 0x1000,
+        HSSVisitorFilterCustom2 = 0x2000,
+        HSSVisitorFilterCustom3 = 0x4000,
+        HSSVisitorFilterCustom4 = 0x8000
+    };
 
     class AXR_API HSSAbstractVisitor
     {
         Q_DISABLE_COPY(HSSAbstractVisitor)
     public:
-        enum VisitorFilterFlags
-        {
-            VisitorFilterNone = 0,
-            VisitorFilterAll = 0x01,
-            VisitorFilterSkip = 0x02,
-            VisitorFilterRendering = 0x04,
-            VisitorFilterDiagnostic = 0x08,
-
-            // Custom flags use the highest bits of a 16-bit
-            // integer, the minimum size required by the C++
-            // standard for an int type; this way we can add
-            // new flags without moving custom ones
-            VisitorFilterCustom1 = 0x1000,
-            VisitorFilterCustom2 = 0x2000,
-            VisitorFilterCustom3 = 0x4000,
-            VisitorFilterCustom4 = 0x8000
-        };
-
         HSSAbstractVisitor();
         virtual ~HSSAbstractVisitor();
 
-        void setFilterFlags(VisitorFilterFlags filterFlags);
         HSSVisitorFilterFlags getFilterFlags() const;
+        void setFilterFlags(HSSVisitorFilterFlags filterFlags);
 
         virtual void initializeVisit() = 0;
-        virtual void visit(HSSContainer &container) = 0;
-        virtual void visit(HSSTextBlock &textBlock) = 0;
+        virtual void visit(HSSObject &object);
+        virtual void visit(HSSContainer &container);
+        virtual void visit(HSSTextBlock &textBlock);
         virtual void finalizeVisit() = 0;
-        virtual void reset() = 0;
+        virtual void reset();
 
     private:
         class Private;

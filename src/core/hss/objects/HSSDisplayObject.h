@@ -178,7 +178,7 @@ namespace AXR
 
         void setDirty(bool value);
         bool isDirty();
-        virtual void accept(HSSAbstractVisitor* visitor, bool traverse);
+        virtual void accept(HSSAbstractVisitor* visitor, HSSVisitorFilterFlags);
 
         void setNeedsLayout(bool value);
         bool needsLayout() const;

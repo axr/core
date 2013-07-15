@@ -598,7 +598,7 @@ bool HSSDisplayObject::isDirty()
     return this->_isDirty;
 }
 
-void HSSDisplayObject::accept(HSSAbstractVisitor* visitor, bool traverse)
+void HSSDisplayObject::accept(HSSAbstractVisitor* visitor, HSSVisitorFilterFlags filterFlags)
 {
 }
 
