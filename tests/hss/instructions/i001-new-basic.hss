@@ -4,6 +4,6 @@ test
         width: 250;
         height: 200;
         background: #D;
-        alignY: 50%;
+        alignX, alignY: 50%;
     }
 }

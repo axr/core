@@ -3,13 +3,13 @@
     size: 12;
     color: #6;
 
-    &@ buttonFont
+    & buttonFont
     {
         size: 14;
         color: #F;
     }
 
-    &@ heading1
+    & heading1
     {
         size: 40;
         color: #3;

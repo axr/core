@@ -8,14 +8,10 @@ test
 
     *
     {
-        //FIXME: this should not be needed
-        height: 50;
-        //-----------
-
-        font: @{ "Helvetica" 18}
+        font: @{ "Helvetica"; 18 };
     }
 
     error { background: #F00 }
     success { background: #9F9 }
-    #delete :first ;
+    #delete :first;
 }

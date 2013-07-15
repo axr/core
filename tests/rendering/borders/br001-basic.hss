@@ -5,7 +5,7 @@
 
 master
 {
-    contentAlignY: 50%;
+    contentAlignX, contentAlignY: 50%;
     background: #3;
 
     #new test

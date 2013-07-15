@@ -3,7 +3,7 @@
     Created by Miro Keller on 2011-11-05.
 */
 
-#import "BH001 Common Styles.hss";
+#import "bh001-common-styles.hss";
 
 slave
 {

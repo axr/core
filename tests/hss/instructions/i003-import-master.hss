@@ -4,6 +4,6 @@ test
 {
     background: background;
 
-    * { isA: box; }
+    * { isA: box; shape: @{10}; }
     :first { background: boxHighlight }
 }

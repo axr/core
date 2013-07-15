@@ -4,13 +4,13 @@ test
         width: 600;
         height: 300;
         background: #E;
-        alignY: 50%;
+        alignX, alignY: 50%;
 
-        #move *
+        #move @parent *
         {
             width: 150;
             height: 150;
-            alignY: 50%;
+            alignX, alignY: 50%;
             background: #D;
         }
 

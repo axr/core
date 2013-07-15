@@ -8,20 +8,20 @@ Created by Miro Keller on 2011-12-15.
 
 @container test
 {
-width: 200;
-height: 200;
-background: #A;
-border: shadowBorder, highlightBorder;
-shape: @{ 10 };
-alignY: middle;
+	width: 200;
+	height: 200;
+	background: #A;
+	border: shadowBorder, highlightBorder;
+	shape: @{ 10 };
+	alignX, alignY: middle;
 }
 
 *
 {
-background: #C;
+	background: #C;
 
-#new test
-{
-isA: test;
-}
+	#new test
+	{
+		isA: test;
+	}
 }

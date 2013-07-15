@@ -10,7 +10,7 @@
 @container box
 {
     height: 50;
-    border: @{ 1 #D }
+    border: @{ 1; #D };
     background: #C;
     contentAlignY: middle;
     textAlign: center;
