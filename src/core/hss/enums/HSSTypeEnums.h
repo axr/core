@@ -444,6 +444,21 @@ namespace AXR
         HSSGradientTypeRadial /**< Radial gradients. */
     };
     /** @} */
+
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSDirectionValue
+     *  The direction in which elements flow in a layout.
+     */
+    enum AXR_API HSSDirectionValue
+    {
+        HSSDirectionLeftToRight, /**< From left to right. */
+        HSSDirectionRightToLeft, /**< From right to left. */
+        HSSDirectionTopToBottom, /**< From top to bottom. */
+        HSSDirectionBottomToTop /**< From bottom to top. */
+    };
+    /** @} */
 }
 
 #endif

@@ -51,14 +51,6 @@
 
 namespace AXR
 {
-    enum AXR_API HSSDirectionValue
-    {
-        HSSDirectionLeftToRight,
-        HSSDirectionRightToLeft,
-        HSSDirectionTopToBottom,
-        HSSDirectionBottomToTop
-    };
-
     class HSSShape;
     class HSSLayoutLine;
 
