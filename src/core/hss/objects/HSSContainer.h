@@ -155,7 +155,7 @@ namespace AXR
          *  at the beginning and end of the text.
          *  @param text     A string containing the new content text.
          */
-        virtual void appendContentText(const AXRString &text);
+        void appendContentText(const AXRString &contentText);
 
         /**
          *  Accepts a visitor to traverse and process the HSSObject tree.
