@@ -985,6 +985,23 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
                     continue;
                 }
             }
+            //this might be dot notation
+            else if(peekToken->isA(HSSSymbol) && VALUE_TOKEN(peekToken)->getString() == ".")
+            {
+                peekToken = this->tokenizer->peekNextToken();
+                if(peekToken->isA(HSSIdentifier)){
+                    //we are still in the property chain, continue
+                    peekToken = this->tokenizer->peekNextToken();
+                    done = false;
+                    continue;
+                }
+                else
+                {
+                    //this can't be a property definition -- either a syntax error or a selector chain
+                    ret = false;
+                    *isShorthand = false;
+                }
+            }
             else
             {
                 if (this->currentToken->isA(HSSObjectSign))
@@ -1476,7 +1493,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
 {
     axr_log(LoggerChannelHSSParser, "HSSParser: reading property definition");
 
-    QVector<AXRString> propertyNames;
+    QVector<QVector<AXRString> > propertyPaths;
 
     //end of source is no good
     this->checkForUnexpectedEndOfSource();
@@ -1504,7 +1521,9 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                     {
                         done = true;
                         AXRString propertyName = VALUE_TOKEN(this->currentToken)->getString();
-                        propertyNames.push_back(propertyName);
+                        QVector<AXRString> path;
+                        path.push_back(propertyName);
+                        propertyPaths.push_back(path);
                         this->readNextToken();
                         //allow whitespace before colon
                         this->skip(HSSWhitespace);
@@ -1551,7 +1570,9 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
         //get the property name for the current value
         try
         {
-            propertyNames.push_back(this->currentObjectContext.top()->getPropertyForCurrentValue());
+            QVector<AXRString> path;
+            path.push_back(this->currentObjectContext.top()->getPropertyForCurrentValue());
+            propertyPaths.push_back(path);
             //consume the property
             this->currentObjectContext.top()->shorthandNext();
         }
@@ -1566,7 +1587,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
 
     bool done = false;
     AXRController * controller = this->getController();
-    ret = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(propertyNames, controller));
+    ret = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(propertyPaths, controller));
 
     while (!done && valid)
     {
@@ -1582,7 +1603,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                     objdefDone = true;
                     try
                     {
-                        QSharedPointer<HSSObjectDefinition> objdef = this->readObjectDefinition(propertyNames.front()); ///@todo: what to do if the property names give different default objects?
+                        QSharedPointer<HSSObjectDefinition> objdef = this->readObjectDefinition(propertyPaths.front().front()); ///@todo: what to do if the property names give different default objects?
                         if (objdef)
                         {
                             ret->addValue(objdef);
@@ -1636,7 +1657,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                 //check if it is a function
                 QSharedPointer<HSSObject> objectContext = this->currentObjectContext.top();
 
-                if (objectContext->isFunction(valuestr, propertyNames.front())) ///@todo: what to do if the property names give different functions?
+                if (objectContext->isFunction(valuestr, propertyPaths.front().front())) ///@todo: what to do if the property names give different functions?
                 {
                     QSharedPointer<HSSParserNode> exp = this->readExpression();
                     if (exp)
@@ -1650,7 +1671,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
 
                     //check if it is a keyword
                 }
-                else if (objectContext->isKeyword(valuestr, propertyNames.front())) ///@todo: what to do if the property names give different keywords?
+                else if (objectContext->isKeyword(valuestr, propertyPaths.front().front())) ///@todo: what to do if the property names give different keywords?
                 {
                     ret->addValue(QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(valuestr, controller)));
                     this->readNextToken();
@@ -2066,23 +2087,29 @@ QSharedPointer<HSSObjectDefinition> HSSParser::getObjectFromInstruction(QSharedP
         AXRController * controller = this->getController();
 
         QSharedPointer<HSSPropertyDefinition> newRed = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        QVector<AXRString> redName;
-        redName.push_back("red");
-        newRed->setNames(redName);
+        QVector<AXRString> redPath;
+        redPath.push_back("red");
+        QVector<QVector<AXRString> > redPaths;
+        redPaths.push_back(redPath);
+        newRed->setPaths(redPaths);
         newRed->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newRed);
 
         QSharedPointer<HSSPropertyDefinition> newGreen = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        QVector<AXRString> greenName;
-        greenName.push_back("green");
-        newGreen->setNames(greenName);
+        QVector<AXRString> greenPath;
+        greenPath.push_back("green");
+        QVector<QVector<AXRString> > greenPaths;
+        greenPaths.push_back(greenPath);
+        newGreen->setPaths(greenPaths);
         newGreen->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newGreen);
 
         QSharedPointer<HSSPropertyDefinition> newBlue = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        QVector<AXRString> blueName;
-        blueName.push_back("blue");
-        newBlue->setNames(blueName);
+        QVector<AXRString> bluePath;
+        bluePath.push_back("blue");
+        QVector<QVector<AXRString> > bluePaths;
+        bluePaths.push_back(bluePath);
+        newBlue->setPaths(bluePaths);
         newBlue->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, controller)));
         ret->propertiesAdd(newBlue);
 
@@ -2170,30 +2197,38 @@ QSharedPointer<HSSObjectDefinition> HSSParser::getObjectFromInstruction(QSharedP
         ret = QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(obj, controller));
 
         QSharedPointer<HSSPropertyDefinition> newRed = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        QVector<AXRString> redName;
-        redName.push_back("red");
-        newRed->setNames(redName);
+        QVector<AXRString> redPath;
+        redPath.push_back("red");
+        QVector<QVector<AXRString> > redPaths;
+        redPaths.push_back(redPath);
+        newRed->setPaths(redPaths);
         newRed->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(redHex, controller)));
         ret->propertiesAdd(newRed);
 
         QSharedPointer<HSSPropertyDefinition> newGreen = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        QVector<AXRString> greenName;
-        greenName.push_back("green");
-        newGreen->setNames(greenName);
+        QVector<AXRString> greenPath;
+        greenPath.push_back("green");
+        QVector<QVector<AXRString> > greenPaths;
+        greenPaths.push_back(greenPath);
+        newGreen->setPaths(greenPaths);
         newGreen->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(greenHex, controller)));
         ret->propertiesAdd(newGreen);
 
         QSharedPointer<HSSPropertyDefinition> newBlue = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        QVector<AXRString> blueName;
-        blueName.push_back("blue");
-        newBlue->setNames(blueName);
+        QVector<AXRString> bluePath;
+        bluePath.push_back("blue");
+        QVector<QVector<AXRString> > bluePaths;
+        bluePaths.push_back(bluePath);
+        newBlue->setPaths(bluePaths);
         newBlue->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(blueHex, controller)));
         ret->propertiesAdd(newBlue);
 
         QSharedPointer<HSSPropertyDefinition> newAlpha = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(controller));
-        QVector<AXRString> alphaName;
-        alphaName.push_back("alpha");
-        newAlpha->setNames(alphaName);
+        QVector<AXRString> alphaPath;
+        alphaPath.push_back("alpha");
+        QVector<QVector<AXRString> > alphaPaths;
+        alphaPaths.push_back(alphaPath);
+        newAlpha->setPaths(alphaPaths);
         newAlpha->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(alphaHex, controller)));
         ret->propertiesAdd(newAlpha);
 
@@ -2539,13 +2574,13 @@ QSharedPointer<HSSParserNode> HSSParser::readRefFunction()
             }
             else
             {
-                refFunction->setPropertyName(HSSObservable::observablePropertyFromString(VALUE_TOKEN(this->currentToken)->getString()));
+                refFunction->setPropertyName(VALUE_TOKEN(this->currentToken)->getString());
             }
         }
         else
         {
             //just the property name
-            refFunction->setPropertyName(HSSObservable::observablePropertyFromString(firstValue));
+            refFunction->setPropertyName(firstValue);
         }
     }
 

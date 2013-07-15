@@ -79,7 +79,7 @@ namespace AXR
          *  value.
          *  @param name     A vector of strings containing the names of the property.
          */
-        HSSPropertyDefinition(QVector<AXRString> names, AXRController * controller);
+        HSSPropertyDefinition(QVector<QVector<AXRString> > paths, AXRController * controller);
 
         /**
          *  Creates a new instance of a property definition, with the given names and value.
@@ -87,7 +87,7 @@ namespace AXR
          *  @param value    A shared pointer to the parser node that holds the value of this
          *                  property definition.
          */
-        HSSPropertyDefinition(QVector<AXRString> names, QSharedPointer<HSSParserNode> value, AXRController * controller);
+        HSSPropertyDefinition(QVector<QVector<AXRString> > paths, QSharedPointer<HSSParserNode> value, AXRController * controller);
 
         /**
          *  Copy constructor for HSSPropertyDefinition objects. Do not call directly, use clone() instead.
@@ -114,13 +114,13 @@ namespace AXR
          *  Setter for the names of the property.
          *  @param name     A vector of strings containing the names of the property.
          */
-        void setNames(QVector<AXRString> names);
+        void setPaths(QVector<QVector<AXRString> > paths);
 
         /**
          *  Getter for the names of the property.
          *  @return A vector of strings containing the names of the property.
          */
-        QVector<AXRString> getNames();
+        QVector<QVector<AXRString> > getPaths();
 
         /**
          *  Setter for the value of the property.
@@ -147,7 +147,7 @@ namespace AXR
     protected:
         QSharedPointer<HSSPropertyDefinition> shared_from_this();
 
-        QVector<AXRString> names;
+        QVector<QVector<AXRString> > paths;
         QSharedPointer<HSSParserNode> value;
 
     private:

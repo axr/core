@@ -420,9 +420,11 @@ void HSSDisplayObject::rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState de
         for (HSSPropertyDefinition::const_it it = props.begin(); it != props.end(); ++it)
         {
             QSharedPointer<HSSPropertyDefinition> propdef = *it;
-            if (propdef->getNames().contains("isA"))
-            {
-                this->rulesAddIsAChildren(propdef, defaultState, newRule);
+            Q_FOREACH(QVector<AXRString> path, propdef->getPaths()){
+                if (path.size() == 1 && path.front() == "isA")
+                {
+                    this->rulesAddIsAChildren(propdef, defaultState, newRule);
+                }
             }
         }
     }
@@ -452,9 +454,11 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
                      props.begin(); pIt != props.end(); ++pIt)
                 {
                     QSharedPointer<HSSPropertyDefinition> propdef = *pIt;
-                    if (propdef->getNames().contains("isA"))
-                    {
-                        this->rulesAddIsAChildren(propdef, defaultState, parentRule);
+                    Q_FOREACH(QVector<AXRString> path, propdef->getPaths()){
+                        if (path.size() == 1 && path.front() == "isA")
+                        {
+                            this->rulesAddIsAChildren(propdef, defaultState, parentRule);
+                        }
                     }
                 }
 
