@@ -141,12 +141,12 @@ namespace AXR
          *  @param  type    The function type to which to check against.
          *  @return Wether it is of the given type or not.
          */
-        virtual bool isA(HSSFunctionType type);
+        virtual const bool isA(HSSFunctionType type) const;
 
         /**
          *  @return The function type of this instance.
          */
-        HSSFunctionType getFunctionType();
+        const HSSFunctionType getFunctionType() const;
 
         std::deque<QSharedPointer<HSSParserNode> > getArguments();
         void setArguments(std::deque<QSharedPointer<HSSParserNode> > arguments);

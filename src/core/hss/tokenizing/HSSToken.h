@@ -55,8 +55,8 @@ namespace AXR
 
         HSSToken(HSSTokenType type, qint64 line, qint64 column);
         virtual ~HSSToken();
-        bool isA(HSSTokenType otherType);
-        HSSTokenType getType();
+        const bool isA(HSSTokenType otherType) const;
+        const HSSTokenType getType() const;
         virtual AXRString toString();
 
         qint64 line;

@@ -77,8 +77,8 @@ namespace AXR
         HSSAbstractVisitor();
         virtual ~HSSAbstractVisitor();
 
-        VisitorFilterFlags getFilterFlags() const;
         void setFilterFlags(VisitorFilterFlags filterFlags);
+        HSSVisitorFilterFlags getFilterFlags() const;
 
         virtual void initializeVisit() = 0;
         virtual void visit(HSSContainer &container) = 0;

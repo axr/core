@@ -65,7 +65,7 @@ HSSAbstractVisitor::~HSSAbstractVisitor()
     delete d;
 }
 
-HSSAbstractVisitor::VisitorFilterFlags HSSAbstractVisitor::getFilterFlags() const
+HSSVisitorFilterFlags HSSAbstractVisitor::getFilterFlags() const
 {
     return d->filterFlags;
 }

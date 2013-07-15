@@ -86,12 +86,12 @@ AXRString HSSExpression::toString()
     return tempstr;
 }
 
-bool HSSExpression::isA(HSSExpressionType otherType)
+const bool HSSExpression::isA(HSSExpressionType otherType) const
 {
     return otherType == this->expressionType;
 }
 
-HSSExpressionType HSSExpression::getExpressionType()
+const HSSExpressionType HSSExpression::getExpressionType() const
 {
     return this->expressionType;
 }

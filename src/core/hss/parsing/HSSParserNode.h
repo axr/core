@@ -122,12 +122,12 @@ namespace AXR
          *  @param otherType    The parser node type to compare against.
          *  @return Wether the instance is an parser node of given type.
          */
-        bool isA(HSSParserNodeType otherType);
+        const bool isA(HSSParserNodeType otherType) const;
 
         /**
          *  @return The parser node type of the current instance.
          */
-        HSSParserNodeType getType();
+        const HSSParserNodeType getType() const;
 
         /**
          *  Traversal method of the parser tree.
@@ -179,29 +179,29 @@ namespace AXR
         virtual QSharedPointer<HSSDisplayObject> getThisObj();
 
         //add all type isAs here
-        virtual bool isA(HSSExpressionType otherType);
-        virtual HSSExpressionType getExpressionType();
+        virtual const bool isA(HSSExpressionType otherType) const;
+        virtual const HSSExpressionType getExpressionType() const;
 
-        virtual bool isA(HSSStatementType otherType);
-        virtual HSSStatementType getStatementType();
+        virtual const bool isA(HSSStatementType otherType) const;
+        virtual const HSSStatementType getStatementType() const;
 
-        virtual bool isA(HSSInstructionType otherType);
-        virtual HSSInstructionType getInstructionType();
+        virtual const bool isA(HSSInstructionType otherType) const;
+        virtual const HSSInstructionType getInstructionType() const;
 
-        virtual bool isA(HSSSelectorType otherType);
-        virtual HSSSelectorType getSelectorType();
+        virtual const bool isA(HSSSelectorType otherType) const;
+        virtual const HSSSelectorType getSelectorType() const;
 
-        virtual bool isA(HSSCombinatorType otherType);
-        virtual HSSCombinatorType getCombinatorType();
+        virtual const bool isA(HSSCombinatorType otherType) const;
+        virtual const HSSCombinatorType getCombinatorType() const;
 
-        virtual bool isA(HSSFilterType otherType);
-        virtual HSSFilterType getFilterType();
+        virtual const bool isA(HSSFilterType otherType) const;
+        virtual const HSSFilterType getFilterType() const;
 
-        virtual bool isA(HSSFunctionType otherType);
-        virtual HSSFunctionType getFunctionType();
+        virtual const bool isA(HSSFunctionType otherType) const;
+        virtual const HSSFunctionType getFunctionType() const;
 
-        virtual bool isA(HSSFlagFunctionType otherType);
-        virtual HSSFlagFunctionType getFlagFunctionType();
+        virtual const bool isA(HSSFlagFunctionType otherType) const;
+        virtual const HSSFlagFunctionType getFlagFunctionType() const;
 
         QSharedPointer<HSSParserNode> shared_from_this();
 

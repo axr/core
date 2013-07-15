@@ -509,67 +509,67 @@ void HSSObject::setThisObj(QSharedPointer<HSSDisplayObject> value)
     this->thisObj = value;
 }
 
-QSharedPointer<HSSDisplayObject> HSSObject::getThisObj()
+QSharedPointer<HSSDisplayObject> HSSObject::getThisObj() const
 {
     return thisObj;
 }
 
-bool HSSObject::isA(HSSObjectType otherType)
+const bool HSSObject::isA(HSSObjectType otherType) const
 {
     return otherType == this->type;
 }
 
-HSSObjectType HSSObject::getObjectType()
+const HSSObjectType HSSObject::getObjectType() const
 {
     return this->type;
 }
 
-bool HSSObject::isA(HSSShapeType otherType)
+const bool HSSObject::isA(HSSShapeType otherType) const
 {
     return false;
 }
 
-HSSShapeType HSSObject::getShapeType()
+const HSSShapeType HSSObject::getShapeType() const
 {
     return HSSShapeTypeNone;
 }
 
-bool HSSObject::isA(HSSRequestModeType otherType)
+const bool HSSObject::isA(HSSRequestModeType otherType) const
 {
     return false;
 }
 
-HSSRequestModeType HSSObject::getRequestModeType()
+const HSSRequestModeType HSSObject::getRequestModeType() const
 {
     return HSSRequestModeTypeNone;
 }
 
-bool HSSObject::isA(HSSEventType otherType)
+const bool HSSObject::isA(HSSEventType otherType) const
 {
     return false;
 }
 
-HSSEventType HSSObject::getEventType()
+const HSSEventType HSSObject::getEventType() const
 {
     return HSSEventTypeNone;
 }
 
-bool HSSObject::isA(HSSActionType otherType)
+const bool HSSObject::isA(HSSActionType otherType) const
 {
     return false;
 }
 
-HSSActionType HSSObject::getActionType()
+const HSSActionType HSSObject::getActionType() const
 {
     return HSSActionTypeNone;
 }
 
-bool HSSObject::isA(HSSGradientType otherType)
+const bool HSSObject::isA(HSSGradientType otherType) const
 {
     return false;
 }
 
-HSSGradientType HSSObject::getGradientType()
+const HSSGradientType HSSObject::getGradientType() const
 {
     return HSSGradientTypeNone;
 }

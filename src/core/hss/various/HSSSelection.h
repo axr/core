@@ -81,12 +81,12 @@ namespace AXR
          *  @param  type    The selection type to which to check against.
          *  @return Wether it is of the given type or not.
          */
-        bool isA(HSSSelectionType type);
+        const bool isA(HSSSelectionType type) const;
 
         /**
          *  @return The selection type of this instance.
          */
-        HSSSelectionType getSelectionType();
+        const HSSSelectionType getSelectionType() const;
 
         virtual void addSelection(QSharedPointer<HSSSelection> item) =0;
         virtual QSharedPointer<HSSSimpleSelection> joinAll() const =0;

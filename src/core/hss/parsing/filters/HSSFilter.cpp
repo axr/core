@@ -225,12 +225,12 @@ AXRString HSSFilter::toString()
     return "Generic filter";
 }
 
-bool HSSFilter::isA(HSSFilterType type)
+const bool HSSFilter::isA(HSSFilterType type) const
 {
     return this->filterType == type;
 }
 
-HSSFilterType HSSFilter::getFilterType()
+const HSSFilterType HSSFilter::getFilterType() const
 {
     return this->filterType;
 }

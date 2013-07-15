@@ -64,12 +64,12 @@ HSSShape::~HSSShape()
 
 }
 
-bool HSSShape::isA(HSSShapeType type)
+const bool HSSShape::isA(HSSShapeType type) const
 {
     return this->shapeType == type;
 }
 
-HSSShapeType HSSShape::getShapeType()
+const HSSShapeType HSSShape::getShapeType() const
 {
     return this->shapeType;
 }

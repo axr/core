@@ -319,7 +319,7 @@ bool HSSDisplayObject::canHaveChildren()
     return false;
 }
 
-QSharedPointer<HSSContainer> HSSDisplayObject::getParent()
+QSharedPointer<HSSContainer> HSSDisplayObject::getParent() const
 {
     QSharedPointer<HSSContainer> parent = this->parent.toStrongRef();
     return parent;

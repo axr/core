@@ -87,7 +87,7 @@ void HSSRefFunction::setModifier(AXRString newValue)
     this->setDirty(true);
 }
 
-const HSSObservableProperty & HSSRefFunction::getPropertyName() const
+const AXRString & HSSRefFunction::getPropertyName() const
 {
     return this->propertyName;
 }

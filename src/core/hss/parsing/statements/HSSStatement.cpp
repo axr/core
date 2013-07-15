@@ -58,12 +58,12 @@ HSSStatement::HSSStatement(const HSSStatement &orig)
     this->type = orig.type;
 }
 
-bool HSSStatement::isA(HSSStatementType otherType)
+const bool HSSStatement::isA(HSSStatementType otherType) const
 {
     return otherType == this->type;
 }
 
-HSSStatementType HSSStatement::getStatementType()
+const HSSStatementType HSSStatement::getStatementType() const
 {
     return this->type;
 }
@@ -89,7 +89,7 @@ QSharedPointer<HSSStatement> HSSStatement::shared_from_this()
     return qSharedPointerCast<HSSStatement>(HSSParserNode::shared_from_this());
 }
 
-bool HSSStatement::isA(HSSInstructionType type)
+const bool HSSStatement::isA(HSSInstructionType type) const
 {
     return HSSParserNode::isA(type);
 }

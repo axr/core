@@ -137,12 +137,12 @@ AXRString HSSParserNode::stringRep()
     return "Generic parser node - you forgot to override toString in your subclass or somehow using HSSParserNode directly";
 }
 
-bool HSSParserNode::isA(HSSParserNodeType otherType)
+const bool HSSParserNode::isA(HSSParserNodeType otherType) const
 {
     return otherType == this->nodeType;
 }
 
-HSSParserNodeType HSSParserNode::getType()
+const HSSParserNodeType HSSParserNode::getType() const
 {
     return this->nodeType;
 }
@@ -205,82 +205,82 @@ QSharedPointer<HSSDisplayObject> HSSParserNode::getThisObj()
     return thisObj;
 }
 
-bool HSSParserNode::isA(HSSExpressionType otherType)
+const bool HSSParserNode::isA(HSSExpressionType otherType) const
 {
     return false;
 }
 
-HSSExpressionType HSSParserNode::getExpressionType()
+const HSSExpressionType HSSParserNode::getExpressionType() const
 {
     return HSSExpressionTypeNone;
 }
 
-bool HSSParserNode::isA(HSSStatementType otherType)
+const bool HSSParserNode::isA(HSSStatementType otherType) const
 {
     return false;
 }
 
-HSSStatementType HSSParserNode::getStatementType()
+const HSSStatementType HSSParserNode::getStatementType() const
 {
     return HSSStatementTypeNone;
 }
 
-bool HSSParserNode::isA(HSSInstructionType otherType)
+const bool HSSParserNode::isA(HSSInstructionType otherType) const
 {
     return false;
 }
 
-HSSInstructionType HSSParserNode::getInstructionType()
+const HSSInstructionType HSSParserNode::getInstructionType() const
 {
     return HSSInstructionTypeNone;
 }
 
-bool HSSParserNode::isA(HSSSelectorType otherType)
+const bool HSSParserNode::isA(HSSSelectorType otherType) const
 {
     return false;
 }
 
-HSSSelectorType HSSParserNode::getSelectorType()
+const HSSSelectorType HSSParserNode::getSelectorType() const
 {
     return HSSSelectorTypeNone;
 }
 
-bool HSSParserNode::isA(HSSCombinatorType otherType)
+const bool HSSParserNode::isA(HSSCombinatorType otherType) const
 {
     return false;
 }
 
-HSSCombinatorType HSSParserNode::getCombinatorType()
+const HSSCombinatorType HSSParserNode::getCombinatorType() const
 {
     return HSSCombinatorTypeNone;
 }
 
-bool HSSParserNode::isA(HSSFilterType otherType)
+const bool HSSParserNode::isA(HSSFilterType otherType) const
 {
     return false;
 }
 
-HSSFilterType HSSParserNode::getFilterType()
+const HSSFilterType HSSParserNode::getFilterType() const
 {
     return HSSFilterTypeNone;
 }
 
-bool HSSParserNode::isA(HSSFunctionType otherType)
+const bool HSSParserNode::isA(HSSFunctionType otherType) const
 {
     return false;
 }
 
-HSSFunctionType HSSParserNode::getFunctionType()
+const HSSFunctionType HSSParserNode::getFunctionType() const
 {
     return HSSFunctionTypeNone;
 }
 
-bool HSSParserNode::isA(HSSFlagFunctionType otherType)
+const bool HSSParserNode::isA(HSSFlagFunctionType otherType) const
 {
     return false;
 }
 
-HSSFlagFunctionType HSSParserNode::getFlagFunctionType()
+const HSSFlagFunctionType HSSParserNode::getFlagFunctionType() const
 {
     return HSSFlagFunctionTypeNone;
 }

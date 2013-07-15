@@ -249,7 +249,7 @@ namespace AXR
          *  (including itself).
          *  @return A shared pointer to the nearest display object.
          */
-        QSharedPointer<HSSDisplayObject> getThisObj();
+        QSharedPointer<HSSDisplayObject> getThisObj() const;
 
 
         /**
@@ -257,26 +257,26 @@ namespace AXR
          *  @param otherType    The HSSObjectType to compare against.
          *  @return Wether the object is an object of given type.
          */
-        bool isA(HSSObjectType otherType);
+        const bool isA(HSSObjectType otherType) const;
         /**
          *  @return The object type.
          */
-        HSSObjectType getObjectType();
+        const HSSObjectType getObjectType() const;
 
-        virtual bool isA(HSSShapeType otherType);
-        virtual HSSShapeType getShapeType();
+        virtual const bool isA(HSSShapeType otherType) const;
+        virtual const HSSShapeType getShapeType() const;
 
-        virtual bool isA(HSSRequestModeType otherType);
-        virtual HSSRequestModeType getRequestModeType();
+        virtual const bool isA(HSSRequestModeType otherType) const;
+        virtual const HSSRequestModeType getRequestModeType() const;
 
-        virtual bool isA(HSSEventType otherType);
-        virtual HSSEventType getEventType();
+        virtual const bool isA(HSSEventType otherType) const;
+        virtual const HSSEventType getEventType() const;
 
-        virtual bool isA(HSSActionType otherType);
-        virtual HSSActionType getActionType();
+        virtual const bool isA(HSSActionType otherType) const;
+        virtual const HSSActionType getActionType() const;
 
-        virtual bool isA(HSSGradientType otherType);
-        virtual HSSGradientType getGradientType();
+        virtual const bool isA(HSSGradientType otherType) const;
+        virtual const HSSGradientType getGradientType() const;
 
         QSharedPointer<HSSObject> shared_from_this();
 

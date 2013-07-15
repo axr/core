@@ -58,12 +58,12 @@ HSSToken::~HSSToken()
 {
 }
 
-bool HSSToken::isA(HSSTokenType otherType)
+const bool HSSToken::isA(HSSTokenType otherType) const
 {
     return otherType == this->type;
 }
 
-HSSTokenType HSSToken::getType()
+const HSSTokenType HSSToken::getType() const
 {
     return this->type;
 }

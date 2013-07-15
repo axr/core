@@ -69,12 +69,12 @@ namespace AXR
          *  @param  type    The shape type to which to check against.
          *  @return Wether it is of the given type or not.
          */
-        bool isA(HSSShapeType type);
+        const bool isA(HSSShapeType type) const;
 
         /**
          *  @return The shape type of this instance.
          */
-        HSSShapeType getShapeType();
+        const HSSShapeType getShapeType() const;
 
         virtual AXRString toString();
         virtual AXRString defaultObjectType();

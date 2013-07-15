@@ -125,12 +125,12 @@ namespace AXR
          *  @param  type    The gradient type to which to check against.
          *  @return Wether it is of the given type or not.
          */
-        bool isA(HSSGradientType type);
+        const bool isA(HSSGradientType type) const;
 
         /**
          *  @return The gradient type of this instance.
          */
-        HSSGradientType getGradientType();
+        const HSSGradientType getGradientType() const;
 
     protected:
         /**

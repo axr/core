@@ -77,7 +77,7 @@ HSSInstruction::~HSSInstruction()
 
 }
 
-HSSInstructionType HSSInstruction::getInstructionType()
+const HSSInstructionType HSSInstruction::getInstructionType() const
 {
     return this->instructionType;
 }
@@ -87,7 +87,7 @@ AXRString HSSInstruction::getValue()
     return this->value;
 }
 
-bool HSSInstruction::isA(HSSInstructionType type)
+const bool HSSInstruction::isA(HSSInstructionType type) const
 {
     return this->instructionType == type;
 }

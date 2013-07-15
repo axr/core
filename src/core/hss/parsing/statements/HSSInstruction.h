@@ -95,7 +95,7 @@ namespace AXR
         /**
          *  @return The instruction type of this instance.
          */
-        HSSInstructionType getInstructionType();
+        const HSSInstructionType getInstructionType() const;
 
         /**
          *  Getter for the value of the instruction.
@@ -108,7 +108,7 @@ namespace AXR
          *  @param  type    The instruction type to which to check against.
          *  @return Wether it is of the given type or not.
          */
-        bool isA(HSSInstructionType type);
+        const bool isA(HSSInstructionType type) const;
 
         /**
          *  When logging, you often need a string representation of the instruction type.

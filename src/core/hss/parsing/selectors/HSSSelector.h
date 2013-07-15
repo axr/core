@@ -67,10 +67,10 @@ namespace AXR
         bool getNegating() const;
         void setNegating(bool value);
 
-        bool isA(HSSSelectorType otherType);
-        HSSSelectorType getSelectorType();
+        const bool isA(HSSSelectorType otherType) const;
+        const HSSSelectorType getSelectorType() const;
 
-        bool isA(HSSCombinatorType otherType);
+        const bool isA(HSSCombinatorType otherType) const;
 
     protected:
         /**

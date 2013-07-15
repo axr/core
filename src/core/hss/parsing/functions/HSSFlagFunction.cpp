@@ -168,7 +168,7 @@ void HSSFlagFunction::valueChanged(const AXRString source, const QSharedPointer<
     this->notifyObservers("value", theObj);
 }
 
-HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType()
+const HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType() const
 {
     return this->_flagFunctionType;
 }

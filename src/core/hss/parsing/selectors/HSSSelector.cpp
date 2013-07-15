@@ -68,17 +68,17 @@ void HSSSelector::setNegating(bool value)
     this->_negating = value;
 }
 
-bool HSSSelector::isA(HSSSelectorType otherType)
+const bool HSSSelector::isA(HSSSelectorType otherType) const
 {
     return this->_selectorType == otherType;
 }
 
-HSSSelectorType HSSSelector::getSelectorType()
+const HSSSelectorType HSSSelector::getSelectorType() const
 {
     return this->_selectorType;
 }
 
-bool HSSSelector::isA(HSSCombinatorType otherType)
+const bool HSSSelector::isA(HSSCombinatorType otherType) const
 {
     return HSSParserNode::isA(otherType);
 }

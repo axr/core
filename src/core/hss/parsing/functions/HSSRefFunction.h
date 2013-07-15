@@ -102,7 +102,7 @@ namespace AXR
          *  Getter for the property name.
          *  @return The observable property that we are referencing.
          */
-        const HSSObservableProperty & getPropertyName() const;
+        const AXRString & getPropertyName() const;
 
         /**
          *  Setter for the property name.

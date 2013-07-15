@@ -103,7 +103,7 @@ namespace AXR
          *  Gives access to the parent element in the content tree.
          *  @return A shared pointer to the parent element in the content tree.
          */
-        QSharedPointer<HSSContainer> getParent();
+        QSharedPointer<HSSContainer> getParent() const;
 
         /**
          *  Sets the given container to be the parent of this display object.

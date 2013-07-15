@@ -78,12 +78,12 @@ HSSSelection::~HSSSelection()
 
 }
 
-bool HSSSelection::isA(HSSSelectionType type)
+const bool HSSSelection::isA(HSSSelectionType type) const
 {
     return type == this->selectionType;
 }
 
-HSSSelectionType HSSSelection::getSelectionType()
+const HSSSelectionType HSSSelection::getSelectionType() const
 {
     return this->selectionType;
 }

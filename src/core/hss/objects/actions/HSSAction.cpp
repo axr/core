@@ -110,12 +110,12 @@ AXRString HSSAction::defaultObjectType(AXRString property)
     return HSSObject::defaultObjectType(property);
 }
 
-bool HSSAction::isA(HSSActionType type)
+const bool HSSAction::isA(HSSActionType type) const
 {
     return type == this->actionType;
 }
 
-HSSActionType HSSAction::getActionType()
+const HSSActionType HSSAction::getActionType() const
 {
     return this->actionType;
 }
