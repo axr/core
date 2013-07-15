@@ -80,13 +80,6 @@ HSSRadialGradient::HSSRadialGradient(AXRController * controller)
 HSSRadialGradient::HSSRadialGradient(const HSSRadialGradient & orig)
 : HSSGradient(orig)
 {
-    std::vector<AXRString> shorthandProperties;
-    shorthandProperties.push_back("startColor");
-    shorthandProperties.push_back("endColor");
-    shorthandProperties.push_back("centerX");
-    shorthandProperties.push_back("centerY");
-    shorthandProperties.push_back("offsetX");
-    shorthandProperties.push_back("offsetY");
     this->setShorthandProperties(shorthandProperties);
 }
 

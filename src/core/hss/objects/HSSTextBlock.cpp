@@ -169,13 +169,6 @@ HSSTextBlock::HSSTextBlock(AXRController * controller)
 HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
 : HSSDisplayObject(orig)
 {
-    std::vector<AXRString> shorthandProperties;
-    shorthandProperties.push_back("text");
-    shorthandProperties.push_back("textAlign");
-    shorthandProperties.push_back("transform");
-    shorthandProperties.push_back("direction");
-    shorthandProperties.push_back("wrapDirection");
-    this->setShorthandProperties(shorthandProperties);
 }
 
 QSharedPointer<HSSTextBlock> HSSTextBlock::clone() const

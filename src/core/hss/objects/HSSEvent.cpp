@@ -101,11 +101,6 @@ HSSEvent::HSSEvent(const HSSEvent & orig)
 : HSSObject(orig)
 {
     this->eventType = orig.eventType;
-
-    std::vector<AXRString> shorthandProperties;
-    shorthandProperties.push_back("action");
-    this->setShorthandProperties(shorthandProperties);
-
 }
 
 QSharedPointer<HSSEvent> HSSEvent::clone() const

@@ -76,13 +76,13 @@ HSSLineBorder::HSSLineBorder(AXRController * controller)
 HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
 : HSSBorder(orig)
 {
-    std::vector<AXRString> shorthandProperties;
-    shorthandProperties.push_back("size");
-    shorthandProperties.push_back("color");
-    shorthandProperties.push_back("segments");
-    shorthandProperties.push_back("position");
+    this->_initialize();
+}
 
-    this->setShorthandProperties(shorthandProperties);
+void HSSLineBorder::_initialize()
+{
+    this->addCallback("color", new HSSComputeCallback<HSSLineBorder>(this, &HSSLineBorder::computeColor));
+>>>>>>> 19d3e71... Missing for shorthand
 }
 
 QSharedPointer<HSSLineBorder> HSSLineBorder::clone() const

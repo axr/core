@@ -257,6 +257,11 @@ HSSObject::HSSObject(const HSSObject & orig)
     this->axrController = orig.axrController;
     this->shorthandIndex = orig.shorthandIndex;
 
+    //copy the shorthand list
+    Q_FOREACH(AXRString value, orig.shorthandProperties)
+    {
+        this->shorthandProperties.push_back(value);
+    }
 }
 
 QSharedPointer<HSSObject> HSSObject::clone() const

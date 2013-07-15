@@ -79,12 +79,6 @@ HSSFont::HSSFont(AXRController * controller)
 HSSFont::HSSFont(const HSSFont & orig)
 : HSSObject(orig)
 {
-    std::vector<AXRString> shorthandProperties;
-    shorthandProperties.push_back("face");
-    shorthandProperties.push_back("size");
-    shorthandProperties.push_back("color");
-    shorthandProperties.push_back("weight");
-    this->setShorthandProperties(shorthandProperties);
 }
 
 QSharedPointer<HSSFont> HSSFont::clone() const

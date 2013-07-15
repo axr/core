@@ -74,10 +74,6 @@ HSSPolygon::HSSPolygon(AXRController * controller)
 HSSPolygon::HSSPolygon(const HSSPolygon & orig)
 : HSSShape(orig)
 {
-    std::vector<AXRString> shorthandProperties;
-    shorthandProperties.push_back("sides");
-    shorthandProperties.push_back("angle");
-    this->setShorthandProperties(shorthandProperties);
 }
 
 QSharedPointer<HSSPolygon> HSSPolygon::clone() const

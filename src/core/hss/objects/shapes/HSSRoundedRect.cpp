@@ -74,9 +74,6 @@ HSSRoundedRect::HSSRoundedRect(AXRController * controller)
 HSSRoundedRect::HSSRoundedRect(const HSSRoundedRect & orig)
 : HSSShape(orig)
 {
-    std::vector<AXRString> shorthandProperties;
-    shorthandProperties.push_back("corners");
-    this->setShorthandProperties(shorthandProperties);
 }
 
 QSharedPointer<HSSRoundedRect> HSSRoundedRect::clone() const

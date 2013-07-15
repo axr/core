@@ -74,11 +74,6 @@ HSSColorStop::HSSColorStop(AXRController * controller)
 HSSColorStop::HSSColorStop(const HSSColorStop & orig)
 : HSSObject(orig)
 {
-    std::vector<AXRString> shorthandProperties;
-    shorthandProperties.push_back("color");
-    shorthandProperties.push_back("position");
-    shorthandProperties.push_back("balance");
-    this->setShorthandProperties(shorthandProperties);
 }
 
 QSharedPointer<HSSColorStop> HSSColorStop::clone() const
