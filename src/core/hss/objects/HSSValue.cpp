@@ -44,30 +44,47 @@
 #include "AXRController.h"
 #include "AXRLoggerManager.h"
 #include "AXRWarning.h"
+#include "HSSCallback.h"
 #include "HSSDisplayObject.h"
 #include "HSSFunction.h"
+#include "HSSExpression.h"
+#include "HSSKeywordConstant.h"
+#include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
+#include "HSSPercentageConstant.h"
+#include "HSSSimpleSelection.h"
+#include "HSSStringConstant.h"
 #include "HSSValue.h"
 
 using namespace AXR;
 
+QSharedPointer<HSSValue> HSSValue::valueFromParserNode(AXRController * controller, QSharedPointer<HSSParserNode> parserNode, QSharedPointer<HSSDisplayObject> thisObj, QSharedPointer<HSSSimpleSelection> scope)
+{
+    QSharedPointer<HSSValue> valueObj = QSharedPointer<HSSValue>(new HSSValue(controller));
+    valueObj->setValue(parserNode);
+    valueObj->setThisObj(thisObj);
+    valueObj->setScope(scope);
+    return valueObj;
+}
+
 HSSValue::HSSValue(AXRController * controller)
 : HSSObject(HSSObjectTypeValue, controller)
 {
-    axr_log(LoggerChannelGeneralSpecific, "HSSValue: creating value object");
-
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("value");
     this->setShorthandProperties(shorthandProperties);
 
     this->_initialize();
+    this->_percentageBase = 0;
 }
 
 HSSValue::HSSValue(const HSSValue & orig)
 : HSSObject(orig)
 {
     this->_initialize();
+    this->_percentageBase = orig._percentageBase;
+    this->value = orig.value->clone();
 }
 
 void HSSValue::_initialize()
@@ -93,7 +110,7 @@ HSSValue::~HSSValue()
 
 AXRString HSSValue::toString()
 {
-    return "HSSValue: " + (dValue ? dValue->toString() : "(null)");
+    return "HSSValue: " + (value ? this->value->toString() : "(null)");
 }
 
 AXRString HSSValue::defaultObjectType()
@@ -113,3 +130,305 @@ AXRString HSSValue::defaultObjectType(AXRString property)
     }
 }
 
+const QSharedPointer<HSSParserNode> HSSValue::getValue() const
+{
+    return this->value;
+}
+
+void HSSValue::setValue(QSharedPointer<HSSParserNode> value)
+{
+    this->value = value;
+    switch (value->getType())
+    {
+        case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeExpression:
+            value->observe("value", "value", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
+            break;
+
+        default:
+            break;
+    }
+}
+
+void HSSValue::listen(QSharedPointer<HSSObservable> observed, const AXRString target)
+{
+    observed->observe(target, "value", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
+}
+
+void HSSValue::valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    QSharedPointer<HSSObject> ret;
+    switch (theObj->getObjectType())
+    {
+        case HSSObjectTypeValue:
+        {
+            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
+            QSharedPointer<HSSParserNode> parserNode = valueObj->getValue();
+            if (parserNode)
+            {
+                if (this->value)
+                {
+                    switch (this->value->getType())
+                    {
+                        case HSSParserNodeTypePercentageConstant:
+                        case HSSParserNodeTypeExpression:
+                            this->setPercentageBase(valueObj->getNumber());
+                            break;
+
+                        case HSSParserNodeTypeFunctionCall:
+                            this->setPercentageBase(valueObj->getNumber());
+                            ret = qSharedPointerCast<HSSFunction>(this->value)->evaluate();
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    this->setValue(parserNode->clone());
+                }
+            }
+            else
+            {
+
+            }
+            break;
+        }
+
+        default:
+            ret = theObj;
+            break;
+    }
+    this->notifyObservers("value", ret);
+}
+
+const HSSUnit HSSValue::getNumber() const
+{
+    switch (this->value->getType())
+    {
+        case HSSParserNodeTypeFunctionCall:
+        {
+            QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(this->value)->evaluate();
+            if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
+            {
+                return this->_getNumber(qSharedPointerCast<HSSValue>(remoteObj)->getValue());
+            }
+            break;
+        }
+        default:
+            return this->_getNumber(this->value);
+    }
+    return 0.;
+}
+
+const HSSUnit HSSValue::_getNumber(const QSharedPointer<HSSParserNode> & parserNode) const
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeNumberConstant:
+            return qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue();
+        case HSSParserNodeTypePercentageConstant:
+            return qSharedPointerCast<HSSPercentageConstant>(parserNode)->evaluate();
+        case HSSParserNodeTypeExpression:
+            return qSharedPointerCast<HSSExpression>(parserNode)->evaluate();
+        case HSSParserNodeTypeStringConstant:
+        {
+            AXRString string = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
+            if (string.endsWith("%"))
+            {
+                string.truncate(string.length()-1);
+                HSSPercentageConstant percentage(string.toDouble(), this->getController());
+                percentage.setPercentageBase(this->_percentageBase);
+                return percentage.evaluate();
+
+            }
+            return string.toDouble();
+        }
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            AXRString kw = qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue();
+            if (kw == "yes")
+            {
+                return 1.;
+            }
+        }
+        default:
+            break;
+    }
+    return 0.;
+}
+
+const bool HSSValue::getBool() const
+{
+    switch (this->value->getType())
+    {
+        case HSSParserNodeTypeFunctionCall:
+        {
+            QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(this->value)->evaluate();
+            if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
+            {
+                return this->_getBool(qSharedPointerCast<HSSValue>(remoteObj)->getValue());
+            }
+            break;
+        }
+        default:
+            return this->_getBool(this->value);
+    }
+    return false;
+}
+
+const bool HSSValue::_getBool(const QSharedPointer<HSSParserNode> & parserNode) const
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeNumberConstant:
+            return qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue() > 0.;
+        case HSSParserNodeTypePercentageConstant:
+            return qSharedPointerCast<HSSPercentageConstant>(parserNode)->evaluate() > 0.;
+        case HSSParserNodeTypeExpression:
+            return qSharedPointerCast<HSSExpression>(parserNode)->evaluate() > 0;
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            AXRString kwValue = qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue();
+            if (kwValue == "yes")
+            {
+                return true;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+    return false;
+}
+
+const AXRString HSSValue::getString() const
+{
+    switch (this->value->getType())
+    {
+        case HSSParserNodeTypeFunctionCall:
+        {
+            QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(this->value)->evaluate();
+            if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
+            {
+                return this->_getString(qSharedPointerCast<HSSValue>(remoteObj)->getValue());
+            }
+            break;
+        }
+        default:
+            return this->_getString(this->value);
+    }
+    return "";
+}
+
+const AXRString HSSValue::_getString(const QSharedPointer<HSSParserNode> & parserNode) const
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeStringConstant:
+        {
+            AXRString ret = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
+            return ret;
+        }
+        case HSSParserNodeTypeNumberConstant:
+            return QString::number(qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue());
+        case HSSParserNodeTypePercentageConstant:
+            return QString::number(qSharedPointerCast<HSSPercentageConstant>(parserNode)->evaluate());
+        case HSSParserNodeTypeExpression:
+            return QString::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate());
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            return qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue();
+        }
+        default:
+            break;
+    }
+    return "";
+}
+
+const QSharedPointer<HSSObject> HSSValue::getObject() const
+{
+    switch (this->value->getType())
+    {
+        case HSSParserNodeTypeFunctionCall:
+        {
+            return qSharedPointerCast<HSSFunction>(this->value)->evaluate();
+        }
+        default:
+            break;
+    }
+    return QSharedPointer<HSSObject>();
+}
+
+void HSSValue::setScope(QSharedPointer<HSSSimpleSelection> newScope)
+{
+    HSSObject::setScope(newScope);
+    //propagate values
+    if (this->value)
+    {
+        switch (this->value->getType())
+        {
+            case HSSParserNodeTypeExpression:
+                qSharedPointerCast<HSSExpression>(this->value)->setScope(newScope);
+                break;
+            case HSSParserNodeTypeFunctionCall:
+                qSharedPointerCast<HSSFunction>(this->value)->setScope(newScope);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+void HSSValue::setThisObj(QSharedPointer<HSSDisplayObject> value)
+{
+    HSSObject::setThisObj(value);
+    //propagate values
+    if (this->value)
+    {
+        this->value->setThisObj(value);
+    }
+}
+
+void HSSValue::setPercentageBase(HSSUnit value)
+{
+    this->_percentageBase = value;
+    //propagate values
+    if (this->value)
+    {
+        switch (this->value->getType())
+        {
+            case HSSParserNodeTypePercentageConstant:
+                qSharedPointerCast<HSSPercentageConstant>(this->value)->setPercentageBase(value);
+                break;
+            case HSSParserNodeTypeExpression:
+                qSharedPointerCast<HSSExpression>(this->value)->setPercentageBase(value);
+                break;
+            case HSSParserNodeTypeFunctionCall:
+                qSharedPointerCast<HSSFunction>(this->value)->setPercentageBase(value);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+void HSSValue::setPercentageObserved(QSharedPointer<HSSObservable> observable, AXRString property)
+{
+    //propagate values
+    if (this->value)
+    {
+        switch (this->value->getType())
+        {
+            case HSSParserNodeTypeExpression:
+                qSharedPointerCast<HSSExpression>(this->value)->setPercentageObserved(property, observable);
+                break;
+            case HSSParserNodeTypeFunctionCall:
+                qSharedPointerCast<HSSFunction>(this->value)->setPercentageObserved(property, observable.data());
+                break;
+            default:
+                break;
+        }
+    }
+}

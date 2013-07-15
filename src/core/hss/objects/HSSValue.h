@@ -55,7 +55,14 @@ namespace AXR
     {
     public:
         /**
+         *  Convenience constructor, to set a value directly
+         *  @param controller   A pointer to the controller
+         *  @param parserNode   The value to be used
+         */
+        static QSharedPointer<HSSValue> valueFromParserNode(AXRController * controller, QSharedPointer<HSSParserNode> parserNode, QSharedPointer<HSSDisplayObject> thisObj, QSharedPointer<HSSSimpleSelection> scope);
+        /**
          *  Constructor for HSSValue objects.
+         *  @param controller   A pointer to the controller
          */
         HSSValue(AXRController * controller);
         /**
@@ -78,7 +85,44 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
 
+        /**
+         *  Getter for the definition object of value.
+         *  @return A shared pointer to the parser node containing the definition object of value.
+         */
+        const QSharedPointer<HSSParserNode> getValue() const;
+
+        void setValue(QSharedPointer<HSSParserNode> value);
+
+        void listen(QSharedPointer<HSSObservable> observed, const AXRString target);
+        /**
+         *  Method to be passed as callback when observing changes that will affect value.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
+        void valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+
+        const HSSUnit getNumber() const;
+        const bool getBool() const;
+        const AXRString getString() const;
+        const QSharedPointer<HSSObject> getObject() const;
+
+        //see HSSObject.h for documentation on this method
+        void setScope(QSharedPointer<HSSSimpleSelection> newScope);
+
+        //see HSSObject.h for documentation on this method
+        void setThisObj(QSharedPointer<HSSDisplayObject> value);
+        void setPercentageBase(HSSUnit value);
+        void setPercentageObserved(QSharedPointer<HSSObservable> observable, AXRString property);
+
+    protected:
+        //value
+        QSharedPointer<HSSParserNode> value;
+
     private:
+        HSSUnit _percentageBase;
+        const HSSUnit _getNumber(const QSharedPointer<HSSParserNode> & parserNode) const;
+        const bool _getBool(const QSharedPointer<HSSParserNode> & parserNode) const;
+        const AXRString _getString(const QSharedPointer<HSSParserNode> & parserNode) const;
         void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
