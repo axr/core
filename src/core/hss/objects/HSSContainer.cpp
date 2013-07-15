@@ -341,9 +341,9 @@ void HSSContainer::resetChildrenIndexes()
     }
 }
 
-void HSSContainer::setContentText(const AXRString &contextText)
+void HSSContainer::setContentText(const AXRString &contentText)
 {
-    AXRString text = contextText.trimmed();
+    AXRString text = contentText.trimmed();
 
     AXRController * controller = this->getController();
 
@@ -373,9 +373,10 @@ void HSSContainer::setContentText(const AXRString &contextText)
     }
 }
 
-void HSSContainer::appendContentText(const AXRString &contextText)
+void HSSContainer::appendContentText(const AXRString &contentText)
 {
-    AXRString text = contextText.trimmed();
+    AXRString text = contentText.trimmed();
+
     AXRController * controller = this->getController();
 
     if (!text.isEmpty())
