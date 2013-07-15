@@ -46,10 +46,12 @@
 
 using namespace AXR;
 
-HSSPercentageConstant::HSSPercentageConstant(HSSUnit value, AXRController * controller)
+HSSPercentageConstant::HSSPercentageConstant(HSSUnit number, AXRController * controller)
 : HSSParserNode(HSSParserNodeTypePercentageConstant, controller)
 {
-    this->value = value / 100.;
+    this->_number = number / 100.;
+    this->_isDirty = true;
+    this->_percentageBase = this->_value = 0.;
 }
 
 QSharedPointer<HSSPercentageConstant> HSSPercentageConstant::clone() const
@@ -64,17 +66,53 @@ HSSPercentageConstant::~HSSPercentageConstant()
 
 AXRString HSSPercentageConstant::toString()
 {
-    return AXRString("HSSPercentageConstant with value %1%").arg(this->value);
+    return AXRString("HSSPercentageConstant with value %1%").arg(this->_number);
+}
+
+HSSUnit HSSPercentageConstant::evaluate()
+{
+    if (this->isDirty())
+    {
+        this->setDirty(false);
+        this->setValue(this->_number * this->_percentageBase);
+    }
+    return this->getValue();
+}
+
+void HSSPercentageConstant::setDirty(bool value)
+{
+    this->_isDirty = value;
+}
+
+bool HSSPercentageConstant::isDirty()
+{
+    return this->_isDirty;
+}
+
+void HSSPercentageConstant::setNumber(HSSUnit newValue)
+{
+    this->_number = newValue;
+}
+
+HSSUnit HSSPercentageConstant::getNumber()
+{
+    return this->_number;
 }
 
 void HSSPercentageConstant::setValue(HSSUnit newValue)
 {
-    this->value = value / 100.;
+    this->_value = newValue;
 }
 
-HSSUnit HSSPercentageConstant::getValue(HSSUnit baseValue)
+HSSUnit HSSPercentageConstant::getValue()
 {
-    return this->value * baseValue;
+    return this->_value;
+}
+
+void HSSPercentageConstant::setPercentageBase(HSSUnit value)
+{
+    this->_percentageBase = value;
+    this->setDirty(true);
 }
 
 QSharedPointer<HSSClonable> HSSPercentageConstant::cloneImpl() const

@@ -46,9 +46,12 @@
 #include "AXRLoggerManager.h"
 #include "HSSCallback.h"
 #include "HSSDisplayObject.h"
+#include "HSSNumberConstant.h"
+#include "HSSPercentageConstant.h"
 #include "HSSRefFunction.h"
 #include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -89,7 +92,7 @@ const HSSObservableProperty & HSSRefFunction::getPropertyName() const
     return this->propertyName;
 }
 
-void HSSRefFunction::setPropertyName(HSSObservableProperty newValue)
+void HSSRefFunction::setPropertyName(AXRString newValue)
 {
     this->propertyName = newValue;
     this->setDirty(true);
@@ -113,17 +116,20 @@ void HSSRefFunction::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSel
         axr_log(LoggerChannelObsolete3, "Added selector chain to HSSRefFunction: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
         this->selectorChains.push_back(newSelectorChain);
+        this->setDirty(true);
     }
 }
 
 void HSSRefFunction::selectorChainsRemove(unsigned int index)
 {
     this->selectorChains.erase(this->selectorChains.begin() + index);
+    this->setDirty(true);
 }
 
 void HSSRefFunction::selectorChainsRemoveLast()
 {
     this->selectorChains.pop_back();
+    this->setDirty(true);
 }
 
 QSharedPointer<HSSSelectorChain> & HSSRefFunction::selectorChainsGet(unsigned index)
@@ -141,7 +147,7 @@ size_t HSSRefFunction::selectorChainsSize() const
     return this->selectorChains.size();
 }
 
-QVariant HSSRefFunction::_evaluate()
+QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
 {
     QSharedPointer<HSSSimpleSelection> selection = this->getController()->select(this->selectorChains, this->scope, this->getThisObj())->joinAll();
     if (selection->empty())
@@ -151,54 +157,84 @@ QVariant HSSRefFunction::_evaluate()
     else if (selection->size() == 1)
     {
         QSharedPointer<HSSDisplayObject> container = selection->front();
-        this->_value = container->getProperty(this->propertyName);
-
-        if (this->observed)
+        QSharedPointer<HSSObject> remoteObj = container->getComputedValue(this->propertyName);
+        QSharedPointer<HSSObject> ret;
+        if (remoteObj)
         {
-            this->observed->removeObserver(this->propertyName, HSSObservablePropertyValue, this);
-            this->observed = NULL;
+            if (remoteObj->isA(HSSObjectTypeValue))
+            {
+                QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(remoteObj);
+
+                QSharedPointer<HSSParserNode> parserNode = valueObj->getValue();
+                if (parserNode)
+                {
+                    switch (parserNode->getType())
+                    {
+                        case HSSParserNodeTypePercentageConstant:
+                        {
+                            HSSUnit remoteNum = qSharedPointerCast<HSSPercentageConstant>(parserNode)->evaluate();
+                            QSharedPointer<HSSNumberConstant> numberConstant = QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(remoteNum, this->getController()));
+                            ret = HSSValue::valueFromParserNode(this->getController(), numberConstant, this->getThisObj(), this->scope);
+                            break;
+                        }
+                        case HSSParserNodeTypeFunctionCall:
+                            ret = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
+                            break;
+
+                        default:
+                            ret = remoteObj->clone();
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                ret = remoteObj->clone();
+            }
         }
+        this->_value = ret;
 
-        container->observe(this->propertyName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
-
-        this->observed = container.data();
+        if (container != this->getTrackedObserver("value") || this->getTrackedProperty("value") != this->propertyName)
+        {
+            container->observe(this->propertyName, "value", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
+        }
     }
     else
     {
         /*
-        if (this->modifier == "min"){
-            unsigned i, size;
-            HSSUnit tempval;
-            QSharedPointer<HSSDisplayObject> container;
-            for (i=0, size = selection.size(); i<size; ++i) {
-                tempval = *(HSSUnit*)selection[i]->getProperty(this->propertyName);
-                if (tempval < *(HSSUnit*)this->_value){
-                    this->_value = &tempval;
-                    container = selection[i];
-                }
-            }
+         if (this->modifier == "min"){
+         unsigned i, size;
+         HSSUnit tempval;
+         QSharedPointer<HSSDisplayObject> container;
+         for (i=0, size = selection.size(); i<size; ++i) {
+         tempval = *(HSSUnit*)selection[i]->getProperty(this->propertyName);
+         if (tempval < *(HSSUnit*)this->_value){
+         this->_value = &tempval;
+         container = selection[i];
+         }
+         }
 
-            this->_value = container->getProperty(this->propertyName);
+         this->_value = container->getProperty(this->propertyName);
 
-            container->observe(this->propertyName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRefFunction>(this, &HSSRefFunction::valueChanged));
+         container->observe(this->propertyName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSRefFunction>(this, &HSSRefFunction::valueChanged));
 
 
-        } else if (this->modifier == "max"){
+         } else if (this->modifier == "max"){
 
-        } else if (this->modifier == "avg"){
+         } else if (this->modifier == "avg"){
 
-        }
+         }
          */
         throw AXRError("HSSRefFunciton", "Using modifiers in ref functions is not implemented yet");
     }
     return this->_value;
 }
 
-void HSSRefFunction::valueChanged(HSSObservableProperty source, void*data)
+void HSSRefFunction::valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     this->setDirty(true);
-    this->_value = QVariant::fromValue(data);
-    this->notifyObservers(HSSObservablePropertyValue, this->_value.value<void*>());
+    this->_value = theObj;
+    this->notifyObservers("value", theObj);
 }
 
 QSharedPointer<HSSClonable> HSSRefFunction::cloneImpl() const

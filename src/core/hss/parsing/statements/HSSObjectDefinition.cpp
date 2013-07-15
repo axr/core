@@ -104,6 +104,18 @@ AXRString HSSObjectDefinition::toString()
 
 void HSSObjectDefinition::apply()
 {
+    this->prototype->clearProperties();
+    this->prototype->setDefaults();
+    Q_FOREACH(const QSharedPointer<HSSPropertyDefinition>& propertyDefinition, this->properties)
+    {
+        QVector<QVector<AXRString> > propertyPaths = propertyDefinition->getPaths();
+        Q_FOREACH(QVector<AXRString> path, propertyPaths){
+            QSharedPointer<HSSParserNode> nodeValue = propertyDefinition->getValue();
+            this->prototype->setStackValue(path.front(), nodeValue);
+        }
+    }
+    this->prototype->commitStackValues();
+    this->prototype->fillWithDefaults();
 }
 
 void HSSObjectDefinition::propertiesAdd(QSharedPointer<HSSPropertyDefinition> &newProperty)

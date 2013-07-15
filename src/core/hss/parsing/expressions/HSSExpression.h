@@ -50,6 +50,7 @@
 namespace AXR
 {
     class HSSSimpleSelection;
+    class HSSValue;
 
     /**
      *  @brief Abstract base class for all expressions.
@@ -87,30 +88,28 @@ namespace AXR
          *  @param  newLeft     A shared pointer to a parser node representing the left
          *                      member of the expression.
          */
-        void setLeft(QSharedPointer<HSSParserNode> newLeft);
+        void setLeft(QSharedPointer<HSSValue> newLeft);
 
         /**
          *  Getter for the left hand member of the expression.
          *  @return A shared pointer to a parser node representing the left member of
          *  the expression.
          */
-        QSharedPointer<HSSParserNode> getLeft();
+        QSharedPointer<HSSValue> getLeft();
 
         /**
          *  Setter for the right hand member of the expression.
          *  @param  newRight    A shared pointer to a parser node representing the right
          *                      member of the expression.
          */
-        void setRight(QSharedPointer<HSSParserNode> newRight);
+        void setRight(QSharedPointer<HSSValue> newRight);
 
         /**
          *  Getter for the right hand member of the expression.
          *  @return A shared pointer to a parser node representing the right member of
          *  the expression.
          */
-        QSharedPointer<HSSParserNode> getRight();
-
-        virtual void propertyChanged(HSSObservableProperty property, void* data);
+        QSharedPointer<HSSValue> getRight();
 
         /**
          *  Method to be passed as callback when observing changes that will affect the left
@@ -118,7 +117,7 @@ namespace AXR
          *  @param property The property which we are observing.
          *  @param data     A pointer to the data that is sent along the notification.
          */
-        virtual void leftChanged(HSSObservableProperty property, void* data);
+        virtual void leftChanged(AXRString property, QSharedPointer<HSSObject> theObj);
 
         /**
          *  Method to be passed as callback when observing changes that will affect the right
@@ -126,7 +125,7 @@ namespace AXR
          *  @param property The property which we are observing.
          *  @param data     A pointer to the data that is sent along the notification.
          */
-        virtual void rightChanged(HSSObservableProperty property, void* data);
+        virtual void rightChanged(AXRString property, QSharedPointer<HSSObject> theObj);
 
         /**
          *  The percentage base is the number that corresponds to 100%.
@@ -141,7 +140,7 @@ namespace AXR
          *
          *  @todo what if both left and right are percentages?
          */
-        virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
+        virtual void setPercentageObserved(const AXRString property, QSharedPointer<HSSObservable> observed);
 
         /**
          *  Setter for the scope which to pass to members like references or selections.
@@ -194,15 +193,14 @@ namespace AXR
          */
         HSSExpression(const HSSExpression &orig);
 
-        QSharedPointer<HSSParserNode> left;
+        QSharedPointer<HSSValue> left;
         HSSUnit leftval;
         HSSUnit rightval;
-        QSharedPointer<HSSParserNode> right;
+        QSharedPointer<HSSValue> right;
 
         HSSUnit percentageBase;
-        HSSObservableProperty percentageObservedProperty;
-        HSSObservable * percentageObserved;
-
+        AXRString percentageObservedProperty;
+        QSharedPointer<HSSObservable> percentageObserved;
 
         QSharedPointer<HSSSimpleSelection> scope;
 
@@ -210,7 +208,11 @@ namespace AXR
         HSSUnit _value;
 
     private:
+        QSharedPointer<HSSParserNode> _leftNode;
+        QSharedPointer<HSSParserNode> _rightNode;
         HSSExpressionType expressionType;
+
+        void _nodesToValuesIfNeeded();
     };
 }
 

@@ -48,6 +48,8 @@
 #include "HSSAttrFunction.h"
 #include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
+#include "HSSStringConstant.h"
+#include "HSSValue.h"
 #include <QStringList>
 
 using namespace AXR;
@@ -130,13 +132,13 @@ size_t HSSAttrFunction::selectorChainsSize() const
     return this->selectorChains.size();
 }
 
-QVariant HSSAttrFunction::_evaluate()
+QSharedPointer<HSSObject> HSSAttrFunction::_evaluate()
 {
     QSharedPointer<HSSSimpleSelection> selection = this->getController()->select(this->selectorChains, this->scope, this->getThisObj())->joinAll();
     if(selection->size() > 0)
     {
         QSharedPointer<HSSDisplayObject> container = selection->front();
-        this->_value = container->attributes[this->attributeName];
+        this->_stringValue = container->attributes[this->attributeName];
 
         //todo handle this
         //container->observe(this->attributeName, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSAttrFunction>(this, &HSSAttrFunction::valueChanged));
@@ -152,16 +154,18 @@ QVariant HSSAttrFunction::_evaluate()
         }
 
         AXRWarning("HSSAttrFunction", AXRString("attr(%1) of %2 did not select any elements").arg(this->attributeName).arg(selectorChainStrings.join(", "))).raise();
-        this->_value = AXRString();
+        this->_stringValue = AXRString();
     }
+    this->_value = HSSValue::valueFromParserNode(this->getController(), HSSStringConstant::stringToConstant(this->_stringValue, this->getController()), this->getThisObj(), this->scope);
+    qSharedPointerCast<HSSValue>(this->_value)->setPercentageBase(this->getPercentageBase());
     return this->_value;
 }
 
-void HSSAttrFunction::valueChanged(HSSObservableProperty source, void*data)
+void HSSAttrFunction::valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     this->setDirty(true);
-    this->_value = QVariant::fromValue(data);
-    this->notifyObservers(HSSObservablePropertyValue, this->_value.value<void*>());
+    this->_value = theObj;
+    this->notifyObservers("value", theObj);
 }
 
 QSharedPointer<HSSClonable> HSSAttrFunction::cloneImpl() const

@@ -56,10 +56,17 @@
 namespace AXR
 {
     class AXRController;
+    class HSSAbstractComputeCallback;
+    class HSSAbstractObserveCallback;
+    class HSSAbstractStackCallback;
+    class HSSKeywordConstant;
     class HSSMultipleValueDefinition;
+    class HSSNumberConstant;
     class HSSDisplayObject;
     class HSSParserNode;
+    class HSSPercentageConstant;
     class HSSSimpleSelection;
+    class HSSStringConstant;
 
     /**
      *  @brief The class from which all HSS objects inherit from. Handles general properties such as
@@ -270,7 +277,59 @@ namespace AXR
 
         QSharedPointer<HSSObject> shared_from_this();
 
+        virtual bool validate(AXRString propertyName, QSharedPointer<HSSParserNode> & value) const;
+        void clearProperties();
+        void addCallback(AXRString name, HSSAbstractStackCallback *stackCallback);
+        void addCallback(AXRString name, HSSAbstractComputeCallback *callback);
+        void addCallback(AXRString name, HSSAbstractObserveCallback *setCallback);
+        void addCallback(AXRString name, HSSAbstractObserveCallback *listenCallback, HSSAbstractObserveCallback *notifyCallback);
+        void addCallback(AXRString name, HSSAbstractComputeCallback *computeCallback, HSSAbstractObserveCallback *listenCallback, HSSAbstractObserveCallback *notifyCallback);
+        void addListenCallback(AXRString name, HSSAbstractObserveCallback *listenCallback);
+        void addNotifyCallback(AXRString name, HSSAbstractObserveCallback *notifyCallback);
+        void clearDefaultValues();
+        virtual void setDefaults();
+        void setDefaultValue(AXRString propertyName, QSharedPointer<HSSObject> theObj);
+        const QSharedPointer<HSSObject> getDefaultValue(AXRString propertyName) const;
+        void setDefault(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
+        void setDefault(AXRString propertyName, HSSUnit value);
+        void setDefaultPercentage(AXRString propertyName, HSSUnit value);
+        void setDefault(AXRString propertyName, AXRString value);
+        void setDefaultKw(AXRString propertyName, AXRString value);
+        void fillWithDefaults();
+        void clearStackValues();
+        void setStackValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
+        void appendStackValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
+        void commitStackValues();
+        virtual QSharedPointer<HSSObject> computeValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
+        QSharedPointer<HSSObject> computeValueObject(QSharedPointer<HSSParserNode> parserNode);
+        QSharedPointer<HSSObject> computeValueObject(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
+        void setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
+        void setComputedValue(AXRString propertyName, HSSUnit value);
+        void setComputedBool(AXRString propertyName, bool value);
+        void setComputedValue(AXRString propertyName, AXRString value);
+        QSharedPointer<HSSNumberConstant> numberToConstant(HSSUnit value);
+        QSharedPointer<HSSPercentageConstant> percentageToConstant(HSSUnit value);
+        QSharedPointer<HSSStringConstant> stringToConstant(AXRString value);
+        QSharedPointer<HSSKeywordConstant> stringToKeyword(AXRString value);
+        void setComputed(AXRString propertyName, QSharedPointer<HSSObject> theObj);
+        QSharedPointer<HSSObject> getComputedValue(AXRString property) const;
+        const HSSUnit getComputedNumber(AXRString property) const;
+        const HSSUnit getComputedBool(AXRString property) const;
+        const AXRString getComputedString(AXRString property) const;
+        void clearComputedValues();
+        const QSharedPointer<HSSObject> inheritValue(AXRString propertyName) const;
+        void inheritedChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void propertyChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+
     protected:
+        QMap<AXRString, HSSAbstractStackCallback*> _stackCallbacks;
+        QMap<AXRString, HSSAbstractComputeCallback*> _computeCallbacks;
+        QMap<AXRString, HSSAbstractObserveCallback*> _setCallbacks;
+        QMap<AXRString, HSSAbstractObserveCallback*> _listenCallbacks;
+        QMap<AXRString, HSSAbstractObserveCallback*> _notifyCallbacks;
+        QMap<AXRString, QSharedPointer<HSSObject> > _defaultValues;
+        QMap<AXRString, QSharedPointer<HSSObject> > _computedValues;
+        QMap<AXRString, QSharedPointer<HSSParserNode> > _stackValues;
         std::vector<AXRString> shorthandProperties;
         QMap<AXRString, bool> skipShorthand;
         size_t shorthandIndex;
@@ -285,6 +344,7 @@ namespace AXR
         bool _isNamed;
 
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        void _setStackValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
 
         QWeakPointer<HSSObject> ptr;
     };

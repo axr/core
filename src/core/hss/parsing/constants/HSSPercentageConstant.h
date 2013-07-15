@@ -58,7 +58,7 @@ namespace AXR
          *  Creates a new instance of a percentage constant, with given value.
          *  @param  value   A string containing the name of the keyword.
          */
-        HSSPercentageConstant(HSSUnit value, AXRController * controller);
+        HSSPercentageConstant(HSSUnit number, AXRController * controller);
 
         /**
          *  Clones an instance of HSSParserNode and gives a shared pointer of the
@@ -74,22 +74,55 @@ namespace AXR
 
         virtual AXRString toString();
 
+        HSSUnit evaluate();
+
         /**
-         *  Setter for the value of the percentage constant.
-         *  @param newValue     A HSSUnit containing the numeric value of the percentage.
+         *  The percentage base is the number that corresponds to 100%.
+         *  @param value    A HSSUnit containing the base for percentage calculations.
+         */
+        virtual void setPercentageBase(HSSUnit value);
+
+        /**
+         *  Whenever a percentage value needs to recalculate its value, it should be set to true.
+         *  @param value    A boolean, wether it needs to recalculate or not.
+         */
+        void setDirty(bool value);
+
+        /**
+         *  Tells if the percentage value needs to recalculate its value.
+         *  @return Wether it needs recalculating or not.
+         */
+        bool isDirty();
+
+        /**
+         *  Setter for the number of the percentage (e.g. 50% would have a number of 0.5).
+         *  @param newValue     A HSSUnit containing the new number of the percentage value
+         */
+        void setNumber(HSSUnit newValue);
+
+        /**
+         *  Getter for the number of the percentage (e.g. 50% would have a number of 0.5).
+         *  @return The number of the percentage value.
+         */
+        HSSUnit getNumber();
+
+        /**
+         *  Setter for the value.
+         *  @param newValue     A HSSUnit containing the new calculated value for this percentage value.
          */
         void setValue(HSSUnit newValue);
 
         /**
-         *  Call this method when you need to calculate the actual resulting value.
-         *  @param baseValue    A HSSUnit containing the number that corresponds to 100%.
-         *  @return A HSSUnit containing the result of the calculation of the base value with the stored
-         *  percentage value.
+         *  Getter for the value.
+         *  @return The calculated value of the percentage value.
          */
-        HSSUnit getValue(HSSUnit baseValue);
+        HSSUnit getValue();
 
     protected:
-        HSSUnit value;
+        bool _isDirty;
+        HSSUnit _value;
+        HSSUnit _number;
+        HSSUnit _percentageBase;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

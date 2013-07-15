@@ -151,21 +151,21 @@ size_t HSSFlagFunction::selectorChainsSize() const
     return this->selectorChains.size();
 }
 
-QVariant HSSFlagFunction::_evaluate()
+QSharedPointer<HSSObject> HSSFlagFunction::_evaluate()
 {
-    return QVariant();
+    return QSharedPointer<HSSObject>();
 }
 
-QVariant HSSFlagFunction::_evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments)
+QSharedPointer<HSSObject> HSSFlagFunction::_evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments)
 {
     return this->_evaluate();
 }
 
-void HSSFlagFunction::valueChanged(HSSObservableProperty source, void*data)
+void HSSFlagFunction::valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     this->setDirty(true);
-    this->_value = QVariant::fromValue(data);
-    this->notifyObservers(HSSObservablePropertyValue, this->_value.value<void*>());
+    this->_value = theObj;
+    this->notifyObservers("value", theObj);
 }
 
 HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType()

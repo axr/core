@@ -55,6 +55,10 @@ namespace AXR
 {
     class AXRController;
     class HSSDisplayObject;
+    class HSSKeywordConstant;
+    class HSSNumberConstant;
+    class HSSPercentageConstant;
+    class HSSStringConstant;
 
     /**
      *  @brief Abstract base class that provides the basic functionality of a parser node.
@@ -82,6 +86,11 @@ namespace AXR
          *  @return A string representation of the given type.
          */
         static AXRString parserNodeStringRepresentation(HSSParserNodeType type);
+
+        static QSharedPointer<HSSNumberConstant> number(HSSUnit value, AXRController * controller);
+        static QSharedPointer<HSSPercentageConstant> percentage(HSSUnit value, AXRController * controller);
+        static QSharedPointer<HSSStringConstant> string(AXRString value, AXRController * controller);
+        static QSharedPointer<HSSKeywordConstant> keyword(AXRString value, AXRController * controller);
 
         /**
          *  Clones an instance of HSSParserNode and gives a shared pointer of the

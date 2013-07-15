@@ -57,6 +57,8 @@ namespace AXR
     class AXR_API HSSStringConstant : public HSSParserNode
     {
     public:
+        static QSharedPointer<HSSStringConstant> stringToConstant(AXRString value, AXRController * controller);
+
         /**
          *  Creates a new instance of a string constant node which holds the given value.
          *  @param value    A string containing the value for the constant.

@@ -46,6 +46,11 @@
 
 using namespace AXR;
 
+QSharedPointer<HSSStringConstant> HSSStringConstant::stringToConstant(AXRString value, AXRController * controller)
+{
+    return QSharedPointer<HSSStringConstant>(new HSSStringConstant(value, controller));
+}
+
 HSSStringConstant::HSSStringConstant(AXRString value, AXRController * controller)
 : HSSParserNode(HSSParserNodeTypeStringConstant, controller)
 {

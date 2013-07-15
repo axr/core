@@ -147,19 +147,19 @@ namespace AXR
         /**
          *  @todo make private
          */
-        virtual QVariant _evaluate();
+        virtual QSharedPointer<HSSObject> _evaluate();
 
         /**
          *  @todo is this one even used?
          */
-        virtual QVariant _evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments);
+        virtual QSharedPointer<HSSObject> _evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments);
 
         /**
          *  Method to be passed as callback when observing changes.
          *  @param source   The property which we are observing.
          *  @param data     A pointer to the data that is sent along the notification.
          */
-        void valueChanged(HSSObservableProperty source, void*data);
+        void valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         /**
          *  @return The flag type of this instance.

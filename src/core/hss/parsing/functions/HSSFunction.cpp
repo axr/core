@@ -57,7 +57,6 @@ HSSFunction::HSSFunction(HSSFunctionType type, AXRController * controller)
     this->functionType = type;
     this->percentageObserved = NULL;
     this->_isDirty = true;
-    this->_value = QVariant();
 }
 
 HSSFunction::HSSFunction(const HSSFunction & orig)
@@ -68,6 +67,7 @@ HSSFunction::HSSFunction(const HSSFunction & orig)
     this->_isDirty = orig._isDirty;
     this->_value = orig._value;
     this->_name = orig._name;
+    this->scope = orig.scope;
 }
 
 QSharedPointer<HSSFunction> HSSFunction::clone() const
@@ -102,7 +102,7 @@ AXRString HSSFunction::toString()
     return tempstr;
 }
 
-QVariant HSSFunction::evaluate()
+QSharedPointer<HSSObject> HSSFunction::evaluate()
 {
     if (this->_isDirty)
     {
@@ -114,41 +114,42 @@ QVariant HSSFunction::evaluate()
     return this->_value;
 }
 
-QVariant HSSFunction::evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments)
+QSharedPointer<HSSObject> HSSFunction::evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments)
 {
     if (this->_isDirty)
     {
         this->_isDirty = false;
 
-        this->_value = this->_evaluate(arguments);
+        this->_value = this->_evaluate();
     }
 
     return this->_value;
 }
 
-QVariant HSSFunction::_evaluate()
-{
-    return this->_evaluate(std::deque<QSharedPointer<HSSParserNode> > ());
-}
-
-QVariant HSSFunction::_evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments)
+QSharedPointer<HSSObject> HSSFunction::_evaluate()
 {
     AXRDocument* document = this->getController()->document();
-    document->evaluateCustomFunction(this->getName(), (void*) &arguments);
-    return QVariant();
+    document->evaluateCustomFunction(this->getName(), QSharedPointer<HSSObject>());
+    return QSharedPointer<HSSObject>();
 }
 
-void HSSFunction::propertyChanged(HSSObservableProperty property, void* data)
+void HSSFunction::propertyChanged(AXRString property, QSharedPointer<HSSObject> theObj)
 {
-    this->notifyObservers(HSSObservablePropertyValue, data);
+    this->notifyObservers("value", theObj);
+}
+
+const HSSUnit HSSFunction::getPercentageBase() const
+{
+    return this->percentageBase;
 }
 
 void HSSFunction::setPercentageBase(HSSUnit value)
 {
     this->percentageBase = value;
+    this->setDirty(true);
 }
 
-void HSSFunction::setPercentageObserved(HSSObservableProperty property, HSSObservable *observed)
+void HSSFunction::setPercentageObserved(const AXRString property, HSSObservable *observed)
 {
     //    if(this->percentageObserved)
     //    {
@@ -212,7 +213,7 @@ bool HSSFunction::isDirty()
     return this->_isDirty;
 }
 
-QVariant HSSFunction::getValue()
+QSharedPointer<HSSObject> HSSFunction::getValue()
 {
     return this->_value;
 }

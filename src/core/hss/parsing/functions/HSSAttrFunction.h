@@ -144,18 +144,20 @@ namespace AXR
          *  This is the actual implementation of what the function does. It selects from the elements
          *  in the scope and then observes the property, storing  its value.
          */
-        virtual QVariant _evaluate();
+        virtual QSharedPointer<HSSObject> _evaluate();
 
         /**
          *  Callback that will update the value when the observed property changes.
          *  @param source   The property which we are observing (ignored).
          *  @param data     A pointer to the data that is sent along the notification.
          */
-        void valueChanged(HSSObservableProperty source, void*data);
+        void valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
     private:
         AXRString attributeName;
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
+
+        AXRString _stringValue;
 
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };

@@ -49,6 +49,7 @@
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -56,19 +57,21 @@ HSSExpression::HSSExpression(HSSExpressionType type, QSharedPointer<HSSParserNod
 : HSSParserNode(HSSParserNodeTypeExpression, controller)
 {
     this->expressionType = type;
-    this->setLeft(_left);
-    this->setRight(_right);
+    this->_leftNode = _left;
+    this->_rightNode = _right;
 
-    this->percentageObserved = NULL;
+    this->leftval = 0;
+    this->rightval = 0;
 }
 
 HSSExpression::HSSExpression(const HSSExpression &orig)
 : HSSParserNode(orig)
 {
     this->expressionType = orig.expressionType;
-    this->setLeft(orig.left->clone());
-    this->setRight(orig.right->clone());
-    this->percentageObserved = NULL;
+    this->_leftNode = orig._leftNode->clone();
+    this->_rightNode = orig._rightNode->clone();
+    this->leftval = orig.leftval;
+    this->rightval = orig.rightval;
 }
 
 HSSExpression::~HSSExpression()
@@ -78,6 +81,7 @@ HSSExpression::~HSSExpression()
 AXRString HSSExpression::toString()
 {
     AXRString tempstr = AXRString("HSSExpression with following components:\n");
+    this->_nodesToValuesIfNeeded();
     tempstr.append(this->getLeft()->toString() + "\n" + this->getRight()->toString());
     return tempstr;
 }
@@ -109,235 +113,54 @@ HSSUnit HSSExpression::evaluate()
     if (this->isDirty())
     {
         this->setDirty(false);
-
+        this->_nodesToValuesIfNeeded();
         //left
-        switch (this->getLeft()->getType())
-        {
-        case HSSParserNodeTypeExpression:
-        {
-            QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->getLeft());
-            this->leftval = leftExpression->evaluate();
-            if (this->leftObserved)
-            {
-                this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyLeft, this);
-            }
-            leftExpression->observe(HSSObservablePropertyValue, HSSObservablePropertyLeft, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::leftChanged));
-            this->leftObserved = leftExpression.data();
-            this->leftObservedProperty = HSSObservablePropertyValue;
-            break;
-        }
-
-        case HSSParserNodeTypeNumberConstant:
-        {
-            QSharedPointer<HSSNumberConstant> leftNumber = qSharedPointerCast<HSSNumberConstant > (this->getLeft());
-            this->leftval = leftNumber->getValue();
-            break;
-        }
-
-        case HSSParserNodeTypePercentageConstant:
-        {
-            QSharedPointer<HSSPercentageConstant> leftPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getLeft());
-            this->leftval = leftPercentage->getValue(this->percentageBase);
-            if (this->leftObserved)
-            {
-                this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyLeft, this);
-            }
-            this->percentageObserved->observe(this->percentageObservedProperty, HSSObservablePropertyLeft, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::leftChanged));
-            this->leftObserved = this->percentageObserved;
-            this->leftObservedProperty = this->percentageObservedProperty;
-            break;
-        }
-
-        case HSSParserNodeTypeFunctionCall:
-        {
-            QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->getLeft());
-            QVariant remoteValue = leftFunction->evaluate();
-            if (remoteValue.canConvert<HSSUnit*>())
-            {
-                this->leftval = *remoteValue.value<HSSUnit*>();
-                if (this->leftObserved)
-                {
-                    this->leftObserved->removeObserver(this->leftObservedProperty, HSSObservablePropertyLeft, this);
-                }
-                leftFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyLeft, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::leftChanged));
-                this->leftObserved = leftFunction.data();
-                this->leftObservedProperty = HSSObservablePropertyValue;
-
-            }
-            else
-            {
-                this->rightval = 0.;
-            }
-
-            break;
-        }
-
-        default:
-            axr_log(LoggerChannelObsolete1, "############ HSSExpression::evaluate() unknwown node type in left member");
-            break;
-        }
-
-
+        QSharedPointer<HSSValue> left = this->getLeft();
+        this->leftval = left->getNumber();
+        left->observe("value", "left", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
         //right
-        switch (this->getRight()->getType())
-        {
-        case HSSParserNodeTypeExpression:
-        {
-            QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->getRight());
-            this->rightval = rightExpression->evaluate();
-            if (this->rightObserved)
-            {
-                this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyRight, this);
-            }
-            rightExpression->observe(HSSObservablePropertyValue, HSSObservablePropertyRight, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
-            this->rightObserved = rightExpression.data();
-            this->rightObservedProperty = HSSObservablePropertyValue;
-            break;
-        }
-
-        case HSSParserNodeTypeNumberConstant:
-        {
-            QSharedPointer<HSSNumberConstant> rightNumber = qSharedPointerCast<HSSNumberConstant > (this->getRight());
-            this->rightval = rightNumber->getValue();
-            break;
-        }
-
-        case HSSParserNodeTypePercentageConstant:
-        {
-            QSharedPointer<HSSPercentageConstant> rightPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getRight());
-            this->rightval = rightPercentage->getValue(this->percentageBase);
-            if (this->rightObserved)
-            {
-                this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyRight, this);
-            }
-            this->percentageObserved->observe(this->percentageObservedProperty, HSSObservablePropertyRight, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
-            this->rightObserved = rightPercentage.data();
-            this->rightObservedProperty = this->percentageObservedProperty;
-            break;
-        }
-
-        case HSSParserNodeTypeFunctionCall:
-        {
-            QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->getRight());
-            QVariant remoteValue = rightFunction->evaluate();
-            if (remoteValue.canConvert<HSSUnit*>())
-            {
-                this->rightval = *remoteValue.value<HSSUnit*>();
-                if (this->rightObserved)
-                {
-                    this->rightObserved->removeObserver(this->rightObservedProperty, HSSObservablePropertyRight, this);
-                }
-                rightFunction->observe(HSSObservablePropertyValue, HSSObservablePropertyRight, this, new HSSValueChangedCallback<HSSExpression > (this, &HSSExpression::rightChanged));
-                this->rightObserved = rightFunction.data();
-                this->rightObservedProperty = HSSObservablePropertyValue;
-            }
-            else
-            {
-                this->rightval = 0.;
-            }
-
-            break;
-        }
-
-        default:
-            axr_log(LoggerChannelObsolete1, "############ HSSExpression::evaluate() unknwown node type in right member");
-            break;
-        }
-
+        QSharedPointer<HSSValue> right = this->getRight();
+        this->rightval = right->getNumber();
+        right->observe("value", "right", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
+        //calculate
         this->setValue(this->calculate(this->leftval, this->rightval));
     }
 
     return this->getValue();
 }
 
-void HSSExpression::setLeft(QSharedPointer<HSSParserNode> newLeft)
+void HSSExpression::setLeft(QSharedPointer<HSSValue> newLeft)
 {
     this->left = newLeft;
 }
 
-QSharedPointer<HSSParserNode> HSSExpression::getLeft()
+QSharedPointer<HSSValue> HSSExpression::getLeft()
 {
     return this->left;
 }
 
-void HSSExpression::setRight(QSharedPointer<HSSParserNode> newRight)
+void HSSExpression::setRight(QSharedPointer<HSSValue> newRight)
 {
     this->right = newRight;
 }
 
-QSharedPointer<HSSParserNode> HSSExpression::getRight()
+QSharedPointer<HSSValue> HSSExpression::getRight()
 {
     return this->right;
 }
 
-void HSSExpression::propertyChanged(HSSObservableProperty property, void* data)
+void HSSExpression::leftChanged(AXRString property, QSharedPointer<HSSObject> theObj)
 {
-    if (property == this->percentageObservedProperty)
-    {
-        HSSUnit newPercentageBase = *(HSSUnit *) data;
-        this->setPercentageBase(newPercentageBase);
-        axr_log(LoggerChannelObsolete1, "property of expression changed");
-        this->notifyObservers(HSSObservablePropertyValue, NULL);
-    }
-    else
-    {
-        axr_log(LoggerChannelObsolete1, "############### unknown observed property");
-    }
+    this->leftval = this->getLeft()->getNumber();
+    this->setValue(this->calculate(this->leftval, this->rightval));
+    this->notifyObservers("value", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
 }
 
-void HSSExpression::leftChanged(HSSObservableProperty property, void* data)
+void HSSExpression::rightChanged(AXRString property, QSharedPointer<HSSObject> theObj)
 {
-    switch (this->getLeft()->getType())
-    {
-    case HSSParserNodeTypeExpression:
-    case HSSParserNodeTypeNumberConstant:
-    case HSSParserNodeTypeFunctionCall:
-    {
-        this->leftval = *(HSSUnit*) data;
-        break;
-    }
-
-    case HSSParserNodeTypePercentageConstant:
-    {
-        QSharedPointer<HSSPercentageConstant> leftPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getLeft());
-        this->leftval = leftPercentage->getValue(*(HSSUnit*) data);
-        break;
-    }
-
-    default:
-        axr_log(LoggerChannelObsolete1, "############ HSSExpression::evaluate() unknwown node type in left member");
-        break;
-    }
-
-    this->_value = this->calculate(this->leftval, this->rightval);
-    this->notifyObservers(HSSObservablePropertyValue, &this->_value);
-}
-
-void HSSExpression::rightChanged(HSSObservableProperty property, void* data)
-{
-    switch (this->getRight()->getType())
-    {
-    case HSSParserNodeTypeExpression:
-    case HSSParserNodeTypeNumberConstant:
-    case HSSParserNodeTypeFunctionCall:
-    {
-        this->rightval = *(HSSUnit*) data;
-        break;
-    }
-
-    case HSSParserNodeTypePercentageConstant:
-    {
-        QSharedPointer<HSSPercentageConstant> rightPercentage = qSharedPointerCast<HSSPercentageConstant > (this->getRight());
-        this->rightval = rightPercentage->getValue(*(HSSUnit*) data);
-        break;
-    }
-
-    default:
-        axr_log(LoggerChannelObsolete1, "############ HSSExpression::evaluate() unknwown node type in right member");
-        break;
-    }
-    this->_value = this->calculate(this->leftval, this->rightval);
-    this->notifyObservers(HSSObservablePropertyValue, &this->_value);
+    this->rightval = this->getRight()->getNumber();
+    this->setValue(this->calculate(this->leftval, this->rightval));
+    this->notifyObservers("value", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
 }
 
 void HSSExpression::setDirty(bool value)
@@ -365,55 +188,33 @@ void HSSExpression::setPercentageBase(HSSUnit value)
     this->percentageBase = value;
 
     //propagate values
-    if (this->left && this->left->isA(HSSParserNodeTypeExpression))
+    this->_nodesToValuesIfNeeded();
+    if (this->left)
     {
-        QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->left);
-        leftExpression->setPercentageBase(value);
+        this->left->setPercentageBase(value);
     }
-    else if (this->left && this->left->isA(HSSParserNodeTypeFunctionCall))
+    if (this->right)
     {
-        QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->left);
-        leftFunction->setPercentageBase(value);
-    }
-    if (this->right && this->right->isA(HSSParserNodeTypeExpression))
-    {
-        QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->right);
-        rightExpression->setPercentageBase(value);
-    }
-    else if (this->right && this->right->isA(HSSParserNodeTypeFunctionCall))
-    {
-        QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->right);
-        rightFunction->setPercentageBase(value);
+        this->right->setPercentageBase(value);
     }
 
     this->setDirty(true);
 }
 
-void HSSExpression::setPercentageObserved(HSSObservableProperty property, HSSObservable *observed)
+void HSSExpression::setPercentageObserved(const AXRString property, QSharedPointer<HSSObservable> observed)
 {
     this->percentageObserved = observed;
     this->percentageObservedProperty = property;
 
     //propagate values
-    if (this->left && this->left->isA(HSSParserNodeTypeExpression))
+    this->_nodesToValuesIfNeeded();
+    if (this->left)
     {
-        QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->left);
-        leftExpression->setPercentageObserved(property, observed);
+        this->left->setPercentageObserved(observed, property);
     }
-    else if (this->left && this->left->isA(HSSParserNodeTypeFunctionCall))
+    if (this->right)
     {
-        QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->left);
-        leftFunction->setPercentageObserved(property, observed);
-    }
-    if (this->right && this->right->isA(HSSParserNodeTypeExpression))
-    {
-        QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->right);
-        rightExpression->setPercentageObserved(property, observed);
-    }
-    else if (this->right && this->right->isA(HSSParserNodeTypeFunctionCall))
-    {
-        QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->right);
-        rightFunction->setPercentageObserved(property, observed);
+        this->right->setPercentageObserved(observed, property);
     }
 
     this->setDirty(true);
@@ -423,25 +224,14 @@ void HSSExpression::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 {
     this->scope = newScope;
     //propagate values
-    if (this->left && this->left->isA(HSSParserNodeTypeExpression))
+    this->_nodesToValuesIfNeeded();
+    if (this->left)
     {
-        QSharedPointer<HSSExpression> leftExpression = qSharedPointerCast<HSSExpression > (this->left);
-        leftExpression->setScope(newScope);
+        this->left->setScope(newScope);
     }
-    else if (this->left && this->left->isA(HSSParserNodeTypeFunctionCall))
+    if (this->right)
     {
-        QSharedPointer<HSSFunction> leftFunction = qSharedPointerCast<HSSFunction > (this->left);
-        leftFunction->setScope(newScope);
-    }
-    if (this->right && this->right->isA(HSSParserNodeTypeExpression))
-    {
-        QSharedPointer<HSSExpression> rightExpression = qSharedPointerCast<HSSExpression > (this->right);
-        rightExpression->setScope(newScope);
-    }
-    else if (this->right && this->right->isA(HSSParserNodeTypeFunctionCall))
-    {
-        QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction > (this->right);
-        rightFunction->setScope(newScope);
+        this->right->setScope(newScope);
     }
 
     this->setDirty(true);
@@ -449,9 +239,23 @@ void HSSExpression::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 
 void HSSExpression::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
+    this->thisObj = value;
     //propagate values
+    this->_nodesToValuesIfNeeded();
     if (this->left) this->left->setThisObj(value);
     if (this->right) this->right->setThisObj(value);
 
     HSSParserNode::setThisObj(value);
+}
+
+void HSSExpression::_nodesToValuesIfNeeded()
+{
+    if (!this->left && this->_leftNode)
+    {
+        this->left = HSSValue::valueFromParserNode(this->getController(), this->_leftNode, this->getThisObj(), this->scope);
+    }
+    if (!this->right && this->_rightNode)
+    {
+        this->right = HSSValue::valueFromParserNode(this->getController(), this->_rightNode, this->getThisObj(), this->scope);
+    }
 }

@@ -78,25 +78,26 @@ namespace AXR
          *  @return A void pointer to some data. It's up to the caller to know what type of
          *  data is expected.
          */
-        QVariant evaluate();
+        QSharedPointer<HSSObject> evaluate();
 
         /**
          *  @todo I think this one is not used
          */
-        QVariant evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments);
+        QSharedPointer<HSSObject> evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments);
 
         /**
          *  @todo make protected or private
          */
-        virtual QVariant _evaluate();
-        virtual QVariant _evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments);
+        virtual QSharedPointer<HSSObject> _evaluate();
 
         /**
          *  Method to be passed as callback when observing changes.
          *  @param property The property which we are observing.
          *  @param data     A pointer to the data that is sent along the notification.
          */
-        virtual void propertyChanged(HSSObservableProperty property, void* data);
+        virtual void propertyChanged(AXRString property, QSharedPointer<HSSObject> theObj);
+
+        const HSSUnit getPercentageBase() const;
 
         /**
          *  The percentage base is the number that corresponds to 100%.
@@ -109,7 +110,7 @@ namespace AXR
          *  @param property     The property which we are observing.
          *  @param observed     A regular pointer to the object we are observing.
          */
-        virtual void setPercentageObserved(HSSObservableProperty property, HSSObservable * observed);
+        virtual void setPercentageObserved(const AXRString property, HSSObservable * observed);
 
         /**
          *  Setter for the scope which to pass to members like references or selections.
@@ -131,10 +132,9 @@ namespace AXR
 
         /**
          *  Getter for the value.
-         *  @return A void pointer to the value returned by the function. It's up to the caller to
-         *  know what kind of data is expected.
+         *  @return A pointer to the object returned by the function.
          */
-        QVariant getValue();
+        QSharedPointer<HSSObject> getValue();
 
         /**
          *  Allows you to check if this function is of the given type.
@@ -168,10 +168,10 @@ namespace AXR
         HSSFunction(const HSSFunction & orig);
 
         bool _isDirty;
-        QVariant _value;
+        QSharedPointer<HSSObject> _value;
 
         HSSUnit percentageBase;
-        HSSObservableProperty percentageObservedProperty;
+        AXRString percentageObservedProperty;
         HSSObservable * percentageObserved;
         QSharedPointer<HSSSimpleSelection> scope;
 

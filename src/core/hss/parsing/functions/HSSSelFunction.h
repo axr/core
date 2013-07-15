@@ -130,9 +130,9 @@ namespace AXR
         /**
          *  This is the actual implementation of what the function does. It selects from the elements
          *  in the scope and then returns a selection.
-         *  @return A pointer to a selection casted to void*.
+         *  @return A pointer to a HSSValue containing the selection.
          */
-        virtual QVariant _evaluate();
+        virtual QSharedPointer<HSSObject> _evaluate();
 
         //        void valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 

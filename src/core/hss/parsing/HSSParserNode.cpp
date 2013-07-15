@@ -42,7 +42,11 @@
  ********************************************************************/
 
 #include "HSSDisplayObject.h"
+#include "HSSKeywordConstant.h"
+#include "HSSNumberConstant.h"
 #include "HSSParserNode.h"
+#include "HSSPercentageConstant.h"
+#include "HSSStringConstant.h"
 
 using namespace AXR;
 
@@ -75,6 +79,26 @@ AXRString HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type)
     }
 
     return ret;
+}
+
+QSharedPointer<HSSNumberConstant> HSSParserNode::number(HSSUnit value, AXRController * controller)
+{
+    return QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, controller));
+}
+
+QSharedPointer<HSSPercentageConstant> HSSParserNode::percentage(HSSUnit value, AXRController * controller)
+{
+    return QSharedPointer<HSSPercentageConstant>(new HSSPercentageConstant(value, controller));
+}
+
+QSharedPointer<HSSStringConstant> HSSParserNode::string(AXRString value, AXRController * controller)
+{
+    return QSharedPointer<HSSStringConstant>(new HSSStringConstant(value, controller));
+}
+
+QSharedPointer<HSSKeywordConstant> HSSParserNode::keyword(AXRString value, AXRController * controller)
+{
+    return QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(value, controller));
 }
 
 HSSParserNode::HSSParserNode(HSSParserNodeType type, AXRController * controller)

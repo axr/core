@@ -47,6 +47,7 @@
 #include "HSSSelFunction.h"
 #include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -124,10 +125,11 @@ size_t HSSSelFunction::selectorChainsSize() const
     return this->selectorChains.size();
 }
 
-QVariant HSSSelFunction::_evaluate()
+QSharedPointer<HSSObject> HSSSelFunction::_evaluate()
 {
     this->selection = this->getController()->select(this->selectorChains, this->scope, this->getThisObj());
-    this->_value = QVariant::fromValue(this->selection);
+    ///@todo make HSSSelection a HSSObject and uncomment this
+    //this->_value = HSSValue::valueFromParserNode(this->getController(), this->selection);
     return this->_value;
 }
 
