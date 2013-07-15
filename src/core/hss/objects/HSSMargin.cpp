@@ -57,6 +57,13 @@ using namespace AXR;
 HSSMargin::HSSMargin(AXRController * controller)
 : HSSObject(HSSObjectTypeMargin, controller)
 {
+    std::vector<AXRString> shorthandProperties;
+    shorthandProperties.push_back("size");
+    shorthandProperties.push_back("top");
+    shorthandProperties.push_back("right");
+    shorthandProperties.push_back("bottom");
+    shorthandProperties.push_back("left");
+    this->setShorthandProperties(shorthandProperties);
 }
 
 HSSMargin::HSSMargin(const HSSMargin & orig)
