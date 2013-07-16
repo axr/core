@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e
+
+ruby validate.rb --cached
+../common/update-authors.sh
