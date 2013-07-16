@@ -5,7 +5,8 @@ Project {
     references: [
         "src/cocoa/cocoa.qbs",
         "src/core/core.qbs",
-        "src/qt/qt.qbs"
+        "src/qt/qt.qbs",
+        "src/layout-tests/layout-tests.qbs"
     ]
 
     property int axr_version_major: 0
