@@ -1,9 +1,9 @@
 {
-	children: [
+	"children": [
 		{
-			name: "child_source_obj",
-			expect : [
-				{ property: "contentAlignX", value: "200" }
+			"name": "child_source_obj",
+			"expect" : [
+				{ "property": "contentAlignX", "value": "200" }
 			]
 		}
 	]

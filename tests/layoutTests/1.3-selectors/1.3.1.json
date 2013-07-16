@@ -1,5 +1,5 @@
 {
-	expect : [
-		{ property: "contentAlignX", value: "200" }
+	"expect": [
+		{ "property": "contentAlignX", "value": "200" }
 	]
 }
