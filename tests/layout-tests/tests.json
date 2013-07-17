@@ -1,0 +1,6 @@
+{
+	"name": "All tests",
+	"include": [
+		"selectors/tests.json"
+	]
+}

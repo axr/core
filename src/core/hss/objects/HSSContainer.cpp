@@ -217,9 +217,9 @@ AXRString HSSContainer::toString()
     return tempstr;
 }
 
-QMap<QString, QVariant> HSSContainer::toMap()
+QVariantMap HSSContainer::toMap() const
 {
-    QMap<QString, QVariant> map = HSSObject::toMap();
+    QVariantMap map = HSSObject::toMap();
 
     if (this->children->size() > 0)
     {

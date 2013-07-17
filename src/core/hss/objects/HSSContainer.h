@@ -44,6 +44,7 @@
 #ifndef HSSCONTAINER_H
 #define HSSCONTAINER_H
 
+#include <QVariant>
 #include "HSSDisplayObject.h"
 #include "HSSSimpleSelection.h"
 #include "HSSTextEnums.h"
@@ -122,7 +123,7 @@ namespace AXR
         virtual ~HSSContainer();
 
         virtual AXRString toString();
-        virtual QMap<QString, QVariant> toMap();
+        virtual QVariantMap toMap() const;
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);

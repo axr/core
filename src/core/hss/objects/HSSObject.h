@@ -47,6 +47,7 @@
 #include <vector>
 #include <QMap>
 #include <QSharedPointer>
+#include <QVariant>
 #include <QWeakPointer>
 #include "HSSClonable.h"
 #include "HSSObservable.h"
@@ -138,11 +139,11 @@ namespace AXR
         /**
          * @return A map representing the object and it's properties
          */
-        virtual QMap<QString, QVariant> toMap();
+        virtual QVariantMap toMap() const;
         /**
          *  @return Wether the object is named or is anonymous.
          */
-        bool isNamed();
+        bool isNamed() const;
         /**
          *  Sets the name of the object. After calling this, isNamed() will return TRUE.
          *  @param newName     A string with the new name.

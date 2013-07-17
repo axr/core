@@ -1,0 +1,7 @@
+{
+	"name": "Selectors",
+	"cases": [
+		"simple/test-case.json",
+		"hierarchy/test-case.json"
+	]
+}

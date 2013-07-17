@@ -1,0 +1,17 @@
+{
+	"name": "Hierarchy",
+	"load": "test.xml",
+	"expect": {
+		"children": [
+			{
+				"name": "child",
+				"properties" : [
+					{
+						"name": "contentAlignX",
+						"value": "200"
+					}
+				]
+			}
+		]
+	}
+}

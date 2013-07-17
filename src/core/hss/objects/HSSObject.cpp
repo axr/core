@@ -314,10 +314,10 @@ AXRString HSSObject::toString()
     }
 }
 
-QMap<QString, QVariant> HSSObject::toMap()
+QVariantMap HSSObject::toMap() const
 {
-    QMap<QString, QVariant> map;
-    QMap<QString, QVariant> properties;
+    QVariantMap map;
+    QVariantMap properties;
 
     QMapIterator<HSSObservableProperty, QVariant> i(this->getProperties());
     while (i.hasNext())
@@ -487,7 +487,7 @@ QMap<QString, QVariant> HSSObject::toMap()
 
             if (objects.size() > 0)
             {
-                QMap<QString, QVariant> eventsMap;
+                QVariantMap eventsMap;
 
                 while (i2.hasNext())
                 {
@@ -520,6 +520,7 @@ QMap<QString, QVariant> HSSObject::toMap()
         properties.insert(propertyName, propertyValue);
     }
 
+    // TODO: Insert the object type here (including the @)
     map.insert("object", QVariant::String);
     map.insert("name", this->isNamed() ? QVariant(this->name) : QVariant::String);
     map.insert("properties", properties);
@@ -527,7 +528,7 @@ QMap<QString, QVariant> HSSObject::toMap()
     return map;
 }
 
-bool HSSObject::isNamed()
+bool HSSObject::isNamed() const
 {
     return this->_isNamed;
 }
