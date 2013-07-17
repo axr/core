@@ -136,11 +136,9 @@ namespace AXR
          */
         virtual AXRString toString();
         /**
-         *  Each object overrides this method to print itself to a JSON object.
-         *  @return A JSON representation of the object.
+         * @return A map representing the object and it's properties
          */
-        AXRString toJSON(AXRString whitespace);
-        virtual AXRString _toJSON(AXRString whitespace);
+        virtual QMap<QString, QVariant> toMap();
         /**
          *  @return Wether the object is named or is anonymous.
          */
