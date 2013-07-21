@@ -47,6 +47,7 @@
 #include <vector>
 #include <QMap>
 #include <QSharedPointer>
+#include <QVariant>
 #include <QWeakPointer>
 #include "HSSClonable.h"
 #include "HSSObservable.h"
@@ -136,15 +137,13 @@ namespace AXR
          */
         virtual AXRString toString();
         /**
-         *  Each object overrides this method to print itself to a JSON object.
-         *  @return A JSON representation of the object.
+         * @return A map representing the object and it's properties
          */
-        AXRString toJSON(AXRString whitespace);
-        virtual AXRString _toJSON(AXRString whitespace);
+        virtual QVariantMap toMap() const;
         /**
          *  @return Wether the object is named or is anonymous.
          */
-        bool isNamed();
+        bool isNamed() const;
         /**
          *  Sets the name of the object. After calling this, isNamed() will return TRUE.
          *  @param newName     A string with the new name.

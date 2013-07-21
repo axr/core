@@ -1,6 +1,10 @@
 set(layout-tests_SOURCES
-	json.h
-	json.cpp
+	Json.h
+	Json.cpp
+    TestCase.h
+    TestCase.cpp
+    TestSuite.h
+    TestSuite.cpp
     main.cpp
 )
 
@@ -17,7 +21,7 @@ if(NOT WIN32)
     get_filename_component(LAYOUT_TESTS_PATH "${LAYOUT_TESTS_BIN}" PATH)
 
     add_custom_target(run-layout-tests ALL
-        COMMAND "${LAYOUT_TESTS_BIN}" "${AXR_CORE_SOURCE_DIR}/tests/layoutTests/tests.json" --format xml --stylesheet "${AXR_CORE_SOURCE_DIR}/tests/layoutTests/style.hss"
+        COMMAND "${LAYOUT_TESTS_BIN}" "${AXR_CORE_SOURCE_DIR}/tests/layout-tests/tests.json" --format plain
         DEPENDS layout-tests
         WORKING_DIRECTORY "${LAYOUT_TESTS_PATH}"
     )
