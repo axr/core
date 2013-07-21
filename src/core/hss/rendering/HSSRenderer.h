@@ -46,7 +46,12 @@
 
 #include "HSSAbstractVisitor.h"
 
+class QPainterPath;
 template <class T> class QSharedPointer;
+
+#ifdef __APPLE__
+typedef struct CGImage *CGImageRef;
+#endif
 
 namespace AXR
 {
@@ -68,6 +73,11 @@ namespace AXR
         virtual void reset();
 
         QImage getFinalFrame() const;
+
+#ifdef __APPLE__
+        // TODO: Temporary
+        CGImageRef getFinalFrameAsCGImageRef() const;
+#endif
 
         void setDirtyRect(const HSSRect &dirtyRect);
 

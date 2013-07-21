@@ -42,7 +42,6 @@
  ********************************************************************/
 
 #import <iostream>
-#import <QPixmap>
 #import "AXRController.h"
 #import "AXRDocument.h"
 #import "HSSContainer.h"
@@ -114,7 +113,7 @@ using namespace AXR;
         renderVisitor->setDirtyRect([self bounds]);
         visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);
 
-        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, QPixmap::fromImage(renderVisitor->getFinalFrame()).toMacCGImageRef());
+        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, renderVisitor->getFinalFrameAsCGImageRef());
     }
 }
 

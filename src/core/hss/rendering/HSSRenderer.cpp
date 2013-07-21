@@ -547,3 +547,12 @@ QImage HSSRenderer::getFinalFrame() const
 {
     return d->canvas;
 }
+
+#ifdef __APPLE__
+#include <CoreGraphics/CoreGraphics.h>
+
+CGImageRef HSSRenderer::getFinalFrameAsCGImageRef() const
+{
+    return QPixmap::fromImage(getFinalFrame()).toMacCGImageRef();
+}
+#endif
