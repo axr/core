@@ -1,0 +1,12 @@
+{
+	"name": "Simple selector",
+	"load": "test.xml",
+	"expect": {
+		"properties": [
+			{
+				"name": "contentAlignX",
+				"value": "200"
+			}
+		]
+	}
+}

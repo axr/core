@@ -217,29 +217,27 @@ AXRString HSSContainer::toString()
     return tempstr;
 }
 
-AXRString HSSContainer::_toJSON(AXRString whitespace)
+QVariantMap HSSContainer::toMap() const
 {
-    AXRString tmp;
-    tmp.append(whitespace).append("name: '" + (this->isNamed() ? this->name : "") + "',\n");
+    QVariantMap map = HSSObject::toMap();
+
     if (this->children->size() > 0)
     {
-        tmp.append(whitespace).append("children: [\n");
-        whitespace.append("    ");
-        if (this->children->size() > 0)
+        QList<QVariant> childrenList;
+
+        for (HSSSimpleSelection::iterator it = this->children->begin(); it!= this->children->end(); ++it)
         {
-            for (HSSSimpleSelection::iterator it = this->children->begin(); it!= this->children->end(); ++it)
-            {
-                tmp.append(whitespace).append((*it)->toJSON(whitespace));
-            }
+            childrenList.append((*it)->toMap());
         }
-        whitespace.remove(whitespace.length()-4, 4);
-        tmp.append("\n").append(whitespace).append("],\n");
+
+        map.insert("children", QVariant(childrenList));
     }
     else
     {
-        tmp.append(whitespace).append("children: false,\n");
+        map.insert("children", QVariant(false));
     }
-    return tmp;
+
+    return map;
 }
 
 AXRString HSSContainer::defaultObjectType()
