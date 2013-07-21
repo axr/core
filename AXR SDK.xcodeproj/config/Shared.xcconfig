@@ -1,0 +1,9 @@
+QT_INSTALL_BINS = /Developer/Tools/Qt
+QT_INSTALL_LIBS = /Library/Frameworks
+QT_CORE_HEADERS = $(QT_INSTALL_LIBS)/QtCore.framework/Headers
+QT_GUI_HEADERS = $(QT_INSTALL_LIBS)/QtGui.framework/Headers
+
+// Search Paths
+ALWAYS_SEARCH_USER_PATHS = NO
+
+#include "SharedWarnings.xcconfig"

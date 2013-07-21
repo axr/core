@@ -1,0 +1,15 @@
+// Deployment
+INSTALL_PATH = /Developer/SDKs/AXR.sdk/usr/local/lib
+
+// Linking
+DYLIB_COMPATIBILITY_VERSION = 1
+DYLIB_CURRENT_VERSION = 1
+
+// Packaging
+PRODUCT_NAME = axrcocoahelper
+
+// Search Paths
+FRAMEWORK_SEARCH_PATHS = $(inherited) "$(QT_INSTALL_LIBS)"
+
+// Custom Compiler Flags
+OTHER_CPLUSPLUSFLAGS = $(inherited) -isystem"$(QT_CORE_HEADERS)"

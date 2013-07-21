@@ -1,0 +1,1554 @@
+// !$*UTF8*$!
+{
+    archiveVersion = 1;
+    classes = {
+    };
+    objectVersion = 46;
+    objects = {
+
+/* Begin PBXBuildFile section */
+        14367CB8179C525400764852 /* AXRGlobal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B05030179C434C00AF6FDE /* AXRGlobal.cpp */; };
+        14367CBA179C525400764852 /* AXRController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E73179C42F500AF6FDE /* AXRController.cpp */; };
+        14367CBC179C525400764852 /* AXRDocument.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E75179C42F500AF6FDE /* AXRDocument.cpp */; };
+        14367CBE179C525400764852 /* AXRError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E78179C42F500AF6FDE /* AXRError.cpp */; };
+        14367CC0179C525400764852 /* AXRWarning.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E7A179C42F500AF6FDE /* AXRWarning.cpp */; };
+        14367CC3179C525400764852 /* HSSInputEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E80179C42F500AF6FDE /* HSSInputEvent.cpp */; };
+        14367CC5179C525400764852 /* HSSMouseEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E82179C42F500AF6FDE /* HSSMouseEvent.cpp */; };
+        14367CC7179C525400764852 /* HSSAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E86179C42F500AF6FDE /* HSSAction.cpp */; };
+        14367CC9179C525400764852 /* HSSFlagAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E88179C42F500AF6FDE /* HSSFlagAction.cpp */; };
+        14367CCB179C525400764852 /* HSSFunctionAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E8A179C42F500AF6FDE /* HSSFunctionAction.cpp */; };
+        14367CCD179C525400764852 /* HSSLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E8C179C42F500AF6FDE /* HSSLog.cpp */; };
+        14367CCF179C525400764852 /* HSSRequest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E8E179C42F500AF6FDE /* HSSRequest.cpp */; };
+        14367CD1179C525400764852 /* HSSBorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E91179C42F500AF6FDE /* HSSBorder.cpp */; };
+        14367CD3179C525400764852 /* HSSLineBorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E93179C42F500AF6FDE /* HSSLineBorder.cpp */; };
+        14367CD5179C525400764852 /* HSSColorStop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E96179C42F500AF6FDE /* HSSColorStop.cpp */; };
+        14367CD7179C525400764852 /* HSSGradient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E98179C42F500AF6FDE /* HSSGradient.cpp */; };
+        14367CD9179C525400764852 /* HSSLinearGradient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E9A179C42F500AF6FDE /* HSSLinearGradient.cpp */; };
+        14367CDB179C525400764852 /* HSSRadialGradient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E9C179C42F500AF6FDE /* HSSRadialGradient.cpp */; };
+        14367CDD179C525400764852 /* HSSContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04E9E179C42F500AF6FDE /* HSSContainer.cpp */; };
+        14367CDF179C525400764852 /* HSSDisplayObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EA0179C42F500AF6FDE /* HSSDisplayObject.cpp */; };
+        14367CE1179C525400764852 /* HSSEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EA2179C42F500AF6FDE /* HSSEvent.cpp */; };
+        14367CE3179C525400764852 /* HSSFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EA4179C42F500AF6FDE /* HSSFont.cpp */; };
+        14367CE5179C525400764852 /* HSSLayoutLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EA6179C42F500AF6FDE /* HSSLayoutLine.cpp */; };
+        14367CE7179C525400764852 /* HSSMargin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EA8179C42F500AF6FDE /* HSSMargin.cpp */; };
+        14367CE9179C525400764852 /* HSSMultipleValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EAA179C42F500AF6FDE /* HSSMultipleValue.cpp */; };
+        14367CEB179C525400764852 /* HSSObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EAC179C42F500AF6FDE /* HSSObject.cpp */; };
+        14367CED179C525400764852 /* HSSRgb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EAE179C42F500AF6FDE /* HSSRgb.cpp */; };
+        14367CEF179C525400764852 /* HSSTextBlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EB0179C42F500AF6FDE /* HSSTextBlock.cpp */; };
+        14367CF2179C525400764852 /* HSSValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EB3179C42F500AF6FDE /* HSSValue.cpp */; };
+        14367CF4179C525500764852 /* HSSCircle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EB6179C42F500AF6FDE /* HSSCircle.cpp */; };
+        14367CF6179C525500764852 /* HSSPolygon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EB8179C42F500AF6FDE /* HSSPolygon.cpp */; };
+        14367CF8179C525500764852 /* HSSRectangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EBA179C42F500AF6FDE /* HSSRectangle.cpp */; };
+        14367CFA179C525500764852 /* HSSRoundedRect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EBC179C42F500AF6FDE /* HSSRoundedRect.cpp */; };
+        14367CFC179C525500764852 /* HSSShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EBE179C42F500AF6FDE /* HSSShape.cpp */; };
+        14367CFE179C525500764852 /* HSSKeywordConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EC2179C42F500AF6FDE /* HSSKeywordConstant.cpp */; };
+        14367D00179C525500764852 /* HSSNumberConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EC4179C42F500AF6FDE /* HSSNumberConstant.cpp */; };
+        14367D02179C525500764852 /* HSSObjectNameConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EC6179C42F500AF6FDE /* HSSObjectNameConstant.cpp */; };
+        14367D04179C525500764852 /* HSSPercentageConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EC8179C42F500AF6FDE /* HSSPercentageConstant.cpp */; };
+        14367D06179C525500764852 /* HSSStringConstant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04ECA179C42F500AF6FDE /* HSSStringConstant.cpp */; };
+        14367D08179C525500764852 /* HSSDivision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04ECD179C42F500AF6FDE /* HSSDivision.cpp */; };
+        14367D0A179C525500764852 /* HSSExpression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04ECF179C42F500AF6FDE /* HSSExpression.cpp */; };
+        14367D0C179C525500764852 /* HSSMultiplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04ED1179C42F500AF6FDE /* HSSMultiplication.cpp */; };
+        14367D0E179C525500764852 /* HSSSubtraction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04ED3179C42F500AF6FDE /* HSSSubtraction.cpp */; };
+        14367D10179C525500764852 /* HSSSum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04ED5179C42F500AF6FDE /* HSSSum.cpp */; };
+        14367D12179C525500764852 /* HSSEmptyFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04ED8179C42F500AF6FDE /* HSSEmptyFilter.cpp */; };
+        14367D14179C525500764852 /* HSSEvenChildFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EDA179C42F500AF6FDE /* HSSEvenChildFilter.cpp */; };
+        14367D16179C525500764852 /* HSSEvenFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EDC179C42F500AF6FDE /* HSSEvenFilter.cpp */; };
+        14367D18179C525500764852 /* HSSFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EDE179C42F500AF6FDE /* HSSFilter.cpp */; };
+        14367D1A179C525500764852 /* HSSFirstChildFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EE0179C42F500AF6FDE /* HSSFirstChildFilter.cpp */; };
+        14367D1C179C525500764852 /* HSSFirstFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EE2179C42F500AF6FDE /* HSSFirstFilter.cpp */; };
+        14367D1E179C525500764852 /* HSSFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EE4179C42F500AF6FDE /* HSSFlag.cpp */; };
+        14367D20179C525500764852 /* HSSLastChildFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EE6179C42F500AF6FDE /* HSSLastChildFilter.cpp */; };
+        14367D22179C525500764852 /* HSSLastFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EE8179C42F500AF6FDE /* HSSLastFilter.cpp */; };
+        14367D24179C525500764852 /* HSSOddChildFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EEA179C42F500AF6FDE /* HSSOddChildFilter.cpp */; };
+        14367D26179C525500764852 /* HSSOddFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EEC179C42F500AF6FDE /* HSSOddFilter.cpp */; };
+        14367D28179C525500764852 /* HSSAttrFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EEF179C42F500AF6FDE /* HSSAttrFunction.cpp */; };
+        14367D2A179C525500764852 /* HSSFlagFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EF1179C42F500AF6FDE /* HSSFlagFunction.cpp */; };
+        14367D2C179C525500764852 /* HSSFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EF3179C42F500AF6FDE /* HSSFunction.cpp */; };
+        14367D2E179C525500764852 /* HSSRefFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EF5179C42F500AF6FDE /* HSSRefFunction.cpp */; };
+        14367D30179C525500764852 /* HSSSelFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EF7179C42F500AF6FDE /* HSSSelFunction.cpp */; };
+        14367D32179C525500764852 /* HSSMultipleValueDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EF9179C42F500AF6FDE /* HSSMultipleValueDefinition.cpp */; };
+        14367D34179C525500764852 /* HSSParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EFB179C42F500AF6FDE /* HSSParser.cpp */; };
+        14367D36179C525500764852 /* HSSParserNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EFD179C42F500AF6FDE /* HSSParserNode.cpp */; };
+        14367D38179C525500764852 /* HSSSelectorChain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04EFF179C42F500AF6FDE /* HSSSelectorChain.cpp */; };
+        14367D3A179C525500764852 /* HSSCombinator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F02179C42F500AF6FDE /* HSSCombinator.cpp */; };
+        14367D3C179C525500764852 /* HSSNameSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F04179C42F500AF6FDE /* HSSNameSelector.cpp */; };
+        14367D3E179C525500764852 /* HSSNegation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F06179C42F500AF6FDE /* HSSNegation.cpp */; };
+        14367D40179C525500764852 /* HSSParentSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F08179C42F500AF6FDE /* HSSParentSelector.cpp */; };
+        14367D42179C525500764852 /* HSSRootSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F0A179C42F500AF6FDE /* HSSRootSelector.cpp */; };
+        14367D44179C525500764852 /* HSSSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F0C179C42F500AF6FDE /* HSSSelector.cpp */; };
+        14367D46179C525500764852 /* HSSSimpleSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F0E179C42F500AF6FDE /* HSSSimpleSelector.cpp */; };
+        14367D48179C525500764852 /* HSSThisSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F10179C42F500AF6FDE /* HSSThisSelector.cpp */; };
+        14367D4A179C525500764852 /* HSSUniversalSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F12179C42F500AF6FDE /* HSSUniversalSelector.cpp */; };
+        14367D4C179C525500764852 /* HSSComment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F15179C42F500AF6FDE /* HSSComment.cpp */; };
+        14367D4E179C525500764852 /* HSSInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F17179C42F500AF6FDE /* HSSInstruction.cpp */; };
+        14367D50179C525500764852 /* HSSObjectDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F19179C42F500AF6FDE /* HSSObjectDefinition.cpp */; };
+        14367D52179C525500764852 /* HSSPropertyDefinition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F1B179C42F500AF6FDE /* HSSPropertyDefinition.cpp */; };
+        14367D54179C525500764852 /* HSSRule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F1D179C42F600AF6FDE /* HSSRule.cpp */; };
+        14367D56179C525500764852 /* HSSStatement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F1F179C42F600AF6FDE /* HSSStatement.cpp */; };
+        14367D58179C525500764852 /* HSSAbstractVisitor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F22179C42F600AF6FDE /* HSSAbstractVisitor.cpp */; };
+        14367D5A179C525500764852 /* HSSVisitorManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F24179C42F600AF6FDE /* HSSVisitorManager.cpp */; };
+        14367D5C179C525500764852 /* HSSRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F27179C42F600AF6FDE /* HSSRenderer.cpp */; };
+        14367D5E179C525500764852 /* HSSRenderTreeBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F29179C42F600AF6FDE /* HSSRenderTreeBuilder.cpp */; };
+        14367D60179C525500764852 /* HSSToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F2C179C42F600AF6FDE /* HSSToken.cpp */; };
+        14367D62179C525500764852 /* HSSTokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F2E179C42F600AF6FDE /* HSSTokenizer.cpp */; };
+        14367D65179C525500764852 /* HSSValueToken.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F31179C42F600AF6FDE /* HSSValueToken.cpp */; };
+        14367D67179C525500764852 /* HSSCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F34179C42F600AF6FDE /* HSSCallback.cpp */; };
+        14367D69179C525500764852 /* HSSClonable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F36179C42F600AF6FDE /* HSSClonable.cpp */; };
+        14367D6B179C525500764852 /* HSSMultipleSelection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F38179C42F600AF6FDE /* HSSMultipleSelection.cpp */; };
+        14367D6D179C525500764852 /* HSSObservable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F3A179C42F600AF6FDE /* HSSObservable.cpp */; };
+        14367D6F179C525500764852 /* HSSObservableMapping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F3C179C42F600AF6FDE /* HSSObservableMapping.cpp */; };
+        14367D72179C525500764852 /* HSSSelection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F3F179C42F600AF6FDE /* HSSSelection.cpp */; };
+        14367D74179C525500764852 /* HSSSimpleSelection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F41179C42F600AF6FDE /* HSSSimpleSelection.cpp */; };
+        14367D76179C525500764852 /* AXRAbstractLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F44179C42F600AF6FDE /* AXRAbstractLogger.cpp */; };
+        14367D78179C525500764852 /* AXRGenericLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F46179C42F600AF6FDE /* AXRGenericLogger.cpp */; };
+        14367D7B179C525500764852 /* AXRLoggerManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F49179C42F600AF6FDE /* AXRLoggerManager.cpp */; };
+        14367D7D179C525500764852 /* AXRBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F4C179C42F600AF6FDE /* AXRBuffer.cpp */; };
+        14367D7F179C525500764852 /* AXRString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F4E179C42F600AF6FDE /* AXRString.cpp */; };
+        14367D81179C525500764852 /* AXRString.mm in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F50179C42F600AF6FDE /* AXRString.mm */; };
+        14367D82179C525500764852 /* HSSPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F51179C42F600AF6FDE /* HSSPoint.cpp */; };
+        14367D84179C525500764852 /* HSSPoint.mm in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F53179C42F600AF6FDE /* HSSPoint.mm */; };
+        14367D85179C525500764852 /* HSSRect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F54179C42F600AF6FDE /* HSSRect.cpp */; };
+        14367D87179C525500764852 /* HSSRect.mm in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F56179C42F600AF6FDE /* HSSRect.mm */; };
+        14367D88179C525500764852 /* HSSSize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F57179C42F600AF6FDE /* HSSSize.cpp */; };
+        14367D8A179C525500764852 /* HSSSize.mm in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F59179C42F600AF6FDE /* HSSSize.mm */; };
+        14367D8B179C525500764852 /* XMLParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B04F5B179C42F600AF6FDE /* XMLParser.cpp */; };
+        149BA6EE179C78E400302104 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14B04E47179C3F5C00AF6FDE /* Cocoa.framework */; };
+        149BA714179C799100302104 /* NSAXRDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 149BA710179C799100302104 /* NSAXRDocument.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        149BA715179C799100302104 /* NSAXRDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 149BA711179C799100302104 /* NSAXRDocument.mm */; };
+        149BA716179C799100302104 /* NSAXRView.h in Headers */ = {isa = PBXBuildFile; fileRef = 149BA712179C799100302104 /* NSAXRView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        149BA717179C799100302104 /* NSAXRView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 149BA713179C799100302104 /* NSAXRView.mm */; };
+        149BA71A179C79A500302104 /* QAXRWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 149BA718179C79A500302104 /* QAXRWidget.cpp */; };
+        149BA71B179C79A500302104 /* QAXRWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = 149BA719179C79A500302104 /* QAXRWidget.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        149BA71C179C79B400302104 /* QAXRWidget.h in Sources */ = {isa = PBXBuildFile; fileRef = 149BA719179C79A500302104 /* QAXRWidget.h */; };
+        149BA721179C79C900302104 /* AXRCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14B04E44179C3F5C00AF6FDE /* AXRCore.framework */; };
+        149BA722179C79ED00302104 /* AXRCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14B04E44179C3F5C00AF6FDE /* AXRCore.framework */; };
+        14B04E48179C3F5C00AF6FDE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14B04E47179C3F5C00AF6FDE /* Cocoa.framework */; };
+        14B04E52179C3F5C00AF6FDE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 14B04E50179C3F5C00AF6FDE /* InfoPlist.strings */; };
+        14B04F5E179C42F600AF6FDE /* AXRController.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E74179C42F500AF6FDE /* AXRController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F60179C42F600AF6FDE /* AXRDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E76179C42F500AF6FDE /* AXRDocument.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F62179C42F600AF6FDE /* AXRError.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E79179C42F500AF6FDE /* AXRError.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F64179C42F600AF6FDE /* AXRWarning.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E7B179C42F500AF6FDE /* AXRWarning.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F65179C42F600AF6FDE /* HSSTypeEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E7E179C42F500AF6FDE /* HSSTypeEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F67179C42F600AF6FDE /* HSSInputEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E81179C42F500AF6FDE /* HSSInputEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F69179C42F600AF6FDE /* HSSMouseEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E83179C42F500AF6FDE /* HSSMouseEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F6B179C42F600AF6FDE /* HSSAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E87179C42F500AF6FDE /* HSSAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F6D179C42F600AF6FDE /* HSSFlagAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E89179C42F500AF6FDE /* HSSFlagAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F6F179C42F600AF6FDE /* HSSFunctionAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E8B179C42F500AF6FDE /* HSSFunctionAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F71179C42F600AF6FDE /* HSSLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E8D179C42F500AF6FDE /* HSSLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F73179C42F600AF6FDE /* HSSRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E8F179C42F500AF6FDE /* HSSRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F75179C42F600AF6FDE /* HSSBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E92179C42F500AF6FDE /* HSSBorder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F77179C42F600AF6FDE /* HSSLineBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E94179C42F500AF6FDE /* HSSLineBorder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F79179C42F600AF6FDE /* HSSColorStop.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E97179C42F500AF6FDE /* HSSColorStop.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F7B179C42F600AF6FDE /* HSSGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E99179C42F500AF6FDE /* HSSGradient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F7D179C42F600AF6FDE /* HSSLinearGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E9B179C42F500AF6FDE /* HSSLinearGradient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F7F179C42F600AF6FDE /* HSSRadialGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E9D179C42F500AF6FDE /* HSSRadialGradient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F81179C42F600AF6FDE /* HSSContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04E9F179C42F500AF6FDE /* HSSContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F83179C42F600AF6FDE /* HSSDisplayObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EA1179C42F500AF6FDE /* HSSDisplayObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F85179C42F600AF6FDE /* HSSEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EA3179C42F500AF6FDE /* HSSEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F87179C42F600AF6FDE /* HSSFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EA5179C42F500AF6FDE /* HSSFont.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F89179C42F600AF6FDE /* HSSLayoutLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EA7179C42F500AF6FDE /* HSSLayoutLine.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F8B179C42F600AF6FDE /* HSSMargin.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EA9179C42F500AF6FDE /* HSSMargin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F8D179C42F600AF6FDE /* HSSMultipleValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EAB179C42F500AF6FDE /* HSSMultipleValue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F8F179C42F600AF6FDE /* HSSObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EAD179C42F500AF6FDE /* HSSObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F91179C42F600AF6FDE /* HSSRgb.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EAF179C42F500AF6FDE /* HSSRgb.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F93179C42F600AF6FDE /* HSSTextBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EB1179C42F500AF6FDE /* HSSTextBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F94179C42F600AF6FDE /* HSSTextEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EB2179C42F500AF6FDE /* HSSTextEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F96179C42F600AF6FDE /* HSSValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EB4179C42F500AF6FDE /* HSSValue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F98179C42F600AF6FDE /* HSSCircle.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EB7179C42F500AF6FDE /* HSSCircle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F9A179C42F600AF6FDE /* HSSPolygon.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EB9179C42F500AF6FDE /* HSSPolygon.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F9C179C42F600AF6FDE /* HSSRectangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EBB179C42F500AF6FDE /* HSSRectangle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04F9E179C42F600AF6FDE /* HSSRoundedRect.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EBD179C42F500AF6FDE /* HSSRoundedRect.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FA0179C42F600AF6FDE /* HSSShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EBF179C42F500AF6FDE /* HSSShape.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FA2179C42F600AF6FDE /* HSSKeywordConstant.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EC3179C42F500AF6FDE /* HSSKeywordConstant.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FA4179C42F600AF6FDE /* HSSNumberConstant.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EC5179C42F500AF6FDE /* HSSNumberConstant.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FA6179C42F600AF6FDE /* HSSObjectNameConstant.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EC7179C42F500AF6FDE /* HSSObjectNameConstant.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FA8179C42F600AF6FDE /* HSSPercentageConstant.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EC9179C42F500AF6FDE /* HSSPercentageConstant.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FAA179C42F600AF6FDE /* HSSStringConstant.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04ECB179C42F500AF6FDE /* HSSStringConstant.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FAC179C42F600AF6FDE /* HSSDivision.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04ECE179C42F500AF6FDE /* HSSDivision.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FAE179C42F600AF6FDE /* HSSExpression.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04ED0179C42F500AF6FDE /* HSSExpression.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FB0179C42F600AF6FDE /* HSSMultiplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04ED2179C42F500AF6FDE /* HSSMultiplication.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FB2179C42F600AF6FDE /* HSSSubtraction.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04ED4179C42F500AF6FDE /* HSSSubtraction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FB4179C42F600AF6FDE /* HSSSum.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04ED6179C42F500AF6FDE /* HSSSum.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FB6179C42F600AF6FDE /* HSSEmptyFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04ED9179C42F500AF6FDE /* HSSEmptyFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FB8179C42F600AF6FDE /* HSSEvenChildFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EDB179C42F500AF6FDE /* HSSEvenChildFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FBA179C42F600AF6FDE /* HSSEvenFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EDD179C42F500AF6FDE /* HSSEvenFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FBC179C42F600AF6FDE /* HSSFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EDF179C42F500AF6FDE /* HSSFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FBE179C42F600AF6FDE /* HSSFirstChildFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EE1179C42F500AF6FDE /* HSSFirstChildFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FC0179C42F600AF6FDE /* HSSFirstFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EE3179C42F500AF6FDE /* HSSFirstFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FC2179C42F600AF6FDE /* HSSFlag.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EE5179C42F500AF6FDE /* HSSFlag.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FC4179C42F600AF6FDE /* HSSLastChildFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EE7179C42F500AF6FDE /* HSSLastChildFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FC6179C42F600AF6FDE /* HSSLastFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EE9179C42F500AF6FDE /* HSSLastFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FC8179C42F600AF6FDE /* HSSOddChildFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EEB179C42F500AF6FDE /* HSSOddChildFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FCA179C42F600AF6FDE /* HSSOddFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EED179C42F500AF6FDE /* HSSOddFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FCC179C42F600AF6FDE /* HSSAttrFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EF0179C42F500AF6FDE /* HSSAttrFunction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FCE179C42F600AF6FDE /* HSSFlagFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EF2179C42F500AF6FDE /* HSSFlagFunction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FD0179C42F600AF6FDE /* HSSFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EF4179C42F500AF6FDE /* HSSFunction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FD2179C42F600AF6FDE /* HSSRefFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EF6179C42F500AF6FDE /* HSSRefFunction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FD4179C42F600AF6FDE /* HSSSelFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EF8179C42F500AF6FDE /* HSSSelFunction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FD6179C42F600AF6FDE /* HSSMultipleValueDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EFA179C42F500AF6FDE /* HSSMultipleValueDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FD8179C42F600AF6FDE /* HSSParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EFC179C42F500AF6FDE /* HSSParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FDA179C42F600AF6FDE /* HSSParserNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04EFE179C42F500AF6FDE /* HSSParserNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FDC179C42F600AF6FDE /* HSSSelectorChain.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F00179C42F500AF6FDE /* HSSSelectorChain.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FDE179C42F600AF6FDE /* HSSCombinator.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F03179C42F500AF6FDE /* HSSCombinator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FE0179C42F600AF6FDE /* HSSNameSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F05179C42F500AF6FDE /* HSSNameSelector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FE2179C42F600AF6FDE /* HSSNegation.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F07179C42F500AF6FDE /* HSSNegation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FE4179C42F600AF6FDE /* HSSParentSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F09179C42F500AF6FDE /* HSSParentSelector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FE6179C42F600AF6FDE /* HSSRootSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F0B179C42F500AF6FDE /* HSSRootSelector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FE8179C42F600AF6FDE /* HSSSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F0D179C42F500AF6FDE /* HSSSelector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FEA179C42F600AF6FDE /* HSSSimpleSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F0F179C42F500AF6FDE /* HSSSimpleSelector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FEC179C42F600AF6FDE /* HSSThisSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F11179C42F500AF6FDE /* HSSThisSelector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FEE179C42F600AF6FDE /* HSSUniversalSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F13179C42F500AF6FDE /* HSSUniversalSelector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FF0179C42F600AF6FDE /* HSSComment.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F16179C42F500AF6FDE /* HSSComment.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FF2179C42F600AF6FDE /* HSSInstruction.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F18179C42F500AF6FDE /* HSSInstruction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FF4179C42F600AF6FDE /* HSSObjectDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F1A179C42F500AF6FDE /* HSSObjectDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FF6179C42F600AF6FDE /* HSSPropertyDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F1C179C42F500AF6FDE /* HSSPropertyDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FF8179C42F600AF6FDE /* HSSRule.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F1E179C42F600AF6FDE /* HSSRule.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FFA179C42F600AF6FDE /* HSSStatement.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F20179C42F600AF6FDE /* HSSStatement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FFC179C42F600AF6FDE /* HSSAbstractVisitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F23179C42F600AF6FDE /* HSSAbstractVisitor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B04FFE179C42F600AF6FDE /* HSSVisitorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F25179C42F600AF6FDE /* HSSVisitorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05000179C42F600AF6FDE /* HSSRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F28179C42F600AF6FDE /* HSSRenderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05002179C42F600AF6FDE /* HSSRenderTreeBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F2A179C42F600AF6FDE /* HSSRenderTreeBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05004179C42F600AF6FDE /* HSSToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F2D179C42F600AF6FDE /* HSSToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05006179C42F600AF6FDE /* HSSTokenizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F2F179C42F600AF6FDE /* HSSTokenizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05007179C42F600AF6FDE /* HSSTokenType.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F30179C42F600AF6FDE /* HSSTokenType.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05009179C42F600AF6FDE /* HSSValueToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F32179C42F600AF6FDE /* HSSValueToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B0500B179C42F600AF6FDE /* HSSCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F35179C42F600AF6FDE /* HSSCallback.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B0500D179C42F600AF6FDE /* HSSClonable.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F37179C42F600AF6FDE /* HSSClonable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B0500F179C42F600AF6FDE /* HSSMultipleSelection.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F39179C42F600AF6FDE /* HSSMultipleSelection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05011179C42F600AF6FDE /* HSSObservable.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F3B179C42F600AF6FDE /* HSSObservable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05013179C42F600AF6FDE /* HSSObservableMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F3D179C42F600AF6FDE /* HSSObservableMapping.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05014179C42F600AF6FDE /* HSSObservableProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F3E179C42F600AF6FDE /* HSSObservableProperties.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05016179C42F600AF6FDE /* HSSSelection.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F40179C42F600AF6FDE /* HSSSelection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05018179C42F600AF6FDE /* HSSSimpleSelection.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F42179C42F600AF6FDE /* HSSSimpleSelection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B0501A179C42F600AF6FDE /* AXRAbstractLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F45179C42F600AF6FDE /* AXRAbstractLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B0501C179C42F600AF6FDE /* AXRGenericLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F47179C42F600AF6FDE /* AXRGenericLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B0501D179C42F600AF6FDE /* AXRLoggerEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F48179C42F600AF6FDE /* AXRLoggerEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B0501F179C42F600AF6FDE /* AXRLoggerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F4A179C42F600AF6FDE /* AXRLoggerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05021179C42F600AF6FDE /* AXRBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F4D179C42F600AF6FDE /* AXRBuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05023179C42F600AF6FDE /* AXRString.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F4F179C42F600AF6FDE /* AXRString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05026179C42F600AF6FDE /* HSSPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F52179C42F600AF6FDE /* HSSPoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05029179C42F600AF6FDE /* HSSRect.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F55179C42F600AF6FDE /* HSSRect.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B0502C179C42F600AF6FDE /* HSSSize.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F58179C42F600AF6FDE /* HSSSize.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B0502F179C42F600AF6FDE /* XMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B04F5C179C42F600AF6FDE /* XMLParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+        14B05033179C434C00AF6FDE /* AXRGlobal.h in Headers */ = {isa = PBXBuildFile; fileRef = 14B05031179C434C00AF6FDE /* AXRGlobal.h */; settings = {ATTRIBUTES = (Public, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+        149BA723179C7A0700302104 /* PBXBuildRule */ = {
+            isa = PBXBuildRule;
+            compilerSpec = com.apple.compilers.proxy.script;
+            filePatterns = "*.h";
+            fileType = pattern.proxy;
+            isEditable = 1;
+            outputFiles = (
+                "moc_${INPUT_FILE_BASE}.cpp",
+            );
+            script = "\"$PROJECT_FILE_PATH/rules/moc\"";
+        };
+/* End PBXBuildRule section */
+
+/* Begin PBXContainerItemProxy section */
+        149BA71D179C79B800302104 /* PBXContainerItemProxy */ = {
+            isa = PBXContainerItemProxy;
+            containerPortal = 14B04E3B179C3F5C00AF6FDE /* Project object */;
+            proxyType = 1;
+            remoteGlobalIDString = 14B04E43179C3F5C00AF6FDE;
+            remoteInfo = "AXR Core";
+        };
+        149BA71F179C79BC00302104 /* PBXContainerItemProxy */ = {
+            isa = PBXContainerItemProxy;
+            containerPortal = 14B04E3B179C3F5C00AF6FDE /* Project object */;
+            proxyType = 1;
+            remoteGlobalIDString = 14B04E43179C3F5C00AF6FDE;
+            remoteInfo = "AXR Core";
+        };
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+        14367DA3179C638800764852 /* AXRCore.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = AXRCore.xcconfig; path = "AXR SDK.xcodeproj/config/AXRCore.xcconfig"; sourceTree = SOURCE_ROOT; };
+        149BA6A2179C787500302104 /* axrqthelper.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = axrqthelper.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+        149BA6ED179C78E400302104 /* axrcocoahelper.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = axrcocoahelper.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+        149BA710179C799100302104 /* NSAXRDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAXRDocument.h; path = src/cocoa/NSAXRDocument.h; sourceTree = SOURCE_ROOT; };
+        149BA711179C799100302104 /* NSAXRDocument.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = NSAXRDocument.mm; path = src/cocoa/NSAXRDocument.mm; sourceTree = SOURCE_ROOT; };
+        149BA712179C799100302104 /* NSAXRView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAXRView.h; path = src/cocoa/NSAXRView.h; sourceTree = SOURCE_ROOT; };
+        149BA713179C799100302104 /* NSAXRView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = NSAXRView.mm; path = src/cocoa/NSAXRView.mm; sourceTree = SOURCE_ROOT; };
+        149BA718179C79A500302104 /* QAXRWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QAXRWidget.cpp; path = src/qt/QAXRWidget.cpp; sourceTree = SOURCE_ROOT; };
+        149BA719179C79A500302104 /* QAXRWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QAXRWidget.h; path = src/qt/QAXRWidget.h; sourceTree = SOURCE_ROOT; };
+        149BA724179C7AB000302104 /* AXRQtHelper.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = AXRQtHelper.xcconfig; path = "AXR SDK.xcodeproj/config/AXRQtHelper.xcconfig"; sourceTree = SOURCE_ROOT; };
+        149BA725179C7AC100302104 /* AXRCocoaHelper.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = AXRCocoaHelper.xcconfig; path = "AXR SDK.xcodeproj/config/AXRCocoaHelper.xcconfig"; sourceTree = SOURCE_ROOT; };
+        149BA72B179C84AD00302104 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Shared.xcconfig; path = "AXR SDK.xcodeproj/config/Shared.xcconfig"; sourceTree = "<group>"; };
+        149BA72C179C88E700302104 /* SharedDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedDebug.xcconfig; path = "AXR SDK.xcodeproj/config/SharedDebug.xcconfig"; sourceTree = "<group>"; };
+        149BA72D179C88FD00302104 /* SharedRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedRelease.xcconfig; path = "AXR SDK.xcodeproj/config/SharedRelease.xcconfig"; sourceTree = "<group>"; };
+        149BA731179C8D0200302104 /* SharedWarnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SharedWarnings.xcconfig; path = "AXR SDK.xcodeproj/config/SharedWarnings.xcconfig"; sourceTree = "<group>"; };
+        14B04E44179C3F5C00AF6FDE /* AXRCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AXRCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+        14B04E47179C3F5C00AF6FDE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+        14B04E4A179C3F5C00AF6FDE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+        14B04E4B179C3F5C00AF6FDE /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+        14B04E4C179C3F5C00AF6FDE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+        14B04E4F179C3F5C00AF6FDE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+        14B04E51179C3F5C00AF6FDE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+        14B04E5C179C3F5C00AF6FDE /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+        14B04E73179C42F500AF6FDE /* AXRController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRController.cpp; sourceTree = "<group>"; };
+        14B04E74179C42F500AF6FDE /* AXRController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRController.h; sourceTree = "<group>"; };
+        14B04E75179C42F500AF6FDE /* AXRDocument.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRDocument.cpp; sourceTree = "<group>"; };
+        14B04E76179C42F500AF6FDE /* AXRDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRDocument.h; sourceTree = "<group>"; };
+        14B04E78179C42F500AF6FDE /* AXRError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRError.cpp; sourceTree = "<group>"; };
+        14B04E79179C42F500AF6FDE /* AXRError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRError.h; sourceTree = "<group>"; };
+        14B04E7A179C42F500AF6FDE /* AXRWarning.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRWarning.cpp; sourceTree = "<group>"; };
+        14B04E7B179C42F500AF6FDE /* AXRWarning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRWarning.h; sourceTree = "<group>"; };
+        14B04E7E179C42F500AF6FDE /* HSSTypeEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSTypeEnums.h; sourceTree = "<group>"; };
+        14B04E80179C42F500AF6FDE /* HSSInputEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSInputEvent.cpp; sourceTree = "<group>"; };
+        14B04E81179C42F500AF6FDE /* HSSInputEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSInputEvent.h; sourceTree = "<group>"; };
+        14B04E82179C42F500AF6FDE /* HSSMouseEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMouseEvent.cpp; sourceTree = "<group>"; };
+        14B04E83179C42F500AF6FDE /* HSSMouseEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSMouseEvent.h; sourceTree = "<group>"; };
+        14B04E86179C42F500AF6FDE /* HSSAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSAction.cpp; sourceTree = "<group>"; };
+        14B04E87179C42F500AF6FDE /* HSSAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSAction.h; sourceTree = "<group>"; };
+        14B04E88179C42F500AF6FDE /* HSSFlagAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFlagAction.cpp; sourceTree = "<group>"; };
+        14B04E89179C42F500AF6FDE /* HSSFlagAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFlagAction.h; sourceTree = "<group>"; };
+        14B04E8A179C42F500AF6FDE /* HSSFunctionAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFunctionAction.cpp; sourceTree = "<group>"; };
+        14B04E8B179C42F500AF6FDE /* HSSFunctionAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFunctionAction.h; sourceTree = "<group>"; };
+        14B04E8C179C42F500AF6FDE /* HSSLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSLog.cpp; sourceTree = "<group>"; };
+        14B04E8D179C42F500AF6FDE /* HSSLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSLog.h; sourceTree = "<group>"; };
+        14B04E8E179C42F500AF6FDE /* HSSRequest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRequest.cpp; sourceTree = "<group>"; };
+        14B04E8F179C42F500AF6FDE /* HSSRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRequest.h; sourceTree = "<group>"; };
+        14B04E91179C42F500AF6FDE /* HSSBorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSBorder.cpp; sourceTree = "<group>"; };
+        14B04E92179C42F500AF6FDE /* HSSBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSBorder.h; sourceTree = "<group>"; };
+        14B04E93179C42F500AF6FDE /* HSSLineBorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSLineBorder.cpp; sourceTree = "<group>"; };
+        14B04E94179C42F500AF6FDE /* HSSLineBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSLineBorder.h; sourceTree = "<group>"; };
+        14B04E96179C42F500AF6FDE /* HSSColorStop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSColorStop.cpp; sourceTree = "<group>"; };
+        14B04E97179C42F500AF6FDE /* HSSColorStop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSColorStop.h; sourceTree = "<group>"; };
+        14B04E98179C42F500AF6FDE /* HSSGradient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSGradient.cpp; sourceTree = "<group>"; };
+        14B04E99179C42F500AF6FDE /* HSSGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSGradient.h; sourceTree = "<group>"; };
+        14B04E9A179C42F500AF6FDE /* HSSLinearGradient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSLinearGradient.cpp; sourceTree = "<group>"; };
+        14B04E9B179C42F500AF6FDE /* HSSLinearGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSLinearGradient.h; sourceTree = "<group>"; };
+        14B04E9C179C42F500AF6FDE /* HSSRadialGradient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRadialGradient.cpp; sourceTree = "<group>"; };
+        14B04E9D179C42F500AF6FDE /* HSSRadialGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRadialGradient.h; sourceTree = "<group>"; };
+        14B04E9E179C42F500AF6FDE /* HSSContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSContainer.cpp; sourceTree = "<group>"; };
+        14B04E9F179C42F500AF6FDE /* HSSContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSContainer.h; sourceTree = "<group>"; };
+        14B04EA0179C42F500AF6FDE /* HSSDisplayObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSDisplayObject.cpp; sourceTree = "<group>"; };
+        14B04EA1179C42F500AF6FDE /* HSSDisplayObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSDisplayObject.h; sourceTree = "<group>"; };
+        14B04EA2179C42F500AF6FDE /* HSSEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSEvent.cpp; sourceTree = "<group>"; };
+        14B04EA3179C42F500AF6FDE /* HSSEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSEvent.h; sourceTree = "<group>"; };
+        14B04EA4179C42F500AF6FDE /* HSSFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFont.cpp; sourceTree = "<group>"; };
+        14B04EA5179C42F500AF6FDE /* HSSFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFont.h; sourceTree = "<group>"; };
+        14B04EA6179C42F500AF6FDE /* HSSLayoutLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSLayoutLine.cpp; sourceTree = "<group>"; };
+        14B04EA7179C42F500AF6FDE /* HSSLayoutLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSLayoutLine.h; sourceTree = "<group>"; };
+        14B04EA8179C42F500AF6FDE /* HSSMargin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMargin.cpp; sourceTree = "<group>"; };
+        14B04EA9179C42F500AF6FDE /* HSSMargin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSMargin.h; sourceTree = "<group>"; };
+        14B04EAA179C42F500AF6FDE /* HSSMultipleValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMultipleValue.cpp; sourceTree = "<group>"; };
+        14B04EAB179C42F500AF6FDE /* HSSMultipleValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSMultipleValue.h; sourceTree = "<group>"; };
+        14B04EAC179C42F500AF6FDE /* HSSObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSObject.cpp; sourceTree = "<group>"; };
+        14B04EAD179C42F500AF6FDE /* HSSObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObject.h; sourceTree = "<group>"; };
+        14B04EAE179C42F500AF6FDE /* HSSRgb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRgb.cpp; sourceTree = "<group>"; };
+        14B04EAF179C42F500AF6FDE /* HSSRgb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRgb.h; sourceTree = "<group>"; };
+        14B04EB0179C42F500AF6FDE /* HSSTextBlock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSTextBlock.cpp; sourceTree = "<group>"; };
+        14B04EB1179C42F500AF6FDE /* HSSTextBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSTextBlock.h; sourceTree = "<group>"; };
+        14B04EB2179C42F500AF6FDE /* HSSTextEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSTextEnums.h; sourceTree = "<group>"; };
+        14B04EB3179C42F500AF6FDE /* HSSValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSValue.cpp; sourceTree = "<group>"; };
+        14B04EB4179C42F500AF6FDE /* HSSValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSValue.h; sourceTree = "<group>"; };
+        14B04EB6179C42F500AF6FDE /* HSSCircle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSCircle.cpp; sourceTree = "<group>"; };
+        14B04EB7179C42F500AF6FDE /* HSSCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSCircle.h; sourceTree = "<group>"; };
+        14B04EB8179C42F500AF6FDE /* HSSPolygon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSPolygon.cpp; sourceTree = "<group>"; };
+        14B04EB9179C42F500AF6FDE /* HSSPolygon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSPolygon.h; sourceTree = "<group>"; };
+        14B04EBA179C42F500AF6FDE /* HSSRectangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRectangle.cpp; sourceTree = "<group>"; };
+        14B04EBB179C42F500AF6FDE /* HSSRectangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRectangle.h; sourceTree = "<group>"; };
+        14B04EBC179C42F500AF6FDE /* HSSRoundedRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRoundedRect.cpp; sourceTree = "<group>"; };
+        14B04EBD179C42F500AF6FDE /* HSSRoundedRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRoundedRect.h; sourceTree = "<group>"; };
+        14B04EBE179C42F500AF6FDE /* HSSShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSShape.cpp; sourceTree = "<group>"; };
+        14B04EBF179C42F500AF6FDE /* HSSShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSShape.h; sourceTree = "<group>"; };
+        14B04EC2179C42F500AF6FDE /* HSSKeywordConstant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSKeywordConstant.cpp; sourceTree = "<group>"; };
+        14B04EC3179C42F500AF6FDE /* HSSKeywordConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSKeywordConstant.h; sourceTree = "<group>"; };
+        14B04EC4179C42F500AF6FDE /* HSSNumberConstant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSNumberConstant.cpp; sourceTree = "<group>"; };
+        14B04EC5179C42F500AF6FDE /* HSSNumberConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSNumberConstant.h; sourceTree = "<group>"; };
+        14B04EC6179C42F500AF6FDE /* HSSObjectNameConstant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSObjectNameConstant.cpp; sourceTree = "<group>"; };
+        14B04EC7179C42F500AF6FDE /* HSSObjectNameConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObjectNameConstant.h; sourceTree = "<group>"; };
+        14B04EC8179C42F500AF6FDE /* HSSPercentageConstant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSPercentageConstant.cpp; sourceTree = "<group>"; };
+        14B04EC9179C42F500AF6FDE /* HSSPercentageConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSPercentageConstant.h; sourceTree = "<group>"; };
+        14B04ECA179C42F500AF6FDE /* HSSStringConstant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSStringConstant.cpp; sourceTree = "<group>"; };
+        14B04ECB179C42F500AF6FDE /* HSSStringConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSStringConstant.h; sourceTree = "<group>"; };
+        14B04ECD179C42F500AF6FDE /* HSSDivision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSDivision.cpp; sourceTree = "<group>"; };
+        14B04ECE179C42F500AF6FDE /* HSSDivision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSDivision.h; sourceTree = "<group>"; };
+        14B04ECF179C42F500AF6FDE /* HSSExpression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSExpression.cpp; sourceTree = "<group>"; };
+        14B04ED0179C42F500AF6FDE /* HSSExpression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSExpression.h; sourceTree = "<group>"; };
+        14B04ED1179C42F500AF6FDE /* HSSMultiplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMultiplication.cpp; sourceTree = "<group>"; };
+        14B04ED2179C42F500AF6FDE /* HSSMultiplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSMultiplication.h; sourceTree = "<group>"; };
+        14B04ED3179C42F500AF6FDE /* HSSSubtraction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSubtraction.cpp; sourceTree = "<group>"; };
+        14B04ED4179C42F500AF6FDE /* HSSSubtraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSubtraction.h; sourceTree = "<group>"; };
+        14B04ED5179C42F500AF6FDE /* HSSSum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSum.cpp; sourceTree = "<group>"; };
+        14B04ED6179C42F500AF6FDE /* HSSSum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSum.h; sourceTree = "<group>"; };
+        14B04ED8179C42F500AF6FDE /* HSSEmptyFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSEmptyFilter.cpp; sourceTree = "<group>"; };
+        14B04ED9179C42F500AF6FDE /* HSSEmptyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSEmptyFilter.h; sourceTree = "<group>"; };
+        14B04EDA179C42F500AF6FDE /* HSSEvenChildFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSEvenChildFilter.cpp; sourceTree = "<group>"; };
+        14B04EDB179C42F500AF6FDE /* HSSEvenChildFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSEvenChildFilter.h; sourceTree = "<group>"; };
+        14B04EDC179C42F500AF6FDE /* HSSEvenFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSEvenFilter.cpp; sourceTree = "<group>"; };
+        14B04EDD179C42F500AF6FDE /* HSSEvenFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSEvenFilter.h; sourceTree = "<group>"; };
+        14B04EDE179C42F500AF6FDE /* HSSFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFilter.cpp; sourceTree = "<group>"; };
+        14B04EDF179C42F500AF6FDE /* HSSFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFilter.h; sourceTree = "<group>"; };
+        14B04EE0179C42F500AF6FDE /* HSSFirstChildFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFirstChildFilter.cpp; sourceTree = "<group>"; };
+        14B04EE1179C42F500AF6FDE /* HSSFirstChildFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFirstChildFilter.h; sourceTree = "<group>"; };
+        14B04EE2179C42F500AF6FDE /* HSSFirstFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFirstFilter.cpp; sourceTree = "<group>"; };
+        14B04EE3179C42F500AF6FDE /* HSSFirstFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFirstFilter.h; sourceTree = "<group>"; };
+        14B04EE4179C42F500AF6FDE /* HSSFlag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFlag.cpp; sourceTree = "<group>"; };
+        14B04EE5179C42F500AF6FDE /* HSSFlag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFlag.h; sourceTree = "<group>"; };
+        14B04EE6179C42F500AF6FDE /* HSSLastChildFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSLastChildFilter.cpp; sourceTree = "<group>"; };
+        14B04EE7179C42F500AF6FDE /* HSSLastChildFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSLastChildFilter.h; sourceTree = "<group>"; };
+        14B04EE8179C42F500AF6FDE /* HSSLastFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSLastFilter.cpp; sourceTree = "<group>"; };
+        14B04EE9179C42F500AF6FDE /* HSSLastFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSLastFilter.h; sourceTree = "<group>"; };
+        14B04EEA179C42F500AF6FDE /* HSSOddChildFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSOddChildFilter.cpp; sourceTree = "<group>"; };
+        14B04EEB179C42F500AF6FDE /* HSSOddChildFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSOddChildFilter.h; sourceTree = "<group>"; };
+        14B04EEC179C42F500AF6FDE /* HSSOddFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSOddFilter.cpp; sourceTree = "<group>"; };
+        14B04EED179C42F500AF6FDE /* HSSOddFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSOddFilter.h; sourceTree = "<group>"; };
+        14B04EEF179C42F500AF6FDE /* HSSAttrFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSAttrFunction.cpp; sourceTree = "<group>"; };
+        14B04EF0179C42F500AF6FDE /* HSSAttrFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSAttrFunction.h; sourceTree = "<group>"; };
+        14B04EF1179C42F500AF6FDE /* HSSFlagFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFlagFunction.cpp; sourceTree = "<group>"; };
+        14B04EF2179C42F500AF6FDE /* HSSFlagFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFlagFunction.h; sourceTree = "<group>"; };
+        14B04EF3179C42F500AF6FDE /* HSSFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSFunction.cpp; sourceTree = "<group>"; };
+        14B04EF4179C42F500AF6FDE /* HSSFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSFunction.h; sourceTree = "<group>"; };
+        14B04EF5179C42F500AF6FDE /* HSSRefFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRefFunction.cpp; sourceTree = "<group>"; };
+        14B04EF6179C42F500AF6FDE /* HSSRefFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRefFunction.h; sourceTree = "<group>"; };
+        14B04EF7179C42F500AF6FDE /* HSSSelFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSelFunction.cpp; sourceTree = "<group>"; };
+        14B04EF8179C42F500AF6FDE /* HSSSelFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSelFunction.h; sourceTree = "<group>"; };
+        14B04EF9179C42F500AF6FDE /* HSSMultipleValueDefinition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMultipleValueDefinition.cpp; sourceTree = "<group>"; };
+        14B04EFA179C42F500AF6FDE /* HSSMultipleValueDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSMultipleValueDefinition.h; sourceTree = "<group>"; };
+        14B04EFB179C42F500AF6FDE /* HSSParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSParser.cpp; sourceTree = "<group>"; };
+        14B04EFC179C42F500AF6FDE /* HSSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSParser.h; sourceTree = "<group>"; };
+        14B04EFD179C42F500AF6FDE /* HSSParserNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSParserNode.cpp; sourceTree = "<group>"; };
+        14B04EFE179C42F500AF6FDE /* HSSParserNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSParserNode.h; sourceTree = "<group>"; };
+        14B04EFF179C42F500AF6FDE /* HSSSelectorChain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSelectorChain.cpp; sourceTree = "<group>"; };
+        14B04F00179C42F500AF6FDE /* HSSSelectorChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSelectorChain.h; sourceTree = "<group>"; };
+        14B04F02179C42F500AF6FDE /* HSSCombinator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSCombinator.cpp; sourceTree = "<group>"; };
+        14B04F03179C42F500AF6FDE /* HSSCombinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSCombinator.h; sourceTree = "<group>"; };
+        14B04F04179C42F500AF6FDE /* HSSNameSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSNameSelector.cpp; sourceTree = "<group>"; };
+        14B04F05179C42F500AF6FDE /* HSSNameSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSNameSelector.h; sourceTree = "<group>"; };
+        14B04F06179C42F500AF6FDE /* HSSNegation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSNegation.cpp; sourceTree = "<group>"; };
+        14B04F07179C42F500AF6FDE /* HSSNegation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSNegation.h; sourceTree = "<group>"; };
+        14B04F08179C42F500AF6FDE /* HSSParentSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSParentSelector.cpp; sourceTree = "<group>"; };
+        14B04F09179C42F500AF6FDE /* HSSParentSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSParentSelector.h; sourceTree = "<group>"; };
+        14B04F0A179C42F500AF6FDE /* HSSRootSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRootSelector.cpp; sourceTree = "<group>"; };
+        14B04F0B179C42F500AF6FDE /* HSSRootSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRootSelector.h; sourceTree = "<group>"; };
+        14B04F0C179C42F500AF6FDE /* HSSSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSelector.cpp; sourceTree = "<group>"; };
+        14B04F0D179C42F500AF6FDE /* HSSSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSelector.h; sourceTree = "<group>"; };
+        14B04F0E179C42F500AF6FDE /* HSSSimpleSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSimpleSelector.cpp; sourceTree = "<group>"; };
+        14B04F0F179C42F500AF6FDE /* HSSSimpleSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSimpleSelector.h; sourceTree = "<group>"; };
+        14B04F10179C42F500AF6FDE /* HSSThisSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSThisSelector.cpp; sourceTree = "<group>"; };
+        14B04F11179C42F500AF6FDE /* HSSThisSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSThisSelector.h; sourceTree = "<group>"; };
+        14B04F12179C42F500AF6FDE /* HSSUniversalSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSUniversalSelector.cpp; sourceTree = "<group>"; };
+        14B04F13179C42F500AF6FDE /* HSSUniversalSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSUniversalSelector.h; sourceTree = "<group>"; };
+        14B04F15179C42F500AF6FDE /* HSSComment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSComment.cpp; sourceTree = "<group>"; };
+        14B04F16179C42F500AF6FDE /* HSSComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSComment.h; sourceTree = "<group>"; };
+        14B04F17179C42F500AF6FDE /* HSSInstruction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSInstruction.cpp; sourceTree = "<group>"; };
+        14B04F18179C42F500AF6FDE /* HSSInstruction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSInstruction.h; sourceTree = "<group>"; };
+        14B04F19179C42F500AF6FDE /* HSSObjectDefinition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSObjectDefinition.cpp; sourceTree = "<group>"; };
+        14B04F1A179C42F500AF6FDE /* HSSObjectDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObjectDefinition.h; sourceTree = "<group>"; };
+        14B04F1B179C42F500AF6FDE /* HSSPropertyDefinition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSPropertyDefinition.cpp; sourceTree = "<group>"; };
+        14B04F1C179C42F500AF6FDE /* HSSPropertyDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSPropertyDefinition.h; sourceTree = "<group>"; };
+        14B04F1D179C42F600AF6FDE /* HSSRule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRule.cpp; sourceTree = "<group>"; };
+        14B04F1E179C42F600AF6FDE /* HSSRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRule.h; sourceTree = "<group>"; };
+        14B04F1F179C42F600AF6FDE /* HSSStatement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSStatement.cpp; sourceTree = "<group>"; };
+        14B04F20179C42F600AF6FDE /* HSSStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSStatement.h; sourceTree = "<group>"; };
+        14B04F22179C42F600AF6FDE /* HSSAbstractVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSAbstractVisitor.cpp; sourceTree = "<group>"; };
+        14B04F23179C42F600AF6FDE /* HSSAbstractVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSAbstractVisitor.h; sourceTree = "<group>"; };
+        14B04F24179C42F600AF6FDE /* HSSVisitorManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSVisitorManager.cpp; sourceTree = "<group>"; };
+        14B04F25179C42F600AF6FDE /* HSSVisitorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSVisitorManager.h; sourceTree = "<group>"; };
+        14B04F27179C42F600AF6FDE /* HSSRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRenderer.cpp; sourceTree = "<group>"; };
+        14B04F28179C42F600AF6FDE /* HSSRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRenderer.h; sourceTree = "<group>"; };
+        14B04F29179C42F600AF6FDE /* HSSRenderTreeBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRenderTreeBuilder.cpp; sourceTree = "<group>"; };
+        14B04F2A179C42F600AF6FDE /* HSSRenderTreeBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRenderTreeBuilder.h; sourceTree = "<group>"; };
+        14B04F2C179C42F600AF6FDE /* HSSToken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSToken.cpp; sourceTree = "<group>"; };
+        14B04F2D179C42F600AF6FDE /* HSSToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSToken.h; sourceTree = "<group>"; };
+        14B04F2E179C42F600AF6FDE /* HSSTokenizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSTokenizer.cpp; sourceTree = "<group>"; };
+        14B04F2F179C42F600AF6FDE /* HSSTokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSTokenizer.h; sourceTree = "<group>"; };
+        14B04F30179C42F600AF6FDE /* HSSTokenType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSTokenType.h; sourceTree = "<group>"; };
+        14B04F31179C42F600AF6FDE /* HSSValueToken.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSValueToken.cpp; sourceTree = "<group>"; };
+        14B04F32179C42F600AF6FDE /* HSSValueToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSValueToken.h; sourceTree = "<group>"; };
+        14B04F34179C42F600AF6FDE /* HSSCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSCallback.cpp; sourceTree = "<group>"; };
+        14B04F35179C42F600AF6FDE /* HSSCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSCallback.h; sourceTree = "<group>"; };
+        14B04F36179C42F600AF6FDE /* HSSClonable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSClonable.cpp; sourceTree = "<group>"; };
+        14B04F37179C42F600AF6FDE /* HSSClonable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSClonable.h; sourceTree = "<group>"; };
+        14B04F38179C42F600AF6FDE /* HSSMultipleSelection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSMultipleSelection.cpp; sourceTree = "<group>"; };
+        14B04F39179C42F600AF6FDE /* HSSMultipleSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSMultipleSelection.h; sourceTree = "<group>"; };
+        14B04F3A179C42F600AF6FDE /* HSSObservable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSObservable.cpp; sourceTree = "<group>"; };
+        14B04F3B179C42F600AF6FDE /* HSSObservable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservable.h; sourceTree = "<group>"; };
+        14B04F3C179C42F600AF6FDE /* HSSObservableMapping.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSObservableMapping.cpp; sourceTree = "<group>"; };
+        14B04F3D179C42F600AF6FDE /* HSSObservableMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservableMapping.h; sourceTree = "<group>"; };
+        14B04F3E179C42F600AF6FDE /* HSSObservableProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSObservableProperties.h; sourceTree = "<group>"; };
+        14B04F3F179C42F600AF6FDE /* HSSSelection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSelection.cpp; sourceTree = "<group>"; };
+        14B04F40179C42F600AF6FDE /* HSSSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSelection.h; sourceTree = "<group>"; };
+        14B04F41179C42F600AF6FDE /* HSSSimpleSelection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSimpleSelection.cpp; sourceTree = "<group>"; };
+        14B04F42179C42F600AF6FDE /* HSSSimpleSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSimpleSelection.h; sourceTree = "<group>"; };
+        14B04F44179C42F600AF6FDE /* AXRAbstractLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRAbstractLogger.cpp; sourceTree = "<group>"; };
+        14B04F45179C42F600AF6FDE /* AXRAbstractLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRAbstractLogger.h; sourceTree = "<group>"; };
+        14B04F46179C42F600AF6FDE /* AXRGenericLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRGenericLogger.cpp; sourceTree = "<group>"; };
+        14B04F47179C42F600AF6FDE /* AXRGenericLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRGenericLogger.h; sourceTree = "<group>"; };
+        14B04F48179C42F600AF6FDE /* AXRLoggerEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRLoggerEnums.h; sourceTree = "<group>"; };
+        14B04F49179C42F600AF6FDE /* AXRLoggerManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRLoggerManager.cpp; sourceTree = "<group>"; };
+        14B04F4A179C42F600AF6FDE /* AXRLoggerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRLoggerManager.h; sourceTree = "<group>"; };
+        14B04F4C179C42F600AF6FDE /* AXRBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRBuffer.cpp; sourceTree = "<group>"; };
+        14B04F4D179C42F600AF6FDE /* AXRBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRBuffer.h; sourceTree = "<group>"; };
+        14B04F4E179C42F600AF6FDE /* AXRString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRString.cpp; sourceTree = "<group>"; };
+        14B04F4F179C42F600AF6FDE /* AXRString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRString.h; sourceTree = "<group>"; };
+        14B04F50179C42F600AF6FDE /* AXRString.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AXRString.mm; sourceTree = "<group>"; };
+        14B04F51179C42F600AF6FDE /* HSSPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSPoint.cpp; sourceTree = "<group>"; };
+        14B04F52179C42F600AF6FDE /* HSSPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSPoint.h; sourceTree = "<group>"; };
+        14B04F53179C42F600AF6FDE /* HSSPoint.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HSSPoint.mm; sourceTree = "<group>"; };
+        14B04F54179C42F600AF6FDE /* HSSRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSRect.cpp; sourceTree = "<group>"; };
+        14B04F55179C42F600AF6FDE /* HSSRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSRect.h; sourceTree = "<group>"; };
+        14B04F56179C42F600AF6FDE /* HSSRect.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HSSRect.mm; sourceTree = "<group>"; };
+        14B04F57179C42F600AF6FDE /* HSSSize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HSSSize.cpp; sourceTree = "<group>"; };
+        14B04F58179C42F600AF6FDE /* HSSSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSSSize.h; sourceTree = "<group>"; };
+        14B04F59179C42F600AF6FDE /* HSSSize.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HSSSize.mm; sourceTree = "<group>"; };
+        14B04F5B179C42F600AF6FDE /* XMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XMLParser.cpp; sourceTree = "<group>"; };
+        14B04F5C179C42F600AF6FDE /* XMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLParser.h; sourceTree = "<group>"; };
+        14B05030179C434C00AF6FDE /* AXRGlobal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AXRGlobal.cpp; sourceTree = "<group>"; };
+        14B05031179C434C00AF6FDE /* AXRGlobal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXRGlobal.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+        149BA69F179C787500302104 /* Frameworks */ = {
+            isa = PBXFrameworksBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                149BA722179C79ED00302104 /* AXRCore.framework in Frameworks */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        149BA6EA179C78E400302104 /* Frameworks */ = {
+            isa = PBXFrameworksBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                149BA6EE179C78E400302104 /* Cocoa.framework in Frameworks */,
+                149BA721179C79C900302104 /* AXRCore.framework in Frameworks */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        14B04E40179C3F5C00AF6FDE /* Frameworks */ = {
+            isa = PBXFrameworksBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                14B04E48179C3F5C00AF6FDE /* Cocoa.framework in Frameworks */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+        149BA6A4179C787500302104 /* Qt Helper Library */ = {
+            isa = PBXGroup;
+            children = (
+                149BA718179C79A500302104 /* QAXRWidget.cpp */,
+                149BA719179C79A500302104 /* QAXRWidget.h */,
+                149BA6A5179C787600302104 /* Supporting Files */,
+            );
+            path = "Qt Helper Library";
+            sourceTree = "<group>";
+        };
+        149BA6A5179C787600302104 /* Supporting Files */ = {
+            isa = PBXGroup;
+            children = (
+                149BA724179C7AB000302104 /* AXRQtHelper.xcconfig */,
+            );
+            name = "Supporting Files";
+            sourceTree = "<group>";
+        };
+        149BA6EF179C78E400302104 /* Cocoa Helper Library */ = {
+            isa = PBXGroup;
+            children = (
+                149BA710179C799100302104 /* NSAXRDocument.h */,
+                149BA711179C799100302104 /* NSAXRDocument.mm */,
+                149BA712179C799100302104 /* NSAXRView.h */,
+                149BA713179C799100302104 /* NSAXRView.mm */,
+                149BA6F0179C78E400302104 /* Supporting Files */,
+            );
+            path = "Cocoa Helper Library";
+            sourceTree = "<group>";
+        };
+        149BA6F0179C78E400302104 /* Supporting Files */ = {
+            isa = PBXGroup;
+            children = (
+                149BA725179C7AC100302104 /* AXRCocoaHelper.xcconfig */,
+            );
+            name = "Supporting Files";
+            sourceTree = "<group>";
+        };
+        149BA72A179C845900302104 /* Supporting Files */ = {
+            isa = PBXGroup;
+            children = (
+                149BA72B179C84AD00302104 /* Shared.xcconfig */,
+                149BA72C179C88E700302104 /* SharedDebug.xcconfig */,
+                149BA72D179C88FD00302104 /* SharedRelease.xcconfig */,
+                149BA731179C8D0200302104 /* SharedWarnings.xcconfig */,
+            );
+            name = "Supporting Files";
+            sourceTree = "<group>";
+        };
+        14B04E3A179C3F5C00AF6FDE = {
+            isa = PBXGroup;
+            children = (
+                14B04E4D179C3F5C00AF6FDE /* AXR Core */,
+                149BA6A4179C787500302104 /* Qt Helper Library */,
+                149BA6EF179C78E400302104 /* Cocoa Helper Library */,
+                149BA72A179C845900302104 /* Supporting Files */,
+                14B04E46179C3F5C00AF6FDE /* Frameworks */,
+                14B04E45179C3F5C00AF6FDE /* Products */,
+            );
+            sourceTree = "<group>";
+        };
+        14B04E45179C3F5C00AF6FDE /* Products */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E44179C3F5C00AF6FDE /* AXRCore.framework */,
+                149BA6A2179C787500302104 /* axrqthelper.dylib */,
+                149BA6ED179C78E400302104 /* axrcocoahelper.dylib */,
+            );
+            name = Products;
+            sourceTree = "<group>";
+        };
+        14B04E46179C3F5C00AF6FDE /* Frameworks */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E47179C3F5C00AF6FDE /* Cocoa.framework */,
+                14B04E5C179C3F5C00AF6FDE /* XCTest.framework */,
+                14B04E49179C3F5C00AF6FDE /* Other Frameworks */,
+            );
+            name = Frameworks;
+            sourceTree = "<group>";
+        };
+        14B04E49179C3F5C00AF6FDE /* Other Frameworks */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E4A179C3F5C00AF6FDE /* Foundation.framework */,
+                14B04E4B179C3F5C00AF6FDE /* CoreData.framework */,
+                14B04E4C179C3F5C00AF6FDE /* AppKit.framework */,
+            );
+            name = "Other Frameworks";
+            sourceTree = "<group>";
+        };
+        14B04E4D179C3F5C00AF6FDE /* AXR Core */ = {
+            isa = PBXGroup;
+            children = (
+                14B05030179C434C00AF6FDE /* AXRGlobal.cpp */,
+                14B05031179C434C00AF6FDE /* AXRGlobal.h */,
+                14B04E72179C42F500AF6FDE /* axr */,
+                14B04E77179C42F500AF6FDE /* debug */,
+                14B04E7C179C42F500AF6FDE /* hss */,
+                14B04F43179C42F600AF6FDE /* logging */,
+                14B04F4B179C42F600AF6FDE /* types */,
+                14B04F5A179C42F600AF6FDE /* xml */,
+                14B04E4E179C3F5C00AF6FDE /* Supporting Files */,
+            );
+            name = "AXR Core";
+            path = src/core;
+            sourceTree = "<group>";
+        };
+        14B04E4E179C3F5C00AF6FDE /* Supporting Files */ = {
+            isa = PBXGroup;
+            children = (
+                14367DA3179C638800764852 /* AXRCore.xcconfig */,
+                14B04E4F179C3F5C00AF6FDE /* Info.plist */,
+                14B04E50179C3F5C00AF6FDE /* InfoPlist.strings */,
+            );
+            name = "Supporting Files";
+            sourceTree = "<group>";
+        };
+        14B04E72179C42F500AF6FDE /* axr */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E73179C42F500AF6FDE /* AXRController.cpp */,
+                14B04E74179C42F500AF6FDE /* AXRController.h */,
+                14B04E75179C42F500AF6FDE /* AXRDocument.cpp */,
+                14B04E76179C42F500AF6FDE /* AXRDocument.h */,
+            );
+            path = axr;
+            sourceTree = "<group>";
+        };
+        14B04E77179C42F500AF6FDE /* debug */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E78179C42F500AF6FDE /* AXRError.cpp */,
+                14B04E79179C42F500AF6FDE /* AXRError.h */,
+                14B04E7A179C42F500AF6FDE /* AXRWarning.cpp */,
+                14B04E7B179C42F500AF6FDE /* AXRWarning.h */,
+            );
+            path = debug;
+            sourceTree = "<group>";
+        };
+        14B04E7C179C42F500AF6FDE /* hss */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E7D179C42F500AF6FDE /* enums */,
+                14B04E7F179C42F500AF6FDE /* input */,
+                14B04E84179C42F500AF6FDE /* objects */,
+                14B04EC0179C42F500AF6FDE /* parsing */,
+                14B04F21179C42F600AF6FDE /* processing */,
+                14B04F26179C42F600AF6FDE /* rendering */,
+                14B04F2B179C42F600AF6FDE /* tokenizing */,
+                14B04F33179C42F600AF6FDE /* various */,
+            );
+            path = hss;
+            sourceTree = "<group>";
+        };
+        14B04E7D179C42F500AF6FDE /* enums */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E7E179C42F500AF6FDE /* HSSTypeEnums.h */,
+            );
+            path = enums;
+            sourceTree = "<group>";
+        };
+        14B04E7F179C42F500AF6FDE /* input */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E80179C42F500AF6FDE /* HSSInputEvent.cpp */,
+                14B04E81179C42F500AF6FDE /* HSSInputEvent.h */,
+                14B04E82179C42F500AF6FDE /* HSSMouseEvent.cpp */,
+                14B04E83179C42F500AF6FDE /* HSSMouseEvent.h */,
+            );
+            path = input;
+            sourceTree = "<group>";
+        };
+        14B04E84179C42F500AF6FDE /* objects */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E85179C42F500AF6FDE /* actions */,
+                14B04E90179C42F500AF6FDE /* borders */,
+                14B04E95179C42F500AF6FDE /* gradients */,
+                14B04E9E179C42F500AF6FDE /* HSSContainer.cpp */,
+                14B04E9F179C42F500AF6FDE /* HSSContainer.h */,
+                14B04EA0179C42F500AF6FDE /* HSSDisplayObject.cpp */,
+                14B04EA1179C42F500AF6FDE /* HSSDisplayObject.h */,
+                14B04EA2179C42F500AF6FDE /* HSSEvent.cpp */,
+                14B04EA3179C42F500AF6FDE /* HSSEvent.h */,
+                14B04EA4179C42F500AF6FDE /* HSSFont.cpp */,
+                14B04EA5179C42F500AF6FDE /* HSSFont.h */,
+                14B04EA6179C42F500AF6FDE /* HSSLayoutLine.cpp */,
+                14B04EA7179C42F500AF6FDE /* HSSLayoutLine.h */,
+                14B04EA8179C42F500AF6FDE /* HSSMargin.cpp */,
+                14B04EA9179C42F500AF6FDE /* HSSMargin.h */,
+                14B04EAA179C42F500AF6FDE /* HSSMultipleValue.cpp */,
+                14B04EAB179C42F500AF6FDE /* HSSMultipleValue.h */,
+                14B04EAC179C42F500AF6FDE /* HSSObject.cpp */,
+                14B04EAD179C42F500AF6FDE /* HSSObject.h */,
+                14B04EAE179C42F500AF6FDE /* HSSRgb.cpp */,
+                14B04EAF179C42F500AF6FDE /* HSSRgb.h */,
+                14B04EB0179C42F500AF6FDE /* HSSTextBlock.cpp */,
+                14B04EB1179C42F500AF6FDE /* HSSTextBlock.h */,
+                14B04EB2179C42F500AF6FDE /* HSSTextEnums.h */,
+                14B04EB3179C42F500AF6FDE /* HSSValue.cpp */,
+                14B04EB4179C42F500AF6FDE /* HSSValue.h */,
+                14B04EB5179C42F500AF6FDE /* shapes */,
+            );
+            path = objects;
+            sourceTree = "<group>";
+        };
+        14B04E85179C42F500AF6FDE /* actions */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E86179C42F500AF6FDE /* HSSAction.cpp */,
+                14B04E87179C42F500AF6FDE /* HSSAction.h */,
+                14B04E88179C42F500AF6FDE /* HSSFlagAction.cpp */,
+                14B04E89179C42F500AF6FDE /* HSSFlagAction.h */,
+                14B04E8A179C42F500AF6FDE /* HSSFunctionAction.cpp */,
+                14B04E8B179C42F500AF6FDE /* HSSFunctionAction.h */,
+                14B04E8C179C42F500AF6FDE /* HSSLog.cpp */,
+                14B04E8D179C42F500AF6FDE /* HSSLog.h */,
+                14B04E8E179C42F500AF6FDE /* HSSRequest.cpp */,
+                14B04E8F179C42F500AF6FDE /* HSSRequest.h */,
+            );
+            path = actions;
+            sourceTree = "<group>";
+        };
+        14B04E90179C42F500AF6FDE /* borders */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E91179C42F500AF6FDE /* HSSBorder.cpp */,
+                14B04E92179C42F500AF6FDE /* HSSBorder.h */,
+                14B04E93179C42F500AF6FDE /* HSSLineBorder.cpp */,
+                14B04E94179C42F500AF6FDE /* HSSLineBorder.h */,
+            );
+            path = borders;
+            sourceTree = "<group>";
+        };
+        14B04E95179C42F500AF6FDE /* gradients */ = {
+            isa = PBXGroup;
+            children = (
+                14B04E96179C42F500AF6FDE /* HSSColorStop.cpp */,
+                14B04E97179C42F500AF6FDE /* HSSColorStop.h */,
+                14B04E98179C42F500AF6FDE /* HSSGradient.cpp */,
+                14B04E99179C42F500AF6FDE /* HSSGradient.h */,
+                14B04E9A179C42F500AF6FDE /* HSSLinearGradient.cpp */,
+                14B04E9B179C42F500AF6FDE /* HSSLinearGradient.h */,
+                14B04E9C179C42F500AF6FDE /* HSSRadialGradient.cpp */,
+                14B04E9D179C42F500AF6FDE /* HSSRadialGradient.h */,
+            );
+            path = gradients;
+            sourceTree = "<group>";
+        };
+        14B04EB5179C42F500AF6FDE /* shapes */ = {
+            isa = PBXGroup;
+            children = (
+                14B04EB6179C42F500AF6FDE /* HSSCircle.cpp */,
+                14B04EB7179C42F500AF6FDE /* HSSCircle.h */,
+                14B04EB8179C42F500AF6FDE /* HSSPolygon.cpp */,
+                14B04EB9179C42F500AF6FDE /* HSSPolygon.h */,
+                14B04EBA179C42F500AF6FDE /* HSSRectangle.cpp */,
+                14B04EBB179C42F500AF6FDE /* HSSRectangle.h */,
+                14B04EBC179C42F500AF6FDE /* HSSRoundedRect.cpp */,
+                14B04EBD179C42F500AF6FDE /* HSSRoundedRect.h */,
+                14B04EBE179C42F500AF6FDE /* HSSShape.cpp */,
+                14B04EBF179C42F500AF6FDE /* HSSShape.h */,
+            );
+            path = shapes;
+            sourceTree = "<group>";
+        };
+        14B04EC0179C42F500AF6FDE /* parsing */ = {
+            isa = PBXGroup;
+            children = (
+                14B04EC1179C42F500AF6FDE /* constants */,
+                14B04ECC179C42F500AF6FDE /* expressions */,
+                14B04ED7179C42F500AF6FDE /* filters */,
+                14B04EEE179C42F500AF6FDE /* functions */,
+                14B04EF9179C42F500AF6FDE /* HSSMultipleValueDefinition.cpp */,
+                14B04EFA179C42F500AF6FDE /* HSSMultipleValueDefinition.h */,
+                14B04EFB179C42F500AF6FDE /* HSSParser.cpp */,
+                14B04EFC179C42F500AF6FDE /* HSSParser.h */,
+                14B04EFD179C42F500AF6FDE /* HSSParserNode.cpp */,
+                14B04EFE179C42F500AF6FDE /* HSSParserNode.h */,
+                14B04EFF179C42F500AF6FDE /* HSSSelectorChain.cpp */,
+                14B04F00179C42F500AF6FDE /* HSSSelectorChain.h */,
+                14B04F01179C42F500AF6FDE /* selectors */,
+                14B04F14179C42F500AF6FDE /* statements */,
+            );
+            path = parsing;
+            sourceTree = "<group>";
+        };
+        14B04EC1179C42F500AF6FDE /* constants */ = {
+            isa = PBXGroup;
+            children = (
+                14B04EC2179C42F500AF6FDE /* HSSKeywordConstant.cpp */,
+                14B04EC3179C42F500AF6FDE /* HSSKeywordConstant.h */,
+                14B04EC4179C42F500AF6FDE /* HSSNumberConstant.cpp */,
+                14B04EC5179C42F500AF6FDE /* HSSNumberConstant.h */,
+                14B04EC6179C42F500AF6FDE /* HSSObjectNameConstant.cpp */,
+                14B04EC7179C42F500AF6FDE /* HSSObjectNameConstant.h */,
+                14B04EC8179C42F500AF6FDE /* HSSPercentageConstant.cpp */,
+                14B04EC9179C42F500AF6FDE /* HSSPercentageConstant.h */,
+                14B04ECA179C42F500AF6FDE /* HSSStringConstant.cpp */,
+                14B04ECB179C42F500AF6FDE /* HSSStringConstant.h */,
+            );
+            path = constants;
+            sourceTree = "<group>";
+        };
+        14B04ECC179C42F500AF6FDE /* expressions */ = {
+            isa = PBXGroup;
+            children = (
+                14B04ECD179C42F500AF6FDE /* HSSDivision.cpp */,
+                14B04ECE179C42F500AF6FDE /* HSSDivision.h */,
+                14B04ECF179C42F500AF6FDE /* HSSExpression.cpp */,
+                14B04ED0179C42F500AF6FDE /* HSSExpression.h */,
+                14B04ED1179C42F500AF6FDE /* HSSMultiplication.cpp */,
+                14B04ED2179C42F500AF6FDE /* HSSMultiplication.h */,
+                14B04ED3179C42F500AF6FDE /* HSSSubtraction.cpp */,
+                14B04ED4179C42F500AF6FDE /* HSSSubtraction.h */,
+                14B04ED5179C42F500AF6FDE /* HSSSum.cpp */,
+                14B04ED6179C42F500AF6FDE /* HSSSum.h */,
+            );
+            path = expressions;
+            sourceTree = "<group>";
+        };
+        14B04ED7179C42F500AF6FDE /* filters */ = {
+            isa = PBXGroup;
+            children = (
+                14B04ED8179C42F500AF6FDE /* HSSEmptyFilter.cpp */,
+                14B04ED9179C42F500AF6FDE /* HSSEmptyFilter.h */,
+                14B04EDA179C42F500AF6FDE /* HSSEvenChildFilter.cpp */,
+                14B04EDB179C42F500AF6FDE /* HSSEvenChildFilter.h */,
+                14B04EDC179C42F500AF6FDE /* HSSEvenFilter.cpp */,
+                14B04EDD179C42F500AF6FDE /* HSSEvenFilter.h */,
+                14B04EDE179C42F500AF6FDE /* HSSFilter.cpp */,
+                14B04EDF179C42F500AF6FDE /* HSSFilter.h */,
+                14B04EE0179C42F500AF6FDE /* HSSFirstChildFilter.cpp */,
+                14B04EE1179C42F500AF6FDE /* HSSFirstChildFilter.h */,
+                14B04EE2179C42F500AF6FDE /* HSSFirstFilter.cpp */,
+                14B04EE3179C42F500AF6FDE /* HSSFirstFilter.h */,
+                14B04EE4179C42F500AF6FDE /* HSSFlag.cpp */,
+                14B04EE5179C42F500AF6FDE /* HSSFlag.h */,
+                14B04EE6179C42F500AF6FDE /* HSSLastChildFilter.cpp */,
+                14B04EE7179C42F500AF6FDE /* HSSLastChildFilter.h */,
+                14B04EE8179C42F500AF6FDE /* HSSLastFilter.cpp */,
+                14B04EE9179C42F500AF6FDE /* HSSLastFilter.h */,
+                14B04EEA179C42F500AF6FDE /* HSSOddChildFilter.cpp */,
+                14B04EEB179C42F500AF6FDE /* HSSOddChildFilter.h */,
+                14B04EEC179C42F500AF6FDE /* HSSOddFilter.cpp */,
+                14B04EED179C42F500AF6FDE /* HSSOddFilter.h */,
+            );
+            path = filters;
+            sourceTree = "<group>";
+        };
+        14B04EEE179C42F500AF6FDE /* functions */ = {
+            isa = PBXGroup;
+            children = (
+                14B04EEF179C42F500AF6FDE /* HSSAttrFunction.cpp */,
+                14B04EF0179C42F500AF6FDE /* HSSAttrFunction.h */,
+                14B04EF1179C42F500AF6FDE /* HSSFlagFunction.cpp */,
+                14B04EF2179C42F500AF6FDE /* HSSFlagFunction.h */,
+                14B04EF3179C42F500AF6FDE /* HSSFunction.cpp */,
+                14B04EF4179C42F500AF6FDE /* HSSFunction.h */,
+                14B04EF5179C42F500AF6FDE /* HSSRefFunction.cpp */,
+                14B04EF6179C42F500AF6FDE /* HSSRefFunction.h */,
+                14B04EF7179C42F500AF6FDE /* HSSSelFunction.cpp */,
+                14B04EF8179C42F500AF6FDE /* HSSSelFunction.h */,
+            );
+            path = functions;
+            sourceTree = "<group>";
+        };
+        14B04F01179C42F500AF6FDE /* selectors */ = {
+            isa = PBXGroup;
+            children = (
+                14B04F02179C42F500AF6FDE /* HSSCombinator.cpp */,
+                14B04F03179C42F500AF6FDE /* HSSCombinator.h */,
+                14B04F04179C42F500AF6FDE /* HSSNameSelector.cpp */,
+                14B04F05179C42F500AF6FDE /* HSSNameSelector.h */,
+                14B04F06179C42F500AF6FDE /* HSSNegation.cpp */,
+                14B04F07179C42F500AF6FDE /* HSSNegation.h */,
+                14B04F08179C42F500AF6FDE /* HSSParentSelector.cpp */,
+                14B04F09179C42F500AF6FDE /* HSSParentSelector.h */,
+                14B04F0A179C42F500AF6FDE /* HSSRootSelector.cpp */,
+                14B04F0B179C42F500AF6FDE /* HSSRootSelector.h */,
+                14B04F0C179C42F500AF6FDE /* HSSSelector.cpp */,
+                14B04F0D179C42F500AF6FDE /* HSSSelector.h */,
+                14B04F0E179C42F500AF6FDE /* HSSSimpleSelector.cpp */,
+                14B04F0F179C42F500AF6FDE /* HSSSimpleSelector.h */,
+                14B04F10179C42F500AF6FDE /* HSSThisSelector.cpp */,
+                14B04F11179C42F500AF6FDE /* HSSThisSelector.h */,
+                14B04F12179C42F500AF6FDE /* HSSUniversalSelector.cpp */,
+                14B04F13179C42F500AF6FDE /* HSSUniversalSelector.h */,
+            );
+            path = selectors;
+            sourceTree = "<group>";
+        };
+        14B04F14179C42F500AF6FDE /* statements */ = {
+            isa = PBXGroup;
+            children = (
+                14B04F15179C42F500AF6FDE /* HSSComment.cpp */,
+                14B04F16179C42F500AF6FDE /* HSSComment.h */,
+                14B04F17179C42F500AF6FDE /* HSSInstruction.cpp */,
+                14B04F18179C42F500AF6FDE /* HSSInstruction.h */,
+                14B04F19179C42F500AF6FDE /* HSSObjectDefinition.cpp */,
+                14B04F1A179C42F500AF6FDE /* HSSObjectDefinition.h */,
+                14B04F1B179C42F500AF6FDE /* HSSPropertyDefinition.cpp */,
+                14B04F1C179C42F500AF6FDE /* HSSPropertyDefinition.h */,
+                14B04F1D179C42F600AF6FDE /* HSSRule.cpp */,
+                14B04F1E179C42F600AF6FDE /* HSSRule.h */,
+                14B04F1F179C42F600AF6FDE /* HSSStatement.cpp */,
+                14B04F20179C42F600AF6FDE /* HSSStatement.h */,
+            );
+            path = statements;
+            sourceTree = "<group>";
+        };
+        14B04F21179C42F600AF6FDE /* processing */ = {
+            isa = PBXGroup;
+            children = (
+                14B04F22179C42F600AF6FDE /* HSSAbstractVisitor.cpp */,
+                14B04F23179C42F600AF6FDE /* HSSAbstractVisitor.h */,
+                14B04F24179C42F600AF6FDE /* HSSVisitorManager.cpp */,
+                14B04F25179C42F600AF6FDE /* HSSVisitorManager.h */,
+            );
+            path = processing;
+            sourceTree = "<group>";
+        };
+        14B04F26179C42F600AF6FDE /* rendering */ = {
+            isa = PBXGroup;
+            children = (
+                14B04F27179C42F600AF6FDE /* HSSRenderer.cpp */,
+                14B04F28179C42F600AF6FDE /* HSSRenderer.h */,
+                14B04F29179C42F600AF6FDE /* HSSRenderTreeBuilder.cpp */,
+                14B04F2A179C42F600AF6FDE /* HSSRenderTreeBuilder.h */,
+            );
+            path = rendering;
+            sourceTree = "<group>";
+        };
+        14B04F2B179C42F600AF6FDE /* tokenizing */ = {
+            isa = PBXGroup;
+            children = (
+                14B04F2C179C42F600AF6FDE /* HSSToken.cpp */,
+                14B04F2D179C42F600AF6FDE /* HSSToken.h */,
+                14B04F2E179C42F600AF6FDE /* HSSTokenizer.cpp */,
+                14B04F2F179C42F600AF6FDE /* HSSTokenizer.h */,
+                14B04F30179C42F600AF6FDE /* HSSTokenType.h */,
+                14B04F31179C42F600AF6FDE /* HSSValueToken.cpp */,
+                14B04F32179C42F600AF6FDE /* HSSValueToken.h */,
+            );
+            path = tokenizing;
+            sourceTree = "<group>";
+        };
+        14B04F33179C42F600AF6FDE /* various */ = {
+            isa = PBXGroup;
+            children = (
+                14B04F34179C42F600AF6FDE /* HSSCallback.cpp */,
+                14B04F35179C42F600AF6FDE /* HSSCallback.h */,
+                14B04F36179C42F600AF6FDE /* HSSClonable.cpp */,
+                14B04F37179C42F600AF6FDE /* HSSClonable.h */,
+                14B04F38179C42F600AF6FDE /* HSSMultipleSelection.cpp */,
+                14B04F39179C42F600AF6FDE /* HSSMultipleSelection.h */,
+                14B04F3A179C42F600AF6FDE /* HSSObservable.cpp */,
+                14B04F3B179C42F600AF6FDE /* HSSObservable.h */,
+                14B04F3C179C42F600AF6FDE /* HSSObservableMapping.cpp */,
+                14B04F3D179C42F600AF6FDE /* HSSObservableMapping.h */,
+                14B04F3E179C42F600AF6FDE /* HSSObservableProperties.h */,
+                14B04F3F179C42F600AF6FDE /* HSSSelection.cpp */,
+                14B04F40179C42F600AF6FDE /* HSSSelection.h */,
+                14B04F41179C42F600AF6FDE /* HSSSimpleSelection.cpp */,
+                14B04F42179C42F600AF6FDE /* HSSSimpleSelection.h */,
+            );
+            path = various;
+            sourceTree = "<group>";
+        };
+        14B04F43179C42F600AF6FDE /* logging */ = {
+            isa = PBXGroup;
+            children = (
+                14B04F44179C42F600AF6FDE /* AXRAbstractLogger.cpp */,
+                14B04F45179C42F600AF6FDE /* AXRAbstractLogger.h */,
+                14B04F46179C42F600AF6FDE /* AXRGenericLogger.cpp */,
+                14B04F47179C42F600AF6FDE /* AXRGenericLogger.h */,
+                14B04F48179C42F600AF6FDE /* AXRLoggerEnums.h */,
+                14B04F49179C42F600AF6FDE /* AXRLoggerManager.cpp */,
+                14B04F4A179C42F600AF6FDE /* AXRLoggerManager.h */,
+            );
+            path = logging;
+            sourceTree = "<group>";
+        };
+        14B04F4B179C42F600AF6FDE /* types */ = {
+            isa = PBXGroup;
+            children = (
+                14B04F4C179C42F600AF6FDE /* AXRBuffer.cpp */,
+                14B04F4D179C42F600AF6FDE /* AXRBuffer.h */,
+                14B04F4E179C42F600AF6FDE /* AXRString.cpp */,
+                14B04F4F179C42F600AF6FDE /* AXRString.h */,
+                14B04F50179C42F600AF6FDE /* AXRString.mm */,
+                14B04F51179C42F600AF6FDE /* HSSPoint.cpp */,
+                14B04F52179C42F600AF6FDE /* HSSPoint.h */,
+                14B04F53179C42F600AF6FDE /* HSSPoint.mm */,
+                14B04F54179C42F600AF6FDE /* HSSRect.cpp */,
+                14B04F55179C42F600AF6FDE /* HSSRect.h */,
+                14B04F56179C42F600AF6FDE /* HSSRect.mm */,
+                14B04F57179C42F600AF6FDE /* HSSSize.cpp */,
+                14B04F58179C42F600AF6FDE /* HSSSize.h */,
+                14B04F59179C42F600AF6FDE /* HSSSize.mm */,
+            );
+            path = types;
+            sourceTree = "<group>";
+        };
+        14B04F5A179C42F600AF6FDE /* xml */ = {
+            isa = PBXGroup;
+            children = (
+                14B04F5B179C42F600AF6FDE /* XMLParser.cpp */,
+                14B04F5C179C42F600AF6FDE /* XMLParser.h */,
+            );
+            path = xml;
+            sourceTree = "<group>";
+        };
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+        149BA6A0179C787500302104 /* Headers */ = {
+            isa = PBXHeadersBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                149BA71B179C79A500302104 /* QAXRWidget.h in Headers */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        149BA6EB179C78E400302104 /* Headers */ = {
+            isa = PBXHeadersBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                149BA716179C799100302104 /* NSAXRView.h in Headers */,
+                149BA714179C799100302104 /* NSAXRDocument.h in Headers */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        14B04E41179C3F5C00AF6FDE /* Headers */ = {
+            isa = PBXHeadersBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                14B04FAA179C42F600AF6FDE /* HSSStringConstant.h in Headers */,
+                14B04FDE179C42F600AF6FDE /* HSSCombinator.h in Headers */,
+                14B04FEA179C42F600AF6FDE /* HSSSimpleSelector.h in Headers */,
+                14B04FE2179C42F600AF6FDE /* HSSNegation.h in Headers */,
+                14B04F7D179C42F600AF6FDE /* HSSLinearGradient.h in Headers */,
+                14B04FC4179C42F600AF6FDE /* HSSLastChildFilter.h in Headers */,
+                14B04F8D179C42F600AF6FDE /* HSSMultipleValue.h in Headers */,
+                14B04FAE179C42F600AF6FDE /* HSSExpression.h in Headers */,
+                14B04FD4179C42F600AF6FDE /* HSSSelFunction.h in Headers */,
+                14B05007179C42F600AF6FDE /* HSSTokenType.h in Headers */,
+                14B0500F179C42F600AF6FDE /* HSSMultipleSelection.h in Headers */,
+                14B04FDA179C42F600AF6FDE /* HSSParserNode.h in Headers */,
+                14B04F5E179C42F600AF6FDE /* AXRController.h in Headers */,
+                14B04F73179C42F600AF6FDE /* HSSRequest.h in Headers */,
+                14B0500D179C42F600AF6FDE /* HSSClonable.h in Headers */,
+                14B04F67179C42F600AF6FDE /* HSSInputEvent.h in Headers */,
+                14B04F65179C42F600AF6FDE /* HSSTypeEnums.h in Headers */,
+                14B04FE8179C42F600AF6FDE /* HSSSelector.h in Headers */,
+                14B04F8B179C42F600AF6FDE /* HSSMargin.h in Headers */,
+                14B04FAC179C42F600AF6FDE /* HSSDivision.h in Headers */,
+                14B04FE4179C42F600AF6FDE /* HSSParentSelector.h in Headers */,
+                14B04FA8179C42F600AF6FDE /* HSSPercentageConstant.h in Headers */,
+                14B04FA6179C42F600AF6FDE /* HSSObjectNameConstant.h in Headers */,
+                14B05026179C42F600AF6FDE /* HSSPoint.h in Headers */,
+                14B04FEC179C42F600AF6FDE /* HSSThisSelector.h in Headers */,
+                14B0501D179C42F600AF6FDE /* AXRLoggerEnums.h in Headers */,
+                14B04F6F179C42F600AF6FDE /* HSSFunctionAction.h in Headers */,
+                14B0501F179C42F600AF6FDE /* AXRLoggerManager.h in Headers */,
+                14B04FB6179C42F600AF6FDE /* HSSEmptyFilter.h in Headers */,
+                14B04FFA179C42F600AF6FDE /* HSSStatement.h in Headers */,
+                14B04FC0179C42F600AF6FDE /* HSSFirstFilter.h in Headers */,
+                14B0502F179C42F600AF6FDE /* XMLParser.h in Headers */,
+                14B04FEE179C42F600AF6FDE /* HSSUniversalSelector.h in Headers */,
+                14B04F7F179C42F600AF6FDE /* HSSRadialGradient.h in Headers */,
+                14B0501C179C42F600AF6FDE /* AXRGenericLogger.h in Headers */,
+                14B04F77179C42F600AF6FDE /* HSSLineBorder.h in Headers */,
+                14B04FB8179C42F600AF6FDE /* HSSEvenChildFilter.h in Headers */,
+                14B04FB4179C42F600AF6FDE /* HSSSum.h in Headers */,
+                14B04FFE179C42F600AF6FDE /* HSSVisitorManager.h in Headers */,
+                14B04F62179C42F600AF6FDE /* AXRError.h in Headers */,
+                14B04FA0179C42F600AF6FDE /* HSSShape.h in Headers */,
+                14B04F96179C42F600AF6FDE /* HSSValue.h in Headers */,
+                14B04FD0179C42F600AF6FDE /* HSSFunction.h in Headers */,
+                14B04F98179C42F600AF6FDE /* HSSCircle.h in Headers */,
+                14B04FF2179C42F600AF6FDE /* HSSInstruction.h in Headers */,
+                14B05018179C42F600AF6FDE /* HSSSimpleSelection.h in Headers */,
+                14B04F60179C42F600AF6FDE /* AXRDocument.h in Headers */,
+                14B04FC6179C42F600AF6FDE /* HSSLastFilter.h in Headers */,
+                14B04FD6179C42F600AF6FDE /* HSSMultipleValueDefinition.h in Headers */,
+                14B0502C179C42F600AF6FDE /* HSSSize.h in Headers */,
+                14B04FBA179C42F600AF6FDE /* HSSEvenFilter.h in Headers */,
+                14B05004179C42F600AF6FDE /* HSSToken.h in Headers */,
+                14B0501A179C42F600AF6FDE /* AXRAbstractLogger.h in Headers */,
+                14B04FF6179C42F600AF6FDE /* HSSPropertyDefinition.h in Headers */,
+                14B05013179C42F600AF6FDE /* HSSObservableMapping.h in Headers */,
+                14B04FC8179C42F600AF6FDE /* HSSOddChildFilter.h in Headers */,
+                14B04F9C179C42F600AF6FDE /* HSSRectangle.h in Headers */,
+                14B04F6B179C42F600AF6FDE /* HSSAction.h in Headers */,
+                14B05002179C42F600AF6FDE /* HSSRenderTreeBuilder.h in Headers */,
+                14B04F89179C42F600AF6FDE /* HSSLayoutLine.h in Headers */,
+                14B05000179C42F600AF6FDE /* HSSRenderer.h in Headers */,
+                14B04F85179C42F600AF6FDE /* HSSEvent.h in Headers */,
+                14B04F91179C42F600AF6FDE /* HSSRgb.h in Headers */,
+                14B04FBE179C42F600AF6FDE /* HSSFirstChildFilter.h in Headers */,
+                14B04FD2179C42F600AF6FDE /* HSSRefFunction.h in Headers */,
+                14B05006179C42F600AF6FDE /* HSSTokenizer.h in Headers */,
+                14B04F83179C42F600AF6FDE /* HSSDisplayObject.h in Headers */,
+                14B04FCE179C42F600AF6FDE /* HSSFlagFunction.h in Headers */,
+                14B05021179C42F600AF6FDE /* AXRBuffer.h in Headers */,
+                14B05009179C42F600AF6FDE /* HSSValueToken.h in Headers */,
+                14B04F75179C42F600AF6FDE /* HSSBorder.h in Headers */,
+                14B04F9E179C42F600AF6FDE /* HSSRoundedRect.h in Headers */,
+                14B04F69179C42F600AF6FDE /* HSSMouseEvent.h in Headers */,
+                14B04FC2179C42F600AF6FDE /* HSSFlag.h in Headers */,
+                14B04FCA179C42F600AF6FDE /* HSSOddFilter.h in Headers */,
+                14B04F6D179C42F600AF6FDE /* HSSFlagAction.h in Headers */,
+                14B05023179C42F600AF6FDE /* AXRString.h in Headers */,
+                14B05029179C42F600AF6FDE /* HSSRect.h in Headers */,
+                14B04FBC179C42F600AF6FDE /* HSSFilter.h in Headers */,
+                14B0500B179C42F600AF6FDE /* HSSCallback.h in Headers */,
+                14B04F71179C42F600AF6FDE /* HSSLog.h in Headers */,
+                14B04FDC179C42F600AF6FDE /* HSSSelectorChain.h in Headers */,
+                14B04FCC179C42F600AF6FDE /* HSSAttrFunction.h in Headers */,
+                14B04F64179C42F600AF6FDE /* AXRWarning.h in Headers */,
+                14B05033179C434C00AF6FDE /* AXRGlobal.h in Headers */,
+                14B05011179C42F600AF6FDE /* HSSObservable.h in Headers */,
+                14B04FA2179C42F600AF6FDE /* HSSKeywordConstant.h in Headers */,
+                14B04FE0179C42F600AF6FDE /* HSSNameSelector.h in Headers */,
+                14B04F9A179C42F600AF6FDE /* HSSPolygon.h in Headers */,
+                14B05016179C42F600AF6FDE /* HSSSelection.h in Headers */,
+                14B04FFC179C42F600AF6FDE /* HSSAbstractVisitor.h in Headers */,
+                14B04FF4179C42F600AF6FDE /* HSSObjectDefinition.h in Headers */,
+                14B04FB0179C42F600AF6FDE /* HSSMultiplication.h in Headers */,
+                14B04FD8179C42F600AF6FDE /* HSSParser.h in Headers */,
+                14B04FE6179C42F600AF6FDE /* HSSRootSelector.h in Headers */,
+                14B04FF8179C42F600AF6FDE /* HSSRule.h in Headers */,
+                14B04F93179C42F600AF6FDE /* HSSTextBlock.h in Headers */,
+                14B04F79179C42F600AF6FDE /* HSSColorStop.h in Headers */,
+                14B04F7B179C42F600AF6FDE /* HSSGradient.h in Headers */,
+                14B04F87179C42F600AF6FDE /* HSSFont.h in Headers */,
+                14B04FF0179C42F600AF6FDE /* HSSComment.h in Headers */,
+                14B04F94179C42F600AF6FDE /* HSSTextEnums.h in Headers */,
+                14B05014179C42F600AF6FDE /* HSSObservableProperties.h in Headers */,
+                14B04F8F179C42F600AF6FDE /* HSSObject.h in Headers */,
+                14B04FA4179C42F600AF6FDE /* HSSNumberConstant.h in Headers */,
+                14B04FB2179C42F600AF6FDE /* HSSSubtraction.h in Headers */,
+                14B04F81179C42F600AF6FDE /* HSSContainer.h in Headers */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+        149BA6A1179C787500302104 /* Qt Helper Library */ = {
+            isa = PBXNativeTarget;
+            buildConfigurationList = 149BA6BC179C787600302104 /* Build configuration list for PBXNativeTarget "Qt Helper Library" */;
+            buildPhases = (
+                149BA69E179C787500302104 /* Sources */,
+                149BA69F179C787500302104 /* Frameworks */,
+                149BA6A0179C787500302104 /* Headers */,
+            );
+            buildRules = (
+                149BA723179C7A0700302104 /* PBXBuildRule */,
+            );
+            dependencies = (
+                149BA71E179C79B800302104 /* PBXTargetDependency */,
+            );
+            name = "Qt Helper Library";
+            productName = "Qt Helper Library";
+            productReference = 149BA6A2179C787500302104 /* axrqthelper.dylib */;
+            productType = "com.apple.product-type.library.dynamic";
+        };
+        149BA6EC179C78E400302104 /* Cocoa Helper Library */ = {
+            isa = PBXNativeTarget;
+            buildConfigurationList = 149BA707179C78E500302104 /* Build configuration list for PBXNativeTarget "Cocoa Helper Library" */;
+            buildPhases = (
+                149BA6E9179C78E400302104 /* Sources */,
+                149BA6EA179C78E400302104 /* Frameworks */,
+                149BA6EB179C78E400302104 /* Headers */,
+            );
+            buildRules = (
+            );
+            dependencies = (
+                149BA720179C79BC00302104 /* PBXTargetDependency */,
+            );
+            name = "Cocoa Helper Library";
+            productName = "Cocoa Helper Library";
+            productReference = 149BA6ED179C78E400302104 /* axrcocoahelper.dylib */;
+            productType = "com.apple.product-type.library.dynamic";
+        };
+        14B04E43179C3F5C00AF6FDE /* AXR Core */ = {
+            isa = PBXNativeTarget;
+            buildConfigurationList = 14B04E6C179C3F5C00AF6FDE /* Build configuration list for PBXNativeTarget "AXR Core" */;
+            buildPhases = (
+                14367DA2179C5A0A00764852 /* ShellScript */,
+                14B04E3F179C3F5C00AF6FDE /* Sources */,
+                14B04E40179C3F5C00AF6FDE /* Frameworks */,
+                14B04E41179C3F5C00AF6FDE /* Headers */,
+                14B04E42179C3F5C00AF6FDE /* Resources */,
+            );
+            buildRules = (
+            );
+            dependencies = (
+            );
+            name = "AXR Core";
+            productName = "AXR SDK";
+            productReference = 14B04E44179C3F5C00AF6FDE /* AXRCore.framework */;
+            productType = "com.apple.product-type.framework";
+        };
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+        14B04E3B179C3F5C00AF6FDE /* Project object */ = {
+            isa = PBXProject;
+            attributes = {
+                LastUpgradeCheck = 0500;
+                ORGANIZATIONNAME = "AXR Project";
+            };
+            buildConfigurationList = 14B04E3E179C3F5C00AF6FDE /* Build configuration list for PBXProject "AXR SDK" */;
+            compatibilityVersion = "Xcode 3.2";
+            developmentRegion = English;
+            hasScannedForEncodings = 0;
+            knownRegions = (
+                en,
+            );
+            mainGroup = 14B04E3A179C3F5C00AF6FDE;
+            productRefGroup = 14B04E45179C3F5C00AF6FDE /* Products */;
+            projectDirPath = "";
+            projectRoot = "";
+            targets = (
+                14B04E43179C3F5C00AF6FDE /* AXR Core */,
+                149BA6A1179C787500302104 /* Qt Helper Library */,
+                149BA6EC179C78E400302104 /* Cocoa Helper Library */,
+            );
+        };
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+        14B04E42179C3F5C00AF6FDE /* Resources */ = {
+            isa = PBXResourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                14B04E52179C3F5C00AF6FDE /* InfoPlist.strings in Resources */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+        14367DA2179C5A0A00764852 /* ShellScript */ = {
+            isa = PBXShellScriptBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+            );
+            inputPaths = (
+            );
+            outputPaths = (
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+            shellPath = /bin/sh;
+            shellScript = "mkdir -p \"$SHARED_DERIVED_FILE_DIR\"\ncp \"$PROJECT_DIR/config.in.h\" \"$SHARED_DERIVED_FILE_DIR/axr-config.h\"\nsed -i '' \"s/@AXR_VERSION_MAJOR@/$AXR_VERSION_MAJOR/g\" \"$SHARED_DERIVED_FILE_DIR/axr-config.h\"\nsed -i '' \"s/@AXR_VERSION_MINOR@/$AXR_VERSION_MINOR/g\" \"$SHARED_DERIVED_FILE_DIR/axr-config.h\"\nsed -i '' \"s/@AXR_VERSION_PATCH@/$AXR_VERSION_PATCH/g\" \"$SHARED_DERIVED_FILE_DIR/axr-config.h\"\nsed -i '' \"s/@AXR_VERSION_BUILD@/$AXR_VERSION_BUILD/g\" \"$SHARED_DERIVED_FILE_DIR/axr-config.h\"\nsed -i '' \"s/@AXR_VERSION_STRING@/$AXR_VERSION_STRING/g\" \"$SHARED_DERIVED_FILE_DIR/axr-config.h\"";
+        };
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+        149BA69E179C787500302104 /* Sources */ = {
+            isa = PBXSourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                149BA71A179C79A500302104 /* QAXRWidget.cpp in Sources */,
+                149BA71C179C79B400302104 /* QAXRWidget.h in Sources */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        149BA6E9179C78E400302104 /* Sources */ = {
+            isa = PBXSourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                149BA715179C799100302104 /* NSAXRDocument.mm in Sources */,
+                149BA717179C799100302104 /* NSAXRView.mm in Sources */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        14B04E3F179C3F5C00AF6FDE /* Sources */ = {
+            isa = PBXSourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                14367CB8179C525400764852 /* AXRGlobal.cpp in Sources */,
+                14367CBA179C525400764852 /* AXRController.cpp in Sources */,
+                14367CBC179C525400764852 /* AXRDocument.cpp in Sources */,
+                14367CBE179C525400764852 /* AXRError.cpp in Sources */,
+                14367CC0179C525400764852 /* AXRWarning.cpp in Sources */,
+                14367CC3179C525400764852 /* HSSInputEvent.cpp in Sources */,
+                14367CC5179C525400764852 /* HSSMouseEvent.cpp in Sources */,
+                14367CC7179C525400764852 /* HSSAction.cpp in Sources */,
+                14367CC9179C525400764852 /* HSSFlagAction.cpp in Sources */,
+                14367CCB179C525400764852 /* HSSFunctionAction.cpp in Sources */,
+                14367CCD179C525400764852 /* HSSLog.cpp in Sources */,
+                14367CCF179C525400764852 /* HSSRequest.cpp in Sources */,
+                14367CD1179C525400764852 /* HSSBorder.cpp in Sources */,
+                14367CD3179C525400764852 /* HSSLineBorder.cpp in Sources */,
+                14367CD5179C525400764852 /* HSSColorStop.cpp in Sources */,
+                14367CD7179C525400764852 /* HSSGradient.cpp in Sources */,
+                14367CD9179C525400764852 /* HSSLinearGradient.cpp in Sources */,
+                14367CDB179C525400764852 /* HSSRadialGradient.cpp in Sources */,
+                14367CDD179C525400764852 /* HSSContainer.cpp in Sources */,
+                14367CDF179C525400764852 /* HSSDisplayObject.cpp in Sources */,
+                14367CE1179C525400764852 /* HSSEvent.cpp in Sources */,
+                14367CE3179C525400764852 /* HSSFont.cpp in Sources */,
+                14367CE5179C525400764852 /* HSSLayoutLine.cpp in Sources */,
+                14367CE7179C525400764852 /* HSSMargin.cpp in Sources */,
+                14367CE9179C525400764852 /* HSSMultipleValue.cpp in Sources */,
+                14367CEB179C525400764852 /* HSSObject.cpp in Sources */,
+                14367CED179C525400764852 /* HSSRgb.cpp in Sources */,
+                14367CEF179C525400764852 /* HSSTextBlock.cpp in Sources */,
+                14367CF2179C525400764852 /* HSSValue.cpp in Sources */,
+                14367CF4179C525500764852 /* HSSCircle.cpp in Sources */,
+                14367CF6179C525500764852 /* HSSPolygon.cpp in Sources */,
+                14367CF8179C525500764852 /* HSSRectangle.cpp in Sources */,
+                14367CFA179C525500764852 /* HSSRoundedRect.cpp in Sources */,
+                14367CFC179C525500764852 /* HSSShape.cpp in Sources */,
+                14367CFE179C525500764852 /* HSSKeywordConstant.cpp in Sources */,
+                14367D00179C525500764852 /* HSSNumberConstant.cpp in Sources */,
+                14367D02179C525500764852 /* HSSObjectNameConstant.cpp in Sources */,
+                14367D04179C525500764852 /* HSSPercentageConstant.cpp in Sources */,
+                14367D06179C525500764852 /* HSSStringConstant.cpp in Sources */,
+                14367D08179C525500764852 /* HSSDivision.cpp in Sources */,
+                14367D0A179C525500764852 /* HSSExpression.cpp in Sources */,
+                14367D0C179C525500764852 /* HSSMultiplication.cpp in Sources */,
+                14367D0E179C525500764852 /* HSSSubtraction.cpp in Sources */,
+                14367D10179C525500764852 /* HSSSum.cpp in Sources */,
+                14367D12179C525500764852 /* HSSEmptyFilter.cpp in Sources */,
+                14367D14179C525500764852 /* HSSEvenChildFilter.cpp in Sources */,
+                14367D16179C525500764852 /* HSSEvenFilter.cpp in Sources */,
+                14367D18179C525500764852 /* HSSFilter.cpp in Sources */,
+                14367D1A179C525500764852 /* HSSFirstChildFilter.cpp in Sources */,
+                14367D1C179C525500764852 /* HSSFirstFilter.cpp in Sources */,
+                14367D1E179C525500764852 /* HSSFlag.cpp in Sources */,
+                14367D20179C525500764852 /* HSSLastChildFilter.cpp in Sources */,
+                14367D22179C525500764852 /* HSSLastFilter.cpp in Sources */,
+                14367D24179C525500764852 /* HSSOddChildFilter.cpp in Sources */,
+                14367D26179C525500764852 /* HSSOddFilter.cpp in Sources */,
+                14367D28179C525500764852 /* HSSAttrFunction.cpp in Sources */,
+                14367D2A179C525500764852 /* HSSFlagFunction.cpp in Sources */,
+                14367D2C179C525500764852 /* HSSFunction.cpp in Sources */,
+                14367D2E179C525500764852 /* HSSRefFunction.cpp in Sources */,
+                14367D30179C525500764852 /* HSSSelFunction.cpp in Sources */,
+                14367D32179C525500764852 /* HSSMultipleValueDefinition.cpp in Sources */,
+                14367D34179C525500764852 /* HSSParser.cpp in Sources */,
+                14367D36179C525500764852 /* HSSParserNode.cpp in Sources */,
+                14367D38179C525500764852 /* HSSSelectorChain.cpp in Sources */,
+                14367D3A179C525500764852 /* HSSCombinator.cpp in Sources */,
+                14367D3C179C525500764852 /* HSSNameSelector.cpp in Sources */,
+                14367D3E179C525500764852 /* HSSNegation.cpp in Sources */,
+                14367D40179C525500764852 /* HSSParentSelector.cpp in Sources */,
+                14367D42179C525500764852 /* HSSRootSelector.cpp in Sources */,
+                14367D44179C525500764852 /* HSSSelector.cpp in Sources */,
+                14367D46179C525500764852 /* HSSSimpleSelector.cpp in Sources */,
+                14367D48179C525500764852 /* HSSThisSelector.cpp in Sources */,
+                14367D4A179C525500764852 /* HSSUniversalSelector.cpp in Sources */,
+                14367D4C179C525500764852 /* HSSComment.cpp in Sources */,
+                14367D4E179C525500764852 /* HSSInstruction.cpp in Sources */,
+                14367D50179C525500764852 /* HSSObjectDefinition.cpp in Sources */,
+                14367D52179C525500764852 /* HSSPropertyDefinition.cpp in Sources */,
+                14367D54179C525500764852 /* HSSRule.cpp in Sources */,
+                14367D56179C525500764852 /* HSSStatement.cpp in Sources */,
+                14367D58179C525500764852 /* HSSAbstractVisitor.cpp in Sources */,
+                14367D5A179C525500764852 /* HSSVisitorManager.cpp in Sources */,
+                14367D5C179C525500764852 /* HSSRenderer.cpp in Sources */,
+                14367D5E179C525500764852 /* HSSRenderTreeBuilder.cpp in Sources */,
+                14367D60179C525500764852 /* HSSToken.cpp in Sources */,
+                14367D62179C525500764852 /* HSSTokenizer.cpp in Sources */,
+                14367D65179C525500764852 /* HSSValueToken.cpp in Sources */,
+                14367D67179C525500764852 /* HSSCallback.cpp in Sources */,
+                14367D69179C525500764852 /* HSSClonable.cpp in Sources */,
+                14367D6B179C525500764852 /* HSSMultipleSelection.cpp in Sources */,
+                14367D6D179C525500764852 /* HSSObservable.cpp in Sources */,
+                14367D6F179C525500764852 /* HSSObservableMapping.cpp in Sources */,
+                14367D72179C525500764852 /* HSSSelection.cpp in Sources */,
+                14367D74179C525500764852 /* HSSSimpleSelection.cpp in Sources */,
+                14367D76179C525500764852 /* AXRAbstractLogger.cpp in Sources */,
+                14367D78179C525500764852 /* AXRGenericLogger.cpp in Sources */,
+                14367D7B179C525500764852 /* AXRLoggerManager.cpp in Sources */,
+                14367D7D179C525500764852 /* AXRBuffer.cpp in Sources */,
+                14367D7F179C525500764852 /* AXRString.cpp in Sources */,
+                14367D81179C525500764852 /* AXRString.mm in Sources */,
+                14367D82179C525500764852 /* HSSPoint.cpp in Sources */,
+                14367D84179C525500764852 /* HSSPoint.mm in Sources */,
+                14367D85179C525500764852 /* HSSRect.cpp in Sources */,
+                14367D87179C525500764852 /* HSSRect.mm in Sources */,
+                14367D88179C525500764852 /* HSSSize.cpp in Sources */,
+                14367D8A179C525500764852 /* HSSSize.mm in Sources */,
+                14367D8B179C525500764852 /* XMLParser.cpp in Sources */,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+        149BA71E179C79B800302104 /* PBXTargetDependency */ = {
+            isa = PBXTargetDependency;
+            target = 14B04E43179C3F5C00AF6FDE /* AXR Core */;
+            targetProxy = 149BA71D179C79B800302104 /* PBXContainerItemProxy */;
+        };
+        149BA720179C79BC00302104 /* PBXTargetDependency */ = {
+            isa = PBXTargetDependency;
+            target = 14B04E43179C3F5C00AF6FDE /* AXR Core */;
+            targetProxy = 149BA71F179C79BC00302104 /* PBXContainerItemProxy */;
+        };
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+        14B04E50179C3F5C00AF6FDE /* InfoPlist.strings */ = {
+            isa = PBXVariantGroup;
+            children = (
+                14B04E51179C3F5C00AF6FDE /* en */,
+            );
+            name = InfoPlist.strings;
+            sourceTree = "<group>";
+        };
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+        149BA6BD179C787600302104 /* Debug */ = {
+            isa = XCBuildConfiguration;
+            baseConfigurationReference = 149BA724179C7AB000302104 /* AXRQtHelper.xcconfig */;
+            buildSettings = {
+            };
+            name = Debug;
+        };
+        149BA6BE179C787600302104 /* Release */ = {
+            isa = XCBuildConfiguration;
+            baseConfigurationReference = 149BA724179C7AB000302104 /* AXRQtHelper.xcconfig */;
+            buildSettings = {
+            };
+            name = Release;
+        };
+        149BA708179C78E500302104 /* Debug */ = {
+            isa = XCBuildConfiguration;
+            baseConfigurationReference = 149BA725179C7AC100302104 /* AXRCocoaHelper.xcconfig */;
+            buildSettings = {
+            };
+            name = Debug;
+        };
+        149BA709179C78E500302104 /* Release */ = {
+            isa = XCBuildConfiguration;
+            baseConfigurationReference = 149BA725179C7AC100302104 /* AXRCocoaHelper.xcconfig */;
+            buildSettings = {
+            };
+            name = Release;
+        };
+        14B04E6A179C3F5C00AF6FDE /* Debug */ = {
+            isa = XCBuildConfiguration;
+            baseConfigurationReference = 149BA72C179C88E700302104 /* SharedDebug.xcconfig */;
+            buildSettings = {
+            };
+            name = Debug;
+        };
+        14B04E6B179C3F5C00AF6FDE /* Release */ = {
+            isa = XCBuildConfiguration;
+            baseConfigurationReference = 149BA72D179C88FD00302104 /* SharedRelease.xcconfig */;
+            buildSettings = {
+            };
+            name = Release;
+        };
+        14B04E6D179C3F5C00AF6FDE /* Debug */ = {
+            isa = XCBuildConfiguration;
+            baseConfigurationReference = 14367DA3179C638800764852 /* AXRCore.xcconfig */;
+            buildSettings = {
+            };
+            name = Debug;
+        };
+        14B04E6E179C3F5C00AF6FDE /* Release */ = {
+            isa = XCBuildConfiguration;
+            baseConfigurationReference = 14367DA3179C638800764852 /* AXRCore.xcconfig */;
+            buildSettings = {
+            };
+            name = Release;
+        };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+        149BA6BC179C787600302104 /* Build configuration list for PBXNativeTarget "Qt Helper Library" */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (
+                149BA6BD179C787600302104 /* Debug */,
+                149BA6BE179C787600302104 /* Release */,
+            );
+            defaultConfigurationIsVisible = 0;
+        };
+        149BA707179C78E500302104 /* Build configuration list for PBXNativeTarget "Cocoa Helper Library" */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (
+                149BA708179C78E500302104 /* Debug */,
+                149BA709179C78E500302104 /* Release */,
+            );
+            defaultConfigurationIsVisible = 0;
+        };
+        14B04E3E179C3F5C00AF6FDE /* Build configuration list for PBXProject "AXR SDK" */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (
+                14B04E6A179C3F5C00AF6FDE /* Debug */,
+                14B04E6B179C3F5C00AF6FDE /* Release */,
+            );
+            defaultConfigurationIsVisible = 0;
+            defaultConfigurationName = Release;
+        };
+        14B04E6C179C3F5C00AF6FDE /* Build configuration list for PBXNativeTarget "AXR Core" */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (
+                14B04E6D179C3F5C00AF6FDE /* Debug */,
+                14B04E6E179C3F5C00AF6FDE /* Release */,
+            );
+            defaultConfigurationIsVisible = 0;
+            defaultConfigurationName = Release;
+        };
+/* End XCConfigurationList section */
+    };
+    rootObject = 14B04E3B179C3F5C00AF6FDE /* Project object */;
+}

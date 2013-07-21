@@ -1,0 +1,7 @@
+#include "Shared.xcconfig"
+
+// Build Options
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+
+// Preprocessing
+ENABLE_NS_ASSERTIONS = NO

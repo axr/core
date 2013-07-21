@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+cd "$INPUT_FILE_DIR"
+"$QT_INSTALL_BINS/moc" "$@" -o "$DERIVED_SOURCES_DIR/moc_$INPUT_FILE_BASE.cpp" "$INPUT_FILE_NAME"

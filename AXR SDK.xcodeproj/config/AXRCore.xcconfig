@@ -1,0 +1,26 @@
+AXR_VERSION_MAJOR = 0
+AXR_VERSION_MINOR = 4
+AXR_VERSION_PATCH = 8
+AXR_VERSION_BUILD = 0
+AXR_VERSION_STRING = $(AXR_VERSION_MAJOR).$(AXR_VERSION_MINOR).$(AXR_VERSION_PATCH)
+
+// Deployment
+INSTALL_PATH = /Developer/SDKs/AXR.sdk/Library/Frameworks
+
+// Linking
+DYLIB_COMPATIBILITY_VERSION = 1
+DYLIB_CURRENT_VERSION = 1
+OTHER_LDFLAGS = -framework QtCore -framework QtGui
+
+// Packaging
+FRAMEWORK_VERSION = A
+INFOPLIST_FILE = src/core/Info.plist
+PRODUCT_NAME = AXRCore
+WRAPPER_EXTENSION = framework
+
+// Search Paths
+FRAMEWORK_SEARCH_PATHS = $(inherited) "$(QT_INSTALL_LIBS)"
+HEADER_SEARCH_PATHS = $(inherited) "$(QT_CORE_HEADERS)" "$(QT_GUI_HEADERS)"
+
+// Custom Compiler Flags
+OTHER_CPLUSPLUSFLAGS = $(inherited) -isystem"$(QT_CORE_HEADERS)" -isystem"$(QT_GUI_HEADERS)"

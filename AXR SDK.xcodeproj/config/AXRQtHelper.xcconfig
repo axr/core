@@ -1,0 +1,17 @@
+// Deployment
+INSTALL_PATH = /Developer/SDKs/AXR.sdk/usr/local/lib
+
+// Linking
+DYLIB_COMPATIBILITY_VERSION = 1
+DYLIB_CURRENT_VERSION = 1
+OTHER_LDFLAGS = -framework QtCore -framework QtGui
+
+// Packaging
+PRODUCT_NAME = axrqthelper
+
+// Search Paths
+FRAMEWORK_SEARCH_PATHS = $(inherited) "$(QT_INSTALL_LIBS)"
+HEADER_SEARCH_PATHS = $(inherited) "$(QT_CORE_HEADERS)" "$(QT_GUI_HEADERS)"
+
+// Custom Compiler Flags
+OTHER_CPLUSPLUSFLAGS = $(inherited) -isystem"$(QT_CORE_HEADERS)" -isystem"$(QT_GUI_HEADERS)"
