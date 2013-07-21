@@ -773,3 +773,4 @@ void HSSContainer::shapeChanged(const AXRString source, const QSharedPointer<HSS
 {
     this->setDirty(true);
     this->notifyObservers("shape", theObj);
+}
