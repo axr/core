@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include <limits>
 #include <QFont>
 #include <QFontMetrics>
 #include <QVector>
