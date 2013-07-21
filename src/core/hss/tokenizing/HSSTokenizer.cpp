@@ -308,7 +308,7 @@ QSharedPointer<HSSToken> HSSTokenizer::peekNextToken()
         return ret;
 
     // Store the current position in the buffer
-    int savedPosition = d->textStream->pos();
+    qint64 savedPosition = d->textStream->pos();
     qint64 savedLine = d->currentLine;
     qint64 savedColumn = d->currentColumn;
 

@@ -55,11 +55,11 @@ AXRString AXR::fromCFStringRef(CFStringRef string)
     CFIndex length = CFStringGetLength(string);
     const UniChar *chars = CFStringGetCharactersPtr(string);
     if (chars)
-        return AXRString(reinterpret_cast<const AXRChar*>(chars), length);
+        return AXRString(reinterpret_cast<const AXRChar*>(chars), static_cast<int>(length));
 
     UniChar buffer[length];
     CFStringGetCharacters(string, CFRangeMake(0, length), buffer);
-    return AXRString(reinterpret_cast<const AXRChar*>(buffer), length);
+    return AXRString(reinterpret_cast<const AXRChar*>(buffer), static_cast<int>(length));
 }
 
 CFStringRef AXR::toCFStringRef(const AXRString &string)
