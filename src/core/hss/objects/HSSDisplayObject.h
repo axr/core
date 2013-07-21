@@ -46,6 +46,7 @@
 
 #include <vector>
 #include <QSharedPointer>
+#include "HSSAbstractVisitor.h"
 #include "HSSObject.h"
 
 namespace AXR
