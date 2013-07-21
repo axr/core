@@ -113,7 +113,6 @@ namespace AXR
 
         virtual void setDefaults();
         virtual AXRString toString();
-        virtual QVariantMap toMap() const;
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
