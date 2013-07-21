@@ -32,8 +32,10 @@ if(AXR_BUILD_CORE)
 
     ### pandoc ###
     find_program(PANDOC NAMES "pandoc.exe" "pandoc" PATHS "C:\\Program Files (x86)\\Pandoc\\bin" "/usr/local/bin" "/usr/bin")
-    if(NOT PANDOC)
-        message(FATAL_ERROR "Could not find pandoc; this is required for building packages")
+    if(PANDOC)
+        message(STATUS "Found pandoc: ${PANDOC}")
+    else()
+        message(STATUS "Could not find pandoc; will not build distribution packages")
     endif()
 endif()
 
