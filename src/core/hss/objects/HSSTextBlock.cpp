@@ -320,7 +320,7 @@ QFont HSSTextBlock::getFont() const
     else
         font_description.setWeight(QFont::Normal);
 
-    font_description.setPointSize(theFont ? theFont->getSize() : HSSFont::DEFAULT_SIZE);
+    font_description.setPointSizeF(theFont ? theFont->getSize() : HSSFont::DEFAULT_SIZE);
 
     return font_description;
 }
@@ -357,7 +357,7 @@ void HSSTextBlock::layout()
         }
 
         QFontMetrics fontMetrics(getFont());
-        QRect bounds = fontMetrics.boundingRect(0, 0, this->width, std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, this->getText());
+        QRect bounds = fontMetrics.boundingRect(0, 0, static_cast<int>(this->width), std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, this->getText());
 
         this->width = bounds.width();
         this->_setInnerWidth();

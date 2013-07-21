@@ -242,7 +242,7 @@ void HSSPolygon::setDSides(QSharedPointer<HSSParserNode> value)
     case HSSParserNodeTypePercentageConstant:
     case HSSParserNodeTypeExpression:
         this->dSides = value;
-        this->sides = floor(this->_evaluatePropertyValue(
+        this->sides = static_cast<unsigned int>(this->_evaluatePropertyValue(
                                            &HSSPolygon::sidesChanged,
                                            value,
                                            1.,
@@ -264,7 +264,7 @@ void HSSPolygon::setDSides(QSharedPointer<HSSParserNode> value)
             QVariant remoteValue = fnct->evaluate();
             if (remoteValue.canConvert<HSSUnit>())
             {
-                this->sides = floor(remoteValue.value<HSSUnit>());
+                this->sides = static_cast<unsigned int>(remoteValue.value<HSSUnit>());
             }
 
             if (remoteValue.type() == QVariant::UInt)
@@ -296,13 +296,13 @@ void HSSPolygon::sidesChanged(HSSObservableProperty source, void*data)
     case HSSParserNodeTypeNumberConstant:
     case HSSParserNodeTypeExpression:
     case HSSParserNodeTypeFunctionCall:
-        this->sides = floor(*(HSSUnit*) data);
+        this->sides = static_cast<unsigned int>(*(HSSUnit*) data);
         break;
 
     case HSSParserNodeTypePercentageConstant:
     {
         QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant > (this->dSides);
-        this->sides = floor(percentageValue->getValue(*(HSSUnit*) data));
+        this->sides = static_cast<unsigned int>(percentageValue->getValue(*(HSSUnit*) data));
         break;
     }
 

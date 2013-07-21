@@ -467,8 +467,8 @@ void HSSRenderer::initializeVisit()
         ///@todo find out what objects lie in that rect
 
         // If the window size has changed, make new size
-        HSSUnit windowWidth = d->document->windowWidth();
-        HSSUnit windowHeight = d->document->windowHeight();
+        int windowWidth = d->document->windowWidth();
+        int windowHeight = d->document->windowHeight();
         if (d->bounds.size.width != windowWidth || d->bounds.size.height != windowHeight)
         {
             axr_log(LoggerChannelRendering, AXRString("HSSVisitorManager: window size changed, setting to width: %1 and height: %2").arg((int)d->bounds.size.width).arg((int)d->bounds.size.height));
