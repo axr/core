@@ -70,6 +70,7 @@ QSharedPointer<HSSSelectorChain> HSSSelectorChain::clone() const
 
 HSSSelectorChain::~HSSSelectorChain()
 {
+    this->cleanTrackedObservers();
     this->nodeList.clear();
 }
 

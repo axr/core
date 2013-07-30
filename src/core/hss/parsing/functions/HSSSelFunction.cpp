@@ -60,6 +60,7 @@ HSSSelFunction::HSSSelFunction(AXRController * controller)
 HSSSelFunction::~HSSSelFunction()
 {
 
+    this->cleanTrackedObservers();
 }
 
 HSSSelFunction::HSSSelFunction(const HSSSelFunction & orig)

@@ -73,6 +73,7 @@ QSharedPointer<HSSFunction> HSSAttrFunction::clone() const
 
 HSSAttrFunction::~HSSAttrFunction()
 {
+    this->cleanTrackedObservers();
 }
 
 const AXRString & HSSAttrFunction::getAttributeName() const

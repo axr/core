@@ -76,6 +76,7 @@ QSharedPointer<HSSClonable> HSSFunctionAction::cloneImpl() const
 HSSFunctionAction::~HSSFunctionAction()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSFunctionAction: destructing function action object");
+    this->cleanTrackedObservers();
 }
 
 AXRString HSSFunctionAction::toString()

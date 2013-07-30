@@ -83,7 +83,8 @@ QSharedPointer<HSSClonable> HSSMargin::cloneImpl() const
 
 HSSMargin::~HSSMargin()
 {
-
+    axr_log(LoggerChannelGeneralSpecific, "HSSMargin: destructing margin object");
+    this->cleanTrackedObservers();
 }
 
 void HSSMargin::setDefaults()

@@ -104,6 +104,7 @@ QSharedPointer<HSSClonable> HSSLinearGradient::cloneImpl() const
 HSSLinearGradient::~HSSLinearGradient()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSLinearGradient: destructing linear gradient object");
+    this->cleanTrackedObservers();
 }
 
 void HSSLinearGradient::setDefaults()

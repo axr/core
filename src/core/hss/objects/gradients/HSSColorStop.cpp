@@ -98,6 +98,7 @@ QSharedPointer<HSSClonable> HSSColorStop::cloneImpl() const
 HSSColorStop::~HSSColorStop()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSColorStop: destructing color stop object");
+    this->cleanTrackedObservers();
 }
 
 void HSSColorStop::setDefaults()

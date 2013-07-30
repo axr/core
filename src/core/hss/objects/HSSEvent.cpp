@@ -118,6 +118,7 @@ QSharedPointer<HSSClonable> HSSEvent::cloneImpl() const
 HSSEvent::~HSSEvent()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSEvent: destructing event object");
+    this->cleanTrackedObservers();
 }
 
 void HSSEvent::setDefaults()

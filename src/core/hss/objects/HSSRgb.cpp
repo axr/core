@@ -120,6 +120,7 @@ QSharedPointer<HSSClonable> HSSRgb::cloneImpl() const
 HSSRgb::~HSSRgb()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSRgb: destructing rgb object");
+    this->cleanTrackedObservers();
 }
 
 void HSSRgb::setDefaults()

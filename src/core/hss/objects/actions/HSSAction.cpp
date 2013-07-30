@@ -93,6 +93,7 @@ QSharedPointer<HSSClonable> HSSAction::cloneImpl() const
 HSSAction::~HSSAction()
 {
 
+    this->cleanTrackedObservers();
 }
 
 AXRString HSSAction::toString()

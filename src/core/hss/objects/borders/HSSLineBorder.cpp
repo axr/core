@@ -100,6 +100,7 @@ QSharedPointer<HSSClonable> HSSLineBorder::cloneImpl() const
 HSSLineBorder::~HSSLineBorder()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSLineBorder: destructing line border object");
+    this->cleanTrackedObservers();
 }
 
 void HSSLineBorder::setDefaults()

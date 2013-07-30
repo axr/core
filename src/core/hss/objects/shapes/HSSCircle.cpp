@@ -74,6 +74,7 @@ QSharedPointer<HSSClonable> HSSCircle::cloneImpl() const
 HSSCircle::~HSSCircle()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSCircle: destructing circle object");
+    this->cleanTrackedObservers();
 }
 
 AXRString HSSCircle::toString()

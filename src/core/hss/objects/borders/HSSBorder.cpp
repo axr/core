@@ -70,6 +70,7 @@ HSSBorder::HSSBorder(const HSSBorder & orig)
 
 HSSBorder::~HSSBorder()
 {
+    this->cleanTrackedObservers();
 }
 
 AXRString HSSBorder::toString()

@@ -85,6 +85,7 @@ QSharedPointer<HSSClonable> HSSLog::cloneImpl() const
 HSSLog::~HSSLog()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSLog: destructing log object");
+    this->cleanTrackedObservers();
 }
 
 AXRString HSSLog::toString()

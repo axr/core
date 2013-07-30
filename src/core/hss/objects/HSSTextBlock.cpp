@@ -193,6 +193,7 @@ QSharedPointer<HSSClonable> HSSTextBlock::cloneImpl() const
 HSSTextBlock::~HSSTextBlock()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSTextBlock: destructing text block object");
+    this->cleanTrackedObservers();
 }
 
 void HSSTextBlock::setDefaults()

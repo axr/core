@@ -76,6 +76,7 @@ HSSExpression::HSSExpression(const HSSExpression &orig)
 
 HSSExpression::~HSSExpression()
 {
+    this->cleanTrackedObservers();
 }
 
 AXRString HSSExpression::toString()

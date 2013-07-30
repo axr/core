@@ -156,6 +156,7 @@ HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
 HSSDisplayObject::~HSSDisplayObject()
 {
     axr_log(LoggerChannelGeneralSpecific, AXRString("destroying display object with name ").append(this->name));
+    this->cleanTrackedObservers();
 }
 
 void HSSDisplayObject::setDefaults()

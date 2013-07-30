@@ -110,6 +110,7 @@ QSharedPointer<HSSClonable> HSSFont::cloneImpl() const
 HSSFont::~HSSFont()
 {
 
+    this->cleanTrackedObservers();
 }
 
 void HSSFont::setDefaults()

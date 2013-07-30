@@ -74,6 +74,7 @@ QSharedPointer<HSSFunction> HSSRefFunction::clone() const
 
 HSSRefFunction::~HSSRefFunction()
 {
+    this->cleanTrackedObservers();
 }
 
 const AXRString & HSSRefFunction::getModifier() const

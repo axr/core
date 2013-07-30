@@ -81,6 +81,7 @@ QSharedPointer<HSSObjectDefinition> HSSObjectDefinition::clone() const
 HSSObjectDefinition::~HSSObjectDefinition()
 {
 
+    this->cleanTrackedObservers();
 }
 
 AXRString HSSObjectDefinition::toString()

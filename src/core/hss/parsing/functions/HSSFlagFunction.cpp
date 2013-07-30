@@ -92,6 +92,7 @@ QSharedPointer<HSSFunction> HSSFlagFunction::clone() const
 HSSFlagFunction::~HSSFlagFunction()
 {
 
+    this->cleanTrackedObservers();
 }
 
 const AXRString & HSSFlagFunction::getName()

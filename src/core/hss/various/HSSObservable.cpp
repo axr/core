@@ -282,7 +282,6 @@ HSSObservable::HSSObservable()
 
 HSSObservable::~HSSObservable()
 {
-    this->cleanTrackedObservers();
     this->_propertyObservers.clear();
 }
 

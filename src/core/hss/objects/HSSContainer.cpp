@@ -140,6 +140,7 @@ QSharedPointer<HSSClonable> HSSContainer::cloneImpl() const
 HSSContainer::~HSSContainer()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSContainer: destructing container");
+    this->cleanTrackedObservers();
     if (this->children)
     {
         this->children->clear();

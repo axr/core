@@ -123,6 +123,7 @@ QSharedPointer<HSSClonable> HSSLayoutLine::cloneImpl() const
 
 HSSLayoutLine::~HSSLayoutLine()
 {
+    this->cleanTrackedObservers();
     delete this->objects;
 }
 

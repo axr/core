@@ -77,6 +77,7 @@ QSharedPointer<HSSClonable> HSSMultipleValue::cloneImpl() const
 HSSMultipleValue::~HSSMultipleValue()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSMultipleValue: destructing multiple value object");
+    this->cleanTrackedObservers();
     this->valueList.clear();
 }
 
