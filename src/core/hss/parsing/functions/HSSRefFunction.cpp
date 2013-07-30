@@ -74,6 +74,7 @@ QSharedPointer<HSSFunction> HSSRefFunction::clone() const
 
 HSSRefFunction::~HSSRefFunction()
 {
+    axr_log(LoggerChannelGeneralSpecific, "HSSRefFunction: destructing ref function");
     this->cleanTrackedObservers();
 }
 

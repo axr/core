@@ -91,7 +91,7 @@ QSharedPointer<HSSFunction> HSSFlagFunction::clone() const
 
 HSSFlagFunction::~HSSFlagFunction()
 {
-
+    axr_log(LoggerChannelGeneralSpecific, "HSSFlagFunction: destructing flag function");
     this->cleanTrackedObservers();
 }
 

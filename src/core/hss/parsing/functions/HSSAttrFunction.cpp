@@ -73,6 +73,7 @@ QSharedPointer<HSSFunction> HSSAttrFunction::clone() const
 
 HSSAttrFunction::~HSSAttrFunction()
 {
+    axr_log(LoggerChannelGeneralSpecific, "HSSAttrFunction: destructing attr function");
     this->cleanTrackedObservers();
 }
 

@@ -77,6 +77,7 @@ QSharedPointer<HSSRule> HSSRule::clone() const
 
 HSSRule::~HSSRule()
 {
+    axr_log(LoggerChannelGeneralSpecific, "HSSRule: destructing rule");
     this->cleanTrackedObservers();
     for (unsigned i = 0; i<this->properties.size(); ++i)
     {

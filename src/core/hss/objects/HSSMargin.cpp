@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSDisplayObject.h"

@@ -43,6 +43,7 @@
 
 #include <QMap>
 #include "AXRController.h"
+#include "AXRLoggerManager.h"
 #include "HSSAction.h"
 #include "HSSDisplayObject.h"
 #include "HSSObjectDefinition.h"
@@ -92,7 +93,7 @@ QSharedPointer<HSSClonable> HSSAction::cloneImpl() const
 
 HSSAction::~HSSAction()
 {
-
+    axr_log(LoggerChannelGeneralSpecific, "HSSAction: destructing action object");
     this->cleanTrackedObservers();
 }
 

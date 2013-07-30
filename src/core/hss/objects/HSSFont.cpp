@@ -109,7 +109,7 @@ QSharedPointer<HSSClonable> HSSFont::cloneImpl() const
 
 HSSFont::~HSSFont()
 {
-
+    axr_log(LoggerChannelGeneralSpecific, "HSSFont: destructing font object");
     this->cleanTrackedObservers();
 }
 

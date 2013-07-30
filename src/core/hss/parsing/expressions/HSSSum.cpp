@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRLoggerManager.h"
 #include "HSSDisplayObject.h"
 #include "HSSSum.h"
 
@@ -65,7 +66,7 @@ QSharedPointer<HSSSum> HSSSum::clone() const
 
 HSSSum::~HSSSum()
 {
-
+    axr_log(LoggerChannelGeneralSpecific, "HSSSum: destructing sum expression");
 }
 
 HSSUnit HSSSum::calculate(HSSUnit leftval, HSSUnit rightval)

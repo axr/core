@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRLoggerManager.h"
 #include "HSSDisplayObject.h"
 #include "HSSSubtraction.h"
 
@@ -65,7 +66,7 @@ QSharedPointer<HSSSubtraction> HSSSubtraction::clone() const
 
 HSSSubtraction::~HSSSubtraction()
 {
-
+    axr_log(LoggerChannelGeneralSpecific, "HSSSubtraction: destructing subtraction expression");
 }
 
 HSSUnit HSSSubtraction::calculate(HSSUnit leftval, HSSUnit rightval)

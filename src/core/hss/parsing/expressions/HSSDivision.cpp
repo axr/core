@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRLoggerManager.h"
 #include "HSSDisplayObject.h"
 #include "HSSDivision.h"
 
@@ -65,7 +66,7 @@ QSharedPointer<HSSDivision> HSSDivision::clone() const
 
 HSSDivision::~HSSDivision()
 {
-
+    axr_log(LoggerChannelGeneralSpecific, "HSSDivision: destructing division expression");
 }
 
 HSSUnit HSSDivision::calculate(HSSUnit leftval, HSSUnit rightval)

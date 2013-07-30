@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRLoggerManager.h"
 #include "HSSDisplayObject.h"
 #include "HSSMultiplication.h"
 
@@ -65,7 +66,7 @@ QSharedPointer<HSSMultiplication> HSSMultiplication::clone() const
 
 HSSMultiplication::~HSSMultiplication()
 {
-
+    axr_log(LoggerChannelGeneralSpecific, "HSSMultiplication: destructing multiplication expression");
 }
 
 HSSUnit HSSMultiplication::calculate(HSSUnit leftval, HSSUnit rightval)

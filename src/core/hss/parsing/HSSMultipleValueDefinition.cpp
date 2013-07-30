@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRLoggerManager.h"
 #include "HSSDisplayObject.h"
 #include "HSSMultipleValueDefinition.h"
 
@@ -59,7 +60,8 @@ QSharedPointer<HSSMultipleValueDefinition> HSSMultipleValueDefinition::clone() c
 
 HSSMultipleValueDefinition::~HSSMultipleValueDefinition()
 {
-
+    axr_log(LoggerChannelGeneralSpecific, "HSSMultipleValueDefinition: destructing multiple value definition");
+    this->cleanTrackedObservers();
 }
 
 AXRString HSSMultipleValueDefinition::toString()

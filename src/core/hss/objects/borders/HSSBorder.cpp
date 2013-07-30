@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include "AXRController.h"
+#include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSBorder.h"
 #include "HSSCallback.h"
@@ -70,6 +71,7 @@ HSSBorder::HSSBorder(const HSSBorder & orig)
 
 HSSBorder::~HSSBorder()
 {
+    axr_log(LoggerChannelGeneralSpecific, "HSSBorder: destructing border object");
     this->cleanTrackedObservers();
 }
 

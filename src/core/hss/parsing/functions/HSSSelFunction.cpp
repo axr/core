@@ -59,7 +59,7 @@ HSSSelFunction::HSSSelFunction(AXRController * controller)
 
 HSSSelFunction::~HSSSelFunction()
 {
-
+    axr_log(LoggerChannelGeneralSpecific, "HSSSelFunction: destructing sel function");
     this->cleanTrackedObservers();
 }
 

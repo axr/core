@@ -80,7 +80,7 @@ QSharedPointer<HSSObjectDefinition> HSSObjectDefinition::clone() const
 
 HSSObjectDefinition::~HSSObjectDefinition()
 {
-
+    axr_log(LoggerChannelGeneralSpecific, "HSSObjectDefinition: destructing object definition");
     this->cleanTrackedObservers();
 }
 
