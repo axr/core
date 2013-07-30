@@ -117,11 +117,11 @@ HSSUnit HSSExpression::evaluate()
         //left
         QSharedPointer<HSSValue> left = this->getLeft();
         this->leftval = left->getNumber();
-        left->observe("value", "left", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
+        left->observe("valueChanged", "left", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
         //right
         QSharedPointer<HSSValue> right = this->getRight();
         this->rightval = right->getNumber();
-        right->observe("value", "right", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
+        right->observe("valueChanged", "right", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
         //calculate
         this->setValue(this->calculate(this->leftval, this->rightval));
     }
@@ -153,14 +153,14 @@ void HSSExpression::leftChanged(AXRString property, QSharedPointer<HSSObject> th
 {
     this->leftval = this->getLeft()->getNumber();
     this->setValue(this->calculate(this->leftval, this->rightval));
-    this->notifyObservers("value", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
+    this->notifyObservers("expressionResult", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
 }
 
 void HSSExpression::rightChanged(AXRString property, QSharedPointer<HSSObject> theObj)
 {
     this->rightval = this->getRight()->getNumber();
     this->setValue(this->calculate(this->leftval, this->rightval));
-    this->notifyObservers("value", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
+    this->notifyObservers("expressionResult", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
 }
 
 void HSSExpression::setDirty(bool value)

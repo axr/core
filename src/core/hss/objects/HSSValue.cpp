@@ -135,14 +135,16 @@ const QSharedPointer<HSSParserNode> HSSValue::getValue() const
     return this->value;
 }
 
-void HSSValue::setValue(QSharedPointer<HSSParserNode> value)
+void HSSValue::setValue(QSharedPointer<HSSParserNode> parserNode)
 {
-    this->value = value;
-    switch (value->getType())
+    this->value = parserNode;
+    switch (parserNode->getType())
     {
         case HSSParserNodeTypeFunctionCall:
+            parserNode->observe("remoteValue", "value", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
+            break;
         case HSSParserNodeTypeExpression:
-            value->observe("value", "value", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
+            parserNode->observe("expressionResult", "value", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
             break;
 
         default:
@@ -200,7 +202,7 @@ void HSSValue::valueChanged(const AXRString source, const QSharedPointer<HSSObje
             ret = theObj;
             break;
     }
-    this->notifyObservers("value", ret);
+    this->notifyObservers("valueChanged", ret);
 }
 
 const HSSUnit HSSValue::getNumber() const

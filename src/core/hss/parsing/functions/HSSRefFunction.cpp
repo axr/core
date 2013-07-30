@@ -234,7 +234,7 @@ void HSSRefFunction::valueChanged(const AXRString source, const QSharedPointer<H
 {
     this->setDirty(true);
     this->_value = theObj;
-    this->notifyObservers("value", theObj);
+    this->notifyObservers("remoteValue", ret);
 }
 
 QSharedPointer<HSSClonable> HSSRefFunction::cloneImpl() const

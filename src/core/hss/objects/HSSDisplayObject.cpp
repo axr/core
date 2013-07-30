@@ -404,8 +404,7 @@ void HSSDisplayObject::rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState de
 {
     if (!this->hasRule(newRule))
     {
-        //the target property is set to HSSObservablePropertyValue -- should this be something else?
-        newRule->observe("value", "value", this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::ruleChanged));
+        newRule->observe("ruleChanged", "ruleAdd", this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::ruleChanged));
 
         newRule->appliedToAdd(this->shared_from_this());
 

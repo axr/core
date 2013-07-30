@@ -983,7 +983,18 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
         {
             if (theObj->isA(HSSObjectTypeValue))
             {
-                theObj->observe("value", propertyName, this, new HSSValueChangedCallback<HSSObject>(this, &HSSObject::propertyChanged));
+                switch (qSharedPointerCast<HSSValue>(theObj)->getValue()->getType())
+                {
+                    case HSSParserNodeTypeExpression:
+                    case HSSParserNodeTypeFunctionCall:
+                    {
+                        theObj->observe("valueChanged", propertyName, this, new HSSValueChangedCallback<HSSObject>(this, &HSSObject::propertyChanged));
+                        break;
+                    }
+
+                    default:
+                        break;
+                }
             }
         }
         //set
