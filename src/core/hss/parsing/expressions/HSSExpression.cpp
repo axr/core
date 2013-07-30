@@ -184,43 +184,6 @@ HSSUnit HSSExpression::getValue()
     return this->_value;
 }
 
-void HSSExpression::setPercentageBase(HSSUnit value)
-{
-    this->percentageBase = value;
-
-    //propagate values
-    this->_nodesToValuesIfNeeded();
-    if (this->left)
-    {
-        this->left->setPercentageBase(value);
-    }
-    if (this->right)
-    {
-        this->right->setPercentageBase(value);
-    }
-
-    this->setDirty(true);
-}
-
-void HSSExpression::setPercentageObserved(const AXRString property, QSharedPointer<HSSObservable> observed)
-{
-    this->percentageObserved = observed;
-    this->percentageObservedProperty = property;
-
-    //propagate values
-    this->_nodesToValuesIfNeeded();
-    if (this->left)
-    {
-        this->left->setPercentageObserved(observed, property);
-    }
-    if (this->right)
-    {
-        this->right->setPercentageObserved(observed, property);
-    }
-
-    this->setDirty(true);
-}
-
 void HSSExpression::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 {
     this->scope = newScope;

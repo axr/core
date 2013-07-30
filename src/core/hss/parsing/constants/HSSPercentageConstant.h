@@ -74,26 +74,6 @@ namespace AXR
 
         virtual AXRString toString();
 
-        HSSUnit evaluate();
-
-        /**
-         *  The percentage base is the number that corresponds to 100%.
-         *  @param value    A HSSUnit containing the base for percentage calculations.
-         */
-        virtual void setPercentageBase(HSSUnit value);
-
-        /**
-         *  Whenever a percentage value needs to recalculate its value, it should be set to true.
-         *  @param value    A boolean, wether it needs to recalculate or not.
-         */
-        void setDirty(bool value);
-
-        /**
-         *  Tells if the percentage value needs to recalculate its value.
-         *  @return Wether it needs recalculating or not.
-         */
-        bool isDirty();
-
         /**
          *  Setter for the number of the percentage (e.g. 50% would have a number of 0.5).
          *  @param newValue     A HSSUnit containing the new number of the percentage value
@@ -106,23 +86,8 @@ namespace AXR
          */
         HSSUnit getNumber();
 
-        /**
-         *  Setter for the value.
-         *  @param newValue     A HSSUnit containing the new calculated value for this percentage value.
-         */
-        void setValue(HSSUnit newValue);
-
-        /**
-         *  Getter for the value.
-         *  @return The calculated value of the percentage value.
-         */
-        HSSUnit getValue();
-
     protected:
-        bool _isDirty;
-        HSSUnit _value;
         HSSUnit _number;
-        HSSUnit _percentageBase;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

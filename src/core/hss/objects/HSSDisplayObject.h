@@ -91,6 +91,7 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
+        virtual QSharedPointer<HSSParserNode> getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
 
         /**
          *  Each subclass should return wether it can have children or not. Right now the only

@@ -116,6 +116,7 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
+        virtual QSharedPointer<HSSParserNode> getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
 
         /**
          *  Add a child to the content tree.
@@ -199,10 +200,8 @@ namespace AXR
 
         const HSSUnit getContentAlignX() const;
         QSharedPointer<HSSObject> computeContentAlignX(QSharedPointer<HSSParserNode> parserNode);
-        void listenContentAlignX(QSharedPointer<HSSObject> theObj);
         const HSSUnit getContentAlignY() const;
         QSharedPointer<HSSObject> computeContentAlignY(QSharedPointer<HSSParserNode> parserNode);
-        void listenContentAlignY(QSharedPointer<HSSObject> theObj);
         const HSSDirectionValue getDirection() const;
         const HSSDirectionValue getWrapDirection() const;
         //content

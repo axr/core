@@ -84,10 +84,6 @@ HSSLinearGradient::HSSLinearGradient(const HSSLinearGradient & orig)
 
 void HSSLinearGradient::_initialize()
 {
-    this->addCallback("startX", new HSSObserveCallback<HSSLinearGradient>(this, &HSSLinearGradient::listenStartX), new HSSObserveCallback<HSSLinearGradient>(this, &HSSLinearGradient::notifyStartX));
-    this->addCallback("startY", new HSSObserveCallback<HSSLinearGradient>(this, &HSSLinearGradient::listenStartY), new HSSObserveCallback<HSSLinearGradient>(this, &HSSLinearGradient::notifyStartY));
-    this->addCallback("endX", new HSSObserveCallback<HSSLinearGradient>(this, &HSSLinearGradient::listenEndX), new HSSObserveCallback<HSSLinearGradient>(this, &HSSLinearGradient::notifyEndX));
-    this->addCallback("endY", new HSSObserveCallback<HSSLinearGradient>(this, &HSSLinearGradient::listenEndY), new HSSObserveCallback<HSSLinearGradient>(this, &HSSLinearGradient::notifyEndY));
 }
 
 QSharedPointer<HSSLinearGradient> HSSLinearGradient::clone() const
@@ -162,6 +158,33 @@ bool HSSLinearGradient::isKeyword(AXRString value, AXRString property)
     return HSSGradient::isKeyword(value, property);
 }
 
+QSharedPointer<HSSParserNode> HSSLinearGradient::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
+{
+    if (!parserNode || !parserNode->isA(HSSParserNodeTypePercentageConstant))
+    {
+        AXRError("HSSLinearGradient", "You can only create a percentage expression from a percentage constant.");
+        return QSharedPointer<HSSParserNode>();
+    }
+
+    static QMap<AXRString, AXRString> mappings;
+    if (mappings.empty())
+    {
+        mappings.insert("startX", "width");
+        mappings.insert("startY", "height");
+        mappings.insert("endX", "width");
+        mappings.insert("endY", "height");
+    }
+
+    if (mappings.contains(propertyName))
+    {
+        HSSUnit number = qSharedPointerCast<HSSPercentageConstant>(parserNode)->getNumber();
+        //get the properties from itself
+        return this->getPercentageExpressionFromThis(number, mappings[propertyName]);
+    }
+
+    return HSSObject::getPercentageExpression(parserNode, propertyName);
+}
+
 void HSSLinearGradient::setStartX(HSSUnit value)
 {
     this->setComputedValue("startX", value);
@@ -175,18 +198,6 @@ const HSSUnit HSSLinearGradient::getStartX() const
         return qSharedPointerCast<HSSValue>(value)->getNumber();
     }
     return 0.;
-}
-
-void HSSLinearGradient::listenStartX(QSharedPointer<HSSObject> theObj)
-{
-    if (theObj->isA(HSSObjectTypeValue))
-    {
-        QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-        QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
-        valueObj->listen(this->getThisObj(), "width");
-        valueObj->setPercentageBase(thisObj->getWidth());
-        valueObj->observe("value", "startX", this, new HSSValueChangedCallback<HSSLinearGradient>(this, &HSSLinearGradient::startXChanged));
-    }
 }
 
 void HSSLinearGradient::notifyStartX(QSharedPointer<HSSObject> theObj)
@@ -214,17 +225,6 @@ const HSSUnit HSSLinearGradient::getStartY() const
     return 0.;
 }
 
-void HSSLinearGradient::listenStartY(QSharedPointer<HSSObject> theObj)
-{
-    if (theObj->isA(HSSObjectTypeValue))
-    {
-        QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-        QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
-        valueObj->listen(thisObj, "height");
-        valueObj->setPercentageBase(thisObj->getHeight());
-        valueObj->observe("value", "startY", this, new HSSValueChangedCallback<HSSLinearGradient>(this, &HSSLinearGradient::startYChanged));
-    }
-}
 
 void HSSLinearGradient::notifyStartY(QSharedPointer<HSSObject> theObj)
 {
@@ -251,18 +251,6 @@ const HSSUnit HSSLinearGradient::getEndX() const
     return 0.;
 }
 
-void HSSLinearGradient::listenEndX(QSharedPointer<HSSObject> theObj)
-{
-    if (theObj->isA(HSSObjectTypeValue))
-    {
-        QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-        QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
-        valueObj->listen(this->getThisObj(), "width");
-        valueObj->setPercentageBase(thisObj->getWidth());
-        valueObj->observe("value", "endX", this, new HSSValueChangedCallback<HSSLinearGradient>(this, &HSSLinearGradient::endXChanged));
-    }
-}
-
 void HSSLinearGradient::notifyEndX(QSharedPointer<HSSObject> theObj)
 {
     this->notifyObservers("endX", theObj);
@@ -287,19 +275,6 @@ const HSSUnit HSSLinearGradient::getEndY() const
     }
     return 0.;
 }
-
-void HSSLinearGradient::listenEndY(QSharedPointer<HSSObject> theObj)
-{
-    if (theObj->isA(HSSObjectTypeValue))
-    {
-        QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-        QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
-        valueObj->listen(this->getThisObj(), "height");
-        valueObj->setPercentageBase(thisObj->getHeight());
-        valueObj->observe("value", "endY", this, new HSSValueChangedCallback<HSSLinearGradient>(this, &HSSLinearGradient::endYChanged));
-    }
-}
-
 void HSSLinearGradient::notifyEndY(QSharedPointer<HSSObject> theObj)
 {
     this->notifyObservers("endY", theObj);

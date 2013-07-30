@@ -55,7 +55,6 @@ HSSFunction::HSSFunction(HSSFunctionType type, AXRController * controller)
 : HSSParserNode(HSSParserNodeTypeFunctionCall, controller)
 {
     this->functionType = type;
-    this->percentageObserved = NULL;
     this->_isDirty = true;
 }
 
@@ -63,7 +62,6 @@ HSSFunction::HSSFunction(const HSSFunction & orig)
 : HSSParserNode(orig)
 {
     this->functionType = orig.functionType;
-    this->percentageObserved = NULL;
     this->_isDirty = orig._isDirty;
     this->_value = orig._value;
     this->_name = orig._name;
@@ -90,10 +88,6 @@ QSharedPointer<HSSClonable> HSSFunction::cloneImpl() const
 
 HSSFunction::~HSSFunction()
 {
-    //    if (this->percentageObserved) {
-    //        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
-    //        this->percentageObserved = NULL;
-    //    }
 }
 
 AXRString HSSFunction::toString()
@@ -136,29 +130,6 @@ QSharedPointer<HSSObject> HSSFunction::_evaluate()
 void HSSFunction::propertyChanged(AXRString property, QSharedPointer<HSSObject> theObj)
 {
     this->notifyObservers("value", theObj);
-}
-
-const HSSUnit HSSFunction::getPercentageBase() const
-{
-    return this->percentageBase;
-}
-
-void HSSFunction::setPercentageBase(HSSUnit value)
-{
-    this->percentageBase = value;
-    this->setDirty(true);
-}
-
-void HSSFunction::setPercentageObserved(const AXRString property, HSSObservable *observed)
-{
-    //    if(this->percentageObserved)
-    //    {
-    //        this->percentageObserved->removeObserver(this->percentageObservedProperty, HSSObservablePropertyValue, this);
-    //        this->percentageObserved = NULL;
-    //    }
-    this->percentageObservedProperty = property;
-    this->percentageObserved = observed;
-    //observed->observe(property, HSSObservablePropertyValue, this, new HSSValueChangedCallback<HSSFunction>(this, &QSharedPointer<HSSFunction>ropertyChanged));
 }
 
 void HSSFunction::setScope(QSharedPointer<HSSSimpleSelection> newScope)

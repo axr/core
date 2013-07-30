@@ -60,6 +60,7 @@
 #include "HSSMargin.h"
 #include "HSSMultipleValue.h"
 #include "HSSMultipleValueDefinition.h"
+#include "HSSMultiplication.h"
 #include "HSSNumberConstant.h"
 #include "HSSObject.h"
 #include "HSSObjectDefinition.h"
@@ -78,6 +79,7 @@
 #include "HSSSimpleSelection.h"
 #include "HSSSimpleSelector.h"
 #include "HSSStringConstant.h"
+#include "HSSThisSelector.h"
 #include "HSSTypeEnums.h"
 #include "HSSValue.h"
 
@@ -910,20 +912,92 @@ QSharedPointer<HSSObject> HSSObject::computeValueObject(QSharedPointer<HSSParser
 
 QSharedPointer<HSSObject> HSSObject::computeValueObject(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
 {
-    if (parserNode->isA(HSSParserNodeTypeKeywordConstant) && qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue() == "inherit")
+    if (!parserNode)
     {
-        QSharedPointer<HSSRefFunction> refFunc(new HSSRefFunction(this->getController()));
-        refFunc->setPropertyName(propertyName);
-        std::vector< QSharedPointer<HSSSelectorChain> > selectorChains;
-        QSharedPointer<HSSSelectorChain> selectorChain(new HSSSelectorChain(this->getController()));
-        QSharedPointer<HSSSimpleSelector> simpleSelector(new HSSSimpleSelector(this->getController()));
-        simpleSelector->setName(QSharedPointer<HSSParentSelector>(new HSSParentSelector(this->getController())));
-        selectorChain->add(simpleSelector);
-        selectorChains.push_back(selectorChain);
-        refFunc->setSelectorChains(selectorChains);
-        parserNode = refFunc;
+        AXRWarning("HSSObject", "Creating value object from empty parser node.");
+        return QSharedPointer<HSSValue>();
     }
-    return qSharedPointerCast<HSSValue>(this->computeValueObject(parserNode));
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            if (qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue() == "inherit")
+            {
+                QSharedPointer<HSSRefFunction> refFunc(new HSSRefFunction(this->getController()));
+                refFunc->setPropertyName(propertyName);
+                std::vector< QSharedPointer<HSSSelectorChain> > selectorChains;
+                QSharedPointer<HSSSelectorChain> selectorChain(new HSSSelectorChain(this->getController()));
+                QSharedPointer<HSSSimpleSelector> simpleSelector(new HSSSimpleSelector(this->getController()));
+                simpleSelector->setName(QSharedPointer<HSSParentSelector>(new HSSParentSelector(this->getController())));
+                selectorChain->add(simpleSelector);
+                selectorChains.push_back(selectorChain);
+                refFunc->setSelectorChains(selectorChains);
+                parserNode = refFunc;
+            }
+            break;
+        }
+
+        case HSSParserNodeTypePercentageConstant:
+        {
+            parserNode = this->getPercentageExpression(parserNode, propertyName);
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    QSharedPointer<HSSValue> ret = qSharedPointerCast<HSSValue>(this->computeValueObject(parserNode));
+    ret->setHostProperty(propertyName);
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSObject::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
+{
+    if (!parserNode || !parserNode->isA(HSSParserNodeTypePercentageConstant))
+    {
+        AXRError("HSSObject", "You can only create a percentage expression from a percentage constant.");
+        return QSharedPointer<HSSParserNode>();
+    }
+
+    //by default, get the same property from the parent
+    HSSUnit number = qSharedPointerCast<HSSPercentageConstant>(parserNode)->getNumber();
+    return this->getPercentageExpressionFromParent(number, propertyName);
+}
+
+QSharedPointer<HSSParserNode> HSSObject::getPercentageExpressionFromParent(HSSUnit number, AXRString propertyName)
+{
+    QSharedPointer<HSSParentSelector> parentSelector(new HSSParentSelector(this->getController()));
+    QSharedPointer<HSSSimpleSelector> simpleSelector(new HSSSimpleSelector(this->getController()));
+    simpleSelector->setName(parentSelector);
+    return this->getPercentageExpression(number, simpleSelector, propertyName);
+}
+
+QSharedPointer<HSSParserNode> HSSObject::getPercentageExpressionFromThis(HSSUnit number, AXRString propertyName)
+{
+    QSharedPointer<HSSThisSelector> thisSelector(new HSSThisSelector(this->getController()));
+    QSharedPointer<HSSSimpleSelector> simpleSelector(new HSSSimpleSelector(this->getController()));
+    simpleSelector->setName(thisSelector);
+    return this->getPercentageExpression(number, simpleSelector, propertyName);
+}
+
+QSharedPointer<HSSParserNode> HSSObject::getPercentageExpression(HSSUnit number, QSharedPointer<HSSSimpleSelector> target, AXRString propertyName)
+{
+    //left
+    QSharedPointer<HSSRefFunction> refFunc(new HSSRefFunction(this->getController()));
+    refFunc->setPropertyName(propertyName);
+    std::vector< QSharedPointer<HSSSelectorChain> > selectorChains;
+    QSharedPointer<HSSSelectorChain> selectorChain(new HSSSelectorChain(this->getController()));
+
+    selectorChain->add(target);
+    selectorChains.push_back(selectorChain);
+    refFunc->setSelectorChains(selectorChains);
+
+    //right
+    QSharedPointer<HSSNumberConstant> right = this->numberToConstant(number);
+
+    QSharedPointer<HSSMultiplication> ret(new HSSMultiplication(refFunc, right, this->getController()));
+    return ret;
 }
 
 void HSSObject::setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode)

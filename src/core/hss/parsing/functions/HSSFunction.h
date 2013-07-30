@@ -97,21 +97,6 @@ namespace AXR
          */
         virtual void propertyChanged(AXRString property, QSharedPointer<HSSObject> theObj);
 
-        const HSSUnit getPercentageBase() const;
-
-        /**
-         *  The percentage base is the number that corresponds to 100%.
-         *  @param value    A HSSUnit containing the base for percentage calculations.
-         */
-        virtual void setPercentageBase(HSSUnit value);
-
-        /**
-         *  When we are using percentages, we keep track of the value and update accordingly.
-         *  @param property     The property which we are observing.
-         *  @param observed     A regular pointer to the object we are observing.
-         */
-        virtual void setPercentageObserved(const AXRString property, HSSObservable * observed);
-
         /**
          *  Setter for the scope which to pass to members like references or selections.
          *  @param newScope     The new scope, a shared pointer to a simple selection.
@@ -170,9 +155,6 @@ namespace AXR
         bool _isDirty;
         QSharedPointer<HSSObject> _value;
 
-        HSSUnit percentageBase;
-        AXRString percentageObservedProperty;
-        HSSObservable * percentageObserved;
         QSharedPointer<HSSSimpleSelection> scope;
 
     private:

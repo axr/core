@@ -262,8 +262,7 @@ QSharedPointer<HSSObject> HSSPolygon::computeAngle(QSharedPointer<HSSParserNode>
         case HSSParserNodeTypePercentageConstant:
         {
             QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant>(value);
-            percentageValue->setPercentageBase(360.);
-            ret = percentageValue->evaluate();
+            ret = 360. * percentageValue->getNumber();
             break;
         }
         case HSSParserNodeTypeExpression:

@@ -66,6 +66,7 @@ namespace AXR
     class HSSParserNode;
     class HSSPercentageConstant;
     class HSSSimpleSelection;
+    class HSSSimpleSelector;
     class HSSStringConstant;
 
     /**
@@ -306,6 +307,10 @@ namespace AXR
         virtual QSharedPointer<HSSObject> computeValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
         QSharedPointer<HSSObject> computeValueObject(QSharedPointer<HSSParserNode> parserNode);
         QSharedPointer<HSSObject> computeValueObject(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
+        virtual QSharedPointer<HSSParserNode> getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
+        QSharedPointer<HSSParserNode> getPercentageExpression(HSSUnit number, QSharedPointer<HSSSimpleSelector> target, AXRString propertyName);
+        QSharedPointer<HSSParserNode> getPercentageExpressionFromParent(HSSUnit number, AXRString propertyName);
+        QSharedPointer<HSSParserNode> getPercentageExpressionFromThis(HSSUnit number, AXRString propertyName);
         void setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
         void setComputedValue(AXRString propertyName, HSSUnit value);
         void setComputedBool(AXRString propertyName, bool value);

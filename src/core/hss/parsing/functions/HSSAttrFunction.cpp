@@ -157,7 +157,6 @@ QSharedPointer<HSSObject> HSSAttrFunction::_evaluate()
         this->_stringValue = AXRString();
     }
     this->_value = HSSValue::valueFromParserNode(this->getController(), HSSStringConstant::stringToConstant(this->_stringValue, this->getController()), this->getThisObj(), this->scope);
-    qSharedPointerCast<HSSValue>(this->_value)->setPercentageBase(this->getPercentageBase());
     return this->_value;
 }
 

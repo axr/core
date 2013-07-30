@@ -93,7 +93,6 @@ namespace AXR
 
         void setValue(QSharedPointer<HSSParserNode> value);
 
-        void listen(QSharedPointer<HSSObservable> observed, const AXRString target);
         /**
          *  Method to be passed as callback when observing changes that will affect value.
          *  @param source   The property which we are observing.
@@ -111,15 +110,12 @@ namespace AXR
 
         //see HSSObject.h for documentation on this method
         void setThisObj(QSharedPointer<HSSDisplayObject> value);
-        void setPercentageBase(HSSUnit value);
-        void setPercentageObserved(QSharedPointer<HSSObservable> observable, AXRString property);
 
     protected:
         //value
         QSharedPointer<HSSParserNode> value;
 
     private:
-        HSSUnit _percentageBase;
         const HSSUnit _getNumber(const QSharedPointer<HSSParserNode> & parserNode) const;
         const bool _getBool(const QSharedPointer<HSSParserNode> & parserNode) const;
         const AXRString _getString(const QSharedPointer<HSSParserNode> & parserNode) const;

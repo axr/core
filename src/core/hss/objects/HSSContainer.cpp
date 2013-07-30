@@ -113,9 +113,7 @@ void HSSContainer::_initialize()
     this->allChildren = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection());
 
     this->addCallback("contentAlignX", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContentAlignX));
-    this->addListenCallback("contentAlignX", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::listenContentAlignX));
     this->addCallback("contentAlignY", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContentAlignY));
-    this->addListenCallback("contentAlignY", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::listenContentAlignY));
     this->addCallback("content", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContent));
     this->addCallback("shape", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeShape), new HSSObserveCallback<HSSContainer>(this, &HSSContainer::listenShape), new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyShape));
 }
@@ -252,6 +250,31 @@ bool HSSContainer::isKeyword(AXRString value, AXRString property)
 
     //if we reached this far, let the superclass handle it
     return HSSDisplayObject::isKeyword(value, property);
+}
+
+QSharedPointer<HSSParserNode> HSSContainer::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
+{
+    if (!parserNode || !parserNode->isA(HSSParserNodeTypePercentageConstant))
+    {
+        AXRError("HSSContainer", "You can only create a percentage expression from a percentage constant.");
+        return QSharedPointer<HSSParserNode>();
+    }
+
+    static QMap<AXRString, AXRString> mappings;
+    if (mappings.empty())
+    {
+        mappings.insert("contentAlignX", "innerWidth");
+        mappings.insert("contentAlignY", "innerHeight");
+    }
+
+    if (mappings.contains(propertyName))
+    {
+        HSSUnit number = qSharedPointerCast<HSSPercentageConstant>(parserNode)->getNumber();
+        //get the properties from itself
+        return this->getPercentageExpressionFromThis(number, mappings[propertyName]);
+    }
+
+    return HSSDisplayObject::getPercentageExpression(parserNode, propertyName);
 }
 
 //children
@@ -523,15 +546,15 @@ QSharedPointer<HSSObject> HSSContainer::computeContentAlignX(QSharedPointer<HSSP
             AXRString kwValue = theKW->getValue();
             if (kwValue == "left")
             {
-                return this->computeValueObject(this->percentageToConstant(0));
+                return this->computeValueObject(this->percentageToConstant(0), "contentAlignX");
             }
             else if (kwValue == "middle" || kwValue == "center")
             {
-                return this->computeValueObject(this->percentageToConstant(50));
+                return this->computeValueObject(this->percentageToConstant(50), "contentAlignX");
             }
             else if (kwValue == "right")
             {
-                return this->computeValueObject(this->percentageToConstant(100));
+                return this->computeValueObject(this->percentageToConstant(100), "contentAlignX");
             }
             else if (kwValue == "even")
             {
@@ -552,21 +575,6 @@ QSharedPointer<HSSObject> HSSContainer::computeContentAlignX(QSharedPointer<HSSP
     return this->computeValueObject(parserNode, "contentAlignX");
 }
 
-void HSSContainer::listenContentAlignX(QSharedPointer<HSSObject> theObj)
-{
-    if (theObj->isA(HSSObjectTypeValue))
-    {
-        QSharedPointer<HSSContainer> parent = this->getParent();
-        if (parent)
-        {
-            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-            valueObj->listen(parent, "innerWidth");
-            valueObj->setPercentageBase(this->getInnerWidth());
-            valueObj->observe("value", "contentAlignX", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignXChanged));
-        }
-    }
-}
-
 //contentAlignY
 const HSSUnit HSSContainer::getContentAlignY() const
 {
@@ -583,15 +591,15 @@ QSharedPointer<HSSObject> HSSContainer::computeContentAlignY(QSharedPointer<HSSP
             AXRString kwValue = theKW->getValue();
             if (kwValue == "top")
             {
-                return this->computeValueObject(this->percentageToConstant(0));
+                return this->computeValueObject(this->percentageToConstant(0), "contentAlignY");
             }
             else if (kwValue == "middle" || kwValue == "center")
             {
-                return this->computeValueObject(this->percentageToConstant(50));
+                return this->computeValueObject(this->percentageToConstant(50), "contentAlignY");
             }
             else if (kwValue == "bottom")
             {
-                return this->computeValueObject(this->percentageToConstant(100));
+                return this->computeValueObject(this->percentageToConstant(100), "contentAlignY");
             }
             else if (kwValue == "even")
             {
@@ -610,21 +618,6 @@ QSharedPointer<HSSObject> HSSContainer::computeContentAlignY(QSharedPointer<HSSP
             break;
     }
     return this->computeValueObject(parserNode, "contentAlignY");
-}
-
-void HSSContainer::listenContentAlignY(QSharedPointer<HSSObject> theObj)
-{
-    if (theObj->isA(HSSObjectTypeValue))
-    {
-        QSharedPointer<HSSContainer> parent = this->getParent();
-        if (parent)
-        {
-            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-            valueObj->listen(parent, "innerWidth");
-            valueObj->setPercentageBase(this->getInnerWidth());
-            valueObj->observe("value", "contentAlignY", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignXChanged));
-        }
-    }
 }
 
 //direction

@@ -246,8 +246,7 @@ QSharedPointer<HSSValue> HSSRgb::_computeChannelValue(QSharedPointer<HSSParserNo
         case HSSParserNodeTypePercentageConstant:
         {
             QSharedPointer<HSSPercentageConstant> percentageValue = qSharedPointerCast<HSSPercentageConstant>(parserNode);
-            percentageValue->setPercentageBase(255.);
-            ret = percentageValue->evaluate();
+            ret = 255. * percentageValue->getNumber();
             break;
         }
         case HSSParserNodeTypeExpression:

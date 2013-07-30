@@ -85,12 +85,12 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
+        virtual QSharedPointer<HSSParserNode> getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
 
         //startX
         void setStartX(HSSUnit value);
         const HSSUnit getStartX() const;
         QSharedPointer<HSSObject> computeStartX(QSharedPointer<HSSParserNode> parserNode);
-        void listenStartX(QSharedPointer<HSSObject> theObj);
         void notifyStartX(QSharedPointer<HSSObject> theObj);
         void startXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
@@ -98,7 +98,6 @@ namespace AXR
         void setStartY(HSSUnit value);
         const HSSUnit getStartY() const;
         QSharedPointer<HSSObject> computeStartY(QSharedPointer<HSSParserNode> parserNode);
-        void listenStartY(QSharedPointer<HSSObject> theObj);
         void notifyStartY(QSharedPointer<HSSObject> theObj);
         void startYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
@@ -106,7 +105,6 @@ namespace AXR
         void setEndX(HSSUnit value);
         const HSSUnit getEndX() const;
         QSharedPointer<HSSObject> computeEndX(QSharedPointer<HSSParserNode> parserNode);
-        void listenEndX(QSharedPointer<HSSObject> theObj);
         void notifyEndX(QSharedPointer<HSSObject> theObj);
         void endXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
@@ -114,7 +112,6 @@ namespace AXR
         void setEndY(HSSUnit value);
         const HSSUnit getEndY() const;
         QSharedPointer<HSSObject> computeEndY(QSharedPointer<HSSParserNode> parserNode);
-        void listenEndY(QSharedPointer<HSSObject> theObj);
         void notifyEndY(QSharedPointer<HSSObject> theObj);
         void endYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 

@@ -172,13 +172,6 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
                 {
                     switch (parserNode->getType())
                     {
-                        case HSSParserNodeTypePercentageConstant:
-                        {
-                            HSSUnit remoteNum = qSharedPointerCast<HSSPercentageConstant>(parserNode)->evaluate();
-                            QSharedPointer<HSSNumberConstant> numberConstant = QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(remoteNum, this->getController()));
-                            ret = HSSValue::valueFromParserNode(this->getController(), numberConstant, this->getThisObj(), this->scope);
-                            break;
-                        }
                         case HSSParserNodeTypeFunctionCall:
                             ret = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
                             break;

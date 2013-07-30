@@ -128,9 +128,14 @@ void HSSDisplayObject::_initialize()
 
     this->addCallback("width", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenWidth), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyWidth));
     this->addCallback("height", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenHeight), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyHeight));
-    this->addCallback("anchorX", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAnchorX), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenAnchorX), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyAnchorX));
-    this->addCallback("alignX", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAlignX), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenAlignX), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyAlignX));
-    this->addCallback("alignY", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAlignY), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenAlignY), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyAlignY));
+    this->addCallback("anchorX", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAnchorX));
+    this->addNotifyCallback("anchorX", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyAnchorX));
+    this->addCallback("anchorY", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAnchorY));
+    this->addNotifyCallback("anchorY", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyAnchorY));
+    this->addCallback("alignX", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAlignX));
+    this->addNotifyCallback("alignX", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyAlignX));
+    this->addCallback("alignY", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAlignY));
+    this->addNotifyCallback("alignY", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyAlignY));
     this->addCallback("background", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeBackground));
 }
 
@@ -313,6 +318,45 @@ bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
 
     //if we reached this far, let the superclass handle it
     return HSSObject::isKeyword(value, property);
+}
+
+QSharedPointer<HSSParserNode> HSSDisplayObject::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
+{
+    if (!parserNode || !parserNode->isA(HSSParserNodeTypePercentageConstant))
+    {
+        AXRError("HSSDisplayObject", "You can only create a percentage expression from a percentage constant.");
+        return QSharedPointer<HSSParserNode>();
+    }
+
+    static QMap<AXRString, AXRString> parentMappings;
+    if (parentMappings.empty())
+    {
+        parentMappings.insert("width", "innerWidth");
+        parentMappings.insert("height", "innerHeight");
+        parentMappings.insert("alignX", "innerWidth");
+        parentMappings.insert("alignY", "innerHeight");
+    }
+
+    if (parentMappings.contains(propertyName))
+    {
+        HSSUnit number = qSharedPointerCast<HSSPercentageConstant>(parserNode)->getNumber();
+        return this->getPercentageExpressionFromParent(number, parentMappings[propertyName]);
+    }
+
+    static QMap<AXRString, AXRString> thisMappings;
+    if (parentMappings.empty())
+    {
+        thisMappings.insert("anchorX", "width");
+        thisMappings.insert("anchorY", "height");
+    }
+
+    if (thisMappings.contains(propertyName))
+    {
+        HSSUnit number = qSharedPointerCast<HSSPercentageConstant>(parserNode)->getNumber();
+        return this->getPercentageExpressionFromThis(number, thisMappings[propertyName]);
+    }
+
+    return HSSObject::getPercentageExpression(parserNode, propertyName);
 }
 
 bool HSSDisplayObject::canHaveChildren()
@@ -655,13 +699,17 @@ void HSSDisplayObject::listenWidth(QSharedPointer<HSSObject> theObj)
 {
     if (theObj->isA(HSSObjectTypeValue))
     {
-        QSharedPointer<HSSContainer> parent = this->getParent();
-        if (parent)
+        switch (qSharedPointerCast<HSSValue>(theObj)->getValue()->getType())
         {
-            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-            valueObj->listen(parent, "innerWidth");
-            valueObj->setPercentageBase(this->getInnerWidth());
-            valueObj->observe("value", "width", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::widthChanged));
+            case HSSParserNodeTypeExpression:
+            case HSSParserNodeTypeFunctionCall:
+            {
+                theObj->observe("valueChanged", "width", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::widthChanged));
+                break;
+            }
+
+            default:
+                break;
         }
     }
 }
@@ -731,13 +779,17 @@ void HSSDisplayObject::listenHeight(QSharedPointer<HSSObject> theObj)
 {
     if (theObj->isA(HSSObjectTypeValue))
     {
-        QSharedPointer<HSSContainer> parent = this->getParent();
-        if (parent)
+        switch (qSharedPointerCast<HSSValue>(theObj)->getValue()->getType())
         {
-            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-            valueObj->listen(parent, "innerHeight");
-            valueObj->setPercentageBase(this->getInnerHeight());
-            valueObj->observe("value", "height", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::heightChanged));
+            case HSSParserNodeTypeFunctionCall:
+            case HSSParserNodeTypeExpression:
+            {
+                theObj->observe("valueChanged", "height", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::heightChanged));
+                break;
+            }
+
+            default:
+                break;
         }
     }
 }
@@ -801,15 +853,15 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAnchorX(QSharedPointer<HSSPar
             }
             else if (kwValue == "left")
             {
-                return this->computeValueObject(this->percentageToConstant(0));
+                return this->computeValueObject(this->percentageToConstant(0), "anchorX");
             }
             else if (kwValue == "middle" || kwValue == "center")
             {
-                return this->computeValueObject(this->percentageToConstant(50));
+                return this->computeValueObject(this->percentageToConstant(50), "anchorX");
             }
             else if (kwValue == "right")
             {
-                return this->computeValueObject(this->percentageToConstant(100));
+                return this->computeValueObject(this->percentageToConstant(100), "anchorX");
             }
             break;
         }
@@ -818,17 +870,6 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAnchorX(QSharedPointer<HSSPar
             break;
     }
     return this->computeValueObject(parserNode, "anchorX");
-}
-
-void HSSDisplayObject::listenAnchorX(QSharedPointer<HSSObject> theObj)
-{
-    if (theObj->isA(HSSObjectTypeValue))
-    {
-        QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-        valueObj->listen(this->shared_from_this(), "width");
-        valueObj->setPercentageBase(this->getWidth());
-        valueObj->observe("value", "anchorX", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::anchorXChanged));
-    }
 }
 
 void HSSDisplayObject::notifyAnchorX(QSharedPointer<HSSObject> theObj)
@@ -890,15 +931,15 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAnchorY(QSharedPointer<HSSPar
             }
             else if (kwValue == "top")
             {
-                return this->computeValueObject(this->percentageToConstant(0));
+                return this->computeValueObject(this->percentageToConstant(0), "anchorY");
             }
             else if (kwValue == "middle" || kwValue == "center")
             {
-                return this->computeValueObject(this->percentageToConstant(50));
+                return this->computeValueObject(this->percentageToConstant(50), "anchorY");
             }
             else if (kwValue == "bottom")
             {
-                return this->computeValueObject(this->percentageToConstant(100));
+                return this->computeValueObject(this->percentageToConstant(100), "anchorY");
             }
             break;
         }
@@ -907,17 +948,6 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAnchorY(QSharedPointer<HSSPar
             break;
     }
     return this->computeValueObject(parserNode, "anchorY");
-}
-
-void HSSDisplayObject::listenAnchorY(QSharedPointer<HSSObject> theObj)
-{
-    if (theObj->isA(HSSObjectTypeValue))
-    {
-        QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-        valueObj->listen(this->shared_from_this(), "height");
-        valueObj->setPercentageBase(this->getHeight());
-        valueObj->observe("value", "anchorY", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::anchorYChanged));
-    }
 }
 
 void HSSDisplayObject::notifyAnchorY(QSharedPointer<HSSObject> theObj)
@@ -991,15 +1021,15 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAlignX(QSharedPointer<HSSPars
             }
             else if (kwValue == "left")
             {
-                return this->computeValueObject(this->percentageToConstant(0));
+                return this->computeValueObject(this->percentageToConstant(0), "alignX");
             }
             else if (kwValue == "middle" || kwValue == "center")
             {
-                return this->computeValueObject(this->percentageToConstant(50));
+                return this->computeValueObject(this->percentageToConstant(50), "alignX");
             }
             else if (kwValue == "right")
             {
-                return this->computeValueObject(this->percentageToConstant(100));
+                return this->computeValueObject(this->percentageToConstant(100), "alignX");
             }
             break;
         }
@@ -1008,21 +1038,6 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAlignX(QSharedPointer<HSSPars
             break;
     }
     return this->computeValueObject(parserNode, "alignX");
-}
-
-void HSSDisplayObject::listenAlignX(QSharedPointer<HSSObject> theObj)
-{
-    if (theObj->isA(HSSObjectTypeValue))
-    {
-        QSharedPointer<HSSContainer> parent = this->getParent();
-        if (parent)
-        {
-            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-            valueObj->listen(parent, "innerWidth");
-            valueObj->setPercentageBase(this->getInnerWidth());
-            valueObj->observe("value", "alignX", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignXChanged));
-        }
-    }
 }
 
 void HSSDisplayObject::notifyAlignX(QSharedPointer<HSSObject> theObj)
@@ -1069,15 +1084,15 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAlignY(QSharedPointer<HSSPars
             }
             else if (kwValue == "top")
             {
-                return this->computeValueObject(this->percentageToConstant(0));
+                return this->computeValueObject(this->percentageToConstant(0), "alignY");
             }
             else if (kwValue == "middle" || kwValue == "center")
             {
-                return this->computeValueObject(this->percentageToConstant(50));
+                return this->computeValueObject(this->percentageToConstant(50), "alignY");
             }
             else if (kwValue == "bottom")
             {
-                return this->computeValueObject(this->percentageToConstant(100));
+                return this->computeValueObject(this->percentageToConstant(100), "alignY");
             }
             break;
         }
@@ -1086,21 +1101,6 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAlignY(QSharedPointer<HSSPars
             break;
     }
     return this->computeValueObject(parserNode, "alignY");
-}
-
-void HSSDisplayObject::listenAlignY(QSharedPointer<HSSObject> theObj)
-{
-    if (theObj->isA(HSSObjectTypeValue))
-    {
-        QSharedPointer<HSSContainer> parent = this->getParent();
-        if (parent)
-        {
-            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-            valueObj->listen(parent, "innerHeight");
-            valueObj->setPercentageBase(this->getInnerHeight());
-            valueObj->observe("value", "alignY", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::alignYChanged));
-        }
-    }
 }
 
 void HSSDisplayObject::notifyAlignY(QSharedPointer<HSSObject> theObj)
