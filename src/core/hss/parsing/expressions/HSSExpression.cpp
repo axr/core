@@ -220,11 +220,19 @@ void HSSExpression::_nodesToValuesIfNeeded()
 {
     if (!this->left && this->_leftNode)
     {
-        this->left = HSSValue::valueFromParserNode(this->getController(), this->_leftNode, this->getThisObj(), this->scope);
+        QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
+        if(thisObj)
+        {
+            this->left = qSharedPointerCast<HSSValue>(thisObj->computeValueObject(this->_leftNode, this->getHostProperty()));
+        }
     }
     if (!this->right && this->_rightNode)
     {
-        this->right = HSSValue::valueFromParserNode(this->getController(), this->_rightNode, this->getThisObj(), this->scope);
+        QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
+        if(thisObj)
+        {
+            this->right = qSharedPointerCast<HSSValue>(thisObj->computeValueObject(this->_rightNode, this->getHostProperty()));
+        }
     }
 }
 
