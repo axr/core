@@ -724,6 +724,10 @@ void HSSObject::setStackValue(AXRString propertyName, QSharedPointer<HSSParserNo
     {
         case HSSParserNodeTypeMultipleValueDefinition:
         {
+            if (this->_stackValues.contains(propertyName))
+            {
+                this->_stackValues.remove(propertyName);
+            }
             HSSParserNode::it iterator;
             QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (parserNode);
             std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
@@ -1103,14 +1107,10 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
 QSharedPointer<HSSObject> HSSObject::getComputedValue(AXRString property) const
 {
     axr_log(LoggerChannelGeneralSpecific, AXRString("reading ").append(property).append(" of ").append(this->name));
-    QSharedPointer<HSSObject> ret = this->_computedValues[property];
-    if (ret && ret->isA(HSSObjectTypeValue))
+    QSharedPointer<HSSObject> ret;
+    if (this->_computedValues.contains(property))
     {
-        QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(ret)->getValue();
-        if (parserNode->isA(HSSParserNodeTypeFunctionCall))
-        {
-            return qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
-        }
+        ret = this->_computedValues[property];
     }
     return ret;
 }
