@@ -186,13 +186,6 @@ const HSSUnit HSSValue::_getNumber(const QSharedPointer<HSSParserNode> & parserN
         case HSSParserNodeTypeStringConstant:
         {
             AXRString string = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
-            if (string.endsWith("%"))
-            {
-                string.truncate(string.length()-1);
-                HSSPercentageConstant percentage(string.toDouble(), this->getController());
-                return percentage.evaluate();
-
-            }
             return string.toDouble();
         }
         case HSSParserNodeTypeKeywordConstant:
