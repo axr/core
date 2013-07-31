@@ -80,6 +80,7 @@ namespace AXR
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
+        QSharedPointer<HSSParserNode> getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
 
         //color
         const QSharedPointer<HSSObject> getColor() const;
@@ -89,9 +90,12 @@ namespace AXR
         //balance
         const HSSUnit getBalance() const;
 
+        const bool positionIsPercentage() const;
+
     private:
         void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        bool _positionIsPercentage;
     };
 }
 

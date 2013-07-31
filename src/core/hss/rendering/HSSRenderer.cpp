@@ -54,6 +54,7 @@
 #include "HSSLinearGradient.h"
 #include "HSSMultipleValue.h"
 #include "HSSNumberConstant.h"
+#include "HSSPercentageConstant.h"
 #include "HSSRadialGradient.h"
 #include "HSSRect.h"
 #include "HSSRenderer.h"
@@ -369,22 +370,26 @@ void HSSRenderer::_addColorStops(QLinearGradient & pat, HSSLinearGradient &gradi
             QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop > (theStopObj);
 
             //calculate the position
-            QSharedPointer<HSSObject> positionObj = theStop->getComputedValue("position");
+            HSSUnit width = (gradient.getEndX() - gradient.getStartX());
+            HSSUnit height = (gradient.getEndY() - gradient.getStartY());
+            HSSUnit hypotenuse = hypot(width, height);
             HSSUnit position;
-            if (positionObj)
-            {
-                position = theStop->getPosition();
+            if (theStop->positionIsPercentage()) {
+                QSharedPointer<HSSObject> percentageValue = theStop->getComputedValue("position");
+                if (!percentageValue->isA(HSSObjectTypeValue) || !qSharedPointerCast<HSSValue>(percentageValue)->getValue()->isA(HSSParserNodeTypePercentageConstant))
+                {
+                    AXRError("HSSRenderer", "Position is percentage, bad object type while reading percentage constant. Please report this bug.");
+                }
+                QSharedPointer<HSSPercentageConstant> percentageConstant = qSharedPointerCast<HSSPercentageConstant>(qSharedPointerCast<HSSValue>(percentageValue)->getValue());
+                position = percentageConstant->getNumber();
             }
             else
             {
-                HSSUnit width = (gradient.getEndX() - gradient.getStartX());
-                HSSUnit height = (gradient.getEndY() - gradient.getStartY());
-                HSSUnit hypotenuse = hypot(width, height);
-                HSSUnit posval = theStop->getPosition();
-                if (posval < 0) posval = 0;
-                if (posval > 1) posval = 1;
-                position = posval / hypotenuse;
+                position = theStop->getPosition() / hypotenuse;
             }
+
+            if (position < 0) position = 0;
+            if (position > 1) position = 1;
 
             //determine the color
             QSharedPointer<HSSObject> theColorObj = theStop->getColor();

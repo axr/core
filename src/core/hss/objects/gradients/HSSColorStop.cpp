@@ -66,6 +66,8 @@ HSSColorStop::HSSColorStop(AXRController * controller)
     axr_log(LoggerChannelGeneralSpecific, "HSSColorStop: creating color stop object");
     this->_initialize();
 
+    this->_positionIsPercentage = false;
+
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("color");
     shorthandProperties.push_back("position");
@@ -77,6 +79,7 @@ HSSColorStop::HSSColorStop(const HSSColorStop & orig)
 : HSSObject(orig)
 {
     this->_initialize();
+    this->_positionIsPercentage = orig._positionIsPercentage;
 }
 
 void HSSColorStop::_initialize()
@@ -157,6 +160,17 @@ bool HSSColorStop::isKeyword(AXRString value, AXRString property)
     return HSSObject::isKeyword(value, property);
 }
 
+QSharedPointer<HSSParserNode> HSSColorStop::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
+{
+    if (propertyName == "position")
+    {
+        this->_positionIsPercentage = true;
+        return parserNode;
+    }
+
+    return HSSObject::getPercentageExpression(parserNode, propertyName);
+}
+
 const QSharedPointer<HSSObject> HSSColorStop::getColor() const
 {
     return this->getComputedValue("color");
@@ -192,20 +206,15 @@ QSharedPointer<HSSObject> HSSColorStop::computeColor(QSharedPointer<HSSParserNod
 
 const HSSUnit HSSColorStop::getPosition() const
 {
-    QSharedPointer<HSSObject> value = this->getComputedValue("position");
-    if (value && value->isA(HSSObjectTypeValue))
-    {
-        return qSharedPointerCast<HSSValue>(value)->getNumber();
-    }
-    return 0.;
+    return this->getComputedNumber("position");
 }
 
 const HSSUnit HSSColorStop::getBalance() const
 {
-    QSharedPointer<HSSObject> value = this->getComputedValue("position");
-    if (value && value->isA(HSSObjectTypeValue))
-    {
-        return qSharedPointerCast<HSSValue>(value)->getNumber();
-    }
-    return 0.;
+    return this->getComputedNumber("balance");
+}
+
+const bool HSSColorStop::positionIsPercentage() const
+{
+    return this->_positionIsPercentage;
 }
