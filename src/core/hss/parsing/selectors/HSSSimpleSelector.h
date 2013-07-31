@@ -45,11 +45,11 @@
 #define HSSSIMPLESELECTOR_H
 
 #include <QSharedPointer>
+#include "HSSFilter.h"
 #include "HSSSelector.h"
 
 namespace AXR
 {
-    class HSSFilter;
     class HSSNameSelector;
 
     /**
