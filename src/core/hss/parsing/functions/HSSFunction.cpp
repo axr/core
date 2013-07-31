@@ -127,7 +127,7 @@ QSharedPointer<HSSObject> HSSFunction::_evaluate()
     return QSharedPointer<HSSObject>();
 }
 
-void HSSFunction::propertyChanged(AXRString property, QSharedPointer<HSSObject> theObj)
+void HSSFunction::propertyChanged(const AXRString property, const AXRString target, QSharedPointer<HSSObject> theObj)
 {
     this->notifyObservers("value", theObj);
 }

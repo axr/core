@@ -276,7 +276,7 @@ void AXRDocument::evaluateCustomFunction(const AXRString &name, const QSharedPoi
 {
     if (this->isCustomFunction(name))
     {
-        d->customFunctions[name]->call("", theObj);
+        d->customFunctions[name]->call("", "", theObj);
     }
 }
 

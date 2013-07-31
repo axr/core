@@ -326,8 +326,19 @@ namespace AXR
         const AXRString getComputedString(AXRString property) const;
         void clearComputedValues();
         const QSharedPointer<HSSObject> inheritValue(AXRString propertyName) const;
-        void inheritedChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
-        void propertyChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        virtual void propertyChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj);
+
+        /**
+         *  Getter for the host property.
+         *  @return A string containing the name of the property that "owns" the node
+         */
+        const AXRString getHostProperty() const;
+
+        /**
+         *  Setter for the host property.
+         *  @param newValue     A string containing the name of the property that "owns" the node
+         */
+        virtual void setHostProperty(AXRString newValue);
 
     protected:
         QMap<AXRString, HSSAbstractStackCallback*> _stackCallbacks;

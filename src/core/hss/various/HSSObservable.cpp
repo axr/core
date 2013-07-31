@@ -337,9 +337,9 @@ void HSSObservable::removeObserver(const AXRString target, const AXRString sourc
     axr_log(LoggerChannelObserving, AXRString("tried to remove non existent observer for ").append(target));
 }
 
-void HSSObservable::propertyChanged(const AXRString property, const QSharedPointer<HSSObject> theObj)
+void HSSObservable::propertyChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
-    axr_log(LoggerChannelObserving, "property changed");
+    axr_log(LoggerChannelObserving, AXRString(source).append("property changed"));
 }
 
 void HSSObservable::notifyObservers(const AXRString property, const QSharedPointer<HSSObject> theObj)
@@ -351,7 +351,7 @@ void HSSObservable::notifyObservers(const AXRString property, const QSharedPoint
         {
             const QSharedPointer<HSSObservableMapping> & mapping = *it;
             HSSAbstractValueChangedCallback *callback = mapping->callback;
-            callback->call(property, theObj);
+            callback->call(property, mapping->source, theObj);
         }
     }
 }

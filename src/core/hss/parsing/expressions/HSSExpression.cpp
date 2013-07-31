@@ -150,14 +150,14 @@ QSharedPointer<HSSValue> HSSExpression::getRight()
     return this->right;
 }
 
-void HSSExpression::leftChanged(AXRString property, QSharedPointer<HSSObject> theObj)
+void HSSExpression::leftChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj)
 {
     this->leftval = this->getLeft()->getNumber();
     this->setValue(this->calculate(this->leftval, this->rightval));
     this->notifyObservers("expressionResult", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
 }
 
-void HSSExpression::rightChanged(AXRString property, QSharedPointer<HSSObject> theObj)
+void HSSExpression::rightChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj)
 {
     this->rightval = this->getRight()->getNumber();
     this->setValue(this->calculate(this->leftval, this->rightval));

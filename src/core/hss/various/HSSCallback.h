@@ -208,7 +208,7 @@ namespace AXR
          *  @param property The property where the callback originated.
          *  @param data     The new value or the data that goes along with the callback.
          */
-        virtual void call(const AXRString source, const QSharedPointer<HSSObject> theObj) = 0;
+        virtual void call(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj) = 0;
     };
 
     /**
@@ -216,7 +216,7 @@ namespace AXR
      */
     template <class T> class HSSValueChangedCallback : public HSSAbstractValueChangedCallback
     {
-        void (T::*fptr)(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void (T::*fptr)(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
         T* ptr;
 
     public:
@@ -227,7 +227,7 @@ namespace AXR
          *  @param _ptr     A regular pointer to the object that will receive the callback.
          *  @param _fptr    The function pointer to the method that will be called.
          */
-        HSSValueChangedCallback(T* _ptr, void(T::*_fptr)(const AXRString source, const QSharedPointer<HSSObject> theObj))
+        HSSValueChangedCallback(T* _ptr, void(T::*_fptr)(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj))
         {
             ptr = _ptr;
             fptr = _fptr;
@@ -235,9 +235,9 @@ namespace AXR
 
         virtual ~HSSValueChangedCallback() {}
 
-        void call(const AXRString source, const QSharedPointer<HSSObject> theObj)
+        void call(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
         {
-            (*ptr.*fptr)(source, theObj);
+            (*ptr.*fptr)(target, source, theObj);
         }
     };
 }

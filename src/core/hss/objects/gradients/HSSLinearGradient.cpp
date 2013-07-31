@@ -200,16 +200,6 @@ const HSSUnit HSSLinearGradient::getStartX() const
     return 0.;
 }
 
-void HSSLinearGradient::notifyStartX(QSharedPointer<HSSObject> theObj)
-{
-    this->notifyObservers("startX", theObj);
-}
-
-void HSSLinearGradient::startXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
-{
-    this->notifyObservers("startX", theObj);
-}
-
 void HSSLinearGradient::setStartY(HSSUnit value)
 {
     this->setComputedValue("startY", value);
@@ -223,17 +213,6 @@ const HSSUnit HSSLinearGradient::getStartY() const
         return qSharedPointerCast<HSSValue>(value)->getNumber();
     }
     return 0.;
-}
-
-
-void HSSLinearGradient::notifyStartY(QSharedPointer<HSSObject> theObj)
-{
-    this->notifyObservers("startY", theObj);
-}
-
-void HSSLinearGradient::startYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
-{
-    this->notifyObservers("startY", theObj);
 }
 
 void HSSLinearGradient::setEndX(HSSUnit value)
@@ -251,16 +230,6 @@ const HSSUnit HSSLinearGradient::getEndX() const
     return 0.;
 }
 
-void HSSLinearGradient::notifyEndX(QSharedPointer<HSSObject> theObj)
-{
-    this->notifyObservers("endX", theObj);
-}
-
-void HSSLinearGradient::endXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
-{
-    this->notifyObservers("endX", theObj);
-}
-
 void HSSLinearGradient::setEndY(HSSUnit value)
 {
     this->setComputedValue("endY", value);
@@ -275,13 +244,3 @@ const HSSUnit HSSLinearGradient::getEndY() const
     }
     return 0.;
 }
-void HSSLinearGradient::notifyEndY(QSharedPointer<HSSObject> theObj)
-{
-    this->notifyObservers("endY", theObj);
-}
-
-void HSSLinearGradient::endYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
-{
-    this->notifyObservers("endY", theObj);
-}
-

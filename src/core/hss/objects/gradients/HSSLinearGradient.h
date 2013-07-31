@@ -91,29 +91,21 @@ namespace AXR
         void setStartX(HSSUnit value);
         const HSSUnit getStartX() const;
         QSharedPointer<HSSObject> computeStartX(QSharedPointer<HSSParserNode> parserNode);
-        void notifyStartX(QSharedPointer<HSSObject> theObj);
-        void startXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //startY
         void setStartY(HSSUnit value);
         const HSSUnit getStartY() const;
         QSharedPointer<HSSObject> computeStartY(QSharedPointer<HSSParserNode> parserNode);
-        void notifyStartY(QSharedPointer<HSSObject> theObj);
-        void startYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //endX
         void setEndX(HSSUnit value);
         const HSSUnit getEndX() const;
         QSharedPointer<HSSObject> computeEndX(QSharedPointer<HSSParserNode> parserNode);
-        void notifyEndX(QSharedPointer<HSSObject> theObj);
-        void endXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //endY
         void setEndY(HSSUnit value);
         const HSSUnit getEndY() const;
         QSharedPointer<HSSObject> computeEndY(QSharedPointer<HSSParserNode> parserNode);
-        void notifyEndY(QSharedPointer<HSSObject> theObj);
-        void endYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
 
     private:
         void _initialize();

@@ -197,7 +197,7 @@ namespace AXR
         const HSSUnit getOuterWidth() const;
         void listenWidth(QSharedPointer<HSSObject> theObj);
         void notifyWidth(QSharedPointer<HSSObject> theObj);
-        void widthChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void widthChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //height
         void setHeight(HSSUnit value);
@@ -206,23 +206,21 @@ namespace AXR
         const HSSUnit getOuterHeight() const;
         void listenHeight(QSharedPointer<HSSObject> theObj);
         void notifyHeight(QSharedPointer<HSSObject> theObj);
-        void heightChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void heightChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //alignX
         void setAlignX(HSSUnit value);
         const HSSUnit getAlignX() const;
         QSharedPointer<HSSObject> computeAlignX(QSharedPointer<HSSParserNode> parserNode);
-        void listenAlignX(QSharedPointer<HSSObject> theObj);
         void notifyAlignX(QSharedPointer<HSSObject> theObj);
-        void alignXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void alignXChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //alignY
         void setAlignY(HSSUnit value);
         const HSSUnit getAlignY() const;
         QSharedPointer<HSSObject> computeAlignY(QSharedPointer<HSSParserNode> parserNode);
-        void listenAlignY(QSharedPointer<HSSObject> theObj);
         void notifyAlignY(QSharedPointer<HSSObject> theObj);
-        void alignYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void alignYChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //lineAlign
         const HSSUnit getLineAlign() const;
@@ -232,17 +230,15 @@ namespace AXR
         void setAnchorX(HSSUnit value);
         const HSSUnit getAnchorX() const;
         QSharedPointer<HSSObject> computeAnchorX(QSharedPointer<HSSParserNode> parserNode);
-        void listenAnchorX(QSharedPointer<HSSObject> theObj);
         void notifyAnchorX(QSharedPointer<HSSObject> theObj);
-        void anchorXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void anchorXChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //anchorY
         void setAnchorY(HSSUnit value);
         const HSSUnit getAnchorY() const;
         QSharedPointer<HSSObject> computeAnchorY(QSharedPointer<HSSParserNode> parserNode);
-        void listenAnchorY(QSharedPointer<HSSObject> theObj);
         void notifyAnchorY(QSharedPointer<HSSObject> theObj);
-        void anchorYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void anchorYChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //flow
         bool getFlow();
@@ -263,8 +259,8 @@ namespace AXR
 
         //margin
         const QSharedPointer<HSSObject> getMargin() const;
-        void horizontalMarginChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
-        void verticalMarginChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void horizontalMarginChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void verticalMarginChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
         void setTopMargin(HSSUnit value);
         const HSSUnit getTopMargin() const;
         void setRightMargin(HSSUnit value);
@@ -300,7 +296,7 @@ namespace AXR
         void setPress(bool newValue);
         bool isPress();
 
-        void ruleChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void ruleChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         void createFlag(QSharedPointer<HSSFlag> flag, HSSRuleState defaultValue);
         bool hasFlag(AXRString name);

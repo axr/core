@@ -215,7 +215,6 @@ namespace AXR
          *  @return A shared pointer to the shape object.
          */
         QSharedPointer<HSSShape> getShape();
-        void listenShape(QSharedPointer<HSSObject> theObj);
         void notifyShape(QSharedPointer<HSSObject> theObj);
 
         void shapeChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);

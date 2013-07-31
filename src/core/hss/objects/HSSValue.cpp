@@ -151,53 +151,9 @@ void HSSValue::setValue(QSharedPointer<HSSParserNode> parserNode)
     }
 }
 
-
-void HSSValue::valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSValue::valueChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
-    QSharedPointer<HSSObject> ret;
-    switch (theObj->getObjectType())
-    {
-        case HSSObjectTypeValue:
-        {
-            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-            QSharedPointer<HSSParserNode> parserNode = valueObj->getValue();
-            if (parserNode)
-            {
-                if (this->value)
-                {
-                    switch (this->value->getType())
-                    {
-                        case HSSParserNodeTypePercentageConstant:
-                        case HSSParserNodeTypeExpression:
-                            this->setPercentageBase(valueObj->getNumber());
-                            break;
-
-                        case HSSParserNodeTypeFunctionCall:
-                            this->setPercentageBase(valueObj->getNumber());
-                            ret = qSharedPointerCast<HSSFunction>(this->value)->evaluate();
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-                else
-                {
-                    this->setValue(parserNode->clone());
-                }
-            }
-            else
-            {
-
-            }
-            break;
-        }
-
-        default:
-            ret = theObj;
-            break;
-    }
-    this->notifyObservers("valueChanged", ret);
+    this->notifyObservers("valueChanged", theObj);
 }
 
 const HSSUnit HSSValue::getNumber() const

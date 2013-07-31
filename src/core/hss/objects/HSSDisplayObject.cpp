@@ -738,7 +738,7 @@ void HSSDisplayObject::notifyWidth(QSharedPointer<HSSObject> theObj)
     this->notifyObservers("width", theObj);
 }
 
-void HSSDisplayObject::widthChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSDisplayObject::widthChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     //FIXME: handle width by content
     //    if (this->widthByContent)
@@ -818,7 +818,7 @@ void HSSDisplayObject::notifyHeight(QSharedPointer<HSSObject> theObj)
     this->notifyObservers("height", theObj);
 }
 
-void HSSDisplayObject::heightChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSDisplayObject::heightChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     this->_setInnerHeight();
     this->_setOuterHeight();
@@ -882,7 +882,7 @@ void HSSDisplayObject::notifyAnchorX(QSharedPointer<HSSObject> theObj)
     this->notifyObservers("anchorX", theObj);
 }
 
-void HSSDisplayObject::anchorXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSDisplayObject::anchorXChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     this->_anchorXdefault = false;
     QSharedPointer<HSSObject> currentValue = this->getComputedValue("anchorX");
@@ -960,7 +960,7 @@ void HSSDisplayObject::notifyAnchorY(QSharedPointer<HSSObject> theObj)
     this->notifyObservers("anchorY", theObj);
 }
 
-void HSSDisplayObject::anchorYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSDisplayObject::anchorYChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     this->_anchorYdefault = false;
     QSharedPointer<HSSObject> currentValue = this->getComputedValue("anchorY");
@@ -1050,7 +1050,7 @@ void HSSDisplayObject::notifyAlignX(QSharedPointer<HSSObject> theObj)
     this->notifyObservers("alignX", theObj);
 }
 
-void HSSDisplayObject::alignXChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSDisplayObject::alignXChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     QSharedPointer<HSSContainer> parent = this->getParent();
     if (parent)
@@ -1113,7 +1113,7 @@ void HSSDisplayObject::notifyAlignY(QSharedPointer<HSSObject> theObj)
     this->notifyObservers("alignY", theObj);
 }
 
-void HSSDisplayObject::alignYChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSDisplayObject::alignYChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     QSharedPointer<HSSContainer> parent = this->getParent();
     if (parent)
@@ -1305,13 +1305,13 @@ const HSSUnit HSSDisplayObject::getLeftMargin() const
     return this->getComputedNumber("leftMargin");
 }
 
-void HSSDisplayObject::horizontalMarginChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSDisplayObject::horizontalMarginChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     this->_setOuterWidth();
     this->notifyObservers("margin", theObj);
 }
 
-void HSSDisplayObject::verticalMarginChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSDisplayObject::verticalMarginChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     this->_setOuterHeight();
     this->notifyObservers("margin", theObj);
@@ -1659,7 +1659,7 @@ bool HSSDisplayObject::isPress()
     return this->_isPress;
 }
 
-void HSSDisplayObject::ruleChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSDisplayObject::ruleChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     //HSSRule * theRule = (HSSRule*)data;
     this->setNeedsRereadRules(true);

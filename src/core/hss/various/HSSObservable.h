@@ -141,7 +141,7 @@ namespace AXR
          *  @param property The property which we are observing.
          *  @param data     A shared pointer to the object that is sent along the notification.
          */
-        virtual void propertyChanged(const AXRString property, const QSharedPointer<HSSObject> theObj);
+        virtual void propertyChanged(const AXRString source, const AXRString target, const QSharedPointer<HSSObject> theObj);
 
         /**
          *  Subclasses should call this method on themselves to trigger the delivery of the notification.

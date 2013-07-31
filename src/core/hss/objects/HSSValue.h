@@ -98,7 +98,7 @@ namespace AXR
          *  @param source   The property which we are observing.
          *  @param data     A pointer to the data that is sent along the notification.
          */
-        void valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void valueChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         const HSSUnit getNumber() const;
         const bool getBool() const;

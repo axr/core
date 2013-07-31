@@ -263,7 +263,7 @@ namespace AXR
 
         virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
-        void treeChanged(const AXRString source, const QSharedPointer<HSSObject> theObj);
+        void treeChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         const std::vector<QWeakPointer<HSSDisplayObject> > getAppliedTo() const;
 

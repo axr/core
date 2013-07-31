@@ -117,7 +117,7 @@ namespace AXR
          *  @param property The property which we are observing.
          *  @param data     A pointer to the data that is sent along the notification.
          */
-        virtual void leftChanged(AXRString property, QSharedPointer<HSSObject> theObj);
+        virtual void leftChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj);
 
         /**
          *  Method to be passed as callback when observing changes that will affect the right
@@ -125,7 +125,7 @@ namespace AXR
          *  @param property The property which we are observing.
          *  @param data     A pointer to the data that is sent along the notification.
          */
-        virtual void rightChanged(AXRString property, QSharedPointer<HSSObject> theObj);
+        virtual void rightChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj);
 
         /**
          *  Setter for the scope which to pass to members like references or selections.

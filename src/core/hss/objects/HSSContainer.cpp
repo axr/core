@@ -115,7 +115,8 @@ void HSSContainer::_initialize()
     this->addCallback("contentAlignX", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContentAlignX));
     this->addCallback("contentAlignY", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContentAlignY));
     this->addCallback("content", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContent));
-    this->addCallback("shape", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeShape), new HSSObserveCallback<HSSContainer>(this, &HSSContainer::listenShape), new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyShape));
+    this->addCallback("shape", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeShape));
+    this->addNotifyCallback("shape", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyShape));
 }
 
 HSSContainer::HSSContainer(const HSSContainer & orig)
@@ -723,15 +724,6 @@ QSharedPointer<HSSObject> HSSContainer::computeShape(QSharedPointer<HSSParserNod
     }
 
     return this->computeValueObject(parserNode);
-}
-
-void HSSContainer::listenShape(QSharedPointer<HSSObject> theObj)
-{
-    if (theObj->isA(HSSObjectTypeShape))
-    {
-        QSharedPointer<HSSShape> shapeObj = qSharedPointerCast<HSSShape>(theObj);
-        shapeObj->observe("value", "shape", this, new HSSValueChangedCallback<HSSContainer>(this, &HSSContainer::shapeChanged));
-    }
 }
 
 void HSSContainer::notifyShape(QSharedPointer<HSSObject> theObj)

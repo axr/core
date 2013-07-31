@@ -299,7 +299,7 @@ void HSSRule::setThisObj(QSharedPointer<HSSDisplayObject> value)
     HSSStatement::setThisObj(value);
 }
 
-void HSSRule::treeChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSRule::treeChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
     AXRController * theController = thisObj->getController();
