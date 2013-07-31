@@ -1197,12 +1197,6 @@ const QSharedPointer<HSSObject> HSSObject::inheritValue(AXRString propertyName) 
     return ret;
 }
 
-void HSSObject::inheritedChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
-{
-    //source and target are the same name in this case
-    this->setComputed(source, theObj);
-}
-
 void HSSObject::propertyChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj)
 {
     this->notifyObservers(source, theObj);
