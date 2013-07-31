@@ -1107,7 +1107,6 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
 
 QSharedPointer<HSSObject> HSSObject::getComputedValue(AXRString property) const
 {
-    axr_log(LoggerChannelGeneralSpecific, AXRString("reading ").append(property).append(" of ").append(this->name));
     QSharedPointer<HSSObject> ret;
     if (this->_computedValues.contains(property))
     {
