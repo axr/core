@@ -1235,27 +1235,44 @@ const QSharedPointer<HSSObject> HSSDisplayObject::getOn() const
 bool HSSDisplayObject::fireEvent(HSSEventType type)
 {
     bool fired = false;
-//    if (this->on.find(type) != this->on.end())
-//    {
-//        std::vector<QSharedPointer<HSSObject> > events = this->on[type];
-//        HSSObject::it it;
-//        for (it = events.begin(); it != events.end(); ++it)
-//        {
-//            if ((*it)->isA(HSSObjectTypeEvent))
-//            {
-//                QSharedPointer<HSSEvent> theEvent = qSharedPointerCast<HSSEvent > (*it);
-//                axr_log(LoggerChannelEvents, "HSSDisplayObject: firing event: " + theEvent->toString());
-//                theEvent->fire();
-//                fired = true;
-//            }
-//        }
-//    }
-//
-//    if (fired)
-//    {
-//        axr_log(LoggerChannelEvents, "HSSDisplayObject: fired event");
-//    }
 
+    QSharedPointer<HSSObject> computed = this->getComputedValue("on");;
+    if (computed)
+    {
+        if (computed->isA(HSSObjectTypeEvent))
+        {
+            fired = this->_fireEvent(qSharedPointerCast<HSSEvent>(computed), type);
+        }
+        else if(computed->isA(HSSObjectTypeMultipleValue))
+        {
+            bool allFired = true;
+            Q_FOREACH(QSharedPointer<HSSObject> comp, qSharedPointerCast<HSSMultipleValue>(computed)->getValues())
+            {
+                if (comp->isA(HSSObjectTypeEvent))
+                {
+                    QSharedPointer<HSSEvent> theEvent = qSharedPointerCast<HSSEvent>(comp);
+                    if ( ! this->_fireEvent(qSharedPointerCast<HSSEvent>(computed), type))
+                    {
+                        allFired = false;
+                    }
+                }
+            }
+            fired = allFired;
+        }
+    }
+
+    return fired;
+}
+
+bool HSSDisplayObject::_fireEvent(QSharedPointer<HSSEvent> theEvent, HSSEventType eventType)
+{
+    bool fired = false;
+    if (theEvent->isA(eventType))
+    {
+        axr_log(LoggerChannelEvents, "HSSDisplayObject: firing event: " + theEvent->toString());
+        theEvent->fire();
+        fired = true;
+    }
     return fired;
 }
 

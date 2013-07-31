@@ -49,6 +49,7 @@
 namespace AXR
 {
     class HSSAction;
+    class HSSFlagFunction;
 
     /**
      *  @brief Represents all event objects in HSS.
@@ -119,6 +120,7 @@ namespace AXR
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        void _fireFlagFunction(QSharedPointer<HSSFlagFunction> flagFunction);
     };
 }
 

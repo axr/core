@@ -59,6 +59,7 @@
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -167,6 +168,15 @@ void HSSEvent::fire()
         {
             qSharedPointerCast<HSSAction>(actionObj)->fire();
         }
+        else if (actionObj->isA(HSSObjectTypeValue))
+        {
+            QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(actionObj)->getValue();
+            if (parserNode->isA(HSSParserNodeTypeFunctionCall) && qSharedPointerCast<HSSFunction>(parserNode)->isA(HSSFunctionTypeFlag))
+            {
+                QSharedPointer<HSSFlagFunction> flagFunction = qSharedPointerCast<HSSFlagFunction>(parserNode);
+                this->_fireFlagFunction(flagFunction);
+            }
+        }
         else if (actionObj->isA(HSSObjectTypeMultipleValue))
         {
             Q_FOREACH(const QSharedPointer<HSSObject> & aObj, qSharedPointerCast<HSSMultipleValue>(actionObj)->getValues())
@@ -174,6 +184,15 @@ void HSSEvent::fire()
                 if (aObj->isA(HSSObjectTypeAction))
                 {
                     qSharedPointerCast<HSSAction>(aObj)->fire();
+                }
+                else if (aObj->isA(HSSObjectTypeValue))
+                {
+                    QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(aObj)->getValue();
+                    if (parserNode->isA(HSSParserNodeTypeFunctionCall) && qSharedPointerCast<HSSFunction>(parserNode)->isA(HSSFunctionTypeFlag))
+                    {
+                        QSharedPointer<HSSFlagFunction> flagFunction = qSharedPointerCast<HSSFlagFunction>(parserNode);
+                        this->_fireFlagFunction(flagFunction);
+                    }
                 }
             }
         }
@@ -183,4 +202,47 @@ void HSSEvent::fire()
 const QSharedPointer<HSSObject> HSSEvent::getAction() const
 {
     return this->getComputedValue("action");
+}
+
+void HSSEvent::_fireFlagFunction(QSharedPointer<HSSFlagFunction> flagFunction)
+{
+    QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
+    QSharedPointer<HSSSelection> selection = this->getController()->select(flagFunction->getSelectorChains(), this->scope, thisObj);
+    QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
+    HSSFlagFunctionType type = flagFunction->getFlagFunctionType();
+    const AXRString & flagName = flagFunction->getName();
+    if(type == HSSFlagFunctionTypeTakeFlag){
+        for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
+        {
+            QSharedPointer<HSSDisplayObject> container = *innerIt;
+            if(container != thisObj)
+            {
+                container->flagsDeactivate(flagName);
+            }
+        }
+        thisObj->flagsActivate(flagName);
+    }
+    else
+    {
+        for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
+        {
+            QSharedPointer<HSSDisplayObject> container = *innerIt;
+            switch (flagFunction->getFlagFunctionType())
+            {
+                case HSSFlagFunctionTypeFlag:
+                    container->flagsActivate(flagName);
+                    break;
+                case HSSFlagFunctionTypeUnflag:
+                    container->flagsDeactivate(flagName);
+                    break;
+                case HSSFlagFunctionTypeToggleFlag:
+                    container->flagsToggle(flagName);
+                    break;
+
+                default:
+                    throw AXRWarning("HSSFlagAction", "Invalid flag function type for flag action");
+                    break;
+            }
+        }
+    }
 }

@@ -53,6 +53,7 @@ namespace AXR
 {
     class HSSBorder;
     class HSSContainer;
+    class HSSEvent;
     class HSSFlag;
     class HSSFont;
     class HSSInputEvent;
@@ -421,6 +422,7 @@ namespace AXR
         std::string _debugName;
 
         void _initialize();
+        bool _fireEvent(QSharedPointer<HSSEvent> theEvent, HSSEventType eventType);
     };
 }
 
