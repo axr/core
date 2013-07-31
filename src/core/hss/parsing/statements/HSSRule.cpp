@@ -184,7 +184,6 @@ void HSSRule::propertiesAdd(QSharedPointer<HSSPropertyDefinition> & newProperty)
 {
     if (newProperty)
     {
-        axr_log(LoggerChannelObsolete3, "Added property: " + newProperty->toString());
         newProperty->setParentNode(this->shared_from_this());
         this->properties.push_back(newProperty);
     }
