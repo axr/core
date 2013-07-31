@@ -228,7 +228,34 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
 void HSSRefFunction::valueChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> remoteObj)
 {
     this->setDirty(true);
-    this->_value = theObj;
+    QSharedPointer<HSSObject> ret;
+    if (remoteObj)
+    {
+        if (remoteObj->isA(HSSObjectTypeValue))
+        {
+            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(remoteObj);
+
+            QSharedPointer<HSSParserNode> parserNode = valueObj->getValue();
+            if (parserNode)
+            {
+                switch (parserNode->getType())
+                {
+                    case HSSParserNodeTypeFunctionCall:
+                        ret = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
+                        break;
+
+                    default:
+                        ret = remoteObj;
+                        break;
+                }
+            }
+        }
+        else
+        {
+            ret = remoteObj;
+        }
+    }
+    this->_value = ret;
     this->notifyObservers("remoteValue", ret);
 }
 
