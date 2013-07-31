@@ -103,7 +103,7 @@ QSharedPointer<HSSClonable> HSSValue::cloneImpl() const
 
 HSSValue::~HSSValue()
 {
-    axr_log(LoggerChannelGeneralSpecific, "HSSValue: destructing value object");
+    axr_log(LoggerChannelGeneralSpecific, AXRString("HSSValue (").append(this->getHostProperty()).append("): destructing value object"));
     this->cleanTrackedObservers();
 }
 
