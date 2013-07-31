@@ -94,8 +94,10 @@ HSSParser::HSSParser(AXRController * theController)
     this->tokenizer = QSharedPointer<HSSTokenizer>(new HSSTokenizer());
 
     this->currentContext.push_back(HSSParserContextRoot);
-    this->_genericContext = QSharedPointer<HSSValue>(new HSSValue(this->controller));
-    this->currentObjectContextAdd(this->_genericContext);
+    this->_valueContextObj = QSharedPointer<HSSValue>(new HSSValue(this->controller));
+    this->_containerContextObj = QSharedPointer<HSSContainer>(new HSSContainer(this->controller));
+    //context starts out with value
+    this->currentObjectContextAdd(this->_valueContextObj);
     this->_lastObjectType = "value";
 
     this->line = 1;
@@ -133,7 +135,7 @@ void HSSParser::reset()
     //initialize the new values
     this->currentContext.push_back(HSSParserContextRoot);
     //set the new default object context
-    this->currentObjectContextAdd(this->_genericContext);
+    this->currentObjectContextAdd(this->_valueContextObj);
 
 }
 
@@ -443,7 +445,7 @@ QSharedPointer<HSSRule> HSSParser::readRule()
     this->skip(HSSWhitespace, true);
 
     //now we're inside the block
-    this->currentObjectContextAdd(QSharedPointer<HSSContainer>(new HSSContainer(controller)));
+    this->currentObjectContextAdd(this->_containerContextObj);
     this->currentContext.push_back(HSSParserContextBlock);
 
     //read the inner part of the block

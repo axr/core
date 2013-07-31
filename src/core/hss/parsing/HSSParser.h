@@ -80,6 +80,7 @@ namespace AXR
     class HSSSimpleSelector;
     class HSSToken;
     class HSSTokenizer;
+    class HSSValue;
 
     /**
      *  @brief This class reads an HSS file and, with the help of HSSTokenizer, converts
@@ -526,7 +527,8 @@ namespace AXR
 
         QList<QSharedPointer<AXRBuffer> > loadedFiles;
 
-        QSharedPointer<HSSObject> _genericContext;
+        QSharedPointer<HSSValue> _valueContextObj;
+        QSharedPointer<HSSContainer> _containerContextObj;
         AXRString _lastObjectType;
 
     };
