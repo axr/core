@@ -690,7 +690,7 @@ void HSSRoundedRect::_drawInsideBorderBySegments(
                 const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
                 if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
                 {
-                    this->__drawInsideBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, cornerTL, cornerBL, cornerBR, cornerTR, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+                    this->__drawInsideBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
                 }
             }
         }
