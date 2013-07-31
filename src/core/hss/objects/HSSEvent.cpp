@@ -88,6 +88,55 @@ AXRString HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
     return types[eventType];
 }
 
+AXRString HSSEvent::eventTypeToName(HSSEventType eventType)
+{
+    static QMap<HSSEventType, AXRString> types;
+    if (types.isEmpty())
+    {
+        types[HSSEventTypeNone] = "";
+        types[HSSEventTypeLoad] = "load";
+        types[HSSEventTypeClick] = "click";
+        types[HSSEventTypeDoubleClick] = "doubleClick";
+        types[HSSEventTypeTripleClick] = "tripleClick";
+        types[HSSEventTypeMouseDown] = "mouseDown";
+        types[HSSEventTypeMouseUp] = "mouseUp";
+        types[HSSEventTypeMouseOver] = "mouseOver";
+        types[HSSEventTypeMouseOut] = "mouseOut";
+        types[HSSEventTypeMouseHold] = "mouseHold";
+        types[HSSEventTypeMouseMove] = "mouseMove";
+        types[HSSEventTypeClickSecondary] = "clickSecondary";
+        types[HSSEventTypeClickTertiary] = "clickTertiary";
+        types[HSSEventTypeScroll] = "scroll";
+        types[HSSEventTypeExitedWindow] = "exitedWindow";
+    }
+
+    return types[eventType];
+}
+
+HSSEventType HSSEvent::nameToEventType(AXRString name)
+{
+    static QMap<AXRString, HSSEventType> types;
+    if (types.isEmpty())
+    {
+        types["load"] = HSSEventTypeLoad;
+        types["click"] = HSSEventTypeClick;
+        types["doubleClick"] = HSSEventTypeDoubleClick;
+        types["tripleClick"] = HSSEventTypeTripleClick;
+        types["mouseDown"] = HSSEventTypeMouseDown;
+        types["mouseUp"] = HSSEventTypeMouseUp;
+        types["mouseOver"] = HSSEventTypeMouseOver;
+        types["mouseOut"] = HSSEventTypeMouseOut;
+        types["mouseHold"] = HSSEventTypeMouseHold;
+        types["mouseMove"] = HSSEventTypeMouseMove;
+        types["clickSecondary"] = HSSEventTypeClickSecondary;
+        types["clickTertiary"] = HSSEventTypeClickTertiary;
+        types["scroll"] = HSSEventTypeScroll;
+        types["exitedWindow"] = HSSEventTypeExitedWindow;
+    }
+
+    return types[name];
+}
+
 HSSEvent::HSSEvent(HSSEventType type, AXRController * controller)
 : HSSObject(HSSObjectTypeEvent, controller)
 {

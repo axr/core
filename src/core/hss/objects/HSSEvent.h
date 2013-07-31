@@ -66,6 +66,9 @@ namespace AXR
          */
         static AXRString eventTypeStringRepresentation(HSSEventType eventType);
 
+        static AXRString eventTypeToName(HSSEventType eventType);
+        static HSSEventType nameToEventType(AXRString name);
+
         /**
          *  Constructor for HSSEvent objects.
          *  @param  type    The event type that this event will respond to.
