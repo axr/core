@@ -405,7 +405,6 @@ void HSSContainer::appendContentText(const AXRString &contentText)
                 this->add(txtBlck);
             }
         }
-        this->setComputedValue("content", text);
     }
 }
 
