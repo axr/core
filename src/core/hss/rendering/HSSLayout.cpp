@@ -145,20 +145,20 @@ inline void HSSLayout::_placeOnAlignmentPoint(const HSSContainer & container, co
 {
     if (child->_anchorXdefault)
     {
-        child->x = child->getAlignX() - (child->getOuterWidth() / 2) + child->getLeftMargin();
+        child->x = container.getLeftPadding() + child->getAlignX() - (child->getOuterWidth() / 2) + child->getLeftMargin();
     }
     else
     {
-        child->x = child->getAlignX() - child->getAnchorX();
+        child->x = container.getLeftPadding()+ child->getAlignX() - child->getAnchorX();
     }
 
     if (child->_anchorYdefault)
     {
-        child->y = child->getAlignY() - (child->getOuterHeight() / 2) + child->getTopMargin();
+        child->y = container.getTopPadding() + child->getAlignY() - (child->getOuterHeight() / 2) + child->getTopMargin();
     }
     else
     {
-        child->y = child->getAlignY() - child->getAnchorY();
+        child->y = container.getTopPadding() + child->getAlignY() - child->getAnchorY();
     }
     if (child->getContained())
     {
