@@ -1418,6 +1418,17 @@ void HSSDisplayObject::_setInnerWidth()
                 }
             }
         }
+        else if(paddingObj->isA(HSSObjectTypeValue))
+        {
+            QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(paddingObj)->getValue();
+            if (parserNode->isA(HSSParserNodeTypeNumberConstant))
+            {
+                HSSUnit paddingSize = qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue();
+                rightPadding += paddingSize;
+                leftPadding += paddingSize;
+                innerWidth -= (paddingSize*2);
+            }
+        }
     }
     this->setRightPadding(rightPadding);
     this->setLeftPadding(leftPadding);
@@ -1452,6 +1463,17 @@ void HSSDisplayObject::_setInnerHeight()
                     topPadding += theMargin->getTop();
                     bottomPadding += theMargin->getBottom();
                 }
+            }
+        }
+        else if(paddingObj->isA(HSSObjectTypeValue))
+        {
+            QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(paddingObj)->getValue();
+            if (parserNode->isA(HSSParserNodeTypeNumberConstant))
+            {
+                HSSUnit paddingSize = qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue();
+                topPadding += paddingSize;
+                bottomPadding += paddingSize;
+                innerHeight -= (paddingSize*2);
             }
         }
     }
@@ -1490,6 +1512,17 @@ void HSSDisplayObject::_setOuterWidth()
                 }
             }
         }
+        else if(marginObj->isA(HSSObjectTypeValue))
+        {
+            QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(marginObj)->getValue();
+            if (parserNode->isA(HSSParserNodeTypeNumberConstant))
+            {
+                HSSUnit marginSize = qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue();
+                rightMargin += marginSize;
+                leftMargin += marginSize;
+                outerWidth += (marginSize*2);
+            }
+        }
     }
     this->setRightMargin(rightMargin);
     this->setLeftMargin(leftMargin);
@@ -1523,6 +1556,17 @@ void HSSDisplayObject::_setOuterHeight()
                     topMargin += theMargin->getTop();
                     bottomMargin += theMargin->getBottom();
                 }
+            }
+        }
+        else if(marginObj->isA(HSSObjectTypeValue))
+        {
+            QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(marginObj)->getValue();
+            if (parserNode->isA(HSSParserNodeTypeNumberConstant))
+            {
+                HSSUnit marginSize = qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue();
+                topMargin += marginSize;
+                bottomMargin += marginSize;
+                outerHeight += (marginSize*2);
             }
         }
     }
