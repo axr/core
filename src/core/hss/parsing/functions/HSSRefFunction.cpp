@@ -227,7 +227,6 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
 
 void HSSRefFunction::valueChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> remoteObj)
 {
-    this->setDirty(true);
     QSharedPointer<HSSObject> ret;
     if (remoteObj)
     {
