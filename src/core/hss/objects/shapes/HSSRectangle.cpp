@@ -230,8 +230,11 @@ void HSSRectangle::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, inside)
+    QList<QSharedPointer<HSSBorder> >::const_iterator insideIt = inside.constEnd();
+    while (insideIt != inside.constBegin())
     {
+        --insideIt;
+        const QSharedPointer<HSSBorder> & theBorder = *insideIt;
         HSSUnit theSize = theBorder->getSize();
 
         QPainterPath path;
