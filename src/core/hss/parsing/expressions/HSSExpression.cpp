@@ -62,6 +62,8 @@ HSSExpression::HSSExpression(HSSExpressionType type, QSharedPointer<HSSParserNod
 
     this->leftval = 0;
     this->rightval = 0;
+    this->_value = 0;
+    this->_isDirty = true;
 }
 
 HSSExpression::HSSExpression(const HSSExpression &orig)
@@ -72,6 +74,8 @@ HSSExpression::HSSExpression(const HSSExpression &orig)
     this->_rightNode = orig._rightNode->clone();
     this->leftval = orig.leftval;
     this->rightval = orig.rightval;
+    this->_value = 0;
+    this->_isDirty = true;
 }
 
 HSSExpression::~HSSExpression()
