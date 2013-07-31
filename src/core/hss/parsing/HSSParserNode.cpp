@@ -105,6 +105,7 @@ HSSParserNode::HSSParserNode(HSSParserNodeType type, AXRController * controller)
 {
     this->nodeType = type;
     this->controller = controller;
+    this->_hostProperty = "";
 }
 
 //doesn't clone any part of the node tree, nor the observers array
@@ -114,6 +115,7 @@ HSSParserNode::HSSParserNode(const HSSParserNode &orig)
     this->nodeType = orig.nodeType;
     this->thisObj = orig.thisObj;
     this->controller = orig.controller;
+    this->_hostProperty = orig._hostProperty;
 }
 
 QSharedPointer<HSSParserNode> HSSParserNode::clone() const
@@ -301,4 +303,14 @@ AXRController* HSSParserNode::getController()
 void HSSParserNode::setController(AXRController *controller)
 {
     this->controller = controller;
+}
+
+const AXRString HSSParserNode::getHostProperty() const
+{
+    return this->_hostProperty;
+}
+
+void HSSParserNode::setHostProperty(AXRString newValue)
+{
+    this->_hostProperty = newValue;
 }

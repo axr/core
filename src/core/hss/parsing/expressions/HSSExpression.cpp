@@ -223,3 +223,11 @@ void HSSExpression::_nodesToValuesIfNeeded()
         this->right = HSSValue::valueFromParserNode(this->getController(), this->_rightNode, this->getThisObj(), this->scope);
     }
 }
+
+void HSSExpression::setHostProperty(AXRString newValue)
+{
+    HSSParserNode::setHostProperty(newValue);
+    if (this->_leftNode) this->_leftNode->setHostProperty(newValue);
+    if (this->_rightNode) this->_rightNode->setHostProperty(newValue);
+}
+

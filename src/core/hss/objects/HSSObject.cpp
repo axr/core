@@ -256,6 +256,7 @@ HSSObject::HSSObject(HSSObjectType type, AXRController * controller)
     this->type = type;
     this->shorthandIndex = 0;
     this->axrController = controller;
+    this->_hostProperty = "";
 }
 
 HSSObject::HSSObject(const HSSObject & orig)
@@ -268,6 +269,7 @@ HSSObject::HSSObject(const HSSObject & orig)
     this->thisObj = orig.thisObj;
     this->axrController = orig.axrController;
     this->shorthandIndex = orig.shorthandIndex;
+    this->_hostProperty = orig._hostProperty;
 
     //copy the shorthand list
     Q_FOREACH(AXRString value, orig.shorthandProperties)
@@ -785,6 +787,9 @@ void HSSObject::commitStackValues()
 
 QSharedPointer<HSSObject> HSSObject::computeValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode)
 {
+    //set the hosting property
+    parserNode->setHostProperty(propertyName);
+
     //handle multiple values
     if (parserNode->isA(HSSParserNodeTypeMultipleValueDefinition))
     {
@@ -1044,6 +1049,7 @@ QSharedPointer<HSSKeywordConstant> HSSObject::stringToKeyword(AXRString value)
 void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> theObj)
 {
     QSharedPointer<HSSObject> currentValue = this->getComputedValue(propertyName);
+    theObj->setHostProperty(propertyName);
     //FIXME: I don't know if this is comparing correctly
     if (!currentValue || currentValue != theObj)
     {
@@ -1201,3 +1207,12 @@ void HSSObject::propertyChanged(const AXRString target, const AXRString source, 
     this->notifyObservers(source, theObj);
 }
 
+const AXRString HSSObject::getHostProperty() const
+{
+    return this->_hostProperty;
+}
+
+void HSSObject::setHostProperty(AXRString newValue)
+{
+    this->_hostProperty = newValue;
+}

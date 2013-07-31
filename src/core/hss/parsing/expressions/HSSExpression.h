@@ -163,6 +163,8 @@ namespace AXR
          */
         HSSUnit getValue();
 
+        virtual void setHostProperty(AXRString newValue);
+
     protected:
         /**
          *  Creates a new instance of an expression.

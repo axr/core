@@ -211,11 +211,24 @@ namespace AXR
          *  @param controller       A pointer to the AXRController that owns this object
          */
         virtual void setController(AXRController *controller);
+
         /**
          *  Getter for the controller.
          *  @return A pointer to the AXRController that owns this object
          */
         virtual AXRController* getController();
+
+       /**
+        *  Getter for the host property.
+        *  @return A string containing the name of the property that "owns" the node
+        */
+       const AXRString getHostProperty() const;
+
+       /**
+        *  Setter for the host property.
+        *  @param newValue     A string containing the name of the property that "owns" the node
+        */
+       virtual void setHostProperty(AXRString newValue);
 
     protected:
         /**
@@ -241,6 +254,7 @@ namespace AXR
         QWeakPointer<HSSParserNode> _parentNode;
         std::vector<QSharedPointer<HSSParserNode> > _childNodes;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        AXRString _hostProperty;
 
         QWeakPointer<HSSParserNode> ptr;
     };

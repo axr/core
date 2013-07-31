@@ -361,6 +361,7 @@ namespace AXR
         void _initialize();
         HSSObjectType type;
         bool _isNamed;
+        AXRString _hostProperty;
 
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
         void _setStackValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
