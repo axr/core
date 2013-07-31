@@ -1161,14 +1161,12 @@ void HSSLayout::visit(HSSTextBlock &textBlock)
         }
 
         QFontMetrics fontMetrics(textBlock.getQFont());
-        QRect bounds = fontMetrics.boundingRect(0, 0, static_cast<int>(textBlock.getWidth()), std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, textBlock.getText());
+        HSSUnit allowedWidth = textBlock.getParent()->getInnerWidth();
+        AXRString text = textBlock.getText();
+        QRect bounds = fontMetrics.boundingRect(0, 0, static_cast<int>(allowedWidth), std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, text);
 
         textBlock.setWidth(bounds.width());
-        textBlock._setInnerWidth();
-        textBlock._setOuterWidth();
         textBlock.setHeight(bounds.height());
-        textBlock._setInnerHeight();
-        textBlock._setOuterHeight();
         textBlock.setNeedsSurface(true);
 
         textBlock._needsLayout = false;
