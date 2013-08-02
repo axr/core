@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSPercentageConstant.h"
 
 using namespace AXR;

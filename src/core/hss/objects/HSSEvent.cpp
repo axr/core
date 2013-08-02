@@ -58,6 +58,7 @@
 #include "HSSMultipleValueDefinition.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
+#include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
 #include "HSSValue.h"
 
