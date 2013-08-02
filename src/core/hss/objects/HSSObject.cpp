@@ -700,6 +700,20 @@ void HSSObject::fillWithDefaults()
     }
 }
 
+bool HSSObject::hasStackValue(AXRString property) const
+{
+    return this->_stackValues.contains(property);
+}
+
+const QSharedPointer<HSSParserNode> HSSObject::getStackValue(AXRString property) const
+{
+    if (this->hasStackValue(property))
+    {
+        return this->_stackValues.value(property);
+    }
+    return QSharedPointer<HSSParserNode>();
+}
+
 void HSSObject::clearStackValues()
 {
     this->_stackValues.clear();

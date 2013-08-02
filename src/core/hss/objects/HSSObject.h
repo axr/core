@@ -300,6 +300,8 @@ namespace AXR
         void setDefault(AXRString propertyName, AXRString value);
         void setDefaultKw(AXRString propertyName, AXRString value);
         void fillWithDefaults();
+        bool hasStackValue(AXRString property) const;
+        const QSharedPointer<HSSParserNode> getStackValue(AXRString property) const;
         void clearStackValues();
         void setStackValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
         void appendStackValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
