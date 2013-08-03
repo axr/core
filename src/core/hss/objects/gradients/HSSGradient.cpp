@@ -92,7 +92,6 @@ void HSSGradient::_initialize()
 {
     this->addCallback("startColor", new HSSComputeCallback<HSSGradient>(this, &HSSGradient::computeStartColor));
     this->addCallback("endColor", new HSSComputeCallback<HSSGradient>(this, &HSSGradient::computeEndColor));
-    this->addCallback("endColor", new HSSComputeCallback<HSSGradient>(this, &HSSGradient::computeColorStops));
     this->addCallback("colorStops", new HSSComputeCallback<HSSGradient>(this, &HSSGradient::computeColorStops));
 }
 
