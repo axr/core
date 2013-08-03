@@ -158,10 +158,11 @@ void HSSCascader::_applyProperty(HSSObject & object, QVector<AXRString> path, QS
                 objDef = qSharedPointerCast<HSSObjectDefinition>(stackValue);
             }
         }
-        else
-        {
+        if(!objDef){
             QSharedPointer<HSSObject> prototype = HSSObject::newObjectWithType(object.defaultObjectType(property), controller);
             objDef = QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(prototype, controller));
+            objDef->applyStack();
+            object.setStackValue(property, objDef);
         }
         this->_applyProperty(*(objDef->getObject().data()), path, value);
     }
