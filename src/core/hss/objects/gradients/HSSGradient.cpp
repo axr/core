@@ -103,6 +103,8 @@ HSSGradient::~HSSGradient()
 void HSSGradient::setDefaults()
 {
     this->setDefaultKw("startColor", "black");
+    this->setDefaultKw("endColor", "black");
+    this->setDefaultKw("colorStops", "no");
 }
 
 AXRString HSSGradient::toString()

@@ -105,6 +105,7 @@ HSSLinearGradient::~HSSLinearGradient()
 
 void HSSLinearGradient::setDefaults()
 {
+    HSSGradient::setDefaults();
     this->setDefault("startX", 0.);
     this->setDefault("startY", 0.);
     this->setDefault("endX", 0.);

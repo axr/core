@@ -109,6 +109,7 @@ HSSRadialGradient::~HSSRadialGradient()
 
 void HSSRadialGradient::setDefaults()
 {
+    HSSGradient::setDefaults();
     this->setDefaultPercentage("centerX", 50.);
     this->setDefaultPercentage("centerY", 50.);
     this->setDefaultPercentage("offsetX", 50.);
