@@ -283,6 +283,13 @@ HSSObject::HSSObject(const HSSObject & orig)
         defaultIt.next();
         this->_defaultValues.insert(defaultIt.key(), defaultIt.value()->clone());
     }
+    //copy the stack values
+    QMapIterator<AXRString, QSharedPointer<HSSParserNode> > stackIt(orig._stackValues);
+    while (stackIt.hasNext())
+    {
+        stackIt.next();
+        this->_stackValues.insert(stackIt.key(), stackIt.value()->clone());
+    }
     //copy the computed values
     QMapIterator<AXRString, QSharedPointer<HSSObject> > computedIt(orig._computedValues);
     while (computedIt.hasNext())
