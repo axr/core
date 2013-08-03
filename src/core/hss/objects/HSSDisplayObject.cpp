@@ -1193,18 +1193,6 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeBackground(QSharedPointer<HSS
             break;
     }
 
-    switch (parserNode->getStatementType())
-    {
-        case HSSStatementTypeObjectDefinition:
-        {
-            QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (parserNode);
-            objdef->apply();
-            return objdef->getObject();
-        }
-        default:
-            break;
-    }
-
     return this->computeValueObject(parserNode);
 }
 
