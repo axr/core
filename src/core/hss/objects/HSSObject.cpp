@@ -856,7 +856,7 @@ QSharedPointer<HSSObject> HSSObject::computeValue(AXRString propertyName, QShare
                 objdef->setThisObj(this->getThisObj());
                 objdef->setScope(this->getScope());
             }
-            objdef->apply();
+            objdef->applyComputed();
             QSharedPointer<HSSObject> theObj = objdef->getObject();
             if (theObj->isA(HSSObjectTypeValue))
             {

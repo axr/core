@@ -110,6 +110,10 @@ void HSSCascader::visit(HSSContainer &container)
                         Q_FOREACH(QVector<AXRString> path, propertyPaths){
                             QSharedPointer<HSSParserNode> nodeValue = propertyDefinition->getValue();
                             container.setStackValue(path.front(), nodeValue->clone());
+                            if (clonedNode->isA(HSSStatementTypeObjectDefinition))
+                            {
+                                qSharedPointerCast<HSSObjectDefinition>(nodeValue)->applyStack();
+                            }
                         }
                     }
                     break;

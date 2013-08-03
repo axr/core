@@ -89,11 +89,8 @@ namespace AXR
 
         virtual AXRString toString();
 
-        /**
-         *  Call this to apply the property definitions to the prototype object. You can
-         *  call getObject() afterwards, to access the object itself.
-         */
-        void apply();
+        void applyStack();
+        void applyComputed();
 
         /**
          *  Adds a new property definition to the end of the properties list.
