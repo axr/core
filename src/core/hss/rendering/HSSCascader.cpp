@@ -65,7 +65,7 @@ public:
     Private() : document()
     {
     }
-    
+
     AXRDocument *document;
 };
 
@@ -100,7 +100,7 @@ void HSSCascader::visit(HSSContainer &container)
                     ruleStatus->state = HSSRuleStateOn;
                     //fall through
                 }
-                    
+
                 case HSSRuleStateOn:
                 {
                     QSharedPointer<HSSRule> & rule = ruleStatus->rule;
@@ -125,13 +125,13 @@ void HSSCascader::visit(HSSContainer &container)
                     }
                     break;
                 }
-                    
+
                 case HSSRuleStatePurge:
                 {
                     ruleStatus->state = HSSRuleStateOff;
                     break;
                 }
-                    
+
                 default:
                     break;
             }

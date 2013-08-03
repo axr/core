@@ -53,7 +53,7 @@ namespace AXR
     class HSSContainer;
     class HSSObject;
     class HSSParserNode;
-    
+
     class AXR_API HSSCascader : public HSSAbstractVisitor
     {
         Q_DISABLE_COPY(HSSCascader)
