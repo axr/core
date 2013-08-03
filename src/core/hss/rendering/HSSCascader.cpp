@@ -153,9 +153,26 @@ void HSSCascader::_applyProperty(HSSObject & object, QVector<AXRString> path, QS
         if(object.hasStackValue(property))
         {
             QSharedPointer<HSSParserNode> stackValue = object.getStackValue(property);
-            if (stackValue && stackValue->isA(HSSStatementTypeObjectDefinition))
+            if (stackValue)
             {
-                objDef = qSharedPointerCast<HSSObjectDefinition>(stackValue);
+                if (stackValue->isA(HSSStatementTypeObjectDefinition))
+                {
+                    objDef = qSharedPointerCast<HSSObjectDefinition>(stackValue);
+                }
+                else if (stackValue->isA(HSSParserNodeTypeObjectNameConstant))
+                {
+                    try
+                    {
+                        QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (stackValue);
+                        objDef = controller->objectTreeNodeNamed(objname->getValue());
+                        objDef->applyStack();
+                        object.setStackValue(property, objDef);
+                    }
+                    catch (const AXRError &e)
+                    {
+                        e.raise();
+                    }
+                }
             }
         }
         if(!objDef){
