@@ -71,6 +71,7 @@ namespace AXR
     private:
         class Private;
         Private *d;
+        void _applyProperty(HSSObject & object, QVector<AXRString> path, QSharedPointer<HSSParserNode> value);
     };
 }
 

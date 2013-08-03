@@ -108,11 +108,18 @@ void HSSCascader::visit(HSSContainer &container)
                     {
                         QVector<QVector<AXRString> > propertyPaths = propertyDefinition->getPaths();
                         Q_FOREACH(QVector<AXRString> path, propertyPaths){
-                            QSharedPointer<HSSParserNode> nodeValue = propertyDefinition->getValue();
-                            container.setStackValue(path.front(), nodeValue->clone());
+                            QSharedPointer<HSSParserNode> clonedNode = propertyDefinition->getValue()->clone();
                             if (clonedNode->isA(HSSStatementTypeObjectDefinition))
                             {
-                                qSharedPointerCast<HSSObjectDefinition>(nodeValue)->applyStack();
+                                qSharedPointerCast<HSSObjectDefinition>(clonedNode)->applyStack();
+                            }
+                            if (path.size() == 1)
+                            {
+                                container.setStackValue(path.front(), clonedNode);
+                            }
+                            else
+                            {
+                                this->_applyProperty(container, path, clonedNode);
                             }
                         }
                     }
@@ -132,6 +139,35 @@ void HSSCascader::visit(HSSContainer &container)
         container.commitStackValues();
         container.fillWithDefaults();
         container._needsRereadRules = false;
+    }
+}
+
+void HSSCascader::_applyProperty(HSSObject & object, QVector<AXRString> path, QSharedPointer<HSSParserNode> value)
+{
+    AXRController * controller = this->d->document->controller().data();
+    AXRString property = path.front();
+    path.pop_front();
+    QSharedPointer<HSSObjectDefinition> objDef;
+    if (!path.empty())
+    {
+        if(object.hasStackValue(property))
+        {
+            QSharedPointer<HSSParserNode> stackValue = object.getStackValue(property);
+            if (stackValue && stackValue->isA(HSSStatementTypeObjectDefinition))
+            {
+                objDef = qSharedPointerCast<HSSObjectDefinition>(stackValue);
+            }
+        }
+        else
+        {
+            QSharedPointer<HSSObject> prototype = HSSObject::newObjectWithType(object.defaultObjectType(property), controller);
+            objDef = QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(prototype, controller));
+        }
+        this->_applyProperty(*(objDef->getObject().data()), path, value);
+    }
+    else
+    {
+        object.setStackValue(property, value);
     }
 }
 

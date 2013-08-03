@@ -1524,8 +1524,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                         done = true;
                         AXRString propertyName = VALUE_TOKEN(this->currentToken)->getString();
                         QVector<AXRString> path;
-                        path.push_back(propertyName);
-                        propertyPaths.push_back(path);
+                        path.append(propertyName);
                         this->readNextToken();
                         //allow whitespace before colon
                         this->skip(HSSWhitespace);
@@ -1539,6 +1538,31 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                                 continue;
                             }
                         }
+                        if (this->currentToken->isA(HSSSymbol) && VALUE_TOKEN(this->currentToken)->getString() == ".")
+                        {
+                            this->readNextToken(true);
+                            this->expect(HSSIdentifier);
+                            bool done2 = false;
+                            while (!done2)
+                            {
+                                done2 = true;
+                                if (this->currentToken->isA(HSSSymbol) && VALUE_TOKEN(this->currentToken)->getString() == ".")
+                                {
+                                    done2 = false;
+                                    this->readNextToken(true);
+                                }
+
+                                if (!this->currentToken->isA(HSSIdentifier))
+                                {
+                                    AXRError("HSSParser", "Unexpected token after dot in property expression", this->currentFile->sourceUrl(), this->line, this->column).raise();
+                                    continue;
+                                }
+                                AXRString prop = VALUE_TOKEN(this->currentToken)->getString();
+                                path.append(prop);
+                                this->readNextToken(true);
+                            }
+                        }
+                        propertyPaths.append(path);
                         //now must come a colon
                         this->skipExpected(HSSColon);
                         //we don't give a f$%# about whitespace
