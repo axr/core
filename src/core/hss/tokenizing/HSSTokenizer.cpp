@@ -660,7 +660,6 @@ QSharedPointer<HSSToken> HSSTokenizer::readSymbol()
         }
 
         ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText(), line, column));
-        readNextChar();
         return ret;
 
     default:
