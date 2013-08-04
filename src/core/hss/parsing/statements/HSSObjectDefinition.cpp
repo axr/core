@@ -117,7 +117,7 @@ void HSSObjectDefinition::applyStack()
                 qSharedPointerCast<HSSObjectDefinition>(nodeValue)->applyStack();
             }
             AXRString property = path.front();
-            this->prototype->setStackValue(property, nodeValue);
+            this->prototype->setStackNode(property, nodeValue);
         }
     }
 }

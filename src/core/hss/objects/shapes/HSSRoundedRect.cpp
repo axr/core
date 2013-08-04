@@ -138,23 +138,23 @@ void HSSRoundedRect::stackCorners(QSharedPointer<HSSParserNode> parserNode)
 }
 void HSSRoundedRect::stackTop(QSharedPointer<HSSParserNode> parserNode)
 {
-    this->setStackValue("leftTop", parserNode);
-    this->setStackValue("rightTop", parserNode);
+    this->setStackNode("leftTop", parserNode);
+    this->setStackNode("rightTop", parserNode);
 }
 void HSSRoundedRect::stackRight(QSharedPointer<HSSParserNode> parserNode)
 {
-    this->setStackValue("rightTop", parserNode);
-    this->setStackValue("rightBottom", parserNode);
+    this->setStackNode("rightTop", parserNode);
+    this->setStackNode("rightBottom", parserNode);
 }
 void HSSRoundedRect::stackBottom(QSharedPointer<HSSParserNode> parserNode)
 {
-    this->setStackValue("leftBottom", parserNode);
-    this->setStackValue("rightBottom", parserNode);
+    this->setStackNode("leftBottom", parserNode);
+    this->setStackNode("rightBottom", parserNode);
 }
 void HSSRoundedRect::stackLeft(QSharedPointer<HSSParserNode> parserNode)
 {
-    this->setStackValue("leftTop", parserNode);
-    this->setStackValue("leftBottom", parserNode);
+    this->setStackNode("leftTop", parserNode);
+    this->setStackNode("leftBottom", parserNode);
 }
 
 void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments)

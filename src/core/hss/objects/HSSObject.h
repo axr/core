@@ -301,10 +301,11 @@ namespace AXR
         void setDefaultKw(AXRString propertyName, AXRString value);
         void fillWithDefaults();
         bool hasStackValue(AXRString property) const;
-        const QSharedPointer<HSSParserNode> getStackValue(AXRString property) const;
+        const QSharedPointer<HSSObject> getStackValue(AXRString property) const;
         void clearStackValues();
-        void setStackValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
-        void appendStackValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
+        void setStackNode(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
+        void setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject);
+        void appendStackValue(AXRString propertyName, QSharedPointer<HSSObject> parserNode);
         void commitStackValues();
         virtual QSharedPointer<HSSObject> computeValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
         QSharedPointer<HSSObject> computeValueObject(QSharedPointer<HSSParserNode> parserNode);
@@ -350,7 +351,7 @@ namespace AXR
         QMap<AXRString, HSSAbstractObserveCallback*> _notifyCallbacks;
         QMap<AXRString, QSharedPointer<HSSObject> > _defaultValues;
         QMap<AXRString, QSharedPointer<HSSObject> > _computedValues;
-        QMap<AXRString, QSharedPointer<HSSParserNode> > _stackValues;
+        QMap<AXRString, QSharedPointer<HSSObject> > _stackValues;
         std::vector<AXRString> shorthandProperties;
         QMap<AXRString, bool> skipShorthand;
         size_t shorthandIndex;
@@ -359,6 +360,8 @@ namespace AXR
         QSharedPointer<HSSDisplayObject> thisObj;
         AXRController * axrController;
 
+        void _setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject);
+
     private:
         void _initialize();
         HSSObjectType type;
@@ -366,7 +369,6 @@ namespace AXR
         AXRString _hostProperty;
 
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
-        void _setStackValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
 
         QWeakPointer<HSSObject> ptr;
     };

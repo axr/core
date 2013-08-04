@@ -109,13 +109,9 @@ void HSSCascader::visit(HSSContainer &container)
                         QVector<QVector<AXRString> > propertyPaths = propertyDefinition->getPaths();
                         Q_FOREACH(QVector<AXRString> path, propertyPaths){
                             QSharedPointer<HSSParserNode> clonedNode = propertyDefinition->getValue()->clone();
-                            if (clonedNode->isA(HSSStatementTypeObjectDefinition))
-                            {
-                                qSharedPointerCast<HSSObjectDefinition>(clonedNode)->applyStack();
-                            }
                             if (path.size() == 1)
                             {
-                                container.setStackValue(path.front(), clonedNode);
+                                container.setStackNode(path.front(), clonedNode);
                             }
                             else
                             {
@@ -147,45 +143,25 @@ void HSSCascader::_applyProperty(HSSObject & object, QVector<AXRString> path, QS
     AXRController * controller = this->d->document->controller().data();
     AXRString property = path.front();
     path.pop_front();
-    QSharedPointer<HSSObjectDefinition> objDef;
     if (!path.empty())
     {
-        if(object.hasStackValue(property))
+        if(!object.hasStackValue(property))
         {
-            QSharedPointer<HSSParserNode> stackValue = object.getStackValue(property);
-            if (stackValue)
-            {
-                if (stackValue->isA(HSSStatementTypeObjectDefinition))
-                {
-                    objDef = qSharedPointerCast<HSSObjectDefinition>(stackValue);
-                }
-                else if (stackValue->isA(HSSParserNodeTypeObjectNameConstant))
-                {
-                    try
-                    {
-                        QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (stackValue);
-                        objDef = controller->objectTreeNodeNamed(objname->getValue());
-                        objDef->applyStack();
-                        object.setStackValue(property, objDef);
-                    }
-                    catch (const AXRError &e)
-                    {
-                        e.raise();
-                    }
-                }
-            }
+            QSharedPointer<HSSObject> newObject = HSSObject::newObjectWithType(object.defaultObjectType(property), controller);
+            newObject->setDefaults();
+
+            object.setStackValue(property, newObject);
+            this->_applyProperty(*(newObject.data()), path, value);
         }
-        if(!objDef){
-            QSharedPointer<HSSObject> prototype = HSSObject::newObjectWithType(object.defaultObjectType(property), controller);
-            objDef = QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(prototype, controller));
-            objDef->applyStack();
-            object.setStackValue(property, objDef);
+        else
+        {
+            QSharedPointer<HSSObject> existingObject = object.getStackValue(property);
+            this->_applyProperty(*(existingObject.data()), path, value);
         }
-        this->_applyProperty(*(objDef->getObject().data()), path, value);
     }
     else
     {
-        object.setStackValue(property, value);
+        object.setStackNode(property, value);
     }
 }
 
