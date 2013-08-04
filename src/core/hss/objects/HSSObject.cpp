@@ -759,7 +759,7 @@ void HSSObject::setStackNode(AXRString propertyName, QSharedPointer<AXR::HSSPars
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (parserNode);
-            parserNode = this->getController()->objectTreeNodeNamed(objname->getValue());
+            parserNode = this->getController()->objectTreeNodeNamed(objname->getValue())->clone();
         }
         catch (const AXRError &e)
         {
