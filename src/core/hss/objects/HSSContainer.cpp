@@ -113,7 +113,9 @@ void HSSContainer::_initialize()
     this->allChildren = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection());
 
     this->addCallback("contentAlignX", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContentAlignX));
+    this->addNotifyCallback("contentAlignX", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyContentAlignX));
     this->addCallback("contentAlignY", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContentAlignY));
+    this->addNotifyCallback("contentAlignY", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyContentAlignY));
     this->addCallback("content", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContent));
     this->addCallback("shape", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeShape));
     this->addNotifyCallback("shape", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyShape));
@@ -556,16 +558,6 @@ QSharedPointer<HSSObject> HSSContainer::computeContentAlignX(QSharedPointer<HSSP
             {
                 return this->computeValueObject(this->percentageToConstant(100), "contentAlignX");
             }
-            else if (kwValue == "even")
-            {
-                this->distributeX = true;
-                this->distributeXLinear = false;
-            }
-            else if (kwValue == "justify")
-            {
-                this->distributeX = true;
-                this->distributeXLinear = true;
-            }
             break;
         }
 
@@ -573,6 +565,29 @@ QSharedPointer<HSSObject> HSSContainer::computeContentAlignX(QSharedPointer<HSSP
             break;
     }
     return this->computeValueObject(parserNode, "contentAlignX");
+}
+
+void HSSContainer::notifyContentAlignX(QSharedPointer<HSSObject> theObject)
+{
+    this->distributeX = false;
+    this->distributeXLinear = false;
+
+    if (theObject->isA(HSSObjectTypeValue) && qSharedPointerCast<HSSValue>(theObject)->getValue()->isA(HSSParserNodeTypeKeywordConstant))
+    {
+        QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(qSharedPointerCast<HSSValue>(theObject)->getValue());
+        AXRString kwValue = theKW->getValue();
+        if (kwValue == "even")
+        {
+            this->distributeX = true;
+            this->distributeXLinear = false;
+        }
+        else if (kwValue == "justify")
+        {
+            this->distributeX = true;
+            this->distributeXLinear = true;
+        }
+    }
+    this->notifyObservers("contentAlignX", theObject);
 }
 
 //contentAlignY
@@ -601,16 +616,6 @@ QSharedPointer<HSSObject> HSSContainer::computeContentAlignY(QSharedPointer<HSSP
             {
                 return this->computeValueObject(this->percentageToConstant(100), "contentAlignY");
             }
-            else if (kwValue == "even")
-            {
-                this->distributeY = true;
-                this->distributeYLinear = false;
-            }
-            else if (kwValue == "justify")
-            {
-                this->distributeY = true;
-                this->distributeYLinear = true;
-            }
             break;
         }
 
@@ -618,6 +623,29 @@ QSharedPointer<HSSObject> HSSContainer::computeContentAlignY(QSharedPointer<HSSP
             break;
     }
     return this->computeValueObject(parserNode, "contentAlignY");
+}
+
+void HSSContainer::notifyContentAlignY(QSharedPointer<HSSObject> theObject)
+{
+    this->distributeY = false;
+    this->distributeYLinear = false;
+
+    if (theObject->isA(HSSObjectTypeValue) && qSharedPointerCast<HSSValue>(theObject)->getValue()->isA(HSSParserNodeTypeKeywordConstant))
+    {
+        QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(qSharedPointerCast<HSSValue>(theObject)->getValue());
+        AXRString kwValue = theKW->getValue();
+        if (kwValue == "even")
+        {
+            this->distributeY = true;
+            this->distributeYLinear = false;
+        }
+        else if (kwValue == "justify")
+        {
+            this->distributeY = true;
+            this->distributeYLinear = true;
+        }
+    }
+    this->notifyObservers("contentAlignY", theObject);
 }
 
 //direction

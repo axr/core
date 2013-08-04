@@ -200,8 +200,10 @@ namespace AXR
 
         const HSSUnit getContentAlignX() const;
         QSharedPointer<HSSObject> computeContentAlignX(QSharedPointer<HSSParserNode> parserNode);
+        void notifyContentAlignX(QSharedPointer<HSSObject> theObject);
         const HSSUnit getContentAlignY() const;
         QSharedPointer<HSSObject> computeContentAlignY(QSharedPointer<HSSParserNode> parserNode);
+        void notifyContentAlignY(QSharedPointer<HSSObject> theObject);
         const HSSDirectionValue getDirection() const;
         const HSSDirectionValue getWrapDirection() const;
         //content
