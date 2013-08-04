@@ -1199,35 +1199,20 @@ void HSSObject::clearComputedValues()
     this->_computedValues.clear();
 }
 
-const QSharedPointer<HSSObject> HSSObject::inheritValue(AXRString propertyName) const
+const QSharedPointer<HSSObject> HSSObject::inheritValue(AXRString propertyName)
 {
-    QSharedPointer<HSSObject> ret;
-    QSharedPointer<HSSDisplayObject> parent;
-    if (this->isA(HSSObjectTypeContainer) || this->isA(HSSObjectTypeTextBlock))
-    {
-        parent = static_cast<const HSSDisplayObject*>(this)->getParent();
-        if (parent)
-        {
-            ret = parent->getComputedValue(propertyName);
-        }
-        else
-        {
-            return QSharedPointer<HSSObject>();
-        }
-    }
-    else
-    {
-        parent = this->thisObj->getParent();
-        if (parent)
-        {
-            ret = parent->getComputedValue(propertyName);
-        }
-        else
-        {
-            return QSharedPointer<HSSObject>();
-        }
-    }
-    return ret;
+    QSharedPointer<HSSParentSelector> parentSelector(new HSSParentSelector(this->getController()));
+    QSharedPointer<HSSSimpleSelector> simpleSelector(new HSSSimpleSelector(this->getController()));
+    simpleSelector->setName(parentSelector);
+    QSharedPointer<HSSRefFunction> refFunc(new HSSRefFunction(this->getController()));
+    refFunc->setPropertyName(propertyName);
+    std::vector< QSharedPointer<HSSSelectorChain> > selectorChains;
+    QSharedPointer<HSSSelectorChain> selectorChain(new HSSSelectorChain(this->getController()));
+    selectorChain->add(simpleSelector);
+    selectorChains.push_back(selectorChain);
+    refFunc->setSelectorChains(selectorChains);
+    
+    return this->computeValueObject(refFunc, propertyName);
 }
 
 void HSSObject::propertyChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj)
