@@ -244,7 +244,7 @@ namespace AXR
          *  (including itself).
          *  @param value        A shared pointer to the nearest display object.
          */
-        void setThisObj(QSharedPointer<HSSDisplayObject> value);
+        virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
         /**
          *  Getter for the "this object", which is a shared pointer to the nearest display object
          *  (including itself).

@@ -503,6 +503,13 @@ QSharedPointer<HSSSimpleSelection> HSSObject::getScope() const
 void HSSObject::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 {
     this->scope = newScope;
+    //propagate values
+    QMapIterator<AXRString, QSharedPointer<HSSObject> > computedIt(this->_computedValues);
+    while (computedIt.hasNext())
+    {
+        computedIt.next();
+        computedIt.value()->setScope(newScope);
+    }
 }
 
 void HSSObject::setController(AXRController * controller)
@@ -518,6 +525,13 @@ AXRController * HSSObject::getController() const
 void HSSObject::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     this->thisObj = value;
+    //propagate values
+    QMapIterator<AXRString, QSharedPointer<HSSObject> > computedIt(this->_computedValues);
+    while (computedIt.hasNext())
+    {
+        computedIt.next();
+        computedIt.value()->setThisObj(value);
+    }
 }
 
 QSharedPointer<HSSDisplayObject> HSSObject::getThisObj() const
