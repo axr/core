@@ -1528,16 +1528,6 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                         this->readNextToken();
                         //allow whitespace before colon
                         this->skip(HSSWhitespace);
-                        if (this->currentToken->isA(HSSComma))
-                        {
-                            this->readNextToken(true);
-                            this->skip(HSSWhitespace, true);
-                            if (this->currentToken->isA(HSSIdentifier))
-                            {
-                                done = false;
-                                continue;
-                            }
-                        }
                         if (this->currentToken->isA(HSSSymbol) && VALUE_TOKEN(this->currentToken)->getString() == ".")
                         {
                             this->readNextToken(true);
@@ -1563,6 +1553,16 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                             }
                         }
                         propertyPaths.append(path);
+                        if (this->currentToken->isA(HSSComma))
+                        {
+                            this->readNextToken(true);
+                            this->skip(HSSWhitespace, true);
+                            if (this->currentToken->isA(HSSIdentifier))
+                            {
+                                done = false;
+                                continue;
+                            }
+                        }
                         //now must come a colon
                         this->skipExpected(HSSColon);
                         //we don't give a f$%# about whitespace
