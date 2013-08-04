@@ -436,12 +436,23 @@ void HSSRenderer::_addColorStops(QLinearGradient & pat, HSSLinearGradient &gradi
         {
             QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theStopObj);
             QSharedPointer<HSSParserNode> parserNode = valueObj->getValue();
-            if (parserNode->isA(HSSParserNodeTypeKeywordConstant) && qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue() == "transparent") {
-                //create two stops:
-                //one with the previous color
-                pat.setColorAt(this->_nextFreePosition(positions, 0.5), prevColor->toQColorWithAlpha(0));
-                pat.setColorAt(this->_nextFreePosition(positions, 0.5), gradient.getColorBeforeLast()->toQColorWithAlpha(0));
-                break;
+            AXRString kwValue = "";
+            if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
+            {
+                kwValue = qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue();
+                if (kwValue == "transparent")
+                {
+                    //create two stops:
+                    //one with the previous color
+                    pat.setColorAt(this->_nextFreePosition(positions, 0.5), prevColor->toQColorWithAlpha(0));
+                    pat.setColorAt(this->_nextFreePosition(positions, 0.5), gradient.getColorBeforeLast()->toQColorWithAlpha(0));
+                    break;
+                }
+                else if (kwValue == "no")
+                {
+                    //do nothing
+                    break;
+                }
             }
         }
         default:
