@@ -140,10 +140,10 @@ void HSSValue::setValue(QSharedPointer<HSSParserNode> parserNode)
     switch (parserNode->getType())
     {
         case HSSParserNodeTypeFunctionCall:
-            parserNode->observe("remoteValue", "value", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
+            parserNode->observe("remoteValue", "valueObj", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
             break;
         case HSSParserNodeTypeExpression:
-            parserNode->observe("expressionResult", "value", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
+            parserNode->observe("expressionResult", "valueObj", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
             break;
 
         default:

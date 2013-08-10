@@ -189,9 +189,9 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
         }
         this->_value = ret;
 
-        if (container != this->getTrackedObserver("value") || this->getTrackedProperty("value") != this->propertyName)
+        if (container != this->getTrackedObserver("refValue") || this->getTrackedProperty("refValue") != this->propertyName)
         {
-            container->observe(this->propertyName, "value", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
+            container->observe(this->propertyName, "refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
         }
     }
     else
