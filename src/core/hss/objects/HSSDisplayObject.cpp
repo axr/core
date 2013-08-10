@@ -1017,7 +1017,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAlignX(QSharedPointer<HSSPars
             AXRString kwValue = theKW->getValue();
             if (kwValue == "auto")
             {
-                return this->inheritValue("contentAlignX");
+                return this->inheritValue("contentAlignX", "alignX");
             }
             else if (kwValue == "left")
             {
@@ -1080,7 +1080,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAlignY(QSharedPointer<HSSPars
             AXRString kwValue = theKW->getValue();
             if (kwValue == "auto")
             {
-                return this->inheritValue("contentAlignY");
+                return this->inheritValue("contentAlignY", "alignY");
             }
             else if (kwValue == "top")
             {

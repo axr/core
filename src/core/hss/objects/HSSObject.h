@@ -328,7 +328,7 @@ namespace AXR
         const HSSUnit getComputedBool(AXRString property) const;
         const AXRString getComputedString(AXRString property) const;
         void clearComputedValues();
-        const QSharedPointer<HSSObject> inheritValue(AXRString propertyName);
+        const QSharedPointer<HSSObject> inheritValue(AXRString inheritProperty, AXRString hostProperty);
         virtual void propertyChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj);
 
         /**
@@ -361,6 +361,7 @@ namespace AXR
         AXRController * axrController;
 
         void _setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject);
+        const QSharedPointer<HSSParserNode> _inheritProperty(AXRString propertyName) const;
 
     private:
         void _initialize();

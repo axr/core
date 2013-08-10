@@ -942,16 +942,7 @@ QSharedPointer<HSSObject> HSSObject::computeValueObject(QSharedPointer<HSSParser
         {
             if (qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue() == "inherit")
             {
-                QSharedPointer<HSSRefFunction> refFunc(new HSSRefFunction(this->getController()));
-                refFunc->setPropertyName(propertyName);
-                std::vector< QSharedPointer<HSSSelectorChain> > selectorChains;
-                QSharedPointer<HSSSelectorChain> selectorChain(new HSSSelectorChain(this->getController()));
-                QSharedPointer<HSSSimpleSelector> simpleSelector(new HSSSimpleSelector(this->getController()));
-                simpleSelector->setName(QSharedPointer<HSSParentSelector>(new HSSParentSelector(this->getController())));
-                selectorChain->add(simpleSelector);
-                selectorChains.push_back(selectorChain);
-                refFunc->setSelectorChains(selectorChains);
-                parserNode = refFunc;
+                parserNode = this->_inheritProperty(propertyName);
             }
             break;
         }
@@ -1199,20 +1190,23 @@ void HSSObject::clearComputedValues()
     this->_computedValues.clear();
 }
 
-const QSharedPointer<HSSObject> HSSObject::inheritValue(AXRString propertyName)
+const QSharedPointer<HSSObject> HSSObject::inheritValue(AXRString inheritProperty, AXRString hostProperty)
 {
-    QSharedPointer<HSSParentSelector> parentSelector(new HSSParentSelector(this->getController()));
-    QSharedPointer<HSSSimpleSelector> simpleSelector(new HSSSimpleSelector(this->getController()));
-    simpleSelector->setName(parentSelector);
+    return this->computeValueObject(this->_inheritProperty(inheritProperty), hostProperty);
+}
+
+const QSharedPointer<HSSParserNode> HSSObject::_inheritProperty(AXRString propertyName) const
+{
     QSharedPointer<HSSRefFunction> refFunc(new HSSRefFunction(this->getController()));
     refFunc->setPropertyName(propertyName);
     std::vector< QSharedPointer<HSSSelectorChain> > selectorChains;
     QSharedPointer<HSSSelectorChain> selectorChain(new HSSSelectorChain(this->getController()));
+    QSharedPointer<HSSSimpleSelector> simpleSelector(new HSSSimpleSelector(this->getController()));
+    simpleSelector->setName(QSharedPointer<HSSParentSelector>(new HSSParentSelector(this->getController())));
     selectorChain->add(simpleSelector);
     selectorChains.push_back(selectorChain);
     refFunc->setSelectorChains(selectorChains);
-    
-    return this->computeValueObject(refFunc, propertyName);
+    return refFunc;
 }
 
 void HSSObject::propertyChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj)
