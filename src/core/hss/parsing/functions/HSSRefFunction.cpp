@@ -46,6 +46,7 @@
 #include "AXRLoggerManager.h"
 #include "HSSCallback.h"
 #include "HSSDisplayObject.h"
+#include "HSSExpression.h"
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
 #include "HSSRefFunction.h"
@@ -191,7 +192,11 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
                     switch (parserNode->getType())
                     {
                         case HSSParserNodeTypeFunctionCall:
-                            ret = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
+                            ret = qSharedPointerCast<HSSFunction>(parserNode)->evaluate()->clone();
+                            break;
+
+                        case HSSParserNodeTypeExpression:
+                            ret = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate(), this->getController()), this->getThisObj(), this->scope);
                             break;
 
                         default:
@@ -258,18 +263,22 @@ void HSSRefFunction::valueChanged(const AXRString target, const AXRString source
                 switch (parserNode->getType())
                 {
                     case HSSParserNodeTypeFunctionCall:
-                        ret = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
+                        ret = qSharedPointerCast<HSSFunction>(parserNode)->evaluate()->clone();
+                        break;
+
+                    case HSSParserNodeTypeExpression:
+                        ret = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate(), this->getController()), this->getThisObj(), this->scope);
                         break;
 
                     default:
-                        ret = remoteObj;
+                        ret = remoteObj->clone();
                         break;
                 }
             }
         }
         else
         {
-            ret = remoteObj;
+            ret = remoteObj->clone();
         }
     }
     this->_value = ret;
