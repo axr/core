@@ -868,10 +868,13 @@ HSSUnit HSSLayoutLine::getAlignY()
         heightsTotal += currentChild->getOuterHeight();
     }
     HSSUnit medianHeight = heightsTotal / size;
-    for (HSSSimpleSelection::reverse_iterator it = this->objects->rbegin(); it!= this->objects->rend(); ++it)
+    if (medianHeight > 0)
     {
-        QSharedPointer<HSSDisplayObject> & currentChild = *it;
-        alignmentTotal += currentChild->getAlignY() * currentChild->getOuterHeight() / medianHeight;
+        for (HSSSimpleSelection::reverse_iterator it = this->objects->rbegin(); it!= this->objects->rend(); ++it)
+        {
+            QSharedPointer<HSSDisplayObject> & currentChild = *it;
+            alignmentTotal += currentChild->getAlignY() * currentChild->getOuterHeight() / medianHeight;
+        }
     }
     return alignmentTotal / size;
 }

@@ -466,10 +466,13 @@ inline bool HSSLayout::_arrangeLines(const HSSContainer & container, const QShar
                     heightsTotal += line->height;
                 }
                 HSSUnit medianHeight = heightsTotal / linesSize;
-                for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = group->lines.begin(); it!= group->lines.end(); ++it)
+                if (medianHeight > 0)
                 {
-                    const QSharedPointer<HSSLayoutLine> & line = *it;
-                    groupAlignmentTotal += line->getAlignY() * line->height / medianHeight;
+                    for (std::vector<QSharedPointer<HSSLayoutLine> >::const_iterator it = group->lines.begin(); it!= group->lines.end(); ++it)
+                    {
+                        const QSharedPointer<HSSLayoutLine> & line = *it;
+                        groupAlignmentTotal += line->getAlignY() * line->height / medianHeight;
+                    }
                 }
                 HSSUnit groupAlignY = groupAlignmentTotal / linesSize;
                 HSSUnit startY = groupAlignY - (heightsTotal/2);
