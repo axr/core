@@ -134,11 +134,17 @@ HSSUnit HSSExpression::evaluate()
         //left
         QSharedPointer<HSSValue> left = this->getLeft();
         this->leftval = left->getNumber();
-        left->observe("valueChanged", "left", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
+        if (this->_leftNode->isA(HSSParserNodeTypeExpression) || this->_leftNode->isA(HSSParserNodeTypeFunctionCall))
+        {
+            left->observe("valueChanged", "left", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
+        }
         //right
         QSharedPointer<HSSValue> right = this->getRight();
         this->rightval = right->getNumber();
-        right->observe("valueChanged", "right", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
+        if (this->_rightNode->isA(HSSParserNodeTypeExpression) || this->_rightNode->isA(HSSParserNodeTypeFunctionCall))
+        {
+            right->observe("valueChanged", "right", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
+        }
         //calculate
         this->setValue(this->calculate(this->leftval, this->rightval));
     }
