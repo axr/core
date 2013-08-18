@@ -924,8 +924,6 @@ void HSSLayout::visit(HSSContainer &container)
             {
                 container.setHeight(child->getOuterHeight() + container.getTopPadding() + container.getBottomPadding());
             }
-            container._setInnerHeight();
-            container._setOuterHeight();
         }
         this->_placeOnAlignmentPoint(container, child);
         this->_setGlobalPosition(container, child);
@@ -1120,8 +1118,6 @@ void HSSLayout::visit(HSSContainer &container)
                         }
                     }
                     container.setHeight(contentHeight + container.getTopPadding() + container.getBottomPadding());
-                    container._setInnerHeight();
-                    container._setOuterHeight();
                     if (needsHeightByContent)
                     {
                         container._needsLayout = true;
