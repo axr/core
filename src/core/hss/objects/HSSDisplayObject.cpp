@@ -801,6 +801,7 @@ void HSSDisplayObject::notifyHeight(QSharedPointer<HSSObject> theObj)
     if (parent)
     {
         this->_hasOwnHeight = !parent->heightByContent;
+        parent->setNeedsLayout(true);
     }
     else
     {
@@ -829,6 +830,11 @@ void HSSDisplayObject::notifyHeight(QSharedPointer<HSSObject> theObj)
 
 void HSSDisplayObject::heightChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
+    const QSharedPointer<HSSContainer> parent = this->getParent();
+    if (parent)
+    {
+        parent->setNeedsLayout(true);
+    }
     this->_setInnerHeight();
     this->_setOuterHeight();
     this->setNeedsSurface(true);
