@@ -123,10 +123,6 @@ void HSSObjectDefinition::applyStack()
         QVector<QVector<AXRString> > propertyPaths = propertyDefinition->getPaths();
         Q_FOREACH(QVector<AXRString> path, propertyPaths){
             QSharedPointer<HSSParserNode> nodeValue = propertyDefinition->getValue();
-            if (nodeValue->isA(HSSStatementTypeObjectDefinition))
-            {
-                qSharedPointerCast<HSSObjectDefinition>(nodeValue)->applyStack();
-            }
             AXRString property = path.front();
             this->prototype->setStackNode(property, nodeValue);
         }
