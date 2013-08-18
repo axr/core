@@ -83,6 +83,13 @@ namespace AXR
         virtual ~HSSRefFunction();
 
         /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
+        /**
          *  Getter for the modifier.
          *  @return A string containing the modifier that was passed.
          *

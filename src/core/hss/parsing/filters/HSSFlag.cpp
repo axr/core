@@ -89,6 +89,18 @@ AXRString HSSFlag::stringRep()
     return AXRString("::").append(this->_name);
 }
 
+bool HSSFlag::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSFilter::equalTo(otherNode)) return false;
+    QSharedPointer<HSSFlag> castedNode = qSharedPointerCast<HSSFlag>(otherNode);
+    if ( this->_name != castedNode->_name ) return false;
+    if ( this->_purging != castedNode->_purging ) return false;
+    return true;
+}
+
 AXRString HSSFlag::getName()
 {
     return this->_name;

@@ -118,6 +118,13 @@ namespace AXR
         virtual AXRString stringRep();
 
         /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        virtual bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
+        /**
          *  Call this to know if a parser node is of the given type.
          *  @param otherType    The parser node type to compare against.
          *  @return Wether the instance is an parser node of given type.

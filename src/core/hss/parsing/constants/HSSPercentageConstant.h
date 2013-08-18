@@ -75,6 +75,13 @@ namespace AXR
         virtual AXRString toString();
 
         /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
+        /**
          *  Setter for the number of the percentage (e.g. 50% would have a number of 0.5).
          *  @param newValue     A HSSUnit containing the new number of the percentage value
          */

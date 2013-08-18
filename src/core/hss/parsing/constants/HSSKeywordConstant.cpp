@@ -77,6 +77,17 @@ AXRString HSSKeywordConstant::toString()
     return "HSSKeywordConstant with value " + this->value;
 }
 
+bool HSSKeywordConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSKeywordConstant> castedNode = qSharedPointerCast<HSSKeywordConstant>(otherNode);
+    if ( this->value != castedNode->value ) return false;
+    return true;
+}
+
 QSharedPointer<HSSClonable> HSSKeywordConstant::cloneImpl() const
 {
     return QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(*this));

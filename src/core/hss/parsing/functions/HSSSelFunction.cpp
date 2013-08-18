@@ -80,6 +80,23 @@ AXRString HSSSelFunction::toString()
     return tempstr;
 }
 
+bool HSSSelFunction::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSFunction::equalTo(otherNode)) return false;
+    QSharedPointer<HSSSelFunction> castedNode = qSharedPointerCast<HSSSelFunction>(otherNode);
+    if ( ! this->selection->equalTo(castedNode->selection) ) return false;
+    unsigned i = 0;
+    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+    {
+        if ( ! selectorChain->equalTo(castedNode->selectorChains[i])) return false;
+        ++i;
+    }
+    return true;
+}
+
 const std::vector<QSharedPointer<HSSSelectorChain> > & HSSSelFunction::getSelectorChains() const
 {
     return this->selectorChains;

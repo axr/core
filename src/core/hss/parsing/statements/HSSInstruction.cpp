@@ -127,6 +127,19 @@ AXRString HSSInstruction::instructionStringRepresentation(HSSInstructionType typ
     return types[type];
 }
 
+bool HSSInstruction::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSStatement::equalTo(otherNode)) return false;
+    QSharedPointer<HSSInstruction> castedNode = qSharedPointerCast<HSSInstruction>(otherNode);
+    if ( this->instructionType != castedNode->instructionType ) return false;
+    if ( this->value != castedNode->value ) return false;
+    if ( ! this->argument->equalTo(castedNode->argument)) return false;
+    return true;
+}
+
 QSharedPointer<HSSClonable> HSSInstruction::cloneImpl() const
 {
     return QSharedPointer<HSSInstruction>(new HSSInstruction(*this));

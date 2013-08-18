@@ -360,6 +360,25 @@ AXRString HSSObject::toString()
     }
 }
 
+bool HSSObject::equalTo(QSharedPointer<HSSObject> otherObj)
+{
+    //check wether pointers are the same
+    if (this == otherObj.data()) return true;
+    //check wether of same type
+    if (otherObj->type != this->type) return false;
+    //check wether the same amount of values
+    if (this->_computedValues.size() != otherObj->_computedValues.size()) return false;
+    //check wether the values are equal
+    QMapIterator<AXRString, QSharedPointer<HSSObject> > it(this->_computedValues);
+    while (it.hasNext())
+    {
+        it.next();
+        if ( ! otherObj->_computedValues.contains(it.key())) return false;
+        if ( ! it.value()->equalTo(otherObj->_computedValues[it.key()])) return false;
+    }
+    return true;
+}
+
 bool HSSObject::isNamed() const
 {
     return this->_isNamed;
@@ -614,8 +633,6 @@ bool HSSObject::validate(AXRString propertyName, QSharedPointer<HSSParserNode> &
 
 void HSSObject::clearProperties()
 {
-    this->clearDefaultValues();
-    this->clearComputedValues();
     this->clearStackValues();
 }
 
@@ -714,7 +731,7 @@ void HSSObject::fillWithDefaults()
         it.next();
         AXRString propertyName = it.key();
         QSharedPointer<HSSObject> defaultValue = it.value();
-        if (!this->_computedValues.contains(propertyName))
+        if (!this->_stackValues.contains(propertyName))
         {
             this->setComputed(propertyName, defaultValue);
         }
@@ -1054,13 +1071,12 @@ QSharedPointer<HSSKeywordConstant> HSSObject::stringToKeyword(AXRString value)
 void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> theObj)
 {
     QSharedPointer<HSSObject> currentValue = this->getComputedValue(propertyName);
+    //prepare
     theObj->setHostProperty(propertyName);
-    //FIXME: I don't know if this is comparing correctly
-    if (!currentValue || currentValue != theObj)
+    theObj->commitStackValues();
+    theObj->fillWithDefaults();
+    if (!currentValue || !currentValue->equalTo(theObj))
     {
-        //prepare
-        theObj->commitStackValues();
-        theObj->fillWithDefaults();
         if (this->isA(HSSObjectTypeContainer) || this->isA(HSSObjectTypeTextBlock))
         {
             QSharedPointer<HSSDisplayObject> thisDO = qSharedPointerCast<HSSDisplayObject>(this->shared_from_this());
@@ -1082,7 +1098,7 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
             theObj->setThisObj(this->getThisObj());
             theObj->setScope(this->getScope());
         }
-        
+
         //listen
         if (this->_listenCallbacks.contains(propertyName))
         {

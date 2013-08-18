@@ -103,6 +103,17 @@ AXRString HSSObjectDefinition::toString()
     return tempstr;
 }
 
+bool HSSObjectDefinition::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSStatement::equalTo(otherNode)) return false;
+    QSharedPointer<HSSObjectDefinition> castedNode = qSharedPointerCast<HSSObjectDefinition>(otherNode);
+    if ( ! this->prototype->equalTo(castedNode->prototype)) return false;
+    return true;
+}
+
 void HSSObjectDefinition::applyStack()
 {
     this->prototype->clearProperties();

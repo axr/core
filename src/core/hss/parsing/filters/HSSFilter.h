@@ -99,6 +99,13 @@ namespace AXR
         virtual AXRString toString();
 
         /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        virtual bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
+        /**
          *  Each subclass implements its own way of processing the selection.
          *  This base implementation is (I think) what gets called when you use
          *  an unknown filter name in the source code, which currently returns the entire scope.

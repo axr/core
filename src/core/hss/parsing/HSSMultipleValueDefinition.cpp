@@ -77,6 +77,26 @@ AXRString HSSMultipleValueDefinition::toString()
     return tempstr;
 }
 
+bool HSSMultipleValueDefinition::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSMultipleValueDefinition> castedNode = qSharedPointerCast<HSSMultipleValueDefinition>(otherNode);
+    if ( this->values.size() != castedNode->values.size() ) return false;
+    std::vector<QSharedPointer<HSSParserNode> >::const_iterator it1, it2;
+    it2 = castedNode->values.begin();
+    for (it1 = this->values.begin(); it1 != this->values.end(); ++it1)
+    {
+        const QSharedPointer<HSSParserNode> & nod = (*it1);
+        const QSharedPointer<HSSParserNode> & otherNod = (*it2);
+        if ( ! nod->equalTo(otherNod) ) return false;
+        ++it2;
+    }
+    return true;
+}
+
 std::vector<QSharedPointer<HSSParserNode> > HSSMultipleValueDefinition::getValues()
 {
     return this->values;

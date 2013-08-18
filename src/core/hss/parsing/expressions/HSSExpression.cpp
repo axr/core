@@ -91,6 +91,18 @@ AXRString HSSExpression::toString()
     return tempstr;
 }
 
+bool HSSExpression::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSExpression> castedNode = qSharedPointerCast<HSSExpression>(otherNode);
+    if ( ! this->_leftNode->equalTo(castedNode->_leftNode)) return false;
+    if ( ! this->_rightNode->equalTo(castedNode->_rightNode)) return false;
+    return true;
+}
+
 const bool HSSExpression::isA(HSSExpressionType otherType) const
 {
     return otherType == this->expressionType;

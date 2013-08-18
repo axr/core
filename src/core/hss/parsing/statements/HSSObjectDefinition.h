@@ -89,6 +89,13 @@ namespace AXR
 
         virtual AXRString toString();
 
+        /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
         void applyStack();
         void applyComputed();
 

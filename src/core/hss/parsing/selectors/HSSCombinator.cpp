@@ -99,6 +99,17 @@ AXRString HSSCombinator::stringRep()
     }
 }
 
+bool HSSCombinator::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSSelector::equalTo(otherNode)) return false;
+    QSharedPointer<HSSCombinator> castedNode = qSharedPointerCast<HSSCombinator>(otherNode);
+    if ( this->combinatorType != castedNode->combinatorType ) return false;
+    return true;
+}
+
 AXRString HSSCombinator::combinatorStringRepresentation(HSSCombinatorType type)
 {
     AXRString types[20];

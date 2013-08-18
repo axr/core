@@ -77,6 +77,14 @@ namespace AXR
         const HSSShapeType getShapeType() const;
 
         virtual AXRString toString();
+
+        /**
+         *  Each object overrides this method to compare against another node
+         *  @param otherObj     The other object to compare to
+         *  @return Wether the object is equal to the given one.
+         */
+        bool equalTo(QSharedPointer<HSSObject> otherObj);
+
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);

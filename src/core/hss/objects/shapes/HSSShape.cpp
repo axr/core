@@ -79,6 +79,17 @@ AXRString HSSShape::toString()
     return "HSSShape";
 }
 
+bool HSSShape::equalTo(QSharedPointer<HSSObject> otherObj)
+{
+    //check wether pointers are the same
+    if (this == otherObj.data()) return true;
+    //other checks
+    if ( ! HSSObject::equalTo(otherObj)) return false;
+    QSharedPointer<HSSShape> castedObj = qSharedPointerCast<HSSShape>(otherObj);
+    if ( this->shapeType != castedObj->shapeType ) return false;
+    return true;
+}
+
 AXRString HSSShape::defaultObjectType()
 {
     return "HSSShape";

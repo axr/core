@@ -110,6 +110,13 @@ namespace AXR
         AXRString stringRep();
 
         /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
+        /**
          *  Returns a node based on the index.
          *  @param i    The index of the node in the node list.
          *  @return A shared pointer to the parser node at the given index in the node list.

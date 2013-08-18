@@ -99,6 +99,15 @@ std::string HSSSelection::toStdString()
     return tempstr.toStdString();
 }
 
+bool HSSSelection::equalTo(QSharedPointer<HSSSelection> otherObj)
+{
+    //check wether pointers are the same
+    if (this == otherObj.data()) return true;
+    //check wether of same type
+    if (otherObj->selectionType != this->selectionType) return false;
+    return true;
+}
+
 AXRString HSSSelection::logSelection(const HSSSelection * selection, const std::vector<QSharedPointer<HSSSelectorChain> > & selectorChains)
 {
     QStringList selections;

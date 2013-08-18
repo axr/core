@@ -81,6 +81,13 @@ namespace AXR
         //see HSSParserNode.h for documentation of this method
         AXRString stringRep();
 
+        /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
         void setName(QSharedPointer<HSSNameSelector> name);
         const QSharedPointer<HSSNameSelector> getName() const;
 

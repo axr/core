@@ -96,6 +96,18 @@ AXRString HSSFunction::toString()
     return tempstr;
 }
 
+bool HSSFunction::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSFunction> castedNode = qSharedPointerCast<HSSFunction>(otherNode);
+    if ( this->functionType != castedNode->functionType) return false;
+    if ( this->_name != castedNode->_name) return false;
+    return true;
+}
+
 QSharedPointer<HSSObject> HSSFunction::evaluate()
 {
     if (this->_isDirty)

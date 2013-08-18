@@ -82,3 +82,15 @@ const bool HSSSelector::isA(HSSCombinatorType otherType) const
 {
     return HSSParserNode::isA(otherType);
 }
+
+bool HSSSelector::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSSelector> castedNode = qSharedPointerCast<HSSSelector>(otherNode);
+    if ( this->_selectorType != castedNode->_selectorType ) return false;
+    if ( this->_negating != castedNode->_negating ) return false;
+    return true;
+}

@@ -104,6 +104,13 @@ namespace AXR
          */
         std::string toStdString();
 
+        /**
+         *  Each object overrides this method to compare against another node
+         *  @param otherObj     The other object to compare to
+         *  @return Wether the object is equal to the given one.
+         */
+        virtual bool equalTo(QSharedPointer<HSSSelection> otherObj);
+
     protected:
         HSSSelection(HSSSelectionType type);
         HSSSelection(const HSSSelection &other);

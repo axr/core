@@ -112,6 +112,17 @@ AXRString HSSValue::toString()
     return "HSSValue: " + (value ? this->value->toString() : "(null)");
 }
 
+bool HSSValue::equalTo(QSharedPointer<HSSObject> otherObj)
+{
+    //check wether pointers are the same
+    if (this == otherObj.data()) return true;
+    //other checks
+    if ( ! HSSObject::equalTo(otherObj)) return false;
+    QSharedPointer<HSSValue> castedObj = qSharedPointerCast<HSSValue>(otherObj);
+    if ( ! this->value->equalTo(castedObj->value)) return false;
+    return true;
+}
+
 AXRString HSSValue::defaultObjectType()
 {
     return "value";

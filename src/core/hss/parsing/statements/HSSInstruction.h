@@ -124,6 +124,13 @@ namespace AXR
         virtual AXRString toString();
 
         /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
+        /**
          *  Setter for argument.
          *  Some instructions accept an argument, when written in functional notation (e.g. \#new(3) { ... }).
          *  When using an argument, this will hold the parser node that represents that value.

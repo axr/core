@@ -80,6 +80,17 @@ AXRString HSSNameSelector::stringRep()
     return this->elementName;
 }
 
+bool HSSNameSelector::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSSelector::equalTo(otherNode)) return false;
+    QSharedPointer<HSSNameSelector> castedNode = qSharedPointerCast<HSSNameSelector>(otherNode);
+    if ( this->elementName != castedNode->elementName ) return false;
+    return true;
+}
+
 QSharedPointer<HSSClonable> HSSNameSelector::cloneImpl() const
 {
     return QSharedPointer<HSSNameSelector>(new HSSNameSelector(*this));

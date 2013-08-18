@@ -98,6 +98,26 @@ AXRString HSSSelectorChain::stringRep()
     return tempstr;
 }
 
+bool HSSSelectorChain::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSSelectorChain> castedNode = qSharedPointerCast<HSSSelectorChain>(otherNode);
+    if ( this->nodeList.size() != castedNode->nodeList.size() ) return false;
+    std::deque<QSharedPointer<HSSParserNode> >::const_iterator it1, it2;
+    it2 = castedNode->nodeList.begin();
+    for (it1 = this->nodeList.begin(); it1 != this->nodeList.end(); ++it1)
+    {
+        const QSharedPointer<HSSParserNode> & nod = (*it1);
+        const QSharedPointer<HSSParserNode> & otherNod = (*it2);
+        if ( ! nod->equalTo(otherNod) ) return false;
+        ++it2;
+    }
+    return true;
+}
+
 const QSharedPointer<HSSParserNode> & HSSSelectorChain::get(size_t i) const
 {
     return this->nodeList[i];

@@ -82,6 +82,27 @@ AXRString HSSSimpleSelector::stringRep()
     return ret;
 }
 
+bool HSSSimpleSelector::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSSelector::equalTo(otherNode)) return false;
+    QSharedPointer<HSSSimpleSelector> castedNode = qSharedPointerCast<HSSSimpleSelector>(otherNode);
+    if ( ! this->name->equalTo(castedNode->name) ) return false;
+    if ( this->filters.size() != castedNode->filters.size()) return false;
+    std::list<QSharedPointer<HSSFilter> >::const_iterator it1, it2;
+    it2 = castedNode->filters.begin();
+    for (it1 = this->filters.begin(); it1 != this->filters.end(); ++it1)
+    {
+        const QSharedPointer<HSSFilter> & flt = (*it1);
+        const QSharedPointer<HSSFilter> & otherFlt = (*it2);
+        if ( ! flt->equalTo(otherFlt) ) return false;
+        ++it2;
+    }
+    return true;
+}
+
 QSharedPointer<HSSClonable> HSSSimpleSelector::cloneImpl() const
 {
     QSharedPointer<HSSSimpleSelector> clone = QSharedPointer<HSSSimpleSelector>(new HSSSimpleSelector(*this));

@@ -85,6 +85,13 @@ namespace AXR
         AXRString stringRep();
 
         /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        virtual bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
+        /**
          *  Getter for the name.
          *  @return The name of the flag. This is what comes after the double colon
          *  in HSS (e.g. "hover").

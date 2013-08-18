@@ -77,6 +77,17 @@ AXRString HSSNumberConstant::toString()
     return AXRString("HSSNumberConstant with value %1").arg(this->value);
 }
 
+bool HSSNumberConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSNumberConstant> castedNode = qSharedPointerCast<HSSNumberConstant>(otherNode);
+    if ( this->value != castedNode->value ) return false;
+    return true;
+}
+
 QSharedPointer<HSSClonable> HSSNumberConstant::cloneImpl() const
 {
     return QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(*this));

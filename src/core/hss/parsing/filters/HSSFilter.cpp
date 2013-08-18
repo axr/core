@@ -225,6 +225,18 @@ AXRString HSSFilter::toString()
     return "Generic filter";
 }
 
+bool HSSFilter::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSFilter> castedNode = qSharedPointerCast<HSSFilter>(otherNode);
+    if ( ! this->filterType == castedNode->filterType) return false;
+    if ( ! this->_negating == castedNode->_negating) return false;
+    return true;
+}
+
 const bool HSSFilter::isA(HSSFilterType type) const
 {
     return this->filterType == type;

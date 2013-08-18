@@ -81,6 +81,13 @@ namespace AXR
 
         const bool isA(HSSInstructionType type) const;
 
+        /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
     protected:
         /**
          *  Creates a new instance of a statement node. This class shouldn't be called directly,

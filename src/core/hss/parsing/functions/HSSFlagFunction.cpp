@@ -95,6 +95,23 @@ HSSFlagFunction::~HSSFlagFunction()
     this->cleanTrackedObservers();
 }
 
+bool HSSFlagFunction::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSFunction::equalTo(otherNode)) return false;
+    QSharedPointer<HSSFlagFunction> castedNode = qSharedPointerCast<HSSFlagFunction>(otherNode);
+    if ( this->_flagFunctionType != castedNode->_flagFunctionType ) return false;
+    unsigned i = 0;
+    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+    {
+        if ( ! selectorChain->equalTo(castedNode->selectorChains[i])) return false;
+        ++i;
+    }
+    return true;
+}
+
 const AXRString & HSSFlagFunction::getName()
 {
     return this->_name;

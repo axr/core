@@ -67,6 +67,17 @@ AXRString HSSPercentageConstant::toString()
     return AXRString("HSSPercentageConstant with value %1%").arg(this->_number);
 }
 
+bool HSSPercentageConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSPercentageConstant> castedNode = qSharedPointerCast<HSSPercentageConstant>(otherNode);
+    if ( this->_number != castedNode->_number ) return false;
+    return true;
+}
+
 void HSSPercentageConstant::setNumber(HSSUnit newValue)
 {
     this->_number = newValue;

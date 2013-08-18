@@ -93,3 +93,14 @@ const bool HSSStatement::isA(HSSInstructionType type) const
 {
     return HSSParserNode::isA(type);
 }
+
+bool HSSStatement::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSStatement> castedNode = qSharedPointerCast<HSSStatement>(otherNode);
+    if ( this->type != castedNode->type ) return false;
+    return true;
+}

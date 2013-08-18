@@ -145,6 +145,12 @@ namespace AXR
          */
         virtual AXRString toString();
         /**
+         *  Each object overrides this method to compare against another node
+         *  @param otherObj     The other object to compare to
+         *  @return Wether the object is equal to the given one.
+         */
+        virtual bool equalTo(QSharedPointer<HSSObject> otherObj);
+        /**
          *  @return Wether the object is named or is anonymous.
          */
         bool isNamed() const;

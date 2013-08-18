@@ -108,6 +108,14 @@ namespace AXR
         QSharedPointer<HSSMultipleSelection> splitAll();
 
         virtual AXRString toString();
+
+        /**
+         *  Each object overrides this method to compare against another node
+         *  @param otherObj     The other object to compare to
+         *  @return Wether the object is equal to the given one.
+         */
+        bool equalTo(QSharedPointer<HSSSelection> otherObj);
+
     protected:
 
     private:

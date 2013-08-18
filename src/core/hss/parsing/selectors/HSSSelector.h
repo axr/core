@@ -72,6 +72,13 @@ namespace AXR
 
         const bool isA(HSSCombinatorType otherType) const;
 
+        /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        virtual bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
     protected:
         /**
          *  Creates a new instance of a simple selector, for use of the subclasses.

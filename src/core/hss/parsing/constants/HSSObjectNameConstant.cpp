@@ -77,6 +77,17 @@ AXRString HSSObjectNameConstant::toString()
     return "HSSObjectNameConstant with value " + this->value;
 }
 
+bool HSSObjectNameConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSObjectNameConstant> castedNode = qSharedPointerCast<HSSObjectNameConstant>(otherNode);
+    if ( this->value != castedNode->value ) return false;
+    return true;
+}
+
 QSharedPointer<HSSClonable> HSSObjectNameConstant::cloneImpl() const
 {
     return QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(*this));

@@ -118,6 +118,17 @@ AXRString HSSGradient::toString()
     }
 }
 
+bool HSSGradient::equalTo(QSharedPointer<HSSObject> otherObj)
+{
+    //check wether pointers are the same
+    if (this == otherObj.data()) return true;
+    //other checks
+    if ( ! HSSObject::equalTo(otherObj)) return false;
+    QSharedPointer<HSSGradient> castedObj = qSharedPointerCast<HSSGradient>(otherObj);
+    if ( this->gradientType != castedObj->gradientType ) return false;
+    return true;
+}
+
 AXRString HSSGradient::defaultObjectType()
 {
     return "linearGradient";

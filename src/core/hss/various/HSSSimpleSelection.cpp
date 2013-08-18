@@ -266,3 +266,21 @@ AXRString HSSSimpleSelection::toString()
     }
     return tempstr;
 }
+
+bool HSSSimpleSelection::equalTo(QSharedPointer<HSSSelection> otherObj)
+{
+    //check wether pointers are the same
+    if (this == otherObj.data()) return true;
+    //other checks
+    if ( ! HSSSelection::equalTo(otherObj)) return false;
+    QSharedPointer<HSSSimpleSelection> castedObj = qSharedPointerCast<HSSSimpleSelection>(otherObj);
+    if ( this->d->items.size() != castedObj->d->items.size() ) return false;
+    std::vector<QSharedPointer<HSSDisplayObject> >::const_iterator it1, it2;
+    it2 = castedObj->d->items.begin();
+    for (it1=this->d->items.begin(); it1 != this->d->items.end(); ++it1)
+    {
+        if ( ! (*it1)->equalTo(*it2)) return false;
+        ++it2;
+    }
+    return true;
+}

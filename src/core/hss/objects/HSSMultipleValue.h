@@ -74,6 +74,14 @@ namespace AXR
          */
         virtual ~HSSMultipleValue();
         virtual AXRString toString();
+
+        /**
+         *  Each object overrides this method to compare against another node
+         *  @param otherObj     The other object to compare to
+         *  @return Wether the object is equal to the given one.
+         */
+        bool equalTo(QSharedPointer<HSSObject> otherObj);
+
         /**
          *  Adds a parser node defining a value to the storage.
          *  @param newValue     A shared pointer to the parser node that defines the value

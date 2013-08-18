@@ -74,6 +74,13 @@ namespace AXR
         virtual AXRString toString();
 
         /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        virtual bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
+        /**
          *  Evaluate the function. The actual implementation is up to each specific subclass.
          *  @return A void pointer to some data. It's up to the caller to know what type of
          *  data is expected.

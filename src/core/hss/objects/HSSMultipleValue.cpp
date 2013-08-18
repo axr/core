@@ -98,6 +98,24 @@ AXRString HSSMultipleValue::toString()
     return tempstr;
 }
 
+bool HSSMultipleValue::equalTo(QSharedPointer<HSSObject> otherObj)
+{
+    //check wether pointers are the same
+    if (this == otherObj.data()) return true;
+    //other checks
+    if ( ! HSSObject::equalTo(otherObj)) return false;
+    QSharedPointer<HSSMultipleValue> castedObj = qSharedPointerCast<HSSMultipleValue>(otherObj);
+    if ( this->valueList.size() != castedObj->valueList.size() ) return false;
+    QListIterator<QSharedPointer<HSSObject> > it1(this->valueList);
+    QListIterator<QSharedPointer<HSSObject> > it2(castedObj->valueList);
+    while (it1.hasNext() && it2.hasNext())
+    {
+        if ( ! it1.next()->equalTo(it2.next())) return false;
+
+    }
+    return true;
+}
+
 void HSSMultipleValue::add(QSharedPointer<HSSObject> newValue)
 {
     if (newValue)

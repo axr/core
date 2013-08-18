@@ -77,6 +77,24 @@ HSSAttrFunction::~HSSAttrFunction()
     this->cleanTrackedObservers();
 }
 
+bool HSSAttrFunction::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSFunction::equalTo(otherNode)) return false;
+    QSharedPointer<HSSAttrFunction> castedNode = qSharedPointerCast<HSSAttrFunction>(otherNode);
+    if ( this->attributeName != castedNode->attributeName ) return false;
+    if ( this->_stringValue != castedNode->_stringValue ) return false;
+    unsigned i = 0;
+    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+    {
+        if ( ! selectorChain->equalTo(castedNode->selectorChains[i])) return false;
+        ++i;
+    }
+    return true;
+}
+
 const AXRString & HSSAttrFunction::getAttributeName() const
 {
     return this->attributeName;
