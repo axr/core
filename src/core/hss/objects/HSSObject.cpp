@@ -787,6 +787,21 @@ void HSSObject::setStackNode(AXRString propertyName, QSharedPointer<AXR::HSSPars
     {
         qSharedPointerCast<HSSObjectDefinition>(parserNode)->applyStack();
     }
+    else if (parserNode->isA(HSSParserNodeTypeMultipleValueDefinition))
+    {
+        HSSParserNode::it iterator;
+        QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (parserNode);
+        std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
+        for (iterator = values.begin(); iterator != values.end(); ++iterator)
+        {
+            QSharedPointer<HSSParserNode> innerNode = *iterator;
+            if (innerNode->isA(HSSStatementTypeObjectDefinition))
+            {
+                qSharedPointerCast<HSSObjectDefinition>(innerNode)->applyStack();
+            }
+        }
+    }
+
     this->setStackValue(propertyName, this->computeValue(propertyName, parserNode));
 }
 
@@ -825,27 +840,6 @@ void HSSObject::appendStackValue(AXRString propertyName, QSharedPointer<HSSObjec
 
 void HSSObject::_setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject)
 {
-    switch (theObject->getObjectType())
-    {
-        case HSSObjectTypeMultipleValue:
-        {
-            if (this->_stackValues.contains(propertyName))
-            {
-                this->_stackValues.remove(propertyName);
-            }
-            QList<QSharedPointer<HSSObject> >::iterator iterator;
-            QSharedPointer<HSSMultipleValue> multiVal = qSharedPointerCast<HSSMultipleValue> (theObject);
-            QList<QSharedPointer<HSSObject> > values = multiVal->getValues();
-            for (iterator = values.begin(); iterator != values.end(); ++iterator)
-            {
-                this->appendStackValue(propertyName, *iterator);
-            }
-            return;
-        }
-
-        default:
-            break;
-    }
     this->_stackValues.insert(propertyName, theObject);
 }
 
