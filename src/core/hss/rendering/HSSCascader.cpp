@@ -170,6 +170,7 @@ void HSSCascader::visit(HSSTextBlock &textBlock)
     if (textBlock._needsRereadRules)
     {
         textBlock.setDefaults();
+        textBlock.commitStackValues();
         textBlock.fillWithDefaults();
         textBlock._needsRereadRules = false;
     }
