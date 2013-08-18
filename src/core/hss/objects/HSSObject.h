@@ -299,14 +299,14 @@ namespace AXR
         void setDefaultPercentage(AXRString propertyName, HSSUnit value);
         void setDefault(AXRString propertyName, AXRString value);
         void setDefaultKw(AXRString propertyName, AXRString value);
-        void fillWithDefaults();
+        virtual void fillWithDefaults();
         bool hasStackValue(AXRString property) const;
         const QSharedPointer<HSSObject> getStackValue(AXRString property) const;
         void clearStackValues();
         void setStackNode(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
         void setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject);
         void appendStackValue(AXRString propertyName, QSharedPointer<HSSObject> parserNode);
-        void commitStackValues();
+        virtual void commitStackValues();
         virtual QSharedPointer<HSSObject> computeValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
         QSharedPointer<HSSObject> computeValueObject(QSharedPointer<HSSParserNode> parserNode);
         QSharedPointer<HSSObject> computeValueObject(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);

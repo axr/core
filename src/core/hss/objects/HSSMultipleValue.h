@@ -102,6 +102,11 @@ namespace AXR
          */
         const QList<QSharedPointer<HSSObject> > getValues() const;
 
+        void commitStackValues();
+        void fillWithDefaults();
+        void setThisObj(QSharedPointer<HSSDisplayObject> value);
+        void setScope(QSharedPointer<HSSSimpleSelection> newScope);
+
     protected:
         QList<QSharedPointer<HSSObject> >valueList;
 

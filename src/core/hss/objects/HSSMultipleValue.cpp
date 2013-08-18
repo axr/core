@@ -131,3 +131,43 @@ const QList<QSharedPointer<HSSObject> > HSSMultipleValue::getValues() const
 {
     return this->valueList;
 }
+
+void HSSMultipleValue::commitStackValues()
+{
+    QListIterator<QSharedPointer<HSSObject> > it(this->valueList);
+    while (it.hasNext())
+    {
+        QSharedPointer<HSSObject> item = it.next();
+        item->commitStackValues();
+    }
+}
+
+void HSSMultipleValue::fillWithDefaults()
+{
+    QListIterator<QSharedPointer<HSSObject> > it(this->valueList);
+    while (it.hasNext())
+    {
+        QSharedPointer<HSSObject> item = it.next();
+        item->fillWithDefaults();
+    }
+}
+
+void HSSMultipleValue::setThisObj(QSharedPointer<HSSDisplayObject> value)
+{
+    QListIterator<QSharedPointer<HSSObject> > it(this->valueList);
+    while (it.hasNext())
+    {
+        QSharedPointer<HSSObject> item = it.next();
+        item->setThisObj(value);
+    }
+}
+
+void HSSMultipleValue::setScope(QSharedPointer<HSSSimpleSelection> newScope)
+{
+    QListIterator<QSharedPointer<HSSObject> > it(this->valueList);
+    while (it.hasNext())
+    {
+        QSharedPointer<HSSObject> item = it.next();
+        item->setScope(newScope);
+    }
+}
