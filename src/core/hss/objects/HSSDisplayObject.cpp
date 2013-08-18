@@ -797,13 +797,22 @@ void HSSDisplayObject::listenHeight(QSharedPointer<HSSObject> theObj)
 void HSSDisplayObject::notifyHeight(QSharedPointer<HSSObject> theObj)
 {
     this->heightByContent = false;
-    this->_hasOwnHeight = false;
+    const QSharedPointer<HSSContainer> parent = this->getParent();
+    if (parent)
+    {
+        this->_hasOwnHeight = !parent->heightByContent;
+    }
+    else
+    {
+        this->_hasOwnHeight = true;
+    }
     if (theObj->isA(HSSObjectTypeValue))
     {
         QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
         if (parserNode->isA(HSSParserNodeTypeKeywordConstant) && qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue() == "content")
         {
             this->heightByContent = true;
+            this->_hasOwnHeight = true;
         }
         else if (parserNode->isA(HSSParserNodeTypeNumberConstant))
         {
