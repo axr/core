@@ -118,6 +118,7 @@ namespace AXR
 
         //see HSSObject.h for documentation on this method
         void setThisObj(QSharedPointer<HSSDisplayObject> value);
+        void setHostProperty(AXRString newValue);
 
     protected:
         //value

@@ -340,3 +340,12 @@ void HSSValue::setThisObj(QSharedPointer<HSSDisplayObject> value)
         this->value->setThisObj(value);
     }
 }
+
+void HSSValue::setHostProperty(AXRString newValue)
+{
+    HSSObject::setHostProperty(newValue);
+    if (this->value)
+    {
+        this->value->setHostProperty(newValue);
+    }
+}
