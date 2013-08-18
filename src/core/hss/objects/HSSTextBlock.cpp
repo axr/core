@@ -199,7 +199,7 @@ HSSTextBlock::~HSSTextBlock()
 void HSSTextBlock::setDefaults()
 {
     HSSDisplayObject::setDefaults();
-    this->setDefault("text", "");
+    //the 'text' property is intentionally left out here
     this->setDefault("height", "content");
     this->setDefaultKw("font", "inherit");
     this->setDefaultKw("textAlign", "left");
