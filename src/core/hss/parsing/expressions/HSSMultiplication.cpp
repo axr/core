@@ -67,6 +67,7 @@ QSharedPointer<HSSMultiplication> HSSMultiplication::clone() const
 HSSMultiplication::~HSSMultiplication()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSMultiplication: destructing multiplication expression");
+    this->cleanTrackedObservers();
 }
 
 HSSUnit HSSMultiplication::calculate(HSSUnit leftval, HSSUnit rightval)

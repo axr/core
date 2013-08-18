@@ -67,6 +67,7 @@ QSharedPointer<HSSDivision> HSSDivision::clone() const
 HSSDivision::~HSSDivision()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSDivision: destructing division expression");
+    this->cleanTrackedObservers();
 }
 
 HSSUnit HSSDivision::calculate(HSSUnit leftval, HSSUnit rightval)

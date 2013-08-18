@@ -67,6 +67,7 @@ QSharedPointer<HSSSum> HSSSum::clone() const
 HSSSum::~HSSSum()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSSum: destructing sum expression");
+    this->cleanTrackedObservers();
 }
 
 HSSUnit HSSSum::calculate(HSSUnit leftval, HSSUnit rightval)

@@ -67,6 +67,7 @@ QSharedPointer<HSSSubtraction> HSSSubtraction::clone() const
 HSSSubtraction::~HSSSubtraction()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSSubtraction: destructing subtraction expression");
+    this->cleanTrackedObservers();
 }
 
 HSSUnit HSSSubtraction::calculate(HSSUnit leftval, HSSUnit rightval)
