@@ -760,6 +760,8 @@ void HSSObject::clearStackValues()
 void HSSObject::setStackNode(AXRString propertyName, QSharedPointer<AXR::HSSParserNode> parserNode)
 {
     //ignore invalid values
+    ///@todo this is not doing anything anywhere, yet. This needs to be discussed
+    ///and implemented accordingly in all the subclasses
     if (!this->validate(propertyName, parserNode))
     {
         return;
