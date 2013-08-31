@@ -2,10 +2,32 @@ import qbs 1.0
 
 Product {
     name: "axrcore"
-    type: "dynamiclibrary"
+    type: {
+        if (qbs.targetOS.contains("osx"))
+            return "frameworkbundle"
+        else if (qbs.targetOS.contains("ios"))
+            return "staticlibrary"
+        else
+            return "dynamiclibrary"
+    }
 
     Depends { name: "cpp" }
     Depends { name: "Qt"; submodules: [ "core", "gui" ] }
+
+    targetName: type.contains("frameworkbundle") ? "AXRCore" : name
+
+    destinationDirectory: {
+        if (type.contains("frameworkbundle"))
+            return "Library/Frameworks"
+        else if (qbs.targetOS.contains("unix"))
+            return "lib"
+    }
+
+    Group {
+        fileTagsFilter: product.type
+        qbs.install: true
+        qbs.installDir: product.destinationDirectory
+    }
 
     // TODO: how can we do this in a less verbose manner?
     files: [

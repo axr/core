@@ -1,16 +1,22 @@
 import qbs 1.0
 
-Project {
-    Application {
-        name: "axrlayouttests"
-        type: "application"
+Application {
+    name: "axrlayouttests"
+    type: "application"
 
-        Depends { name: "cpp" }
-        Depends { name: "axrcore" }
-        Depends { name: "Qt"; submodules: [ "core", "script" ] }
+    destinationDirectory: qbs.targetOS.contains("unix") ? "bin" : undefined
 
-        cpp.includePaths: [ product.buildDirectory ]
-
-        files: [ "*.h", "*.cpp" ]
+    Group {
+        fileTagsFilter: product.type
+        qbs.install: true
+        qbs.installDir: product.destinationDirectory
     }
+
+    Depends { name: "cpp" }
+    Depends { name: "axrcore" }
+    Depends { name: "Qt"; submodules: [ "core", "script" ] }
+
+    cpp.includePaths: [ product.buildDirectory ]
+
+    files: [ "*.h", "*.cpp" ]
 }
