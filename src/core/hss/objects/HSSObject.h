@@ -150,6 +150,12 @@ namespace AXR
          *  @return Wether the object is equal to the given one.
          */
         virtual bool equalTo(QSharedPointer<HSSObject> otherObj);
+
+        /**
+         * @return A map representing the object and it's properties
+         */
+        virtual QVariantMap toMap() const;
+
         /**
          *  @return Wether the object is named or is anonymous.
          */

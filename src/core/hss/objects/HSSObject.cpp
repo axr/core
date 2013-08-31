@@ -379,6 +379,220 @@ bool HSSObject::equalTo(QSharedPointer<HSSObject> otherObj)
     return true;
 }
 
+QVariantMap HSSObject::toMap() const
+{
+    QVariantMap map;
+    QVariantMap properties;
+
+    QMapIterator<HSSObservableProperty, QVariant> i(this->getProperties());
+    while (i.hasNext())
+    {
+        i.next();
+
+        QString propertyName = HSSObservable::observablePropertyStringRepresentation(i.key());
+        QVariant propertyValue;
+        QVariant value = i.value();
+
+        if (value.canConvert<bool *>())
+        {
+            propertyValue = QVariant(*value.value<bool *>());
+        }
+        else if (value.canConvert<HSSUnit *>())
+        {
+            propertyValue = QVariant(*value.value<HSSUnit *>());
+        }
+        else if (value.canConvert<QSharedPointer<HSSObject> *>())
+        {
+            QSharedPointer<HSSObject> object = *value.value<QSharedPointer<HSSObject> *>();
+            propertyValue = QVariant(object->toMap());
+        }
+        else if (value.canConvert<QSharedPointer<HSSShape> *>())
+        {
+            QSharedPointer<HSSShape> object = *value.value<QSharedPointer<HSSShape> *>();
+            propertyValue = QVariant(object->toMap());
+        }
+        else if (value.canConvert<HSSDirectionValue *>())
+        {
+            HSSDirectionValue direction = *value.value<HSSDirectionValue *>();
+
+            switch (direction)
+            {
+                case HSSDirectionTopToBottom:
+                    propertyValue = QVariant("ttb");
+                    break;
+
+                case HSSDirectionBottomToTop:
+                    propertyValue = QVariant("btt");
+                    break;
+
+                case HSSDirectionLeftToRight:
+                    propertyValue = QVariant("ltr");
+                    break;
+
+                case HSSDirectionRightToLeft:
+                    propertyValue = QVariant("rtl");
+                    break;
+
+                default:
+                    propertyValue = QVariant(QVariant::String);
+            }
+        }
+        else if (value.canConvert<HSSTextAlignType *>())
+        {
+            HSSTextAlignType textAlign = *value.value<HSSTextAlignType *>();
+
+            switch (textAlign)
+            {
+                case HSSTextAlignTypeCenter:
+                    propertyValue = QVariant("center");
+                    break;
+
+                case HSSTextAlignTypeLeft:
+                    propertyValue = QVariant("left");
+                    break;
+
+                case HSSTextAlignTypeRight:
+                    propertyValue = QVariant("right");
+                    break;
+
+                case HSSTextAlignTypeJustify:
+                    propertyValue = QVariant("justify");
+                    break;
+
+                default:
+                    propertyValue = QVariant(QVariant::String);
+            }
+        }
+        else if (value.canConvert<std::vector<QSharedPointer<HSSObject> > *>())
+        {
+            std::vector<QSharedPointer<HSSObject> > objects = *value.value<std::vector<QSharedPointer<HSSObject> > *>();
+
+            if (objects.size() > 0)
+            {
+                QList<QVariant> list;
+
+                Q_FOREACH(QSharedPointer<HSSObject> object, objects)
+                {
+                    list.append(object->toMap());
+                }
+
+                propertyValue = QVariant(list);
+            }
+            else
+            {
+                propertyValue = QVariant(false);
+            }
+        }
+        else if (value.canConvert<std::vector<QSharedPointer<HSSMargin> > *>())
+        {
+            std::vector<QSharedPointer<HSSMargin> > objects = *value.value<std::vector<QSharedPointer<HSSMargin> > *>();
+
+            if (objects.size() > 0)
+            {
+                QList<QVariant> list;
+
+                Q_FOREACH(QSharedPointer<HSSMargin> object, objects)
+                {
+                    list.append(object->toMap());
+                }
+
+                propertyValue = QVariant(list);
+            }
+            else
+            {
+                propertyValue = QVariant(false);
+            }
+        }
+        else if (value.canConvert<std::vector<QSharedPointer<HSSBorder> > *>())
+        {
+            std::vector<QSharedPointer<HSSBorder> > objects = *value.value<std::vector<QSharedPointer<HSSBorder> > *>();
+
+            if (objects.size() > 0)
+            {
+                QList<QVariant> list;
+
+                Q_FOREACH(QSharedPointer<HSSBorder> object, objects)
+                {
+                    list.append(object->toMap());
+                }
+
+                propertyValue = QVariant(list);
+            }
+            else
+            {
+                propertyValue = QVariant(false);
+            }
+        }
+        else if (value.canConvert<std::vector<QSharedPointer<HSSFont> > *>())
+        {
+            std::vector<QSharedPointer<HSSFont> > objects = *value.value<std::vector<QSharedPointer<HSSFont> > *>();
+
+            if (objects.size() > 0)
+            {
+                QList<QVariant> list;
+
+                Q_FOREACH(QSharedPointer<HSSFont> object, objects)
+                {
+                    list.append(object->toMap());
+                }
+
+                propertyValue = QVariant(list);
+            }
+            else
+            {
+                propertyValue = QVariant(false);
+            }
+        }
+        else if (value.canConvert<QMapHSSEventTypeVectorHSSObjectp *>())
+        {
+            QMap<AXR::HSSEventType, std::vector<QSharedPointer<AXR::HSSObject> > > objects;
+            objects = *value.value<QMapHSSEventTypeVectorHSSObjectp *>();
+
+            QMapIterator<AXR::HSSEventType, std::vector<QSharedPointer<AXR::HSSObject> > > i2(objects);
+
+            if (objects.size() > 0)
+            {
+                QVariantMap eventsMap;
+
+                while (i2.hasNext())
+                {
+                    i2.next();
+
+                    QList<QVariant> eventList;
+                    QString eventName = HSSEvent::eventTypeStringRepresentation(i2.key());
+                    std::vector<QSharedPointer<AXR::HSSObject> > events = i2.value();
+
+                    Q_FOREACH(QSharedPointer<HSSObject> object, events)
+                    {
+                        eventList.append(object->toMap());
+                    }
+
+                    eventsMap.insert(eventName, eventList);
+                }
+
+                propertyValue = QVariant(eventsMap);
+            }
+            else
+            {
+                propertyValue = QVariant(QVariant::List);
+            }
+        }
+        else
+        {
+            propertyValue = QVariant();
+        }
+
+        properties.insert(propertyName, propertyValue);
+    }
+
+    // TODO: Insert the object type here (including the @)
+    map.insert("object", QVariant::String);
+    map.insert("name", this->isNamed() ? QVariant(this->name) : QVariant::String);
+    map.insert("properties", properties);
+
+    return map;
+}
+
 bool HSSObject::isNamed() const
 {
     return this->_isNamed;
