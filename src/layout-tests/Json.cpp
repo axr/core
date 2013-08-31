@@ -46,16 +46,6 @@
 
 #include "Json.h"
 
-Json::Json()
-{
-
-}
-
-Json::~Json()
-{
-}
-
-
 QString Json::encode(const QMap<QString,QVariant> &map)
 {
     QScriptEngine engine;
