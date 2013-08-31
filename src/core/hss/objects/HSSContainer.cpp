@@ -197,6 +197,29 @@ AXRString HSSContainer::toString()
     return tempstr;
 }
 
+QVariantMap HSSContainer::toMap() const
+{
+    QVariantMap map = HSSObject::toMap();
+
+    if (this->children->size() > 0)
+    {
+        QList<QVariant> childrenList;
+
+        for (HSSSimpleSelection::iterator it = this->children->begin(); it!= this->children->end(); ++it)
+        {
+            childrenList.append((*it)->toMap());
+        }
+
+        map.insert("children", QVariant(childrenList));
+    }
+    else
+    {
+        map.insert("children", QVariant(false));
+    }
+
+    return map;
+}
+
 AXRString HSSContainer::defaultObjectType()
 {
     return "container";
