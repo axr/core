@@ -111,7 +111,7 @@ using namespace AXR;
     {
         // Render the final image to the screen
         renderVisitor->setDirtyRect([self bounds]);
-        visitorManager->runVisitors(HSSAbstractVisitor::VisitorFilterAll);
+        visitorManager->runVisitors(HSSVisitorFilterAll);
 
         CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, renderVisitor->getFinalFrameAsCGImageRef());
     }
