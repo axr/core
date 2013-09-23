@@ -99,6 +99,9 @@ AXRString HSSToken::tokenStringRepresentation(HSSTokenType type)
         types[HSSParenthesisClose] = "HSSParenthesisClose";
         types[HSSLineComment] = "HSSLineComment";
         types[HSSBlockComment] = "HSSBlockComment";
+        types[HSSDot] = "HSSDot";
+        types[HSSDoubleDot] = "HSSDoubleDot";
+        types[HSSEllipsis] = "HSSEllipsis";
     }
 
     return types[type];

@@ -71,7 +71,10 @@ namespace AXR
         HSSLineComment,
         HSSBlockComment,
         HSSNegator,
-        HSSAmpersand
+        HSSAmpersand,
+        HSSDot,
+        HSSDoubleDot,
+        HSSEllipsis
     };
 }
 

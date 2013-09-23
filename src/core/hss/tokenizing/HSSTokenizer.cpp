@@ -289,6 +289,8 @@ QSharedPointer<HSSToken> HSSTokenizer::readNextToken()
             ret = QSharedPointer<HSSToken>(new HSSToken(HSSNegator, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
+        case '.':
+            return this->readDotChars();
         default:
             return this->readSymbol();
     }
@@ -645,26 +647,46 @@ QSharedPointer<HSSToken> HSSTokenizer::readSymbol()
 
     switch (d->currentChar.toLatin1())
     {
-    case '.':
-        this->storeCurrentCharAndReadNext();
-        if (d->currentChar == '.')
-        {
-            this->storeCurrentCharAndReadNext();
-            if (d->currentChar == '.')
-            {
-                this->storeCurrentCharAndReadNext();
-            }
-
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText(), line, column));
-            return ret;
-        }
-
-        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, this->extractCurrentTokenText(), line, column));
-        return ret;
-
     default:
         ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, d->currentChar, line, column));
         this->readNextChar();
         return ret;
     }
+}
+
+/*!
+ * Reads and returns a dot characters
+ *
+ * NOTE: This function expects the current character to be a dot "."
+ */
+QSharedPointer<HSSToken> HSSTokenizer::readDotChars()
+{
+    const qint64 line = d->currentLine;
+    const qint64 column = d->currentColumn - 1;
+    QSharedPointer<HSSToken> ret;
+    if (d->currentChar == '.')
+    {
+        this->readNextChar();
+        if (d->currentChar == '.')
+        {
+            this->readNextChar();
+            if (d->currentChar == '.')
+            {
+                this->readNextChar();
+                ret = QSharedPointer<HSSToken>(new HSSToken(HSSEllipsis, line, column));
+                return ret;
+            }
+            else
+            {
+                ret = QSharedPointer<HSSToken>(new HSSToken(HSSDoubleDot, line, column));
+                return ret;
+            }
+        }
+        else
+        {
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSDot, line, column));
+            return ret;
+        }
+    }
+    return ret;
 }

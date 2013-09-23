@@ -835,33 +835,43 @@ QSharedPointer<HSSCombinator> HSSParser::readCombinator()
     axr_log(LoggerChannelHSSParser, "HSSParser: reading combinator");
     QSharedPointer<HSSCombinator> ret;
 
-    if (this->currentToken->isA(HSSSymbol))
+    switch (this->currentToken->getType())
+    {
+    case HSSSymbol:
     {
         const char currentTokenValue = *(VALUE_TOKEN(this->currentToken)->getString()).toStdString().c_str();
         switch (currentTokenValue)
         {
-        case '=':
-        case '-':
-        case '+':
-        case '>':
-            /**
-             *  @todo special handling for text selection combinators?
-             */
-            ret = this->readSymbolCombinator();
-            break;
-
-        case '.':
-            //we need to check if it is really a combinator or just a syntax error
-            if (VALUE_TOKEN(this->currentToken)->getString() == "..")
-            {
+            case '=':
+            case '-':
+            case '+':
+            case '>':
+                /**
+                 *  @todo special handling for text selection combinators?
+                 */
                 ret = this->readSymbolCombinator();
                 break;
-            }
 
-            //huh? we didn't expect any other symbol
-        default:
-            break;
+                //huh? we didn't expect any other symbol
+            default:
+                break;
         }
+        break;
+    }
+
+    case HSSDot:
+    {
+        //ret = QSharedPointer<HSSCombinator>(new HSSCombinator(HSSCombinatorTypeNearestDescendants, this->getController()));
+        break;
+    }
+    case HSSDoubleDot:
+    {
+        ret = QSharedPointer<HSSCombinator>(new HSSCombinator(HSSCombinatorTypeDescendants, this->getController()));
+        break;
+    }
+
+    default:
+        break;
     }
 
     return ret;
@@ -882,25 +892,31 @@ bool HSSParser::isCombinator(QSharedPointer<HSSToken> token)
         return false;
     }
     //all combinators are symbols
-    if (token->isA(HSSSymbol))
+    switch (token->getType())
+    {
+    case HSSSymbol:
     {
         const char currentTokenChar = *(VALUE_TOKEN(token).data()->getString()).toStdString().c_str();
         switch (currentTokenChar)
         {
-        case '=':
-        case '-':
-        case '+':
-        case '.':
-        case '>':
-            return true;
+            case '=':
+            case '-':
+            case '+':
+            case '>':
+                return true;
 
-        default:
-            return false;
+            default:
+                return false;
         }
+        break;
     }
-    else if (token->isA(HSSWhitespace))
-    {
+    case HSSDot:
+    case HSSDoubleDot:
+        return true;
+    case HSSWhitespace:
         return this->isChildrenCombinator();
+    default:
+        break;
     }
     return false;
 }
@@ -988,7 +1004,7 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
                 }
             }
             //this might be dot notation
-            else if(peekToken->isA(HSSSymbol) && VALUE_TOKEN(peekToken)->getString() == ".")
+            else if(peekToken->isA(HSSDot))
             {
                 peekToken = this->tokenizer->peekNextToken();
                 if(peekToken->isA(HSSIdentifier)){
@@ -1146,13 +1162,6 @@ QSharedPointer<HSSCombinator> HSSParser::readSymbolCombinator()
         break;
     case '+':
         ret = QSharedPointer<HSSCombinator>(new HSSCombinator(HSSCombinatorTypeNextSiblings, this->getController()));
-        break;
-    case '.':
-        if (VALUE_TOKEN(this->currentToken)->getString() == "..")
-        {
-            ret = QSharedPointer<HSSCombinator>(new HSSCombinator(HSSCombinatorTypeDescendants, this->getController()));
-        }
-
         break;
     default:
         throw AXRWarning("HSSParser", "Unexpected token of type " + HSSToken::tokenStringRepresentation(this->currentToken->getType()), this->currentFile->sourceUrl(), this->line, this->column);
@@ -1528,7 +1537,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                         this->readNextToken();
                         //allow whitespace before colon
                         this->skip(HSSWhitespace);
-                        if (this->currentToken->isA(HSSSymbol) && VALUE_TOKEN(this->currentToken)->getString() == ".")
+                        if (this->currentToken->isA(HSSDot))
                         {
                             this->readNextToken(true);
                             this->expect(HSSIdentifier);
@@ -1536,7 +1545,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                             while (!done2)
                             {
                                 done2 = true;
-                                if (this->currentToken->isA(HSSSymbol) && VALUE_TOKEN(this->currentToken)->getString() == ".")
+                                if (this->currentToken->isA(HSSDot))
                                 {
                                     done2 = false;
                                     this->readNextToken(true);
