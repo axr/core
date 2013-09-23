@@ -182,7 +182,7 @@ void HSSAttrFunction::valueChanged(const AXRString source, const QSharedPointer<
 {
     this->setDirty(true);
     this->_value = theObj;
-    this->notifyObservers("value", theObj);
+    this->notifyObservers("__impl_private__value", theObj);
 }
 
 QSharedPointer<HSSClonable> HSSAttrFunction::cloneImpl() const

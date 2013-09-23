@@ -212,9 +212,9 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
         }
         this->_value = ret;
 
-        if (container != this->getTrackedObserver("refValue") || this->getTrackedProperty("refValue") != this->propertyName)
+        if (container != this->getTrackedObserver("__impl_private__refValue") || this->getTrackedProperty("__impl_private__refValue") != this->propertyName)
         {
-            container->observe(this->propertyName, "refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
+            container->observe(this->propertyName, "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
         }
     }
     else
@@ -282,7 +282,7 @@ void HSSRefFunction::valueChanged(const AXRString target, const AXRString source
         }
     }
     this->_value = ret;
-    this->notifyObservers("remoteValue", ret);
+    this->notifyObservers("__impl_private__remoteValue", ret);
 }
 
 QSharedPointer<HSSClonable> HSSRefFunction::cloneImpl() const

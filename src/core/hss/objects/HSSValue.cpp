@@ -151,10 +151,10 @@ void HSSValue::setValue(QSharedPointer<HSSParserNode> parserNode)
     switch (parserNode->getType())
     {
         case HSSParserNodeTypeFunctionCall:
-            parserNode->observe("remoteValue", "valueObj", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
+            parserNode->observe("__impl_private__remoteValue", "__impl_private__valueObj", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
             break;
         case HSSParserNodeTypeExpression:
-            parserNode->observe("expressionResult", "valueObj", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
+            parserNode->observe("__impl_private__expressionResult", "__impl_private__valueObj", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
             break;
 
         default:
@@ -164,7 +164,7 @@ void HSSValue::setValue(QSharedPointer<HSSParserNode> parserNode)
 
 void HSSValue::valueChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
-    this->notifyObservers("valueChanged", theObj);
+    this->notifyObservers("__impl_private__valueChanged", theObj);
 }
 
 const HSSUnit HSSValue::getNumber() const

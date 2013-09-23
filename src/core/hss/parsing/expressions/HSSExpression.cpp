@@ -136,14 +136,14 @@ HSSUnit HSSExpression::evaluate()
         this->leftval = left->getNumber();
         if (this->left->getValue()->isA(HSSParserNodeTypeExpression) || this->left->getValue()->isA(HSSParserNodeTypeFunctionCall))
         {
-            left->observe("valueChanged", "left", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
+            left->observe("__impl_private__valueChanged", "left", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
         }
         //right
         QSharedPointer<HSSValue> right = this->getRight();
         this->rightval = right->getNumber();
         if (this->right->getValue()->isA(HSSParserNodeTypeExpression) || this->right->getValue()->isA(HSSParserNodeTypeFunctionCall))
         {
-            right->observe("valueChanged", "right", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
+            right->observe("__impl_private__valueChanged", "right", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
         }
         //calculate
         this->setValue(this->calculate(this->leftval, this->rightval));
@@ -176,14 +176,14 @@ void HSSExpression::leftChanged(const AXRString target, const AXRString source, 
 {
     this->leftval = this->getLeft()->getNumber();
     this->setValue(this->calculate(this->leftval, this->rightval));
-    this->notifyObservers("expressionResult", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
+    this->notifyObservers("__impl_private__expressionResult", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
 }
 
 void HSSExpression::rightChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj)
 {
     this->rightval = this->getRight()->getNumber();
     this->setValue(this->calculate(this->leftval, this->rightval));
-    this->notifyObservers("expressionResult", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
+    this->notifyObservers("__impl_private__expressionResult", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
 }
 
 void HSSExpression::setDirty(bool value)

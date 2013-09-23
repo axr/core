@@ -183,7 +183,7 @@ void HSSFlagFunction::valueChanged(const AXRString source, const QSharedPointer<
 {
     this->setDirty(true);
     this->_value = theObj;
-    this->notifyObservers("value", theObj);
+    this->notifyObservers("__impl_private__value", theObj);
 }
 
 const HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType() const

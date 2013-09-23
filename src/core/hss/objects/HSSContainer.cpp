@@ -315,7 +315,7 @@ void HSSContainer::add(QSharedPointer<HSSDisplayObject> child)
         this->children->add(child);
     }
     this->allChildren->add(child);
-    this->notifyObservers("treeChange", sharedThis);
+    this->notifyObservers("__impl_private__treeChange", sharedThis);
 }
 
 void HSSContainer::remove(size_t index)
@@ -349,7 +349,7 @@ void HSSContainer::remove(size_t index)
     }
 
     this->resetChildrenIndexes();
-    this->notifyObservers("treeChange", this->shared_from_this());
+    this->notifyObservers("__impl_private__treeChange", this->shared_from_this());
 }
 
 void HSSContainer::clear()

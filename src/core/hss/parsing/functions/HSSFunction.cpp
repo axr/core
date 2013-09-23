@@ -141,7 +141,7 @@ QSharedPointer<HSSObject> HSSFunction::_evaluate()
 
 void HSSFunction::propertyChanged(const AXRString property, const AXRString target, QSharedPointer<HSSObject> theObj)
 {
-    this->notifyObservers("value", theObj);
+    this->notifyObservers("__impl_private__value", theObj);
 }
 
 void HSSFunction::setScope(QSharedPointer<HSSSimpleSelection> newScope)

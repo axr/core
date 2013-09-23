@@ -449,7 +449,7 @@ void HSSDisplayObject::rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState de
 {
     if (!this->hasRule(newRule))
     {
-        newRule->observe("ruleChanged", "ruleAdd", this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::ruleChanged));
+        newRule->observe("__impl_private__ruleChanged", "__impl_private__ruleAdd", this, new HSSValueChangedCallback<HSSDisplayObject > (this, &HSSDisplayObject::ruleChanged));
 
         newRule->appliedToAdd(this->shared_from_this());
 
@@ -704,7 +704,7 @@ void HSSDisplayObject::listenWidth(QSharedPointer<HSSObject> theObj)
             case HSSParserNodeTypeExpression:
             case HSSParserNodeTypeFunctionCall:
             {
-                theObj->observe("valueChanged", "width", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::widthChanged));
+                theObj->observe("__impl_private__valueChanged", "width", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::widthChanged));
                 break;
             }
 
@@ -784,7 +784,7 @@ void HSSDisplayObject::listenHeight(QSharedPointer<HSSObject> theObj)
             case HSSParserNodeTypeFunctionCall:
             case HSSParserNodeTypeExpression:
             {
-                theObj->observe("valueChanged", "height", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::heightChanged));
+                theObj->observe("__impl_private__valueChanged", "height", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::heightChanged));
                 break;
             }
 
