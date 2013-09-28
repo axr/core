@@ -46,6 +46,7 @@
 #include "HSSObjectDefinition.h"
 #include "HSSPropertyPath.h"
 #include "HSSPropertyPathNode.h"
+#include "HSSRefFunction.h"
 #include "HSSValue.h"
 
 using namespace AXR;
@@ -150,11 +151,24 @@ void HSSPropertyPath::setStackNode(QSharedPointer<HSSObject> object, QSharedPoin
             if (existingObject->isA(HSSObjectTypeValue))
             {
                 QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(existingObject)->getValue();
-                if (parserNode && parserNode->isA(HSSStatementTypeObjectDefinition))
+                if (parserNode)
                 {
-                    QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition>(parserNode);
-                    objdef->applyStack();
-                    this->setStackNode(objdef->getObject(), value, false);
+                    if (parserNode->isA(HSSStatementTypeObjectDefinition))
+                    {
+                        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition>(parserNode);
+                        objdef->applyStack();
+                        this->setStackNode(objdef->getObject(), value, false);
+                    }
+                    else if (parserNode->isA(HSSFunctionTypeRef))
+                    {
+                        QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSRefFunction>(parserNode)->evaluate();
+                        if (remoteObj)
+                        {
+                            this->setStackNode(remoteObj, value, false);
+                            object->setStackValue(propertyName, remoteObj);
+                        }
+                        ///@todo observe for future changes. For that, the object definition needs to be cloned.
+                    }
                 }
             }
             else
