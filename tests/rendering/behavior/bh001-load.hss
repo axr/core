@@ -13,7 +13,7 @@ master
     {
         height: 50% - 40;
         contentAlignX, contentAlignY: middle;
-    
+
         #move @parent changeLocation
         {
             isA: button;
@@ -23,25 +23,25 @@ master
                 action: @request{ src: "bh001-load-slave.xml" }
             };
         }
-		flow: no;
+        flow: no;
     }
-    
+
     #new highlight
     {
         height: 1;
         background: #F;
         alignY: 50% - 30;
-		flow: no;
+        flow: no;
     }
-    
+
     #new shadow
     {
         height: 1;
         background: #BE;
         alignY: 50% - 30;
-		flow: no;
+        flow: no;
     }
-    
+
     #new shadow
     {
         height: 10;
@@ -51,22 +51,22 @@ master
             endY: 100%;
         };
         alignY: 50% - 30;
-		flow: no;
+        flow: no;
     }
-    
+
     #new bottom
     {
         width: 100% - 100;
         height: 50% - 50;
         border: @{ 1 #BE };
         alignX: 50%;
-		alignY: 73%;
+        alignY: 73%;
         contentAlignX, contentAlignY: 50%;
         background: #F;
         shape: @{3};
-		flow: no;
-    
-    
+        flow: no;
+
+
         #move @parent loadInto
         {
             isA: button;

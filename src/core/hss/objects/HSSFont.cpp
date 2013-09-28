@@ -229,4 +229,3 @@ const AXRString HSSFont::getWeight() const
 {
     return this->getComputedString("weight");
 }
-

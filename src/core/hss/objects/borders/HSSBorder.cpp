@@ -179,5 +179,3 @@ const QSharedPointer<HSSObject> HSSBorder::getSegments() const
 {
     return this->getComputedValue("segments");
 }
-
-

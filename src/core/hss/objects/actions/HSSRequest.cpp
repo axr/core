@@ -184,4 +184,3 @@ const QSharedPointer<HSSObject> HSSRequest::getTarget() const
 {
     return this->getComputedValue("target");
 }
-

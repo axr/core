@@ -1176,5 +1176,3 @@ void HSSLayout::finalizeVisit()
 {
     axr_log(LoggerChannelRendering, "FINALIZE_LAYOUT");
 }
-
-

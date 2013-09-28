@@ -1,6 +1,6 @@
 set(layout-tests_SOURCES
-	Json.h
-	Json.cpp
+    Json.h
+    Json.cpp
     TestCase.h
     TestCase.cpp
     TestSuite.h

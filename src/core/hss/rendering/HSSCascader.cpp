@@ -167,5 +167,3 @@ void HSSCascader::finalizeVisit()
 {
     axr_log(LoggerChannelRendering, "FINALIZE_CASCADE");
 }
-
-

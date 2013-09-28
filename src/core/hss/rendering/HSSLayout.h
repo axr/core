@@ -56,25 +56,25 @@ namespace AXR
     class HSSObject;
     class HSSParserNode;
     class HSSTextBlock;
-    
+
     class AXR_API HSSLayout : public HSSAbstractVisitor
     {
         Q_DISABLE_COPY(HSSLayout)
     public:
         HSSLayout();
         virtual ~HSSLayout();
-        
+
         virtual void initializeVisit();
         virtual void visit(HSSContainer &container);
         virtual void visit(HSSTextBlock &textBlock);
         virtual void finalizeVisit();
-        
+
         void setDocument(AXRDocument* document);
-        
+
     private:
         class Private;
         Private *d;
-        
+
         inline bool _overlaps(const QSharedPointer<HSSDisplayObject> & childA, const QSharedPointer<HSSDisplayObject> & childB) const;
         inline bool _overlaps_horizontal(const QSharedPointer<HSSDisplayObject> & childA, const QSharedPointer<HSSDisplayObject> & childB) const;
         inline bool _overlaps_vertical(const QSharedPointer<HSSDisplayObject> & childA, const QSharedPointer<HSSDisplayObject> & childB) const;

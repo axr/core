@@ -277,4 +277,3 @@ QSharedPointer<HSSObject> HSSPolygon::computeAngle(QSharedPointer<HSSParserNode>
     }
     return this->computeValueObject(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(ret, this->getController())));
 }
-

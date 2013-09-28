@@ -437,7 +437,7 @@ QVariantMap HSSObject::toMap() const
                     propertyValue = QVariant(qSharedPointerCast<HSSStringConstant>(parserNode)->getValue());
                     break;
                 }
-                    
+
                 default:
                     break;
             }
@@ -1258,6 +1258,7 @@ QSharedPointer<HSSKeywordConstant> HSSObject::stringToKeyword(AXRString value)
 void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> theObj)
 {
     QSharedPointer<HSSObject> currentValue = this->getComputedValue(propertyName);
+
     //prepare
     theObj->setHostProperty(propertyName);
     theObj->commitStackValues();
