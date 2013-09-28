@@ -391,3 +391,36 @@ const bool HSSRule::clonedFromSameRule(const QSharedPointer<HSSRule> & otherRule
     }
     return false;
 }
+void HSSRule::removeFromDisplayObjects()
+{
+    Q_FOREACH(QWeakPointer<HSSDisplayObject> weakDO, this->appliedTo)
+    {
+        QSharedPointer<HSSDisplayObject> theDO = weakDO.toStrongRef();
+        AXRError("beforeRemoving", QString("Removing rule from ")+theDO->getElementName()+QString(", rules size: ")+QString::number(theDO->rulesSize())).raise();
+        for (int i = 0, size = theDO->rulesSize(); i<size; ++i)
+        {
+            QSharedPointer<HSSRule> remoteRule = theDO->rulesGet(i);
+            if (this->clonedFromSameRule(remoteRule))
+            {
+                theDO->rulesRemove(i);
+                --i;
+                --size;
+                if (this->instruction)
+                {
+                    switch (this->instruction->getInstructionType())
+                    {
+                        case HSSNewInstruction:
+                        {
+                            theDO->removeFromParent();
+                            break;
+                        }
+
+                        default:
+                            break;
+                    }
+                }
+
+            }
+        }
+    }
+}
