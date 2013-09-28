@@ -66,6 +66,7 @@ HSSRule::HSSRule(const HSSRule & orig)
 {
     this->_originalScope = orig._originalScope;
     this->_clonedFromRule = &orig;
+    this->appliedTo = orig.appliedTo; //shallow copy
 }
 
 QSharedPointer<HSSRule> HSSRule::clone() const
