@@ -1356,6 +1356,7 @@ QSharedPointer<HSSObjectDefinition> HSSParser::readObjectDefinition(AXRString pr
 
             case HSSAmpersand:
             {
+                this->_lastObjectType = objtype;
                 QSharedPointer<HSSObjectDefinition> childDef = this->readObjectDefinition(propertyName);
                 childDef->setParentNode(ret);
                 ret->childrenAdd(childDef);
