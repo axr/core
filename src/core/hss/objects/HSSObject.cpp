@@ -1264,6 +1264,7 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
     theObj->fillWithDefaults();
     if (!currentValue || !currentValue->equalTo(theObj))
     {
+        ///@todo this should target any subclass of display object
         if (this->isA(HSSObjectTypeContainer) || this->isA(HSSObjectTypeTextBlock))
         {
             QSharedPointer<HSSDisplayObject> thisDO = qSharedPointerCast<HSSDisplayObject>(this->shared_from_this());
