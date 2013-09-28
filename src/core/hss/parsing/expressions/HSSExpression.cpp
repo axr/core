@@ -85,9 +85,19 @@ HSSExpression::~HSSExpression()
 
 AXRString HSSExpression::toString()
 {
-    AXRString tempstr = AXRString("HSSExpression with following components:\n");
+    AXRString tempstr;
     this->_nodesToValuesIfNeeded();
-    tempstr.append(this->getLeft()->toString() + "\n" + this->getRight()->toString());
+    QSharedPointer<HSSObject> left = this->getLeft();
+    QSharedPointer<HSSObject> right = this->getRight();
+    if (left && right)
+    {
+        tempstr = AXRString("HSSExpression with following components:\n");
+        tempstr.append(this->getLeft()->toString() + "\n" + this->getRight()->toString());
+    }
+    else
+    {
+        tempstr = AXRString("HSSExpression with unknown components");
+    }
     return tempstr;
 }
 

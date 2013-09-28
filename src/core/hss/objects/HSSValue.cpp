@@ -82,7 +82,10 @@ HSSValue::HSSValue(const HSSValue & orig)
 : HSSObject(orig)
 {
     this->_initialize();
-    this->value = orig.value->clone();
+    if (orig.value)
+    {
+        this->value = orig.value->clone();
+    }
 }
 
 void HSSValue::_initialize()

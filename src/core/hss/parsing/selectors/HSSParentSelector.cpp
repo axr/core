@@ -86,7 +86,11 @@ QSharedPointer<HSSSelection> HSSParentSelector::filterSelection(QSharedPointer<H
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
     if(!thisObj->isRoot()){
-        ret->add(thisObj->getParent());
+        QSharedPointer<HSSContainer> parent = thisObj->getParent();
+        if (parent)
+        {
+            ret->add(parent);
+        }
     }
     return ret;
 }

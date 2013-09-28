@@ -491,7 +491,7 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (value);
             QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
 
-            if (this->isA(HSSObjectTypeContainer))
+            if (objdef && this->isA(HSSObjectTypeContainer))
             {
                 QSharedPointer<HSSContainer> thisCont = qSharedPointerCast<HSSContainer > (this->shared_from_this());
                 this->getController()->currentContext().push(thisCont);

@@ -245,8 +245,13 @@ void HSSRefFunction::valueChanged(const AXRString target, const AXRString source
                 switch (parserNode->getType())
                 {
                     case HSSParserNodeTypeFunctionCall:
-                        ret = qSharedPointerCast<HSSFunction>(parserNode)->evaluate()->clone();
+                    {
+                        QSharedPointer<HSSObject> remoteObj2 = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
+                        if (remoteObj2) {
+                            ret = remoteObj2->clone();
+                        }
                         break;
+                    }
 
                     case HSSParserNodeTypeExpression:
                         ret = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate(), this->getController()), this->getThisObj(), this->scope);
