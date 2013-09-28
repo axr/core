@@ -86,7 +86,13 @@ AXRString HSSFlag::toString()
 
 AXRString HSSFlag::stringRep()
 {
-    return AXRString("::").append(this->_name);
+    AXRString tmpstr = "";
+    if (this->getNegating())
+    {
+        tmpstr.append("!");
+    }
+    tmpstr.append("::").append(this->_name);
+    return tmpstr;
 }
 
 bool HSSFlag::equalTo(QSharedPointer<HSSParserNode> otherNode)
