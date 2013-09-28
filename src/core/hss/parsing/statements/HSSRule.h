@@ -282,6 +282,8 @@ namespace AXR
 
         const bool clonedFromSameRule(const QSharedPointer<HSSRule> & otherRule) const;
 
+        bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
         void removeFromDisplayObjects();
 
     protected:

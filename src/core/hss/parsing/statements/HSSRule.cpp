@@ -392,6 +392,20 @@ const bool HSSRule::clonedFromSameRule(const QSharedPointer<HSSRule> & otherRule
     }
     return false;
 }
+
+bool HSSRule::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSStatement::equalTo(otherNode)) return false;
+    QSharedPointer<HSSRule> castedNode = qSharedPointerCast<HSSRule>(otherNode);
+    if ( ! this->clonedFromSameRule(castedNode) ) return false;
+    if ( (this->instruction && !castedNode->instruction) || (!this->instruction && castedNode->instruction)) return false;
+    if ( this->instruction && castedNode->instruction && ! this->instruction->equalTo(castedNode->instruction)) return false;
+    return true;
+}
+
 void HSSRule::removeFromDisplayObjects()
 {
     Q_FOREACH(QWeakPointer<HSSDisplayObject> weakDO, this->appliedTo)
