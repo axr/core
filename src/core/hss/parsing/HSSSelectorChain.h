@@ -150,6 +150,8 @@ namespace AXR
          */
         size_t size() const;
 
+        const std::deque<QSharedPointer<HSSParserNode> > getNodeList() const;
+
         /**
          *  The subject of the selector chain is the last simple selector, but this can
          *  be changed with the subject selector "$" (currently unimplemented).

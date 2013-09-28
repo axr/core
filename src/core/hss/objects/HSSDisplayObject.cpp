@@ -78,7 +78,9 @@
 #include "HSSRect.h"
 #include "HSSRgb.h"
 #include "HSSRule.h"
+#include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
+#include "HSSSimpleSelector.h"
 #include "HSSStringConstant.h"
 #include "HSSValue.h"
 
@@ -541,12 +543,34 @@ QSharedPointer<HSSRule> HSSDisplayObject::rulesGet(unsigned index)
 
 void HSSDisplayObject::rulesRemove(unsigned index)
 {
+    QSharedPointer<HSSRule> rule = this->rules[index]->rule;
+    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, rule->getSelectorChains())
+    {
+        Q_FOREACH(QSharedPointer<HSSParserNode> parserNode, selectorChain->getNodeList())
+        {
+            if (parserNode->isA(HSSSelectorTypeSimpleSelector))
+            {
+                QSharedPointer<HSSSimpleSelector> simpleSelector = qSharedPointerCast<HSSSimpleSelector>(parserNode);
+                Q_FOREACH(QSharedPointer<HSSFilter> filter, simpleSelector->getFilters())
+                {
+                    if (filter->isA(HSSFilterTypeFlag))
+                    {
+                        QSharedPointer<HSSFlag> theFlag = qSharedPointerCast<HSSFlag>(filter);
+                        this->removeFlag(theFlag);
+                    }
+                }
+            }
+        }
+    }
+
     this->rules.erase(this->rules.begin() + index);
+    this->setNeedsRereadRules(true);
 }
 
 void HSSDisplayObject::rulesRemoveLast()
 {
     this->rules.pop_back();
+    this->setNeedsRereadRules(true);
 }
 
 size_t HSSDisplayObject::rulesSize() const
@@ -1736,6 +1760,27 @@ void HSSDisplayObject::createFlag(QSharedPointer<HSSFlag> flag, HSSRuleState def
 {
     this->_flagsStatus[flag->getName()] = defaultValue;
     this->_flags[flag->getName()].push_back(flag);
+}
+
+void HSSDisplayObject::removeFlag(QSharedPointer<HSSFlag> flag)
+{
+    AXRString name = flag->getName();
+    if (this->hasFlag(name))
+    {
+        std::vector<QSharedPointer<HSSFlag> > flags = this->_flags[name];
+        Q_FOREACH(QSharedPointer<HSSFlag> existingFlag, flags)
+        {
+            if (existingFlag->equalTo(flag))
+            {
+                flags.erase(std::remove(flags.begin(), flags.end(), flag), flags.end());
+            }
+        }
+        if (flags.size() == 0)
+        {
+            this->_flags.remove(name);
+            this->_flagsStatus.remove(name);
+        }
+    }
 }
 
 bool HSSDisplayObject::hasFlag(AXRString name)

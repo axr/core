@@ -157,6 +157,11 @@ size_t HSSSelectorChain::size() const
     return this->nodeList.size();
 }
 
+const std::deque<QSharedPointer<HSSParserNode> > HSSSelectorChain::getNodeList() const
+{
+    return this->nodeList;
+}
+
 QSharedPointer<HSSSimpleSelector> HSSSelectorChain::subject()
 {
     QSharedPointer<HSSSimpleSelector> ret;

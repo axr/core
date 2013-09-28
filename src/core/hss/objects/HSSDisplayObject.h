@@ -300,6 +300,7 @@ namespace AXR
         void ruleChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         void createFlag(QSharedPointer<HSSFlag> flag, HSSRuleState defaultValue);
+        void removeFlag(QSharedPointer<HSSFlag> flag);
         bool hasFlag(AXRString name);
         HSSRuleState flagState(AXRString name);
         void flagsActivate(AXRString name);
