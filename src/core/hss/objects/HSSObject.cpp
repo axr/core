@@ -1033,6 +1033,7 @@ void HSSObject::appendStackValue(AXRString propertyName, QSharedPointer<HSSObjec
 
 void HSSObject::_setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject)
 {
+    if (!theObject) return;
     this->_stackValues.insert(propertyName, theObject);
 }
 
