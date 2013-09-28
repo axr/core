@@ -73,6 +73,11 @@ HSSObjectDefinition::HSSObjectDefinition(const HSSObjectDefinition & orig)
     {
         this->children.push_back((*c_it)->clone());
     }
+
+    for (std::deque<QSharedPointer<HSSRule> >::const_iterator r_it = orig._rules.begin(); r_it != orig._rules.end(); ++r_it)
+    {
+        this->_rules.push_back((*r_it)->clone());
+    }
 }
 
 QSharedPointer<HSSObjectDefinition> HSSObjectDefinition::clone() const
