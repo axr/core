@@ -139,7 +139,7 @@ void HSSPropertyDefinition::addValue(QSharedPointer<HSSParserNode> value)
     }
 }
 
-QSharedPointer<HSSParserNode> HSSPropertyDefinition::getValue()
+const QSharedPointer<HSSParserNode> HSSPropertyDefinition::getValue() const
 {
     return this->value;
 }

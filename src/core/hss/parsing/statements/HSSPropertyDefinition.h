@@ -141,7 +141,7 @@ namespace AXR
          *  Getter for the value of the property.
          *  @return A shared pointer to the parser node that represents the value of the property definition.
          */
-        QSharedPointer<HSSParserNode> getValue();
+        const QSharedPointer<HSSParserNode> getValue() const;
 
         virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
