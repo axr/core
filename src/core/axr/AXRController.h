@@ -425,6 +425,9 @@ namespace AXR
         // methods for doing that rather than providing a list reference?
         QStack<QSharedPointer<HSSContainer> >& currentContext() const;
 
+        void currentContextPush(QSharedPointer<HSSContainer> container);
+        const QSharedPointer<HSSContainer> currentContextPop() const;
+
     protected:
         void readNextSelectorNode();
         bool isAtEndOfSelector() const;

@@ -396,6 +396,16 @@ QStack<QSharedPointer<HSSContainer> >& AXRController::currentContext() const
     return d->currentContext;
 }
 
+void AXRController::currentContextPush(QSharedPointer<HSSContainer> container)
+{
+    d->currentContext.push(container);
+}
+
+const QSharedPointer<HSSContainer> AXRController::currentContextPop() const
+{
+    return d->currentContext.pop();
+}
+
 void AXRController::activateRules()
 {
     QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection());
