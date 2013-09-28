@@ -2662,7 +2662,6 @@ QSharedPointer<HSSParserNode> HSSParser::readRefFunction()
     }
 
     this->checkForUnexpectedEndOfSource();
-    this->readNextToken();
     this->skip(HSSWhitespace, true);
     //if shorthand notation -- assumes 'of @this'
     std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
