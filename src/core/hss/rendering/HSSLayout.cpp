@@ -56,7 +56,6 @@
 #include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
-#include "HSSPropertyDefinition.h"
 #include "HSSRule.h"
 #include "HSSTextBlock.h"
 #include "HSSValue.h"
