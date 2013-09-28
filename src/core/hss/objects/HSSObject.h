@@ -340,6 +340,7 @@ namespace AXR
         const HSSUnit getComputedNumber(AXRString property) const;
         const HSSUnit getComputedBool(AXRString property) const;
         const AXRString getComputedString(AXRString property) const;
+        const QSharedPointer<HSSObject> getComputedObject(AXRString property) const;
         void clearComputedValues();
         const QSharedPointer<HSSObject> inheritValue(AXRString inheritProperty, AXRString hostProperty);
         virtual void propertyChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj);

@@ -192,7 +192,7 @@ void HSSRenderer::drawBackground(HSSContainer &container)
     if (d->globalAntialiasingEnabled)
         d->canvasPainter->setRenderHint(QPainter::Antialiasing);
 
-    QSharedPointer<HSSObject> background = container.getComputedValue("background");
+    QSharedPointer<HSSObject> background = container.getBackground();
     if (background)
     {
         QPainterPath path;
@@ -251,6 +251,7 @@ void HSSRenderer::_drawBackground(QPainterPath & path, QSharedPointer<HSSObject>
         }
 
         default:
+            AXRError("HSSRenderer", "Invalid value type in background property.").raise();
             break;
     }
 }

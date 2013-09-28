@@ -1176,7 +1176,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeLineAlign(QSharedPointer<HSSP
 
 const QSharedPointer<HSSObject> HSSDisplayObject::getBackground() const
 {
-    return this->getComputedValue("background");
+    return this->getComputedObject("background");
 }
 
 QSharedPointer<HSSObject> HSSDisplayObject::computeBackground(QSharedPointer<HSSParserNode> parserNode)

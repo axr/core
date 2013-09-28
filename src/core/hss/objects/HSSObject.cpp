@@ -1238,6 +1238,29 @@ const AXRString HSSObject::getComputedString(AXRString property) const
     return "";
 }
 
+const QSharedPointer<HSSObject> HSSObject::getComputedObject(AXRString property) const
+{
+    QSharedPointer<HSSObject> value = this->getComputedValue(property);
+    if (value)
+    {
+        if (value->isA(HSSObjectTypeValue))
+        {
+            QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(value);
+            if (valueObj->getValue())
+            {
+                return qSharedPointerCast<HSSValue>(value)->getObject();
+            }
+        }
+        return value;
+    }
+    QSharedPointer<HSSObject> defaultValue = this->getDefaultValue(property);
+    if (defaultValue && defaultValue->isA(HSSObjectTypeValue))
+    {
+        return qSharedPointerCast<HSSValue>(defaultValue)->getObject();
+    }
+    return value;
+}
+
 void HSSObject::clearComputedValues()
 {
     this->_computedValues.clear();
