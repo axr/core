@@ -346,7 +346,7 @@ QSharedPointer<HSSObject> HSSGradient::computeStartColor(QSharedPointer<HSSParse
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "startColor");
+    return this->computeObject(parserNode, "startColor");
 }
 
 const QSharedPointer<HSSObject> HSSGradient::getEndColor() const
@@ -379,7 +379,7 @@ QSharedPointer<HSSObject> HSSGradient::computeEndColor(QSharedPointer<HSSParserN
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "endColor");
+    return this->computeObject(parserNode, "endColor");
 }
 
 const QSharedPointer<HSSObject> HSSGradient::getBalance() const
@@ -418,7 +418,7 @@ QSharedPointer<HSSObject> HSSGradient::computeColorStops(QSharedPointer<HSSParse
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "colorStops");
+    return this->computeObject(parserNode, "colorStops");
 }
 
 const bool HSSGradient::isA(HSSGradientType type) const

@@ -193,7 +193,7 @@ QSharedPointer<HSSObject> HSSLineBorder::computeColor(QSharedPointer<HSSParserNo
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "color");
+    return this->computeObject(parserNode, "color");
 }
 
 void HSSLineBorder::draw(QPainter &painter, const QPainterPath &path)

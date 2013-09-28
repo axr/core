@@ -587,7 +587,7 @@ QSharedPointer<HSSObject> HSSContainer::computeContentAlignX(QSharedPointer<HSSP
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "contentAlignX");
+    return this->computeObject(parserNode, "contentAlignX");
 }
 
 void HSSContainer::notifyContentAlignX(QSharedPointer<HSSObject> theObject)
@@ -645,7 +645,7 @@ QSharedPointer<HSSObject> HSSContainer::computeContentAlignY(QSharedPointer<HSSP
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "contentAlignY");
+    return this->computeObject(parserNode, "contentAlignY");
 }
 
 void HSSContainer::notifyContentAlignY(QSharedPointer<HSSObject> theObject)
@@ -745,7 +745,7 @@ QSharedPointer<HSSObject> HSSContainer::computeContent(QSharedPointer<HSSParserN
         AXRString text = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
         this->setContentText(text);
     }
-    return this->computeValueObject(parserNode, "content");
+    return this->computeObject(parserNode, "content");
 }
 
 //shape
@@ -773,7 +773,7 @@ QSharedPointer<HSSObject> HSSContainer::computeShape(QSharedPointer<HSSParserNod
             break;
     }
 
-    return this->computeValueObject(parserNode);
+    return this->computeObject(parserNode, "shape");
 }
 
 void HSSContainer::notifyShape(QSharedPointer<HSSObject> theObj)

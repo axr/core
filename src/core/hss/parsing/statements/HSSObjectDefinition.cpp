@@ -135,6 +135,19 @@ void HSSObjectDefinition::applyComputed()
     this->prototype->fillWithDefaults();
 }
 
+void HSSObjectDefinition::applyRules()
+{
+    ///@todo this should target all display object types
+    if (this->prototype->isA(HSSObjectTypeContainer))
+    {
+        QSharedPointer<HSSDisplayObject> theDO = qSharedPointerCast<HSSDisplayObject>(this->prototype);
+        Q_FOREACH(QSharedPointer<HSSRule> rule, this->_rules)
+        {
+            theDO->objDefRulesAdd(rule);
+        }
+    }
+}
+
 void HSSObjectDefinition::propertiesAdd(QSharedPointer<HSSPropertyDefinition> &newProperty)
 {
     if (newProperty)

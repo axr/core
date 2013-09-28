@@ -201,7 +201,7 @@ QSharedPointer<HSSObject> HSSColorStop::computeColor(QSharedPointer<HSSParserNod
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "color");
+    return this->computeObject(parserNode, "color");
 }
 
 const HSSUnit HSSColorStop::getPosition() const

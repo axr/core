@@ -221,7 +221,7 @@ QSharedPointer<HSSObject> HSSFont::computeColor(QSharedPointer<HSSParserNode> pa
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "color");
+    return this->computeObject(parserNode, "color");
 }
 
 

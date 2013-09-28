@@ -857,24 +857,6 @@ void HSSObject::setStackNode(AXRString propertyName, QSharedPointer<AXR::HSSPars
             e.raise();
         }
     }
-    if (parserNode->isA(HSSStatementTypeObjectDefinition))
-    {
-        qSharedPointerCast<HSSObjectDefinition>(parserNode)->applyStack();
-    }
-    else if (parserNode->isA(HSSParserNodeTypeMultipleValueDefinition))
-    {
-        HSSParserNode::it iterator;
-        QSharedPointer<HSSMultipleValueDefinition> multiDef = qSharedPointerCast<HSSMultipleValueDefinition > (parserNode);
-        std::vector<QSharedPointer<HSSParserNode> > values = multiDef->getValues();
-        for (iterator = values.begin(); iterator != values.end(); ++iterator)
-        {
-            QSharedPointer<HSSParserNode> innerNode = *iterator;
-            if (innerNode->isA(HSSStatementTypeObjectDefinition))
-            {
-                qSharedPointerCast<HSSObjectDefinition>(innerNode)->applyStack();
-            }
-        }
-    }
 
     this->setStackValue(propertyName, this->computeValue(propertyName, parserNode));
 }
@@ -945,42 +927,28 @@ QSharedPointer<HSSObject> HSSObject::computeValue(AXRString propertyName, QShare
         return valueList;
     }
 
-    //is it an object definition?
-    switch (parserNode->getStatementType())
-    {
-        case HSSStatementTypeObjectDefinition:
-        {
-            QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (parserNode);
-            QSharedPointer<HSSObject> theObj = objdef->getObject();
-            if (theObj->isA(HSSObjectTypeValue))
-            {
-                QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
-                QSharedPointer<HSSObject> valueObjProp = valueObj->getComputedValue("value");
-                if (valueObjProp)
-                {
-                    if (valueObjProp->isA(HSSObjectTypeValue))
-                    {
-                        return this->computeValue(propertyName, qSharedPointerCast<HSSValue>(valueObjProp)->getValue());
-                    }
-                    else
-                    {
-                        return valueObjProp;
-                    }
-                }
-                return this->computeValue(propertyName, valueObj->getValue());
-            }
-            return theObj;
-        }
-        default:
-            break;
-    }
-
     //let the specific subclass handle the property
     if (this->_computeCallbacks.contains(propertyName))
     {
         HSSAbstractComputeCallback * callback = this->_computeCallbacks[propertyName];
         return callback->call(parserNode);
     }
+
+    return this->computeObject(parserNode, propertyName);
+}
+
+QSharedPointer<HSSObject> HSSObject::computeObject(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
+{
+    //handle object definitions
+    if (parserNode->isA(HSSStatementTypeObjectDefinition))
+    {
+        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (parserNode);
+        objdef->applyStack();
+        objdef->applyRules();
+        QSharedPointer<HSSObject> theObj = objdef->getObject();
+        return theObj;
+    }
+
     //else no special handling, just wrap in a @value
     return this->computeValueObject(parserNode, propertyName);
 }

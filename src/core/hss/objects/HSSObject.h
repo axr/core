@@ -320,6 +320,7 @@ namespace AXR
         void appendStackValue(AXRString propertyName, QSharedPointer<HSSObject> parserNode);
         virtual void commitStackValues();
         virtual QSharedPointer<HSSObject> computeValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
+        QSharedPointer<HSSObject> computeObject(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
         QSharedPointer<HSSObject> computeValueObject(QSharedPointer<HSSParserNode> parserNode);
         QSharedPointer<HSSObject> computeValueObject(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
         virtual QSharedPointer<HSSParserNode> getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);

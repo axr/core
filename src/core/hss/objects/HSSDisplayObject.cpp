@@ -884,7 +884,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAnchorX(QSharedPointer<HSSPar
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "anchorX");
+    return this->computeObject(parserNode, "anchorX");
 }
 
 void HSSDisplayObject::notifyAnchorX(QSharedPointer<HSSObject> theObj)
@@ -962,7 +962,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAnchorY(QSharedPointer<HSSPar
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "anchorY");
+    return this->computeObject(parserNode, "anchorY");
 }
 
 void HSSDisplayObject::notifyAnchorY(QSharedPointer<HSSObject> theObj)
@@ -1052,7 +1052,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAlignX(QSharedPointer<HSSPars
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "alignX");
+    return this->computeObject(parserNode, "alignX");
 }
 
 void HSSDisplayObject::notifyAlignX(QSharedPointer<HSSObject> theObj)
@@ -1115,7 +1115,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeAlignY(QSharedPointer<HSSPars
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "alignY");
+    return this->computeObject(parserNode, "alignY");
 }
 
 void HSSDisplayObject::notifyAlignY(QSharedPointer<HSSObject> theObj)
@@ -1169,7 +1169,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeLineAlign(QSharedPointer<HSSP
         default:
             break;
     }
-    return this->computeValueObject(parserNode, "lineAlign");
+    return this->computeObject(parserNode, "lineAlign");
 }
 
 const QSharedPointer<HSSObject> HSSDisplayObject::getBackground() const
@@ -1208,7 +1208,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeBackground(QSharedPointer<HSS
             break;
     }
 
-    return this->computeValueObject(parserNode);
+    return this->computeObject(parserNode, "background");
 }
 
 //font

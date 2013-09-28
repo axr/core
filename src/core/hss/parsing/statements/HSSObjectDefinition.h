@@ -98,6 +98,7 @@ namespace AXR
 
         void applyStack();
         void applyComputed();
+        void applyRules();
 
         /**
          *  Adds a new property definition to the end of the properties list.
