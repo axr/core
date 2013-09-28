@@ -44,6 +44,7 @@
 #include "AXRController.h"
 #include "AXRError.h"
 #include "AXRLoggerManager.h"
+#include "AXRWarning.h"
 #include "HSSCallback.h"
 #include "HSSDisplayObject.h"
 #include "HSSExpression.h"
@@ -202,7 +203,14 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
         if (this->getPropertyPath()->size() > 1)
         {
             QSharedPointer<HSSObject> tlo = container->getComputedValue(this->getPropertyPath()->front()->getPropertyName());
-            tlo->observe("__impl_private__replace", "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::replaceChanged));
+            if (tlo)
+            {
+                tlo->observe("__impl_private__replace", "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::replaceChanged));
+            }
+            else
+            {
+                AXRWarning("HSSRefFunction", AXRString("The property ")+this->getPropertyPath()->front()->getPropertyName()+" points to a non existent value.").raise();
+            }
         }
     }
     else
