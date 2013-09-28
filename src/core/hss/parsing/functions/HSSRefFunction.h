@@ -49,6 +49,7 @@
 namespace AXR
 {
     class HSSPropertyPath;
+    class HSSSelectorChain;
 
     /**
      *  @brief Implementation of the ref([<modfier>] <name> [of <selector chain>]) function in HSS.
@@ -183,6 +184,15 @@ namespace AXR
          *  @param data     A pointer to the data that is sent along the notification.
          */
         void valueChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
+
+        void replace(QSharedPointer<HSSObject> theObj);
+
+        /**
+         *  Callback that will update the value when the observed property changes.
+         *  @param source   The property which we are observing (ignored).
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
+        void replaceChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> remoteObj);
 
     private:
         AXRString modifier;

@@ -350,6 +350,7 @@ namespace AXR
         void clearComputedValues();
         const QSharedPointer<HSSObject> inheritValue(AXRString inheritProperty, AXRString hostProperty);
         virtual void propertyChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj);
+        virtual void replace(QSharedPointer<HSSObject> theObj);
 
         /**
          *  Getter for the host property.

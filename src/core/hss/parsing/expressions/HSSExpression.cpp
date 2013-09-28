@@ -48,6 +48,7 @@
 #include "HSSFunction.h"
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
+#include "HSSRefFunction.h"
 #include "HSSSimpleSelection.h"
 #include "HSSValue.h"
 
@@ -271,3 +272,56 @@ void HSSExpression::setHostProperty(AXRString newValue)
     if (this->_rightNode) this->_rightNode->setHostProperty(newValue);
 }
 
+void HSSExpression::replace(QSharedPointer<HSSObject> theObj)
+{
+    if (this->_leftNode)
+    {
+        switch (this->_leftNode->getType())
+        {
+            case HSSParserNodeTypeFunctionCall:
+            {
+                if (this->_leftNode->isA(HSSFunctionTypeRef))
+                {
+                    QSharedPointer<HSSRefFunction> refFn = qSharedPointerCast<HSSRefFunction>(this->_leftNode);
+                    refFn->replace(theObj);
+                }
+                break;
+            }
+
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> expObj = qSharedPointerCast<HSSExpression>(this->_leftNode);
+                expObj->replace(theObj);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+    if (this->_rightNode)
+    {
+        switch (this->_rightNode->getType())
+        {
+            case HSSParserNodeTypeFunctionCall:
+            {
+                if (this->_rightNode->isA(HSSFunctionTypeRef))
+                {
+                    QSharedPointer<HSSRefFunction> refFn = qSharedPointerCast<HSSRefFunction>(this->_rightNode);
+                    refFn->replace(theObj);
+                }
+                break;
+            }
+
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> expObj = qSharedPointerCast<HSSExpression>(this->_rightNode);
+                expObj->replace(theObj);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+}

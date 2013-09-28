@@ -1336,6 +1336,11 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
         {
             this->notifyObservers(propertyName, theObj);
         }
+        //replace
+        if (currentValue)
+        {
+            currentValue->replace(theObj);
+        }
     }
 }
 
@@ -1455,6 +1460,12 @@ void HSSObject::setHostProperty(AXRString newValue)
 {
     this->_hostProperty = newValue;
 }
+
+void HSSObject::replace(QSharedPointer<HSSObject> theObj)
+{
+    this->notifyObservers("__impl_private__replace", theObj);
+}
+
 void HSSObject::objDefRulesAdd(QSharedPointer<HSSRule> rule)
 {
     this->_objDefRules.push_back(rule);

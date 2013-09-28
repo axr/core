@@ -53,6 +53,7 @@
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSPercentageConstant.h"
+#include "HSSRefFunction.h"
 #include "HSSSimpleSelection.h"
 #include "HSSStringConstant.h"
 #include "HSSValue.h"
@@ -358,4 +359,34 @@ void HSSValue::setHostProperty(AXRString newValue)
     {
         this->value->setHostProperty(newValue);
     }
+}
+
+void HSSValue::replace(QSharedPointer<HSSObject> theObj)
+{
+    if (this->value)
+    {
+        switch (this->value->getType())
+        {
+            case HSSParserNodeTypeFunctionCall:
+            {
+                if (this->value->isA(HSSFunctionTypeRef))
+                {
+                    QSharedPointer<HSSRefFunction> refFn = qSharedPointerCast<HSSRefFunction>(this->value);
+                    refFn->replace(theObj);
+                }
+                break;
+            }
+
+            case HSSParserNodeTypeExpression:
+            {
+                QSharedPointer<HSSExpression> expObj = qSharedPointerCast<HSSExpression>(this->value);
+                expObj->replace(theObj);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+    HSSObject::replace(theObj);
 }

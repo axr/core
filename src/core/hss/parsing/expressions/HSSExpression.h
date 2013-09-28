@@ -172,6 +172,7 @@ namespace AXR
         HSSUnit getValue();
 
         virtual void setHostProperty(AXRString newValue);
+        virtual void replace(QSharedPointer<HSSObject> theObj);
 
     protected:
         /**
