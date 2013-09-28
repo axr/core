@@ -697,7 +697,6 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj, QSharedPointer<HSSCont
         }
     }
     Q_FOREACH(QSharedPointer<HSSRule> rule, newRules){
-        AXRError("HSSRule", QString("Adding rule")).raise();
         this->_appliedIsARules.push_back(rule);
         AXRController * controller = this->getController();
         controller->currentContextPush(thisContainer);

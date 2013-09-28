@@ -411,7 +411,6 @@ void HSSRule::removeFromDisplayObjects()
     Q_FOREACH(QWeakPointer<HSSDisplayObject> weakDO, this->appliedTo)
     {
         QSharedPointer<HSSDisplayObject> theDO = weakDO.toStrongRef();
-        AXRError("beforeRemoving", QString("Removing rule from ")+theDO->getElementName()+QString(", rules size: ")+QString::number(theDO->rulesSize())).raise();
         for (int i = 0, size = theDO->rulesSize(); i<size; ++i)
         {
             QSharedPointer<HSSRule> remoteRule = theDO->rulesGet(i);
