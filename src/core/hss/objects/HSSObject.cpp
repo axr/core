@@ -76,6 +76,7 @@
 #include "HSSRequest.h"
 #include "HSSRgb.h"
 #include "HSSRoundedRect.h"
+#include "HSSRule.h"
 #include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
 #include "HSSSimpleSelector.h"
@@ -298,11 +299,23 @@ HSSObject::HSSObject(const HSSObject & orig)
         computedIt.next();
         this->_computedValues.insert(computedIt.key(), computedIt.value()->clone());
     }
+    //shallow copy the applied isA rules
+    Q_FOREACH(QSharedPointer<HSSRule> isARule, orig._appliedIsARules)
+    {
+        this->_appliedIsARules.push_back(isARule);
+    }
+    //copy the objDefRules
+    Q_FOREACH(QSharedPointer<HSSRule> objDefRule, orig._objDefRules)
+    {
+        this->_objDefRules.push_back(objDefRule->clone());
+    }
 }
 
 void HSSObject::_initialize()
 {
     this->addCallback("isA", new HSSStackCallback<HSSObject>(this, &HSSObject::stackIsA));
+    this->addCallback("isA", new HSSObserveCallback<HSSObject>(this, &HSSObject::setIsA));
+    this->addListenCallback("isA", new HSSObserveCallback<HSSObject>(this, &HSSObject::listenIsA));
 }
 
 QSharedPointer<HSSObject> HSSObject::clone() const
@@ -582,8 +595,143 @@ void HSSObject::stackIsA(QSharedPointer<HSSParserNode> parserNode)
             break;
         }
 
+        case HSSParserNodeTypeFunctionCall:
+        {
+            this->setStackValue("isA", this->computeValue("isA", parserNode));
+            if (parserNode->isA(HSSFunctionTypeRef))
+            {
+                QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSRefFunction>(parserNode)->evaluate();
+                if (remoteObj && remoteObj->type == this->type)
+                {
+                    QMapIterator<AXRString, QSharedPointer<HSSObject> > it(remoteObj->_stackValues);
+                    while (it.hasNext())
+                    {
+                        it.next();
+                        AXRString propertyName = it.key();
+                        QSharedPointer<HSSObject> theObj = it.value();
+                        this->setStackValue(propertyName, theObj);
+                    }
+                }
+                else
+                {
+                    AXRError("HSSObject", "Object referenced by isA property is not of the same object type or does not exist.");
+                }
+            }
+        }
+
         default:
             break;
+    }
+}
+
+void HSSObject::setIsA(QSharedPointer<HSSObject> theObj)
+{
+    if (this->isA(HSSObjectTypeContainer))
+    {
+        QSharedPointer<HSSContainer> thisContainer = qSharedPointerCast<HSSContainer>(this->shared_from_this());
+        if (theObj->isA(HSSObjectTypeValue))
+        {
+            QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+            if (parserNode->isA(HSSFunctionTypeRef))
+            {
+                QSharedPointer<HSSRefFunction> refFunction = qSharedPointerCast<HSSRefFunction>(parserNode);
+                QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSRefFunction>(refFunction)->evaluate();
+                if (remoteObj && remoteObj->isA(HSSObjectTypeContainer))
+                {
+                    QSharedPointer<HSSContainer> containerObj = qSharedPointerCast<HSSContainer>(remoteObj);
+                    this->_setIsA(containerObj, thisContainer);
+                }
+            }
+        }
+        else if (theObj->isA(HSSObjectTypeContainer))
+        {
+            QSharedPointer<HSSContainer> containerObj = qSharedPointerCast<HSSContainer>(theObj);
+            this->_setIsA(containerObj, thisContainer);
+        }
+    }
+}
+
+void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj, QSharedPointer<HSSContainer> thisContainer)
+{
+    //apply the rules
+    QVector<QSharedPointer<HSSRule> > currentRules(this->_appliedIsARules);
+    QVector<QSharedPointer<HSSRule> > newRules;
+
+    Q_FOREACH(QSharedPointer<HSSRule> rule, theObj->getObjDefRules()){
+        bool found = false;
+        Q_FOREACH(QSharedPointer<HSSRule> tmprule, currentRules)
+        {
+            if (tmprule->equalTo(rule))
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            newRules.push_back(rule);
+        }
+    }
+    Q_FOREACH(QSharedPointer<HSSRule> tmprule, currentRules)
+    {
+        bool found = false;
+        Q_FOREACH(QSharedPointer<HSSRule> tmprule2, theObj->getObjDefRules())
+        {
+            if (tmprule->equalTo(tmprule2))
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            tmprule->removeFromDisplayObjects();
+            for (int i = 0, size = this->_appliedIsARules.size(); i<size; ++i)
+            {
+                if (this->_appliedIsARules[i] == tmprule)
+                {
+                    this->_appliedIsARules.remove(i);
+                }
+            }
+
+        }
+    }
+    Q_FOREACH(QSharedPointer<HSSRule> rule, newRules){
+        AXRError("HSSRule", QString("Adding rule")).raise();
+        this->_appliedIsARules.push_back(rule);
+        AXRController * controller = this->getController();
+        controller->currentContextPush(thisContainer);
+        controller->recursiveMatchRulesToDisplayObjects(rule, thisContainer->getChildren(), thisContainer, true);
+        controller->recursiveSetRuleState(rule, thisContainer->getChildren(), thisContainer, HSSRuleStateOn);
+        controller->currentContextPop();
+    }
+}
+
+void HSSObject::listenIsA(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        switch (qSharedPointerCast<HSSValue>(theObj)->getValue()->getType())
+        {
+            case HSSParserNodeTypeFunctionCall:
+            {
+                theObj->observe("__impl_private__valueChanged", "isA", this, new HSSValueChangedCallback<HSSObject>(this, &HSSObject::isAChanged));
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+}
+
+void HSSObject::isAChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    ///@todo this should happen on all objects, not just containers
+    if (this->isA(HSSObjectTypeContainer))
+    {
+        HSSContainer * thisCont = static_cast<HSSContainer*>(this);
+        thisCont->setNeedsRereadRules(true);
     }
 }
 
@@ -1303,4 +1451,13 @@ const AXRString HSSObject::getHostProperty() const
 void HSSObject::setHostProperty(AXRString newValue)
 {
     this->_hostProperty = newValue;
+}
+void HSSObject::objDefRulesAdd(QSharedPointer<HSSRule> rule)
+{
+    this->_objDefRules.push_back(rule);
+}
+
+const QVector<QSharedPointer<HSSRule> > HSSObject::getObjDefRules() const
+{
+    return this->_objDefRules;
 }

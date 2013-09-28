@@ -48,6 +48,7 @@
 #include <QMap>
 #include <QSharedPointer>
 #include <QVariant>
+#include <QVector>
 #include <QWeakPointer>
 #include "HSSClonable.h"
 #include "HSSObservable.h"
@@ -59,12 +60,14 @@ namespace AXR
     class HSSAbstractComputeCallback;
     class HSSAbstractObserveCallback;
     class HSSAbstractStackCallback;
+    class HSSContainer;
     class HSSKeywordConstant;
     class HSSMultipleValueDefinition;
     class HSSNumberConstant;
     class HSSDisplayObject;
     class HSSParserNode;
     class HSSPercentageConstant;
+    class HSSRule;
     class HSSSimpleSelection;
     class HSSSimpleSelector;
     class HSSStringConstant;
@@ -229,6 +232,9 @@ namespace AXR
 
         //isA
         void stackIsA(QSharedPointer<HSSParserNode> parserNode);
+        void setIsA(QSharedPointer<HSSObject> theObj);
+        void listenIsA(QSharedPointer<HSSObject> theObj);
+        void isAChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         /**
          *  Getter for the current scope this object is operating on.
@@ -357,6 +363,9 @@ namespace AXR
          */
         virtual void setHostProperty(AXRString newValue);
 
+        void objDefRulesAdd(QSharedPointer<HSSRule> rule);
+        const QVector<QSharedPointer<HSSRule> > getObjDefRules() const;
+
     protected:
         QMap<AXRString, HSSAbstractStackCallback*> _stackCallbacks;
         QMap<AXRString, HSSAbstractComputeCallback*> _computeCallbacks;
@@ -369,6 +378,8 @@ namespace AXR
         std::vector<AXRString> shorthandProperties;
         QMap<AXRString, bool> skipShorthand;
         size_t shorthandIndex;
+        QVector<QSharedPointer<HSSRule> > _appliedIsARules;
+        QVector<QSharedPointer<HSSRule> > _objDefRules;
 
         QSharedPointer<HSSSimpleSelection> scope;
         QSharedPointer<HSSDisplayObject> thisObj;
@@ -384,6 +395,7 @@ namespace AXR
         AXRString _hostProperty;
 
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        void _setIsA(QSharedPointer<HSSObject> theObj, QSharedPointer<HSSContainer> thisContainer);
 
         QWeakPointer<HSSObject> ptr;
     };
