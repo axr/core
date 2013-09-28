@@ -846,18 +846,6 @@ void HSSObject::setStackNode(AXRString propertyName, QSharedPointer<AXR::HSSPars
         callback->call(parserNode);
         return;
     }
-    if (parserNode->isA(HSSParserNodeTypeObjectNameConstant))
-    {
-        try
-        {
-            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (parserNode);
-            parserNode = this->getController()->objectTreeNodeNamed(objname->getValue())->clone();
-        }
-        catch (const AXRError &e)
-        {
-            e.raise();
-        }
-    }
 
     this->setStackValue(propertyName, this->computeValue(propertyName, parserNode));
 }
@@ -913,6 +901,19 @@ QSharedPointer<HSSObject> HSSObject::computeValue(AXRString propertyName, QShare
 {
     //set the hosting property
     parserNode->setHostProperty(propertyName);
+
+    if (parserNode->isA(HSSParserNodeTypeObjectNameConstant))
+    {
+        try
+        {
+            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (parserNode);
+            parserNode = this->getController()->objectTreeNodeNamed(objname->getValue())->clone();
+        }
+        catch (const AXRError &e)
+        {
+            e.raise();
+        }
+    }
 
     //handle multiple values
     if (parserNode->isA(HSSParserNodeTypeMultipleValueDefinition))
