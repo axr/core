@@ -138,7 +138,6 @@ void HSSFlagFunction::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSe
 {
     if (newSelectorChain)
     {
-        axr_log(LoggerChannelObsolete3, "Added selector chain to HSSFlagFunction: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
         this->selectorChains.push_back(newSelectorChain);
     }

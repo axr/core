@@ -112,7 +112,6 @@ void HSSSelFunction::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSel
 {
     if (newSelectorChain)
     {
-        axr_log(LoggerChannelObsolete3, "Added selector chain to HSSFlagFunction: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
         this->selectorChains.push_back(newSelectorChain);
     }
@@ -153,7 +152,6 @@ QSharedPointer<HSSObject> HSSSelFunction::_evaluate()
 
 //void HSSSelFunction::valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
 //{
-//    axr_log(LoggerChannelObsolete1, "######################### valueChanged");
 //    this->setDirty(true);
 //    this->_value = data;
 //    this->notifyObservers(HSSObservablePropertyValue, this->_value);

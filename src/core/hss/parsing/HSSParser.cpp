@@ -751,7 +751,7 @@ QSharedPointer<HSSNameSelector> HSSParser::readObjectSelector()
                 /**
                  *  @todo implement \@super
                  */
-                axr_log(LoggerChannelObsolete0, "@super not implemented yet");
+                AXRError("HSSParser", "@super not implemented yet").raise();
             }
             else if (objtype == "parent")
             {
@@ -1302,7 +1302,7 @@ QSharedPointer<HSSObjectDefinition> HSSParser::readObjectDefinition(AXRString pr
     {
     case HSSIdentifier:
         obj->setName(VALUE_TOKEN(this->currentToken)->getString());
-        axr_log(LoggerChannelObsolete3, "setting its name to " + VALUE_TOKEN(this->currentToken)->getString());
+        axr_log(LoggerChannelHSSParser, "HSSParser: Setting its name to " + VALUE_TOKEN(this->currentToken)->getString());
         this->readNextToken();
         break;
     case HSSBlockOpen:
@@ -2717,7 +2717,7 @@ QSharedPointer<HSSParserNode> HSSParser::readFlagFunction()
     }
     else
     {
-        axr_log(LoggerChannelObsolete0, "HSSParser: unexpected token while reading flagging function " + name);
+        AXRError("HSSParser", "unexpected token while reading flagging function " + name).raise();
     }
 
     this->checkForUnexpectedEndOfSource();

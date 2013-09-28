@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "AXRError.h"
 #include "AXRController.h"
 #include "AXRLoggerManager.h"
 #include "HSSContainer.h"
@@ -144,7 +145,6 @@ void HSSRule::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSelectorCh
 {
     if (newSelectorChain)
     {
-        axr_log(LoggerChannelObsolete3, "Added selector chain: " + newSelectorChain->toString());
         newSelectorChain->setParentNode(this->shared_from_this());
         this->selectorChains.push_back(newSelectorChain);
     }

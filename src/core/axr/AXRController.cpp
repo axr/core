@@ -924,7 +924,6 @@ void AXRController::setRoot(QSharedPointer<HSSContainer> newRoot)
 
 void AXRController::enterElement(const AXRString &elementName)
 {
-    //axr_log(LoggerChannelObsolete1, "enter element " + elementName);
     QSharedPointer<HSSContainer> newContainer(new HSSContainer(this));
     newContainer->setName(elementName + "_source_obj");
     newContainer->setElementName(elementName);
@@ -934,7 +933,6 @@ void AXRController::enterElement(const AXRString &elementName)
 
 void AXRController::addAttribute(const AXRString &name, const AXRString &value)
 {
-    //axr_log(LoggerChannelObsolete1, AXRString("adding attribute " + name + " and value " + value));
     d->currentContext.top()->attributesAdd(name, value);
 }
 
@@ -964,7 +962,7 @@ void AXRController::add(QSharedPointer<HSSDisplayObject> newElement)
         }
         else
         {
-            axr_log(LoggerChannelObsolete0, "############## HSSController: cannot add non-controller as root");
+            AXRError("HSSController", "cannot add non-controller as root").raise();
         }
     }
     else
@@ -976,7 +974,7 @@ void AXRController::add(QSharedPointer<HSSDisplayObject> newElement)
         }
         else
         {
-            axr_log(LoggerChannelObsolete0, "############## HSSController: tried to add a container to nonexistent current");
+            AXRError("HSSController", "tried to add a container to nonexistent current").raise();
         }
     }
 }

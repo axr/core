@@ -120,7 +120,6 @@ void HSSMultipleValue::add(QSharedPointer<HSSObject> newValue)
 {
     if (newValue)
     {
-        axr_log(LoggerChannelObsolete3, "Added value to HSSMultipleValue: " + newValue->toString());
         this->valueList.push_back(newValue);
     }
 }

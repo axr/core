@@ -43,6 +43,7 @@
 
 #include "AXRLoggerManager.h"
 #include "HSSDisplayObject.h"
+#include "AXRError.h"
 #include "HSSFilter.h"
 #include "HSSNameSelector.h"
 #include "HSSRule.h"
@@ -127,7 +128,6 @@ void HSSSelectorChain::add(QSharedPointer<HSSParserNode> newNode)
 {
     if (newNode)
     {
-        axr_log(LoggerChannelObsolete3, "HSSSelectorChain: Added node of type " + newNode->toString());
         newNode->setParentNode(this->shared_from_this());
         this->nodeList.push_back(newNode);
     }
@@ -137,7 +137,6 @@ void HSSSelectorChain::prepend(QSharedPointer<HSSParserNode> newNode)
 {
     if (newNode)
     {
-        axr_log(LoggerChannelObsolete3, "HSSSelectorChain: Added node of type " + newNode->toString() + " to the front of the selector");
         newNode->setParentNode(this->shared_from_this());
         this->nodeList.push_front(newNode);
     }
@@ -175,13 +174,13 @@ QSharedPointer<HSSSimpleSelector> HSSSelectorChain::subject()
             }
             else
             {
-                axr_log(LoggerChannelObsolete1, "########### subject in selector chain could not be determined");
+                AXRError("HSSSelectorChain", "subject in selector chain could not be determined").raise();
             }
 
         }
         else
         {
-            axr_log(LoggerChannelObsolete1, "########### subject in selector chain could not be determined");
+            AXRError("HSSSelectorChain", "subject in selector chain could not be determined").raise();
         }
     }
     return ret;
