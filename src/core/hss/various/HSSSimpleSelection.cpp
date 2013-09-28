@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include <QSharedData>
+#include "AXRError.h"
 #include "HSSDisplayObject.h"
 #include "HSSMultipleSelection.h"
 #include "HSSSimpleSelection.h"
@@ -121,6 +122,10 @@ HSSSimpleSelection& HSSSimpleSelection::operator=(const HSSSimpleSelection &othe
 
 void HSSSimpleSelection::add(QSharedPointer<HSSDisplayObject> theDO)
 {
+    if (!theDO)
+    {
+        AXRError("HSSSimpleSelection", "Adding empty object to selection").raise();
+    }
     this->d->items.push_back(theDO);
 }
 
