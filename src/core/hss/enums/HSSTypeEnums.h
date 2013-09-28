@@ -75,7 +75,9 @@ namespace AXR
         HSSParserNodeTypeSelectorChain, /**< A group of selector nodes that define what elements will be selected. */
         HSSParserNodeTypeNegation, /**< Inverts the meaning of one or more selectors. */
         HSSParserNodeTypeFlag, /**< Conditionally applies properties to elements. */
-        HSSParserNodeTypeRootSelector /**< Returns the root element. */
+        HSSParserNodeTypeRootSelector, /**< Returns the root element. */
+        HSSParserNodeTypePropertyPath, /**< A path to access properties in a tree of objects. */
+        HSSParserNodeTypePropertyPathNode /**< Each node in a property path. */
     };
     /** @} */
 

@@ -41,36 +41,60 @@
  *
  ********************************************************************/
 
-#ifndef HSSCASCADER_H
-#define HSSCASCADER_H
+#ifndef HSSPROPERTYPATHNODE_H
+#define HSSPROPERTYPATHNODE_H
 
-#include "HSSAbstractVisitor.h"
-
-template <class T> class QSharedPointer;
+#include "HSSParserNode.h"
 
 namespace AXR
 {
-    class HSSContainer;
-    class HSSObject;
-    class HSSParserNode;
-
-    class AXR_API HSSCascader : public HSSAbstractVisitor
+    /**
+     *  @brief Each of the nodes of a property path.
+     */
+    class AXR_API HSSPropertyPathNode : public HSSParserNode
     {
-        Q_DISABLE_COPY(HSSCascader)
     public:
-        HSSCascader();
-        virtual ~HSSCascader();
+       /**
+        *  Creates a new property path node.
+        *  @param propertyName A string with the name of the property.
+        */
+        HSSPropertyPathNode(AXRString propertyName, AXRController * controller);
 
-        virtual void initializeVisit();
-        virtual void visit(HSSContainer &container);
-        virtual void visit(HSSTextBlock &textBlock);
-        virtual void finalizeVisit();
+        /**
+         *  Copy constructor for HSSPropertyPath objects
+         */
+        HSSPropertyPathNode(const HSSPropertyPathNode & orig);
 
-        void setDocument(AXRDocument* document);
+        /**
+         *  Clones an instance of HSSPropertyPathNode and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSPropertyPathNode
+         */
+        QSharedPointer<HSSPropertyPathNode> clone() const;
+
+        /**
+         *  Destructor
+         */
+        virtual ~HSSPropertyPathNode();
+
+        virtual AXRString toString();
+
+        /**
+         *  Each node overrides this method to compare against another node.
+         *  @param otherNode    The other object to compare to.
+         *  @return Wether the node is equal to the given one.
+         */
+        virtual bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
+        /**
+         *  Getter for the property name.
+         *  @return A string containing the property name.
+         */
+        const AXRString getPropertyName() const;
 
     private:
-        class Private;
-        Private *d;
+        AXRString _propertyName;
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
 

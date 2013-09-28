@@ -44,6 +44,7 @@
 #include "HSSDisplayObject.h"
 #include "HSSMultipleValueDefinition.h"
 #include "HSSPropertyDefinition.h"
+#include "HSSPropertyPath.h"
 
 using namespace AXR;
 
@@ -53,13 +54,13 @@ HSSPropertyDefinition::HSSPropertyDefinition(AXRController * controller)
 
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(QVector<QVector<AXRString> > paths, AXRController * controller)
+HSSPropertyDefinition::HSSPropertyDefinition(QVector< QSharedPointer<HSSPropertyPath> > paths, AXRController * controller)
 : HSSStatement(HSSStatementTypePropertyDefinition, controller)
 {
     this->paths = paths;
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(QVector<QVector<AXRString> > name, QSharedPointer<HSSParserNode> value, AXRController * controller)
+HSSPropertyDefinition::HSSPropertyDefinition(QVector< QSharedPointer<HSSPropertyPath> > paths, QSharedPointer<HSSParserNode> value, AXRController * controller)
 : HSSStatement(HSSStatementTypePropertyDefinition, controller)
 {
     this->paths = paths;
@@ -85,9 +86,9 @@ HSSPropertyDefinition::~HSSPropertyDefinition()
 AXRString HSSPropertyDefinition::toString()
 {
     AXRString ret = "HSSPropertyDefinition: ";
-    Q_FOREACH(QVector<AXRString> path, this->paths)
+    Q_FOREACH(QSharedPointer<HSSPropertyPath> path, this->paths)
     {
-        ret.append(path.front());
+        ret.append(path->toString());
     }
     if (this->value)
     {
@@ -96,12 +97,12 @@ AXRString HSSPropertyDefinition::toString()
     return ret;
 }
 
-void HSSPropertyDefinition::setPaths(QVector<QVector<AXRString> > paths)
+void HSSPropertyDefinition::setPaths(QVector< QSharedPointer<HSSPropertyPath> > paths)
 {
     this->paths = paths;
 }
 
-QVector<QVector<AXRString> > HSSPropertyDefinition::getPaths()
+const QVector< QSharedPointer<HSSPropertyPath> > HSSPropertyDefinition::getPaths() const
 {
     return this->paths;
 }

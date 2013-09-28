@@ -48,6 +48,8 @@
 
 namespace AXR
 {
+    class HSSPropertyPath;
+
     /**
      *  @brief Implementation of the ref([<modfier>] <name> [of <selector chain>]) function in HSS.
      *
@@ -106,16 +108,22 @@ namespace AXR
         void setModifier(AXRString newValue);
 
         /**
-         *  Getter for the property name.
-         *  @return The observable property that we are referencing.
+         *  Getter for the property path.
+         *  @return The path to the value we are referencing.
          */
-        const AXRString & getPropertyName() const;
+        const QSharedPointer<HSSPropertyPath> getPropertyPath() const;
 
         /**
-         *  Setter for the property name.
-         *  @param  newValue    The observable property that we will be observing.
+         *  Convenience function to set the property path with a single string.
+         *  @param  newValue   The property name that will be referenced.
          */
         void setPropertyName(AXRString newValue);
+
+        /**
+         *  Setter for the property path.
+         *  @param  newValue The new property path that will be referenced.
+         */
+        void setPropertyPath(QSharedPointer<HSSPropertyPath> newValue);
 
         /**
          *  Getter for the selector chain.
@@ -178,10 +186,11 @@ namespace AXR
 
     private:
         AXRString modifier;
-        AXRString propertyName;
+        QSharedPointer<HSSPropertyPath> propertyPath;
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
 
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        QSharedPointer<HSSObject> _getValueByPath(QSharedPointer<HSSObject> object, QSharedPointer<HSSPropertyPath> path, QSharedPointer<HSSObject> & out_refdObject, AXRString & out_refdProperty);
     };
 }
 

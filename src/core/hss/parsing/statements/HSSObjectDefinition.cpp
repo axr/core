@@ -46,6 +46,8 @@
 #include "HSSObject.h"
 #include "HSSObjectDefinition.h"
 #include "HSSPropertyDefinition.h"
+#include "HSSPropertyPath.h"
+#include "HSSPropertyPathNode.h"
 #include "HSSRule.h"
 #include "HSSSimpleSelection.h"
 
@@ -120,11 +122,10 @@ void HSSObjectDefinition::applyStack()
     this->prototype->setDefaults();
     Q_FOREACH(const QSharedPointer<HSSPropertyDefinition>& propertyDefinition, this->properties)
     {
-        QVector<QVector<AXRString> > propertyPaths = propertyDefinition->getPaths();
-        Q_FOREACH(QVector<AXRString> path, propertyPaths){
+        QVector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
+        Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propertyPaths){
             QSharedPointer<HSSParserNode> nodeValue = propertyDefinition->getValue();
-            AXRString property = path.front();
-            this->prototype->setStackNode(property, nodeValue);
+            path->setStackNode(this->prototype, nodeValue);
         }
     }
 }

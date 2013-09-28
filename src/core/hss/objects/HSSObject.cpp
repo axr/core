@@ -69,6 +69,7 @@
 #include "HSSPercentageConstant.h"
 #include "HSSPolygon.h"
 #include "HSSPropertyDefinition.h"
+#include "HSSPropertyPath.h"
 #include "HSSRadialGradient.h"
 #include "HSSRectangle.h"
 #include "HSSRefFunction.h"
@@ -566,10 +567,10 @@ void HSSObject::stackIsA(QSharedPointer<HSSParserNode> parserNode)
 
                 for (size_t i = 0; i < properties.size(); ++i)
                 {
-                    QVector<QVector<AXRString> > paths = properties[i]->getPaths();
-                    Q_FOREACH(QVector<AXRString> path, paths)
+                    QVector<QSharedPointer<HSSPropertyPath> > paths = properties[i]->getPaths();
+                    Q_FOREACH(QSharedPointer<HSSPropertyPath> path, paths)
                     {
-                        this->setStackNode(path.front(), properties[i]->getValue()->clone());
+                        path->setStackNode(this->shared_from_this(), properties[i]->getValue()->clone());
                     }
                 }
             }

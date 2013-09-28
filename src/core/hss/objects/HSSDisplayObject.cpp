@@ -72,6 +72,8 @@
 #include "HSSPercentageConstant.h"
 #include "HSSPoint.h"
 #include "HSSPropertyDefinition.h"
+#include "HSSPropertyPath.h"
+#include "HSSPropertyPathNode.h"
 #include "HSSRadialGradient.h"
 #include "HSSRect.h"
 #include "HSSRgb.h"
@@ -464,8 +466,8 @@ void HSSDisplayObject::rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState de
         for (HSSPropertyDefinition::const_it it = props.begin(); it != props.end(); ++it)
         {
             QSharedPointer<HSSPropertyDefinition> propdef = *it;
-            Q_FOREACH(QVector<AXRString> path, propdef->getPaths()){
-                if (path.size() == 1 && path.front() == "isA")
+            Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propdef->getPaths()){
+                if (path->size() == 1 && path->front()->getPropertyName() == "isA")
                 {
                     this->rulesAddIsAChildren(propdef, defaultState, newRule);
                 }
@@ -498,8 +500,8 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
                      props.begin(); pIt != props.end(); ++pIt)
                 {
                     QSharedPointer<HSSPropertyDefinition> propdef = *pIt;
-                    Q_FOREACH(QVector<AXRString> path, propdef->getPaths()){
-                        if (path.size() == 1 && path.front() == "isA")
+                    Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propdef->getPaths()){
+                        if (path->size() == 1 && path->front()->getPropertyName() == "isA")
                         {
                             this->rulesAddIsAChildren(propdef, defaultState, parentRule);
                         }

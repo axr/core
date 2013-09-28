@@ -49,6 +49,8 @@
 #include "HSSExpression.h"
 #include "HSSNumberConstant.h"
 #include "HSSPercentageConstant.h"
+#include "HSSPropertyPath.h"
+#include "HSSPropertyPathNode.h"
 #include "HSSRefFunction.h"
 #include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
@@ -65,7 +67,7 @@ HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
 : HSSFunction(orig)
 {
     this->modifier = orig.modifier;
-    this->propertyName = orig.propertyName;
+    this->propertyPath = orig.propertyPath;
 }
 
 QSharedPointer<HSSFunction> HSSRefFunction::clone() const
@@ -87,7 +89,7 @@ bool HSSRefFunction::equalTo(QSharedPointer<HSSParserNode> otherNode)
     if ( ! HSSFunction::equalTo(otherNode)) return false;
     QSharedPointer<HSSRefFunction> castedNode = qSharedPointerCast<HSSRefFunction>(otherNode);
     if ( this->modifier != castedNode->modifier ) return false;
-    if ( this->propertyName != castedNode->propertyName ) return false;
+    if ( ! this->propertyPath->equalTo(castedNode->propertyPath) ) return false;
     unsigned i = 0;
     Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
     {
@@ -108,14 +110,23 @@ void HSSRefFunction::setModifier(AXRString newValue)
     this->setDirty(true);
 }
 
-const AXRString & HSSRefFunction::getPropertyName() const
+const QSharedPointer<HSSPropertyPath> HSSRefFunction::getPropertyPath() const
 {
-    return this->propertyName;
+    return this->propertyPath;
 }
 
 void HSSRefFunction::setPropertyName(AXRString newValue)
 {
-    this->propertyName = newValue;
+    QSharedPointer<HSSPropertyPathNode> ppn(new HSSPropertyPathNode(newValue, this->getController()));
+    QSharedPointer<HSSPropertyPath> ppath(new HSSPropertyPath(this->getController()));
+    ppath->add(ppn);
+    this->propertyPath = ppath;
+    this->setDirty(true);
+}
+
+void HSSRefFunction::setPropertyPath(QSharedPointer<HSSPropertyPath> newValue)
+{
+    this->propertyPath = newValue;
     this->setDirty(true);
 }
 
@@ -176,44 +187,16 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
     }
     else if (selection->size() == 1)
     {
+        QSharedPointer<HSSPropertyPath> ppath = this->getPropertyPath()->clone();
         QSharedPointer<HSSDisplayObject> container = selection->front();
-        QSharedPointer<HSSObject> remoteObj = container->getComputedValue(this->propertyName);
         QSharedPointer<HSSObject> ret;
-        if (remoteObj)
+        QSharedPointer<HSSObject> refdObject;
+        AXRString refdProperty;
+        this->_value = this->_getValueByPath(container, ppath, refdObject, refdProperty);
+
+        if (refdObject && (refdObject != this->getTrackedObserver("__impl_private__refValue") || this->getTrackedProperty("__impl_private__refValue") != refdProperty))
         {
-            if (remoteObj->isA(HSSObjectTypeValue))
-            {
-                QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(remoteObj);
-
-                QSharedPointer<HSSParserNode> parserNode = valueObj->getValue();
-                if (parserNode)
-                {
-                    switch (parserNode->getType())
-                    {
-                        case HSSParserNodeTypeFunctionCall:
-                            ret = qSharedPointerCast<HSSFunction>(parserNode)->evaluate()->clone();
-                            break;
-
-                        case HSSParserNodeTypeExpression:
-                            ret = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate(), this->getController()), this->getThisObj(), this->scope);
-                            break;
-
-                        default:
-                            ret = remoteObj->clone();
-                            break;
-                    }
-                }
-            }
-            else
-            {
-                ret = remoteObj->clone();
-            }
-        }
-        this->_value = ret;
-
-        if (container != this->getTrackedObserver("__impl_private__refValue") || this->getTrackedProperty("__impl_private__refValue") != this->propertyName)
-        {
-            container->observe(this->propertyName, "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
+            refdObject->observe(refdProperty, "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
         }
     }
     else
@@ -295,4 +278,59 @@ QSharedPointer<HSSClonable> HSSRefFunction::cloneImpl() const
     }
 
     return clone;
+}
+
+QSharedPointer<HSSObject> HSSRefFunction::_getValueByPath(QSharedPointer<HSSObject> object, QSharedPointer<HSSPropertyPath> path, QSharedPointer<HSSObject> & out_refdObject, AXRString & out_refdProperty)
+{
+    QSharedPointer<HSSObject> ret;
+    QSharedPointer<HSSPropertyPathNode> ppn = path->popFront();
+    AXRString propertyName = ppn->getPropertyName();
+    QSharedPointer<HSSObject> remoteObj;
+    remoteObj = object->getComputedValue(propertyName);
+    if (remoteObj)
+    {
+        if (path->size() != 0)
+        {
+            ret = this->_getValueByPath(remoteObj, path, out_refdObject, out_refdProperty);
+        }
+        else
+        {
+            out_refdObject = object;
+            out_refdProperty = propertyName;
+
+            if (remoteObj->isA(HSSObjectTypeValue))
+            {
+                QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(remoteObj);
+
+                QSharedPointer<HSSParserNode> parserNode = valueObj->getValue();
+                if (parserNode)
+                {
+                    switch (parserNode->getType())
+                    {
+                        case HSSParserNodeTypeFunctionCall:
+                        {
+                            QSharedPointer<HSSObject> remoteObj2 = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
+                            if (remoteObj2) {
+                                ret = remoteObj2->clone();
+                            }
+                            break;
+                        }
+
+                        case HSSParserNodeTypeExpression:
+                            ret = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate(), this->getController()), this->getThisObj(), this->scope);
+                            break;
+
+                        default:
+                            ret = remoteObj->clone();
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                ret = remoteObj->clone();
+            }
+        }
+    }
+    return ret;
 }

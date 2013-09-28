@@ -41,37 +41,54 @@
  *
  ********************************************************************/
 
-#ifndef HSSCASCADER_H
-#define HSSCASCADER_H
+#include "HSSPropertyPathNode.h"
 
-#include "HSSAbstractVisitor.h"
+using namespace AXR;
 
-template <class T> class QSharedPointer;
-
-namespace AXR
+HSSPropertyPathNode::HSSPropertyPathNode(AXRString propertyName, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypePropertyPathNode, controller)
 {
-    class HSSContainer;
-    class HSSObject;
-    class HSSParserNode;
-
-    class AXR_API HSSCascader : public HSSAbstractVisitor
-    {
-        Q_DISABLE_COPY(HSSCascader)
-    public:
-        HSSCascader();
-        virtual ~HSSCascader();
-
-        virtual void initializeVisit();
-        virtual void visit(HSSContainer &container);
-        virtual void visit(HSSTextBlock &textBlock);
-        virtual void finalizeVisit();
-
-        void setDocument(AXRDocument* document);
-
-    private:
-        class Private;
-        Private *d;
-    };
+    this->_propertyName = propertyName;
 }
 
-#endif
+HSSPropertyPathNode::HSSPropertyPathNode(const HSSPropertyPathNode & orig)
+: HSSParserNode(orig)
+{
+    this->_propertyName = orig._propertyName;
+}
+
+QSharedPointer<HSSPropertyPathNode> HSSPropertyPathNode::clone() const
+{
+    return qSharedPointerCast<HSSPropertyPathNode> (this->cloneImpl());
+}
+
+HSSPropertyPathNode::~HSSPropertyPathNode()
+{
+
+}
+
+AXRString HSSPropertyPathNode::toString()
+{
+    return this->_propertyName;
+}
+
+bool HSSPropertyPathNode::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSPropertyPathNode> castedNode = qSharedPointerCast<HSSPropertyPathNode>(otherNode);
+    if (castedNode->_propertyName != this->_propertyName) return false;
+    return true;
+}
+
+const AXRString HSSPropertyPathNode::getPropertyName() const
+{
+    return this->_propertyName;
+}
+
+QSharedPointer<HSSClonable> HSSPropertyPathNode::cloneImpl() const
+{
+    return QSharedPointer<HSSPropertyPathNode>(new HSSPropertyPathNode(*this));
+}

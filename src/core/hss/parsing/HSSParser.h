@@ -77,6 +77,7 @@ namespace AXR
     class HSSNameSelector;
     class HSSObject;
     class HSSPropertyDefinition;
+    class HSSPropertyPath;
     class HSSSimpleSelector;
     class HSSToken;
     class HSSTokenizer;
@@ -261,6 +262,13 @@ namespace AXR
          *  @todo should reading values go into a separate function, maybe called readValue()?
          */
         QSharedPointer<HSSPropertyDefinition> readPropertyDefinition(bool shorthandChecked, bool isShorthand);
+
+        /**
+         *  Reads a property path, with all its nodes.
+         *
+         *  @return The property path that was read.
+         */
+        QSharedPointer<HSSPropertyPath> readPropertyPath();
 
         /**
          *  Shorthand for readInstruction(bool preferHex), passing true to the parameter.

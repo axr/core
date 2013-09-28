@@ -53,6 +53,8 @@
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSPropertyDefinition.h"
+#include "HSSPropertyPath.h"
+#include "HSSPropertyPathNode.h"
 #include "HSSRule.h"
 #include "HSSTextBlock.h"
 #include "HSSValue.h"
@@ -106,16 +108,16 @@ void HSSCascader::visit(HSSContainer &container)
                     QSharedPointer<HSSRule> & rule = ruleStatus->rule;
                     Q_FOREACH(const QSharedPointer<HSSPropertyDefinition>& propertyDefinition, rule->getProperties())
                     {
-                        QVector<QVector<AXRString> > propertyPaths = propertyDefinition->getPaths();
-                        Q_FOREACH(QVector<AXRString> path, propertyPaths){
+                        QVector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
+                        Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propertyPaths){
                             QSharedPointer<HSSParserNode> clonedNode = propertyDefinition->getValue()->clone();
-                            if (path.size() == 1)
+                            if (path->size() == 1)
                             {
-                                container.setStackNode(path.front(), clonedNode);
+                                container.setStackNode(path->front()->getPropertyName(), clonedNode);
                             }
                             else
                             {
-                                this->_applyProperty(container, path, clonedNode);
+                                path->setStackNode(container.shared_from_this(), clonedNode);
                             }
                         }
                     }
@@ -138,32 +140,6 @@ void HSSCascader::visit(HSSContainer &container)
     }
 }
 
-void HSSCascader::_applyProperty(HSSObject & object, QVector<AXRString> path, QSharedPointer<HSSParserNode> value)
-{
-    AXRController * controller = this->d->document->controller().data();
-    AXRString property = path.front();
-    path.pop_front();
-    if (!path.empty())
-    {
-        if(!object.hasStackValue(property))
-        {
-            QSharedPointer<HSSObject> newObject = HSSObject::newObjectWithType(object.defaultObjectType(property), controller);
-            newObject->setDefaults();
-
-            object.setStackValue(property, newObject);
-            this->_applyProperty(*(newObject.data()), path, value);
-        }
-        else
-        {
-            QSharedPointer<HSSObject> existingObject = object.getStackValue(property);
-            this->_applyProperty(*(existingObject.data()), path, value);
-        }
-    }
-    else
-    {
-        object.setStackNode(property, value);
-    }
-}
 
 void HSSCascader::visit(HSSTextBlock &textBlock)
 {
