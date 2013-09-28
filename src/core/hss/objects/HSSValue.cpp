@@ -122,7 +122,14 @@ bool HSSValue::equalTo(QSharedPointer<HSSObject> otherObj)
     //other checks
     if ( ! HSSObject::equalTo(otherObj)) return false;
     QSharedPointer<HSSValue> castedObj = qSharedPointerCast<HSSValue>(otherObj);
-    if ( ! this->value->equalTo(castedObj->value)) return false;
+    if (this->value && castedObj->value)
+    {
+        if ( ! this->value->equalTo(castedObj->value)) return false;
+    }
+    else if ((this->value && !castedObj->value) || (!this->value && castedObj->value))
+    {
+        return false;
+    }
     return true;
 }
 
