@@ -691,6 +691,8 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj, QSharedPointer<HSSCont
                 if (this->_appliedIsARules[i] == tmprule)
                 {
                     this->_appliedIsARules.remove(i);
+                    --i;
+                    --size;
                 }
             }
 
