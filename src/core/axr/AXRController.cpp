@@ -327,7 +327,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
 
                 try
                 {
-                    selection = this->select(selectorChains, scope, container, true);
+                    selection = this->select(selectorChains, scope, container, applyingInstructions);
                 }
                 catch (const AXRError &e)
                 {
@@ -338,7 +338,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
             {
                 try
                 {
-                    selection = this->select(selectorChains, scope, this->root(), true);
+                    selection = this->select(selectorChains, scope, this->root(), applyingInstructions);
                 }
                 catch (const AXRError &e)
                 {
