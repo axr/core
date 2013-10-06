@@ -1210,7 +1210,6 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
     //prepare
     theObj->setHostProperty(propertyName);
     theObj->commitStackValues();
-    theObj->fillWithDefaults();
     if (!currentValue || !currentValue->equalTo(theObj))
     {
         ///@todo this should target any subclass of display object
