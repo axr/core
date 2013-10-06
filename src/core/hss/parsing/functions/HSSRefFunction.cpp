@@ -383,5 +383,10 @@ QSharedPointer<HSSObject> HSSRefFunction::_getValueByPath(QSharedPointer<HSSObje
             }
         }
     }
+    else
+    {
+        out_refdObject = object;
+        out_refdProperty = propertyName;
+    }
     return ret;
 }
