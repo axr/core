@@ -245,6 +245,8 @@ namespace AXR
 
         QSharedPointer<HSSContainer> shared_from_this();
 
+        void _setIsA(QSharedPointer<HSSObject> theObj);
+
     private:
         void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

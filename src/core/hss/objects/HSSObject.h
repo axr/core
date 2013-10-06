@@ -389,6 +389,8 @@ namespace AXR
         void _setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject);
         const QSharedPointer<HSSParserNode> _inheritProperty(AXRString propertyName) const;
 
+        virtual void _setIsA(QSharedPointer<HSSObject> theObj);
+
     private:
         void _initialize();
         HSSObjectType type;
@@ -396,7 +398,6 @@ namespace AXR
         AXRString _hostProperty;
 
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
-        void _setIsA(QSharedPointer<HSSObject> theObj, QSharedPointer<HSSContainer> thisContainer);
 
         QWeakPointer<HSSObject> ptr;
     };

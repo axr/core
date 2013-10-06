@@ -639,73 +639,20 @@ void HSSObject::setIsA(QSharedPointer<HSSObject> theObj)
                 if (remoteObj && remoteObj->isA(HSSObjectTypeContainer))
                 {
                     QSharedPointer<HSSContainer> containerObj = qSharedPointerCast<HSSContainer>(remoteObj);
-                    this->_setIsA(containerObj, thisContainer);
+                    this->_setIsA(containerObj);
                 }
             }
         }
         else if (theObj->isA(HSSObjectTypeContainer))
         {
             QSharedPointer<HSSContainer> containerObj = qSharedPointerCast<HSSContainer>(theObj);
-            this->_setIsA(containerObj, thisContainer);
+            this->_setIsA(containerObj);
         }
     }
 }
 
-void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj, QSharedPointer<HSSContainer> thisContainer)
+void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
 {
-    //apply the rules
-    QVector<QSharedPointer<HSSRule> > currentRules(this->_appliedIsARules);
-    QVector<QSharedPointer<HSSRule> > newRules;
-
-    Q_FOREACH(QSharedPointer<HSSRule> rule, theObj->getObjDefRules()){
-        bool found = false;
-        Q_FOREACH(QSharedPointer<HSSRule> tmprule, currentRules)
-        {
-            if (tmprule->equalTo(rule))
-            {
-                found = true;
-                break;
-            }
-        }
-        if (!found)
-        {
-            newRules.push_back(rule);
-        }
-    }
-    Q_FOREACH(QSharedPointer<HSSRule> tmprule, currentRules)
-    {
-        bool found = false;
-        Q_FOREACH(QSharedPointer<HSSRule> tmprule2, theObj->getObjDefRules())
-        {
-            if (tmprule->equalTo(tmprule2))
-            {
-                found = true;
-                break;
-            }
-        }
-        if (!found)
-        {
-            tmprule->removeFromDisplayObjects();
-            for (int i = 0, size = this->_appliedIsARules.size(); i<size; ++i)
-            {
-                if (this->_appliedIsARules[i] == tmprule)
-                {
-                    this->_appliedIsARules.remove(i);
-                    --i;
-                    --size;
-                }
-            }
-
-        }
-    }
-    Q_FOREACH(QSharedPointer<HSSRule> rule, newRules){
-        this->_appliedIsARules.push_back(rule);
-        AXRController * controller = this->getController();
-        controller->currentContextPush(thisContainer);
-        controller->recursiveMatchRulesToDisplayObjects(rule, thisContainer->getChildren(), thisContainer, true);
-        controller->recursiveSetRuleState(rule, thisContainer->getChildren(), thisContainer, HSSRuleStateOn);
-        controller->currentContextPop();
-    }
 }
 
 void HSSObject::listenIsA(QSharedPointer<HSSObject> theObj)
