@@ -136,7 +136,8 @@ bool HSSInstruction::equalTo(QSharedPointer<HSSParserNode> otherNode)
     QSharedPointer<HSSInstruction> castedNode = qSharedPointerCast<HSSInstruction>(otherNode);
     if ( this->instructionType != castedNode->instructionType ) return false;
     if ( this->value != castedNode->value ) return false;
-    if ( ! this->argument->equalTo(castedNode->argument)) return false;
+    if ( (this->argument && !castedNode->argument) || (!this->argument && castedNode->argument)) return false;
+    if ( this->argument && castedNode->argument && ! this->argument->equalTo(castedNode->argument)) return false;
     return true;
 }
 
