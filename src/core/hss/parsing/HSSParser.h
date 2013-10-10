@@ -364,7 +364,7 @@ namespace AXR
         QSharedPointer<HSSParserNode> readSelFunction();
 
         /**
-         *  Reads a function of type flag|unflag|toglleFlag|takeFlag(<flag name>[ of <selector-chain>]).
+         *  Reads a function of type flag|unflag|toggleFlag|takeFlag(<flag name>[ of <selector-chain>]).
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readFlagFunction();
