@@ -99,6 +99,7 @@ void HSSDisplayObject::_initialize()
     this->_needsSurface = true;
     this->_needsLayout = true;
     this->_debugName = "unnamed";
+    this->_rulesIndex = 0;
 
     this->x = this->y = this->globalX = this->globalY = 0.;
 
@@ -638,6 +639,38 @@ bool HSSDisplayObject::hasRule(QSharedPointer<HSSRule> rule)
         }
     }
     return found;
+}
+
+void HSSDisplayObject::rulesInit()
+{
+    this->_rulesIndex = 0;
+}
+
+bool HSSDisplayObject::rulesHasNext() const
+{
+    return this->rulesIndex() +1 <= this->rulesSize();
+}
+
+unsigned int HSSDisplayObject::rulesIndex() const
+{
+    return this->_rulesIndex;
+}
+
+void HSSDisplayObject::ruleStatusStep()
+{
+    this->_rulesIndex += 1;
+}
+
+QSharedPointer<HSSRuleStatus> HSSDisplayObject::ruleStatusNext()
+{
+    QSharedPointer<HSSRuleStatus> ret;
+    if(this->rulesHasNext())
+    {
+        ret = this->rules[this->rulesIndex()];
+        this->ruleStatusStep();
+    }
+    //return empty pointer if no next
+    return ret;
 }
 
 void HSSDisplayObject::setNeedsRereadRules(bool value)

@@ -172,6 +172,11 @@ namespace AXR
         size_t rulesSize() const;
         void setRuleStatus(QSharedPointer<HSSRule> rule, HSSRuleState newValue);
         bool hasRule(QSharedPointer<HSSRule> rule);
+        void rulesInit();
+        bool rulesHasNext() const;
+        unsigned int rulesIndex() const;
+        void ruleStatusStep();
+        QSharedPointer<HSSRuleStatus> ruleStatusNext();
         void setNeedsRereadRules(bool value);
         bool needsRereadRules();
 
@@ -421,6 +426,7 @@ namespace AXR
         bool _layoutFlagLockBottom;
         HSSUnit _layoutLockBottomPosition;
         std::string _debugName;
+        unsigned int _rulesIndex;
 
         void _initialize();
         bool _fireEvent(QSharedPointer<HSSEvent> theEvent, HSSEventType eventType);
