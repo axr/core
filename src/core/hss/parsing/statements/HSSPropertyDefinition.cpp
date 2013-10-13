@@ -150,6 +150,12 @@ void HSSPropertyDefinition::setThisObj(QSharedPointer<HSSDisplayObject> value)
     HSSStatement::setThisObj(value);
 }
 
+void HSSPropertyDefinition::setSpecificity(unsigned newValue)
+{
+    HSSStatement::setSpecificity(newValue);
+    this->value->setSpecificity(newValue);
+}
+
 QSharedPointer<HSSPropertyDefinition> HSSPropertyDefinition::shared_from_this()
 {
     return qSharedPointerCast<HSSPropertyDefinition > (HSSStatement::shared_from_this());

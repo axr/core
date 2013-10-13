@@ -66,6 +66,8 @@ namespace AXR
         virtual void visit(HSSTextBlock &textBlock);
         virtual void finalizeVisit();
 
+        void applyStack(HSSContainer &container, unsigned &specificity);
+
         void setDocument(AXRDocument* document);
 
     private:

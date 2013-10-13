@@ -237,6 +237,18 @@ namespace AXR
         */
        virtual void setHostProperty(AXRString newValue);
 
+        /**
+         *  Setter for the specificity, which determines the weight of that value in the cascade.
+         *  @param value    An unsigned int with the new value.
+         */
+        virtual void setSpecificity(unsigned value);
+
+        /**
+         *  Getter for the specificity, which determines the weight of that value in the cascade.
+         *  @return An unsigned int with the value.
+         */
+        unsigned getSpecificity() const;
+
     protected:
         /**
          *  Creates a new instance of a parser node. This class shouldn't be called directly,
@@ -262,6 +274,7 @@ namespace AXR
         std::vector<QSharedPointer<HSSParserNode> > _childNodes;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
         AXRString _hostProperty;
+        unsigned _specificity;
 
         QWeakPointer<HSSParserNode> ptr;
     };

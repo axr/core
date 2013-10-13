@@ -364,6 +364,18 @@ namespace AXR
          */
         virtual void setHostProperty(AXRString newValue);
 
+        /**
+         *  Setter for the specificity, which determines the weight of that value in the cascade.
+         *  @param value    An unsigned int with the new value.
+         */
+        void setSpecificity(unsigned value);
+
+        /**
+         *  Getter for the specificity, which determines the weight of that value in the cascade.
+         *  @return An unsigned int with the value.
+         */
+        unsigned getSpecificity() const;
+
         void objDefRulesAdd(QSharedPointer<HSSRule> rule);
         const QVector<QSharedPointer<HSSRule> > getObjDefRules() const;
 
@@ -400,6 +412,7 @@ namespace AXR
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
 
         QWeakPointer<HSSObject> ptr;
+        unsigned _specificity;
     };
 }
 

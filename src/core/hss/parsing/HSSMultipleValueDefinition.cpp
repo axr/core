@@ -112,6 +112,15 @@ void HSSMultipleValueDefinition::add(QSharedPointer<HSSParserNode> newValue)
     this->values.push_back(newValue);
 }
 
+void HSSMultipleValueDefinition::setSpecificity(unsigned newValue)
+{
+    HSSParserNode::setSpecificity(newValue);
+    Q_FOREACH(QSharedPointer<HSSParserNode> parserNode, this->values)
+    {
+        parserNode->setSpecificity(newValue);
+    }
+}
+
 QSharedPointer<HSSClonable> HSSMultipleValueDefinition::cloneImpl() const
 {
     return QSharedPointer<HSSMultipleValueDefinition>(new HSSMultipleValueDefinition(*this));

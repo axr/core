@@ -89,54 +89,69 @@ void HSSCascader::setDocument(AXRDocument* document)
 
 void HSSCascader::visit(HSSContainer &container)
 {
-    if (container._needsRereadRules)
-    {
-        container.clearProperties();
+    if(container._needsRereadRules){
+        unsigned specificity = 0;
         container.setDefaults();
-        Q_FOREACH(const QSharedPointer<HSSRuleStatus> & ruleStatus, container.rules)
+        container.clearProperties();
+        container.rulesInit();
+        while (container._needsRereadRules)
         {
-            switch (ruleStatus->state)
-            {
-                case HSSRuleStateActivate:
-                {
-                    ruleStatus->state = HSSRuleStateOn;
-                    //fall through
-                }
+            container._needsRereadRules = false;
+            this->applyStack(container, specificity);
+            container.commitStackValues();
+        }
+        container.fillWithDefaults();
+    }
+}
 
-                case HSSRuleStateOn:
+void HSSCascader::applyStack(HSSContainer & container, unsigned & specificity)
+{
+    QSharedPointer<HSSRuleStatus> ruleStatus;
+    while((ruleStatus = container.ruleStatusNext()))
+    {
+        switch (ruleStatus->state)
+        {
+            case HSSRuleStateActivate:
+            {
+                ruleStatus->state = HSSRuleStateOn;
+                //fall through
+            }
+
+            case HSSRuleStateOn:
+            {
+                QSharedPointer<HSSRule> & rule = ruleStatus->rule;
+                Q_FOREACH(const QSharedPointer<HSSPropertyDefinition>& propertyDefinition, rule->getProperties())
                 {
-                    QSharedPointer<HSSRule> & rule = ruleStatus->rule;
-                    Q_FOREACH(const QSharedPointer<HSSPropertyDefinition>& propertyDefinition, rule->getProperties())
-                    {
-                        QVector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
-                        Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propertyPaths){
-                            QSharedPointer<HSSParserNode> clonedNode = propertyDefinition->getValue()->clone();
-                            if (path->size() == 1)
-                            {
-                                container.setStackNode(path->front()->getPropertyName(), clonedNode);
-                            }
-                            else
-                            {
-                                path->setStackNode(container.shared_from_this(), clonedNode);
-                            }
+                    ++specificity;
+                    QVector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
+                    Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propertyPaths){
+                        QSharedPointer<HSSParserNode> clonedNode = propertyDefinition->getValue()->clone();
+                        if (clonedNode->getSpecificity() == 0)
+                        {
+                            clonedNode->setSpecificity(specificity);
+                        }
+                        if (path->size() == 1)
+                        {
+                            container.setStackNode(path->front()->getPropertyName(), clonedNode);
+                        }
+                        else
+                        {
+                            path->setStackNode(container.shared_from_this(), clonedNode);
                         }
                     }
-                    break;
                 }
-
-                case HSSRuleStatePurge:
-                {
-                    ruleStatus->state = HSSRuleStateOff;
-                    break;
-                }
-
-                default:
-                    break;
+                break;
             }
+
+            case HSSRuleStatePurge:
+            {
+                ruleStatus->state = HSSRuleStateOff;
+                break;
+            }
+
+            default:
+                break;
         }
-        container.commitStackValues();
-        container.fillWithDefaults();
-        container._needsRereadRules = false;
     }
 }
 

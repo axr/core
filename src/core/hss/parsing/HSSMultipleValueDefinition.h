@@ -106,6 +106,12 @@ namespace AXR
          */
         void add(QSharedPointer<HSSParserNode> newValue);
 
+        /**
+         *  Setter for the specificity, which determines the weight of that value in the cascade.
+         *  @param value    An unsigned int with the new value.
+         */
+        void setSpecificity(unsigned value);
+
     protected:
         std::vector<QSharedPointer<HSSParserNode> > values;
     private:

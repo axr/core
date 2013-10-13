@@ -438,3 +438,18 @@ void HSSRule::removeFromDisplayObjects()
         }
     }
 }
+
+void HSSRule::setSpecificity(unsigned newValue)
+{
+    HSSStatement::setSpecificity(newValue);
+    for (HSSPropertyDefinition::const_it pIt = this->properties.begin(); pIt != this->properties.end(); ++pIt)
+    {
+        const QSharedPointer<HSSPropertyDefinition> & propDef = *pIt;
+        propDef->setSpecificity(newValue);
+    }
+    for (std::deque<QSharedPointer<HSSRule> >::const_iterator rIt = this->children.begin(); rIt != this->children.end(); ++rIt)
+    {
+        const QSharedPointer<HSSRule> & childRule = *rIt;
+        childRule->setSpecificity(newValue);
+    }
+}
