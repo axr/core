@@ -1404,7 +1404,16 @@ const QSharedPointer<HSSParserNode> HSSObject::_inheritProperty(AXRString proper
 
 void HSSObject::propertyChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj)
 {
-    this->notifyObservers(source, theObj);
+    //notify
+    if (this->_notifyCallbacks.contains(source))
+    {
+        HSSAbstractObserveCallback * callback = this->_notifyCallbacks[source];
+        callback->call(theObj);
+    }
+    else
+    {
+        this->notifyObservers(source, theObj);
+    }
 }
 
 const AXRString HSSObject::getHostProperty() const
