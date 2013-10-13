@@ -178,6 +178,7 @@ void HSSDisplayObject::setDefaults()
     if (this->isRoot())
     {
         this->setDefaultKw("visible", "yes");
+        this->setDefaultKw("font", "no");
     }
     else
     {
@@ -190,6 +191,7 @@ void HSSDisplayObject::setDefaults()
         this->setDefaultKw("alignX", "auto");
         this->setDefaultKw("alignY", "auto");
         this->setDefaultKw("visible", "inherit");
+        this->setDefaultKw("font", "inherit");
     }
 }
 

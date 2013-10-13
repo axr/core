@@ -158,6 +158,7 @@ HSSTextBlock::HSSTextBlock(AXRController * controller)
 : HSSDisplayObject(HSSObjectTypeTextBlock, controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSTextBlock: creating text block object");
+    this->_initialize();
 
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("text");
@@ -171,12 +172,12 @@ HSSTextBlock::HSSTextBlock(AXRController * controller)
 HSSTextBlock::HSSTextBlock(const HSSTextBlock & orig)
 : HSSDisplayObject(orig)
 {
-
+    this->_initialize();
 }
 
 void HSSTextBlock::_initialize()
 {
-
+    this->addNotifyCallback("font", new HSSObserveCallback<HSSTextBlock>(this, &HSSTextBlock::notifyFont));
 }
 
 QSharedPointer<HSSTextBlock> HSSTextBlock::clone() const
@@ -322,4 +323,10 @@ const AXRString HSSTextBlock::getText() const
 void HSSTextBlock::setText(AXRString value)
 {
     this->setComputedValue("text", value);
+}
+
+void HSSTextBlock::notifyFont(QSharedPointer<HSSObject> theObj)
+{
+    this->setNeedsLayout(true);
+    this->notifyObservers("font", theObj);
 }

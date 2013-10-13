@@ -93,6 +93,9 @@ namespace AXR
         const AXRString getText() const;
         void setText(AXRString value);
 
+        //font
+        void notifyFont(QSharedPointer<HSSObject> theObj);
+
     private:
         void _initialize();
         QFont getQFont() const;
