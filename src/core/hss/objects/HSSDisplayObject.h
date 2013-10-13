@@ -166,7 +166,7 @@ namespace AXR
          */
         void rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState defaultState);
         void rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition> propdef, HSSRuleState defaultState, QSharedPointer<HSSRule> & parentRule);
-        QSharedPointer<HSSRule> rulesGet(unsigned index);
+        QSharedPointer<HSSRule> rulesGet(unsigned index) const;
         void rulesRemove(unsigned index);
         void rulesRemoveLast();
         size_t rulesSize() const;

@@ -539,7 +539,7 @@ void HSSDisplayObject::rulesAddIsAChildren(QSharedPointer<HSSPropertyDefinition>
     }
 }
 
-QSharedPointer<HSSRule> HSSDisplayObject::rulesGet(unsigned index)
+QSharedPointer<HSSRule> HSSDisplayObject::rulesGet(unsigned index) const
 {
     return this->rules[index]->rule;
 }
