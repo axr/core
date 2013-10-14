@@ -479,6 +479,7 @@ QSharedPointer<HSSRule> HSSParser::readRule()
             }
 
             case HSSSymbol:
+            case HSSDoubleDot:
             case HSSNegator:
             case HSSColon:
             {
@@ -864,11 +865,13 @@ QSharedPointer<HSSCombinator> HSSParser::readCombinator()
     case HSSDot:
     {
         //ret = QSharedPointer<HSSCombinator>(new HSSCombinator(HSSCombinatorTypeNearestDescendants, this->getController()));
+        this->readNextToken(true);
         break;
     }
     case HSSDoubleDot:
     {
         ret = QSharedPointer<HSSCombinator>(new HSSCombinator(HSSCombinatorTypeDescendants, this->getController()));
+        this->readNextToken(true);
         break;
     }
 
