@@ -200,7 +200,7 @@ namespace AXR
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
 
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
-        QSharedPointer<HSSObject> _getValueByPath(QSharedPointer<HSSObject> object, QSharedPointer<HSSPropertyPath> path, QSharedPointer<HSSObject> & out_refdObject, AXRString & out_refdProperty);
+        QSharedPointer<HSSObject> _getValueByPath(QSharedPointer<HSSObject> object, QSharedPointer<HSSPropertyPath> path);
     };
 }
 

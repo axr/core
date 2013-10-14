@@ -190,26 +190,21 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
     else if (selection->size() == 1)
     {
         QSharedPointer<HSSPropertyPath> ppath = this->getPropertyPath()->clone();
+        AXRString tlp = this->getPropertyPath()->front()->getPropertyName();
         QSharedPointer<HSSDisplayObject> container = selection->front();
         QSharedPointer<HSSObject> ret;
-        QSharedPointer<HSSObject> refdObject;
-        AXRString refdProperty;
-        this->_value = this->_getValueByPath(container, ppath, refdObject, refdProperty);
+        this->_value = this->_getValueByPath(container, ppath);
 
-        if (refdObject && (refdObject != this->getTrackedObserver("__impl_private__refValue") || this->getTrackedProperty("__impl_private__refValue") != refdProperty))
+        if (container.data() != this->getTrackedObserver("__impl_private__refValue") || this->getTrackedProperty("__impl_private__refValue") != tlp)
         {
-            refdObject->observe(refdProperty, "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
+            container->observe(tlp, "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
         }
         if (this->getPropertyPath()->size() > 1)
         {
-            QSharedPointer<HSSObject> tlo = container->getComputedValue(this->getPropertyPath()->front()->getPropertyName());
+            QSharedPointer<HSSObject> tlo = container->getComputedValue(tlp);
             if (tlo)
             {
                 tlo->observe("__impl_private__replace", "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::replaceChanged));
-            }
-            else
-            {
-                AXRWarning("HSSRefFunction", AXRString("The property ")+this->getPropertyPath()->front()->getPropertyName()+" points to a non existent value.").raise();
             }
         }
     }
@@ -262,7 +257,7 @@ void HSSRefFunction::valueChanged(const AXRString target, const AXRString source
                     {
                         QSharedPointer<HSSObject> remoteObj2 = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
                         if (remoteObj2) {
-                            ret = remoteObj2->clone();
+                            ret = remoteObj2;
                         }
                         break;
                     }
@@ -276,10 +271,21 @@ void HSSRefFunction::valueChanged(const AXRString target, const AXRString source
                         break;
                 }
             }
+            else
+            {
+                ret = remoteObj->clone();
+            }
         }
         else
         {
             ret = remoteObj->clone();
+        }
+
+        if (this->getPropertyPath()->size() > 1)
+        {
+            QSharedPointer<HSSPropertyPath> ppath = this->getPropertyPath()->clone();
+            ppath->popFront();
+            ret = this->_getValueByPath(ret, ppath);
         }
     }
     this->_value = ret;
@@ -289,13 +295,12 @@ void HSSRefFunction::valueChanged(const AXRString target, const AXRString source
 void HSSRefFunction::replace(QSharedPointer<HSSObject> theObj)
 {
     QSharedPointer<HSSPropertyPath> ppath = this->getPropertyPath()->clone();
-    QSharedPointer<HSSObject> refdObject;
-    AXRString refdProperty;
-    this->_value = this->_getValueByPath(theObj, ppath, refdObject, refdProperty);
+    this->_value = this->_getValueByPath(theObj, ppath);
 
-    if (refdObject && (refdObject != this->getTrackedObserver("__impl_private__refValue") || this->getTrackedProperty("__impl_private__refValue") != refdProperty))
+    AXRString tlp = this->getPropertyPath()->front()->getPropertyName();
+    if (theObj && (theObj != this->getTrackedObserver("__impl_private__refValue") || this->getTrackedProperty("__impl_private__refValue") != tlp))
     {
-        refdObject->observe(refdProperty, "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
+        theObj->observe(tlp, "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
     }
 }
 
@@ -303,13 +308,12 @@ void HSSRefFunction::replaceChanged(const AXRString target, const AXRString sour
 {
     QSharedPointer<HSSPropertyPath> ppath = this->getPropertyPath()->clone();
     ppath->popFront();
-    QSharedPointer<HSSObject> refdObject;
-    AXRString refdProperty;
-    this->_value = this->_getValueByPath(remoteObj, ppath, refdObject, refdProperty);
+    this->_value = this->_getValueByPath(remoteObj, ppath);
 
-    if (refdObject && (refdObject != this->getTrackedObserver("__impl_private__refValue") || this->getTrackedProperty("__impl_private__refValue") != refdProperty))
+    AXRString tlp = this->getPropertyPath()->front()->getPropertyName();
+    if (remoteObj && (remoteObj != this->getTrackedObserver("__impl_private__refValue") || this->getTrackedProperty("__impl_private__refValue") != tlp))
     {
-        refdObject->observe(refdProperty, "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
+        remoteObj->observe(tlp, "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
     }
     if (this->getPropertyPath()->size() > 1)
     {
@@ -331,7 +335,7 @@ QSharedPointer<HSSClonable> HSSRefFunction::cloneImpl() const
     return clone;
 }
 
-QSharedPointer<HSSObject> HSSRefFunction::_getValueByPath(QSharedPointer<HSSObject> object, QSharedPointer<HSSPropertyPath> path, QSharedPointer<HSSObject> & out_refdObject, AXRString & out_refdProperty)
+QSharedPointer<HSSObject> HSSRefFunction::_getValueByPath(QSharedPointer<HSSObject> object, QSharedPointer<HSSPropertyPath> path)
 {
     QSharedPointer<HSSObject> ret;
     QSharedPointer<HSSPropertyPathNode> ppn = path->popFront();
@@ -342,13 +346,10 @@ QSharedPointer<HSSObject> HSSRefFunction::_getValueByPath(QSharedPointer<HSSObje
     {
         if (path->size() != 0)
         {
-            ret = this->_getValueByPath(remoteObj, path, out_refdObject, out_refdProperty);
+            ret = this->_getValueByPath(remoteObj, path);
         }
         else
         {
-            out_refdObject = object;
-            out_refdProperty = propertyName;
-
             if (remoteObj->isA(HSSObjectTypeValue))
             {
                 QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(remoteObj);
@@ -376,17 +377,16 @@ QSharedPointer<HSSObject> HSSRefFunction::_getValueByPath(QSharedPointer<HSSObje
                             break;
                     }
                 }
+                else
+                {
+                    ret = valueObj->clone();
+                }
             }
             else
             {
                 ret = remoteObj->clone();
             }
         }
-    }
-    else
-    {
-        out_refdObject = object;
-        out_refdProperty = propertyName;
     }
     return ret;
 }
