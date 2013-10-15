@@ -89,22 +89,22 @@ namespace AXR
 
         //startX
         void setStartX(HSSUnit value);
-        const HSSUnit getStartX() const;
+        HSSUnit getStartX() const;
         QSharedPointer<HSSObject> computeStartX(QSharedPointer<HSSParserNode> parserNode);
 
         //startY
         void setStartY(HSSUnit value);
-        const HSSUnit getStartY() const;
+        HSSUnit getStartY() const;
         QSharedPointer<HSSObject> computeStartY(QSharedPointer<HSSParserNode> parserNode);
 
         //endX
         void setEndX(HSSUnit value);
-        const HSSUnit getEndX() const;
+        HSSUnit getEndX() const;
         QSharedPointer<HSSObject> computeEndX(QSharedPointer<HSSParserNode> parserNode);
 
         //endY
         void setEndY(HSSUnit value);
-        const HSSUnit getEndY() const;
+        HSSUnit getEndY() const;
         QSharedPointer<HSSObject> computeEndY(QSharedPointer<HSSParserNode> parserNode);
 
     private:

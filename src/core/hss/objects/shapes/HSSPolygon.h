@@ -88,7 +88,7 @@ namespace AXR
          *  Getter for the actual value of the sides property.
          *  @return A HSSUnit containing the amount of sides.
          */
-        const HSSUnit getSides() const;
+        HSSUnit getSides() const;
 
         QSharedPointer<HSSObject> computeSides(QSharedPointer<HSSParserNode> value);
 
@@ -103,7 +103,7 @@ namespace AXR
          *  Getter for the actual value of the angle property.
          *  @return A HSSUnit containing the amount of angle.
          */
-        const HSSUnit getAngle() const;
+        HSSUnit getAngle() const;
 
         QSharedPointer<HSSObject> computeAngle(QSharedPointer<HSSParserNode> value);
 

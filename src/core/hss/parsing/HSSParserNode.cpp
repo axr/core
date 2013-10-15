@@ -152,12 +152,12 @@ bool HSSParserNode::equalTo(QSharedPointer<HSSParserNode> otherNode)
     return true;
 }
 
-const bool HSSParserNode::isA(HSSParserNodeType otherType) const
+bool HSSParserNode::isA(HSSParserNodeType otherType) const
 {
     return otherType == this->nodeType;
 }
 
-const HSSParserNodeType HSSParserNode::getType() const
+HSSParserNodeType HSSParserNode::getType() const
 {
     return this->nodeType;
 }
@@ -200,7 +200,7 @@ void HSSParserNode::removeNode(QSharedPointer<HSSParserNode> child)
     }
 }
 
-const std::vector<QSharedPointer<HSSParserNode> > HSSParserNode::getChildNodes() const
+std::vector<QSharedPointer<HSSParserNode> > HSSParserNode::getChildNodes() const
 {
     return this->_childNodes;
 }
@@ -220,82 +220,82 @@ QSharedPointer<HSSDisplayObject> HSSParserNode::getThisObj()
     return thisObj;
 }
 
-const bool HSSParserNode::isA(HSSExpressionType otherType) const
+bool HSSParserNode::isA(HSSExpressionType otherType) const
 {
     return false;
 }
 
-const HSSExpressionType HSSParserNode::getExpressionType() const
+HSSExpressionType HSSParserNode::getExpressionType() const
 {
     return HSSExpressionTypeNone;
 }
 
-const bool HSSParserNode::isA(HSSStatementType otherType) const
+bool HSSParserNode::isA(HSSStatementType otherType) const
 {
     return false;
 }
 
-const HSSStatementType HSSParserNode::getStatementType() const
+HSSStatementType HSSParserNode::getStatementType() const
 {
     return HSSStatementTypeNone;
 }
 
-const bool HSSParserNode::isA(HSSInstructionType otherType) const
+bool HSSParserNode::isA(HSSInstructionType otherType) const
 {
     return false;
 }
 
-const HSSInstructionType HSSParserNode::getInstructionType() const
+HSSInstructionType HSSParserNode::getInstructionType() const
 {
     return HSSInstructionTypeNone;
 }
 
-const bool HSSParserNode::isA(HSSSelectorType otherType) const
+bool HSSParserNode::isA(HSSSelectorType otherType) const
 {
     return false;
 }
 
-const HSSSelectorType HSSParserNode::getSelectorType() const
+HSSSelectorType HSSParserNode::getSelectorType() const
 {
     return HSSSelectorTypeNone;
 }
 
-const bool HSSParserNode::isA(HSSCombinatorType otherType) const
+bool HSSParserNode::isA(HSSCombinatorType otherType) const
 {
     return false;
 }
 
-const HSSCombinatorType HSSParserNode::getCombinatorType() const
+HSSCombinatorType HSSParserNode::getCombinatorType() const
 {
     return HSSCombinatorTypeNone;
 }
 
-const bool HSSParserNode::isA(HSSFilterType otherType) const
+bool HSSParserNode::isA(HSSFilterType otherType) const
 {
     return false;
 }
 
-const HSSFilterType HSSParserNode::getFilterType() const
+HSSFilterType HSSParserNode::getFilterType() const
 {
     return HSSFilterTypeNone;
 }
 
-const bool HSSParserNode::isA(HSSFunctionType otherType) const
+bool HSSParserNode::isA(HSSFunctionType otherType) const
 {
     return false;
 }
 
-const HSSFunctionType HSSParserNode::getFunctionType() const
+HSSFunctionType HSSParserNode::getFunctionType() const
 {
     return HSSFunctionTypeNone;
 }
 
-const bool HSSParserNode::isA(HSSFlagFunctionType otherType) const
+bool HSSParserNode::isA(HSSFlagFunctionType otherType) const
 {
     return false;
 }
 
-const HSSFlagFunctionType HSSParserNode::getFlagFunctionType() const
+HSSFlagFunctionType HSSParserNode::getFlagFunctionType() const
 {
     return HSSFlagFunctionTypeNone;
 }
@@ -318,7 +318,7 @@ void HSSParserNode::setController(AXRController *controller)
     this->controller = controller;
 }
 
-const AXRString HSSParserNode::getHostProperty() const
+AXRString HSSParserNode::getHostProperty() const
 {
     return this->_hostProperty;
 }

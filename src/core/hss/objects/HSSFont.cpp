@@ -176,17 +176,17 @@ bool HSSFont::isKeyword(AXRString value, AXRString property)
     return HSSObject::isKeyword(value, property);
 }
 
-const HSSUnit HSSFont::getSize() const
+HSSUnit HSSFont::getSize() const
 {
     return this->getComputedNumber("size");
 }
 
-const AXRString HSSFont::getFace() const
+AXRString HSSFont::getFace() const
 {
     return this->getComputedString("face");
 }
 
-const QSharedPointer<HSSRgb> HSSFont::getColor() const
+QSharedPointer<HSSRgb> HSSFont::getColor() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("color");
     if (value && value->isA(HSSObjectTypeRgb))
@@ -225,7 +225,7 @@ QSharedPointer<HSSObject> HSSFont::computeColor(QSharedPointer<HSSParserNode> pa
 }
 
 
-const AXRString HSSFont::getWeight() const
+AXRString HSSFont::getWeight() const
 {
     return this->getComputedString("weight");
 }

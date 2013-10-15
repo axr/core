@@ -162,22 +162,22 @@ void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUni
     this->createRoundedRect(path, x, y, width, height, 0.);
 }
 
-const HSSUnit HSSRoundedRect::getLeftTop() const
+HSSUnit HSSRoundedRect::getLeftTop() const
 {
     return this->getComputedNumber("leftTop");
 }
 
-const HSSUnit HSSRoundedRect::getLeftBottom() const
+HSSUnit HSSRoundedRect::getLeftBottom() const
 {
     return this->getComputedNumber("leftBottom");
 }
 
-const HSSUnit HSSRoundedRect::getRightTop() const
+HSSUnit HSSRoundedRect::getRightTop() const
 {
     return this->getComputedNumber("rightTop");
 }
 
-const HSSUnit HSSRoundedRect::getRightBottom() const
+HSSUnit HSSRoundedRect::getRightBottom() const
 {
     return this->getComputedNumber("rightBottom");
 }

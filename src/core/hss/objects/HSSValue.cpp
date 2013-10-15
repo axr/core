@@ -151,7 +151,7 @@ AXRString HSSValue::defaultObjectType(AXRString property)
     }
 }
 
-const QSharedPointer<HSSParserNode> HSSValue::getValue() const
+QSharedPointer<HSSParserNode> HSSValue::getValue() const
 {
     return this->value;
 }
@@ -178,7 +178,7 @@ void HSSValue::valueChanged(const AXRString target, const AXRString source, cons
     this->notifyObservers("__impl_private__valueChanged", theObj);
 }
 
-const HSSUnit HSSValue::getNumber() const
+HSSUnit HSSValue::getNumber() const
 {
     switch (this->value->getType())
     {
@@ -197,7 +197,7 @@ const HSSUnit HSSValue::getNumber() const
     return 0.;
 }
 
-const HSSUnit HSSValue::_getNumber(const QSharedPointer<HSSParserNode> & parserNode) const
+HSSUnit HSSValue::_getNumber(const QSharedPointer<HSSParserNode> & parserNode) const
 {
     switch (parserNode->getType())
     {
@@ -224,7 +224,7 @@ const HSSUnit HSSValue::_getNumber(const QSharedPointer<HSSParserNode> & parserN
     return 0.;
 }
 
-const bool HSSValue::getBool() const
+bool HSSValue::getBool() const
 {
     switch (this->value->getType())
     {
@@ -243,7 +243,7 @@ const bool HSSValue::getBool() const
     return false;
 }
 
-const bool HSSValue::_getBool(const QSharedPointer<HSSParserNode> & parserNode) const
+bool HSSValue::_getBool(const QSharedPointer<HSSParserNode> & parserNode) const
 {
     switch (parserNode->getType())
     {
@@ -266,7 +266,7 @@ const bool HSSValue::_getBool(const QSharedPointer<HSSParserNode> & parserNode) 
     return false;
 }
 
-const AXRString HSSValue::getString() const
+AXRString HSSValue::getString() const
 {
     switch (this->value->getType())
     {
@@ -285,7 +285,7 @@ const AXRString HSSValue::getString() const
     return "";
 }
 
-const AXRString HSSValue::_getString(const QSharedPointer<HSSParserNode> & parserNode) const
+AXRString HSSValue::_getString(const QSharedPointer<HSSParserNode> & parserNode) const
 {
     switch (parserNode->getType())
     {
@@ -308,7 +308,7 @@ const AXRString HSSValue::_getString(const QSharedPointer<HSSParserNode> & parse
     return "";
 }
 
-const QSharedPointer<HSSObject> HSSValue::getObject() const
+QSharedPointer<HSSObject> HSSValue::getObject() const
 {
     switch (this->value->getType())
     {

@@ -191,7 +191,7 @@ void HSSLinearGradient::setStartX(HSSUnit value)
     this->setComputedValue("startX", value);
 }
 
-const HSSUnit HSSLinearGradient::getStartX() const
+HSSUnit HSSLinearGradient::getStartX() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("startX");
     if (value && value->isA(HSSObjectTypeValue))
@@ -206,7 +206,7 @@ void HSSLinearGradient::setStartY(HSSUnit value)
     this->setComputedValue("startY", value);
 }
 
-const HSSUnit HSSLinearGradient::getStartY() const
+HSSUnit HSSLinearGradient::getStartY() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("startY");
     if (value && value->isA(HSSObjectTypeValue))
@@ -221,7 +221,7 @@ void HSSLinearGradient::setEndX(HSSUnit value)
     this->setComputedValue("endX", value);
 }
 
-const HSSUnit HSSLinearGradient::getEndX() const
+HSSUnit HSSLinearGradient::getEndX() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("endX");
     if (value && value->isA(HSSObjectTypeValue))
@@ -236,7 +236,7 @@ void HSSLinearGradient::setEndY(HSSUnit value)
     this->setComputedValue("endY", value);
 }
 
-const HSSUnit HSSLinearGradient::getEndY() const
+HSSUnit HSSLinearGradient::getEndY() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("endY");
     if (value && value->isA(HSSObjectTypeValue))

@@ -97,7 +97,7 @@ namespace AXR
          *  Getter for the definition object of value.
          *  @return A shared pointer to the parser node containing the definition object of value.
          */
-        const QSharedPointer<HSSParserNode> getValue() const;
+        QSharedPointer<HSSParserNode> getValue() const;
 
         void setValue(QSharedPointer<HSSParserNode> value);
 
@@ -108,10 +108,10 @@ namespace AXR
          */
         void valueChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
-        const HSSUnit getNumber() const;
-        const bool getBool() const;
-        const AXRString getString() const;
-        const QSharedPointer<HSSObject> getObject() const;
+        HSSUnit getNumber() const;
+        bool getBool() const;
+        AXRString getString() const;
+        QSharedPointer<HSSObject> getObject() const;
 
         //see HSSObject.h for documentation on this method
         void setScope(QSharedPointer<HSSSimpleSelection> newScope);
@@ -126,9 +126,9 @@ namespace AXR
         QSharedPointer<HSSParserNode> value;
 
     private:
-        const HSSUnit _getNumber(const QSharedPointer<HSSParserNode> & parserNode) const;
-        const bool _getBool(const QSharedPointer<HSSParserNode> & parserNode) const;
-        const AXRString _getString(const QSharedPointer<HSSParserNode> & parserNode) const;
+        HSSUnit _getNumber(const QSharedPointer<HSSParserNode> & parserNode) const;
+        bool _getBool(const QSharedPointer<HSSParserNode> & parserNode) const;
+        AXRString _getString(const QSharedPointer<HSSParserNode> & parserNode) const;
         void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };

@@ -83,12 +83,12 @@ namespace AXR
          *  @param  type    The action type to which to check against.
          *  @return Wether it is of the given type or not.
          */
-        const bool isA(HSSActionType type) const;
+        bool isA(HSSActionType type) const;
 
         /**
          *  @return The action type of this instance.
          */
-        const HSSActionType getActionType() const;
+        HSSActionType getActionType() const;
 
         /**
          *  This method is called when the action should be executed. The actual implementation

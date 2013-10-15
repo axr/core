@@ -81,8 +81,8 @@ namespace AXR
          */
         virtual HSSUnit calculate(HSSUnit leftval, HSSUnit rightval) = 0;
 
-        const bool isA(HSSExpressionType otherType) const;
-        const HSSExpressionType getExpressionType() const;
+        bool isA(HSSExpressionType otherType) const;
+        HSSExpressionType getExpressionType() const;
 
         /**
          *  When logging, you often need a string representation of the expression type.

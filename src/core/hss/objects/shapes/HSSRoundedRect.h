@@ -103,10 +103,10 @@ namespace AXR
         void stackBottom(QSharedPointer<HSSParserNode> parserNode);
         void stackLeft(QSharedPointer<HSSParserNode> parserNode);
 
-        const HSSUnit getLeftTop() const;
-        const HSSUnit getLeftBottom() const;
-        const HSSUnit getRightTop() const;
-        const HSSUnit getRightBottom() const;
+        HSSUnit getLeftTop() const;
+        HSSUnit getLeftBottom() const;
+        HSSUnit getRightTop() const;
+        HSSUnit getRightBottom() const;
 
     private:
         void _initialize();

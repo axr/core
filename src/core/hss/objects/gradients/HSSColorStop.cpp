@@ -171,7 +171,7 @@ QSharedPointer<HSSParserNode> HSSColorStop::getPercentageExpression(QSharedPoint
     return HSSObject::getPercentageExpression(parserNode, propertyName);
 }
 
-const QSharedPointer<HSSObject> HSSColorStop::getColor() const
+QSharedPointer<HSSObject> HSSColorStop::getColor() const
 {
     return this->getComputedValue("color");
 }
@@ -204,17 +204,17 @@ QSharedPointer<HSSObject> HSSColorStop::computeColor(QSharedPointer<HSSParserNod
     return this->computeObject(parserNode, "color");
 }
 
-const HSSUnit HSSColorStop::getPosition() const
+HSSUnit HSSColorStop::getPosition() const
 {
     return this->getComputedNumber("position");
 }
 
-const HSSUnit HSSColorStop::getBalance() const
+HSSUnit HSSColorStop::getBalance() const
 {
     return this->getComputedNumber("balance");
 }
 
-const bool HSSColorStop::positionIsPercentage() const
+bool HSSColorStop::positionIsPercentage() const
 {
     return this->_positionIsPercentage;
 }

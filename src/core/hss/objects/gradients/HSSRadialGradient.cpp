@@ -163,7 +163,7 @@ bool HSSRadialGradient::isKeyword(AXRString value, AXRString property)
     return HSSGradient::isKeyword(value, property);
 }
 
-const HSSUnit HSSRadialGradient::getCenterX() const
+HSSUnit HSSRadialGradient::getCenterX() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("centerX");
     if (value && value->isA(HSSObjectTypeValue))
@@ -173,7 +173,7 @@ const HSSUnit HSSRadialGradient::getCenterX() const
     return 0.;
 }
 
-const HSSUnit HSSRadialGradient::getCenterY() const
+HSSUnit HSSRadialGradient::getCenterY() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("centerY");
     if (value && value->isA(HSSObjectTypeValue))
@@ -183,7 +183,7 @@ const HSSUnit HSSRadialGradient::getCenterY() const
     return 0.;
 }
 
-const HSSUnit HSSRadialGradient::getOffsetX() const
+HSSUnit HSSRadialGradient::getOffsetX() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("offsetX");
     if (value && value->isA(HSSObjectTypeValue))
@@ -193,7 +193,7 @@ const HSSUnit HSSRadialGradient::getOffsetX() const
     return 0.;
 }
 
-const HSSUnit HSSRadialGradient::getOffsetY() const
+HSSUnit HSSRadialGradient::getOffsetY() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("offsetY");
     if (value && value->isA(HSSObjectTypeValue))

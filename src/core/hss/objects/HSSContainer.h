@@ -199,16 +199,16 @@ namespace AXR
          */
         QSharedPointer<HSSSimpleSelection> getChildren(bool includeTextBlocks) const;
 
-        const HSSUnit getContentAlignX() const;
+        HSSUnit getContentAlignX() const;
         QSharedPointer<HSSObject> computeContentAlignX(QSharedPointer<HSSParserNode> parserNode);
         void notifyContentAlignX(QSharedPointer<HSSObject> theObject);
-        const HSSUnit getContentAlignY() const;
+        HSSUnit getContentAlignY() const;
         QSharedPointer<HSSObject> computeContentAlignY(QSharedPointer<HSSParserNode> parserNode);
         void notifyContentAlignY(QSharedPointer<HSSObject> theObject);
-        const HSSDirectionValue getDirection() const;
-        const HSSDirectionValue getWrapDirection() const;
+        HSSDirectionValue getDirection() const;
+        HSSDirectionValue getWrapDirection() const;
         //content
-        const AXRString getContent() const;
+        AXRString getContent() const;
 
         QSharedPointer<HSSObject> computeContent(QSharedPointer<HSSParserNode> parserNode);
         //shape

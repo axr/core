@@ -316,7 +316,7 @@ QSharedPointer<HSSRgb> HSSGradient::getNextColorFromStops(QListIterator<QSharedP
     return ret;
 }
 
-const QSharedPointer<HSSObject> HSSGradient::getStartColor() const
+QSharedPointer<HSSObject> HSSGradient::getStartColor() const
 {
     return this->getComputedValue("startColor");
 }
@@ -349,7 +349,7 @@ QSharedPointer<HSSObject> HSSGradient::computeStartColor(QSharedPointer<HSSParse
     return this->computeObject(parserNode, "startColor");
 }
 
-const QSharedPointer<HSSObject> HSSGradient::getEndColor() const
+QSharedPointer<HSSObject> HSSGradient::getEndColor() const
 {
     return this->getComputedValue("endColor");
 }
@@ -382,13 +382,13 @@ QSharedPointer<HSSObject> HSSGradient::computeEndColor(QSharedPointer<HSSParserN
     return this->computeObject(parserNode, "endColor");
 }
 
-const QSharedPointer<HSSObject> HSSGradient::getBalance() const
+QSharedPointer<HSSObject> HSSGradient::getBalance() const
 {
     return this->getComputedValue("balance");
 }
 
 //colorStops
-const QSharedPointer<HSSObject> HSSGradient::getColorStops() const
+QSharedPointer<HSSObject> HSSGradient::getColorStops() const
 {
     return this->getComputedValue("colorStops");
 }
@@ -421,12 +421,12 @@ QSharedPointer<HSSObject> HSSGradient::computeColorStops(QSharedPointer<HSSParse
     return this->computeObject(parserNode, "colorStops");
 }
 
-const bool HSSGradient::isA(HSSGradientType type) const
+bool HSSGradient::isA(HSSGradientType type) const
 {
     return type == this->gradientType;
 }
 
-const HSSGradientType HSSGradient::getGradientType() const
+HSSGradientType HSSGradient::getGradientType() const
 {
     return this->gradientType;
 }

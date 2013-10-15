@@ -80,11 +80,11 @@ namespace AXR
         virtual void draw(QPainter &painter, const QPainterPath &path) = 0;
 
         //size
-        const HSSUnit getSize() const;
+        HSSUnit getSize() const;
         //position
-        const HSSBorderPosition getPosition() const;
+        HSSBorderPosition getPosition() const;
         //segments
-        const QSharedPointer<HSSObject> getSegments() const;
+        QSharedPointer<HSSObject> getSegments() const;
 
     protected:
         /**
