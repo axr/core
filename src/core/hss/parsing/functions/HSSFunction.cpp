@@ -201,12 +201,12 @@ QSharedPointer<HSSObject> HSSFunction::getValue()
     return this->_value;
 }
 
-const bool HSSFunction::isA(HSSFunctionType type) const
+bool HSSFunction::isA(HSSFunctionType type) const
 {
     return this->functionType == type;
 }
 
-const HSSFunctionType HSSFunction::getFunctionType() const
+HSSFunctionType HSSFunction::getFunctionType() const
 {
     return this->functionType;
 }

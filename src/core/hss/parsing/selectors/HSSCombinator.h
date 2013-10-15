@@ -83,12 +83,12 @@ namespace AXR
          *  @param  otherType   The combinator type to which to check against.
          *  @return Wether it is of the given type or not.
          */
-        const bool isA(HSSCombinatorType otherType) const;
+        bool isA(HSSCombinatorType otherType) const;
 
         /**
          *  @return The combinator type of this instance.
          */
-        const HSSCombinatorType getCombinatorType() const;
+        HSSCombinatorType getCombinatorType() const;
 
         //see HSSParserNode.h for the documentation of this method
         virtual AXRString toString();

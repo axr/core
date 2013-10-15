@@ -120,7 +120,7 @@ namespace AXR
          *  @return A HSSUnit containing the value for the red channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        const HSSUnit getRed() const;
+        HSSUnit getRed() const;
 
         /**
          *  Setter for the definition object of red. It will use the value as needed.
@@ -137,7 +137,7 @@ namespace AXR
          *  @return A HSSUnit containing the value for the green channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        const HSSUnit getGreen() const;
+        HSSUnit getGreen() const;
 
         /**
          *  Setter for the definition object of green. It will use the value as needed.
@@ -153,7 +153,7 @@ namespace AXR
          *  @return A HSSUnit containing the value for the blue channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        const HSSUnit getBlue() const;
+        HSSUnit getBlue() const;
 
         /**
          *  Setter for the definition object of blue. It will use the value as needed.
@@ -169,7 +169,7 @@ namespace AXR
          *  @return A HSSUnit containing the value for the alpha channel. The range of this
          *  value is from 0.0 to 255.0.
          */
-        const HSSUnit getAlpha() const;
+        HSSUnit getAlpha() const;
 
         /**
          *  Setter for the definition object of alpha. It will use the value as needed.

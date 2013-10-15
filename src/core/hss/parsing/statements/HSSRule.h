@@ -179,7 +179,7 @@ namespace AXR
          *  Getter for the property definitions vector.
          *  @return A vector of shared pointers to property definitions.
          */
-        const std::vector<QSharedPointer<HSSPropertyDefinition> > & getProperties() const;
+       const std::vector<QSharedPointer<HSSPropertyDefinition> > & getProperties() const;
 
         /**
          *  Add a property definition to the properties vector.
@@ -265,7 +265,7 @@ namespace AXR
 
         void treeChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
-        const std::vector<QWeakPointer<HSSDisplayObject> > getAppliedTo() const;
+        std::vector<QWeakPointer<HSSDisplayObject> > getAppliedTo() const;
 
         void setAppliedTo(std::vector<QWeakPointer<HSSDisplayObject> > newObjects);
 
@@ -280,7 +280,7 @@ namespace AXR
         bool hasParent();
         QSharedPointer<HSSRule> getParent();
 
-        const bool clonedFromSameRule(const QSharedPointer<HSSRule> & otherRule) const;
+        bool clonedFromSameRule(const QSharedPointer<HSSRule> & otherRule) const;
 
         bool equalTo(QSharedPointer<HSSParserNode> otherNode);
 

@@ -129,12 +129,12 @@ namespace AXR
          *  @param otherType    The parser node type to compare against.
          *  @return Wether the instance is an parser node of given type.
          */
-        const bool isA(HSSParserNodeType otherType) const;
+        bool isA(HSSParserNodeType otherType) const;
 
         /**
          *  @return The parser node type of the current instance.
          */
-        const HSSParserNodeType getType() const;
+        HSSParserNodeType getType() const;
 
         /**
          *  Traversal method of the parser tree.
@@ -170,7 +170,7 @@ namespace AXR
         /**
          *  Traversal method of the parser tree.
          */
-        const std::vector<QSharedPointer<HSSParserNode> > getChildNodes() const;
+        std::vector<QSharedPointer<HSSParserNode> > getChildNodes() const;
 
         /**
          *  Setter for the "this object", which is a shared pointer to the nearest display object
@@ -186,29 +186,29 @@ namespace AXR
         virtual QSharedPointer<HSSDisplayObject> getThisObj();
 
         //add all type isAs here
-        virtual const bool isA(HSSExpressionType otherType) const;
-        virtual const HSSExpressionType getExpressionType() const;
+        virtual bool isA(HSSExpressionType otherType) const;
+        virtual HSSExpressionType getExpressionType() const;
 
-        virtual const bool isA(HSSStatementType otherType) const;
-        virtual const HSSStatementType getStatementType() const;
+        virtual bool isA(HSSStatementType otherType) const;
+        virtual HSSStatementType getStatementType() const;
 
-        virtual const bool isA(HSSInstructionType otherType) const;
-        virtual const HSSInstructionType getInstructionType() const;
+        virtual bool isA(HSSInstructionType otherType) const;
+        virtual HSSInstructionType getInstructionType() const;
 
-        virtual const bool isA(HSSSelectorType otherType) const;
-        virtual const HSSSelectorType getSelectorType() const;
+        virtual bool isA(HSSSelectorType otherType) const;
+        virtual HSSSelectorType getSelectorType() const;
 
-        virtual const bool isA(HSSCombinatorType otherType) const;
-        virtual const HSSCombinatorType getCombinatorType() const;
+        virtual bool isA(HSSCombinatorType otherType) const;
+        virtual HSSCombinatorType getCombinatorType() const;
 
-        virtual const bool isA(HSSFilterType otherType) const;
-        virtual const HSSFilterType getFilterType() const;
+        virtual bool isA(HSSFilterType otherType) const;
+        virtual HSSFilterType getFilterType() const;
 
-        virtual const bool isA(HSSFunctionType otherType) const;
-        virtual const HSSFunctionType getFunctionType() const;
+        virtual bool isA(HSSFunctionType otherType) const;
+        virtual HSSFunctionType getFunctionType() const;
 
-        virtual const bool isA(HSSFlagFunctionType otherType) const;
-        virtual const HSSFlagFunctionType getFlagFunctionType() const;
+        virtual bool isA(HSSFlagFunctionType otherType) const;
+        virtual HSSFlagFunctionType getFlagFunctionType() const;
 
         QSharedPointer<HSSParserNode> shared_from_this();
 
@@ -229,7 +229,7 @@ namespace AXR
         *  Getter for the host property.
         *  @return A string containing the name of the property that "owns" the node
         */
-       const AXRString getHostProperty() const;
+        AXRString getHostProperty() const;
 
        /**
         *  Setter for the host property.

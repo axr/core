@@ -287,7 +287,7 @@ void HSSTextBlock::accept(HSSAbstractVisitor* visitor, HSSVisitorFilterFlags fil
     visitor->visit(*this);
 }
 
-const HSSTextTransformType HSSTextBlock::getTransform() const
+HSSTextTransformType HSSTextBlock::getTransform() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("transform");
     if (value && value->isA(HSSObjectTypeValue))
@@ -301,7 +301,7 @@ const HSSTextTransformType HSSTextBlock::getTransform() const
     return HSSTextTransformTypeNone;
 }
 
-const HSSTextAlignType HSSTextBlock::getTextAlign() const
+HSSTextAlignType HSSTextBlock::getTextAlign() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("transform");
     if (value && value->isA(HSSObjectTypeValue))
@@ -315,7 +315,7 @@ const HSSTextAlignType HSSTextBlock::getTextAlign() const
     return HSSTextAlignTypeNone;
 }
 
-const AXRString HSSTextBlock::getText() const
+AXRString HSSTextBlock::getText() const
 {
     return this->getComputedString("text");
 }

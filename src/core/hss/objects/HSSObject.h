@@ -276,26 +276,26 @@ namespace AXR
          *  @param otherType    The HSSObjectType to compare against.
          *  @return Wether the object is an object of given type.
          */
-        const bool isA(HSSObjectType otherType) const;
+        bool isA(HSSObjectType otherType) const;
         /**
          *  @return The object type.
          */
-        const HSSObjectType getObjectType() const;
+        HSSObjectType getObjectType() const;
 
-        virtual const bool isA(HSSShapeType otherType) const;
-        virtual const HSSShapeType getShapeType() const;
+        virtual bool isA(HSSShapeType otherType) const;
+        virtual HSSShapeType getShapeType() const;
 
-        virtual const bool isA(HSSRequestModeType otherType) const;
-        virtual const HSSRequestModeType getRequestModeType() const;
+        virtual bool isA(HSSRequestModeType otherType) const;
+        virtual HSSRequestModeType getRequestModeType() const;
 
-        virtual const bool isA(HSSEventType otherType) const;
-        virtual const HSSEventType getEventType() const;
+        virtual bool isA(HSSEventType otherType) const;
+        virtual HSSEventType getEventType() const;
 
-        virtual const bool isA(HSSActionType otherType) const;
-        virtual const HSSActionType getActionType() const;
+        virtual bool isA(HSSActionType otherType) const;
+        virtual HSSActionType getActionType() const;
 
-        virtual const bool isA(HSSGradientType otherType) const;
-        virtual const HSSGradientType getGradientType() const;
+        virtual bool isA(HSSGradientType otherType) const;
+        virtual HSSGradientType getGradientType() const;
 
         QSharedPointer<HSSObject> shared_from_this();
 
@@ -311,7 +311,7 @@ namespace AXR
         void clearDefaultValues();
         virtual void setDefaults();
         void setDefaultValue(AXRString propertyName, QSharedPointer<HSSObject> theObj);
-        const QSharedPointer<HSSObject> getDefaultValue(AXRString propertyName) const;
+        QSharedPointer<HSSObject> getDefaultValue(AXRString propertyName) const;
         void setDefault(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
         void setDefault(AXRString propertyName, HSSUnit value);
         void setDefaultPercentage(AXRString propertyName, HSSUnit value);
@@ -319,7 +319,7 @@ namespace AXR
         void setDefaultKw(AXRString propertyName, AXRString value);
         virtual void fillWithDefaults();
         bool hasStackValue(AXRString property) const;
-        const QSharedPointer<HSSObject> getStackValue(AXRString property) const;
+        QSharedPointer<HSSObject> getStackValue(AXRString property) const;
         void clearStackValues();
         void setStackNode(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
         void setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject);
@@ -343,12 +343,12 @@ namespace AXR
         QSharedPointer<HSSKeywordConstant> stringToKeyword(AXRString value);
         void setComputed(AXRString propertyName, QSharedPointer<HSSObject> theObj);
         QSharedPointer<HSSObject> getComputedValue(AXRString property) const;
-        const HSSUnit getComputedNumber(AXRString property) const;
-        const HSSUnit getComputedBool(AXRString property) const;
-        const AXRString getComputedString(AXRString property) const;
-        const QSharedPointer<HSSObject> getComputedObject(AXRString property) const;
+        HSSUnit getComputedNumber(AXRString property) const;
+        HSSUnit getComputedBool(AXRString property) const;
+        AXRString getComputedString(AXRString property) const;
+        QSharedPointer<HSSObject> getComputedObject(AXRString property) const;
         void clearComputedValues();
-        const QSharedPointer<HSSObject> inheritValue(AXRString inheritProperty, AXRString hostProperty);
+        QSharedPointer<HSSObject> inheritValue(AXRString inheritProperty, AXRString hostProperty);
         virtual void propertyChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj);
         virtual void replace(QSharedPointer<HSSObject> theObj);
 
@@ -356,7 +356,7 @@ namespace AXR
          *  Getter for the host property.
          *  @return A string containing the name of the property that "owns" the node
          */
-        const AXRString getHostProperty() const;
+        AXRString getHostProperty() const;
 
         /**
          *  Setter for the host property.
@@ -377,7 +377,7 @@ namespace AXR
         unsigned getSpecificity() const;
 
         void objDefRulesAdd(QSharedPointer<HSSRule> rule);
-        const QVector<QSharedPointer<HSSRule> > getObjDefRules() const;
+        QVector<QSharedPointer<HSSRule> > getObjDefRules() const;
 
     protected:
         QMap<AXRString, HSSAbstractStackCallback*> _stackCallbacks;
@@ -399,7 +399,7 @@ namespace AXR
         AXRController * axrController;
 
         void _setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject);
-        const QSharedPointer<HSSParserNode> _inheritProperty(AXRString propertyName) const;
+        QSharedPointer<HSSParserNode> _inheritProperty(AXRString propertyName) const;
 
         virtual void _setIsA(QSharedPointer<HSSObject> theObj);
 

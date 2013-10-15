@@ -622,7 +622,7 @@ QSharedPointer<HSSContainer> HSSContainer::shared_from_this()
 }
 
 //contentAlignX
-const HSSUnit HSSContainer::getContentAlignX() const
+HSSUnit HSSContainer::getContentAlignX() const
 {
     return this->getComputedNumber("contentAlignX");
 }
@@ -680,7 +680,7 @@ void HSSContainer::notifyContentAlignX(QSharedPointer<HSSObject> theObject)
 }
 
 //contentAlignY
-const HSSUnit HSSContainer::getContentAlignY() const
+HSSUnit HSSContainer::getContentAlignY() const
 {
     return this->getComputedNumber("contentAlignY");
 }
@@ -738,7 +738,7 @@ void HSSContainer::notifyContentAlignY(QSharedPointer<HSSObject> theObject)
 }
 
 //direction
-const HSSDirectionValue HSSContainer::getDirection() const
+HSSDirectionValue HSSContainer::getDirection() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("direction");
     if (value && value->isA(HSSObjectTypeValue))
@@ -769,7 +769,7 @@ const HSSDirectionValue HSSContainer::getDirection() const
 }
 
 //wrapDirection
-const HSSDirectionValue HSSContainer::getWrapDirection() const
+HSSDirectionValue HSSContainer::getWrapDirection() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("wrapDirection");
     if (value && value->isA(HSSObjectTypeValue))
@@ -800,7 +800,7 @@ const HSSDirectionValue HSSContainer::getWrapDirection() const
 }
 
 //content
-const AXRString HSSContainer::getContent() const
+AXRString HSSContainer::getContent() const
 {
     return this->getComputedString("content");
 }

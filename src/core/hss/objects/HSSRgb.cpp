@@ -165,7 +165,7 @@ QSharedPointer<HSSObject> HSSRgb::computeRed(QSharedPointer<HSSParserNode> parse
     return this->_computeChannelValue(parserNode);
 }
 
-const HSSUnit HSSRgb::getRed() const
+HSSUnit HSSRgb::getRed() const
 {
     return this->getComputedNumber("red");
 }
@@ -180,7 +180,7 @@ QSharedPointer<HSSObject> HSSRgb::computeGreen(QSharedPointer<HSSParserNode> par
     return this->_computeChannelValue(parserNode);
 }
 
-const HSSUnit HSSRgb::getGreen() const
+HSSUnit HSSRgb::getGreen() const
 {
     return this->getComputedNumber("green");
 }
@@ -195,7 +195,7 @@ QSharedPointer<HSSObject> HSSRgb::computeBlue(QSharedPointer<HSSParserNode> pars
     return this->_computeChannelValue(parserNode);
 }
 
-const HSSUnit HSSRgb::getBlue() const
+HSSUnit HSSRgb::getBlue() const
 {
     return this->getComputedNumber("blue");
 }
@@ -210,7 +210,7 @@ QSharedPointer<HSSObject> HSSRgb::computeAlpha(QSharedPointer<HSSParserNode> par
     return this->_computeChannelValue(parserNode);
 }
 
-const HSSUnit HSSRgb::getAlpha() const
+HSSUnit HSSRgb::getAlpha() const
 {
     return this->getComputedNumber("alpha");
 }

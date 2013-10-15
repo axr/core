@@ -132,7 +132,7 @@ bool HSSBorder::isKeyword(AXRString value, AXRString property)
     return HSSObject::isKeyword(value, property);
 }
 
-const HSSUnit HSSBorder::getSize() const
+HSSUnit HSSBorder::getSize() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("size");
     if (value && value->isA(HSSObjectTypeValue))
@@ -142,7 +142,7 @@ const HSSUnit HSSBorder::getSize() const
     return 0.;
 }
 
-const HSSBorderPosition HSSBorder::getPosition() const
+HSSBorderPosition HSSBorder::getPosition() const
 {
     QSharedPointer<HSSObject> computedValue = this->getComputedValue("position");
     if (computedValue && computedValue->isA(HSSObjectTypeValue))
@@ -175,7 +175,7 @@ const HSSBorderPosition HSSBorder::getPosition() const
     return HSSBorderPositionInside; ///@todo set defaults and change to None
 }
 
-const QSharedPointer<HSSObject> HSSBorder::getSegments() const
+QSharedPointer<HSSObject> HSSBorder::getSegments() const
 {
     return this->getComputedValue("segments");
 }

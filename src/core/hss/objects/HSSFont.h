@@ -95,13 +95,13 @@ namespace AXR
          *  Getter for the computed value of size.
          *  @return A HSSUnit containing the size in points of the font.
          */
-        const HSSUnit getSize() const;
+        HSSUnit getSize() const;
 
         /**
          *  Getter for the computed value of face.
          *  @return A string containing the name of the typeface that will be used.
          */
-        const AXRString getFace() const;
+        AXRString getFace() const;
 
         /**
          *  Getter for the computed value of color.
@@ -109,14 +109,14 @@ namespace AXR
          *
          *  @todo what about using gradients on text?
          */
-        const QSharedPointer<HSSRgb> getColor() const;
+        QSharedPointer<HSSRgb> getColor() const;
         QSharedPointer<HSSObject> computeColor(QSharedPointer<HSSParserNode> parserNode);
 
         /**
          *  Getter for the computed value of weight.
          *  @return A string representing the used weight.
          */
-        const AXRString getWeight() const;
+        AXRString getWeight() const;
 
     private:
         void _initialize();

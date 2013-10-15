@@ -102,7 +102,7 @@ AXRString HSSRule::toString()
         tempstr.append("WARNING: this rule has no selector chain!\n");
     }
 
-    const size_t pccount = this->propertiesSize();
+    size_t pccount = this->propertiesSize();
     if (pccount > 0)
     {
         tempstr.append(" and the following properties: \n");
@@ -113,7 +113,7 @@ AXRString HSSRule::toString()
         }
     }
 
-    const size_t srcount = this->children.size();
+    size_t srcount = this->children.size();
     if (srcount > 0)
     {
         tempstr.append(" with the following sub-rules: \n");
@@ -310,7 +310,7 @@ void HSSRule::treeChanged(const AXRString target, const AXRString source, const 
     }
 }
 
-const std::vector<QWeakPointer<HSSDisplayObject> > HSSRule::getAppliedTo() const
+std::vector<QWeakPointer<HSSDisplayObject> > HSSRule::getAppliedTo() const
 {
     return this->appliedTo;
 }
@@ -384,7 +384,7 @@ QSharedPointer<HSSRule> HSSRule::getParent()
     return qSharedPointerCast<HSSRule>(this->getParentNode());
 }
 
-const bool HSSRule::clonedFromSameRule(const QSharedPointer<HSSRule> & otherRule) const
+bool HSSRule::clonedFromSameRule(const QSharedPointer<HSSRule> & otherRule) const
 {
     if(this->_clonedFromRule != NULL)
     {

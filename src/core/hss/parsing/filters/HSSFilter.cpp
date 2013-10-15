@@ -237,12 +237,12 @@ bool HSSFilter::equalTo(QSharedPointer<HSSParserNode> otherNode)
     return true;
 }
 
-const bool HSSFilter::isA(HSSFilterType type) const
+bool HSSFilter::isA(HSSFilterType type) const
 {
     return this->filterType == type;
 }
 
-const HSSFilterType HSSFilter::getFilterType() const
+HSSFilterType HSSFilter::getFilterType() const
 {
     return this->filterType;
 }

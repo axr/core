@@ -171,7 +171,7 @@ namespace AXR
         /**
          *  @return The flag type of this instance.
          */
-        const HSSFlagFunctionType getFlagFunctionType() const;
+        HSSFlagFunctionType getFlagFunctionType() const;
 
     protected:
         AXRString _name;

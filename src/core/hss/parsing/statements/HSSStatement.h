@@ -65,12 +65,12 @@ namespace AXR
          *  @param otherType    The statement type to compare against.
          *  @return Wether the instance is a statement of given type.
          */
-        virtual const bool isA(HSSStatementType otherType) const;
+        virtual bool isA(HSSStatementType otherType) const;
 
         /**
          *  @return The statement type of the current instance.
          */
-        virtual const HSSStatementType getStatementType() const;
+        virtual HSSStatementType getStatementType() const;
 
         /**
          *  When logging, you often need a string representation of the statement type.
@@ -79,7 +79,7 @@ namespace AXR
          */
         AXRString statementStringRepresentation(HSSStatementType type);
 
-        const bool isA(HSSInstructionType type) const;
+        bool isA(HSSInstructionType type) const;
 
         /**
          *  Each node overrides this method to compare against another node

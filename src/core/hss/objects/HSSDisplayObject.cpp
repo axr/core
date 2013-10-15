@@ -741,17 +741,17 @@ void HSSDisplayObject::setWidth(HSSUnit value)
     this->setComputedValue("width", value);
 }
 
-const HSSUnit HSSDisplayObject::getWidth() const
+HSSUnit HSSDisplayObject::getWidth() const
 {
     return this->getComputedNumber("width");
 }
 
-const HSSUnit HSSDisplayObject::getInnerWidth() const
+HSSUnit HSSDisplayObject::getInnerWidth() const
 {
     return this->getComputedNumber("innerWidth");
 }
 
-const HSSUnit HSSDisplayObject::getOuterWidth() const
+HSSUnit HSSDisplayObject::getOuterWidth() const
 {
     return this->getComputedNumber("outerWidth");
 }
@@ -821,17 +821,17 @@ void HSSDisplayObject::setHeight(HSSUnit value)
     this->setComputedValue("height", value);
 }
 
-const HSSUnit HSSDisplayObject::getHeight() const
+HSSUnit HSSDisplayObject::getHeight() const
 {
     return this->getComputedNumber("height");
 }
 
-const HSSUnit HSSDisplayObject::getInnerHeight() const
+HSSUnit HSSDisplayObject::getInnerHeight() const
 {
     return this->getComputedNumber("innerHeight");
 }
 
-const HSSUnit HSSDisplayObject::getOuterHeight() const
+HSSUnit HSSDisplayObject::getOuterHeight() const
 {
     return this->getComputedNumber("outerHeight");
 }
@@ -909,7 +909,7 @@ void HSSDisplayObject::setAnchorX(HSSUnit value)
     this->setComputedValue("anchorX", value);
 }
 
-const HSSUnit HSSDisplayObject::getAnchorX() const
+HSSUnit HSSDisplayObject::getAnchorX() const
 {
     return this->getComputedNumber("anchorX");
 }
@@ -987,7 +987,7 @@ void HSSDisplayObject::setAnchorY(HSSUnit value)
     this->setComputedValue("anchorY", value);
 }
 
-const HSSUnit HSSDisplayObject::getAnchorY() const
+HSSUnit HSSDisplayObject::getAnchorY() const
 {
     return this->getComputedNumber("anchorY");
 }
@@ -1078,7 +1078,7 @@ void HSSDisplayObject::setAlignX(HSSUnit value)
     this->setComputedValue("alignX", value);
 }
 
-const HSSUnit HSSDisplayObject::getAlignX() const
+HSSUnit HSSDisplayObject::getAlignX() const
 {
     return this->getComputedNumber("alignX");
 }
@@ -1141,7 +1141,7 @@ void HSSDisplayObject::setAlignY(HSSUnit value)
     this->setComputedValue("alignY", value);
 }
 
-const HSSUnit HSSDisplayObject::getAlignY() const
+HSSUnit HSSDisplayObject::getAlignY() const
 {
     return this->getComputedNumber("alignY");
 }
@@ -1199,7 +1199,7 @@ void HSSDisplayObject::alignYChanged(const AXRString target, const AXRString sou
     this->notifyObservers("alignY", theObj);
 }
 
-const HSSUnit HSSDisplayObject::getLineAlign() const
+HSSUnit HSSDisplayObject::getLineAlign() const
 {
     return this->getComputedNumber("lineAlign");
 }
@@ -1233,7 +1233,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeLineAlign(QSharedPointer<HSSP
     return this->computeObject(parserNode, "lineAlign");
 }
 
-const QSharedPointer<HSSObject> HSSDisplayObject::getBackground() const
+QSharedPointer<HSSObject> HSSDisplayObject::getBackground() const
 {
     return this->getComputedObject("background");
 }
@@ -1273,7 +1273,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeBackground(QSharedPointer<HSS
 }
 
 //font
-const QSharedPointer<HSSFont> HSSDisplayObject::getFont() const
+QSharedPointer<HSSFont> HSSDisplayObject::getFont() const
 {
     QSharedPointer<HSSObject> computed = this->getComputedValue("font");;
     if (computed && computed->isA(HSSObjectTypeValue))
@@ -1291,7 +1291,7 @@ const QSharedPointer<HSSFont> HSSDisplayObject::getFont() const
 }
 
 //on
-const QSharedPointer<HSSObject> HSSDisplayObject::getOn() const
+QSharedPointer<HSSObject> HSSDisplayObject::getOn() const
 {
     return this->getComputedValue("on");
 }
@@ -1341,7 +1341,7 @@ bool HSSDisplayObject::_fireEvent(QSharedPointer<HSSEvent> theEvent, HSSEventTyp
 }
 
 //margin
-const QSharedPointer<HSSObject> HSSDisplayObject::getMargin() const
+QSharedPointer<HSSObject> HSSDisplayObject::getMargin() const
 {
     return this->getComputedValue("margin");
 }
@@ -1351,7 +1351,7 @@ void HSSDisplayObject::setTopMargin(HSSUnit value)
     this->setComputedValue("topMargin", value);
 }
 
-const HSSUnit HSSDisplayObject::getTopMargin() const
+HSSUnit HSSDisplayObject::getTopMargin() const
 {
     return this->getComputedNumber("topMargin");
 }
@@ -1361,7 +1361,7 @@ void HSSDisplayObject::setRightMargin(HSSUnit value)
     this->setComputedValue("rightMargin", value);
 }
 
-const HSSUnit HSSDisplayObject::getRightMargin() const
+HSSUnit HSSDisplayObject::getRightMargin() const
 {
     return this->getComputedNumber("rightMargin");
 }
@@ -1371,7 +1371,7 @@ void HSSDisplayObject::setBottomMargin(HSSUnit value)
     this->setComputedValue("bottomMargin", value);
 }
 
-const HSSUnit HSSDisplayObject::getBottomMargin() const
+HSSUnit HSSDisplayObject::getBottomMargin() const
 {
     return this->getComputedNumber("bottomMargin");
 }
@@ -1381,7 +1381,7 @@ void HSSDisplayObject::setLeftMargin(HSSUnit value)
     this->setComputedValue("leftMargin", value);
 }
 
-const HSSUnit HSSDisplayObject::getLeftMargin() const
+HSSUnit HSSDisplayObject::getLeftMargin() const
 {
     return this->getComputedNumber("leftMargin");
 }
@@ -1399,7 +1399,7 @@ void HSSDisplayObject::verticalMarginChanged(const AXRString target, const AXRSt
 }
 
 //padding
-const QSharedPointer<HSSObject> HSSDisplayObject::getPadding() const
+QSharedPointer<HSSObject> HSSDisplayObject::getPadding() const
 {
     return this->getComputedValue("padding");
 }
@@ -1409,7 +1409,7 @@ void HSSDisplayObject::setTopPadding(HSSUnit value)
     this->setComputedValue("topPadding", value);
 }
 
-const HSSUnit HSSDisplayObject::getTopPadding() const
+HSSUnit HSSDisplayObject::getTopPadding() const
 {
     return this->getComputedNumber("topPadding");
 }
@@ -1419,7 +1419,7 @@ void HSSDisplayObject::setRightPadding(HSSUnit value)
     this->setComputedValue("rightPadding", value);
 }
 
-const HSSUnit HSSDisplayObject::getRightPadding() const
+HSSUnit HSSDisplayObject::getRightPadding() const
 {
     return this->getComputedNumber("rightPadding");
 }
@@ -1429,7 +1429,7 @@ void HSSDisplayObject::setBottomPadding(HSSUnit value)
     this->setComputedValue("bottomPadding", value);
 }
 
-const HSSUnit HSSDisplayObject::getBottomPadding() const
+HSSUnit HSSDisplayObject::getBottomPadding() const
 {
     return this->getComputedNumber("bottomPadding");
 }
@@ -1439,17 +1439,17 @@ void HSSDisplayObject::setLeftPadding(HSSUnit value)
     this->setComputedValue("leftPadding", value);
 }
 
-const HSSUnit HSSDisplayObject::getLeftPadding() const
+HSSUnit HSSDisplayObject::getLeftPadding() const
 {
     return this->getComputedNumber("leftPadding");
 }
 
-const QSharedPointer<HSSObject> HSSDisplayObject::getBorder() const
+QSharedPointer<HSSObject> HSSDisplayObject::getBorder() const
 {
     return this->getComputedValue("border");
 }
 
-const bool HSSDisplayObject::getVisible() const
+bool HSSDisplayObject::getVisible() const
 {
     return this->getComputedBool("visible");
 }

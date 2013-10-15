@@ -75,7 +75,7 @@ if(AXR_BUILD_CORE)
         endif()
 
         if(CMAKE_COMPILER_IS_CLANGXX)
-            set_clang_warning_level("max")
+            set_clang_warning_level("sane")
         endif()
     endif()
 

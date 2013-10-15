@@ -125,12 +125,12 @@ namespace AXR
          *  @param  type    The filter type to which to check against.
          *  @return Wether it is of the given type or not.
          */
-        const bool isA(HSSFilterType type) const;
+        bool isA(HSSFilterType type) const;
 
         /**
          *  @return The filter type of this instance.
          */
-        const HSSFilterType getFilterType() const;
+        HSSFilterType getFilterType() const;
 
         bool getNegating() const;
         void setNegating(bool value);

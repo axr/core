@@ -95,31 +95,31 @@ namespace AXR
          *  Getter for the computed value of size.
          *  @return An HSSUnit containing the value of size;
          */
-        const HSSUnit getSize() const;
+        HSSUnit getSize() const;
 
         /**
          *  Getter for the computed value of top.
          *  @return An HSSUnit containing the value of top.
          */
-        const HSSUnit getTop() const;
+        HSSUnit getTop() const;
 
         /**
          *  Getter for the computed value of right.
          *  @return An HSSUnit containing the value of right.
          */
-        const HSSUnit getRight() const;
+        HSSUnit getRight() const;
 
         /**
          *  Getter for the computed value of bottom.
          *  @return An HSSUnit containing the value of bottom.
          */
-        const HSSUnit getBottom() const;
+        HSSUnit getBottom() const;
 
         /**
          *  Getter for the computed value of left.
          *  @return An HSSUnit containing the value of left.
          */
-        const HSSUnit getLeft() const;
+        HSSUnit getLeft() const;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

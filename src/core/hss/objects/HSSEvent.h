@@ -100,12 +100,12 @@ namespace AXR
          *  @param  type    The event type to which to check against.
          *  @return Wether it is of the given type or not.
          */
-        const bool isA(HSSEventType type) const;
+        bool isA(HSSEventType type) const;
 
         /**
          *  @return The event type of this instance.
          */
-        const HSSEventType getEventType() const;
+        HSSEventType getEventType() const;
 
         /**
          *  Getter for the computed value of action.

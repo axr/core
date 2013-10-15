@@ -199,12 +199,12 @@ AXRString HSSEvent::defaultObjectType(AXRString property)
     }
 }
 
-const bool HSSEvent::isA(HSSEventType type) const
+bool HSSEvent::isA(HSSEventType type) const
 {
     return type == this->eventType;
 }
 
-const HSSEventType HSSEvent::getEventType() const
+HSSEventType HSSEvent::getEventType() const
 {
     return this->eventType;
 }
