@@ -129,13 +129,13 @@ namespace AXR
          *  Returns the first value from the nodes.
          *  @param newNode    A shared pointer to the first path node.
          */
-        const QSharedPointer<HSSPropertyPathNode> front() const;
+        QSharedPointer<HSSPropertyPathNode> front() const;
 
         /**
          *  How many nodes are in the path.
          *  @return The number of nodes.
          */
-        const size_t size() const;
+        size_t size() const;
 
         /**
          *  Removes and returns the first element in the nodes list.

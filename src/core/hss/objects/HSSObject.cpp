@@ -718,62 +718,62 @@ QSharedPointer<HSSDisplayObject> HSSObject::getThisObj() const
     return thisObj;
 }
 
-const bool HSSObject::isA(HSSObjectType otherType) const
+bool HSSObject::isA(HSSObjectType otherType) const
 {
     return otherType == this->type;
 }
 
-const HSSObjectType HSSObject::getObjectType() const
+HSSObjectType HSSObject::getObjectType() const
 {
     return this->type;
 }
 
-const bool HSSObject::isA(HSSShapeType otherType) const
+bool HSSObject::isA(HSSShapeType otherType) const
 {
     return false;
 }
 
-const HSSShapeType HSSObject::getShapeType() const
+HSSShapeType HSSObject::getShapeType() const
 {
     return HSSShapeTypeNone;
 }
 
-const bool HSSObject::isA(HSSRequestModeType otherType) const
+bool HSSObject::isA(HSSRequestModeType otherType) const
 {
     return false;
 }
 
-const HSSRequestModeType HSSObject::getRequestModeType() const
+HSSRequestModeType HSSObject::getRequestModeType() const
 {
     return HSSRequestModeTypeNone;
 }
 
-const bool HSSObject::isA(HSSEventType otherType) const
+bool HSSObject::isA(HSSEventType otherType) const
 {
     return false;
 }
 
-const HSSEventType HSSObject::getEventType() const
+HSSEventType HSSObject::getEventType() const
 {
     return HSSEventTypeNone;
 }
 
-const bool HSSObject::isA(HSSActionType otherType) const
+bool HSSObject::isA(HSSActionType otherType) const
 {
     return false;
 }
 
-const HSSActionType HSSObject::getActionType() const
+HSSActionType HSSObject::getActionType() const
 {
     return HSSActionTypeNone;
 }
 
-const bool HSSObject::isA(HSSGradientType otherType) const
+bool HSSObject::isA(HSSGradientType otherType) const
 {
     return false;
 }
 
-const HSSGradientType HSSObject::getGradientType() const
+HSSGradientType HSSObject::getGradientType() const
 {
     return HSSGradientTypeNone;
 }
@@ -856,7 +856,7 @@ void HSSObject::setDefaultValue(AXRString propertyName, QSharedPointer<HSSObject
     this->_defaultValues.insert(propertyName, theObj);
 }
 
-const QSharedPointer<HSSObject> HSSObject::getDefaultValue(AXRString propertyName) const
+QSharedPointer<HSSObject> HSSObject::getDefaultValue(AXRString propertyName) const
 {
     return this->_defaultValues[propertyName];
 }
@@ -910,7 +910,7 @@ bool HSSObject::hasStackValue(AXRString property) const
     return this->_stackValues.contains(property);
 }
 
-const QSharedPointer<HSSObject> HSSObject::getStackValue(AXRString property) const
+QSharedPointer<HSSObject> HSSObject::getStackValue(AXRString property) const
 {
     if (this->hasStackValue(property))
     {
@@ -1310,7 +1310,7 @@ QSharedPointer<HSSObject> HSSObject::getComputedValue(AXRString property) const
     return ret;
 }
 
-const HSSUnit HSSObject::getComputedNumber(AXRString property) const
+HSSUnit HSSObject::getComputedNumber(AXRString property) const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue(property);
     if (value && value->isA(HSSObjectTypeValue))
@@ -1325,7 +1325,7 @@ const HSSUnit HSSObject::getComputedNumber(AXRString property) const
     return 0.;
 }
 
-const HSSUnit HSSObject::getComputedBool(AXRString property) const
+HSSUnit HSSObject::getComputedBool(AXRString property) const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue(property);
     if (value && value->isA(HSSObjectTypeValue))
@@ -1340,7 +1340,7 @@ const HSSUnit HSSObject::getComputedBool(AXRString property) const
     return FALSE;
 }
 
-const AXRString HSSObject::getComputedString(AXRString property) const
+AXRString HSSObject::getComputedString(AXRString property) const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue(property);
     if (value && value->isA(HSSObjectTypeValue))
@@ -1355,7 +1355,7 @@ const AXRString HSSObject::getComputedString(AXRString property) const
     return "";
 }
 
-const QSharedPointer<HSSObject> HSSObject::getComputedObject(AXRString property) const
+QSharedPointer<HSSObject> HSSObject::getComputedObject(AXRString property) const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue(property);
     if (value)
@@ -1383,12 +1383,12 @@ void HSSObject::clearComputedValues()
     this->_computedValues.clear();
 }
 
-const QSharedPointer<HSSObject> HSSObject::inheritValue(AXRString inheritProperty, AXRString hostProperty)
+QSharedPointer<HSSObject> HSSObject::inheritValue(AXRString inheritProperty, AXRString hostProperty)
 {
     return this->computeValueObject(this->_inheritProperty(inheritProperty), hostProperty);
 }
 
-const QSharedPointer<HSSParserNode> HSSObject::_inheritProperty(AXRString propertyName) const
+QSharedPointer<HSSParserNode> HSSObject::_inheritProperty(AXRString propertyName) const
 {
     QSharedPointer<HSSRefFunction> refFunc(new HSSRefFunction(this->getController()));
     refFunc->setPropertyName(propertyName);
@@ -1416,7 +1416,7 @@ void HSSObject::propertyChanged(const AXRString target, const AXRString source, 
     }
 }
 
-const AXRString HSSObject::getHostProperty() const
+AXRString HSSObject::getHostProperty() const
 {
     return this->_hostProperty;
 }
@@ -1453,7 +1453,7 @@ void HSSObject::objDefRulesAdd(QSharedPointer<HSSRule> rule)
     this->_objDefRules.push_back(rule);
 }
 
-const QVector<QSharedPointer<HSSRule> > HSSObject::getObjDefRules() const
+QVector<QSharedPointer<HSSRule> > HSSObject::getObjDefRules() const
 {
     return this->_objDefRules;
 }

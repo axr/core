@@ -241,12 +241,12 @@ void HSSPropertyPath::add(AXRString newValue)
     this->add(ppn);
 }
 
-const QSharedPointer<HSSPropertyPathNode> HSSPropertyPath::front() const
+QSharedPointer<HSSPropertyPathNode> HSSPropertyPath::front() const
 {
     return this->_nodes.front();
 }
 
-const size_t HSSPropertyPath::size() const
+size_t HSSPropertyPath::size() const
 {
     return this->_nodes.size();
 }

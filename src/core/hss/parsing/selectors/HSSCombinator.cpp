@@ -58,12 +58,12 @@ QSharedPointer<HSSCombinator> HSSCombinator::clone() const
     return qSharedPointerCast<HSSCombinator > (this->cloneImpl());
 }
 
-const bool HSSCombinator::isA(HSSCombinatorType otherType) const
+bool HSSCombinator::isA(HSSCombinatorType otherType) const
 {
     return this->combinatorType == otherType;
 }
 
-const HSSCombinatorType HSSCombinator::getCombinatorType() const
+HSSCombinatorType HSSCombinator::getCombinatorType() const
 {
     return this->combinatorType;
 }

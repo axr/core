@@ -83,14 +83,14 @@ namespace AXR
         QSharedPointer<HSSParserNode> getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
 
         //color
-        const QSharedPointer<HSSObject> getColor() const;
+        QSharedPointer<HSSObject> getColor() const;
         QSharedPointer<HSSObject> computeColor(QSharedPointer<HSSParserNode> parserNode);
         //position
-        const HSSUnit getPosition() const;
+        HSSUnit getPosition() const;
         //balance
-        const HSSUnit getBalance() const;
+        HSSUnit getBalance() const;
 
-        const bool positionIsPercentage() const;
+        bool positionIsPercentage() const;
 
     private:
         void _initialize();

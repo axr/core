@@ -117,27 +117,27 @@ bool HSSMargin::isKeyword(AXRString value, AXRString property)
     return false;
 }
 
-const HSSUnit HSSMargin::getSize() const
+HSSUnit HSSMargin::getSize() const
 {
     return this->getComputedNumber("size");
 }
 
-const HSSUnit HSSMargin::getTop() const
+HSSUnit HSSMargin::getTop() const
 {
     return this->getComputedNumber("top");
 }
 
-const HSSUnit HSSMargin::getRight() const
+HSSUnit HSSMargin::getRight() const
 {
     return this->getComputedNumber("right");
 }
 
-const HSSUnit HSSMargin::getBottom() const
+HSSUnit HSSMargin::getBottom() const
 {
     return this->getComputedNumber("bottom");
 }
 
-const HSSUnit HSSMargin::getLeft() const
+HSSUnit HSSMargin::getLeft() const
 {
     return this->getComputedNumber("left");
 }

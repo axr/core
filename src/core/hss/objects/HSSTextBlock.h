@@ -84,13 +84,13 @@ namespace AXR
         virtual void accept(HSSAbstractVisitor* visitor, HSSVisitorFilterFlags filterFlags);
 
         //transform
-        const HSSTextTransformType getTransform() const;
+        HSSTextTransformType getTransform() const;
 
         //textAlign
-        const HSSTextAlignType getTextAlign() const;
+        HSSTextAlignType getTextAlign() const;
 
         //text
-        const AXRString getText() const;
+        AXRString getText() const;
         void setText(AXRString value);
 
         //font

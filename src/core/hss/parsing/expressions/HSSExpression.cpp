@@ -114,12 +114,12 @@ bool HSSExpression::equalTo(QSharedPointer<HSSParserNode> otherNode)
     return true;
 }
 
-const bool HSSExpression::isA(HSSExpressionType otherType) const
+bool HSSExpression::isA(HSSExpressionType otherType) const
 {
     return otherType == this->expressionType;
 }
 
-const HSSExpressionType HSSExpression::getExpressionType() const
+HSSExpressionType HSSExpression::getExpressionType() const
 {
     return this->expressionType;
 }

@@ -204,7 +204,7 @@ void HSSPolygon::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder> 
         cumulativeThickness += theSize;
     }
 }
-const HSSUnit HSSPolygon::getSides() const
+HSSUnit HSSPolygon::getSides() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("sides");
     if (value && value->isA(HSSObjectTypeValue))
@@ -238,7 +238,7 @@ QSharedPointer<HSSObject> HSSPolygon::computeSides(QSharedPointer<HSSParserNode>
     return this->computeValueObject(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(ret, this->getController())));
 }
 
-const HSSUnit HSSPolygon::getAngle() const
+HSSUnit HSSPolygon::getAngle() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("angle");
     if (value && value->isA(HSSObjectTypeValue))

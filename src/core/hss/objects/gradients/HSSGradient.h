@@ -115,15 +115,15 @@ namespace AXR
         QSharedPointer<HSSRgb> getNextColorFromStops(QListIterator<QSharedPointer<HSSObject> > it);
 
         //startColor
-        const QSharedPointer<HSSObject> getStartColor() const;
+        QSharedPointer<HSSObject> getStartColor() const;
         QSharedPointer<HSSObject> computeStartColor(QSharedPointer<HSSParserNode> parserNode);
         //endColor
-        const QSharedPointer<HSSObject> getEndColor() const;
+        QSharedPointer<HSSObject> getEndColor() const;
         QSharedPointer<HSSObject> computeEndColor(QSharedPointer<HSSParserNode> parserNode);
         //balance
-        const QSharedPointer<HSSObject> getBalance() const;
+        QSharedPointer<HSSObject> getBalance() const;
         //colorStops
-        const QSharedPointer<HSSObject> getColorStops() const;
+        QSharedPointer<HSSObject> getColorStops() const;
         QSharedPointer<HSSObject> computeColorStops(QSharedPointer<HSSParserNode> parserNode);
 
 
@@ -133,12 +133,12 @@ namespace AXR
          *  @param  type    The gradient type to which to check against.
          *  @return Wether it is of the given type or not.
          */
-        const bool isA(HSSGradientType type) const;
+        bool isA(HSSGradientType type) const;
 
         /**
          *  @return The gradient type of this instance.
          */
-        const HSSGradientType getGradientType() const;
+        HSSGradientType getGradientType() const;
 
     protected:
         /**
