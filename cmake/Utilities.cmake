@@ -69,4 +69,8 @@ function(set_clang_warning_level level)
     if("${level}" STREQUAL "max")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything" PARENT_SCOPE)
     endif()
+
+    if("${level}" STREQUAL "sane")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weverything -Wno-padded -Wno-switch-enum" PARENT_SCOPE)
+    endif()
 endfunction()
