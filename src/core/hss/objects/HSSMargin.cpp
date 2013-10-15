@@ -58,6 +58,8 @@ using namespace AXR;
 HSSMargin::HSSMargin(AXRController * controller)
 : HSSObject(HSSObjectTypeMargin, controller)
 {
+    this->_initialize();
+
     std::vector<AXRString> shorthandProperties;
     shorthandProperties.push_back("size");
     shorthandProperties.push_back("top");
@@ -70,6 +72,12 @@ HSSMargin::HSSMargin(AXRController * controller)
 HSSMargin::HSSMargin(const HSSMargin & orig)
 : HSSObject(orig)
 {
+    this->_initialize();
+}
+
+void HSSMargin::_initialize()
+{
+    this->addCallback("size", new HSSObserveCallback<HSSMargin>(this, &HSSMargin::setSize));
 }
 
 QSharedPointer<HSSMargin> HSSMargin::clone() const
@@ -122,9 +130,31 @@ HSSUnit HSSMargin::getSize() const
     return this->getComputedNumber("size");
 }
 
+void HSSMargin::setSize(HSSUnit value)
+{
+    this->setLeft(value);
+    this->setRight(value);
+    this->setTop(value);
+    this->setBottom(value);
+}
+
+void HSSMargin::setSize(QSharedPointer<HSSObject> theObj)
+{
+    this->setComputed("left", theObj);
+    this->setComputed("right", theObj);
+    this->setComputed("top", theObj);
+    this->setComputed("bottom", theObj);
+}
+
+
 HSSUnit HSSMargin::getTop() const
 {
     return this->getComputedNumber("top");
+}
+
+void HSSMargin::setTop(HSSUnit value)
+{
+    this->setComputedValue("top", value);
 }
 
 HSSUnit HSSMargin::getRight() const
@@ -132,12 +162,27 @@ HSSUnit HSSMargin::getRight() const
     return this->getComputedNumber("right");
 }
 
+void HSSMargin::setRight(HSSUnit value)
+{
+    this->setComputedValue("right", value);
+}
+
 HSSUnit HSSMargin::getBottom() const
 {
     return this->getComputedNumber("bottom");
 }
 
+void HSSMargin::setBottom(HSSUnit value)
+{
+    this->setComputedValue("bottom", value);
+}
+
 HSSUnit HSSMargin::getLeft() const
 {
     return this->getComputedNumber("left");
+}
+
+void HSSMargin::setLeft(HSSUnit value)
+{
+    this->setComputedValue("left", value);
 }

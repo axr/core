@@ -98,10 +98,27 @@ namespace AXR
         HSSUnit getSize() const;
 
         /**
+         *  Setter for the computed value of size.
+         *  @param value    An HSSUnit containing the new value of size;
+         */
+        void setSize(HSSUnit value);
+
+        /**
+         *  Callback for the set listener
+         */
+        void setSize(QSharedPointer<HSSObject> theObj);
+
+        /**
          *  Getter for the computed value of top.
          *  @return An HSSUnit containing the value of top.
          */
         HSSUnit getTop() const;
+
+        /**
+         *  Setter for the computed value of top.
+         *  @param value    An HSSUnit containing the new value of top;
+         */
+        void setTop(HSSUnit value);
 
         /**
          *  Getter for the computed value of right.
@@ -110,10 +127,22 @@ namespace AXR
         HSSUnit getRight() const;
 
         /**
+         *  Setter for the computed value of right.
+         *  @param value    An HSSUnit containing the new value of right;
+         */
+        void setRight(HSSUnit value);
+
+        /**
          *  Getter for the computed value of bottom.
          *  @return An HSSUnit containing the value of bottom.
          */
         HSSUnit getBottom() const;
+
+        /**
+         *  Setter for the computed value of bottom.
+         *  @param value    An HSSUnit containing the new value of bottom;
+         */
+        void setBottom(HSSUnit value);
 
         /**
          *  Getter for the computed value of left.
@@ -121,7 +150,14 @@ namespace AXR
          */
         HSSUnit getLeft() const;
 
+        /**
+         *  Setter for the computed value of left.
+         *  @param value    An HSSUnit containing the new value of left;
+         */
+        void setLeft(HSSUnit value);
+
     private:
+        void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
