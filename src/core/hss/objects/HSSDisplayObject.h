@@ -265,8 +265,8 @@ namespace AXR
 
         //margin
         QSharedPointer<HSSObject> getMargin() const;
-        void horizontalMarginChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
-        void verticalMarginChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
+        QSharedPointer<HSSObject> computeMargin(QSharedPointer<HSSParserNode> parserNode);
+        void notifyMargin(QSharedPointer<HSSObject> theObj);
         void setTopMargin(HSSUnit value);
         HSSUnit getTopMargin() const;
         void setRightMargin(HSSUnit value);
@@ -278,6 +278,8 @@ namespace AXR
 
         //padding
         QSharedPointer<HSSObject> getPadding() const;
+        QSharedPointer<HSSObject> computePadding(QSharedPointer<HSSParserNode> parserNode);
+        void notifyPadding(QSharedPointer<HSSObject> theObj);
         void setTopPadding(HSSUnit value);
         HSSUnit getTopPadding() const;
         void setRightPadding(HSSUnit value);

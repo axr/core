@@ -142,6 +142,10 @@ void HSSDisplayObject::_initialize()
     this->addCallback("alignY", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAlignY));
     this->addNotifyCallback("alignY", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyAlignY));
     this->addCallback("background", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeBackground));
+    this->addCallback("margin", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeMargin));
+    this->addNotifyCallback("margin", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyMargin));
+    this->addCallback("padding", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computePadding));
+    this->addNotifyCallback("padding", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyPadding));
 }
 
 HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
@@ -1386,15 +1390,55 @@ HSSUnit HSSDisplayObject::getLeftMargin() const
     return this->getComputedNumber("leftMargin");
 }
 
-void HSSDisplayObject::horizontalMarginChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
+QSharedPointer<HSSObject> HSSDisplayObject::computeMargin(QSharedPointer<HSSParserNode> parserNode)
 {
-    this->_setOuterWidth();
-    this->notifyObservers("margin", theObj);
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(parserNode);
+            AXRString kwValue = theKW->getValue();
+            if (kwValue == "auto")
+            {
+                return QSharedPointer<HSSObject>();
+            }
+            break;
+        }
+
+        case HSSParserNodeTypeNumberConstant:
+        {
+            QSharedPointer<HSSNumberConstant> theNumber = qSharedPointerCast<HSSNumberConstant>(parserNode);
+            QSharedPointer<HSSMargin> newMargin = QSharedPointer<HSSMargin>(new HSSMargin(this->getController()));
+            newMargin->setSize(theNumber->getValue());
+            return newMargin;
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    return this->computeObject(parserNode, "margin");
 }
 
-void HSSDisplayObject::verticalMarginChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
+void HSSDisplayObject::notifyMargin(QSharedPointer<AXR::HSSObject> theObj)
 {
-    this->_setOuterHeight();
+    if (theObj->isA(HSSObjectTypeMargin))
+    {
+        QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(theObj);
+        HSSUnit left = theMargin->getLeft();
+        HSSUnit right = theMargin->getRight();
+        if (left > 0 || right > 0)
+        {
+            this->_setOuterWidth();
+        }
+        HSSUnit top = theMargin->getTop();
+        HSSUnit bottom = theMargin->getBottom();
+        if (top > 0 || bottom > 0)
+        {
+            this->_setOuterHeight();
+        }
+    }
     this->notifyObservers("margin", theObj);
 }
 
@@ -1402,6 +1446,58 @@ void HSSDisplayObject::verticalMarginChanged(const AXRString target, const AXRSt
 QSharedPointer<HSSObject> HSSDisplayObject::getPadding() const
 {
     return this->getComputedValue("padding");
+}
+
+QSharedPointer<HSSObject> HSSDisplayObject::computePadding(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeKeywordConstant:
+        {
+            QSharedPointer<HSSKeywordConstant> theKW = qSharedPointerCast<HSSKeywordConstant>(parserNode);
+            AXRString kwValue = theKW->getValue();
+            if (kwValue == "auto")
+            {
+                return QSharedPointer<HSSObject>();
+            }
+            break;
+        }
+
+        case HSSParserNodeTypeNumberConstant:
+        {
+            QSharedPointer<HSSNumberConstant> theNumber = qSharedPointerCast<HSSNumberConstant>(parserNode);
+            QSharedPointer<HSSMargin> newPadding = QSharedPointer<HSSMargin>(new HSSMargin(this->getController()));
+            newPadding->setSize(theNumber->getValue());
+            return newPadding;
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    return this->computeObject(parserNode, "margin");
+}
+
+void HSSDisplayObject::notifyPadding(QSharedPointer<AXR::HSSObject> theObj)
+{
+    if (theObj->isA(HSSObjectTypeMargin))
+    {
+        QSharedPointer<HSSMargin> thePadding = qSharedPointerCast<HSSMargin>(theObj);
+        HSSUnit left = thePadding->getLeft();
+        HSSUnit right = thePadding->getRight();
+        if (left > 0 || right > 0)
+        {
+            this->_setInnerWidth();
+        }
+        HSSUnit top = thePadding->getTop();
+        HSSUnit bottom = thePadding->getBottom();
+        if (top > 0 || bottom > 0)
+        {
+            this->_setInnerHeight();
+        }
+    }
+    this->notifyObservers("padding", theObj);
 }
 
 void HSSDisplayObject::setTopPadding(HSSUnit value)
