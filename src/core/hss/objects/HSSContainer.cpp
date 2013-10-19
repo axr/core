@@ -374,30 +374,25 @@ void HSSContainer::setContentText(const AXRString &contentText)
     AXRString text = contentText.trimmed();
 
     AXRController * controller = this->getController();
+    QSharedPointer<HSSTextBlock> txtBlck;
 
     if (!text.isEmpty())
     {
-        if (this->allChildren->empty())
+        for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it!= this->allChildren->end(); ++it)
         {
-            QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
-            txtBlck->setText(text);
+            QSharedPointer<HSSDisplayObject> child = *it;
+            if (child->isA(HSSObjectTypeTextBlock))
+            {
+                txtBlck = qSharedPointerCast<HSSTextBlock > (child);
+            }
+        }
+        if ( ! txtBlck)
+        {
+            txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
             this->add(txtBlck);
         }
-        else
-        {
-            QSharedPointer<HSSDisplayObject> lastChild = this->allChildren->back();
-            if (lastChild->isA(HSSObjectTypeTextBlock))
-            {
-                QSharedPointer<HSSTextBlock> textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
-                textBlock->setText(text);
-            }
-            else
-            {
-                QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
-                txtBlck->setText(text);
-                this->add(txtBlck);
-            }
-        }
+
+        txtBlck->setText(text);
     }
 }
 
