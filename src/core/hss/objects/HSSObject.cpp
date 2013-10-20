@@ -1225,7 +1225,13 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
     //prepare
     theObj->setHostProperty(propertyName);
     theObj->commitStackValues();
-    if (!currentValue || (!currentValue->equalTo(theObj) && currentValue->getSpecificity() <= theObj->getSpecificity()))
+    //if the object is equal, reset the specificity
+    if (currentValue && currentValue->equalTo(theObj))
+    {
+        currentValue->setSpecificity(theObj->getSpecificity());
+        return;
+    }
+    if (!currentValue || (currentValue->getSpecificity() <= theObj->getSpecificity()))
     {
         ///@todo this should target any subclass of display object
         if (this->isA(HSSObjectTypeContainer) || this->isA(HSSObjectTypeTextBlock))
