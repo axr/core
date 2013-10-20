@@ -921,7 +921,7 @@ void HSSLayout::visit(HSSContainer &container)
         {
             if(child->hasOwnHeight())
             {
-                container.setHeight(child->getOuterHeight() + container.getTopPadding() + container.getBottomPadding());
+                container.setHeight(child->getOuterHeight() + container.getTopPadding() + container.getBottomPadding(), 1);
             }
         }
         this->_placeOnAlignmentPoint(container, child);
@@ -1116,7 +1116,7 @@ void HSSLayout::visit(HSSContainer &container)
                             contentHeight = groupHeight;
                         }
                     }
-                    container.setHeight(contentHeight + container.getTopPadding() + container.getBottomPadding());
+                    container.setHeight(contentHeight + container.getTopPadding() + container.getBottomPadding(), 1);
                     if (needsHeightByContent)
                     {
                         container._needsLayout = true;
@@ -1163,8 +1163,8 @@ void HSSLayout::visit(HSSTextBlock &textBlock)
         AXRString text = textBlock.getText();
         QRect bounds = fontMetrics.boundingRect(0, 0, static_cast<int>(allowedWidth), std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, text);
 
-        textBlock.setWidth(bounds.width());
-        textBlock.setHeight(bounds.height());
+        textBlock.setWidth(bounds.width(), 1);
+        textBlock.setHeight(bounds.height(), 1);
         textBlock.setNeedsSurface(true);
 
         textBlock._needsLayout = false;

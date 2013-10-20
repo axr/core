@@ -333,10 +333,10 @@ namespace AXR
         QSharedPointer<HSSParserNode> getPercentageExpression(HSSUnit number, QSharedPointer<HSSSimpleSelector> target, AXRString propertyName);
         QSharedPointer<HSSParserNode> getPercentageExpressionFromParent(HSSUnit number, AXRString propertyName);
         QSharedPointer<HSSParserNode> getPercentageExpressionFromThis(HSSUnit number, AXRString propertyName);
-        void setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
-        void setComputedValue(AXRString propertyName, HSSUnit value);
-        void setComputedBool(AXRString propertyName, bool value);
-        void setComputedValue(AXRString propertyName, AXRString value);
+        void setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode, unsigned specificity);
+        void setComputedValue(AXRString propertyName, HSSUnit value, unsigned specificity);
+        void setComputedBool(AXRString propertyName, bool value, unsigned specificity);
+        void setComputedValue(AXRString propertyName, AXRString value, unsigned specificity);
         QSharedPointer<HSSNumberConstant> numberToConstant(HSSUnit value);
         QSharedPointer<HSSPercentageConstant> percentageToConstant(HSSUnit value);
         QSharedPointer<HSSStringConstant> stringToConstant(AXRString value);

@@ -72,9 +72,9 @@ QSharedPointer<HSSRgb> HSSRgb::whiteColor(AXRController * controller)
     QSharedPointer<HSSRgb> whiteColor = QSharedPointer<HSSRgb>(new HSSRgb(controller));
     whiteColor->setDefaults();
     //set all the color channels to the maximum value
-    whiteColor->setRed(255.0);
-    whiteColor->setGreen(255.0);
-    whiteColor->setBlue(255.0);
+    whiteColor->setRed(255.0, 1);
+    whiteColor->setGreen(255.0, 1);
+    whiteColor->setBlue(255.0, 1);
     return whiteColor;
 }
 
@@ -170,9 +170,9 @@ HSSUnit HSSRgb::getRed() const
     return this->getComputedNumber("red");
 }
 
-void HSSRgb::setRed(HSSUnit value)
+void HSSRgb::setRed(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("red", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())));
+    this->setComputedValue("red", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())), specificity);
 }
 
 QSharedPointer<HSSObject> HSSRgb::computeGreen(QSharedPointer<HSSParserNode> parserNode)
@@ -185,9 +185,9 @@ HSSUnit HSSRgb::getGreen() const
     return this->getComputedNumber("green");
 }
 
-void HSSRgb::setGreen(HSSUnit value)
+void HSSRgb::setGreen(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("green", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())));
+    this->setComputedValue("green", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())), specificity);
 }
 
 QSharedPointer<HSSObject> HSSRgb::computeBlue(QSharedPointer<HSSParserNode> parserNode)
@@ -200,9 +200,9 @@ HSSUnit HSSRgb::getBlue() const
     return this->getComputedNumber("blue");
 }
 
-void HSSRgb::setBlue(HSSUnit value)
+void HSSRgb::setBlue(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("blue", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())));
+    this->setComputedValue("blue", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())), specificity);
 }
 
 QSharedPointer<HSSObject> HSSRgb::computeAlpha(QSharedPointer<HSSParserNode> parserNode)
@@ -215,9 +215,9 @@ HSSUnit HSSRgb::getAlpha() const
     return this->getComputedNumber("alpha");
 }
 
-void HSSRgb::setAlpha(HSSUnit value)
+void HSSRgb::setAlpha(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("alpha", value);
+    this->setComputedValue("alpha", value, specificity);
 }
 
 QColor HSSRgb::toQColor() const

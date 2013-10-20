@@ -1172,24 +1172,26 @@ QSharedPointer<HSSParserNode> HSSObject::getPercentageExpression(HSSUnit number,
     return ret;
 }
 
-void HSSObject::setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode)
+void HSSObject::setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode, unsigned specificity)
 {
-    this->setComputed(propertyName, this->computeValue(propertyName, parserNode));
+    QSharedPointer<HSSObject> theObj = this->computeValue(propertyName, parserNode);
+    theObj->setSpecificity(specificity);
+    this->setComputed(propertyName, theObj);
 }
 
-void HSSObject::setComputedValue(AXRString propertyName, HSSUnit value)
+void HSSObject::setComputedValue(AXRString propertyName, HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue(propertyName, this->numberToConstant(value));
+    this->setComputedValue(propertyName, this->numberToConstant(value), specificity);
 }
 
-void HSSObject::setComputedBool(AXRString propertyName, bool value)
+void HSSObject::setComputedBool(AXRString propertyName, bool value, unsigned specificity)
 {
-    this->setComputedValue(propertyName, this->stringToKeyword(value ? "yes" : "no"));
+    this->setComputedValue(propertyName, this->stringToKeyword(value ? "yes" : "no"), specificity);
 }
 
-void HSSObject::setComputedValue(AXRString propertyName, AXRString value)
+void HSSObject::setComputedValue(AXRString propertyName, AXRString value, unsigned specificity)
 {
-    this->setComputedValue(propertyName, this->stringToConstant(value));
+    this->setComputedValue(propertyName, this->stringToConstant(value), specificity);
 }
 
 QSharedPointer<HSSNumberConstant> HSSObject::numberToConstant(HSSUnit value)

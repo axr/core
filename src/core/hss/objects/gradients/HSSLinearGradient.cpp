@@ -186,9 +186,9 @@ QSharedPointer<HSSParserNode> HSSLinearGradient::getPercentageExpression(QShared
     return HSSObject::getPercentageExpression(parserNode, propertyName);
 }
 
-void HSSLinearGradient::setStartX(HSSUnit value)
+void HSSLinearGradient::setStartX(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("startX", value);
+    this->setComputedValue("startX", value, specificity);
 }
 
 HSSUnit HSSLinearGradient::getStartX() const
@@ -201,9 +201,9 @@ HSSUnit HSSLinearGradient::getStartX() const
     return 0.;
 }
 
-void HSSLinearGradient::setStartY(HSSUnit value)
+void HSSLinearGradient::setStartY(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("startY", value);
+    this->setComputedValue("startY", value, specificity);
 }
 
 HSSUnit HSSLinearGradient::getStartY() const
@@ -216,9 +216,9 @@ HSSUnit HSSLinearGradient::getStartY() const
     return 0.;
 }
 
-void HSSLinearGradient::setEndX(HSSUnit value)
+void HSSLinearGradient::setEndX(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("endX", value);
+    this->setComputedValue("endX", value, specificity);
 }
 
 HSSUnit HSSLinearGradient::getEndX() const
@@ -231,9 +231,9 @@ HSSUnit HSSLinearGradient::getEndX() const
     return 0.;
 }
 
-void HSSLinearGradient::setEndY(HSSUnit value)
+void HSSLinearGradient::setEndY(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("endY", value);
+    this->setComputedValue("endY", value, specificity);
 }
 
 HSSUnit HSSLinearGradient::getEndY() const

@@ -130,12 +130,12 @@ HSSUnit HSSMargin::getSize() const
     return this->getComputedNumber("size");
 }
 
-void HSSMargin::setSize(HSSUnit value)
+void HSSMargin::setSize(HSSUnit value, unsigned specificity)
 {
-    this->setLeft(value);
-    this->setRight(value);
-    this->setTop(value);
-    this->setBottom(value);
+    this->setLeft(value, specificity);
+    this->setRight(value, specificity);
+    this->setTop(value, specificity);
+    this->setBottom(value, specificity);
 }
 
 void HSSMargin::setSize(QSharedPointer<HSSObject> theObj)
@@ -152,9 +152,9 @@ HSSUnit HSSMargin::getTop() const
     return this->getComputedNumber("top");
 }
 
-void HSSMargin::setTop(HSSUnit value)
+void HSSMargin::setTop(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("top", value);
+    this->setComputedValue("top", value, specificity);
 }
 
 HSSUnit HSSMargin::getRight() const
@@ -162,9 +162,9 @@ HSSUnit HSSMargin::getRight() const
     return this->getComputedNumber("right");
 }
 
-void HSSMargin::setRight(HSSUnit value)
+void HSSMargin::setRight(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("right", value);
+    this->setComputedValue("right", value, specificity);
 }
 
 HSSUnit HSSMargin::getBottom() const
@@ -172,9 +172,9 @@ HSSUnit HSSMargin::getBottom() const
     return this->getComputedNumber("bottom");
 }
 
-void HSSMargin::setBottom(HSSUnit value)
+void HSSMargin::setBottom(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("bottom", value);
+    this->setComputedValue("bottom", value, specificity);
 }
 
 HSSUnit HSSMargin::getLeft() const
@@ -182,7 +182,7 @@ HSSUnit HSSMargin::getLeft() const
     return this->getComputedNumber("left");
 }
 
-void HSSMargin::setLeft(HSSUnit value)
+void HSSMargin::setLeft(HSSUnit value, unsigned specificity)
 {
-    this->setComputedValue("left", value);
+    this->setComputedValue("left", value, specificity);
 }

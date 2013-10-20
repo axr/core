@@ -102,7 +102,7 @@ namespace AXR
         inline static QSharedPointer<HSSRgb> transparentColor(AXRController * controller)
         {
             QSharedPointer<HSSRgb> ret(new HSSRgb(controller));
-            ret->setAlpha(0.);
+            ret->setAlpha(0., 1);
             return ret;
         }
         inline static QSharedPointer<HSSRgb> defaultColor(AXRController * controller) { return QSharedPointer<HSSRgb>(new HSSRgb(controller)); }
@@ -125,8 +125,9 @@ namespace AXR
         /**
          *  Setter for the definition object of red. It will use the value as needed.
          *  @param value    The new value.
+         *  @param specificity An unsigned integer that determines how much "weight" the property has.
          */
-        void setRed(HSSUnit value);
+        void setRed(HSSUnit value, unsigned specificity);
 
         QSharedPointer<HSSObject> computeGreen(QSharedPointer<HSSParserNode> parserNode);
         void listenGreen(QSharedPointer<HSSObject> theObj);
@@ -142,8 +143,9 @@ namespace AXR
         /**
          *  Setter for the definition object of green. It will use the value as needed.
          *  @param value    The new value.
+         *  @param specificity An unsigned integer that determines how much "weight" the property has.
          */
-        void setGreen(HSSUnit value);
+        void setGreen(HSSUnit value, unsigned specificity);
 
         QSharedPointer<HSSObject> computeBlue(QSharedPointer<HSSParserNode> parserNode);
         void listenBlue(QSharedPointer<HSSObject> theObj);
@@ -158,8 +160,9 @@ namespace AXR
         /**
          *  Setter for the definition object of blue. It will use the value as needed.
          *  @param value    The new value.
+         *  @param specificity An unsigned integer that determines how much "weight" the property has.
          */
-        void setBlue(HSSUnit value);
+        void setBlue(HSSUnit value, unsigned specificity);
 
         QSharedPointer<HSSObject> computeAlpha(QSharedPointer<HSSParserNode> parserNode);
         void listenAlpha(QSharedPointer<HSSObject> theObj);
@@ -174,8 +177,9 @@ namespace AXR
         /**
          *  Setter for the definition object of alpha. It will use the value as needed.
          *  @param value    The new value.
+         *  @param specificity An unsigned integer that determines how much "weight" the property has.
          */
-        void setAlpha(HSSUnit value);
+        void setAlpha(HSSUnit value, unsigned specificity);
 
         QColor toQColor() const;
         QColor toQColorWithAlpha(int alpha) const;

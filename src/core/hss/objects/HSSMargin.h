@@ -100,8 +100,9 @@ namespace AXR
         /**
          *  Setter for the computed value of size.
          *  @param value    An HSSUnit containing the new value of size;
+         *  @parame specificity An unsigned integer that determines how much "weight" the property has.
          */
-        void setSize(HSSUnit value);
+        void setSize(HSSUnit value, unsigned specificity);
 
         /**
          *  Callback for the set listener
@@ -117,8 +118,9 @@ namespace AXR
         /**
          *  Setter for the computed value of top.
          *  @param value    An HSSUnit containing the new value of top;
+         *  @param specificity An unsigned integer that determines how much "weight" the property has.
          */
-        void setTop(HSSUnit value);
+        void setTop(HSSUnit value, unsigned specificity);
 
         /**
          *  Getter for the computed value of right.
@@ -129,8 +131,9 @@ namespace AXR
         /**
          *  Setter for the computed value of right.
          *  @param value    An HSSUnit containing the new value of right;
+         *  @param specificity An unsigned integer that determines how much "weight" the property has.
          */
-        void setRight(HSSUnit value);
+        void setRight(HSSUnit value, unsigned specificity);
 
         /**
          *  Getter for the computed value of bottom.
@@ -141,8 +144,9 @@ namespace AXR
         /**
          *  Setter for the computed value of bottom.
          *  @param value    An HSSUnit containing the new value of bottom;
+         *  @param specificity An unsigned integer that determines how much "weight" the property has.
          */
-        void setBottom(HSSUnit value);
+        void setBottom(HSSUnit value, unsigned specificity);
 
         /**
          *  Getter for the computed value of left.
@@ -153,8 +157,9 @@ namespace AXR
         /**
          *  Setter for the computed value of left.
          *  @param value    An HSSUnit containing the new value of left;
+         *  @param specificity An unsigned integer that determines how much "weight" the property has.
          */
-        void setLeft(HSSUnit value);
+        void setLeft(HSSUnit value, unsigned specificity);
 
     private:
         void _initialize();

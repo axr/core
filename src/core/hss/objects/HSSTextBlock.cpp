@@ -320,9 +320,9 @@ AXRString HSSTextBlock::getText() const
     return this->getComputedString("text");
 }
 
-void HSSTextBlock::setText(AXRString value)
+void HSSTextBlock::setText(AXRString value, unsigned specificity)
 {
-    this->setComputedValue("text", value);
+    this->setComputedValue("text", value, specificity);
 }
 
 void HSSTextBlock::notifyFont(QSharedPointer<HSSObject> theObj)
