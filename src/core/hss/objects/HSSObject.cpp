@@ -1440,11 +1440,18 @@ unsigned HSSObject::getSpecificity() const
 void HSSObject::setSpecificity(unsigned newValue)
 {
     this->_specificity = newValue;
-    QMapIterator<AXRString, QSharedPointer<HSSObject> > it(this->_computedValues);
+    QMapIterator<AXRString, QSharedPointer<HSSObject> > it(this->_stackValues);
     while (it.hasNext())
     {
         it.next();
         QSharedPointer<HSSObject> theObj = it.value();
+        theObj->setSpecificity(newValue);
+    }
+    QMapIterator<AXRString, QSharedPointer<HSSObject> > it2(this->_computedValues);
+    while (it2.hasNext())
+    {
+        it2.next();
+        QSharedPointer<HSSObject> theObj = it2.value();
         theObj->setSpecificity(newValue);
     }
 }
