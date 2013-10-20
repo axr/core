@@ -617,11 +617,10 @@ void HSSObject::setIsA(QSharedPointer<HSSObject> theObj)
         {
             QSharedPointer<HSSRefFunction> refFunction = qSharedPointerCast<HSSRefFunction>(parserNode);
             QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSRefFunction>(refFunction)->evaluate();
-            if (remoteObj && remoteObj->isA(HSSObjectTypeContainer))
+            if (remoteObj)
             {
-                QSharedPointer<HSSContainer> containerObj = qSharedPointerCast<HSSContainer>(remoteObj);
-                containerObj->setSpecificity(theObj->getSpecificity());
-                this->_setIsA(containerObj);
+                remoteObj->setSpecificity(theObj->getSpecificity());
+                this->_setIsA(remoteObj);
             }
         }
     }
