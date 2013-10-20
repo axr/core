@@ -398,7 +398,6 @@ namespace AXR
         QSharedPointer<HSSDisplayObject> thisObj;
         AXRController * axrController;
 
-        void _setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject);
         QSharedPointer<HSSParserNode> _inheritProperty(AXRString propertyName) const;
 
         virtual void _setIsA(QSharedPointer<HSSObject> theObj);

@@ -946,15 +946,25 @@ void HSSObject::setStackNode(AXRString propertyName, QSharedPointer<AXR::HSSPars
 
 void HSSObject::setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject)
 {
-    //default handling
-    this->_setStackValue(propertyName, theObject);
+    if (!theObject) return;
+    if (this->_stackValues.contains(propertyName))
+    {
+        if (theObject->getSpecificity() >= this->_stackValues[propertyName]->getSpecificity())
+        {
+            this->_stackValues.insert(propertyName, theObject);
+        }
+    }
+    else
+    {
+        this->_stackValues.insert(propertyName, theObject);
+    }
 }
 
 void HSSObject::appendStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject)
 {
     if (!this->_stackValues.contains(propertyName))
     {
-        this->_setStackValue(propertyName, theObject);
+        this->setStackValue(propertyName, theObject);
     }
     else
     {
@@ -971,16 +981,10 @@ void HSSObject::appendStackValue(AXRString propertyName, QSharedPointer<HSSObjec
                 QSharedPointer<HSSMultipleValue> multiVal(new HSSMultipleValue(this->getController()));
                 multiVal->add(stackValue);
                 multiVal->add(theObject);
-                this->_setStackValue(propertyName, multiVal);
+                this->setStackValue(propertyName, multiVal);
             }
         }
     }
-}
-
-void HSSObject::_setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject)
-{
-    if (!theObject) return;
-    this->_stackValues.insert(propertyName, theObject);
 }
 
 void HSSObject::commitStackValues()
