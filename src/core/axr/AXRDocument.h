@@ -54,12 +54,12 @@ namespace AXR
     class AXRBuffer;
     class AXRController;
     class AXRDocumentPrivate;
-    class AXRRender;
     class HSSAbstractValueChangedCallback;
     class HSSInputEvent;
     class HSSObject;
     class HSSParser;
     class HSSRect;
+    class HSSRenderer;
     class HSSVisitorManager;
     class XMLParser;
 
@@ -175,6 +175,12 @@ namespace AXR
          */
         void registerCustomFunction(const AXRString &name, HSSAbstractValueChangedCallback* fn);
         void evaluateCustomFunction(const AXRString &name,  const QSharedPointer<HSSObject> theObj);
+
+        /**
+         *  Getter for the render visitor
+         *  @return A pointer to the render visitor
+         */
+        HSSRenderer * getRenderVisitor() const;
 
         // From AXRWrapper
     public:

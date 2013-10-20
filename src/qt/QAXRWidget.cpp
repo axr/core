@@ -63,9 +63,6 @@ namespace AXR
         QAXRWidgetPrivate(QAXRWidget *);
         QAXRWidget *q_ptr;
         AXRDocument *document;
-        HSSCascader* cascadeVisitor;
-        HSSLayout* layoutVisitor;
-        HSSRenderer* renderVisitor;
         QColor backgroundFillColor;
     };
 }
@@ -75,9 +72,6 @@ using namespace AXR;
 QAXRWidgetPrivate::QAXRWidgetPrivate(QAXRWidget *q)
 : q_ptr(q)
 , document(0)
-, renderVisitor(new HSSRenderer)
-, layoutVisitor(new HSSLayout)
-, cascadeVisitor(new HSSCascader)
 , backgroundFillColor(QColor(Qt::white))
 {
     q_ptr->setMouseTracking(true);
@@ -107,26 +101,14 @@ AXRDocument* QAXRWidget::document() const
 
 HSSRenderer* QAXRWidget::renderer() const
 {
-    return d->renderVisitor;
+    return d->document->getRenderVisitor();
 }
 
 void QAXRWidget::setDocument(AXRDocument *document)
 {
     if (d->document == document)
         return;
-
-    d->cascadeVisitor->setDocument(document);
-    d->layoutVisitor->setDocument(document);
-    d->renderVisitor->setDocument(document);
-
-    if ((d->document = document) && d->document->visitorManager())
-    {
-        QSharedPointer<HSSVisitorManager> vm = d->document->visitorManager();
-        vm->addVisitor(d->cascadeVisitor);
-        vm->addVisitor(d->layoutVisitor);
-        vm->addVisitor(d->renderVisitor);
-    }
-
+    d->document = document;
     this->update();
 }
 
@@ -167,7 +149,7 @@ void QAXRWidget::paintEvent(QPaintEvent *e)
             root->setComputedValue("height", d->document->windowHeight());
 
             // Render the final image to the screen
-            d->renderVisitor->setDirtyRect(e->rect());
+            this->renderer()->setDirtyRect(e->rect());
             visitorManager->runVisitors();
         }
         else
@@ -177,7 +159,7 @@ void QAXRWidget::paintEvent(QPaintEvent *e)
     }
 
     // Present the final composited surface to the screen
-    const QImage &image = d->renderVisitor->getFinalFrame();
+    const QImage &image = this->renderer()->getFinalFrame();
     if (!image.isNull() && !image.size().isEmpty())
     {
         painter.drawImage(paintRect.topLeft(), image);

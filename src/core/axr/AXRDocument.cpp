@@ -49,10 +49,13 @@
 #include "AXRDocument.h"
 #include "AXRLoggerManager.h"
 #include "AXRWarning.h"
+#include "HSSCascader.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
+#include "HSSLayout.h"
 #include "HSSMouseEvent.h"
 #include "HSSParser.h"
+#include "HSSRenderer.h"
 #include "HSSVisitorManager.h"
 #include "XMLParser.h"
 
@@ -67,7 +70,10 @@ namespace AXR
         AXRDocumentPrivate()
         : isHSSOnly(), hasLoadedFile(), showLayoutSteps(), currentLayoutStep(), currentLayoutTick(),
           currentLayoutChild(), needsDisplay(true), windowWidth(), windowHeight(), visitorManager(),
-          controller(), file(), directory(), parserXML(), parserHSS(), customFunctions()
+        controller(), file(), directory(), parserXML(), parserHSS(), customFunctions()
+        , cascadeVisitor(new HSSCascader)
+        , layoutVisitor(new HSSLayout)
+        , renderVisitor(new HSSRenderer)
         {
         }
 
@@ -91,6 +97,10 @@ namespace AXR
         QSharedPointer<HSSParser> parserHSS;
 
         QMap<AXRString, HSSAbstractValueChangedCallback*> customFunctions;
+
+        HSSCascader* cascadeVisitor;
+        HSSLayout* layoutVisitor;
+        HSSRenderer* renderVisitor;
     };
 }
 
@@ -103,7 +113,14 @@ AXRDocument::AXRDocument()
     this->setController(ctrlr);
     this->setXmlParser(QSharedPointer<XMLParser>(new XMLParser(ctrlr.data())));
     this->setHssParser(QSharedPointer<HSSParser>(new HSSParser(ctrlr.data())));
-    this->setVisitorManager(QSharedPointer<HSSVisitorManager>(new HSSVisitorManager(ctrlr.data())));
+    QSharedPointer<HSSVisitorManager>vm(new HSSVisitorManager(ctrlr.data()));
+    this->setVisitorManager(vm);
+    d->cascadeVisitor->setDocument(this);
+    d->layoutVisitor->setDocument(this);
+    d->renderVisitor->setDocument(this);
+    vm->addVisitor(d->cascadeVisitor);
+    vm->addVisitor(d->layoutVisitor);
+    vm->addVisitor(d->renderVisitor);
 }
 
 AXRDocument::~AXRDocument()
@@ -278,6 +295,11 @@ void AXRDocument::evaluateCustomFunction(const AXRString &name, const QSharedPoi
     {
         d->customFunctions[name]->call("", "", theObj);
     }
+}
+
+HSSRenderer * AXRDocument::getRenderVisitor() const
+{
+    return d->renderVisitor;
 }
 
 /*!
