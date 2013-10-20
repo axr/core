@@ -457,6 +457,7 @@ QVariantMap HSSObject::toMap() const
         {
             propertyValue = QVariant(value->toMap());
         }
+        properties.insert(propertyName, propertyValue);
     }
 
     // TODO: Insert the object type here (including the @)
