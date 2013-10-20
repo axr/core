@@ -634,7 +634,7 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
 {
     if (theObj && theObj->type == this->type)
     {
-        QMapIterator<AXRString, QSharedPointer<HSSObject> > it(theObj->_computedValues);
+        QMapIterator<AXRString, QSharedPointer<HSSObject> > it(theObj->_stackValues);
         while (it.hasNext())
         {
             it.next();
