@@ -97,7 +97,6 @@ namespace AXR
         bool equalTo(QSharedPointer<HSSParserNode> otherNode);
 
         void applyStack();
-        void applyComputed();
         void applyRules();
 
         /**

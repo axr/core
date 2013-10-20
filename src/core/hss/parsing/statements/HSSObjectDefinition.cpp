@@ -135,12 +135,6 @@ void HSSObjectDefinition::applyStack()
     }
 }
 
-void HSSObjectDefinition::applyComputed()
-{
-    this->prototype->commitStackValues();
-    this->prototype->fillWithDefaults();
-}
-
 void HSSObjectDefinition::applyRules()
 {
     ///@todo this should target all display object types
