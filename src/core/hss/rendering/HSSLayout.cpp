@@ -514,7 +514,7 @@ inline bool HSSLayout::_arrangeLines(const HSSContainer & container, const QShar
             else
             {
                 HSSUnit groupHeight = group->height;
-                HSSUnit startY = group->getAlignY() - (groupHeight/2);
+                HSSUnit startY = group->getAlignY() - (groupHeight/2) + container.getTopPadding();
                 if (startY > (container.getHeight() - container.getBottomPadding()) - groupHeight) startY = (container.getHeight() - container.getBottomPadding()) - groupHeight;
                 if (startY < container.getTopPadding()) startY = container.getTopPadding();
                 for (HSSSimpleSelection::iterator it = group->objects->begin(); it!= group->objects->end(); ++it)
