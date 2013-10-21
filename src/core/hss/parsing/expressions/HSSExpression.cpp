@@ -187,14 +187,18 @@ void HSSExpression::leftChanged(const AXRString target, const AXRString source, 
 {
     this->leftval = this->getLeft()->getNumber();
     this->setValue(this->calculate(this->leftval, this->rightval));
-    this->notifyObservers("__impl_private__expressionResult", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
+    QSharedPointer<HSSObject> newValue = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope);
+    newValue->setSpecificity(theObj->getSpecificity());
+    this->notifyObservers("__impl_private__expressionResult", newValue);
 }
 
 void HSSExpression::rightChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj)
 {
     this->rightval = this->getRight()->getNumber();
     this->setValue(this->calculate(this->leftval, this->rightval));
-    this->notifyObservers("__impl_private__expressionResult", HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope));
+    QSharedPointer<HSSObject> newValue = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(this->getValue(), this->getController()), this->getThisObj(), this->scope);
+    newValue->setSpecificity(theObj->getSpecificity());
+    this->notifyObservers("__impl_private__expressionResult", newValue);
 }
 
 void HSSExpression::setDirty(bool value)
