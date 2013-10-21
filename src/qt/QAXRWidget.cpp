@@ -144,9 +144,9 @@ void QAXRWidget::paintEvent(QPaintEvent *e)
         {
             //force values
             QSharedPointer<HSSDisplayObject> root = d->document->controller()->root();
-            root->setComputedBool("visible", true, 1);
-            root->setComputedValue("width", d->document->windowWidth(), 1);
-            root->setComputedValue("height", d->document->windowHeight(), 1);
+            root->setComputedBool("visible", true, std::numeric_limits<int>::max());
+            root->setComputedValue("width", d->document->windowWidth(), std::numeric_limits<int>::max());
+            root->setComputedValue("height", d->document->windowHeight(), std::numeric_limits<int>::max());
 
             // Render the final image to the screen
             this->renderer()->setDirtyRect(e->rect());

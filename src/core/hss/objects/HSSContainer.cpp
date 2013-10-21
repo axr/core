@@ -392,7 +392,7 @@ void HSSContainer::setContentText(const AXRString &contentText)
             this->add(txtBlck);
         }
 
-        txtBlck->setText(text, 1);
+        txtBlck->setText(text, std::numeric_limits<int>::max());
     }
 }
 
@@ -407,7 +407,7 @@ void HSSContainer::appendContentText(const AXRString &contentText)
         if (this->allChildren->empty())
         {
             QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
-            txtBlck->setText(text, 1);
+            txtBlck->setText(text, std::numeric_limits<int>::max());
             this->add(txtBlck);
         }
         else
@@ -417,12 +417,12 @@ void HSSContainer::appendContentText(const AXRString &contentText)
             {
                 QSharedPointer<HSSTextBlock> textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
                 text = textBlock->getText() + " " + text;
-                textBlock->setText(text, 1);
+                textBlock->setText(text, std::numeric_limits<int>::max());
             }
             else
             {
                 QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
-                txtBlck->setText(text, 1);
+                txtBlck->setText(text, std::numeric_limits<int>::max());
                 this->add(txtBlck);
             }
         }
