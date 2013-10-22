@@ -42,6 +42,7 @@
  ********************************************************************/
 
 #include <cmath>
+#include <limits>
 #include <QtGlobal>
 #include "AXRController.h"
 #include "AXRDocument.h"
