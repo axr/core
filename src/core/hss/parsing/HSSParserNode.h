@@ -216,7 +216,7 @@ namespace AXR
         *  Getter for the controller.
         *  @return A pointer to the AXRController that owns this object
         */
-       virtual AXRController* getController();
+       virtual AXRController* getController() const;
 
         /**
          *  Setter for the controller. The controller needs to be propagated across all

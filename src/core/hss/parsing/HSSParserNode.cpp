@@ -308,7 +308,7 @@ QSharedPointer<HSSParserNode> HSSParserNode::shared_from_this()
     return ptr.toStrongRef();
 }
 
-AXRController* HSSParserNode::getController()
+AXRController* HSSParserNode::getController() const
 {
     return controller;
 }
