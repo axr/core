@@ -259,7 +259,7 @@ HSSObject::HSSObject(HSSObjectType type, AXRController * controller)
     this->shorthandIndex = 0;
     this->axrController = controller;
     this->_hostProperty = "";
-    this->_specificity = 0;
+    this->_specificity = 0.0;
 }
 
 HSSObject::HSSObject(const HSSObject & orig)
@@ -1006,7 +1006,7 @@ QSharedPointer<HSSObject> HSSObject::computeValue(AXRString propertyName, QShare
         try
         {
             QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (parserNode);
-            unsigned specificity = parserNode->getSpecificity();
+            HSSUnit specificity = parserNode->getSpecificity();
             parserNode = this->getController()->objectTreeNodeNamed(objname->getValue())->clone();
             parserNode->setSpecificity(specificity);
         }
@@ -1175,24 +1175,24 @@ QSharedPointer<HSSParserNode> HSSObject::getPercentageExpression(HSSUnit number,
     return ret;
 }
 
-void HSSObject::setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode, unsigned specificity)
+void HSSObject::setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode, HSSUnit specificity)
 {
     QSharedPointer<HSSObject> theObj = this->computeValue(propertyName, parserNode);
     theObj->setSpecificity(specificity);
     this->setComputed(propertyName, theObj);
 }
 
-void HSSObject::setComputedValue(AXRString propertyName, HSSUnit value, unsigned specificity)
+void HSSObject::setComputedValue(AXRString propertyName, HSSUnit value, HSSUnit specificity)
 {
     this->setComputedValue(propertyName, this->numberToConstant(value), specificity);
 }
 
-void HSSObject::setComputedBool(AXRString propertyName, bool value, unsigned specificity)
+void HSSObject::setComputedBool(AXRString propertyName, bool value, HSSUnit specificity)
 {
     this->setComputedValue(propertyName, this->stringToKeyword(value ? "yes" : "no"), specificity);
 }
 
-void HSSObject::setComputedValue(AXRString propertyName, AXRString value, unsigned specificity)
+void HSSObject::setComputedValue(AXRString propertyName, AXRString value, HSSUnit specificity)
 {
     this->setComputedValue(propertyName, this->stringToConstant(value), specificity);
 }
@@ -1438,12 +1438,12 @@ void HSSObject::setHostProperty(AXRString newValue)
     this->_hostProperty = newValue;
 }
 
-unsigned HSSObject::getSpecificity() const
+HSSUnit HSSObject::getSpecificity() const
 {
     return this->_specificity;
 }
 
-void HSSObject::setSpecificity(unsigned newValue)
+void HSSObject::setSpecificity(HSSUnit newValue)
 {
     this->_specificity = newValue;
     QMapIterator<AXRString, QSharedPointer<HSSObject> > it(this->_stackValues);

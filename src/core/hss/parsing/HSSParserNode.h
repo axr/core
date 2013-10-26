@@ -239,15 +239,15 @@ namespace AXR
 
         /**
          *  Setter for the specificity, which determines the weight of that value in the cascade.
-         *  @param value    An unsigned int with the new value.
+         *  @param value    A HSSUnit with the new value.
          */
-        virtual void setSpecificity(unsigned value);
+        virtual void setSpecificity(HSSUnit value);
 
         /**
          *  Getter for the specificity, which determines the weight of that value in the cascade.
-         *  @return An unsigned int with the value.
+         *  @return A HSSUnit with the value.
          */
-        unsigned getSpecificity() const;
+        HSSUnit getSpecificity() const;
 
     protected:
         /**
@@ -274,7 +274,7 @@ namespace AXR
         std::vector<QSharedPointer<HSSParserNode> > _childNodes;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
         AXRString _hostProperty;
-        unsigned _specificity;
+        HSSUnit _specificity;
 
         QWeakPointer<HSSParserNode> ptr;
     };

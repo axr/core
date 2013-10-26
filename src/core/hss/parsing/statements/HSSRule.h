@@ -286,7 +286,7 @@ namespace AXR
 
         void removeFromDisplayObjects();
 
-        void setSpecificity(unsigned newValue);
+        void setSpecificity(HSSUnit newValue);
 
     protected:
         QSharedPointer<HSSRule> shared_from_this();

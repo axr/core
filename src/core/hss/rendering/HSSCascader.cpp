@@ -90,7 +90,7 @@ void HSSCascader::setDocument(AXRDocument* document)
 void HSSCascader::visit(HSSContainer &container)
 {
     if(container._needsRereadRules){
-        unsigned specificity = 0;
+        HSSUnit specificity = 0.;
         container.setDefaults();
         container.clearProperties();
         container.rulesInit();
@@ -104,7 +104,7 @@ void HSSCascader::visit(HSSContainer &container)
     }
 }
 
-void HSSCascader::applyStack(HSSContainer & container, unsigned & specificity)
+void HSSCascader::applyStack(HSSContainer & container, HSSUnit & specificity)
 {
     QSharedPointer<HSSRuleStatus> ruleStatus;
     while((ruleStatus = container.ruleStatusNext()))
@@ -122,13 +122,17 @@ void HSSCascader::applyStack(HSSContainer & container, unsigned & specificity)
                 QSharedPointer<HSSRule> & rule = ruleStatus->rule;
                 Q_FOREACH(const QSharedPointer<HSSPropertyDefinition>& propertyDefinition, rule->getProperties())
                 {
-                    ++specificity;
+                    specificity += 1.0;
                     QVector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
                     Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propertyPaths){
                         QSharedPointer<HSSParserNode> clonedNode = propertyDefinition->getValue()->clone();
-                        if (clonedNode->getSpecificity() == 0)
+                        if (clonedNode->getSpecificity() == 0.0)
                         {
                             clonedNode->setSpecificity(specificity);
+                        }
+                        else
+                        {
+                            clonedNode->setSpecificity(clonedNode->getSpecificity() + (specificity * 0.000001));
                         }
                         if (path->size() == 1)
                         {

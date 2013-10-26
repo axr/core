@@ -439,7 +439,7 @@ void HSSRule::removeFromDisplayObjects()
     }
 }
 
-void HSSRule::setSpecificity(unsigned newValue)
+void HSSRule::setSpecificity(HSSUnit newValue)
 {
     HSSStatement::setSpecificity(newValue);
     for (HSSPropertyDefinition::const_it pIt = this->properties.begin(); pIt != this->properties.end(); ++pIt)

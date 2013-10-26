@@ -320,7 +320,7 @@ AXRString HSSTextBlock::getText() const
     return this->getComputedString("text");
 }
 
-void HSSTextBlock::setText(AXRString value, unsigned specificity)
+void HSSTextBlock::setText(AXRString value, HSSUnit specificity)
 {
     this->setComputedValue("text", value, specificity);
 }

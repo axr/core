@@ -145,7 +145,7 @@ namespace AXR
 
         virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
 
-        void setSpecificity(unsigned newValue);
+        void setSpecificity(HSSUnit newValue);
 
     protected:
         QSharedPointer<HSSPropertyDefinition> shared_from_this();

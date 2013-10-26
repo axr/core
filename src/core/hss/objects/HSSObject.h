@@ -333,10 +333,10 @@ namespace AXR
         QSharedPointer<HSSParserNode> getPercentageExpression(HSSUnit number, QSharedPointer<HSSSimpleSelector> target, AXRString propertyName);
         QSharedPointer<HSSParserNode> getPercentageExpressionFromParent(HSSUnit number, AXRString propertyName);
         QSharedPointer<HSSParserNode> getPercentageExpressionFromThis(HSSUnit number, AXRString propertyName);
-        void setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode, unsigned specificity);
-        void setComputedValue(AXRString propertyName, HSSUnit value, unsigned specificity);
-        void setComputedBool(AXRString propertyName, bool value, unsigned specificity);
-        void setComputedValue(AXRString propertyName, AXRString value, unsigned specificity);
+        void setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode, HSSUnit specificity);
+        void setComputedValue(AXRString propertyName, HSSUnit value, HSSUnit specificity);
+        void setComputedBool(AXRString propertyName, bool value, HSSUnit specificity);
+        void setComputedValue(AXRString propertyName, AXRString value, HSSUnit specificity);
         QSharedPointer<HSSNumberConstant> numberToConstant(HSSUnit value);
         QSharedPointer<HSSPercentageConstant> percentageToConstant(HSSUnit value);
         QSharedPointer<HSSStringConstant> stringToConstant(AXRString value);
@@ -366,15 +366,15 @@ namespace AXR
 
         /**
          *  Setter for the specificity, which determines the weight of that value in the cascade.
-         *  @param value    An unsigned int with the new value.
+         *  @param value    A HSSUnit with the new value.
          */
-        void setSpecificity(unsigned value);
+        void setSpecificity(HSSUnit value);
 
         /**
          *  Getter for the specificity, which determines the weight of that value in the cascade.
-         *  @return An unsigned int with the value.
+         *  @return A HSSUnit with the value.
          */
-        unsigned getSpecificity() const;
+        HSSUnit getSpecificity() const;
 
         void objDefRulesAdd(QSharedPointer<HSSRule> rule);
         QVector<QSharedPointer<HSSRule> > getObjDefRules() const;
@@ -411,7 +411,7 @@ namespace AXR
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
 
         QWeakPointer<HSSObject> ptr;
-        unsigned _specificity;
+        HSSUnit _specificity;
     };
 }
 

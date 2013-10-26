@@ -112,7 +112,7 @@ void HSSMultipleValueDefinition::add(QSharedPointer<HSSParserNode> newValue)
     this->values.push_back(newValue);
 }
 
-void HSSMultipleValueDefinition::setSpecificity(unsigned newValue)
+void HSSMultipleValueDefinition::setSpecificity(HSSUnit newValue)
 {
     HSSParserNode::setSpecificity(newValue);
     Q_FOREACH(QSharedPointer<HSSParserNode> parserNode, this->values)

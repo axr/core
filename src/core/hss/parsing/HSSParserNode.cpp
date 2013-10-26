@@ -106,7 +106,7 @@ HSSParserNode::HSSParserNode(HSSParserNodeType type, AXRController * controller)
     this->nodeType = type;
     this->controller = controller;
     this->_hostProperty = "";
-    this->_specificity = 0;
+    this->_specificity = 0.0;
 }
 
 //doesn't clone any part of the node tree, nor the observers array
@@ -328,12 +328,12 @@ void HSSParserNode::setHostProperty(AXRString newValue)
     this->_hostProperty = newValue;
 }
 
-unsigned HSSParserNode::getSpecificity() const
+HSSUnit HSSParserNode::getSpecificity() const
 {
     return this->_specificity;
 }
 
-void HSSParserNode::setSpecificity(unsigned newValue)
+void HSSParserNode::setSpecificity(HSSUnit newValue)
 {
     this->_specificity = newValue;
 }

@@ -170,7 +170,7 @@ HSSUnit HSSRgb::getRed() const
     return this->getComputedNumber("red");
 }
 
-void HSSRgb::setRed(HSSUnit value, unsigned specificity)
+void HSSRgb::setRed(HSSUnit value, HSSUnit specificity)
 {
     this->setComputedValue("red", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())), specificity);
 }
@@ -185,7 +185,7 @@ HSSUnit HSSRgb::getGreen() const
     return this->getComputedNumber("green");
 }
 
-void HSSRgb::setGreen(HSSUnit value, unsigned specificity)
+void HSSRgb::setGreen(HSSUnit value, HSSUnit specificity)
 {
     this->setComputedValue("green", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())), specificity);
 }
@@ -200,7 +200,7 @@ HSSUnit HSSRgb::getBlue() const
     return this->getComputedNumber("blue");
 }
 
-void HSSRgb::setBlue(HSSUnit value, unsigned specificity)
+void HSSRgb::setBlue(HSSUnit value, HSSUnit specificity)
 {
     this->setComputedValue("blue", QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(value, this->getController())), specificity);
 }
@@ -215,7 +215,7 @@ HSSUnit HSSRgb::getAlpha() const
     return this->getComputedNumber("alpha");
 }
 
-void HSSRgb::setAlpha(HSSUnit value, unsigned specificity)
+void HSSRgb::setAlpha(HSSUnit value, HSSUnit specificity)
 {
     this->setComputedValue("alpha", value, specificity);
 }

@@ -91,7 +91,7 @@ namespace AXR
 
         //text
         AXRString getText() const;
-        void setText(AXRString value, unsigned specificity);
+        void setText(AXRString value, HSSUnit specificity);
 
         //font
         void notifyFont(QSharedPointer<HSSObject> theObj);

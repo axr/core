@@ -130,7 +130,7 @@ HSSUnit HSSMargin::getSize() const
     return this->getComputedNumber("size");
 }
 
-void HSSMargin::setSize(HSSUnit value, unsigned specificity)
+void HSSMargin::setSize(HSSUnit value, HSSUnit specificity)
 {
     this->setLeft(value, specificity);
     this->setRight(value, specificity);
@@ -152,7 +152,7 @@ HSSUnit HSSMargin::getTop() const
     return this->getComputedNumber("top");
 }
 
-void HSSMargin::setTop(HSSUnit value, unsigned specificity)
+void HSSMargin::setTop(HSSUnit value, HSSUnit specificity)
 {
     this->setComputedValue("top", value, specificity);
 }
@@ -162,7 +162,7 @@ HSSUnit HSSMargin::getRight() const
     return this->getComputedNumber("right");
 }
 
-void HSSMargin::setRight(HSSUnit value, unsigned specificity)
+void HSSMargin::setRight(HSSUnit value, HSSUnit specificity)
 {
     this->setComputedValue("right", value, specificity);
 }
@@ -172,7 +172,7 @@ HSSUnit HSSMargin::getBottom() const
     return this->getComputedNumber("bottom");
 }
 
-void HSSMargin::setBottom(HSSUnit value, unsigned specificity)
+void HSSMargin::setBottom(HSSUnit value, HSSUnit specificity)
 {
     this->setComputedValue("bottom", value, specificity);
 }
@@ -182,7 +182,7 @@ HSSUnit HSSMargin::getLeft() const
     return this->getComputedNumber("left");
 }
 
-void HSSMargin::setLeft(HSSUnit value, unsigned specificity)
+void HSSMargin::setLeft(HSSUnit value, HSSUnit specificity)
 {
     this->setComputedValue("left", value, specificity);
 }

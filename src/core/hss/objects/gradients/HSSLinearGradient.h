@@ -88,22 +88,22 @@ namespace AXR
         virtual QSharedPointer<HSSParserNode> getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
 
         //startX
-        void setStartX(HSSUnit value, unsigned specificity);
+        void setStartX(HSSUnit value, HSSUnit specificity);
         HSSUnit getStartX() const;
         QSharedPointer<HSSObject> computeStartX(QSharedPointer<HSSParserNode> parserNode);
 
         //startY
-        void setStartY(HSSUnit value, unsigned specificity);
+        void setStartY(HSSUnit value, HSSUnit specificity);
         HSSUnit getStartY() const;
         QSharedPointer<HSSObject> computeStartY(QSharedPointer<HSSParserNode> parserNode);
 
         //endX
-        void setEndX(HSSUnit value, unsigned specificity);
+        void setEndX(HSSUnit value, HSSUnit specificity);
         HSSUnit getEndX() const;
         QSharedPointer<HSSObject> computeEndX(QSharedPointer<HSSParserNode> parserNode);
 
         //endY
-        void setEndY(HSSUnit value, unsigned specificity);
+        void setEndY(HSSUnit value, HSSUnit specificity);
         HSSUnit getEndY() const;
         QSharedPointer<HSSObject> computeEndY(QSharedPointer<HSSParserNode> parserNode);
 

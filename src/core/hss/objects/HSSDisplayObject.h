@@ -197,7 +197,7 @@ namespace AXR
         void setElementName(AXRString name);
 
         //width
-        void setWidth(HSSUnit value, unsigned specificity);
+        void setWidth(HSSUnit value, HSSUnit specificity);
         HSSUnit getWidth() const;
         HSSUnit getInnerWidth() const;
         HSSUnit getOuterWidth() const;
@@ -206,7 +206,7 @@ namespace AXR
         void widthChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //height
-        void setHeight(HSSUnit value, unsigned specificity);
+        void setHeight(HSSUnit value, HSSUnit specificity);
         HSSUnit getHeight() const;
         HSSUnit getInnerHeight() const;
         HSSUnit getOuterHeight() const;
@@ -215,14 +215,14 @@ namespace AXR
         void heightChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //alignX
-        void setAlignX(HSSUnit value, unsigned specificity);
+        void setAlignX(HSSUnit value, HSSUnit specificity);
         HSSUnit getAlignX() const;
         QSharedPointer<HSSObject> computeAlignX(QSharedPointer<HSSParserNode> parserNode);
         void notifyAlignX(QSharedPointer<HSSObject> theObj);
         void alignXChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //alignY
-        void setAlignY(HSSUnit value, unsigned specificity);
+        void setAlignY(HSSUnit value, HSSUnit specificity);
         HSSUnit getAlignY() const;
         QSharedPointer<HSSObject> computeAlignY(QSharedPointer<HSSParserNode> parserNode);
         void notifyAlignY(QSharedPointer<HSSObject> theObj);
@@ -233,14 +233,14 @@ namespace AXR
         QSharedPointer<HSSObject> computeLineAlign(QSharedPointer<HSSParserNode> parserNode);
 
         //anchorX
-        void setAnchorX(HSSUnit value, unsigned specificity);
+        void setAnchorX(HSSUnit value, HSSUnit specificity);
         HSSUnit getAnchorX() const;
         QSharedPointer<HSSObject> computeAnchorX(QSharedPointer<HSSParserNode> parserNode);
         void notifyAnchorX(QSharedPointer<HSSObject> theObj);
         void anchorXChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         //anchorY
-        void setAnchorY(HSSUnit value, unsigned specificity);
+        void setAnchorY(HSSUnit value, HSSUnit specificity);
         HSSUnit getAnchorY() const;
         QSharedPointer<HSSObject> computeAnchorY(QSharedPointer<HSSParserNode> parserNode);
         void notifyAnchorY(QSharedPointer<HSSObject> theObj);
@@ -267,26 +267,26 @@ namespace AXR
         QSharedPointer<HSSObject> getMargin() const;
         QSharedPointer<HSSObject> computeMargin(QSharedPointer<HSSParserNode> parserNode);
         void notifyMargin(QSharedPointer<HSSObject> theObj);
-        void setTopMargin(HSSUnit value, unsigned specificity);
+        void setTopMargin(HSSUnit value, HSSUnit specificity);
         HSSUnit getTopMargin() const;
-        void setRightMargin(HSSUnit value, unsigned specificity);
+        void setRightMargin(HSSUnit value, HSSUnit specificity);
         HSSUnit getRightMargin() const;
-        void setBottomMargin(HSSUnit value, unsigned specificity);
+        void setBottomMargin(HSSUnit value, HSSUnit specificity);
         HSSUnit getBottomMargin() const;
-        void setLeftMargin(HSSUnit value, unsigned specificity);
+        void setLeftMargin(HSSUnit value, HSSUnit specificity);
         HSSUnit getLeftMargin() const;
 
         //padding
         QSharedPointer<HSSObject> getPadding() const;
         QSharedPointer<HSSObject> computePadding(QSharedPointer<HSSParserNode> parserNode);
         void notifyPadding(QSharedPointer<HSSObject> theObj);
-        void setTopPadding(HSSUnit value, unsigned specificity);
+        void setTopPadding(HSSUnit value, HSSUnit specificity);
         HSSUnit getTopPadding() const;
-        void setRightPadding(HSSUnit value, unsigned specificity);
+        void setRightPadding(HSSUnit value, HSSUnit specificity);
         HSSUnit getRightPadding() const;
-        void setBottomPadding(HSSUnit value, unsigned specificity);
+        void setBottomPadding(HSSUnit value, HSSUnit specificity);
         HSSUnit getBottomPadding() const;
-        void setLeftPadding(HSSUnit value, unsigned specificity);
+        void setLeftPadding(HSSUnit value, HSSUnit specificity);
         HSSUnit getLeftPadding() const;
 
         //border
@@ -408,10 +408,10 @@ namespace AXR
          */
         HSSDisplayObject(HSSObjectType type, AXRController * controller);
 
-        void _setInnerWidth(unsigned specificity);
-        void _setInnerHeight(unsigned specificity);
-        void _setOuterWidth(unsigned specificity);
-        void _setOuterHeight(unsigned specificity);
+        void _setInnerWidth(HSSUnit specificity);
+        void _setInnerHeight(HSSUnit specificity);
+        void _setOuterWidth(HSSUnit specificity);
+        void _setOuterHeight(HSSUnit specificity);
 
     private:
         bool _isHover;
