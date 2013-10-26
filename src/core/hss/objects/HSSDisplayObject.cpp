@@ -795,8 +795,8 @@ void HSSDisplayObject::notifyWidth(QSharedPointer<HSSObject> theObj)
             this->_hasOwnWidth = true;
         }
     }
-    this->_setInnerWidth(theObj->getSpecificity());
-    this->_setOuterWidth(theObj->getSpecificity());
+    this->_setInnerWidth(1.);
+    this->_setOuterWidth(1.);
     this->setNeedsSurface(true);
     this->setNeedsLayout(true);
     this->setDirty(true);
@@ -811,8 +811,8 @@ void HSSDisplayObject::widthChanged(const AXRString target, const AXRString sour
     //        this->width = floor(*(HSSUnit*) data);
     //    }
 
-    this->_setInnerWidth(theObj->getSpecificity());
-    this->_setOuterWidth(theObj->getSpecificity());
+    this->_setInnerWidth(1.);
+    this->_setOuterWidth(1.);
 
     this->setNeedsSurface(true);
     this->setNeedsLayout(true);
@@ -885,8 +885,8 @@ void HSSDisplayObject::notifyHeight(QSharedPointer<HSSObject> theObj)
             this->_hasOwnHeight = true;
         }
     }
-    this->_setInnerHeight(theObj->getSpecificity());
-    this->_setOuterHeight(theObj->getSpecificity());
+    this->_setInnerHeight(1.);
+    this->_setOuterHeight(1.);
     this->setNeedsSurface(true);
     this->setNeedsLayout(true);
     this->setDirty(true);
@@ -900,8 +900,8 @@ void HSSDisplayObject::heightChanged(const AXRString target, const AXRString sou
     {
         parent->setNeedsLayout(true);
     }
-    this->_setInnerHeight(theObj->getSpecificity());
-    this->_setOuterHeight(theObj->getSpecificity());
+    this->_setInnerHeight(1.);
+    this->_setOuterHeight(1.);
     this->setNeedsSurface(true);
     this->setNeedsLayout(true);
     this->setDirty(true);
