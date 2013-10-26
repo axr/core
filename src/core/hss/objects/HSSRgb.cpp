@@ -259,5 +259,5 @@ QSharedPointer<HSSValue> HSSRgb::_computeChannelValue(QSharedPointer<HSSParserNo
             break;
     }
 
-    return HSSValue::valueFromParserNode(this->getController(), QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(ret, this->getController())), this->getThisObj(), this->getScope());
+    return HSSValue::valueFromParserNode(this->getController(), QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(ret, this->getController())), parserNode->getSpecificity(), this->getThisObj(), this->getScope());
 }

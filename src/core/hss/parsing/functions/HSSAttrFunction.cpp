@@ -173,7 +173,7 @@ QSharedPointer<HSSObject> HSSAttrFunction::_evaluate()
         AXRWarning("HSSAttrFunction", AXRString("attr(%1) of %2 did not select any elements").arg(this->attributeName).arg(selectorChainStrings.join(", "))).raise();
         this->_stringValue = AXRString();
     }
-    this->_value = HSSValue::valueFromParserNode(this->getController(), HSSStringConstant::stringToConstant(this->_stringValue, this->getController()), this->getThisObj(), this->scope);
+    this->_value = HSSValue::valueFromParserNode(this->getController(), HSSStringConstant::stringToConstant(this->_stringValue, this->getController()), this->getSpecificity(), this->getThisObj(), this->scope);
     return this->_value;
 }
 

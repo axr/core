@@ -1101,7 +1101,7 @@ QSharedPointer<HSSObject> HSSObject::computeValueObject(QSharedPointer<HSSParser
         thisObj = this->getThisObj();
         scope = this->getScope();
     }
-    QSharedPointer<HSSObject> valueObj = HSSValue::valueFromParserNode(this->getController(), parserNode, thisObj, scope);
+    QSharedPointer<HSSObject> valueObj = HSSValue::valueFromParserNode(this->getController(), parserNode, parserNode->getSpecificity(), thisObj, scope);
     return valueObj;
 }
 

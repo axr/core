@@ -263,7 +263,7 @@ void HSSRefFunction::valueChanged(const AXRString target, const AXRString source
                     }
 
                     case HSSParserNodeTypeExpression:
-                        ret = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate(), this->getController()), this->getThisObj(), this->scope);
+                        ret = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate(), this->getController()), parserNode->getSpecificity(), this->getThisObj(), this->scope);
                         break;
 
                     default:
@@ -369,7 +369,7 @@ QSharedPointer<HSSObject> HSSRefFunction::_getValueByPath(QSharedPointer<HSSObje
                         }
 
                         case HSSParserNodeTypeExpression:
-                            ret = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate(), this->getController()), this->getThisObj(), this->scope);
+                            ret = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate(), this->getController()), parserNode->getSpecificity(), this->getThisObj(), this->scope);
                             break;
 
                         default:

@@ -60,9 +60,10 @@
 
 using namespace AXR;
 
-QSharedPointer<HSSValue> HSSValue::valueFromParserNode(AXRController * controller, QSharedPointer<HSSParserNode> parserNode, QSharedPointer<HSSDisplayObject> thisObj, QSharedPointer<HSSSimpleSelection> scope)
+QSharedPointer<HSSValue> HSSValue::valueFromParserNode(AXRController * controller, QSharedPointer<HSSParserNode> parserNode, HSSUnit specificity, QSharedPointer<HSSDisplayObject> thisObj, QSharedPointer<HSSSimpleSelection> scope)
 {
     QSharedPointer<HSSValue> valueObj = QSharedPointer<HSSValue>(new HSSValue(controller));
+    valueObj->setSpecificity(specificity);
     valueObj->setValue(parserNode);
     valueObj->setThisObj(thisObj);
     valueObj->setScope(scope);

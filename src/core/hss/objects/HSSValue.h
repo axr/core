@@ -59,7 +59,7 @@ namespace AXR
          *  @param controller   A pointer to the controller
          *  @param parserNode   The value to be used
          */
-        static QSharedPointer<HSSValue> valueFromParserNode(AXRController * controller, QSharedPointer<HSSParserNode> parserNode, QSharedPointer<HSSDisplayObject> thisObj, QSharedPointer<HSSSimpleSelection> scope);
+        static QSharedPointer<HSSValue> valueFromParserNode(AXRController * controller, QSharedPointer<HSSParserNode> parserNode, HSSUnit specificity, QSharedPointer<HSSDisplayObject> thisObj, QSharedPointer<HSSSimpleSelection> scope);
         /**
          *  Constructor for HSSValue objects.
          *  @param controller   A pointer to the controller
