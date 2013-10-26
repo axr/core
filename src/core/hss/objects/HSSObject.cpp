@@ -260,6 +260,7 @@ HSSObject::HSSObject(HSSObjectType type, AXRController * controller)
     this->axrController = controller;
     this->_hostProperty = "";
     this->_specificity = 0.0;
+    this->_isDefaultPropertyPathObject = false;
 }
 
 HSSObject::HSSObject(const HSSObject & orig)
@@ -274,6 +275,7 @@ HSSObject::HSSObject(const HSSObject & orig)
     this->shorthandIndex = orig.shorthandIndex;
     this->_hostProperty = orig._hostProperty;
     this->_specificity = orig._specificity;
+    this->_isDefaultPropertyPathObject = orig._isDefaultPropertyPathObject;
 
     //copy the shorthand list
     Q_FOREACH(AXRString value, orig.shorthandProperties)
@@ -640,9 +642,8 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
             it.next();
             AXRString propertyName = it.key();
             QSharedPointer<HSSObject> theObj = it.value();
-            this->setComputed(propertyName, theObj);
-            //set the stack value too, so that it won't get overridden by the default
             this->setStackValue(propertyName, theObj);
+            this->setComputed(propertyName, theObj);
         }
     }
     else
@@ -949,7 +950,17 @@ void HSSObject::setStackValue(AXRString propertyName, QSharedPointer<HSSObject> 
     if (!theObject) return;
     if (this->_stackValues.contains(propertyName))
     {
-        if (theObject->getSpecificity() >= this->_stackValues[propertyName]->getSpecificity())
+        QSharedPointer<HSSObject> current = this->_stackValues[propertyName];
+        if (current->isDefaultPropertyPathObject())
+        {
+            const QVector<QSharedPointer<HSSPropertyDefinition> > & modifiers = current->modifierGet(propertyName);
+            Q_FOREACH(const QSharedPointer<HSSPropertyDefinition> & propDef, modifiers)
+            {
+                QSharedPointer<HSSPropertyPath> propPath = propDef->getPaths().front();
+                propPath->setStackNode(theObject, propDef->getValue());
+            }
+        }
+        if (theObject->getSpecificity() >= current->getSpecificity())
         {
             this->_stackValues.insert(propertyName, theObject);
         }
@@ -1467,6 +1478,26 @@ void HSSObject::replace(QSharedPointer<HSSObject> theObj)
     this->notifyObservers("__impl_private__replace", theObj);
 }
 
+void HSSObject::replaceByPropertyPath(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj)
+{
+    const QVector<QSharedPointer<HSSPropertyDefinition> > & modifiers = this->modifierGet(source);
+    Q_FOREACH(const QSharedPointer<HSSPropertyDefinition> & propDef, modifiers)
+    {
+        QSharedPointer<HSSPropertyPath> propPath = propDef->getPaths().front();
+        propPath->applyModifier(theObj, propDef->getValue());
+    }
+}
+
+bool HSSObject::isDefaultPropertyPathObject() const
+{
+    return this->_isDefaultPropertyPathObject;
+}
+
+void HSSObject::setDefaultPropertyPathObject(bool newValue)
+{
+    this->_isDefaultPropertyPathObject = newValue;
+}
+
 void HSSObject::objDefRulesAdd(QSharedPointer<HSSRule> rule)
 {
     this->_objDefRules.push_back(rule);
@@ -1475,4 +1506,29 @@ void HSSObject::objDefRulesAdd(QSharedPointer<HSSRule> rule)
 QVector<QSharedPointer<HSSRule> > HSSObject::getObjDefRules() const
 {
     return this->_objDefRules;
+}
+
+void HSSObject::modifierAdd(AXRString propertyName, QSharedPointer<HSSPropertyDefinition> propertyDef)
+{
+    if (this->_modifiers.contains(propertyName))
+    {
+        QVector<QSharedPointer<HSSPropertyDefinition> > vector = this->_modifiers[propertyName];
+        vector.push_back(propertyDef);
+        this->_modifiers.insert(propertyName, vector);
+    }
+    else
+    {
+        QVector<QSharedPointer<HSSPropertyDefinition> > vector;
+        vector.push_back(propertyDef);
+        this->_modifiers.insert(propertyName, vector);
+    }
+}
+
+QVector<QSharedPointer<HSSPropertyDefinition> > HSSObject::modifierGet(AXRString propertyName) const
+{
+    if (this->_modifiers.contains(propertyName))
+    {
+        return this->_modifiers[propertyName];
+    }
+    return QVector<QSharedPointer<HSSPropertyDefinition> >();
 }

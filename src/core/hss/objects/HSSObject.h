@@ -67,6 +67,7 @@ namespace AXR
     class HSSDisplayObject;
     class HSSParserNode;
     class HSSPercentageConstant;
+    class HSSPropertyDefinition;
     class HSSRule;
     class HSSSimpleSelection;
     class HSSSimpleSelector;
@@ -351,6 +352,7 @@ namespace AXR
         QSharedPointer<HSSObject> inheritValue(AXRString inheritProperty, AXRString hostProperty);
         virtual void propertyChanged(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj);
         virtual void replace(QSharedPointer<HSSObject> theObj);
+        void replaceByPropertyPath(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj);
 
         /**
          *  Getter for the host property.
@@ -378,6 +380,11 @@ namespace AXR
 
         void objDefRulesAdd(QSharedPointer<HSSRule> rule);
         QVector<QSharedPointer<HSSRule> > getObjDefRules() const;
+
+        void modifierAdd(AXRString propertyName, QSharedPointer<HSSPropertyDefinition> propertyDef);
+        QVector<QSharedPointer<HSSPropertyDefinition> > modifierGet(AXRString propertyName) const;
+        bool isDefaultPropertyPathObject() const;
+        void setDefaultPropertyPathObject(bool newValue);
 
     protected:
         QMap<AXRString, HSSAbstractStackCallback*> _stackCallbacks;
@@ -412,6 +419,8 @@ namespace AXR
 
         QWeakPointer<HSSObject> ptr;
         HSSUnit _specificity;
+        bool _isDefaultPropertyPathObject;
+        QMap<AXRString, QVector<QSharedPointer<HSSPropertyDefinition> > > _modifiers;
     };
 }
 

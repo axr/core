@@ -97,6 +97,7 @@ namespace AXR
         bool equalTo(QSharedPointer<HSSParserNode> otherNode);
 
         void setStackNode(QSharedPointer<HSSObject> object, QSharedPointer<HSSParserNode> value,  bool initializing = true);
+        void applyModifier(QSharedPointer<HSSObject> object, QSharedPointer<HSSParserNode> value, bool initializing = true);
         query getComputed(QSharedPointer<HSSObject> object);
 
         /**
@@ -143,7 +144,10 @@ namespace AXR
          */
         QSharedPointer<HSSPropertyPathNode> popFront();
 
+        QSharedPointer<HSSPropertyPath> cloneFromCurrentIterator();
+
     private:
+        void _setModifiers(QSharedPointer<HSSObject> theObj, AXRString propertyName, QSharedPointer<HSSParserNode> value, QSharedPointer<HSSObject> baseObj);
         QVector<QSharedPointer<HSSPropertyPathNode> > _nodes;
         QVectorIterator<QSharedPointer<HSSPropertyPathNode> > _iterator;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

@@ -42,8 +42,10 @@
  ********************************************************************/
 
 #include "AXRLoggerManager.h"
+#include "HSSCallback.h"
 #include "HSSObject.h"
 #include "HSSObjectDefinition.h"
+#include "HSSPropertyDefinition.h"
 #include "HSSPropertyPath.h"
 #include "HSSPropertyPathNode.h"
 #include "HSSRefFunction.h"
@@ -134,6 +136,8 @@ void HSSPropertyPath::setStackNode(QSharedPointer<HSSObject> object, QSharedPoin
             AXRController * controller = this->getController();
             QSharedPointer<HSSObject> newObject = HSSObject::newObjectWithType(object->defaultObjectType(propertyName), controller);
             newObject->setDefaults();
+            newObject->setDefaultPropertyPathObject(true);
+            this->_setModifiers(newObject, propertyName, value, object);
             object->setStackValue(propertyName, newObject);
             this->setStackNode(newObject, value, false);
         }
@@ -157,7 +161,9 @@ void HSSPropertyPath::setStackNode(QSharedPointer<HSSObject> object, QSharedPoin
                     {
                         QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition>(parserNode);
                         objdef->applyStack();
-                        this->setStackNode(objdef->getObject(), value, false);
+                        QSharedPointer<HSSObject> remoteObj = objdef->getObject();
+                        this->_setModifiers(remoteObj, propertyName, value, object);
+                        this->setStackNode(remoteObj, value, false);
                     }
                     else if (parserNode->isA(HSSFunctionTypeRef))
                     {
@@ -165,20 +171,123 @@ void HSSPropertyPath::setStackNode(QSharedPointer<HSSObject> object, QSharedPoin
                         if (remoteObj)
                         {
                             this->setStackNode(remoteObj, value, false);
+                            this->_setModifiers(remoteObj, propertyName, value, object);
                             object->setStackValue(propertyName, remoteObj);
                         }
                         ///@todo observe for future changes. For that, the object definition needs to be cloned.
                     }
                 }
+                else
+                {
+                    this->_setModifiers(existingObject, propertyName, value, object);
+                    this->setStackNode(existingObject, value, false);
+                }
             }
             else
             {
+                this->_setModifiers(existingObject, propertyName, value, object);
                 this->setStackNode(existingObject, value, false);
             }
         }
         else
         {
             object->setStackNode(propertyName, value);
+            this->_iterator.toFront();
+        }
+    }
+}
+
+void HSSPropertyPath::_setModifiers(QSharedPointer<HSSObject> theObj, AXRString propertyName, QSharedPointer<HSSParserNode> value, QSharedPointer<HSSObject> baseObj)
+{
+    theObj->observe("__impl_private__replace", propertyName, baseObj.data(), new HSSValueChangedCallback<HSSObject>(baseObj.data(), &HSSObject::replaceByPropertyPath));
+    QSharedPointer<HSSPropertyDefinition> propDef(new HSSPropertyDefinition(this->getController()));
+    QVector<QSharedPointer<HSSPropertyPath> > paths;
+    paths.push_back(this->cloneFromCurrentIterator());
+    propDef->setPaths(paths);
+    propDef->setValue(value);
+    theObj->modifierAdd(propertyName, propDef);
+}
+
+void HSSPropertyPath::applyModifier(QSharedPointer<HSSObject> object, QSharedPointer<HSSParserNode> value, bool initializing)
+{
+    //short path
+    if (this->size() == 1)
+    {
+        AXRString propertyName = this->front()->getPropertyName();
+        QSharedPointer<HSSObject> theObj = object->computeValue(propertyName, value);
+        theObj->setSpecificity(value->getSpecificity());
+        object->setStackValue(propertyName, theObj);
+        object->setComputed(propertyName, theObj);
+        return;
+    }
+    //long path
+    if (initializing)
+    {
+        this->_iterator = QVectorIterator<QSharedPointer<HSSPropertyPathNode> >(this->_nodes);
+    }
+    QSharedPointer<HSSPropertyPathNode> ppn = this->_iterator.next();
+    AXRString propertyName = ppn->getPropertyName();
+    if(!object->getComputedValue(propertyName))
+    {
+        if (this->_iterator.hasNext())
+        {
+            AXRController * controller = this->getController();
+            QSharedPointer<HSSObject> newObject = HSSObject::newObjectWithType(object->defaultObjectType(propertyName), controller);
+            newObject->setDefaults();
+            this->applyModifier(newObject, value, false);
+            QSharedPointer<HSSObject> theObj = object->computeValue(propertyName, value);
+            newObject->setSpecificity(value->getSpecificity());
+            object->setStackValue(propertyName, newObject);
+            object->setComputed(propertyName, newObject);
+        }
+        else
+        {
+            QSharedPointer<HSSObject> theObj = object->computeValue(propertyName, value);
+            theObj->setSpecificity(value->getSpecificity());
+            object->setStackValue(propertyName, theObj);
+            object->setComputed(propertyName, theObj);
+            this->_iterator.toFront();
+        }
+    }
+    else
+    {
+        if (this->_iterator.hasNext())
+        {
+            QSharedPointer<HSSObject> existingObject = object->getComputedValue(propertyName);
+            if (existingObject->isA(HSSObjectTypeValue))
+            {
+                QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(existingObject)->getValue();
+                if (parserNode)
+                {
+                    if (parserNode->isA(HSSStatementTypeObjectDefinition))
+                    {
+                        QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition>(parserNode);
+                        objdef->applyStack();
+                        this->applyModifier(objdef->getObject(), value, false);
+                    }
+                    else if (parserNode->isA(HSSFunctionTypeRef))
+                    {
+                        QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSRefFunction>(parserNode)->evaluate();
+                        if (remoteObj)
+                        {
+                            this->applyModifier(remoteObj, value, false);
+                            object->setStackValue(propertyName, remoteObj);
+                            object->setComputed(propertyName, remoteObj);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                this->applyModifier(existingObject, value, false);
+            }
+        }
+        else
+        {
+            QSharedPointer<HSSObject> theObj = object->computeValue(propertyName, value);
+            theObj->setSpecificity(value->getSpecificity());
+            object->setStackValue(propertyName, theObj);
+            object->setComputed(propertyName, theObj);
             this->_iterator.toFront();
         }
     }
@@ -256,6 +365,18 @@ QSharedPointer<HSSPropertyPathNode> HSSPropertyPath::popFront()
     QSharedPointer<HSSPropertyPathNode> ppn = this->_nodes.front();
     this->_nodes.pop_front();
     return ppn;
+}
+
+QSharedPointer<HSSPropertyPath> HSSPropertyPath::cloneFromCurrentIterator()
+{
+    QSharedPointer<HSSPropertyPath> newPath(new HSSPropertyPath(this->getController()));
+    QVectorIterator<QSharedPointer<HSSPropertyPathNode> > currentIterator = this->_iterator;
+    while (this->_iterator.hasNext())
+    {
+        newPath->add(this->_iterator.next()->clone());
+    }
+    this->_iterator = currentIterator;
+    return newPath;
 }
 
 QSharedPointer<HSSClonable> HSSPropertyPath::cloneImpl() const
