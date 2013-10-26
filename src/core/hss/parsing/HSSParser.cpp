@@ -1551,12 +1551,6 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                             while (!done2)
                             {
                                 done2 = true;
-                                if (this->currentToken->isA(HSSDot))
-                                {
-                                    done2 = false;
-                                    this->readNextToken(true);
-                                }
-
                                 if (!this->currentToken->isA(HSSIdentifier))
                                 {
                                     AXRError("HSSParser", "Unexpected token after dot in property expression", this->currentFile->sourceUrl(), this->line, this->column).raise();
@@ -1565,6 +1559,11 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                                 AXRString prop = VALUE_TOKEN(this->currentToken)->getString();
                                 path->add(prop);
                                 this->readNextToken(true);
+                                if (this->currentToken->isA(HSSDot))
+                                {
+                                    done2 = false;
+                                    this->readNextToken(true);
+                                }
                             }
                         }
                         propertyPaths.append(path);
