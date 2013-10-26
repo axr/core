@@ -1476,7 +1476,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computePadding(QSharedPointer<HSSPar
             break;
     }
 
-    return this->computeObject(parserNode, "margin");
+    return this->computeObject(parserNode, "padding");
 }
 
 void HSSDisplayObject::notifyPadding(QSharedPointer<AXR::HSSObject> theObj)
