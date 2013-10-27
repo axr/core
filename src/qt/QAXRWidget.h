@@ -44,6 +44,7 @@
 #ifndef AXR_QAXRWIDGET
 #define AXR_QAXRWIDGET
 
+#include <limits>
 #include <QWidget>
 
 namespace AXR
