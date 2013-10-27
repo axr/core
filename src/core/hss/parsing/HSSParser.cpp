@@ -1753,6 +1753,11 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
             {
                 done = true;
 
+                if (!ret->getValue())
+                {
+                    AXRError("HSSParser", "No value set for the current property").raise();
+                    valid = false;
+                }
             }
             else
             {
