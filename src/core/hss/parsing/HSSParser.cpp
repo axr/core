@@ -1962,6 +1962,11 @@ QSharedPointer<HSSParserNode> HSSParser::readValue(AXRString propertyName, bool 
 
     valid = isValid;
 
+    if (!valid)
+    {
+        ret.clear();
+    }
+
     return ret;
 }
 
