@@ -291,6 +291,7 @@ namespace AXR
 
         //border
         QSharedPointer<HSSObject> getBorder() const;
+        QSharedPointer<HSSObject> computeBorder(QSharedPointer<HSSParserNode> parserNode);
 
         //visible
         bool getVisible() const;

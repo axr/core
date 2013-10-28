@@ -59,6 +59,7 @@
 #include "HSSFlag.h"
 #include "HSSFont.h"
 #include "HSSKeywordConstant.h"
+#include "HSSLineBorder.h"
 #include "HSSLinearGradient.h"
 #include "HSSMargin.h"
 #include "HSSMouseEvent.h"
@@ -146,6 +147,7 @@ void HSSDisplayObject::_initialize()
     this->addNotifyCallback("margin", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyMargin));
     this->addCallback("padding", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computePadding));
     this->addNotifyCallback("padding", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyPadding));
+    this->addCallback("border", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeBorder));
 }
 
 HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
@@ -1543,6 +1545,26 @@ HSSUnit HSSDisplayObject::getLeftPadding() const
 QSharedPointer<HSSObject> HSSDisplayObject::getBorder() const
 {
     return this->getComputedValue("border");
+}
+
+QSharedPointer<HSSObject> HSSDisplayObject::computeBorder(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeNumberConstant:
+        {
+            QSharedPointer<HSSNumberConstant> theNumber = qSharedPointerCast<HSSNumberConstant>(parserNode);
+            QSharedPointer<HSSLineBorder> newBorder = QSharedPointer<HSSLineBorder>(new HSSLineBorder(this->getController()));
+            newBorder->setSize(theNumber->getValue(), parserNode->getSpecificity());
+            return newBorder;
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    return this->computeObject(parserNode, "border");
 }
 
 bool HSSDisplayObject::getVisible() const

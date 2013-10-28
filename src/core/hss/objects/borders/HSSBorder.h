@@ -81,6 +81,7 @@ namespace AXR
 
         //size
         HSSUnit getSize() const;
+        void setSize(HSSUnit value, HSSUnit specificity);
         //position
         HSSBorderPosition getPosition() const;
         //segments

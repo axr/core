@@ -142,6 +142,11 @@ HSSUnit HSSBorder::getSize() const
     return 0.;
 }
 
+void HSSBorder::setSize(HSSUnit value, HSSUnit specificity)
+{
+    this->setComputedValue("size", value, specificity);
+}
+
 HSSBorderPosition HSSBorder::getPosition() const
 {
     QSharedPointer<HSSObject> computedValue = this->getComputedValue("position");
