@@ -357,7 +357,7 @@ QSharedPointer<HSSParserNode> HSSDisplayObject::getPercentageExpression(QSharedP
     }
 
     static QMap<AXRString, AXRString> thisMappings;
-    if (parentMappings.empty())
+    if (thisMappings.empty())
     {
         thisMappings.insert("anchorX", "width");
         thisMappings.insert("anchorY", "height");
