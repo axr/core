@@ -232,7 +232,6 @@ namespace AXR
         void setShorthandIndex(size_t newValue);
 
         //isA
-        void stackIsA(QSharedPointer<HSSParserNode> parserNode);
         void setIsA(QSharedPointer<HSSObject> theObj);
         void listenIsA(QSharedPointer<HSSObject> theObj);
         void isAChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);

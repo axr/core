@@ -317,7 +317,6 @@ HSSObject::HSSObject(const HSSObject & orig)
 
 void HSSObject::_initialize()
 {
-    this->addCallback("isA", new HSSStackCallback<HSSObject>(this, &HSSObject::stackIsA));
     this->addCallback("isA", new HSSObserveCallback<HSSObject>(this, &HSSObject::setIsA));
     this->addListenCallback("isA", new HSSObserveCallback<HSSObject>(this, &HSSObject::listenIsA));
 }
@@ -571,59 +570,45 @@ void HSSObject::setShorthandIndex(size_t newValue)
     }
 }
 
-void HSSObject::stackIsA(QSharedPointer<HSSParserNode> parserNode)
-{
-    switch (parserNode->getType())
-    {
-        case HSSParserNodeTypeObjectNameConstant:
-        {
-            try
-            {
-                QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (parserNode);
-                QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
-                std::deque<QSharedPointer<HSSPropertyDefinition> > properties = objdef->getProperties();
-
-                for (size_t i = 0; i < properties.size(); ++i)
-                {
-                    QVector<QSharedPointer<HSSPropertyPath> > paths = properties[i]->getPaths();
-                    Q_FOREACH(QSharedPointer<HSSPropertyPath> path, paths)
-                    {
-                        path->setStackNode(this->shared_from_this(), properties[i]->getValue()->clone());
-                    }
-                }
-            }
-            catch (const AXRError &e)
-            {
-                e.raise();
-            }
-
-            break;
-        }
-
-        case HSSParserNodeTypeFunctionCall:
-        {
-            this->setStackValue("isA", this->computeValue("isA", parserNode));
-        }
-
-        default:
-            break;
-    }
-}
-
 void HSSObject::setIsA(QSharedPointer<HSSObject> theObj)
 {
     if (theObj->isA(HSSObjectTypeValue))
     {
         QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
-        if (parserNode->isA(HSSFunctionTypeRef))
+        switch (parserNode->getType())
         {
-            QSharedPointer<HSSRefFunction> refFunction = qSharedPointerCast<HSSRefFunction>(parserNode);
-            QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSRefFunction>(refFunction)->evaluate();
-            if (remoteObj)
+            case HSSParserNodeTypeObjectNameConstant:
             {
-                remoteObj->setSpecificity(theObj->getSpecificity());
-                this->_setIsA(remoteObj);
+                try
+                {
+                    QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (parserNode);
+                    QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
+                    objdef->applyStack();
+                    objdef->applyRules();
+                    this->_setIsA(objdef->getObject());
+                }
+                catch (const AXRError &e)
+                {
+                    e.raise();
+                }
+                break;
             }
+            case HSSParserNodeTypeFunctionCall:
+            {
+                if (parserNode->isA(HSSFunctionTypeRef))
+                {
+                    QSharedPointer<HSSRefFunction> refFunction = qSharedPointerCast<HSSRefFunction>(parserNode);
+                    QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSRefFunction>(refFunction)->evaluate();
+                    if (remoteObj)
+                    {
+                        remoteObj->setSpecificity(theObj->getSpecificity());
+                        this->_setIsA(remoteObj);
+                    }
+                }
+                break;
+            }
+            default:
+                break;
         }
     }
     else
