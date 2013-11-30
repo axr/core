@@ -285,6 +285,7 @@ namespace AXR
         bool equalTo(QSharedPointer<HSSParserNode> otherNode);
 
         void removeFromDisplayObjects();
+        void removeFromDisplayObject(QSharedPointer<HSSDisplayObject> theDO);
 
         void setSpecificity(HSSUnit newValue);
 

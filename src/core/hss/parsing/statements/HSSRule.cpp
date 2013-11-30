@@ -411,29 +411,33 @@ void HSSRule::removeFromDisplayObjects()
     Q_FOREACH(QWeakPointer<HSSDisplayObject> weakDO, this->appliedTo)
     {
         QSharedPointer<HSSDisplayObject> theDO = weakDO.toStrongRef();
-        for (int i = 0, size = theDO->rulesSize(); i<size; ++i)
+        this->removeFromDisplayObject(theDO);
+    }
+}
+
+void HSSRule::removeFromDisplayObject(QSharedPointer<HSSDisplayObject> theDO)
+{
+    for (int i = 0, size = theDO->rulesSize(); i<size; ++i)
+    {
+        QSharedPointer<HSSRule> remoteRule = theDO->rulesGet(i);
+        if (this->clonedFromSameRule(remoteRule))
         {
-            QSharedPointer<HSSRule> remoteRule = theDO->rulesGet(i);
-            if (this->clonedFromSameRule(remoteRule))
+            theDO->rulesRemove(i);
+            --i;
+            --size;
+            if (this->instruction)
             {
-                theDO->rulesRemove(i);
-                --i;
-                --size;
-                if (this->instruction)
+                switch (this->instruction->getInstructionType())
                 {
-                    switch (this->instruction->getInstructionType())
+                    case HSSNewInstruction:
                     {
-                        case HSSNewInstruction:
-                        {
-                            theDO->removeFromParent();
-                            break;
-                        }
-
-                        default:
-                            break;
+                        theDO->removeFromParent();
+                        break;
                     }
-                }
 
+                    default:
+                        break;
+                }
             }
         }
     }
