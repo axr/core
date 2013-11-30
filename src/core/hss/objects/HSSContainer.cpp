@@ -619,6 +619,7 @@ void HSSContainer::_setIsA(QSharedPointer<HSSObject> theObj)
     Q_FOREACH(QSharedPointer<HSSRule> rule, newRules){
         rule->setSpecificity(theObj->getSpecificity());
         this->_appliedIsARules.push_back(rule);
+        this->objDefRulesAdd(rule);
         AXRController * controller = this->getController();
         controller->currentContextPush(thisContainer);
         controller->recursiveMatchRulesToDisplayObjects(rule, thisContainer->getChildren(), thisContainer, true);
