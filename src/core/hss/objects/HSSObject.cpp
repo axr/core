@@ -630,7 +630,6 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
             it.next();
             AXRString propertyName = it.key();
             QSharedPointer<HSSObject> isAObj = it.value();
-            this->setStackValue(propertyName, isAObj);
             this->setComputed(propertyName, isAObj);
         }
     }
@@ -887,11 +886,25 @@ void HSSObject::fillWithDefaults()
         it.next();
         AXRString propertyName = it.key();
         QSharedPointer<HSSObject> defaultValue = it.value();
-        if (!this->_stackValues.contains(propertyName))
+        if (this->needsDefault(propertyName))
         {
             this->setComputed(propertyName, defaultValue);
         }
     }
+}
+
+bool HSSObject::needsDefault(AXRString propertyName)
+{
+    if (this->_needsDefault.contains(propertyName))
+    {
+        return this->_needsDefault[propertyName];
+    }
+    return true;
+}
+
+void HSSObject::setNeedsDefault(AXRString propertyName, bool value)
+{
+    this->_needsDefault.insert(propertyName, value);
 }
 
 bool HSSObject::hasStackValue(AXRString property) const
@@ -951,11 +964,13 @@ void HSSObject::setStackValue(AXRString propertyName, QSharedPointer<HSSObject> 
         if (theObject->getSpecificity() >= current->getSpecificity())
         {
             this->_stackValues.insert(propertyName, theObject);
+            this->setNeedsDefault(propertyName, false);
         }
     }
     else
     {
         this->_stackValues.insert(propertyName, theObject);
+        this->setNeedsDefault(propertyName, false);
     }
 }
 

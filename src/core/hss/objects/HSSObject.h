@@ -319,6 +319,8 @@ namespace AXR
         void setDefault(AXRString propertyName, AXRString value);
         void setDefaultKw(AXRString propertyName, AXRString value);
         virtual void fillWithDefaults();
+        bool needsDefault(AXRString propertyName);
+        void setNeedsDefault(AXRString propertyName, bool value);
         bool hasStackValue(AXRString property) const;
         QSharedPointer<HSSObject> getStackValue(AXRString property) const;
         void clearStackValues();
@@ -421,6 +423,7 @@ namespace AXR
         HSSUnit _specificity;
         bool _isDefaultPropertyPathObject;
         QMap<AXRString, QVector<QSharedPointer<HSSPropertyDefinition> > > _modifiers;
+        QMap<AXRString, bool> _needsDefault;
     };
 }
 
