@@ -317,7 +317,7 @@ void HSSContainer::add(QSharedPointer<HSSDisplayObject> child)
         this->children->add(child);
     }
     this->allChildren->add(child);
-    this->notifyObservers("__impl_private__treeChange", sharedThis);
+    this->changeRulesNotifyAdd(child);
 }
 
 void HSSContainer::remove(size_t index)
@@ -343,6 +343,7 @@ void HSSContainer::remove(size_t index)
         if (child->getIndex() == index)
         {
             it2 = this->allChildren->erase(it2);
+            this->changeRulesNotifyRemove(child);
         }
         else
         {
@@ -351,7 +352,33 @@ void HSSContainer::remove(size_t index)
     }
 
     this->resetChildrenIndexes();
-    this->notifyObservers("__impl_private__treeChange", this->shared_from_this());
+}
+
+void HSSContainer::changeRulesAdd(QSharedPointer<HSSRule> theRule)
+{
+    if (!this->_changeRules.contains(theRule))
+    {
+        this->_changeRules.append(theRule);
+    }
+}
+
+void HSSContainer::changeRulesNotifyAdd(QSharedPointer<HSSDisplayObject> theDO)
+{
+    Q_FOREACH(const QSharedPointer<HSSRule> & theRule, this->_changeRules)
+    {
+        QSharedPointer<HSSSimpleSelection> theScope(new HSSSimpleSelection());
+        theScope->add(theDO);
+        this->getController()->recursiveMatchRulesToDisplayObjects(theRule, theScope, this->shared_from_this(), true);
+        this->getController()->recursiveSetRuleState(theRule, theScope, this->shared_from_this(), HSSRuleStateActivate);
+    }
+}
+
+void HSSContainer::changeRulesNotifyRemove(QSharedPointer<HSSDisplayObject> theDO)
+{
+    Q_FOREACH(const QSharedPointer<HSSRule> & theRule, this->_changeRules)
+    {
+        theRule->removeFromDisplayObject(theDO);
+    }
 }
 
 void HSSContainer::clear()

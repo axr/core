@@ -131,6 +131,10 @@ namespace AXR
          */
         void remove(size_t index);
 
+        void changeRulesAdd(QSharedPointer<HSSRule> theRule);
+        void changeRulesNotifyAdd(QSharedPointer<HSSDisplayObject> theDO);
+        void changeRulesNotifyRemove(QSharedPointer<HSSDisplayObject> theDO);
+
         /**
          *  Removes all children from this container.
          */
@@ -259,6 +263,7 @@ namespace AXR
         {
             return a->getAlignY() < b->getAlignY();
         }
+        QList<QSharedPointer<HSSRule> > _changeRules;
     };
 }
 

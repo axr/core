@@ -321,7 +321,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
                 if (applyingInstructions)
                 {
                     //we observe the parent for dom changes
-                    container->observe("__impl_private__treeChange", "__impl_private__reapplyRules", rule.data(), new HSSValueChangedCallback<HSSRule>(rule.data(), &HSSRule::treeChanged));
+                    container->changeRulesAdd(rule);
                 }
                 rule->addOriginalScope(scope->joinAll());
 

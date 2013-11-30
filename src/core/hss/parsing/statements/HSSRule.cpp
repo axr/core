@@ -306,7 +306,7 @@ void HSSRule::treeChanged(const AXRString target, const AXRString source, const 
     if (thisObj->isA(HSSObjectTypeContainer))
     {
         QSharedPointer<HSSContainer> thisContainer = HSSContainer::asContainer(thisObj);
-        theController->recursiveMatchRulesToDisplayObjects(this->shared_from_this(), thisContainer->getChildren(), thisContainer, false);
+        theController->recursiveMatchRulesToDisplayObjects(this->shared_from_this(), thisContainer->getChildren(), thisContainer, true);
     }
 }
 
