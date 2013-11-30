@@ -636,7 +636,7 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
     }
     else
     {
-        AXRError("HSSObject", "Object referenced by isA property is not of the same object type or does not exist.");
+        AXRError("HSSObject", "Object referenced by isA property is not of the same object type or does not exist.").raise();
     }
 }
 
