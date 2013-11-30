@@ -324,7 +324,7 @@ namespace AXR
         void clearStackValues();
         void setStackNode(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
         void setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject);
-        void appendStackValue(AXRString propertyName, QSharedPointer<HSSObject> parserNode);
+        void appendStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject);
         virtual void commitStackValues();
         virtual QSharedPointer<HSSObject> computeValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode);
         QSharedPointer<HSSObject> computeObject(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
