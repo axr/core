@@ -255,6 +255,7 @@ HSSObject::HSSObject(HSSObjectType type, AXRController * controller)
     this->_initialize();
     this->_isNamed = false;
     this->name = "";
+    this->_debugName = "unnamed";
     this->type = type;
     this->shorthandIndex = 0;
     this->axrController = controller;
@@ -267,6 +268,7 @@ HSSObject::HSSObject(const HSSObject & orig)
 {
     this->_initialize();
     this->name = orig.name;
+    this->_debugName = orig._debugName;
     this->type = orig.type;
     this->_isNamed = orig._isNamed;
     this->scope = orig.scope;
@@ -479,6 +481,7 @@ void HSSObject::setName(AXRString newName)
     axr_log(LoggerChannelGeneralSpecific, "HSSObject: setting name to " + newName);
     this->name = newName;
     this->_isNamed = true;
+    this->_debugName = newName.toStdString();
 }
 
 AXRString HSSObject::getName()

@@ -99,7 +99,6 @@ void HSSDisplayObject::_initialize()
     this->_needsRereadRules = true;
     this->_needsSurface = true;
     this->_needsLayout = true;
-    this->_debugName = "unnamed";
     this->_rulesIndex = 0;
 
     this->x = this->y = this->globalX = this->globalY = 0.;

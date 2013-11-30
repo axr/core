@@ -1307,6 +1307,7 @@ QSharedPointer<HSSObjectDefinition> HSSParser::readObjectDefinition(AXRString pr
     {
     case HSSIdentifier:
         obj->setName(VALUE_TOKEN(this->currentToken)->getString());
+        obj->_debugName = VALUE_TOKEN(this->currentToken)->getString().toStdString();
         axr_log(LoggerChannelHSSParser, "HSSParser: Setting its name to " + VALUE_TOKEN(this->currentToken)->getString());
         this->readNextToken();
         break;

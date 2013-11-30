@@ -81,6 +81,7 @@ namespace AXR
     class AXR_API HSSObject : public HSSObservable, public HSSClonable, public QObject
     {
     public:
+        std::string _debugName;
         /**
          *  Convenience iterator for vectors of shared pointers to this kind of object.
          */
