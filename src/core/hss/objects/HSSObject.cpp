@@ -629,9 +629,9 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
         {
             it.next();
             AXRString propertyName = it.key();
-            QSharedPointer<HSSObject> theObj = it.value();
-            this->setStackValue(propertyName, theObj);
-            this->setComputed(propertyName, theObj);
+            QSharedPointer<HSSObject> isAObj = it.value();
+            this->setStackValue(propertyName, isAObj);
+            this->setComputed(propertyName, isAObj);
         }
     }
     else
