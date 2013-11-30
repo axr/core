@@ -1418,13 +1418,13 @@ void HSSDisplayObject::notifyPadding(QSharedPointer<AXR::HSSObject> theObj)
         HSSUnit right = thePadding->getRight();
         if (left > 0 || right > 0)
         {
-            this->_setInnerWidth(theObj->getSpecificity());
+            this->_setInnerWidth(1.);
         }
         HSSUnit top = thePadding->getTop();
         HSSUnit bottom = thePadding->getBottom();
         if (top > 0 || bottom > 0)
         {
-            this->_setInnerHeight(theObj->getSpecificity());
+            this->_setInnerHeight(1.);
         }
     }
     this->notifyObservers("padding", theObj);
