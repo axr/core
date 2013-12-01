@@ -620,11 +620,13 @@ void HSSContainer::_setIsA(QSharedPointer<HSSObject> theObj)
         rule->setSpecificity(theObj->getSpecificity());
         this->_appliedIsARules.push_back(rule);
         this->objDefRulesAdd(rule);
-        AXRController * controller = this->getController();
-        controller->currentContextPush(thisContainer);
-        controller->recursiveMatchRulesToDisplayObjects(rule, thisContainer->getChildren(), thisContainer, true);
-        controller->recursiveSetRuleState(rule, thisContainer->getChildren(), thisContainer, HSSRuleStateOn);
-        controller->currentContextPop();
+        if (this->expectsIsAIncluded()) {
+            AXRController * controller = this->getController();
+            controller->currentContextPush(thisContainer);
+            controller->recursiveMatchRulesToDisplayObjects(rule, thisContainer->getChildren(), thisContainer, true);
+            controller->recursiveSetRuleState(rule, thisContainer->getChildren(), thisContainer, HSSRuleStateOn);
+            controller->currentContextPop();
+        }
     }
 }
 

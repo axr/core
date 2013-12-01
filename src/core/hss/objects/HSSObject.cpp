@@ -626,13 +626,17 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
 {
     if (theObj && theObj->type == this->type)
     {
-        QMapIterator<AXRString, QSharedPointer<HSSObject> > it(theObj->_stackValues);
+        QMapIterator<AXRString, QSharedPointer<HSSObject> > it(theObj->_computedValues);
         while (it.hasNext())
         {
             it.next();
             AXRString propertyName = it.key();
             QSharedPointer<HSSObject> isAObj = it.value();
-            this->setComputed(propertyName, isAObj);
+            if (!this->expectsIsAIncluded() || propertyName != "isA")
+            {
+                this->setComputed(propertyName, isAObj);
+            }
+            this->setNeedsDefault(propertyName, false);
         }
     }
     else

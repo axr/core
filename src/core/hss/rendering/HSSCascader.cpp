@@ -94,6 +94,7 @@ void HSSCascader::visit(HSSContainer &container)
         container.setDefaults();
         container.clearProperties();
         container.rulesInit();
+        container.setExpectsIsAIncluded(true);
         while (container._needsRereadRules)
         {
             container._needsRereadRules = false;
@@ -165,6 +166,7 @@ void HSSCascader::visit(HSSTextBlock &textBlock)
     if (textBlock._needsRereadRules)
     {
         textBlock.setDefaults();
+        textBlock.setExpectsIsAIncluded(true);
         textBlock.commitStackValues();
         textBlock.fillWithDefaults();
         textBlock._needsRereadRules = false;
