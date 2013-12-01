@@ -795,6 +795,7 @@ void HSSObject::clearProperties()
         QSharedPointer<HSSObject> theObj = it.value();
         theObj->setSpecificity(0);
     }
+    this->_needsDefault.clear();
 }
 
 void HSSObject::addCallback(AXRString name, HSSAbstractStackCallback *callback)
