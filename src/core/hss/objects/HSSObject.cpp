@@ -262,6 +262,7 @@ HSSObject::HSSObject(HSSObjectType type, AXRController * controller)
     this->_hostProperty = "";
     this->_specificity = 0.0;
     this->_isDefaultPropertyPathObject = false;
+    this->_expectsIsAIncluded = false;
 }
 
 HSSObject::HSSObject(const HSSObject & orig)
@@ -278,6 +279,7 @@ HSSObject::HSSObject(const HSSObject & orig)
     this->_hostProperty = orig._hostProperty;
     this->_specificity = orig._specificity;
     this->_isDefaultPropertyPathObject = orig._isDefaultPropertyPathObject;
+    this->_expectsIsAIncluded = orig._expectsIsAIncluded;
 
     //copy the shorthand list
     Q_FOREACH(AXRString value, orig.shorthandProperties)
@@ -1499,6 +1501,16 @@ bool HSSObject::isDefaultPropertyPathObject() const
 void HSSObject::setDefaultPropertyPathObject(bool newValue)
 {
     this->_isDefaultPropertyPathObject = newValue;
+}
+
+bool HSSObject::expectsIsAIncluded() const
+{
+    return this->_expectsIsAIncluded;
+}
+
+void HSSObject::setExpectsIsAIncluded(bool value)
+{
+    this->_expectsIsAIncluded = value;
 }
 
 void HSSObject::objDefRulesAdd(QSharedPointer<HSSRule> rule)

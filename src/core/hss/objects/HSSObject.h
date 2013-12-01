@@ -388,6 +388,9 @@ namespace AXR
         bool isDefaultPropertyPathObject() const;
         void setDefaultPropertyPathObject(bool newValue);
 
+        bool expectsIsAIncluded() const;
+        void setExpectsIsAIncluded(bool value);
+
     protected:
         QMap<AXRString, HSSAbstractStackCallback*> _stackCallbacks;
         QMap<AXRString, HSSAbstractComputeCallback*> _computeCallbacks;
@@ -424,6 +427,7 @@ namespace AXR
         bool _isDefaultPropertyPathObject;
         QMap<AXRString, QVector<QSharedPointer<HSSPropertyDefinition> > > _modifiers;
         QMap<AXRString, bool> _needsDefault;
+        bool _expectsIsAIncluded;
     };
 }
 
