@@ -725,11 +725,14 @@ void HSSDisplayObject::notifyWidth(QSharedPointer<HSSObject> theObj)
             this->_hasOwnWidth = true;
         }
     }
-    this->_setInnerWidth(1.);
-    this->_setOuterWidth(1.);
-    this->setNeedsSurface(true);
-    this->setNeedsLayout(true);
-    this->setDirty(true);
+    if (this->expectsIsAIncluded())
+    {
+        this->_setInnerWidth(1.);
+        this->_setOuterWidth(1.);
+        this->setNeedsSurface(true);
+        this->setNeedsLayout(true);
+        this->setDirty(true);
+    }
     this->notifyObservers("width", theObj);
 }
 
@@ -741,12 +744,15 @@ void HSSDisplayObject::widthChanged(const AXRString target, const AXRString sour
     //        this->width = floor(*(HSSUnit*) data);
     //    }
 
-    this->_setInnerWidth(1.);
-    this->_setOuterWidth(1.);
+    if (this->expectsIsAIncluded())
+    {
+        this->_setInnerWidth(1.);
+        this->_setOuterWidth(1.);
 
-    this->setNeedsSurface(true);
-    this->setNeedsLayout(true);
-    this->setDirty(true);
+        this->setNeedsSurface(true);
+        this->setNeedsLayout(true);
+        this->setDirty(true);
+    }
     this->notifyObservers("width", this->getComputedValue("width"));
 }
 
@@ -815,26 +821,32 @@ void HSSDisplayObject::notifyHeight(QSharedPointer<HSSObject> theObj)
             this->_hasOwnHeight = true;
         }
     }
-    this->_setInnerHeight(1.);
-    this->_setOuterHeight(1.);
-    this->setNeedsSurface(true);
-    this->setNeedsLayout(true);
-    this->setDirty(true);
+    if (this->expectsIsAIncluded())
+    {
+        this->_setInnerHeight(1.);
+        this->_setOuterHeight(1.);
+        this->setNeedsSurface(true);
+        this->setNeedsLayout(true);
+        this->setDirty(true);
+    }
     this->notifyObservers("height", theObj);
 }
 
 void HSSDisplayObject::heightChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
-    const QSharedPointer<HSSContainer> parent = this->getParent();
-    if (parent)
+    if (this->expectsIsAIncluded())
     {
-        parent->setNeedsLayout(true);
+        const QSharedPointer<HSSContainer> parent = this->getParent();
+        if (parent)
+        {
+            parent->setNeedsLayout(true);
+        }
+        this->_setInnerHeight(1.);
+        this->_setOuterHeight(1.);
+        this->setNeedsSurface(true);
+        this->setNeedsLayout(true);
+        this->setDirty(true);
     }
-    this->_setInnerHeight(1.);
-    this->_setOuterHeight(1.);
-    this->setNeedsSurface(true);
-    this->setNeedsLayout(true);
-    this->setDirty(true);
     this->notifyObservers("height", this->getComputedValue("height"));
 }
 
@@ -1353,7 +1365,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeMargin(QSharedPointer<HSSPars
 
 void HSSDisplayObject::notifyMargin(QSharedPointer<AXR::HSSObject> theObj)
 {
-    if (theObj->isA(HSSObjectTypeMargin))
+    if (theObj->isA(HSSObjectTypeMargin) && this->expectsIsAIncluded())
     {
         QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(theObj);
         HSSUnit left = theMargin->getLeft();
@@ -1411,7 +1423,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computePadding(QSharedPointer<HSSPar
 
 void HSSDisplayObject::notifyPadding(QSharedPointer<AXR::HSSObject> theObj)
 {
-    if (theObj->isA(HSSObjectTypeMargin))
+    if (theObj->isA(HSSObjectTypeMargin) && this->expectsIsAIncluded())
     {
         QSharedPointer<HSSMargin> thePadding = qSharedPointerCast<HSSMargin>(theObj);
         HSSUnit left = thePadding->getLeft();
