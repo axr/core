@@ -57,6 +57,7 @@
 #include "HSSLayoutLine.h"
 #include "HSSKeywordConstant.h"
 #include "HSSNumberConstant.h"
+#include "HSSMultipleValue.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSPercentageConstant.h"
@@ -564,17 +565,35 @@ bool HSSContainer::handleEvent(HSSInputEvent *event)
 
 void HSSContainer::_setIsA(QSharedPointer<HSSObject> theObj)
 {
-    HSSObject::_setIsA(theObj);
-    if (!theObj->isA(HSSObjectTypeContainer))
+    QVector<QSharedPointer<HSSRule> > newRuleSet;
+    if (theObj->isA(HSSObjectTypeMultipleValue))
     {
-        return;
+        Q_FOREACH(QSharedPointer<HSSObject> mvObj, qSharedPointerCast<HSSMultipleValue>(theObj)->getValues()){
+            Q_FOREACH(QSharedPointer<HSSRule> tmprule, mvObj->getObjDefRules()){
+                newRuleSet.push_back(tmprule);
+            }
+        }
+        Q_FOREACH(QSharedPointer<HSSObject> mvObj, qSharedPointerCast<HSSMultipleValue>(theObj)->getValues())
+        {
+            HSSObject::_setIsA(mvObj);
+        }
+    }
+    else
+    {
+        if (!theObj->isA(HSSObjectTypeContainer))
+        {
+            return;
+        }
+
+        newRuleSet = theObj->getObjDefRules();
+        HSSObject::_setIsA(theObj);
     }
 
     QSharedPointer<HSSContainer> thisContainer = qSharedPointerCast<HSSContainer>(this->shared_from_this());
-    //apply the rules
     QVector<QSharedPointer<HSSRule> > currentRules(this->_appliedIsARules);
     QVector<QSharedPointer<HSSRule> > newRules;
 
+    //find the new rules to add
     Q_FOREACH(QSharedPointer<HSSRule> rule, theObj->getObjDefRules()){
         bool found = false;
         Q_FOREACH(QSharedPointer<HSSRule> tmprule, currentRules)
@@ -590,10 +609,11 @@ void HSSContainer::_setIsA(QSharedPointer<HSSObject> theObj)
             newRules.push_back(rule);
         }
     }
+    //remove obsolete rules
     Q_FOREACH(QSharedPointer<HSSRule> tmprule, currentRules)
     {
         bool found = false;
-        Q_FOREACH(QSharedPointer<HSSRule> tmprule2, theObj->getObjDefRules())
+        Q_FOREACH(QSharedPointer<HSSRule> tmprule2, newRuleSet)
         {
             if (tmprule->equalTo(tmprule2))
             {

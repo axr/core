@@ -577,6 +577,11 @@ void HSSObject::setShorthandIndex(size_t newValue)
 
 void HSSObject::setIsA(QSharedPointer<HSSObject> theObj)
 {
+    this->_setIsA(theObj);
+}
+
+void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
+{
     if (theObj->isA(HSSObjectTypeValue))
     {
         QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
@@ -592,7 +597,7 @@ void HSSObject::setIsA(QSharedPointer<HSSObject> theObj)
                     objdef->applyRules();
                     QSharedPointer<HSSObject> remoteObj = objdef->getObject();
                     remoteObj->setSpecificity(theObj->getSpecificity());
-                    this->_setIsA(remoteObj);
+                    this->_applyIsAObject(remoteObj);
                 }
                 catch (const AXRError &e)
                 {
@@ -609,7 +614,7 @@ void HSSObject::setIsA(QSharedPointer<HSSObject> theObj)
                     if (remoteObj)
                     {
                         remoteObj->setSpecificity(theObj->getSpecificity());
-                        this->_setIsA(remoteObj);
+                        this->_applyIsAObject(remoteObj);
                     }
                 }
                 break;
@@ -620,11 +625,11 @@ void HSSObject::setIsA(QSharedPointer<HSSObject> theObj)
     }
     else
     {
-        this->_setIsA(theObj);
+        this->_applyIsAObject(theObj);
     }
 }
 
-void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
+void HSSObject::_applyIsAObject(QSharedPointer<HSSObject> theObj)
 {
     if (theObj && theObj->type == this->type)
     {
@@ -637,6 +642,10 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
             if (!this->expectsIsAIncluded() || propertyName != "isA")
             {
                 this->setComputed(propertyName, isAObj);
+            }
+            if (propertyName != "isA")
+            {
+                this->setStackValue(propertyName, isAObj);
             }
             this->setNeedsDefault(propertyName, false);
         }
@@ -952,7 +961,14 @@ void HSSObject::setStackNode(AXRString propertyName, QSharedPointer<AXR::HSSPars
         return;
     }
 
-    this->setStackValue(propertyName, this->computeValue(propertyName, parserNode));
+    if (propertyName == "isA")
+    {
+        this->appendStackValue(propertyName, this->computeValue(propertyName, parserNode));
+    }
+    else
+    {
+        this->setStackValue(propertyName, this->computeValue(propertyName, parserNode));
+    }
 }
 
 void HSSObject::setStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject)
