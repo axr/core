@@ -1525,6 +1525,11 @@ void HSSObject::objDefRulesAdd(QSharedPointer<HSSRule> rule)
     this->_objDefRules.push_back(rule);
 }
 
+void HSSObject::objDefRulesPrepend(QSharedPointer<HSSRule> rule)
+{
+    this->_objDefRules.push_front(rule);
+}
+
 QVector<QSharedPointer<HSSRule> > HSSObject::getObjDefRules() const
 {
     return this->_objDefRules;

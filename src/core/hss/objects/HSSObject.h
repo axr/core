@@ -381,6 +381,7 @@ namespace AXR
         HSSUnit getSpecificity() const;
 
         void objDefRulesAdd(QSharedPointer<HSSRule> rule);
+        void objDefRulesPrepend(QSharedPointer<HSSRule> rule);
         QVector<QSharedPointer<HSSRule> > getObjDefRules() const;
 
         void modifierAdd(AXRString propertyName, QSharedPointer<HSSPropertyDefinition> propertyDef);
