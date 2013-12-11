@@ -590,7 +590,9 @@ void HSSObject::setIsA(QSharedPointer<HSSObject> theObj)
                     QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
                     objdef->applyStack();
                     objdef->applyRules();
-                    this->_setIsA(objdef->getObject());
+                    QSharedPointer<HSSObject> remoteObj = objdef->getObject();
+                    remoteObj->setSpecificity(theObj->getSpecificity());
+                    this->_setIsA(remoteObj);
                 }
                 catch (const AXRError &e)
                 {
@@ -996,12 +998,14 @@ void HSSObject::appendStackValue(AXRString propertyName, QSharedPointer<HSSObjec
             {
                 QSharedPointer<HSSMultipleValue> multiVal = qSharedPointerCast<HSSMultipleValue> (stackValue);
                 multiVal->add(theObject);
+                multiVal->setSpecificity(theObject->getSpecificity());
             }
             else
             {
                 QSharedPointer<HSSMultipleValue> multiVal(new HSSMultipleValue(this->getController()));
                 multiVal->add(stackValue);
                 multiVal->add(theObject);
+                multiVal->setSpecificity(theObject->getSpecificity());
                 this->setStackValue(propertyName, multiVal);
             }
         }
@@ -1073,15 +1077,13 @@ QSharedPointer<HSSObject> HSSObject::computeObject(QSharedPointer<HSSParserNode>
         objdef->applyStack();
         objdef->applyRules();
         theObj = objdef->getObject();
+        theObj->setSpecificity(objdef->getSpecificity());
     }
     else
     {
         //no special handling, just wrap in a @value
         theObj = this->computeValueObject(parserNode, propertyName);
     }
-
-    //set the specificity
-    theObj->setSpecificity(parserNode->getSpecificity());
 
     return theObj;
 }

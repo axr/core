@@ -123,6 +123,8 @@ bool HSSObjectDefinition::equalTo(QSharedPointer<HSSParserNode> otherNode)
 
 void HSSObjectDefinition::applyStack()
 {
+    HSSUnit objDefSpecificity = this->getSpecificity();
+    HSSUnit specificity = 0.;
     this->prototype->clearProperties();
     this->prototype->setDefaults();
     Q_FOREACH(const QSharedPointer<HSSPropertyDefinition>& propertyDefinition, this->properties)
@@ -130,8 +132,10 @@ void HSSObjectDefinition::applyStack()
         QVector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
         Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propertyPaths){
             QSharedPointer<HSSParserNode> nodeValue = propertyDefinition->getValue();
+            nodeValue->setSpecificity(objDefSpecificity + (specificity * 0.000001));
             path->setStackNode(this->prototype, nodeValue);
         }
+        specificity += 1.;
     }
 }
 
@@ -143,6 +147,7 @@ void HSSObjectDefinition::applyRules()
         QSharedPointer<HSSDisplayObject> theDO = qSharedPointerCast<HSSDisplayObject>(this->prototype);
         Q_FOREACH(QSharedPointer<HSSRule> rule, this->_rules)
         {
+            rule->setSpecificity(this->getSpecificity());
             theDO->objDefRulesAdd(rule);
         }
     }
