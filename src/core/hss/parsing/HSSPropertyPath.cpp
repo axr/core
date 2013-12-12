@@ -205,7 +205,7 @@ void HSSPropertyPath::_setModifiers(QSharedPointer<HSSObject> theObj, AXRString 
     paths.push_back(this->cloneFromCurrentIterator());
     propDef->setPaths(paths);
     propDef->setValue(value);
-    baseObj->modifierAdd(propertyName, propDef);
+    theObj->modifierAdd(propertyName, propDef);
 }
 
 void HSSPropertyPath::applyModifier(QSharedPointer<HSSObject> object, QSharedPointer<HSSParserNode> value, bool initializing)

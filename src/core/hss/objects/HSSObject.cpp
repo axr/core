@@ -1508,7 +1508,8 @@ void HSSObject::replace(QSharedPointer<HSSObject> theObj)
 
 void HSSObject::replaceByPropertyPath(const AXRString target, const AXRString source, QSharedPointer<HSSObject> theObj)
 {
-    const QVector<QSharedPointer<HSSPropertyDefinition> > & modifiers = this->modifierGet(source);
+    QSharedPointer<HSSObject> currentValue = this->getComputedValue(source);
+    const QVector<QSharedPointer<HSSPropertyDefinition> > & modifiers = currentValue->modifierGet(source);
     Q_FOREACH(const QSharedPointer<HSSPropertyDefinition> & propDef, modifiers)
     {
         QSharedPointer<HSSPropertyPath> propPath = propDef->getPaths().front();
