@@ -880,6 +880,13 @@ QSharedPointer<HSSObject> HSSContainer::computeShape(QSharedPointer<HSSParserNod
             }
             break;
         }
+        case HSSParserNodeTypeNumberConstant:
+        {
+            QSharedPointer<HSSNumberConstant> theNum = qSharedPointerCast<HSSNumberConstant>(parserNode);
+            QSharedPointer<HSSRoundedRect> ret = QSharedPointer<HSSRoundedRect>(new HSSRoundedRect(this->getController()));
+            ret->stackCorners(theNum);
+            return ret;
+        }
 
         default:
             break;
