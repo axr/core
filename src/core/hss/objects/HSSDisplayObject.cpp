@@ -1351,7 +1351,9 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeMargin(QSharedPointer<HSSPars
         {
             QSharedPointer<HSSNumberConstant> theNumber = qSharedPointerCast<HSSNumberConstant>(parserNode);
             QSharedPointer<HSSMargin> newMargin = QSharedPointer<HSSMargin>(new HSSMargin(this->getController()));
-            newMargin->setSize(theNumber->getValue(), parserNode->getSpecificity());
+            HSSUnit specificity = parserNode->getSpecificity();
+            newMargin->setSize(theNumber->getValue(), specificity);
+            newMargin->setSpecificity(specificity);
             return newMargin;
             break;
         }
