@@ -78,6 +78,7 @@ QSharedPointer<HSSClonable> HSSRectangle::cloneImpl() const
 HSSRectangle::~HSSRectangle()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSRectangle: destructing rectangle object");
+    this->cleanTrackedObservers();
 }
 
 AXRString HSSRectangle::toString()

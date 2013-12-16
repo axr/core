@@ -102,6 +102,7 @@ QSharedPointer<HSSClonable> HSSRoundedRect::cloneImpl() const
 HSSRoundedRect::~HSSRoundedRect()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSRoundedRect: destructing rounded rectangle object");
+    this->cleanTrackedObservers();
 }
 
 void HSSRoundedRect::setDefaults()

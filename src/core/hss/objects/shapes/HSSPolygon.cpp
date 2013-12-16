@@ -101,6 +101,7 @@ QSharedPointer<HSSClonable> HSSPolygon::cloneImpl() const
 HSSPolygon::~HSSPolygon()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSPolygon: destructing polygon object");
+    this->cleanTrackedObservers();
 }
 
 void HSSPolygon::setDefaults()
