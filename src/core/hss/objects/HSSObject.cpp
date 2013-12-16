@@ -1146,14 +1146,18 @@ QSharedPointer<HSSObject> HSSObject::computeValueObject(QSharedPointer<HSSParser
         {
             if (qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue() == "inherit")
             {
-                parserNode = this->_inheritProperty(propertyName);
+                QSharedPointer<HSSParserNode> newNode = this->_inheritProperty(propertyName);
+                newNode->setSpecificity(parserNode->getSpecificity());
+                parserNode = newNode;
             }
             break;
         }
 
         case HSSParserNodeTypePercentageConstant:
         {
-            parserNode = this->getPercentageExpression(parserNode, propertyName);
+            QSharedPointer<HSSParserNode> newNode = this->getPercentageExpression(parserNode, propertyName);
+            newNode->setSpecificity(parserNode->getSpecificity());
+            parserNode = newNode;
             break;
         }
 
