@@ -577,11 +577,12 @@ void HSSObject::setShorthandIndex(size_t newValue)
 
 void HSSObject::setIsA(QSharedPointer<HSSObject> theObj)
 {
-    this->_setIsA(theObj);
+    this->_setIsA(this->_setIsAPrepare(theObj));
 }
 
-void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
+QSharedPointer<HSSObject> HSSObject::_setIsAPrepare(QSharedPointer<HSSObject> theObj)
 {
+    QSharedPointer<HSSObject> ret;
     if (theObj->isA(HSSObjectTypeValue))
     {
         QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
@@ -597,7 +598,7 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
                     objdef->applyRules();
                     QSharedPointer<HSSObject> remoteObj = objdef->getObject();
                     remoteObj->setSpecificity(theObj->getSpecificity());
-                    this->_applyIsAObject(remoteObj);
+                    ret = remoteObj;
                 }
                 catch (const AXRError &e)
                 {
@@ -614,7 +615,7 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
                     if (remoteObj)
                     {
                         remoteObj->setSpecificity(theObj->getSpecificity());
-                        this->_applyIsAObject(remoteObj);
+                        ret = remoteObj;
                     }
                 }
                 break;
@@ -623,10 +624,25 @@ void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
                 break;
         }
     }
+    else if (theObj->isA(HSSObjectTypeMultipleValue))
+    {
+        QSharedPointer<HSSMultipleValue> newMultiVal = QSharedPointer<HSSMultipleValue>(new HSSMultipleValue(this->getController()));
+        Q_FOREACH(QSharedPointer<HSSObject> mvObj, qSharedPointerCast<HSSMultipleValue>(theObj)->getValues())
+        {
+            newMultiVal->add(this->_setIsAPrepare(mvObj));
+        }
+        ret = newMultiVal;
+    }
     else
     {
-        this->_applyIsAObject(theObj);
+        ret = theObj;
     }
+    return ret;
+}
+
+void HSSObject::_setIsA(QSharedPointer<HSSObject> theObj)
+{
+    this->_applyIsAObject(theObj);
 }
 
 void HSSObject::_applyIsAObject(QSharedPointer<HSSObject> theObj)
