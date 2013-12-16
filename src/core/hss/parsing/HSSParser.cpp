@@ -1653,6 +1653,7 @@ QSharedPointer<HSSPropertyDefinition> HSSParser::readPropertyDefinition(bool sho
                     catch (const AXRError &e)
                     {
                         e.raise();
+                        valid = false;
                     }
 
                     if (this->currentToken->isA(HSSAmpersand))
