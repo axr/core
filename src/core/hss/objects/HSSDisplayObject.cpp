@@ -1374,13 +1374,13 @@ void HSSDisplayObject::notifyMargin(QSharedPointer<AXR::HSSObject> theObj)
         HSSUnit right = theMargin->getRight();
         if (left > 0 || right > 0)
         {
-            this->_setOuterWidth(theMargin->getSpecificity());
+            this->_setOuterWidth(1.);
         }
         HSSUnit top = theMargin->getTop();
         HSSUnit bottom = theMargin->getBottom();
         if (top > 0 || bottom > 0)
         {
-            this->_setOuterHeight(theMargin->getSpecificity());
+            this->_setOuterHeight(1.);
         }
     }
     this->notifyObservers("margin", theObj);
