@@ -1292,6 +1292,11 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
     }
     if (!currentValue || (currentValue->getSpecificity() <= theObj->getSpecificity()))
     {
+        //replace
+        if (currentValue)
+        {
+            currentValue->replace(theObj);
+        }
         ///@todo this should target any subclass of display object
         if (this->isA(HSSObjectTypeContainer) || this->isA(HSSObjectTypeTextBlock))
         {
@@ -1362,11 +1367,6 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
         else
         {
             this->notifyObservers(propertyName, theObj);
-        }
-        //replace
-        if (currentValue)
-        {
-            currentValue->replace(theObj);
         }
     }
 }
