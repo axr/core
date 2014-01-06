@@ -265,7 +265,7 @@ inline bool HSSLayout::_arrangeLines(const HSSContainer & container, const QShar
     {
         case HSSDirectionLeftToRight:
         {
-            if (group->lines.size() > 0)
+            if (group->lines.size() > 1)
             {
                 //calculate the starting point
                 HSSUnit widthsTotal = 0.;
@@ -304,30 +304,12 @@ inline bool HSSLayout::_arrangeLines(const HSSContainer & container, const QShar
                     }
                 }
             }
-            else
-            {
-                HSSUnit maxWidth = 0.;
-                QSharedPointer<HSSDisplayObject> widestChild;
-                for (HSSSimpleSelection::iterator it = group->objects->begin(); it!= group->objects->end(); ++it)
-                {
-                    const QSharedPointer<HSSDisplayObject> & currentChild = *it;
-                    if(currentChild->getOuterWidth() > maxWidth)
-                    {
-                        maxWidth = currentChild->getOuterWidth();
-                        widestChild = currentChild;
-                    }
-                }
-                group->x = widestChild->x;
-                if (this->_layoutTick()){
-                    return true;
-                }
-            }
             break;
         }
 
         case HSSDirectionRightToLeft:
         {
-            if (group->lines.size() > 0)
+            if (group->lines.size() > 1)
             {
                 //calculate the starting point
                 HSSUnit widthsTotal = 0.;
@@ -364,24 +346,6 @@ inline bool HSSLayout::_arrangeLines(const HSSContainer & container, const QShar
                     if (this->_layoutTick()){
                         return true;
                     }
-                }
-            }
-            else
-            {
-                HSSUnit maxWidth = 0.;
-                QSharedPointer<HSSDisplayObject> widestChild;
-                for (HSSSimpleSelection::iterator it = group->objects->begin(); it!= group->objects->end(); ++it)
-                {
-                    const QSharedPointer<HSSDisplayObject> & currentChild = *it;
-                    if(currentChild->getOuterWidth() > maxWidth)
-                    {
-                        maxWidth = currentChild->getOuterWidth();
-                        widestChild = currentChild;
-                    }
-                }
-                group->x = widestChild->x;
-                if (this->_layoutTick()){
-                    return true;
                 }
             }
             break;
@@ -429,31 +393,12 @@ inline bool HSSLayout::_arrangeLines(const HSSContainer & container, const QShar
                 }
                 group->y = startY;
             }
-            else
-            {
-                HSSUnit maxHeight = 0.;
-                QSharedPointer<HSSDisplayObject> tallestChild;
-                for (HSSSimpleSelection::iterator it = group->objects->begin(); it!= group->objects->end(); ++it)
-                {
-                    const QSharedPointer<HSSDisplayObject> & currentChild = *it;
-                    if(currentChild->getOuterHeight() > maxHeight)
-                    {
-                        maxHeight = currentChild->getOuterHeight();
-                        tallestChild = currentChild;
-                    }
-                }
-                group->y = tallestChild->y;
-
-                if (this->_layoutTick()){
-                    return true;
-                }
-            }
             break;
         }
 
         default:
         {
-            if (group->lines.size() > 0)
+            if (group->lines.size() > 1)
             {
                 //calculate the starting point
                 HSSUnit heightsTotal = 0.;
@@ -509,21 +454,6 @@ inline bool HSSLayout::_arrangeLines(const HSSContainer & container, const QShar
                             return true;
                         }
                     }
-                }
-            }
-            else
-            {
-                HSSUnit groupHeight = group->height;
-                HSSUnit startY = group->getAlignY() - (groupHeight/2) + container.getTopPadding();
-                if (startY > (container.getHeight() - container.getBottomPadding()) - groupHeight) startY = (container.getHeight() - container.getBottomPadding()) - groupHeight;
-                if (startY < container.getTopPadding()) startY = container.getTopPadding();
-                for (HSSSimpleSelection::iterator it = group->objects->begin(); it!= group->objects->end(); ++it)
-                {
-                    const QSharedPointer<HSSDisplayObject> & currentChild = *it;
-                    this->_lineArrangeY(currentChild, startY, group->height);
-                }
-                if (this->_layoutTick()){
-                    return true;
                 }
             }
             break;
