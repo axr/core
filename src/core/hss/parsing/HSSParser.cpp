@@ -1077,19 +1077,29 @@ bool HSSParser::isPropertyDefinition(bool * isShorthand)
                         {
                             this->checkForUnexpectedEndOfSource();
                             peekToken = this->tokenizer->peekNextToken();
-                            AXRString objtype = VALUE_TOKEN(peekToken)->getString();
-                            if ((objtype == "this")
+                            if (peekToken->isA(HSSIdentifier))
+                            {
+                                AXRString objtype = VALUE_TOKEN(peekToken)->getString();
+                                if ((objtype == "this")
                                     || (objtype == "super")
                                     || (objtype == "parent")
                                     || (objtype == "root"))
-                            {
-                                //it is a selector, continue because it may be a selector inside a function
+                                {
+                                    //it is a selector, continue because it may be a selector inside a function
+                                }
+                                else
+                                {
+                                    //this is a regular object definition, so we can conclude it is not a rule
+                                    ret = true;
+                                    *isShorthand = true;
+                                    done = true;
+                                }
                             }
                             else
                             {
-                                //this is a regular object definition, so we can conclude it is not a rule
-                                ret = true;
-                                *isShorthand = true;
+                                //unexpected token, abort
+                                ret = false;
+                                *isShorthand = false;
                                 done = true;
                             }
                             break;
