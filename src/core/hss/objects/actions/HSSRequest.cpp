@@ -142,26 +142,35 @@ void HSSRequest::fire()
             }
             else
             {
-                for (HSSSimpleSelection::iterator it = tempNode->getChildren()->begin(); it != tempNode->getChildren()->end(); ++it)
+                QSharedPointer<HSSSimpleSelection> target;
+                if (this->getTarget()->isA(HSSObjectTypeValue))
                 {
-                    QSharedPointer<HSSContainer> loadedRoot = HSSContainer::asContainer(*it);
-                    if(loadedRoot)
+                    QSharedPointer<HSSParserNode> targetNode = qSharedPointerCast<HSSValue>(this->getTarget())->getValue();
+                    if (targetNode->isA(HSSFunctionTypeSel))
                     {
-//                        for (HSSSimpleSelection::iterator it2 = this->target->begin(); it2 != this->target->end(); ++it2) {
-//                            QSharedPointer<HSSContainer> theTarget = HSSContainer::asContainer(*it2);
-//                            if(theTarget)
-//                            {
-//                                //QSharedPointer<HSSContainer> clonedNode = loadedRoot->clone();
-//                                theTarget->add(loadedRoot);
-//                            }
-//                        }
-//
-//                        ctrlr->activateRules();
-//                        HSSInputEvent event(HSSEventTypeLoad);
-//                        loadedRoot->handleEvent(&event);
-//                        document->setNeedsDisplay(true);
+                        QSharedPointer<HSSSelFunction> selFunction;
+                        selFunction = qSharedPointerCast<HSSSelFunction>(targetNode);
+                        target = qSharedPointerCast<HSSSelection>(selFunction->evaluate())->joinAll();
                     }
-                    break;
+                }
+                if(target){
+                    for (HSSSimpleSelection::iterator it = tempNode->getChildren()->begin(); it != tempNode->getChildren()->end(); ++it)
+                    {
+                        QSharedPointer<HSSContainer> loadedRoot = HSSContainer::asContainer(*it);
+                        if(loadedRoot)
+                        {
+                            for (HSSSimpleSelection::iterator it2 = target->begin(); it2 != target->end(); ++it2) {
+                                QSharedPointer<HSSContainer> theTarget = HSSContainer::asContainer(*it2);
+                                if(theTarget)
+                                {
+                                    theTarget->add(loadedRoot);
+                                    theTarget->setNeedsRereadRules(true);
+                                    theTarget->setDirty(true);
+                                }
+                            }
+                            break;
+                        }
+                    }
                 }
             }
             ctrlr->currentContext().pop();

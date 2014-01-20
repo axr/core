@@ -145,8 +145,7 @@ size_t HSSSelFunction::selectorChainsSize() const
 QSharedPointer<HSSObject> HSSSelFunction::_evaluate()
 {
     this->selection = this->getController()->select(this->selectorChains, this->scope, this->getThisObj());
-    ///@todo make HSSSelection a HSSObject and uncomment this
-    //this->_value = HSSValue::valueFromParserNode(this->getController(), this->selection);
+    this->_value = this->selection;
     return this->_value;
 }
 
