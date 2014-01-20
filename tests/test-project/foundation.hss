@@ -17,7 +17,7 @@
     &@ textfield
     {
         contentText: searchFormLabel;
-        border: @{ 1 };
+        stroke: @{ 1 };
         // effects: @glow { 5 #0 10 inside };
         contentAlignY: 50%;
         // editable: yes;

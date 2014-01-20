@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <?xml-stylesheet type="application/x-hss" href="s008-descendant-combinator-2.hss" version="0.4.8" ?>
 <test>The window background should be yellow
-    <child>This should be green and with a border
-        <child>This should be green and with a border</child>
+    <child>This should be green and with a stroke
+        <child>This should be green and with a stroke</child>
     </child>
 </test>

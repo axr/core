@@ -102,7 +102,7 @@ namespace AXR
 
         void drawRadialGradient(HSSRadialGradient &gradient, const QPainterPath &path, HSSUnit posX, HSSUnit posY);
 
-        void drawBorders(HSSContainer &container);
+        void drawStrokes(HSSContainer &container);
 
         void drawForeground(HSSTextBlock &textBlock);
 

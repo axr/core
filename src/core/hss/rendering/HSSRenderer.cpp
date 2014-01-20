@@ -47,7 +47,7 @@
 #include "AXRError.h"
 #include "AXRLoggerManager.h"
 #include "AXRWarning.h"
-#include "HSSBorder.h"
+#include "HSSAbstractStroke.h"
 #include "HSSContainer.h"
 #include "HSSFont.h"
 #include "HSSKeywordConstant.h"
@@ -128,7 +128,7 @@ void HSSRenderer::visit(HSSContainer &container)
 
             container._isDirty = false;
             drawBackground(container);
-            drawBorders(container);
+            drawStrokes(container);
         }
     }
     else
@@ -157,33 +157,33 @@ void HSSRenderer::visit(HSSTextBlock &textBlock)
     }
 }
 
-void HSSRenderer::drawBorders(HSSContainer &container)
+void HSSRenderer::drawStrokes(HSSContainer &container)
 {
     if (d->globalAntialiasingEnabled)
         d->canvasPainter->setRenderHint(QPainter::Antialiasing);
 
-    QSharedPointer<HSSObject> borderObj = container.getBorder();
-    QList<QSharedPointer<HSSBorder> > borders;
-    if (borderObj)
+    QSharedPointer<HSSObject> strokeObj = container.getStroke();
+    QList<QSharedPointer<HSSAbstractStroke> > strokes;
+    if (strokeObj)
     {
-        if (borderObj->isA(HSSObjectTypeBorder))
+        if (strokeObj->isA(HSSObjectTypeStroke))
         {
-            borders.append(qSharedPointerCast<HSSBorder>(borderObj));
+            strokes.append(qSharedPointerCast<HSSAbstractStroke>(strokeObj));
         }
-        else if (borderObj->isA(HSSObjectTypeMultipleValue))
+        else if (strokeObj->isA(HSSObjectTypeMultipleValue))
         {
-            Q_FOREACH(const QSharedPointer<HSSObject> bObj, qSharedPointerCast<HSSMultipleValue>(borderObj)->getValues())
+            Q_FOREACH(const QSharedPointer<HSSObject> bObj, qSharedPointerCast<HSSMultipleValue>(strokeObj)->getValues())
             {
-                if (bObj->isA(HSSObjectTypeBorder))
+                if (bObj->isA(HSSObjectTypeStroke))
                 {
-                    borders.append(qSharedPointerCast<HSSBorder>(bObj));
+                    strokes.append(qSharedPointerCast<HSSAbstractStroke>(bObj));
                 }
             }
         }
     }
-    if (borders.size() > 0)
+    if (strokes.size() > 0)
     {
-        container.getShape()->drawBorders(*d->canvasPainter, borders, container.getWidth(), container.getHeight(), container.globalX, container.globalY);
+        container.getShape()->drawStrokes(*d->canvasPainter, strokes, container.getWidth(), container.getHeight(), container.globalX, container.globalY);
     }
 }
 

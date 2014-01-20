@@ -11,6 +11,6 @@
             sides: 3;
             angle: 0;
         };
-        border: @{ 15 #FFF }, @{ 10 #FA3 };
+        stroke: @{ 15 #FFF }, @{ 10 #FA3 };
     }
 }

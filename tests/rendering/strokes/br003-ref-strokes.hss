@@ -1,10 +1,10 @@
 /*
-    Test BR003 Ref borders
+    Test BR003 Ref strokes
     Created by Miro Keller on 2011-12-20.
 */
 
-@lineBorder shadowBorder { 1 #6 }
-@lineBorder highlightBorder { 1 #DF }
+@stroke shadowStroke { 1 #6 }
+@stroke highlightStroke { 1 #DF }
 
 @container test
 {
@@ -22,14 +22,14 @@
     #new test
     {
         isA: test;
-        border: shadowBorder, highlightBorder;
+        stroke: shadowStroke, highlightStroke;
         alignX: 30%;
     }
 
     #new test2
     {
         isA: test;
-        border: ref(border of test);
+        stroke: ref(stroke of test);
         alignX: 70%;
     }
 }

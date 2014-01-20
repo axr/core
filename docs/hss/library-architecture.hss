@@ -17,7 +17,7 @@
 @container box
 {
     background: #E;
-    border: @{ 1; #FFF6 }, @{ 1; #C };
+    stroke: @{ 1; #FFF6 }, @{ 1; #C };
     shape: @{ 5 };
     font: bigFont;
     textAlign: center;
@@ -26,21 +26,21 @@
     & boxGreen
     {
         background: #AEA;
-        border: @{ 1; #FFF6 }, @{ 1; #8C8 };
+        stroke: @{ 1; #FFF6 }, @{ 1; #8C8 };
         font: fontGreen;
     }
 
     & boxBlue
     {
         background: #AAE;
-        border: @{ 1; #FFF6 }, @{ 1; #99D };
+        stroke: @{ 1; #FFF6 }, @{ 1; #99D };
         font: fontBlue;
     }
 
     & boxRed
     {
         background: #EAA;
-        border: @{ 1; #FFF6 }, @{ 1; #D99 };
+        stroke: @{ 1; #FFF6 }, @{ 1; #D99 };
         font: fontRed;
     }
 }
@@ -65,7 +65,7 @@
 
 & hollowBox
 {
-    border: @{ 2; #D };
+    stroke: @{ 2; #D };
     shape: @{ 5 };
     font: bigFont;
     textAlign: center;
@@ -151,7 +151,7 @@
         width: 775;
         height: 400;
         background: #F;
-        border: @{ 10; #F };
+        stroke: @{ 10; #F };
         contentAlignX: even;
 
         #new wrapper

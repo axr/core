@@ -42,7 +42,7 @@
  ********************************************************************/
 
 #include "AXRLoggerManager.h"
-#include "HSSBorder.h"
+#include "HSSAbstractStroke.h"
 #include "HSSDisplayObject.h"
 #include "HSSMultipleValue.h"
 #include "HSSKeywordConstant.h"
@@ -143,43 +143,43 @@ void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit 
     }
 }
 
-void HSSRectangle::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
+void HSSRectangle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
-    //sort borders in three groups
-    QList<QSharedPointer<HSSBorder> > center, inside, outside;
-    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, borders)
+    //sort strokes in three groups
+    QList<QSharedPointer<HSSAbstractStroke> > center, inside, outside;
+    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, strokes)
     {
-        HSSBorderPosition thePos = theBorder->getPosition();
-        if (thePos == HSSBorderPositionCenter)
+        HSSStrokePosition thePos = theStroke->getPosition();
+        if (thePos == HSSStrokePositionCenter)
         {
-            center.push_back(theBorder);
+            center.push_back(theStroke);
         }
-        else if (thePos == HSSBorderPositionInside)
+        else if (thePos == HSSStrokePositionInside)
         {
-            inside.push_back(theBorder);
+            inside.push_back(theStroke);
         }
-        else if (thePos == HSSBorderPositionOutside)
+        else if (thePos == HSSStrokePositionOutside)
         {
-            outside.push_back(theBorder);
+            outside.push_back(theStroke);
         }
     }
 
     HSSUnit topThickness = 0., rightThickness = 0., bottomThickness = 0., leftThickness = 0.;
-    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, center)
+    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, center)
     {
-        const QSharedPointer<HSSObject> & segmentsObj = theBorder->getSegments();
+        const QSharedPointer<HSSObject> & segmentsObj = theStroke->getSegments();
         bool hasAll = false;
         bool hasSegments = false;
         this->_hasAll(segmentsObj, hasAll, hasSegments);
         if(!hasSegments || hasAll){
-            topThickness += theBorder->getSize();
-            rightThickness += theBorder->getSize();
-            bottomThickness += theBorder->getSize();
-            leftThickness += theBorder->getSize();
+            topThickness += theStroke->getSize();
+            rightThickness += theStroke->getSize();
+            bottomThickness += theStroke->getSize();
+            leftThickness += theStroke->getSize();
         }
         else
         {
-            this->_increaseThickness(segmentsObj, theBorder->getSize(), topThickness, rightThickness, bottomThickness, leftThickness);
+            this->_increaseThickness(segmentsObj, theStroke->getSize(), topThickness, rightThickness, bottomThickness, leftThickness);
         }
     }
 
@@ -197,23 +197,23 @@ void HSSRectangle::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder
         leftCorrection = 0.5;
     }
 
-    // Uncomment this to see the dimensions of the borders surface
+    // Uncomment this to see the dimensions of the strokes surface
     //QPainterPath outerPath;
-    //outerPath.addRect(0.5, 0.5, width+borderBleeding*2-1, height+borderBleeding*2-1);
+    //outerPath.addRect(0.5, 0.5, width+strokeBleeding*2-1, height+strokeBleeding*2-1);
     //painter.strokePath(outerPath, QPen(Qt::red, 1, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
 
     HSSUnit topCumulative = 0., rightCumulative = 0., bottomCumulative = 0., leftCumulative = 0.;
-    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, center)
+    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, center)
     {
-        HSSUnit theSize = theBorder->getSize();
+        HSSUnit theSize = theStroke->getSize();
 
         QPainterPath path;
-        QSharedPointer<HSSObject> segmentsObj = theBorder->getSegments();
+        QSharedPointer<HSSObject> segmentsObj = theStroke->getSegments();
         bool hasAll = false, hasSegments = false;
         this->_hasAll(segmentsObj, hasAll, hasSegments);
         if(hasSegments && !hasAll){
-            const QSharedPointer<HSSObject> & segmentsObj = theBorder->getSegments();
-            this->_drawCenteredBorderBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+            const QSharedPointer<HSSObject> & segmentsObj = theStroke->getSegments();
+            this->_drawCenteredStrokeBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
         } else {
             HSSUnit leftOffset = (leftThickness / 2) - leftCumulative - (theSize / 2) + leftCorrection;
             HSSUnit topOffset = (topThickness / 2) - topCumulative - (theSize / 2) + topCorrection;
@@ -227,26 +227,26 @@ void HSSRectangle::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder
             rightCumulative += theSize;
             bottomCumulative += theSize;
         }
-        theBorder->draw(painter, path);
+        theStroke->draw(painter, path);
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    QList<QSharedPointer<HSSBorder> >::const_iterator insideIt = inside.constEnd();
+    QList<QSharedPointer<HSSAbstractStroke> >::const_iterator insideIt = inside.constEnd();
     while (insideIt != inside.constBegin())
     {
         --insideIt;
-        const QSharedPointer<HSSBorder> & theBorder = *insideIt;
-        HSSUnit theSize = theBorder->getSize();
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *insideIt;
+        HSSUnit theSize = theStroke->getSize();
 
         QPainterPath path;
 
-        QSharedPointer<HSSObject> segmentsObj = theBorder->getSegments();
+        QSharedPointer<HSSObject> segmentsObj = theStroke->getSegments();
         bool hasAll = false, hasSegments = false;
         this->_hasAll(segmentsObj, hasAll, hasSegments);
 
         if(hasSegments && !hasAll){
-            const QSharedPointer<HSSObject> & segmentsObj = theBorder->getSegments();
-            this->_drawInsideBorderBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+            const QSharedPointer<HSSObject> & segmentsObj = theStroke->getSegments();
+            this->_drawInsideStrokeBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
         } else {
             HSSUnit leftOffset = (leftThickness / 2) + leftCumulative + (theSize / 2) + leftCorrection;
             HSSUnit topOffset = (topThickness / 2) + topCumulative + (theSize / 2) + topCorrection;
@@ -261,22 +261,22 @@ void HSSRectangle::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder
             bottomCumulative += theSize;
         }
 
-        theBorder->draw(painter, path);
+        theStroke->draw(painter, path);
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, outside)
+    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, outside)
     {
-        HSSUnit theSize = theBorder->getSize();
+        HSSUnit theSize = theStroke->getSize();
 
         QPainterPath path;
-        QSharedPointer<HSSObject> segmentsObj = theBorder->getSegments();
+        QSharedPointer<HSSObject> segmentsObj = theStroke->getSegments();
         bool hasAll = false, hasSegments = false;
         this->_hasAll(segmentsObj, hasAll, hasSegments);
 
         if(hasSegments && !hasAll){
-            const QSharedPointer<HSSObject> & segmentsObj = theBorder->getSegments();
-            this->_drawOutsideBorderBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+            const QSharedPointer<HSSObject> & segmentsObj = theStroke->getSegments();
+            this->_drawOutsideStrokeBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
         } else {
             HSSUnit leftOffset = (leftThickness / 2) + leftCumulative + (theSize / 2) + leftCorrection;
             HSSUnit topOffset = (topThickness / 2) + topCumulative + (theSize / 2) + topCorrection;
@@ -291,7 +291,7 @@ void HSSRectangle::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder
             bottomCumulative += theSize;
         }
 
-        theBorder->draw(painter, path);
+        theStroke->draw(painter, path);
     }
 }
 
@@ -364,7 +364,7 @@ void HSSRectangle::_hasAll(const QSharedPointer<HSSObject> & segmentsObj, bool &
     }
 }
 
-void HSSRectangle::_drawCenteredBorderBySegments(
+void HSSRectangle::_drawCenteredStrokeBySegments(
     QPainterPath & path,
     const QSharedPointer<HSSObject> & segmentsObj,
     HSSUnit & theSize,
@@ -391,7 +391,7 @@ void HSSRectangle::_drawCenteredBorderBySegments(
         const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(segmentsObj)->getValue();
         if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
         {
-            this->__drawCenteredBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+            this->__drawCenteredStrokeBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
         }
     }
     else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
@@ -403,14 +403,14 @@ void HSSRectangle::_drawCenteredBorderBySegments(
                 const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
                 if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
                 {
-                    this->__drawCenteredBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+                    this->__drawCenteredStrokeBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
                 }
             }
         }
     }
 }
 
-void HSSRectangle::__drawCenteredBorderBySegments(
+void HSSRectangle::__drawCenteredStrokeBySegments(
     QPainterPath & path,
     const AXRString & segment,
     HSSUnit & theSize,
@@ -474,7 +474,7 @@ void HSSRectangle::__drawCenteredBorderBySegments(
     }
 }
 
-void HSSRectangle::_drawInsideBorderBySegments(
+void HSSRectangle::_drawInsideStrokeBySegments(
     QPainterPath & path,
     const QSharedPointer<HSSObject> & segmentsObj,
     HSSUnit & theSize,
@@ -501,7 +501,7 @@ void HSSRectangle::_drawInsideBorderBySegments(
         const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(segmentsObj)->getValue();
         if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
         {
-            this->__drawInsideBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+            this->__drawInsideStrokeBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
         }
     }
     else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
@@ -513,14 +513,14 @@ void HSSRectangle::_drawInsideBorderBySegments(
                 const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
                 if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
                 {
-                    this->__drawInsideBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+                    this->__drawInsideStrokeBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
                 }
             }
         }
     }
 }
 
-void HSSRectangle::__drawInsideBorderBySegments(
+void HSSRectangle::__drawInsideStrokeBySegments(
     QPainterPath & path,
     const AXRString & segment,
     HSSUnit & theSize,
@@ -574,7 +574,7 @@ void HSSRectangle::__drawInsideBorderBySegments(
     }
 }
 
-void HSSRectangle::_drawOutsideBorderBySegments(
+void HSSRectangle::_drawOutsideStrokeBySegments(
     QPainterPath & path,
     const QSharedPointer<HSSObject> & segmentsObj,
     HSSUnit & theSize,
@@ -601,7 +601,7 @@ void HSSRectangle::_drawOutsideBorderBySegments(
         const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(segmentsObj)->getValue();
         if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
         {
-            this->__drawOutsideBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+            this->__drawOutsideStrokeBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
         }
     }
     else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
@@ -613,14 +613,14 @@ void HSSRectangle::_drawOutsideBorderBySegments(
                 const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
                 if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
                 {
-                    this->__drawOutsideBorderBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
+                    this->__drawOutsideStrokeBySegments(path, qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue(), theSize, width, height, offsetX, offsetY, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
                 }
             }
         }
     }
 }
 
-void HSSRectangle::__drawOutsideBorderBySegments(
+void HSSRectangle::__drawOutsideStrokeBySegments(
     QPainterPath & path,
     const AXRString & segment,
     HSSUnit & theSize,

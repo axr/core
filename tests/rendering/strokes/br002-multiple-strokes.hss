@@ -1,17 +1,17 @@
 /*
-Test BR002 Multiple Borders
+Test BR002 Multiple Strokes
 Created by Miro Keller on 2011-12-15.
 */
 
-@lineBorder shadowBorder { 1 #6 }
-@lineBorder highlightBorder { 1 #DF }
+@stroke shadowStroke { 1 #6 }
+@stroke highlightStroke { 1 #DF }
 
 @container test
 {
     width: 200;
     height: 200;
     background: #A;
-    border: shadowBorder, highlightBorder;
+    stroke: shadowStroke, highlightStroke;
     shape: @{ 10 };
     alignX, alignY: middle;
 }

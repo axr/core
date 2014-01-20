@@ -21,7 +21,7 @@
         endY: 100%;
     };
     shape: @{4};
-    border: @ hl{1 #FFF8}, @ sh{1 #EA08 };
+    stroke: @ hl{1 #FFF8}, @ sh{1 #EA08 };
 
     // @::hover
     // {
@@ -37,7 +37,7 @@
         endColor: #FF6;
         endY: 100%;
     };
-    border: @ hl{1 #FFFB}, @ sh{1 #EA0 };
+    stroke: @ hl{1 #FFFB}, @ sh{1 #EA0 };
 }
 
 @container button2
@@ -52,7 +52,7 @@
         endColor: #E;
         endY: 100%;
     };
-    border: @{1 #FFF}, @{1 #0002 };
+    stroke: @{1 #FFF}, @{1 #0002 };
 }
 
 @container button3
@@ -67,7 +67,7 @@
         endY: 100%;
     };
     shape: @{15};
-    border: @{1 #0003 }, @{1 #FFF4};
+    stroke: @{1 #0003 }, @{1 #FFF4};
 }
 
 root

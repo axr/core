@@ -49,7 +49,7 @@
 #include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSAbstractVisitor.h"
-#include "HSSBorder.h"
+#include "HSSStroke.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
 #include "HSSExpression.h"

@@ -49,7 +49,7 @@
 #include "AXRDocument.h"
 #include "AXRLoggerManager.h"
 #include "AXRWarning.h"
-#include "HSSBorder.h"
+#include "HSSStroke.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
 #include "HSSDisplayObject.h"
@@ -59,7 +59,6 @@
 #include "HSSFlag.h"
 #include "HSSFont.h"
 #include "HSSKeywordConstant.h"
-#include "HSSLineBorder.h"
 #include "HSSLinearGradient.h"
 #include "HSSMargin.h"
 #include "HSSMouseEvent.h"
@@ -83,6 +82,7 @@
 #include "HSSSimpleSelection.h"
 #include "HSSSimpleSelector.h"
 #include "HSSStringConstant.h"
+#include "HSSStroke.h"
 #include "HSSValue.h"
 
 using namespace AXR;
@@ -146,7 +146,7 @@ void HSSDisplayObject::_initialize()
     this->addNotifyCallback("margin", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyMargin));
     this->addCallback("padding", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computePadding));
     this->addNotifyCallback("padding", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyPadding));
-    this->addCallback("border", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeBorder));
+    this->addCallback("stroke", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeStroke));
 }
 
 HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
@@ -179,7 +179,7 @@ void HSSDisplayObject::setDefaults()
     this->setDefaultKw("background", "no");
     this->setDefaultKw("content", "no");
     this->setDefaultKw("on", "no");
-    this->setDefaultKw("border", "no");
+    this->setDefaultKw("stroke", "no");
     if (this->isRoot())
     {
         this->setDefaultKw("visible", "yes");
@@ -227,9 +227,9 @@ AXRString HSSDisplayObject::defaultObjectType(AXRString property)
     {
         return "margin";
     }
-    else if (property == "border")
+    else if (property == "stroke")
     {
-        return "lineBorder";
+        return "stroke";
     }
     else if (property == "background")
     {
@@ -1484,21 +1484,21 @@ HSSUnit HSSDisplayObject::getLeftPadding() const
     return this->getComputedNumber("leftPadding");
 }
 
-QSharedPointer<HSSObject> HSSDisplayObject::getBorder() const
+QSharedPointer<HSSObject> HSSDisplayObject::getStroke() const
 {
-    return this->getComputedValue("border");
+    return this->getComputedValue("stroke");
 }
 
-QSharedPointer<HSSObject> HSSDisplayObject::computeBorder(QSharedPointer<HSSParserNode> parserNode)
+QSharedPointer<HSSObject> HSSDisplayObject::computeStroke(QSharedPointer<HSSParserNode> parserNode)
 {
     switch (parserNode->getType())
     {
         case HSSParserNodeTypeNumberConstant:
         {
             QSharedPointer<HSSNumberConstant> theNumber = qSharedPointerCast<HSSNumberConstant>(parserNode);
-            QSharedPointer<HSSLineBorder> newBorder = QSharedPointer<HSSLineBorder>(new HSSLineBorder(this->getController()));
-            newBorder->setSize(theNumber->getValue(), parserNode->getSpecificity());
-            return newBorder;
+            QSharedPointer<HSSStroke> newStroke = QSharedPointer<HSSStroke>(new HSSStroke(this->getController()));
+            newStroke->setSize(theNumber->getValue(), parserNode->getSpecificity());
+            return newStroke;
             break;
         }
 
@@ -1506,7 +1506,7 @@ QSharedPointer<HSSObject> HSSDisplayObject::computeBorder(QSharedPointer<HSSPars
             break;
     }
 
-    return this->computeObject(parserNode, "border");
+    return this->computeObject(parserNode, "stroke");
 }
 
 bool HSSDisplayObject::getVisible() const

@@ -54,7 +54,6 @@
 #include "HSSEvent.h"
 #include "HSSFont.h"
 #include "HSSKeywordConstant.h"
-#include "HSSLineBorder.h"
 #include "HSSLinearGradient.h"
 #include "HSSLog.h"
 #include "HSSMargin.h"
@@ -81,6 +80,7 @@
 #include "HSSSimpleSelection.h"
 #include "HSSSimpleSelector.h"
 #include "HSSStringConstant.h"
+#include "HSSStroke.h"
 #include "HSSThisSelector.h"
 #include "HSSTypeEnums.h"
 #include "HSSValue.h"
@@ -95,7 +95,7 @@ QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRContro
     if (types.empty())
     {
         types["container"] = HSSObjectTypeContainer;
-        types["lineBorder"] = HSSObjectTypeBorder;
+        types["stroke"] = HSSObjectTypeStroke;
         types["object"] = HSSObjectTypeGeneric;
         types["value"] = HSSObjectTypeValue;
         types["margin"] = HSSObjectTypeMargin;
@@ -138,12 +138,12 @@ QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRContro
         return QSharedPointer<HSSContainer>(new HSSContainer(controller));
     }
 
-    case HSSObjectTypeBorder:
+    case HSSObjectTypeStroke:
     {
         /**
-         *  @todo border tyes?
+         *  @todo stroke tyes?
          */
-        return QSharedPointer<HSSLineBorder>(new HSSLineBorder(controller));
+        return QSharedPointer<HSSStroke>(new HSSStroke(controller));
     }
 
     case HSSObjectTypeGradient:

@@ -43,7 +43,7 @@
 
 #include <QPainterPath>
 #include "AXRLoggerManager.h"
-#include "HSSBorder.h"
+#include "HSSAbstractStroke.h"
 #include "HSSCircle.h"
 #include "HSSDisplayObject.h"
 
@@ -102,13 +102,13 @@ void HSSCircle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit wid
     path.addEllipse(x, y, width, height);
 }
 
-void HSSCircle::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
+void HSSCircle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
-    // Calculate the combined thickness of all borders
+    // Calculate the combined thickness of all strokes
     HSSUnit combinedThickness = 0;
-    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, borders)
+    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, strokes)
     {
-        combinedThickness += theBorder->getSize();
+        combinedThickness += theStroke->getSize();
     }
 
     // Correction if needed
@@ -121,16 +121,16 @@ void HSSCircle::drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder> >
     // Cumulative combined thickness
     HSSUnit cumulativeThickness = 0;
 
-    // Draw all borders
-    Q_FOREACH(const QSharedPointer<HSSBorder> & theBorder, borders)
+    // Draw all strokes
+    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, strokes)
     {
-        HSSUnit theSize = theBorder->getSize();
+        HSSUnit theSize = theStroke->getSize();
 
         HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
 
         QPainterPath path;
         HSSShape::createPath(path, offsetX + offset, offsetY + offset, width - offset * 2, height - offset * 2);
-        theBorder->draw(painter, path);
+        theStroke->draw(painter, path);
 
         cumulativeThickness += theSize;
     }

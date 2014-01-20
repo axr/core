@@ -41,29 +41,45 @@
  *
  ********************************************************************/
 
-#ifndef HSSBORDER_H
-#define HSSBORDER_H
+#ifndef HSSSTROKE_H
+#define HSSSTROKE_H
 
 #include <QSharedPointer>
-#include "HSSObject.h"
-
-class QPainter;
-class QPainterPath;
+#include "HSSAbstractStroke.h"
 
 namespace AXR
 {
+    class HSSRgb;
+
     /**
-     *  @brief Abstract base class for all border objects.
+     *  @brief The object type representing line strokes in HSS.
+     *
+     *  This stroke style renders solid lines on whatever path they are applied.
      */
-    class AXR_API HSSBorder : public HSSObject
+    class AXR_API HSSStroke : public HSSAbstractStroke
     {
     public:
-        typedef std::vector<QSharedPointer<HSSBorder> >::iterator it;
+        /**
+         *  Creates a new instance of a line stroke object.
+         */
+        HSSStroke(AXRController * controller);
 
         /**
-         *  Destructor for HSSBorder objects.
+         *  Copy constructor for HSSStroke objects. Don't use directly, use clone() instead.
          */
-        virtual ~HSSBorder();
+        HSSStroke(const HSSStroke & orig);
+
+        /**
+         *  Clones an instance of HSSStroke and gives a shared pointer of the
+         *  newly instanciated object.
+         *  @return A shared pointer to the new HSSStroke
+         */
+        QSharedPointer<HSSStroke> clone() const;
+
+        /**
+         *  Destructs the container, clearing the children and allChildren.
+         */
+        virtual ~HSSStroke();
 
         virtual void setDefaults();
         virtual AXRString toString();
@@ -71,37 +87,16 @@ namespace AXR
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
 
-        /**
-         *  Each type of border implements its own drawing routines. Call this method
-         *  when you need to draw the border on a surface.
-         *  @param painter A QPainter context used to draw onto a surface.
-         *  @param path The path comprising the object shape.
-         */
-        virtual void draw(QPainter &painter, const QPainterPath &path) = 0;
+        //color
+        QSharedPointer<HSSObject> getColor();
+        QSharedPointer<HSSObject> computeColor(QSharedPointer<HSSParserNode> parserNode);
 
-        //size
-        HSSUnit getSize() const;
-        void setSize(HSSUnit value, HSSUnit specificity);
-        //position
-        HSSBorderPosition getPosition() const;
-        //segments
-        QSharedPointer<HSSObject> getSegments() const;
+        virtual void draw(QPainter &painter, const QPainterPath &path);
 
-    protected:
-        /**
-         *  Creates a new HSSBorder object.
-         */
-        HSSBorder(AXRController * controller);
-
-        /**
-         *  Copy constructor for HSSBorder objects.
-         */
-        HSSBorder(const HSSBorder & orig);
+    private:
+        void _initialize();
+        virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }
-
-Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSBorder> >)
-Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSBorder> >*)
-Q_DECLARE_METATYPE(AXR::HSSBorderPosition*)
 
 #endif

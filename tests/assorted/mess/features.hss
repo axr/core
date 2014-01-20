@@ -27,18 +27,18 @@
     endX: 50% + 1;
 }
 
-@lineBorder demoButtonOuterBorder {
+@stroke demoButtonOuterStroke {
     size: 1;
     color: demoButtonBase;
 
-    & demoButtonInnerBorder { color: demoButtonHL2 }
+    & demoButtonInnerStroke { color: demoButtonHL2 }
 }
 
 @container demoButton
 {
     background: demoButtonBg;
     shape: @roundedRect { corners: 10 };
-    border: demoButtonInnerBorder, demoButtonOuterBorder;
+    stroke: demoButtonInnerStroke, demoButtonOuterStroke;
 
     @::hover
     {

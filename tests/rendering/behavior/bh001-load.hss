@@ -58,7 +58,7 @@ master
     {
         width: 100% - 100;
         height: 50% - 50;
-        border: @{ 1 #BE };
+        stroke: @{ 1 #BE };
         alignX: 50%;
         alignY: 73%;
         contentAlignX, contentAlignY: 50%;

@@ -51,7 +51,7 @@
 #include "HSSExpression.h"
 #include "HSSFunction.h"
 #include "HSSKeywordConstant.h"
-#include "HSSLineBorder.h"
+#include "HSSStroke.h"
 #include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
@@ -60,10 +60,10 @@
 
 using namespace AXR;
 
-HSSLineBorder::HSSLineBorder(AXRController * controller)
-: HSSBorder(controller)
+HSSStroke::HSSStroke(AXRController * controller)
+: HSSAbstractStroke(controller)
 {
-    axr_log(LoggerChannelGeneralSpecific, "HSSLineBorder: creating line border object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSStroke: creating stroke object");
 
     this->_initialize();
 
@@ -75,58 +75,58 @@ HSSLineBorder::HSSLineBorder(AXRController * controller)
     this->setShorthandProperties(shorthandProperties);
 }
 
-HSSLineBorder::HSSLineBorder(const HSSLineBorder & orig)
-: HSSBorder(orig)
+HSSStroke::HSSStroke(const HSSStroke & orig)
+: HSSAbstractStroke(orig)
 {
     this->_initialize();
 }
 
-void HSSLineBorder::_initialize()
+void HSSStroke::_initialize()
 {
-    this->addCallback("color", new HSSComputeCallback<HSSLineBorder>(this, &HSSLineBorder::computeColor));
+    this->addCallback("color", new HSSComputeCallback<HSSStroke>(this, &HSSStroke::computeColor));
 }
 
-QSharedPointer<HSSLineBorder> HSSLineBorder::clone() const
+QSharedPointer<HSSStroke> HSSStroke::clone() const
 {
-    axr_log(LoggerChannelGeneralSpecific, "HSSLineBorder: cloning line border object");
-    return qSharedPointerCast<HSSLineBorder> (this->cloneImpl());
+    axr_log(LoggerChannelGeneralSpecific, "HSSStroke: cloning stroke object");
+    return qSharedPointerCast<HSSStroke> (this->cloneImpl());
 }
 
-QSharedPointer<HSSClonable> HSSLineBorder::cloneImpl() const
+QSharedPointer<HSSClonable> HSSStroke::cloneImpl() const
 {
-    return QSharedPointer<HSSLineBorder>(new HSSLineBorder(*this));
+    return QSharedPointer<HSSStroke>(new HSSStroke(*this));
 }
 
-HSSLineBorder::~HSSLineBorder()
+HSSStroke::~HSSStroke()
 {
-    axr_log(LoggerChannelGeneralSpecific, "HSSLineBorder: destructing line border object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSStroke: destructing stroke object");
     this->cleanTrackedObservers();
 }
 
-void HSSLineBorder::setDefaults()
+void HSSStroke::setDefaults()
 {
-    HSSBorder::setDefaults();
+    HSSAbstractStroke::setDefaults();
     this->setDefaultKw("color", "black");
 }
 
-AXRString HSSLineBorder::toString()
+AXRString HSSStroke::toString()
 {
     if (this->isNamed())
     {
-        return AXRString("HSSLineBorder: ").append(this->name);
+        return AXRString("HSSStroke: ").append(this->name);
     }
     else
     {
-        return "Annonymous HSSLineBorder";
+        return "Annonymous HSSStroke";
     }
 }
 
-AXRString HSSLineBorder::defaultObjectType()
+AXRString HSSStroke::defaultObjectType()
 {
-    return "lineBorder";
+    return "stroke";
 }
 
-AXRString HSSLineBorder::defaultObjectType(AXRString property)
+AXRString HSSStroke::defaultObjectType(AXRString property)
 {
     if (property == "color")
     {
@@ -142,11 +142,11 @@ AXRString HSSLineBorder::defaultObjectType(AXRString property)
     }
     else
     {
-        return HSSBorder::defaultObjectType(property);
+        return HSSAbstractStroke::defaultObjectType(property);
     }
 }
 
-bool HSSLineBorder::isKeyword(AXRString value, AXRString property)
+bool HSSStroke::isKeyword(AXRString value, AXRString property)
 {
     if ((value == "rounded" || value == "projected") && (property == "caps"))
     {
@@ -160,15 +160,15 @@ bool HSSLineBorder::isKeyword(AXRString value, AXRString property)
         }
     }
 
-    return HSSBorder::isKeyword(value, property);
+    return HSSAbstractStroke::isKeyword(value, property);
 }
 
-QSharedPointer<HSSObject> HSSLineBorder::getColor()
+QSharedPointer<HSSObject> HSSStroke::getColor()
 {
     return this->getComputedValue("color");
 }
 
-QSharedPointer<HSSObject> HSSLineBorder::computeColor(QSharedPointer<HSSParserNode> parserNode)
+QSharedPointer<HSSObject> HSSStroke::computeColor(QSharedPointer<HSSParserNode> parserNode)
 {
     switch (parserNode->getType())
     {
@@ -196,13 +196,13 @@ QSharedPointer<HSSObject> HSSLineBorder::computeColor(QSharedPointer<HSSParserNo
     return this->computeObject(parserNode, "color");
 }
 
-void HSSLineBorder::draw(QPainter &painter, const QPainterPath &path)
+void HSSStroke::draw(QPainter &painter, const QPainterPath &path)
 {
     QPainterPathStroker stroker;
     stroker.setWidth(this->getSize());
     stroker.setJoinStyle(Qt::MiterJoin);
     stroker.setCapStyle(Qt::FlatCap);
-    QPainterPath borderPath = stroker.createStroke(path);
+    QPainterPath strokePath = stroker.createStroke(path);
 
     QSharedPointer<HSSObject> colorObj = this->getColor();
     QColor usedColor;
@@ -214,6 +214,6 @@ void HSSLineBorder::draw(QPainter &painter, const QPainterPath &path)
     {
         usedColor = QColor(Qt::black);
     }
-    painter.fillPath(borderPath, usedColor);
+    painter.fillPath(strokePath, usedColor);
 
 }

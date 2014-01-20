@@ -130,7 +130,7 @@
  *
  *  In the process of drawing, each object type which draws (display objects) implements and handles
  *  all the properties inside to calculate the visual rendering, each generating bitmap surfaces for the
- *  background, borders, etc, and finally compositing it all together.
+ *  background, strokes, etc, and finally compositing it all together.
  *
  *  This is all done in a pretty straightforward an naïve way, and should receive quite a lot of facelifting
  *  and performance improvements in the near future.

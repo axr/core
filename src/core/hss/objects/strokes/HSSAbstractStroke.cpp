@@ -44,7 +44,7 @@
 #include "AXRController.h"
 #include "AXRLoggerManager.h"
 #include "AXRWarning.h"
-#include "HSSBorder.h"
+#include "HSSAbstractStroke.h"
 #include "HSSCallback.h"
 #include "HSSContainer.h"
 #include "HSSExpression.h"
@@ -59,47 +59,47 @@
 
 using namespace AXR;
 
-HSSBorder::HSSBorder(AXRController * controller)
-: HSSObject(HSSObjectTypeBorder, controller)
+HSSAbstractStroke::HSSAbstractStroke(AXRController * controller)
+: HSSObject(HSSObjectTypeStroke, controller)
 {
 }
 
-HSSBorder::HSSBorder(const HSSBorder & orig)
+HSSAbstractStroke::HSSAbstractStroke(const HSSAbstractStroke & orig)
 : HSSObject(orig)
 {
 }
 
-HSSBorder::~HSSBorder()
+HSSAbstractStroke::~HSSAbstractStroke()
 {
-    axr_log(LoggerChannelGeneralSpecific, "HSSBorder: destructing border object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSAbstractStroke: destructing stroke object");
     this->cleanTrackedObservers();
 }
 
-AXRString HSSBorder::toString()
+AXRString HSSAbstractStroke::toString()
 {
     if (this->isNamed())
     {
-        return AXRString("HSSBorder: ").append(this->name);
+        return AXRString("HSSAbstractStroke: ").append(this->name);
     }
     else
     {
-        return "Annonymous HSSBorder";
+        return "Annonymous HSSAbstractStroke";
     }
 }
 
-void HSSBorder::setDefaults()
+void HSSAbstractStroke::setDefaults()
 {
     this->setDefault("size", 1);
     this->setDefaultKw("position", "center");
     this->setDefaultKw("segments", "all");
 }
 
-AXRString HSSBorder::defaultObjectType()
+AXRString HSSAbstractStroke::defaultObjectType()
 {
-    return "border";
+    return "stroke";
 }
 
-AXRString HSSBorder::defaultObjectType(AXRString property)
+AXRString HSSAbstractStroke::defaultObjectType(AXRString property)
 {
     if (property == "effects")
     {
@@ -111,7 +111,7 @@ AXRString HSSBorder::defaultObjectType(AXRString property)
     }
 }
 
-bool HSSBorder::isKeyword(AXRString value, AXRString property)
+bool HSSAbstractStroke::isKeyword(AXRString value, AXRString property)
 {
     if (property == "position")
     {
@@ -132,7 +132,7 @@ bool HSSBorder::isKeyword(AXRString value, AXRString property)
     return HSSObject::isKeyword(value, property);
 }
 
-HSSUnit HSSBorder::getSize() const
+HSSUnit HSSAbstractStroke::getSize() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("size");
     if (value && value->isA(HSSObjectTypeValue))
@@ -142,12 +142,12 @@ HSSUnit HSSBorder::getSize() const
     return 0.;
 }
 
-void HSSBorder::setSize(HSSUnit value, HSSUnit specificity)
+void HSSAbstractStroke::setSize(HSSUnit value, HSSUnit specificity)
 {
     this->setComputedValue("size", value, specificity);
 }
 
-HSSBorderPosition HSSBorder::getPosition() const
+HSSStrokePosition HSSAbstractStroke::getPosition() const
 {
     QSharedPointer<HSSObject> computedValue = this->getComputedValue("position");
     if (computedValue && computedValue->isA(HSSObjectTypeValue))
@@ -160,15 +160,15 @@ HSSBorderPosition HSSBorder::getPosition() const
                 AXRString kwValue = qSharedPointerCast<HSSKeywordConstant>(theValue->getValue())->getValue();
                 if (kwValue == "inside")
                 {
-                    return HSSBorderPositionInside;
+                    return HSSStrokePositionInside;
                 }
                 if (kwValue == "outside")
                 {
-                    return HSSBorderPositionOutside;
+                    return HSSStrokePositionOutside;
                 }
                 if (kwValue == "center")
                 {
-                    return HSSBorderPositionCenter;
+                    return HSSStrokePositionCenter;
                 }
                 break;
             }
@@ -177,10 +177,10 @@ HSSBorderPosition HSSBorder::getPosition() const
                 break;
         }
     }
-    return HSSBorderPositionInside; ///@todo set defaults and change to None
+    return HSSStrokePositionInside; ///@todo set defaults and change to None
 }
 
-QSharedPointer<HSSObject> HSSBorder::getSegments() const
+QSharedPointer<HSSObject> HSSAbstractStroke::getSegments() const
 {
     return this->getComputedValue("segments");
 }

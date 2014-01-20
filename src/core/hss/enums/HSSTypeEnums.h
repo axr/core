@@ -309,7 +309,7 @@ namespace AXR
         HSSObjectTypeMultipleValue, /**< Multiple values separated by commas passed to a property are wrapped in these. */
         HSSObjectTypeContainer, /**< Containers can contain other display objects. */
         HSSObjectTypeTextBlock, /**< Each container has at least one text block. It's task is to render the content text. */
-        HSSObjectTypeBorder, /**< All borders share this type */
+        HSSObjectTypeStroke, /**< All strokes share this type */
         HSSObjectTypeMargin, /**< All margins share this type */
         HSSObjectTypeRgb, /**< Colors in RGB */
         HSSObjectTypeGradient, /**< All gradients share this type */
@@ -407,15 +407,15 @@ namespace AXR
     /**
      *  @addtogroup typeEnums
      *  @{
-     *  @enum HSSBorderPosition
-     *  The position of a border object.
+     *  @enum HSSStrokePosition
+     *  The position of a stroke object.
      */
-    enum AXR_API HSSBorderPosition
+    enum AXR_API HSSStrokePosition
     {
-        HSSBorderPositionNone = 0, /**< Error state. */
-        HSSBorderPositionInside, /**< The border is drawn to the inside of the path. */
-        HSSBorderPositionCenter, /**< The border is drawn on the center of the path. */
-        HSSBorderPositionOutside /**< The border is drawn outside of the path. */
+        HSSStrokePositionNone = 0, /**< Error state. */
+        HSSStrokePositionInside, /**< The stroke is drawn to the inside of the path. */
+        HSSStrokePositionCenter, /**< The stroke is drawn on the center of the path. */
+        HSSStrokePositionOutside /**< The stroke is drawn outside of the path. */
     };
     /** @} */
 

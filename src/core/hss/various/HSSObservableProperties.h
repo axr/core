@@ -69,7 +69,7 @@ namespace AXR
         HSSObservablePropertyAlignY,
         HSSObservablePropertyMargin,
         HSSObservablePropertyPadding,
-        HSSObservablePropertyBorder,
+        HSSObservablePropertyStroke,
         HSSObservablePropertyFlagChanged,
         HSSObservablePropertyLineAlign,
 
@@ -146,7 +146,7 @@ namespace AXR
         HSSObservablePropertyContent,
         HSSObservablePropertyVisible,
 
-        //HSSBorder
+        //HSSStroke
         HSSObservablePropertySegments,
 
         //HSSRadialGradient

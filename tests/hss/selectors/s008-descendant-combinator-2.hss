@@ -8,7 +8,7 @@
 //this matches all except root
 * .. *
 {
-    border: @{ 1; #0 };
+    stroke: @{ 1; #0 };
 }
 
 //so does this

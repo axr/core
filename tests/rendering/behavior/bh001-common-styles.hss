@@ -23,7 +23,7 @@
         endColor: #181;
         endY: 100%;
     };
-    border: @{ 1 #FFF5}, @{ 1 #282};
+    stroke: @{ 1 #FFF5}, @{ 1 #282};
     shape: @{ 10 };
     contentAlignY: middle;
     textAlign: center;

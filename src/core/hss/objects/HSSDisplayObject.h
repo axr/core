@@ -51,7 +51,7 @@
 
 namespace AXR
 {
-    class HSSBorder;
+    class HSSAbstractStroke;
     class HSSContainer;
     class HSSEvent;
     class HSSFlag;
@@ -288,9 +288,9 @@ namespace AXR
         void setLeftPadding(HSSUnit value, HSSUnit specificity);
         HSSUnit getLeftPadding() const;
 
-        //border
-        QSharedPointer<HSSObject> getBorder() const;
-        QSharedPointer<HSSObject> computeBorder(QSharedPointer<HSSParserNode> parserNode);
+        //stroke
+        QSharedPointer<HSSObject> getStroke() const;
+        QSharedPointer<HSSObject> computeStroke(QSharedPointer<HSSParserNode> parserNode);
 
         //visible
         bool getVisible() const;
@@ -337,9 +337,6 @@ namespace AXR
 
         //if it needs to resize the surface
         bool _needsSurface;
-        QImage * backgroundSurface;
-        QImage * foregroundSurface;
-        QImage * bordersSurface;
 
         //flags
         QMap<AXRString, HSSRuleState> _flagsStatus;

@@ -2,6 +2,6 @@
 
 myElement
 {
-    border: @lineBorder{ size: 1 };
+    stroke: @stroke{ size: 1 };
     margin: margin1
 }

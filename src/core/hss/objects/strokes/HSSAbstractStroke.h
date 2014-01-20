@@ -41,45 +41,29 @@
  *
  ********************************************************************/
 
-#ifndef HSSLINEBORDER_H
-#define HSSLINEBORDER_H
+#ifndef HSSABSTRACTSTROKE_H
+#define HSSABSTRACTSTROKE_H
 
 #include <QSharedPointer>
-#include "HSSBorder.h"
+#include "HSSObject.h"
+
+class QPainter;
+class QPainterPath;
 
 namespace AXR
 {
-    class HSSRgb;
-
     /**
-     *  @brief The object type representing line borders in HSS.
-     *
-     *  This border style renders solid lines on whatever path they are applied.
+     *  @brief Abstract base class for all stroke objects.
      */
-    class AXR_API HSSLineBorder : public HSSBorder
+    class AXR_API HSSAbstractStroke : public HSSObject
     {
     public:
-        /**
-         *  Creates a new instance of a line border object.
-         */
-        HSSLineBorder(AXRController * controller);
+        typedef std::vector<QSharedPointer<HSSAbstractStroke> >::iterator it;
 
         /**
-         *  Copy constructor for HSSLineBorder objects. Don't use directly, use clone() instead.
+         *  Destructor for HSSAbstractStroke objects.
          */
-        HSSLineBorder(const HSSLineBorder & orig);
-
-        /**
-         *  Clones an instance of HSSLineBorder and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSLineBorder
-         */
-        QSharedPointer<HSSLineBorder> clone() const;
-
-        /**
-         *  Destructs the container, clearing the children and allChildren.
-         */
-        virtual ~HSSLineBorder();
+        virtual ~HSSAbstractStroke();
 
         virtual void setDefaults();
         virtual AXRString toString();
@@ -87,16 +71,37 @@ namespace AXR
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
 
-        //color
-        QSharedPointer<HSSObject> getColor();
-        QSharedPointer<HSSObject> computeColor(QSharedPointer<HSSParserNode> parserNode);
+        /**
+         *  Each type of stroke implements its own drawing routines. Call this method
+         *  when you need to draw the stroke on a surface.
+         *  @param painter A QPainter context used to draw onto a surface.
+         *  @param path The path comprising the object shape.
+         */
+        virtual void draw(QPainter &painter, const QPainterPath &path) = 0;
 
-        virtual void draw(QPainter &painter, const QPainterPath &path);
+        //size
+        HSSUnit getSize() const;
+        void setSize(HSSUnit value, HSSUnit specificity);
+        //position
+        HSSStrokePosition getPosition() const;
+        //segments
+        QSharedPointer<HSSObject> getSegments() const;
 
-    private:
-        void _initialize();
-        virtual QSharedPointer<HSSClonable> cloneImpl() const;
+    protected:
+        /**
+         *  Creates a new HSSAbstractStroke object.
+         */
+        HSSAbstractStroke(AXRController * controller);
+
+        /**
+         *  Copy constructor for HSSAbstractStroke objects.
+         */
+        HSSAbstractStroke(const HSSAbstractStroke & orig);
     };
 }
+
+Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSAbstractStroke> >)
+Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSAbstractStroke> >*)
+Q_DECLARE_METATYPE(AXR::HSSStrokePosition*)
 
 #endif

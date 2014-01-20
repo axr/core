@@ -51,7 +51,7 @@ class QPainterPath;
 
 namespace AXR
 {
-    class HSSBorder;
+    class HSSAbstractStroke;
 
     /**
      *  @brief Abstract base class for all shape objects.
@@ -115,7 +115,7 @@ namespace AXR
          */
         void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
 
-        virtual void drawBorders(QPainter &painter, QList<QSharedPointer<HSSBorder> > borders, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY) = 0;
+        virtual void drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY) = 0;
 
     protected:
         /**

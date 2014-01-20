@@ -27,7 +27,7 @@
 @container box
 {
     shape: @{6};
-    border: @{ 1 #6203 }, @{ 1 #FFF3 };
+    stroke: @{ 1 #6203 }, @{ 1 #FFF3 };
 }
 
 @container boxTitle
@@ -47,7 +47,7 @@
     contentAlignY: middle;
     width: 80%;
     shape: @{3};
-    border: @{ 1 #6203 }, @{ 1 #FFF3 };
+    stroke: @{ 1 #6203 }, @{ 1 #FFF3 };
     font: @{ isA: stdFont; color: brownDarker };
 }
 

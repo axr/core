@@ -83,7 +83,7 @@ AXRString HSSObservable::observablePropertyStringRepresentation(HSSObservablePro
         types[HSSObservablePropertyOn] = "on";
         types[HSSObservablePropertyMargin] = "margin";
         types[HSSObservablePropertyPadding] = "padding";
-        types[HSSObservablePropertyBorder] = "border";
+        types[HSSObservablePropertyStroke] = "stroke";
         types[HSSObservablePropertyFlagChanged] = "flagChanged";
         types[HSSObservablePropertyVisible] = "visible";
         types[HSSObservablePropertyLineAlign] = "lineAlign";
@@ -155,7 +155,7 @@ AXRString HSSObservable::observablePropertyStringRepresentation(HSSObservablePro
         types[HSSObservablePropertySides] = "sides";
         types[HSSObservablePropertyAngle] = "angle";
 
-        //HSSBorder
+        //HSSStroke
         types[HSSObservablePropertySegments] = "segments";
 
         //HSSRadialGradient
@@ -204,7 +204,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(AXRString name
         properties["on"] = HSSObservablePropertyOn;
         properties["margin"] = HSSObservablePropertyMargin;
         properties["padding"] = HSSObservablePropertyPadding;
-        properties["border"] = HSSObservablePropertyBorder;
+        properties["stroke"] = HSSObservablePropertyStroke;
 
         //HSSTextBlock
         properties["transform"] = HSSObservablePropertyTransform;
@@ -262,7 +262,7 @@ HSSObservableProperty HSSObservable::observablePropertyFromString(AXRString name
         properties["mode"] = HSSObservablePropertyMode;
         properties["contentTarget"] = HSSObservablePropertyContentTarget;
 
-        //HSSBorder
+        //HSSStroke
         properties["segments"] = HSSObservablePropertySegments;
 
         //HSSRadialGradient

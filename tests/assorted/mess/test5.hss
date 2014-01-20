@@ -10,7 +10,7 @@
     width: 150;
 }
 
-@lineBorder myBorder
+@stroke myStroke
 {
     color: @rgb { 127, 127, 128, 20% }
 }*/

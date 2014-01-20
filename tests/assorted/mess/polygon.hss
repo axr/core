@@ -8,7 +8,7 @@
         sides: ref(height) / 10;
         angle: ref(height) * 10;
     };
-    border: @{ 1 #F }, @{ 1 #9 };
+    stroke: @{ 1 #F }, @{ 1 #9 };
 
     @::hover
     {

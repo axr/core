@@ -16,7 +16,7 @@ master
         width: 200;
         height: 50%;
         shape: @{10};
-        border: @{ 1 #FFF5 }, @{ 1 #0008 };
+        stroke: @{ 1 #FFF5 }, @{ 1 #0008 };
         background: @linearGradient blackGrad {
             startColor: bgColor;
             endColor: bgColor2;
